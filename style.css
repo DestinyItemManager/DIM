@@ -220,7 +220,7 @@ body {
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq a { color: #fff }
 .content {
-    max-width: 1200;
+    max-width: 1088px;
     margin: 0 auto;
     padding: 2px;
 }
@@ -268,8 +268,12 @@ body {
         max-width: 391px;
         margin-left: 10px;
         float: left;
+        margin-right: 0;
     }
     .content { max-width: 1604px }
     .item,
     .item img { width: 47.7px }
+    .character-box {
+      width: 281px;
+    }
 }
