@@ -156,11 +156,11 @@ function moveItem(item, destination, amount, callback) {
 function manageItemClick(item, data) {
 	if(data.type === 'equip') {
 		document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type).appendChild(
-			document.querySelector('[data-name="' + item.name + '"]'));
+			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = true;
 	} else {
 		document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type	).appendChild(
-			document.querySelector('[data-name="' + item.name + '"]'));
+			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = false;
 	}
 }
@@ -399,6 +399,7 @@ function buildItems() {
 		if(_items[itemId].complete) itemBox.className += ' complete';
 		itemBox.dataset.index = itemId;
 		itemBox.dataset.name = _items[itemId].name;
+		itemBox.dataset.instanceId = _items[itemId].id;
 		img.addEventListener('dragstart', function(e) {
 			_transfer = this.parentNode;
 		});
