@@ -143,11 +143,6 @@ body {
     margin-right: 5px;
     vertical-align: middle;
 }
-#filter-element {
-    display: none;
-    margin-right: 5px;
-    vertical-align: middle;
-}
 #move-popup {
     position: absolute;
     display: none;
