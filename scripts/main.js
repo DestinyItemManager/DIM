@@ -383,6 +383,7 @@ function buildItems() {
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		} else {
+			console.log(_items[itemId]);
 			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
@@ -420,15 +421,29 @@ function sortItem(type) {
 
 function flattenInventory(data) {
 	var inv = [];
-	var buckets = data.buckets;
-	for(var b in buckets) {
-		for(var s in buckets[b]) {
-			var items = buckets[b][s].items;
-			for(var i in items) {
-				inv[items[i].itemHash] = items[i];
+	var buckets = data.buckets;	
+
+	// Only look at the equippable bucket
+	if (buckets.Equippable) {
+
+		// Loop through the equippable buckets and flatten the items
+		for (var b in buckets.Equippable) {
+			
+			var eBucket = buckets.Equippable[b];
+
+			// Skip the subclass bucket - 3284755031
+			if (eBucket.bucketHash === 3284755031)
+				continue;
+
+			var items = eBucket.items;
+			
+			// Store the item in the inventory array, associated to its instanceId, so we can support duplicate items
+			for (var i in items) {
+				inv[items[i].itemInstanceId] = items[i];
 			}
 		}
 	}
+
 	return inv;
 }
 
@@ -436,37 +451,54 @@ function flattenInventory(data) {
 function flattenVault(data) {
 	var inv = [];
 	var buckets = data.buckets;
-	for(var b in buckets) {
+
+	for (var b in buckets) {
+		
 		var items = buckets[b].items;
-		for(var i in items) {
-			inv[items[i].itemHash] = items[i];
+		
+		for (var i in items) {
+			inv[items[i].itemInstanceId] = items[i];
 		}
 	}
+	
 	return inv;
 }
 
-var typesofitems = [];
-function appendItems(owner, items, data) {
-	for(var item in items) {
-		if(items[item].nonTransferrable || data[item] === undefined) continue;
+var typesOfItems = [];
 
-		if(typesofitems.indexOf(items[item].itemTypeName) == -1) typesofitems.push(items[item].itemTypeName)
+function appendItems(owner, defs, items) {
+	// Loop through the flattened inventory
+	for (var i in items) {
+
+		var item        = items[i];
+		var itemHash    = item.itemHash;
+		var itemDef     = defs[item.itemHash];
+
+		// Skip this item if we don't have a definition for it or it cannot be transferred
+		if (itemDef === undefined || itemDef.nonTransferrable)
+			continue;
+
+		if (typesOfItems.indexOf(itemDef.itemTypeName) == -1) typesOfItems.push(itemDef.itemTypeName);
+
+		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+		var itemSort = sortItem(itemDef.itemTypeName);
 
 		_items.push({
-			owner: owner,
-			hash: item,
-			type: getItemType(items[item].itemTypeName, items[item].itemName),
-			sort: sortItem(items[item].itemTypeName),
-			tier: items[item].tierType,
-			name: items[item].itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon: items[item].icon,
-			id: data[item].itemInstanceId,
-			equipped: data[item].isEquipped,
-			equipment: data[item].isEquipment,
-			complete: data[item].isGridComplete,
-			amount: data[item].stackSize,
-		});
+			owner:     owner,
+			hash:      itemHash,
+			type:      itemType,
+			sort:      itemSort,
+			tier:      itemDef.tierType,
+			name:      itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			icon:      itemDef.icon,
+			id:        item.itemInstanceId,
+			equipped:  item.isEquipped,
+			equipment: item.isEquipment,
+			complete:  item.isGridComplete,
+			amount:    item.stackSize
+		})
 	}
+
 	tryPageLoad();
 }
 
