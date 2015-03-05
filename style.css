@@ -36,10 +36,15 @@ body {
     font-size: 15px;
     font-weight: 500;
     color: rgba(245,245,245,.6);
-    width: 390px;
+    width: 260px;
 }
 .title .icon { width: 30px }
-.storage { margin-bottom: 100px; }
+.storage {
+  margin-top: 10px;
+  max-width: 260px;
+  float: left;
+  margin-right: 1em;
+}
 .item {
     position: relative;
     display: inline-block;
@@ -65,10 +70,10 @@ body {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 281px;
+    width: 165px;
     height: 43px;
-    padding: 0 0 0 55px;
-    margin: 5px 5px 5px 0;
+    padding: 0 0 0 50px;
+    margin: 5px 0;
     opacity: 1;
     background: rgba(30,36,43,.5);
     color: #f5f5f5;
@@ -116,7 +121,7 @@ body {
     color: rgba(245,245,245,.6);
     vertical-align: top;
     text-align: center;
-    margin: 5px 0 5px 5px;
+    margin: 5px 0;
     line-height: 39px;
     padding: 0;
     cursor: pointer;
@@ -128,9 +133,9 @@ body {
     border-bottom: 2px solid rgba(245,245,245,.6);
     color: rgba(245,245,245,.6);
     margin-bottom: 10px;
-    width: 391px;
+    width: 260px;
     position: absolute;
-    left: -352px;
+    left: -220px;
     z-index: 2;
     cursor: pointer;
 }
