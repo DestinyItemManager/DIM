@@ -27,5 +27,6 @@
   },
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "incognito": "split",
-  "offline_enabled": false
+  "offline_enabled": false,
+  "options": "window.html"
 }
