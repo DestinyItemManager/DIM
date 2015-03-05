@@ -167,7 +167,7 @@ function manageItemClick(item, data) {
 			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = true;
 	} else {
-		document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type	).appendChild(
+		document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + item.type	).appendChild(
 			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = false;
 	}
@@ -423,7 +423,7 @@ function buildItems() {
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		} else {
-			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
+			_storage[_items[itemId].owner].elements.item.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
 }

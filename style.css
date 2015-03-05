@@ -33,10 +33,10 @@ body {
     margin-top: 8px;
     margin-bottom: 8px;
     border-bottom: 2px solid rgba(245,245,245,.6);
-    font-size: 15px;
+    font-size: 10px;
     font-weight: 500;
     color: rgba(245,245,245,.6);
-    width: 260px;
+    width: auto;
 }
 .title .icon { width: 30px }
 .storage {
@@ -44,6 +44,25 @@ body {
   max-width: 260px;
   float: left;
   margin-right: 1em;
+}
+.equipped {
+  float: left;
+  width: 60px;
+}
+.equipped .title {
+  width: 50px;
+}
+.inventory {
+  float: left;
+  width: 200px;
+}
+.sort {
+  float: left;
+  clear: left;
+  height: 67px;
+  white-space: nowrap;
+  overflow-x: auto;
+  width: 200px;
 }
 .item {
     position: relative;
