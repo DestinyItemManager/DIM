@@ -639,3 +639,14 @@ bungie.user(function(u) {
 		appendItems('vault', v.definitions.items, flattenVault(v.data));
 	});
 });
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+	var optionsUrl = chrome.extension.getURL('window.html');
+	chrome.tabs.query({url: optionsUrl}, function(tabs) {
+	    if (tabs.length) {
+	        chrome.tabs.update(tabs[0].id, {active: true});
+	    } else {
+	        chrome.tabs.create({url: optionsUrl});
+	    }
+	});
+});

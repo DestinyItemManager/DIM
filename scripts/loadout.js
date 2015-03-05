@@ -1,6 +1,6 @@
 function loadout() {
   // private vars
-  var _box, _contents, _saveButton, _cancelButton, _name;
+  var _box, _contents, _saveButton, _cancelButton, _errorText, _name;
   var _loadouts = []
 
   // private methods
@@ -36,14 +36,19 @@ function loadout() {
   }
 
   function _save() {
+    _errorText.innerText = '';
     if(_name.value.length === 0) {
       _name.style.border = '1px solid red';
+
+      _errorText.innerText = 'please specify a loadout name.';
       return;
     }
 
     var selected = _contents.querySelectorAll('.item');
-    if(selected.length === 0) return;
-
+    if(selected.length === 0) {
+      _errorText.innerText = 'no items in loadout, click items to add.';
+      return;
+    }
     var ids = [];
     for(var i = 0; i < selected.length; i++) {
       ids.push(_items[selected[i].dataset.index].id);
@@ -78,6 +83,8 @@ function loadout() {
     _box = document.getElementById('loadout-create');
 
     _contents = document.getElementById('loadout-contents');
+
+    _errorText = document.getElementById('loadout-error');
 
     _saveButton = document.getElementById('loadout-save');
     _saveButton.addEventListener('click', _save)

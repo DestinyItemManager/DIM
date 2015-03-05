@@ -19,15 +19,13 @@
   "permissions": [
     "storage",
     "*://*.bungie.net/*",
-    "cookies"
+    "cookies",
+    "tabs"
   ],
   "browser_action": {
-    "default_icon": "icon128.png",
-    "default_popup": "window.html"
-
+    "default_icon": "icon128.png"
   },
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "incognito": "split",
-  "offline_enabled": false,
-  "options_page": "window.html"
+  "offline_enabled": false
 }
