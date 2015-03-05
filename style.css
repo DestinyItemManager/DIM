@@ -50,7 +50,6 @@ body {
     display: inline-block;
     width: 44px;
     cursor: pointer;
-    cursor: -webkit-grab;
     margin: 2;
     border: 2px solid #DDD;
 }
@@ -139,7 +138,12 @@ body {
     z-index: 2;
     cursor: pointer;
 }
-#filter {
+#filter-text {
+    display: none;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+#filter-element {
     display: none;
     margin-right: 5px;
     vertical-align: middle;

@@ -38,29 +38,37 @@ function moveBox(item) {
     if (moveItem.primStat) {
 		if (moveItem.primStat.statHash === 3897883278) {
 			// This item has defense stats, so lets pull some useful armor stats
-			var light      = moveItem.stats[0].value;
-			var intellect  = moveItem.stats[1].value;
-			var discipline = moveItem.stats[2].value;
-			var strength   = moveItem.stats[3].value;
+			name.innerHTML = moveItem.name;
 
-			name.innerHTML = moveItem.name + ' L: ' + light + ' I: ' + intellect + ' D: ' + discipline + ' S:' + strength;
+			// only 4 stats if there is a light element. other armor has only 3 stats.
+			if(moveItem.stats.length === 4) {
+				name.innerHTML += ' &#10022;' + moveItem.stats[0].value;
+			}
+			var stats = ['Int:', 'Dis:', 'Str:'];
+			var val = 0;
+			for(var s = 0; s < stats.length; s++) {
+				val = moveItem.stats[s + (moveItem.stats.length === 4 ? 1 : 0)].value;
+				if(val !== 0) {
+					name.innerHTML += ' | ' + stats[s] + ' ' + val;
+				}
+			}
 		} else if (moveItem.primStat.statHash === 368428387) {
 			// This item has attack stats, so lets pull some useful weapon stats
 			var attack = moveItem.primStat.value;
 			var damage = 'Kinetic';
+			var color = 'rgba(245,245,245,1)';
 
-			if (moveItem.dmgType === 2) {
-				damage = 'Arc';
-			} else if (moveItem.dmgType === 3) {
-				damage = 'Solar';
-			} else if (moveItem.dmgType === 4) {
-				damage = 'Void';
+			switch(moveItem.dmgType) {
+				case 2: damage = 'Arc'; color = '#85c5ec'; break;
+				case 3: damage = 'Solar'; color = '#f2721b';  break;
+				case 4: damage = 'Void'; color = '#b184c5'; break;
 			}
 
-			name.innerHTML = moveItem.name + ' A: ' + attack + ' ' + damage + ' damage';
+			name.innerHTML = moveItem.name + ' | ' + damage + ' | A: ' + attack + ' ';
+			name.style.backgroundColor = color;
 		} else {
-			name.innerHTML = _items[item.dataset.index].name;	
-		} 
+			name.innerHTML = _items[item.dataset.index].name;
+		}
     } else {
 		name.innerHTML = _items[item.dataset.index].name;
 	}
@@ -452,14 +460,14 @@ function sortItem(type) {
 
 function flattenInventory(data) {
 	var inv = [];
-	var buckets = data.buckets;	
+	var buckets = data.buckets;
 
 	// Only look at the equippable bucket
 	if (buckets.Equippable) {
 
 		// Loop through the equippable buckets and flatten the items
 		for (var b in buckets.Equippable) {
-			
+
 			var eBucket = buckets.Equippable[b];
 
 			// Skip the subclass bucket - 3284755031
@@ -467,7 +475,7 @@ function flattenInventory(data) {
 				continue;
 
 			var items = eBucket.items;
-			
+
 			// Store the item in the inventory array, associated to its instanceId, so we can support duplicate items
 			for (var i in items) {
 				inv[items[i].itemInstanceId] = items[i];
@@ -484,14 +492,13 @@ function flattenVault(data) {
 	var buckets = data.buckets;
 
 	for (var b in buckets) {
-		
 		var items = buckets[b].items;
-		
+
 		for (var i in items) {
 			inv[items[i].itemInstanceId] = items[i];
 		}
 	}
-	
+
 	return inv;
 }
 
@@ -613,7 +620,7 @@ function tryPageLoad() {
 		buildItems();
 
 
-		var input = document.getElementById('filter');
+		var input = document.getElementById('filter-text');
 		input.style.display = 'inline-block';
 		var item = document.querySelectorAll('.item');
 
@@ -642,6 +649,18 @@ function tryPageLoad() {
 		});
 		input.addEventListener('click', function() { this.select(); });
 		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
+
+
+		var element = document.getElementById('filter-element');
+		element.style.display = 'inline-block';
+		element.addEventListener('change', function () {
+			var filter = element.value;
+			for (var i = 0; i < item.length; i++) {
+				item[i].style.display = filter === "-1" ? '' : (_items[item[i].dataset.index].dmgType == filter ? '' : 'none');
+			}
+
+			collapseSections();
+		});
 
 
 		function hideTooltip(e) {
