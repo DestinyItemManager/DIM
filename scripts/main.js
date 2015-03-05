@@ -33,7 +33,38 @@ function moveBox(item) {
 	move.style.display = 'block';
 
 	var name = move.querySelector('.item-name')
-	name.innerHTML = _items[item.dataset.index].name;
+	var moveItem = _items[item.dataset.index];
+
+    if (moveItem.primStat) {
+		if (moveItem.primStat.statHash === 3897883278) {
+			// This item has defense stats, so lets pull some useful armor stats
+			var light      = moveItem.stats[0].value;
+			var intellect  = moveItem.stats[1].value;
+			var discipline = moveItem.stats[2].value;
+			var strength   = moveItem.stats[3].value;
+
+			name.innerHTML = moveItem.name + ' L: ' + light + ' I: ' + intellect + ' D: ' + discipline + ' S:' + strength;
+		} else if (moveItem.primStat.statHash === 368428387) {
+			// This item has attack stats, so lets pull some useful weapon stats
+			var attack = moveItem.primStat.value;
+			var damage = 'Kinetic';
+
+			if (moveItem.dmgType === 2) {
+				damage = 'Arc';
+			} else if (moveItem.dmgType === 3) {
+				damage = 'Solar';
+			} else if (moveItem.dmgType === 4) {
+				damage = 'Void';
+			}
+
+			name.innerHTML = moveItem.name + ' A: ' + attack + ' ' + damage + ' damage';
+		} else {
+			name.innerHTML = _items[item.dataset.index].name;	
+		} 
+    } else {
+		name.innerHTML = _items[item.dataset.index].name;
+	}
+
 	// switch(_items[item.dataset.index].tier) {
 	// 	TODO: be fancy and color the item name background the color of the item
 	// }
@@ -420,15 +451,29 @@ function sortItem(type) {
 
 function flattenInventory(data) {
 	var inv = [];
-	var buckets = data.buckets;
-	for(var b in buckets) {
-		for(var s in buckets[b]) {
-			var items = buckets[b][s].items;
-			for(var i in items) {
-				inv[items[i].itemHash] = items[i];
+	var buckets = data.buckets;	
+
+	// Only look at the equippable bucket
+	if (buckets.Equippable) {
+
+		// Loop through the equippable buckets and flatten the items
+		for (var b in buckets.Equippable) {
+			
+			var eBucket = buckets.Equippable[b];
+
+			// Skip the subclass bucket - 3284755031
+			if (eBucket.bucketHash === 3284755031)
+				continue;
+
+			var items = eBucket.items;
+			
+			// Store the item in the inventory array, associated to its instanceId, so we can support duplicate items
+			for (var i in items) {
+				inv[items[i].itemInstanceId] = items[i];
 			}
 		}
 	}
+
 	return inv;
 }
 
@@ -436,37 +481,57 @@ function flattenInventory(data) {
 function flattenVault(data) {
 	var inv = [];
 	var buckets = data.buckets;
-	for(var b in buckets) {
+
+	for (var b in buckets) {
+		
 		var items = buckets[b].items;
-		for(var i in items) {
-			inv[items[i].itemHash] = items[i];
+		
+		for (var i in items) {
+			inv[items[i].itemInstanceId] = items[i];
 		}
 	}
+	
 	return inv;
 }
 
-var typesofitems = [];
-function appendItems(owner, items, data) {
-	for(var item in items) {
-		if(items[item].nonTransferrable || data[item] === undefined) continue;
+var typesOfItems = [];
 
-		if(typesofitems.indexOf(items[item].itemTypeName) == -1) typesofitems.push(items[item].itemTypeName)
+function appendItems(owner, defs, items) {
+	// Loop through the flattened inventory
+	for (var i in items) {
+
+		var item        = items[i];
+		var itemHash    = item.itemHash;
+		var itemDef     = defs[item.itemHash];
+
+		// Skip this item if we don't have a definition for it or it cannot be transferred
+		if (itemDef === undefined || itemDef.nonTransferrable)
+			continue;
+
+		if (typesOfItems.indexOf(itemDef.itemTypeName) == -1) typesOfItems.push(itemDef.itemTypeName);
+
+		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+		var itemSort = sortItem(itemDef.itemTypeName);
 
 		_items.push({
-			owner: owner,
-			hash: item,
-			type: getItemType(items[item].itemTypeName, items[item].itemName),
-			sort: sortItem(items[item].itemTypeName),
-			tier: items[item].tierType,
-			name: items[item].itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon: items[item].icon,
-			id: data[item].itemInstanceId,
-			equipped: data[item].isEquipped,
-			equipment: data[item].isEquipment,
-			complete: data[item].isGridComplete,
-			amount: data[item].stackSize,
+			owner:     owner,
+			hash:      itemHash,
+			type:      itemType,
+			sort:      itemSort,
+			tier:      itemDef.tierType,
+			name:      itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			icon:      itemDef.icon,
+			id:        item.itemInstanceId,
+			equipped:  item.isEquipped,
+			equipment: item.isEquipment,
+			complete:  item.isGridComplete,
+			amount:    item.stackSize,
+			primStat:  item.primaryStat,
+			stats:     item.stats,
+			dmgType:   item.damageType
 		});
 	}
+
 	tryPageLoad();
 }
 
