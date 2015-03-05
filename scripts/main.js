@@ -33,7 +33,38 @@ function moveBox(item) {
 	move.style.display = 'block';
 
 	var name = move.querySelector('.item-name')
-	name.innerHTML = _items[item.dataset.index].name;
+	var moveItem = _items[item.dataset.index];
+
+    if (moveItem.primStat) {
+		if (moveItem.primStat.statHash === 3897883278) {
+			// This item has defense stats, so lets pull some useful armor stats
+			var light      = moveItem.stats[0].value;
+			var intellect  = moveItem.stats[1].value;
+			var discipline = moveItem.stats[2].value;
+			var strength   = moveItem.stats[3].value;
+
+			name.innerHTML = moveItem.name + ' L: ' + light + ' I: ' + intellect + ' D: ' + discipline + ' S:' + strength;
+		} else if (moveItem.primStat.statHash === 368428387) {
+			// This item has attack stats, so lets pull some useful weapon stats
+			var attack = moveItem.primStat.value;
+			var damage = 'Kinetic';
+
+			if (moveItem.dmgType === 2) {
+				damage = 'Arc';
+			} else if (moveItem.dmgType === 3) {
+				damage = 'Solar';
+			} else if (moveItem.dmgType === 4) {
+				damage = 'Void';
+			}
+
+			name.innerHTML = moveItem.name + ' A: ' + attack + ' ' + damage + ' damage';
+		} else {
+			name.innerHTML = _items[item.dataset.index].name;	
+		} 
+    } else {
+		name.innerHTML = _items[item.dataset.index].name;
+	}
+
 	// switch(_items[item.dataset.index].tier) {
 	// 	TODO: be fancy and color the item name background the color of the item
 	// }
@@ -494,8 +525,11 @@ function appendItems(owner, defs, items) {
 			equipped:  item.isEquipped,
 			equipment: item.isEquipment,
 			complete:  item.isGridComplete,
-			amount:    item.stackSize
-		})
+			amount:    item.stackSize,
+			primStat:  item.primaryStat,
+			stats:     item.stats,
+			dmgType:   item.damageType
+		});
 	}
 
 	tryPageLoad();
