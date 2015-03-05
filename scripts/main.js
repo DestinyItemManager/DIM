@@ -692,12 +692,14 @@ bungie.user(function(u) {
 			storage.innerHTML = 'error loading user. make sure your account is linked with bungie.net and you are logged in.';
 			return;
 	}
-	document.getElementById('user').innerText = u.gamerTag || u.psnId;
+	document.getElementById('user').innerText = bungie.gamertag();
 
 	bungie.search(function(e) {
 		if(e.error) {
 				var storage = document.getElementById('storage');
-				storage.innerHTML = 'bungie.net user found. but was unable to find your account.';
+				storage.innerHTML = 'bungie.net user found. but was unable to find your ' +
+					'account. you may have a XBL and PSN account tied to your bungie.net' +
+					' profile. This is not yet supported.';
 				return;
 		}
 

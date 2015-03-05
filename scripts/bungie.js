@@ -69,6 +69,9 @@ function bungie() {
   }
 
   // privileged methods
+  this.gamertag = function() {
+    return gamertag;
+  }
   this.user = function(callback) {
     _request({
       route: '/User/GetBungieNetUser/',
