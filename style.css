@@ -39,7 +39,7 @@ body {
     width: 390px;
 }
 .title .icon { width: 30px }
-.storage { margin-top: 10px }
+.storage { margin-bottom: 100px; }
 .item {
     position: relative;
     display: inline-block;
