@@ -68,8 +68,10 @@ function loadout() {
       items: ids
     });
 
-    _sync();
+    _sync(function() {
+    });
     _close(false)
+
   }
   function getItem(id) {
   	for(var i in _items) {
@@ -111,7 +113,7 @@ function loadout() {
 
   }
   this.apply = function(character, loadout) {
-    if(character === 'vault') return;
+    if(character === 'vault' || _loadouts[loadout] === undefined) return;
   	var destination = {type: "equip", character: character};
 
     (function processItem(i) {

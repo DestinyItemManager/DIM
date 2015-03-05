@@ -244,6 +244,10 @@ body {
     vertical-align: middle;
     margin-left: 10px;
 }
+#loadout-options p {
+  display: inline-block;
+  padding-left: 10px;
+}
 #loadout-list .loadout-set:hover,
 #loadout-new:hover,
 #loadout-options span:hover { background-color: #628e89 }
