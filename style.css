@@ -61,7 +61,6 @@ body {
   clear: left;
   height: 67px;
   white-space: nowrap;
-  overflow-x: auto;
   width: 200px;
 }
 .item {
