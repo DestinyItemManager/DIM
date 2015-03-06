@@ -430,7 +430,6 @@ function buildItems() {
 			_storage[_items[itemId].owner].elements.item.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
-	setTimeout(setSortHeights,500);
 }
 
 function getItemType(type, name) {
