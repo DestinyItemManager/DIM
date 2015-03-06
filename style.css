@@ -20,6 +20,29 @@ body {
     color: #1a1e24;
     box-shadow: 0 2px 20px 2px #000;
 }
+#header-right {
+  float: right;
+}
+img.elemental {
+  width: 16px !important;
+  vertical-align: middle;
+  margin-right: 3px;
+  padding: 2px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+img.kinetic {
+  background-color: black;
+}
+img.arc {
+  background-color: #85c5ec;
+}
+img.solar {
+  background-color: #f2721b;
+}
+img.void {
+  background-color: #b184c5;
+}
 #header .content span {
     font-size: 13px;
     line-height: 25px;
@@ -86,11 +109,16 @@ body {
     position: relative;
     display: inline-block;
     width: 44px;
+    height: 44px;
+    background-color: #5c7183;
     cursor: pointer;
     margin: 2;
     border: 2px solid #DDD;
 }
-.item img { width: 44px }
+.item img {
+  width: 44px;
+  height: 44px;
+}
 .item .stack {
     position: absolute;
     bottom: 0;
@@ -176,11 +204,6 @@ body {
     cursor: pointer;
 }
 #filter-text {
-    display: none;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-#filter-element {
     display: none;
     margin-right: 5px;
     vertical-align: middle;

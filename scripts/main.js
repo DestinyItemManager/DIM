@@ -59,12 +59,13 @@ function moveBox(item) {
 			var color = 'rgba(245,245,245,1)';
 
 			switch(moveItem.dmgType) {
-				case 2: damage = 'Arc'; color = '#85c5ec'; break;
-				case 3: damage = 'Solar'; color = '#f2721b';  break;
-				case 4: damage = 'Void'; color = '#b184c5'; break;
+				case 2: damage = 'arc'; color = '#85c5ec'; break;
+				case 3: damage = 'solar'; color = '#f2721b';  break;
+				case 4: damage = 'void'; color = '#b184c5'; break;
 			}
 
-			name.innerHTML = moveItem.name + ' | ' + damage + ' | A: ' + attack + ' ';
+			name.innerHTML = '<img class="elemental ' + damage + '" src="assets/' + damage + '.png" />' +
+			 	moveItem.name + ' | A: ' + attack + ' ';
 			name.style.backgroundColor = color;
 		} else {
 			name.innerHTML = _items[item.dataset.index].name;
@@ -647,28 +648,38 @@ function tryPageLoad() {
 		}
 		collapseSections();
 		input.addEventListener('keyup', function () {
-			var filter = input.value.toUpperCase();
+			var filter = input.value.toLowerCase();
+			var special = filter.indexOf('is:') >= 0;
+			if(special) {
+				filter = filter.split('is:')[1].trim();
+				if(['arc', 'solar', 'void', 'kinetic'].indexOf(filter) >= 0) {
+					special = 'elemental';
+					switch(filter) {
+						case 'kinetic': filter = 0; break;
+						case 'arc': filter = 2; break;
+						case 'solar': filter = 3; break;
+						case 'void': filter = 4; break;
+						default: filter = 0;
+					}
+				} else if(['primary', 'secondary', 'heavy'].indexOf(filter) >= 0) {
+					special = 'type';
+				} else if(['complete'].indexOf(filter) >= 0) {
+					special = 'complete';
+				}
+			}
 			for (var i = 0; i < item.length; i++) {
-				item[i].style.display = item[i].dataset.name.toUpperCase().indexOf(filter) >= 0 ? '' : 'none';
+				switch(special) {
+					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmgType == filter ? '' : 'none'; break;
+					case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
+					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete === true ? '' : 'none'; break;
+					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
+				}
 			}
 
 			collapseSections();
 		});
 		input.addEventListener('click', function() { this.select(); });
 		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
-
-
-		var element = document.getElementById('filter-element');
-		element.style.display = 'inline-block';
-		element.addEventListener('change', function () {
-			var filter = element.value;
-			for (var i = 0; i < item.length; i++) {
-				item[i].style.display = filter === "-1" ? '' : (_items[item[i].dataset.index].dmgType == filter ? '' : 'none');
-			}
-
-			collapseSections();
-		});
-
 
 		function hideTooltip(e) {
 
