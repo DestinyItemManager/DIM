@@ -171,6 +171,7 @@ function manageItemClick(item, data) {
 			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = false;
 	}
+	setSortHeights();
 }
 
 function manageItem(e) {
@@ -197,6 +198,7 @@ function manageItem(e) {
 			// TODO: partial stack move, so copy the item...
 			destination.querySelector('.sort-' + _items[_transfer.dataset.index].type).appendChild(_transfer);
 		}
+		setSortHeights();
 	});
 
 }
@@ -426,6 +428,7 @@ function buildItems() {
 			_storage[_items[itemId].owner].elements.item.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
+	setTimeout(setSortHeights,400);
 }
 
 function getItemType(type, name) {
@@ -441,7 +444,9 @@ function getItemType(type, name) {
 		return 'Heavy';
 	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
+	if(["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
+		return 'Class';
+	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return type.split(' ')[0];
 	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
@@ -637,6 +642,7 @@ function tryPageLoad() {
 					}
 				}
 			}
+			setSortHeights();
 		}
 		collapseSections();
 		input.addEventListener('keyup', function () {
@@ -726,6 +732,23 @@ bungie.user(function(u) {
 		appendItems('vault', v.definitions.items, flattenVault(v.data));
 	});
 });
+
+function setSortHeights() {
+	function setSortHeight(key,value) {
+		var elementHeights = $('.sort-' + value).map(function() {
+			$(this).height('auto');
+	    return $(this).height();
+	  }).get();
+
+		var maxHeight = Math.max.apply(null, elementHeights);
+
+		$('.sort-' + value).height(maxHeight);
+	}
+
+	var sorts = ['primary', 'secondary', 'heavy', 'helmet', 'gauntlets', 'chest', 'leg', 'emblem', 'armor', 'vehicle', 'ship', 'ghost', 'class', 'miscellaneous'];
+
+	$.each(sorts,setSortHeight);
+}
 
 chrome.browserAction.onClicked.addListener(function(tab) {
 	var optionsUrl = chrome.extension.getURL('window.html');

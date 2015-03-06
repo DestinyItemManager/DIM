@@ -47,21 +47,26 @@ body {
 }
 .equipped {
   float: left;
-  width: 60px;
+  width: 72px;
 }
 .equipped .title {
   width: 50px;
 }
 .inventory {
   float: left;
-  width: 200px;
+  width: 156px;
 }
 .sort {
   float: left;
   clear: left;
-  height: 67px;
-  white-space: nowrap;
-  width: 200px;
+  min-height: 48px;
+  width: 170px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(245,245,245,.2);
+  padding-bottom: 12px;
+}
+.equipped .sort {
+  width: 72px;
 }
 .item {
     position: relative;
