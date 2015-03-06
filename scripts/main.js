@@ -765,7 +765,8 @@ bungie.user(function(u) {
 	bungie.vault(function(v) {
 		_storage['vault'] = {
 			id: 'vault',
-			icon: ''
+			icon: '',
+			class: 'Vault'
 		};
 
 		window.dimDO.stores['vault'] = _.extend({}, _storage['vault']);
