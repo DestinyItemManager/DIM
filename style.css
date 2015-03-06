@@ -47,7 +47,9 @@ body {
 }
 .equipped {
   float: left;
-  width: 72px;
+  background: rgba(255,255,255,.2);
+  padding: 0 12px;
+  width: 52px;
 }
 .equipped .title {
   width: 50px;
@@ -55,6 +57,7 @@ body {
 .inventory {
   float: left;
   width: 156px;
+  padding-left: 12px;
 }
 .sort {
   float: left;
@@ -66,7 +69,7 @@ body {
   padding-bottom: 12px;
 }
 .equipped .sort {
-  width: 72px;
+  width: 52px;
 }
 .item {
     position: relative;
