@@ -9,6 +9,10 @@ body {
     background-size: cover;
     color: #fff;
     font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
+    text-align: center;
+}
+div {
+  text-align: initial;
 }
 #header {
     position: fixed;
@@ -63,6 +67,7 @@ img.void {
 }
 .title .icon { width: 30px }
 #storage {
+  display: inline-block;
   white-space: nowrap;
 }
 .storage {
