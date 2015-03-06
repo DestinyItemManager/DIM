@@ -281,3 +281,7 @@ body {
       width: 281px;
     }
 }
+
+.ng-hide {
+  display: none;
+}

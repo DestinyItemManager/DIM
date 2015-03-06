@@ -1,7 +1,12 @@
 var bungie = new bungie();
 var loadout = new loadout();
 
-var _storage = [];
+var dimDO = {
+	stores: {}
+};
+
+
+var _storage = {};
 var _items = [];
 var _sections = null;
 
@@ -269,6 +274,8 @@ function buildStorage() {
 	var storage = document.getElementById('storage');
 	storage.innerHTML = '';
 
+	angular.element(document).scope().$apply(); // Something changed so angular needs to digest.
+
 	for(var c in _storage) {
 		var node = document.getElementById('storage-template').content.cloneNode(true);
 		var characterNode = document.getElementById('character-template').content.cloneNode(true);
@@ -324,20 +331,21 @@ function buildStorage() {
 			char.style.backgroundImage = "url(http://bungie.net/" + _storage[c].icon + ')';
 			move.querySelector('.locations').appendChild(char);
 		}
+// FROM HERE----------------------------------------------------------------------------
 
-		characterNode.querySelector('.loadout-button').addEventListener('click', function() {
-			// if(loadoutBox.style.display === 'block') {
-			// 	loadoutBox.style.display = 'none';
-			// 	return;
-			// }
-
-			if(move.style.display === 'block') {
-				move.style.display = 'none';
-			}
-
-			loadoutBox.style.display = 'block';
-			this.appendChild(loadoutBox);
-		});
+		// characterNode.querySelector('.loadout-button').addEventListener('click', function() {
+		// 	// if(loadoutBox.style.display === 'block') {
+		// 	// 	loadoutBox.style.display = 'none';
+		// 	// 	return;
+		// 	// }
+		//
+		// 	if(move.style.display === 'block') {
+		// 		move.style.display = 'none';
+		// 	}
+		//
+		// 	loadoutBox.style.display = 'block';
+		// 	this.appendChild(loadoutBox);
+		// });
 
 		if(c !== 'vault') {
 			characterNode.querySelector('.character-box').style.backgroundImage = "url(http://bungie.net/" + _storage[c].background + ')';
@@ -352,6 +360,12 @@ function buildStorage() {
 		var title = node.querySelector('.character');
 		title.appendChild(characterNode)
 
+
+// TODO
+// TODO
+// TODO
+// TODO
+
 		var equipedblock = node.querySelector('div[data-type="equip"]');
 		if(c !== 'vault') {
 			equipedblock.dataset.character = c;
@@ -363,19 +377,25 @@ function buildStorage() {
 		itemblock.parentNode.addEventListener('dragover', ignoreDrag);
 		itemblock.addEventListener('drop', manageItem);
 
-		// this is what i get for using templates.
-		if(c === 'vault') {
-			level.style.display = 'none';
-			equipedblock.parentNode.style.display = 'none';
-			// itemblock.parentNode.childNodes[0].style.display = 'none';
-		}
+// END TODO
+// END TODO
+// END TODO
+
+
+
+		// // this is what i get for using templates.
+		// if(c === 'vault') {
+		// 	level.style.display = 'none';
+		// 	equipedblock.parentNode.style.display = 'none';
+		// 	// itemblock.parentNode.childNodes[0].style.display = 'none';
+		// }
 
 		_storage[c].elements = {
 			equipped: equipedblock,
 			item: itemblock
 		};
 
-		storage.appendChild(node);
+		//storage.appendChild(node);
 	}
 }
 
@@ -408,6 +428,8 @@ function buildItems() {
 		itemBox.dataset.index = itemId;
 		itemBox.dataset.name = _items[itemId].name;
 		itemBox.dataset.instanceId = _items[itemId].id;
+
+// TO HERE----------------------------------------------------------------------------
 		img.addEventListener('dragstart', function(e) {
 			_transfer = this.parentNode;
 		});
@@ -538,6 +560,24 @@ function appendItems(owner, defs, items) {
 			stats:     item.stats,
 			dmgType:   item.damageType
 		});
+
+		window.dimDO.stores[owner].items.push({
+			owner:     owner,
+			hash:      itemHash,
+			type:      itemType,
+			sort:      itemSort,
+			tier:      itemDef.tierType,
+			name:      itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			icon:      itemDef.icon,
+			id:        item.itemInstanceId,
+			equipped:  item.isEquipped,
+			equipment: item.isEquipment,
+			complete:  item.isGridComplete,
+			amount:    item.stackSize,
+			primStat:  item.primaryStat,
+			stats:     item.stats,
+			dmgType:   item.damageType
+		});
 	}
 
 	tryPageLoad();
@@ -595,7 +635,7 @@ function tryPageLoad() {
 
 		buildStorage();
 		_dragCounter = 0;
-		_sections = document.querySelectorAll('.sections');
+		_sections = document.querySelectorAll('#storage .sections');
 		var sorter = document.getElementById('sort-template').content;
 		for(var i = 0; i < _sections.length; i++) {
 			_sections[i].appendChild(sorter.cloneNode(true));
@@ -705,21 +745,31 @@ bungie.user(function(u) {
 		loader.characters = avatars.length;
 
 		for(var c in avatars) {
-			// move.appendChild();
-			_storage[avatars[c].characterBase.characterId] = {
-				icon: avatars[c].emblemPath,
-				background: avatars[c].backgroundPath,
-				level: avatars[c].characterLevel,
-				class: getClass(avatars[c].characterBase.classType)
-			}
-			loadInventory(avatars[c].characterBase.characterId);
+			var avatar = avatars[c];
+			var charId = avatar.characterBase.characterId;
+
+			_storage[charId] = {
+				icon: avatar.emblemPath,
+				background: avatar.backgroundPath,
+				level: avatar.characterLevel,
+				class: getClass(avatar.characterBase.classType)
+			};
+
+			window.dimDO.stores[charId] = _.extend({}, _storage[charId]);
+			window.dimDO.stores[charId].id = charId;
+			window.dimDO.stores[charId].items = [];
+			loadInventory(charId);
 		}
 	});
 
 	bungie.vault(function(v) {
 		_storage['vault'] = {
+			id: 'vault',
 			icon: ''
 		};
+
+		window.dimDO.stores['vault'] = _.extend({}, _storage['vault']);
+		window.dimDO.stores['vault'].items = [];
 
 		appendItems('vault', v.definitions.items, flattenVault(v.data));
 	});

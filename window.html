@@ -1,12 +1,19 @@
-<html>
+<html ng-app="dimApp" ng-csp>
   <head>
     <title>DIM</title>
+    <script type="text/javascript" src="vendor/angularjs/angular.js"></script>
+    <script type="text/javascript" src="vendor/underscore/underscore.js"></script>
+    <script type="text/javascript" src="scripts/app.module.js"></script>
+    <script type="text/javascript" src="scripts/controllers/loot.controller.js"></script>
+    <script type="text/javascript" src="scripts/directives/character.directive.js"></script>
+    <script type="text/javascript" src="scripts/directives/equipped.directive.js"></script>
+    <script type="text/javascript" src="scripts/directives/items.directive.js"></script>
     <script type="text/javascript" src="scripts/bungie.js"></script>
     <script type="text/javascript" src="scripts/loadout.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
-  <body>
+  <body ng-controller="LootCtrl as vm">
     <div id="header">
       <div class="content">
         <span>DIM</span> <span id="faq-button">?</span>
@@ -22,7 +29,15 @@
       </div>
     </div>
 
-    <div id="storage" class="content">loading...</div>
+    <div id="storageV2" class="content">
+      <div ng-repeat="store in vm.data.stores" class="storage">
+        <div dim-character="store"></div>
+        <div dim-equipped="store" ng-if="store.id !== 'vault'"></div>
+        <div dim-items="store"></div>
+      </div>
+    </div>
+
+      <div id="storage" class="content">loading...</div>
 
     <div id="loadout-create">
       <div class="content">
@@ -144,13 +159,32 @@
     <template id="storage-template">
       <div class="storage">
         <div class="character"></div>
-        <div><div class="hover"></div><div class="title">Equipped</div><div class="items sections" data-type="equip"></div></div>
-        <div><div class="hover"></div><div class="items" data-type="item">
-          <div><div class="title">Weapons</div><div class="item-Weapon sections"></div></div>
-          <div><div class="title">Armor</div><div class="item-Armor sections"></div></div>
-          <div><div class="title">Styling</div><div class="item-Styling sections"></div></div>
-          <div><div class="title">Miscellaneous</div><div class="item-Miscellaneous sections"></div></div>
-        </div></div>
+        <div>
+          <div class="hover"></div>
+          <div class="title">Equipped</div>
+          <div class="items sections" data-type="equip"></div>
+        </div>
+        <div>
+          <div class="hover"></div>
+          <div class="items" data-type="item">
+            <div>
+              <div class="title">Weapons</div>
+              <div class="item-Weapon sections"></div>
+            </div>
+            <div>
+              <div class="title">Armor</div>
+              <div class="item-Armor sections"></div>
+            </div>
+            <div>
+              <div class="title">Styling</div>
+              <div class="item-Styling sections"></div>
+            </div>
+            <div>
+              <div class="title">Miscellaneous</div>
+              <div class="item-Miscellaneous sections"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </template>
   </body>
