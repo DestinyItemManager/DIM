@@ -78,7 +78,7 @@ img.void {
     margin: 2;
     border: 2px solid #DDD;
 }
-.item img {
+.item>img {
   width: 44px;
   height: 44px;
 }
