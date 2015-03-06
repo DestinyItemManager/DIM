@@ -71,12 +71,15 @@ img.void {
 .item {
     position: relative;
     display: inline-block;
-    width: 44px;
+    background-color: #555;
     cursor: pointer;
     margin: 2;
     border: 2px solid #DDD;
 }
-.item img { width: 44px }
+.item img {
+  width: 44px;
+  height: 44px;
+}
 .item .stack {
     position: absolute;
     bottom: 0;

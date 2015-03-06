@@ -1,5 +1,5 @@
 (function() {
     'use strict';
 
-    angular.module('dimApp', []);
+    angular.module('dimApp', ['ngDraggable']);
 })();

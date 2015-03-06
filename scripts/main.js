@@ -348,39 +348,39 @@ function buildStorage() {
 		// 	this.appendChild(loadoutBox);
 		// });
 
-		if(c !== 'vault') {
-			characterNode.querySelector('.character-box').style.backgroundImage = "url(http://bungie.net/" + _storage[c].background + ')';
-			characterNode.querySelector('.emblem').style.backgroundImage = "url(http://bungie.net/" + _storage[c].icon + ')';
-		}
-		characterNode.querySelector('.class').innerText =
-			c === 'vault' ? c : _storage[c].class;
-		var level = characterNode.querySelector('.level');
-		level.innerText = _storage[c].level;
-		if(_storage[c].level >= 20) level.style.color = 'rgba(245, 220, 86, 1)';
+		// if(c !== 'vault') {
+		// 	characterNode.querySelector('.character-box').style.backgroundImage = "url(http://bungie.net/" + _storage[c].background + ')';
+		// 	characterNode.querySelector('.emblem').style.backgroundImage = "url(http://bungie.net/" + _storage[c].icon + ')';
+		// }
+		// characterNode.querySelector('.class').innerText =
+		// 	c === 'vault' ? c : _storage[c].class;
+		// var level = characterNode.querySelector('.level');
+		// level.innerText = _storage[c].level;
+		// if(_storage[c].level >= 20) level.style.color = 'rgba(245, 220, 86, 1)';
 
-		var title = node.querySelector('.character');
-		title.appendChild(characterNode)
+		// var title = node.querySelector('.character');
+		// title.appendChild(characterNode)
 
 
-// TODO
-// TODO
-// TODO
-// TODO
+// //TODO
+// //TODO
+// //TODO
+// //TODO
 
-		var equipedblock = node.querySelector('div[data-type="equip"]');
-		if(c !== 'vault') {
-			equipedblock.dataset.character = c;
-			equipedblock.parentNode.addEventListener('dragover', ignoreDrag);
-			equipedblock.addEventListener('drop', manageItem);
-		}
-		var itemblock = node.querySelector('div[data-type="item"]');
-		itemblock.dataset.character = c;
-		itemblock.parentNode.addEventListener('dragover', ignoreDrag);
-		itemblock.addEventListener('drop', manageItem);
+		// var equipedblock = node.querySelector('div[data-type="equip"]');
+		// if(c !== 'vault') {
+		// 	equipedblock.dataset.character = c;
+		// 	equipedblock.parentNode.addEventListener('dragover', ignoreDrag);
+		// 	equipedblock.addEventListener('drop', manageItem);
+		// }
+		// var itemblock = node.querySelector('div[data-type="item"]');
+		// itemblock.dataset.character = c;
+		// itemblock.parentNode.addEventListener('dragover', ignoreDrag);
+		// itemblock.addEventListener('drop', manageItem);
 
-// END TODO
-// END TODO
-// END TODO
+// //END TODO
+// //END TODO
+// //END TODO
 
 
 
@@ -391,65 +391,70 @@ function buildStorage() {
 		// 	// itemblock.parentNode.childNodes[0].style.display = 'none';
 		// }
 
-		_storage[c].elements = {
-			equipped: equipedblock,
-			item: itemblock
-		};
+		// _storage[c].elements = {
+		// 	equipped: equipedblock,
+		// 	item: itemblock
+		// };
 
 		//storage.appendChild(node);
-	}
-}
+// 	}
+// }
 
-function buildItems() {
+// function buildItems() {
+	//
+	// // create the item blocks
+	// for(var itemId in _items) {
+		// if(!_items[itemId].equipment) continue;
+		//
+		// var itemBox = document.createElement('span');
+		//
+		// // populate the item
+		// var img = document.createElement('img');
+		// img.draggable = true;
+		// img.src = 'http://bungie.net/' + _items[itemId].icon;
 
-	// create the item blocks
-	for(var itemId in _items) {
-		if(!_items[itemId].equipment) continue;
+		// if(_items[itemId].amount > 1) {
+		// 	var amt = document.createElement('div');
+		// 	amt.className = 'stack';
+		// 	amt.innerText = _items[itemId].amount;
+		//
+		// 	// console.log(amt)
+		// 	itemBox.appendChild(amt);
+		// }
+		// itemBox.appendChild(img);
 
-		var itemBox = document.createElement('span');
-
-		// populate the item
-		var img = document.createElement('img');
-		img.draggable = true;
-		img.src = 'http://bungie.net/' + _items[itemId].icon;
-
-		if(_items[itemId].amount > 1) {
-			var amt = document.createElement('div');
-			amt.className = 'stack';
-			amt.innerText = _items[itemId].amount;
-
-			// console.log(amt)
-			itemBox.appendChild(amt);
-		}
-		itemBox.appendChild(img);
-
-		// img.className = 'item';
-		itemBox.className = 'item';
-		if(_items[itemId].complete) itemBox.className += ' complete';
-		itemBox.dataset.index = itemId;
-		itemBox.dataset.name = _items[itemId].name;
-		itemBox.dataset.instanceId = _items[itemId].id;
+		// // img.className = 'item';
+		// itemBox.className = 'item';
+		// if(_items[itemId].complete) itemBox.className += ' complete';
+		// // TODO
+		// itemBox.dataset.index = itemId;
+		// // TODO
+		// itemBox.dataset.name = _items[itemId].name;
+		// itemBox.dataset.instanceId = _items[itemId].id;
 
 // TO HERE----------------------------------------------------------------------------
-		img.addEventListener('dragstart', function(e) {
-			_transfer = this.parentNode;
-		});
-		img.addEventListener('click', function() {
-			if(loadout.open()) {
-				loadout.add(_items[this.parentNode.dataset.index]);
-				return;
-			}
-			_transfer = this.parentNode;
-			moveBox(this.parentNode);
-		});
+// // TODO
+		// img.addEventListener('dragstart', function(e) {
+		// 	_transfer = this.parentNode;
+		// });
+		//
+		// img.addEventListener('click', function() {
+		// 	if(loadout.open()) {
+		// 		loadout.add(_items[this.parentNode.dataset.index]);
+		// 		return;
+		// 	}
+		// 	_transfer = this.parentNode;
+		// 	moveBox(this.parentNode);
+		// });
 
-		if(_items[itemId].equipped) {
-			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
-		} else {
-			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
-		}
+// // TODO
+		// if(_items[itemId].equipped) {
+		// 	_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
+		// } else {
+		// 	_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
+		// }
 	}
-}
+ }
 
 function getItemType(type, name) {
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
@@ -658,7 +663,7 @@ function tryPageLoad() {
 		// 	}, false);
 		// }
 
-		buildItems();
+	//	buildItems();
 
 
 		var input = document.getElementById('filter-text');
