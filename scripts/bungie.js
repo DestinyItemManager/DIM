@@ -154,4 +154,20 @@ function bungie() {
       complete: callback
     })
   }
+  // this function works and returns a behemoth response. very useful/scary.
+  // .equipResults for more information on item equip messages
+  // .character.inventory.buckets -useful to resync data maybe?
+  // .summary - useful if we want to update character level/emblem/etc
+  this.equipall = function(characterId, itemIds, callback) {
+    _request({
+      route: '/Destiny/EquipItems/',
+      method: 'POST',
+      payload: {
+        membershipType: membershipType,
+        characterId: characterId,
+        itemIds: itemIds
+      },
+      complete: callback
+    })
+  }
 }
