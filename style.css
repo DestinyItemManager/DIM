@@ -41,7 +41,7 @@ body {
 .title .icon { width: 30px }
 .storage {
   margin-top: 10px;
-  max-width: 260px;
+  max-width: 244px;
   float: left;
   margin-right: 1em;
 }
@@ -63,13 +63,24 @@ body {
   float: left;
   clear: left;
   min-height: 48px;
-  width: 170px;
+  width: 156px;
   margin-bottom: 12px;
   border-bottom: 1px solid rgba(245,245,245,.2);
   padding-bottom: 12px;
 }
 .equipped .sort {
   width: 52px;
+}
+.vault .character-box {
+  width: 137px;
+}
+.vault .inventory {
+  width: 208px;
+  padding: 0 12px;
+  background: rgba(0,0,0,.2);
+}
+.vault .sort {
+  width: 208px;
 }
 .item {
     position: relative;
@@ -95,7 +106,7 @@ body {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 165px;
+    width: 149px;
     height: 43px;
     padding: 0 0 0 50px;
     margin: 5px 0;

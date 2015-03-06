@@ -347,6 +347,7 @@ function buildStorage() {
 		}
 		characterNode.querySelector('.class').innerText =
 			c === 'vault' ? c : _storage[c].class;
+		node.querySelector('.storage').className = node.querySelector('.storage').className + ' ' + characterNode.querySelector('.class').innerText;	
 		var level = characterNode.querySelector('.level');
 		level.innerText = _storage[c].level;
 		if(_storage[c].level >= 20) level.style.color = 'rgba(245, 220, 86, 1)';
