@@ -62,11 +62,15 @@ img.void {
     width: auto;
 }
 .title .icon { width: 30px }
+#storage {
+  white-space: nowrap;
+}
 .storage {
   margin-top: 10px;
   max-width: 244px;
-  float: left;
+  display: inline-block;
   margin-right: 1em;
+  white-space: initial;
 }
 .equipped {
   float: left;
@@ -284,8 +288,7 @@ img.void {
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq a { color: #fff }
 .content {
-    max-width: 1088px;
-    margin: 0 auto;
+    margin: 0 1em;
     padding: 2px;
 }
 #loadout-create {
@@ -326,18 +329,4 @@ img.void {
     float: right;
     padding-left: 10px;
     padding-right: 10px;
-}
-@media only screen and (min-width :1648px) {
-    .storage {
-        max-width: 391px;
-        margin-left: 10px;
-        float: left;
-        margin-right: 0;
-    }
-    .content { max-width: 1604px }
-    .item,
-    .item img { width: 47.7px }
-    .character-box {
-      width: 281px;
-    }
 }
