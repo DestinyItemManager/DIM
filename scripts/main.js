@@ -59,12 +59,13 @@ function moveBox(item) {
 			var color = 'rgba(245,245,245,1)';
 
 			switch(moveItem.dmgType) {
-				case 2: damage = 'Arc'; color = '#85c5ec'; break;
-				case 3: damage = 'Solar'; color = '#f2721b';  break;
-				case 4: damage = 'Void'; color = '#b184c5'; break;
+				case 2: damage = 'arc'; color = '#85c5ec'; break;
+				case 3: damage = 'solar'; color = '#f2721b';  break;
+				case 4: damage = 'void'; color = '#b184c5'; break;
 			}
 
-			name.innerHTML = moveItem.name + ' | ' + damage + ' | A: ' + attack + ' ';
+			name.innerHTML = '<img class="elemental ' + damage + '" src="assets/' + damage + '.png" />' +
+			 	moveItem.name + ' | A: ' + attack + ' ';
 			name.style.backgroundColor = color;
 		} else {
 			name.innerHTML = _items[item.dataset.index].name;
