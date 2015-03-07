@@ -5,8 +5,6 @@ var _storage = [];
 var _items = [];
 var _sections = null;
 
-var loadoutMode = false;
-
 var move, loadoutBox, loadoutNew, loadoutList;
 
 function moveBox(item) {
@@ -713,20 +711,17 @@ function tryPageLoad() {
 	}
 }
 
-bungie.user(function(u) {
-	if(u.error) {
-			var storage = document.getElementById('storage');
-			storage.innerHTML = 'error loading user. make sure your account is linked with bungie.net and you are logged in.';
-			return;
-	}
+function loadUser() {
+	_storage = [];
+	_items = [];
+	_sections = null;
+
 	document.getElementById('user').innerText = bungie.gamertag();
 
 	bungie.search(function(e) {
 		if(e.error) {
 				var storage = document.getElementById('storage');
-				storage.innerHTML = 'Bungie.net user found. Was unable to find your account.' +
-					'You might have a XBL and PSN account tied to your bungie.net profile.' +
-					'This is not yet supported.';
+				storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
 				return;
 		}
 
@@ -760,6 +755,25 @@ bungie.user(function(u) {
 			loadInventory(avatars[c].characterBase.characterId);
 		}
 	});
+}
+
+bungie.user(function(u) {
+	if(u.error) {
+			var storage = document.getElementById('storage');
+			storage.innerHTML = 'error loading user. make sure your account is linked with bungie.net and you are logged in.';
+			return;
+	}
+
+	if(bungie.system().xbl.id !== undefined && bungie.system().psn.id !== undefined) {
+		var toggle = document.getElementById('system');
+		toggle.style.display = 'block';
+		toggle.addEventListener('change', function() {
+			bungie.setsystem(this.value);
+			loadUser();
+		});
+	}
+
+	loadUser()
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {

@@ -20,8 +20,20 @@ body {
     color: #1a1e24;
     box-shadow: 0 2px 20px 2px #000;
 }
-#header-right {
+#header .header-right {
   float: right;
+}
+#system {
+  display: none;
+  background-color: #5b6e6c;
+  color: rgba(245,245,245,.6);
+  float: right;
+  margin-right: 5px;
+}
+#filter-text {
+    display: none;
+    margin-right: 5px;
+    vertical-align: middle;
 }
 img.elemental {
   width: 16px !important;
@@ -44,7 +56,7 @@ img.void {
 }
 #header .content span {
     font-size: 13px;
-    line-height: 25px;
+    line-height: 18px;
     text-align: center;
     vertical-align: middle;
 }
@@ -166,11 +178,6 @@ img.void {
     z-index: 2;
     cursor: pointer;
 }
-#filter-text {
-    display: none;
-    margin-right: 5px;
-    vertical-align: middle;
-}
 #move-popup.little {
   width: 85px;
   left: -21px;
@@ -228,6 +235,7 @@ img.void {
 #faq-button {
     display: inline-block;
     background-color: #5b6e6c;
+    color: rgba(245,245,245,.6);
     border-radius: 50%;
     width: 14px;
     height: 14px;
@@ -235,7 +243,6 @@ img.void {
     cursor: pointer;
     margin-left: 5px;
     font-size: 10px!important;
-    color: rgba(245,245,245,.6);
 }
 #faq-button:hover { background-color: #628e89 }
 #faq {
@@ -256,7 +263,7 @@ img.void {
 .content {
     max-width: 1088px;
     margin: 0 auto;
-    padding: 2px;
+    padding: 5px;
 }
 #loadout-create {
     position: fixed;
