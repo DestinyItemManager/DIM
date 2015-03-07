@@ -129,7 +129,7 @@ function bungie() {
   }
   this.transfer = function(characterId, itemId, itemHash, amount, toVault, callback) {
     _request({
-      route: '/Destiny/TransferItem/?lc=en&fmt=true&lcin=true',
+      route: '/Destiny/TransferItem/',
       method: 'POST',
       payload: {
         characterId: characterId,

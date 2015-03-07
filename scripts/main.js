@@ -539,7 +539,7 @@ function appendItems(owner, defs, items) {
 		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
 
 		if(!itemType) {
-			console.log(itemDef.itemName, itemDef.itemTypeName)
+			// console.log(itemDef.itemName, itemDef.itemTypeName)
 			continue;
 		}
 
@@ -549,7 +549,7 @@ function appendItems(owner, defs, items) {
 		}
 
 		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
-		var dmgName = [,'kinetic','arc','solar','void'][item.damageType];
+		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
 
 		_items.push({
 			owner:      owner,
