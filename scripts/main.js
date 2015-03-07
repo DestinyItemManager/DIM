@@ -7,11 +7,20 @@ var _sections = null;
 
 var move, loadoutBox, loadoutNew, loadoutList;
 
+function hideMovePopup() {
+	move.style.display = 'none';
+	move.style.marginLeft = undefined;
+	move.parentNode.classList.remove('popup-open');
+}
+
 function moveBox(item) {
-	if(move.parentNode === item && move.style.display === 'block') {
-		move.style.display = 'none';
+
+	if(move.parentNode === item && move.style.display !== 'none' ) {
+		hideMovePopup();
 		return;
 	}
+
+	hideMovePopup();
 
 	if(loadoutBox.style.display === 'block') {
 		loadoutBox.style.display = 'none';
@@ -105,14 +114,22 @@ function moveBox(item) {
 
 	item.appendChild(move);
 
-	// move.querySelector('');
+	var itemBounds = item.getBoundingClientRect();
+	var bodyWidth = document.body.clientWidth;
+	var requiredExtraPopupWidth = (move.clientWidth - itemBounds.width) / 2;
 
-	if(move.offsetLeft <= 0) {
-		// console.log(move.offsetLeft)
-		move.style.marginLeft = move.style.offsetLeft;
-		// console.log(move.style.marginLeft)
+	var clippedLeft = itemBounds.left - 4 < requiredExtraPopupWidth,
+	    clippedRight = bodyWidth - (itemBounds.right + 4) < requiredExtraPopupWidth;
+
+	if (clippedLeft) {
+		move.style.marginLeft = (2 - itemBounds.left) + 'px';
+	} else if (clippedRight) {
+		move.style.marginLeft = (bodyWidth - itemBounds.right - 4 - requiredExtraPopupWidth * 2) + 'px';
+	} else {
+		move.style.marginLeft = (-requiredExtraPopupWidth) + 'px';
 	}
-	// console.log(_items[item.dataset.index]);
+
+	item.classList.add('popup-open');
 }
 
 function dequip(item, callback, exotic) {
@@ -312,7 +329,7 @@ function buildStorage() {
 				char.dataset.type = 'item';
 				char.dataset.character =	c;
 				char.addEventListener('click', function() {
-					move.style.display = 'none';
+					hideMovePopup();
 					var data = this.dataset;
 					var item = _items[_transfer.dataset.index];
 					moveItem(item, data, 1, function() {
@@ -327,7 +344,7 @@ function buildStorage() {
 			char.dataset.type = 'item';
 			char.dataset.character =	c;
 			char.addEventListener('click', function() {
-				move.style.display = 'none';
+				hideMovePopup();
 				var data = this.dataset;
 				var item = _items[_transfer.dataset.index];
 				moveItem(item, data, 1, function() {
@@ -343,7 +360,7 @@ function buildStorage() {
 			char.dataset.type = 'equip';
 			char.dataset.character =	c;
 			char.addEventListener('click', function() {
-				move.style.display = 'none';
+				hideMovePopup();
 				var data = this.dataset;
 				var item = _items[_transfer.dataset.index];
 				moveItem(item, data, 1, function() {
@@ -361,7 +378,7 @@ function buildStorage() {
 			}
 
 			if(move.style.display === 'block') {
-				move.style.display = 'none';
+				hideMovePopup();
 			}
 
 			loadoutBox.style.display = 'block';
@@ -701,7 +718,7 @@ function tryPageLoad() {
 					e.target.parentNode.id === 'loadout-list' ||
 					e.target.parentNode.parentNode.id === 'loadout-list')) /*|| e.target.className !== 'loadouts'*/) {
 
-				move.style.display = 'none';
+				hideMovePopup();
 				loadoutBox.style.display = 'none';
 				// faq.style.display = 'none';
 			}

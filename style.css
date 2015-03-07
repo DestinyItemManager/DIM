@@ -90,6 +90,17 @@ img.void {
     margin: 2;
     border: 2px solid #DDD;
 }
+.item.popup-open:before {
+    border: solid;
+    border-color: rgba(0,0,0,.8) transparent;
+    border-width: .4em .4em 0;
+    top: -6px;
+    content: "";
+    display: block;
+    left: 16px;
+    position: absolute;
+    z-index: 2;
+}
 .item>img {
   width: 44px;
   height: 44px;
@@ -190,22 +201,10 @@ img.void {
     display: none;
     z-index: 2;
     top: -75px;
-    left: -126px;
-    width: 300;
+    width: 300px;
     height: 69px;
     background-color: rgba(21,13,13,1);
     cursor: default;
-}
-#move-popup:before {
-    border: solid;
-    border-color: rgba(0,0,0,.8) transparent;
-    border-width: .4em .4em 0;
-    bottom: -4px;
-    content: "";
-    display: block;
-    left: 144px;
-    position: absolute;
-    z-index: 2;
 }
 #move-popup .item-name {
     color: #000;
