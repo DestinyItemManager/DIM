@@ -71,7 +71,7 @@ img.void {
 .item {
     position: relative;
     display: inline-block;
-    background-color: #555;
+    background-color: #5c7183;
     cursor: pointer;
     margin: 2;
     border: 2px solid #DDD;
@@ -134,6 +134,9 @@ img.void {
     display: inline-block;
     vertical-align: 18%;
     font-size: 50%;
+}
+.character-box .level.maxLevel {
+  color: rgba(245, 220, 86, 1);
 }
 .loadout-button {
     position: relative;
@@ -305,4 +308,8 @@ img.void {
 
 .ng-hide {
   display: none;
+}
+
+div[class^="sort-"] {
+  display: inline-block;
 }
