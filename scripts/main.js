@@ -34,8 +34,9 @@ function moveBox(item) {
 
 	var name = move.querySelector('.item-name')
 	var moveItem = _items[item.dataset.index];
+	var color = 'rgba(245,245,245,1)';
 
-    if (moveItem.primStat) {
+  if (moveItem.primStat) {
 		if (moveItem.primStat.statHash === 3897883278) {
 			// This item has defense stats, so lets pull some useful armor stats
 			name.innerHTML = moveItem.name;
@@ -56,7 +57,6 @@ function moveBox(item) {
 			// This item has attack stats, so lets pull some useful weapon stats
 			var attack = moveItem.primStat.value;
 			var damage = 'Kinetic';
-			var color = 'rgba(245,245,245,1)';
 
 			switch(moveItem.dmgType) {
 				case 2: damage = 'arc'; color = '#85c5ec'; break;
@@ -66,13 +66,14 @@ function moveBox(item) {
 
 			name.innerHTML = '<img class="elemental ' + damage + '" src="assets/' + damage + '.png" />' +
 			 	moveItem.name + ' | A: ' + attack + ' ';
-			name.style.backgroundColor = color;
 		} else {
 			name.innerHTML = _items[item.dataset.index].name;
 		}
-    } else {
+  } else {
 		name.innerHTML = _items[item.dataset.index].name;
 	}
+
+	name.style.backgroundColor = color;
 
 	// switch(_items[item.dataset.index].tier) {
 	// 	TODO: be fancy and color the item name background the color of the item
@@ -113,7 +114,7 @@ function dequip(item, callback, exotic) {
 }
 
 function moveItem(item, destination, amount, callback) {
-	console.log('move item', item, destination)
+	// console.log('move item', item, destination)
 
 	if(item.equipped) {
 		dequip(item, function() {
@@ -242,16 +243,15 @@ function buildLoadouts() {
 		var node = document.getElementById('loadout-template').content;
 		for(var s = 0; s < sets.length; s++) {
 			var d = node.cloneNode(true);
-
 			d.querySelector('.loadout-set').dataset.index = s;
-
-
+			d.querySelector('.button-edit').addEventListener('click', function(e) {
+				loadout.edit(e.target.parentNode.dataset.index);
+			});
 			d.querySelector('.button-delete').addEventListener('click', function(e) {
 				loadout.delete(e.target.parentNode.dataset.index, function() {
 					buildLoadouts();
 				});
-			})
-
+			});
 			var n = d.querySelector('.button-name');
 			n.innerText = sets[s].name;
 			n.parentNode.addEventListener('click', function(e) {
@@ -327,10 +327,10 @@ function buildStorage() {
 		}
 
 		characterNode.querySelector('.loadout-button').addEventListener('click', function() {
-			// if(loadoutBox.style.display === 'block') {
-			// 	loadoutBox.style.display = 'none';
-			// 	return;
-			// }
+			if(loadoutBox.style.display === 'block') {
+				loadoutBox.style.display = 'none';
+				return;
+			}
 
 			if(move.style.display === 'block') {
 				move.style.display = 'none';
@@ -572,7 +572,6 @@ function tryPageLoad() {
 			loadoutNew = document.getElementById('loadout-new');
 			loadoutList = document.getElementById('loadout-list');
 			loadoutNew.addEventListener('click', function() {
-				loadoutBox.style.display = 'none';
 				loadout.toggle(true);
 			})
 			buildLoadouts();

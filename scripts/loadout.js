@@ -30,7 +30,6 @@ function loadout() {
     chrome.storage.sync.set({
       'loadouts': _loadouts
     }, function() {
-      console.log('saved!');
       callback();
     });
   }
@@ -39,7 +38,6 @@ function loadout() {
     _errorText.innerText = '';
     if(_name.value.length === 0) {
       _name.style.border = '1px solid red';
-
       _errorText.innerText = 'please specify a loadout name.';
       return;
     }
@@ -54,24 +52,29 @@ function loadout() {
       ids.push(_items[selected[i].dataset.index].id);
     }
 
+    var exists = false;
+
     // if loadout already exists, update
     for(var l = 0; l < _loadouts.length; l++) {
       if(_loadouts[l].name === _name.value) {
         _loadouts[l].items = ids;
-        return;
+        exists = true;
+        break;
       }
     }
 
     // otherwise create new layout
-    _loadouts.push({
-      name: _name.value,
-      items: ids
-    });
+    if(!exists) {
+      _loadouts.push({
+        name: _name.value,
+        items: ids
+      });
+    }
 
+    // sync & close loadout view
     _sync(function() {
+      _close(false)
     });
-    _close(false)
-
   }
   function getItem(id) {
   	for(var i in _items) {
@@ -108,9 +111,16 @@ function loadout() {
     slot.appendChild(node);
   }
   this.delete = function(id, callback) {
-        _loadouts.splice(id,1);
-        _sync(callback);
-
+    _loadouts.splice(id,1);
+    _sync(callback);
+  }
+  this.edit = function(loadout) {
+    loadout = _loadouts[loadout];
+    _name.value = loadout.name;
+    for(var i = 0; i < loadout.items.length; i++) {
+      this.add(getItem(loadout.items[i]));
+    }
+    this.toggle(true);
   }
   this.apply = function(character, loadout) {
     if(character === 'vault' || _loadouts[loadout] === undefined) return;
@@ -119,7 +129,6 @@ function loadout() {
     (function processItem(i) {
       if(i-- <= 0) return;
       var item = getItem(_loadouts[loadout].items[i]);
-      // console.log(i, item.name)
       if(destination.character === item.owner && item.equipped) {
         processItem(i);
         return;

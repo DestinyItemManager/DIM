@@ -27,7 +27,6 @@ img.elemental {
   width: 16px !important;
   vertical-align: middle;
   margin-right: 3px;
-  padding: 2px;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -78,7 +77,7 @@ img.void {
     margin: 2;
     border: 2px solid #DDD;
 }
-.item img {
+.item>img {
   width: 44px;
   height: 44px;
 }
@@ -194,10 +193,10 @@ img.void {
     z-index: 2;
 }
 #move-popup .item-name {
-    padding-left: 6px;
-    padding-top: 5px;
-    background-color: #fff;
     color: #000;
+    margin: 1px;
+    padding: 1px;
+    padding-left: 3px;
 }
 #move-popup .move-button {
     background-size: cover;
@@ -277,18 +276,22 @@ img.void {
     margin-left: 10px;
 }
 #loadout-options p {
-  display: inline-block;
+  display: inline;
   padding-left: 10px;
 }
 #loadout-list .loadout-set:hover,
 #loadout-new:hover,
 #loadout-options span:hover { background-color: #628e89 }
-.loadout-set .button-delete {
+.loadout-set .button-edit, .loadout-set .button-delete {
     background-color: rgba(195,188,180,.9);
     color: #1a1e24;
     float: right;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 50px;
+    border-right: 1px solid rgba(195,188,180,.7);
+    border-left: 1px solid rgba(195,188,180,.9);
+}
+.loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
+    background-color: rgba(195,188,180,.6);
 }
 @media only screen and (min-width :1648px) {
     .storage {
