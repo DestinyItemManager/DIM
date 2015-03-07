@@ -66,6 +66,7 @@ img.void {
   max-width: 260px;
   float: left;
   margin-right: 1em;
+  margin-bottom: 100px;
 }
 .item {
     position: relative;
@@ -169,6 +170,13 @@ img.void {
     display: none;
     margin-right: 5px;
     vertical-align: middle;
+}
+#move-popup.little {
+  width: 85px;
+  left: -21px;
+}
+#move-popup.little:before {
+  left: 39px;
 }
 #move-popup {
     position: absolute;

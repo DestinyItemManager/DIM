@@ -19,22 +19,36 @@ function moveBox(item) {
 		loadoutBox.style.display = 'none';
 	}
 
+	move.style.display = 'block';
+
 	var buttons = move.querySelectorAll('.move-button');
+	var moveItem = _items[item.dataset.index];
+
+	move.classList.remove('little');
+	if(moveItem.notransfer)
+		move.classList.add('little');
 
 	for(var b = 0; b < buttons.length; b++) {
 		buttons[b].style.display = 'block';
-		if(buttons[b].dataset.character === _items[item.dataset.index].owner) {
-			if(buttons[b].dataset.character === 'vault' || (_items[item.dataset.index].equipped && buttons[b].dataset.type === 'equip') || (!_items[item.dataset.index].equipped && buttons[b].dataset.type === 'item')) {
+
+		if(moveItem.notransfer) {
+			buttons[b].style.display = 'none';
+			if(buttons[b].dataset.character === moveItem.owner &&
+			((!moveItem.equipped && buttons[b].dataset.type === 'equip') ||
+			 (moveItem.equipped && buttons[b].dataset.type === 'item'))) {
+				buttons[b].style.display = 'block';
+			}
+		} else if(buttons[b].dataset.character === moveItem.owner) {
+			if(buttons[b].dataset.character === 'vault' ||
+				(moveItem.equipped && buttons[b].dataset.type === 'equip') ||
+				(!moveItem.equipped && buttons[b].dataset.type === 'item')) {
 				buttons[b].style.display = 'none';
 			}
 		}
 	}
 
-	move.style.display = 'block';
-
 	var name = move.querySelector('.item-name')
-	var moveItem = _items[item.dataset.index];
-	var color = 'rgba(245,245,245,1)';
+	var color = '#f5f5f5';
 
   if (moveItem.primStat) {
 		if (moveItem.primStat.statHash === 3897883278) {
@@ -56,15 +70,14 @@ function moveBox(item) {
 		} else if (moveItem.primStat.statHash === 368428387) {
 			// This item has attack stats, so lets pull some useful weapon stats
 			var attack = moveItem.primStat.value;
-			var damage = 'Kinetic';
 
-			switch(moveItem.dmgType) {
-				case 2: damage = 'arc'; color = '#85c5ec'; break;
-				case 3: damage = 'solar'; color = '#f2721b';  break;
-				case 4: damage = 'void'; color = '#b184c5'; break;
+			switch(moveItem.dmg) {
+				case 'arc': color = '#85c5ec'; break;
+				case 'solar': color = '#f2721b';  break;
+				case 'void': color = '#b184c5'; break;
 			}
 
-			name.innerHTML = '<img class="elemental ' + damage + '" src="assets/' + damage + '.png" />' +
+			name.innerHTML = '<img class="elemental ' + moveItem.dmg + '" src="assets/' + moveItem.dmg + '.png" />' +
 			 	moveItem.name + ' | A: ' + attack + ' ';
 		} else {
 			name.innerHTML = _items[item.dataset.index].name;
@@ -94,7 +107,7 @@ function moveBox(item) {
 function dequip(item, callback, exotic) {
 	// find an item to replace the current.
 	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 6) && !_items[i].equipped) {
+		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier === 'exotic') && !_items[i].equipped) {
 			// console.log('[dequip] found replacement item: ', _items[i].name)
 			bungie.equip(_items[i].owner, _items[i].id, function(e) {
 				if(e === 0) {
@@ -436,12 +449,16 @@ function getItemType(type, name) {
 		// detect special case items that are actually primary weapons.
 		if(["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
 			return 'Primary';
-		return 'Secondary';
+		return 'Special';
 	}
 	if(["Rocket Launcher", "Machine Gun"].indexOf(type) != -1)
 		return 'Heavy';
 	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
 		return type.split(' ')[0];
+	if(["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
+		return 'Class';
+	if(["Restore Defaults"].indexOf(type) != -1)
+		return 'Armor';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return type.split(' ')[0];
 	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
@@ -453,7 +470,7 @@ function sortItem(type) {
 		return 'Weapon';
 	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
 		return 'Armor';
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
+	if(["Restore Defaults", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return 'Styling';
 	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
@@ -470,10 +487,6 @@ function flattenInventory(data) {
 		for (var b in buckets.Equippable) {
 
 			var eBucket = buckets.Equippable[b];
-
-			// Skip the subclass bucket - 3284755031
-			if (eBucket.bucketHash === 3284755031)
-				continue;
 
 			var items = eBucket.items;
 
@@ -503,8 +516,6 @@ function flattenVault(data) {
 	return inv;
 }
 
-var typesOfItems = [];
-
 function appendItems(owner, defs, items) {
 	// Loop through the flattened inventory
 	for (var i in items) {
@@ -512,32 +523,36 @@ function appendItems(owner, defs, items) {
 		var item        = items[i];
 		var itemHash    = item.itemHash;
 		var itemDef     = defs[item.itemHash];
+		if (itemDef.nonTransferrable) {
+			//console.log(itemDef.itemTypeName, item, itemDef)
+		}
 
 		// Skip this item if we don't have a definition for it or it cannot be transferred
-		if (itemDef === undefined || itemDef.nonTransferrable)
+		if (itemDef === undefined)
 			continue;
-
-		if (typesOfItems.indexOf(itemDef.itemTypeName) == -1) typesOfItems.push(itemDef.itemTypeName);
 
 		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
 		var itemSort = sortItem(itemDef.itemTypeName);
+		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
+		var dmgName = [,'kinetic','arc','solar','void'][item.damageType];
 
 		_items.push({
-			owner:     owner,
-			hash:      itemHash,
-			type:      itemType,
-			sort:      itemSort,
-			tier:      itemDef.tierType,
-			name:      itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon:      itemDef.icon,
-			id:        item.itemInstanceId,
-			equipped:  item.isEquipped,
-			equipment: item.isEquipment,
-			complete:  item.isGridComplete,
-			amount:    item.stackSize,
-			primStat:  item.primaryStat,
-			stats:     item.stats,
-			dmgType:   item.damageType
+			owner:      owner,
+			hash:       itemHash,
+			type:       itemType,
+			sort:       itemSort,
+			tier:       tierName,
+			name:       itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			icon:       itemDef.icon,
+			notransfer: itemDef.nonTransferrable,
+			id:         item.itemInstanceId,
+			equipped:   item.isEquipped,
+			equipment:  item.isEquipment,
+			complete:   item.isGridComplete,
+			amount:     item.stackSize,
+			primStat:   item.primaryStat,
+			stats:      item.stats,
+			dmg:        dmgName
 		});
 	}
 
@@ -646,23 +661,19 @@ function tryPageLoad() {
 				filter = filter.split('is:')[1].trim();
 				if(['arc', 'solar', 'void', 'kinetic'].indexOf(filter) >= 0) {
 					special = 'elemental';
-					switch(filter) {
-						case 'kinetic': filter = 0; break;
-						case 'arc': filter = 2; break;
-						case 'solar': filter = 3; break;
-						case 'void': filter = 4; break;
-						default: filter = 0;
-					}
-				} else if(['primary', 'secondary', 'heavy'].indexOf(filter) >= 0) {
+				} else if(['primary', 'special', 'heavy'].indexOf(filter) >= 0) {
 					special = 'type';
+				} else if(['basic', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filter) >= 0) {
+					special = 'tier';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
 				}
 			}
 			for (var i = 0; i < item.length; i++) {
 				switch(special) {
-					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmgType == filter ? '' : 'none'; break;
+					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmg == filter ? '' : 'none'; break;
 					case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
+					case 'tier':	item[i].style.display = _items[item[i].dataset.index].tier.toLowerCase() == filter ? '' : 'none'; break;
 					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete === true ? '' : 'none'; break;
 					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
@@ -707,11 +718,18 @@ bungie.user(function(u) {
 	bungie.search(function(e) {
 		if(e.error) {
 				var storage = document.getElementById('storage');
-				storage.innerHTML = 'bungie.net user found. but was unable to find your ' +
-					'account. you may have a XBL and PSN account tied to your bungie.net' +
-					' profile. This is not yet supported.';
+				storage.innerHTML = 'Bungie.net user found. Was unable to find your account.' +
+					'You might have a XBL and PSN account tied to your bungie.net profile.' +
+					'This is not yet supported.';
 				return;
 		}
+
+		bungie.vault(function(v) {
+			_storage['vault'] = {
+				icon: ''
+			};
+			appendItems('vault', v.definitions.items, flattenVault(v.data));
+		});
 
 		var avatars = e.data.characters;
 		loader.characters = avatars.length;
@@ -726,14 +744,6 @@ bungie.user(function(u) {
 			}
 			loadInventory(avatars[c].characterBase.characterId);
 		}
-	});
-
-	bungie.vault(function(v) {
-		_storage['vault'] = {
-			icon: ''
-		};
-
-		appendItems('vault', v.definitions.items, flattenVault(v.data));
 	});
 });
 
