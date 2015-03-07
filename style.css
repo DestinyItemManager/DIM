@@ -209,9 +209,9 @@ img.void {
     border-bottom: 2px solid rgba(245,245,245,.6);
     color: rgba(245,245,245,.6);
     margin-bottom: 10px;
-    width: 260px;
+    width: 244px;
     position: absolute;
-    left: -220px;
+    left: -204px;
     z-index: 2;
     cursor: pointer;
 }
