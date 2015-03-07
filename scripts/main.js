@@ -38,12 +38,25 @@ function moveBox(item) {
 			 (moveItem.equipped && buttons[b].dataset.type === 'item'))) {
 				buttons[b].style.display = 'block';
 			}
+		} else if(!moveItem.equipment) {
+			buttons[b].style.display = 'none';
+			if(buttons[b].dataset.character !== moveItem.owner &&
+			((moveItem.equipped && buttons[b].dataset.type === 'equip') ||
+			(!moveItem.equipped && buttons[b].dataset.type === 'item'))) {
+				buttons[b].style.display = 'block';
+			}
 		} else if(buttons[b].dataset.character === moveItem.owner) {
 			if(buttons[b].dataset.character === 'vault' ||
 				(moveItem.equipped && buttons[b].dataset.type === 'equip') ||
 				(!moveItem.equipped && buttons[b].dataset.type === 'item')) {
 				buttons[b].style.display = 'none';
 			}
+		}
+	}
+
+	if(moveItem.sort === "Postmaster") {
+		for(var b = 0; b < buttons.length; b++) {
+			buttons[b].style.display = 'none';
 		}
 	}
 
@@ -200,17 +213,22 @@ function manageItem(e) {
 
 	var item = _items[_transfer.dataset.index];
 	var amount = 1;
+
+	if(item.notransfer) {
+		console.log('no drag and drop support for this type of item yet.')
+	}
+
 	if(item.amount > 1) {
 		console.log(item.amount)
 	}
 
-	moveItem(_items[_transfer.dataset.index], destination.dataset, amount, function() {
+	moveItem(item, destination.dataset, amount, function() {
 		// move the item to the right spot once done.
 		if(_items[_transfer.dataset.index] === amount) {
-			destination.querySelector('.sort-' + _items[_transfer.dataset.index].type).appendChild(_transfer);
+			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
 		} else {
 			// TODO: partial stack move, so copy the item...
-			destination.querySelector('.sort-' + _items[_transfer.dataset.index].type).appendChild(_transfer);
+			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
 		}
 	});
 
@@ -303,7 +321,6 @@ function buildStorage() {
 						manageItemClick(item, data)
 					})
 				});
-				// char.style.b = "url(http://bungie.net/" + _storage[c].icon + ')';
 				move.querySelector('.locations').appendChild(char);
 		} else {
 			var char = document.createElement('div');
@@ -437,6 +454,7 @@ function buildItems() {
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		} else {
+			// console.log(_items[itemId])
 			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
@@ -461,18 +479,18 @@ function getItemType(type, name) {
 		return 'Armor';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
+	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
 }
 
 function sortItem(type) {
 	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun"].indexOf(type) != -1)
 		return 'Weapon';
-	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
+	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
 		return 'Armor';
 	if(["Restore Defaults", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return 'Styling';
-	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
+	if(["Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
 }
 
@@ -480,18 +498,11 @@ function flattenInventory(data) {
 	var inv = [];
 	var buckets = data.buckets;
 
-	// Only look at the equippable bucket
-	if (buckets.Equippable) {
-
-		// Loop through the equippable buckets and flatten the items
-		for (var b in buckets.Equippable) {
-
-			var eBucket = buckets.Equippable[b];
-
-			var items = eBucket.items;
-
-			// Store the item in the inventory array, associated to its instanceId, so we can support duplicate items
-			for (var i in items) {
+	for(var b in buckets) {
+		// if(b === "Currency") continue;
+		for(var s in buckets[b]) {
+			var items = buckets[b][s].items;
+			for(var i in items) {
 				inv[items[i].itemInstanceId] = items[i];
 			}
 		}
@@ -507,7 +518,6 @@ function flattenVault(data) {
 
 	for (var b in buckets) {
 		var items = buckets[b].items;
-
 		for (var i in items) {
 			inv[items[i].itemInstanceId] = items[i];
 		}
@@ -523,16 +533,21 @@ function appendItems(owner, defs, items) {
 		var item        = items[i];
 		var itemHash    = item.itemHash;
 		var itemDef     = defs[item.itemHash];
-		if (itemDef.nonTransferrable) {
-			//console.log(itemDef.itemTypeName, item, itemDef)
-		}
 
-		// Skip this item if we don't have a definition for it or it cannot be transferred
-		if (itemDef === undefined)
-			continue;
+		if(itemDef.itemTypeName.indexOf('Bounty') != -1 || itemDef.itemTypeName.indexOf('Commendation') != -1) continue;
 
 		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+
+		if(!itemType) {
+			console.log(itemDef.itemName, itemDef.itemTypeName)
+			continue;
+		}
+
 		var itemSort = sortItem(itemDef.itemTypeName);
+		if(item.location === 4) {
+			itemSort = 'Postmaster';
+		}
+
 		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
 		var dmgName = [,'kinetic','arc','solar','void'][item.damageType];
 
@@ -563,15 +578,6 @@ function loadInventory(c) {
 	bungie.inventory(c, function(i) {
 		appendItems(c, i.definitions.items, flattenInventory(i.data))
 	});
-}
-
-function getClass(type) {
-	switch(type) {
-		case 0: return 'titan';
-		case 1: return 'hunter';
-		case 2: return 'warlock';
-	}
-	return 'unknown';
 }
 
 var loader = {
@@ -733,6 +739,15 @@ bungie.user(function(u) {
 
 		var avatars = e.data.characters;
 		loader.characters = avatars.length;
+
+		function getClass(type) {
+			switch(type) {
+				case 0: return 'titan';
+				case 1: return 'hunter';
+				case 2: return 'warlock';
+			}
+			return 'unknown';
+		}
 
 		for(var c in avatars) {
 			// move.appendChild();
