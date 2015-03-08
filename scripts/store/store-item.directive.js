@@ -21,23 +21,34 @@
         '</div>'].join('')
     };
 
-    function StoreItemCtrl() {
+    function StoreItemCtrl($scope) {
       var vm = this;
+
+      vm.dialogResult = null;
+
+      vm.openLoadout = function openLoadout(item, e) {
+        if (!_.isNull(vm.dialogResult)) {
+          vm.dialogResult.close();
+        } else {
+          ngDialog.closeAll();
+
+          vm.dialogResult = ngDialog.open({
+            template: '<p>my template</p>',
+            plain: true,
+            appendTo: 'div[data-instance-id="' + item.id + '"]',
+            overlay: false,
+            scope: $scope
+          });
+
+          vm.dialogResult.closePromise.then(function(data) {
+            vm.dialogResult = null;
+          });
+        }
+      };
     }
 
     function Link(scope) {
       var vm = scope.vm;
-
-      vm.openLoadout = function openLoadout(item, e) {
-        ngDialog.closeAll();
-        ngDialog.open({
-          template: '<p>my template</p>',
-          plain: true,
-          appendTo: 'div[data-instance-id="' + item.id + '"]',
-          overlay: false,
-          scope: scope
-        });
-      };
     }
   }
 })();
