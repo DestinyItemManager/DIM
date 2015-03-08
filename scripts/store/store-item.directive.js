@@ -48,8 +48,8 @@
 
     function Link(scope, element) {
       var vm = scope.vm;
-      
-      element.attr('data-item-id', vm.item.id);
+
+      //element.parent().attr('data-item-id', vm.item.id);
     }
   }
 })();
