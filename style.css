@@ -101,7 +101,7 @@ img.void {
   width: 156px;
   margin-bottom: 12px;
   border-bottom: 1px solid rgba(245,245,245,.2);
-  padding-bottom: 12px;
+  padding-bottom: 6px;
 }
 .equipped .sort {
   width: 52px;
