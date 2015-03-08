@@ -16,7 +16,7 @@
       replace: true,
       template: [
         '<div id="move-popup">',
-          '<div dim-item-properties="mp.item"></div>',
+          '<div dim-move-item-properties="mp.item"></div>',
           '<div class="locations" ng-repeat="store in mp.vm.data.stores">',
             '<div class="move-button move-vault" data-type="item" data-character="{{ store.id }}" ng-if="!mp.isGuardian" ng-click="MoveToVault(store, $event)">',
               '<span>Vault</span>',
@@ -35,16 +35,16 @@
   function MovePopupController($scope) {
     var vm = this;
 
-    vm.showPopup = false;
-
-    $scope.$on('show-popup', function(e, arg) {
-      vm.showPopup = arg.showPopup;
-      vm.item = arg.item;
-    });
-
-    angular.forEach($scope.mp.vm.data.stores, function(storage) {
-      storage.isGuardian = (storage.class !== 'vault');
-    });
+    // vm.showPopup = false;
+    //
+    // $scope.$on('show-popup', function(e, arg) {
+    //   vm.showPopup = arg.showPopup;
+    //   vm.item = arg.item;
+    // });
+    //
+    // angular.forEach($scope.mp.vm.data.stores, function(storage) {
+    //   storage.isGuardian = (storage.class !== 'vault');
+    // });
   }
 
   function Link(scope, element, attrs) {
