@@ -36,7 +36,8 @@
           '<div>',
             '<div class="title">Styling</div>',
             '<div class="item-Styling sections">',
-              '<div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Styling\' } | filter:{ equipped : false } | filter:{ equipment: true }" class="sort-{{ item.type.toLowerCase() }}">',
+              '<div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Styling\' } | filter:{ equipped : false } | filter:{ equipment: true }"
+                class="sort-{{ item.type.toLowerCase() }}" data-item-id="{{ item.id }}">',
                 '<div dim-store-item store-data="vm.store" item-data="item"></div>',
               '</div>',
             '</div>',

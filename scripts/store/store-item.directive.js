@@ -23,16 +23,15 @@
 
     function StoreItemCtrl($scope) {
       var vm = this;
-
-      vm.dialogResult = null;
+      var dialogResult = null;
 
       vm.openLoadout = function openLoadout(item, e) {
-        if (!_.isNull(vm.dialogResult)) {
-          vm.dialogResult.close();
+        if (!_.isNull(dialogResult)) {
+          dialogResult.close();
         } else {
           ngDialog.closeAll();
 
-          vm.dialogResult = ngDialog.open({
+          dialogResult = ngDialog.open({
             template: '<p>my template</p>',
             plain: true,
             appendTo: 'div[data-instance-id="' + item.id + '"]',
@@ -40,15 +39,17 @@
             scope: $scope
           });
 
-          vm.dialogResult.closePromise.then(function(data) {
-            vm.dialogResult = null;
+          dialogResult.closePromise.then(function(data) {
+            dialogResult = null;
           });
         }
       };
     }
 
-    function Link(scope) {
+    function Link(scope, element) {
       var vm = scope.vm;
+      
+      element.attr('data-item-id', vm.item.id);
     }
   }
 })();
