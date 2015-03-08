@@ -6,25 +6,31 @@
   function MovePopup($window) {
     return {
       controller: MovePopupController,
-      controllerAs: 'mp',
+      controllerAs: 'vm',
       bindToController: true,
       link: Link,
       restrict: 'A',
       scope: {
-        vm: '=dimMovePopup'
+        store: '=dimStore',
+        item: '=dimItem'
       },
       replace: true,
       template: [
-        '<div id="move-popup">',
-          '<div dim-move-item-properties="mp.item"></div>',
-          '<div class="locations" ng-repeat="store in mp.vm.data.stores">',
-            '<div class="move-button move-vault" data-type="item" data-character="{{ store.id }}" ng-if="!mp.isGuardian" ng-click="MoveToVault(store, $event)">',
+        '<div class="move-popup">',
+          '<div class="locations" ng-repeat="store in vm.stores">',
+            '<div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" ',
+              'ng-if="vm.canShowButton(vm.item, vm.store, store)" ng-click="MoveToVault(vm.item, store, $event)" ',
+              'data-type="item" data-character="{{ store.id }}">',
               '<span>Vault</span>',
             '</div>',
-            '<div class="move-button move-store" data-type="item" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})" ng-if="mp.isGuardian" ng-click="MoveToGuardian(store, $event)">',
+            '<div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" ',
+              'ng-if="vm.canShowButton(vm.item, vm.store, store)" ng-click="MoveToGuardian(store, $event)" ',
+              'data-type="item" data-character="{{ store.id }} style="background-image: url(http://bungie.net{{ store.icon }})"> ',
               '<span>Store</span>',
             '</div>',
-            '<div class="move-button move-equip" data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})" ng-if="mp.isGuardian" ng-click="MoveToEquip(store, $event)">',
+            '<div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" ',
+              'ng-if="vm.canShowButton(vm.item, vm.store, store)" ng-click="MoveToEquip(store, $event)" ',
+              'data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})">',
               '<span>Equip</span>',
             '</div>',
           '</div>',
@@ -32,23 +38,23 @@
     }
   }
 
-  function MovePopupController($scope) {
+  function MovePopupController($scope, dimStoreService) {
     var vm = this;
 
-    // vm.showPopup = false;
-    //
-    // $scope.$on('show-popup', function(e, arg) {
-    //   vm.showPopup = arg.showPopup;
-    //   vm.item = arg.item;
-    // });
-    //
-    // angular.forEach($scope.mp.vm.data.stores, function(storage) {
-    //   storage.isGuardian = (storage.class !== 'vault');
-    // });
+    vm.stores = dimStoreService.getStores();
+
+    this.canShowButton = function canShowButton(item, sourceStore, targetStore) {
+      if (item.notransfer) {
+        if ((item.owner === targetSource.id)) {
+
+        }
+      }
+
+      return true;
+    }
   }
 
   function Link(scope, element, attrs) {
-
     scope.MoveToVault = function MoveToVault(store, e) {
       var data = e.srcElement.dataset;
       var item = $window._items[_transfer.dataset.index];
@@ -57,24 +63,6 @@
         $window.manageItemClick(item, data);
       });
     };
-
-    scope.$on('show-popup', function(e, arg) {
-
-      if (scope.mp.item.hash !== arg.item.hash) {
-        element[0].style.removeProperty('display');
-        element[0].style.setProperty('display', 'block');
-        scope.showPopup = true;
-      } else {
-        if (scope.showPopup) {
-          element[0].style.removeProperty('display');
-          scope.showPopup = false;
-        } else {
-          element[0].style.removeProperty('display');
-          element[0].style.setProperty('display', 'block');
-          scope.showPopup = true;
-        }
-      }
-    });
 
     scope.MoveToGuardian = scope.MoveToEquip = scope.MoveToVault;
   }

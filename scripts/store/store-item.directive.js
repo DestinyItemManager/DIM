@@ -8,7 +8,6 @@
       bindToController: true,
       controller: StoreItemCtrl,
       controllerAs: 'vm',
-      link: Link,
       replace: true,
       scope: {
         'store': '=storeData',
@@ -21,7 +20,7 @@
         '</div>'].join('')
     };
 
-    function StoreItemCtrl($scope) {
+    function StoreItemCtrl($scope, dimStoreService) {
       var vm = this;
       var dialogResult = null;
 
@@ -32,31 +31,12 @@
           ngDialog.closeAll();
 
           dialogResult = ngDialog.open({
-            template: [
-                '<div dim-move-item-properties="vm.item"></div>',
-                '<div class="locations" ng-repeat="(name, store) in vm.stores">',
-                  '<div class="move-button move-vault" data-type="item" data-character="{{ store.id }}" ng-if="name !== \'vault\'" ng-click="MoveToVault(store, $event)">',
-                    '<span>Vault</span>',
-                  '</div>',
-                  '<div class="move-button move-store" data-type="item" data-character="{{ store.id }}" ng-if="name !== \'vault\'" style="background-image: url(http://bungie.net{{ store.icon }})" ng-click="MoveToGuardian(store, $event)">',
-                    '<span>Store</span>',
-                  '</div>',
-                  '<div class="move-button move-equip" data-type="equip" data-character="{{ store.id }}" ng-if="name !== \'vault\'" style="background-image: url(http://bungie.net{{ store.icon }})" ng-click="MoveToEquip(store, $event)">',
-                    '<span>Equip</span>',
-                  '</div>',
-                '</div>'].join(''),
+            template: '<div dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
             plain: true,
-            controller: function($scope, dimStoreService) {
-              var vm = $scope.vm = {};
-              var parent = $scope.$parent;
-
-              vm.stores = dimStoreService.getStores();
-              vm.currentStore = parent.vm.store;
-              vm.item = parent.vm.item;
-              vm.isGuardian = vm.currentStore.name !== 'vault';
-            },
             appendTo: 'div[data-instance-id="' + item.id + '"]',
             overlay: false,
+            className: 'move-popup',
+            showClose: false,
             scope: $scope
           });
 
@@ -65,12 +45,6 @@
           });
         }
       };
-    }
-
-    function Link(scope, element) {
-      var vm = scope.vm;
-
-      //element.parent().attr('data-item-id', vm.item.id);
     }
   }
 })();

@@ -172,18 +172,11 @@ img.void {
     margin-right: 5px;
     vertical-align: middle;
 }
-#move-popup {
-    position: absolute;
-    display: none;
-    z-index: 2;
-    top: -75px;
-    left: -126px;
-    width: 300;
-    height: 69px;
+.move-popup {
     background-color: rgba(21,13,13,1);
     cursor: default;
 }
-#move-popup:before {
+.ngdialog:before {
     border: solid;
     border-color: rgba(0,0,0,.8) transparent;
     border-width: .4em .4em 0;
@@ -194,13 +187,13 @@ img.void {
     position: absolute;
     z-index: 2;
 }
-#move-popup .item-name {
+.move-popup .item-name {
     padding-left: 6px;
     padding-top: 5px;
     background-color: #fff;
     color: #000;
 }
-#move-popup .move-button {
+.move-popup .move-button {
     background-size: cover;
     width: 37px;
     height: 37px;
@@ -210,7 +203,7 @@ img.void {
     margin: 6px;
     cursor: pointer;
 }
-#move-popup .move-button span {
+.move-popup .move-button span {
     display: inline-block;
     text-transform: uppercase;
     background: rgba(0,0,0,.4);
@@ -218,7 +211,7 @@ img.void {
     width: 100%;
     height: 100%;
 }
-#move-popup .move-button span:hover { background: rgba(0,0,0,.1) }
+.move-popup .move-button span:hover { background: rgba(0,0,0,.1) }
 #faq-button {
     display: inline-block;
     background-color: #5b6e6c;
@@ -326,8 +319,11 @@ div[class^="sort-"] {
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
   width: 300px;
-  height: 69px;
-  top: -75px;
+  top: initial;
+  left: initial;
+  right: initial;
+  bottom: 52px;
+  overflow: visible;
 }
 
 .ngdialog-content {
