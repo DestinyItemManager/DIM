@@ -15,11 +15,6 @@ function hideMovePopup() {
 
 function moveBox(item) {
 
-	if(move.parentNode === item && move.style.display !== 'none' ) {
-		hideMovePopup();
-		return;
-	}
-
 	hideMovePopup();
 
 	if(loadoutBox.style.display === 'block') {
