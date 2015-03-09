@@ -2,6 +2,7 @@ body {
     min-width: 410px;
     margin: 0 auto;
     padding-top: 40px;
+    background: radial-gradient(transparent,70%,#000) fixed,rgb(105, 125, 123);
     background: radial-gradient(transparent,70%,#000) fixed,url(https://www.bungie.net/img/theme/destiny/bgs/gradient_green.jpg) fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -257,7 +258,9 @@ img.void {
     cursor: pointer;
 }
 #faq .content .title { margin: 50px 50px 0 }
+#faq .content table { margin: 10px 50px 0 55px; text-align: left; font-size: 12px; }
 #faq .content ul { margin: 10px 50px 0 30px }
+#faq .content ul li { margin-bottom: 3px; }
 #faq a { color: #fff }
 .content {
     max-width: 1088px;
