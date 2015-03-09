@@ -68,9 +68,6 @@ img.void {
   letter-spacing: 2px;
   font-size: 14px;
 }
-.vault .title {
-  background-color: rgba(100,100,100,0.25);
-}
 .title .icon { width: 30px }
 
 .storage {
@@ -78,6 +75,12 @@ img.void {
   padding: 0 8px;
   vertical-align: top;
   display: inline-block;
+}
+
+.vault {
+  background-color: rgba(245,245,245,0.25);
+  padding: 0 8px 1px;
+  margin: 0 -8px;
 }
 
 .sub-section {
