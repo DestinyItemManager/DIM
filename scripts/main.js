@@ -504,7 +504,6 @@ function tryPageLoad() {
 					e.target.parentNode.id === 'loadout-list' ||
 					e.target.parentNode.parentNode.id === 'loadout-list')) /*|| e.target.className !== 'loadouts'*/) {
 
-				hideMovePopup();
 				loadoutBox.style.display = 'none';
 				// faq.style.display = 'none';
 			}
@@ -563,7 +562,7 @@ function loadUser() {
 
 			var charId = avatars[c].characterBase.characterId;
 			window.dimDO.stores[charId] = _.extend({}, _storage[charId]);
-			window.dimDO.stores[charId].id = c;
+			window.dimDO.stores[charId].id = charId;
 			window.dimDO.stores[charId].items = [];
 
 			loadInventory(avatars[c].characterBase.characterId);

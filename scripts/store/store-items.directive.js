@@ -20,7 +20,7 @@
         '  <div class="items" data-type="item" data-character="{{ vm.store.id }}">',
         '    <div>',
         '      <div class="title">Weapons</div>',
-        '      <div class="items-Weapon sections">',
+        '      <div class="item-Weapon sections">',
         '        <div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Weapon\' } | filter:{ equipped : false }"',
         '          class="sort-{{ item.type }}">',
         '          <div dim-store-item store-data="vm.store" item-data="item"></div>',
