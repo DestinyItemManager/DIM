@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimStoreHeading', StoreHeading);
+  angular.module('dimApp')
+    .directive('dimStoreHeading', StoreHeading);
 
   function StoreHeading() {
     return {
@@ -38,12 +39,15 @@
       element.addClass('character');
 
       if (vm.isGuardian) {
-    			element[0].querySelector('.character-box').style.backgroundImage = 'url(' + vm.characterBoxUrl + ')';
-    			element[0].querySelector('.emblem').style.backgroundImage = 'url(' + vm.emblemUrl + ')';
+        element[0].querySelector('.character-box')
+          .style.backgroundImage = 'url(' + vm.characterBoxUrl + ')';
+        element[0].querySelector('.emblem')
+          .style.backgroundImage = 'url(' + vm.emblemUrl + ')';
 
-          if (vm.maxLevel) {
-            element[0].querySelector('.level').classList.add('maxLevel');
-          }
+        if (vm.maxLevel) {
+          element[0].querySelector('.level')
+            .classList.add('maxLevel');
+        }
       }
     }
   }

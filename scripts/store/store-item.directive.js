@@ -1,7 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimStoreItem', StoreItem);
+  angular.module('dimApp')
+    .directive('dimStoreItem', StoreItem);
+
+  StoreItem.$inject = ['ngDialog'];
 
   function StoreItem(ngDialog) {
     return {
@@ -21,11 +24,15 @@
         '</div>'].join('')
     };
 
+    StoreItemCtrl.$inject = ['$scope', 'dimStoreService'];
+
     function StoreItemCtrl($scope, dimStoreService) {
       var vm = this;
       var dialogResult = null;
 
       vm.openLoadout = function openLoadout(item, e) {
+        e.stopPropagation();
+
         if (!_.isNull(dialogResult)) {
           dialogResult.close();
         } else {
@@ -41,7 +48,7 @@
             scope: $scope
           });
 
-          dialogResult.closePromise.then(function(data) {
+          dialogResult.closePromise.then(function (data) {
             dialogResult = null;
           });
         }

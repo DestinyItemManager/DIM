@@ -1,14 +1,14 @@
 (function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimStoreItems', StoreItems);
+  angular.module('dimApp')
+    .directive('dimStoreItems', StoreItems);
 
-  function StoreItems($document) {
+  function StoreItems() {
     return {
       bindToController: true,
       controller: StoreItemsCtrl,
       controllerAs: 'vm',
-      link: Link,
       replace: true,
       scope: {
         'store': '=storeData'
@@ -149,10 +149,6 @@
 
     function StoreItemsCtrl($scope) {
       var vm = this;
-    }
-
-    function Link(scope, element) {
-      var vm = scope.vm;
     }
   }
 })();

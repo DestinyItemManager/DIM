@@ -10,119 +10,151 @@ var _storage = {};
 var _items = [];
 var _sections = null;
 
-var loadoutMode = false;
-
 var move, loadoutBox, loadoutNew, loadoutList;
 
 function dequip(item, callback, exotic) {
-	// find an item to replace the current.
-	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 6) && !_items[i].equipped) {
-			// console.log('[dequip] found replacement item: ', _items[i].name)
-			bungie.equip(_items[i].owner, _items[i].id, function(e) {
-				if(e === 0) {
-					manageItemClick(_items[i], {type: 'equip', character: item.owner})
-				}
-				callback();
-				return;
-			});
-			return;
-		}
-	}
-	if(exotic) {
-		console.log('ERROR: no', item.type, 'found on character. eventual support.');
-		return;
-	}
-	dequip(item, callback, true)
+  // find an item to replace the current.
+  for (var i in _items) {
+    if (item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier === 'exotic') && !_items[i].equipped) {
+      // console.log('[dequip] found replacement item: ', _items[i].name)
+      bungie.equip(_items[i].owner, _items[i].id, function (e) {
+        if (e === 0) {
+          manageItemClick(_items[i], {
+            type: 'equip',
+            character: item.owner
+          })
+        }
+        callback();
+        return;
+      });
+      return;
+    }
+  }
+  if (exotic) {
+    console.log('ERROR: no', item.type, 'found on character. eventual support.');
+    return;
+  }
+  dequip(item, callback, true)
+
+	//angular.element(document).scope().$apply();
 }
 
 function moveItem(item, destination, amount, callback) {
-	console.log('move item', item, destination)
+  //console.log('move item', item, destination)
 
-	if(item.equipped) {
-		dequip(item, function() {
-			item.equipped = false;
-			moveItem(item, destination, amount, callback);
-		});
-		return;
-	}
+  if (item.equipped) {
+    dequip(item, function () {
+      item.equipped = false;
 
-	// if the character now owns the item we're done!
-	if(item.owner === destination.character) {
-		// if we're equipping an item
-		if(destination.type === 'equip' && !item.equipped) {
-			bungie.equip(item.owner, item.id, function(e) {
-				if(e === 0) {
-					// find what was replaced
-					for(var i in _items) {
-						if(item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
-							manageItemClick(_items[i], {type: 'item', character: item.owner})
-							break;
-						}
-					}
-					item.equipped = true;
-					_items[i].owner = destination.character;
-				}
-				callback();
-				return;
-			});
-		}
+			//debugger;
 
-		callback();
-		return;
-	}
+      moveItem(item, destination, amount, callback);
+    });
+angular.element(document).scope().$apply();
+    return;
+  }
 
-	var toVault = true;
-	var char = item.owner;
-	if(char === 'vault') {
-		char = destination.character;
-		toVault = false;
-	}
+  // if the character now owns the item we're done!
+  if (item.owner === destination.character) {
+    // if we're equipping an item
+    if (destination.type === 'equip' && !item.equipped) {
+      bungie.equip(item.owner, item.id, function (e) {
+        if (e === 0) {
+          // find what was replaced
+          for (var i in _items) {
+            if (item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
+							var tItem = _.find(window.dimDO.stores[_items[i].owner].items, function(item) {
+								return (item.id === _items[i].id);
+							});
+              manageItemClick(tItem, {
+                type: 'item',
+                character: item.owner
+              })
+              break;
+            }
+          }
+          item.equipped = true;
+          _items[i].owner = destination.character;
+					//debugger;
+// angular.forEach(window.dimDO.stores[_items[i].owner].items, function (itemDO, itemIndex) {
+//   if (itemDO.id === item.id) {
+//     debugger;
+//   }
+// });
+        }
+        callback();angular.element(document).scope().$apply();
+        return;
+      });
+    }
 
-	bungie.transfer(char, item.id, item.hash, amount, toVault, function(cb, more) {
-		item.owner = toVault ? 'vault' : destination.character;
+    callback();
+    return;
 
-		moveItem(item, destination, amount, callback);
-	});
+		//angular.element(document).scope().$apply();
+  }
+
+  var toVault = true;
+  var char = item.owner;
+  if (char === 'vault') {
+    char = destination.character;
+    toVault = false;
+  }
+
+  bungie.transfer(char, item.id, item.hash, amount, toVault, function (cb, more) {
+    item.owner = toVault ? 'vault' : destination.character;
+		//debugger;
+    moveItem(item, destination, amount, callback);
+  });
 }
-
 function manageItemClick(item, data) {
-	if(data.type === 'equip') {
-		document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type).appendChild(
-			document.querySelector('[data-instance-id="' + item.id + '"]'));
-		item.equipped = true;
-	} else {
-		document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type	).appendChild(
-			document.querySelector('[data-instance-id="' + item.id + '"]'));
-		item.equipped = false;
-	}
+  if (data.type === 'equip') {
+    // document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type)
+    //   .appendChild(
+    //     document.querySelector('[data-instance-id="' + item.id + '"]'));
+    item.equipped = true;
+  } else {
+    // document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type)
+    //   .appendChild(
+    //     document.querySelector('[data-instance-id="' + item.id + '"]'));
+    item.equipped = false;
+  }
+
+	//angular.element(document).scope().$apply();
+	//debugger;
 }
 
 function manageItem(e) {
   e.preventDefault();
-	_dragCounter = 0;
+  _dragCounter = 0;
 
-	var destination = e.target.parentNode.parentNode.parentNode;
-	if(destination.dataset.type === undefined) {
-		destination = e.target.parentNode.parentNode;
-	}
-	if(_transfer.parentNode == destination || destination.dataset.type === undefined) return;
+  var destination = e.target.parentNode.parentNode.parentNode;
+  if (destination.dataset.type === undefined) {
+    destination = e.target.parentNode.parentNode;
+  }
+  if (_transfer.parentNode == destination || destination.dataset.type === undefined) return;
 
-	var item = _items[_transfer.dataset.index];
-	var amount = 1;
-	if(item.amount > 1) {
-		console.log(item.amount)
-	}
+  var item = _items[_transfer.dataset.index];
+  var amount = 1;
 
-	moveItem(_items[_transfer.dataset.index], destination.dataset, amount, function() {
-		// move the item to the right spot once done.
-		if(_items[_transfer.dataset.index] === amount) {
-			destination.querySelector('.sort-' + _items[_transfer.dataset.index].type).appendChild(_transfer);
-		} else {
-			// TODO: partial stack move, so copy the item...
-			destination.querySelector('.sort-' + _items[_transfer.dataset.index].type).appendChild(_transfer);
-		}
-	});
+  if (item.notransfer) {
+    console.log('no drag and drop support for this type of item yet.')
+  }
+
+  if (item.amount > 1) {
+    console.log(item.amount)
+  }
+
+  moveItem(item, destination.dataset, amount, function () {
+    // move the item to the right spot once done.
+    if (_items[_transfer.dataset.index] === amount) {
+      destination.querySelector('.sort-' + item.type)
+        .appendChild(_transfer);
+    } else {
+      // TODO: partial stack move, so copy the item...
+      destination.querySelector('.sort-' + item.type)
+        .appendChild(_transfer);
+    }
+  });
 
 }
 
@@ -167,14 +199,21 @@ function buildLoadouts() {
 		for(var s = 0; s < sets.length; s++) {
 			var d = node.cloneNode(true);
 
-			d.querySelector('.loadout-set').dataset.index = s;
+			d.querySelector('.loadout-set')
+			  .dataset.index = s;
+
+			d.querySelector('.button-edit')
+			  .addEventListener('click', function (e) {
+			    loadout.edit(e.target.parentNode.dataset.index);
+			  });
 
 
-			d.querySelector('.button-delete').addEventListener('click', function(e) {
-				loadout.delete(e.target.parentNode.dataset.index, function() {
-					buildLoadouts();
-				});
-			})
+			d.querySelector('.button-delete')
+			  .addEventListener('click', function (e) {
+			    loadout.delete(e.target.parentNode.dataset.index, function () {
+			      buildLoadouts();
+			    });
+			  });
 
 			var n = d.querySelector('.button-name');
 			n.innerText = sets[s].name;
@@ -218,12 +257,13 @@ function buildLoadouts() {
 		// });
 // // TODO
 
+
 function getItemType(type, name) {
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Primary';
-	if(["Sniper Rifle", "Shotgun", "Fusion Rifle", "Special Weapon Engram"].indexOf(type) != -1) {
+	if(["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
 		// detect special case items that are actually primary weapons.
-		if(["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
+		if(["Vex Mythoclast", "Universal Remote", "No Land Beyond", "Special Weapon Engram"].indexOf(name) != -1)
 			return 'Primary';
 		return 'Special';
 	}
@@ -235,16 +275,20 @@ function getItemType(type, name) {
 		return 'Gauntlets';
 	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable",  "Material", "Currency"].indexOf(type) != -1)
+	if(["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
+		return 'Class';
+	if(["Restore Defaults"].indexOf(type) != -1)
+		return 'Armor';
+	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
 		return type.split(' ')[0];
 }
 
 function sortItem(type) {
 	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
-		return 'Weapon';
-	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram"].indexOf(type) != -1)
+		return 'Weapons';
+	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
 		return 'Armor';
-	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+	if(["Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
 		return 'General';
 }
 
@@ -252,22 +296,11 @@ function flattenInventory(data) {
 	var inv = [];
 	var buckets = data.buckets;
 
-	// Only look at the equippable bucket
-	if (buckets.Equippable) {
-
-		// Loop through the equippable buckets and flatten the items
-		for (var b in buckets.Equippable) {
-
-			var eBucket = buckets.Equippable[b];
-
-			// Skip the subclass bucket - 3284755031
-			if (eBucket.bucketHash === 3284755031)
-				continue;
-
-			var items = eBucket.items;
-
-			// Store the item in the inventory array, associated to its instanceId, so we can support duplicate items
-			for (var i in items) {
+	for(var b in buckets) {
+		// if(b === "Currency") continue;
+		for(var s in buckets[b]) {
+			var items = buckets[b][s].items;
+			for(var i in items) {
 				inv[items[i].itemInstanceId] = items[i];
 			}
 		}
@@ -283,7 +316,6 @@ function flattenVault(data) {
 
 	for (var b in buckets) {
 		var items = buckets[b].items;
-
 		for (var i in items) {
 			inv[items[i].itemInstanceId] = items[i];
 		}
@@ -303,51 +335,62 @@ function appendItems(owner, defs, items) {
 		var itemHash    = item.itemHash;
 		var itemDef     = defs[item.itemHash];
 
-		// Skip this item if we don't have a definition for it or it cannot be transferred
-		if (itemDef === undefined || itemDef.nonTransferrable)
-			continue;
-
-		if (typesOfItems.indexOf(itemDef.itemTypeName) == -1) typesOfItems.push(itemDef.itemTypeName);
+		if(itemDef.itemTypeName.indexOf('Bounty') != -1 || itemDef.itemTypeName.indexOf('Commendation') != -1) continue;
 
 		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+
+		if(!itemType) {
+			// console.log(itemDef.itemName, itemDef.itemTypeName)
+			continue;
+		}
+
 		var itemSort = sortItem(itemDef.itemTypeName);
+		if(item.location === 4) {
+			itemSort = 'Postmaster';
+		}
+
+		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
+		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
+
 
 		_items.push({
-			index: index,
-			owner:     owner,
-			hash:      itemHash,
-			type:      itemType,
-			sort:      itemSort,
-			tier:      itemDef.tierType,
-			name:      itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon:      itemDef.icon,
-			id:        item.itemInstanceId,
-			equipped:  item.isEquipped,
-			equipment: item.isEquipment,
-			complete:  item.isGridComplete,
-			amount:    item.stackSize,
-			primStat:  item.primaryStat,
-			stats:     item.stats,
-			dmgType:   item.damageType
+			index: 			index,
+			owner:      owner,
+			hash:       itemHash,
+			type:       itemType,
+			sort:       itemSort,
+			tier:       tierName,
+			name:       itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			icon:       itemDef.icon,
+			notransfer: itemDef.nonTransferrable,
+			id:         item.itemInstanceId,
+			equipped:   item.isEquipped,
+			equipment:  item.isEquipment,
+			complete:   item.isGridComplete,
+			amount:     item.stackSize,
+			primStat:   item.primaryStat,
+			stats:      item.stats,
+			dmg:        dmgName
 		});
 
 		window.dimDO.stores[owner].items.push({
-			index: index,
-			owner:     owner,
-			hash:      itemHash,
-			type:      itemType,
-			sort:      itemSort,
-			tier:      itemDef.tierType,
-			name:      itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon:      itemDef.icon,
-			id:        item.itemInstanceId,
-			equipped:  item.isEquipped,
-			equipment: item.isEquipment,
-			complete:  item.isGridComplete,
-			amount:    item.stackSize,
-			primStat:  item.primaryStat,
-			stats:     item.stats,
-			dmgType:   item.damageType
+			index: 			index,
+			owner:      owner,
+			hash:       itemHash,
+			type:       itemType,
+			sort:       itemSort,
+			tier:       tierName,
+			name:       itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			icon:       itemDef.icon,
+			notransfer: itemDef.nonTransferrable,
+			id:         item.itemInstanceId,
+			equipped:   item.isEquipped,
+			equipment:  item.isEquipment,
+			complete:   item.isGridComplete,
+			amount:     item.stackSize,
+			primStat:   item.primaryStat,
+			stats:      item.stats,
+			dmg:        dmgName
 		});
 
 		index = index + 1;
@@ -360,15 +403,6 @@ function loadInventory(c) {
 	bungie.inventory(c, function(i) {
 		appendItems(c, i.definitions.items, flattenInventory(i.data))
 	});
-}
-
-function getClass(type) {
-	switch(type) {
-		case 0: return 'titan';
-		case 1: return 'hunter';
-		case 2: return 'warlock';
-	}
-	return 'unknown';
 }
 
 var loader = {
@@ -384,13 +418,12 @@ function tryPageLoad() {
 			loadoutNew = document.getElementById('loadout-new');
 			loadoutList = document.getElementById('loadout-list');
 			loadoutNew.addEventListener('click', function() {
-				loadoutBox.style.display = 'none';
 				loadout.toggle(true);
 			})
 			buildLoadouts();
 		});
 
-		move = document.getElementById('move-popup');
+		//move = document.getElementById('move-popup');
 
 		// var faqButton = document.getElementById('faq-button');
 		// var faq = document.getElementById('faq');
@@ -464,23 +497,19 @@ function tryPageLoad() {
 				filter = filter.split('is:')[1].trim();
 				if(['arc', 'solar', 'void', 'kinetic'].indexOf(filter) >= 0) {
 					special = 'elemental';
-					switch(filter) {
-						case 'kinetic': filter = 0; break;
-						case 'arc': filter = 2; break;
-						case 'solar': filter = 3; break;
-						case 'void': filter = 4; break;
-						default: filter = 0;
-					}
-				} else if(['primary', 'secondary', 'heavy'].indexOf(filter) >= 0) {
+				} else if(['primary', 'special', 'heavy'].indexOf(filter) >= 0) {
 					special = 'type';
+				} else if(['basic', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filter) >= 0) {
+					special = 'tier';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
 				}
 			}
 			for (var i = 0; i < item.length; i++) {
 				switch(special) {
-					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmgType == filter ? '' : 'none'; break;
+					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmg == filter ? '' : 'none'; break;
 					case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
+					case 'tier':	item[i].style.display = _items[item[i].dataset.index].tier.toLowerCase() == filter ? '' : 'none'; break;
 					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete === true ? '' : 'none'; break;
 					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
@@ -504,7 +533,6 @@ function tryPageLoad() {
 					e.target.parentNode.id === 'loadout-list' ||
 					e.target.parentNode.parentNode.id === 'loadout-list')) /*|| e.target.className !== 'loadouts'*/) {
 
-				// move.style.display = 'none';
 				loadoutBox.style.display = 'none';
 				// faq.style.display = 'none';
 			}
@@ -514,67 +542,91 @@ function tryPageLoad() {
 	}
 }
 
+function loadUser() {
+	_storage = [];
+	_items = [];
+	_sections = null;
+
+	document.getElementById('user').innerText = bungie.gamertag();
+
+	bungie.search(function(e) {
+		if(e.error) {
+				var storage = document.getElementById('storage');
+				storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
+				return;
+		}
+
+		bungie.vault(function(v) {
+			_storage['vault'] = {
+				icon: ''
+			};
+
+			window.dimDO.stores['vault'] = _.extend({}, _storage['vault']);
+			window.dimDO.stores['vault'].id = 'vault';
+
+			window.dimDO.stores['vault'].bucketCounts = {};
+			for (var b in v.data.buckets) {
+				if (v.data.buckets[b].bucketHash === 3003523923)
+					window.dimDO.stores['vault'].bucketCounts['Armor'] = v.data.buckets[b].items.length;
+				if (v.data.buckets[b].bucketHash === 138197802)
+					window.dimDO.stores['vault'].bucketCounts['General'] = v.data.buckets[b].items.length;
+				if (v.data.buckets[b].bucketHash === 4046403665)
+					window.dimDO.stores['vault'].bucketCounts['Weapons'] = v.data.buckets[b].items.length;
+			}
+
+			window.dimDO.stores['vault'].items = [];
+
+			appendItems('vault', v.definitions.items, flattenVault(v.data));
+		});
+
+		var avatars = e.data.characters;
+		loader.characters = avatars.length;
+
+		function getClass(type) {
+			switch(type) {
+				case 0: return 'titan';
+				case 1: return 'hunter';
+				case 2: return 'warlock';
+			}
+			return 'unknown';
+		}
+
+		for(var c in avatars) {
+			// move.appendChild();
+			_storage[avatars[c].characterBase.characterId] = {
+				icon: avatars[c].emblemPath,
+				background: avatars[c].backgroundPath,
+				level: avatars[c].characterLevel,
+				class: getClass(avatars[c].characterBase.classType)
+			}
+
+			var charId = avatars[c].characterBase.characterId;
+			window.dimDO.stores[charId] = _.extend({}, _storage[charId]);
+			window.dimDO.stores[charId].id = charId;
+			window.dimDO.stores[charId].items = [];
+
+			loadInventory(avatars[c].characterBase.characterId);
+		}
+	});
+}
+
 bungie.user(function(u) {
 	if(u.error) {
 			var storage = document.getElementById('storage');
 			storage.innerHTML = 'error loading user. make sure your account is linked with bungie.net and you are logged in.';
 			return;
 	}
-	document.getElementById('user').innerText = bungie.gamertag();
 
-	bungie.search(function(e) {
-		if(e.error) {
-				var storage = document.getElementById('storage');
-				storage.innerHTML = 'bungie.net user found. but was unable to find your ' +
-					'account. you may have a XBL and PSN account tied to your bungie.net' +
-					' profile. This is not yet supported.';
-				return;
-		}
+	if(bungie.system().xbl.id !== undefined && bungie.system().psn.id !== undefined) {
+		var toggle = document.getElementById('system');
+		toggle.style.display = 'block';
+		toggle.addEventListener('change', function() {
+			bungie.setsystem(this.value);
+			loadUser();
+		});
+	}
 
-		var avatars = e.data.characters;
-		loader.characters = avatars.length;
-
-		for(var c in avatars) {
-			var avatar = avatars[c];
-			var charId = avatar.characterBase.characterId;
-
-			_storage[charId] = {
-				icon: avatar.emblemPath,
-				background: avatar.backgroundPath,
-				level: avatar.characterLevel,
-				class: getClass(avatar.characterBase.classType)
-			};
-
-			window.dimDO.stores[charId] = _.extend({}, _storage[charId]);
-			window.dimDO.stores[charId].id = charId;
-			window.dimDO.stores[charId].items = [];
-			loadInventory(charId);
-		}
-	});
-
-	bungie.vault(function(v) {
-		_storage['vault'] = {
-			id: 'vault',
-			icon: '',
-			class: 'Vault'
-		};
-
-		window.dimDO.stores['vault'] = _.extend({}, _storage['vault']);
-		window.dimDO.stores['vault'].items = [];
-
-		window.dimDO.stores['vault'].bucketCounts = {};
-
-		for (var b in v.data.buckets) {
-			if (v.data.buckets[b].bucketHash === 3003523923)
-				window.dimDO.stores['vault'].bucketCounts['Armor'] = v.data.buckets[b].items.length;
-			if (v.data.buckets[b].bucketHash === 138197802)
-				window.dimDO.stores['vault'].bucketCounts['General'] = v.data.buckets[b].items.length;
-			if (v.data.buckets[b].bucketHash === 4046403665)
-				window.dimDO.stores['vault'].bucketCounts['Weapons'] = v.data.buckets[b].items.length;
-		}
-
-		appendItems('vault', v.definitions.items, flattenVault(v.data));
-	});
+	loadUser()
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {

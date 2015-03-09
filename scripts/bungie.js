@@ -4,19 +4,18 @@ function bungie() {
   var url = 'https://www.bungie.net/Platform';
   var apikey = '57c5ff5864634503a0340ffdfbeb20c0';
 
-  var gamertag = null;
-  var membershipType = 1;
+  var systemIds = {};
   var membershipId = 0;
   var characterIds = [];
 
   // private methods
-  function _getAllCookies(callback){
+  function _getAllCookies(callback) {
     chrome.cookies.getAll({ domain: '.' + domain }, function(){
       callback.apply(null, arguments);
     });
   }
 
-  function _getCookie(name, callback){
+  function _getCookie(name, callback) {
     _getAllCookies(function(cookies){
       var c = null;
       for(var i = 0, l = cookies.length; i < l; ++i){
@@ -69,8 +68,16 @@ function bungie() {
   }
 
   // privileged methods
+  this.setsystem = function(type) {
+    active = systemIds.xbl
+    if(type === 'PSN')
+      active = systemIds.psn;
+  }
   this.gamertag = function() {
-    return gamertag;
+    return active.id;
+  }
+  this.system = function() {
+    return systemIds;
   }
   this.user = function(callback) {
     _request({
@@ -81,18 +88,22 @@ function bungie() {
           callback({error: true})
           return;
         }
-        gamertag = res.gamerTag;
-        if(res.psnId) {
-          membershipType = 2;
-          gamertag = res.psnId;
-        }
+
+        systemIds.xbl = {id: res.gamerTag, type: 1};
+        systemIds.psn = {id: res.psnId, type: 2};
+
+        active = systemIds.xbl;
+
+        if(res.psnId)
+          active = systemIds.psn;
+
         callback(res);
       }
     });
   }
   this.search = function(callback) {
     _request({
-      route: '/Destiny/SearchDestinyPlayer/' + membershipType + '/' + gamertag + '/',
+      route: '/Destiny/SearchDestinyPlayer/' + active.type + '/' + active.id + '/',
       method: 'GET',
       complete: function(membership) {
         if(membership[0] === undefined) {
@@ -102,7 +113,7 @@ function bungie() {
         }
         membershipId = membership[0].membershipId;
         _request({
-          route: '/Destiny/Tiger' + (membershipType == 1 ? 'Xbox' : 'PSN') +
+          route: '/Destiny/Tiger' + (active.type == 1 ? 'Xbox' : 'PSN') +
                   '/Account/' + membershipId + '/',
           method: 'GET',
           complete: callback
@@ -112,14 +123,14 @@ function bungie() {
   }
   this.vault = function(callback) {
     _request({
-      route: '/Destiny/' + membershipType + '/MyAccount/Vault/?definitions=true',
+      route: '/Destiny/' + active.type + '/MyAccount/Vault/?definitions=true',
       method: 'GET',
       complete: callback
     });
   }
   this.inventory = function(characterId, callback) {
     _request({
-      route: '/Destiny/' + membershipType +
+      route: '/Destiny/' + active.type +
               '/Account/' + membershipId +
               '/Character/' + characterId +
               '/Inventory/?definitions=true',
@@ -129,11 +140,11 @@ function bungie() {
   }
   this.transfer = function(characterId, itemId, itemHash, amount, toVault, callback) {
     _request({
-      route: '/Destiny/TransferItem/?lc=en&fmt=true&lcin=true',
+      route: '/Destiny/TransferItem/',
       method: 'POST',
       payload: {
         characterId: characterId,
-        membershipType: membershipType,
+        membershipType: active.type,
         itemId: itemId,
         itemReferenceHash: itemHash,
         stackSize: amount,
@@ -147,9 +158,25 @@ function bungie() {
       route: '/Destiny/EquipItem/',
       method: 'POST',
       payload: {
-        membershipType: membershipType,
+        membershipType: active.type,
         characterId: characterId,
         itemId: itemId
+      },
+      complete: callback
+    })
+  }
+  // this function works and returns a behemoth response. very useful/scary.
+  // .equipResults for more information on item equip messages
+  // .character.inventory.buckets -useful to resync data maybe?
+  // .summary - useful if we want to update character level/emblem/etc
+  this.equipall = function(characterId, itemIds, callback) {
+    _request({
+      route: '/Destiny/EquipItems/',
+      method: 'POST',
+      payload: {
+        membershipType: active.type,
+        characterId: characterId,
+        itemIds: itemIds
       },
       complete: callback
     })

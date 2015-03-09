@@ -1,37 +1,44 @@
 (function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimStoreEquipped', StoreEquipped);
+  angular.module('dimApp')
+    .directive('dimStoreEquipped', StoreEquipped);
+
+  StoreEquipped.$inject = ['ngDialog'];
 
   function StoreEquipped(ngDialog) {
     return {
-      bindToController: true,
       controller: StoreEquippedCtrl,
       controllerAs: 'vm',
-      link: Link,
+      bindToController: true,
       replace: true,
       scope: {
         'store': '=storeData'
       },
       template: [
-        '<div>',
-          '<div class="title">Equipped</div>',
-          '<div class="items sections" data-type="equip" data-character="{{ vm.store.id }}" ng-show="vm.isGuardian">',
-            '<div ng-repeat="item in vm.store.items | filter:{ equipped : true } | filter:{ equipment : true }" class="sort-{{ item.type.toLowerCase() }}">',
-              '<div dim-store-item store-data="vm.store" item-data="item"></div>',
-            '</div>',
-          '</div>',
-        '</div>'].join('')
+        '<div ui-on-drop="vm.onDrop($data, $event)" drag-enter-class="drag-enter" drag-hover-class="drag-hover">',
+        '  <div class="title">Equipped</div>',
+        '  <div class="items sections" data-type="equip" data-character="{{ vm.store.id }}" ng-show="vm.isGuardian">',
+        '    <div ng-repeat="item in vm.store.items | filter:{ equipped : true } | filter:{ equipment : true }" class="sort-{{ item.type.toLowerCase() }}">',
+        '      <div dim-store-item store-data="vm.store" item-data="item"></div>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('')
     };
+  }
 
-    function StoreEquippedCtrl() {
-      var vm = this;
+  StoreEquipped.$inject = ['dimItemService'];
 
-      vm.isGuardian = (vm.store.id !== 'vault');
-    }
+  function StoreEquippedCtrl(dimItemService) {
+    var vm = this;
 
-    function Link(scope, element) {
-      var vm = scope.vm;
-    }
+    vm.isGuardian = (vm.store.id !== 'vault');
+
+    vm.onDrop = function(data, e) {
+      var item = dimItemService.getItem(data.id);
+
+      alert(item.name);
+    };
   }
 })();

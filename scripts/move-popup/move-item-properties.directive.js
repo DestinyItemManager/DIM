@@ -19,6 +19,8 @@
     };
   }
 
+  StoreItemPropertiesController.$inject = ['$scope', '$sce'];
+
   function StoreItemPropertiesController($scope, $sce) {
     var vm = this;
 
