@@ -629,6 +629,45 @@ bungie.user(function(u) {
 	loadUser()
 });
 
+function setSortHeights() {
+	var sorts = [
+		'primary',
+		'special',
+		'heavy',
+		'helmet',
+		'gauntlets',
+		'chest',
+		'leg',
+		'classitem',
+		'emblem',
+		'armor',
+		'ghost',
+		'ship',
+		'vehicle',
+		'class',
+		'consumable',
+		'material',
+		'currency'
+	];
+
+	sorts.forEach(function(sort) {
+		var elements = document.querySelectorAll('.sort-' + sort),
+				maxHeight;
+
+		Array.prototype.forEach.call(elements, function(element) {
+			element.style.height = 'auto';
+
+			if (typeof maxHeight === 'undefined' || element.clientHeight > maxHeight) {
+				maxHeight = element.clientHeight;
+			}
+		});
+
+		Array.prototype.forEach.call(elements, function(element) {
+			element.style.height = maxHeight + 'px';
+		});
+	});
+}
+
 chrome.browserAction.onClicked.addListener(function(tab) {
 	var optionsUrl = chrome.extension.getURL('window.html');
 	chrome.tabs.query({url: optionsUrl}, function(tabs) {
