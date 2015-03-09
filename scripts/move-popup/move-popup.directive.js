@@ -1,7 +1,8 @@
-(function() {
+(function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimMovePopup', MovePopup);
+  angular.module('dimApp')
+    .directive('dimMovePopup', MovePopup);
 
   MovePopup.$inject = ['$window', 'ngDialog'];
 
@@ -10,19 +11,6 @@
       controller: MovePopupController,
       controllerAs: 'vm',
       bindToController: true,
-      link: function Link(scope, element, attrs) {
-        scope.MoveToVault = function MoveToVault(store, e) {
-          var data = e.currentTarget.dataset;
-          var item = this.$parent.vm.item;
-
-          $window.moveItem(item, data, 1, function() {
-            $window.manageItemClick(item, data);
-            ngDialog.closeAll();
-          });
-        };
-
-        scope.MoveToGuardian = scope.MoveToEquip = scope.MoveToVault;
-      },
       restrict: 'A',
       scope: {
         store: '=dimStore',
@@ -31,33 +19,45 @@
       replace: true,
       template: [
         '<div class="move-popup">',
-          '<div class="locations" ng-repeat="store in vm.stores">',
-            '<div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" ',
-              'ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="MoveToVault(vm.item, store, $event)" ',
-              'data-type="item" data-character="{{ store.id }}">',
-              '<span>Vault</span>',
-            '</div>',
-            '<div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" ',
-              'ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="MoveToGuardian(store, $event)" ',
-              'data-type="item" data-character="{{ store.id }} style="background-image: url(http://bungie.net{{ store.icon }})"> ',
-              '<span>Store</span>',
-            '</div>',
-            '<div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" ',
-              'ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="MoveToEquip(store, $event)" ',
-              'data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})">',
-              '<span>Equip</span>',
-            '</div>',
-          '</div>',
-        '</div>'].join('')
+        '<div class="locations" ng-repeat="store in vm.stores">',
+        '<div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" ',
+        'ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.MoveToVault(vm.item, store, $event)" ',
+        'data-type="item" data-character="{{ store.id }}">',
+        '<span>Vault</span>',
+        '</div>',
+        '<div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" ',
+        'ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.MoveToGuardian(store, $event)" ',
+        'data-type="item" data-character="{{ store.id }} style="background-image: url(http://bungie.net{{ store.icon }})"> ',
+        '<span>Store</span>',
+        '</div>',
+        '<div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" ',
+        'ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.MoveToEquip(store, $event)" ',
+        'data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})">',
+        '<span>Equip</span>',
+        '</div>',
+        '</div>',
+        '</div>'
+      ].join('')
     }
   }
 
-  MovePopupController.$inject = ['$scope', 'dimStoreService'];
+  MovePopupController.$inject = ['$window', 'dimStoreService', 'ngDialog'];
 
-  function MovePopupController($scope, dimStoreService) {
+  function MovePopupController($window, dimStoreService, ngDialog) {
     var vm = this;
 
     vm.stores = dimStoreService.getStores();
+
+    vm.MoveToVault = function MoveToVault(store, e) {
+      var data = e.currentTarget.dataset;
+
+      $window.moveItem(vm.item, data, 1, function () {
+        $window.manageItemClick(vm.item, data);
+        ngDialog.closeAll();
+      });
+    };
+
+    vm.MoveToGuardian = vm.MoveToEquip = vm.MoveToVault;
 
     this.canShowVault = function canShowButton(item, sourceStore, buttonStore) {
       if (item.notransfer) {
