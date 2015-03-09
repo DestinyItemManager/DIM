@@ -17,7 +17,7 @@
         'item': '=itemData'
       },
       template: [
-        '<div ui-draggable="true" class="item{{ vm.item.complete ? \' complete\' : \'\' }}" data-instance-id="{{ vm.item.id }}" ng-click="vm.openLoadout(vm.item, $event)">',
+        '<div ui-draggable="true" drag="{ id: \'{{ vm.item.id }}\' }" class="item{{ vm.item.complete ? \' complete\' : \'\' }}" data-instance-id="{{ vm.item.id }}" ng-click="vm.openLoadout(vm.item, $event)">',
         '  <img ui-draggable="false" ng-drag="false" ng-src="http://bungie.net/{{ vm.item.icon }}">',
         '  <div class="stack" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '</div>'
