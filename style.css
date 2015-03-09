@@ -68,6 +68,30 @@ img.void {
   float: left;
   margin-right: 1em;
 }
+
+.equippable {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 12px;
+}
+
+.unequippable {
+  margin-bottom: 12px;
+  width: 260px;
+}
+
+.equipped {
+  width: 52px;
+  margin-right: 12px;
+}
+
+.unequipped {
+  width: 156px;
+}
+.vault .unequipped {
+  width: 260px;
+}
+
 .item {
     position: relative;
     display: inline-block;
@@ -284,29 +308,12 @@ img.void {
     padding-left: 10px;
     padding-right: 10px;
 }
-@media only screen and (min-width :1648px) {
-    .storage {
-        max-width: 391px;
-        margin-left: 10px;
-        float: left;
-        margin-right: 0;
-    }
-    .content { max-width: 1604px }
-    .item,
-    .item img { width: 47.7px }
-    .character-box {
-      width: 281px;
-    }
-}
 
 .ng-hide {
   display: none;
 }
 
 div[class^="sort-"] {
-  display: inline-block;
-}
-.item {
   display: inline-block;
 }
 
