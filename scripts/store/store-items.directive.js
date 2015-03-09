@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimStoreItems', StoreItems);
 
-  StoreItems.$inject = ['$document'];
-
-  function StoreItems($document) {
+  function StoreItems() {
     return {
       bindToController: true,
       controller: StoreItemsCtrl,
