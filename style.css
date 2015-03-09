@@ -20,14 +20,25 @@ body {
     color: #1a1e24;
     box-shadow: 0 2px 20px 2px #000;
 }
-#header-right {
+#header .header-right {
   float: right;
+}
+#system {
+  display: none;
+  background-color: #5b6e6c;
+  color: rgba(245,245,245,.6);
+  float: right;
+  margin-right: 5px;
+}
+#filter-text {
+    display: none;
+    margin-right: 5px;
+    vertical-align: middle;
 }
 img.elemental {
   width: 16px !important;
   vertical-align: middle;
   margin-right: 3px;
-  padding: 2px;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -45,7 +56,7 @@ img.void {
 }
 #header .content span {
     font-size: 13px;
-    line-height: 25px;
+    line-height: 18px;
     text-align: center;
     vertical-align: middle;
 }
@@ -67,16 +78,30 @@ img.void {
   max-width: 260px;
   float: left;
   margin-right: 1em;
+  margin-bottom: 100px;
 }
 .item {
     position: relative;
     display: inline-block;
+    width: 44px;
+    height: 44px;
     background-color: #5c7183;
     cursor: pointer;
     margin: 2;
     border: 2px solid #DDD;
 }
-.item img {
+.item.popup-open:before {
+    border: solid;
+    border-color: rgba(0,0,0,.8) transparent;
+    border-width: .4em .4em 0;
+    top: -6px;
+    content: "";
+    display: block;
+    left: 16px;
+    position: absolute;
+    z-index: 2;
+}
+.item>img {
   width: 44px;
   height: 44px;
 }
@@ -135,9 +160,6 @@ img.void {
     vertical-align: 18%;
     font-size: 50%;
 }
-.character-box .level.maxLevel {
-  color: rgba(245, 220, 86, 1);
-}
 .loadout-button {
     position: relative;
     display: inline-block;
@@ -167,33 +189,30 @@ img.void {
     z-index: 2;
     cursor: pointer;
 }
-#filter-text {
-    display: none;
-    margin-right: 5px;
-    vertical-align: middle;
+#move-popup.little {
+  width: 85px;
+  left: -21px;
 }
-.move-popup {
+#move-popup.little:before {
+  left: 39px;
+}
+#move-popup {
+    position: absolute;
+    display: none;
+    z-index: 2;
+    top: -75px;
+    width: 300px;
+    height: 69px;
     background-color: rgba(21,13,13,1);
     cursor: default;
 }
-.ngdialog:before {
-    border: solid;
-    border-color: rgba(0,0,0,.8) transparent;
-    border-width: .4em .4em 0;
-    bottom: -4px;
-    content: "";
-    display: block;
-    left: 144px;
-    position: absolute;
-    z-index: 2;
-}
-.move-popup .item-name {
-    padding-left: 6px;
-    padding-top: 5px;
-    background-color: #fff;
+#move-popup .item-name {
     color: #000;
+    margin: 1px;
+    padding: 1px;
+    padding-left: 3px;
 }
-.move-popup .move-button {
+#move-popup .move-button {
     background-size: cover;
     width: 37px;
     height: 37px;
@@ -203,7 +222,7 @@ img.void {
     margin: 6px;
     cursor: pointer;
 }
-.move-popup .move-button span {
+#move-popup .move-button span {
     display: inline-block;
     text-transform: uppercase;
     background: rgba(0,0,0,.4);
@@ -211,10 +230,11 @@ img.void {
     width: 100%;
     height: 100%;
 }
-.move-popup .move-button span:hover { background: rgba(0,0,0,.1) }
+#move-popup .move-button span:hover { background: rgba(0,0,0,.1) }
 #faq-button {
     display: inline-block;
     background-color: #5b6e6c;
+    color: rgba(245,245,245,.6);
     border-radius: 50%;
     width: 14px;
     height: 14px;
@@ -222,7 +242,6 @@ img.void {
     cursor: pointer;
     margin-left: 5px;
     font-size: 10px!important;
-    color: rgba(245,245,245,.6);
 }
 #faq-button:hover { background-color: #628e89 }
 #faq {
@@ -243,7 +262,7 @@ img.void {
 .content {
     max-width: 1088px;
     margin: 0 auto;
-    padding: 2px;
+    padding: 5px;
 }
 #loadout-create {
     position: fixed;
@@ -271,18 +290,22 @@ img.void {
     margin-left: 10px;
 }
 #loadout-options p {
-  display: inline-block;
+  display: inline;
   padding-left: 10px;
 }
 #loadout-list .loadout-set:hover,
 #loadout-new:hover,
 #loadout-options span:hover { background-color: #628e89 }
-.loadout-set .button-delete {
+.loadout-set .button-edit, .loadout-set .button-delete {
     background-color: rgba(195,188,180,.9);
     color: #1a1e24;
     float: right;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 50px;
+    border-right: 1px solid rgba(195,188,180,.7);
+    border-left: 1px solid rgba(195,188,180,.9);
+}
+.loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
+    background-color: rgba(195,188,180,.6);
 }
 @media only screen and (min-width :1648px) {
     .storage {
@@ -298,6 +321,7 @@ img.void {
       width: 281px;
     }
 }
+
 
 .ng-hide {
   display: none;

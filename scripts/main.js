@@ -13,119 +13,129 @@ var _sections = null;
 var move, loadoutBox, loadoutNew, loadoutList;
 
 function dequip(item, callback, exotic) {
-	// find an item to replace the current.
-	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier === 'exotic') && !_items[i].equipped) {
-			// console.log('[dequip] found replacement item: ', _items[i].name)
-			bungie.equip(_items[i].owner, _items[i].id, function(e) {
-				if(e === 0) {
-					manageItemClick(_items[i], {type: 'equip', character: item.owner})
-				}
-				callback();
-				return;
-			});
-			return;
-		}
-	}
-	if(exotic) {
-		console.log('ERROR: no', item.type, 'found on character. eventual support.');
-		return;
-	}
-	dequip(item, callback, true)
+  // find an item to replace the current.
+  for (var i in _items) {
+    if (item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier === 'exotic') && !_items[i].equipped) {
+      // console.log('[dequip] found replacement item: ', _items[i].name)
+      bungie.equip(_items[i].owner, _items[i].id, function (e) {
+        if (e === 0) {
+          manageItemClick(_items[i], {
+            type: 'equip',
+            character: item.owner
+          })
+        }
+        callback();
+        return;
+      });
+      return;
+    }
+  }
+  if (exotic) {
+    console.log('ERROR: no', item.type, 'found on character. eventual support.');
+    return;
+  }
+  dequip(item, callback, true)
 }
 
 function moveItem(item, destination, amount, callback) {
-	//console.log('move item', item, destination)
+  //console.log('move item', item, destination)
 
-	if(item.equipped) {
-		dequip(item, function() {
-			item.equipped = false;
-			moveItem(item, destination, amount, callback);
-		});
-		return;
-	}
+  if (item.equipped) {
+    dequip(item, function () {
+      item.equipped = false;
+      moveItem(item, destination, amount, callback);
+    });
 
-	// if the character now owns the item we're done!
-	if(item.owner === destination.character) {
-		// if we're equipping an item
-		if(destination.type === 'equip' && !item.equipped) {
-			bungie.equip(item.owner, item.id, function(e) {
-				if(e === 0) {
-					// find what was replaced
-					for(var i in _items) {
-						if(item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
-							manageItemClick(_items[i], {type: 'item', character: item.owner})
-							break;
-						}
-					}
-					item.equipped = true;
-					_items[i].owner = destination.character;
-				}
-				callback();
-				return;
-			});
-		}
+    return;
+  }
 
-		callback();
-		return;
-	}
+  // if the character now owns the item we're done!
+  if (item.owner === destination.character) {
+    // if we're equipping an item
+    if (destination.type === 'equip' && !item.equipped) {
+      bungie.equip(item.owner, item.id, function (e) {
+        if (e === 0) {
+          // find what was replaced
+          for (var i in _items) {
+            if (item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
+              manageItemClick(_items[i], {
+                type: 'item',
+                character: item.owner
+              })
+              break;
+            }
+          }
+          item.equipped = true;
+          _items[i].owner = destination.character;
+        }
+        callback();
+        return;
+      });
+    }
 
-	var toVault = true;
-	var char = item.owner;
-	if(char === 'vault') {
-		char = destination.character;
-		toVault = false;
-	}
+    callback();
+    return;
+  }
 
-	bungie.transfer(char, item.id, item.hash, amount, toVault, function(cb, more) {
-		item.owner = toVault ? 'vault' : destination.character;
+  var toVault = true;
+  var char = item.owner;
+  if (char === 'vault') {
+    char = destination.character;
+    toVault = false;
+  }
 
-		moveItem(item, destination, amount, callback);
-	});
+  bungie.transfer(char, item.id, item.hash, amount, toVault, function (cb, more) {
+    item.owner = toVault ? 'vault' : destination.character;
+
+    moveItem(item, destination, amount, callback);
+  });
 }
-
 function manageItemClick(item, data) {
-	if(data.type === 'equip') {
-		document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type).appendChild(
-			document.querySelector('[data-instance-id="' + item.id + '"]'));
-		item.equipped = true;
-	} else {
-		document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type	).appendChild(
-			document.querySelector('[data-instance-id="' + item.id + '"]'));
-		item.equipped = false;
-	}
+  if (data.type === 'equip') {
+    document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type)
+      .appendChild(
+        document.querySelector('[data-instance-id="' + item.id + '"]'));
+    item.equipped = true;
+  } else {
+    document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type)
+      .appendChild(
+        document.querySelector('[data-instance-id="' + item.id + '"]'));
+    item.equipped = false;
+  }
 }
 
 function manageItem(e) {
   e.preventDefault();
-	_dragCounter = 0;
+  _dragCounter = 0;
 
-	var destination = e.target.parentNode.parentNode.parentNode;
-	if(destination.dataset.type === undefined) {
-		destination = e.target.parentNode.parentNode;
-	}
-	if(_transfer.parentNode == destination || destination.dataset.type === undefined) return;
+  var destination = e.target.parentNode.parentNode.parentNode;
+  if (destination.dataset.type === undefined) {
+    destination = e.target.parentNode.parentNode;
+  }
+  if (_transfer.parentNode == destination || destination.dataset.type === undefined) return;
 
-	var item = _items[_transfer.dataset.index];
-	var amount = 1;
+  var item = _items[_transfer.dataset.index];
+  var amount = 1;
 
-	    if(item.notransfer) {
-        console.log('no drag and drop support for this type of item yet.')
+  if (item.notransfer) {
+    console.log('no drag and drop support for this type of item yet.')
+  }
+
+  if (item.amount > 1) {
+    console.log(item.amount)
+  }
+
+  moveItem(item, destination.dataset, amount, function () {
+    // move the item to the right spot once done.
+    if (_items[_transfer.dataset.index] === amount) {
+      destination.querySelector('.sort-' + item.type)
+        .appendChild(_transfer);
+    } else {
+      // TODO: partial stack move, so copy the item...
+      destination.querySelector('.sort-' + item.type)
+        .appendChild(_transfer);
     }
-
-	if(item.amount > 1) {
-		console.log(item.amount)
-	}
-
-    moveItem(item, destination.dataset, amount, function() {
-		// move the item to the right spot once done.
-		if(_items[_transfer.dataset.index] === amount) {
-      destination.querySelector('.sort-' + item.type).appendChild(_transfer);
-		} else {
-			// TODO: partial stack move, so copy the item...
-			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
-		}
-	});
+  });
 
 }
 
