@@ -35,6 +35,8 @@ function dequip(item, callback, exotic) {
     return;
   }
   dequip(item, callback, true)
+
+	//angular.element(document).scope().$apply();
 }
 
 function moveItem(item, destination, amount, callback) {
@@ -43,9 +45,12 @@ function moveItem(item, destination, amount, callback) {
   if (item.equipped) {
     dequip(item, function () {
       item.equipped = false;
+
+			//debugger;
+
       moveItem(item, destination, amount, callback);
     });
-
+angular.element(document).scope().$apply();
     return;
   }
 
@@ -58,7 +63,10 @@ function moveItem(item, destination, amount, callback) {
           // find what was replaced
           for (var i in _items) {
             if (item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
-              manageItemClick(_items[i], {
+							var tItem = _.find(window.dimDO.stores[_items[i].owner].items, function(item) {
+								return (item.id === _items[i].id);
+							});
+              manageItemClick(tItem, {
                 type: 'item',
                 character: item.owner
               })
@@ -67,14 +75,22 @@ function moveItem(item, destination, amount, callback) {
           }
           item.equipped = true;
           _items[i].owner = destination.character;
+					//debugger;
+// angular.forEach(window.dimDO.stores[_items[i].owner].items, function (itemDO, itemIndex) {
+//   if (itemDO.id === item.id) {
+//     debugger;
+//   }
+// });
         }
-        callback();
+        callback();angular.element(document).scope().$apply();
         return;
       });
     }
 
     callback();
     return;
+
+		//angular.element(document).scope().$apply();
   }
 
   var toVault = true;
@@ -86,7 +102,7 @@ function moveItem(item, destination, amount, callback) {
 
   bungie.transfer(char, item.id, item.hash, amount, toVault, function (cb, more) {
     item.owner = toVault ? 'vault' : destination.character;
-
+		//debugger;
     moveItem(item, destination, amount, callback);
   });
 }
@@ -102,6 +118,9 @@ function manageItemClick(item, data) {
     //     document.querySelector('[data-instance-id="' + item.id + '"]'));
     item.equipped = false;
   }
+
+	//angular.element(document).scope().$apply();
+	//debugger;
 }
 
 function manageItem(e) {

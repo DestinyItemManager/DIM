@@ -49,12 +49,36 @@
     vm.stores = dimStoreService.getStores();
 
     vm.MoveToVault = function MoveToVault(store, e) {
-      var data = e.currentTarget.dataset;
+      // var data = e.currentTarget.dataset;
+      //
+      // $window.moveItem(vm.item, data, 1, function () {
+      //   $window.manageItemClick(vm.item, data);
+      //   ngDialog.closeAll();
+      // });
 
-      $window.moveItem(vm.item, data, 1, function () {
-        $window.manageItemClick(vm.item, data);
-        ngDialog.closeAll();
+      var current = _.find(vm.store.items, function (item) {
+        return ((item.type === vm.item.type) && (vm.item.sort === item.sort) && item.equipped);
       });
+
+      var i = _.indexOf(vm.store.items, vm.item);
+
+      if (i >= 0) {
+        vm.store.items.splice(i, 1);
+        store.items.push(vm.item);
+        vm.item.owner = store.id;
+        vm.item.equipped = true;
+      }
+
+      i = _.indexOf(vm.store.items, current);
+
+      if (i >= 0) {
+        vm.store.items.splice(i, 1);
+        store.items.push(current);
+        current.owner = store.id;
+        current.equipped = false;
+      }
+
+
     };
 
     vm.MoveToGuardian = vm.MoveToEquip = vm.MoveToVault;
