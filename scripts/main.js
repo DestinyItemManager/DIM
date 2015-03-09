@@ -219,33 +219,31 @@ function buildLoadouts() {
 // // TODO
 
 function getItemType(type, name) {
-	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
+	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Primary';
-	if(["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
+	if(["Sniper Rifle", "Shotgun", "Fusion Rifle", "Special Weapon Engram"].indexOf(type) != -1) {
 		// detect special case items that are actually primary weapons.
 		if(["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
 			return 'Primary';
 		return 'Secondary';
 	}
-	if(["Rocket Launcher", "Machine Gun"].indexOf(type) != -1)
+	if(["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
 		return 'Heavy';
-	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
+	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader"].indexOf(type) != -1)
+		return 'Class item';
+	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
+	if(["Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable",  "Material", "Currency"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
 }
 
 function sortItem(type) {
-	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun"].indexOf(type) != -1)
+	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
 		return 'Weapon';
-	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
+	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram"].indexOf(type) != -1)
 		return 'Armor';
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
-		return 'Styling';
-	if(["Helmet Engram", "Leg Armor Engram", "Consumable", "Body Armor Engram", "Material", "Gauntlet Engram", "Currency", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
+	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+		return 'General';
 }
 
 function flattenInventory(data) {
