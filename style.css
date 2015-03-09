@@ -69,8 +69,8 @@ img.void {
 }
 .user { margin-bottom: 10px }
 .title {
-  margin: 0 -8px 14px;
-  padding: 0 1em;
+  margin: 0 -12px 14px;
+  padding: 0 16px;
   font-weight: 500;
   background-color: rgba(10,10,10,0.25);
   color: #FFF;
@@ -89,19 +89,19 @@ img.void {
 
 .storage {
   width: auto;
-  padding: 0 8px;
+  padding: 0 12px;
   vertical-align: top;
   display: inline-block;
 }
 
 .vault {
   background-color: rgba(245,245,245,0.25);
-  padding: 0 8px 1px;
-  margin: 0 -8px;
+  padding: 0 12px 1px;
+  margin: 0 -12px;
 }
 
 .sub-section {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .equippable {
