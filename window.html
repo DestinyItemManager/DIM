@@ -24,11 +24,7 @@
     </div>
 
     <div class="content">
-      <div ng-repeat="store in vm.data.stores" class="storage">
-        <div dim-store-heading store-data="store"></div>
-        <div dim-store-equipped store-data="store" ng-if="store.id !== 'vault'"></div>
-        <div dim-store-items store-data="store"></div>
-      </div>
+      <div dim-store></div>
     </div>
 
     <div id="loadout-create">
@@ -85,6 +81,7 @@
     <script type="text/javascript" src="scripts/store/store-equipped.directive.js"></script>
     <script type="text/javascript" src="scripts/store/store-items.directive.js"></script>
     <script type="text/javascript" src="scripts/store/store-item.directive.js"></script>
+    <script type="text/javascript" src="scripts/store/store.directive.js"></script>
     <script type="text/javascript" src="scripts/move-popup/move-item-properties.directive.js"></script>
     <script type="text/javascript" src="scripts/move-popup/move-popup.directive.js"></script>
     <script type="text/javascript" src="scripts/bungie.js"></script>
