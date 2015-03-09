@@ -21,7 +21,7 @@
         '<div class="move-popup">',
         '  <div class="locations" ng-repeat="store in vm.stores">',
         '    <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" ',
-        '      ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.MoveToVault(vm.item, store, $event)" ',
+        '      ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.MoveToVault(store, $event)" ',
         '      data-type="item" data-character="{{ store.id }}">',
         '      <span>Vault</span>',
         '    </div>',
@@ -49,13 +49,6 @@
     vm.stores = dimStoreService.getStores();
 
     vm.MoveToVault = function MoveToVault(store, e) {
-      // var data = e.currentTarget.dataset;
-      //
-      // $window.moveItem(vm.item, data, 1, function () {
-      //   $window.manageItemClick(vm.item, data);
-      //   ngDialog.closeAll();
-      // });
-
       var current = _.find(vm.store.items, function (item) {
         return ((item.type === vm.item.type) && (vm.item.sort === item.sort) && item.equipped);
       });
@@ -77,8 +70,6 @@
         current.owner = store.id;
         current.equipped = false;
       }
-
-
     };
 
     vm.MoveToGuardian = vm.MoveToEquip = vm.MoveToVault;

@@ -17,8 +17,8 @@
         'item': '=itemData'
       },
       template: [
-        '<div class="item{{ vm.item.complete ? \' complete\' : \'\' }}" data-index="{{ vm.item.index }}" data-name="{{ vm.item.name }}" data-instance-id="{{ vm.item.id }}">',
-        '  <img draggable="true" ng-src="http://bungie.net/{{ vm.item.icon }}" ng-click="vm.openLoadout(vm.item, $event)">',
+        '<div ui-draggable="true" class="item{{ vm.item.complete ? \' complete\' : \'\' }}" data-instance-id="{{ vm.item.id }}" ng-click="vm.openLoadout(vm.item, $event)">',
+        '  <img ui-draggable="false" ng-drag="false" ng-src="http://bungie.net/{{ vm.item.icon }}">',
         '  <div class="stack" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '</div>'
       ].join('')
@@ -31,6 +31,8 @@
       var dialogResult = null;
 
       vm.openLoadout = function openLoadout(item, e) {
+        e.stopPropagation();
+
         if (!_.isNull(dialogResult)) {
           dialogResult.close();
         } else {

@@ -104,6 +104,7 @@ img.void {
 .item>img {
   width: 44px;
   height: 44px;
+  pointer-events: none;
 }
 .item .stack {
     position: absolute;
@@ -356,4 +357,11 @@ div[class^="sort-"] {
     content: "";
     display: block;
     left: 144px;
+}
+
+.drag-enter {
+    background-color: rgba(255,255,255,.1);
+}
+.drag-hover {
+    background-color: rgba(255,255,255,.2);
 }

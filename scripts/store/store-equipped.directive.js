@@ -16,7 +16,7 @@
         'store': '=storeData'
       },
       template: [
-        '<div>',
+        '<div ui-on-drop="vm.onDrop(\'equipment\', $event)" drag-enter-class="drag-enter" drag-hover-class="drag-hover">',
         '  <div class="title">Equipped</div>',
         '  <div class="items sections" data-type="equip" data-character="{{ vm.store.id }}" ng-show="vm.isGuardian">',
         '    <div ng-repeat="item in vm.store.items | filter:{ equipped : true } | filter:{ equipment : true }" class="sort-{{ item.type.toLowerCase() }}">',
@@ -31,6 +31,10 @@
       var vm = this;
 
       vm.isGuardian = (vm.store.id !== 'vault');
+
+      vm.onDrop = function(type, e) {
+        alert(type);
+      }
     }
   }
 })();
