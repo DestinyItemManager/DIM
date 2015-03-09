@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimStoreHeading', StoreHeading);
+  angular.module('dimApp')
+    .directive('dimStoreHeading', StoreHeading);
 
   function StoreHeading() {
     return {
@@ -14,11 +15,12 @@
       link: Link,
       template: [
         '<div class="character-box">',
-          '<div class="emblem"></div>',
-          '<div class="class">{{ vm.class }}</div>',
-          '<div class="level" ng-show="vm.isGuardian">{{ vm.level }}</div>',
+        '  <div class="emblem"></div>',
+        '  <div class="class">{{ vm.class }}</div>',
+        '  <div class="level" ng-show="vm.isGuardian">{{ vm.level }}</div>',
         '</div>',
-        '<div class="loadout-button">&#x25BD;</div>'].join('')
+        '<div class="loadout-button">&#x25BD;</div>'
+      ].join('')
     };
 
     function StoreHeadingCtrl() {
@@ -38,12 +40,15 @@
       element.addClass('character');
 
       if (vm.isGuardian) {
-    			element[0].querySelector('.character-box').style.backgroundImage = 'url(' + vm.characterBoxUrl + ')';
-    			element[0].querySelector('.emblem').style.backgroundImage = 'url(' + vm.emblemUrl + ')';
+        element[0].querySelector('.character-box')
+          .style.backgroundImage = 'url(' + vm.characterBoxUrl + ')';
+        element[0].querySelector('.emblem')
+          .style.backgroundImage = 'url(' + vm.emblemUrl + ')';
 
-          if (vm.maxLevel) {
-            element[0].querySelector('.level').classList.add('maxLevel');
-          }
+        if (vm.maxLevel) {
+          element[0].querySelector('.level')
+            .classList.add('maxLevel');
+        }
       }
     }
   }

@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('dimApp').directive('dimStoreItems', StoreItems);
+  angular.module('dimApp')
+    .directive('dimStoreItems', StoreItems);
 
   StoreItems.$inject = ['$document'];
 
@@ -16,36 +17,38 @@
       },
       template: [
         '<div>',
-          '<div class="hover"></div>',
-          '<div class="items" data-type="item" data-character="{{ vm.store.id }}">',
-          '<div>',
-            '<div class="title">Weapons</div>',
-            '<div class="items-Weapon sections">',
-              '<div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Weapon\' } | filter:{ equipped : false }"',
-                ' class="sort-{{ item.type }}">',
-                  '<div dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-          '</div>',
-          '<div>',
-            '<div class="title">Armor</div>',
-            '<div class="item-Armor sections">',
-              '<div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Armor\' } | filter:{ equipped : false }"',
-                ' class="sort-{{ item.type }}">',
-                '<div dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-          '</div>',
-          '<div>',
-            '<div class="title">General</div>',
-            '<div class="item-Styling sections">',
-              '<div ng-repeat="(key, item) in vm.store.items | filter: { sort : \'General\' } | filter:{ equipped : false }"',
-                ' class="sort-{{ item.type }}">',
-                '<div dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-          '</div>',
-        '</div>'].join('')
+        '  <div class="items" data-type="item" data-character="{{ vm.store.id }}">',
+        '    <div>',
+        '      <div class="title">Weapons</div>',
+        '      <div class="items-Weapon sections">',
+        '        <div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Weapon\' } | filter:{ equipped : false }"',
+        '          class="sort-{{ item.type }}">',
+        '          <div dim-store-item store-data="vm.store" item-data="item"></div>',
+        '        </div>',
+        '      </div>',
+        '    </div>',
+        '    <div>',
+        '      <div class="title">Armor</div>',
+        '      <div class="item-Armor sections">',
+        '        <div ng-repeat="(key, item) in vm.store.items | filter:{ sort : \'Armor\' } | filter:{ equipped : false }"',
+        '          class="sort-{{ item.type }}">',
+        '          <div dim-store-item store-data="vm.store" item-data="item"></div>',
+        '        </div>',
+        '      </div>',
+        '    </div>',
+        '    <div>',
+        '      <div class="title">General</div>',
+        '        <div class="item-Styling sections">',
+        '          <div ng-repeat="(key, item) in vm.store.items | filter: { sort : \'General\' } | filter:{ equipped : false }"',
+        '            class="sort-{{ item.type }}">',
+        '            <div dim-store-item store-data="vm.store" item-data="item"></div>',
+        '          </div>',
+        '        </div>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join('')
     };
 
     function StoreItemsCtrl($scope) {
