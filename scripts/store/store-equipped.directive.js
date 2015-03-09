@@ -3,12 +3,13 @@
 
   angular.module('dimApp').directive('dimStoreEquipped', StoreEquipped);
 
+  StoreEquipped.$inject = ['ngDialog'];
+
   function StoreEquipped(ngDialog) {
     return {
       bindToController: true,
       controller: StoreEquippedCtrl,
       controllerAs: 'vm',
-      link: Link,
       replace: true,
       scope: {
         'store': '=storeData'
@@ -28,10 +29,6 @@
       var vm = this;
 
       vm.isGuardian = (vm.store.id !== 'vault');
-    }
-
-    function Link(scope, element) {
-      var vm = scope.vm;
     }
   }
 })();

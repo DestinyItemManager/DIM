@@ -4,6 +4,8 @@
   angular.module('dimApp')
     .controller('ItemManagerCtrl', ItemManager);
 
+  ItemManager.$inject = ['$scope', '$window'];
+
   function ItemManager($scope, $window) {
     var vm = this;
 

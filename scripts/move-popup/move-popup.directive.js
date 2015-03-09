@@ -3,6 +3,8 @@
 
   angular.module('dimApp').directive('dimMovePopup', MovePopup);
 
+  MovePopup.$inject = ['$window', 'ngDialog'];
+
   function MovePopup($window, ngDialog) {
     return {
       controller: MovePopupController,
@@ -49,6 +51,8 @@
         '</div>'].join('')
     }
   }
+
+  MovePopupController.$inject = ['$scope', 'dimStoreService'];
 
   function MovePopupController($scope, dimStoreService) {
     var vm = this;

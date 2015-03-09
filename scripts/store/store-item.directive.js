@@ -3,6 +3,8 @@
 
   angular.module('dimApp').directive('dimStoreItem', StoreItem);
 
+  StoreItem.$inject = ['ngDialog'];
+
   function StoreItem(ngDialog) {
     return {
       bindToController: true,
@@ -19,6 +21,8 @@
           '<div class="stack" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '</div>'].join('')
     };
+
+    StoreItemCtrl.$inject = ['$scope', 'dimStoreService'];
 
     function StoreItemCtrl($scope, dimStoreService) {
       var vm = this;

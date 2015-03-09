@@ -3,12 +3,13 @@
 
   angular.module('dimApp').directive('dimStoreItems', StoreItems);
 
+  StoreItems.$inject = ['$document'];
+
   function StoreItems($document) {
     return {
       bindToController: true,
       controller: StoreItemsCtrl,
       controllerAs: 'vm',
-      link: Link,
       replace: true,
       scope: {
         'store': '=storeData'
@@ -49,10 +50,6 @@
 
     function StoreItemsCtrl($scope) {
       var vm = this;
-    }
-
-    function Link(scope, element) {
-      var vm = scope.vm;
     }
   }
 })();
