@@ -3,12 +3,24 @@
 
   angular.module('dimApp').directive('dimMovePopup', MovePopup);
 
-  function MovePopup($window) {
+  function MovePopup($window, ngDialog) {
     return {
       controller: MovePopupController,
       controllerAs: 'vm',
       bindToController: true,
-      link:Link,
+      link: function Link(scope, element, attrs) {
+        scope.MoveToVault = function MoveToVault(store, e) {
+          var data = e.currentTarget.dataset;
+          var item = this.$parent.vm.item;
+
+          $window.moveItem(item, data, 1, function() {
+            $window.manageItemClick(item, data);
+            ngDialog.closeAll();
+          });
+        };
+
+        scope.MoveToGuardian = scope.MoveToEquip = scope.MoveToVault;
+      },
       restrict: 'A',
       scope: {
         store: '=dimStore',
@@ -90,18 +102,5 @@
 
       return false;
     };
-  }
-
-  function Link(scope, element, attrs) {
-    scope.MoveToVault = function MoveToVault(store, e) {
-      var data = e.currentTarget.dataset;
-      var item = this.$parent.vm.item;
-
-      window.moveItem(item, data, 1, function() {
-        window.manageItemClick(item, data);
-      });
-    };
-
-    scope.MoveToGuardian = scope.MoveToEquip = scope.MoveToVault;
   }
 })();
