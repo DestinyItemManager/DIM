@@ -18,7 +18,7 @@
           '<div class="class">{{ vm.class }}</div>',
           '<div class="level" ng-show="vm.isGuardian">{{ vm.level }}</div>',
         '</div>',
-        '<div class="loadout-button">&#x25BD;</div>'].join('')
+        '<div class="loadout-button">&#x25BC;</div>'].join('')
     };
 
     function StoreHeadingCtrl() {

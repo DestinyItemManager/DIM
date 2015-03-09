@@ -148,8 +148,8 @@ img.void {
     display: inline-block;
     width: 165px;
     height: 43px;
-    padding: 0 0 0 50px;
-    margin: 5px 0;
+    padding: 0 42px 0 50px;
+    margin: 5px -42px 5px 0;
     opacity: 1;
     background: rgba(30,36,43,.5);
     color: #f5f5f5;
@@ -176,7 +176,7 @@ img.void {
 .character-box .level {
     position: absolute;
     top: 8px;
-    right: 7px;
+    right: 50px;
     font-weight: 200;
     font-size: 22px;
 }
@@ -192,20 +192,26 @@ img.void {
 .loadout-button {
     position: relative;
     display: inline-block;
-    width: 37px;
-    height: 37px;
-    background-color: #5b6e6c;
-    border: 2px solid rgba(245,245,245,.6);
-    border-bottom: 4px solid rgba(245,245,245,.6);
-    color: rgba(245,245,245,.6);
+    width: 40px;
+    height: 43px;
+    border-left: 2px solid rgba(245,245,245,.25);
+    color: rgba(245,245,245,.5);
     vertical-align: top;
     text-align: center;
     margin: 5px 0;
-    line-height: 39px;
+    font-size: 20px;
+    line-height: 43px;
     padding: 0;
     cursor: pointer;
 }
-.loadout-button .active { background-color: #628e89 }
+.loadout-button:hover {
+  background-color: rgba(245,245,245,.25);
+  color: rgba(245,245,245,.75);
+}
+.loadout-button .active {
+  background-color: rgba(10,10,10,.25);
+  color: rgba(245,245,245,.75);
+}
 #loadout-popup {
     display: none;
     background-color: #5b6e6c;
