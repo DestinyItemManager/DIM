@@ -94,6 +94,30 @@ img.void {
   width: 260px;
 }
 
+.counter {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  padding: 0 1px;
+  background: #ddd;
+  color: #000;
+  min-width: 15px;
+  text-align: center;
+}
+
+.damage-2 {
+  color: #fff;
+  background-color: #85c5ec;
+}
+.damage-3 {
+  color: #fff;
+  background-color: #f2721b;
+}
+.damage-4 {
+  color: #fff;
+  background-color: #b184c5;
+}
+
 .item {
     position: relative;
     display: inline-block;
