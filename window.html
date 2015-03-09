@@ -1,84 +1,95 @@
 <html ng-app="dimApp" ng-csp>
-  <head>
-    <title>DIM</title>
-    <link rel="stylesheet" type="text/css" href="vendor/ngdialog/css/ngDialog.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
-  </head>
-  <body>
-    <div ng-controller="ItemManagerCtrl as vm">
-      <div id="header">
-        <div class="content">
-          <span>DIM</span> <span id="faq-button">?</span>
-          <span style="float: right;">
-          <input type="search" id="filter-text" placeholder="Filter Items or is:arc" /><span id="user">&lt;loading&gt;</span>
-          </span>
-        </div>
-      </div>
 
+<head>
+  <title>DIM</title>
+  <link rel="stylesheet" type="text/css" href="vendor/ngdialog/css/ngDialog.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <div ng-controller="ItemManagerCtrl as vm">
+    <div id="header">
       <div class="content">
-        <div ng-repeat="store in vm.data.stores" class="storage">
-          <div dim-store-heading store-data="store"></div>
-          <div dim-store-equipped store-data="store" ng-if="store.id !== 'vault'"></div>
-          <div dim-store-items store-data="store"></div>
-        </div>
+        <span>DIM</span>
+        <span id="faq-button">?</span>
+        <span class="header-right">
+          <input type="search" id="filter-text" placeholder="filter items or is:arc" />
+          <span id="user" class="header-right"></span>
+          <select id="system">
+            <option>PSN</option>
+            <option>XBL</option>
+          </select>
+        </span>
       </div>
-
-      <div id="loadout-create">
-        <div class="content">
-          <div id="loadout-options">
-            <input id="loadout-name" type="search" placeholder="Loadout Name..." />
-            <span id="loadout-save">Save</span><span id="loadout-cancel">Cancel</span><p id="loadout-error"></p>
-          </div>
-          <span id="loadout-contents">
-            <!-- <span class="loadout-class"></span> -->
-            <span class="loadout-emblem"></span
-            ><span class="loadout-primary"></span
-            ><span class="loadout-secondary"></span
-            ><span class="loadout-heavy"></span
-            ><span class="loadout-helmet"></span
-            ><span class="loadout-gauntlets"></span
-            ><span class="loadout-chest"></span
-            ><span class="loadout-leg"></span
-            ><span class="loadout-armor"></span
-            ><span class="loadout-vehicle"></span
-            ><span class="loadout-ship"></span
-            ><span class="loadout-ghost"></span
-            ><span class="loadout-titan"></span
-            ><span class="loadout-hunter"></span
-            ><span class="loadout-warlock"></span>
-          </span>
-        </div>
-      </div>
-
-      <div id="loadout-popup">
-        <div id="loadout-new">+ Create Loadout</div>
-        <div id="loadout-list"></div>
-      </div>
-
-  		<template id="loadout-template">
-  			<div class="loadout-set">
-  				<span class="button-name"></span>
-  				<span class="button-delete">Delete</span>
-  			</div>
-  		</template>
     </div>
-    <div data-scripts>
-      <script type="text/javascript" src="vendor/angular/angular.js"></script>
-      <script type="text/javascript" src="vendor/underscore/underscore.js"></script>
-      <script type="text/javascript" src="vendor/ngDraggable/ngDraggable.js"></script>
-      <script type="text/javascript" src="vendor/ngDialog/js/ngDialog.js"></script>
-      <script type="text/javascript" src="scripts/app.module.js"></script>
-      <script type="text/javascript" src="scripts/shell/item-manager.controller.js"></script>
-      <script type="text/javascript" src="scripts/store/store.factory.js"></script>
-      <script type="text/javascript" src="scripts/store/store-heading.directive.js"></script>
-      <script type="text/javascript" src="scripts/store/store-equipped.directive.js"></script>
-      <script type="text/javascript" src="scripts/store/store-items.directive.js"></script>
-      <script type="text/javascript" src="scripts/store/store-item.directive.js"></script>
-      <script type="text/javascript" src="scripts/move-popup/move-item-properties.directive.js"></script>
-      <script type="text/javascript" src="scripts/move-popup/move-popup.directive.js"></script>
-      <script type="text/javascript" src="scripts/bungie.js"></script>
-      <script type="text/javascript" src="scripts/loadout.js"></script>
-      <script type="text/javascript" src="scripts/main.js"></script>
-    <div>
-  </body>
+
+    <div class="content">
+      <div ng-repeat="store in vm.data.stores" class="storage">
+        <div dim-store-heading store-data="store"></div>
+        <div dim-store-equipped store-data="store" ng-if="store.id !== 'vault'"></div>
+        <div dim-store-items store-data="store"></div>
+      </div>
+    </div>
+
+    <div id="loadout-create">
+      <div class="content">
+        <div id="loadout-options">
+          <input id="loadout-name" type="search" placeholder="Loadout Name..." />
+          <span id="loadout-save">Save</span>
+          <span id="loadout-cancel">Cancel</span>
+          <p id="loadout-error"></p>
+        </div>
+        <span id="loadout-contents">
+          <span class="loadout-class"></span>
+          <span class="loadout-emblem"></span>
+          <span class="loadout-primary"></span>
+          <span class="loadout-secondary"></span>
+          <span class="loadout-heavy"></span>
+          <span class="loadout-helmet"></span>
+          <span class="loadout-gauntlets"></span>
+          <span class="loadout-chest"></span>
+          <span class="loadout-leg"></span>
+          <span class="loadout-armor"></span>
+          <span class="loadout-vehicle"></span>
+          <span class="loadout-ship"></span>
+          <span class="loadout-ghost"></span>
+          <span class="loadout-titan"></span>
+          <span class="loadout-hunter"></span>
+          <span class="loadout-warlock"></span>
+        </span>
+      </div>
+    </div>
+
+    <div id="loadout-popup">
+      <div id="loadout-new">+ Create Loadout</div>
+      <div id="loadout-list"></div>
+    </div>
+
+    <template id="loadout-template">
+      <div class="loadout-set">
+        <span class="button-name"></span>
+        <span class="button-delete">Delete</span>
+      </div>
+    </template>
+  </div>
+  <div data-scripts>
+    <script type="text/javascript" src="vendor/angular/angular.js"></script>
+    <script type="text/javascript" src="vendor/underscore/underscore.js"></script>
+    <script type="text/javascript" src="vendor/ngDraggable/ngDraggable.js"></script>
+    <script type="text/javascript" src="vendor/ngDialog/js/ngDialog.js"></script>
+    <script type="text/javascript" src="scripts/app.module.js"></script>
+    <script type="text/javascript" src="scripts/shell/item-manager.controller.js"></script>
+    <script type="text/javascript" src="scripts/store/store.factory.js"></script>
+    <script type="text/javascript" src="scripts/store/store-heading.directive.js"></script>
+    <script type="text/javascript" src="scripts/store/store-equipped.directive.js"></script>
+    <script type="text/javascript" src="scripts/store/store-items.directive.js"></script>
+    <script type="text/javascript" src="scripts/store/store-item.directive.js"></script>
+    <script type="text/javascript" src="scripts/move-popup/move-item-properties.directive.js"></script>
+    <script type="text/javascript" src="scripts/move-popup/move-popup.directive.js"></script>
+    <script type="text/javascript" src="scripts/bungie.js"></script>
+    <script type="text/javascript" src="scripts/loadout.js"></script>
+    <script type="text/javascript" src="scripts/main.js"></script>
+  </div>
+</body>
+
 </html>
