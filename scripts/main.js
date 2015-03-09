@@ -562,6 +562,17 @@ bungie.user(function(u) {
 		window.dimDO.stores['vault'] = _.extend({}, _storage['vault']);
 		window.dimDO.stores['vault'].items = [];
 
+		window.dimDO.stores['vault'].bucketCounts = {};
+
+		for (var b in v.data.buckets) {
+			if (v.data.buckets[b].bucketHash === 3003523923)
+				window.dimDO.stores['vault'].bucketCounts['Armor'] = v.data.buckets[b].items.length;
+			if (v.data.buckets[b].bucketHash === 138197802)
+				window.dimDO.stores['vault'].bucketCounts['General'] = v.data.buckets[b].items.length;
+			if (v.data.buckets[b].bucketHash === 4046403665)
+				window.dimDO.stores['vault'].bucketCounts['Weapons'] = v.data.buckets[b].items.length;
+		}
+
 		appendItems('vault', v.definitions.items, flattenVault(v.data));
 	});
 });

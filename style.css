@@ -68,6 +68,11 @@ img.void {
   letter-spacing: 2px;
   font-size: 14px;
 }
+
+.bucket-count {
+  float: right;
+}
+
 .title .icon { width: 30px }
 
 .storage {
@@ -170,6 +175,11 @@ img.void {
     color: #f5f5f5;
     text-decoration: none;
     background-size: cover;
+}
+.character-box.vault-box {
+  padding: 0 1em;
+  width: 260px;
+  box-sizing: border-box;
 }
 .character-box .emblem {
     position: absolute;
