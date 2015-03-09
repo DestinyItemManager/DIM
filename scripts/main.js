@@ -170,6 +170,13 @@ function moveItem(item, destination, amount, callback) {
 		// if we're equipping an item
 		if(destination.type === 'equip' && !item.equipped) {
 			bungie.equip(item.owner, item.id, function(e) {
+				// if(error equipping) {
+				// if the error was that an exotic was already equipped
+				// erroritem = find the item that caused the error
+				// 	dequip(erroritem, function(){
+				//    moveItem(item, destination, amount, callback);
+				//  })
+				// }
 				if(e === 0) {
 					// find what was replaced
 					for(var i in _items) {
@@ -789,13 +796,18 @@ bungie.user(function(u) {
 	if(bungie.system().xbl.id !== undefined && bungie.system().psn.id !== undefined) {
 		var toggle = document.getElementById('system');
 		toggle.style.display = 'block';
+		chrome.storage.sync.get('system', function(res) {
+			bungie.setsystem(res.system);
+			toggle.value = res.system;
+		});
 		toggle.addEventListener('change', function() {
 			bungie.setsystem(this.value);
+			chrome.storage.sync.set({'system': this.value});
 			loadUser();
 		});
 	}
 
-	loadUser()
+	loadUser();
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {

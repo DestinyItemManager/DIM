@@ -8,6 +8,8 @@ function bungie() {
   var membershipId = 0;
   var characterIds = [];
 
+  var active = {id: 'loading'};
+
   // private methods
   function _getAllCookies(callback) {
     chrome.cookies.getAll({ domain: '.' + domain }, function(){
@@ -24,8 +26,7 @@ function bungie() {
           break;
         }
       }
-      if(c)
-      callback(c.value);
+      callback(c ? c.value : null);
     });
   }
 
@@ -37,14 +38,8 @@ function bungie() {
 
   function _request(opts) {
     var r = new XMLHttpRequest();
-    // console.log('looking at ', opts.route)
     r.open(opts.method, url + opts.route, true);
     r.setRequestHeader('X-API-Key', apikey);
-    // r.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    // r.setRequestHeader('accept', 'accept:application/json, text/javascript, */*; q=0.01');
-    // r.setRequestHeader('x-requested-with', 'XMLHttpRequest');
-    // r.setRequestHeader('referer', 'https://www.bungie.net/en/Legend/1/4611686018443852891/2305843009263222646');
-    // r.setRequestHeader('origin', 'https://www.bungie.net');
     r.onload = function() {
       if (this.status >= 200 && this.status < 400) {
         var response = JSON.parse(this.response);
@@ -63,6 +58,8 @@ function bungie() {
         r.withCredentials = true;
         r.setRequestHeader('x-csrf', token);
         r.send(JSON.stringify(opts.payload));
+      } else {
+        opts.complete({error: 'cookie not found'});
       }
     });
   }
@@ -85,7 +82,7 @@ function bungie() {
       method: 'GET',
       complete: function(res) {
         if(res === undefined) {
-          callback({error: true})
+          callback({error: 'no response'})
           return;
         }
 
