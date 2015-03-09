@@ -137,17 +137,28 @@ img.void {
   text-align: center;
 }
 
+.damage-type {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+}
+
 .damage-arc {
-  color: #fff;
-  background-color: #85c5ec;
+  border-style: solid;
+  border-width: 0 0 10px 10px;
+  border-color: transparent transparent #85c5ec transparent;
 }
 .damage-solar {
-  color: #fff;
-  background-color: #f2721b;
+  border-style: solid;
+  border-width: 0 0 10px 10px;
+  border-color: transparent transparent #f2721b transparent;
 }
 .damage-void {
-  color: #fff;
-  background-color: #b184c5;
+  border-style: solid;
+  border-width: 0 0 10px 10px;
+  border-color: transparent transparent #b184c5 transparent;
 }
 
 .item {
