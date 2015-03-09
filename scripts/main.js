@@ -92,14 +92,14 @@ function moveItem(item, destination, amount, callback) {
 }
 function manageItemClick(item, data) {
   if (data.type === 'equip') {
-    document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type)
-      .appendChild(
-        document.querySelector('[data-instance-id="' + item.id + '"]'));
+    // document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type)
+    //   .appendChild(
+    //     document.querySelector('[data-instance-id="' + item.id + '"]'));
     item.equipped = true;
   } else {
-    document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type)
-      .appendChild(
-        document.querySelector('[data-instance-id="' + item.id + '"]'));
+    // document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type)
+    //   .appendChild(
+    //     document.querySelector('[data-instance-id="' + item.id + '"]'));
     item.equipped = false;
   }
 }
