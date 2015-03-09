@@ -15,7 +15,7 @@
       scope: {
         store: '=dimStore',
         item: '=dimItem'
-      },s
+      },
       replace: true,
       template: [
         '<div class="move-popup">',
@@ -80,7 +80,7 @@
         return false;
       }
 
-      if (item.notransfer && item.equipped) {
+      if (item.notransfer && item.equipped && item.owner === buttonStore.id) {
         return true;
       }
 
