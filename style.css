@@ -1,7 +1,7 @@
 body {
     min-width: 410px;
     margin: 0 auto;
-    padding-top: 40px;
+    padding-top: 50px;
     background: radial-gradient(transparent,70%,#000) fixed,url(https://www.bungie.net/img/theme/destiny/bgs/gradient_green.jpg) fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -9,12 +9,18 @@ body {
     background-size: cover;
     color: #fff;
     font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
+    text-align: center;
+}
+.ng-scope {
+  text-align: initial;
+  display: inline-block;
 }
 #header {
     position: fixed;
     width: 100%;
     z-index: 5;
     top: 0;
+    left: 0;
     height: 32px;
     background: rgba(195,188,180,.9);
     color: #1a1e24;
@@ -51,22 +57,27 @@ img.void {
 }
 .user { margin-bottom: 10px }
 .title {
-    text-transform: uppercase;
-    position: relative;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    border-bottom: 2px solid rgba(245,245,245,.6);
-    font-size: 15px;
-    font-weight: 500;
-    color: rgba(245,245,245,.6);
-    width: 260px;
+  margin: 0 -8px 14px;
+  padding: 0 1em;
+  font-weight: 500;
+  background-color: rgba(10,10,10,0.25);
+  color: #FFF;
+  line-height: 40px;
+  height: 40px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+.vault .title {
+  background-color: rgba(100,100,100,0.25);
 }
 .title .icon { width: 30px }
+
 .storage {
-  margin-top: 10px;
-  max-width: 260px;
-  float: left;
-  margin-right: 1em;
+  width: 260px;
+  padding: 0 8px;
+  vertical-align: top;
+  display: inline-block;
 }
 
 .sub-section {
@@ -149,7 +160,8 @@ img.void {
     width: 165px;
     height: 43px;
     padding: 0 42px 0 50px;
-    margin: 5px -42px 5px 0;
+    margin-right: -42px;
+    margin-bottom: 16px;
     opacity: 1;
     background: rgba(30,36,43,.5);
     color: #f5f5f5;
@@ -198,7 +210,6 @@ img.void {
     color: rgba(245,245,245,.5);
     vertical-align: top;
     text-align: center;
-    margin: 5px 0;
     font-size: 20px;
     line-height: 43px;
     padding: 0;
@@ -298,9 +309,15 @@ img.void {
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq a { color: #fff }
 .content {
-    max-width: 1088px;
     margin: 0 auto;
     padding: 2px;
+    white-space: nowrap;
+}
+.content * {
+  white-space: normal;
+}
+#header .content {
+  max-width: 1088px;
 }
 #loadout-create {
     position: fixed;
