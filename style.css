@@ -25,6 +25,7 @@ body {
     background: rgba(195,188,180,.9);
     color: #1a1e24;
     box-shadow: 0 2px 20px 2px #000;
+    text-align: initial;
 }
 #header .header-right {
   float: right;
