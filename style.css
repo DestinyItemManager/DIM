@@ -296,6 +296,10 @@ img.void {
 #loadout-list .loadout-set:hover,
 #loadout-new:hover,
 #loadout-options span:hover { background-color: #628e89 }
+.loadout-set .button-name {
+  display: inline-block;
+  width: 150px;
+}
 .loadout-set .button-edit, .loadout-set .button-delete {
     background-color: rgba(195,188,180,.9);
     color: #1a1e24;

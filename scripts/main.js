@@ -135,7 +135,7 @@ function moveBox(item) {
 function dequip(item, callback, exotic) {
 	// find an item to replace the current.
 	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier === 'exotic') && !_items[i].equipped) {
+		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'exotic') && !_items[i].equipped) {
 			// console.log('[dequip] found replacement item: ', _items[i].name)
 			bungie.equip(_items[i].owner, _items[i].id, function(e) {
 				if(e === 0) {
@@ -300,7 +300,7 @@ function buildLoadouts() {
 			});
 			var n = d.querySelector('.button-name');
 			n.innerText = sets[s].name;
-			n.parentNode.addEventListener('click', function(e) {
+			n.addEventListener('click', function(e) {
 				// this is really sketchy
 				loadout.apply(
 					loadoutBox.parentNode.parentNode.parentNode.querySelector('[data-character]').dataset.character,
@@ -614,6 +614,7 @@ function tryPageLoad() {
 		});
 
 		move = document.getElementById('move-popup');
+		move.querySelector('.locations').innerHTML = '';
 
 		var faqButton = document.getElementById('faq-button');
 		var faq = document.getElementById('faq');
@@ -686,6 +687,8 @@ function tryPageLoad() {
 					special = 'type';
 				} else if(['basic', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filter) >= 0) {
 					special = 'tier';
+				} else if(['incomplete'].indexOf(filter) >= 0) {
+					special = 'incomplete';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
 				}
@@ -695,7 +698,9 @@ function tryPageLoad() {
 					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmg == filter ? '' : 'none'; break;
 					case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
 					case 'tier':	item[i].style.display = _items[item[i].dataset.index].tier.toLowerCase() == filter ? '' : 'none'; break;
-					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete === true ? '' : 'none'; break;
+					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_items[item[i].dataset.index].sort) !== -1 &&
+						!_items[item[i].dataset.index].complete ? '' : 'none'; break;
+					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete ? '' : 'none'; break;
 					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
 			}
