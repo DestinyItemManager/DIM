@@ -1,31 +1,31 @@
 body {
-    min-width: 410px;
-    margin: 0 auto;
-    padding-top: 50px;
-    background: radial-gradient(transparent,70%,#000) fixed,url(https://www.bungie.net/img/theme/destiny/bgs/gradient_green.jpg) fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    color: #fff;
-    font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
-    text-align: center;
+  min-width: 410px;
+  margin: 0 auto;
+  padding-top: 50px;
+  background: radial-gradient(transparent,70%,#000) fixed,url(https://www.bungie.net/img/theme/destiny/bgs/gradient_green.jpg) fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #fff;
+  font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
 }
-.ng-scope {
+body>div {
+  text-align: center;
+}
+body>div * {
   text-align: initial;
-  display: inline-block;
 }
 #header {
-    position: fixed;
-    width: 100%;
-    z-index: 5;
-    top: 0;
-    left: 0;
-    height: 32px;
-    background: rgba(195,188,180,.9);
-    color: #1a1e24;
-    box-shadow: 0 2px 20px 2px #000;
-    text-align: initial;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  height: 32px;
+  background: rgba(195,188,180,.9);
+  color: #1a1e24;
+  box-shadow: 0 2px 20px 2px #000;
 }
 #header .header-right {
   float: right;
@@ -88,7 +88,7 @@ img.void {
 .title .icon { width: 30px }
 
 .storage {
-  width: 260px;
+  width: auto;
   padding: 0 8px;
   vertical-align: top;
   display: inline-block;
@@ -110,7 +110,7 @@ img.void {
 }
 
 .unequippable {
-  width: 260px;
+  width: 220px;
 }
 
 .equipped {
@@ -133,19 +133,19 @@ img.void {
   padding: 0 2px;
   background: #ddd;
   color: #000;
-  min-width: 15px;
+  min-width: 10px;
   text-align: center;
 }
 
-.damage-2 {
+.damage-arc {
   color: #fff;
   background-color: #85c5ec;
 }
-.damage-3 {
+.damage-solar {
   color: #fff;
   background-color: #f2721b;
 }
-.damage-4 {
+.damage-void {
   color: #fff;
   background-color: #b184c5;
 }
@@ -191,7 +191,7 @@ img.void {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 165px;
+    width: 128px;
     height: 43px;
     padding: 0 42px 0 50px;
     margin-right: -42px;
@@ -335,15 +335,18 @@ img.void {
 #faq .content .title { margin: 50px 50px 0 }
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq a { color: #fff }
-.content {
+#content {
     margin: 0 auto;
     padding: 2px;
     white-space: nowrap;
+    display: inline-block;
 }
-.content * {
+#content div * {
   white-space: normal;
 }
 #header .content {
+  margin: 0 auto;
+  padding: 7px 1em;
   max-width: 1088px;
 }
 #loadout-create {
