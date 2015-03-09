@@ -225,13 +225,15 @@ function getItemType(type, name) {
 		// detect special case items that are actually primary weapons.
 		if(["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
 			return 'Primary';
-		return 'Secondary';
+		return 'Special';
 	}
 	if(["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
 		return 'Heavy';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
 		return 'ClassItem';
-	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram"].indexOf(type) != -1)
+	if(["Gauntlet Engram"].indexOf(type) != -1)
+		return 'Gauntlets';
+	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
 		return type.split(' ')[0];
 	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable",  "Material", "Currency"].indexOf(type) != -1)
 		return type.split(' ')[0];

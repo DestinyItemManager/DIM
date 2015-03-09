@@ -306,6 +306,9 @@ img.void {
 div[class^="sort-"] {
   display: inline-block;
 }
+.item {
+  display: inline-block;
+}
 
 .body.ngdialog-open {
   overflow: auto;
