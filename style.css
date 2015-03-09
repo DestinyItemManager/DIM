@@ -69,14 +69,16 @@ img.void {
   margin-right: 1em;
 }
 
-.equippable {
-  display: inline-block;
-  vertical-align: top;
+.sub-section {
   margin-bottom: 12px;
 }
 
+.equippable {
+  display: inline-block;
+  vertical-align: top;
+}
+
 .unequippable {
-  margin-bottom: 12px;
   width: 260px;
 }
 
