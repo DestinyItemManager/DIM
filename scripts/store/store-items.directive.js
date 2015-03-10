@@ -6,149 +6,175 @@
 
   function StoreItems() {
     return {
-      bindToController: true,
       controller: StoreItemsCtrl,
       controllerAs: 'vm',
+      bindToController: true,
       replace: true,
       scope: {
         'store': '=storeData'
       },
       template: [
         '<div>',
-          '<div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-          '<div class="section weapons">',
-            '<div class="title"><span ng-if="$parent.$index === 0 || vm.store.id === \'vault\'">Weapons</span><span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{vm.store.bucketCounts.Weapons}}/20</span></div>',
-            '<div class="sub-section sort-primary">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Primary\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Primary\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-special">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Special\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Special\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-heavy">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Heavy\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Heavy\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-          '</div>',
-          '<div class="section armor">',
-            '<div class="title"><span ng-if="$parent.$index === 0 || vm.store.id === \'vault\'">Armor</span><span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{vm.store.bucketCounts.Armor}}/20</span></div>',
-            '<div class="sub-section sort-helmet">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Helmet\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Helmet\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-gauntlets">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Gauntlets\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Gauntlets\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-chest">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Chest\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Chest\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-leg">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Leg\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Leg\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-classitem">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'ClassItem\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'ClassItem\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-          '</div>',
-          '<div class="section general">',
-            '<div class="title"><span ng-if="$parent.$index === 0 || vm.store.id === \'vault\'">General</span><span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{vm.store.bucketCounts.General}}/20</span></div>',
-            '<div class="sub-section sort-emblem">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Emblem\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Emblem\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-armor">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Armor\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Armor\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-ghost">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Ghost\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Ghost\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-ship">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Ship\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Ship\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-vehicle">',
-              '<div class="equipped equippable" ng-if="vm.store.id !== \'vault\'">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Vehicle\' } | filter:{ equipped : true }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-              '<div class="unequipped equippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Vehicle\' } | filter:{ equipped : false }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-consumable">',
-              '<div class="unequippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Consumable\' }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-material">',
-              '<div class="unequippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Material\' }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
-            '<div class="sub-section sort-currency">',
-              '<div class="unequippable">',
-                '<div ng-repeat="(key, item) in vm.store.items | filter:{ type : \'Currency\' }" dim-store-item store-data="vm.store" item-data="item"></div>',
-              '</div>',
-            '</div>',
+        '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
+        '  <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}">',
+        '    <div class="title">',
+        '      <span>{{ key }}</span>',
+        '      <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.store.bucketCounts[key] }}/20</span>',
+        '    </div>',
+        '    <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event)" drop-channel="{{ type }}" ng-if="vm.data[vm.orderedTypes[type]]">',
+        '      <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ng-if="vm.data[vm.orderedTypes[type]].equipped">',
+        '        <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '      </div>',
+        '      <div ng-class="vm.styles[type].unequipped">',
+        '        <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '      </div>',
+        '    </div>',
           '</div>',
         '</div>'].join('')
     };
 
     function StoreItemsCtrl($scope) {
       var vm = this;
+      var types = [ // Order of types in the rows.
+        'Class',
+        'Primary',
+        'Special',
+        'Heavy',
+        'Helmet',
+        'Gauntlets',
+        'Chest',
+        'Leg',
+        'ClassItem',
+        'Emblem',
+        'Armor',
+        'Ghost',
+        'Ship',
+        'Vehicle',
+        'Consumable',
+        'Material',
+        'Currency'
+      ];
+      vm.orderedTypes = {};
+
+      _.each(types, function (value, index) {
+        vm.orderedTypes[value] = index;
+      });
+
+      vm.categories = { // Grouping of the types in the rows.
+        Weapons: [
+          'Primary',
+          'Special',
+          'Heavy',
+        ],
+        Armor: [
+          'Helmet',
+          'Gauntlets',
+          'Chest',
+          'Leg',
+          'ClassItem',
+        ],
+        General: [
+          'Emblem',
+          'Armor',
+          'Ghost',
+          'Ship',
+          'Vehicle',
+          'Consumable',
+          'Material',
+          'Currency'
+        ]
+      };
+
+      vm.styles = { // Styles of the types in the rows.
+        Class: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Primary: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Special: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Heavy: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Helmet: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Gauntlets: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Chest: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Leg: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        ClassItem: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Emblem: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Armor: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Ghost: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Ship: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Vehicle: {
+          equipped: 'equipped equippable',
+          unequipped: 'unequipped equippable',
+        },
+        Consumable: {
+          equipped: '',
+          unequipped: 'unequippable',
+        },
+        Material: {
+          equipped: '',
+          unequipped: 'unequippable',
+        },
+        Currency: {
+          equipped: '',
+          unequipped: 'unequippable',
+        }
+      }
+
+      vm.onDrop = function(data, e) {
+        var item = dimItemService.getItem(data.id);
+
+        alert(item.name);
+      };
+
+      vm.data = _.chain(vm.store.items)
+        .sortBy(function (item) {
+          return vm.orderedTypes[item.type];
+        })
+        .groupBy(function (item) {
+          return vm.orderedTypes[item.type];
+        })
+        .mapObject(function (values, key) {
+          return _.groupBy(values, function (item) {
+            return (item.equipped ? 'equipped' : 'unequipped');
+          });
+        })
+        .value();
     }
   }
 })();
