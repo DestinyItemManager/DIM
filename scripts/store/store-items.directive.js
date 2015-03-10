@@ -33,19 +33,51 @@
         '</div>'
       ].join('')
     };
+  }
 
-    function StoreItemsCtrl($scope) {
-      var vm = this;
-      var types = [ // Order of types in the rows.
-        'Class',
+  StoreItemsCtrl.$inject = ['$scope', 'dimItemService'];
+
+  function StoreItemsCtrl($scope, dimItemService) {
+    var vm = this;
+    var types = [ // Order of types in the rows.
+      'Class',
+      'Primary',
+      'Special',
+      'Heavy',
+      'Helmet',
+      'Gauntlets',
+      'Chest',
+      'Leg',
+      'ClassItem',
+      'Emblem',
+      'Armor',
+      'Ghost',
+      'Ship',
+      'Vehicle',
+      'Consumable',
+      'Material',
+      'Currency'
+    ];
+    vm.orderedTypes = {};
+
+    _.each(types, function (value, index) {
+      vm.orderedTypes[value] = index;
+    });
+
+    vm.categories = { // Grouping of the types in the rows.
+      Weapons: [
         'Primary',
         'Special',
         'Heavy',
+      ],
+      Armor: [
         'Helmet',
         'Gauntlets',
         'Chest',
         'Leg',
         'ClassItem',
+      ],
+      General: [
         'Emblem',
         'Armor',
         'Ghost',
@@ -54,132 +86,102 @@
         'Consumable',
         'Material',
         'Currency'
-      ];
-      vm.orderedTypes = {};
+      ]
+    };
 
-      _.each(types, function (value, index) {
-        vm.orderedTypes[value] = index;
-      });
-
-      vm.categories = { // Grouping of the types in the rows.
-        Weapons: [
-          'Primary',
-          'Special',
-          'Heavy',
-        ],
-        Armor: [
-          'Helmet',
-          'Gauntlets',
-          'Chest',
-          'Leg',
-          'ClassItem',
-        ],
-        General: [
-          'Emblem',
-          'Armor',
-          'Ghost',
-          'Ship',
-          'Vehicle',
-          'Consumable',
-          'Material',
-          'Currency'
-        ]
-      };
-
-      vm.styles = { // Styles of the types in the rows.
-        Class: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Primary: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Special: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Heavy: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Helmet: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Gauntlets: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Chest: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Leg: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        ClassItem: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Emblem: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Armor: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Ghost: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Ship: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Vehicle: {
-          equipped: 'equipped equippable',
-          unequipped: 'unequipped equippable',
-        },
-        Consumable: {
-          equipped: '',
-          unequipped: 'unequippable',
-        },
-        Material: {
-          equipped: '',
-          unequipped: 'unequippable',
-        },
-        Currency: {
-          equipped: '',
-          unequipped: 'unequippable',
-        }
+    vm.styles = { // Styles of the types in the rows.
+      Class: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Primary: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Special: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Heavy: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Helmet: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Gauntlets: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Chest: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Leg: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      ClassItem: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Emblem: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Armor: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Ghost: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Ship: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Vehicle: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Consumable: {
+        equipped: '',
+        unequipped: 'unequippable',
+      },
+      Material: {
+        equipped: '',
+        unequipped: 'unequippable',
+      },
+      Currency: {
+        equipped: '',
+        unequipped: 'unequippable',
       }
-
-      vm.onDrop = function (data, e) {
-        var item = dimItemService.getItem(data.id);
-
-        alert(item.name);
-      };
-
-      $scope.$watch('vm.store.items', function (newVal) {
-        vm.data = _.chain(vm.store.items)
-          .sortBy(function (item) {
-            return vm.orderedTypes[item.type];
-          })
-          .groupBy(function (item) {
-            return vm.orderedTypes[item.type];
-          })
-          .mapObject(function (values, key) {
-            return _.groupBy(values, function (item) {
-              return (item.equipped ? 'equipped' : 'unequipped');
-            });
-          })
-          .value();
-
-          console.log(_.size(vm.data));
-      });
     }
+
+    vm.onDrop = function (id, e) {
+      var item = dimItemService.getItem(id);
+
+      alert(item.name);
+    };
+
+    $scope.$watch('vm.store.items', function (newVal) {
+      vm.data = _.chain(vm.store.items)
+        .sortBy(function (item) {
+          return vm.orderedTypes[item.type];
+        })
+        .groupBy(function (item) {
+          return vm.orderedTypes[item.type];
+        })
+        .mapObject(function (values, key) {
+          return _.groupBy(values, function (item) {
+            return (item.equipped ? 'equipped' : 'unequipped');
+          });
+        })
+        .value();
+
+        console.log(_.size(vm.data));
+    });
   }
 })();
