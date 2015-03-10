@@ -39,91 +39,91 @@
         '</div>'
       ].join('')
     }
-  }
 
-  MovePopupController.$inject = ['dimStoreService', 'ngDialog'];
+    MovePopupController.$inject = ['dimStoreService', 'ngDialog'];
 
-  function MovePopupController(dimStoreService, ngDialog) {
-    var vm = this;
+    function MovePopupController(dimStoreService, ngDialog) {
+      var vm = this;
 
-    vm.stores = dimStoreService.getStores();
+      vm.stores = dimStoreService.getStores();
 
-    vm.MoveToVault = function MoveToVault(store, e) {
-      var current = _.find(vm.store.items, function (item) {
-        return ((item.type === vm.item.type) && (vm.item.sort === item.sort) && item.equipped);
-      });
+      vm.MoveToVault = function MoveToVault(store, e) {
+        var current = _.find(vm.store.items, function (item) {
+          return ((item.type === vm.item.type) && (vm.item.sort === item.sort) && item.equipped);
+        });
 
-      var i = _.indexOf(vm.store.items, vm.item);
+        var i = _.indexOf(vm.store.items, vm.item);
 
-      if (i >= 0) {
-        vm.store.items.splice(i, 1);
-        store.items.push(vm.item);
-        vm.item.owner = store.id;
-        vm.item.equipped = true;
-      }
+        if (i >= 0) {
+          vm.store.items.splice(i, 1);
+          store.items.push(vm.item);
+          vm.item.owner = store.id;
+          vm.item.equipped = true;
+        }
 
-      i = _.indexOf(vm.store.items, current);
+        i = _.indexOf(vm.store.items, current);
 
-      if (i >= 0) {
-        vm.store.items.splice(i, 1);
-        store.items.push(current);
-        current.owner = store.id;
-        current.equipped = false;
-      }
-    };
+        if (i >= 0) {
+          vm.store.items.splice(i, 1);
+          store.items.push(current);
+          current.owner = store.id;
+          current.equipped = false;
+        }
+      };
 
-    vm.MoveToGuardian = vm.MoveToEquip = vm.MoveToVault;
+      vm.MoveToGuardian = vm.MoveToEquip = vm.MoveToVault;
 
-    this.canShowVault = function canShowButton(item, itemStore, buttonStore) {
-      // If my itemStore is the vault, don't show a vault button.
-      // Can't vault a vaulted item.
-      if (itemStore.id === 'vault') {
-        return false;
-      }
+      this.canShowVault = function canShowButton(item, itemStore, buttonStore) {
+        // If my itemStore is the vault, don't show a vault button.
+        // Can't vault a vaulted item.
+        if (itemStore.id === 'vault') {
+          return false;
+        }
 
-      // If my buttonStore is the vault, then show a vault button.
-      if (buttonStore.id !== 'vault') {
-        return false;
-      }
+        // If my buttonStore is the vault, then show a vault button.
+        if (buttonStore.id !== 'vault') {
+          return false;
+        }
 
-      // Can't move this item away from the current itemStore.
-      if (item.notransfer) {
-        return false;
-      }
+        // Can't move this item away from the current itemStore.
+        if (item.notransfer) {
+          return false;
+        }
 
-      return true;
-    };
-
-    this.canShowStore = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault') {
-        return false;
-      }
-
-      if (item.notransfer && item.equipped && itemStore.id === buttonStore.id) {
         return true;
-      }
+      };
 
-      if (itemStore.id !== buttonStore.id) {
-        return true;
-      }
+      this.canShowStore = function canShowButton(item, itemStore, buttonStore) {
+        if (buttonStore.id === 'vault') {
+          return false;
+        }
 
-      return false;
-    };
+        if (item.notransfer && item.equipped && itemStore.id === buttonStore.id) {
+          return true;
+        }
 
-    this.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault') {
+        if (itemStore.id !== buttonStore.id) {
+          return true;
+        }
+
         return false;
-      }
+      };
 
-      if (item.notransfer && !item.equipped) {
-        return true;
-      }
+      this.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
+        if (buttonStore.id === 'vault') {
+          return false;
+        }
 
-      if (!item.equipped) {
-        return true;
-      }
+        if (item.notransfer && !item.equipped) {
+          return true;
+        }
 
-      return false;
-    };
+        if (!item.equipped) {
+          return true;
+        }
+
+        return false;
+      };
+    }
   }
 })();
