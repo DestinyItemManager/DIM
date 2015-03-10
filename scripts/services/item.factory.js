@@ -1,5 +1,6 @@
-(function() {
-  angular.module('dimApp').factory('dimItemService', ItemService);
+(function () {
+  angular.module('dimApp')
+    .factory('dimItemService', ItemService);
 
   ItemService.$inject = ['dimStoreService'];
 
@@ -10,7 +11,7 @@
       var returnValue = [];
       var stores = dimStoreService.getStores();
 
-      angular.forEach(stores, function(store) {
+      angular.forEach(stores, function (store) {
         returnValue = returnValue.concat(store.items);
       });
 
@@ -20,7 +21,7 @@
     service.getItem = function getItem(id) {
       var items = this.getItems();;
 
-      var item = _.find(items, function(item) {
+      var item = _.find(items, function (item) {
         return item.id === id;
       });
 

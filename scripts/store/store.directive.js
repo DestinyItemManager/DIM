@@ -27,13 +27,11 @@
 
       vm.stores = dimStoreService.getStores();
 
-      $scope.$watch(function() {
+      $scope.$watch(function () {
         return dimStoreService.getStores()
-      }, function(newVal) {
+      }, function (newVal) {
         vm.stores = newVal;
       });
     }
-
-
   }
 })();

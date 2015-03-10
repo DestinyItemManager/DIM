@@ -181,7 +181,7 @@
         })
         .value();
 
-        console.log(_.size(vm.data));
+      console.log(_.size(vm.data));
     });
   }
 })();

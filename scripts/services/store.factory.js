@@ -1,5 +1,6 @@
-(function() {
-  angular.module('dimApp').factory('dimStoreService', StoreService);
+(function () {
+  angular.module('dimApp')
+    .factory('dimStoreService', StoreService);
 
   StoreService.$inject = ['$window'];
 

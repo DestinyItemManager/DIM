@@ -15,11 +15,12 @@
       link: Link,
       template: [
         '<div class="character-box" ng-class="vm.isGuardian ? \'\' : \'vault-box\'">',
-          '<div class="emblem" ng-show="vm.isGuardian"></div>',
-          '<div class="class">{{ vm.class || "Vault" }}</div>',
-          '<div class="level" ng-show="vm.isGuardian">{{ vm.level }}</div>',
+        '  <div class="emblem" ng-show="vm.isGuardian"></div>',
+        '  <div class="class">{{ vm.class || "Vault" }}</div>',
+        '  <div class="level" ng-show="vm.isGuardian">{{ vm.level }}</div>',
         '</div>',
-        '<div class="loadout-button" ng-show="vm.isGuardian">&#x25BC;</div>'].join('')
+        '<div class="loadout-button" ng-show="vm.isGuardian">&#x25BC;</div>'
+      ].join('')
     };
 
     function StoreHeadingCtrl() {

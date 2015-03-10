@@ -95,10 +95,6 @@
     };
 
     this.canShowStore = function canShowButton(item, itemStore, buttonStore) {
-      // if (!item.equipment) {
-      //   return false;
-      // }
-
       if (buttonStore.id === 'vault') {
         return false;
       }

@@ -21,7 +21,8 @@
         '  <img ng-src="http://bungie.net/{{ vm.item.icon }}" ng-click="vm.openLoadout(vm.item, $event)">',
         '  <div class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div class="damage-type" ng-if="vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
-        '</div>'].join('')
+        '</div>'
+      ].join('')
     };
 
     StoreItemCtrl.$inject = ['$scope', 'dimStoreService'];
