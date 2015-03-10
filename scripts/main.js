@@ -141,7 +141,7 @@ function manageItem(e) {
   }
 
   if (item.amount > 1) {
-    console.log(item.amount)
+    //console.log(item.amount)
   }
 
   moveItem(item, destination.dataset, amount, function () {
@@ -399,9 +399,21 @@ function appendItems(owner, defs, items) {
 	tryPageLoad();
 }
 
+window.invIndex = 0;
+
 function loadInventory(c) {
+
+	invIndex ++;
+
+	console.log(invIndex);
 	bungie.inventory(c, function(i) {
+		invIndex--;
+		console.log(invIndex);
 		appendItems(c, i.definitions.items, flattenInventory(i.data))
+
+		if (invIndex === 0) {
+					angular.element(document).scope().$apply(); // Something changed so angular needs to digest.
+		}
 	});
 }
 
@@ -440,7 +452,6 @@ function tryPageLoad() {
 		// });
 
 
-		angular.element(document).scope().$apply(); // Something changed so angular needs to digest.
 
 		_dragCounter = 0;
 		_sections = document.querySelectorAll('#storage .sections');
@@ -546,6 +557,8 @@ function loadUser() {
 	_storage = [];
 	_items = [];
 	_sections = null;
+
+	dimDO.stores = {};
 
 	document.getElementById('user').innerText = bungie.gamertag();
 

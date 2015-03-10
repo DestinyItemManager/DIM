@@ -29,8 +29,9 @@
         '        <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped" dim-store-item store-data="vm.store" item-data="item"></div>',
         '      </div>',
         '    </div>',
-          '</div>',
-        '</div>'].join('')
+        '  </div>',
+        '</div>'
+      ].join('')
     };
 
     function StoreItemsCtrl($scope) {
@@ -156,25 +157,29 @@
         }
       }
 
-      vm.onDrop = function(data, e) {
+      vm.onDrop = function (data, e) {
         var item = dimItemService.getItem(data.id);
 
         alert(item.name);
       };
 
-      vm.data = _.chain(vm.store.items)
-        .sortBy(function (item) {
-          return vm.orderedTypes[item.type];
-        })
-        .groupBy(function (item) {
-          return vm.orderedTypes[item.type];
-        })
-        .mapObject(function (values, key) {
-          return _.groupBy(values, function (item) {
-            return (item.equipped ? 'equipped' : 'unequipped');
-          });
-        })
-        .value();
+      $scope.$watch('vm.store.items', function (newVal) {
+        vm.data = _.chain(vm.store.items)
+          .sortBy(function (item) {
+            return vm.orderedTypes[item.type];
+          })
+          .groupBy(function (item) {
+            return vm.orderedTypes[item.type];
+          })
+          .mapObject(function (values, key) {
+            return _.groupBy(values, function (item) {
+              return (item.equipped ? 'equipped' : 'unequipped');
+            });
+          })
+          .value();
+
+          console.log(_.size(vm.data));
+      });
     }
   }
 })();

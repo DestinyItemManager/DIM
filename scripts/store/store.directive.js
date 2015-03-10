@@ -20,12 +20,20 @@
       ].join('')
     };
 
-    StoreCtrl.$inject = ['dimStoreService'];
+    StoreCtrl.$inject = ['$scope', 'dimStoreService'];
 
-    function StoreCtrl(dimStoreService) {
+    function StoreCtrl($scope, dimStoreService) {
       var vm = this;
 
       vm.stores = dimStoreService.getStores();
+
+      $scope.$watch(function() {
+        return dimStoreService.getStores()
+      }, function(newVal) {
+        vm.stores = newVal;
+      });
     }
+
+
   }
 })();

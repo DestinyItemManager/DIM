@@ -11,6 +11,7 @@
     "angularjs": "~1.4.0-beta.5",
     "underscore": "~1.8.2",
     "ngDialog": "~0.3.12",
-    "angular-native-dragdrop": "https://github.com/angular-dragdrop/angular-dragdrop.git#~1.0.6"
+    "angular-native-dragdrop": "https://github.com/angular-dragdrop/angular-dragdrop.git#~1.0.6",
+    "q": "1.1.2"
   }
 }
