@@ -25,7 +25,7 @@
     function StoresCtrl($scope, dimStoreService) {
       var vm = this;
 
-      vm.stores = dimStoreService.getStores();
+      //vm.stores = dimStoreService.getStores();
 
       $scope.$watch(function () {
         return dimStoreService.getStores()

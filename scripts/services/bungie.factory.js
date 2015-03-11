@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
@@ -9,6 +11,7 @@
     var inventoryData = null;
     var destinyUserData = null;
     var platformUserData = null;
+    var bungieUserData = null;
 
     return {
       loadBungieNetUser: loadBungieNetUser,
@@ -211,7 +214,7 @@
           window.setTimeout(function () {
             $http(request)
               .success(function (data, status, headers, config) {
-                userData = data;
+                bungieUserData = data;
                 resolve(data);
               })
               .error(function (data) {

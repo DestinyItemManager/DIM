@@ -14,11 +14,7 @@
         <span id="faq-button">?</span>
         <span class="header-right">
           <input type="search" id="filter-text" placeholder="filter items or is:arc" />
-          <span id="user" class="header-right"></span>
-          <select id="system">
-            <option>PSN</option>
-            <option>XBL</option>
-          </select>
+          <div dim-platform-choice></div>
         </span>
       </div>
     </div>
@@ -75,7 +71,9 @@
     <script type="text/javascript" src="vendor/ngDialog/js/ngDialog.js"></script>
     <script type="text/javascript" src="scripts/app.module.js"></script>
     <script type="text/javascript" src="scripts/app.config.js"></script>
+    <script type="text/javascript" src="scripts/shell/platform-choice.directive.js"></script>
     <script type="text/javascript" src="scripts/services/bungie.factory.js"></script>
+    <script type="text/javascript" src="scripts/services/platform.factory.js"></script>
     <script type="text/javascript" src="scripts/services/store.factory.js"></script>
     <script type="text/javascript" src="scripts/services/item.factory.js"></script>
     <script type="text/javascript" src="scripts/store/store-heading.directive.js"></script>
@@ -84,9 +82,6 @@
     <script type="text/javascript" src="scripts/store/store.directive.js"></script>
     <script type="text/javascript" src="scripts/move-popup/move-item-properties.directive.js"></script>
     <script type="text/javascript" src="scripts/move-popup/move-popup.directive.js"></script>
-    <script type="text/javascript" src="scripts/bungie.js"></script>
-    <script type="text/javascript" src="scripts/loadout.js"></script>
-    <script type="text/javascript" src="scripts/main.js"></script>
   </div>
 </body>
 

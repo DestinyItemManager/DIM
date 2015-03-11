@@ -1,17 +1,18 @@
 (function () {
+  'use strict';
+
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
   StoreService.$inject = ['$window'];
 
   function StoreService($window) {
-    var service = {};
-    var stores = null;
+    return {
+      getStores: getStores
+    };
 
-    service.getStores = function getStores() {
-      return $window.dimDO.stores;
+    function getStores() {
+      return ($window.dimDO) ? $window.dimDO.stores : null;
     }
-
-    return service;
   }
 })();

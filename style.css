@@ -31,7 +31,6 @@ body>div * {
   float: right;
 }
 #system {
-  display: none;
   background-color: #5b6e6c;
   color: rgba(245,245,245,.6);
   float: right;
