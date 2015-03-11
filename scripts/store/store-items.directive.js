@@ -179,8 +179,6 @@
             });
           })
           .value();
-
-        console.log(_.size(vm.data));
       });
     }
   }

@@ -2,24 +2,49 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$http', '$q', 'dimUserSystemIds', 'dimActiveId'];
+  BungieService.$inject = ['$http', '$q', 'dimConfig'];
 
-  function BungieService($http, $q, dimUserSystemIds, dimActiveId) {
+  function BungieService($http, $q, dimConfig) {
+    var vaultData = null;
+    var inventoryData = null;
+    var destinyUserData = null;
+    var platformUserData = null;
+
     return {
-      getUser: getUser
+      loadBungieNetUser: loadBungieNetUser,
+      loadDestinyUser: loadDestinyUser,
+      loadPlatformUser: loadPlatformUser,
+      loadDestinyStores: loadDestinyStores,
+      getUser: getUser,
+      getStores: getStores
     };
 
     function getUser() {
-      getCookies()
-        .then(getBungleToken)
-        .then(generateUserRequest)
-        .then(getUserComplete)
-        .catch(getUserFailed);
+      return {
+        platform: platformUserData,
+        destiny: destinyUserData
+      };
+    }
 
-      function generateUserRequest(token) {
+    function getStores() {
+      return {
+        vault: vaultData,
+        destiny: inventoryData
+      };
+    }
+
+    function loadPlatformUser() {
+      return loadBnetCookies()
+        .then(getBungleToken)
+        .then(generatePlatformUserReq)
+        .catch(loadStoresFailed);
+    }
+
+    function generatePlatformUserReq(token) {
+      return $q(function (resolve, reject) {
         var request = {
           method: 'GET',
-          url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
+          url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (dimConfig.active.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + dimConfig.membershipId + '/',
           headers: {
             'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
             'x-csrf': token
@@ -27,61 +52,217 @@
           withCredentials: true
         };
 
-        return $http(request);
-      }
+        window.setTimeout(function () {
+          $http(request)
+            .success(function (data, status, headers, config) {
+              if (_.size(data.Response) === 0) {
+                reject(data);
+              }
 
-      function getUserComplete(response) {
-        var bungieUser = response.data.Response;
+              platformUserData = data;
 
-        dimUserSystemIds.xbl.id = bungieUser.gamerTag;
-        dimUserSystemIds.xbl.type = 1;
+              // inventoryData = _.indexBy(data.Response.data.characters, function (item) {
+              //   return item.characterBase.characterId;
+              // });
 
-        dimUserSystemIds.psn.id = bungieUser.psnId;
-        dimUserSystemIds.psn.type = 2;
+              resolve(data);
+            })
+            .error(function (data) {
+              reject(data);
+            });
+        }, 100);
+      });
+    }
 
-        dimActiveId = dimUserSystemIds.xbl;
+    function loadDestinyUser() {
+      return loadBnetCookies()
+        .then(getBungleToken)
+        .then(generateDestinyUserReq)
+        .catch(loadStoresFailed);
+    }
 
-        if (!_.isNull(dimUserSystemIds.psn.id))
-          dimActiveId = dimUserSystemIds.psn;
-      }
+    function generateDestinyUserReq(token) {
+      return $q(function (resolve, reject) {
+        var request = {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/SearchDestinyPlayer/' + dimConfig.active.type + '/' + dimConfig.active.id + '/',
+          headers: {
+            'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
 
-      function getUserFailed(response) {
-        console.log('XHR Failed for getUser. ' + response);
-      }
+        window.setTimeout(function () {
+          $http(request)
+            .success(function (data, status, headers, config) {
+              destinyUserData = data;
 
-      function getCookies() {
+              if (_.size(data.Response) === 0) {
+                reject(data);
+              }
+
+              resolve(data);
+            })
+            .error(function (data) {
+              reject(data);
+            });
+        }, 100);
+      });
+    }
+
+    function loadDestinyStores() {
+      var vaultPromise = loadBnetCookies()
+        .then(getBungleToken)
+        .then(loadBnetVault)
+        .catch(loadStoresFailed);
+      var inventoryPromise = loadBnetCookies()
+        .then(getBungleToken)
+        .then(loadBnetInventory)
+        .catch(loadStoresFailed);
+
+      return $q.all([vaultPromise, inventoryPromise]);
+    }
+
+    function loadBnetVault(token) {
+      return $q(function (resolve, reject) {
+        var request = {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + dimConfig.active.type + '/MyAccount/Vault/?definitions=true',
+          headers: {
+            'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
+
+        window.setTimeout(function () {
+          $http(request)
+            .success(function (data, status, headers, config) {
+              vaultData = data;
+              resolve(data);
+            })
+            .error(function (data) {
+              reject(data);
+            });
+        }, 100);
+      });
+    }
+
+    function loadBnetInventory(token) {
+      var promises = [];
+
+      inventoryData = {};
+
+      _.each(dimConfig.characterIds, function (characterId) {
+        var p = $q(function (resolve, reject) {
+          var request = {
+            method: 'GET',
+            url: 'https://www.bungie.net/Platform//Destiny/' + dimConfig.active.type + '/Account/' + dimConfig.membershipId + '/Character/' + characterId + '/Inventory/?definitions=true',
+            headers: {
+              'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
+              'x-csrf': token
+            },
+            withCredentials: true
+          };
+
+          window.setTimeout(function () {
+            $http(request)
+              .success(function (data, status, headers, config) {
+                data.Response.characterId = characterId;
+                inventoryData[characterId] = data.Response;
+                resolve(data.Response);
+              })
+              .error(function (data) {
+                reject(data);
+                return;
+              });
+          }, 100);
+        });
+
+        promises.push(p);
+      });
+
+      return $q.all(promises);
+    }
+
+    function loadStoresFailed(response) {
+      throw 'XHR Failed for loadBungieStores. ' + response;
+    }
+
+    function loadBungieNetUser() {
+      return loadBnetCookies()
+        .then(getBungleToken)
+        .then(loadBnetUser)
+        .catch(loadUserFailed);
+
+      function loadBnetUser(token) {
         return $q(function (resolve, reject) {
-          function getAllCallback(cookies) {
-            if (_.size(cookies) > 0) {
-              resolve(cookies);
-            } else {
-              reject('No cookies found.');
-            }
-          }
+          var request = {
+            method: 'GET',
+            url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
+            headers: {
+              'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
+              'x-csrf': token
+            },
+            withCredentials: true
+          };
 
-          chrome.cookies.getAll({
-            'domain': '.bungie.net'
-          }, getAllCallback);
+          window.setTimeout(function () {
+            $http(request)
+              .success(function (data, status, headers, config) {
+                userData = data;
+                resolve(data);
+              })
+              .error(function (data) {
+                reject(data);
+              });
+          }, 100);
         });
       }
 
-      function getBungleToken(cookies) {
-        return $q(function (resolve, reject) {
-          var cookie = _.find(cookies, function (cookie) {
-            return cookie.name === 'bungled';
+      function loadUserFailed(response) {
+        throw 'XHR Failed for loadBungieNetUser. ' + response;
+      }
+    }
+
+    function loadBnetCookies() {
+      return $q(function (resolve, reject) {
+        chrome.cookies.getAll({
+          'domain': '.bungie.net'
+        }, getAllCallback);
+
+        function getAllCallback(cookies) {
+          if (_.size(cookies) > 0) {
+            resolve(cookies);
+          } else {
+            reject('No cookies found.');
+          }
+        }
+      });
+    }
+
+    function getBungleToken(cookies) {
+      return $q(function (resolve, reject) {
+        var cookie = _.find(cookies, function (cookie) {
+          return cookie.name === 'bungled';
+        });
+
+        if (!_.isUndefined(cookie)) {
+          resolve(cookie.value);
+        } else {
+          chrome.tabs.create({
+            url: 'http://bungie.net',
+            active: false
           });
 
-          if (!_.isUndefined(cookie)) {
-            resolve(cookie.value);
-          } else {
-            chrome.tabs.create({ url: 'http://bungie.net', active: false });
-            setTimeout(function() { window.location.reload(); }, 5000);
+          setTimeout(function () {
+            window.location.reload();
+          }, 5000);
 
-            reject('No bungled cookie found.');
-          }
-        });
-        var d = $q.defer();
-      }
+          reject('No bungled cookie found.');
+        }
+      });
     }
   }
 })();

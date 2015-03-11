@@ -106,90 +106,7 @@ angular.element(document).scope().$apply();
     moveItem(item, destination, amount, callback);
   });
 }
-function manageItemClick(item, data) {
-  if (data.type === 'equip') {
-    // document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type)
-    //   .appendChild(
-    //     document.querySelector('[data-instance-id="' + item.id + '"]'));
-    item.equipped = true;
-  } else {
-    // document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type)
-    //   .appendChild(
-    //     document.querySelector('[data-instance-id="' + item.id + '"]'));
-    item.equipped = false;
-  }
 
-	//angular.element(document).scope().$apply();
-	//debugger;
-}
-
-function manageItem(e) {
-  e.preventDefault();
-  _dragCounter = 0;
-
-  var destination = e.target.parentNode.parentNode.parentNode;
-  if (destination.dataset.type === undefined) {
-    destination = e.target.parentNode.parentNode;
-  }
-  if (_transfer.parentNode == destination || destination.dataset.type === undefined) return;
-
-  var item = _items[_transfer.dataset.index];
-  var amount = 1;
-
-  if (item.notransfer) {
-    console.log('no drag and drop support for this type of item yet.')
-  }
-
-  if (item.amount > 1) {
-    //console.log(item.amount)
-  }
-
-  moveItem(item, destination.dataset, amount, function () {
-    // move the item to the right spot once done.
-    if (_items[_transfer.dataset.index] === amount) {
-      destination.querySelector('.sort-' + item.type)
-        .appendChild(_transfer);
-    } else {
-      // TODO: partial stack move, so copy the item...
-      destination.querySelector('.sort-' + item.type)
-        .appendChild(_transfer);
-    }
-  });
-
-}
-
-function handleDragEnter(e) {
-  // this / e.target is the current hover target.
-  this.classList.add('over');
-}
-
-function handleDragLeave(e) {
-  this.classList.remove('over');  // this / e.target is previous target element.
-}
-
-function ignoreDrag(e) {
-	e.preventDefault();
-	// _dragCounter = 0;
-	// return;
-
-	// var sections = document.querySelectorAll('.items');
-
-	// for(var s = 0; s < _sections.length; s++) {
-	// // for(var s in sections ) {
-	// 	_sections[s].style.border='none';
-	//
-	// 	var testObj = e.target;
-	// 	while(testObj.className != null && testObj.className != 'items') {
-	// 			testObj = testObj.parentNode;
-	// 	}
-	//
-	// 	if(testObj.className != undefined) {
-	// 		console.log(testObj.parentNode.children[0]);
-	// 		// testObj.className = 'hover'
-	// 		// testObj.style.height = testObj.parentNode.height;
-	// 	}
-	// }
-}
 
 function buildLoadouts() {
 		var sets = loadout.all();
@@ -230,455 +147,77 @@ function buildLoadouts() {
 }
 
 
-// //TODO
-// //TODO
-// //TODO
-// //TODO
-
-		// var equipedblock = node.querySelector('div[data-type="equip"]');
-		// if(c !== 'vault') {
-		// 	equipedblock.dataset.character = c;
-		// 	equipedblock.parentNode.addEventListener('dragover', ignoreDrag);
-		// 	equipedblock.addEventListener('drop', manageItem);
-		// }
-		// var itemblock = node.querySelector('div[data-type="item"]');
-		// itemblock.dataset.character = c;
-		// itemblock.parentNode.addEventListener('dragover', ignoreDrag);
-		// itemblock.addEventListener('drop', manageItem);
-
-// //END TODO
-// //END TODO
-// //END TODO
-
-
-// // TODO
-		// img.addEventListener('dragstart', function(e) {
-		// 	_transfer = this.parentNode;
-		// });
-// // TODO
-
-
-function getItemType(type, name) {
-	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Primary';
-	if(["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
-		// detect special case items that are actually primary weapons.
-		if(["Vex Mythoclast", "Universal Remote", "No Land Beyond", "Special Weapon Engram"].indexOf(name) != -1)
-			return 'Primary';
-		return 'Special';
-	}
-	if(["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
-		return 'Heavy';
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
-		return 'ClassItem';
-	if(["Gauntlet Engram"].indexOf(type) != -1)
-		return 'Gauntlets';
-	if(["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
-		return type.split(' ')[0];
-	if(["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
-		return 'Class';
-	if(["Restore Defaults"].indexOf(type) != -1)
-		return 'Armor';
-	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
-		return type.split(' ')[0];
-}
-
-function sortItem(type) {
-	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
-		return 'Weapons';
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
-		return 'Armor';
-	if(["Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
-		return 'General';
-}
-
-function flattenInventory(data) {
-	var inv = [];
-	var buckets = data.buckets;
-
-	for(var b in buckets) {
-		// if(b === "Currency") continue;
-		for(var s in buckets[b]) {
-			var items = buckets[b][s].items;
-			for(var i in items) {
-				inv[items[i].itemInstanceId] = items[i];
-			}
-		}
-	}
-
-	return inv;
-}
-
-
-function flattenVault(data) {
-	var inv = [];
-	var buckets = data.buckets;
-
-	for (var b in buckets) {
-		var items = buckets[b].items;
-		for (var i in items) {
-			inv[items[i].itemInstanceId] = items[i];
-		}
-	}
-
-	return inv;
-}
-
-var typesOfItems = [];
-
-function appendItems(owner, defs, items) {
-	var index = 0;
-	// Loop through the flattened inventory
-	for (var i in items) {
-
-		var item        = items[i];
-		var itemHash    = item.itemHash;
-		var itemDef     = defs[item.itemHash];
-
-		if(itemDef.itemTypeName.indexOf('Bounty') != -1 || itemDef.itemTypeName.indexOf('Commendation') != -1) continue;
-
-		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
-
-		if(!itemType) {
-			// console.log(itemDef.itemName, itemDef.itemTypeName)
-			continue;
-		}
-
-		var itemSort = sortItem(itemDef.itemTypeName);
-		if(item.location === 4) {
-			itemSort = 'Postmaster';
-		}
-
-		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
-		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
-
-
-		_items.push({
-			index: 			index,
-			owner:      owner,
-			hash:       itemHash,
-			type:       itemType,
-			sort:       itemSort,
-			tier:       tierName,
-			name:       itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon:       itemDef.icon,
-			notransfer: itemDef.nonTransferrable,
-			id:         item.itemInstanceId,
-			equipped:   item.isEquipped,
-			equipment:  item.isEquipment,
-			complete:   item.isGridComplete,
-			amount:     item.stackSize,
-			primStat:   item.primaryStat,
-			stats:      item.stats,
-			dmg:        dmgName
-		});
-
-		window.dimDO.stores[owner].items.push({
-			index: 			index,
-			owner:      owner,
-			hash:       itemHash,
-			type:       itemType,
-			sort:       itemSort,
-			tier:       tierName,
-			name:       itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
-			icon:       itemDef.icon,
-			notransfer: itemDef.nonTransferrable,
-			id:         item.itemInstanceId,
-			equipped:   item.isEquipped,
-			equipment:  item.isEquipment,
-			complete:   item.isGridComplete,
-			amount:     item.stackSize,
-			primStat:   item.primaryStat,
-			stats:      item.stats,
-			dmg:        dmgName
-		});
-
-		index = index + 1;
-	}
-
-	tryPageLoad();
-}
-
-window.invIndex = 0;
-
-function loadInventory(c) {
-
-	invIndex ++;
-
-	console.log(invIndex);
-	bungie.inventory(c, function(i) {
-		invIndex--;
-		console.log(invIndex);
-		appendItems(c, i.definitions.items, flattenInventory(i.data))
-
-		if (invIndex === 0) {
-					angular.element(document).scope().$apply(); // Something changed so angular needs to digest.
-		}
-	});
-}
-
-var loader = {
-	loaded: 0,
-	characters: 0
-}
 
 function tryPageLoad() {
-	loader.loaded++;
-	if(loader.characters != 0 && loader.loaded > loader.characters) {
-		loadout.ready(function() {
-			loadoutBox = document.getElementById('loadout-popup');
-			loadoutNew = document.getElementById('loadout-new');
-			loadoutList = document.getElementById('loadout-list');
-			loadoutNew.addEventListener('click', function() {
-				loadout.toggle(true);
-			})
-			buildLoadouts();
-		});
-
-		//move = document.getElementById('move-popup');
-
-		// var faqButton = document.getElementById('faq-button');
-		// var faq = document.getElementById('faq');
-		// faqButton.addEventListener('click', function() {
-		// 	if(faq.style.display === 'block') {
-		// 		faq.style.display = 'none';
-		// 		return;
-		// 	}
-		// 	faq.style.display = 'block'
-		// })
-		// faq.addEventListener('click', function(e) {
-		// 	faq.style.display = 'none';
-		// 	loadout.toggle(false);
-		// });
-
-
-
-		_dragCounter = 0;
-		_sections = document.querySelectorAll('#storage .sections');
-		// TODO
-		// var sorter = document.getElementById('sort-template').content;
-		// for(var i = 0; i < _sections.length; i++) {
-		// 	_sections[i].appendChild(sorter.cloneNode(true));
-		// }
-
-		//TODO
-
-		// var items = document.querySelectorAll('.items');
-		// for(var s = 0; s < items.length; s++) {
-		// 	items[s].parentNode.addEventListener('dragenter', function() {
-    //    	_dragCounter++;
-		// 		console.log(_dragCounter)
-		// 		this.classList.add('over');
-		// 	}, false);
-		// 	items[s].parentNode.addEventListener('dragleave', function() {
-		// 		_dragCounter--;
-    // 		if (_dragCounter <= 0) {
-		// 			_dragCounter = 0;
-		// 			this.classList.remove('over');
-		// 		}
-		// 	}, false);
-		// }
-
-	//	buildItems();
-
-
-		var input = document.getElementById('filter-text');
-		input.style.display = 'inline-block';
-		var item = document.querySelectorAll('.item');
-
-		function collapseSections() {
-			for (var i = 0; i < _sections.length; i++) {
-				if(_sections[i].parentNode !== null)
-				_sections[i].parentNode.style.display = 'none';
-				for(var j = 0; j < _sections[i].children.length; j++) {
-					for(var k = 0; k < _sections[i].children[j].children.length; k++) {
-						if(_sections[i].children[j].children[k].style.display == '' && _sections[i].parentNode !== null) {
-							_sections[i].parentNode.style.display = '';
-							break;
-						}
-					}
-				}
-			}
-		}
-		collapseSections();
-		input.addEventListener('keyup', function () {
-			var filter = input.value.toLowerCase();
-			var special = filter.indexOf('is:') >= 0;
-			if(special) {
-				filter = filter.split('is:')[1].trim();
-				if(['arc', 'solar', 'void', 'kinetic'].indexOf(filter) >= 0) {
-					special = 'elemental';
-				} else if(['primary', 'special', 'heavy'].indexOf(filter) >= 0) {
-					special = 'type';
-				} else if(['basic', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filter) >= 0) {
-					special = 'tier';
-				} else if(['complete'].indexOf(filter) >= 0) {
-					special = 'complete';
-				}
-			}
-			for (var i = 0; i < item.length; i++) {
-				switch(special) {
-					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmg == filter ? '' : 'none'; break;
-					case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
-					case 'tier':	item[i].style.display = _items[item[i].dataset.index].tier.toLowerCase() == filter ? '' : 'none'; break;
-					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete === true ? '' : 'none'; break;
-					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
-				}
-			}
-
-			collapseSections();
-		});
-		input.addEventListener('click', function() { this.select(); });
-		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
-
-		function hideTooltip(e) {
-
-			// console.log( e.target, e.target.parentNode, e.target.parentNode.parentNode, e.target.className === 'loadout-set')
-			if((e.type === 'keyup' && e.keyCode === 27) || (e.type === 'mousedown' &&
-				!(e.target.parentNode.className === 'move-button' ||
-				 	e.target.parentNode.className === 'item' ||
-					e.target.className === 'loadout-button' ||
-					e.target.parentNode.id === 'loadout-popup' ||
-					e.target.className === 'loadout-set' ||
-					e.target.parentNode.className === 'loadout-set' ||
-					e.target.parentNode.id === 'loadout-list' ||
-					e.target.parentNode.parentNode.id === 'loadout-list')) /*|| e.target.className !== 'loadouts'*/) {
-
-				loadoutBox.style.display = 'none';
-				// faq.style.display = 'none';
-			}
-		}
-		document.body.addEventListener('mousedown', hideTooltip);
-		document.body.addEventListener('keyup', hideTooltip);
-	}
-}
-
-function loadUser() {
-	_storage = [];
-	_items = [];
-	_sections = null;
-
-	dimDO.stores = {};
-
-	document.getElementById('user').innerText = bungie.gamertag();
-
-	bungie.search(function(e) {
-		if(e.error) {
-				var storage = document.getElementById('storage');
-				storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
-				return;
-		}
-
-		bungie.vault(function(v) {
-			_storage['vault'] = {
-				icon: ''
-			};
-
-			window.dimDO.stores['vault'] = _.extend({}, _storage['vault']);
-			window.dimDO.stores['vault'].id = 'vault';
-
-			window.dimDO.stores['vault'].bucketCounts = {};
-			for (var b in v.data.buckets) {
-				if (v.data.buckets[b].bucketHash === 3003523923)
-					window.dimDO.stores['vault'].bucketCounts['Armor'] = v.data.buckets[b].items.length;
-				if (v.data.buckets[b].bucketHash === 138197802)
-					window.dimDO.stores['vault'].bucketCounts['General'] = v.data.buckets[b].items.length;
-				if (v.data.buckets[b].bucketHash === 4046403665)
-					window.dimDO.stores['vault'].bucketCounts['Weapons'] = v.data.buckets[b].items.length;
-			}
-
-			window.dimDO.stores['vault'].items = [];
-
-			appendItems('vault', v.definitions.items, flattenVault(v.data));
-		});
-
-		var avatars = e.data.characters;
-		loader.characters = avatars.length;
-
-		function getClass(type) {
-			switch(type) {
-				case 0: return 'titan';
-				case 1: return 'hunter';
-				case 2: return 'warlock';
-			}
-			return 'unknown';
-		}
-
-		for(var c in avatars) {
-			// move.appendChild();
-			_storage[avatars[c].characterBase.characterId] = {
-				icon: avatars[c].emblemPath,
-				background: avatars[c].backgroundPath,
-				level: avatars[c].characterLevel,
-				class: getClass(avatars[c].characterBase.classType)
-			}
-
-			var charId = avatars[c].characterBase.characterId;
-			window.dimDO.stores[charId] = _.extend({}, _storage[charId]);
-			window.dimDO.stores[charId].id = charId;
-			window.dimDO.stores[charId].items = [];
-
-			loadInventory(avatars[c].characterBase.characterId);
-		}
-	});
-}
-
-bungie.user(function(u) {
-	if(u.error) {
-			var storage = document.getElementById('storage');
-			storage.innerHTML = 'error loading user. make sure your account is linked with bungie.net and you are logged in.';
-			return;
-	}
-
-	if(bungie.system().xbl.id !== undefined && bungie.system().psn.id !== undefined) {
-		var toggle = document.getElementById('system');
-		toggle.style.display = 'block';
-		toggle.addEventListener('change', function() {
-			bungie.setsystem(this.value);
-			loadUser();
-		});
-	}
-
-	loadUser()
-});
-
-function setSortHeights() {
-	var sorts = [
-		'primary',
-		'special',
-		'heavy',
-		'helmet',
-		'gauntlets',
-		'chest',
-		'leg',
-		'classitem',
-		'emblem',
-		'armor',
-		'ghost',
-		'ship',
-		'vehicle',
-		'class',
-		'consumable',
-		'material',
-		'currency'
-	];
-
-	sorts.forEach(function(sort) {
-		var elements = document.querySelectorAll('.sort-' + sort),
-				maxHeight;
-
-		Array.prototype.forEach.call(elements, function(element) {
-			element.style.height = 'auto';
-
-			if (typeof maxHeight === 'undefined' || element.clientHeight > maxHeight) {
-				maxHeight = element.clientHeight;
-			}
-		});
-
-		Array.prototype.forEach.call(elements, function(element) {
-			element.style.height = maxHeight + 'px';
-		});
-	});
+	// 	var input = document.getElementById('filter-text');
+	// 	input.style.display = 'inline-block';
+	// 	var item = document.querySelectorAll('.item');
+	//
+	// 	function collapseSections() {
+	// 		for (var i = 0; i < _sections.length; i++) {
+	// 			if(_sections[i].parentNode !== null)
+	// 			_sections[i].parentNode.style.display = 'none';
+	// 			for(var j = 0; j < _sections[i].children.length; j++) {
+	// 				for(var k = 0; k < _sections[i].children[j].children.length; k++) {
+	// 					if(_sections[i].children[j].children[k].style.display == '' && _sections[i].parentNode !== null) {
+	// 						_sections[i].parentNode.style.display = '';
+	// 						break;
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	collapseSections();
+	// 	input.addEventListener('keyup', function () {
+	// 		var filter = input.value.toLowerCase();
+	// 		var special = filter.indexOf('is:') >= 0;
+	// 		if(special) {
+	// 			filter = filter.split('is:')[1].trim();
+	// 			if(['arc', 'solar', 'void', 'kinetic'].indexOf(filter) >= 0) {
+	// 				special = 'elemental';
+	// 			} else if(['primary', 'special', 'heavy'].indexOf(filter) >= 0) {
+	// 				special = 'type';
+	// 			} else if(['basic', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filter) >= 0) {
+	// 				special = 'tier';
+	// 			} else if(['complete'].indexOf(filter) >= 0) {
+	// 				special = 'complete';
+	// 			}
+	// 		}
+	// 		for (var i = 0; i < item.length; i++) {
+	// 			switch(special) {
+	// 				case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmg == filter ? '' : 'none'; break;
+	// 				case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
+	// 				case 'tier':	item[i].style.display = _items[item[i].dataset.index].tier.toLowerCase() == filter ? '' : 'none'; break;
+	// 				case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete === true ? '' : 'none'; break;
+	// 				default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
+	// 			}
+	// 		}
+	//
+	// 		collapseSections();
+	// 	});
+	// 	input.addEventListener('click', function() { this.select(); });
+	// 	input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
+	//
+	// 	function hideTooltip(e) {
+	//
+	// 		// console.log( e.target, e.target.parentNode, e.target.parentNode.parentNode, e.target.className === 'loadout-set')
+	// 		if((e.type === 'keyup' && e.keyCode === 27) || (e.type === 'mousedown' &&
+	// 			!(e.target.parentNode.className === 'move-button' ||
+	// 			 	e.target.parentNode.className === 'item' ||
+	// 				e.target.className === 'loadout-button' ||
+	// 				e.target.parentNode.id === 'loadout-popup' ||
+	// 				e.target.className === 'loadout-set' ||
+	// 				e.target.parentNode.className === 'loadout-set' ||
+	// 				e.target.parentNode.id === 'loadout-list' ||
+	// 				e.target.parentNode.parentNode.id === 'loadout-list')) /*|| e.target.className !== 'loadouts'*/) {
+	//
+	// 			loadoutBox.style.display = 'none';
+	// 			// faq.style.display = 'none';
+	// 		}
+	// 	}
+	// 	document.body.addEventListener('mousedown', hideTooltip);
+	// 	document.body.addEventListener('keyup', hideTooltip);
+	// }
 }
 
 chrome.browserAction.onClicked.addListener(function(tab) {

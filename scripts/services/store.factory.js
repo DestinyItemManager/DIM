@@ -6,6 +6,7 @@
 
   function StoreService($window) {
     var service = {};
+    var stores = null;
 
     service.getStores = function getStores() {
       return $window.dimDO.stores;
