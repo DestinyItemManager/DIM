@@ -244,7 +244,7 @@ img.void {
     margin-bottom: 10px;
     width: 244px;
     position: absolute;
-    left: -204px;
+    left: -205px;
     z-index: 2;
     cursor: pointer;
 }
@@ -356,15 +356,18 @@ img.void {
 #loadout-list .loadout-set:hover,
 #loadout-new:hover,
 #loadout-options span:hover { background-color: #628e89 }
+#loadout-new {
+  padding: 0 12px;
+}
 .loadout-set .button-name {
   display: inline-block;
-  width: 150px;
+  padding: 0 12px;
 }
 .loadout-set .button-edit, .loadout-set .button-delete {
     background-color: rgba(195,188,180,.9);
     color: #1a1e24;
     float: right;
-    width: 50px;
+    padding: 0 12px;
     border-right: 1px solid rgba(195,188,180,.7);
     border-left: 1px solid rgba(195,188,180,.9);
 }
