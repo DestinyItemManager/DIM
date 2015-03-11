@@ -156,13 +156,23 @@ img.void {
 }
 .item .stack {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -2px;
+    right: -2px;
     padding: 1px;
     max-width: 20px;
     text-align: center;
     background: #F5f5f5;
     color: #24282b;
+}
+.item .dmgTag {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    padding: 0 2px;
+    text-align: center;
+    color: white;
+    background: #555;
+    font-size: 10px;
 }
 .complete { border-color: #f5dc56 }
 .over { background: rgba(0,0,0,.5) }

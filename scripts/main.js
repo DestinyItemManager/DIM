@@ -448,6 +448,20 @@ function buildItems() {
 		img.draggable = true;
 		img.src = 'http://bungie.net/' + _items[itemId].icon;
 
+		if (typeof(_items[itemId].primStat) != "undefined"){
+			var dmgTag = document.createElement('span');
+			var color = '';
+			dmgTag.className = 'dmgTag';
+			switch(_items[itemId].dmgType) {
+				case 2: damage = 'arc'; color = '#85c5ec'; break;
+				case 3: damage = 'solar'; color = '#f2721b'; break;
+				case 4: damage = 'void'; color = '#b184c5'; break;
+			}
+			dmgTag.style.backgroundColor = color;
+			dmgTag.innerText = _items[itemId].primStat.value;
+			itemBox.appendChild(dmgTag);
+		}
+
 		if(_items[itemId].amount > 1) {
 			var amt = document.createElement('div');
 			amt.className = 'stack';
