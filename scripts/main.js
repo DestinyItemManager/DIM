@@ -463,7 +463,7 @@ function buildItems() {
 			switch(_items[itemId].dmg) {
 				case 'arc': color = '#85c5ec'; break;
 				case 'solar': color = '#f2721b'; break;
-				case 'solar': color = '#b184c5'; break;
+				case 'void': color = '#b184c5'; break;
 			}
 			dmgTag.style.backgroundColor = color;
 			dmgTag.innerText = _items[itemId].primStat.value;
