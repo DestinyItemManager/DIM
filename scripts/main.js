@@ -448,7 +448,15 @@ function buildItems() {
 		img.draggable = true;
 		img.src = 'http://bungie.net/' + _items[itemId].icon;
 
-		if (typeof(_items[itemId].primStat) != "undefined"){
+		if (typeof(_items[itemId].stats[0]) != "undefined" && _items[itemId].stats[0].statHash === 2391494160) {
+			var lightTag = document.createElement('span');
+			var light = _items[itemId].stats[0].value;
+			lightTag.className = 'dmgTag';
+			lightTag.innerText = light;
+			itemBox.appendChild(lightTag);
+		}
+
+		if (typeof(_items[itemId].primStat) != "undefined" && _items[itemId].primStat.statHash === 368428387) {
 			var dmgTag = document.createElement('span');
 			var color = '';
 			dmgTag.className = 'dmgTag';

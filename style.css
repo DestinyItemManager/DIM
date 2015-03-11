@@ -173,6 +173,7 @@ img.void {
     color: white;
     background: #555;
     font-size: 10px;
+    min-width: 10px;
 }
 .complete { border-color: #f5dc56 }
 .over { background: rgba(0,0,0,.5) }
