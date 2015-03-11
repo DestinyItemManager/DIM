@@ -452,10 +452,10 @@ function buildItems() {
 			var dmgTag = document.createElement('span');
 			var color = '';
 			dmgTag.className = 'dmgTag';
-			switch(_items[itemId].dmgType) {
-				case 2: damage = 'arc'; color = '#85c5ec'; break;
-				case 3: damage = 'solar'; color = '#f2721b'; break;
-				case 4: damage = 'void'; color = '#b184c5'; break;
+			switch(_items[itemId].dmg) {
+				case 'arc': color = '#85c5ec'; break;
+				case 'solar': color = '#f2721b'; break;
+				case 'solar': color = '#b184c5'; break;
 			}
 			dmgTag.style.backgroundColor = color;
 			dmgTag.innerText = _items[itemId].primStat.value;
