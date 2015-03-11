@@ -516,7 +516,7 @@ function getItemType(type, name) {
 	if(["Restore Defaults"].indexOf(type) != -1)
 		return 'Armor';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
-		return 'Class';
+		return 'ClassItem';
 	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return type.split(' ')[0];
 	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
