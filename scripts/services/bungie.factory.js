@@ -73,7 +73,7 @@
             .error(function (data) {
               reject(data);
             });
-        }, 100);
+        }, 0);
       });
     }
 
@@ -110,7 +110,7 @@
             .error(function (data) {
               reject(data);
             });
-        }, 100);
+        }, 0);
       });
     }
 
@@ -148,7 +148,7 @@
             .error(function (data) {
               reject(data);
             });
-        }, 100);
+        }, 0);
       });
     }
 
@@ -180,7 +180,7 @@
                 reject(data);
                 return;
               });
-          }, 100);
+          }, 0);
         });
 
         promises.push(p);
@@ -220,7 +220,7 @@
               .error(function (data) {
                 reject(data);
               });
-          }, 100);
+          }, 0);
         });
       }
 

@@ -39,7 +39,9 @@
       return dimConfig.active;
     }, function (newValue) {
       vm.active = dimConfig.active;
-      update();
+      if (vm.active.id) {
+        update();
+      }
     });
 
     function update() {
