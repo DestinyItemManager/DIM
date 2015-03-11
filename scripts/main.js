@@ -571,11 +571,13 @@ function appendItems(owner, defs, items) {
 		}
 
 		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
+                var className = ['titan','hunter','warlock','unclassified'][itemDef.classType];
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
 
 		_items.push({
 			owner:      owner,
 			hash:       itemHash,
+                        class:      className,
 			type:       itemType,
 			sort:       itemSort,
 			tier:       tierName,
@@ -698,7 +700,9 @@ function tryPageLoad() {
 					special = 'incomplete';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
-				}
+				} else if(['warlock', 'hunter', 'titan'].indexOf(filter) >= 0) {
+					special = 'class';
+                                }
 			}
 			for (var i = 0; i < item.length; i++) {
 				switch(special) {
@@ -708,6 +712,8 @@ function tryPageLoad() {
 					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_items[item[i].dataset.index].sort) !== -1 &&
 						!_items[item[i].dataset.index].complete ? '' : 'none'; break;
 					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete ? '' : 'none'; break;
+                                        case 'class':	item[i].style.display = _items[item[i].dataset.index].class.toLowerCase() == filter || 
+                                                    _items[item[i].dataset.index].class.toLowerCase() == 'unclassified' ? '' : 'none'; break;
 					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
 			}
