@@ -2,14 +2,14 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStore', Store);
+    .directive('dimStores', Stores);
 
-  Store.$inject = ['ngDialog'];
+  Stores.$inject = ['ngDialog'];
 
-  function Store(ngDialog) {
+  function Stores(ngDialog) {
     return {
       bindToController: true,
-      controller: StoreCtrl,
+      controller: StoresCtrl,
       controllerAs: 'vm',
       scope: {},
       template: [
@@ -20,9 +20,9 @@
       ].join('')
     };
 
-    StoreCtrl.$inject = ['$scope', 'dimStoreService'];
+    StoresCtrl.$inject = ['$scope', 'dimStoreService'];
 
-    function StoreCtrl($scope, dimStoreService) {
+    function StoresCtrl($scope, dimStoreService) {
       var vm = this;
 
       vm.stores = dimStoreService.getStores();
