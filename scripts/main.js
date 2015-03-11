@@ -247,10 +247,10 @@ function manageItem(e) {
 	moveItem(item, destination.dataset, amount, function() {
 		// move the item to the right spot once done.
 		if(_items[_transfer.dataset.index] === amount) {
-			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
+			destination.querySelector('.item-' + item.sort + ' .sort-' + item.type).appendChild(_transfer);
 		} else {
 			// TODO: partial stack move, so copy the item...
-			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
+			destination.querySelector('.item-' + item.sort + ' .sort-' + item.type).appendChild(_transfer);
 		}
 	});
 
