@@ -10,6 +10,10 @@ body {
     background-size: cover;
     color: #fff;
     font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
+    text-align: center;
+}
+div {
+  text-align: initial;
 }
 #header {
     position: fixed;
@@ -68,18 +72,62 @@ img.void {
     margin-top: 8px;
     margin-bottom: 8px;
     border-bottom: 2px solid rgba(245,245,245,.6);
-    font-size: 15px;
+    font-size: 10px;
     font-weight: 500;
     color: rgba(245,245,245,.6);
-    width: 260px;
+    width: auto;
 }
 .title .icon { width: 30px }
+#storage {
+  display: inline-block;
+  white-space: nowrap;
+}
 .storage {
   margin-top: 10px;
-  max-width: 260px;
-  float: left;
+  max-width: 244px;
+  display: inline-block;
   margin-right: 1em;
-  margin-bottom: 100px;
+  white-space: initial;
+}
+.storage:last-of-type {
+  margin-right: 0;
+}
+.equipped {
+  float: left;
+  background: rgba(255,255,255,.2);
+  padding: 0 12px;
+  width: 52px;
+}
+.equipped .title {
+  width: 50px;
+}
+.inventory {
+  float: left;
+  width: 156px;
+  padding-left: 12px;
+}
+.sort {
+  float: left;
+  clear: left;
+  min-height: 48px;
+  width: 156px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(245,245,245,.2);
+  padding-bottom: 6px;
+}
+.equipped .sort {
+  width: 52px;
+}
+.vault .character-box {
+  width: 137px;
+}
+.vault .inventory {
+  width: 208px;
+  padding: 0 12px;
+  background: rgba(0,0,0,.2);
+}
+.vault .sort {
+  width: 208px;
 }
 .item {
     position: relative;
@@ -121,7 +169,7 @@ img.void {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 165px;
+    width: 149px;
     height: 43px;
     padding: 0 0 0 50px;
     margin: 5px 0;
@@ -184,9 +232,9 @@ img.void {
     border-bottom: 2px solid rgba(245,245,245,.6);
     color: rgba(245,245,245,.6);
     margin-bottom: 10px;
-    width: 260px;
+    width: 244px;
     position: absolute;
-    left: -220px;
+    left: -204px;
     z-index: 2;
     cursor: pointer;
 }
@@ -263,9 +311,8 @@ img.void {
 #faq .content ul li { margin-bottom: 3px; }
 #faq a { color: #fff }
 .content {
-    max-width: 1088px;
-    margin: 0 auto;
-    padding: 5px;
+    margin: 0 1em;
+    padding: 2px;
 }
 #loadout-create {
     position: fixed;
@@ -313,18 +360,4 @@ img.void {
 }
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
     background-color: rgba(195,188,180,.6);
-}
-@media only screen and (min-width :1648px) {
-    .storage {
-        max-width: 391px;
-        margin-left: 10px;
-        float: left;
-        margin-right: 0;
-    }
-    .content { max-width: 1604px }
-    .item,
-    .item img { width: 47.7px }
-    .character-box {
-      width: 281px;
-    }
 }

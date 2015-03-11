@@ -217,10 +217,11 @@ function manageItemClick(item, data) {
 			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = true;
 	} else {
-		document.querySelector('.items[data-character="' + data.character + '"] .item-' + item.sort + ' .sort-' + item.type	).appendChild(
+		document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + item.type	).appendChild(
 			document.querySelector('[data-instance-id="' + item.id + '"]'));
 		item.equipped = false;
 	}
+	setSortHeights();
 }
 
 function manageItem(e) {
@@ -252,6 +253,7 @@ function manageItem(e) {
 			// TODO: partial stack move, so copy the item...
 			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
 		}
+		setSortHeights();
 	});
 
 }
@@ -398,6 +400,7 @@ function buildStorage() {
 		}
 		characterNode.querySelector('.class').innerText =
 			c === 'vault' ? c : _storage[c].class;
+		node.querySelector('.storage').className = node.querySelector('.storage').className + ' ' + characterNode.querySelector('.class').innerText;
 		var level = characterNode.querySelector('.level');
 		level.innerText = _storage[c].level;
 		if(_storage[c].level >= 20) level.style.color = 'rgba(245, 220, 86, 1)';
@@ -476,8 +479,7 @@ function buildItems() {
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		} else {
-			// console.log(_items[itemId])
-			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
+			_storage[_items[itemId].owner].elements.item.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
 }
@@ -499,7 +501,9 @@ function getItemType(type, name) {
 		return 'Class';
 	if(["Restore Defaults"].indexOf(type) != -1)
 		return 'Armor';
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
+	if(["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
+		return 'Class';
+	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return type.split(' ')[0];
 	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
@@ -681,6 +685,7 @@ function tryPageLoad() {
 					}
 				}
 			}
+			setSortHeights();
 		}
 		collapseSections();
 		input.addEventListener('keyup', function () {
@@ -809,6 +814,43 @@ bungie.user(function(u) {
 
 	loadUser();
 });
+
+function setSortHeights() {
+	var sorts = [
+		'primary',
+		'special',
+		'heavy',
+		'helmet',
+		'gauntlets',
+		'chest',
+		'leg',
+		'emblem',
+		'armor',
+		'vehicle',
+		'ship',
+		'ghost',
+		'class',
+		'classitem',
+		'miscellaneous'
+	];
+
+	sorts.forEach(function(sort) {
+		var elements = document.querySelectorAll('.sort-' + sort),
+				maxHeight;
+
+		Array.prototype.forEach.call(elements, function(element) {
+			element.style.height = 'auto';
+
+			if (typeof maxHeight === 'undefined' || element.clientHeight > maxHeight) {
+				maxHeight = element.clientHeight;
+			}
+		});
+
+		Array.prototype.forEach.call(elements, function(element) {
+			element.style.height = maxHeight + 'px';
+		});
+	});
+}
 
 chrome.browserAction.onClicked.addListener(function(tab) {
 	var optionsUrl = chrome.extension.getURL('window.html');
