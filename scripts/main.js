@@ -846,13 +846,13 @@ function setSortHeights() {
 		'gauntlets',
 		'chest',
 		'leg',
+		'classitem',
 		'emblem',
 		'armor',
 		'vehicle',
 		'ship',
 		'ghost',
 		'class',
-		'classitem',
 		'miscellaneous'
 	];
 
