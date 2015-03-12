@@ -127,6 +127,24 @@ img.void {
   width: 208px;
 }
 
+.equipped.on-drag-enter .item {
+  box-shadow: 0 0 10px 2px #eee;
+}
+
+.item-target {
+  vertical-align: top;
+  position: relative;
+  display: none;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  margin: 4px;
+  box-shadow: 0 0 10px 2px #eee;
+}
+.unequipped.on-drag-enter .item-target {
+  display: inline-block;
+}
+
 .counter {
   position: absolute;
   bottom: -2px;
