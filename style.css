@@ -232,10 +232,10 @@ img.void {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 137px;
+    width: 139px;
     height: 45px;
-    padding: 0 42px 0 44px;
-    margin-right: -42px;
+    padding: 0 40px 0 44px;
+    margin-right: -40px;
     margin-bottom: 16px;
     opacity: 1;
     background: rgba(30,36,43,.5);
@@ -277,7 +277,7 @@ img.void {
 .character-box .level {
   position: absolute;
   top: 7px;
-  right: 46px;
+  right: 45px;
   font-weight: 200;
   font-size: 22px;
 }
@@ -292,7 +292,7 @@ img.void {
 }
 .levelBar {
   height: 5px;
-  background-color: rgba(245,245,245,0.25);
+  background-color: rgba(245,245,245,0.1);
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -311,7 +311,6 @@ img.void {
     display: inline-block;
     width: 40px;
     height: 40px;
-    border-left: 2px solid rgba(245,245,245,.25);
     color: rgba(245,245,245,.5);
     vertical-align: top;
     text-align: center;
