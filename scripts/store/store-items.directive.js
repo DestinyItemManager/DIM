@@ -55,8 +55,7 @@
         'Ship',
         'Vehicle',
         'Consumable',
-        'Material',
-        'Currency'
+        'Material'
       ];
       vm.orderedTypes = {};
 
@@ -84,8 +83,7 @@
           'Ship',
           'Vehicle',
           'Consumable',
-          'Material',
-          'Currency'
+          'Material'
         ]
       };
 
@@ -151,10 +149,6 @@
           unequipped: 'unequippable',
         },
         Material: {
-          equipped: '',
-          unequipped: 'unequippable',
-        },
-        Currency: {
           equipped: '',
           unequipped: 'unequippable',
         }
