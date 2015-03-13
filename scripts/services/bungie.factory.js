@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$http', '$q', 'dimConfig'];
+  BungieService.$inject = ['$http', '$q', 'dimConfig', '$timeout'];
 
-  function BungieService($http, $q, dimConfig) {
+  function BungieService($http, $q, dimConfig, $timeout) {
     var vaultData = null;
     var inventoryData = null;
     var destinyUserData = null;
@@ -19,8 +19,100 @@
       loadPlatformUser: loadPlatformUser,
       loadDestinyStores: loadDestinyStores,
       getUser: getUser,
-      getStores: getStores
+      getStores: getStores,
+      vault: vault,
+      equip: equip
     };
+
+    // Moves items between the equip slot and the inventory.
+    function equip(membershipType, characterId, itemId) {
+      return loadBnetCookies()
+        .then(getBungleToken)
+        .then(function (token) {
+          return generateEquipToken(token, membershipType, characterId, itemId);
+        })
+        .catch(loadStoresFailed);
+    }
+
+    function generateEquipToken(token, membershipType, characterId, itemId) {
+      return $q(function (resolve, reject) {
+        var request = {
+          method: 'POST',
+          url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
+          headers: {
+            'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
+            'x-csrf': token
+          },
+          data: JSON.stringify({
+            membershipType: membershipType,
+            characterId: characterId,
+            itemId: itemId
+          }),
+          withCredentials: true
+        };
+
+        window.setTimeout(function () {
+          return $http(request)
+            .success(function (data, status, headers, config) {
+              if (data.ErrorCode === 1) {
+                resolve(data);
+              } else {
+                reject(data);
+              }
+            })
+            .error(function (data) {
+              reject(data);
+            });
+        }, 0);
+      });
+    }
+
+    // Moves items between characters and the vault.
+    function vault(characterId, membershipType, itemId, itemReferenceHash, stackSize, transferToVault) {
+      return loadBnetCookies()
+        .then(getBungleToken)
+        .then(function (token) {
+          return generateTransferReq(token, characterId, membershipType, itemId, itemReferenceHash, stackSize, transferToVault);
+        })
+        .catch(loadStoresFailed);
+    }
+
+    function generateTransferReq(token, characterId, membershipType, itemId, itemReferenceHash, stackSize, transferToVault) {
+      return $q(function (resolve, reject) {
+        var request = {
+          method: 'POST',
+          url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
+          headers: {
+            'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
+            'x-csrf': token
+          },
+          data: JSON.stringify({
+            characterId: characterId,
+            membershipType: membershipType,
+            itemId: itemId,
+            itemReferenceHash: itemReferenceHash,
+            stackSize: stackSize,
+            transferToVault: transferToVault
+          }),
+          withCredentials: true
+        };
+
+        window.setTimeout(function () {
+          return $http(request)
+            .success(function (data, status, headers, config) {
+              if (data.ErrorCode === 1) {
+                resolve(data);
+              } else {
+                reject(data);
+              }
+
+            })
+            .error(function (data) {
+              reject(data);
+            });
+        }, 1000);
+      });
+    }
 
     function getUser() {
       return {
@@ -161,7 +253,7 @@
         var p = $q(function (resolve, reject) {
           var request = {
             method: 'GET',
-            url: 'https://www.bungie.net/Platform//Destiny/' + dimConfig.active.type + '/Account/' + dimConfig.membershipId + '/Character/' + characterId + '/Inventory/?definitions=true',
+            url: 'https://www.bungie.net/Platform/Destiny/' + dimConfig.active.type + '/Account/' + dimConfig.membershipId + '/Character/' + characterId + '/Inventory/?definitions=true',
             headers: {
               'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0',
               'x-csrf': token
@@ -189,7 +281,7 @@
       return $q.all(promises);
     }
 
-    function loadStoresFailed(response) {
+      function loadStoresFailed(response) {
       throw 'XHR Failed for loadBungieStores. ' + response;
     }
 
@@ -211,22 +303,25 @@
             withCredentials: true
           };
 
-          window.setTimeout(function () {
+          $timeout(function () {
             $http(request)
               .success(function (data, status, headers, config) {
+                if (data.ErrorCode === 99) {
+                  reject("Please log into Bungie.net before using this extension.");
+                }
                 bungieUserData = data;
                 resolve(data);
               })
               .error(function (data) {
                 reject(data);
               });
-          }, 0);
+          }, 0, false);
         });
       }
+    }
 
-      function loadUserFailed(response) {
-        throw 'XHR Failed for loadBungieNetUser. ' + response;
-      }
+    function loadUserFailed(response) {
+      throw 'XHR Failed for loadBungieNetUser. ' + response;
     }
 
     function loadBnetCookies() {
@@ -254,14 +349,16 @@
         if (!_.isUndefined(cookie)) {
           resolve(cookie.value);
         } else {
-          chrome.tabs.create({
-            url: 'http://bungie.net',
-            active: false
-          });
+          if (_.isUndefined(location.search.split('reloaded')[1])) {
+            chrome.tabs.create({
+              url: 'http://bungie.net',
+              active: false
+            });
 
-          setTimeout(function () {
-            window.location.reload();
-          }, 5000);
+            setTimeout(function () {
+              window.location.reload(window.location.href + "?reloaded=true");
+            }, 5000);
+          }
 
           reject('No bungled cookie found.');
         }

@@ -7,7 +7,7 @@
       psn: null
     })
     .value('dimConfig', {
-      'membershipId': -1,
+      'membershipType': -1,
       'active': {}
     })
     .run(appRun);

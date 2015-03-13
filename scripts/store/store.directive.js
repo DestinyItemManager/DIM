@@ -1,3 +1,5 @@
+/*jshint -W027*/
+
 (function () {
   'use strict';
 
@@ -25,10 +27,8 @@
     function StoresCtrl($scope, dimStoreService) {
       var vm = this;
 
-      //vm.stores = dimStoreService.getStores();
-
       $scope.$watch(function () {
-        return dimStoreService.getStores()
+        return dimStoreService.getStores();
       }, function (newVal) {
         vm.stores = newVal;
       });
