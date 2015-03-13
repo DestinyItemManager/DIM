@@ -110,7 +110,6 @@
             isPrestigeLevel: characterDo.isPrestigeLevel,
             percentToNextLevel: characterDo.percentToNextLevel,
           };
-          console.info(dimDo.stores[id]);
 
           items = [];
 
