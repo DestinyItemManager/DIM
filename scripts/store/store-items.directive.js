@@ -1,5 +1,3 @@
-/*jshint -W027*/
-
 (function () {
   'use strict';
 
@@ -37,9 +35,9 @@
       ].join('')
     };
 
-    StoreItemsCtrl.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$q'];
+    StoreItemsCtrl.$inject = ['$scope', 'dimItemService'];
 
-    function StoreItemsCtrl($scope, dimItemService, dimStoreService, $q) {
+    function StoreItemsCtrl($scope, dimItemService) {
       var vm = this;
       var types = [ // Order of types in the rows.
         'Class',
@@ -154,35 +152,12 @@
           equipped: '',
           unequipped: 'unequippable',
         }
-      };
+      }
 
       vm.onDrop = function (id, e) {
         var item = dimItemService.getItem(id);
-        var source = null;
 
-        if (item.owner === vm.store.id) {
-          source = vm.store;
-        } else {
-          source = dimStoreService.getStore(item.owner);
-        }
-
-        dimItemService.moveTo(item, vm.store)
-          .then(function(result) {
-            return updateUi(item, source, vm.store);
-          });
-      };
-
-      function updateUi(item, source, target) {
-        return $q(function (resolve, reject) {
-          var index = _.findIndex(source.items, function (prevItems) {
-            return item.id == prevItems.id;
-          });
-
-          if (index >= 0) {
-            source.items.splice(index, 1);
-            target.items.push(item);
-          }
-        });
+        alert(item.name);
       };
 
       $scope.$watch('vm.store.items', function (newVal) {
@@ -199,7 +174,7 @@
             });
           })
           .value();
-      }, true);
+      });
     }
   }
 })();
