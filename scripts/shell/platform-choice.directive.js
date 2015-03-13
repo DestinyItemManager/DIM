@@ -234,7 +234,6 @@
           return 'Class';
         if (["Restore Defaults"].indexOf(type) != -1)
           return 'Armor';
-        if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         if (["Currency"].indexOf(type) != -1) {
           if (["Vanguard Marks", "Crucible Marks"].indexOf(name) != -1)
             return '';
