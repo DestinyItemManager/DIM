@@ -17,9 +17,10 @@
         '<div class="character-box" ng-class="vm.isGuardian ? \'\' : \'vault-box\'">',
         '  <div class="emblem" ng-show="vm.isGuardian"></div>',
         '  <div class="class">{{ vm.class || "Vault" }}</div>',
-        '  <div class="level" ng-show="vm.isGuardian">{{ vm.level }}</div>',
+        '  <div class="race-gender" ng-show="vm.isGuardian">{{ vm.race }} {{ vm.gender }}</div>',
+        '  <div class="level" ng-show="vm.isGuardian" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'">{{ vm.level }}</div>',
         '  <div class="levelBar" ng-show="vm.isGuardian">',
-        '    <div class="barFill"></div>',
+        '    <div class="barFill" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'" ng-style="{width: vm.percentToNextLevel + \'%\'}"></div>',
         '  </div>',
         '</div>',
         '<div class="loadout-button" ng-show="vm.isGuardian">&#x25BC;</div>'
@@ -32,6 +33,10 @@
       vm.isGuardian = (vm.store.id !== 'vault');
       vm.class = vm.store.class;
       vm.level = vm.store.level;
+      vm.race = vm.store.race;
+      vm.gender = vm.store.gender;
+      vm.isPrestigeLevel = vm.store.isPrestigeLevel;
+      vm.percentToNextLevel = vm.store.percentToNextLevel;
       vm.maxLevel = (vm.store.level >= 20);
       vm.characterBoxUrl = 'http://bungie.net' + vm.store.background;
       vm.emblemUrl = 'http://bungie.net' + vm.store.icon;

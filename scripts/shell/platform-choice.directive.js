@@ -99,14 +99,18 @@
 
         _.each(platformData.Response.data.characters, function (characterDo) {
           var id = characterDo.characterBase.characterId;
-
           dimDo.stores[id] = {
             id: id,
             icon: characterDo.emblemPath,
             background: characterDo.backgroundPath,
             level: characterDo.characterLevel,
-            class: getClass(characterDo.characterBase.classType)
+            class: getClass(characterDo.characterBase.classType),
+            gender: getGender(characterDo.characterBase.genderType),
+            race: getRace(characterDo.characterBase.raceHash),
+            isPrestigeLevel: characterDo.isPrestigeLevel,
+            percentToNextLevel: characterDo.percentToNextLevel,
           };
+          console.info(dimDo.stores[id]);
 
           items = [];
 
@@ -132,6 +136,28 @@
           return 'hunter';
         case 2:
           return 'warlock';
+        }
+        return 'unknown';
+      }
+
+      function getRace(hash) {
+        switch (hash) {
+        case 3887404748:
+          return 'human';
+        case 898834093:
+          return 'exo';
+        case 2803282938:
+          return 'awoken';
+        }
+        return 'unknown';
+      }
+
+      function getGender(type) {
+        switch (type) {
+        case 0:
+          return 'male';
+        case 1:
+          return 'female';
         }
         return 'unknown';
       }

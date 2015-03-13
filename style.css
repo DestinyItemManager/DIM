@@ -232,9 +232,9 @@ img.void {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 131px;
+    width: 137px;
     height: 45px;
-    padding: 0 42px 0 50px;
+    padding: 0 42px 0 44px;
     margin-right: -42px;
     margin-bottom: 16px;
     opacity: 1;
@@ -258,29 +258,41 @@ img.void {
     background-size: cover;
 }
 .character-box .class {
-    text-transform: capitalize;
-    position: relative;
-    display: block;
-    top: 9px;
-    font-size: 24px;
-    font-weight: 400;
+  text-transform: capitalize;
+  position: relative;
+  display: block;
+  top: 4px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.vault-box .class {
+  font-size: 25px;
+  line-height: 38px;
+}
+.character-box .race-gender {
+  text-transform: capitalize;
+  top: 3px;
+  position: relative;
 }
 .character-box .level {
-    position: absolute;
-    top: 8px;
-    right: 50px;
-    font-weight: 200;
-    font-size: 22px;
+  position: absolute;
+  top: 7px;
+  right: 46px;
+  font-weight: 200;
+  font-size: 22px;
+}
+.character-box .level.prestige {
+  color: #f5dc56;
 }
 .character-box .level:before {
     content: "\2726";
     display: inline-block;
-    vertical-align: 18%;
+    vertical-align: 25%;
     font-size: 50%;
 }
 .levelBar {
   height: 5px;
-  background-color: rgba(245,245,245,0.1);
+  background-color: rgba(245,245,245,0.25);
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -291,20 +303,20 @@ img.void {
   height: 5px;
   width: 0%;
 }
-.barFill.lightBar {
+.barFill.prestige {
   background-color: #f5dc56;
 }
 .loadout-button {
     position: relative;
     display: inline-block;
     width: 40px;
-    height: 45px;
-    border-left: 2px solid rgba(245,245,245,.45);
+    height: 40px;
+    border-left: 2px solid rgba(245,245,245,.25);
     color: rgba(245,245,245,.5);
     vertical-align: top;
     text-align: center;
     font-size: 20px;
-    line-height: 45px;
+    line-height: 41px;
     padding: 0;
     cursor: pointer;
 }
