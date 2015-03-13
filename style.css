@@ -128,7 +128,10 @@ img.void {
 }
 
 .equipped.on-drag-enter .item {
-  box-shadow: 0 0 10px 2px #eee;
+  box-shadow: 0 0 10px #ddd;
+}
+.equipped.on-drag-hover .item {
+  box-shadow: 0 0 10px 2px #fff;
 }
 
 .item-target {
@@ -138,11 +141,18 @@ img.void {
   width: 44px;
   height: 44px;
   cursor: pointer;
-  margin: 4px;
-  box-shadow: 0 0 10px 2px #eee;
+  margin: 3px;
+  box-shadow: 0 0 10px #ddd;
+  border-style: dashed;
+  border-width: 1px;
+  opacity: .75;
+  border-color: #ddd;
 }
 .unequipped.on-drag-enter .item-target {
   display: inline-block;
+}
+.unequipped.on-drag-hover .item-target {
+  box-shadow: 0 0 10px 2px #fff;
 }
 
 .counter {
