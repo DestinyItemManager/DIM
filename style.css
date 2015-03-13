@@ -148,10 +148,10 @@ img.void {
   opacity: .75;
   border-color: #ddd;
 }
-.unequipped.on-drag-enter .item-target {
+.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target  {
   display: inline-block;
 }
-.unequipped.on-drag-hover .item-target {
+.unequipped.on-drag-hover .item-target, .unequippable.on-drag-enter .item-target  {
   box-shadow: 0 0 10px 2px #fff;
   opacity: 1;
 }
