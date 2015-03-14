@@ -19,8 +19,8 @@
         'item': '=itemData'
       },
       template: [
-        '<div ui-draggable="true" drag="vm.item.id" drag-channel="{{ vm.item.type }}" class="item{{ vm.item.complete ? \' complete\' : \'\' }}" ',
-        '  data-index="{{ vm.item.index }}" data-name="{{ vm.item.name }}" data-instance-id="{{ vm.item.id }}">',
+        '<div ui-draggable="true" drag-channel="{{ vm.item.type }}" drag="vm.item.id" class="item{{ vm.item.complete ? \' complete\' : \'\' }}" ',
+        '  data-instance-id="{{ vm.item.id }}">',
         '  <img ui-draggable="false" ng-src="http://bungie.net/{{ vm.item.icon }}" ng-click="vm.openLoadout(vm.item, $event)">',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="damage-type" ng-if="vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',

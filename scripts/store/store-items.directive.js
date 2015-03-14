@@ -18,18 +18,19 @@
       template: [
         '<div>',
         '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-        '  <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}">',
-        '    <div class="title">',
-        '      <span>{{ key }}</span>',
-        '      <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.store.bucketCounts[key] }}/20</span>',
-        '    </div>',
-        '    <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'">',
-        '      <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event)" drop-channel="{{ type }}" ng-if="vm.data[vm.orderedTypes[type]].equipped">',
-        '        <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '    <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event)" drop-channel="{{ value.join(\',\') }}">',
+        '      <div class="title">',
+        '        <span>{{ key }}</span>',
+        '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.store.bucketCounts[key] }}/20</span>',
         '      </div>',
-        '      <div ng-class="vm.styles[type].unequipped" ui-on-drop="vm.onDrop($data, $event)" drop-channel="{{ type }}">',
-        '        <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped" dim-store-item store-data="vm.store" item-data="item"></div',
-        '        ><div class="item-target"></div>',
+        '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-if="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'">',
+        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ng-if="vm.data[vm.orderedTypes[type]].equipped">',
+        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '        </div>',
+        '        <div ng-class="vm.styles[type].unequipped">',
+        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '          <div class="item-target"></div>',
+        '        </div>',
         '      </div>',
         '    </div>',
         '  </div>',
@@ -156,20 +157,38 @@
         }
       };
 
+      function generateData() {
+        return _.chain(vm.store.items)
+          .sortBy(function (item) {
+            return vm.orderedTypes[item.type];
+          })
+          .groupBy(function (item) {
+            return vm.orderedTypes[item.type];
+          })
+          .mapObject(function (values, key) {
+            return _.groupBy(values, function (item) {
+              return (item.equipped ? 'equipped' : 'unequipped');
+            });
+          })
+          .value();
+      }
+
+      vm.data = generateData();
+
       vm.onDrop = function (id, e) {
-        var item = dimItemService.getItem(id);
-        var source = null;
-
-        if (item.owner === vm.store.id) {
-          source = vm.store;
-        } else {
-          source = dimStoreService.getStore(item.owner);
-        }
-
-        dimItemService.moveTo(item, vm.store)
-          .then(function(result) {
-            return updateUi(item, source, vm.store);
-          });
+        // var item = dimItemService.getItem(id);
+        // var source = null;
+        //
+        // if (item.owner === vm.store.id) {
+        //   source = vm.store;
+        // } else {
+        //   source = dimStoreService.getStore(item.owner);
+        // }
+        //
+        // dimItemService.moveTo(item, vm.store)
+        //   .then(function(result) {
+        //     return updateUi(item, source, vm.store);
+        //   });
       };
 
       function updateUi(item, source, target) {
@@ -185,21 +204,21 @@
         });
       };
 
-      $scope.$watch('vm.store.items', function (newVal) {
-        vm.data = _.chain(vm.store.items)
-          .sortBy(function (item) {
-            return vm.orderedTypes[item.type];
-          })
-          .groupBy(function (item) {
-            return vm.orderedTypes[item.type];
-          })
-          .mapObject(function (values, key) {
-            return _.groupBy(values, function (item) {
-              return (item.equipped ? 'equipped' : 'unequipped');
-            });
-          })
-          .value();
-      }, true);
+      // $scope.$watch('vm.store.items', function (newVal) {
+      //   vm.data = _.chain(vm.store.items)
+      //     .sortBy(function (item) {
+      //       return vm.orderedTypes[item.type];
+      //     })
+      //     .groupBy(function (item) {
+      //       return vm.orderedTypes[item.type];
+      //     })
+      //     .mapObject(function (values, key) {
+      //       return _.groupBy(values, function (item) {
+      //         return (item.equipped ? 'equipped' : 'unequipped');
+      //       });
+      //     })
+      //     .value();
+      // });
     }
   }
 })();
