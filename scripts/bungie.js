@@ -66,6 +66,7 @@ function bungie() {
 
   // privileged methods
   this.setsystem = function(type) {
+    if(type === undefined) return;
     active = systemIds.xbl
     if(type === 'PSN')
       active = systemIds.psn;
