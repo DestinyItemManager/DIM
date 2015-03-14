@@ -120,7 +120,7 @@ function bungie() {
   }
   this.vault = function(callback) {
     _request({
-      route: '/Destiny/' + active.type + '/MyAccount/Vault/?definitions=true',
+      route: '/Destiny/' + active.type + '/MyAccount/Vault/',
       method: 'GET',
       complete: callback
     });
@@ -130,7 +130,7 @@ function bungie() {
       route: '/Destiny/' + active.type +
               '/Account/' + membershipId +
               '/Character/' + characterId +
-              '/Inventory/?definitions=true',
+              '/Inventory/',
       method: 'GET',
       complete: callback
     });
