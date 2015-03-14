@@ -195,7 +195,8 @@ function moveItem(item, destination, amount, callback) {
 				for(var i in _items) {
 					if(item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
 						// console.log(_items[i].name)
-						manageItemClick(i, {type: 'item', character: item.owner})
+						manageItemClick(i, {type: 'item', character: item.owner});
+						_items[i].equipped = false;
 						break;
 					}
 				}
@@ -235,6 +236,7 @@ function manageItemClick(item, data) {
 			document.querySelector('[data-index="' + item + '"]'));
 		item.equipped = true;
 	} else {
+		item.equipped = false;
 		// else do this insane hack
 		var drop = document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type);
 		for(var e = 0; e < drop.childNodes.length; e++) {
@@ -257,7 +259,6 @@ function manageItemClick(item, data) {
 		}
 		// document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type).appendChild(
 		drop.appendChild(document.querySelector('[data-index="' + item + '"]'));
-		item.equipped = false;
 	}
 	setSortHeights();
 }
@@ -536,6 +537,7 @@ function buildItems() {
 		itemBox.className = 'item';
 		if(_items[itemId].complete) itemBox.className += ' complete';
 		itemBox.dataset.index = itemId;
+		itemBox.dataset.instance = _items[itemId].id;
 		img.addEventListener('dragstart', function(e) {
 			_transfer = this.parentNode;
 		});
@@ -853,6 +855,12 @@ function loadUser() {
 		}
 
 		bungie.vault(function(v) {
+			console.log(v)
+			if(v === undefined) {
+					var storage = document.getElementById('storage');
+					storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
+					return;
+			}
 			_storage['vault'] = {
 				icon: ''
 			};
@@ -893,6 +901,7 @@ bungie.user(function(u) {
 
 	var toggle = document.getElementById('system');
 	chrome.storage.sync.get('system', function(res) {
+		if(res.system === undefined) return;
 		bungie.setsystem(res.system);
 		toggle.value = res.system;
 	});

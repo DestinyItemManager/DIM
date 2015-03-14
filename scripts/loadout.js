@@ -103,7 +103,7 @@ function loadout() {
   this.add = function(item) {
     if(item.type === 'Miscellaneous') return;
 
-    var node = document.querySelector('[data-instance-id="' + item.id + '"]').cloneNode(true);
+    var node = document.querySelector('[data-instance="' + item.id + '"]').cloneNode(true);
     node.querySelector('img').draggable=false;
 
     var slot = _contents.querySelector('.loadout-' + item.type);
@@ -134,7 +134,7 @@ function loadout() {
         return;
       }
       moveItem(item, destination, 1, function() {
-        manageItemClick(item, {type:'equip', character: character});
+        manageItemClick(document.querySelector('[data-instance="'+item.id+'"]').dataset.index, {type:'equip', character: character});
 
         setTimeout(function () { processItem(i); }, 1000);
       });
