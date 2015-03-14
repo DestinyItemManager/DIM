@@ -829,6 +829,12 @@ function loadUser() {
 		}
 
 		bungie.vault(function(v) {
+			console.log(v)
+			if(v === undefined) {
+					var storage = document.getElementById('storage');
+					storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
+					return;
+			}
 			_storage['vault'] = {
 				icon: ''
 			};
@@ -869,6 +875,7 @@ bungie.user(function(u) {
 
 	var toggle = document.getElementById('system');
 	chrome.storage.sync.get('system', function(res) {
+		if(res.system === undefined) return;
 		bungie.setsystem(res.system);
 		toggle.value = res.system;
 	});
