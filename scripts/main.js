@@ -557,9 +557,6 @@ function buildItems() {
 }
 
 function getItemType(type, name) {
-	if(type.indexOf("Engram") != -1) {
-		return null;
-	}
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
 		return 'Primary';
 	if(["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
@@ -576,12 +573,16 @@ function getItemType(type, name) {
 		return 'Class';
 	if(["Restore Defaults"].indexOf(type) != -1)
 		return 'Armor';
+	if(["Gauntlet Engram"].indexOf(type) != -1)
+		return 'Gauntlets';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
 		return 'ClassItem';
-	if(["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
+	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram", "Consumable", "Material"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
+	if(["Vanguard Marks", "Crucible Marks"].indexOf(name) != -1)
+		return null;
+	if(["Currency"].indexOf(type) != -1)
+		return 'Material';
 }
 
 function sortItem(type) {
@@ -924,6 +925,8 @@ function setSortHeights() {
 		'ship',
 		'ghost',
 		'class',
+		'material',
+		'consumables',
 		'miscellaneous'
 	];
 

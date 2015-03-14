@@ -114,7 +114,7 @@ img.void {
   margin: 0 -12px 12px;
   padding: 0 12px 6px;
 }
-.sort-class, .sort-heavy, .sort-classitem {
+.sort-class, .sort-heavy, .sort-classitem, .sort-ghost {
   border-bottom: 1px solid rgba(245,245,245,.2);
 }
 .equipped .sort {
