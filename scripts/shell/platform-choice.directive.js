@@ -22,9 +22,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimBungieService', 'dimUserSystemIds', 'dimConfig', '$window'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimBungieService', 'dimUserSystemIds', 'dimConfig', '$window', 'dimItemTier', 'dimCategory'];
 
-  function PlatformChoiceCtrl($scope, dimBungieService, dimUserSystemIds, dimConfig, $window) {
+  function PlatformChoiceCtrl($scope, dimBungieService, dimUserSystemIds, dimConfig, $window, dimItemTier, dimCategory) {
     var vm = this;
 
     vm.update = function update() {
@@ -78,7 +78,28 @@
               'id': 'vault',
               'icon': '',
               'items': [],
-              'bucketCounts': {}
+              'bucketCounts': {},
+              hasExotic: function(type) {
+                var predicate = {
+                  'tier': dimItemTier.exotic,
+                  'type': type
+                };
+
+                return _.chain(items)
+                  .where(predicate)
+                  .value();
+              },
+              getTypeCount: function(item) {
+                return _.chain(this.items)
+                  .filter(function(storeItem) {
+                    return item.type === storeItem.type;
+                  })
+                  .size()
+                  .value() < 10;
+              },
+              canEquipExotic: function(item) {
+                return this.getTypeCount(item);
+              }
             }
           }
         };
@@ -111,6 +132,44 @@
             race: getRace(characterDo.characterBase.raceHash),
             isPrestigeLevel: characterDo.isPrestigeLevel,
             percentToNextLevel: characterDo.percentToNextLevel,
+            hasExotic: function(type, equipped) {
+              var predicate = {
+                'tier': dimItemTier.exotic,
+                'type': type
+              };
+
+              if (!_.isUndefined(equipped)) {
+                predicate.equipped = equipped;
+              }
+
+              return _.chain(this.items)
+                .where(predicate)
+                .value();
+            },
+            getTypeCount: function(item) {
+              return _.chain(this.items)
+                .filter(function(storeItem) {
+                  return item.type === storeItem.type;
+                })
+                .size()
+                .value() < 10;
+            },
+            canEquipExotic: function(itemType) {
+              var types = _.chain(dimCategory)
+                .pairs()
+                .find(function(cat) {
+                  return _.some(cat[1],
+                    function(type) {
+                      return (type == itemType);
+                    }
+                  );
+                })
+                .value()[1];
+
+              return _.size(_.reduce(types, function(memo, type) {
+                return memo || this.hasExotic(type, true);
+              }, false, this)) === 0;
+            }
           };
 
           items = [];

@@ -1,34 +1,77 @@
 /*jshint -W027*/
 
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
     .factory('dimItemService', ItemService);
 
-  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimConfig'];
+  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimConfig', 'dimItemTier', 'dimCategory'];
 
-  function ItemService(dimStoreService, dimBungieService, dimConfig) {
+  function ItemService(dimStoreService, dimBungieService, dimConfig, dimItemTier, dimCategory) {
     return {
       getItem: getItem,
       getItems: getItems,
       moveTo: moveTo
     };
 
-    function moveTo(item, store) {
-      var movePromise = null;
+    function moveTo(item, store, equip) {
+      var meta = {
+        'item': {
+          'owner': item.owner,
+          'inVault': item.owner === 'vault'
+        },
+        'store': {
+          'inVault': store.id === 'vault'
+        }
+      };
 
-      if (item.owner === 'vault' && store.id === 'vault') {
-        return $q(function(resolve, reject) {
-          reject('vault to vault transfer.');
+      if (meta.item.inVault && meta.store.inVault) {
+        return $q.reject({
+          'errorCode': 2,
+          'message': 'Vault-to-vault transfer.'
         });
       }
 
-      if (store.id === 'vault' || item.owner === 'vault') {
-        movePromise = dimBungieService.vault((item.owner === 'vault' ? store.id : item.owner), dimConfig.active.type, item.id, item.hash, 1, ((item.owner === 'vault') ? false : true))
+      // If the item is in the vault, move it to the store.
+      if (meta.item.inVault) {
+        if (item.tier === dimItemTier.exotic) {
+          // Better check to see if we can equip a legendary.
+
+          // What types do we need to search?
+          var category = _.chain(dimCategory)
+            .pairs()
+            .find(function(cat) {
+              return _.some(cat[1],
+                function(type) {
+                  return (item.type == type);
+                }
+              );
+            })
+            .value();
+
+          // Do any of these types have an exotic equipped?
+          var exoticEquipped = _.some(category[1], function(type) {
+              return store.hasExotic(type, true);
+            });
+
+            debugger;
+        }
+        return (dimBungieService.vault(store.id, dimConfig.active.type, item.id, item.hash, 1, false)
+          .then(function(data) {
+            // Change the owner of the item to the store.
+            item.owner = store.id;
+          }));
+      }
+
+      if (itemInVault || storeIsVault) {
+        var characterId = (itemInVault) ? store.id : item.owner;
+        var moveToVault = (itemInVault) ? false : true;
+
+        return (dimBungieService.vault(characterId, dimConfig.active.type, item.id, item.hash, 1, moveToVault)
           .then(function(data) {
             item.owner = store.id;
-          });
+          }));
       } else {
         if (item.owner === store.id) {
           // Equip or Dequip
@@ -74,7 +117,7 @@
       var returnValue = [];
       var stores = dimStoreService.getStores();
 
-      angular.forEach(stores, function (store) {
+      angular.forEach(stores, function(store) {
         returnValue = returnValue.concat(store.items);
       });
 
@@ -84,7 +127,7 @@
     function getItem(id) {
       var items = getItems();
 
-      var item = _.find(items, function (item) {
+      var item = _.find(items, function(item) {
         return item.id === id;
       });
 

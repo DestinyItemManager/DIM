@@ -12,6 +12,36 @@
       'membershipType': -1,
       'active': {}
     })
+    .value('dimItemTier', {
+      exotic: 'exotic',
+      legendary: 'legendary',
+      rare: 'rare',
+      uncommon: 'uncommon',
+      basic: 'basic'
+    })
+    .value('dimCategory', {
+      Weapons: [
+        'Primary',
+        'Special',
+        'Heavy',
+      ],
+      Armor: [
+        'Helmet',
+        'Gauntlets',
+        'Chest',
+        'Leg',
+        'ClassItem',
+      ],
+      General: [
+        'Emblem',
+        'Armor',
+        'Ghost',
+        'Ship',
+        'Vehicle',
+        'Consumable',
+        'Material'
+      ]
+    })
     .run(appRun);
 
   appRun.$inject = ['dimBungieService', 'dimUserSystemIds', 'dimConfig', '$window'];

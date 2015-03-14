@@ -176,19 +176,19 @@
       vm.data = generateData();
 
       vm.onDrop = function (id, e) {
-        // var item = dimItemService.getItem(id);
-        // var source = null;
-        //
-        // if (item.owner === vm.store.id) {
-        //   source = vm.store;
-        // } else {
-        //   source = dimStoreService.getStore(item.owner);
-        // }
-        //
-        // dimItemService.moveTo(item, vm.store)
-        //   .then(function(result) {
-        //     return updateUi(item, source, vm.store);
-        //   });
+        var item = dimItemService.getItem(id);
+        var source = null;
+
+        if (item.owner === vm.store.id) {
+          source = vm.store;
+        } else {
+          source = dimStoreService.getStore(item.owner);
+        }
+
+        dimItemService.moveTo(item, vm.store)
+          .then(function(result) {
+            return updateUi(item, source, vm.store);
+          });
       };
 
       function updateUi(item, source, target) {
