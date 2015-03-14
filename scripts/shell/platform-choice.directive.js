@@ -1,3 +1,5 @@
+/*jshint -W027*/
+
 (function () {
   'use strict';
 
@@ -27,7 +29,7 @@
 
     vm.update = function update() {
       dimConfig.active = vm.active;
-    }
+    };
 
     $scope.$watch(function () {
       return dimUserSystemIds;
