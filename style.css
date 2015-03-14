@@ -141,19 +141,20 @@ img.void {
   width: 44px;
   height: 44px;
   cursor: pointer;
-  margin: 3px;
-  box-shadow: 0 0 10px #ddd;
-  border-style: dashed;
-  border-width: 1px;
-  opacity: .75;
-  border-color: #ddd;
+  margin: 4px;
+  background: url('assets/bg_inventory_bucket_single_crop.png');
+  background-size: contain;
 }
-.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target  {
+.empty .item-target {
   display: inline-block;
+  box-shadow: none;
+}
+.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target {
+  display: inline-block;
+  box-shadow: 0 0 10px #ccc;
 }
 .unequipped.on-drag-hover .item-target, .unequippable.on-drag-enter .item-target  {
-  box-shadow: 0 0 10px 2px #fff;
-  opacity: 1;
+  box-shadow: 0 0 10px 2px #eee;
 }
 
 .counter {

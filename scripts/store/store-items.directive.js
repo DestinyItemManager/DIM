@@ -23,7 +23,7 @@
         '      <span>{{ key }}</span>',
         '      <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.store.bucketCounts[key] }}/20</span>',
         '    </div>',
-        '    <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-if="vm.data[vm.orderedTypes[type]]">',
+        '    <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'">',
         '      <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event)" drop-channel="{{ type }}" ng-if="vm.data[vm.orderedTypes[type]].equipped">',
         '        <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped" dim-store-item store-data="vm.store" item-data="item"></div>',
         '      </div>',
