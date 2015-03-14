@@ -84,9 +84,8 @@ img.void {
 }
 .storage {
   margin-top: 10px;
-  max-width: 244px;
   display: inline-block;
-  margin-right: 1em;
+  margin-right: 3px;
   white-space: initial;
 }
 .storage:last-of-type {
@@ -94,8 +93,7 @@ img.void {
 }
 .equipped {
   float: left;
-  background: rgba(255,255,255,.2);
-  padding: 0 12px;
+  padding: 0 6px;
   width: 52px;
 }
 .equipped .title {
@@ -104,32 +102,40 @@ img.void {
 .inventory {
   float: left;
   width: 156px;
-  padding-left: 12px;
+  padding-left: 6px;
 }
 .sort {
   float: left;
   clear: left;
   min-height: 48px;
   width: 156px;
-  margin: 0 -12px 12px;
-  padding: 0 12px 6px;
+  margin: 0 -6px 6px;
+  padding: 0 6px 6px;
 }
 .sort-class, .sort-heavy, .sort-classitem, .sort-ghost {
   border-bottom: 1px solid rgba(245,245,245,.2);
+}
+.items .sort-material, .items .sort-consumable {
+  margin-left: -70px;
+  width: 220px;
+}
+.equipped .sort-material, .equipped .sort-consumable, .equipped .sort-miscellaneous {
+  display: none;
 }
 .equipped .sort {
   width: 52px;
 }
 .vault .character-box {
-  width: 137px;
+  width: 177px;
 }
 .vault .inventory {
-  width: 208px;
-  padding: 0 12px;
+  width: 260px;
+  padding: 0 6px;
   background: rgba(0,0,0,.2);
 }
 .vault .sort {
-  width: 208px;
+  width: 260px;
+  margin: 0 -6px 6px;
 }
 .item {
     position: relative;
@@ -182,7 +188,7 @@ img.void {
 .character-box {
     position: relative;
     display: inline-block;
-    width: 149px;
+    width: 131px;
     height: 43px;
     padding: 0 0 0 50px;
     margin: 5px 0;

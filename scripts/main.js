@@ -943,7 +943,7 @@ function setSortHeights() {
 		});
 
 		Array.prototype.forEach.call(elements, function(element) {
-			element.style.height = maxHeight + 'px';
+			element.style.height = maxHeight - 6 + 'px';
 		});
 	});
 }
