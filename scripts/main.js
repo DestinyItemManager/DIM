@@ -243,12 +243,13 @@ function manageItemClick(item, data) {
 				current.amount += _items[item].amount;
 
 				var stack = drop.childNodes[e].querySelector('.stack');
-				if(stack === undefined) {
-						var amt = document.createElement('div');
-						amt.className = 'stack';
-						drop.childNodes[e].appendChild(amt);
+				if(stack === null) {
+					stack =  document.createElement('div');
+					stack.className = 'stack';
+					stack.innerText = '1';
+					drop.childNodes[e].appendChild(stack);
 				};
-				stack = innerText = parseInt(stack.innerText,10) + _items[item].amount;
+				stack.innerText = parseInt(stack.innerText,10) + _items[item].amount;
 				var remove = document.querySelector('[data-index="' + item + '"]');
 				remove.parentNode.removeChild(remove);
 				return;
