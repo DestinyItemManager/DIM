@@ -251,6 +251,33 @@ img.void {
     z-index: 2;
     cursor: pointer;
 }
+input[type=range] {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  margin: 31px 0;
+  font-size: 28px;
+  background: rgba(245, 245, 245, 0.5);
+  border: 0;
+}
+#move-amount {
+    width:200px;
+    height:150px;
+    background: rgba(21,13,13,.8);
+    position:fixed;
+    top:50%;
+    left:50%;
+    margin-top:-100px;
+    margin-left:-100px;
+    overflow-y:scroll;
+    padding:5px;
+}
+#move-amount {
+    display: none;
+}
 #move-popup.little {
   width: 85px;
   left: -21px;

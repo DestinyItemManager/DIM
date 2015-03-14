@@ -66,6 +66,7 @@ function bungie() {
 
   // privileged methods
   this.setsystem = function(type) {
+    if(type === undefined) return;
     active = systemIds.xbl
     if(type === 'PSN')
       active = systemIds.psn;
@@ -120,7 +121,7 @@ function bungie() {
   }
   this.vault = function(callback) {
     _request({
-      route: '/Destiny/' + active.type + '/MyAccount/Vault/?definitions=true',
+      route: '/Destiny/' + active.type + '/MyAccount/Vault/',
       method: 'GET',
       complete: callback
     });
@@ -130,7 +131,7 @@ function bungie() {
       route: '/Destiny/' + active.type +
               '/Account/' + membershipId +
               '/Character/' + characterId +
-              '/Inventory/?definitions=true',
+              '/Inventory/',
       method: 'GET',
       complete: callback
     });

@@ -5,12 +5,19 @@ var _storage = [];
 var _items = [];
 var _sections = null;
 
-var move, loadoutBox, loadoutNew, loadoutList;
+var move, loadoutBox, loadoutNew, loadoutList, amountBox;
 
 function hideMovePopup() {
 	move.style.display = 'none';
 	move.style.marginLeft = undefined;
 	move.parentNode.classList.remove('popup-open');
+}
+
+function amountDialog(item, amount, confirm, cancel) {
+	amountBox.style.display = 'block';
+
+	amountBox.querySelector('.confirm').addEventListener('click', confirm)
+	amountBox.querySelector('.cancel').addEventListener('click', cancel)
 }
 
 function moveBox(item) {
@@ -137,10 +144,12 @@ function dequip(item, callback, exotic) {
 	for(var i in _items) {
 		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'exotic') && !_items[i].equipped) {
 			// console.log('[dequip] found replacement item: ', _items[i].name)
-			bungie.equip(_items[i].owner, _items[i].id, function(e) {
-				if(e === 0) {
-					manageItemClick(_items[i], {type: 'equip', character: item.owner})
+			bungie.equip(_items[i].owner, _items[i].id, function(e, more) {
+				if(more.ErrorCode > 1) {
+					console.log('Error', more.ErrorCode, 'Message', more.Message);
+					return;
 				}
+				manageItemClick(i, {type: 'equip', character: item.owner});
 				callback();
 				return;
 			});
@@ -169,25 +178,30 @@ function moveItem(item, destination, amount, callback) {
 	if(item.owner === destination.character) {
 		// if we're equipping an item
 		if(destination.type === 'equip' && !item.equipped) {
-			bungie.equip(item.owner, item.id, function(e) {
-				// if(error equipping) {
-				// if the error was that an exotic was already equipped
-				// erroritem = find the item that caused the error
-				// 	dequip(erroritem, function(){
-				//    moveItem(item, destination, amount, callback);
-				//  })
-				// }
-				if(e === 0) {
-					// find what was replaced
-					for(var i in _items) {
-						if(item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
-							manageItemClick(_items[i], {type: 'item', character: item.owner})
-							break;
-						}
-					}
-					item.equipped = true;
-					_items[i].owner = destination.character;
+			bungie.equip(item.owner, item.id, function(e, more) {
+				if(more.ErrorCode > 1) {
+					console.log('Error', more.ErrorCode, 'Message', more.Message);
+
+					// if the error was that an exotic was already equipped
+					// erroritem = find the item that caused the error
+					// 	dequip(erroritem, function(){
+					//    moveItem(item, destination, amount, callback);
+					//  })
+
+					return;
 				}
+
+				// find what was replaced
+				for(var i in _items) {
+					if(item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
+						// console.log(_items[i].name)
+						manageItemClick(i, {type: 'item', character: item.owner})
+						break;
+					}
+				}
+				item.equipped = true;
+				_items[i].owner = destination.character;
+
 				callback();
 				return;
 			});
@@ -205,6 +219,10 @@ function moveItem(item, destination, amount, callback) {
 	}
 
 	bungie.transfer(char, item.id, item.hash, amount, toVault, function(cb, more) {
+		if(more.ErrorCode > 1) {
+			console.log('Error', more.ErrorCode, 'Message', more.Message);
+			return;
+		}
 		item.owner = toVault ? 'vault' : destination.character;
 
 		moveItem(item, destination, amount, callback);
@@ -213,12 +231,32 @@ function moveItem(item, destination, amount, callback) {
 
 function manageItemClick(item, data) {
 	if(data.type === 'equip') {
-		document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + item.type).appendChild(
-			document.querySelector('[data-instance-id="' + item.id + '"]'));
+		document.querySelector('.items[data-character="' + data.character + '"][data-type="equip"] .sort-' + _items[item].type).appendChild(
+			document.querySelector('[data-index="' + item + '"]'));
 		item.equipped = true;
 	} else {
-		document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + item.type	).appendChild(
-			document.querySelector('[data-instance-id="' + item.id + '"]'));
+		// else do this insane hack
+		var drop = document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type);
+		for(var e = 0; e < drop.childNodes.length; e++) {
+			current = _items[drop.childNodes[e].dataset.index];
+			if(current.hash === _items[item].hash) {
+				current.amount += _items[item].amount;
+
+				var stack = drop.childNodes[e].querySelector('.stack');
+				if(stack === null) {
+					stack =  document.createElement('div');
+					stack.className = 'stack';
+					stack.innerText = '1';
+					drop.childNodes[e].appendChild(stack);
+				};
+				stack.innerText = parseInt(stack.innerText,10) + _items[item].amount;
+				var remove = document.querySelector('[data-index="' + item + '"]');
+				remove.parentNode.removeChild(remove);
+				return;
+			}
+		}
+		// document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type).appendChild(
+		drop.appendChild(document.querySelector('[data-index="' + item + '"]'));
 		item.equipped = false;
 	}
 	setSortHeights();
@@ -235,27 +273,41 @@ function manageItem(e) {
 	if(_transfer.parentNode == destination || destination.dataset.type === undefined) return;
 
 	var item = _items[_transfer.dataset.index];
-	var amount = 1;
+	var amount = item.amount;
+
+	// console.log(item)
 
 	if(item.notransfer) {
 		console.log('no drag and drop support for this type of item yet.')
 	}
 
-	if(item.amount > 1) {
-		console.log(item.amount)
+	var doMove = function(quantity) {
+		moveItem(item, destination.dataset, amount, function() {
+			// move the item to the right spot once done.
+			if(item.amount === quantity) {
+				destination.querySelector('.sort-' + item.type).appendChild(_transfer);
+			} else {
+				// item.owner = destination.dataset.character;
+				// _items.push(item);
+
+				// if destination location does not have the item {
+					var newStack = _transfer.cloneNode(true);
+					destination.querySelector('.sort-' + item.type).appendChild(newStack);
+				// }
+				// newStack.querySelector('.stack').innerText = quantity;
+				//
+				// var stack = _transfer.querySelector('.stack');
+				// stack.innerText = stack.innerText - quantity;
+				setSortHeights();
+			}
+		});
 	}
 
-	moveItem(item, destination.dataset, amount, function() {
-		// move the item to the right spot once done.
-		if(_items[_transfer.dataset.index] === amount) {
-			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
-		} else {
-			// TODO: partial stack move, so copy the item...
-			destination.querySelector('.sort-' + item.type).appendChild(_transfer);
-		}
-		setSortHeights();
-	});
-
+	if(amount > 1) {
+		showAmountDialog(item, amount, doMove);
+	} else {
+		doMove();
+	}
 }
 
 function handleDragEnter(e) {
@@ -341,8 +393,8 @@ function buildStorage() {
 					hideMovePopup();
 					var data = this.dataset;
 					var item = _items[_transfer.dataset.index];
-					moveItem(item, data, 1, function() {
-						manageItemClick(item, data)
+					moveItem(item, data, item.amount, function() {
+						manageItemClick(_transfer.dataset.index, data)
 					})
 				});
 				move.querySelector('.locations').appendChild(char);
@@ -356,8 +408,8 @@ function buildStorage() {
 				hideMovePopup();
 				var data = this.dataset;
 				var item = _items[_transfer.dataset.index];
-				moveItem(item, data, 1, function() {
-					manageItemClick(item, data)
+				moveItem(item, data, item.amount, function() {
+					manageItemClick(_transfer.dataset.index, data)
 				})
 			});
 			char.style.backgroundImage = "url(http://bungie.net/" + _storage[c].icon + ')';
@@ -372,8 +424,8 @@ function buildStorage() {
 				hideMovePopup();
 				var data = this.dataset;
 				var item = _items[_transfer.dataset.index];
-				moveItem(item, data, 1, function() {
-					manageItemClick(item, data)
+				moveItem(item, data, item.amount, function() {
+					manageItemClick(_transfer.dataset.index, data)
 				})
 			});
 			char.style.backgroundImage = "url(http://bungie.net/" + _storage[c].icon + ')';
@@ -439,7 +491,7 @@ function buildItems() {
 
 	// create the item blocks
 	for(var itemId in _items) {
-		if(!_items[itemId].equipment) continue;
+		// if(!_items[itemId].equipment) continue;
 
 		var itemBox = document.createElement('span');
 
@@ -484,8 +536,6 @@ function buildItems() {
 		itemBox.className = 'item';
 		if(_items[itemId].complete) itemBox.className += ' complete';
 		itemBox.dataset.index = itemId;
-		itemBox.dataset.name = _items[itemId].name;
-		itemBox.dataset.instanceId = _items[itemId].id;
 		img.addEventListener('dragstart', function(e) {
 			_transfer = this.parentNode;
 		});
@@ -507,6 +557,9 @@ function buildItems() {
 }
 
 function getItemType(type, name) {
+	if(type.indexOf("Engram") != -1) {
+		return null;
+	}
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
 		return 'Primary';
 	if(["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
@@ -532,6 +585,9 @@ function getItemType(type, name) {
 }
 
 function sortItem(type) {
+	if(type.indexOf("Engram") != -1) {
+		return 'Miscellaneous';
+	}
 	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun"].indexOf(type) != -1)
 		return 'Weapon';
 	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
@@ -551,7 +607,8 @@ function flattenInventory(data) {
 		for(var s in buckets[b]) {
 			var items = buckets[b][s].items;
 			for(var i in items) {
-				inv[items[i].itemInstanceId] = items[i];
+				inv.push(items[i]);
+				// inv[items[i].itemInstanceId+items[i].itemHash] = items[i];
 			}
 		}
 	}
@@ -567,47 +624,57 @@ function flattenVault(data) {
 	for (var b in buckets) {
 		var items = buckets[b].items;
 		for (var i in items) {
-			inv[items[i].itemInstanceId] = items[i];
+			inv.push(items[i]);
+			// inv[items[i].itemInstanceId+items[i].itemHash] = items[i];
 		}
 	}
 
 	return inv;
 }
 
-function appendItems(owner, defs, items) {
+function appendItems(owner, items) {
 	// Loop through the flattened inventory
 	for (var i in items) {
 
 		var item        = items[i];
 		var itemHash    = item.itemHash;
-		var itemDef     = defs[item.itemHash];
+		var itemDef     = _itemDefs[item.itemHash];
 
-		if(itemDef.itemTypeName.indexOf('Bounty') != -1 || itemDef.itemTypeName.indexOf('Commendation') != -1) continue;
-
-		var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
-
-		if(!itemType) {
-			// console.log(itemDef.itemName, itemDef.itemTypeName)
+		if(itemDef === undefined) {
 			continue;
 		}
 
-		var itemSort = sortItem(itemDef.itemTypeName);
+		if(itemDef.type.indexOf('Bounty') != -1 || itemDef.type.indexOf('Commendation') != -1) continue;
+
+		var itemType = getItemType(itemDef.type, itemDef.name);
+
+		// if(item.stackSize > 1) {
+		// 	// console.log(itemDef)
+		// }
+
+		if(!itemType) {
+			// console.log(itemDef.name, itemDef.type)
+			continue;
+		}
+
+		var itemSort = sortItem(itemDef.type);
 		if(item.location === 4) {
 			itemSort = 'Postmaster';
 		}
 
-		var tierName = [,,'basic','uncommon','rare','legendary','exotic'][itemDef.tierType];
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
+
 
 		_items.push({
 			owner:      owner,
 			hash:       itemHash,
 			type:       itemType,
 			sort:       itemSort,
-			tier:       tierName,
-			name:       itemDef.itemName.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+			tier:       itemDef.tierTypeName,
+			stats:      itemDef.baseStats,
+			name:       itemDef.name,
 			icon:       itemDef.icon,
-			notransfer: itemDef.nonTransferrable,
+			notransfer: itemDef.notransfer,
 			id:         item.itemInstanceId,
 			equipped:   item.isEquipped,
 			equipment:  item.isEquipment,
@@ -624,7 +691,7 @@ function appendItems(owner, defs, items) {
 
 function loadInventory(c) {
 	bungie.inventory(c, function(i) {
-		appendItems(c, i.definitions.items, flattenInventory(i.data))
+		appendItems(c, flattenInventory(i.data))
 	});
 }
 
@@ -645,6 +712,8 @@ function tryPageLoad() {
 			})
 			buildLoadouts();
 		});
+
+		amountBox = document.getElementById('move-amount');
 
 		move = document.getElementById('move-popup');
 		move.querySelector('.locations').innerHTML = '';
@@ -727,15 +796,16 @@ function tryPageLoad() {
 					special = 'complete';
 				}
 			}
+			var _tmpItem;
 			for (var i = 0; i < item.length; i++) {
+				_tmpItem = _items[item[i].dataset.index]
 				switch(special) {
-					case 'elemental':	item[i].style.display = _items[item[i].dataset.index].dmg == filter ? '' : 'none'; break;
-					case 'type':	item[i].style.display = _items[item[i].dataset.index].type.toLowerCase() == filter ? '' : 'none'; break;
-					case 'tier':	item[i].style.display = _items[item[i].dataset.index].tier.toLowerCase() == filter ? '' : 'none'; break;
-					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_items[item[i].dataset.index].sort) !== -1 &&
-						!_items[item[i].dataset.index].complete ? '' : 'none'; break;
-					case 'complete':	item[i].style.display = _items[item[i].dataset.index].complete ? '' : 'none'; break;
-					default: item[i].style.display = item[i].dataset.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
+					case 'elemental':	item[i].style.display = _tmpItem.dmg == filter ? '' : 'none'; break;
+					case 'type':	item[i].style.display = _tmpItem.type.toLowerCase() == filter ? '' : 'none'; break;
+					case 'tier':	item[i].style.display = _tmpItem.tier.toLowerCase() == filter ? '' : 'none'; break;
+					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_tmpItem.sort) !== -1 && !_tmpItem.complete ? '' : 'none'; break;
+					case 'complete':	item[i].style.display = _tmpItem.complete ? '' : 'none'; break;
+					default: item[i].style.display = _tmpItem.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
 			}
 
@@ -785,7 +855,7 @@ function loadUser() {
 			_storage['vault'] = {
 				icon: ''
 			};
-			appendItems('vault', v.definitions.items, flattenVault(v.data));
+			appendItems('vault', flattenVault(v.data));
 		});
 
 		var avatars = e.data.characters;
@@ -820,13 +890,14 @@ bungie.user(function(u) {
 			return;
 	}
 
+	var toggle = document.getElementById('system');
+	chrome.storage.sync.get('system', function(res) {
+		bungie.setsystem(res.system);
+		toggle.value = res.system;
+	});
+
 	if(bungie.system().xbl.id !== undefined && bungie.system().psn.id !== undefined) {
-		var toggle = document.getElementById('system');
 		toggle.style.display = 'block';
-		chrome.storage.sync.get('system', function(res) {
-			bungie.setsystem(res.system);
-			toggle.value = res.system;
-		});
 		toggle.addEventListener('change', function() {
 			bungie.setsystem(this.value);
 			chrome.storage.sync.set({'system': this.value});
