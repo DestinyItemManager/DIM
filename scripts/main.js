@@ -239,22 +239,25 @@ function manageItemClick(item, data) {
 		item.equipped = false;
 		// else do this insane hack
 		var drop = document.querySelector('.items[data-character="' + data.character + '"] .item-' + _items[item].sort + ' .sort-' + _items[item].type);
-		for(var e = 0; e < drop.childNodes.length; e++) {
-			current = _items[drop.childNodes[e].dataset.index];
-			if(current.hash === _items[item].hash) {
-				current.amount += _items[item].amount;
 
-				var stack = drop.childNodes[e].querySelector('.stack');
-				if(stack === null) {
-					stack =  document.createElement('div');
-					stack.className = 'stack';
-					stack.innerText = '1';
-					drop.childNodes[e].appendChild(stack);
-				};
-				stack.innerText = parseInt(stack.innerText,10) + _items[item].amount;
-				var remove = document.querySelector('[data-index="' + item + '"]');
-				remove.parentNode.removeChild(remove);
-				return;
+		if(_items[item].id == 0) {
+			for(var e = 0; e < drop.childNodes.length; e++) {
+				current = _items[drop.childNodes[e].dataset.index];
+				if(current.hash === _items[item].hash) {
+					current.amount += _items[item].amount;
+
+					var stack = drop.childNodes[e].querySelector('.stack');
+					if(stack === null) {
+						stack =  document.createElement('div');
+						stack.className = 'stack';
+						stack.innerText = '1';
+						drop.childNodes[e].appendChild(stack);
+					};
+					stack.innerText = parseInt(stack.innerText,10) + _items[item].amount;
+					var remove = document.querySelector('[data-index="' + item + '"]');
+					remove.parentNode.removeChild(remove);
+					return;
+				}
 			}
 		}
 		// document.querySelector('.items[data-character="' + data.character + '"] .item-' + _items[item].sort + ' .sort-' + _items[item].type).appendChild(
@@ -285,7 +288,7 @@ function manageItem(e) {
 		moveItem(item, destination.dataset, amount, function() {
 			// move the item to the right spot once done.
 			if(item.amount === quantity) {
-				destination.querySelector('.sort-' + item.type).appendChild(_transfer);
+				destination.querySelector('.item-' + item.sort + ' .sort-' + item.type).appendChild(_transfer);
 			} else {
 				// item.owner = destination.dataset.character;
 				// _items.push(item);
@@ -294,7 +297,7 @@ function manageItem(e) {
 
 				// if destination location does not have the item {
 					var newStack = _transfer.cloneNode(true);
-					destination.querySelector('.sort-' + item.type).appendChild(newStack);
+					destination.querySelector('.item-' + item.sort + '.sort-' + item.type).appendChild(newStack);
 				// }
 				// newStack.querySelector('.stack').innerText = quantity;
 				//
@@ -642,13 +645,12 @@ function appendItems(owner, items) {
 
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
 
-
 		_items.push({
 			owner:      owner,
 			hash:       itemHash,
 			type:       itemType,
 			sort:       itemSort,
-			tier:       itemDef.tierTypeName,
+			tier:       itemDef.tier,
 			stats:      itemDef.baseStats,
 			name:       itemDef.name,
 			icon:       itemDef.icon,
@@ -829,7 +831,6 @@ function loadUser() {
 		}
 
 		bungie.vault(function(v) {
-			console.log(v)
 			if(v === undefined) {
 					var storage = document.getElementById('storage');
 					storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
