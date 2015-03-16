@@ -540,7 +540,7 @@ function buildItems() {
 }
 
 function getItemType(type, name) {
-	if(type.indexOf("Engram") != -1) {
+	if(type.indexOf("Engram") != -1 || name.indexOf("Marks") != -1) {
 		return null;
 	}
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
@@ -634,7 +634,7 @@ function appendItems(owner, items) {
 		// }
 
 		if(!itemType) {
-			console.log(itemDef.name, itemDef.type)
+			// console.log(itemDef.name, itemDef.type)
 			continue;
 		}
 
