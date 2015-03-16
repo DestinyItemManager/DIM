@@ -561,7 +561,7 @@ function getItemType(type, name) {
 		return 'Armor';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
+	if(["Currency", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
 }
 
@@ -575,7 +575,7 @@ function sortItem(type) {
 		return 'Armor';
 	if(["Restore Defaults", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
 		return 'Styling';
-	if(["Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
+	if(["Currency", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
 		return 'Miscellaneous';
 }
 
@@ -634,7 +634,7 @@ function appendItems(owner, items) {
 		// }
 
 		if(!itemType) {
-			// console.log(itemDef.name, itemDef.type)
+			console.log(itemDef.name, itemDef.type)
 			continue;
 		}
 
