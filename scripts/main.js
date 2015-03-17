@@ -682,13 +682,18 @@ var loader = {
 
 function exportDestinyExoticsLink() {
 
-  var seen_items = _items.map(function(item){ return item.name.toLowerCase(); })
+  function tolower(item){ return item.name.toLowerCase(); }
+
+  var seen_items = _items.map(tolower)
+  var completed_items = _items.filter(function(item){ return item.complete }).map(tolower)
   var hashArray = [];
 
   for (var i in destinyexotics_gear) {
     for (var j in destinyexotics_gear[i]) {
       var title = destinyexotics_gear[i][j].title.replace("'", "&#39;").toLowerCase()
-      if (seen_items.indexOf(title) != -1) {
+      if (completed_items.indexOf(title) != -1) {
+        hashArray.push(2);
+      } else if (seen_items.indexOf(title) != -1) {
         hashArray.push(1);
       } else {
         hashArray.push(0);
