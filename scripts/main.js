@@ -239,22 +239,25 @@ function manageItemClick(item, data) {
 		item.equipped = false;
 		// else do this insane hack
 		var drop = document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type);
-		for(var e = 0; e < drop.childNodes.length; e++) {
-			current = _items[drop.childNodes[e].dataset.index];
-			if(current.hash === _items[item].hash) {
-				current.amount += _items[item].amount;
 
-				var stack = drop.childNodes[e].querySelector('.stack');
-				if(stack === null) {
-					stack =  document.createElement('div');
-					stack.className = 'stack';
-					stack.innerText = '1';
-					drop.childNodes[e].appendChild(stack);
-				};
-				stack.innerText = parseInt(stack.innerText,10) + _items[item].amount;
-				var remove = document.querySelector('[data-index="' + item + '"]');
-				remove.parentNode.removeChild(remove);
-				return;
+		if(_items[item].id == 0) {
+			for(var e = 0; e < drop.childNodes.length; e++) {
+				current = _items[drop.childNodes[e].dataset.index];
+				if(current.hash === _items[item].hash) {
+					current.amount += _items[item].amount;
+
+					var stack = drop.childNodes[e].querySelector('.stack');
+					if(stack === null) {
+						stack =  document.createElement('div');
+						stack.className = 'stack';
+						stack.innerText = '1';
+						drop.childNodes[e].appendChild(stack);
+					};
+					stack.innerText = parseInt(stack.innerText,10) + _items[item].amount;
+					var remove = document.querySelector('[data-index="' + item + '"]');
+					remove.parentNode.removeChild(remove);
+					return;
+				}
 			}
 		}
 		// document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type).appendChild(
@@ -559,6 +562,9 @@ function buildItems() {
 }
 
 function getItemType(type, name) {
+	if(name.indexOf("Marks") != -1) {
+		return null;
+	}
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
 		return 'Primary';
 	if(["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
@@ -581,24 +587,8 @@ function getItemType(type, name) {
 		return 'ClassItem';
 	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram", "Consumable", "Material"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Vanguard Marks", "Crucible Marks"].indexOf(name) != -1)
-		return null;
 	if(["Currency"].indexOf(type) != -1)
 		return 'Material';
-}
-
-function sortItem(type) {
-	if(type.indexOf("Engram") != -1) {
-		return 'Miscellaneous';
-	}
-	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun"].indexOf(type) != -1)
-		return 'Weapon';
-	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
-		return 'Armor';
-	if(["Restore Defaults", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
-		return 'Styling';
-	if(["Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
 }
 
 function flattenInventory(data) {
@@ -660,20 +650,13 @@ function appendItems(owner, items) {
 			continue;
 		}
 
-		var itemSort = sortItem(itemDef.type);
-		if(item.location === 4) {
-			itemSort = 'Postmaster';
-		}
-
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
-
 
 		_items.push({
 			owner:      owner,
 			hash:       itemHash,
 			type:       itemType,
-			sort:       itemSort,
-			tier:       itemDef.tierTypeName,
+			tier:       itemDef.tier,
 			stats:      itemDef.baseStats,
 			name:       itemDef.name,
 			icon:       itemDef.icon,
@@ -855,7 +838,6 @@ function loadUser() {
 		}
 
 		bungie.vault(function(v) {
-			console.log(v)
 			if(v === undefined) {
 					var storage = document.getElementById('storage');
 					storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
