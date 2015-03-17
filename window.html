@@ -1,10 +1,10 @@
 <html>
   <head>
     <title>DIM</title>
-    <script type="text/javascript" src="scripts/gear.js"></script>
     <script type="text/javascript" src="scripts/lzstring.min.js"></script>
-
     <script type="text/javascript" src="scripts/itemdef.json"></script>
+    <script type="text/javascript" src="scripts/collection.json"></script>
+    <script type="text/javascript" src="scripts/report.js"></script>
     <script type="text/javascript" src="scripts/bungie.js"></script>
     <script type="text/javascript" src="scripts/loadout.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
@@ -13,9 +13,8 @@
   <body>
     <div id="header">
       <div class="content">
-        <span>DIM</span> <span id="faq-button">?</span>
+        <span>DIM</span> <span id="faq-button">?</span> <span id="collection-button">C</span> <input id="collection-url" type="text" />
         <span class="header-right">
-        <span id="destinyexotics-link">destinyexotics.com</span>
         <input type="search" id="filter-text" placeholder="filter items or is:arc" /><span id="user" class="header-right"></span><select id="system">
           <option>PSN</option>
           <option>XBL</option>
@@ -117,6 +116,19 @@
         <div style="padding-top: 50px; text-align: center;">
           All images and content are property of bungie.net. Please contact me if there are any issues, and I will gladly abide &lt;3
         </div>
+      </div>
+    </div>
+
+    <div id="collection">
+        <div class="content">
+          <div id="exoticWeapons"><p>Exotic Weapons</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="vaultWeapons"><p>Vault Weapons</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="crotaWeapons"><p>Crota Weapons</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="ironWeapons"><p>IB Weapons</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="exoticArmor"><p>Exotic Armor</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="vaultArmor"><p>Vault Armor</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="crotaArmor"><p>Crota Armor</p><span class="done"></span><span class="has"></span><span class="missing"></div>
+          <div id="ironArmor"><p>IB Armor</p><span class="done"></span><span class="has"></span><span class="missing"></div>
       </div>
     </div>
 
