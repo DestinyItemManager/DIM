@@ -680,6 +680,27 @@ var loader = {
 	characters: 0
 }
 
+function exportDestinyExoticsLink() {
+
+  var seen_items = _items.map(function(item){ return item.name.toLowerCase(); })
+  var hashArray = [];
+
+  for (var i in destinyexotics_gear) {
+    for (var j in destinyexotics_gear[i]) {
+      var title = destinyexotics_gear[i][j].title.replace("'", "&#39;").toLowerCase()
+      if (seen_items.indexOf(title) != -1) {
+        hashArray.push(1);
+      } else {
+        hashArray.push(0);
+      }
+    }
+  }
+
+   var array_string = hashArray.join('');
+   var hash = LZString.compressToBase64(array_string);
+   return "http://destinyexotics.com/?share=" + hash;
+}
+
 function tryPageLoad() {
 	loader.loaded++;
 	if(loader.characters != 0 && loader.loaded > loader.characters) {
@@ -711,6 +732,12 @@ function tryPageLoad() {
 			faq.style.display = 'none';
 			loadout.toggle(false);
 		});
+
+    var exoticsExportLink = document.getElementById('destinyexotics-link');
+    exoticsExportLink.addEventListener('click', function() {
+      window.open(exportDestinyExoticsLink());
+    })
+
 
 		buildStorage();
 		_dragCounter = 0;
