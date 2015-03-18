@@ -74,6 +74,9 @@ img.void {
     width: 260px;
 }
 .title .icon { width: 30px }
+#storage .error a {
+  color: white;
+}
 .storage {
   margin-top: 10px;
   max-width: 260px;
