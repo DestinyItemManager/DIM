@@ -90,7 +90,7 @@ function bungie() {
         systemIds.xbl = {id: res.gamerTag, type: 1};
         systemIds.psn = {id: res.psnId, type: 2};
 
-        active = systemIds.psn;
+        active = systemIds.xbl;
 
         if(res.psnId)
           active = systemIds.psn;
