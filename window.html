@@ -8,8 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <script type="text/javascript" src="scripts/itemdef.json"></script>
-    <script type="text/javascript" src="scripts/collection.json"></script>	
 	<script type="text/javascript" src="scripts/bungie.js"></script>
     <script src="/js/dependencies/jquery.js"></script>
     <script src="/js/dependencies/bootstrap.min.js"></script>
@@ -25,24 +23,24 @@
 	<div id="itemsList" class="container">
   		<div class="row hidden-print" data-bind="if: items().length > 0">
   			<h3>Tier</h3>
-  			<button value="0" class="btn btn-default" onclick="app.tierFilter(this.value)" data-bind="css: tierFilter() == $element.value ? 'btn-primary' : ''">All</button>
-  			<button value="3" class="btn btn-default" onclick="app.tierFilter(this.value)" data-bind="css: tierFilter() == $element.value ? 'btn-primary' : ''">Uncommon</button>
-  			<button value="4" class="btn btn-default" onclick="app.tierFilter(this.value)" data-bind="css: tierFilter() == $element.value ? 'btn-primary' : ''">Rare</button>
-  			<button value="5" class="btn btn-default" onclick="app.tierFilter(this.value)" data-bind="css: tierFilter() == $element.value ? 'btn-primary' : ''">Legendary</button>
-  			<button value="6" class="btn btn-default" onclick="app.tierFilter(this.value)" data-bind="css: tierFilter() == $element.value ? 'btn-primary' : ''">Exotic</button>  				  			
+  			<button value="0" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">All</button>
+  			<button value="3" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Uncommon</button>
+  			<button value="4" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Rare</button>
+  			<button value="5" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Legendary</button>
+  			<button value="6" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Exotic</button>  				  			
   		</div>
   		<div class="row hidden-print" data-bind="if: items().length > 0">
   			<h3>Damage Type</h3>
-  			<button value="All" class="btn btn-default" onclick="app.dmgFilter(this.value)" data-bind="css: dmgFilter() == $element.value ? 'btn-primary' : ''">All</button>
-  			<button value="Arc" class="btn btn-default" onclick="app.dmgFilter(this.value)" data-bind="css: dmgFilter() == $element.value ? 'btn-primary' : ''">Arc</button>
-  			<button value="Void" class="btn btn-default" onclick="app.dmgFilter(this.value)" data-bind="css: dmgFilter() == $element.value ? 'btn-primary' : ''">Void</button>
-  			<button value="Solar" class="btn btn-default" onclick="app.dmgFilter(this.value)" data-bind="css: dmgFilter() == $element.value ? 'btn-primary' : ''">Solar</button> 			  			
+  			<button value="All" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">All</button>
+  			<button value="Arc" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">Arc</button>
+  			<button value="Void" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">Void</button>
+  			<button value="Solar" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">Solar</button> 			  			
   		</div>
   		<div class="row hidden-print" data-bind="if: items().length > 0">
   			<h3>Class</h3>
-  			<button value="0" class="btn btn-default" onclick="app.typeFilter(this.value)" data-bind="css: typeFilter() == $element.value ? 'btn-primary' : ''">All</button>
+  			<button value="0" class="btn btn-default" data-bind="click: setTypeFilter, css: typeFilter() == $element.value ? 'btn-primary' : ''">All</button>
   			<!-- ko foreach: { data: weaponTypes, as: 'weaponType' } -->
-  				<button class="btn btn-default" onclick="app.typeFilter(this.value)" data-bind="value: weaponType.type, text: weaponType.name, css: $parent.typeFilter() == weaponType.type ? 'btn-primary' : ''">All</button>
+  				<button class="btn btn-default" data-bind="click: $parent.setTypeFilter, value: weaponType.type, text: weaponType.name, css: $parent.typeFilter() == weaponType.type ? 'btn-primary' : ''">All</button>
   			<!--/ko  -->
   		</div>
   		<div class="row hidden-print" data-bind="if: items().length > 0">

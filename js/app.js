@@ -57,6 +57,7 @@ var app = new (function() {
 	this.tierFilter = ko.observable(0);
 	this.typeFilter = ko.observable(0);
 	this.dmgFilter =  ko.observable("All");
+	this.weaponTypes = ko.observableArray();
 	this.dmgTypeColors = {
 		"None": "white",
 		"Arc": "blue",
@@ -64,7 +65,18 @@ var app = new (function() {
 		"Solar": "orange",
 		"Void": "magenta"
 	}
-	this.weaponTypes = ko.observableArray();
+	
+	this.setTierFilter = function(model, event){
+		self.tierFilter(event.target.value);
+	}
+	
+	this.setDmgFilter = function(model, event){
+		self.dmgFilter(event.target.value);
+	}
+	
+	this.setTypeFilter = function(model, event){
+		self.typeFilter(event.target.value);
+	}
 	
 	this.classesToItems = function(classes) {
 		var items = {}, weapons = {}, stats = {}, dmg = {}, perks = {};
