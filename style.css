@@ -40,6 +40,13 @@ div {
     margin-right: 5px;
     vertical-align: middle;
 }
+.quick-filter {
+  float: left;
+  margin: 0 1px;
+  width: 14px;
+  padding: 2px;
+  border-radius: 9px;
+}
 img.elemental {
   width: 16px !important;
   vertical-align: middle;
@@ -410,7 +417,7 @@ input[type=range] {
 }
 .content {
     margin: 0 1em;
-    padding: 2px;
+    padding: 7px 2px 0;
 }
 #loadout-create {
     position: fixed;

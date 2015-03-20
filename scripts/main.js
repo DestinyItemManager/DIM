@@ -821,6 +821,14 @@ function tryPageLoad() {
 		input.addEventListener('click', function() { this.select(); });
 		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
 
+		var quickFilters = [
+			'is:arc', 'is:solar', 'is:void'
+		]
+
+		quickFilters.forEach(function(quickFilter) {
+			document.getElementById(quickFilter).addEventListener('click', function() { input.value = quickFilter; input.dispatchEvent(new Event('keyup')); });
+		});
+
 		function hideTooltip(e) {
 
 			// console.log( e.target, e.target.parentNode, e.target.parentNode.parentNode, e.target.className === 'loadout-set')
