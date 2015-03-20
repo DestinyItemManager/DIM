@@ -163,10 +163,14 @@ img.void {
   clear: left;
   width: 156px;
   margin: 0 -6px 6px;
-  padding: 0 6px 6px;
+  padding: 0 6px 4px;
+  background-image: url('assets/bg_inventory_bucket_single_crop.png');
+  background-repeat: no-repeat;
+  background-position: 10px 5px;
 }
 .sort-class, .sort-heavy, .sort-classitem, .sort-ghost {
   border-bottom: 1px solid rgba(245,245,245,.2);
+  padding: 0 6px 3px;
 }
 .items .sort-material, .items .sort-consumable {
   margin-left: -70px;
