@@ -9,7 +9,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	});
 });
 
-var filterWeaponByType = function(type, isEquipped){
+var filterItemByType = function(type, isEquipped){
 	return function(weapon){
 		if (weapon.bucketType == type && weapon.isEquipped == isEquipped)
 			return weapon;
@@ -23,24 +23,48 @@ var Profile = function(model){
 	});
 	
 	this.weapons = ko.observableArray([]);
-	this.armor = [];
+	this.armor = ko.observableArray([]);
 	this.primaries = ko.computed(function(){
-		return self.weapons().filter(filterWeaponByType("Primary", false));
+		return self.weapons().filter(filterItemByType("Primary", false));
 	});
 	this.specials = ko.computed(function(){
-		return self.weapons().filter(filterWeaponByType("Special", false));
+		return self.weapons().filter(filterItemByType("Special", false));
 	});
 	this.heavies = ko.computed(function(){
-		return self.weapons().filter(filterWeaponByType("Heavy", false));
+		return self.weapons().filter(filterItemByType("Heavy", false));
+	});
+	this.helmets = ko.computed(function(){
+		return self.armor().filter(filterItemByType("Helmet", false));
+	});
+	this.gauntlets = ko.computed(function(){
+		return self.armor().filter(filterItemByType("Gauntlet", false));
+	});
+	this.chest = ko.computed(function(){
+		return self.armor().filter(filterItemByType("Chest", false));
+	});
+	this.boots = ko.computed(function(){
+		return self.armor().filter(filterItemByType("Boots", false));
 	});
 	this.primaryEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.weapons(), filterWeaponByType("Primary", true));
+		return ko.utils.arrayFirst(self.weapons(), filterItemByType("Primary", true));
 	});
 	this.specialEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.weapons(), filterWeaponByType("Special", true));
+		return ko.utils.arrayFirst(self.weapons(), filterItemByType("Special", true));
 	});
 	this.heavyEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.weapons(), filterWeaponByType("Heavy", true));
+		return ko.utils.arrayFirst(self.weapons(), filterItemByType("Heavy", true));
+	});
+	this.helmetEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.armor(), filterItemByType("Helmet", true));
+	});
+	this.gauntletsEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.armor(), filterItemByType("Gauntlet", true));
+	});
+	this.chestEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.armor(), filterItemByType("Chest", true));
+	});
+	this.bootsEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.armor(), filterItemByType("Boots", true));
 	});
 }
 
@@ -73,7 +97,11 @@ var DestinyDamageTypes = {
 var DestinyBucketTypes = {
 	"1498876634": "Primary",
 	"2465295065": "Special",
-	"953998645": "Heavy"
+	"953998645": "Heavy",
+	"3448274439": "Helmet",
+	"3551918588": "Gauntlet",
+	"14239492": "Chest",
+	"20886954": "Boots"
 }
 
 var app = new (function() {
@@ -137,8 +165,9 @@ var app = new (function() {
 				});
 				profile.weapons.push( itemObject );
 			}
-			else if (info.itemType != 3 && info.tierType == 6)
+			else if (info.itemType == 2){
 				profile.armor.push( itemObject );
+			}	
 		}
 	}
 	

@@ -82,7 +82,71 @@
 							</div>
 						</div>
 					  </div>
-					  <div><div class="title">Armor</div><div class="item-Armor sections"></div></div>
+					  <div>
+						<div class="title">Armor</div>
+						<div class="item-Armor sections">
+							<div class="title">Helmets (<span data-bind="text: character.helmets().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.helmetEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.helmets, as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Gauntlets (<span data-bind="text: character.gauntlets().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.gauntletsEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.gauntlets, as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Chest (<span data-bind="text: character.chest().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.chestEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.chest, as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Boots (<span data-bind="text: character.boots().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.bootsEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.boots, as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					  </div>
 					  <div><div class="title">Styling</div><div class="item-Styling sections"></div></div>
 					  <div><div class="title">Miscellaneous</div><div class="item-Miscellaneous sections"></div></div>
 					  <div><div class="title">Postmaster</div><div class="item-Postmaster sections"></div></div>
