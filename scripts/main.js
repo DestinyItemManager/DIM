@@ -801,6 +801,16 @@ function tryPageLoad() {
 					special = 'incomplete';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
+				} else if(['weapon', 'weapons'].indexOf(filter) >= 0) {
+					special = 'weapon';
+				} else if(['armor'].indexOf(filter) >= 0) {
+					special = 'armor';
+				} else if(['general'].indexOf(filter) >= 0) {
+					special = 'general';
+				} else if(['style'].indexOf(filter) >= 0) {
+					special = 'style';
+				} else if(['inventory'].indexOf(filter) >= 0) {
+					special = 'inventory';
 				}
 			}
 			var _tmpItem;
@@ -810,8 +820,80 @@ function tryPageLoad() {
 					case 'elemental':	item[i].style.display = _tmpItem.dmg == filter ? '' : 'none'; break;
 					case 'type':	item[i].style.display = _tmpItem.type.toLowerCase() == filter ? '' : 'none'; break;
 					case 'tier':	item[i].style.display = _tmpItem.tier.toLowerCase() == filter ? '' : 'none'; break;
-					case 'incomplete':	item[i].style.display = _tmpItem.complete ? 'none' : ''; break;
 					case 'complete':	item[i].style.display = _tmpItem.complete ? '' : 'none'; break;
+					case 'incomplete':
+						if ((_tmpItem.type.toLowerCase().indexOf('primary') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('special') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('heavy') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('helmet') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('gauntlets') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('chest') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('leg') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('class') >= 0 && _tmpItem.type.toLowerCase().indexOf('classitem') < 0)
+						&& !_tmpItem.complete) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'weapon':
+						if (_tmpItem.type.toLowerCase().indexOf('primary') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('special') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('heavy') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'armor':
+						if (_tmpItem.type.toLowerCase().indexOf('helmet') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('gauntlets') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('chest') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('leg') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('classitem') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'general':
+						if (_tmpItem.type.toLowerCase().indexOf('emblem') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('armor') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('vehicle') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ship') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ghost') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('material') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('consumable') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'style':
+						if (_tmpItem.type.toLowerCase().indexOf('emblem') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('armor') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('vehicle') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ship') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ghost') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'inventory':
+						if (_tmpItem.type.toLowerCase().indexOf('material') >= 0
+						|| _tmpItem.type.toLowerCase().indexOf('consumable') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
 					default: item[i].style.display = _tmpItem.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
 			}
@@ -822,7 +904,9 @@ function tryPageLoad() {
 		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
 
 		var quickFilters = [
-			'is:arc', 'is:solar', 'is:void'
+			'is:arc', 'is:solar', 'is:void', 'is:kinetic',
+			'is:weapon', 'is:armor', 'is:style', 'is:inventory',
+			'is:complete', 'is:incomplete'
 		]
 
 		quickFilters.forEach(function(quickFilter) {
@@ -948,7 +1032,7 @@ function setSortHeights() {
 		'ghost',
 		'class',
 		'material',
-		'consumables',
+		'consumable',
 		'miscellaneous'
 	];
 

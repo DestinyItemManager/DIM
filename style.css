@@ -42,10 +42,54 @@ div {
 }
 .quick-filter {
   float: left;
-  margin: 0 1px;
+  margin: 0 2px;
   width: 14px;
+  height: 14px;
   padding: 2px;
   border-radius: 9px;
+  background-color: #5b6e6c;
+  line-height: 14px;
+  text-align: center;
+  color: rgba(245,245,245,.6);
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.quick-filter.complete {
+  background-color: #f5dc56;
+  color: rgba(10,10,10,.6);
+}
+.quick-filter.incomplete {
+  background-color: #ddd;
+  color: rgba(10,10,10,.6);
+}
+
+.quick-filter:hover {
+  background-color: #628e89;
+}
+
+.quick-filter.complete:hover {
+  background-color: #ffec66;
+}
+.quick-filter.incomplete:hover {
+  background-color: #eee;
+}
+.quick-filter.arc:hover {
+  background-color: #95d5fc;
+}
+.quick-filter.solar:hover {
+  background-color: #ff822b;
+}
+.quick-filter.void:hover {
+  background-color: #c194d5;
+}
+.quick-filter.kinetic:hover {
+  background-color: #444;
+}
+
+#is\:inventory, #is\:kinetic, #is\:incomplete {
+  margin-right: 10px;
 }
 img.elemental {
   width: 16px !important;
