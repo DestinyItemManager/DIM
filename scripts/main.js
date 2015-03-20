@@ -827,7 +827,18 @@ function tryPageLoad() {
 			for (var i = 0; i < item.length; i++) {
 				_tmpItem = _items[item[i].dataset.index]
 				switch(special) {
-					case 'elemental':	item[i].style.display = _tmpItem.dmg == filter ? '' : 'none'; break;
+					case 'elemental':
+						if ((_tmpItem.type.toLowerCase().indexOf('primary') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('special') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('heavy') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('class') >= 0 && _tmpItem.type.toLowerCase().indexOf('classitem') < 0)
+						&& _tmpItem.dmg == filter) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
 					case 'type':	item[i].style.display = _tmpItem.type.toLowerCase() == filter ? '' : 'none'; break;
 					case 'tier':	item[i].style.display = _tmpItem.tier.toLowerCase() == filter ? '' : 'none'; break;
 					case 'complete':	item[i].style.display = _tmpItem.complete ? '' : 'none'; break;
