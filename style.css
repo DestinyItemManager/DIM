@@ -322,9 +322,9 @@ input[type=range] {
   background: rgba(245, 245, 245, 0.5);
   border: 0;
 }
-#move-amount {
-    width:200px;
-    height:150px;
+#move-amount, #error-popup {
+    display: none;
+    width:300px;
     background: rgba(21,13,13,.8);
     position:fixed;
     top:50%;
@@ -334,8 +334,16 @@ input[type=range] {
     overflow-y:scroll;
     padding:5px;
 }
-#move-amount {
-    display: none;
+#error-popup h3 {
+  color: red;
+}
+#error-popup .close {
+  padding: 10px;
+  background: rgba(195,188,180,.9);
+  color: white;
+  text-align: center;
+  margin-top: 20px;
+  cursor: pointer;
 }
 #move-popup.little {
   width: 85px;

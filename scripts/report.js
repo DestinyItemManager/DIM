@@ -10,10 +10,10 @@ function report() {
 		console.log('error finding: ', name)
 	}
 
-	function toLower(item) { return item.name.toLowerCase(); }
+	function toHash(item) { return item.hash; }
 
-	var _completed = _items.filter(function(item){ return item.complete; }).map(toLower);
-	var _collected = _items.map(toLower);
+	var _completed = _items.filter(function(item){ return item.complete; }).map(toHash);
+	var _collected = _items.map(toHash);
 
 	var collection = [];
 	var hashArray = [];
@@ -21,19 +21,16 @@ function report() {
 	for(var c in _collections) {
 		collection[c] = {completed:[], collected:[], missing:[]};
 		for(var i in _collections[c]) {
-			for(var h in _collections[c][i]) {
-				var title = _collections[c][i][h].replace("'", "&#39;").toLowerCase();
-
-				if(_completed.indexOf(title) != -1) {
-					hashArray.push(2);
-					collection[c].completed.push(h);
-				} else if(_collected.indexOf(title) != -1) {
-					hashArray.push(1);
-					collection[c].collected.push(h)
-				} else {
-					hashArray.push(0);
-					collection[c].missing.push(h);
-				}
+			i = _collections[c][i];
+			if(_completed.indexOf(i) != -1) {
+				hashArray.push(2);
+				collection[c].completed.push(i);
+			} else if(_collected.indexOf(i) != -1) {
+				hashArray.push(1);
+				collection[c].collected.push(i);
+			} else {
+				hashArray.push(0);
+				collection[c].missing.push(i);
 			}
 		}
 	}

@@ -5,7 +5,7 @@ var _storage = [];
 var _items = [];
 var _sections = null;
 
-var move, loadoutBox, loadoutNew, loadoutList, amountBox;
+var move, loadoutBox, loadoutNew, loadoutList, amountBox, errorBox;
 
 function hideMovePopup() {
 	move.style.display = 'none';
@@ -18,6 +18,15 @@ function amountDialog(item, amount, confirm, cancel) {
 
 	amountBox.querySelector('.confirm').addEventListener('click', confirm)
 	amountBox.querySelector('.cancel').addEventListener('click', cancel)
+}
+
+function errorDialog(message) {
+	errorBox.style.display = 'block';
+
+	errorBox.querySelector('.message').innerText = message
+	errorBox.querySelector('.close').addEventListener('click', function(){
+		errorBox.style.display = 'none';
+	});
 }
 
 function moveBox(item) {
@@ -146,7 +155,7 @@ function dequip(item, callback, exotic) {
 			// console.log('[dequip] found replacement item: ', _items[i].name)
 			bungie.equip(_items[i].owner, _items[i].id, function(e, more) {
 				if(more.ErrorCode > 1) {
-					console.log('Error', more.ErrorCode, 'Message', more.Message);
+					errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
 					return;
 				}
 				manageItemClick(i, {type: 'equip', character: item.owner});
@@ -157,6 +166,7 @@ function dequip(item, callback, exotic) {
 		}
 	}
 	if(exotic) {
+		errorDialog('No ' + item.type + ' found on character to switch with ' + item.name + '. move over item to swap with.');
 		console.log('ERROR: no', item.type, 'found on character. eventual support.');
 		return;
 	}
@@ -180,7 +190,7 @@ function moveItem(item, destination, amount, callback) {
 		if(destination.type === 'equip' && !item.equipped) {
 			bungie.equip(item.owner, item.id, function(e, more) {
 				if(more.ErrorCode > 1) {
-					console.log('Error', more.ErrorCode, 'Message', more.Message);
+					errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
 
 					// if the error was that an exotic was already equipped
 					// erroritem = find the item that caused the error
@@ -221,7 +231,7 @@ function moveItem(item, destination, amount, callback) {
 
 	bungie.transfer(char, item.id, item.hash, amount, toVault, function(cb, more) {
 		if(more.ErrorCode > 1) {
-			console.log('Error', more.ErrorCode, 'Message', more.Message);
+			errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
 			return;
 		}
 		item.owner = toVault ? 'vault' : destination.character;
@@ -630,7 +640,6 @@ function appendItems(owner, items) {
 	for (var i in items) {
 
 		var item        = items[i];
-		var itemHash    = item.itemHash;
 		var itemDef     = _itemDefs[item.itemHash];
 
 		if(itemDef === undefined) {
@@ -654,7 +663,7 @@ function appendItems(owner, items) {
 
 		_items.push({
 			owner:      owner,
-			hash:       itemHash,
+			hash:       item.itemHash,
 			type:       itemType,
 			tier:       itemDef.tier,
 			stats:      itemDef.baseStats,
@@ -720,6 +729,7 @@ function tryPageLoad() {
 			collection.style.display = 'none';
 		});
 
+		errorBox = document.getElementById('error-popup');
 		amountBox = document.getElementById('move-amount');
 
 		move = document.getElementById('move-popup');
