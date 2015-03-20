@@ -151,7 +151,7 @@ function moveBox(item) {
 function dequip(item, callback, exotic) {
 	// find an item to replace the current.
 	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'exotic') && !_items[i].equipped) {
+		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'Exotic') && !_items[i].equipped) {
 			// console.log('[dequip] found replacement item: ', _items[i].name)
 			bungie.equip(_items[i].owner, _items[i].id, function(e, more) {
 				if(more.ErrorCode > 1) {
