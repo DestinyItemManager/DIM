@@ -785,7 +785,7 @@ function tryPageLoad() {
 			}
 			setSortHeights();
 		}
-		collapseSections();
+		setSortHeights();
 		input.addEventListener('keyup', function () {
 			var filter = input.value.toLowerCase();
 			var special = filter.indexOf('is:') >= 0;
@@ -816,7 +816,7 @@ function tryPageLoad() {
 				}
 			}
 
-			collapseSections();
+			setSortHeights();
 		});
 		input.addEventListener('click', function() { this.select(); });
 		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });

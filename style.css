@@ -110,7 +110,6 @@ img.void {
 .sort {
   float: left;
   clear: left;
-  min-height: 48px;
   width: 156px;
   margin: 0 -6px 6px;
   padding: 0 6px 6px;
