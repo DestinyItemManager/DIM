@@ -1,3 +1,14 @@
+chrome.browserAction.onClicked.addListener(function(tab) {
+	var optionsUrl = chrome.extension.getURL('window.html');
+	chrome.tabs.query({url: optionsUrl}, function(tabs) {
+	    if (tabs.length) {
+	        chrome.tabs.update(tabs[0].id, {active: true});
+	    } else {
+	        chrome.tabs.create({url: optionsUrl});
+	    }
+	});
+});
+
 var Weapon = function(stats, ids){
 	var self = this;
 	Object.keys(stats).forEach(function(key){

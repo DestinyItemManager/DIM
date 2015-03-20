@@ -1,17 +1,16 @@
 {
   "manifest_version": 2,
-  "name": "Destiny Item Manager",
-  "version": "2.8.2",
-  "description": "Robust interface to manage gear, weapons, and items in destiny.",
+  "name": "Destiny Item Viewer",
+  "version": "1.0.0",
+  "description": "Robust interface to view weapons in Destiny.",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "short_name": "DIM",
+  "short_name": "DIV",
   "background": {
     "scripts": [
-      "scripts/bungie.js",
 	  "js/app.js"
     ]
   },
