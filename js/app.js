@@ -45,13 +45,12 @@ var Item = function(stats, ids){
 	}
 	this.equip = function(list, targetCharacterId){
 		app.bungie.equip(targetCharacterId, self._id, function(e){
-			console.log(arguments);
+			
 		});
 	}
 	this.store = function(list, targetCharacterId){
 		var sourceCharacterId = self.characterId;
 		app.bungie.transfer(targetCharacterId, self._id, self.id, 1, targetCharacterId == "Vault", function(e, result){
-			console.log(arguments);
 			if (e === 0){
 				self.doMove(false);
 				ko.utils.arrayFirst(app.characters(), function(character){
@@ -104,39 +103,12 @@ var app = new (function() {
 	var self = this;
 
 	this.activeUser = ko.observable();
-	
-	this.searchPerk = ko.observable("");
-	this.items = ko.observableArray();
 	this.characters = ko.observableArray();
 	this.orderedCharacters = ko.computed(function(){
 		return self.characters().sort(function(a,b){
 			return a.order - b.order;
 		});
 	});
-	this.ids = [];
-	this.tierFilter = ko.observable(0);
-	this.typeFilter = ko.observable(0);
-	this.dmgFilter =  ko.observable("All");
-	this.weaponTypes = ko.observableArray();
-	this.dmgTypeColors = {
-		"None": "white",
-		"Arc": "blue",
-		"Arc": "cyan",
-		"Solar": "orange",
-		"Void": "magenta"
-	}
-	
-	this.setTierFilter = function(model, event){
-		self.tierFilter(event.target.value);
-	}
-	
-	this.setDmgFilter = function(model, event){
-		self.dmgFilter(event.target.value);
-	}
-	
-	this.setTypeFilter = function(model, event){
-		self.typeFilter(event.target.value);
-	}
 	
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
