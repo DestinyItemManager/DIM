@@ -162,7 +162,7 @@ img.void {
   float: left;
   clear: left;
   width: 156px;
-  margin: 0 -6px 6px;
+  margin: 0 -6px 8px;
   padding: 0 6px 4px;
   background-image: url('assets/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
