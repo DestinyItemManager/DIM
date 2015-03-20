@@ -21,7 +21,7 @@
   </head>
 
   <body>
-  		<div class="content" id="storage" data-bind="foreach: { data: characters, as: 'character' }">
+  		<div class="content" id="storage" data-bind="foreach: { data: orderedCharacters, as: 'character' }">
 			<div class="storage">
 				<div class="character">
 				  <div class="character-box" data-bind="style: { backgroundImage: background }">
@@ -35,45 +35,45 @@
 					  <div>
 						<div class="title">Weapons (<span data-bind="text: character.weapons().length"></span>)</div>
 						<div class="item-Weapon sections">
-							<div class="title">Primary (<span data-bind="text: character.primaries().length"></span>)</div>
+							<div class="title">Primary (<span data-bind="text: character.get('weapons','Primary').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.primaryEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('weapons', 'Primary')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.primaries, as: 'weapon' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('weapons','Primary'), as: 'weapon' }">								
 										<span class="item">
 											<img data-bind="attr: { src: weapon.icon }">
 										</span>
 									</div>
 								</div>
 							</div>							
-							<div class="title">Special (<span data-bind="text: character.specials().length"></span>)</div>
+							<div class="title">Special (<span data-bind="text: character.get('weapons','Special').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.specialEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('weapons','Special')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.specials, as: 'weapon' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('weapons','Special'), as: 'weapon' }">								
 										<span class="item">
 											<img data-bind="attr: { src: weapon.icon }">
 										</span>
 									</div>
 								</div>
 							</div>
-							<div class="title">Heavy (<span data-bind="text: character.heavies().length"></span>)</div>
+							<div class="title">Heavy (<span data-bind="text: character.get('weapons','Heavy').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.heavyEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('weapons','Heavy')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.heavies, as: 'weapon' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('weapons','Heavy'), as: 'weapon' }">								
 										<span class="item">
 											<img data-bind="attr: { src: weapon.icon }">
 										</span>
@@ -85,60 +85,60 @@
 					  <div>
 						<div class="title">Armor</div>
 						<div class="item-Armor sections">
-							<div class="title">Helmets (<span data-bind="text: character.helmets().length"></span>)</div>
+							<div class="title">Helmets (<span data-bind="text: character.get('armor','Helmet').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.helmetEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('armor','Helmet')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.helmets, as: 'armor' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('armor','Helmet'), as: 'armor' }">								
 										<span class="item">
 											<img data-bind="attr: { src: armor.icon }">
 										</span>
 									</div>
 								</div>
 							</div>
-							<div class="title">Gauntlets (<span data-bind="text: character.gauntlets().length"></span>)</div>
+							<div class="title">Gauntlets (<span data-bind="text: character.get('armor','Gauntlet').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.gauntletsEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('armor','Gauntlet')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.gauntlets, as: 'armor' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('armor','Gauntlet'), as: 'armor' }">								
 										<span class="item">
 											<img data-bind="attr: { src: armor.icon }">
 										</span>
 									</div>
 								</div>
 							</div>
-							<div class="title">Chest (<span data-bind="text: character.chest().length"></span>)</div>
+							<div class="title">Chest (<span data-bind="text: character.get('armor','Chest').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.chestEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('armor','Chest')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.chest, as: 'armor' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('armor','Chest'), as: 'armor' }">								
 										<span class="item">
 											<img data-bind="attr: { src: armor.icon }">
 										</span>
 									</div>
 								</div>
 							</div>
-							<div class="title">Boots (<span data-bind="text: character.boots().length"></span>)</div>
+							<div class="title">Boots (<span data-bind="text: character.get('armor','Boots').length"></span>)</div>
 							<div class="row">
 								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
-									<span class="item" data-bind="with: character.bootsEquipped">
+									<span class="item" data-bind="with: character.itemEquipped('armor','Boots')">
 										<img data-bind="attr: { src: icon }">
 									</span>
 								</div>
 								<div class="col-lg-7">
-									<div class="item-Section" data-bind="foreach: { data: character.boots, as: 'armor' }">								
+									<div class="item-Section" data-bind="foreach: { data: character.get('armor','Boots'), as: 'armor' }">								
 										<span class="item">
 											<img data-bind="attr: { src: armor.icon }">
 										</span>
@@ -147,7 +147,71 @@
 							</div>
 						</div>
 					  </div>
-					  <div><div class="title">Styling</div><div class="item-Styling sections"></div></div>
+					  <div>
+						<div class="title">Styling</div>
+						<div class="item-Styling sections">
+							<div class="title">Shaders (<span data-bind="text: character.get('items','Shader').length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.itemEquipped('items','Shader')">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.get('items','Shader'), as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Ships (<span data-bind="text: character.get('items','Ship').length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.itemEquipped('items','Ship')">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.get('items','Ship'), as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Sparrows (<span data-bind="text: character.get('items','Sparrow').length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.itemEquipped('items','Sparrow')">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.get('items','Sparrow'), as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Emblems (<span data-bind="text: character.get('items','Emblem').length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.itemEquipped('items','Emblem')">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.get('items','Emblem'), as: 'armor' }">								
+										<span class="item">
+											<img data-bind="attr: { src: armor.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					  </div>
 					  <div><div class="title">Miscellaneous</div><div class="item-Miscellaneous sections"></div></div>
 					  <div><div class="title">Postmaster</div><div class="item-Postmaster sections"></div></div>
 					</div>

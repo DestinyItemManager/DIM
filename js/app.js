@@ -24,48 +24,14 @@ var Profile = function(model){
 	
 	this.weapons = ko.observableArray([]);
 	this.armor = ko.observableArray([]);
-	this.primaries = ko.computed(function(){
-		return self.weapons().filter(filterItemByType("Primary", false));
-	});
-	this.specials = ko.computed(function(){
-		return self.weapons().filter(filterItemByType("Special", false));
-	});
-	this.heavies = ko.computed(function(){
-		return self.weapons().filter(filterItemByType("Heavy", false));
-	});
-	this.helmets = ko.computed(function(){
-		return self.armor().filter(filterItemByType("Helmet", false));
-	});
-	this.gauntlets = ko.computed(function(){
-		return self.armor().filter(filterItemByType("Gauntlet", false));
-	});
-	this.chest = ko.computed(function(){
-		return self.armor().filter(filterItemByType("Chest", false));
-	});
-	this.boots = ko.computed(function(){
-		return self.armor().filter(filterItemByType("Boots", false));
-	});
-	this.primaryEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.weapons(), filterItemByType("Primary", true));
-	});
-	this.specialEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.weapons(), filterItemByType("Special", true));
-	});
-	this.heavyEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.weapons(), filterItemByType("Heavy", true));
-	});
-	this.helmetEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.armor(), filterItemByType("Helmet", true));
-	});
-	this.gauntletsEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.armor(), filterItemByType("Gauntlet", true));
-	});
-	this.chestEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.armor(), filterItemByType("Chest", true));
-	});
-	this.bootsEquipped = ko.computed(function(){
-		return ko.utils.arrayFirst(self.armor(), filterItemByType("Boots", true));
-	});
+	this.items = ko.observableArray([]);
+	
+	this.get = function(list, type){
+		return self[list]().filter(filterItemByType(type, false));
+	}
+	this.itemEquipped = function(list, type){
+		return ko.utils.arrayFirst(self[list](), filterItemByType(type, true));
+	}
 }
 
 var Weapon = function(stats, ids){
@@ -101,7 +67,11 @@ var DestinyBucketTypes = {
 	"3448274439": "Helmet",
 	"3551918588": "Gauntlet",
 	"14239492": "Chest",
-	"20886954": "Boots"
+	"20886954": "Boots",
+	"2973005342": "Shader",
+	"4274335291": "Emblem",
+	"2025709351": "Sparrow",
+	"284967655": "Ship"
 }
 
 var app = new (function() {
@@ -112,6 +82,11 @@ var app = new (function() {
 	this.searchPerk = ko.observable("");
 	this.items = ko.observableArray();
 	this.characters = ko.observableArray();
+	this.orderedCharacters = ko.computed(function(){
+		return self.characters().sort(function(a,b){
+			return a.order - b.order;
+		});
+	});
 	this.ids = [];
 	this.tierFilter = ko.observable(0);
 	this.typeFilter = ko.observable(0);
@@ -167,7 +142,10 @@ var app = new (function() {
 			}
 			else if (info.itemType == 2){
 				profile.armor.push( itemObject );
-			}	
+			}
+			else if (info.bucketTypeHash in DestinyBucketTypes){
+				profile.items.push( itemObject );
+			}
 		}
 	}
 	
@@ -178,7 +156,7 @@ var app = new (function() {
 				var avatars = e.data.characters;
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
-					var profile = new Profile({ gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
+					var profile = new Profile({ order: 0, gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
 					var def = results.definitions.items;
 					var def_perks = results.definitions.perks;
 					
@@ -186,9 +164,10 @@ var app = new (function() {
 					
 					self.characters.push(profile);
 				});
-				avatars.forEach(function(character){
+				avatars.forEach(function(character, index){
 					self.bungie.inventory(character.characterBase.characterId, function(response) {
-						var profile = new Profile({ 
+						var profile = new Profile({
+							order: index+1,
 							gender: DestinyGender[character.characterBase.genderType],
 							classType: DestinyClass[character.characterBase.classType],
 							id: character.characterBase.characterId,
