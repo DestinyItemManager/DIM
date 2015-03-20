@@ -50,7 +50,8 @@ var Item = function(stats, ids){
 	}
 	this.store = function(list, targetCharacterId){
 		var sourceCharacterId = self.characterId;
-		app.bungie.transfer(targetCharacterId, self._id, self.id, 1, targetCharacterId == "Vault", function(e, result){
+		var isVault = targetCharacterId == "Vault";
+		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, 1, isVault, function(e, result){
 			if (e === 0){
 				self.doMove(false);
 				ko.utils.arrayFirst(app.characters(), function(character){
@@ -153,6 +154,7 @@ var app = new (function() {
 		self.bungie.user(function(user){
 			self.activeUser(user);
 			self.bungie.search(function(e){
+				console.log(e.data);
 				var avatars = e.data.characters;
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
