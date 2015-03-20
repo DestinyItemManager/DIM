@@ -34,11 +34,15 @@ var Profile = function(model){
 	}
 }
 
-var Weapon = function(stats, ids){
+var Item = function(stats, ids){
 	var self = this;
 	Object.keys(stats).forEach(function(key){
 		self[key] = stats[key];
 	});
+	this.doMove = ko.observable(false);
+	this.toggleMove = function(){
+		self.doMove(!self.doMove());
+	}
 }
 
 var DestinyGender = {
@@ -115,8 +119,9 @@ var app = new (function() {
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
-			var itemObject = { 
+			var itemObject = new Item({ 
 				id: item.itemHash,
+				characterId: profile.id,
 				damageType: item.damageType,
 				damageTypeName: DestinyDamageTypes[item.damageType],
 				description: info.itemName, 
@@ -126,7 +131,7 @@ var app = new (function() {
 				tierType: info.tierType, //6 (Exotic) 5 (Legendary)
 				icon: "http://www.bungie.net/" + info.icon,
 				isEquipped: item.isEquipped
-			};			
+			});
 			if (item.primaryStat)
 				itemObject.primaryStat = item.primaryStat.value;
 			
