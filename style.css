@@ -166,7 +166,7 @@ img.void {
   padding: 0 6px 4px;
   background-image: url('assets/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
-  background-position: 10px 5px;
+  background-position: 10px 4px;
 }
 .sort-class, .sort-heavy, .sort-classitem, .sort-ghost {
   border-bottom: 1px solid rgba(245,245,245,.2);
