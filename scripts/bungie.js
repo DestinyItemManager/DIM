@@ -71,8 +71,8 @@ function bungie() {
     if(type === 'PSN')
       active = systemIds.psn;
   }
-  this.gamertag = function() {
-    return active.id;
+  this.active = function() {
+    return active;
   }
   this.system = function() {
     return systemIds;
@@ -105,7 +105,6 @@ function bungie() {
       method: 'GET',
       complete: function(membership) {
         if(membership[0] === undefined) {
-          console.log('error finding bungie account!', membership)
           callback({error: true})
           return;
         }

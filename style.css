@@ -82,6 +82,9 @@ img.void {
   display: inline-block;
   white-space: nowrap;
 }
+#storage .error a {
+  color: white;
+}
 .storage {
   margin-top: 10px;
   display: inline-block;
@@ -356,6 +359,56 @@ input[type=range] {
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq .content ul li { margin-bottom: 3px; }
 #faq a { color: #fff }
+
+#collection-url {
+  display: none;
+  width: 500px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+#collection-button {
+    display: inline-block;
+    background-color: #5b6e6c;
+    color: rgba(245,245,245,.6);
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    line-height: 14px!important;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 10px!important;
+}
+#collection-button:hover { background-color: #628e89 }
+#collection {
+    display: none;
+    position: fixed;
+    background: rgba(0,0,0,.86);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    cursor: pointer;
+    padding-top: 40px
+}
+#collection .content div {
+  display: inline-block;
+  width: 136px;
+  float: left;
+}
+#collection .content div p {
+  text-align: left;
+}
+#collection .content .done {
+  color: yellow;
+}
+#collection .content .has {
+  color: green;
+}
+#collection .content .missing {
+  color: pink;
+}
 .content {
     margin: 0 1em;
     padding: 2px;

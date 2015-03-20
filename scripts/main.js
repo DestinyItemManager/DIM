@@ -699,6 +699,27 @@ function tryPageLoad() {
 			buildLoadouts();
 		});
 
+		var r = new report();
+		r.buildHTML();
+
+		var collectionButton = document.getElementById('collection-button');
+		var collectionUrl = document.getElementById('collection-url');
+		var collection = document.getElementById('collection');
+		collectionButton.addEventListener('click', function() {
+			if(collection.style.display === 'block') {
+				collectionUrl.style.display = 'none';
+				collection.style.display = 'none';
+				return;
+			}
+			collectionUrl.value = r.de();
+			collectionUrl.style.display = 'inline-block';
+			collection.style.display = 'block';
+		})
+		collection.addEventListener('click', function(e) {
+			collectionUrl.style.display = 'none';
+			collection.style.display = 'none';
+		});
+
 		amountBox = document.getElementById('move-amount');
 
 		move = document.getElementById('move-popup');
@@ -823,25 +844,28 @@ function tryPageLoad() {
 	}
 }
 
+function printError(message) {
+	var storage = document.getElementById('storage');
+	storage.innerHTML = '<span class="error">'+ message+'</span>';
+}
+
 function loadUser() {
 	_storage = [];
 	_items = [];
 	_sections = null;
 
-	document.getElementById('user').innerText = bungie.gamertag();
+	document.getElementById('user').innerText = bungie.active().id;
 
 	bungie.search(function(e) {
 		if(e.error) {
-				var storage = document.getElementById('storage');
-				storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
+				printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
 				return;
 		}
 
 		bungie.vault(function(v) {
 			if(v === undefined) {
-					var storage = document.getElementById('storage');
-					storage.innerHTML = 'Bungie.net user found, but was unable to find your linked account.';
-					return;
+				printError('Bungie.net user found, but was unable to find your linked ' + (bungie.active().type == 1 ? 'Xbox' : 'PSN') + ' account.');
+				return;
 			}
 			_storage['vault'] = {
 				icon: ''
@@ -876,16 +900,17 @@ function loadUser() {
 
 bungie.user(function(u) {
 	if(u.error) {
-			var storage = document.getElementById('storage');
-			storage.innerHTML = 'error loading user. make sure your account is linked with bungie.net and you are logged in.';
+			printError('Error loading user. Make sure your account is <a href="http://www.bungie.net">linked with bungie.net and you are logged in</a>.');
 			return;
 	}
 
 	var toggle = document.getElementById('system');
 	chrome.storage.sync.get('system', function(res) {
-		if(res.system === undefined) return;
-		bungie.setsystem(res.system);
-		toggle.value = res.system;
+		if(res.system !== undefined) {
+			bungie.setsystem(res.system);
+			toggle.value = res.system;
+		}
+		loadUser();
 	});
 
 	if(bungie.system().xbl.id !== undefined && bungie.system().psn.id !== undefined) {
@@ -896,8 +921,6 @@ bungie.user(function(u) {
 			loadUser();
 		});
 	}
-
-	loadUser();
 });
 
 function setSortHeights() {
