@@ -6,8 +6,9 @@
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
+    <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+	
 	<script type="text/javascript" src="scripts/bungie.js"></script>
     <script src="/js/dependencies/jquery.js"></script>
     <script src="/js/dependencies/bootstrap.min.js"></script>
@@ -20,54 +21,74 @@
   </head>
 
   <body>
-	<div id="itemsList" class="container">
-  		<div class="row hidden-print" data-bind="if: items().length > 0">
-  			<h3>Tier</h3>
-  			<button value="0" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">All</button>
-  			<button value="3" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Uncommon</button>
-  			<button value="4" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Rare</button>
-  			<button value="5" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Legendary</button>
-  			<button value="6" class="btn btn-default" data-bind="click: setTierFilter, css: tierFilter() == $element.value ? 'btn-primary' : ''">Exotic</button>  				  			
-  		</div>
-  		<div class="row hidden-print" data-bind="if: items().length > 0">
-  			<h3>Damage Type</h3>
-  			<button value="All" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">All</button>
-  			<button value="Arc" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">Arc</button>
-  			<button value="Void" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">Void</button>
-  			<button value="Solar" class="btn btn-default" data-bind="click: setDmgFilter, css: dmgFilter() == $element.value ? 'btn-primary' : ''">Solar</button> 			  			
-  		</div>
-  		<div class="row hidden-print" data-bind="if: items().length > 0">
-  			<h3>Class</h3>
-  			<button value="0" class="btn btn-default" data-bind="click: setTypeFilter, css: typeFilter() == $element.value ? 'btn-primary' : ''">All</button>
-  			<!-- ko foreach: { data: weaponTypes, as: 'weaponType' } -->
-  				<button class="btn btn-default" data-bind="click: $parent.setTypeFilter, value: weaponType.type, text: weaponType.name, css: $parent.typeFilter() == weaponType.type ? 'btn-primary' : ''">All</button>
-  			<!--/ko  -->
-  		</div>
-  		<div class="row hidden-print" data-bind="if: items().length > 0">
-  			<h3>Perk</h3>
-  			<input type="text" data-bind="value: searchPerk" class="form-control">
-  		</div>	
-		<div class="row" data-bind="if: items().length > 0">
-			<div class="col-sm-3">&nbsp;</div>
-			<div class="col-sm-9 row" data-bind="foreach: { data: ids, as: 'alt' }">
-				<div class="col-sm-3"><h4 data-bind="text: alt.title"></h4></div>
+  		<div class="content" id="storage" data-bind="foreach: { data: characters, as: 'character' }">
+			<div class="storage">
+				<div class="character">
+				  <div class="character-box" data-bind="style: { backgroundImage: background }">
+					<div class="emblem" data-bind="style: { backgroundImage: icon }"></div>
+					<div class="class" data-bind="text: classType"></div>
+					<div class="level" data-bind="text: level" style="color: rgb(245, 220, 86)"></div>
+				  </div>				
+				</div>
+				<div>
+					<div class="items" data-type="item">
+					  <div>
+						<div class="title">Weapons (<span data-bind="text: character.weapons().length"></span>)</div>
+						<div class="item-Weapon sections">
+							<div class="title">Primary (<span data-bind="text: character.primaries().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.primaryEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.primaries, as: 'weapon' }">								
+										<span class="item">
+											<img data-bind="attr: { src: weapon.icon }">
+										</span>
+									</div>
+								</div>
+							</div>							
+							<div class="title">Special (<span data-bind="text: character.specials().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.specialEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.specials, as: 'weapon' }">								
+										<span class="item">
+											<img data-bind="attr: { src: weapon.icon }">
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="title">Heavy (<span data-bind="text: character.heavies().length"></span>)</div>
+							<div class="row">
+								<div class="col-lg-2" data-bind="visible: character.id != 'Vault'">
+									<span class="item" data-bind="with: character.heavyEquipped">
+										<img data-bind="attr: { src: icon }">
+									</span>
+								</div>
+								<div class="col-lg-7">
+									<div class="item-Section" data-bind="foreach: { data: character.heavies, as: 'weapon' }">								
+										<span class="item">
+											<img data-bind="attr: { src: weapon.icon }">
+										</span>
+									</div>								
+								</div>
+							</div>
+						</div>
+					  </div>
+					  <div><div class="title">Armor</div><div class="item-Armor sections"></div></div>
+					  <div><div class="title">Styling</div><div class="item-Styling sections"></div></div>
+					  <div><div class="title">Miscellaneous</div><div class="item-Miscellaneous sections"></div></div>
+					  <div><div class="title">Postmaster</div><div class="item-Postmaster sections"></div></div>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<table class="table table-striped">
-				<tbody data-bind="foreach: { data: items, as: 'item' }">
-					<tr data-bind="visible: ($parent.searchPerk() == '' || item.hasPerkSearch($parent.searchPerk())) && ($parent.dmgFilter() == 'All' || item.hasDmgType($parent.dmgFilter())) && ($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) && ($parent.typeFilter() == 0 || $parent.typeFilter() == item.type)">
-						<td class="col-sm-3 control-label" data-bind="text: item.description"></td>
-						<td class="col-sm-9 row" data-bind="foreach: { data: item.toons, as: 'alt' }">
-							<div class="col-sm-3" data-bind="attr: { title: alt.perks }, style: { color: alt.color }">
-								<span data-bind="text: alt.damageStat"></span>
-								<span data-bind="text: alt.damageType, visible: alt.damageType != '(None)'"></span>
-					   		</div>	
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-  	</div>
   </body>
 </html>

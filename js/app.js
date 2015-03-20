@@ -9,32 +9,46 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	});
 });
 
+var filterWeaponByType = function(type, isEquipped){
+	return function(weapon){
+		if (weapon.bucketType == type && weapon.isEquipped == isEquipped)
+			return weapon;
+	}
+}
+
+var Profile = function(model){
+	var self = this;
+	_.each(model, function(value, key){
+		self[key] = value;
+	});
+	
+	this.weapons = ko.observableArray([]);
+	this.armor = [];
+	this.primaries = ko.computed(function(){
+		return self.weapons().filter(filterWeaponByType("Primary", false));
+	});
+	this.specials = ko.computed(function(){
+		return self.weapons().filter(filterWeaponByType("Special", false));
+	});
+	this.heavies = ko.computed(function(){
+		return self.weapons().filter(filterWeaponByType("Heavy", false));
+	});
+	this.primaryEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.weapons(), filterWeaponByType("Primary", true));
+	});
+	this.specialEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.weapons(), filterWeaponByType("Special", true));
+	});
+	this.heavyEquipped = ko.computed(function(){
+		return ko.utils.arrayFirst(self.weapons(), filterWeaponByType("Heavy", true));
+	});
+}
+
 var Weapon = function(stats, ids){
 	var self = this;
 	Object.keys(stats).forEach(function(key){
 		self[key] = stats[key];
 	});
-	this.hasDmgType = function(type){
-		return self.dmg.indexOf(type) > -1;
-	}
-	this.hasPerkSearch = function(search){
-		var foundPerk = false, vSearch = search.toLowerCase();
-		self.perks.forEach(function(perk){
-			if (perk.toLowerCase().indexOf(vSearch) > -1)
-				foundPerk = true;
-		});
-		return foundPerk;
-	}
-	this.toons = [];
-	
-	_.each(ids, function(toon, index){
-		self.toons[index] = {
-			color: 		self.alts.indexOf(index+1) > -1 ? app.dmgTypeColors[self.dmg[index+1]] 	: '',
-			damageStat: self.alts.indexOf(index+1) > -1 ? self.stats[index+1] 					: '-',
-			damageType: self.alts.indexOf(index+1) > -1 ? ('(' + self.dmg[index+1]  + ')')		: '',
-			perks:		self.alts.indexOf(index+1) > -1 ? self.perks[index+1] 					: ''
-		}
-	})
 }
 
 var DestinyGender = {
@@ -48,7 +62,7 @@ var DestinyClass = {
     "2": "Warlock",
     "3": "Unknown"
 };
-var DamageType = {
+var DestinyDamageTypes = {
     "0": "None",
     "1": "Kinetic",
     "2": "Arc",
@@ -56,6 +70,12 @@ var DamageType = {
     "4": "Void",
     "5": "Raid"
 };
+var DestinyBucketTypes = {
+	"1498876634": "Primary",
+	"2465295065": "Special",
+	"953998645": "Heavy"
+}
+
 var app = new (function() {
 	var self = this;
 
@@ -89,83 +109,21 @@ var app = new (function() {
 		self.typeFilter(event.target.value);
 	}
 	
-	this.classesToItems = function(classes) {
-		var items = {}, weapons = {}, stats = {}, dmg = {}, perks = {};
-		classes.forEach(function(character) {
-			var index = self.ids.push({
-				id : character.id,
-				title : character.gender + " " + character.class
-			});
-			character.weapons.forEach(function(weapon) {
-				var id = weapon.id;
-				weapons[id] = weapon; 
-				if (!(id in items))
-					items[id] = [ index ];				
-				else
-					items[id].push(index);
-				
-				if (!(id in stats))
-					stats[id] = [];
-				stats[id][index] = weapon.primaryStat;
-				
-				if (!(id in dmg))
-					dmg[id] = [];
-				dmg[id][index] = weapon.damageTypeName;
-				
-				if (!(id in perks))
-					perks[id] = [];
-				perks[id][index] = weapon && weapon.perks && weapon.perks.map(function(perk){
-					  return "[" + perk.name + "] " + perk.description;
-				}).join("\n");;
-			});
-		});
-		
-		Object.keys(items).forEach(function(key) {
-			self.items.push(
-				new Weapon(
-					_.extend({}, weapons[key], {
-						id: 	key,
-						stats: 	stats[key],
-						dmg:	dmg[key],
-						perks: 	perks[key],
-						alts : 	items[key]
-					}), 
-					self.ids
-				)
-			);
-		});
-		
-		self.items(
-			self.items().sort(function(a,b){
-				return (a.damageType - b.damageType);
-			}).sort(function(a,b){
-				return (a.type - b.type);
-			})
-		);
-
-		self.items().forEach(function(item){
-			if (_.where(self.weaponTypes(), { type: item.type}).length == 0)
-				self.weaponTypes.push({ name: item.typeName, type: item.type });
-		});
-		
-		self.weaponTypes(
-			self.weaponTypes().sort(function(a,b){
-				return (a.type - b.type);
-			})
-		);
-	}
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
 			var itemObject = { 
 				id: item.itemHash,
 				damageType: item.damageType,
-				damageTypeName: DamageType[item.damageType],
+				damageTypeName: DestinyDamageTypes[item.damageType],
 				description: info.itemName, 
-				type: info.itemSubType, 
-				typeName: info.itemTypeName,
-				tierType: info.tierType
-			};
+				bucketType: DestinyBucketTypes[info.bucketTypeHash],
+				type: info.itemSubType, //12 (Sniper)
+				typeName: info.itemTypeName, //Sniper Rifle
+				tierType: info.tierType, //6 (Exotic) 5 (Legendary)
+				icon: "http://www.bungie.net/" + info.icon,
+				isEquipped: item.isEquipped
+			};			
 			if (item.primaryStat)
 				itemObject.primaryStat = item.primaryStat.value;
 			
@@ -191,23 +149,24 @@ var app = new (function() {
 				var avatars = e.data.characters;
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
-					var profile = { gender: "Tower",  class: "Vendor", id: "Vault", weapons: [], armor: [] };
+					var profile = new Profile({ gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
 					var def = results.definitions.items;
 					var def_perks = results.definitions.perks;
 					
-					buckets[1].items.forEach(processItem(profile, def, def_perks));
+					buckets[2].items.forEach(processItem(profile, def, def_perks));
 					
 					self.characters.push(profile);
 				});
 				avatars.forEach(function(character){
 					self.bungie.inventory(character.characterBase.characterId, function(response) {
-						var profile = { 
+						var profile = new Profile({ 
 							gender: DestinyGender[character.characterBase.genderType],
-							class: DestinyClass[character.characterBase.classType],
-							id: character.characterBase.characterId, 
-							weapons: [], 
-							armor: [] 
-						};
+							classType: DestinyClass[character.characterBase.classType],
+							id: character.characterBase.characterId,
+							icon: "url(http://www.bungie.net/" + character.emblemPath + ")",
+							background: "url(http://www.bungie.net/" + character.backgroundPath + ")",
+							level: character.characterLevel
+						});
 						var items = [];						
 						response.data.buckets.Equippable.forEach(function(obj){
 							obj.items.forEach(function(item){
@@ -220,8 +179,6 @@ var app = new (function() {
 						self.characters.push(profile);
 					});
 				});
-				/* setup promises and call this when they're all done or find a better way */
-				setTimeout(function(){ self.classesToItems( self.characters() ) },3000);
 			});			
 		});
 	}
