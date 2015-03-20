@@ -810,7 +810,7 @@ function tryPageLoad() {
 					case 'elemental':	item[i].style.display = _tmpItem.dmg == filter ? '' : 'none'; break;
 					case 'type':	item[i].style.display = _tmpItem.type.toLowerCase() == filter ? '' : 'none'; break;
 					case 'tier':	item[i].style.display = _tmpItem.tier.toLowerCase() == filter ? '' : 'none'; break;
-					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_tmpItem.sort) !== -1 && !_tmpItem.complete ? '' : 'none'; break;
+					case 'incomplete':	item[i].style.display = _tmpItem.complete ? 'none' : ''; break;
 					case 'complete':	item[i].style.display = _tmpItem.complete ? '' : 'none'; break;
 					default: item[i].style.display = _tmpItem.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
