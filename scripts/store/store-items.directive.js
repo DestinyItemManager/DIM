@@ -18,14 +18,14 @@
       template: [
         '<div>',
         '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-        '    <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event)" drop-channel="{{ value.join(\',\') }}">',
+        '    <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ value.join(\',\') }}">',
         '      <div class="title">',
         '        <span>{{ key }}</span>',
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.store.bucketCounts[key] }}/20</span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'">',
-        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ng-if="vm.data[vm.orderedTypes[type]].equipped">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ng-if="vm.data[vm.orderedTypes[type]].equipped" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ value.join(\',\') }}">',
+        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped" dim-store-item store-data="vm.store" item-data="item" ng-click="vm.onDrop(item.id, $event, false)"></div>',
         '        </div>',
         '        <div ng-class="vm.styles[type].unequipped">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped" dim-store-item store-data="vm.store" item-data="item"></div>',
@@ -38,9 +38,9 @@
       ].join('')
     };
 
-    StoreItemsCtrl.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$q'];
+    StoreItemsCtrl.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$q', 'dimConfig'];
 
-    function StoreItemsCtrl($scope, dimItemService, dimStoreService, $q) {
+    function StoreItemsCtrl($scope, dimItemService, dimStoreService, $q, dimConfig) {
       var vm = this;
       var types = [ // Order of types in the rows.
         'Class',
@@ -175,7 +175,7 @@
 
       vm.data = generateData();
 
-      vm.onDrop = function (id, e) {
+      vm.onDrop = function (id, e, equip) {
         var item = dimItemService.getItem(id);
         var source = null;
 
@@ -185,9 +185,17 @@
           source = dimStoreService.getStore(item.owner);
         }
 
-        dimItemService.moveTo(item, vm.store)
-          .then(function(result) {
-            return updateUi(item, source, vm.store);
+        dimItemService.moveTo(item, vm.store, equip)
+          .catch(function (error) {
+            if (dimConfig.debug) {
+              console.log('error: ' + error);
+            }
+          })
+          .finally(function (result) {
+            if (dimConfig.debug) {
+              console.log('done.');
+              console.log('------');
+            }
           });
       };
 
