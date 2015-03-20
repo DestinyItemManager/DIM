@@ -43,6 +43,28 @@ var Item = function(stats, ids){
 	this.toggleMove = function(){
 		self.doMove(!self.doMove());
 	}
+	this.equip = function(list, targetCharacterId){
+		app.bungie.equip(targetCharacterId, self._id, function(e){
+			console.log(arguments);
+		});
+	}
+	this.store = function(list, targetCharacterId){
+		var sourceCharacterId = self.characterId;
+		app.bungie.transfer(targetCharacterId, self._id, self.id, 1, targetCharacterId == "Vault", function(e, result){
+			console.log(arguments);
+			if (e === 0){
+				self.doMove(false);
+				ko.utils.arrayFirst(app.characters(), function(character){
+					if (character.id == sourceCharacterId){
+						character[list].remove(self);
+					}
+					else if (character.id == targetCharacterId){
+						character[list].push(self);
+					}
+				});
+			}
+		})
+	}
 }
 
 var DestinyGender = {
@@ -121,6 +143,7 @@ var app = new (function() {
 			var info = itemDefs[item.itemHash];
 			var itemObject = new Item({ 
 				id: item.itemHash,
+				_id: item.itemInstanceId,
 				characterId: profile.id,
 				damageType: item.damageType,
 				damageTypeName: DestinyDamageTypes[item.damageType],

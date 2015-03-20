@@ -18,10 +18,10 @@
 
   <body>
 		<script type="text/html" id="sections-template">
-			<div class="title" data-bind="text: $data.split('.')[1]"></div>
+			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div class="row">
 				<div style="width: 52px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault'">
-					<span class="item" data-bind="with: character.itemEquipped($data.split('.')[0], $data.split('.')[1])">
+					<span class="item" data-bind="with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
 						<img data-bind="attr: { src: icon }, click: toggleMove">
 						<div class="move-popup" data-bind="visible: doMove">
 						  <div class="item-name" data-bind="text: description"></div>
@@ -40,7 +40,7 @@
 					</span>
 				</div>
 				<div style="width: 205px; display: inline-block;">
-					<div class="item-Section" data-bind="foreach: { data: character.get($data.split('.')[0], $data.split('.')[1]), as: 'item' }">								
+					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }">								
 						<span class="item">
 							<img data-bind="attr: { src: item.icon }, click: toggleMove">
 							<div class="move-popup" data-bind="visible: doMove">
@@ -49,10 +49,10 @@
 								<div class="move-button" style="display: block;" data-bind="visible: avatar.id == 'Vault' && character.id !== 'Vault'">
 									<span>vault</span>								
 								</div>
-								<div class="move-button" style="display: block;" data-bind="style: { backgroundImage: icon }, visible: item.characterId != avatar.id && avatar.id !== 'Vault'">
+								<div class="move-button" style="display: block;" data-bind="click: function(){ item.store(list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: item.characterId != avatar.id && avatar.id !== 'Vault'">
 									<span>store</span>								
 								</div>
-								<div class="move-button" style="display: block;" data-bind="style: { backgroundImage: icon }, visible: !item.isEquipped && avatar.id !== 'Vault'">
+								<div class="move-button" style="display: block;" data-bind="click: function(){ item.equip(list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: !item.isEquipped && avatar.id !== 'Vault'">
 									<span>equip</span>								
 								</div>								
 							  </div>
@@ -75,17 +75,17 @@
 					<div class="items" data-type="item">
 					  <div>
 						<div class="title">Weapons (<span data-bind="text: character.weapons().length"></span>)</div>
-						<div class="item-Weapon sections" data-bind="template: { name: 'sections-template', foreach: ['weapons.Primary','weapons.Special','weapons.Heavy'] }">
+						<div class="item-Weapon sections" data-bind="template: { name: 'sections-template', foreach: ['weapons.Primary','weapons.Special','weapons.Heavy'], as: 'list' }">
 						</div>
 					  </div>
 					  <div>
 						<div class="title">Armor</div>
-						<div class="item-Armor sections" data-bind="template: { name: 'sections-template', foreach: ['armor.Helmet','armor.Gauntlet','armor.Chest', 'armor.Boots'] }">
+						<div class="item-Armor sections" data-bind="template: { name: 'sections-template', foreach: ['armor.Helmet','armor.Gauntlet','armor.Chest', 'armor.Boots'], as: 'list' }">
 						</div>
 					  </div>
 					  <div>
 						<div class="title">Styling</div>
-						<div class="item-Styling sections" data-bind="template: { name: 'sections-template', foreach: ['items.Shader','items.Emblem','items.Ship','items.Sparrow'] }">							
+						<div class="item-Styling sections" data-bind="template: { name: 'sections-template', foreach: ['items.Shader','items.Emblem','items.Ship','items.Sparrow'], as: 'list' }">							
 						</div>
 					  </div>
 					</div>
