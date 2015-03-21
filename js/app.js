@@ -90,7 +90,8 @@ var Item = function(stats, profile){
 	this.character = profile;
 	this.href = "http://destinydb.com/items/" + self.id;
 	this.isEquipped = ko.observable(self.isEquipped);
-	this.moveItem = function(){
+	this.moveItem = function(list, item){
+		self.list = list;
 		app.activeItem(self);
 	}
 	this.primaryStat = self.primaryStat || "";
