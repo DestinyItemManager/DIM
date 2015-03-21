@@ -104,7 +104,7 @@ img.void {
     position: absolute;
     z-index: 2;
 }
-.item>img {
+.item a img {
   width: 44px;
   height: 44px;
 }

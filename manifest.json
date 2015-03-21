@@ -23,7 +23,7 @@
   "browser_action": {
     "default_icon": "icon128.png"
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://desjs.zamimg.com https://destinydb.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false,
   "options_page": "window.html"
