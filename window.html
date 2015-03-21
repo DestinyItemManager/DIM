@@ -33,7 +33,7 @@
 								<div class="move-button" style="display: block;" data-bind="click: function(){ item.store(list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: item.characterId != avatar.id && avatar.id !== 'Vault'">
 									<span>store</span>								
 								</div>
-								<div class="move-button" style="display: block;" data-bind="click: function(){ item.equip(list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: !item.isEquipped && avatar.id !== 'Vault'">
+								<div class="move-button" style="display: block;" data-bind="click: function(){ item.equip(list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: !item.isEquipped() && avatar.id !== 'Vault'">
 									<span>equip</span>								
 								</div>								
 							  </div>

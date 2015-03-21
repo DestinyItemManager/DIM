@@ -11,7 +11,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 var filterItemByType = function(type, isEquipped){
 	return function(weapon){
-		if (weapon.bucketType == type && weapon.isEquipped == isEquipped)
+		if (weapon.bucketType == type && weapon.isEquipped() == isEquipped)
 			return weapon;
 	}
 }
@@ -34,25 +34,34 @@ var Profile = function(model){
 	}
 }
 
-var Item = function(stats, ids){
+var Item = function(stats, profile){
 	var self = this;
 	Object.keys(stats).forEach(function(key){
 		self[key] = stats[key];
 	});
+	this.isEquipped = ko.observable(self.isEquipped);
 	this.doMove = ko.observable(false);
 	this.toggleMove = function(){
 		self.doMove(!self.doMove());
 	}
 	this.equip = function(list, targetCharacterId){
-		app.bungie.equip(targetCharacterId, self._id, function(e){
-			
+		app.bungie.equip(targetCharacterId, self._id, function(e, result){
+			if (result.Message == "Ok"){
+				self.doMove(false);
+				self.isEquipped(true);
+				profile[list]().forEach(function(item){
+					if (item != self){
+						item.isEquipped(false);
+					}
+				});
+			}
 		});
 	}
 	this.store = function(list, targetCharacterId){
 		var sourceCharacterId = self.characterId;
 		var isVault = targetCharacterId == "Vault";
 		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, 1, isVault, function(e, result){
-			if (e === 0){
+			if (result.Message == "Ok"){
 				self.doMove(false);
 				ko.utils.arrayFirst(app.characters(), function(character){
 					if (character.id == sourceCharacterId){
@@ -128,7 +137,7 @@ var app = new (function() {
 				icon: "http://www.bungie.net/" + info.icon,
 				isEquipped: item.isEquipped,
 				isGridComplete: item.isGridComplete
-			});
+			}, profile);
 			if (item.primaryStat)
 				itemObject.primaryStat = item.primaryStat.value;
 			
@@ -155,7 +164,6 @@ var app = new (function() {
 		self.bungie.user(function(user){
 			self.activeUser(user);
 			self.bungie.search(function(e){
-				console.log(e.data);
 				var avatars = e.data.characters;
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
