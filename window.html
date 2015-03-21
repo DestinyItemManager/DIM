@@ -87,7 +87,17 @@
 		      </ul>
 		      <form class="navbar-form navbar-left" role="search" onsubmit="return false">
 		        <div class="form-group">
-		          <input class="form-control" placeholder="Search By Name or Perk" type="text" data-bind="value: searchKeyword">
+					<div class="col-lg-5">
+			          <input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">					
+					</div>
+				  	<div class="col-lg-3">
+						Auto Refresh<br>
+						(seconds)
+					</div>
+					<div class="col-lg-4">
+						<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">
+						<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
+					</div>
 		        </div>
 		      </form>
 		      <ul class="nav navbar-nav navbar-right">

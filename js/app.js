@@ -208,6 +208,8 @@ var app = new (function() {
 	});
 
 	this.searchKeyword = ko.observable("");
+	this.doRefresh = ko.observable(true);
+	this.refreshSeconds = ko.observable(300);
 	this.tierFilter = ko.observable(0);
 	this.typeFilter = ko.observable(0);
 	this.dmgFilter =  ko.observable("All");
@@ -270,6 +272,8 @@ var app = new (function() {
 	}
 	
 	this.loadData = function(){
+		console.log("refreshing");
+		self.characters.removeAll();
 		self.bungie.user(function(user){
 			self.activeUser(user);
 			self.bungie.search(function(e){
@@ -314,9 +318,18 @@ var app = new (function() {
 		});
 	}
 	
+	this.refreshHandler = function(){
+		clearInterval(self.refreshInterval);
+		if (self.doRefresh() == 1){
+			self.refreshInterval = setInterval(self.loadData, self.refreshSeconds() * 1000);
+		}
+	}
 	this.init = function(){
 		self.bungie = new bungie();
 		self.loadData();
+		self.doRefresh.subscribe(self.refreshHandler);
+		self.refreshSeconds.subscribe(self.refreshHandler);
+		self.refreshHandler();
 		ko.applyBindings(self, document.getElementById('itemsList'));
 	}
 });
