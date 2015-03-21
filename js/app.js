@@ -9,6 +9,21 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	});
 });
 
+/* this will be the drag & drop functionality
+//connect items with observableArrays
+ko.bindingHandlers.sortableList = {
+	init: function (element, valueAccessor) {
+		var list = valueAccessor();
+		
+		$(element).sortable({
+			update: function (event, ui) {
+				console.log(arguments);				
+				console.log(list);
+			}
+		});
+	}
+};
+*/
 var activeElement;
 var moveItemPositionHandler = function(element){
 	return function(){
@@ -276,10 +291,10 @@ var app = new (function() {
 						description: p.displayDescription
 					}
 				});
-				/*if (itemObject.description.indexOf("SUROS") > -1){					
+				if (itemObject.description.indexOf("SUROS") > -1){					
 					console.log(itemObject);
 					console.log(item);
-				}*/
+				}
 				itemObject.progression = (item.progression.progressToNextLevel == 0);
 				profile.weapons.push( itemObject );
 			}

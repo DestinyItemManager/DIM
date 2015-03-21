@@ -26,7 +26,7 @@
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div class="row">
 				<div style="width: 151px; height: 145px; border:1px solid white; display: inline-block;">
-					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }">								
+					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }, sortableList: character.get(list.split('.')[0], list.split('.')[1])">
 						<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
 							<a data-bind="attr:{href: item.href }"><img data-bind="attr: { src: item.icon }, click: moveItem, moveItem: true"></a>
 						</span>
@@ -117,7 +117,7 @@
 		</nav>
 		<div data-bind="with: activeItem" id="move-popup">
 			<div class="move-popup">
-			  <div class="item-name" data-bind="text: description"></div>
+			  <div class="item-name" data-bind="text: description + ' (Primary Stat: ' + primaryStat + ')'"></div>
 			  <div class="locations" data-bind="foreach: { data: $root.orderedCharacters, as: 'avatar' }">
 				<div class="move-button" style="display: block;" data-bind="click: function(){ item.store(list.split('.')[0], avatar.id) }, visible: avatar.id == 'Vault' && $parent.character.id !== 'Vault'">
 					<span>vault</span>								
