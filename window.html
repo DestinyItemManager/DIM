@@ -24,7 +24,7 @@
   <body class="container">
 		<script type="text/html" id="sections-template">
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
-			<div class="row">
+			<div>
 				<div style="width: 151px; height: 145px; border:1px solid white; display: inline-block;">
 					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }, sortableList: character.get(list.split('.')[0], list.split('.')[1])">
 						<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
@@ -96,17 +96,11 @@
 		        </li>
 		      </ul>
 		      <form class="navbar-form navbar-left" role="search" onsubmit="return false">
-		        <div class="form-group">
-					<div class="col-lg-5">
-			          <input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">					
-					</div>
-				  	<div class="col-lg-3">
-						Auto Refresh
-					</div>
-					<div class="col-lg-4">
-						<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">
-						<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
-					</div>
+		        <div>
+					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">		
+					<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
+					Auto Refresh
+					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">		
 		        </div>
 		      </form>
 		    </div>
