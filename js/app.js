@@ -9,6 +9,39 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	});
 });
 
+var activeElement;
+var moveItemPositionHandler = function(element){
+	return function(){
+		if (element	== activeElement){
+			$( "#move-popup" ).hide();
+			activeElement = null;
+		}	
+		else {
+			activeElement = element;
+			$( "#move-popup" ).show().position({
+				my: "left bottom",
+				at: "left top",
+				collision: "none fit",
+				of: element
+			});
+		}
+	}
+}
+
+ko.bindingHandlers.moveItem = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+		$(element).bind("click", moveItemPositionHandler(element));
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+		//$(element).bind("click", moveItemPositionHandler(element));
+    }
+};
+
 var filterItemByType = function(type, isEquipped){
 	return function(weapon){
 		if (weapon.bucketType == type && weapon.isEquipped() == isEquipped)
@@ -39,40 +72,72 @@ var Item = function(stats, profile){
 	Object.keys(stats).forEach(function(key){
 		self[key] = stats[key];
 	});
+	this.character = profile;
 	this.isEquipped = ko.observable(self.isEquipped);
-	this.doMove = ko.observable(false);
-	this.toggleMove = function(){
-		self.doMove(!self.doMove());
+	this.moveItem = function(){
+		app.activeItem(self);
 	}
 	this.equip = function(list, targetCharacterId){
-		app.bungie.equip(targetCharacterId, self._id, function(e, result){
-			if (result.Message == "Ok"){
-				self.doMove(false);
-				self.isEquipped(true);
-				profile[list]().forEach(function(item){
-					if (item != self){
-						item.isEquipped(false);
-					}
-				});
-			}
-		});
-	}
-	this.store = function(list, targetCharacterId){
 		var sourceCharacterId = self.characterId;
+		if (targetCharacterId == sourceCharacterId){
+			app.bungie.equip(targetCharacterId, self._id, function(e, result){
+				if (result.Message == "Ok"){
+					self.isEquipped(true);
+					self.character[list]().forEach(function(item){
+						if (item != self && item.bucketType == self.bucketType){
+							item.isEquipped(false);
+						}
+					});
+				}
+				else {
+					alert(result.Message);
+				}
+			});
+		}
+		else {
+			self.store(list, targetCharacterId, function(newProfile){
+				self.character = newProfile;
+				self.equip(list, targetCharacterId);
+				window.item = self;
+			});
+		}
+	}
+	this.transfer = function(list, sourceCharacterId, targetCharacterId, cb){
 		var isVault = targetCharacterId == "Vault";
 		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, 1, isVault, function(e, result){
 			if (result.Message == "Ok"){
-				self.doMove(false);
 				ko.utils.arrayFirst(app.characters(), function(character){
 					if (character.id == sourceCharacterId){
 						character[list].remove(self);
 					}
 					else if (character.id == targetCharacterId){
+						self.characterId = targetCharacterId;
 						character[list].push(self);
+						if (cb) cb(character);
 					}
-				});
+				});				
 			}
-		})
+			else {
+				alert(result.Message);
+			}
+		});
+	}
+	this.store = function(list, targetCharacterId, callback){
+		var sourceCharacterId = self.characterId;
+		if (targetCharacterId == "Vault"){
+			//console.log("from charcter to vault");
+			self.transfer(list, sourceCharacterId, "Vault", callback);
+		}
+		else if (sourceCharacterId !== "Vault"){
+			//console.log("from character to vault to character");
+			self.transfer(list, sourceCharacterId, "Vault", function(){
+				self.transfer(list, "Vault", targetCharacterId, callback);
+			});
+		}
+		else {
+			//console.log("from vault to character");
+			self.transfer(list, "Vault", targetCharacterId, callback);
+		}
 	}
 }
 
@@ -112,6 +177,7 @@ var DestinyBucketTypes = {
 var app = new (function() {
 	var self = this;
 
+	this.activeItem = ko.observable();
 	this.activeUser = ko.observable();
 	this.characters = ko.observableArray();
 	this.orderedCharacters = ko.computed(function(){
