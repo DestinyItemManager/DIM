@@ -88,12 +88,31 @@ var Item = function(stats, profile){
 		}
 		return foundPerk;
 	}
+	this.hashProgress = function(state){
+		console.log("state: " + state);
+		/* Missing XP */
+		if (state == 1 && self.progression == false){
+			return true;
+		}
+		/* Full XP  but not maxed out */
+		else if (state == 2 && self.progression == true && self.isGridComplete == false){
+			return true
+		}
+		/* Maxed weapons (Gold Borders only) */
+		else if (state == 3 && self.progression == true && self.isGridComplete == true){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	this.isVisible = ko.computed(function(){
 		var $parent = app;
 		var item = self;
 		return ($parent.searchKeyword() == '' || item.hasPerkSearch($parent.searchKeyword()) || item.description.indexOf($parent.searchKeyword()) >-1) &&
 			($parent.dmgFilter() == 'All' || item.damageTypeName == $parent.dmgFilter()) && 
-			($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) && 
+			($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) &&
+			($parent.progressFilter() == 0 || item.hashProgress($parent.progressFilter())) &&
 			($parent.typeFilter() == 0 || $parent.typeFilter() == item.type);		
 	});
 	this.equip = function(list, targetCharacterId){
@@ -213,7 +232,8 @@ var app = new (function() {
 	this.tierFilter = ko.observable(0);
 	this.typeFilter = ko.observable(0);
 	this.dmgFilter =  ko.observable("All");
-		
+	this.progressFilter =  ko.observable(0);
+	
 	this.setDmgFilter = function(model, event){
 		self.dmgFilter($(event.target).parent().attr("value"));
 	}
@@ -223,7 +243,9 @@ var app = new (function() {
 	this.setTypeFilter = function(model, event){
 		self.typeFilter($(event.target).parent().attr("value"));
 	}
-		
+	this.setProgressFilter = function(model, event){
+		self.progressFilter($(event.target).parent().attr("value"));
+	}
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
@@ -253,6 +275,11 @@ var app = new (function() {
 						description: p.displayDescription
 					}
 				});
+				/*if (itemObject.description.indexOf("SUROS") > -1){					
+					console.log(itemObject);
+					console.log(item);
+				}*/
+				itemObject.progression = (item.progression.progressToNextLevel == 0);
 				profile.weapons.push( itemObject );
 			}
 			else if (info.itemType == 2){
