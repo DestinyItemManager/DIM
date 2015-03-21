@@ -77,6 +77,25 @@ var Item = function(stats, profile){
 	this.moveItem = function(){
 		app.activeItem(self);
 	}
+	this.hasPerkSearch = function(search){
+		var foundPerk = false;
+		if (self.perks){
+			var vSearch = search.toLowerCase();
+			self.perks.forEach(function(perk){
+				if (perk.name.toLowerCase().indexOf(vSearch) > -1 || perk.description.toLowerCase().indexOf(vSearch) > -1)
+					foundPerk = true;
+			});
+		}
+		return foundPerk;
+	}
+	this.isVisible = ko.computed(function(){
+		var $parent = app;
+		var item = self;
+		return ($parent.searchKeyword() == '' || item.hasPerkSearch($parent.searchKeyword()) || item.description.indexOf($parent.searchKeyword()) >-1) &&
+			($parent.dmgFilter() == 'All' || item.damageTypeName == $parent.dmgFilter()) && 
+			($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) && 
+			($parent.typeFilter() == 0 || $parent.typeFilter() == item.type);		
+	});
 	this.equip = function(list, targetCharacterId){
 		var sourceCharacterId = self.characterId;
 		if (targetCharacterId == sourceCharacterId){
@@ -179,13 +198,30 @@ var app = new (function() {
 
 	this.activeItem = ko.observable();
 	this.activeUser = ko.observable();
+
+	this.weaponTypes = ko.observableArray();
 	this.characters = ko.observableArray();
 	this.orderedCharacters = ko.computed(function(){
 		return self.characters().sort(function(a,b){
 			return a.order - b.order;
 		});
 	});
-	
+
+	this.searchKeyword = ko.observable("");
+	this.tierFilter = ko.observable(0);
+	this.typeFilter = ko.observable(0);
+	this.dmgFilter =  ko.observable("All");
+		
+	this.setDmgFilter = function(model, event){
+		self.dmgFilter($(event.target).parent().attr("value"));
+	}
+	this.setTierFilter = function(model, event){
+		self.tierFilter($(event.target).parent().attr("value"));
+	}
+	this.setTypeFilter = function(model, event){
+		self.typeFilter($(event.target).parent().attr("value"));
+	}
+		
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
@@ -226,6 +262,13 @@ var app = new (function() {
 		}
 	}
 	
+	this.addWeaponTypes = function(weapons){
+		weapons.forEach(function(item){
+			if (_.where(self.weaponTypes(), { type: item.type}).length == 0)
+				self.weaponTypes.push({ name: item.typeName, type: item.type });
+		});
+	}
+	
 	this.loadData = function(){
 		self.bungie.user(function(user){
 			self.activeUser(user);
@@ -240,7 +283,7 @@ var app = new (function() {
 					buckets.forEach(function(bucket){
 						bucket.items.forEach(processItem(profile, def, def_perks));
 					});
-					
+					self.addWeaponTypes(profile.weapons());
 					self.characters.push(profile);
 				});
 				avatars.forEach(function(character, index){
@@ -263,6 +306,7 @@ var app = new (function() {
 						var def = response.definitions.items;
 						var def_perks = response.definitions.perks;
 						items.forEach(processItem(profile, def, def_perks));
+						self.addWeaponTypes(profile.weapons());
 						self.characters.push(profile);
 					});
 				});

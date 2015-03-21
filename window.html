@@ -6,35 +6,96 @@
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" type="text/css" href="style.css">
-
+    
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	
 	<script type="text/javascript" src="scripts/bungie.js"></script>
     <script src="/js/dependencies/jquery.js"></script>
 	<script src="/js/dependencies/jquery-ui.js"></script>
+	<script src="/js/dependencies/bootstrap.js"></script>
     <script src="/js/dependencies/knockout.js"></script>
     <script src="/js/dependencies/underscore-min.js"></script>
     <script src="/js/app.js"></script>
 
   </head>
 
-  <body>
+  <body class="container">
 		<script type="text/html" id="sections-template">
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div class="row">
-				<div style="width: 160px; height: 145px; border:1px solid white; display: inline-block;">
+				<div style="width: 151px; height: 145px; border:1px solid white; display: inline-block;">
 					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }">								
-						<span class="item" data-bind="css: isGridComplete ? 'complete' : ''">
+						<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
 							<img data-bind="attr: { src: item.icon }, click: moveItem, moveItem: true">
 						</span>
 					</div>
 				</div>
 				<div style="width: 52px; height: 145px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault', with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
 					<span class="item" data-bind="css: isGridComplete ? 'complete' : ''">
-						<img data-bind="attr: { src: icon }, click: moveItem, moveItem: true">						
+						<img data-bind="attr: { src: icon }, click: moveItem, moveItem: true, visible: isVisible">						
 					</span>
 				</div>				
 			</div>	
-		</script>
+		</script>		
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="#">DIM</a>
+		    </div>
+		
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		        <li class="active"><a href="#">About</a></li>
+		        <li><a href="#">Help</a></li>
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tier <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li data-bind="css: tierFilter() == $($element).attr('value') ? 'active' : '', click: setTierFilter" value="0"><a href="#">All</a></li>
+					<li data-bind="css: tierFilter() == $($element).attr('value') ? 'active' : '', click: setTierFilter" value="2"><a href="#">Common</a></li>
+		            <li data-bind="css: tierFilter() == $($element).attr('value') ? 'active' : '', click: setTierFilter" value="3"><a href="#">Uncommon</a></li>
+		            <li data-bind="css: tierFilter() == $($element).attr('value') ? 'active' : '', click: setTierFilter" value="4"><a href="#">Rare</a></li>
+					<li data-bind="css: tierFilter() == $($element).attr('value') ? 'active' : '', click: setTierFilter" value="5"><a href="#">Legendary</a></li>
+					<li data-bind="css: tierFilter() == $($element).attr('value') ? 'active' : '', click: setTierFilter" value="6"><a href="#">Exotic</a></li>
+		          </ul>
+		        </li>
+				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Damage Type <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		          	<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="All"><a href="#">All</a></li>
+					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="None"><a href="#"><img src="assets/kinetic.png" class="icon">Kinetic (None)</a></li>
+					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="Solar"><a href="#"><img src="assets/solar.png" class="icon">Solar</a></li>
+					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="Arc"><a href="#"><img src="assets/arc.png" class="icon">Arc</a></li>
+					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="Void"><a href="#"><img src="assets/void.png" class="icon">Void</a></li>
+		          </ul>
+		        </li>
+				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Class <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+					<li data-bind="css: typeFilter() == $($element).attr('value') ? 'active' : '', click: setTypeFilter" value="0"><a href="#">All</a></li>
+		  			<!-- ko foreach: { data: weaponTypes, as: 'weaponType' } -->
+						<li data-bind="css: $parent.typeFilter() == weaponType.type ? 'active' : '', click: $parent.setTypeFilter, value: weaponType.type" value="0"><a data-bind="text: weaponType.name" href="#">All</a></li>
+		  			<!--/ko  -->
+		          </ul>
+		        </li>
+		      </ul>
+		      <form class="navbar-form navbar-left" role="search" onsubmit="return false">
+		        <div class="form-group">
+		          <input class="form-control" placeholder="Search By Name or Perk" type="text" data-bind="value: searchKeyword">
+		        </div>
+		      </form>
+		      <ul class="nav navbar-nav navbar-right">
+		        <li><a href="#">Link</a></li>
+		      </ul>
+		    </div>
+		  </div>
+		</nav>
 		<div data-bind="with: activeItem" id="move-popup">
 			<div class="move-popup">
 			  <div class="item-name" data-bind="text: description"></div>
