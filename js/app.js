@@ -93,6 +93,7 @@ var Item = function(stats, profile){
 	this.moveItem = function(){
 		app.activeItem(self);
 	}
+	this.primaryStat = self.primaryStat || "";
 	this.hasPerkSearch = function(search){
 		var foundPerk = false;
 		if (self.perks){
@@ -105,7 +106,6 @@ var Item = function(stats, profile){
 		return foundPerk;
 	}
 	this.hashProgress = function(state){
-		console.log("state: " + state);
 		/* Missing XP */
 		if (state == 1 && self.progression == false){
 			return true;
@@ -291,10 +291,6 @@ var app = new (function() {
 						description: p.displayDescription
 					}
 				});
-				if (itemObject.description.indexOf("SUROS") > -1){					
-					console.log(itemObject);
-					console.log(item);
-				}
 				itemObject.progression = (item.progression.progressToNextLevel == 0);
 				profile.weapons.push( itemObject );
 			}
@@ -315,7 +311,7 @@ var app = new (function() {
 	}
 	
 	this.loadData = function(){
-		console.log("refreshing");
+		//console.log("refreshing");
 		self.characters.removeAll();
 		self.bungie.user(function(user){
 			self.activeUser(user);
