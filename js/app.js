@@ -126,7 +126,8 @@ var app = new (function() {
 				typeName: info.itemTypeName, //Sniper Rifle
 				tierType: info.tierType, //6 (Exotic) 5 (Legendary)
 				icon: "http://www.bungie.net/" + info.icon,
-				isEquipped: item.isEquipped
+				isEquipped: item.isEquipped,
+				isGridComplete: item.isGridComplete
 			});
 			if (item.primaryStat)
 				itemObject.primaryStat = item.primaryStat.value;
@@ -162,7 +163,9 @@ var app = new (function() {
 					var def = results.definitions.items;
 					var def_perks = results.definitions.perks;
 					
-					buckets[2].items.forEach(processItem(profile, def, def_perks));
+					buckets.forEach(function(bucket){
+						bucket.items.forEach(processItem(profile, def, def_perks));
+					});
 					
 					self.characters.push(profile);
 				});

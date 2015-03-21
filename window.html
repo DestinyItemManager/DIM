@@ -20,28 +20,9 @@
 		<script type="text/html" id="sections-template">
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div class="row">
-				<div style="width: 52px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault'">
-					<span class="item" data-bind="with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
-						<img data-bind="attr: { src: icon }, click: toggleMove">
-						<div class="move-popup" data-bind="visible: doMove">
-						  <div class="item-name" data-bind="text: description"></div>
-						  <div class="locations" data-bind="foreach: { data: $root.orderedCharacters, as: 'character' }">
-							<div class="move-button" style="display: block;" data-bind="visible: character.id == 'Vault'">
-								<span>vault</span>								
-							</div>
-							<div class="move-button" style="display: block;" data-bind="style: { backgroundImage: icon }, visible: character.id !== 'Vault'">
-								<span>store</span>								
-							</div>
-							<div class="move-button" style="display: block;" data-bind="style: { backgroundImage: icon }, visible: $parent.characterId != character.id && character.id !== 'Vault'">
-								<span>equip</span>								
-							</div>								
-						  </div>
-						</div>
-					</span>
-				</div>
-				<div style="width: 205px; display: inline-block;">
+				<div style="width: 160px; height: 145px; border:1px solid white; display: inline-block;">
 					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }">								
-						<span class="item">
+						<span class="item" data-bind="css: isGridComplete ? 'complete' : ''">
 							<img data-bind="attr: { src: item.icon }, click: toggleMove">
 							<div class="move-popup" data-bind="visible: doMove">
 							  <div class="item-name" data-bind="text: description"></div>
@@ -60,6 +41,25 @@
 						</span>
 					</div>
 				</div>
+				<div style="width: 52px; height: 145px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault', with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
+					<span class="item" data-bind="css: isGridComplete ? 'complete' : ''">
+						<img data-bind="attr: { src: icon }, click: toggleMove">
+						<div class="move-popup" data-bind="visible: doMove">
+						  <div class="item-name" data-bind="text: description"></div>
+						  <div class="locations" data-bind="foreach: { data: $root.orderedCharacters, as: 'character' }">
+							<div class="move-button" style="display: block;" data-bind="visible: character.id == 'Vault'">
+								<span>vault</span>								
+							</div>
+							<div class="move-button" style="display: block;" data-bind="style: { backgroundImage: icon }, visible: character.id !== 'Vault'">
+								<span>store</span>								
+							</div>
+							<div class="move-button" style="display: block;" data-bind="style: { backgroundImage: icon }, visible: $parent.characterId != character.id && character.id !== 'Vault'">
+								<span>equip</span>								
+							</div>								
+						  </div>
+						</div>
+					</span>
+				</div>				
 			</div>	
 		</script>
   		<div class="content" id="storage" data-bind="foreach: { data: orderedCharacters, as: 'character' }">
@@ -74,17 +74,17 @@
 				<div>
 					<div class="items" data-type="item">
 					  <div>
-						<div class="title">Weapons (<span data-bind="text: character.weapons().length"></span>)</div>
+						<div class="title"><strong>Weapons</strong> (<span data-bind="text: character.weapons().length"></span>)</div>
 						<div class="item-Weapon sections" data-bind="template: { name: 'sections-template', foreach: ['weapons.Primary','weapons.Special','weapons.Heavy'], as: 'list' }">
 						</div>
 					  </div>
 					  <div>
-						<div class="title">Armor</div>
+						<div class="title"><strong>Armor</strong> (<span data-bind="text: character.armor().length"></span>)</div>
 						<div class="item-Armor sections" data-bind="template: { name: 'sections-template', foreach: ['armor.Helmet','armor.Gauntlet','armor.Chest', 'armor.Boots'], as: 'list' }">
 						</div>
 					  </div>
 					  <div>
-						<div class="title">Styling</div>
+						<div class="title"><strong>Styling</strong></div>
 						<div class="item-Styling sections" data-bind="template: { name: 'sections-template', foreach: ['items.Shader','items.Emblem','items.Ship','items.Sparrow'], as: 'list' }">							
 						</div>
 					  </div>
