@@ -76,13 +76,6 @@ img.void {
 }
 .title .icon { width: 30px }
 .icon { width: 24px; }
-.storage {
-  margin-top: 10px;
-  max-width: 260px;
-  float: left;
-  margin-right: 1em;
-  margin-bottom: 100px;
-}
 .item {
     position: relative;
     display: inline-block;
@@ -265,11 +258,6 @@ img.void {
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq .content ul li { margin-bottom: 3px; }
 #faq a { color: #fff }
-.content {
-    max-width: 1088px;
-    margin: 0 auto;
-    padding: 5px;
-}
 #loadout-create {
     position: fixed;
     display: none;
@@ -317,17 +305,20 @@ img.void {
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
     background-color: rgba(195,188,180,.6);
 }
-@media only screen and (min-width :1648px) {
-    .storage {
-        max-width: 391px;
-        margin-left: 10px;
-        float: left;
-        margin-right: 0;
-    }
-    .content { max-width: 1604px }
-    .character-box {
-      width: 281px;
-    }
+.storage {
+    max-width: 260px;
+    margin-left: 10px;
+	margin-top: 10px;
+	margin-right: 1em;
+	margin-bottom: 100px;
+	float: left;
+}
+.content { 
+    margin: 0 auto;
+    padding: 5px;
+}
+.character-box {
+  width: 281px;
 }
 .item-Section {
 	width: 200px;
