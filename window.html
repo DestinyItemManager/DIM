@@ -114,6 +114,11 @@
 		<div class="alert alert-info" data-bind="visible: shareView" style="display:none;">
 			<strong>DestinyExotics.com</strong> Share URL: <a target="_blank" data-bind="attr:{href: shareUrl}"><span data-bind="text: shareUrl"></span></a>
 		</div>
+		<div data-bind="with: $root.activeUser()">
+			<div class="alert alert-danger" data-bind="visible: typeof error !== 'undefined'" style="display:none;">
+				<strong>Error:</strong> <span data-bind="text: typeof error == 'undefined' ? '' : error"></span>
+			</div>
+		</div>
 		<div data-bind="with: activeItem" id="move-popup">
 			<div class="move-popup">
 			  <div class="item-name" data-bind="text: description + ' (Primary Stat: ' + primaryStat + ')'"></div>

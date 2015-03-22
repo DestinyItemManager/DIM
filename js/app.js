@@ -325,8 +325,11 @@ var app = new (function() {
 	this.loadData = function(){
 		//console.log("refreshing");
 		self.characters.removeAll();
-		self.bungie.user(function(user){
+		self.bungie.user(function(user){			
 			self.activeUser(user);
+			if (user.error){
+				return
+			}
 			self.bungie.search(function(e){
 				var avatars = e.data.characters;
 				self.bungie.vault(function(results){
