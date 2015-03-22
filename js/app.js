@@ -126,7 +126,7 @@ var Item = function(stats, profile){
 	this.isVisible = ko.computed(function(){
 		var $parent = app;
 		var item = self;
-		return ($parent.searchKeyword() == '' || item.hasPerkSearch($parent.searchKeyword()) || item.description.indexOf($parent.searchKeyword()) >-1) &&
+		return ($parent.searchKeyword() == '' || item.hasPerkSearch($parent.searchKeyword()) || item.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1) &&
 			($parent.dmgFilter() == 'All' || item.damageTypeName == $parent.dmgFilter()) && 
 			($parent.setFilter().length == 0 || $parent.setFilter().indexOf(item.id) > -1) &&
 			($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) &&
@@ -261,17 +261,19 @@ var app = new (function() {
 			return a.order - b.order;
 		});
 	});
-	this.renderCallback = function(context, content, callback){
-		var itemId = parseInt(context.id), activeItem, $content = $("<div>" + content + "</div>");
+	this.renderCallback = function(context, content, element, callback){
+		if (element) lastElement = element
+		var instanceId = lastElement.id, activeItem, $content = $("<div>" + content + "</div>");
+		self.characters().forEach(function(character){
+		  ['weapons','armor'].forEach(function(list){
+	          var item = _.findWhere( character[list](), { '_id': instanceId });
+			  if (item) activeItem = item;			  	
+	      });
+	   	});		
 		if ($content.find(".destt-talent").length == 0){
-			self.characters().forEach(function(character){
-			  ['weapons','armor'].forEach(function(list){
-		          var item = _.findWhere( character[list](), { 'id': itemId });
-				  if (item) activeItem = item;			  	
-		      });
-		   	});
 			$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
 		}
+		$content.find(".destt-primary-min").html( activeItem.primaryStat );
 		callback($content.html());
 	}
 	this.searchKeyword = ko.observable("");

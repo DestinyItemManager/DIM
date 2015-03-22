@@ -30,14 +30,14 @@
 				<div style="width: 151px; height: 155px; border:1px solid white; display: inline-block;">
 					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }, sortableList: character.get(list.split('.')[0], list.split('.')[1])">
 						<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
-							<a data-bind="attr:{href: item.href }"><img data-bind="attr: { src: item.icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
+							<a data-bind="attr:{href:item.href, id:item._id}"><img data-bind="attr: { src: item.icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
 							<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
 						</span>
 					</div>
 				</div>
 				<div style="width: 52px; height: 155px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault', with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
 					<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
-						<a data-bind="attr:{href: href }"><img data-bind="attr: { src: icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
+						<a data-bind="attr:{href:href, id:_id}"><img data-bind="attr: { src: icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
 						<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
 					</span>
 				</div>				
