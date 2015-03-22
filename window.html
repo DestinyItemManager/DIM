@@ -10,6 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script language="JavaScript" type="text/javascript" src="js/destinyexotics.js"></script>
+	<script language="JavaScript" type="text/javascript" src="js/itemdef.js"></script>
 	<script language="JavaScript" type="text/javascript" src="scripts/lzstring.min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/destinydb.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/tooltips.min.js"></script>
@@ -72,6 +73,22 @@
 		          </ul>
 		        </li>
 				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Set <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+				  	<li data-bind="css: setFilter().length == 0 ? 'active' : '', click: setSetFilter" value="All"><a href="#">All</a></li>
+		            <li data-bind="css: setFilter() == _collections.crotaWeapons ? 'active' : '', click: setSetFilter" value="crotaWeapons"><a href="#">Crota's End Weapons</a></li>
+					<li data-bind="css: setFilter() == _collections.crotaArmor ? 'active' : '', click: setSetFilter" value="crotaArmor"><a href="#">Crota's End Armor</a></li>
+					<li data-bind="css: setFilter() == _collections.vaultWeapons ? 'active' : '', click: setSetFilter" value="vaultWeapons"><a href="#">VOG Weapons</a></li>
+					<li data-bind="css: setFilter() == _collections.vaultArmor ? 'active' : '', click: setSetFilter" value="vaultArmor"><a href="#">VOG Armor</a></li>
+					<li data-bind="css: setFilter() == _collections.ironWeapons ? 'active' : '', click: setSetFilter" value="ironWeapons"><a href="#">Iron Banner Weapons</a></li>
+					<li data-bind="css: setFilter() == _collections.ironArmor ? 'active' : '', click: setSetFilter" value="ironArmor"><a href="#">Iron Banner Armor</a></li>
+					<li data-bind="css: setFilter() == _collections.exoticWeapons ? 'active' : '', click: setSetFilter" value="exoticWeapons"><a href="#">Exotic Weapons</a></li>
+					<li data-bind="css: setFilter() == _collections.exoticArmor ? 'active' : '', click: setSetFilter" value="exoticArmor"><a href="#">Exotic Armor</a></li>
+					<li class="divider"></li>
+					<li data-bind="css: showMissing() ? 'active' : '', click: toggleShowMissing"><a href="#">Show Missing Items</a></li>
+		          </ul>
+		        </li>
+				<li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Progress <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
 		            <li data-bind="css: progressFilter() == $($element).attr('value') ? 'active' : '', click: setProgressFilter" value="0"><a href="#">All</a></li>
@@ -114,6 +131,12 @@
 		<div class="alert alert-info" data-bind="visible: shareView" style="display:none;">
 			<strong>DestinyExotics.com</strong> Share URL: <a target="_blank" data-bind="attr:{href: shareUrl}"><span data-bind="text: shareUrl"></span></a>
 		</div>
+		<div class="alert alert-success" data-bind="visible: showMissing" style="display:none;">
+			<strong>Missing Items</strong> 
+			<span data-bind="foreach: { data: missingSets }">
+				<a data-bind="attr:{ href: 'http://destinydb.com/items/' + $data }"><img data-bind="attr:{src: $root.bungie.getUrl() + _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
+			</span>
+		</div>		
 		<div data-bind="with: $root.activeUser()">
 			<div class="alert alert-danger" data-bind="visible: typeof error !== 'undefined'" style="display:none;">
 				<strong>Error:</strong> <span data-bind="text: typeof error == 'undefined' ? '' : error"></span>

@@ -1,7 +1,7 @@
 function bungie() {
   // private vars
   var domain = 'bungie.net';
-  var url = 'https://www.bungie.net/Platform';
+  var url = 'https://www.bungie.net/';
   var apikey = '57c5ff5864634503a0340ffdfbeb20c0';
 
   var systemIds = {};
@@ -38,7 +38,7 @@ function bungie() {
 
   function _request(opts) {
     var r = new XMLHttpRequest();
-    r.open(opts.method, url + opts.route, true);
+    r.open(opts.method, url + "Platform" + opts.route, true);
     r.setRequestHeader('X-API-Key', apikey);
     r.onload = function() {
       if (this.status >= 200 && this.status < 400) {
@@ -177,5 +177,8 @@ function bungie() {
       },
       complete: callback
     })
+  }
+  this.getUrl = function(){
+  	return url;
   }
 }

@@ -128,6 +128,7 @@ var Item = function(stats, profile){
 		var item = self;
 		return ($parent.searchKeyword() == '' || item.hasPerkSearch($parent.searchKeyword()) || item.description.indexOf($parent.searchKeyword()) >-1) &&
 			($parent.dmgFilter() == 'All' || item.damageTypeName == $parent.dmgFilter()) && 
+			($parent.setFilter().length == 0 || $parent.setFilter().indexOf(item.id) > -1) &&
 			($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) &&
 			($parent.progressFilter() == 0 || item.hashProgress($parent.progressFilter())) &&
 			($parent.typeFilter() == 0 || $parent.typeFilter() == item.type);		
@@ -256,12 +257,33 @@ var app = new (function() {
 	this.typeFilter = ko.observable(0);
 	this.dmgFilter =  ko.observable("All");
 	this.progressFilter =  ko.observable(0);
+	this.setFilter = ko.observableArray();
 	this.shareView =  ko.observable(false);
 	this.shareUrl  = ko.observable("");
-	
+	this.showMissing =  ko.observable(false);
 	this.toggleShareView = function(){
 		self.shareView(!self.shareView());
 	}
+	this.toggleShowMissing = function(){
+		self.showMissing(!self.showMissing());
+	}
+	this.setSetFilter = function(model, event){
+		var collection = $(event.target).parent().attr("value");
+		self.setFilter(collection == "All" ? [] : _collections[collection]);
+	}
+	this.missingSets = ko.computed(function(){
+		var missingIds = [];
+		self.setFilter().forEach(function(item){
+		   var itemFound = false;
+		   self.characters().forEach(function(character){
+			  ['weapons','armor'].forEach(function(list){
+		          if (_.pluck( character[list](), 'id') .indexOf(item) > -1) itemFound = true;
+		      });
+		   });
+		   if (!itemFound) missingIds.push(item);
+		});
+		return missingIds;
+	})
 	this.setDmgFilter = function(model, event){
 		self.dmgFilter($(event.target).parent().attr("value"));
 	}
@@ -288,7 +310,7 @@ var app = new (function() {
 				type: info.itemSubType, //12 (Sniper)
 				typeName: info.itemTypeName, //Sniper Rifle
 				tierType: info.tierType, //6 (Exotic) 5 (Legendary)
-				icon: "http://www.bungie.net/" + info.icon,
+				icon: self.bungie.getUrl() + info.icon,
 				isEquipped: item.isEquipped,
 				isGridComplete: item.isGridComplete
 			}, profile);
@@ -351,8 +373,8 @@ var app = new (function() {
 							gender: DestinyGender[character.characterBase.genderType],
 							classType: DestinyClass[character.characterBase.classType],
 							id: character.characterBase.characterId,
-							icon: "url(http://www.bungie.net/" + character.emblemPath + ")",
-							background: "url(http://www.bungie.net/" + character.backgroundPath + ")",
+							icon: "url(" + self.bungie.getUrl() + character.emblemPath + ")",
+							background: "url(" + self.bungie.getUrl() + character.backgroundPath + ")",
 							level: character.characterLevel
 						});
 						var items = [];						
