@@ -10,9 +10,9 @@
 -    Filter by weapon type (Scout, Auto, Hand Cannon, etc...)
 -    Filter by Tier (Exotic, Legendary, Rare, etc...)
 -    Auto Refresh Toggle, Custom set seconds
--    DestinyDB tooltips
+-    DestinyDB tooltips now display personal perks attached to your weapon
 -    Personal primary stats in transfer popup
--    DestinyExotics integration
+-    DestinyExotics integration and more
 -    Inline stat values on the item icons
     
 
