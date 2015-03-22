@@ -9,15 +9,17 @@
     
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script language="JavaScript" type="text/javascript" src="js/destinyexotics.js"></script>
+	<script language="JavaScript" type="text/javascript" src="scripts/lzstring.min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/destinydb.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/tooltips.min.js"></script>
-	<script type="text/javascript" src="scripts/bungie.js"></script>
-    <script src="/js/dependencies/jquery.js"></script>
-	<script src="/js/dependencies/jquery-ui.js"></script>
-	<script src="/js/dependencies/bootstrap.js"></script>
-    <script src="/js/dependencies/knockout.js"></script>
-    <script src="/js/dependencies/underscore-min.js"></script>
-    <script src="/js/app.js"></script>
+	<script language="JavaScript" type="text/javascript" src="scripts/bungie.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/js/dependencies/jquery.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/js/dependencies/jquery-ui.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/js/dependencies/bootstrap.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/js/dependencies/knockout.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/js/dependencies/underscore-min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/js/app.js"></script>
 
   </head>
 
@@ -57,6 +59,7 @@
 		      <ul class="nav navbar-nav">
 		        <li><a href="#">About</a></li>
 		        <li><a href="#">Help</a></li>
+				<li><a href="#" data-bind="click: toggleShareView">Share</a></li>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tier <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
@@ -108,6 +111,9 @@
 		    </div>
 		  </div>
 		</nav>
+		<div class="alert alert-info" data-bind="visible: shareView" style="display:none;">
+			<strong>DestinyExotics.com</strong> Share URL: <a target="_blank" data-bind="attr:{href: shareUrl}"><span data-bind="text: shareUrl"></span></a>
+		</div>
 		<div data-bind="with: activeItem" id="move-popup">
 			<div class="move-popup">
 			  <div class="item-name" data-bind="text: description + ' (Primary Stat: ' + primaryStat + ')'"></div>

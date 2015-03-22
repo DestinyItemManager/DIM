@@ -256,7 +256,12 @@ var app = new (function() {
 	this.typeFilter = ko.observable(0);
 	this.dmgFilter =  ko.observable("All");
 	this.progressFilter =  ko.observable(0);
+	this.shareView =  ko.observable(false);
+	this.shareUrl  = ko.observable("");
 	
+	this.toggleShareView = function(){
+		self.shareView(!self.shareView());
+	}
 	this.setDmgFilter = function(model, event){
 		self.dmgFilter($(event.target).parent().attr("value"));
 	}
@@ -358,6 +363,9 @@ var app = new (function() {
 						items.forEach(processItem(profile, def, def_perks));
 						self.addWeaponTypes(profile.weapons());
 						self.characters.push(profile);
+						if (avatars.length == (index + 1)){
+							self.shareUrl(new report().de());
+						}
 					});
 				});
 			});			
