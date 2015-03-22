@@ -133,7 +133,7 @@
 		<div class="alert alert-success" data-bind="visible: showMissing" style="display:none;">
 			<strong>Missing Items</strong> 
 			<span data-bind="foreach: { data: missingSets }">
-				<a data-bind="attr:{ href: 'http://destinydb.com/items/' + $data }"><img data-bind="attr:{src: $root.bungie.getUrl() + _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
+				<a data-bind="attr:{ href: 'http://destinydb.com/items/' + $data }"><img data-bind="attr:{src: _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
 			</span>
 		</div>		
 		<div data-bind="with: $root.activeUser()">

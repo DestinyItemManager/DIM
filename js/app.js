@@ -70,6 +70,8 @@ var Profile = function(model){
 		self[key] = value;
 	});
 	
+	this.icon = ko.observable(self.icon);	
+	this.background = ko.observable(self.background);
 	this.weapons = ko.observableArray([]);
 	this.armor = ko.observableArray([]);
 	this.items = ko.observableArray([]);
@@ -141,9 +143,17 @@ var Item = function(stats, profile){
 					self.isEquipped(true);
 					self.character[list]().forEach(function(item){
 						if (item != self && item.bucketType == self.bucketType){
-							item.isEquipped(false);
+							item.isEquipped(false);							
 						}
 					});
+					if (list == "items" && self.bucketType == "Emblem"){
+						/*console.log("old icon path: " + self.character.icon());
+						console.log("new icon path " + app.makeBackgroundUrl(self.icon, true));
+						console.log("old bg path: " + self.character.background());
+						console.log("new bg path " + self.backgroundPath);*/
+						self.character.icon(app.makeBackgroundUrl(self.icon, true));
+						self.character.background(self.backgroundPath);
+					}
 				}
 				else {
 					alert(result.Message);
@@ -269,11 +279,13 @@ var app = new (function() {
 	          var item = _.findWhere( character[list](), { '_id': instanceId });
 			  if (item) activeItem = item;			  	
 	      });
-	   	});		
-		if ($content.find(".destt-talent").length == 0){
-			$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
+	   	});
+		if (activeItem){		
+			if (activeItem.perks && $content.find(".destt-talent").length == 0){
+				$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
+			}
+			$content.find(".destt-primary-min").html( activeItem.primaryStat );
 		}
-		$content.find(".destt-primary-min").html( activeItem.primaryStat );
 		callback($content.html());
 	}
 	this.searchKeyword = ko.observable("");
@@ -359,6 +371,9 @@ var app = new (function() {
 				profile.armor.push( itemObject );
 			}
 			else if (info.bucketTypeHash in DestinyBucketTypes){
+				if (itemObject.typeName == "Emblem"){
+					itemObject.backgroundPath = self.makeBackgroundUrl(info.secondaryIcon);
+				}
 				profile.items.push( itemObject );
 			}
 		}
@@ -371,6 +386,10 @@ var app = new (function() {
 		});
 	}
 	
+	this.makeBackgroundUrl = function(path, excludeDomain){
+		return "url(" + (excludeDomain ? "" : self.bungie.getUrl()) + path + ")";
+	}
+		
 	this.loadData = function(){
 		//console.log("refreshing");
 		self.characters.removeAll();
@@ -393,6 +412,7 @@ var app = new (function() {
 					self.addWeaponTypes(profile.weapons());
 					self.characters.push(profile);
 				});
+
 				avatars.forEach(function(character, index){
 					self.bungie.inventory(character.characterBase.characterId, function(response) {
 						var profile = new Profile({
@@ -400,8 +420,8 @@ var app = new (function() {
 							gender: DestinyGender[character.characterBase.genderType],
 							classType: DestinyClass[character.characterBase.classType],
 							id: character.characterBase.characterId,
-							icon: "url(" + self.bungie.getUrl() + character.emblemPath + ")",
-							background: "url(" + self.bungie.getUrl() + character.backgroundPath + ")",
+							icon: self.makeBackgroundUrl(character.emblemPath),
+							background: self.makeBackgroundUrl(character.backgroundPath),
 							level: character.characterLevel
 						});
 						var items = [];						
