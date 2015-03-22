@@ -352,7 +352,7 @@ var app = new (function() {
 						description: p.displayDescription
 					}
 				});
-				itemObject.progression = (item.progression.progressToNextLevel == 0);
+				itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
 				profile.weapons.push( itemObject );
 			}
 			else if (info.itemType == 2){
