@@ -235,7 +235,19 @@ var DestinyDamageTypeColors = {
 	"Solar": "#C48A01",
 	"Void": "#B184C5"
 }
-
+var perksTemplate = _.template('<div class="destt-talent">' +
+	'<% perks.forEach(function(perk){ %>' +
+		'<div class="destt-talent-wrapper">' +
+			'<div class="destt-talent-icon">' +
+				'<img src="https://desimg.zamimg.com/static/image/icons/gamedata/game-backgrounds/medium/<%= perk.hash %>.png">' +
+			'</div>' +
+			'<div class="destt-talent-description">' +
+				'<%= perk.description %>' +
+			'</div>' +
+		'</div>' +
+	'<% }) %>' +
+'</div>')
+		
 var app = new (function() {
 	var self = this;
 
@@ -249,7 +261,19 @@ var app = new (function() {
 			return a.order - b.order;
 		});
 	});
-
+	this.renderCallback = function(context, content, callback){
+		var itemId = parseInt(context.id), activeItem, $content = $("<div>" + content + "</div>");
+		if ($content.find(".destt-talent").length == 0){
+			self.characters().forEach(function(character){
+			  ['weapons','armor'].forEach(function(list){
+		          var item = _.findWhere( character[list](), { 'id': itemId });
+				  if (item) activeItem = item;			  	
+		      });
+		   	});
+			$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
+		}
+		callback($content.html());
+	}
 	this.searchKeyword = ko.observable("");
 	this.doRefresh = ko.observable(true);
 	this.refreshSeconds = ko.observable(300);
@@ -321,6 +345,7 @@ var app = new (function() {
 				itemObject.perks = item.perks.map(function(perk){
 					var p = perkDefs[perk.perkHash];
 					return {
+						hash: perk.iconPath.split("/")[4].split(".")[0],
 						name: p.displayName,
 						description: p.displayDescription
 					}
