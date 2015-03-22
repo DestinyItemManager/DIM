@@ -1,6 +1,6 @@
 
 
-Current Features Supported
+#Current Features Supported
 
 -    Equipping Items across characters and within itself
 -    Storing items across characters
