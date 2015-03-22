@@ -1,6 +1,6 @@
 
 
-#Current Features Supported
+##Current Features Supported
 
 -    Equipping Items across characters and within itself
 -    Storing items across characters
@@ -16,17 +16,17 @@
 -    Inline stat values on the item icons
     
 
-#Features Incoming
+##Features Incoming
 -    Drag & Drop Items
 -    Destiny materials/consumables
 
-#Known Issues
+##Known Issues
 
 -    Layout doesn't scale well to multiple screen sizes
 -    Progress filter is not working properly
 -    About & Help are currently just placeholders
 
-#Manual Install Instructions
+##Manual Install Instructions
 
 -    Go to Settings
 -    Go to Extensions
@@ -34,7 +34,7 @@
 -    Load Unpacked Extensions
 -    Point it to the directory where you unzipped the master.zip file
 
-#Chrome Install Instructions
+##Chrome Install Instructions
 
 Visit this store Link:
 
