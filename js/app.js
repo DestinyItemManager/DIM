@@ -111,7 +111,7 @@ var Item = function(stats, profile){
 		if (state == 1 && self.progression == false){
 			return true;
 		}
-		/* Full XP  but not maxed out */
+		/* Full XP  but not maxed out, TODO: figure out why new guns meet this criteria */
 		else if (state == 2 && self.progression == true && self.isGridComplete == false){
 			return true
 		}
@@ -227,6 +227,12 @@ var DestinyBucketTypes = {
 	"4274335291": "Emblem",
 	"2025709351": "Sparrow",
 	"284967655": "Ship"
+}
+var DestinyDamageTypeColors = {
+	"None": "#BBB",
+	"Arc": "#85C5EC",
+	"Solar": "#C48A01",
+	"Void": "#B184C5"
 }
 
 var app = new (function() {

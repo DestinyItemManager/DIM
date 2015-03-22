@@ -25,16 +25,18 @@
 		<script type="text/html" id="sections-template">
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div>
-				<div style="width: 151px; height: 145px; border:1px solid white; display: inline-block;">
+				<div style="width: 151px; height: 155px; border:1px solid white; display: inline-block;">
 					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }, sortableList: character.get(list.split('.')[0], list.split('.')[1])">
 						<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
 							<a data-bind="attr:{href: item.href }"><img data-bind="attr: { src: item.icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
+							<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
 						</span>
 					</div>
 				</div>
-				<div style="width: 52px; height: 145px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault', with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
+				<div style="width: 52px; height: 155px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault', with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
 					<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
-						<a data-bind="attr:{href: href }"><img data-bind="attr: { src: icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>					
+						<a data-bind="attr:{href: href }"><img data-bind="attr: { src: icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
+						<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
 					</span>
 				</div>				
 			</div>	
@@ -71,7 +73,7 @@
 		          <ul class="dropdown-menu" role="menu">
 		            <li data-bind="css: progressFilter() == $($element).attr('value') ? 'active' : '', click: setProgressFilter" value="0"><a href="#">All</a></li>
 					<li data-bind="css: progressFilter() == $($element).attr('value') ? 'active' : '', click: setProgressFilter" value="1"><a href="#">Missing XP</a></li>
-		            <li data-bind="css: progressFilter() == $($element).attr('value') ? 'active' : '', click: setProgressFilter" value="2"><a href="#">Full XP</a></li>
+		            <li data-bind="css: progressFilter() == $($element).attr('value') ? 'active' : '', click: setProgressFilter" value="2"><a href="#">Full XP</a></li> 
 		            <li data-bind="css: progressFilter() == $($element).attr('value') ? 'active' : '', click: setProgressFilter" value="3"><a href="#">Maxed</a></li>
 		          </ul>
 		        </li>

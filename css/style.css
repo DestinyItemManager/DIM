@@ -92,6 +92,7 @@ img.void {
     cursor: pointer;
     margin: 0px;
     border: 2px solid #DDD;
+	overflow: hidden;
 }
 .item.popup-open:before {
     border: solid;
@@ -341,4 +342,14 @@ img.void {
 }
 .container {
   width: 1220px !important;
+}
+.attkIcon { 
+	position: relative; 
+	top: -12px; 
+	left: 24px; 
+	color: #333;
+	font-weight: bold;
+	font-size:9px; 
+	text-align:right;
+	width: 20px;
 }
