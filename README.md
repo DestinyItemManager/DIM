@@ -20,7 +20,6 @@
 -    Drag & Drop Items
 -    Destiny materials/consumables
 -    Improved moved & Equip algorithm
--    Hide tooltip when anything else is clicked
 
 ##Known Issues
 
