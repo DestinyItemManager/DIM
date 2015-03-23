@@ -84,10 +84,10 @@ var Profile = function(model){
 	}
 }
 
-var Item = function(stats, profile){
+var Item = function(model, profile){
 	var self = this;
-	Object.keys(stats).forEach(function(key){
-		self[key] = stats[key];
+	_.each(model, function(value, key){
+		self[key] = value;
 	});
 	this.character = profile;
 	this.href = "http://destinydb.com/items/" + self.id;
@@ -113,7 +113,7 @@ var Item = function(stats, profile){
 		if (state == 1 && self.progression == false){
 			return true;
 		}
-		/* Full XP  but not maxed out, TODO: figure out why new guns meet this criteria */
+		/* Full XP  but not maxed out */
 		else if (state == 2 && self.progression == true && self.isGridComplete == false){
 			return true
 		}
@@ -127,13 +127,26 @@ var Item = function(stats, profile){
 	}
 	this.isVisible = ko.computed(function(){
 		var $parent = app;
-		var item = self;
-		return ($parent.searchKeyword() == '' || item.hasPerkSearch($parent.searchKeyword()) || item.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1) &&
-			($parent.dmgFilter() == 'All' || item.damageTypeName == $parent.dmgFilter()) && 
-			($parent.setFilter().length == 0 || $parent.setFilter().indexOf(item.id) > -1) &&
-			($parent.tierFilter() == 0 || $parent.tierFilter() == item.tierType) &&
-			($parent.progressFilter() == 0 || item.hashProgress($parent.progressFilter())) &&
-			($parent.typeFilter() == 0 || $parent.typeFilter() == item.type);		
+		var searchFilter = $parent.searchKeyword() == '' || self.hasPerkSearch($parent.searchKeyword()) || 
+			($parent.searchKeyword() !== "" && self.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1);
+		var dmgFilter = $parent.dmgFilter() == 'All' || self.damageTypeName == $parent.dmgFilter();
+		var setFilter = $parent.setFilter().length == 0 || $parent.setFilter().indexOf(self.id) > -1;
+		var tierFilter = $parent.tierFilter() == 0 || $parent.tierFilter() == self.tierType;
+		var progressFilter = $parent.progressFilter() == 0 || self.hashProgress($parent.progressFilter());
+		var typeFilter = $parent.typeFilter() == 0 || $parent.typeFilter() == self.type;
+		/*console.log( "searchFilter: " + searchFilter);
+		console.log( "dmgFilter: " + dmgFilter);
+		console.log( "setFilter: " + setFilter);
+		console.log( "tierFilter: " + tierFilter);
+		console.log( "progressFilter: " + progressFilter);
+		console.log( "typeFilter: " + typeFilter);
+		console.log("keyword is: " + $parent.searchKeyword());
+		console.log("keyword is empty " + ($parent.searchKeyword() == ''));
+		console.log("keyword has perk " + self.hasPerkSearch($parent.searchKeyword()));
+		console.log("perks are " + JSON.stringify(self.perks));
+		console.log("description is " + self.description);
+		console.log("keyword has description " + ($parent.searchKeyword() !== "" && self.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1));*/
+		return (searchFilter) && (dmgFilter) && (setFilter) && (tierFilter) && (progressFilter) && (typeFilter);
 	});
 	this.equip = function(list, targetCharacterId){
 		var sourceCharacterId = self.characterId;
@@ -337,7 +350,7 @@ var app = new (function() {
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
-			var itemObject = new Item({ 
+			var itemObject = { 
 				id: item.itemHash,
 				_id: item.itemInstanceId,
 				characterId: profile.id,
@@ -351,11 +364,11 @@ var app = new (function() {
 				icon: self.bungie.getUrl() + info.icon,
 				isEquipped: item.isEquipped,
 				isGridComplete: item.isGridComplete
-			}, profile);
+			};
 			if (item.primaryStat)
 				itemObject.primaryStat = item.primaryStat.value;
 			
-			if (info.itemType === 3){
+			if (info.itemType == 3){
 				itemObject.perks = item.perks.map(function(perk){
 					var p = perkDefs[perk.perkHash];
 					return {
@@ -365,16 +378,16 @@ var app = new (function() {
 					}
 				});
 				itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
-				profile.weapons.push( itemObject );
+				profile.weapons.push( new Item(itemObject,profile) );
 			}
 			else if (info.itemType == 2){
-				profile.armor.push( itemObject );
+				profile.armor.push( new Item(itemObject,profile) );
 			}
 			else if (info.bucketTypeHash in DestinyBucketTypes){
 				if (itemObject.typeName == "Emblem"){
 					itemObject.backgroundPath = self.makeBackgroundUrl(info.secondaryIcon);
 				}
-				profile.items.push( itemObject );
+				profile.items.push( new Item(itemObject,profile) );
 			}
 		}
 	}
