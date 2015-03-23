@@ -90,7 +90,7 @@ var Item = function(model, profile){
 		self[key] = value;
 	});
 	this.character = profile;
-	this.href = "http://destinydb.com/items/" + self.id;
+	this.href = "https://destinydb.com/items/" + self.id;
 	this.isEquipped = ko.observable(self.isEquipped);
 	this.moveItem = function(list, item){
 		self.list = list;
@@ -469,6 +469,11 @@ var app = new (function() {
 		self.doRefresh.subscribe(self.refreshHandler);
 		self.refreshSeconds.subscribe(self.refreshHandler);
 		self.refreshHandler();
+		$(window).click(function(e){
+			if (e.target.className !== "itemImage") {
+				$("#move-popup").hide();
+			}
+		});
 		ko.applyBindings(self, document.getElementById('itemsList'));
 	}
 });
