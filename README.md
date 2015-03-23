@@ -19,12 +19,16 @@
 ##Features Incoming
 -    Drag & Drop Items
 -    Destiny materials/consumables
+-    Improved moved & Equip algorithm
+-    Hide tooltip when anything else is clicked
 
 ##Known Issues
 
 -    Layout doesn't scale well to multiple screen sizes
--    Progress filter is not working properly
 -    About & Help are currently just placeholders
+-    Move & Equip has limitations on the API
+-    Page is not loading for certain accounts
+-    DestinyExotics doesn't recognize certain weapons you might have
 
 ##Manual Install Instructions
 
