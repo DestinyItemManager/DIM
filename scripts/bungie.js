@@ -100,7 +100,7 @@ function bungie() {
   }
   this.search = function(callback) {
     _request({
-      route: '/Destiny/SearchDestinyPlayer/' + active.type + '/' + active.id + '/',
+      route: '/Destiny/SearchDestinyPlayer/' + active.type + '/' + active.id + '/?definitions=true',
       method: 'GET',
       complete: function(membership) {
         if(membership[0] === undefined) {
@@ -111,7 +111,7 @@ function bungie() {
         membershipId = membership[0].membershipId;
         _request({
           route: '/Destiny/Tiger' + (active.type == 1 ? 'Xbox' : 'PSN') +
-                  '/Account/' + membershipId + '/',
+                  '/Account/' + membershipId + '/?definitions=true',
           method: 'GET',
           complete: callback
         });

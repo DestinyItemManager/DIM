@@ -75,7 +75,7 @@ var Profile = function(model){
 	this.weapons = ko.observableArray([]);
 	this.armor = ko.observableArray([]);
 	this.items = ko.observableArray([]);
-	
+	this.uniqueName = self.level + " " + self.race + " " + self.gender + " " + self.classType;
 	this.get = function(list, type){
 		return self[list]().filter(filterItemByType(type, false));
 	}
@@ -303,6 +303,7 @@ var _collectionsFix = {
 	"crotaArmor": [],
 	"ironArmor": []
 }
+
 var perksTemplate = _.template('<div class="destt-talent">' +
 	'<% perks.forEach(function(perk){ %>' +
 		'<div class="destt-talent-wrapper">' +
@@ -491,6 +492,7 @@ var app = new (function() {
 			}
 			self.bungie.search(function(e){
 				var avatars = e.data.characters;
+
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
 					var profile = new Profile({ order: 0, gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
@@ -513,7 +515,8 @@ var app = new (function() {
 							id: character.characterBase.characterId,
 							icon: self.makeBackgroundUrl(character.emblemPath),
 							background: self.makeBackgroundUrl(character.backgroundPath),
-							level: character.characterLevel
+							level: character.characterLevel,
+							race: e.definitions.races[character.characterBase.raceHash].raceName
 						});
 						var items = [];						
 						response.data.buckets.Equippable.forEach(function(obj){
