@@ -85,7 +85,6 @@ function loadout() {
 
   // removes item from loadout when image is clicked in loadout contents area
   function _remove(item) {
-	  alert('Attempting to remove item from loadout.');
 	  var span = _contents.querySelector('[data-instance="' + item.id + '"]').parentNode;
 	  var contents = span.parentNode;
 	  contents.removeChild(span);
@@ -118,9 +117,6 @@ function loadout() {
     newslot.className = "loadout-" + item.type;
     newslot.appendChild(node);
     _contents.appendChild(newslot);
-
-	// to get total number of items of each type, you can use the following
-    // var slots = _contents.querySelectorAll('.loadout-' + item.type);	
 
 	var image = node.querySelector('img');
 	image.addEventListener('click', function() { _remove(item) });
