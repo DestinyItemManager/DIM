@@ -109,17 +109,22 @@ var Item = function(model, profile, list){
 		return foundPerk;
 	}
 	this.hashProgress = function(state){
-		/* Missing XP */
-		if (state == 1 && self.progression == false){
-			return true;
-		}
-		/* Full XP  but not maxed out */
-		else if (state == 2 && self.progression == true && self.isGridComplete == false){
-			return true
-		}
-		/* Maxed weapons (Gold Borders only) */
-		else if (state == 3 && self.progression == true && self.isGridComplete == true){
-			return true;
+		if (self.progression){
+			/* Missing XP */
+			if (state == 1 && self.progression == false){
+				return true;
+			}
+			/* Full XP  but not maxed out */
+			else if (state == 2 && self.progression == true && self.isGridComplete == false){
+				return true
+			}
+			/* Maxed weapons (Gold Borders only) */
+			else if (state == 3 && self.progression == true && self.isGridComplete == true){
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else {
 			return false;
@@ -457,7 +462,9 @@ var app = new (function() {
 						description: p.displayDescription
 					}
 				});
-				itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
+				if (item.progression){
+					itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
+				}
 				profile.weapons.push( new Item(itemObject,profile,'weapons') );
 			}
 			else if (info.itemType == 2){
