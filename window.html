@@ -146,13 +146,13 @@
 			<div class="move-popup">
 			  <div class="item-name" data-bind="text: description + ' (Primary Stat: ' + primaryStat + ')'"></div>
 			  <div class="locations" data-bind="foreach: { data: $root.orderedCharacters, as: 'avatar' }">
-				<div class="move-button" style="display: block;" data-bind="click: function(){ $parent.store($parent.list.split('.')[0], avatar.id) }, visible: avatar.id == 'Vault' && $parent.character.id !== 'Vault'">
+				<div class="move-button" style="display: block;" data-bind="click: function(){ $parent.store(avatar.id) }, visible: avatar.id == 'Vault' && $parent.character.id !== 'Vault'">
 					<span>vault</span>								
 				</div>
-				<div class="move-button" style="display: block;" data-bind="click: function(){ $parent.store($parent.list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: $parent.characterId != avatar.id && avatar.id !== 'Vault'">
+				<div class="move-button" style="display: block;" data-bind="click: function(){ $parent.store(avatar.id) }, style: { backgroundImage: icon }, visible: $parent.characterId != avatar.id && avatar.id !== 'Vault'">
 					<span>store</span>								
 				</div>
-				<div class="move-button" style="display: block;" data-bind="click: function(){ $parent.equip($parent.list.split('.')[0], avatar.id) }, style: { backgroundImage: icon }, visible: !$parent.isEquipped() && avatar.id !== 'Vault' || $parent.characterId != avatar.id && avatar.id !== 'Vault'">
+				<div class="move-button" style="display: block;" data-bind="click: function(){ $parent.equip(avatar.id) }, style: { backgroundImage: icon }, visible: !$parent.isEquipped() && avatar.id !== 'Vault' || $parent.characterId != avatar.id && avatar.id !== 'Vault'">
 					<span>equip</span>								
 				</div>								
 			  </div>

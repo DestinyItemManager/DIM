@@ -84,16 +84,16 @@ var Profile = function(model){
 	}
 }
 
-var Item = function(model, profile){
+var Item = function(model, profile, list){
 	var self = this;
 	_.each(model, function(value, key){
 		self[key] = value;
 	});
+	this.list = list;
 	this.character = profile;
 	this.href = "https://destinydb.com/items/" + self.id;
 	this.isEquipped = ko.observable(self.isEquipped);
-	this.moveItem = function(list, item){
-		self.list = list;
+	this.moveItem = function(){
 		app.activeItem(self);
 	}
 	this.primaryStat = self.primaryStat || "";
@@ -149,47 +149,48 @@ var Item = function(model, profile){
 		return (searchFilter) && (dmgFilter) && (setFilter) && (tierFilter) && (progressFilter) && (typeFilter);
 	});
 	/* helper function that unequips the current item in favor of anything else */
-	this.unequip = function(list, callback){
+	this.unequip = function(callback){
 		if (self.isEquipped() == true){
 			var otherEquipped = false, itemIndex = -1;
-			var otherItems = _.where( self.character[list](), { bucketType: self.bucketType });
+			var otherItems = _.where( self.character[self.list](), { bucketType: self.bucketType });
 			var tryNextItem = function(){			
 				var item = otherItems[++itemIndex];
+				//console.log(item.description);
 				/* still haven't found a match */
 				if (otherEquipped == false){
 					if (item != self){
-						item.equip(list, self.characterId, function(isEquipped){
+						//console.log("trying to equip " + item.description);
+						item.equip(self.characterId, function(isEquipped){
+							//console.log("result was " + isEquipped);
 							if (isEquipped == true){ otherEquipped = true; callback(); }
-							else { tryNextItem() }
+							else { tryNextItem(); console.log("tryNextItem") }
 						});				
 					}
 					else {
 						tryNextItem()
+						//console.log("tryNextItem")
 					}
 				}
 			}
 			tryNextItem();		
+			//console.log("tryNextItem")
 		}
 		else {
 			callback();
 		}
 	}
-	this.equip = function(list, targetCharacterId, callback){
+	this.equip = function(targetCharacterId, callback){
 		var sourceCharacterId = self.characterId;
 		if (targetCharacterId == sourceCharacterId){
 			app.bungie.equip(targetCharacterId, self._id, function(e, result){
 				if (result.Message == "Ok"){
 					self.isEquipped(true);
-					self.character[list]().forEach(function(item){
+					self.character[self.list]().forEach(function(item){
 						if (item != self && item.bucketType == self.bucketType){
 							item.isEquipped(false);							
 						}
 					});
-					if (list == "items" && self.bucketType == "Emblem"){
-						/*console.log("old icon path: " + self.character.icon());
-						console.log("new icon path " + app.makeBackgroundUrl(self.icon, true));
-						console.log("old bg path: " + self.character.background());
-						console.log("new bg path " + self.backgroundPath);*/
+					if (self.list == "items" && self.bucketType == "Emblem"){
 						self.character.icon(app.makeBackgroundUrl(self.icon, true));
 						self.character.background(self.backgroundPath);
 					}
@@ -202,24 +203,24 @@ var Item = function(model, profile){
 			});
 		}
 		else {
-			self.store(list, targetCharacterId, function(newProfile){
+			self.store(targetCharacterId, function(newProfile){
 				self.character = newProfile;
-				self.equip(list, targetCharacterId);
-				window.item = self;
+				self.equip(targetCharacterId);
 			});
 		}
 	}
-	this.transfer = function(list, sourceCharacterId, targetCharacterId, cb){
+	this.transfer = function(sourceCharacterId, targetCharacterId, cb){
 		var isVault = targetCharacterId == "Vault";
 		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, 1, isVault, function(e, result){
 			if (result.Message == "Ok"){
 				ko.utils.arrayFirst(app.characters(), function(character){
 					if (character.id == sourceCharacterId){
-						character[list].remove(self);
+						character[self.list].remove(self);
 					}
 					else if (character.id == targetCharacterId){
 						self.characterId = targetCharacterId;
-						character[list].push(self);
+						self.character = character;
+						character[self.list].push(self);
 						if (cb) cb(character);
 					}
 				});				
@@ -229,27 +230,27 @@ var Item = function(model, profile){
 			}
 		});
 	}
-	this.store = function(list, targetCharacterId, callback){
+	this.store = function(targetCharacterId, callback){
 		var sourceCharacterId = self.characterId;
 		if (targetCharacterId == "Vault"){
 			//console.log("from character to vault");
-			self.unequip(list, function(){
-				self.transfer(list, sourceCharacterId, "Vault", callback);
+			self.unequip(function(){
+				self.transfer(sourceCharacterId, "Vault", callback);
 			});
 		}
 		else if (sourceCharacterId !== "Vault"){
 			//console.log("from character to vault to character");
-			self.unequip(list, function(){
+			self.unequip(function(){
 				//console.log("unquipped item");
-				self.transfer(list, sourceCharacterId, "Vault", function(){
+				self.transfer(sourceCharacterId, "Vault", function(){
 					//console.log("xfered item to vault");
-					self.transfer(list, "Vault", targetCharacterId, callback);
+					self.transfer("Vault", targetCharacterId, callback);
 				});
 			});
 		}
 		else {
 			//console.log("from vault to character");
-			self.transfer(list, "Vault", targetCharacterId, callback);
+			self.transfer("Vault", targetCharacterId, callback);
 		}
 	}
 }
@@ -455,16 +456,16 @@ var app = new (function() {
 					}
 				});
 				itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
-				profile.weapons.push( new Item(itemObject,profile) );
+				profile.weapons.push( new Item(itemObject,profile,'weapons') );
 			}
 			else if (info.itemType == 2){
-				profile.armor.push( new Item(itemObject,profile) );
+				profile.armor.push( new Item(itemObject,profile,'armor') );
 			}
 			else if (info.bucketTypeHash in DestinyBucketTypes){
 				if (itemObject.typeName == "Emblem"){
 					itemObject.backgroundPath = self.makeBackgroundUrl(info.secondaryIcon);
 				}
-				profile.items.push( new Item(itemObject,profile) );
+				profile.items.push( new Item(itemObject,profile,'items') );
 			}
 		}
 	}
