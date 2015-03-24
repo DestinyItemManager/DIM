@@ -130,7 +130,7 @@ var Item = function(model, profile){
 		var searchFilter = $parent.searchKeyword() == '' || self.hasPerkSearch($parent.searchKeyword()) || 
 			($parent.searchKeyword() !== "" && self.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1);
 		var dmgFilter = $parent.dmgFilter() == 'All' || self.damageTypeName == $parent.dmgFilter();
-		var setFilter = $parent.setFilter().length == 0 || $parent.setFilter().indexOf(self.id) > -1;
+		var setFilter = $parent.setFilter().length == 0 || $parent.setFilter().indexOf(self.id) > -1 || $parent.setFilterFix().indexOf(self.id) > -1;
 		var tierFilter = $parent.tierFilter() == 0 || $parent.tierFilter() == self.tierType;
 		var progressFilter = $parent.progressFilter() == 0 || self.hashProgress($parent.progressFilter());
 		var typeFilter = $parent.typeFilter() == 0 || $parent.typeFilter() == self.type;
@@ -292,6 +292,16 @@ var DestinyDamageTypeColors = {
 	"Solar": "#C48A01",
 	"Void": "#B184C5"
 }
+var _collectionsFix = {
+	"exoticWeapons": [],
+	"vaultWeapons": [],
+	"crotaWeapons": [],
+	"ironWeapons": [1488311144,1244530683,1451703869,3244859508,996787434,3800763760,337037804,1487387187], /* 300 ATK: Fusion,Sniper,Shotgun,LMG,Rocket,Scout,Hand Cannon,Pulse */
+	"exoticArmor": [],
+	"vaultArmor": [],
+	"crotaArmor": [],
+	"ironArmor": []
+}
 var perksTemplate = _.template('<div class="destt-talent">' +
 	'<% perks.forEach(function(perk){ %>' +
 		'<div class="destt-talent-wrapper">' +
@@ -329,6 +339,7 @@ var app = new (function() {
 	this.dmgFilter =  ko.observable(defaults.dmgFilter);
 	this.progressFilter =  ko.observable(defaults.progressFilter);
 	this.setFilter = ko.observableArray(defaults.setFilter);
+	this.setFilterFix = ko.observableArray(defaults.setFilter);
 	this.shareView =  ko.observable(defaults.shareView);
 	this.shareUrl  = ko.observable(defaults.shareUrl);
 	this.showMissing =  ko.observable(defaults.showMissing);
@@ -353,6 +364,7 @@ var app = new (function() {
 		self.dmgFilter(defaults.dmgFilter);
 		self.progressFilter(defaults.progressFilter);
 		self.setFilter(defaults.setFilter);
+		self.setFilterFix(defaults.setFilter);
 		self.shareView(defaults.shareView);
 		self.shareUrl (defaults.shareUrl);
 		self.showMissing(defaults.showMissing);
@@ -385,10 +397,11 @@ var app = new (function() {
 	this.setSetFilter = function(model, event){
 		var collection = $(event.target).parent().attr("value");
 		self.setFilter(collection == "All" ? [] : _collections[collection]);
+		self.setFilterFix(collection == "All" ? [] : _collectionsFix[collection]);
 	}
 	this.missingSets = ko.computed(function(){
 		var missingIds = [];
-		self.setFilter().forEach(function(item){
+		self.setFilter().concat(self.setFilterFix()).forEach(function(item){
 		   var itemFound = false;
 		   self.characters().forEach(function(character){
 			  ['weapons','armor'].forEach(function(list){
