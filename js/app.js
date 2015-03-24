@@ -280,7 +280,7 @@ var Item = function(model, profile, list){
 				self.transfer("Vault", targetCharacterId, transferAmount, callback);
 			}		
 		}
-		if (self.bucketType == "Materials"){
+		if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
 			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='1'></div>").show(function(event){			
 				transferAmount = parseInt($("input#materialsAmount").val());
 				if (!isNaN(transferAmount))	done();
@@ -325,7 +325,7 @@ var DestinyBucketTypes = {
 	"2025709351": "Sparrow",
 	"284967655": "Ship",
 	"3865314626": "Materials",
-	"1469714392": "Materials"
+	"1469714392": "Consumables"
 }
 var DestinyDamageTypeColors = {
 	"None": "#BBB",
@@ -508,7 +508,7 @@ var app = new (function() {
 				if (itemObject.typeName == "Emblem"){
 					itemObject.backgroundPath = self.makeBackgroundUrl(info.secondaryIcon);
 				}
-				if (itemObject.bucketType == "Materials"){
+				if (itemObject.bucketType == "Materials" || itemObject.bucketType == "Consumables"){
 					itemObject.primaryStat = item.stackSize;
 				}
 				profile.items.push( new Item(itemObject,profile,'items') );

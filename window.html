@@ -167,7 +167,7 @@
 				<div class="move-button" style="display: block;" data-bind="attr: { title: avatar.uniqueName }, click: function(){ $parent.store(avatar.id) }, style: { backgroundImage: icon }, visible: $parent.characterId != avatar.id && avatar.id !== 'Vault'">
 					<span>store</span>								
 				</div>
-				<div class="move-button" style="display: block;" data-bind="attr: { title: avatar.uniqueName }, click: function(){ $parent.equip(avatar.id) }, style: { backgroundImage: icon }, visible: !$parent.isEquipped() && avatar.id !== 'Vault' && $parent.bucketType != 'Materials' || $parent.characterId != avatar.id && avatar.id !== 'Vault' && $parent.bucketType != 'Materials'">
+				<div class="move-button" style="display: block;" data-bind="attr: { title: avatar.uniqueName }, click: function(){ $parent.equip(avatar.id) }, style: { backgroundImage: icon }, visible: !$parent.isEquipped() && avatar.id !== 'Vault' && $parent.bucketType != 'Materials' && $parent.bucketType != 'Consumables' || $parent.characterId != avatar.id && avatar.id !== 'Vault' && $parent.bucketType != 'Materials' && $parent.bucketType != 'Consumables'">
 					<span>equip</span>								
 				</div>								
 			  </div>
@@ -201,7 +201,7 @@
 					  </div>
 					  <div>
 						<div class="title"><strong>Misc</strong></div>
-						<div class="item-Materials sections" data-bind="template: { name: 'sections-template', foreach: ['items.Materials'], as: 'list' }">
+						<div class="item-Materials sections" data-bind="template: { name: 'sections-template', foreach: ['items.Materials','items.Consumables'], as: 'list' }">
 						</div>
 					  </div>
 					</div>
