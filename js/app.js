@@ -205,6 +205,7 @@ var Item = function(model, profile, list){
 		else {
 			self.store(targetCharacterId, function(newProfile){
 				self.character = newProfile;
+				self.characterId = newProfile.id;
 				self.equip(targetCharacterId);
 			});
 		}
