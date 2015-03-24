@@ -148,7 +148,33 @@ var Item = function(model, profile){
 		console.log("keyword has description " + ($parent.searchKeyword() !== "" && self.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1));*/
 		return (searchFilter) && (dmgFilter) && (setFilter) && (tierFilter) && (progressFilter) && (typeFilter);
 	});
-	this.equip = function(list, targetCharacterId){
+	/* helper function that unequips the current item in favor of anything else */
+	this.unequip = function(list, callback){
+		if (self.isEquipped() == true){
+			var otherEquipped = false, itemIndex = -1;
+			var otherItems = _.where( self.character[list](), { bucketType: self.bucketType });
+			var tryNextItem = function(){			
+				var item = otherItems[++itemIndex];
+				/* still haven't found a match */
+				if (otherEquipped == false){
+					if (item != self){
+						item.equip(list, self.characterId, function(isEquipped){
+							if (isEquipped == true){ otherEquipped = true; callback(); }
+							else { tryNextItem() }
+						});				
+					}
+					else {
+						tryNextItem()
+					}
+				}
+			}
+			tryNextItem();		
+		}
+		else {
+			callback();
+		}
+	}
+	this.equip = function(list, targetCharacterId, callback){
 		var sourceCharacterId = self.characterId;
 		if (targetCharacterId == sourceCharacterId){
 			app.bungie.equip(targetCharacterId, self._id, function(e, result){
@@ -167,9 +193,11 @@ var Item = function(model, profile){
 						self.character.icon(app.makeBackgroundUrl(self.icon, true));
 						self.character.background(self.backgroundPath);
 					}
+					if (callback) callback(true);
 				}
 				else {
-					alert(result.Message);
+					if (callback) callback(false);
+					else alert(result.Message);
 				}
 			});
 		}
@@ -204,13 +232,19 @@ var Item = function(model, profile){
 	this.store = function(list, targetCharacterId, callback){
 		var sourceCharacterId = self.characterId;
 		if (targetCharacterId == "Vault"){
-			//console.log("from charcter to vault");
-			self.transfer(list, sourceCharacterId, "Vault", callback);
+			//console.log("from character to vault");
+			self.unequip(list, function(){
+				self.transfer(list, sourceCharacterId, "Vault", callback);
+			});
 		}
 		else if (sourceCharacterId !== "Vault"){
 			//console.log("from character to vault to character");
-			self.transfer(list, sourceCharacterId, "Vault", function(){
-				self.transfer(list, "Vault", targetCharacterId, callback);
+			self.unequip(list, function(){
+				//console.log("unquipped item");
+				self.transfer(list, sourceCharacterId, "Vault", function(){
+					//console.log("xfered item to vault");
+					self.transfer(list, "Vault", targetCharacterId, callback);
+				});
 			});
 		}
 		else {
