@@ -24,6 +24,21 @@
   </head>
 
   <body>
+
+		<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel"></h4>
+			  </div>
+			  <div class="modal-body" id="myModalContent"></div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
 		<script type="text/html" id="sections-template">
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div>

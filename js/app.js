@@ -24,6 +24,26 @@ ko.bindingHandlers.sortableList = {
 	}
 };
 */
+
+var dialog = new (function(){
+	var self = this;
+	
+	this.title = function(title){
+		$("#myModalLabel").text(title);
+		return self;
+	}
+	
+	this.content = function(content){
+		$("#myModalContent").html(content);
+		return self;
+	}
+	
+	this.show = function(cb){
+		$('#basicModal').modal({}).on("hidden.bs.modal", cb);
+		return self;
+	}
+});
+
 var activeElement;
 var moveItemPositionHandler = function(element){
 	return function(){
@@ -215,9 +235,9 @@ var Item = function(model, profile, list){
 			});
 		}
 	}
-	this.transfer = function(sourceCharacterId, targetCharacterId, cb){
+	this.transfer = function(sourceCharacterId, targetCharacterId, amount, cb){
 		var isVault = targetCharacterId == "Vault";
-		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, 1, isVault, function(e, result){
+		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, amount, isVault, function(e, result){
 			if (result.Message == "Ok"){
 				ko.utils.arrayFirst(app.characters(), function(character){
 					if (character.id == sourceCharacterId){
@@ -237,26 +257,38 @@ var Item = function(model, profile, list){
 		});
 	}
 	this.store = function(targetCharacterId, callback){
-		var sourceCharacterId = self.characterId;
-		if (targetCharacterId == "Vault"){
-			//console.log("from character to vault");
-			self.unequip(function(){
-				self.transfer(sourceCharacterId, "Vault", callback);
-			});
-		}
-		else if (sourceCharacterId !== "Vault"){
-			//console.log("from character to vault to character");
-			self.unequip(function(){
-				//console.log("unquipped item");
-				self.transfer(sourceCharacterId, "Vault", function(){
-					//console.log("xfered item to vault");
-					self.transfer("Vault", targetCharacterId, callback);
+		var sourceCharacterId = self.characterId, transferAmount = 1;
+		var done = function(){
+			if (targetCharacterId == "Vault"){
+				//console.log("from character to vault");
+				self.unequip(function(){
+					self.transfer(sourceCharacterId, "Vault", transferAmount, callback);
 				});
+			}
+			else if (sourceCharacterId !== "Vault"){
+				//console.log("from character to vault to character");
+				self.unequip(function(){
+					//console.log("unquipped item");
+					self.transfer(sourceCharacterId, "Vault", transferAmount, function(){
+						//console.log("xfered item to vault");
+						self.transfer("Vault", targetCharacterId, transferAmount, callback);
+					});
+				});
+			}
+			else {
+				//console.log("from vault to character");
+				self.transfer("Vault", targetCharacterId, transferAmount, callback);
+			}		
+		}
+		if (self.bucketType == "Materials"){
+			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='1'></div>").show(function(event){			
+				transferAmount = parseInt($("input#materialsAmount").val());
+				if (!isNaN(transferAmount))	done();
+				else alert("Invalid amount entered: " + transferAmount);
 			});
 		}
 		else {
-			//console.log("from vault to character");
-			self.transfer("Vault", targetCharacterId, callback);
+			done();
 		}
 	}
 }
@@ -475,6 +507,9 @@ var app = new (function() {
 			else if (info.bucketTypeHash in DestinyBucketTypes){
 				if (itemObject.typeName == "Emblem"){
 					itemObject.backgroundPath = self.makeBackgroundUrl(info.secondaryIcon);
+				}
+				if (itemObject.bucketType == "Materials"){
+					itemObject.primaryStat = item.stackSize;
 				}
 				profile.items.push( new Item(itemObject,profile,'items') );
 			}
