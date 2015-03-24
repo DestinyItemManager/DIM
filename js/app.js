@@ -274,6 +274,31 @@ var perksTemplate = _.template('<div class="destt-talent">' +
 var app = new (function() {
 	var self = this;
 
+	var defaults = {
+		searchKeyword: "",
+		doRefresh: true,
+		refreshSeconds: 300,
+		tierFilter: 0,
+		typeFilter: 0,
+		dmgFilter: "All",
+		progressFilter: 0,
+		setFilter: [],
+		shareView: false,
+		shareUrl: "",
+		showMissing: false
+	};
+	this.searchKeyword = ko.observable(defaults.searchKeyword);
+	this.doRefresh = ko.observable(defaults.doRefresh);
+	this.refreshSeconds = ko.observable(defaults.refreshSeconds);
+	this.tierFilter = ko.observable(defaults.tierFilter);
+	this.typeFilter = ko.observable(defaults.typeFilter);
+	this.dmgFilter =  ko.observable(defaults.dmgFilter);
+	this.progressFilter =  ko.observable(defaults.progressFilter);
+	this.setFilter = ko.observableArray(defaults.setFilter);
+	this.shareView =  ko.observable(defaults.shareView);
+	this.shareUrl  = ko.observable(defaults.shareUrl);
+	this.showMissing =  ko.observable(defaults.showMissing);
+	
 	this.activeItem = ko.observable();
 	this.activeUser = ko.observable();
 
@@ -284,6 +309,22 @@ var app = new (function() {
 			return a.order - b.order;
 		});
 	});
+	
+	this.clearFilters = function(model, element){
+		self.searchKeyword(defaults.searchKeyword);
+		self.doRefresh(defaults.doRefresh);
+		self.refreshSeconds(defaults.refreshSeconds);
+		self.tierFilter(defaults.tierFilter);
+		self.typeFilter(defaults.typeFilter);
+		self.dmgFilter(defaults.dmgFilter);
+		self.progressFilter(defaults.progressFilter);
+		self.setFilter(defaults.setFilter);
+		self.shareView(defaults.shareView);
+		self.shareUrl (defaults.shareUrl);
+		self.showMissing(defaults.showMissing);
+		$(element.target).removeClass("active");
+		return false;
+	}
 	this.renderCallback = function(context, content, element, callback){
 		if (element) lastElement = element
 		var instanceId = lastElement.id, activeItem, $content = $("<div>" + content + "</div>");
@@ -301,17 +342,6 @@ var app = new (function() {
 		}
 		callback($content.html());
 	}
-	this.searchKeyword = ko.observable("");
-	this.doRefresh = ko.observable(true);
-	this.refreshSeconds = ko.observable(300);
-	this.tierFilter = ko.observable(0);
-	this.typeFilter = ko.observable(0);
-	this.dmgFilter =  ko.observable("All");
-	this.progressFilter =  ko.observable(0);
-	this.setFilter = ko.observableArray();
-	this.shareView =  ko.observable(false);
-	this.shareUrl  = ko.observable("");
-	this.showMissing =  ko.observable(false);
 	this.toggleShareView = function(){
 		self.shareView(!self.shareView());
 	}
