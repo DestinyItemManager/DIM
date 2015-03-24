@@ -152,7 +152,7 @@
 				<div class="move-button" style="display: block;" data-bind="attr: { title: avatar.uniqueName }, click: function(){ $parent.store(avatar.id) }, style: { backgroundImage: icon }, visible: $parent.characterId != avatar.id && avatar.id !== 'Vault'">
 					<span>store</span>								
 				</div>
-				<div class="move-button" style="display: block;" data-bind="attr: { title: avatar.uniqueName }, click: function(){ $parent.equip(avatar.id) }, style: { backgroundImage: icon }, visible: !$parent.isEquipped() && avatar.id !== 'Vault' || $parent.characterId != avatar.id && avatar.id !== 'Vault'">
+				<div class="move-button" style="display: block;" data-bind="attr: { title: avatar.uniqueName }, click: function(){ $parent.equip(avatar.id) }, style: { backgroundImage: icon }, visible: !$parent.isEquipped() && avatar.id !== 'Vault' && $parent.bucketType != 'Materials' || $parent.characterId != avatar.id && avatar.id !== 'Vault' && $parent.bucketType != 'Materials'">
 					<span>equip</span>								
 				</div>								
 			  </div>
