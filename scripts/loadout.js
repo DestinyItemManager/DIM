@@ -83,6 +83,13 @@ function loadout() {
   	return -1;
   }
 
+  // removes item from loadout when image is clicked in loadout contents area
+  function _remove(item) {
+	  var span = _contents.querySelector('[data-instance="' + item.id + '"]').parentNode;
+	  var contents = span.parentNode;
+	  contents.removeChild(span);
+  }
+
   // privileged methods
   this.ready = function(callback) {
     _box = document.getElementById('loadout-create');
@@ -105,10 +112,14 @@ function loadout() {
 
     var node = document.querySelector('[data-instance="' + item.id + '"]').cloneNode(true);
     node.querySelector('img').draggable=false;
+	
+    var newslot = document.createElement("span");
+    newslot.className = "loadout-" + item.type;
+    newslot.appendChild(node);
+    _contents.appendChild(newslot);
 
-    var slot = _contents.querySelector('.loadout-' + item.type);
-    slot.innerHTML = '';
-    slot.appendChild(node);
+	var image = node.querySelector('img');
+	image.addEventListener('click', function() { _remove(item) });
   }
   this.delete = function(id, callback) {
     _loadouts.splice(id,1);
