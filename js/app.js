@@ -291,7 +291,9 @@ var DestinyBucketTypes = {
 	"2973005342": "Shader",
 	"4274335291": "Emblem",
 	"2025709351": "Sparrow",
-	"284967655": "Ship"
+	"284967655": "Ship",
+	"3865314626": "Materials",
+	"1469714392": "Materials"
 }
 var DestinyDamageTypeColors = {
 	"None": "#BBB",
@@ -500,7 +502,6 @@ var app = new (function() {
 			}
 			self.bungie.search(function(e){
 				var avatars = e.data.characters;
-
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
 					var profile = new Profile({ order: 0, gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
@@ -526,14 +527,23 @@ var app = new (function() {
 							level: character.characterLevel,
 							race: e.definitions.races[character.characterBase.raceHash].raceName
 						});
-						var items = [];						
+						var items = [];
+						var def = response.definitions.items;
+						var def_perks = response.definitions.perks;
+						
 						response.data.buckets.Equippable.forEach(function(obj){
 							obj.items.forEach(function(item){
 								items.push(item);
 							});
 						});
-						var def = response.definitions.items;
-						var def_perks = response.definitions.perks;
+						response.data.buckets.Item.forEach(function(obj){
+							obj.items.forEach(function(item){
+								items.push(item);
+							});
+						});
+						//Currency bucket indicates how many Vanguard/Crucible marks you have
+						//Invisible bucket is for medallions and other things in the bottom left square
+						
 						items.forEach(processItem(profile, def, def_perks));
 						self.addWeaponTypes(profile.weapons());
 						self.characters.push(profile);
