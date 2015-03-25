@@ -72,7 +72,7 @@
 		
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav">
-		        <li><a href="#">About</a></li>
+		        <li><a href="#" data-bind="click: showAbout">About</a></li>
 		        <li><a href="#" data-bind="click: showHelp">Help</a></li>
 				<li><a href="#" data-bind="click: toggleShareView">Share</a></li>
 				<li><a href="#" data-bind="click: clearFilters">Clear Filters</a></li>
@@ -150,7 +150,7 @@
 		<div class="alert alert-success" data-bind="visible: showMissing" style="display:none;">
 			<strong>Missing Items</strong> 
 			<span data-bind="foreach: { data: missingSets }">
-				<a data-bind="attr:{ href: 'https://destinydb.com/items/' + $data }"><img data-bind="attr:{src: _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
+				<a data-bind="attr:{ href: 'https://destinydb.com/items/' + $data }"><img data-bind="attr:{src: $root.bungie.getUrl() + _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
 			</span>
 		</div>		
 		<div data-bind="with: $root.activeUser()">
