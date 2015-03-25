@@ -397,6 +397,10 @@ var app = new (function() {
 		});
 	});
 	
+	this.showHelp = function(){
+		$.get("help.html", function(content){ dialog.title("Help").content(content).show(); });
+	}
+	
 	this.clearFilters = function(model, element){
 		self.searchKeyword(defaults.searchKeyword);
 		self.doRefresh(defaults.doRefresh);
