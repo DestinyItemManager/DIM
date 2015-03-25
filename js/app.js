@@ -597,6 +597,16 @@ var app = new (function() {
 			self.refreshInterval = setInterval(self.loadData, self.refreshSeconds() * 1000);
 		}
 	}
+	
+	var defaultPage = 1;
+	this.togglePage = function(){
+		defaultPage++;
+		if (defaultPage == 4) defaultPage = 1;
+		console.log("changing to default Page " + defaultPage);
+		jQuery( ".sectionContainer_" + (defaultPage-1) ).toggle( "blind" );
+		jQuery( ".sectionContainer_" + defaultPage ).toggle( "blind" );
+	}
+	
 	this.init = function(){
 		self.bungie = new bungie();
 		self.loadData();
