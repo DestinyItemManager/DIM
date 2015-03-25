@@ -602,7 +602,6 @@ var app = new (function() {
 	this.togglePage = function(){
 		defaultPage++;
 		if (defaultPage == 4) defaultPage = 1;
-		console.log("changing to default Page " + defaultPage);
 		jQuery( ".sectionContainer_" + (defaultPage-1) ).toggle( "blind" );
 		jQuery( ".sectionContainer_" + defaultPage ).toggle( "blind" );
 	}
