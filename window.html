@@ -135,10 +135,11 @@
 		      </ul>
 		      <form class="navbar-form navbar-left" role="search" onsubmit="return false">
 		        <div>
-					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">		
+					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">
 					<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
 					Auto Refresh
-					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">		
+					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">
+					<input type="button" class="btn form-control" data-bind="click: loadData" value="Refresh">
 		        </div>
 		      </form>
 		    </div>

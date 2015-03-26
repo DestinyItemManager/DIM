@@ -374,7 +374,18 @@ var app = new (function() {
 		showMissing: false
 	};
 	this.searchKeyword = ko.observable(defaults.searchKeyword);
-	this.doRefresh = ko.observable(defaults.doRefresh);
+	var _doRefresh = ko.observable(defaults.doRefresh);
+	this.doRefresh = ko.computed({
+		read: function(){
+			return _doRefresh();
+		},
+		write: function(newValue){
+			chrome.storage.sync.set({
+			  'autoRefresh': newValue
+			}, function() { });
+			_doRefresh(newValue);
+		}
+	});
 	this.refreshSeconds = ko.observable(defaults.refreshSeconds);
 	this.tierFilter = ko.observable(defaults.tierFilter);
 	this.typeFilter = ko.observable(defaults.typeFilter);
@@ -618,8 +629,13 @@ var app = new (function() {
 		self.bungie = new bungie();
 		self.loadData();
 		self.doRefresh.subscribe(self.refreshHandler);
-		self.refreshSeconds.subscribe(self.refreshHandler);
-		self.refreshHandler();
+		self.refreshSeconds.subscribe(self.refreshHandler);		
+		chrome.storage.sync.get("autoRefresh", function(result){
+			if ("autoRefresh" in result){
+				_doRefresh(result.autoRefresh);
+			}
+			self.refreshHandler();
+		});
 		$(window).click(function(e){
 			if (e.target.className !== "itemImage") {
 				$("#move-popup").hide();
