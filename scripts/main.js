@@ -694,15 +694,15 @@ function appendItems(owner, items) {
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
 
 
-		for(var i = 0; i < item.stats.length; i++) {
-			if(item.stats[i].statHash === 1345609583) {
-				console.log(itemDef.name)
-			}
-		}
-
-		if(item.itemInstanceId == 6917529046161258692) {
-			console.log(item, itemDef)
-		}
+		// for(var i = 0; i < item.stats.length; i++) {
+		// 	if(item.stats[i].statHash === 1345609583) {
+		// 		console.log(itemDef.name)
+		// 	}
+		// }
+		//
+		// if(item.itemInstanceId == 6917529046161258692) {
+		// 	console.log(item, itemDef)
+		// }
 
 		_items.push({
 			owner:      owner,

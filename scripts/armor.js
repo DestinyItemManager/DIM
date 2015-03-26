@@ -73,21 +73,26 @@ function armor() {
     getIterations(getBuckets(_items.filter(function(item) { return item.class === 2 && item.stats.length; })))
   ];
 
-  this.addItem = function(itemDef, stats) {
+  this.addItem = function(itemDef, stats, complete) {
     var newItem = {
       tier:       itemDef.tier,
       name:       itemDef.name,
-      icon:       itemDef.icon,
-      notransfer: itemDef.notransfer,
       class:      itemDef.class,
       bucket:     itemDef.bucket,
       stats:      stats,
     };
 
-    var items = _items.filter(function(item) { return item.class === newItem.class && item.stats.length; });
-    items.push(newItem);
+    console.log('adding item', newItem)
 
-    _sets[newItem.class] = getIterations(getBuckets(items))
+    var items = _items.filter(function(item) { return item.class === newItem.class && item.stats.length; });
+    console.log(items.length)
+    items.push(newItem);
+    console.log(items.length)
+
+    _sets[newItem.class] = getIterations(getBuckets(items));
+    console.log(_sets[newItem.class])
+
+    complete();
   }
 
   this.filter = function(_class, stats) {
@@ -106,11 +111,3 @@ function armor() {
     return passed;
   }
 }
-
-// var item = {"name":"Fake Light Beyond Nemesis","icon":"/common/destiny_content/icons/0453bf86cd490639594631ca01f36ec9.jpg","notransfer":false,"bucket":"Helmet","tier":"Exotic","type":"Helmet","class":2};
-// a.addItem(item, [
-//   {"statHash":2391494160,"value":36},
-//   {"statHash":144602215,"value":300},
-//   {"statHash":1735777505,"value":300},
-//   {"statHash":4244567218,"value":300}
-// ]);

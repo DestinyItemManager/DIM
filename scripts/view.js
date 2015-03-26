@@ -8,6 +8,10 @@ window.onload = function() {
   var mmstrength = document.getElementById('mm-strength');
   var mmtotal = document.getElementById('mm-total');
   var mmdetail = document.getElementById('mm-detail');
+  var mmadd = document.getElementById('minmax-add');
+  var mmaddbtn = document.getElementById('minmax-add-btn');
+  var mmaddbtncancel = document.getElementById('minmax-add-btn-cancel');
+  var mmaddbtndone = document.getElementById('minmax-add-btn-done');
 
   var to = null;
 
@@ -58,4 +62,35 @@ window.onload = function() {
   mmdiscipline.addEventListener('keyup', doFilter);
   mmstrength.addEventListener('keyup', doFilter);
   mmtotal.addEventListener('keyup', doFilter);
+
+  mmaddbtn.addEventListener('click', function() {
+    mmadd.style.display = 'block';
+  });
+  mmaddbtncancel.addEventListener('click', function() {
+    mmadd.style.display = 'none';
+  });
+  mmaddbtndone.addEventListener('click', function() {
+    mmadd.style.display = 'none';
+
+    var name = document.getElementById('minmax-add-name');
+    var bucket = document.getElementById('minmax-add-bucket');
+    var tier = document.getElementById('minmax-add-exotic');
+    var classId = document.getElementById('minmax-add-class');
+
+    var item = {
+      name: name.value,
+      bucket: bucket.options[bucket.selectedIndex].value,
+      tier: tier.checked ? 'Exotic' : '',
+      class: parseInt(classId.options[classId.selectedIndex].value, 10)
+    };
+
+    var stats = [
+      {"statHash":2391494160,"value":parseInt(document.getElementById('minmax-add-light').value, 10)},
+      {"statHash":144602215,"value":parseInt(document.getElementById('minmax-add-intellect').value, 10)},
+      {"statHash":1735777505,"value":parseInt(document.getElementById('minmax-add-discipline').value, 10)},
+      {"statHash":4244567218,"value":parseInt(document.getElementById('minmax-add-strength').value, 10)}
+    ];
+
+    a.addItem(item, stats, doFilter);
+  });
 }

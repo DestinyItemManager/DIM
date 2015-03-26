@@ -150,7 +150,8 @@
 
     <div id="minmax">
       <div class="content">
-        <span style="float:left;">
+        <input type="button" value="close" id="mm-close" style="float:right" />
+        <span>
           <div class="title">MINMAX</div>
           <span>CLASS</span><select id="mm-class">
             <option value=0>Titan</option>
@@ -166,10 +167,9 @@
             <span>DISCIPLINE</span><input type="number" id="mm-discipline" value=50 min=0 max=400 />
             <span>STRENGTH</span><input type="number" id="mm-strength" value=50 min=0 max=400  />
           </span>
+
         </span>
-        <span style="float:left;">
-          <input type="button" value="close" id="mm-close" />
-        </span>
+        <input id="minmax-add-btn" type="button" value="ADD CUSTOM ITEM" style="float:right" />
         <!-- <span style="float:left;">
           <div class="title">ADD ITEM</div>
           <span>ITEM</span><input type="text" id="add-name" />
@@ -191,6 +191,40 @@
           </thead><tbody id="iterations"></tbody>
         </table>
       </div>
+    </div>
+
+    <div id="minmax-add">
+      <div class="title">ADD ITEM</div>
+      Add an item to compare with your others.
+      <br />
+      <span>NAME</span><input type="text" placeholder="item name" id="minmax-add-name" />
+      <br />
+      <span>CLASS</span><select id="minmax-add-class">
+        <option value=0>Titan</option>
+        <option value=1>Hunter</option>
+        <option value=2>Warlock</option>
+      </select>
+      <br />
+      <span>Bucket</span><select id="minmax-add-bucket">
+        <option value="Helmet">Helmet</option>
+        <option value="Gauntlets">Gauntlets</option>
+        <option value="Chest">Chest Armor</option>
+        <option value="Leg">Leg Armor</option>
+      </select>
+      <br />
+      <span>Exotic?</span><input type="checkbox" id="minmax-add-exotic" />
+      <br />
+      <span>LIGHT</span><input type="number" id="minmax-add-light" value=0 min=0 max=50 />
+      <br />
+      <span>INTELLECT</span><input type="number" id="minmax-add-intellect" value=0 min=0 max=400 />
+      <br />
+      <span>DISCIPLINE</span><input type="number" id="minmax-add-discipline" value=0 min=0 max=400 />
+      <br />
+      <span>STRENGTH</span><input type="number" id="minmax-add-strength" value=0 min=0 max=400  />
+      <br />
+
+      <input id="minmax-add-btn-done" type="button" value="ADD" />
+      <input id="minmax-add-btn-cancel" type="button" value="CANCEL" />
     </div>
 
     <template id="minmax-template">
