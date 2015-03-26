@@ -129,7 +129,7 @@ var Item = function(model, profile, list){
 		return foundPerk;
 	}
 	this.hashProgress = function(state){
-		if (self.progression){
+		if (typeof self.progression !== "undefined"){
 			/* Missing XP */
 			if (state == 1 && self.progression == false){
 				return true;
@@ -188,7 +188,7 @@ var Item = function(model, profile, list){
 						item.equip(self.characterId, function(isEquipped){
 							//console.log("result was " + isEquipped);
 							if (isEquipped == true){ otherEquipped = true; callback(); }
-							else { tryNextItem(); console.log("tryNextItem") }
+							else { tryNextItem(); /*console.log("tryNextItem")*/ }
 						});				
 					}
 					else {
