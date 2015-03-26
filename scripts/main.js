@@ -632,9 +632,11 @@ function getItemType(type, name) {
 		return 'Armor';
 	if(["Gauntlet Engram"].indexOf(type) != -1)
 		return 'Gauntlets';
+	if(["Body Armor Engram"].indexOf(type) != -1)
+		return 'Chest';
 	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
 		return 'ClassItem';
-	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram", "Consumable", "Material"].indexOf(type) != -1)
+	if(["Helmet Engram", "Leg Armor Engram", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram", "Consumable", "Material"].indexOf(type) != -1)
 		return type.split(' ')[0];
 	if(["Currency"].indexOf(type) != -1)
 		return 'Material';
