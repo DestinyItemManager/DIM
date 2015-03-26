@@ -1013,6 +1013,33 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	});
 });
 
+(function (console) {
+  console.save = function (data, filename) {
+    if (!data) {
+      console.error('Console.save: No data');
+      return;
+    }
+
+    if (!filename) filename = 'console.json';
+
+    if (typeof data === "object") {
+      data = JSON.stringify(data, undefined, 4);
+    }
+
+    var blob = new Blob([data], {
+        type: 'text/json'
+      }),
+      e = document.createEvent('MouseEvents'),
+      a = document.createElement('a');
+
+    a.download = filename;
+    a.href = window.URL.createObjectURL(blob);
+    a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+    e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    a.dispatchEvent(e);
+  };
+})(console);
+
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
