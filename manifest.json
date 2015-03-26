@@ -11,7 +11,9 @@
   "short_name": "DIM",
   "background": {
     "scripts": [
-      "scripts/lzstring.min.js",
+      "scripts/vendor/lzstring.min.js",
+      "scripts/vendor/sorttable.min.js",
+      "scripts/armor.js",
       "scripts/report.js",
       "scripts/bungie.js",
       "scripts/loadout.js",
