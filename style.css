@@ -193,7 +193,7 @@ img.void {
     z-index: 2;
     cursor: pointer;
 }
-input[type=range] {
+#move-amount input[type=range] {
   display: inline-block;
   vertical-align: top;
   box-sizing: border-box;
@@ -235,7 +235,7 @@ input[type=range] {
 #move-popup.little:before {
   left: 39px;
 }
-#move-popup {
+#hover-popup, #move-popup {
     position: absolute;
     display: none;
     z-index: 2;
@@ -245,13 +245,17 @@ input[type=range] {
     background-color: rgba(21,13,13,1);
     cursor: default;
 }
-#move-popup .item-name {
+#hover-popup {
+  height: auto;
+  background-color: rgba(21,13,13,.4);
+}
+#hover-popup .item-name, #move-popup .item-name {
     color: #000;
     margin: 1px;
     padding: 1px;
     padding-left: 3px;
 }
-#move-popup .move-button {
+#hover-popup .move-button, #move-popup .move-button {
     background-size: cover;
     width: 37px;
     height: 37px;
@@ -270,21 +274,10 @@ input[type=range] {
     height: 100%;
 }
 #move-popup .move-button span:hover { background: rgba(0,0,0,.1) }
-#faq-button {
-    display: inline-block;
-    background-color: #5b6e6c;
-    color: rgba(245,245,245,.6);
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    line-height: 14px!important;
-    cursor: pointer;
-    margin-left: 5px;
-    font-size: 10px!important;
-}
-#faq-button:hover { background-color: #628e89 }
-#faq {
+
+#minmax, #collection, #faq {
     display: none;
+    padding-top: 40px;
     position: fixed;
     background: rgba(0,0,0,.86);
     margin: 0;
@@ -295,7 +288,6 @@ input[type=range] {
     z-index: 4;
     cursor: pointer;
 }
-#faq .content .title { margin: 50px 50px 0 }
 #faq .content table { margin: 10px 50px 0 55px; text-align: left; font-size: 12px; }
 #faq .content ul { margin: 10px 50px 0 30px }
 #faq .content ul li { margin-bottom: 3px; }
@@ -307,7 +299,7 @@ input[type=range] {
   vertical-align: middle;
   margin-left: 5px;
 }
-#collection-button {
+#faq-button, #mm-button, #collection-button {
     display: inline-block;
     background-color: #5b6e6c;
     color: rgba(245,245,245,.6);
@@ -319,20 +311,7 @@ input[type=range] {
     margin-left: 5px;
     font-size: 10px!important;
 }
-#collection-button:hover { background-color: #628e89 }
-#collection {
-    display: none;
-    position: fixed;
-    background: rgba(0,0,0,.86);
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 4;
-    cursor: pointer;
-    padding-top: 40px
-}
+#faq-button:hover, #mm-button:hover, #collection-button:hover { background-color: #628e89 }
 #collection .content div {
   display: inline-block;
   width: 136px;
@@ -350,6 +329,61 @@ input[type=range] {
 #collection .content .missing {
   color: pink;
 }
+#minmax {
+  cursor: default;
+}
+#mm-close {
+  cursor: pointer;
+}
+#minmax input[type=range] {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-appearance: none;
+}
+#minmax table { border-collapse: collapse; }
+#minmax td, th { padding: 4px 1px 4px 1px; text-align: center; font-size: 13px; }
+#minmax th { background: #333; color: white; }
+#minmax tbody tr:nth-child(odd) { background: #dfdfdf; color: black }
+#minmax thead tr { display: block; }
+#minmax tbody {
+  display: block;
+  height: 500px;
+  overflow: auto;
+  width: 100%;
+}
+#minmax thead th { min-width: 185px; }
+#minmax tbody td { width: 185px; }
+#minmax thead th.num { min-width: 60px; }
+#minmax tbody td.num { width: 60px; }
+#minmax table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+    content: " \25B4\25BE"
+}
+#minmax table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+#minmax table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+    min-width: 35px;
+    background: #333;
+}
+#minmax table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+    min-width: 35px;
+    background: #333;
+    color: white;
+    text-align: center;
+}
+#minmax table.sortable tbody tr:hover {
+    color: rgba(245,245,245,.6);
+    background-color: #628e89;
+}
+#mm-total {
+  display: none;
+}
+
 .content {
     max-width: 1088px;
     margin: 0 auto;

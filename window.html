@@ -2,19 +2,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>DIM</title>
-    <script type="text/javascript" src="scripts/lzstring.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/lzstring.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/sorttable.min.js"></script>
+    <script type="text/javascript" src="scripts/statdef.json"></script>
     <script type="text/javascript" src="scripts/itemdef.json"></script>
     <script type="text/javascript" src="scripts/collection.json"></script>
     <script type="text/javascript" src="scripts/report.js"></script>
     <script type="text/javascript" src="scripts/bungie.js"></script>
     <script type="text/javascript" src="scripts/loadout.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
+    <script type="text/javascript" src="scripts/armor.js"></script>
+    <script type="text/javascript" src="scripts/view.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <div id="header">
       <div class="content">
-        <span>DIM</span> <span id="faq-button">?</span> <span id="collection-button">C</span> <input id="collection-url" type="text" />
+        <span>DIM</span> <span id="faq-button">?</span> <span id="mm-button">M</span> <span id="collection-button">C</span> <input id="collection-url" type="text" />
         <span class="header-right">
         <input type="search" id="filter-text" placeholder="filter items or is:arc" /><span id="user" class="header-right"></span><select id="system">
           <option>PSN</option>
@@ -54,7 +58,7 @@
     </div>
 
     <div id="move-amount">
-      <div class="item-name">asdf</div>
+      <div class="item-name"></div>
       <input type="range" value="100" min="0" max="100" />
       <div id="move-amount-value"></div>
       <span id="move-amount-cancel">Cancel</span>
@@ -66,6 +70,11 @@
       <div class="message"></div>
       <div><br/>You may need to refresh the tool. Eventual support for this event.</div>
       <div class="close">close</div>
+    </div>
+
+    <div id="hover-popup">
+      <div class="item-name"></div>
+      <div class="stats"></div>
     </div>
 
     <div id="move-popup">
@@ -138,6 +147,56 @@
           <div id="ironArmor"><p>IB Armor</p><span class="done"></span><span class="has"></span><span class="missing"></div>
       </div>
     </div>
+
+    <div id="minmax">
+      <div class="content">
+        <span style="float:left;">
+          <div class="title">MINMAX</div>
+          <span>CLASS</span><select id="mm-class">
+            <option value=0>Titan</option>
+            <option value=1>Hunter</option>
+            <option value=2>Warlock</option>
+          </select>
+          <span>TOTAL</span><input type="checkbox" id="mm-type" />
+
+          <input type="number" id="mm-total" value=500 min=0 max=999 />
+
+          <span id="mm-detail">
+            <span>INTELLECT</span><input type="number" id="mm-intellect" value=150 min=0 max=400 />
+            <span>DISCIPLINE</span><input type="number" id="mm-discipline" value=50 min=0 max=400 />
+            <span>STRENGTH</span><input type="number" id="mm-strength" value=50 min=0 max=400  />
+          </span>
+        </span>
+        <span style="float:left;">
+          <input type="button" value="close" id="mm-close" />
+        </span>
+        <!-- <span style="float:left;">
+          <div class="title">ADD ITEM</div>
+          <span>ITEM</span><input type="text" id="add-name" />
+          <span>INTELLECT</span><input type="number" id="add-intellect" value=0 min=0 max=200 />
+          <span>DISCIPLINE</span><input type="number" id="add-discipline" value=0 min=0 max=200 />
+          <span>STRENGTH</span><input type="number" id="add-strength" value=0 min=0 max=200 />
+          <input type="button" value="ADD" />
+        </span> -->
+        <table class="sortable"><thead><tr>
+          <th class="num">Light</th>
+          <th class="num">INT</th>
+          <th class="num">DIS</th>
+          <th class="num">STR</th>
+          <th class="num" id="sorttotal">Total</th>
+          <th>Helmet</th>
+          <th>Gauntlets</th>
+          <th>Chest</th>
+          <th>Leg</th></tr>
+          </thead><tbody id="iterations"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <template id="minmax-template">
+      <tr class="minmax-set">
+      </tr>
+    </template>
 
 		<template id="loadout-template">
 			<div class="loadout-set">
