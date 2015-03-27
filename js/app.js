@@ -50,8 +50,14 @@ var moveItemPositionHandler = function(element, item){
 		if (app.loadoutMode() == true){
 			if (app.activeLoadout().ids().indexOf( item._id )>-1)
 				app.activeLoadout().ids.remove(item._id);
-			else
-				app.activeLoadout().ids.push(item._id);
+			else {
+				if ( _.where( app.activeLoadout().items(), { bucketType: item.bucketType }).length < 9){
+					app.activeLoadout().ids.push(item._id);
+				}
+				else {
+					alert("You cannot create a loadout with more than 9 items in the " + item.bucketType + " slots");
+				}
+			}
 		}
 		else {
 			if (element	== activeElement){
@@ -527,6 +533,11 @@ var app = new (function() {
 		});
 		return missingIds;
 	})
+	
+	this.activeView = ko.observable(1);
+	this.setView = function(){
+		self.activeView($(event.target).parent().attr("value"));
+	}	
 	this.setDmgFilter = function(model, event){
 		self.dmgFilter($(event.target).parent().attr("value"));
 	}
@@ -669,14 +680,6 @@ var app = new (function() {
 		if (self.doRefresh() == 1 && self.loadoutMode() == false){
 			self.refreshInterval = setInterval(self.loadData, self.refreshSeconds() * 1000);
 		}
-	}
-	
-	var defaultPage = 1;
-	this.togglePage = function(){
-		defaultPage++;
-		if (defaultPage == 4) defaultPage = 1;
-		jQuery( ".sectionContainer_" + (defaultPage-1) ).toggle( "blind" );
-		jQuery( ".sectionContainer_" + defaultPage ).toggle( "blind" );
 	}
 	
 	this.init = function(){

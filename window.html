@@ -78,7 +78,14 @@
 		        <li><a href="#" data-bind="click: showHelp">Help</a></li>
 				<li><a href="#" data-bind="click: toggleShareView">Share</a></li>
 				<li><a href="#" data-bind="click: clearFilters">Clear Filters</a></li>
-				<li><a href="#" data-bind="click: $root.togglePage">Change Page</a></li>				
+				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">View <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li data-bind="css: activeView() == $($element).attr('value') ? 'active' : '', click: setView" value="1"><a href="#">Weapons</a></li>
+					<li data-bind="css: activeView() == $($element).attr('value') ? 'active' : '', click: setView" value="2"><a href="#">Armor</a></li>
+		            <li data-bind="css: activeView() == $($element).attr('value') ? 'active' : '', click: setView" value="3"><a href="#">Other</a></li>
+		          </ul>
+		        </li>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tier <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
@@ -198,22 +205,22 @@
 				</div>
 				<div>
 					<div class="items" data-type="item">
-					  <div class="sectionContainer_1">
+					  <div data-bind="visible: $root.activeView() == 1">
 						<div class="title"><strong>Weapons</strong> (<span data-bind="text: character.weapons().length"></span>)</div>
 						<div class="item-Weapon sections" data-bind="template: { name: 'sections-template', foreach: ['weapons.Primary','weapons.Special','weapons.Heavy'], as: 'list' }">
 						</div>
 					  </div>
-					  <div style="display:none" class="sectionContainer_2">
+					  <div style="display:none" data-bind="visible: $root.activeView() == 2">
 						<div class="title"><strong>Armor</strong> (<span data-bind="text: character.armor().length"></span>)</div>
 						<div class="item-Armor sections" data-bind="template: { name: 'sections-template', foreach: ['armor.Helmet','armor.Gauntlet','armor.Chest', 'armor.Boots'], as: 'list' }">
 						</div>
 					  </div>
-					  <div style="display:none" class="sectionContainer_3">
+					  <div style="display:none" data-bind="visible: $root.activeView() == 3">
 						<div class="title"><strong>Misc</strong></div>
 						<div class="item-Materials sections" data-bind="template: { name: 'sections-template', foreach: ['items.Consumables','items.Materials'], as: 'list' }">
 						</div>
 					  </div>
-					  <div style="display:none" class="sectionContainer_3">
+					  <div style="display:none" data-bind="visible: $root.activeView() == 3">
 						<div class="title"><strong>Styling</strong></div>
 						<div class="item-Styling sections" data-bind="template: { name: 'sections-template', foreach: ['items.Shader','items.Emblem','items.Ship','items.Sparrow'], as: 'list' }">
 						</div>
