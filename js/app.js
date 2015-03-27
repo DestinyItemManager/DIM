@@ -259,6 +259,7 @@ var Item = function(model, profile, list){
 	this.store = function(targetCharacterId, callback){
 		var sourceCharacterId = self.characterId, transferAmount = 1;
 		var done = function(){
+			$("#basicModalButton").html("Close");
 			if (targetCharacterId == "Vault"){
 				//console.log("from character to vault");
 				self.unequip(function(){
@@ -281,7 +282,8 @@ var Item = function(model, profile, list){
 			}		
 		}
 		if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
-			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='1'></div>").show(function(event){			
+			$("#basicModalButton").html("Transfer");
+			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>").show(function(event){			
 				transferAmount = parseInt($("input#materialsAmount").val());
 				if (!isNaN(transferAmount))	done();
 				else alert("Invalid amount entered: " + transferAmount);
