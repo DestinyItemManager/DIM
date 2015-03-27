@@ -153,7 +153,7 @@
 		          </ul>
 		        </li>
 		      </ul>
-		      <form class="navbar-form navbar-left" role="search" onsubmit="return false">
+		      <form class="navbar-form navbar-right" role="search" onsubmit="return false">
 		        <div>
 					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">		
 					<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
@@ -195,7 +195,7 @@
 			  </div>
 			</div>
 		</div>
-  		<div class="content" id="storage" data-bind="foreach: { data: orderedCharacters, as: 'character' }">
+  		<div class="content" id="storage" data-bind="foreach: { data: orderedCharacters, as: 'character' }" style="margin-top:20px;">
 			<div class="storage">
 				<div class="character">
 				  <div class="character-box" data-bind="style: { backgroundImage: background }">
