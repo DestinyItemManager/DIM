@@ -261,10 +261,37 @@ var Item = function(model, profile, list){
 							y = character;
 						}
 					});
-					self.characterId = targetCharacterId
-					self.character = y;
-					y[self.list].push(self);
-					x[self.list].remove(self);					
+					if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
+						console.log("need to split reference of self and push it into x and y");
+						var remainder = self.primaryStat - amount;
+						/* at this point we can either add the item to the inventory or merge it with existing items there */
+						var existingItem = _.findWhere( y[self.list](), { description: self.description });
+						if (existingItem){
+							y[self.list].remove(existingItem);
+							existingItem.primaryStat = existingItem.primaryStat + amount;
+							y[self.list].push(existingItem);
+						}
+						else {
+							self.characterId = targetCharacterId
+							self.character = y;
+							self.primaryStat = amount;
+							y[self.list].push(self);
+						}
+						/* the source item gets removed from the array, change the stack size, and add it back to the array if theres items left behind */
+						x[self.list].remove(self);
+						if (remainder > 0){
+							self.characterId = sourceCharacterId
+							self.character = x;
+							self.primaryStat = remainder;
+							x[self.list].push(self);
+						}
+					}
+					else {
+						self.characterId = targetCharacterId
+						self.character = y;
+						y[self.list].push(self);
+						x[self.list].remove(self);
+					}
 					if (cb) cb(y,x);
 				}
 				else {
