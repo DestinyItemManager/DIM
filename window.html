@@ -158,16 +158,17 @@
 					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">		
 					<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
 					Auto Refresh
-					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">		
+					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">
+					<input type="button" class="btn form-control" data-bind="click: loadData" value="Refresh">
 		        </div>
 		      </form>
 		    </div>
 		  </div>
 		</nav>
-		<div class="alert alert-info" data-bind="visible: shareView" style="display:none;">
+		<div class="alert alert-info" data-bind="visible: shareView" style="display:none; margin-top:20px;">
 			<strong>DestinyExotics.com</strong> Share URL: <a target="_blank" data-bind="attr:{href: shareUrl}"><span data-bind="text: shareUrl"></span></a>
 		</div>
-		<div class="alert alert-success" data-bind="visible: showMissing" style="display:none;">
+		<div class="alert alert-success" data-bind="visible: showMissing" style="display:none; margin-top:20px;">
 			<strong>Missing Items</strong> 
 			<span data-bind="foreach: { data: missingSets }">
 				<a data-bind="attr:{ href: 'https://destinydb.com/items/' + $data }"><img data-bind="attr:{src: $root.bungie.getUrl() + _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
