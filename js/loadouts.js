@@ -1,3 +1,31 @@
+
+/*
+targetItem: item,
+swapItem: swapItem,
+description: item.description + "'s swap item is " + swapItem.description
+*/
+var swapTemplate = _.template('<ul class="list-group">' +	
+	'<% swapArray.forEach(function(pair){ %>' +
+		'<li class="list-group-item">' +
+			'<div class="row">' +
+				'<div class="col-lg-6">' +
+					'<%= pair.description %>' +
+				'</div>' +
+				'<div class="col-lg-3">' +
+					'<a class="item" href="<%= pair.targetItem.href %>" id="<%= pair.targetItem._id %>">' + 
+						'<img class="itemImage" src="<%= pair.targetItem.icon %>">' +
+					'</a>' +
+				'</div>' +
+				'<div class="col-lg-3">' +
+					'<a class="item" href="<%= pair.swapItem && pair.swapItem.href %>" id="<%= pair.swapItem && pair.swapItem._id %>">' + 
+						'<img class="itemImage" src="<%= pair.swapItem && pair.swapItem.icon %>">' +
+					'</a>' +
+				'</div>' +
+			'</div>' +
+		'</li>' +
+	'<% }) %>' +
+'</ul>');
+
 var Loadout = function(model){
 	var self = this;
 	
@@ -73,6 +101,16 @@ var Loadout = function(model){
 	/* strategy two involves looking into the target bucket and creating pairs for an item that will be removed for it */	
 	this.transfer = function(targetCharacterId){
 		var targetCharacter = _.findWhere( app.characters(), { id: targetCharacterId });
+		var getFirstItem = function(sourceBucketIds, itemFound){
+			return function(otherItem){
+				/* if the otherItem is not part of the sourceBucket then it can go */
+				if ( sourceBucketIds.indexOf( otherItem._id ) == -1 && itemFound == false){
+					itemFound = true;
+					sourceBucketIds.push(otherItem._id);
+					return otherItem;
+				}
+			}
+		};
 		['weapons','armor'].forEach(function(list){			
 			var sourceItems =  _.where( self.items(), { list: list });
 			if (sourceItems.length > 0){
@@ -88,14 +126,9 @@ var Loadout = function(model){
 						var sourceBucketIds = _.pluck( sourceBucket, "_id");
 						var swapArray = _.map(sourceBucket, function(item){
 							var itemFound = false;
-							var swapItem = _.filter(targetBucket, function(otherItem){
-								/* if the otherItem is not part of the sourceBucket then it can go */
-								if ( sourceBucketIds.indexOf( otherItem._id ) == -1 && itemFound == false){
-									itemFound = true;
-									sourceBucketIds.push(otherItem._id);
-									return otherItem;
-								}
-							})[0];
+							//console.log(item.description + " finding a match as " + item.type);
+							var swapItem = _.filter(_.where(targetBucket, { type: item.type }), getFirstItem(sourceBucketIds, itemFound));
+							swapItem = (swapItem.length > 0) ? swapItem[0] : _.filter(targetBucket, getFirstItem(sourceBucketIds, itemFound))[0];
 							return {
 								targetItem: item,
 								swapItem: swapItem,
