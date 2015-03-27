@@ -235,26 +235,33 @@ var Item = function(model, profile, list){
 			});
 		}
 	}
-	this.transfer = function(sourceCharacterId, targetCharacterId, amount, cb){
-		var isVault = targetCharacterId == "Vault";
-		app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, amount, isVault, function(e, result){
-			if (result.Message == "Ok"){
-				ko.utils.arrayFirst(app.characters(), function(character){
-					if (character.id == sourceCharacterId){
-						character[self.list].remove(self);
-					}
-					else if (character.id == targetCharacterId){
-						self.characterId = targetCharacterId;
-						self.character = character;
-						character[self.list].push(self);
-						if (cb) cb(character);
-					}
-				});				
-			}
-			else {
-				alert(result.Message);
-			}
-		});
+	this.transfer = function(sourceCharacterId, targetCharacterId, amount, cb){		
+		setTimeout(function(){
+			var isVault = targetCharacterId == "Vault";			
+			app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, amount, isVault, function(e, result){
+				if (result.Message == "Ok"){
+					var x,y;
+					_.each(app.characters(), function(character){
+						if (character.id == sourceCharacterId){
+							//console.log("removing reference of myself ( " + self.description + " ) in " + character.classType + " from the list of " + self.list);
+							x = character;
+						}
+						else if (character.id == targetCharacterId){
+							//console.log("adding a reference of myself ( " + self.description + " ) to this guy " + character.classType);
+							y = character;
+						}
+					});
+					self.characterId = targetCharacterId
+					self.character = y;
+					y[self.list].push(self);
+					x[self.list].remove(self);					
+					if (cb) cb(y,x);
+				}
+				else {
+					alert(result.Message);
+				}
+			});		
+		}, 1000);
 	}
 	this.store = function(targetCharacterId, callback){
 		var sourceCharacterId = self.characterId, transferAmount = 1;
