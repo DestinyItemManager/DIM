@@ -41,4 +41,4 @@
 
 Visit this store Link:
 
-[https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge](Chrome Store)
+[Destiny Item Viewer in Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge)
