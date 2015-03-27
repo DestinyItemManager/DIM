@@ -129,7 +129,7 @@ var Item = function(model, profile, list){
 		return foundPerk;
 	}
 	this.hashProgress = function(state){
-		if (self.progression){
+		if (typeof self.progression !== "undefined"){
 			/* Missing XP */
 			if (state == 1 && self.progression == false){
 				return true;
@@ -271,6 +271,7 @@ var Item = function(model, profile, list){
 	this.store = function(targetCharacterId, callback){
 		var sourceCharacterId = self.characterId, transferAmount = 1;
 		var done = function(){
+			$("#basicModalButton").html("Close");
 			if (targetCharacterId == "Vault"){
 				//console.log("from character to vault");
 				self.unequip(function(){
@@ -294,6 +295,7 @@ var Item = function(model, profile, list){
 			}		
 		}
 		if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
+			$("#basicModalButton").html("Transfer");
 			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>").show(function(event){
 				transferAmount = parseInt($("input#materialsAmount").val());
 				if (!isNaN(transferAmount))	done();
@@ -417,7 +419,18 @@ var app = new (function() {
 	this.activeLoadout = ko.observable(new Loadout());
 	this.loadouts = ko.observableArray();
 	this.searchKeyword = ko.observable(defaults.searchKeyword);
-	this.doRefresh = ko.observable(defaults.doRefresh);
+	var _doRefresh = ko.observable(defaults.doRefresh);
+	this.doRefresh = ko.computed({
+		read: function(){
+			return _doRefresh();
+		},
+		write: function(newValue){
+			chrome.storage.sync.set({
+			  'autoRefresh': newValue
+			}, function() { });
+			_doRefresh(newValue);
+		}
+	});
 	this.refreshSeconds = ko.observable(defaults.refreshSeconds);
 	this.tierFilter = ko.observable(defaults.tierFilter);
 	this.typeFilter = ko.observable(defaults.typeFilter);
@@ -484,8 +497,7 @@ var app = new (function() {
 	   	});
 		if (activeItem){		
 			if (activeItem.perks && $content.find(".destt-talent").length == 0){
-				var template = perksTemplate({ perks: activeItem.perks });
-				$content.find(".destt-info").prepend(template);
+				$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
 			}
 			$content.find(".destt-primary-min").html( activeItem.primaryStat );
 		}
