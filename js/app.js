@@ -45,35 +45,35 @@ var dialog = new (function(){
 });
 
 var activeElement;
-var moveItemPositionHandler = function(element){
+var moveItemPositionHandler = function(element, item){
 	return function(){
-		if (element	== activeElement){
-			$( "#move-popup" ).hide();
-			activeElement = null;
-		}	
-		else {
-			activeElement = element;
-			$( "#move-popup" ).show().position({
-				my: "left bottom",
-				at: "left top",
-				collision: "none fit",
-				of: element
-			});
+		if (app.loadoutMode() == true){
+			if (app.activeLoadout().ids().indexOf( item._id )>-1)
+				app.activeLoadout().ids.remove(item._id);
+			else
+				app.activeLoadout().ids.push(item._id);
 		}
+		else {
+			if (element	== activeElement){
+				$( "#move-popup" ).hide();
+				activeElement = null;
+			}	
+			else {
+				activeElement = element;
+				$( "#move-popup" ).show().position({
+					my: "left bottom",
+					at: "left top",
+					collision: "none fit",
+					of: element
+				});
+			}
+		}	
 	}
 }
 
 ko.bindingHandlers.moveItem = {
     init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-        // This will be called when the binding is first applied to an element
-        // Set up any initial state, event handlers, etc. here
-		$(element).bind("click", moveItemPositionHandler(element));
-    },
-    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-        // This will be called once when the binding is first applied to an element,
-        // and again whenever any observables/computeds that are accessed change
-        // Update the DOM element based on the supplied values here.
-		//$(element).bind("click", moveItemPositionHandler(element));
+		$(element).bind("click", moveItemPositionHandler(element, viewModel));
     }
 };
 
@@ -113,7 +113,7 @@ var Item = function(model, profile, list){
 	this.character = profile;
 	this.href = "https://destinydb.com/items/" + self.id;
 	this.isEquipped = ko.observable(self.isEquipped);
-	this.moveItem = function(){
+	this.setActiveItem = function(){
 		app.activeItem(self);
 	}
 	this.primaryStat = self.primaryStat || "";
@@ -129,7 +129,7 @@ var Item = function(model, profile, list){
 		return foundPerk;
 	}
 	this.hashProgress = function(state){
-		if (typeof self.progression !== "undefined"){
+		if (self.progression){
 			/* Missing XP */
 			if (state == 1 && self.progression == false){
 				return true;
@@ -175,7 +175,9 @@ var Item = function(model, profile, list){
 	});
 	/* helper function that unequips the current item in favor of anything else */
 	this.unequip = function(callback){
+		//console.log('trying to unequip too!');
 		if (self.isEquipped() == true){
+			//console.log("and its actually equipped");
 			var otherEquipped = false, itemIndex = -1;
 			var otherItems = _.where( self.character[self.list](), { bucketType: self.bucketType });
 			var tryNextItem = function(){			
@@ -201,6 +203,7 @@ var Item = function(model, profile, list){
 			//console.log("tryNextItem")
 		}
 		else {
+			//console.log("but not equipped");
 			callback();
 		}
 	}
@@ -235,6 +238,7 @@ var Item = function(model, profile, list){
 			});
 		}
 	}
+	
 	this.transfer = function(sourceCharacterId, targetCharacterId, amount, cb){		
 		setTimeout(function(){
 			var isVault = targetCharacterId == "Vault";			
@@ -263,13 +267,14 @@ var Item = function(model, profile, list){
 			});		
 		}, 1000);
 	}
+	
 	this.store = function(targetCharacterId, callback){
 		var sourceCharacterId = self.characterId, transferAmount = 1;
 		var done = function(){
-			$("#basicModalButton").html("Close");
 			if (targetCharacterId == "Vault"){
 				//console.log("from character to vault");
 				self.unequip(function(){
+					//console.log("calling transfer from character to vault");
 					self.transfer(sourceCharacterId, "Vault", transferAmount, callback);
 				});
 			}
@@ -289,8 +294,7 @@ var Item = function(model, profile, list){
 			}		
 		}
 		if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
-			$("#basicModalButton").html("Transfer");
-			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>").show(function(event){			
+			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>").show(function(event){
 				transferAmount = parseInt($("input#materialsAmount").val());
 				if (!isNaN(transferAmount))	done();
 				else alert("Invalid amount entered: " + transferAmount);
@@ -353,6 +357,33 @@ var _collectionsFix = {
 	"ironArmor": []
 }
 
+/*
+targetItem: item,
+swapItem: swapItem,
+description: item.description + "'s swap item is " + swapItem.description
+*/
+var swapTemplate = _.template('<ul class="list-group">' +	
+	'<% swapArray.forEach(function(pair){ %>' +
+		'<li class="list-group-item">' +
+			'<div class="row">' +
+				'<div class="col-lg-6">' +
+					'<%= pair.description %>' +
+				'</div>' +
+				'<div class="col-lg-3">' +
+					'<a class="item" href="<%= pair.targetItem.href %>">' + 
+						'<img class="itemImage" src="<%= pair.targetItem.icon %>">' +
+					'</a>' +
+				'</div>' +
+				'<div class="col-lg-3">' +
+					'<a class="item" href="<%= pair.swapItem.href %>">' + 
+						'<img class="itemImage" src="<%= pair.swapItem.icon %>">' +
+					'</a>' +
+				'</div>' +
+			'</div>' +
+		'</li>' +
+	'<% }) %>' +
+'</ul>');
+
 var perksTemplate = _.template('<div class="destt-talent">' +
 	'<% perks.forEach(function(perk){ %>' +
 		'<div class="destt-talent-wrapper">' +
@@ -364,7 +395,7 @@ var perksTemplate = _.template('<div class="destt-talent">' +
 			'</div>' +
 		'</div>' +
 	'<% }) %>' +
-'</div>')
+'</div>');
 		
 var app = new (function() {
 	var self = this;
@@ -382,19 +413,11 @@ var app = new (function() {
 		shareUrl: "",
 		showMissing: false
 	};
+	this.loadoutMode = ko.observable(false);
+	this.activeLoadout = ko.observable(new Loadout());
+	this.loadouts = ko.observableArray();
 	this.searchKeyword = ko.observable(defaults.searchKeyword);
-	var _doRefresh = ko.observable(defaults.doRefresh);
-	this.doRefresh = ko.computed({
-		read: function(){
-			return _doRefresh();
-		},
-		write: function(newValue){
-			chrome.storage.sync.set({
-			  'autoRefresh': newValue
-			}, function() { });
-			_doRefresh(newValue);
-		}
-	});
+	this.doRefresh = ko.observable(defaults.doRefresh);
 	this.refreshSeconds = ko.observable(defaults.refreshSeconds);
 	this.tierFilter = ko.observable(defaults.tierFilter);
 	this.typeFilter = ko.observable(defaults.typeFilter);
@@ -416,6 +439,15 @@ var app = new (function() {
 			return a.order - b.order;
 		});
 	});
+	
+	this.createLoadout = function(){
+		self.loadoutMode(true);
+		self.activeLoadout(new Loadout());
+	}
+	this.cancelLoadout = function(){
+		self.loadoutMode(false);
+		self.activeLoadout(new Loadout());
+	}	
 	
 	this.showHelp = function(){
 		$.get("help.html", function(content){ dialog.title("Help").content(content).show(); });
@@ -452,7 +484,8 @@ var app = new (function() {
 	   	});
 		if (activeItem){		
 			if (activeItem.perks && $content.find(".destt-talent").length == 0){
-				$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
+				var template = perksTemplate({ perks: activeItem.perks });
+				$content.find(".destt-info").prepend(template);
 			}
 			$content.find(".destt-primary-min").html( activeItem.primaryStat );
 		}
@@ -567,7 +600,7 @@ var app = new (function() {
 				var avatars = e.data.characters;
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
-					var profile = new Profile({ order: 0, gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
+					var profile = new Profile({ race: "", order: 0, gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
 					var def = results.definitions.items;
 					var def_perks = results.definitions.perks;
 					
@@ -621,7 +654,7 @@ var app = new (function() {
 	
 	this.refreshHandler = function(){
 		clearInterval(self.refreshInterval);
-		if (self.doRefresh() == 1){
+		if (self.doRefresh() == 1 && self.loadoutMode() == false){
 			self.refreshInterval = setInterval(self.loadData, self.refreshSeconds() * 1000);
 		}
 	}
@@ -638,13 +671,22 @@ var app = new (function() {
 		self.bungie = new bungie();
 		self.loadData();
 		self.doRefresh.subscribe(self.refreshHandler);
-		self.refreshSeconds.subscribe(self.refreshHandler);		
+		self.refreshSeconds.subscribe(self.refreshHandler);
+		self.loadoutMode.subscribe(self.refreshHandler);
 		chrome.storage.sync.get("autoRefresh", function(result){
 			if ("autoRefresh" in result){
 				_doRefresh(result.autoRefresh);
 			}
 			self.refreshHandler();
 		});
+		chrome.storage.sync.get('loadouts', function(result) {
+		  if (result.loadouts){
+		  	var loadouts = JSON.parse(result.loadouts);
+			_.each(loadouts, function(loadout){				
+				self.loadouts.push(new Loadout(loadout));
+			});
+		  }
+	    });
 		$(window).click(function(e){
 			if (e.target.className !== "itemImage") {
 				$("#move-popup").hide();

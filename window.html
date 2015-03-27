@@ -18,9 +18,10 @@
 	<script language="JavaScript" type="text/javascript" src="/js/dependencies/bootstrap.js"></script>
     <script language="JavaScript" type="text/javascript" src="/js/dependencies/knockout.js"></script>
     <script language="JavaScript" type="text/javascript" src="/js/dependencies/underscore-min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/js/loadouts.js"></script>
     <script language="JavaScript" type="text/javascript" src="/js/app.js"></script>
-	<script language="JavaScript" type="text/javascript" src="js/destinydb.js"></script>
-	<script language="JavaScript" type="text/javascript" src="js/tooltips.min.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/js/destinydb.js"></script>
+	<script language="JavaScript" type="text/javascript" src="/js/tooltips.min.js"></script>
   </head>
 
   <body>
@@ -46,14 +47,14 @@
 				<div style="width: 151px; height: 155px; border:1px solid white; display: inline-block;">
 					<div class="item-Section" data-bind="foreach: { data: character.get(list.split('.')[0], list.split('.')[1]), as: 'item' }, sortableList: character.get(list.split('.')[0], list.split('.')[1])">
 						<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
-							<a data-bind="attr:{href:item.href, id:item._id}"><img class="itemImage" data-bind="attr: { src: item.icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
+							<a data-bind="attr:{href:item.href, id:item._id}"><img class="itemImage" data-bind="attr: { src: item.icon }, click: function(){ setActiveItem(list, this) }, moveItem: true"></a>
 							<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
 						</span>
 					</div>
 				</div>
 				<div style="width: 52px; height: 155px; display: inline-block; vertical-align:top;" data-bind="visible: character.id != 'Vault', with: character.itemEquipped(list.split('.')[0], list.split('.')[1])">
 					<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
-						<a data-bind="attr:{href:href, id:_id}"><img class="itemImage" data-bind="attr: { src: icon }, click: function(){ moveItem(list, this) }, moveItem: true"></a>
+						<a data-bind="attr:{href:href, id:_id}"><img class="itemImage" data-bind="attr: { src: icon }, click: function(){ setActiveItem(list, this) }, moveItem: true"></a>
 						<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
 					</span>
 				</div>				
@@ -115,6 +116,17 @@
 		          </ul>
 		        </li>
 				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Loadouts <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li data-bind="click: createLoadout"><a href="#">Create</a></li>
+					<li data-bind="click: cancelLoadout"><a href="#">Cancel</a></li>
+					<li class="divider"></li>
+					<!-- ko foreach: { data: loadouts, as: 'loadout' } -->
+						<li data-bind="click: setActive"><a data-bind="text: loadout.name" href="#"></a></li>
+		  			<!--/ko  -->
+		          </ul>
+		        </li>
+				<li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Damage <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
 		          	<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="All"><a href="#">All</a></li>
@@ -136,11 +148,10 @@
 		      </ul>
 		      <form class="navbar-form navbar-left" role="search" onsubmit="return false">
 		        <div>
-					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">
+					<input class="form-control" placeholder="Name or Perk" size="9" type="text" data-bind="value: searchKeyword">		
 					<input type="Checkbox" class="form-control" data-bind="checked: doRefresh" value="1">
 					Auto Refresh
-					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">
-					<input type="button" class="btn form-control" data-bind="click: loadData" value="Refresh">
+					<input type="Text" class="form-control" data-bind="value: refreshSeconds" size="1">		
 		        </div>
 		      </form>
 		    </div>
@@ -212,5 +223,26 @@
 				</div>
 			</div>
 		</div>
+		<div id="loadout-create" data-bind="visible: loadoutMode" style="display:none;">
+			<div class="content" data-bind="with: activeLoadout">
+				<div id="loadout-options">
+					<input id="loadout-name" type="search" data-bind="value: name" placeholder="Loadout Name...">
+					<span id="loadout-save" data-bind="click: save">Save</span>
+					<span id="loadout-save" data-bind="click: remove">Delete</span>
+					<!-- ko foreach: { data: $root.characters, as: 'character' } -->
+						<div class="move-button move-loadout" data-bind="attr: { title: uniqueName }, click: function(){ $parent.transfer(character.id) }, style: { backgroundImage: icon }, text: classType"></div>
+		  			<!--/ko  -->
+					<p id="loadout-error" data-bind="visible: items().length == 0">no items in loadout, click items to add.</p>
+				</div>
+				<span id="loadout-contents" data-bind="foreach: { data: items, as: 'item' }">
+					<span class="item" data-bind="css: isGridComplete ? 'complete' : '', visible: isVisible">
+						<a data-bind="attr:{href:item.href, id:item._id}, click:">
+							<img class="itemImage" data-bind="attr: { src: item.icon }, click: function(){ setActiveItem(list, this) }, moveItem: true">
+						</a>
+						<div class="attkIcon" data-bind="text: primaryStat, style: { backgroundColor: DestinyDamageTypeColors[damageTypeName] }"></div>
+					</span>
+				</span>	 	
+			</div>
+		</div>		
   </body>
 </html>
