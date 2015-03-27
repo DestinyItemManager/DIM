@@ -9,6 +9,9 @@ DIM will not be able to dismantle any of your items.
 
 To get started with DIM, download the extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager/apghicjnekejhfancbkahkhdckhdagna).
 
+##Requirements
+DIM is an extension that runs within the Chrome Desktop Web Browser.
+
 ##Quick start
 
 Clone the repo: git clone https://github.com/kyleshay/DIM.
@@ -19,19 +22,15 @@ You can run this locally by enabling [Chrome Extensions Developer Mode](https://
 
 ##Bugs and feature requests
 
-Have a bug or a feature request? Please first read the issue guidelines and search for existing and closed issues. If your problem or idea is not addressed yet, please open a new issue.
+Have a bug or a feature request? Please first search for [existing and closed issues](https://github.com/kyleshay/DIM/issues). If your problem or idea is not addressed yet, please open a new issue.
 
-##Discussion
-There are several locations for comments and discussion.  
 
-If your topic is about a feature request or bug, please create [an issue in the repo](https://github.com/kyleshay/DIM/issues).
+##Community
+Keep track of development and community news.
 
-If your topic is development oriented and needs real-time converstation, use our [gitter.im chat room](https://gitter.im/kyleshay/DIM).
+Follow the conversation on [reddit](http://www.reddit.com/r/DestinyItemManager/) and talk to other users of DIM.  This is where we posts updates to DIM.
 
-If your topic is about how much you enjoy the tool, visit us on [reddit](http://www.reddit.com/r/DestinyItemManager/) and talk to other users of DIM.
+Chat with the developers on gitter.im.  [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kyleshay/DIM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge).
 
-###Reddit
-http://www.reddit.com/r/DestinyItemManager/
-
-###gitter.im
-https://gitter.im/kyleshay/DIM
+##License
+Code released under [the MIT license](https://github.com/twbs/bootstrap/blob/master/LICENSE).
