@@ -577,6 +577,9 @@ var app = new (function() {
 	this.setProgressFilter = function(model, event){
 		self.progressFilter($(event.target).parent().attr("value"));
 	}
+	this.toggleRefresh = function(){
+		self.doRefresh(!self.doRefresh());
+	}
 	var processItem = function(profile, itemDefs, perkDefs){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
