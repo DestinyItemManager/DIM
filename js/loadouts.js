@@ -46,23 +46,21 @@ var Loadout = function(model){
 	this.swapItems = function(swapArray, targetCharacterId){
 		var itemIndex = -1;
 		var transferNextItem = function(){
-			console.log("itemIndex " + itemIndex);
 			var pair = swapArray[++itemIndex];
 			if (pair){
-				console.log(pair);
 				/* at this point it doesn't matter who goes first but lets transfer the loadout first */
 				var owner = pair.targetItem.character.id;
-				console.log("going to transfer first item " + pair.targetItem.description);
+				//console.log("going to transfer first item " + pair.targetItem.description);
 				self.findReference(pair.targetItem).store(targetCharacterId, function(targetProfile){			
-					console.log("xfered it, now to transfer next item " + pair.swapItem.description);	
-					self.findReference(pair.swapItem).store(owner, function(){
-						console.log("xfered that too, now to the next pair");
-						transferNextItem();
-					});
+					//console.log("xfered it, now to transfer next item " + pair.swapItem.description);
+					if (typeof pair.swapItem !== "undefined"){
+						self.findReference(pair.swapItem).store(owner, transferNextItem);
+					}	
+					else { transferNextItem(); }
 				});
 			}
 			else {
-				alert("Items transferred successfully");
+				alert("Item(s) transferred successfully");
 				$('#basicModal').modal('hide');
 			}
 		}
@@ -103,17 +101,26 @@ var Loadout = function(model){
 								swapItem: swapItem,
 								description: item.description + "'s swap item is " + swapItem.description
 							}
-						});
-						return swapArray;
+						});						
 					}
 					else {
 						/* do a clean move by returning a swap object without a swapItem */
+						var swapArray = _.map(sourceBucket, function(item){
+							return {
+								targetItem: item,
+								description: item.description + " will be added with no swaps"
+							}
+						});
 					}
+					return swapArray;
 				}));
 				$("#loadoutConfirm").show().click(function(){
 					self.swapItems(masterSwapArray, targetCharacterId);
 				});
-				dialog.title("Transfer Confirm").content(swapTemplate({ swapArray: masterSwapArray })).show(function(){							
+				window.arr = masterSwapArray;
+				window.swap = swapTemplate({ swapArray: masterSwapArray });
+				
+				dialog.title("Transfer Confirm").content(window.swap).show(function(){							
 					$("#loadoutConfirm").hide();
 				});
 			}			

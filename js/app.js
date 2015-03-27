@@ -383,8 +383,8 @@ var swapTemplate = _.template('<ul class="list-group">' +
 					'</a>' +
 				'</div>' +
 				'<div class="col-lg-3">' +
-					'<a class="item" href="<%= pair.swapItem.href %>">' + 
-						'<img class="itemImage" src="<%= pair.swapItem.icon %>">' +
+					'<a class="item" href="<%= pair.swapItem && pair.swapItem.href %>">' + 
+						'<img class="itemImage" src="<%= pair.swapItem && pair.swapItem.icon %>">' +
 					'</a>' +
 				'</div>' +
 			'</div>' +
