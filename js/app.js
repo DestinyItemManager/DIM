@@ -350,7 +350,7 @@ var perksTemplate = _.template('<div class="destt-talent">' +
 	'<% perks.forEach(function(perk){ %>' +
 		'<div class="destt-talent-wrapper">' +
 			'<div class="destt-talent-icon">' +
-				'<img src="https://desimg.zamimg.com/static/image/icons/gamedata/game-backgrounds/medium/<%= perk.hash %>.png">' +
+				'<img src="<%= perk.iconPath %>" width="36">' +
 			'</div>' +
 			'<div class="destt-talent-description">' +
 				'<%= perk.description %>' +
@@ -512,7 +512,7 @@ var app = new (function() {
 				itemObject.perks = item.perks.map(function(perk){
 					var p = perkDefs[perk.perkHash];
 					return {
-						hash: perk.iconPath.split("/")[4].split(".")[0],
+						iconPath: app.bungie.getUrl() + perk.iconPath,
 						name: p.displayName,
 						description: p.displayDescription
 					}
