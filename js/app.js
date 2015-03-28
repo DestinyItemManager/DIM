@@ -732,6 +732,7 @@ var app = new (function() {
 			});
 		  }
 	    });
+		$("form").bind("submit", false);
 		$(window).click(function(e){
 			if (e.target.className !== "itemImage") {
 				$("#move-popup").hide();
