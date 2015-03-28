@@ -18,6 +18,8 @@ const { URL } = require('../url');
 const { sandbox, evaluate, load } = require('../loader/sandbox');
 const { merge } = require('../util/object');
 const { getTabForContentWindow } = require('../tabs/utils');
+const { getInnerId } = require('../window/utils');
+const { PlainTextConsole } = require('../console/plain-text');
 
 // WeakMap of sandboxes so we can access private values
 const sandboxes = new WeakMap();
@@ -28,13 +30,20 @@ const sandboxes = new WeakMap();
 */
 let prefix = module.uri.split('sandbox.js')[0];
 const CONTENT_WORKER_URL = prefix + 'content-worker.js';
+const metadata = require('@loader/options').metadata;
 
 // Fetch additional list of domains to authorize access to for each content
 // script. It is stored in manifest `metadata` field which contains
 // package.json data. This list is originaly defined by authors in
 // `permissions` attribute of their package.json addon file.
-const permissions = require('@loader/options').metadata['permissions'] || {};
+const permissions = (metadata && metadata['permissions']) || {};
 const EXPANDED_PRINCIPALS = permissions['cross-domain-content'] || [];
+
+const waiveSecurityMembrane = !!permissions['unsafe-content-script'];
+
+const nsIScriptSecurityManager = Ci.nsIScriptSecurityManager;
+const secMan = Cc["@mozilla.org/scriptsecuritymanager;1"].
+  getService(Ci.nsIScriptSecurityManager);
 
 const JS_VERSION = '1.8';
 
@@ -94,8 +103,10 @@ const WorkerSandbox = Class({
     this.emit = this.emit.bind(this);
     this.emitSync = this.emitSync.bind(this);
 
-    // Eventually use expanded principal sandbox feature, if some are given.
-    //
+    // Use expanded principal for content-script if the content is a
+    // regular web content for better isolation.
+    // (This behavior can be turned off for now with the unsafe-content-script
+    // flag to give addon developers time for making the necessary changes)
     // But prevent it when the Worker isn't used for a content script but for
     // injecting `addon` object into a Panel, Widget, ... scope.
     // That's because:
@@ -108,12 +119,17 @@ const WorkerSandbox = Class({
     // domain principal.
     let principals = window;
     let wantGlobalProperties = [];
-    if (EXPANDED_PRINCIPALS.length > 0 && !requiresAddonGlobal(worker)) {
-      principals = EXPANDED_PRINCIPALS.concat(window);
-      // We have to replace XHR constructor of the content document
-      // with a custom cross origin one, automagically added by platform code:
-      delete proto.XMLHttpRequest;
-      wantGlobalProperties.push('XMLHttpRequest');
+    let isSystemPrincipal = secMan.isSystemPrincipal(
+      window.document.nodePrincipal);
+    if (!isSystemPrincipal && !requiresAddonGlobal(worker)) {
+      if (EXPANDED_PRINCIPALS.length > 0) {
+        // We have to replace XHR constructor of the content document
+        // with a custom cross origin one, automagically added by platform code:
+        delete proto.XMLHttpRequest;
+        wantGlobalProperties.push('XMLHttpRequest');
+      }
+      if (!waiveSecurityMembrane)
+        principals = EXPANDED_PRINCIPALS.concat(window);
     }
 
     // Instantiate trusted code in another Sandbox in order to prevent content
@@ -127,8 +143,12 @@ const WorkerSandbox = Class({
       sandboxPrototype: proto,
       wantXrays: true,
       wantGlobalProperties: wantGlobalProperties,
+      wantExportHelpers: !waiveSecurityMembrane,
       sameZoneAs: window,
-      metadata: { SDKContentScript: true }
+      metadata: {
+        SDKContentScript: true,
+        'inner-window-id': getInnerId(window)
+      }
     });
     model.sandbox = content;
 
@@ -178,8 +198,10 @@ const WorkerSandbox = Class({
     // script
     merge(model, result);
 
+    let console = new PlainTextConsole(null, getInnerId(window));
+
     // Handle messages send by this script:
-    setListeners(this);
+    setListeners(this, console);
 
     // Inject `addon` global into target document if document is trusted,
     // `addon` in document is equivalent to `self` in content script.
@@ -285,7 +307,7 @@ function importScripts (workerSandbox, ...urls) {
   }
 }
 
-function setListeners (workerSandbox) {
+function setListeners (workerSandbox, console) {
   let { worker } = modelFor(workerSandbox);
   // console.xxx calls
   workerSandbox.on('console', function consoleListener (kind, ...args) {

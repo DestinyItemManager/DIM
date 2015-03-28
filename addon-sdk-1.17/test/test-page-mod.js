@@ -9,8 +9,12 @@ const { Loader } = require('sdk/test/loader');
 const tabs = require("sdk/tabs");
 const { setTimeout } = require("sdk/timers");
 const { Cc, Ci, Cu } = require("chrome");
-const { open, getFrames, getMostRecentBrowserWindow } = require('sdk/window/utils');
-const windowUtils = require('sdk/deprecated/window-utils');
+const {
+  open,
+  getFrames,
+  getMostRecentBrowserWindow,
+  getInnerId
+} = require('sdk/window/utils');
 const { getTabContentWindow, getActiveTab, setTabURL, openTab, closeTab } = require('sdk/tabs/utils');
 const xulApp = require("sdk/system/xul-app");
 const { isPrivateBrowsingSupported } = require('sdk/self');
@@ -20,9 +24,12 @@ const { isTabPBSupported, isWindowPBSupported, isGlobalPBSupported } = require('
 const promise = require("sdk/core/promise");
 const { pb } = require('./private-browsing/helper');
 const { URL } = require("sdk/url");
+const { LoaderWithHookedConsole } = require('sdk/test/loader');
 
 const { waitUntil } = require("sdk/test/utils");
 const data = require("./fixtures");
+
+const { gDevToolsExtensions } = Cu.import("resource://gre/modules/devtools/DevToolsExtensions.jsm", {});
 
 const testPageURI = data.url("test.html");
 
@@ -526,7 +533,7 @@ exports.testContentScriptWhenForNewTabs = function(assert, done) {
   handleReadyState(url, 'start', {
     onLoading: (tab) => {
       assert.pass("PageMod is attached while document is loading");
-      if (++count === 3) 
+      if (++count === 3)
         tab.close(done);
     },
     onInteractive: () => assert.fail("onInteractive should not be called with 'start'."),
@@ -536,7 +543,7 @@ exports.testContentScriptWhenForNewTabs = function(assert, done) {
   handleReadyState(url, 'ready', {
     onInteractive: (tab) => {
       assert.pass("PageMod is attached while document is interactive");
-      if (++count === 3) 
+      if (++count === 3)
         tab.close(done);
     },
     onLoading: () => assert.fail("onLoading should not be called with 'ready'."),
@@ -546,7 +553,7 @@ exports.testContentScriptWhenForNewTabs = function(assert, done) {
   handleReadyState(url, 'end', {
     onComplete: (tab) => {
       assert.pass("PageMod is attached when document is complete");
-      if (++count === 3) 
+      if (++count === 3)
         tab.close(done);
     },
     onLoading: () => assert.fail("onLoading should not be called with 'end'."),
@@ -569,7 +576,7 @@ exports.testContentScriptWhenOnTabOpen = function(assert, done) {
       handleReadyState(url, 'start', {
         onLoading: () => {
           assert.pass("PageMod is attached while document is loading");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onInteractive: () => assert.fail("onInteractive should not be called with 'start'."),
@@ -579,7 +586,7 @@ exports.testContentScriptWhenOnTabOpen = function(assert, done) {
       handleReadyState(url, 'ready', {
         onInteractive: () => {
           assert.pass("PageMod is attached while document is interactive");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'ready'."),
@@ -589,7 +596,7 @@ exports.testContentScriptWhenOnTabOpen = function(assert, done) {
       handleReadyState(url, 'end', {
         onComplete: () => {
           assert.pass("PageMod is attached when document is complete");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'end'."),
@@ -613,7 +620,7 @@ exports.testContentScriptWhenOnTabReady = function(assert, done) {
       handleReadyState(url, 'start', {
         onInteractive: () => {
           assert.pass("PageMod is attached while document is interactive");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'start'."),
@@ -623,7 +630,7 @@ exports.testContentScriptWhenOnTabReady = function(assert, done) {
       handleReadyState(url, 'ready', {
         onInteractive: () => {
           assert.pass("PageMod is attached while document is interactive");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'ready'."),
@@ -633,7 +640,7 @@ exports.testContentScriptWhenOnTabReady = function(assert, done) {
       handleReadyState(url, 'end', {
         onComplete: () => {
           assert.pass("PageMod is attached when document is complete");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'end'."),
@@ -657,7 +664,7 @@ exports.testContentScriptWhenOnTabLoad = function(assert, done) {
       handleReadyState(url, 'start', {
         onComplete: () => {
           assert.pass("PageMod is attached when document is complete");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'start'."),
@@ -667,7 +674,7 @@ exports.testContentScriptWhenOnTabLoad = function(assert, done) {
       handleReadyState(url, 'ready', {
         onComplete: () => {
           assert.pass("PageMod is attached when document is complete");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'ready'."),
@@ -677,7 +684,7 @@ exports.testContentScriptWhenOnTabLoad = function(assert, done) {
       handleReadyState(url, 'end', {
         onComplete: () => {
           assert.pass("PageMod is attached when document is complete");
-          if (++count === 3) 
+          if (++count === 3)
             tab.close(done);
         },
         onLoading: () => assert.fail("onLoading should not be called with 'end'."),
@@ -758,7 +765,6 @@ exports.testAutomaticDestroy = function(assert, done) {
 };
 
 exports.testAttachToTabsOnly = function(assert, done) {
-
   let { PageMod } = require('sdk/page-mod');
   let openedTab = null; // Tab opened in openTabWithIframe()
   let workerCount = 0;
@@ -783,6 +789,7 @@ exports.testAttachToTabsOnly = function(assert, done) {
   });
 
   function openHiddenFrame() {
+    assert.pass('Open iframe in hidden window');
     let hiddenFrames = require('sdk/frame/hidden-frame');
     let hiddenFrame = hiddenFrames.add(hiddenFrames.HiddenFrame({
       onReady: function () {
@@ -804,6 +811,7 @@ exports.testAttachToTabsOnly = function(assert, done) {
   }
 
   function openToplevelWindow() {
+    assert.pass('Open toplevel window');
     let win = open('data:text/html;charset=utf-8,bar');
     win.addEventListener('DOMContentLoaded', function onload() {
       win.removeEventListener('DOMContentLoaded', onload, false);
@@ -813,6 +821,7 @@ exports.testAttachToTabsOnly = function(assert, done) {
   }
 
   function openBrowserIframe() {
+    assert.pass('Open iframe in browser window');
     let window = require('sdk/deprecated/window-utils').activeBrowserWindow;
     let document = window.document;
     let iframe = document.createElement('iframe');
@@ -828,6 +837,7 @@ exports.testAttachToTabsOnly = function(assert, done) {
 
   // Only these three documents will be accepted by the page-mod
   function openTabWithIframes() {
+    assert.pass('Open iframes in a tab');
     let subContent = '<iframe src="data:text/html;charset=utf-8,sub frame" />'
     let content = '<iframe src="data:text/html;charset=utf-8,' +
                   encodeURIComponent(subContent) + '" />';
@@ -948,7 +958,7 @@ exports.testPageModCss = function(assert, done) {
     'data:text/html;charset=utf-8,<div style="background: silver">css test</div>', [{
       include: ["*", "data:*"],
       contentStyle: "div { height: 100px; }",
-      contentStyleFile: data.url("pagemod-css-include-file.css")
+      contentStyleFile: data.url("css-include-file.css")
     }],
     function(win, done) {
       let div = win.document.querySelector("div");
@@ -1060,7 +1070,7 @@ exports.testPageModCssAutomaticDestroy = function(assert, done) {
     url: "data:text/html;charset=utf-8,<div style='width:200px'>css test</div>",
 
     onReady: function onReady(tab) {
-      let browserWindow = windowUtils.activeBrowserWindow;
+      let browserWindow = getMostRecentBrowserWindow();
       let win = getTabContentWindow(getActiveTab(browserWindow));
 
       let div = win.document.querySelector("div");
@@ -1362,6 +1372,8 @@ exports.testWorkerTabClose = function(assert, done) {
       include: "about:",
       contentScript: '',
       onAttach: function(worker) {
+        assert.pass("The page-mod was attached");
+
         worker.tab.close(function () {
           // On Fennec, tab is completely destroyed right after close event is
           // dispatch, so we need to wait for the next event loop cycle to
@@ -1391,18 +1403,30 @@ exports.testDebugMetadata = function(assert, done) {
       include: "about:",
       contentScriptWhen: "start",
       contentScript: "null;",
-    }],
-    function(win, done) {
+    }], function(win, done) {
       assert.ok(globalDebuggees.some(function(global) {
         try {
           let metadata = Cu.getSandboxMetadata(global.unsafeDereference());
-          return metadata && metadata.addonID && metadata.SDKContentScript;
+          return metadata && metadata.addonID && metadata.SDKContentScript &&
+                 metadata['inner-window-id'] == getInnerId(win);
         } catch(e) {
           // Some of the globals might not be Sandbox instances and thus
           // will cause getSandboxMetadata to fail.
           return false;
         }
       }), "one of the globals is a content script");
+      done();
+    }
+  );
+};
+
+exports.testDevToolsExtensionsGetContentGlobals = function(assert, done) {
+  let mods = testPageMod(assert, done, "about:", [{
+      include: "about:",
+      contentScriptWhen: "start",
+      contentScript: "null;",
+    }], function(win, done) {
+      assert.equal(gDevToolsExtensions.getContentGlobals({ 'inner-window-id': getInnerId(win) }).length, 1);
       done();
     }
   );
@@ -1507,5 +1531,68 @@ exports.testDetachOnUnload = function(assert, done) {
     onOpen: t => tab = t
   })
 }
+
+exports.testConsole = function(assert, done) {
+  let innerID;
+  const TEST_URL = 'data:text/html;charset=utf-8,console';
+  const { loader } = LoaderWithHookedConsole(module, onMessage);
+  const { PageMod } = loader.require('sdk/page-mod');
+  const system = require("sdk/system/events");
+
+  let seenMessage = false;
+  function onMessage(type, msg, msgID) {
+    seenMessage = true;
+    innerID = msgID;
+  }
+
+  let mod = PageMod({
+    include: TEST_URL,
+    contentScriptWhen: "ready",
+    contentScript: Isolate(function() {
+      console.log("Hello from the page mod");
+      self.port.emit("done");
+    }),
+    onAttach: function(worker) {
+      worker.port.on("done", function() {
+        let window = getTabContentWindow(tab);
+        let id = getInnerId(window);
+        assert.ok(seenMessage, "Should have seen the console message");
+        assert.equal(innerID, id, "Should have seen the right inner ID");
+        closeTab(tab);
+        done();
+      });
+    },
+  });
+
+  let tab = openTab(getMostRecentBrowserWindow(), TEST_URL);
+}
+
+exports.testSyntaxErrorInContentScript = function(assert, done) {
+  const url = "data:text/html;charset=utf-8,testSyntaxErrorInContentScript";
+  let hitError = null;
+  let attached = false;
+
+  testPageMod(assert, done, url, [{
+      include: url,
+      contentScript: 'console.log(23',
+
+      onAttach: function() {
+        attached = true;
+      },
+
+      onError: function(e) {
+        hitError = e;
+      }
+    }],
+
+    function(win, done) {
+      assert.ok(attached, "The worker was attached.");
+      assert.notStrictEqual(hitError, null, "The syntax error was reported.");
+      if (hitError)
+        assert.equal(hitError.name, "SyntaxError", "The error thrown should be a SyntaxError");
+      done();
+    }
+  );
+};
 
 require('sdk/test').run(exports);

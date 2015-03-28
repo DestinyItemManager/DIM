@@ -298,6 +298,43 @@ exports['test button global state updated'] = function(assert) {
   loader.unload();
 }
 
+exports['test button global state set and get with state method'] = function(assert) {
+  let loader = Loader(module);
+  let { ToggleButton } = loader.require('sdk/ui');
+
+  let button = ToggleButton({
+    id: 'my-button-16',
+    label: 'my button',
+    icon: './icon.png'
+  });
+
+  // read the button's state
+  let state = button.state(button);
+
+  assert.equal(state.label, 'my button',
+    'label is correct');
+  assert.equal(state.icon, './icon.png',
+    'icon is correct');
+  assert.equal(state.disabled, false,
+    'disabled is correct');
+
+  // set the new button's state
+  button.state(button, {
+    label: 'New label',
+    icon: './new-icon.png',
+    disabled: true
+  });
+
+  assert.equal(button.label, 'New label',
+    'label is updated');
+  assert.equal(button.icon, './new-icon.png',
+    'icon is updated');
+  assert.equal(button.disabled, true,
+    'disabled is updated');
+
+  loader.unload();
+};
+
 exports['test button global state updated on multiple windows'] = function(assert, done) {
   let loader = Loader(module);
   let { ToggleButton } = loader.require('sdk/ui');
@@ -807,6 +844,44 @@ exports['test button state are snapshot'] = function(assert) {
   loader.unload();
 }
 
+exports['test button icon object is a snapshot'] = function(assert) {
+  let loader = Loader(module);
+  let { ToggleButton } = loader.require('sdk/ui');
+
+  let icon = {
+    '16': './foo.png'
+  };
+
+  let button = ToggleButton({
+    id: 'my-button-17',
+    label: 'my button',
+    icon: icon
+  });
+
+  assert.deepEqual(button.icon, icon,
+    'button.icon has the same properties of the object set in the constructor');
+
+  assert.notEqual(button.icon, icon,
+    'button.icon is not the same object of the object set in the constructor');
+
+  assert.throws(
+    () => button.icon[16] = './bar.png',
+    /16 is read-only/,
+    'properties of button.icon are ready-only'
+  );
+
+  let newIcon = {'16': './bar.png'};
+  button.icon = newIcon;
+
+  assert.deepEqual(button.icon, newIcon,
+    'button.icon has the same properties of the object set');
+
+  assert.notEqual(button.icon, newIcon,
+    'button.icon is not the same object of the object set');
+
+  loader.unload();
+}
+
 exports['test button after destroy'] = function(assert) {
   let loader = Loader(module);
   let { ToggleButton } = loader.require('sdk/ui');
@@ -1027,50 +1102,62 @@ exports['test buttons can have anchored panels'] = function(assert, done) {
   let { identify } = loader.require('sdk/ui/id');
   let { getActiveView } = loader.require('sdk/view/core');
 
-  let button = ToggleButton({
+  let b1 = ToggleButton({
     id: 'my-button-22',
     label: 'my button',
     icon: './icon.png',
-    onChange: ({checked}) => checked && panel.show({position: button})
+    onChange: ({checked}) => checked && panel.show()
   });
 
-  let panel = Panel();
+  let b2 = ToggleButton({
+    id: 'my-button-23',
+    label: 'my button',
+    icon: './icon.png',
+    onChange: ({checked}) => checked && panel.show({position: b2})
+  });
+
+  let panel = Panel({
+    position: b1
+  });
+
+  let { document } = getMostRecentBrowserWindow();
+  let b1Node = document.getElementById(identify(b1));
+  let b2Node = document.getElementById(identify(b2));
+  let panelNode = getActiveView(panel);
 
   panel.once('show', () => {
-    let { document } = getMostRecentBrowserWindow();
-    let buttonNode = document.getElementById(identify(button));
-    let panelNode = getActiveView(panel);
-
-    assert.ok(button.state('window').checked,
+    assert.ok(b1.state('window').checked,
       'button is checked');
 
     assert.equal(panelNode.getAttribute('type'), 'arrow',
       'the panel is a arrow type');
 
-    assert.strictEqual(buttonNode, panelNode.anchorNode,
-      'the panel is anchored properly to the button');
+    assert.strictEqual(b1Node, panelNode.anchorNode,
+      'the panel is anchored properly to the button given in costructor');
 
-    loader.unload();
+    panel.hide();
 
-    done();
+    panel.once('show', () => {
+      assert.ok(b2.state('window').checked,
+        'button is checked');
+
+      assert.equal(panelNode.getAttribute('type'), 'arrow',
+        'the panel is a arrow type');
+
+      // test also that the button passed in `show` method, takes the precedence
+      // over the button set in panel's constructor.
+      assert.strictEqual(b2Node, panelNode.anchorNode,
+        'the panel is anchored properly to the button passed to show method');
+
+      loader.unload();
+
+      done();
+    });
+
+    b2.click();
   });
 
-  button.click();
-}
-
-// If the module doesn't support the app we're being run in, require() will
-// throw.  In that case, remove all tests above from exports, and add one dummy
-// test that passes.
-try {
-  require('sdk/ui/button/toggle');
-}
-catch (err) {
-  if (!/^Unsupported Application/.test(err.message))
-    throw err;
-
-  module.exports = {
-    'test Unsupported Application': assert => assert.pass(err.message)
-  }
+  b1.click();
 }
 
 require('sdk/test').run(exports);

@@ -12,6 +12,12 @@ const systemPrincipal = CC('@mozilla.org/systemprincipal;1', 'nsIPrincipal')();
 const scriptLoader = Cc['@mozilla.org/moz/jssubscript-loader;1'].
                      getService(Ci.mozIJSSubScriptLoader);
 const self = require('sdk/self');
+const { getTabId, getTabForContentWindow } = require('../tabs/utils');
+const { getInnerId } = require('../window/utils');
+
+const { gDevToolsExtensions: {
+  addContentGlobal, removeContentGlobal
+} } = Cu.import("resource://gre/modules/devtools/DevToolsExtensions.jsm", {});
 
 /**
  * Make a new sandbox that inherits given `source`'s principals. Source can be
@@ -23,7 +29,16 @@ function sandbox(target, options) {
   options.metadata.addonID = options.metadata.addonID ?
     options.metadata.addonID : self.id;
 
-  return Cu.Sandbox(target || systemPrincipal, options);
+  let sandbox = Cu.Sandbox(target || systemPrincipal, options);
+  Cu.setSandboxMetadata(sandbox, options.metadata);
+  let innerWindowID = options.metadata['inner-window-id']
+  if (innerWindowID) {
+    addContentGlobal({
+      global: sandbox,
+      'inner-window-id': innerWindowID
+    });
+  }
+  return sandbox;
 }
 exports.sandbox = sandbox;
 
@@ -52,3 +67,8 @@ function load(sandbox, uri) {
   }
 }
 exports.load = load;
+
+/**
+ * Forces the given `sandbox` to be freed immediately.
+ */
+exports.nuke = Cu.nukeSandbox

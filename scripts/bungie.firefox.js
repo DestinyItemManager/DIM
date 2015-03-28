@@ -45,43 +45,12 @@ function bungie() {
     });
   }
 
-  function _request(opts) {
-    /*
-    var r = new XMLHttpRequest();
-    r.open(opts.method, url + "Platform" + opts.route, true);
-    r.setRequestHeader('X-API-Key', apikey);
-    r.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        var response = JSON.parse(this.response);
-
-        if(response.ErrorCode === 36) setTimeout(function () { _request(opts); }, 1000);
-        else opts.complete(response.Response, response);
-      } else {
-        opts.complete({error: 'network error:' + this.status}, this.response);
-      }
-    };
-
-    r.onerror = function() { opts.complete({error: 'connection error'}); };
-
-    _getToken(function(token) {
-      if(token != null || _token) {
-        r.withCredentials = true;
-        r.setRequestHeader('x-csrf', token || _token);
-        r.send(JSON.stringify(opts.payload));
-      } else {
-        opts.complete({error: 'cookie not found'});
-      }
-    });*/
-	
-	//setTimeout(function(){
-		
-		var event = document.createEvent('CustomEvent');
-		opts.route = url + "Platform" + opts.route;
-		//console.log("call to _request:" + JSON.stringify(opts));
-		event.initCustomEvent("request-message", true, true, { id: ++id, opts: opts });
-		requests[id] = opts;
-		document.documentElement.dispatchEvent(event);
-	//}, 5000);
+  function _request(opts) {		
+	var event = document.createEvent('CustomEvent');
+	opts.route = url + "Platform" + opts.route;
+	event.initCustomEvent("request-message", true, true, { id: ++id, opts: opts });
+	requests[id] = opts;
+	document.documentElement.dispatchEvent(event);
   }
 
   // privileged methods
@@ -99,14 +68,30 @@ function bungie() {
   this.system = function() {
     return systemIds;
   }
+	function isJson(str) {
+	    try {
+	        JSON.parse(str);
+	    } catch (e) {
+	        return false;
+	    }
+	    return true;
+	}  
   this.user = function(callback) {
     _request({
       route: '/User/GetBungieNetUser/',
       method: 'GET',
-      complete: function(res) {
+      complete: function(res, responseText) {
+	  	console.log(arguments);
         if(res === undefined) {
-          callback({error: 'no response'})
-          return;
+			if (isJson(responseText)){
+				var response = JSON.parse(responseText);
+				callback({error: response.Message});
+	         	return;
+			}
+			else {			
+	          callback({error: 'no response'})
+	          return;
+			}
         }
 
         systemIds.xbl = {id: res.gamerTag, type: 1};

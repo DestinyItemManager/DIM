@@ -191,9 +191,6 @@ exports["test postMessage"] = createProxyTest(html, function (helper, assert) {
 
   helper.createWorker(
     'new ' + function ContentScriptScope() {
-      assert(postMessage === postMessage,
-          "verify that we doesn't generate multiple functions for the same method");
-
       var json = JSON.stringify({foo : "bar\n \"escaped\"."});
 
       document.getElementById("iframe").contentWindow.postMessage(json, "*");
@@ -515,8 +512,6 @@ exports["test Window Frames"] = createProxyTest(html, function (helper) {
       let iframe = document.getElementById("iframe");
       //assert(window.frames.length == 1, "The iframe is reported in window.frames check1");
       //assert(window.frames[0] == iframe.contentWindow, "The iframe is reported in window.frames check2");
-      //console.log(window.test+ "-"+iframe.contentWindow);
-      //console.log(window);
       assert(window.test == iframe.contentWindow, "window[frameName] is valid");
       done();
     }
@@ -839,6 +834,32 @@ exports["test MutationObvserver"] = createProxyTest(html, function (helper) {
 
       // Modify the DOM
       link.setAttribute("href", "bar");
+    }
+  );
+
+});
+
+let html = '<script>' +
+  'var accessCheck = function() {' +
+  '  assert(true, "exporting function works");' +
+  '  try{' +
+  '    exportedObj.prop;' +
+  '    assert(false, "content should not have access to content-script");' +
+  '  } catch(e) {' +
+  '    assert(e.toString().indexOf("Permission denied") != -1,' +
+  '           "content should not have access to content-script");' +
+  '  }' +
+  '}</script>';
+exports["test nsEp for content-script"] = createProxyTest(html, function (helper) {
+
+  helper.createWorker(
+    'let glob = this; new ' + function ContentScriptScope() {
+
+      exportFunction(assert, unsafeWindow, { defineAs: "assert" });
+      window.wrappedJSObject.assert(true, "assert exported");
+      window.wrappedJSObject.exportedObj = { prop: 42 };
+      window.wrappedJSObject.accessCheck();
+      done();
     }
   );
 

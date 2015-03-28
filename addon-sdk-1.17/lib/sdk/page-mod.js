@@ -13,6 +13,7 @@ const { contract } = require('./util/contract');
 const { getAttachEventType, WorkerHost } = require('./content/utils');
 const { Class } = require('./core/heritage');
 const { Disposable } = require('./core/disposable');
+const { WeakReference } = require('./core/reference');
 const { Worker } = require('./content/worker');
 const { EventTarget } = require('./event/target');
 const { on, emit, once, setListeners } = require('./event/core');
@@ -97,7 +98,8 @@ const PageMod = Class({
   implements: [
     modContract.properties(modelFor),
     EventTarget,
-    Disposable
+    Disposable,
+    WeakReference
   ],
   extends: WorkerHost(workerFor),
   setup: function PageMod(options) {
@@ -128,7 +130,7 @@ const PageMod = Class({
       applyOnExistingDocuments(mod);
   },
 
-  destroy: function destroy() {
+  dispose: function() {
     let style = styleFor(this);
     if (style)
       detach(style);
@@ -199,6 +201,10 @@ function createWorker (mod, window) {
     contentScript: mod.contentScript,
     contentScriptFile: mod.contentScriptFile,
     contentScriptOptions: mod.contentScriptOptions,
+    // Bug 980468: Syntax errors from scripts can happen before the worker
+    // can set up an error handler. They are per-mod rather than per-worker
+    // so are best handled at the mod level.
+    onError: (e) => emit(mod, 'error', e)
   });
   workers.set(mod, worker);
   pipe(worker, mod);
