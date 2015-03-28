@@ -103,10 +103,12 @@ function bungie() {
       complete: function(res, responseText) {
 		if (responseText != ""){
 			var response = JSON.parse(responseText);
-			callback({error: response.Message, code: response.ErrorCode});
-         	return;
+			if (response.ErrorCode > 1){			
+				callback({error: response.Message, code: response.ErrorCode});
+	         	return;
+			}
 		}
-		else {			
+		else if (res == undefined) {			
           callback({error: 'no response'})
           return;
 		}
