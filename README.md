@@ -38,10 +38,11 @@
 -    Go to Add-ons
 -    Find the button that says "Install addon from file"
 -    Point it to the destiny_item_viewer.xpi file
--    
+
 ##Store Install Instructions
 
 Visit this store Link:
 
 [Destiny Item Viewer in Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge)
+
 Firefox App Store Coming Soon!
