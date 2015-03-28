@@ -18,18 +18,13 @@
 
 ##Features Incoming
 -    Drag & Drop Items
--    Destiny materials/consumables
--    Improved moved & Equip algorithm
 
 ##Known Issues
 
--    Layout doesn't scale well to multiple screen sizes
--    About & Help are currently just placeholders
--    Move & Equip has limitations on the API
--    Page is not loading for certain accounts
+-    Moving materials/consumables causing splits/merges is still buggy
 -    DestinyExotics doesn't recognize certain weapons you might have
 
-##Manual Install Instructions
+##Manual Chrome Install Instructions
 
 -    Go to Settings
 -    Go to Extensions
@@ -37,8 +32,16 @@
 -    Load Unpacked Extensions
 -    Point it to the directory where you unzipped the master.zip file
 
-##Chrome Install Instructions
+##Manual Firefox Install Instructions
+
+-    Go to Tools
+-    Go to Add-ons
+-    Find the button that says "Install addon from file"
+-    Point it to the destiny_item_viewer.xpi file
+-    
+##Store Install Instructions
 
 Visit this store Link:
 
 [Destiny Item Viewer in Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge)
+Firefox App Store Coming Soon!
