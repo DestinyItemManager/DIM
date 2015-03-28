@@ -45,4 +45,4 @@ Visit this store Link:
 
 [Destiny Item Viewer in Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge)
 
-Firefox App Store Coming Soon!
+[Destiny Item Viewer in Firefox Store](https://addons.mozilla.org/En-us/firefox/addon/destiny-item-viewer/)
