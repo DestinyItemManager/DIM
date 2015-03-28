@@ -81,7 +81,6 @@ function bungie() {
       route: '/User/GetBungieNetUser/',
       method: 'GET',
       complete: function(res, responseText) {
-	  	console.log(arguments);
         if(res === undefined) {
 			if (isJson(responseText)){
 				var response = JSON.parse(responseText);
