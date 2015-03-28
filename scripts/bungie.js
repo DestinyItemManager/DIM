@@ -10,11 +10,22 @@ function bungie() {
 
   var active = {id: 'loading'};
 
+  if (!isChrome){
+	var _token, id = 0;
+	window.requests = {};  
+	window.addEventListener("message", function(event) {
+		var reply = event.data;
+		requests[reply.id].complete(JSON.parse(reply.response).Response, reply.response);
+	}, false);  
+  }
+
   // private methods
   function _getAllCookies(callback) {
-    chrome.cookies.getAll({ domain: '.' + domain }, function(){
-      callback.apply(null, arguments);
-    });
+  	if (isChrome){
+		chrome.cookies.getAll({ domain: '.' + domain }, function(){
+	      callback.apply(null, arguments);
+	    });	
+	}    
   }
 
   function _getCookie(name, callback) {
@@ -37,31 +48,39 @@ function bungie() {
   }
 
   function _request(opts) {
-    var r = new XMLHttpRequest();
-    r.open(opts.method, url + "Platform" + opts.route, true);
-    r.setRequestHeader('X-API-Key', apikey);
-    r.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        var response = JSON.parse(this.response);
-
-        if(response.ErrorCode === 36) setTimeout(function () { _request(opts); }, 1000);
-        else opts.complete(response.Response, response);
-      } else {
-        opts.complete({error: 'network error:' + this.status}, this.response);
-      }
-    };
-
-    r.onerror = function() { opts.complete({error: 'connection error'}); };
-
-    _getToken(function(token) {
-      if(token != null) {
-        r.withCredentials = true;
-        r.setRequestHeader('x-csrf', token);
-        r.send(JSON.stringify(opts.payload));
-      } else {
-        opts.complete({error: 'cookie not found'});
-      }
-    });
+  	if (isChrome){
+		var r = new XMLHttpRequest();
+	    r.open(opts.method, url + "Platform" + opts.route, true);
+	    r.setRequestHeader('X-API-Key', apikey);
+	    r.onload = function() {
+	      if (this.status >= 200 && this.status < 400) {
+	        var response = JSON.parse(this.response);			
+	        if(response.ErrorCode === 36) setTimeout(function () { _request(opts); }, 1000);
+	        else opts.complete(response.Response, this.response);
+	      } else {
+	        opts.complete({error: 'network error:' + this.status}, this.response);
+	      }
+	    };
+	
+	    r.onerror = function() { opts.complete({error: 'connection error'}); };
+	
+	    _getToken(function(token) {
+	      if(token != null) {
+	        r.withCredentials = true;
+	        r.setRequestHeader('x-csrf', token);
+	        r.send(JSON.stringify(opts.payload));
+	      } else {
+	        opts.complete({error: 'cookie not found'});
+	      }
+	    });	
+	}
+	else {
+		var event = document.createEvent('CustomEvent');
+		opts.route = url + "Platform" + opts.route;
+		event.initCustomEvent("request-message", true, true, { id: ++id, opts: opts });
+		requests[id] = opts;
+		document.documentElement.dispatchEvent(event);	
+	}
   }
 
   // privileged methods
@@ -76,15 +95,21 @@ function bungie() {
   this.system = function() {
     return systemIds;
   }
+
   this.user = function(callback) {
     _request({
       route: '/User/GetBungieNetUser/',
       method: 'GET',
-      complete: function(res) {
-        if(res === undefined) {
+      complete: function(res, responseText) {
+		if (responseText != ""){
+			var response = JSON.parse(responseText);
+			callback({error: response.Message, code: response.ErrorCode});
+         	return;
+		}
+		else {			
           callback({error: 'no response'})
           return;
-        }
+		}
 
         systemIds.xbl = {id: res.gamerTag, type: 1};
         systemIds.psn = {id: res.psnId, type: 2};
@@ -104,7 +129,7 @@ function bungie() {
       method: 'GET',
       complete: function(membership) {
         if(membership[0] === undefined) {
-          console.log('error finding bungie account!', membership)
+          //console.log('error finding bungie account!', membership)
           callback({error: true})
           return;
         }

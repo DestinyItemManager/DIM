@@ -177,9 +177,16 @@
 				<a data-bind="attr:{ href: 'https://destinydb.com/items/' + $data }"><img data-bind="attr:{src: $root.bungie.getUrl() + _itemDefs[ $data ].icon, title: _itemDefs[ $data ].name }" width="48"></a>
 			</span>
 		</div>		
-		<div data-bind="with: $root.activeUser()" style="display:none; margin-top:20px;">
+		<div data-bind="with: $root.activeUser()" style="margin-top:20px;">
 			<div class="alert alert-danger" data-bind="visible: typeof error !== 'undefined'" style="display:none;">
 				<strong>Error:</strong> <span data-bind="text: typeof error == 'undefined' ? '' : error"></span>
+				<div data-bind="visible: typeof code !== 'undefined' && code == 99">
+					<ol>
+						<li>Visit <a href="http://bungie.net" target="_blank">Bungie.net</a></li>
+						<li>Click Sign In the top right</li>
+						<li>Refresh this page</li>
+					</ol>
+				</div>
 			</div>
 		</div>
 		<div data-bind="with: activeItem" id="move-popup">
