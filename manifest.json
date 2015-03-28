@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
   "name": "Destiny Item Viewer",
-  "version": "1.1.5",
+  "version": "1.2",
   "description": "Robust interface to view weapons in Destiny.",
   "icons": {
-    "16": "./assets/icon16.png",
-    "48": "./assets/icon48.png",
-    "128": "./assets/icon128.png"
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
   },
   "short_name": "DIV",
   "background": {
@@ -21,7 +21,7 @@
     "tabs"
   ],
   "browser_action": {
-    "default_icon": "icon128.png"
+    "default_icon": "assets/icon128.png"
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://desjs.zamimg.com https://destinydb.com; object-src 'self'",
   "incognito": "split",

@@ -1,13 +1,17 @@
-chrome.browserAction.onClicked.addListener(function(tab) {
-	var optionsUrl = chrome.extension.getURL('window.html');
-	chrome.tabs.query({url: optionsUrl}, function(tabs) {
-	    if (tabs.length) {
-	        chrome.tabs.update(tabs[0].id, {active: true});
-	    } else {
-	        chrome.tabs.create({url: optionsUrl});
-	    }
+var isChrome = (typeof chrome != "undefined");
+if (isChrome){
+	chrome.browserAction.onClicked.addListener(function(tab) {
+		var optionsUrl = chrome.extension.getURL('window.html');
+		chrome.tabs.query({url: optionsUrl}, function(tabs) {
+		    if (tabs.length) {
+		        chrome.tabs.update(tabs[0].id, {active: true});
+		    } else {
+		        chrome.tabs.create({url: optionsUrl});
+		    }
+		});
 	});
-});
+}
+
 
 /* this will be the drag & drop functionality
 //connect items with observableArrays
@@ -562,7 +566,7 @@ var app = new (function() {
 	})
 	
 	this.activeView = ko.observable(1);
-	this.setView = function(){
+	this.setView = function(model, event){
 		self.activeView($(event.target).parent().attr("value"));
 	}	
 	this.setDmgFilter = function(model, event){
@@ -713,25 +717,30 @@ var app = new (function() {
 	}
 	
 	this.init = function(){
-		self.bungie = new bungie();
-		self.loadData();
 		self.doRefresh.subscribe(self.refreshHandler);
 		self.refreshSeconds.subscribe(self.refreshHandler);
 		self.loadoutMode.subscribe(self.refreshHandler);
-		chrome.storage.sync.get("autoRefresh", function(result){
-			if ("autoRefresh" in result){
-				_doRefresh(result.autoRefresh);
-			}
-			self.refreshHandler();
-		});
-		chrome.storage.sync.get('loadouts', function(result) {
-		  if (result.loadouts){
-		  	var loadouts = JSON.parse(result.loadouts);
-			_.each(loadouts, function(loadout){				
-				self.loadouts.push(new Loadout(loadout));
+		if (isChrome){
+			chrome.storage.sync.get("autoRefresh", function(result){
+				if ("autoRefresh" in result){
+					_doRefresh(result.autoRefresh);
+				}
+				self.refreshHandler();
 			});
-		  }
-	    });
+			chrome.storage.sync.get('loadouts', function(result) {
+			  if (result.loadouts){
+			  	var loadouts = JSON.parse(result.loadouts);
+				_.each(loadouts, function(loadout){				
+					self.loadouts.push(new Loadout(loadout));
+				});
+			  }
+		    });		
+		}
+		// until I figure out a solution for contentScriptWhen: "start" in main.js
+		setTimeout(function(){		
+			self.bungie = new bungie();
+			self.loadData();
+		}, isChrome ? 1 : 5000);
 		$("form").bind("submit", false);
 		$(window).click(function(e){
 			if (e.target.className !== "itemImage") {
