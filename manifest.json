@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Destiny Item Viewer",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Robust interface to view weapons in Destiny.",
   "icons": {
     "16": "assets/icon16.png",
