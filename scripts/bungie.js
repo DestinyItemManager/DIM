@@ -53,12 +53,16 @@ function bungie() {
 	    r.open(opts.method, url + "Platform" + opts.route, true);
 	    r.setRequestHeader('X-API-Key', apikey);
 	    r.onload = function() {
-	      if (this.status >= 200 && this.status < 400) {
-	        var response = JSON.parse(this.response);			
-	        if(response.ErrorCode === 36) setTimeout(function () { _request(opts); }, 1000);
-	        else opts.complete(response.Response, this.response);
-	      } else {
-	        opts.complete({error: 'network error:' + this.status}, this.response);
+		  var response;
+		  try {
+		  	response = JSON.parse(this.response);
+		  }catch(e){ response = {} }		  
+	      if (this.status >= 200 && this.status < 400) {	        		
+		        if(response.ErrorCode === 36){ setTimeout(function () { _request(opts); }, 1000); }
+		        else { opts.complete(response.Response, response); }			
+	      } 
+		  else {
+	       	    opts.complete({error: 'network error:' + this.status}, response);
 	      }
 	    };
 	
@@ -100,13 +104,10 @@ function bungie() {
     _request({
       route: '/User/GetBungieNetUser/',
       method: 'GET',
-      complete: function(res, responseText) {
-		if (responseText != ""){
-			var response = JSON.parse(responseText);
-			if (response.ErrorCode > 1){			
-				callback({error: response.Message, code: response.ErrorCode});
-	         	return;
-			}
+      complete: function(res, response) {
+		if (response.ErrorCode && response.ErrorCode > 1){			
+			callback({error: response.Message, code: response.ErrorCode});
+         	return;
 		}
 		else if (res == undefined) {			
           callback({error: 'no response'})

@@ -4,7 +4,7 @@ targetItem: item,
 swapItem: swapItem,
 description: item.description + "'s swap item is " + swapItem.description
 */
-var swapTemplate = _.template('<ul class="list-group">' +	
+var swapTemplate3 = _.template('<ul class="list-group">' +	
 	'<% swapArray.forEach(function(pair){ %>' +
 		'<li class="list-group-item">' +
 			'<div class="row">' +
@@ -12,8 +12,8 @@ var swapTemplate = _.template('<ul class="list-group">' +
 					'<%= pair.description %>' +
 				'</div>' +
 				'<div class="col-lg-3">' +
-					'<a class="item" href="<%= pair.targetItem.href %>" id="<%= pair.targetItem._id %>">' + 
-						'<img class="itemImage" src="<%= pair.targetItem.icon %>">' +
+					'<a class="item" href="<%= pair.targetItem && pair.targetItem.href %>" id="<%= pair.targetItem && pair.targetItem._id %>">' + 
+						'<img class="itemImage" src="<%= pair.targetItem && pair.targetItem.icon %>">' +
 					'</a>' +
 				'</div>' +
 				'<div class="col-lg-3">' +
@@ -78,14 +78,17 @@ var Loadout = function(model){
 			if (pair){
 				/* at this point it doesn't matter who goes first but lets transfer the loadout first */
 				var owner = pair.targetItem.character.id;
-				//console.log("going to transfer first item " + pair.targetItem.description);
-				self.findReference(pair.targetItem).store(targetCharacterId, function(targetProfile){			
-					//console.log("xfered it, now to transfer next item " + pair.swapItem.description);
-					if (typeof pair.swapItem !== "undefined"){
-						self.findReference(pair.swapItem).store(owner, transferNextItem);
-					}	
-					else { transferNextItem(); }
-				});
+				if ( typeof pair.targetItem !== "undefined"){
+					//console.log("going to transfer first item " + pair.targetItem.description);
+					self.findReference(pair.targetItem).store(targetCharacterId, function(targetProfile){			
+						//console.log("xfered it, now to transfer next item " + pair.swapItem.description);
+						if (typeof pair.swapItem !== "undefined"){
+							self.findReference(pair.swapItem).store(owner, transferNextItem);
+						}	
+						else { transferNextItem(); }
+					});
+				}
+				else { transferNextItem(); }
 			}
 			else {
 				alert("Item(s) transferred successfully");
@@ -98,7 +101,8 @@ var Loadout = function(model){
 	}
 	/* before starting the transfer we need to decide what strategy we are going to use */
 	/* strategy one involves simply moving the items across assuming enough space to fit in both without having to move other things */
-	/* strategy two involves looking into the target bucket and creating pairs for an item that will be removed for it */	
+	/* strategy two involves looking into the target bucket and creating pairs for an item that will be removed for it */
+	/* strategy three is the same as strategy one except nothing will be moved bc it's already at the destination */
 	this.transfer = function(targetCharacterId){
 		var targetCharacter = _.findWhere( app.characters(), { id: targetCharacterId });
 		var getFirstItem = function(sourceBucketIds, itemFound){
@@ -125,23 +129,37 @@ var Loadout = function(model){
 					if (sourceBucket.length + targetBucket.length > 9){
 						var sourceBucketIds = _.pluck( sourceBucket, "_id");
 						var swapArray = _.map(sourceBucket, function(item){
-							var itemFound = false;
-							//console.log(item.description + " finding a match as " + item.type);
-							var swapItem = _.filter(_.where(targetBucket, { type: item.type }), getFirstItem(sourceBucketIds, itemFound));
-							swapItem = (swapItem.length > 0) ? swapItem[0] : _.filter(targetBucket, getFirstItem(sourceBucketIds, itemFound))[0];
-							return {
-								targetItem: item,
-								swapItem: swapItem,
-								description: item.description + "'s swap item is " + swapItem.description
+							/* if the item is already in the targetBucket then return an object indicating to do nothing */
+							if ( _.findWhere( targetBucket, { _id: item._id }) ){
+								return {
+									description: item.description + " is already in the " + targetCharacter.classType + "'s bucket of " + item.bucketType
+								}
+							}
+							else {
+								var itemFound = false;
+								var swapItem = _.filter(_.where(targetBucket, { type: item.type }), getFirstItem(sourceBucketIds, itemFound));
+								swapItem = (swapItem.length > 0) ? swapItem[0] : _.filter(targetBucket, getFirstItem(sourceBucketIds, itemFound))[0];
+								return {
+									targetItem: item,
+									swapItem: swapItem,
+									description: item.description + "'s swap item is " + swapItem.description
+								}							
 							}
 						});						
 					}
 					else {
 						/* do a clean move by returning a swap object without a swapItem */
 						var swapArray = _.map(sourceBucket, function(item){
-							return {
-								targetItem: item,
-								description: item.description + " will be added with no swaps"
+							if ( _.findWhere( targetBucket, { _id: item._id }) ){
+								return {
+									description: item.description + " is already in the " + targetCharacter.classType + "'s bucket of " + item.bucketType
+								}
+							}
+							else {							
+								return {
+									targetItem: item,
+									description: item.description + " will be added with no swaps"
+								}
 							}
 						});
 					}
@@ -150,10 +168,8 @@ var Loadout = function(model){
 				$("#loadoutConfirm").show().click(function(){
 					self.swapItems(masterSwapArray, targetCharacterId);
 				});
-				window.arr = masterSwapArray;
-				window.swap = swapTemplate({ swapArray: masterSwapArray });
 				
-				dialog.title("Transfer Confirm").content(window.swap).show(function(){							
+				dialog.title("Transfer Confirm").content(swapTemplate3({ swapArray: masterSwapArray })).show(function(){							
 					$("#loadoutConfirm").hide();
 				});
 			}			
