@@ -177,6 +177,7 @@ var Item = function(model, profile, list){
 		var tierFilter = $parent.tierFilter() == 0 || $parent.tierFilter() == self.tierType;
 		var progressFilter = $parent.progressFilter() == 0 || self.hashProgress($parent.progressFilter());
 		var typeFilter = $parent.typeFilter() == 0 || $parent.typeFilter() == self.type;
+		var uniqueFilter = $parent.showUniques() == false || ($parent.showUniques() == true && self.isUnique);
 		/*console.log( "searchFilter: " + searchFilter);
 		console.log( "dmgFilter: " + dmgFilter);
 		console.log( "setFilter: " + setFilter);
@@ -189,7 +190,7 @@ var Item = function(model, profile, list){
 		console.log("perks are " + JSON.stringify(self.perks));
 		console.log("description is " + self.description);
 		console.log("keyword has description " + ($parent.searchKeyword() !== "" && self.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1));*/
-		return (searchFilter) && (dmgFilter) && (setFilter) && (tierFilter) && (progressFilter) && (typeFilter);
+		return (searchFilter) && (dmgFilter) && (setFilter) && (tierFilter) && (progressFilter) && (typeFilter) && (uniqueFilter);
 	});
 	/* helper function that unequips the current item in favor of anything else */
 	this.unequip = function(callback){
@@ -463,7 +464,7 @@ var perksTemplate = _.template('<div class="destt-talent">' +
 		'</div>' +
 	'<% }) %>' +
 '</div>');
-		
+window.stats = {};		
 var app = new (function() {
 	var self = this;
 
@@ -478,7 +479,8 @@ var app = new (function() {
 		setFilter: [],
 		shareView: false,
 		shareUrl: "",
-		showMissing: false
+		showMissing: false,
+		showUniques: false
 	};
 	this.loadoutMode = ko.observable(false);
 	this.activeLoadout = ko.observable(new Loadout());
@@ -506,6 +508,7 @@ var app = new (function() {
 	this.shareView =  ko.observable(defaults.shareView);
 	this.shareUrl  = ko.observable(defaults.shareUrl);
 	this.showMissing =  ko.observable(defaults.showMissing);
+	this.showUniques =  ko.observable(defaults.showUniques);
 	
 	this.activeItem = ko.observable();
 	this.activeUser = ko.observable();
@@ -548,6 +551,7 @@ var app = new (function() {
 		self.shareView(defaults.shareView);
 		self.shareUrl (defaults.shareUrl);
 		self.showMissing(defaults.showMissing);
+		self.showUniques(defaults.showUniques);
 		$(element.target).removeClass("active");
 		return false;
 	}
@@ -560,16 +564,23 @@ var app = new (function() {
 			  if (item) activeItem = item;			  	
 	      });
 	   	});
-		if (activeItem){		
+		if (activeItem){
+			if ($content.find("[class*='destt-damage-color-']").length == 0 && activeItem.damageType > 1){
+				var burnIcon = $("<div></div>").addClass("destt-primary-damage-" + activeItem.damageType);
+				$content.find(".destt-primary").addClass("destt-damage-color-" + activeItem.damageType).prepend(burnIcon);
+			}
 			if (activeItem.perks && $content.find(".destt-talent").length == 0){
 				$content.find(".destt-info").prepend(perksTemplate({ perks: activeItem.perks }));
 			}
 			$content.find(".destt-primary-min").html( activeItem.primaryStat );
-		}
+		}		
 		callback($content.html());
 	}
 	this.toggleShareView = function(){
 		self.shareView(!self.shareView());
+	}
+	this.toggleShowUniques = function(){
+		self.showUniques(!self.showUniques());
 	}
 	this.toggleShowMissing = function(){
 		self.showMissing(!self.showMissing());
@@ -612,7 +623,7 @@ var app = new (function() {
 	this.toggleRefresh = function(){
 		self.doRefresh(!self.doRefresh());
 	}
-	var processItem = function(profile, itemDefs, perkDefs){	
+	var processItem = function(profile, itemDefs, perkDefs, talentPerks){	
 		return function(item){
 			var info = itemDefs[item.itemHash];
 			var itemObject = { 
@@ -645,6 +656,7 @@ var app = new (function() {
 				if (item.progression){
 					itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
 				}
+				itemObject.isUnique = info.tierType != 6 && (_.pluck(_.where(talentPerks[info.talentGridHash].nodes,{column:5}),'isRandom').indexOf(true) > -1);
 				profile.weapons.push( new Item(itemObject,profile,'weapons') );
 			}
 			else if (info.itemType == 2){
@@ -686,11 +698,13 @@ var app = new (function() {
 				self.bungie.vault(function(results){
 					var buckets = results.data.buckets;
 					var profile = new Profile({ race: "", order: 0, gender: "Tower",  classType: "Vault", id: "Vault", level: "", icon: "", background: "" });
+					window.r = results.definitions;
 					var def = results.definitions.items;
 					var def_perks = results.definitions.perks;
+					var def_talents = results.definitions.talentGrids;
 					
 					buckets.forEach(function(bucket){
-						bucket.items.forEach(processItem(profile, def, def_perks));
+						bucket.items.forEach(processItem(profile, def, def_perks, def_talents));
 					});
 					self.addWeaponTypes(profile.weapons());
 					self.characters.push(profile);
@@ -711,6 +725,7 @@ var app = new (function() {
 						var items = [];
 						var def = response.definitions.items;
 						var def_perks = response.definitions.perks;
+						var def_talents = response.definitions.talentGrids;
 						
 						response.data.buckets.Equippable.forEach(function(obj){
 							obj.items.forEach(function(item){
@@ -725,7 +740,7 @@ var app = new (function() {
 						//Currency bucket indicates how many Vanguard/Crucible marks you have
 						//Invisible bucket is for medallions and other things in the bottom left square
 						
-						items.forEach(processItem(profile, def, def_perks));
+						items.forEach(processItem(profile, def, def_perks, def_talents));
 						self.addWeaponTypes(profile.weapons());
 						self.characters.push(profile);
 						if (avatars.length == (index + 1)){
