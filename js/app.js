@@ -642,9 +642,12 @@ var app = new (function() {
 				isEquipped: item.isEquipped,
 				isGridComplete: item.isGridComplete
 			};
-			if (item.primaryStat)
+			if (item.primaryStat){
 				itemObject.primaryStat = item.primaryStat.value;
-			
+			}	
+			if (item.progression){
+				itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
+			}
 			if (info.itemType == 3){
 				itemObject.perks = item.perks.map(function(perk){
 					var p = perkDefs[perk.perkHash];
@@ -654,9 +657,6 @@ var app = new (function() {
 						description: p.displayDescription
 					}
 				});
-				if (item.progression){
-					itemObject.progression = (item.progression.progressToNextLevel == 0 && item.progression.currentProgress > 0);
-				}
 				itemObject.isUnique = info.tierType != 6 && (_.pluck(_.where(talentPerks[info.talentGridHash].nodes,{column:5}),'isRandom').indexOf(true) > -1);
 				profile.weapons.push( new Item(itemObject,profile,'weapons') );
 			}
