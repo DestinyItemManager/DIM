@@ -172,7 +172,7 @@ var Item = function(model, profile, list){
 		var $parent = app;
 		var searchFilter = $parent.searchKeyword() == '' || self.hasPerkSearch($parent.searchKeyword()) || 
 			($parent.searchKeyword() !== "" && self.description.toLowerCase().indexOf($parent.searchKeyword().toLowerCase()) >-1);
-		var dmgFilter = $parent.dmgFilter() == 'All' || self.damageTypeName == $parent.dmgFilter();
+		var dmgFilter = $parent.dmgFilter().length ==0 || $parent.dmgFilter().indexOf(self.damageTypeName) > -1;
 		var setFilter = $parent.setFilter().length == 0 || $parent.setFilter().indexOf(self.id) > -1 || $parent.setFilterFix().indexOf(self.id) > -1;
 		var tierFilter = $parent.tierFilter() == 0 || $parent.tierFilter() == self.tierType;
 		var progressFilter = $parent.progressFilter() == 0 || self.hashProgress($parent.progressFilter());
@@ -474,7 +474,7 @@ var app = new (function() {
 		refreshSeconds: 300,
 		tierFilter: 0,
 		typeFilter: 0,
-		dmgFilter: "All",
+		dmgFilter: [],
 		progressFilter: 0,
 		setFilter: [],
 		shareView: false,
@@ -501,7 +501,7 @@ var app = new (function() {
 	this.refreshSeconds = ko.observable(defaults.refreshSeconds);
 	this.tierFilter = ko.observable(defaults.tierFilter);
 	this.typeFilter = ko.observable(defaults.typeFilter);
-	this.dmgFilter =  ko.observable(defaults.dmgFilter);
+	this.dmgFilter =  ko.observableArray(defaults.dmgFilter);
 	this.progressFilter =  ko.observable(defaults.progressFilter);
 	this.setFilter = ko.observableArray(defaults.setFilter);
 	this.setFilterFix = ko.observableArray(defaults.setFilter);
@@ -609,7 +609,8 @@ var app = new (function() {
 		self.activeView($(event.target).parent().attr("value"));
 	}	
 	this.setDmgFilter = function(model, event){
-		self.dmgFilter($(event.target).parent().attr("value"));
+		var dmgType = $(event.target).parent().attr("value");
+		self.dmgFilter.indexOf(dmgType) == -1 ? self.dmgFilter.push(dmgType) : self.dmgFilter.remove(dmgType);
 	}
 	this.setTierFilter = function(model, event){
 		self.tierFilter($(event.target).parent().attr("value"));

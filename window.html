@@ -130,11 +130,10 @@
 				<li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Damage <span class="caret"></span></a>
 		          <ul class="dropdown-menu" role="menu">
-		          	<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="All"><a href="#">All</a></li>
-					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="None"><a href="#"><img src="assets/kinetic.png" class="icon">Kinetic (None)</a></li>
-					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="Solar"><a href="#"><img src="assets/solar.png" class="icon">Solar</a></li>
-					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="Arc"><a href="#"><img src="assets/arc.png" class="icon">Arc</a></li>
-					<li data-bind="css: dmgFilter() == $($element).attr('value') ? 'active' : '', click: setDmgFilter" value="Void"><a href="#"><img src="assets/void.png" class="icon">Void</a></li>
+					<li data-bind="css: dmgFilter().indexOf($($element).attr('value')) > -1 ? 'active' : '', click: setDmgFilter" value="None"><a href="#"><img src="assets/kinetic.png" class="icon">Kinetic (None)</a></li>
+					<li data-bind="css: dmgFilter().indexOf($($element).attr('value')) > -1 ? 'active' : '', click: setDmgFilter" value="Solar"><a href="#"><img src="assets/solar.png" class="icon">Solar</a></li>
+					<li data-bind="css: dmgFilter().indexOf($($element).attr('value')) > -1 ? 'active' : '', click: setDmgFilter" value="Arc"><a href="#"><img src="assets/arc.png" class="icon">Arc</a></li>
+					<li data-bind="css: dmgFilter().indexOf($($element).attr('value')) > -1 ? 'active' : '', click: setDmgFilter" value="Void"><a href="#"><img src="assets/void.png" class="icon">Void</a></li>
 		          </ul>
 		        </li>
 				<li class="dropdown">
