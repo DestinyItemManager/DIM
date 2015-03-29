@@ -29,21 +29,31 @@ ko.bindingHandlers.sortableList = {
 };
 */
 
-var dialog = new (function(){
+var dialog = (function(){
 	var self = this;
 	
+	this.modal;
+	
 	this.title = function(title){
-		$("#myModalLabel").text(title);
+		self.modal = new BootstrapDialog();
+        self.modal.setTitle(title);
 		return self;
 	}
 	
 	this.content = function(content){
-		$("#myModalContent").html(content);
+		self.modal.setMessage(content);
+		return self;
+	}
+	
+	this.buttons = function(buttons){
+		console.log("setting buttons");
+		console.log(buttons);
+		self.modal.setClosable(true).enableButtons(true).setData("buttons", buttons);
 		return self;
 	}
 	
 	this.show = function(cb){
-		$('#basicModal').modal({}).on("hidden.bs.modal", cb);
+		self.modal.open();
 		return self;
 	}
 });
@@ -250,9 +260,13 @@ var Item = function(model, profile, list){
 	}
 	
 	this.transfer = function(sourceCharacterId, targetCharacterId, amount, cb){		
-		setTimeout(function(){
-			var isVault = targetCharacterId == "Vault";			
+		//console.log("Item.transfer");
+		//console.log(arguments);
+		//setTimeout(function(){
+			var isVault = targetCharacterId == "Vault";
 			app.bungie.transfer(isVault ? sourceCharacterId : targetCharacterId, self._id, self.id, amount, isVault, function(e, result){
+				//console.log("app.bungie.transfer after");
+				//console.log(arguments);
 				if (result.Message == "Ok"){
 					var x,y;
 					_.each(app.characters(), function(character){
@@ -266,7 +280,7 @@ var Item = function(model, profile, list){
 						}
 					});
 					if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
-						console.log("need to split reference of self and push it into x and y");
+						//console.log("need to split reference of self and push it into x and y");
 						var remainder = self.primaryStat - amount;
 						/* at this point we can either add the item to the inventory or merge it with existing items there */
 						var existingItem = _.findWhere( y[self.list](), { description: self.description });
@@ -302,13 +316,14 @@ var Item = function(model, profile, list){
 					alert(result.Message);
 				}
 			});		
-		}, 1000);
+		//}, 1000);
 	}
 	
 	this.store = function(targetCharacterId, callback){
+		//console.log("item.store");
+		//console.log(arguments);
 		var sourceCharacterId = self.characterId, transferAmount = 1;
-		var done = function(){
-			$("#basicModalButton").html("Close");
+		var done = function(){			
 			if (targetCharacterId == "Vault"){
 				//console.log("from character to vault");
 				self.unequip(function(){
@@ -333,11 +348,26 @@ var Item = function(model, profile, list){
 		}
 		if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
 			$("#basicModalButton").html("Transfer");
-			dialog.title("Transfer Materials").content("<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>").show(function(event){
-				transferAmount = parseInt($("input#materialsAmount").val());
-				if (!isNaN(transferAmount))	done();
-				else alert("Invalid amount entered: " + transferAmount);
-			});
+			BootstrapDialog.show({
+	            message: "<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>",
+	            buttons: [
+					{
+	                	label: 'Transfer',
+						cssClass: 'btn-primary',
+						action: function(dialogItself){
+							transferAmount = parseInt($("input#materialsAmount").val());
+							if (!isNaN(transferAmount)){ done(); dialogItself.close(); }
+							else { BootstrapDialog.alert("Invalid amount entered: " + transferAmount); }
+						}
+	            	}, 
+					{
+		                label: 'Close',		                
+		                action: function(dialogItself){
+		                    dialogItself.close();
+		                }
+	            	}
+	            ]
+	        });	
 		}
 		else {
 			done();
@@ -500,11 +530,11 @@ var app = new (function() {
 	}	
 	
 	this.showHelp = function(){
-		$.get("help.html", function(content){ dialog.title("Help").content(content).show(); });
+		$.get("help.html", function(content){ (new dialog).title("Help").content(content).show(); });
 	}
 		
 	this.showAbout = function(){
-		$.get("about.html", function(content){ dialog.title("About").content(content).show(); });
+		$.get("about.html", function(content){ (new dialog).title("About").content(content).show(); });
 	}
 	
 	this.clearFilters = function(model, element){

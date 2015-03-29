@@ -16,6 +16,7 @@
     <script language="JavaScript" type="text/javascript" src="js/dependencies/jquery.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/dependencies/jquery-ui.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/dependencies/bootstrap.js"></script>
+	<script language="JavaScript" type="text/javascript" src="js/dependencies/bootstrap-dialog.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/dependencies/knockout.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/dependencies/underscore-min.js"></script>
 	<script language="JavaScript" type="text/javascript" src="js/loadouts.js"></script>
@@ -25,22 +26,6 @@
   </head>
 
   <body>
-
-		<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel"></h4>
-			  </div>
-			  <div class="modal-body" id="myModalContent"></div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" id="basicModalButton">Close</button>
-				<button type="button" class="btn btn-success" style="display:none;" id="loadoutConfirm">Confirm Changes</button>
-			  </div>
-			</div>
-		  </div>
-		</div>
 		<script type="text/html" id="sections-template">
 			<div class="title" data-bind="text: list.split('.')[1]"></div>
 			<div>
