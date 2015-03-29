@@ -15,7 +15,8 @@ function bungie() {
 	window.requests = {};  
 	window.addEventListener("message", function(event) {
 		var reply = event.data;
-		requests[reply.id].complete(JSON.parse(reply.response).Response, reply.response);
+		var response = JSON.parse(reply.response);
+		requests[reply.id].complete(response.Response, response);
 	}, false);  
   }
 
@@ -53,10 +54,10 @@ function bungie() {
 	    r.open(opts.method, url + "Platform" + opts.route, true);
 	    r.setRequestHeader('X-API-Key', apikey);
 	    r.onload = function() {
-		  var response;
+		  var response = this.response;
 		  try {
 		  	response = JSON.parse(this.response);
-		  }catch(e){ response = {} }		  
+		  }catch(e){}		  
 	      if (this.status >= 200 && this.status < 400) {	        		
 		        if(response.ErrorCode === 36){ setTimeout(function () { _request(opts); }, 1000); }
 		        else { opts.complete(response.Response, response); }			

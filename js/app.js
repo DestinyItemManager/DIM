@@ -46,8 +46,6 @@ var dialog = (function(){
 	}
 	
 	this.buttons = function(buttons){
-		console.log("setting buttons");
-		console.log(buttons);
 		self.modal.setClosable(true).enableButtons(true).setData("buttons", buttons);
 		return self;
 	}
@@ -530,11 +528,11 @@ var app = new (function() {
 	}	
 	
 	this.showHelp = function(){
-		$.get("help.html", function(content){ (new dialog).title("Help").content(content).show(); });
+		(new dialog).title("Help").content($("#help").html()).show();
 	}
 		
 	this.showAbout = function(){
-		$.get("about.html", function(content){ (new dialog).title("About").content(content).show(); });
+		(new dialog).title("About").content($("#about").html()).show();
 	}
 	
 	this.clearFilters = function(model, element){

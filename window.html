@@ -167,7 +167,7 @@
 				<strong>Error:</strong> <span data-bind="text: typeof error == 'undefined' ? '' : error"></span>
 				<div data-bind="visible: typeof code !== 'undefined' && code == 99">
 					<ol>
-						<li>Visit <a href="http://bungie.net" target="_blank">Bungie.net</a></li>
+						<li>Visit <a href="http://www.bungie.net/en/Profile/" target="_blank">Bungie.net</a></li>
 						<li>Click Sign In the top right</li>
 						<li>Refresh this page</li>
 					</ol>
@@ -246,6 +246,82 @@
 					</span>
 				</span>	 	
 			</div>
-		</div>		
+		</div>
+		<div id="about" style="display:none">
+			<h5>Current Features Supported</h5>
+			
+			<ul>
+				<li>Equipping Items across characters and within itself</li>
+				<li>Storing items across characters</li>
+				<li>Filter by Perk Name, Perk Description, and Item Name</li>
+				<li>Filter by item progress (Maxed (gold border), Full XP, Missing XP)</li>
+				<li>Filter by burn type (Kinetic, Arc, Solar, Void)</li>
+				<li>Filter by weapon type (Scout, Auto, Hand Cannon, etc...)</li>
+				<li>Filter by Tier (Exotic, Legendary, Rare, etc...)</li>
+				<li>Filter by Set (VOG, Crota, Iron Banner, Exotic)</li>
+				<li>Auto Refresh enable and disable, custom set seconds</li>
+				<li>DestinyDB tooltips now display personal perks attached to your weapon and current stats</li>
+				<li>Personal primary stats in transfer popup</li>
+				<li>DestinyExotics.com share url with friends and see what items you're missing with the Set filter.</li>
+				<li>Inline stat values on the item icons</li>
+				<li>Change Emblem dynamically</li>
+			</ul>
+			
+			<h5>Features Incoming</h5>
+			
+			<ul>
+				<li>Drag & Drop Items</li>
+			</ul>
+			
+			<h5>Known Issues</h5>
+			
+			<ul>
+				<li>Move & Equip has limitations on the API</li>
+				<li>Page is not loading for certain accounts</li>
+				<li>DestinyExotics doesn't recognize certain weapons you might have</li>
+			</ul>	
+			
+			<h5>Chrome Store Install</h5>		
+			
+			<a href="https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge" target="_blank">https://chrome.google.com/webstore/detail/destiny-item-viewer/gdjndlpockopgjbonnfdmkcmkcikjhge</a>
+			
+			<h5>Firefox Store Install</h5>		
+			
+			<a href="https://addons.mozilla.org/En-us/firefox/addon/destiny-item-viewer/" target="_blank">https://addons.mozilla.org/En-us/firefox/addon/destiny-item-viewer/</a>
+			
+			<h5>Support and New Issues</h5>
+			
+			<a href="https://github.com/dasilva333/DIM/tree/mixed" target="_blank">https://github.com/dasilva333/DIM/</a>
+			
+			<h5>About Me</h5>
+			
+			 This is a hobby project by <a href="https://github.com/dasilva333/">Richard Pinedo</a> and is not financed by or associated with Bungie.<br>			 
+			 All information used on this site is the property of Bungie.<br>			
+
+			Contact me on <a href="http://www.reddit.com/user/dasilva333/">Reddit</a> or <a href="https://github.com/dasilva333/">Github</a>. 
+			
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="5X265ELN4Y5FU">
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"> to keep this project alive.
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		</div>
+		<div id="help" style="display:none">
+			<ul>
+				<li><strong>Share</strong> Generates a URL you can share with your friends showing what weapons you have in your inventory.</li>
+				<li><strong>Clear Filters</strong> Resets all the filters back to their default state.</li>
+				<li><strong>Change Page</strong> Toggle between different views first page is Weapons, second page is Armor, third page is Styling/Misc</li>
+				<li><strong>Tier</strong> Filter by the rarity of the item <br></li>
+				<li><strong>Set</strong> Preset collections from various activiies in Destiny for an easy to filter list<br></li>
+				<li><strong>Progress</strong> <em>Missing XP:</em> Items that do not have their circles completely filled in with XP.<br></li>
+				<li><strong>Progress</strong> <em>Full XP:</em> Items that have been completely filled with XP but is missing the gold border.<br></li>
+				<li><strong>Progress</strong> <em>Maxed:</em> Items that have gold borders only.<br></li>
+				<li><strong>Damage</strong> Filter by burn type, kinetic is the default burn applied to all weapons if it's not arc, void or solar.<br></li>
+				<li><strong>Weapon</strong> Filter by type of weapon, this list will only show types you have in your inventory.<br></li>
+				<li><strong>Name or Perk</strong> Filter by the name of the item, or the name of the perk, or the description in the perk.<br></li>
+				<li><strong>Auto Refresh</strong> Allows option for enable/disable and a refresh interval in seconds.</li>
+			</ul>			
+		</div>
   </body>
 </html>
