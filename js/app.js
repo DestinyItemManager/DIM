@@ -346,8 +346,7 @@ var Item = function(model, profile, list){
 			}		
 		}
 		if (self.bucketType == "Materials" || self.bucketType == "Consumables"){
-			$("#basicModalButton").html("Transfer");
-			BootstrapDialog.show({
+			(new dialog({
 	            message: "<div>Transfer Amount: <input type='text' id='materialsAmount' value='" + self.primaryStat + "'></div>",
 	            buttons: [
 					{
@@ -366,7 +365,7 @@ var Item = function(model, profile, list){
 		                }
 	            	}
 	            ]
-	        });	
+	        })).title("Transfer Materials").show();
 		}
 		else {
 			done();
