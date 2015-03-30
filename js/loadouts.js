@@ -71,14 +71,14 @@ var Loadout = function(model){
 		var x = _.findWhere(c[item.list](),{ _id: item._id });
 		return x;
 	}
-	this.swapItems = function(swapArray, targetCharacterId){
+	this.swapItems = function(swapArray, targetCharacterId, callback){
 		var itemIndex = -1;
 		var transferNextItem = function(){
 			var pair = swapArray[++itemIndex];
 			if (pair){
-				/* at this point it doesn't matter who goes first but lets transfer the loadout first */
-				var owner = pair.targetItem.character.id;
+				/* at this point it doesn't matter who goes first but lets transfer the loadout first */				
 				if ( typeof pair.targetItem !== "undefined"){
+					var owner = pair.targetItem.character.id;
 					//console.log("going to transfer first item " + pair.targetItem.description);
 					self.findReference(pair.targetItem).store(targetCharacterId, function(targetProfile){			
 						//console.log("xfered it, now to transfer next item " + pair.swapItem.description);
@@ -91,8 +91,8 @@ var Loadout = function(model){
 				else { transferNextItem(); }
 			}
 			else {
-				alert("Item(s) transferred successfully");
-				$('#basicModal').modal('hide');
+				if (callback)
+					callback();
 			}
 		}
 		app.activeLoadout(new Loadout());
@@ -164,14 +164,14 @@ var Loadout = function(model){
 						});
 					}
 					return swapArray;
-				}));
-				$("#loadoutConfirm").show().click(function(){
-					self.swapItems(masterSwapArray, targetCharacterId);
-				});
-				
-				dialog.title("Transfer Confirm").content(swapTemplate3({ swapArray: masterSwapArray })).show(function(){							
-					$("#loadoutConfirm").hide();
-				});
+				}));				
+				(new dialog({buttons:[ 
+					{label: "Transfer", action: function(dialog){ self.swapItems(masterSwapArray, targetCharacterId, function(){
+						alert("Item(s) transferred successfully");
+						dialog.close()
+					}); }},
+					{label: "Cancel", action: function(dialog){ dialog.close() }}
+				]})).title("Transfer Confirm").content(swapTemplate3({ swapArray: masterSwapArray })).show();
 			}			
 		});
 	}

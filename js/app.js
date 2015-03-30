@@ -29,13 +29,13 @@ ko.bindingHandlers.sortableList = {
 };
 */
 
-var dialog = (function(){
+var dialog = (function(options){
 	var self = this;
 	
 	this.modal;
 	
 	this.title = function(title){
-		self.modal = new BootstrapDialog();
+		self.modal = new BootstrapDialog(options);
         self.modal.setTitle(title);
 		return self;
 	}
