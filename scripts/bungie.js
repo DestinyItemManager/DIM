@@ -2,7 +2,7 @@ function bungie() {
   // private vars
   var domain = 'bungie.net';
   var url = 'https://www.bungie.net/Platform';
-  var apikey = '57c5ff5864634503a0340ffdfbeb20c0';
+  var apikey = '5a70a3009ea0428a8d5a75a7c329eb5b';
 
   var systemIds = {};
   var membershipId = 0;
@@ -134,6 +134,16 @@ function bungie() {
       method: 'GET',
       complete: callback
     });
+  }
+  this.getItem = function(characterId, itemId, callback) {
+      _request({
+        route: '/Destiny/' + active.type +
+                '/Account/' + membershipId +
+                '/Character/' + characterId +
+                '/Inventory/' + itemId,
+        method: 'GET',
+        complete: callback
+      });
   }
   this.transfer = function(characterId, itemId, itemHash, amount, toVault, callback) {
     _request({

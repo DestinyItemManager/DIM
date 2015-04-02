@@ -2,19 +2,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>DIM</title>
-    <script type="text/javascript" src="scripts/lzstring.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/lzstring.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/sorttable.min.js"></script>
+    <script type="text/javascript" src="scripts/statdef.json"></script>
     <script type="text/javascript" src="scripts/itemdef.json"></script>
     <script type="text/javascript" src="scripts/collection.json"></script>
     <script type="text/javascript" src="scripts/report.js"></script>
     <script type="text/javascript" src="scripts/bungie.js"></script>
     <script type="text/javascript" src="scripts/loadout.js"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
+    <script type="text/javascript" src="scripts/armor.js"></script>
+    <script type="text/javascript" src="scripts/view.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <div id="header">
       <div class="content">
-        <span>DIM</span> <span id="faq-button">?</span> <span id="collection-button">C</span> <input id="collection-url" type="text" />
+        <span>DIM</span> <span id="faq-button">?</span> <span id="mm-button">M</span> <span id="collection-button">C</span> <input id="collection-url" type="text" />
         <span class="header-right">
         <input type="search" id="filter-text" placeholder="filter items or is:arc" /><span id="user" class="header-right"></span><select id="system">
           <option>PSN</option>
@@ -54,7 +58,7 @@
     </div>
 
     <div id="move-amount">
-      <div class="item-name">asdf</div>
+      <div class="item-name"></div>
       <input type="range" value="100" min="0" max="100" />
       <div id="move-amount-value"></div>
       <span id="move-amount-cancel">Cancel</span>
@@ -66,6 +70,11 @@
       <div class="message"></div>
       <div><br/>You may need to refresh the tool. Eventual support for this event.</div>
       <div class="close">close</div>
+    </div>
+
+    <div id="hover-popup">
+      <div class="item-name"></div>
+      <div class="stats"></div>
     </div>
 
     <div id="move-popup">
@@ -81,26 +90,25 @@
 
     <div id="faq">
       <div class="content">
-        <div><div class="title">FAQ</div>
+        <div><div class="title">FAQ - DIM v2.10.2</div>
           <ul>
             <li><div class="question">Why is this app so slow? It seems like it's only moving an item at a time.</div>
               <div class="answer">Unfortunately, the bungie API limits the number of calls made to their service to 1 call per second. Faster than flying to tower though :)</div></li>
-		            <li><div class="question">How can I contact you? Most bug/suggestion/comments are best directed this way.</div>
-		              <div class="answer">There is an active dedicated subreddit <a href="http://www.reddit.com/r/DestinyItemManager/">that can be accessed here.</a></div></li>
+		            <li><div class="question">How can I contact you?</div>
+		              <div class="answer">There is an active dedicated subreddit <a href="http://www.reddit.com/r/DestinyItemManager/">that can be accessed here.</a> my username is eutral</div></li>
             <li><div class="question">I lost my item using your tool!</div>
-              <div class="answer">Try reloading the page and then using the search function. I'm sure it's still there.</div></li>
-            <li><div class="question">It's hard to see everything on the screen to do drag and drop effectively!</div>
-              <div class="answer">Page is best viewed at 1648px width if your monitor supports it. Otherwise, click an item to open a move menu.</div></li>
+              <div class="answer">Try reloading the page and then using the filter input. I'm sure it's still there.</div></li>
             <li><div class="question">Thank you! Can I contribute in any way?</div>
-              <div class="answer">Share the tool and message me with your ideas, I would love to hear them!<br/>
+              <div class="answer">Share the tool, and message me with your ideas. I would love to hear them!<br/>
                 <form style="display:inline-block" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                   <input type="hidden" name="cmd" value="_s-xclick">
                   <input type="hidden" name="hosted_button_id" value="EE2BLN2YN2Q5L">
                   <input type="image" style="height: 15px;vertical-align: middle;" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
                   <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
                 </form>
-              </div></li>
-        </ul>
+              </div>
+            </li>
+          </ul>
         </div>
         <div><div class="title">Filters</div>
           <table>
@@ -139,6 +147,90 @@
           <div id="ironArmor"><p>IB Armor</p><span class="done"></span><span class="has"></span><span class="missing"></div>
       </div>
     </div>
+
+    <div id="minmax">
+      <div class="content">
+        <input type="button" value="close" id="mm-close" style="float:right" />
+        <span>
+          <div class="title">MINMAX</div>
+          <span>CLASS</span><select id="mm-class">
+            <option value=0>Titan</option>
+            <option value=1>Hunter</option>
+            <option value=2>Warlock</option>
+          </select>
+          <span>TOTAL</span><input type="checkbox" id="mm-type" />
+
+          <input type="number" id="mm-total" value=500 min=0 max=999 />
+
+          <span id="mm-detail">
+            <span>INTELLECT</span><input type="number" id="mm-intellect" value=150 min=0 max=400 />
+            <span>DISCIPLINE</span><input type="number" id="mm-discipline" value=50 min=0 max=400 />
+            <span>STRENGTH</span><input type="number" id="mm-strength" value=50 min=0 max=400  />
+          </span>
+
+        </span>
+        <input id="minmax-add-btn" type="button" value="ADD CUSTOM ITEM" style="float:right" />
+        <!-- <span style="float:left;">
+          <div class="title">ADD ITEM</div>
+          <span>ITEM</span><input type="text" id="add-name" />
+          <span>INTELLECT</span><input type="number" id="add-intellect" value=0 min=0 max=200 />
+          <span>DISCIPLINE</span><input type="number" id="add-discipline" value=0 min=0 max=200 />
+          <span>STRENGTH</span><input type="number" id="add-strength" value=0 min=0 max=200 />
+          <input type="button" value="ADD" />
+        </span> -->
+        <table class="sortable"><thead><tr>
+          <th class="num sorttable_numeric">Light</th>
+          <th class="num sorttable_numeric">INT</th>
+          <th class="num sorttable_numeric">DIS</th>
+          <th class="num sorttable_numeric">STR</th>
+          <th class="num sorttable_numeric" id="sorttotal">Total</th>
+          <th>Helmet</th>
+          <th>Gauntlets</th>
+          <th>Chest</th>
+          <th>Leg</th></tr>
+          </thead><tbody id="iterations"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="minmax-add">
+      <div class="title">ADD ITEM</div>
+      Add an item to compare with your others.
+      <br />
+      <span>NAME</span><input type="text" placeholder="item name" id="minmax-add-name" />
+      <br />
+      <span>CLASS</span><select id="minmax-add-class">
+        <option value=0>Titan</option>
+        <option value=1>Hunter</option>
+        <option value=2>Warlock</option>
+      </select>
+      <br />
+      <span>Bucket</span><select id="minmax-add-bucket">
+        <option value="Helmet">Helmet</option>
+        <option value="Gauntlets">Gauntlets</option>
+        <option value="Chest">Chest Armor</option>
+        <option value="Leg">Leg Armor</option>
+      </select>
+      <br />
+      <span>Exotic?</span><input type="checkbox" id="minmax-add-exotic" />
+      <br />
+      <span>LIGHT</span><input type="number" id="minmax-add-light" value=0 min=0 max=50 />
+      <br />
+      <span>INTELLECT</span><input type="number" id="minmax-add-intellect" value=0 min=0 max=400 />
+      <br />
+      <span>DISCIPLINE</span><input type="number" id="minmax-add-discipline" value=0 min=0 max=400 />
+      <br />
+      <span>STRENGTH</span><input type="number" id="minmax-add-strength" value=0 min=0 max=400  />
+      <br />
+
+      <input id="minmax-add-btn-done" type="button" value="ADD" />
+      <input id="minmax-add-btn-cancel" type="button" value="CANCEL" />
+    </div>
+
+    <template id="minmax-template">
+      <tr class="minmax-set">
+      </tr>
+    </template>
 
 		<template id="loadout-template">
 			<div class="loadout-set">

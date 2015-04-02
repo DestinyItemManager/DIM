@@ -5,7 +5,7 @@ var _storage = [];
 var _items = [];
 var _sections = null;
 
-var move, loadoutBox, loadoutNew, loadoutList, amountBox, errorBox;
+var move, hover, loadoutBox, loadoutNew, loadoutList, amountBox, errorBox;
 
 function hideMovePopup() {
 	move.style.display = 'none';
@@ -27,6 +27,81 @@ function errorDialog(message) {
 	errorBox.querySelector('.close').addEventListener('click', function(){
 		errorBox.style.display = 'none';
 	});
+}
+
+function hoverBox(item) {
+	hover.style.display = 'block';
+
+	var hoverItem = _items[item.dataset.index];
+	updateName(hover, hoverItem);
+
+	var stats = hover.querySelector('.stats');
+	stats.innerHTML = '';
+
+	for(var i = 0; i < hoverItem.stats.length; i++) {
+		stats.innerHTML += ('<p>' + _statDefs[hoverItem.stats[i].statHash] + ' | ' + hoverItem.stats[i].value + '</p>')
+	}
+
+	item.appendChild(hover);
+
+	var itemBounds = item.getBoundingClientRect();
+	var bodyWidth = document.body.clientWidth;
+	var requiredExtraPopupWidth = -(hover.clientWidth - itemBounds.width) * .25;
+
+	var clippedLeft = itemBounds.left - 4 < requiredExtraPopupWidth,
+	    clippedRight = bodyWidth - (itemBounds.right + 4) < requiredExtraPopupWidth;
+
+	if (clippedLeft) {
+		hover.style.marginLeft = (2 - itemBounds.left) + 'px';
+	} else if (clippedRight) {
+		hover.style.marginLeft = (bodyWidth - itemBounds.right - 4 - requiredExtraPopupWidth * 2) + 'px';
+	} else {
+		hover.style.marginLeft = (-requiredExtraPopupWidth) + 'px';
+	}
+
+}
+
+function updateName(box, moveItem) {
+	var name = box.querySelector('.item-name')
+	var color = '#f5f5f5';
+
+  if (moveItem.primStat) {
+		if (moveItem.primStat.statHash === 3897883278) {
+			// This item has defense stats, so lets pull some useful armor stats
+			name.innerHTML = moveItem.name;
+
+			// only 4 stats if there is a light element. other armor has only 3 stats.
+			if(moveItem.stats.length === 4) {
+				name.innerHTML += ' &#10022;' + moveItem.stats[0].value;
+			}
+			var stats = ['Int:', 'Dis:', 'Str:'];
+			var val = 0;
+			for(var s = 0; s < stats.length; s++) {
+				val = moveItem.stats[s + (moveItem.stats.length === 4 ? 1 : 0)].value;
+				if(val !== 0) {
+					name.innerHTML += ' | ' + stats[s] + ' ' + val;
+				}
+			}
+		} else if (moveItem.primStat.statHash === 368428387) {
+			// This item has attack stats, so lets pull some useful weapon stats
+			var attack = moveItem.primStat.value;
+
+			switch(moveItem.dmg) {
+				case 'arc': color = '#85c5ec'; break;
+				case 'solar': color = '#f2721b';  break;
+				case 'void': color = '#b184c5'; break;
+			}
+
+			name.innerHTML = '<img class="elemental ' + moveItem.dmg + '" src="assets/' + moveItem.dmg + '.png" />' +
+			 	moveItem.name + ' | A: ' + attack + ' ';
+		} else {
+			name.innerHTML = moveItem.name;
+		}
+  } else {
+		name.innerHTML = moveItem.name;
+	}
+
+	name.style.backgroundColor = color;
 }
 
 function moveBox(item) {
@@ -83,46 +158,7 @@ function moveBox(item) {
 		}
 	}
 
-	var name = move.querySelector('.item-name')
-	var color = '#f5f5f5';
-
-  if (moveItem.primStat) {
-		if (moveItem.primStat.statHash === 3897883278) {
-			// This item has defense stats, so lets pull some useful armor stats
-			name.innerHTML = moveItem.name;
-
-			// only 4 stats if there is a light element. other armor has only 3 stats.
-			if(moveItem.stats.length === 4) {
-				name.innerHTML += ' &#10022;' + moveItem.stats[0].value;
-			}
-			var stats = ['Int:', 'Dis:', 'Str:'];
-			var val = 0;
-			for(var s = 0; s < stats.length; s++) {
-				val = moveItem.stats[s + (moveItem.stats.length === 4 ? 1 : 0)].value;
-				if(val !== 0) {
-					name.innerHTML += ' | ' + stats[s] + ' ' + val;
-				}
-			}
-		} else if (moveItem.primStat.statHash === 368428387) {
-			// This item has attack stats, so lets pull some useful weapon stats
-			var attack = moveItem.primStat.value;
-
-			switch(moveItem.dmg) {
-				case 'arc': color = '#85c5ec'; break;
-				case 'solar': color = '#f2721b';  break;
-				case 'void': color = '#b184c5'; break;
-			}
-
-			name.innerHTML = '<img class="elemental ' + moveItem.dmg + '" src="assets/' + moveItem.dmg + '.png" />' +
-			 	moveItem.name + ' | A: ' + attack + ' ';
-		} else {
-			name.innerHTML = _items[item.dataset.index].name;
-		}
-  } else {
-		name.innerHTML = _items[item.dataset.index].name;
-	}
-
-	name.style.backgroundColor = color;
+	updateName(move, moveItem);
 
 	// switch(_items[item.dataset.index].tier) {
 	// 	TODO: be fancy and color the item name background the color of the item
@@ -151,7 +187,7 @@ function moveBox(item) {
 function dequip(item, callback, exotic) {
 	// find an item to replace the current.
 	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'exotic') && !_items[i].equipped) {
+		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'Exotic') && !_items[i].equipped) {
 			// console.log('[dequip] found replacement item: ', _items[i].name)
 			bungie.equip(_items[i].owner, _items[i].id, function(e, more) {
 				if(more.ErrorCode > 1) {
@@ -539,6 +575,9 @@ function buildItems() {
 			_transfer = this.parentNode;
 			moveBox(this.parentNode);
 		});
+		// img.addEventListener('mouseover', function() {
+		// 	hoverBox(this.parentNode);
+		// });
 
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
@@ -654,16 +693,28 @@ function appendItems(owner, items) {
 
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
 
+
+		// for(var i = 0; i < item.stats.length; i++) {
+		// 	if(item.stats[i].statHash === 1345609583) {
+		// 		console.log(itemDef.name)
+		// 	}
+		// }
+		//
+		// if(item.itemInstanceId == 6917529046161258692) {
+		// 	console.log(item, itemDef)
+		// }
+
 		_items.push({
 			owner:      owner,
 			hash:       item.itemHash,
 			type:       itemType,
 			sort:       itemSort,
 			tier:       itemDef.tier,
-			stats:      itemDef.baseStats,
 			name:       itemDef.name,
 			icon:       itemDef.icon,
 			notransfer: itemDef.notransfer,
+			class:      itemDef.class,
+			bucket:     itemDef.bucket,
 			id:         item.itemInstanceId,
 			equipped:   item.isEquipped,
 			equipment:  item.isEquipment,
@@ -682,6 +733,11 @@ function loadInventory(c) {
 	bungie.inventory(c, function(i) {
 		appendItems(c, flattenInventory(i.data))
 	});
+
+	// bungie.getItem(c, "6917529046161258692", function(eee) {
+	// 	console.log('yeah!')
+	// 	console.log(JSON.stringify(eee))
+	// })
 }
 
 var loader = {
@@ -689,6 +745,7 @@ var loader = {
 	characters: 0
 }
 
+var a = null;
 function tryPageLoad() {
 	loader.loaded++;
 	if(loader.characters != 0 && loader.loaded > loader.characters) {
@@ -701,6 +758,8 @@ function tryPageLoad() {
 			})
 			buildLoadouts();
 		});
+
+		a = new armor();
 
 		var r = new report();
 		r.buildHTML();
@@ -726,8 +785,25 @@ function tryPageLoad() {
 		errorBox = document.getElementById('error-popup');
 		amountBox = document.getElementById('move-amount');
 
+		hover = document.getElementById('hover-popup');
+
 		move = document.getElementById('move-popup');
 		move.querySelector('.locations').innerHTML = '';
+
+
+		var mmButton = document.getElementById('mm-button');
+		var minmax = document.getElementById('minmax');
+		mmButton.addEventListener('click', function() {
+			if(minmax.style.display === 'block') {
+				minmax.style.display = 'none';
+				return;
+			}
+			minmax.style.display = 'block'
+		})
+		var mmClose = document.getElementById('mm-close');
+		mmClose.addEventListener('click', function(e) {
+			minmax.style.display = 'none';
+		});
 
 		var faqButton = document.getElementById('faq-button');
 		var faq = document.getElementById('faq');
@@ -936,6 +1012,33 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	    }
 	});
 });
+
+(function (console) {
+  console.save = function (data, filename) {
+    if (!data) {
+      console.error('Console.save: No data');
+      return;
+    }
+
+    if (!filename) filename = 'console.json';
+
+    if (typeof data === "object") {
+      data = JSON.stringify(data, undefined, 4);
+    }
+
+    var blob = new Blob([data], {
+        type: 'text/json'
+      }),
+      e = document.createEvent('MouseEvents'),
+      a = document.createElement('a');
+
+    a.download = filename;
+    a.href = window.URL.createObjectURL(blob);
+    a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+    e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    a.dispatchEvent(e);
+  };
+})(console);
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

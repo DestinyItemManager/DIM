@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Destiny Item Manager",
-  "version": "2.8.3",
+  "version": "2.10.2",
   "description": "Robust interface to manage gear, weapons, and items in destiny.",
   "icons": {
     "16": "icon16.png",
@@ -11,7 +11,9 @@
   "short_name": "DIM",
   "background": {
     "scripts": [
-      "scripts/lzstring.min.js",
+      "scripts/vendor/lzstring.min.js",
+      "scripts/vendor/sorttable.min.js",
+      "scripts/armor.js",
       "scripts/report.js",
       "scripts/bungie.js",
       "scripts/loadout.js",
