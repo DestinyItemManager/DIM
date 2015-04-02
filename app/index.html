@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="" ng-app="dimApp" ng-csp>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Destiny Item Manager v2.8</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <!--<link rel="stylesheet" href="vendor/ngdialog/css/ngDialog.css">-->
+  <link rel="stylesheet" href="styles/normalize.css">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body ng-app="dimApp" ng-strict-di>
+  <div ng-controller="dimAppCtrl">
+    <div id="header">
+      <div class="content">
+        <span>DIM</span>
+        <span id="faq-button">?</span>
+        <span class="header-right">
+          <div dim-platform-choice class="header-right"></div>
+            <div dim-search-filter class="header-right"></div>
+        </span>
+      </div>
+    </div>
+
+    <div id="content" ui-view></div>
+  </div>
+
+  <!-- begin vendor scripts -->
+  <script src="vendor/angularjs/angular.min.js"></script>
+  <script src="vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <script src="vendor/angular-native-dragdrop/draganddrop.js"></script>
+  <script src="vendor/ngDialog/js/ngDialog.min.js"></script>
+  <script src="vendor/underscore/underscore-min.js"></script>
+  <script src="vendor/lz-string/libs/lz-string.min.js"></script>
+  <script src="vendor/angular-chrome-storage/angular-chrome-storage.js"></script>
+  <script src="vendor/verge/verge.js"></script>
+  <!-- end vendor scripts -->
+
+  <!-- begin app scripts -->
+  <script src="scripts/itemdef.json"></script>
+  <script src="scripts/collection.json"></script>
+  <script src="scripts/.dimApp.module.js"></script>
+  <script src="scripts/dimApp.config.js"></script>
+  <script src="scripts/services/dimBungieService.factory.js"></script>
+  <script src="scripts/services/dimPlatformService.factory.js"></script>
+  <script src="scripts/services/dimLoadoutService.factory.js"></script>
+  <script src="scripts/services/dimStoreService.factory.js"></script>
+  <script src="scripts/services/dimItemService.factory.js"></script>
+  <script src="scripts/loadout/dimLoadout.directive.js"></script>
+  <script src="scripts/loadout/dimLoadoutPopup.directive.js"></script>
+  <script src="scripts/shell/dimAppCtrl.controller.js"></script>
+  <script src="scripts/shell/dimPlatformChoice.directive.js"></script>
+  <script src="scripts/shell/dimSearchFilter.directive.js"></script>
+  <script src="scripts/shell/dimClickAnywhereButHere.directive.js"></script>
+  <script src="scripts/store/dimStores.directive.js"></script>
+  <script src="scripts/store/dimStoreItems.directive.js"></script>
+  <script src="scripts/store/dimStoreItem.directive.js"></script>
+  <script src="scripts/store/dimStoreHeading.directive.js"></script>
+  <script src="scripts/move-popup/dimMovePopup.directive.js"></script>
+  <script src="scripts/move-popup/dimMoveItemProperties.directive.js"></script>
+  <!--
+  <script src="scripts/services/platform.factory.js"></script>
+  <script src="scripts/services/item.factory.js"></script>>-->
+  <!-- end app scripts -->
+</body>
+
+</html>
