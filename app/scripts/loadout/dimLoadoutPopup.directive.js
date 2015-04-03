@@ -38,16 +38,16 @@
       });
 
     vm.newLoadout = function newLoadout($event) {
-      $rootScope.$broadcast('dim-create-new-loadout', {});
       ngDialog.closeAll();
+      $rootScope.$broadcast('dim-create-new-loadout', {});
     };
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
-      $rootScope.$broadcast('dim-create-delete-loadout', { loadout: loadout });
+      dimLoadoutService.deleteLoadout(loadout);
     };
 
     vm.editLoadout = function editLoadout(loadout, $event) {
-      $rootScope.$broadcast('dim-create-edit-loadout', { loadout: loadout });
+      $rootScope.$broadcast('dim-edit-loadout', { loadout: loadout });
     };
   }
 })();
