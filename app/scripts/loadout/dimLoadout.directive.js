@@ -15,12 +15,12 @@
       scope: {
       },
       template: [
-        '<div class="loadout-content">',
+        '<div ng-class="vm.classList" ng-show="vm.show"><div class="loadout-content">',
         '  <div class="content">',
         '    <div id="loadout-options">',
-        '      <input id="loadout-name" ng-model="vm.name" type="search" placeholder="Loadout Name..." />',
-        '      <span id="loadout-save" ng-click="vm.save($event)">Save</span>',
-        '      <span id="loadout-cancel">Cancel</span>',
+        '      <input id="loadout-name" ng-model="vm.loadout.name" type="search" placeholder="Loadout Name..." />',
+        '      <a id="loadout-save" ng-click="vm.save()" href="">Save</a>',
+        '      <a id="loadout-cancel" ng-click="vm.cancel()" href="">Cancel</a>',
         '      <p id="loadout-error"></p>',
         '    </div>',
         '    <span id="loadout-contents">',
@@ -42,29 +42,31 @@
         '      <span class="loadout-warlock"></span>',
         '    </span>',
         '  </div>',
-        '</div>'
+        '</div></div>'
       ].join('')
     };
 
     function Link(scope, element, attrs) {
-      element.addClass('loadout-create');
+      var vm = scope.vm;
+
+      vm.classList = {
+        'loadout-create': true
+      };
 
       scope.$on('dim-create-new-loadout', function(event, args) {
-        element.css('display', 'block');
-
-        if (args.loadout) {
-          scope.vm.loadLoadout(args.loadout);
-        }
+        vm.show = true;
+        vm.loadout = {};
       });
 
-      scope.$on('dim-create-delete-loadout', function(event, args) {
+      scope.$on('dim-delete-loadout', function(event, args) {
+        vm.show = false;
+        vm.loadout = {};
       });
 
-      scope.$on('dim-create-edit-loadout', function(event, args) {
-        element.css('display', 'block');
-
+      scope.$on('dim-edit-loadout', function(event, args) {
         if (args.loadout) {
-          scope.vm.loadLoadout(args.loadout);
+          vm.show = true;
+          vm.loadout = args.loadout;
         }
       });
     }
@@ -75,18 +77,23 @@
   function LoadoutCtrl(dimLoadoutService) {
     var vm = this;
 
-    vm.name = '';
+    vm.show = false;
+    vm.loadout = {};
 
-    vm.save = function save($event) {
-      var loadout = {
-        name: vm.name
-      };
-
-      dimLoadoutService.saveLoadout(loadout);
+    vm.save = function save() {
+      if (_.has(vm.loadout, 'id')) {
+        dimLoadoutService.saveLoadouts();
+      } else {
+        dimLoadoutService.saveLoadout(vm.loadout);
+      }
+      
+      vm.loadout = {};
+      vm.show = false;
     };
 
-    vm.loadLoadout = function loadLoadout(loadout) {
-      vm.name = loadout.name;
+    vm.cancel = function cancel() {
+      vm.show = false;
+      vm.loadout = {};
     }
   }
 })();

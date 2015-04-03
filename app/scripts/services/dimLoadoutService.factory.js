@@ -12,6 +12,7 @@
     return {
       'getLoadouts': getLoadouts,
       'deleteLoadout': deleteLoadout,
+      'saveLoadouts': saveLoadouts,
       'saveLoadout': saveLoadout
     };
 

@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreItem', StoreItem);
 
-  StoreItem.$inject = ['dimStoreService', 'ngDialog'];
+  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService'];
 
-  function StoreItem(dimStoreService, ngDialog) {
+  function StoreItem(dimStoreService, ngDialog, dimLoadoutService) {
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -21,7 +21,7 @@
       },
       template: [
         '<div ui-draggable="true" id="item-{{:: $id }}" drag-channel="{{ vm.item.type }}" drag="\'item-\' + $id" ng-show="vm.item.visible" class="item" ng-class="{ \'complete\': vm.item.complete}">',
-        '  <img ui-draggable="false" ng-src="http://bungie.net/{{ vm.item.icon }}" ng-click="vm.openPopup(vm.item, $event)">',
+        '  <img ui-draggable="false" ng-src="http://bungie.net/{{ vm.item.icon }}" ng-click="vm.clicked(vm.item, $event)">',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="damage-type" ng-if="vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
         '</div>'
@@ -32,7 +32,7 @@
       var vm = scope.vm;
       var dialogResult = null;
 
-      vm.openPopup = function openPopup(item, e) {
+      vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
 
         if (!_.isNull(dialogResult)) {
@@ -40,19 +40,21 @@
         } else {
           ngDialog.closeAll();
 
-          dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
-            plain: true,
-            appendTo: 'div[id="item-' + scope.$id + '"]',
-            overlay: false,
-            className: 'move-popup' + (((element[0].offsetLeft + 320) >= document.documentElement.clientWidth) ? ' move-popup-right' : ''),
-            showClose: false,
-            scope: scope
-          });
+          if (!dimLoadoutService.dialogOpen) {
+            dialogResult = ngDialog.open({
+              template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+              plain: true,
+              appendTo: 'div[id="item-' + scope.$id + '"]',
+              overlay: false,
+              className: 'move-popup' + (((element[0].offsetLeft + 320) >= document.documentElement.clientWidth) ? ' move-popup-right' : ''),
+              showClose: false,
+              scope: scope
+            });
 
-          dialogResult.closePromise.then(function (data) {
-            dialogResult = null;
-          });
+            dialogResult.closePromise.then(function (data) {
+              dialogResult = null;
+            });
+          }
         }
       };
 
@@ -64,9 +66,13 @@
     }
   }
 
-  StoreItemCtrl.$inject = ['$scope'];
+  StoreItemCtrl.$inject = ['$rootScope'];
 
-  function StoreItemCtrl($scope) {
+  function StoreItemCtrl($rootScope) {
     var vm = this;
+
+    vm.itemClicked = function clicked(item) {
+      $rootScope.$broadcast('dim-store-item-clicked', { item: item });
+    }
   }
 })();
