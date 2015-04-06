@@ -75,6 +75,7 @@ window.onload = function() {
           loadout.add(gear[e]);
         }
         loadout.toggle(true);
+        minmax.style.display = 'none';
       });
     }, 200);
   }

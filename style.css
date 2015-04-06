@@ -405,7 +405,7 @@ img.void {
     position: fixed;
     display: none;
     width: 100%;
-    z-index: 30;
+    z-index: 3;
     bottom: 0;
     background: rgba(195,188,180,.9);
     color: #1a1e24;
