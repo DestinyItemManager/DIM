@@ -54,6 +54,8 @@
             dialogResult.closePromise.then(function (data) {
               dialogResult = null;
             });
+          } else {
+            dimLoadoutService.addItemToLoadout(item);
           }
         }
       };
@@ -73,6 +75,6 @@
 
     vm.itemClicked = function clicked(item) {
       $rootScope.$broadcast('dim-store-item-clicked', { item: item });
-    }
+    };
   }
 })();

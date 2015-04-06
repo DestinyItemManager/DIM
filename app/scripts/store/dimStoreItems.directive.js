@@ -85,7 +85,7 @@
       .groupBy(function (i) {
         return i.sort;
       })
-      .mapObject(function(val, key) {
+      .mapObject(function (val, key) {
         return _.size(val);
       })
       .value();
@@ -189,7 +189,7 @@
           .groupBy(function (i) {
             return i.sort;
           })
-          .mapObject(function(val, key) {
+          .mapObject(function (val, key) {
             return _.size(val);
           })
           .value();
@@ -281,29 +281,61 @@
     $scope.$watchCollection('vm.store.items', function (newVal) {
       vm.data = generateData();
 
-      $timeout(cleanUI(), 50);
-
+      $timeout(cleanUI(), 0);
     });
+  }
+
+  function outerHeight(el) {
+    var height = el.offsetHeight;
+    var style = getComputedStyle(el);
+
+    height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+    return height;
+  }
+
+  function outerWidth(el) {
+    var width = el.offsetWidth;
+    var style = getComputedStyle(el);
+
+    width += parseInt(style.marginLeft) + parseInt(style.marginRight);
+    return width;
   }
 
   function cleanUI() {
     var weapons = document.querySelectorAll('.weapons');
     var armor = document.querySelectorAll('.armor');
 
-    var height = _.reduce(weapons, function(memo, section) {
-      if (section.clientHeight > memo) {
-        memo = section.clientHeight;
-      } return memo;
+    var wHeight = _.reduce(weapons, function (memo, section) {
+      var childHeight = 0;
+      _.each(section.children, function(child) {
+        childHeight += outerHeight(child);
+      });
+
+
+      if (childHeight > memo) {
+        memo = childHeight;
+      }
+
+      return memo;
     }, 0);
 
-    _.each(weapons, function(section) { section.style.height = (height) + 'px'; });
+    var aHeight = _.reduce(armor, function (memo, section) {
+      var childHeight = 0;
+      _.each(section.children, function(child) {
+        childHeight += outerHeight(child);
+      });
 
-    height = _.reduce(armor, function(memo, section) {
-      if (section.clientHeight > memo) {
-        memo = section.clientHeight;
-      } return memo;
+
+      if (childHeight > memo) {
+        memo = childHeight;
+      }
+
+      return memo;
     }, 0);
 
-    _.each(armor, function(section) { section.style.height = (height) + 'px'; });
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = '.armor { min-height: ' + (aHeight) + 'px; } .weapons { min-height: ' + (wHeight) + 'px; }';
+    document.getElementsByTagName('head')[0].appendChild(style);
   }
 })();

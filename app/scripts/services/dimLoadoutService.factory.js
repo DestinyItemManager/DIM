@@ -10,11 +10,17 @@
     var _loadouts = [];
 
     return {
+      'dialogOpen': false,
       'getLoadouts': getLoadouts,
       'deleteLoadout': deleteLoadout,
       'saveLoadouts': saveLoadouts,
-      'saveLoadout': saveLoadout
+      'saveLoadout': saveLoadout,
+      'addItemToLoadout': addItemToLoadout
     };
+
+    function addItemToLoadout(item) {
+      $rootScope.$broadcast('dim-store-item-clicked', { item: item });
+    }
 
     function getLoadouts(getLatest) {
       var result;

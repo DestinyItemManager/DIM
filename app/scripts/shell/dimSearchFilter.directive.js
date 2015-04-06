@@ -135,34 +135,58 @@
       return result.bind(null, predicate);
     };
 
+    function outerHeight(el) {
+      var height = el.offsetHeight;
+      var style = getComputedStyle(el);
+
+      height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+      return height;
+    }
+
+    function outerWidth(el) {
+      var width = el.offsetWidth;
+      var style = getComputedStyle(el);
+
+      width += parseInt(style.marginLeft) + parseInt(style.marginRight);
+      return width;
+    }
+
     function cleanUI() {
-
-
       var weapons = document.querySelectorAll('.weapons');
       var armor = document.querySelectorAll('.armor');
 
-      var height = _.reduce(weapons, function (memo, section) {
-        if (section.clientHeight > memo) {
-          memo = section.clientHeight;
+      var wHeight = _.reduce(weapons, function (memo, section) {
+        var childHeight = 0;
+        _.each(section.children, function(child) {
+          childHeight += outerHeight(child);
+        });
+
+
+        if (childHeight > memo) {
+          memo = childHeight;
         }
+
         return memo;
       }, 0);
 
-      _.each(weapons, function (section) {
-        section.style.height = (height) + 'px';
-      });
+      var aHeight = _.reduce(armor, function (memo, section) {
+        var childHeight = 0;
+        _.each(section.children, function(child) {
+          childHeight += outerHeight(child);
+        });
 
-      height = _.reduce(armor, function (memo, section) {
-        if (section.clientHeight > memo) {
-          memo = section.clientHeight;
+
+        if (childHeight > memo) {
+          memo = childHeight;
         }
+
         return memo;
       }, 0);
 
-      _.each(armor, function (section) {
-        section.style.height = (height) + 'px';
-      });
+      var style = document.createElement('style');
+      style.type = 'text/css';
+      style.innerHTML = '.armor { min-height: ' + (aHeight) + 'px; } .weapons { min-height: ' + (wHeight) + 'px; }';
+      document.getElementsByTagName('head')[0].appendChild(style);
     }
-
   }
 })();
