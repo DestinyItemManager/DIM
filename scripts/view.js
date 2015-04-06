@@ -1,4 +1,5 @@
 
+
 window.onload = function() {
   var mmiterations = document.getElementById('mm-iterations');
   var mmtype = document.getElementById('mm-type');
@@ -36,7 +37,9 @@ window.onload = function() {
       var node = document.getElementById('minmax-template').content;
 
       for(var s = 0; s < sets.length; s++) {
-        var d = node.cloneNode(true);
+        // var d = node.cloneNode(true);
+        var row = document.createElement('tr');
+
         var inner = '';
         for(var i in sets[s].stats) {
           inner += '<td class="num">' + sets[s].stats[i] + '</td>';
@@ -45,9 +48,34 @@ window.onload = function() {
         for(var i in sets[s].armor) {
           inner += '<td>' + sets[s].armor[i].name + '</td>';
         }
-        d.querySelector('.minmax-set').innerHTML = inner;
-        iterations.appendChild(d);
+        // var input = document.createElement('input');
+        // input.type = "button";
+        // input.id = 'mm-loadout';
+        // input.value = '+ Loadout';
+        // input.addEventListener('click', function() {
+        //   console.log('create new loadout ' + set[s])
+        // })
+        // inner += input.outerHTML;
+        // d.querySelector('.minmax-set').innerHTML = inner;
+
+
+        row.className = 'minmax-set';
+        row.innerHTML = inner;
+        row.dataset.index = s;
+        iterations.appendChild(row);
       }
+      iterations.addEventListener("click", function(element) {
+        element = element.target;
+        var index = null;
+        if(element.parentNode.dataset.index !== undefined) index = element.parentNode.dataset.index;
+        else if(element.dataset.index !== undefined) index = element.dataset.index;
+        if(index == null) return;
+        var gear = sets[index].armor;
+        for(var e = 0; e < gear.length; e++) {
+          loadout.add(gear[e]);
+        }
+        loadout.toggle(true);
+      });
     }, 200);
   }
 

@@ -390,6 +390,7 @@ img.void {
 #minmax table.sortable tbody tr:hover {
     color: rgba(245,245,245,.6);
     background-color: #628e89;
+    cursor: pointer;
 }
 #mm-total {
   display: none;
@@ -404,7 +405,7 @@ img.void {
     position: fixed;
     display: none;
     width: 100%;
-    z-index: 3;
+    z-index: 30;
     bottom: 0;
     background: rgba(195,188,180,.9);
     color: #1a1e24;
