@@ -15,6 +15,7 @@
     "angular-ui-router": "~0.2.x",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
     "angular-chrome-storage": "infomofo/angular-chrome-storage",
-    "angular-messages": "~1.4.x"
+    "angular-messages": "~1.4.x",
+    "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git"
   }
 }

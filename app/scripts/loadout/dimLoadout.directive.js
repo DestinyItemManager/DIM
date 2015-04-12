@@ -12,12 +12,11 @@
       bindToController: true,
       link: Link,
       restrict: 'A',
-      scope: {
-      },
+      scope: {},
       template: [
         '<div ng-class="vm.classList" ng-show="vm.show">',
         '  <div ng-messages="vm.form.name.$error" ng-if="vm.form.$submitted || vm.form.name.$touched">',
-        '    <div ng-message="required">...</div>',
+        '    <div ng-message="required">A name is required.</div>',
         '    <div ng-message="minlength">...</div>',
         '    <div ng-message="maxlength">...</div>',
         '  </div>',
@@ -26,107 +25,19 @@
         '      <div id="loadout-options">',
         '        <form name="vm.form">',
         '          <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" placeholder="Loadout Name..." />',
-        '          <input type="submit" ng-disabled="vm.form.$invalid" value="Save" ng-click="vm.save()"></input>',
+        '          <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
+        '          <input type="button" ng-disabled="vm.form.$invalid" value="Save" ng-click="vm.save()"></input>',
         '          <button ng-click="vm.cancel()">Cancel</button>',
         '          <p id="loadout-error"></p>',
         '        </form>',
         '      </div>',
         '      <span id="loadout-contents">',
-        '        <span class="loadout-class">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Class\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
+        '        <span ng-repeat="value in vm.types" class="loadout-{{ value }}">',
+        '          <div ng-repeat="item in vm.loadout.items[value]" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
         '            <img ng-src="http://bungie.net/{{ item.icon }}">',
         '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-primary">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Primary\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-special">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Special\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-heavy">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Heavy\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-helmet">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Helmet\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-gauntlets">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Gauntlets\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-chest">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Chest\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-leg">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Leg\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-classItem">',
-        '          <div ng-repeat="item in vm.loadout.items[\'ClassItem\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-emblem">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Emblem\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-armor">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Armor\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-ghost">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Ghost\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-ship">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Ship\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
-        '          </div>',
-        '        </span>',
-        '        <span class="loadout-vehicle">',
-        '          <div ng-repeat="item in vm.loadout.items[\'Vehicle\']" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="http://bungie.net/{{ item.icon }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
+        '            <div class="close" ng-click="vm.remove(item); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
+        '            <div class="equipped" ng-show="item.equipped"></div>',
         '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
         '          </div>',
         '        </span>',
@@ -139,6 +50,20 @@
 
     function Link(scope, element, attrs) {
       var vm = scope.vm;
+
+      vm.classTypeValues = [{
+        label: 'Any',
+        value: -1
+      }, {
+        label: 'Warlock',
+        value: 0
+      }, {
+        label: 'Titan',
+        value: 1
+      }, {
+        label: 'Hunter',
+        value: 2
+      }];
 
       vm.classList = {
         'loadout-create': true
@@ -170,23 +95,23 @@
       });
 
       scope.$on('dim-store-item-clicked', function(event, args) {
-        if (_.isUndefined(vm.loadout.items[args.item.type])) {
-          vm.loadout.items[args.item.type] = [];
-        }
-
-        if (_.isUndefined(_.find(vm.loadout.items[args.item.type], function(i) {
-          return (i.id === args.item.id);
-        }))) {
-          vm.loadout.items[args.item.type] = [args.item];
-        }
+        vm.add(args.item);
       });
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier'];
 
-  function LoadoutCtrl(dimLoadoutService) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier) {
     var vm = this;
+
+    vm.types = _.chain(dimCategory)
+      .values()
+      .flatten()
+      .map(function(t) {
+        return t.toLowerCase();
+      })
+      .value();
 
     vm.show = false;
     dimLoadoutService.dialogOpen = false;
@@ -210,6 +135,58 @@
       vm.show = false;
       dimLoadoutService.dialogOpen = false;
       vm.loadout = {};
-    }
+    };
+
+    vm.add = function add(item) {
+      var discriminator = item.type.toLowerCase();
+      var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
+
+      var dupe = _.find(typeInventory, function(i) {
+        return (i.id === item.id);
+      });
+
+      if (_.isUndefined(dupe) && (_.size(typeInventory) < 9)) {
+        typeInventory.push(_.clone(item));
+      }
+    };
+
+    vm.remove = function remove(item) {
+      var discriminator = item.type.toLowerCase();
+      var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
+
+      var index = _.findIndex(typeInventory, function(i) {
+        return i.id === item.id;
+      });
+
+      if (index >= 0) {
+        typeInventory.splice(index, 1);
+      }
+    };
+
+    vm.equip = function equip(item) {
+      var equipped = vm.loadout.equipped;
+
+      if (item.id !== 0) {
+        if (item.equipped) {
+          item.equipped = false;
+        } else {
+          if (item.tier === dimItemTier.exotic) {
+            var exotic = _.chain(vm.loadout.items)
+              .values()
+              .flatten()
+              .find(function(i) {
+                return ((i.sort === item.sort) && (i.tier === dimItemTier.exotic) && (i.equipped));
+              })
+              .value();
+
+            if (!_.isUndefined(exotic)) {
+              exotic.equipped = false;
+            }
+          }
+
+          item.equipped = true;
+        }
+      }
+    };
   }
 })();

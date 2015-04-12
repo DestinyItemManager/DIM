@@ -229,10 +229,19 @@
 
     function getItem(id) {
       var items = getItems();
+      var item;
 
-      var item = _.find(items, function (item) {
-        return item.id === id;
-      });
+      if (_.isObject(id)) {
+        var primitive = id;
+
+        item = _.find(items, function (item) {
+          return ((item.id === primitive.id) || (item.hash === primitive.hash));
+        });
+      } else {
+        item = _.find(items, function (item) {
+          return item.id === id;
+        });
+      }
 
       return item;
     }

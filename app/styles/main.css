@@ -675,3 +675,26 @@ body.ngdialog-open {
 .character div[loadout-id] {
   top: 0;
 }
+
+.ng-hide {
+  display: none !important;
+}
+
+.close {
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#loadout-contents .equipped {
+  width: 16px;
+  height: 16px;
+  background-color: green;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

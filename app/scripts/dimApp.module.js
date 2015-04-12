@@ -6,6 +6,7 @@
     'ngDialog',
     'ang-drag-drop',
     'chromeStorage',
-    'ngMessages'
+    'ngMessages',
+    'angularUUID2'
   ]);
 })();

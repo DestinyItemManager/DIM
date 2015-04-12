@@ -12,14 +12,17 @@
       debug: true
     })
     .value('dimItemTier', {
-      exotic: 'exotic',
-      legendary: 'legendary',
-      rare: 'rare',
-      uncommon: 'uncommon',
-      basic: 'basic'
+      exotic: 'Exotic',
+      legendary: 'Legendary',
+      rare: 'Rare',
+      uncommon: 'Uncommon',
+      basic: 'Basic'
     })
     .value('dimItemDefs', _itemDefs)
     .value('dimCategory', {
+      Subclass: [
+        'Class'
+      ],
       Weapons: [
         'Primary',
         'Special',
