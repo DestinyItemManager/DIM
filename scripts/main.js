@@ -1,3 +1,5 @@
+__version__ = chrome.runtime.getManifest().version;
+
 var bungie = new bungie();
 var loadout = new loadout();
 

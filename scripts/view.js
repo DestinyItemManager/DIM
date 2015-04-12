@@ -1,6 +1,7 @@
 
 
 window.onload = function() {
+  document.getElementById('app-version').innerHTML = __version__;
   var mmiterations = document.getElementById('mm-iterations');
   var mmtype = document.getElementById('mm-type');
   var mmclass = document.getElementById('mm-class');
