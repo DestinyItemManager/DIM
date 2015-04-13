@@ -548,6 +548,9 @@ function buildItems() {
 		var img = document.createElement('img');
 		img.draggable = true;
 		img.src = 'http://bungie.net/' + _items[itemId].icon;
+		var tmpDiv = document.createElement("div");
+		tmpDiv.innerHTML = _items[itemId].name;
+		img.title = tmpDiv.innerText;
 
 		if(_items[itemId].amount > 1) {
 			var amt = document.createElement('div');
