@@ -22,6 +22,7 @@ function loadout() {
   function _load(callback) {
     chrome.storage.sync.get('loadouts', function(result) {
       _loadouts = result.loadouts || [];
+      _sort();
       callback();
     });
   }
@@ -32,6 +33,14 @@ function loadout() {
     }, function() {
       callback();
     });
+  }
+	
+  function _sort() {
+    _loadouts.sort(
+      function(loadoutAlpha, loadoutBeta){ 
+        return loadoutAlpha.name.toUpperCase() > loadoutBeta.name.toUpperCase();
+      }
+    );
   }
 
   function _save() {
@@ -69,6 +78,7 @@ function loadout() {
         name: _name.value,
         items: ids
       });
+      _sort();
     }
 
     // sync & close loadout view
