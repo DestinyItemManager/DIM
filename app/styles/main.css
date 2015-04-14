@@ -562,7 +562,9 @@ img.void {
   padding: 7px 1em;
   max-width: 1088px;
 }
-.loadout-create {
+div[dim-loadout] {
+  left: 0;
+  right: 0;
     position: fixed;
     width: 100%;
     z-index: 3;

@@ -27,7 +27,7 @@
         '          <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" placeholder="Loadout Name..." />',
         '          <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
         '          <input type="button" ng-disabled="vm.form.$invalid" value="Save" ng-click="vm.save()"></input>',
-        '          <button ng-click="vm.cancel()">Cancel</button>',
+        '          <input type="button" ng-click="vm.cancel()" value="Cancel"></input>',
         '          <p id="loadout-error"></p>',
         '        </form>',
         '      </div>',
@@ -132,12 +132,14 @@
     };
 
     vm.cancel = function cancel() {
-      vm.show = false;
-      dimLoadoutService.dialogOpen = false;
       vm.loadout = {};
+      dimLoadoutService.dialogOpen = false;
+      vm.show = false;
     };
 
     vm.add = function add(item) {
+      item = _.clone(item);
+
       var discriminator = item.type.toLowerCase();
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
@@ -146,7 +148,14 @@
       });
 
       if (_.isUndefined(dupe) && (_.size(typeInventory) < 9)) {
-        typeInventory.push(_.clone(item));
+        if (item.type === 'Class') {
+          if (_.has(vm.loadout.items, 'class')) {
+            vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
+            item.equipped = true;
+          }
+        }
+
+        typeInventory.push(item);
       }
     };
 
