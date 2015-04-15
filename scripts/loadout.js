@@ -34,10 +34,10 @@ function loadout() {
       callback();
     });
   }
-	
+
   function _sort() {
     _loadouts.sort(
-      function(loadoutAlpha, loadoutBeta){ 
+      function(loadoutAlpha, loadoutBeta){
         return loadoutAlpha.name.toUpperCase() > loadoutBeta.name.toUpperCase();
       }
     );
@@ -143,7 +143,7 @@ function loadout() {
         processItem(i);
         return;
       }
-      moveItem(item, destination, 1, function() {
+      doMove(item, destination, 1, function() {
         manageItemClick(document.querySelector('[data-instance="'+item.id+'"]').dataset.index, {type:'equip', character: character});
 
         setTimeout(function () { processItem(i); }, 1000);
