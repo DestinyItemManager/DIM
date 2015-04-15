@@ -20,6 +20,16 @@
       <div class="content">
         <span>DIM</span> <span id="faq-button">?</span> <span id="mm-button">M</span> <span id="collection-button">C</span> <input id="collection-url" type="text" />
         <span class="header-right">
+        <div class="quick-filter" id="is:weapon">W</div>
+        <div class="quick-filter" id="is:armor">A</div>
+        <div class="quick-filter" id="is:style">S</div>
+        <div class="quick-filter" id="is:inventory">I</div>
+        <div class="quick-filter complete" id="is:complete">C</div>
+        <div class="quick-filter incomplete" id="is:incomplete">I</div>
+        <img src="assets/arc.png" class="quick-filter arc" id="is:arc" alt="Arc" />
+        <img src="assets/solar.png" class="quick-filter solar" id="is:solar" alt="Solar" />
+        <img src="assets/void.png" class="quick-filter void" id="is:void" alt="Void" />
+        <img src="assets/kinetic.png" class="quick-filter kinetic" id="is:kinetic" alt="Kinetic" />
         <input type="search" id="filter-text" placeholder="filter items or is:arc" /><span id="user" class="header-right"></span><select id="system">
           <option>PSN</option>
           <option>XBL</option>
@@ -38,7 +48,6 @@
         </div>
         <span id="loadout-contents">
            <span class="loadout-class"></span
-          ><span class="loadout-emblem"></span
           ><span class="loadout-primary"></span
           ><span class="loadout-special"></span
           ><span class="loadout-heavy"></span
@@ -46,13 +55,14 @@
           ><span class="loadout-gauntlets"></span
           ><span class="loadout-chest"></span
           ><span class="loadout-leg"></span
+          ><span class="loadout-classitem"></span>
+          ><span class="loadout-emblem"></span
           ><span class="loadout-armor"></span
           ><span class="loadout-vehicle"></span
           ><span class="loadout-ship"></span
           ><span class="loadout-ghost"></span
-          ><span class="loadout-titan"></span
-          ><span class="loadout-hunter"></span
-          ><span class="loadout-warlock"></span>
+          ><span class="loadout-material"></span
+          ><span class="loadout-consumable"></span
         </span>
       </div>
     </div>
@@ -241,23 +251,23 @@
 		</template>
 
     <template id="sort-template">
-         <span class="sort-class"></span
-        ><span class="sort-emblem"></span
-        ><span class="sort-primary"></span
-        ><span class="sort-special"></span
-        ><span class="sort-heavy"></span
-        ><span class="sort-helmet"></span
-        ><span class="sort-gauntlets"></span
-        ><span class="sort-chest"></span
-        ><span class="sort-leg"></span
-        ><span class="sort-armor"></span
-        ><span class="sort-vehicle"></span
-        ><span class="sort-ship"></span
-        ><span class="sort-ghost"></span
-        ><span class="sort-titan"></span
-        ><span class="sort-hunter"></span
-        ><span class="sort-warlock"></span
-        ><span class="sort-miscellaneous"></span>
+         <span class="sort sort-class"></span
+        ><span class="sort sort-primary"></span
+        ><span class="sort sort-special"></span
+        ><span class="sort sort-heavy"></span
+        ><span class="sort sort-helmet"></span
+        ><span class="sort sort-gauntlets"></span
+        ><span class="sort sort-chest"></span
+        ><span class="sort sort-leg"></span
+        ><span class="sort sort-classitem"></span
+        ><span class="sort sort-emblem"></span
+        ><span class="sort sort-armor"></span
+        ><span class="sort sort-vehicle"></span
+        ><span class="sort sort-ship"></span
+        ><span class="sort sort-ghost"></span
+        ><span class="sort sort-material"></span
+        ><span class="sort sort-consumable"></span
+        ><span class="sort sort-miscellaneous"></span>
     </template>
 
     <template id="character-template">
@@ -272,14 +282,8 @@
     <template id="storage-template">
       <div class="storage">
         <div class="character"></div>
-        <div><div class="hover"></div><div class="title">Equipped</div><div class="items sections" data-type="equip"></div></div>
-        <div><div class="hover"></div><div class="items" data-type="item">
-          <div><div class="title">Weapons</div><div class="item-Weapon sections"></div></div>
-          <div><div class="title">Armor</div><div class="item-Armor sections"></div></div>
-          <div><div class="title">Styling</div><div class="item-Styling sections"></div></div>
-          <div><div class="title">Miscellaneous</div><div class="item-Miscellaneous sections"></div></div>
-          <div><div class="title">Postmaster</div><div class="item-Postmaster sections"></div></div>
-        </div></div>
+        <div class="equipped"><div class="hover"></div><div class="items sections" data-type="equip"></div></div>
+        <div class="inventory"><div class="hover"></div><div class="items sections" data-type="item"></div></div>
       </div>
     </template>
   </body>

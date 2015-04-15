@@ -284,7 +284,7 @@ function manageItemClick(item, data) {
 	} else {
 		item.equipped = false;
 		// else do this insane hack
-		var drop = document.querySelector('.items[data-character="' + data.character + '"] .item-' + _items[item].sort + ' .sort-' + _items[item].type);
+		var drop = document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type);
 
 		if(_items[item].id == 0) {
 			for(var e = 0; e < drop.childNodes.length; e++) {
@@ -306,9 +306,10 @@ function manageItemClick(item, data) {
 				}
 			}
 		}
-		// document.querySelector('.items[data-character="' + data.character + '"] .item-' + _items[item].sort + ' .sort-' + _items[item].type).appendChild(
+		// document.querySelector('.items[data-character="' + data.character + '"][data-type="item"] .sort-' + _items[item].type).appendChild(
 		drop.appendChild(document.querySelector('[data-index="' + item + '"]'));
 	}
+	setSortHeights();
 }
 
 function manageItem(e) {
@@ -334,21 +335,20 @@ function manageItem(e) {
 		moveItem(item, destination.dataset, amount, function() {
 			// move the item to the right spot once done.
 			if(item.amount === quantity) {
-				destination.querySelector('.item-' + item.sort + ' .sort-' + item.type).appendChild(_transfer);
+				destination.querySelector('.sort-' + item.type).appendChild(_transfer);
 			} else {
 				// item.owner = destination.dataset.character;
 				// _items.push(item);
 
-				// TODO: partial stack move, so copy the item... add element to _items...
-
 				// if destination location does not have the item {
 					var newStack = _transfer.cloneNode(true);
-					destination.querySelector('.item-' + item.sort + '.sort-' + item.type).appendChild(newStack);
+					destination.querySelector('.sort-' + item.type).appendChild(newStack);
 				// }
 				// newStack.querySelector('.stack').innerText = quantity;
 				//
 				// var stack = _transfer.querySelector('.stack');
 				// stack.innerText = stack.innerText - quantity;
+				setSortHeights();
 			}
 		});
 	}
@@ -502,6 +502,7 @@ function buildStorage() {
 		}
 		characterNode.querySelector('.class').innerText =
 			c === 'vault' ? c : _storage[c].class;
+		node.querySelector('.storage').className = node.querySelector('.storage').className + ' ' + characterNode.querySelector('.class').innerText;
 		var level = characterNode.querySelector('.level');
 		level.innerText = _storage[c].level;
 		if(_storage[c].level >= 20) level.style.color = 'rgba(245, 220, 86, 1)';
@@ -549,6 +550,28 @@ function buildItems() {
 		img.draggable = true;
 		img.src = 'http://bungie.net/' + _items[itemId].icon;
 
+		if (typeof(_items[itemId].stats[0]) != "undefined" && _items[itemId].stats[0].statHash === 2391494160) {
+			var lightTag = document.createElement('span');
+			var light = _items[itemId].stats[0].value;
+			lightTag.className = 'dmgTag';
+			lightTag.innerText = light;
+			itemBox.appendChild(lightTag);
+		}
+
+		if (typeof(_items[itemId].primStat) != "undefined" && _items[itemId].primStat.statHash === 368428387) {
+			var dmgTag = document.createElement('span');
+			var color = '';
+			dmgTag.className = 'dmgTag';
+			switch(_items[itemId].dmg) {
+				case 'arc': color = '#85c5ec'; break;
+				case 'solar': color = '#f2721b'; break;
+				case 'void': color = '#b184c5'; break;
+			}
+			dmgTag.style.backgroundColor = color;
+			dmgTag.innerText = _items[itemId].primStat.value;
+			itemBox.appendChild(dmgTag);
+		}
+
 		if(_items[itemId].amount > 1) {
 			var amt = document.createElement('div');
 			amt.className = 'stack';
@@ -582,14 +605,13 @@ function buildItems() {
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		} else {
-			// console.log(_items[itemId])
-			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
+			_storage[_items[itemId].owner].elements.item.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
 }
 
 function getItemType(type, name) {
-	if(type.indexOf("Engram") != -1 || name.indexOf("Marks") != -1) {
+	if(name.indexOf("Marks") != -1) {
 		return null;
 	}
 	if(["Pulse Rifle",  "Scout Rifle", "Hand Cannon", "Auto Rifle"].indexOf(type) != -1)
@@ -608,24 +630,16 @@ function getItemType(type, name) {
 		return 'Class';
 	if(["Restore Defaults"].indexOf(type) != -1)
 		return 'Armor';
-	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
+	if(["Gauntlet Engram"].indexOf(type) != -1)
+		return 'Gauntlets';
+	if(["Body Armor Engram"].indexOf(type) != -1)
+		return 'Chest';
+	if(["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
+		return 'ClassItem';
+	if(["Helmet Engram", "Leg Armor Engram", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram", "Consumable", "Material"].indexOf(type) != -1)
 		return type.split(' ')[0];
-	if(["Currency", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
-}
-
-function sortItem(type) {
-	if(type.indexOf("Engram") != -1) {
-		return 'Miscellaneous';
-	}
-	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun"].indexOf(type) != -1)
-		return 'Weapon';
-	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
-		return 'Armor';
-	if(["Restore Defaults", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
-		return 'Styling';
-	if(["Currency", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
+	if(["Currency"].indexOf(type) != -1)
+		return 'Material';
 }
 
 function flattenInventory(data) {
@@ -686,11 +700,6 @@ function appendItems(owner, items) {
 			continue;
 		}
 
-		var itemSort = sortItem(itemDef.type);
-		if(item.location === 4) {
-			itemSort = 'Postmaster';
-		}
-
 		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
 
 
@@ -708,7 +717,6 @@ function appendItems(owner, items) {
 			owner:      owner,
 			hash:       item.itemHash,
 			type:       itemType,
-			sort:       itemSort,
 			tier:       itemDef.tier,
 			name:       itemDef.name,
 			icon:       itemDef.icon,
@@ -863,8 +871,9 @@ function tryPageLoad() {
 					}
 				}
 			}
+			setSortHeights();
 		}
-		collapseSections();
+		setSortHeights();
 		input.addEventListener('keyup', function () {
 			var filter = input.value.toLowerCase();
 			var special = filter.indexOf('is:') >= 0;
@@ -880,25 +889,128 @@ function tryPageLoad() {
 					special = 'incomplete';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
+				} else if(['weapon', 'weapons'].indexOf(filter) >= 0) {
+					special = 'weapon';
+				} else if(['armor'].indexOf(filter) >= 0) {
+					special = 'armor';
+				} else if(['general'].indexOf(filter) >= 0) {
+					special = 'general';
+				} else if(['style'].indexOf(filter) >= 0) {
+					special = 'style';
+				} else if(['inventory'].indexOf(filter) >= 0) {
+					special = 'inventory';
 				}
 			}
 			var _tmpItem;
 			for (var i = 0; i < item.length; i++) {
 				_tmpItem = _items[item[i].dataset.index]
 				switch(special) {
-					case 'elemental':	item[i].style.display = _tmpItem.dmg == filter ? '' : 'none'; break;
+					case 'elemental':
+						if ((_tmpItem.type.toLowerCase().indexOf('primary') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('special') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('heavy') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('class') >= 0 && _tmpItem.type.toLowerCase().indexOf('classitem') < 0)
+						&& _tmpItem.dmg == filter) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
 					case 'type':	item[i].style.display = _tmpItem.type.toLowerCase() == filter ? '' : 'none'; break;
 					case 'tier':	item[i].style.display = _tmpItem.tier.toLowerCase() == filter ? '' : 'none'; break;
-					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_tmpItem.sort) !== -1 && !_tmpItem.complete ? '' : 'none'; break;
 					case 'complete':	item[i].style.display = _tmpItem.complete ? '' : 'none'; break;
+					case 'incomplete':
+						if ((_tmpItem.type.toLowerCase().indexOf('primary') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('special') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('heavy') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('helmet') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('gauntlets') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('chest') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('leg') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('class') >= 0 && _tmpItem.type.toLowerCase().indexOf('classitem') < 0)
+						&& !_tmpItem.complete) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'weapon':
+						if (_tmpItem.type.toLowerCase().indexOf('primary') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('special') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('heavy') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'armor':
+						if (_tmpItem.type.toLowerCase().indexOf('helmet') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('gauntlets') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('chest') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('leg') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('classitem') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'general':
+						if (_tmpItem.type.toLowerCase().indexOf('emblem') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('armor') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('vehicle') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ship') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ghost') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('material') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('consumable') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'style':
+						if (_tmpItem.type.toLowerCase().indexOf('emblem') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('armor') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('vehicle') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ship') >= 0
+						 || _tmpItem.type.toLowerCase().indexOf('ghost') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
+					case 'inventory':
+						if (_tmpItem.type.toLowerCase().indexOf('material') >= 0
+						|| _tmpItem.type.toLowerCase().indexOf('consumable') >= 0) {
+							item[i].style.display = '';
+							break;
+						} else {
+							item[i].style.display = 'none';
+							break;
+						}
 					default: item[i].style.display = _tmpItem.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
 			}
 
-			collapseSections();
+			setSortHeights();
 		});
 		input.addEventListener('click', function() { this.select(); });
 		input.addEventListener('search', function() { this.dispatchEvent(new Event('keyup')); });
+
+		var quickFilters = [
+			'is:arc', 'is:solar', 'is:void', 'is:kinetic',
+			'is:weapon', 'is:armor', 'is:style', 'is:inventory',
+			'is:complete', 'is:incomplete'
+		]
+
+		quickFilters.forEach(function(quickFilter) {
+			document.getElementById(quickFilter).addEventListener('click', function() { input.value = quickFilter; input.dispatchEvent(new Event('keyup')); });
+		});
 
 		function hideTooltip(e) {
 
@@ -1001,6 +1113,45 @@ bungie.user(function(u) {
 		});
 	}
 });
+
+function setSortHeights() {
+	var sorts = [
+		'primary',
+		'special',
+		'heavy',
+		'helmet',
+		'gauntlets',
+		'chest',
+		'leg',
+		'classitem',
+		'emblem',
+		'armor',
+		'vehicle',
+		'ship',
+		'ghost',
+		'class',
+		'material',
+		'consumable',
+		'miscellaneous'
+	];
+
+	sorts.forEach(function(sort) {
+		var elements = document.querySelectorAll('.sort-' + sort),
+				maxHeight;
+
+		Array.prototype.forEach.call(elements, function(element) {
+			element.style.height = 'auto';
+
+			if (typeof maxHeight === 'undefined' || element.clientHeight > maxHeight) {
+				maxHeight = element.clientHeight;
+			}
+		});
+
+		Array.prototype.forEach.call(elements, function(element) {
+			element.style.height = maxHeight - 6 + 'px';
+		});
+	});
+}
 
 chrome.browserAction.onClicked.addListener(function(tab) {
 	var optionsUrl = chrome.extension.getURL('window.html');

@@ -10,6 +10,10 @@ body {
     background-size: cover;
     color: #fff;
     font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
+    text-align: center;
+}
+div {
+  text-align: initial;
 }
 #header {
     position: fixed;
@@ -35,6 +39,57 @@ body {
     display: none;
     margin-right: 5px;
     vertical-align: middle;
+}
+.quick-filter {
+  float: left;
+  margin: 0 2px;
+  width: 14px;
+  height: 14px;
+  padding: 2px;
+  border-radius: 9px;
+  background-color: #5b6e6c;
+  line-height: 14px;
+  text-align: center;
+  color: rgba(245,245,245,.6);
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.quick-filter.complete {
+  background-color: #f5dc56;
+  color: rgba(10,10,10,.6);
+}
+.quick-filter.incomplete {
+  background-color: #ddd;
+  color: rgba(10,10,10,.6);
+}
+
+.quick-filter:hover {
+  background-color: #628e89;
+}
+
+.quick-filter.complete:hover {
+  background-color: #ffec66;
+}
+.quick-filter.incomplete:hover {
+  background-color: #eee;
+}
+.quick-filter.arc:hover {
+  background-color: #95d5fc;
+}
+.quick-filter.solar:hover {
+  background-color: #ff822b;
+}
+.quick-filter.void:hover {
+  background-color: #c194d5;
+}
+.quick-filter.kinetic:hover {
+  background-color: #444;
+}
+
+#is\:inventory, #is\:kinetic, #is\:incomplete {
+  margin-right: 10px;
 }
 img.elemental {
   width: 16px !important;
@@ -68,21 +123,76 @@ img.void {
     margin-top: 8px;
     margin-bottom: 8px;
     border-bottom: 2px solid rgba(245,245,245,.6);
-    font-size: 15px;
+    font-size: 10px;
     font-weight: 500;
     color: rgba(245,245,245,.6);
-    width: 260px;
+    width: auto;
 }
 .title .icon { width: 30px }
+#storage {
+  display: inline-block;
+  white-space: nowrap;
+}
 #storage .error a {
   color: white;
 }
 .storage {
   margin-top: 10px;
-  max-width: 260px;
+  display: inline-block;
+  margin-right: 3px;
+  white-space: initial;
+}
+.storage:last-of-type {
+  margin-right: 0;
+}
+.equipped {
   float: left;
-  margin-right: 1em;
-  margin-bottom: 100px;
+  padding: 0 6px;
+  width: 52px;
+}
+.equipped .title {
+  width: 50px;
+}
+.inventory {
+  float: left;
+  width: 156px;
+  padding-left: 6px;
+}
+.sort {
+  float: left;
+  clear: left;
+  width: 156px;
+  margin: 0 -6px 8px;
+  padding: 0 6px 4px;
+  background-image: url('assets/bg_inventory_bucket_single_crop.png');
+  background-repeat: no-repeat;
+  background-position: 10px 4px;
+}
+.sort-class, .sort-heavy, .sort-classitem, .sort-ghost {
+  border-bottom: 1px solid rgba(245,245,245,.2);
+  padding: 0 6px 3px;
+}
+.items .sort-material, .items .sort-consumable {
+  margin-left: -70px;
+  width: 220px;
+}
+.equipped .sort-material, .equipped .sort-consumable, .equipped .sort-miscellaneous {
+  display: none;
+}
+.equipped .sort {
+  width: 52px;
+}
+.vault .character-box {
+  width: 177px;
+}
+.vault .inventory {
+  width: 260px;
+  padding: 0 6px;
+  background: rgba(0,0,0,.2);
+}
+.vault .sort {
+  width: 260px;
+  margin: 0 -6px 8px;
 }
 .item {
     position: relative;
@@ -111,20 +221,31 @@ img.void {
 }
 .item .stack {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -2px;
+    right: -2px;
     padding: 1px;
     max-width: 20px;
     text-align: center;
     background: #F5f5f5;
     color: #24282b;
 }
+.item .dmgTag {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    padding: 0 2px;
+    text-align: center;
+    color: white;
+    background: #555;
+    font-size: 10px;
+    min-width: 10px;
+}
 .complete { border-color: #f5dc56 }
 .over { background: rgba(0,0,0,.5) }
 .character-box {
     position: relative;
     display: inline-block;
-    width: 165px;
+    width: 131px;
     height: 43px;
     padding: 0 0 0 50px;
     margin: 5px 0;
@@ -188,9 +309,9 @@ img.void {
     border-bottom: 2px solid rgba(245,245,245,.6);
     color: rgba(245,245,245,.6);
     margin-bottom: 10px;
-    width: 260px;
+    width: 244px;
     position: absolute;
-    left: -220px;
+    left: -205px;
     z-index: 2;
     cursor: pointer;
 }
@@ -397,9 +518,8 @@ img.void {
 }
 
 .content {
-    max-width: 1088px;
-    margin: 0 auto;
-    padding: 5px;
+    margin: 0 1em;
+    padding: 7px 2px 0;
 }
 #loadout-create {
     position: fixed;
@@ -433,32 +553,21 @@ img.void {
 #loadout-list .loadout-set:hover,
 #loadout-new:hover,
 #loadout-options span:hover { background-color: #628e89 }
+#loadout-new {
+  padding: 0 12px;
+}
 .loadout-set .button-name {
   display: inline-block;
-  width: 150px;
+  padding: 0 12px;
 }
 .loadout-set .button-edit, .loadout-set .button-delete {
     background-color: rgba(195,188,180,.9);
     color: #1a1e24;
     float: right;
-    width: 50px;
+    padding: 0 12px;
     border-right: 1px solid rgba(195,188,180,.7);
     border-left: 1px solid rgba(195,188,180,.9);
 }
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
     background-color: rgba(195,188,180,.6);
-}
-@media only screen and (min-width :1648px) {
-    .storage {
-        max-width: 391px;
-        margin-left: 10px;
-        float: left;
-        margin-right: 0;
-    }
-    .content { max-width: 1604px }
-    .item,
-    .item>img { width: 47.7px; height: 47.7px; }
-    .character-box {
-      width: 281px;
-    }
 }
