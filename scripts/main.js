@@ -189,14 +189,17 @@ function moveBox(item) {
 function dequip(item, callback, exotic) {
 	// find an item to replace the current.
 	for(var i in _items) {
-		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.type === _items[i].type && (exotic || _items[i].tier !== 'Exotic') && !_items[i].equipped) {
-			// console.log('[dequip] found replacement item: ', _items[i].name)
+		if(item.owner === _items[i].owner && item.name !== _items[i].name && item.bucket === _items[i].bucket && (exotic || _items[i].tier !== 'Exotic') && !_items[i].equipped && _items[i].equipment && _items[i].class === item.class) {
+			//console.log('found replacement item:', _items[i])
 			bungie.equip(_items[i].owner, _items[i].id, function(e, more) {
 				if(more.ErrorCode > 1) {
 					errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
 					return;
 				}
+				//console.log('moving item:', _items[i].name)
 				manageItemClick(i, {type: 'equip', character: item.owner});
+				item.equipped = false;
+				_items[i].equipped = true;
 				callback();
 				return;
 			});
@@ -205,27 +208,107 @@ function dequip(item, callback, exotic) {
 	}
 	if(exotic) {
 		errorDialog('No ' + item.type + ' found on character to switch with ' + item.name + '. move over item to swap with.');
-		console.log('ERROR: no', item.type, 'found on character. eventual support.');
 		return;
 	}
+
 	dequip(item, callback, true)
 }
 
-function moveItem(item, destination, amount, callback) {
-	// console.log('move item', item, destination)
+// function buildSorted(item, destination) {
+//   _sorted = [];
+//   for(var i in _items) {
+//     if(_sorted[_items[i].owner] === undefined) {
+//       _sorted[_items[i].owner] = [];
+//     };
+//     if(_items[i].owner === 'vault' && _items[i].sort === item.sort) {
+//       _sorted[_items[i].owner].push(_items[i]);
+//     } else if(destination.character === _items[i].owner && item.bucket === _items[i].bucket) {
+//       _sorted[_items[i].owner].push(_items[i]);
+// 		}
+// 	}
+// }
 
+function destinationExotic(item, destination) {
+	for(var i in _items) {
+		if(_items[i].equipped && destination.character === _items[i].owner && _items[i].tier === 'Exotic' && _items[i].sort === item.sort) {
+			return _items[i];
+		}
+	}
+	return null;
+}
+
+function destinationInventory(item) {
+	var dest = [];
+	for(var i in _items) {
+		if(dest[_items[i].owner] === undefined) {
+			dest[_items[i].owner] = [];
+		}
+		if(_items[i].owner === item.owner) {
+			continue;
+		}
+		if(_items[i].owner === 'vault' && _items[i].sort === item.sort) {
+			dest[_items[i].owner].push(_items[i]);
+		} else if(item.bucket === _items[i].bucket) {
+			dest[_items[i].owner].push(_items[i]);
+		}
+	}
+	return dest;
+}
+
+function doTransfer(char, item, amount, toVault, callback) {
+	bungie.transfer(char, item.id, item.hash, amount, toVault, function(cb, more) {
+		if(more.ErrorCode > 1) {
+			errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
+			return;
+		}
+		item.owner = toVault ? 'vault' : char;
+
+		callback();
+	});
+}
+
+function doMove(item, destination, amount, callback) {
+	// first move other things if needed.
+
+	// make sure the destination character can equip an exotic if item is exotic
+	// //console.log(item.tier === 'Exotic', destination.spot_clear, destination.spot_clear === undefined)
+	if(item.tier === 'Exotic' && destination.type === 'equip' && destination.exotic_clear === undefined) {
+		//console.log('we are moving and want to equip an exotic, is the destination exotic?');
+		var dest = destinationExotic(item, destination);
+		if(dest === null) {
+			destination.exotic_clear = true;
+			doMove(item, destination, amount, callback);
+			return;
+		} else {
+			//console.log('destination bucket is exotic. dequip ', dest);
+			dequip(dest, function() {
+				manageItemClick(dest.index, {type: 'item', character: dest.owner})
+				destination.exotic_clear = true;
+				doMove(item, destination, amount, callback);
+			});
+			return;
+		}
+	}
+
+	// if the item is equipped. dequip it.
 	if(item.equipped) {
+		//console.log('item we are moving is equipped. dequip it.');
 		dequip(item, function() {
 			item.equipped = false;
-			moveItem(item, destination, amount, callback);
+			doMove(item, destination, amount, callback);
 		});
 		return;
 	}
 
 	// if the character now owns the item we're done!
 	if(item.owner === destination.character) {
+		//console.log('item is on destination character.', item);
 		// if we're equipping an item
 		if(destination.type === 'equip' && !item.equipped) {
+			//console.log('the final equip.', item.name)
+			delete destination.exotic_clear;
+			delete destination.spot_clear;
+			delete destination.vault_clear;
 			bungie.equip(item.owner, item.id, function(e, more) {
 				if(more.ErrorCode > 1) {
 					errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
@@ -241,8 +324,8 @@ function moveItem(item, destination, amount, callback) {
 
 				// find what was replaced
 				for(var i in _items) {
-					if(item.owner === _items[i].owner && item.type === _items[i].type && item.name !== _items[i].name && _items[i].equipped) {
-						// console.log(_items[i].name)
+					if(item.owner === _items[i].owner && item.bucket === _items[i].bucket && item.name !== _items[i].name && _items[i].equipped) {
+						//console.log('item replaced', _items[i].name)
 						manageItemClick(i, {type: 'item', character: item.owner});
 						_items[i].equipped = false;
 						break;
@@ -267,14 +350,79 @@ function moveItem(item, destination, amount, callback) {
 		toVault = false;
 	}
 
-	bungie.transfer(char, item.id, item.hash, amount, toVault, function(cb, more) {
-		if(more.ErrorCode > 1) {
-			errorDialog('Error #' + more.ErrorCode + '\n' +  more.Message);
+	// make sure there is a spot in the destination and vault
+	if(!destination.vault_clear || !destination.spot_clear) {
+		//console.log('are the vault and destination spots free?');
+		var dest = destinationInventory(item, destination);
+		var allFree = true;
+		var freeCharacter = [];
+		for(var c in dest) {
+			if(c === 'vault') continue;
+
+			if(dest[c].length >= 10) {
+				allFree = false;
+			} else {
+				freeCharacter.push(c);
+			}
+		}
+		if(freeCharacter.length === 0) {
+			//console.log('no free spots on any characters.');
 			return;
 		}
-		item.owner = toVault ? 'vault' : destination.character;
+		var vaultFree = false;
+		//console.log(item.sort)
+		switch(item.sort) {
+			case 'Weapon': vaultFree = dest.vault.length < 36; break;
+			case 'Armor': vaultFree = dest.vault.length < 24; break;
+			case 'Miscellaneous': vaultFree = dest.vault.length < 24; break;
+		}
+		if(vaultFree && allFree) {
+			//console.log('transfer path is clear, move.');
+			destination.spot_clear = true;
+			destination.vault_clear = true;
+			doMove(item, destination, amount, callback);
+			return;
+		} else {
+			// if the vault is full, move an item to an open slot... somewhere.
+			//console.log(destination.vault_clear, dest.vault, dest.vault.length)
+			if(!destination.vault_clear && (dest.vault && dest.vault.length >= 20)) {
+				//console.log('the vault is full.');
+				for(var i in dest.vault) {
+					if(dest.vault[i].bucket === item.bucket) {
+						//console.log('moving item from vault.', dest.vault[i]);
+						doTransfer(freeCharacter[0], dest.vault[i], dest.vault[i].amount, false, function() {
+							destination.vault_clear = true;
+							//console.log(destination)
+							doMove(item, destination, amount, callback);
+						});
+						return;
+					}
+				}
+				//console.log('oh shiiiiiiiii....');
+				return;
+			}
+			destination.vault_clear = true;
+			if(!destination.spot_clear) {
+				//console.log('the destination bucket is full.');
+				for(var i in dest[destination.character]) {
+					if(dest[destination.character][i].equipped || dest[destination.character][i].tier === 'Exotic') continue;
+					//console.log('moving item from full destination character.', dest[destination.character][i]);
+					doMove(dest[destination.character][i], {character: freeCharacter[0]}, dest[destination.character][i].amount, function() {
+						destination.spot_clear = true;
+						doMove(item, destination, amount, callback);
+					});
+					return;
+				}
+				//console.log('oh shiiiiiiiii....???');
+				return;
+			}
+			destination.spot_clear = true;
+		}
+	}
 
-		moveItem(item, destination, amount, callback);
+	//console.log('moving item - toVault=' + toVault);
+	doTransfer(char, item, amount, toVault, function() {
+		doMove(item, destination, amount, callback);
 	});
 }
 
@@ -326,14 +474,14 @@ function manageItem(e) {
 	var item = _items[_transfer.dataset.index];
 	var amount = item.amount;
 
-	// console.log(item)
+	// //console.log(item)
 
 	if(item.notransfer) {
-		console.log('no drag and drop support for this type of item yet.')
+		//console.log('no drag and drop support for this type of item yet.')
 	}
 
 	var doMove = function(quantity) {
-		moveItem(item, destination.dataset, amount, function() {
+		doMove(item, destination.dataset, amount, function() {
 			// move the item to the right spot once done.
 			if(item.amount === quantity) {
 				destination.querySelector('.item-' + item.sort + ' .sort-' + item.type).appendChild(_transfer);
@@ -388,7 +536,7 @@ function ignoreDrag(e) {
 	// 	}
 	//
 	// 	if(testObj.className != undefined) {
-	// 		console.log(testObj.parentNode.children[0]);
+	// 		//console.log(testObj.parentNode.children[0]);
 	// 		// testObj.className = 'hover'
 	// 		// testObj.style.height = testObj.parentNode.height;
 	// 	}
@@ -445,7 +593,7 @@ function buildStorage() {
 					hideMovePopup();
 					var data = this.dataset;
 					var item = _items[_transfer.dataset.index];
-					moveItem(item, data, item.amount, function() {
+					doMove(item, data, item.amount, function() {
 						manageItemClick(_transfer.dataset.index, data)
 					})
 				});
@@ -460,7 +608,7 @@ function buildStorage() {
 				hideMovePopup();
 				var data = this.dataset;
 				var item = _items[_transfer.dataset.index];
-				moveItem(item, data, item.amount, function() {
+				doMove(item, data, item.amount, function() {
 					manageItemClick(_transfer.dataset.index, data)
 				})
 			});
@@ -476,7 +624,7 @@ function buildStorage() {
 				hideMovePopup();
 				var data = this.dataset;
 				var item = _items[_transfer.dataset.index];
-				moveItem(item, data, item.amount, function() {
+				doMove(item, data, item.amount, function() {
 					manageItemClick(_transfer.dataset.index, data)
 				})
 			});
@@ -556,7 +704,7 @@ function buildItems() {
 			amt.className = 'stack';
 			amt.innerText = _items[itemId].amount;
 
-			// console.log(amt)
+			// //console.log(amt)
 			itemBox.appendChild(amt);
 		}
 		itemBox.appendChild(img);
@@ -566,6 +714,7 @@ function buildItems() {
 		if(_items[itemId].complete) itemBox.className += ' complete';
 		itemBox.dataset.index = itemId;
 		itemBox.dataset.instance = _items[itemId].id;
+		_items[itemId].index = itemId;
 		img.addEventListener('dragstart', function(e) {
 			_transfer = this.parentNode;
 		});
@@ -584,7 +733,7 @@ function buildItems() {
 		if(_items[itemId].equipped) {
 			_storage[_items[itemId].owner].elements.equipped.querySelector('.sort-' + _items[itemId].type).appendChild(itemBox);
 		} else {
-			// console.log(_items[itemId])
+			// //console.log(_items[itemId])
 			_storage[_items[itemId].owner].elements.item.querySelector('.item-' + _items[itemId].sort + ' .sort-' + _items[itemId].type).appendChild(itemBox);
 		}
 	}
@@ -617,17 +766,11 @@ function getItemType(type, name) {
 }
 
 function sortItem(type) {
-	if(type.indexOf("Engram") != -1) {
-		return 'Miscellaneous';
-	}
 	if(["Pulse Rifle", "Sniper Rifle", "Shotgun", "Scout Rifle", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun"].indexOf(type) != -1)
 		return 'Weapon';
-	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor"].indexOf(type) != -1)
+	if(["Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
 		return 'Armor';
-	if(["Restore Defaults", "Titan Mark", "Hunter Cloak", "Warlock Bond", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle"].indexOf(type) != -1)
-		return 'Styling';
-	if(["Currency", "Consumable", "Material", "Primary Weapon Engram"].indexOf(type) != -1)
-		return 'Miscellaneous';
+	return 'Miscellaneous';
 }
 
 function flattenInventory(data) {
@@ -680,11 +823,11 @@ function appendItems(owner, items) {
 		var itemType = getItemType(itemDef.type, itemDef.name);
 
 		// if(item.stackSize > 1) {
-		// 	// console.log(itemDef)
+		// 	// //console.log(itemDef)
 		// }
 
 		if(!itemType) {
-			// console.log(itemDef.name, itemDef.type)
+			// //console.log(itemDef.name, itemDef.type)
 			continue;
 		}
 
@@ -698,12 +841,12 @@ function appendItems(owner, items) {
 
 		// for(var i = 0; i < item.stats.length; i++) {
 		// 	if(item.stats[i].statHash === 1345609583) {
-		// 		console.log(itemDef.name)
+		// 		//console.log(itemDef.name)
 		// 	}
 		// }
 		//
 		// if(item.itemInstanceId == 6917529046161258692) {
-		// 	console.log(item, itemDef)
+		// 	//console.log(item, itemDef)
 		// }
 
 		_items.push({
@@ -737,8 +880,8 @@ function loadInventory(c) {
 	});
 
 	// bungie.getItem(c, "6917529046161258692", function(eee) {
-	// 	console.log('yeah!')
-	// 	console.log(JSON.stringify(eee))
+	// 	//console.log('yeah!')
+	// 	//console.log(JSON.stringify(eee))
 	// })
 }
 
@@ -833,7 +976,7 @@ function tryPageLoad() {
 		// for(var s = 0; s < items.length; s++) {
 		// 	items[s].parentNode.addEventListener('dragenter', function() {
     //    	_dragCounter++;
-		// 		console.log(_dragCounter)
+		// 		//console.log(_dragCounter)
 		// 		this.classList.add('over');
 		// 	}, false);
 		// 	items[s].parentNode.addEventListener('dragleave', function() {
@@ -882,6 +1025,8 @@ function tryPageLoad() {
 					special = 'incomplete';
 				} else if(['complete'].indexOf(filter) >= 0) {
 					special = 'complete';
+				} else if(['stackable'].indexOf(filter) >= 0) {
+					special = 'stackable';
 				}
 			}
 			var _tmpItem;
@@ -893,6 +1038,7 @@ function tryPageLoad() {
 					case 'tier':	item[i].style.display = _tmpItem.tier.toLowerCase() == filter ? '' : 'none'; break;
 					case 'incomplete':	item[i].style.display = ['Weapon', 'Armor'].indexOf(_tmpItem.sort) !== -1 && !_tmpItem.complete ? '' : 'none'; break;
 					case 'complete':	item[i].style.display = _tmpItem.complete ? '' : 'none'; break;
+					case 'stackable':	item[i].style.display = !_tmpItem.equipment ? '' : 'none'; break;
 					default: item[i].style.display = _tmpItem.name.toLowerCase().indexOf(filter) >= 0 ? '' : 'none'; break;
 				}
 			}
@@ -904,7 +1050,7 @@ function tryPageLoad() {
 
 		function hideTooltip(e) {
 
-			// console.log( e.target, e.target.parentNode, e.target.parentNode.parentNode, e.target.className === 'loadout-set')
+			// //console.log( e.target, e.target.parentNode, e.target.parentNode.parentNode, e.target.className === 'loadout-set')
 			if((e.type === 'keyup' && e.keyCode === 27) || (e.type === 'mousedown' &&
 				!(e.target.parentNode.className === 'move-button' ||
 				 	e.target.parentNode.className === 'item' ||
