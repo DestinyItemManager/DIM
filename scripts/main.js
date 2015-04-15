@@ -693,7 +693,7 @@ function appendItems(owner, items) {
 			itemSort = 'Postmaster';
 		}
 
-		var dmgName = ['kinetic',,'arc','solar','void'][item.damageType];
+		var dmgName = ['na','kinetic','arc','solar','void'][item.damageType];
 
 
 		// for(var i = 0; i < item.stats.length; i++) {
