@@ -22,9 +22,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState'];
 
-  function PlatformChoiceCtrl($scope, dimPlatformService) {
+  function PlatformChoiceCtrl($scope, dimPlatformService, dimState) {
     var vm = this;
 
     vm.active = null;
@@ -45,10 +45,10 @@
 
     $scope.$on('dim-active-platform-updated', function(e, args) {
       if (_.isNull(args.platform)) {
-        vm.active = null;
+        dimState.active = vm.active = null;
       } else {
         if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
-          vm.active = args.platform;
+          dimState.active = vm.active = args.platform;
         }
       }
     });

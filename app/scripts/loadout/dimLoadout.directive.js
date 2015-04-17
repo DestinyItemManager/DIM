@@ -73,17 +73,13 @@
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
 
-        vm.loadout = {
-          items: {}
-        };
+        vm.loadout = _.clone(vm.defaults);
       });
 
       scope.$on('dim-delete-loadout', function(event, args) {
         vm.show = false;
         dimLoadoutService.dialogOpen = false;
-        vm.loadout = {
-          items: {}
-        };
+        vm.loadout = _.clone(vm.defaults);
       });
 
       scope.$on('dim-edit-loadout', function(event, args) {
@@ -115,9 +111,11 @@
 
     vm.show = false;
     dimLoadoutService.dialogOpen = false;
-    vm.loadout = {
+    vm.defaults = {
+      classType: -1,
       items: {}
     };
+    vm.loadout = angular.copy(vm.defaults);
 
     vm.save = function save() {
       if (_.has(vm.loadout, 'id')) {
@@ -126,36 +124,38 @@
         dimLoadoutService.saveLoadout(vm.loadout);
       }
 
-      vm.loadout = {};
+      vm.loadout = angular.copy(vm.defaults);
       vm.show = false;
       dimLoadoutService.dialogOpen = false;
     };
 
     vm.cancel = function cancel() {
-      vm.loadout = {};
+      vm.loadout = angular.copy(vm.defaults);
       dimLoadoutService.dialogOpen = false;
       vm.show = false;
     };
 
     vm.add = function add(item) {
-      item = _.clone(item);
+      var clone = angular.copy(item);
 
-      var discriminator = item.type.toLowerCase();
+      var discriminator = clone.type.toLowerCase();
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
       var dupe = _.find(typeInventory, function(i) {
-        return (i.id === item.id);
+        return (i.id === clone.id);
       });
 
       if (_.isUndefined(dupe) && (_.size(typeInventory) < 9)) {
-        if (item.type === 'Class') {
+        clone.equipped = false;
+
+        if (clone.type === 'Class') {
           if (_.has(vm.loadout.items, 'class')) {
             vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
-            item.equipped = true;
+            clone.equipped = true;
           }
         }
 
-        typeInventory.push(item);
+        typeInventory.push(clone);
       }
     };
 
@@ -173,18 +173,22 @@
     };
 
     vm.equip = function equip(item) {
-      var equipped = vm.loadout.equipped;
+      if (item.equipment) {
+        var equipped = vm.loadout.equipped;
 
-      if (item.id !== 0) {
-        if (item.equipped) {
+        if ((item.type === 'Class') && (!item.equipped)) {
+          item.equipped = true;
+        } else if (item.equipped) {
           item.equipped = false;
         } else {
           if (item.tier === dimItemTier.exotic) {
             var exotic = _.chain(vm.loadout.items)
               .values()
               .flatten()
-              .find(function(i) {
-                return ((i.sort === item.sort) && (i.tier === dimItemTier.exotic) && (i.equipped));
+              .findWhere({
+                sort: item.sort,
+                tier: dimItemTier.exotic,
+                equipped: true
               })
               .value();
 
@@ -192,6 +196,17 @@
               exotic.equipped = false;
             }
           }
+
+          _.chain(vm.loadout.items)
+            .values()
+            .flatten()
+            .where({
+              type: item.type,
+              equipped: true
+            })
+            .each(function(i) {
+              i.equipped = false;
+            });
 
           item.equipped = true;
         }

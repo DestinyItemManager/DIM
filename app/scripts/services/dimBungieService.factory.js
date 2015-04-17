@@ -1,19 +1,19 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState'];
 
-  function BungieService($rootScope, $q, $timeout, $http) {
+  function BungieService($rootScope, $q, $timeout, $http, dimState) {
     var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
     var charactersPromise = null;
 
-    $rootScope.$on('dim-active-platform-updated', function (event, args) {
+    $rootScope.$on('dim-active-platform-updated', function(event, args) {
       tokenPromise = null;
       platformPromise = null;
       membershipPromise = null;
@@ -22,7 +22,9 @@
 
     var service = {
       getPlatforms: getPlatforms,
-      getStores: getStores
+      getStores: getStores,
+      transfer: transfer,
+      equip: equip
     };
 
     return service;
@@ -59,7 +61,7 @@
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
-      return $q(function (resolve, reject) {
+      return $q(function(resolve, reject) {
         chrome.cookies.getAll({
           'domain': '.bungie.net'
         }, getAllCallback);
@@ -78,9 +80,9 @@
 
     function getBungleToken() {
       tokenPromise = tokenPromise || getBnetCookies()
-        .then(function (cookies) {
-          return $q(function (resolve, reject) {
-            var cookie = _.find(cookies, function (cookie) {
+        .then(function(cookies) {
+          return $q(function(resolve, reject) {
+            var cookie = _.find(cookies, function(cookie) {
               return cookie.name === 'bungled';
             });
 
@@ -93,7 +95,7 @@
                   active: false
                 });
 
-                setTimeout(function () {
+                setTimeout(function() {
                   window.location = window.location.origin + window.location.pathname + "?reloaded=true" + window.location.hash;
                 }, 5000);
               }
@@ -102,7 +104,7 @@
             }
           });
         })
-        .catch(function (error) {
+        .catch(function(error) {
           tokenPromise = null;
         });
 
@@ -155,7 +157,7 @@
         .then(networkError)
         .then(throttleCheck)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
-        .catch(function (error) {
+        .catch(function(error) {
           membershipPromise = null;
         });
 
@@ -163,7 +165,7 @@
     }
 
     function getBnetMembershipReqest(platform, token) {
-      return $q.when((function () {
+      return $q.when((function() {
         return {
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/SearchDestinyPlayer/' + platform.type + '/' + platform.id + '/',
@@ -203,7 +205,7 @@
       charactersPromise = charactersPromise || getBungleToken()
         .then(addTokenToData)
         .then(getMembershipPB)
-        .then(function (membershipId) {
+        .then(function(membershipId) {
           return getBnetCharactersRequest(data.token, platform, membershipId);
         })
         .then($http)
@@ -215,7 +217,7 @@
     }
 
     function getBnetCharactersRequest(token, platform, membershipId) {
-      return $q.when((function () {
+      return $q.when((function() {
         return {
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
@@ -233,8 +235,8 @@
         $q.reject('The membership id was not available.');
       }
 
-      return $q.when((function () {
-        return _.map(response.data.Response.data.characters, function (character) {
+      return $q.when((function() {
+        return _.map(response.data.Response.data.characters, function(character) {
           return {
             'id': character.characterBase.characterId,
             'base': character
@@ -267,7 +269,7 @@
         .then(addMembershipIdToData)
         .then(getCharactersPB)
         .then(addCharactersToData)
-        .then(function () {
+        .then(function() {
           return getDestinyInventories(data.token, platform, data.membershipId, data.characters);
         });
 
@@ -317,7 +319,7 @@
       var processPB;
 
       // Guardians
-      _.each(characters, function (character) {
+      _.each(characters, function(character) {
         processPB = processInventoryResponse.bind(null, character);
 
         promise = $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
@@ -344,6 +346,57 @@
       promises.push(promise);
 
       return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
+    function transfer(item, store) {
+      var platform = dimState.active;
+      var membershipType = platform.type;
+      var data = {
+        token: null,
+        characterId: null
+      };
+
+      var promise = getBungleToken()
+        .then(function(token) {
+          data.token = token;
+        })
+        .then(function() {
+
+        });
+
+      return promise;
+    }
+
+    function getTransferRequest(token) {
+      return {
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token,
+          'content-type': 'application/json; charset=UTF-8;'
+        },
+        data: {
+          characterId: characterId,
+          membershipType: membershipType,
+          itemId: item.id,
+          itemReferenceHash: item.hash,
+          stackSize: item.amount,
+          transferToVault: (store.id === 'vault')
+        },
+        dataType: 'json',
+        withCredentials: true
+      };
+    }
+
+    /************************************************************************************************************************************/
+
+    function equip(item) {
+      var promise = getBungleToken();
+
+      return promise;
     }
   }
 })();

@@ -1,4 +1,5 @@
-(function () {
+(function() {
+  'use strict';
   angular.module('dimApp')
     .directive('dimLoadoutPopup', LoadoutPopup);
 
@@ -10,7 +11,9 @@
       controllerAs: 'vm',
       bindToController: true,
       restrict: 'A',
-      scope: {},
+      scope: {
+        classType: '=dimClass'
+      },
       replace: true,
       template: [
         '<div class="loadout-popup-content">',
@@ -32,9 +35,23 @@
   function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService) {
     var vm = this;
 
+    vm.classTypeId = -1;
+
+    var chooseClass = {
+      'warlock': 0,
+      'titan': 1,
+      'hunter': 2
+    };
+
+    vm.classTypeId = chooseClass[vm.classType] || 0;
+
     dimLoadoutService.getLoadouts()
-      .then(function (loadouts) {
+      .then(function(loadouts) {
         vm.loadouts = loadouts || [];
+
+        vm.loadouts = _.filter(vm.loadouts, function(item) {
+          return ((item.classType === -1) || (item.classType === vm.classTypeId));
+        });
       });
 
     vm.newLoadout = function newLoadout($event) {
@@ -48,7 +65,9 @@
 
     vm.editLoadout = function editLoadout(loadout, $event) {
       ngDialog.closeAll();
-      $rootScope.$broadcast('dim-edit-loadout', { loadout: loadout });
+      $rootScope.$broadcast('dim-edit-loadout', {
+        loadout: loadout
+      });
     };
 
     vm.applyLoadout = function applyLoadout(loadout, $event) {

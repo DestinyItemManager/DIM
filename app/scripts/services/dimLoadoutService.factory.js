@@ -143,8 +143,7 @@
         name: loadoutPrimitive.name,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v1.1',
-        items: {},
-        equipped: {}
+        items: {}
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
@@ -156,13 +155,10 @@
         if (item) {
           var discriminator = item.type.toLowerCase();
 
+          item.equipped = itemPrimitive.equipped;
+
           result.items[discriminator] = (result.items[discriminator] || []);
           result.items[discriminator].push(item);
-
-          if (itemPrimitive.equipped) {
-            result.equipped[discriminator] = (result.equipped[discriminator] || []);
-            result.equipped[discriminator] = item;
-          }
         }
       });
 
@@ -175,8 +171,7 @@
         name: loadoutPrimitive.name,
         classType: -1,
         version: 'v1.1',
-        items: {},
-        equipped: {}
+        items: {}
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
@@ -188,8 +183,7 @@
           result.items[discriminator] = (result.items[discriminator] || []);
           result.items[discriminator].push(item);
 
-          result.equipped[discriminator] = (result.equipped[discriminator] || []);
-          result.equipped[discriminator] = item;
+          item.equipped = true;
         }
       });
 
@@ -213,13 +207,7 @@
             id: item.id,
             hash: item.hash,
             amount: item.amount,
-            equipped: _.chain(loadout.equipped)
-              .values()
-              .flatten()
-              .some(function(i) {
-                return ((i.id === item.id) && (i.hash === item.hash))
-              })
-              .value()
+            equipped: item.equipped
           });
         });
 

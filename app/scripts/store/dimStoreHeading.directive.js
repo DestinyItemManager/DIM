@@ -45,7 +45,7 @@
           ngDialog.closeAll();
 
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closeLoadoutPopup()" dim-loadout-popup="vm.store"></div>',
+            template: '<div ng-click="$event.stopPropagation();" dim-class="vm[\'class\']" dim-click-anywhere-but-here="vm.closeLoadoutPopup()" dim-loadout-popup="vm.store"></div>',
             plain: true,
             appendTo: 'div[loadout-id="' + vm.store.id + '"]',
             overlay: false,
