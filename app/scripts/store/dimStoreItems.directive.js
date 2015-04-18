@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -40,7 +40,7 @@
     };
 
     function Link(scope, element, attrs) {
-      scope.vm.onDrop = function (id, $event, equip) {
+      scope.vm.onDrop = function(id, $event, equip) {
         var vm = scope.vm;
 
         var srcElement = $window.document.querySelector('#' + id);
@@ -76,16 +76,16 @@
     ];
     vm.orderedTypes = {};
 
-    _.each(types, function (value, index) {
+    _.each(types, function(value, index) {
       vm.orderedTypes[value] = index;
     });
 
     vm.sortSize = _(vm.store.items)
       .chain()
-      .groupBy(function (i) {
+      .groupBy(function(i) {
         return i.sort;
       })
-      .mapObject(function (val, key) {
+      .mapObject(function(val, key) {
         return _.size(val);
       })
       .value();
@@ -186,50 +186,50 @@
       if (vm.store.id === 'vault') {
         vm.sortSize = _(vm.store.items)
           .chain()
-          .groupBy(function (i) {
+          .groupBy(function(i) {
             return i.sort;
           })
-          .mapObject(function (val, key) {
+          .mapObject(function(val, key) {
             return _.size(val);
           })
           .value();
       }
 
       return _.chain(vm.store.items)
-        .sortBy(function (item) {
+        .sortBy(function(item) {
           return item.name;
         })
-        .sortBy(function (item) {
+        .sortBy(function(item) {
           switch (item.tier) {
-          case 'Exotic':
-            return 0;
-          case 'Legendary':
-            return 1;
-          case 'Rare':
-            return 2;
-          case 'Uncommon':
-            return 3;
-          case 'Common':
-            return 4;
-          default:
-            return 5;
+            case 'Exotic':
+              return 0;
+            case 'Legendary':
+              return 1;
+            case 'Rare':
+              return 2;
+            case 'Uncommon':
+              return 3;
+            case 'Common':
+              return 4;
+            default:
+              return 5;
           }
         })
-        .sortBy(function (item) {
+        .sortBy(function(item) {
           return vm.orderedTypes[item.type];
         })
-        .groupBy(function (item) {
+        .groupBy(function(item) {
           return vm.orderedTypes[item.type];
         })
-        .mapObject(function (values, key) {
-          return _.groupBy(values, function (item) {
+        .mapObject(function(values, key) {
+          return _.groupBy(values, function(item) {
             return (item.equipped ? 'equipped' : 'unequipped');
           });
         })
         .value();
     }
 
-    vm.moveDroppedItem = function (item, equip) {
+    vm.moveDroppedItem = function(item, equip) {
       var promise = null;
       var target = vm.store;
 
@@ -247,38 +247,36 @@
       }
 
       promise
-        .then(function (s) {
+        .then(function(s) {
           source = s;
         })
         .then(dimItemService.moveTo.bind(null, item, target, equip))
-        .then(function () {
-          return $q(function (resolve, reject) {
-            var index = _.findIndex(source.items, function (i) {
-              return (item.index === i.index);
-            });
+        .then(function(p) {
+          var index = _.findIndex(source.items, function(i) {
+            return (item.index === i.index);
+          });
 
-            if (index >= 0) {
-              item.owner = target.id;
+          if (index >= 0) {
+            item.owner = target.id;
 
-              if (equip) {
-                var equipped = _.findWhere(target.items, {
-                  equipped: true,
-                  type: item.type
-                });
-                equipped.equipped = false;
-                item.equipped = true;
-              }
-
-              source.items.splice(index, 1);
-              target.items.push(item);
+            if (equip) {
+              var equipped = _.findWhere(target.items, {
+                equipped: true,
+                type: item.type
+              });
+              equipped.equipped = false;
+              item.equipped = true;
             }
 
-            resolve(true);
-          });
+            source.items.splice(index, 1);
+            target.items.push(item);
+          }
+
+          return item;
         });
     };
 
-    $scope.$watchCollection('vm.store.items', function (newVal) {
+    $scope.$watchCollection('vm.store.items', function(newVal) {
       vm.data = generateData();
 
       $timeout(cleanUI(), 0);
@@ -305,7 +303,7 @@
     var weapons = document.querySelectorAll('.weapons');
     var armor = document.querySelectorAll('.armor');
 
-    var wHeight = _.reduce(weapons, function (memo, section) {
+    var wHeight = _.reduce(weapons, function(memo, section) {
       var childHeight = 0;
       _.each(section.children, function(child) {
         childHeight += outerHeight(child);
@@ -319,7 +317,7 @@
       return memo;
     }, 0);
 
-    var aHeight = _.reduce(armor, function (memo, section) {
+    var aHeight = _.reduce(armor, function(memo, section) {
       var childHeight = 0;
       _.each(section.children, function(child) {
         childHeight += outerHeight(child);

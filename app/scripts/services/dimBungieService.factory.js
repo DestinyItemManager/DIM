@@ -1,61 +1,59 @@
 (function() {
-  'use strict';
+    'use strict';
 
-  angular.module('dimApp')
-    .factory('dimBungieService', BungieService);
+    angular.module('dimApp')
+      .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState'];
+    BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState) {
-    var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
-    var tokenPromise = null;
-    var platformPromise = null;
-    var membershipPromise = null;
-    var charactersPromise = null;
+    function BungieService($rootScope, $q, $timeout, $http, dimState) {
+      var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
+      var tokenPromise = null;
+      var platformPromise = null;
+      var membershipPromise = null;
+      var charactersPromise = null;
 
-    $rootScope.$on('dim-active-platform-updated', function(event, args) {
-      tokenPromise = null;
-      platformPromise = null;
-      membershipPromise = null;
-      charactersPromise = null;
-    });
-
-    var service = {
-      getPlatforms: getPlatforms,
-      getStores: getStores,
-      transfer: transfer,
-      equip: equip
-    };
-
-    return service;
-
-    function assignResultAndForward(dataset, attribute, result) {
-      dataset[attribute] = result;
-
-      return result;
-    }
-
-    function networkError(response) {
-      if (response.status >= 200 && response.status < 400) {
-        return response;
-      } else {
-        return $q.reject('Network error: ' + response.status);
-      }
-    }
-
-    function throttleCheck(response) {
-      return $q(function(resolve, reject) {
-        if (response.ErrorCode !== 36) {
-          resolve(response);
-        } else {
-          $timeout(function() {
-            reject({
-              errorCode: 36,
-              message: 'Throttle limit exceeded.  Retry.'
-            });
-          }, 1000);
-        }
+      $rootScope.$on('dim-active-platform-updated', function(event, args) {
+        tokenPromise = null;
+        platformPromise = null;
+        membershipPromise = null;
+        charactersPromise = null;
       });
+
+      var service = {
+        getPlatforms: getPlatforms,
+        getStores: getStores,
+        transfer: transfer,
+        equip: equip
+      };
+
+      return service;
+
+      function assignResultAndForward(dataset, attribute, result) {
+        dataset[attribute] = result;
+
+        return result;
+      }
+
+      function networkError(response) {
+        if (response.status >= 200 && response.status < 400) {
+          return response;
+        } else {
+          return $q.reject('Network error: ' + response.status);
+        }
+      }
+
+      function throttleCheck(response) {
+        return $q(function(resolve, reject) {
+            if (response.data.  ErrorCode !== 36) {
+              return resolve(response);
+            } else {
+              return reject({
+                errorCode: 36,
+                message: 'Throttle limit exceeded.  Retry.'
+              });
+          }
+        });
     }
 
     /************************************************************************************************************************************/
@@ -355,21 +353,57 @@
       var membershipType = platform.type;
       var data = {
         token: null,
-        characterId: null
+        membershipType: null
       };
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
+      var getMembershipPB = getMembership.bind(null, platform);
 
       var promise = getBungleToken()
-        .then(function(token) {
-          data.token = token;
-        })
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(addMembershipTypeToDataPB)
         .then(function() {
+          return getTransferRequest(data.token, platform.type, item, store);
+        })
+        .then(function(request) {
+          return $q(function(resolve, reject) {
+            var retries = 4;
 
+            function run() {
+              $http(request).then(function success(response) {
+                if (response.data.ErrorCode === 36) {
+                  retries = retries - 1;
+
+                  if (retries <= 0) {
+                    // debugger;
+                    reject(response);
+                  } else {
+                    $timeout(run(), Math.pow(2, 4 - retries) * 1000);
+                  }
+                } else {
+                  // debugger;
+                  resolve(response);
+                }
+              }, function failure(response) {
+                // debugger;
+                reject(response);
+              });
+            }
+
+            run();
+          });
+        })
+        .then(networkError)
+        .then(throttleCheck)
+        .then(function(response) {
+          var a = response.status;
         });
 
       return promise;
     }
 
-    function getTransferRequest(token) {
+    function getTransferRequest(token, membershipType, item, store) {
       return {
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
@@ -379,7 +413,7 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: characterId,
+          characterId: (store.id === 'vault') ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,

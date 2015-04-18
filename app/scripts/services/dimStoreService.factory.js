@@ -230,6 +230,7 @@
           primStat: item.primaryStat,
           stats: item.stats,
           maxStackSize: definitions.items[item.itemHash].maxStackSize,
+          classType: itemDef.class, /* 0: titan, 1: hunter, 2: warlock, 3: any */
           dmg: dmgName,
           visible: true
         });

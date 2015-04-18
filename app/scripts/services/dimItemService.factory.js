@@ -176,6 +176,12 @@
       };
 
       var promise = isValidTransfer(item, target, equip);
+      var transferPB = dimBungieService.transfer.bind(null, item, target);
+
+      // promise
+      //   .then(transferPB);
+
+      promise = dimBungieService.transfer.bind(null, item, target)();
 
       // if (meta.item.inVault && meta.target.isGuardian) {
       //   promise = promise

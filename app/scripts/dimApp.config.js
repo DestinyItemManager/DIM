@@ -8,7 +8,7 @@
     })
     .value('dimState', {
       membershipType: -1,
-      active: {},
+      active: null,
       debug: true
     })
     .value('dimItemTier', {

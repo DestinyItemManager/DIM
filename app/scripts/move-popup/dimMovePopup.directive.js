@@ -42,16 +42,31 @@
     };
   }
 
-  MovePopupController.$inject = ['dimStoreService', 'ngDialog', '$q'];
+  MovePopupController.$inject = ['dimStoreService', 'dimItemService', 'ngDialog', '$q'];
 
-  function MovePopupController(dimStoreService, ngDialog, $q) {
+  function MovePopupController(dimStoreService, dimItemService, ngDialog, $q) {
+    var vm = this;
 
     function moveToVaultFn(store, e) {
+      var promise = $q.when(vm.item);
+
       if (vm.item.equipped) {
         var item = vm.getSimilarItem(vm.item);
+
+        if (item) {
+
+        } else {
+          // Can't find item to replace.
+        }
         // get comparable item
         // equip comparable item
+      } else {
+        promise
+          .then(dimItemService.moveTo.bind(null, vm.item, store))
+          .then(moveItemUI.bind(null, vm.item, store));
       }
+
+
 
       // if (store.id !== 'vault') {
       //   // move to vault
@@ -83,7 +98,7 @@
     function moveItemUI(item, targetStore) {
       var sourceStore = (item.owner === targetStore.id) ? $q.when(targetStore) : dimStoreService.getStore(item.owner);
 
-      sourceStore
+      return sourceStore
         .then(function(sourceStore) {
           var i = _.indexOf(sourceStore.items, item);
 
@@ -175,6 +190,7 @@
       };
 
       var results = _.chain(fnStore.items)
+        .where({ classType: fnItem.classType })
         .sortBy(function (i) {
           return sortType[i.tier];
         })
@@ -196,8 +212,7 @@
       }
 
       return result;
-    };
-    var vm = this;
+    }
 
     vm.moveToVault = moveToVaultFn;
     vm.moveToEquip = moveToEquipFn;
