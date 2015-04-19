@@ -355,6 +355,7 @@
         token: null,
         membershipType: null
       };
+
       var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
       var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
       var getMembershipPB = getMembership.bind(null, platform);
@@ -379,7 +380,7 @@
                     // debugger;
                     reject(response);
                   } else {
-                    $timeout(run(), Math.pow(2, 4 - retries) * 1000);
+                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
                   }
                 } else {
                   // debugger;
@@ -391,7 +392,7 @@
               });
             }
 
-            run();
+            $timeout(run, 1000);
           });
         })
         .then(networkError)
