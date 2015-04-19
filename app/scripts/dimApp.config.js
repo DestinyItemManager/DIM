@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -47,8 +47,13 @@
     });
 
   angular.module('dimApp')
-    .config(function ($stateProvider, $urlRouterProvider) {
-
+    .config(["rateLimiterConfigProvider", function(rateLimiterConfigProvider) {
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 4000);
+    }])
+    .config(["$httpProvider", function($httpProvider) {
+      $httpProvider.interceptors.push("rateLimiterInterceptor");
+    }])
+    .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise("/inventory");
 
       $stateProvider
