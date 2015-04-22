@@ -1,12 +1,12 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefs'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefs) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -26,10 +26,10 @@
         return _stores;
       } else {
         var promise = dimBungieService.getStores(dimPlatformService.getActive())
-          .then(function (stores) {
+          .then(function(stores) {
             _stores.splice(0);
 
-            _.each(stores, function (raw) {
+            _.each(stores, function(raw) {
               var store;
               var items = [];
 
@@ -39,7 +39,7 @@
                   'icon': '',
                   'items': [],
                   'bucketCounts': {},
-                  hasExotic: function (type) {
+                  hasExotic: function(type) {
                     var predicate = {
                       'tier': dimItemTier.exotic,
                       'type': type
@@ -49,20 +49,20 @@
                       .where(predicate)
                       .value();
                   },
-                  getTypeCount: function (item) {
+                  getTypeCount: function(item) {
                     return _.chain(this.items)
-                      .filter(function (storeItem) {
+                      .filter(function(storeItem) {
                         return item.type === storeItem.type;
                       })
                       .size()
                       .value() < 10;
                   },
-                  canEquipExotic: function (item) {
+                  canEquipExotic: function(item) {
                     return this.getTypeCount(item);
                   }
                 };
 
-                _.each(raw.data.buckets, function (bucket) {
+                _.each(raw.data.buckets, function(bucket) {
                   if (bucket.bucketHash === 3003523923)
                     store.bucketCounts.Armor = _.size(bucket.items);
                   if (bucket.bucketHash === 138197802)
@@ -83,7 +83,7 @@
                   race: getRace(raw.character.base.characterBase.raceHash),
                   isPrestigeLevel: raw.character.base.isPrestigeLevel,
                   percentToNextLevel: raw.character.base.percentToNextLevel,
-                  hasExotic: function (type, equipped) {
+                  hasExotic: function(type, equipped) {
                     var predicate = {
                       'tier': dimItemTier.exotic,
                       'type': type
@@ -97,27 +97,27 @@
                       .where(predicate)
                       .value();
                   },
-                  getTypeCount: function (item) {
+                  getTypeCount: function(item) {
                     return _.chain(this.items)
-                      .filter(function (storeItem) {
+                      .filter(function(storeItem) {
                         return item.type === storeItem.type;
                       })
                       .size()
                       .value() < 10;
                   },
-                  canEquipExotic: function (itemType) {
+                  canEquipExotic: function(itemType) {
                     var types = _.chain(dimCategory)
                       .pairs()
-                      .find(function (cat) {
+                      .find(function(cat) {
                         return _.some(cat[1],
-                          function (type) {
+                          function(type) {
                             return (type == itemType);
                           }
                         );
                       })
                       .value()[1];
 
-                    return _.size(_.reduce(types, function (memo, type) {
+                    return _.size(_.reduce(types, function(memo, type) {
                       return memo || this.hasExotic(type, true);
                     }, false, this)) === 0;
                   }
@@ -125,8 +125,8 @@
 
 
 
-                _.each(raw.data.buckets, function (bucket) {
-                  _.each(bucket, function (pail) {
+                _.each(raw.data.buckets, function(bucket) {
+                  _.each(bucket, function(pail) {
                     items = _.union(items, pail.items);
                   });
                 });
@@ -135,36 +135,40 @@
 
               var i = getItems(store.id, items, raw.definitions);
 
-              i = _.sortBy(i, function(item) {
-                return item.name;
+              i.then(function(items) {
+                items = _.sortBy(items, function(item) {
+                  return item.name;
+                });
+
+                items = _.sortBy(items, function(item) {
+
+                  switch (item.tier) {
+                    case 'Exotic':
+                      return 0;
+                    case 'Legendary':
+                      return 1;
+                    case 'Rare':
+                      return 2;
+                    case 'Uncommon':
+                      return 3;
+                    case 'Common':
+                      return 4;
+                    default:
+                      return 5;
+                  }
+                });
+
+                store.items = items;
+
+                _stores.push(store);
+
+                return store;
               });
-
-              i = _.sortBy(i, function (item) {
-
-                switch (item.tier) {
-                case 'Exotic':
-                  return 0;
-                case 'Legendary':
-                  return 1;
-                case 'Rare':
-                  return 2;
-                case 'Uncommon':
-                  return 3;
-                case 'Common':
-                  return 4;
-                default:
-                  return 5;
-                }
-              });
-
-              store.items = i;
-
-              _stores.push(store);
             });
 
             return $q.when(_stores);
           })
-          .then(function (stores) {
+          .then(function(stores) {
             $rootScope.$broadcast('dim-stores-updated', {
               stores: stores
             });
@@ -177,7 +181,7 @@
     }
 
     function getStore(id) {
-      var store = _.find(_stores, function (store) {
+      var store = _.find(_stores, function(store) {
         return store.id === id;
       });
 
@@ -187,25 +191,25 @@
     function getItems(owner, items, definitions) {
       var result = [];
 
-      var iterator = function (definitions, item, index) {
-        var itemDef = _itemDefs[item.itemHash];
+      var iterator = function(definitions, item, index) {
+        var itemDef = definitions[item.itemHash];
 
         // Missing definition?
         if (itemDef === undefined) {
           return;
         }
 
-        if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
-          return;
-        }
+        // if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
+        //   return;
+        // }
 
-        var itemType = getItemType(itemDef.type, itemDef.name);
+        var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
 
         if (!itemType) {
           return;
         }
 
-        var itemSort = sortItem(itemDef.type);
+        var itemSort = sortItem(itemDef.itemTypeName);
         if (item.location === 4) {
           itemSort = 'Postmaster';
         }
@@ -219,7 +223,7 @@
           type: itemType,
           sort: itemSort,
           tier: itemDef.tier,
-          name: itemDef.name,
+          name: itemDef.itemName,
           icon: itemDef.icon,
           notransfer: itemDef.notransfer,
           id: item.itemInstanceId,
@@ -229,50 +233,56 @@
           amount: item.stackSize,
           primStat: item.primaryStat,
           stats: item.stats,
-          maxStackSize: definitions.items[item.itemHash].maxStackSize,
-          classType: itemDef.class, /* 0: titan, 1: hunter, 2: warlock, 3: any */
+          maxStackSize: definitions[item.itemHash].maxStackSize,
+          classType: itemDef.class,
+          /* 0: titan, 1: hunter, 2: warlock, 3: any */
           dmg: dmgName,
           visible: true
         });
       };
 
-      var iteratorPB = iterator.bind(null, definitions);
+      var promise = dimItemDefinitions.getDefinitions()
+        .then(function(defs) {
+          var iteratorPB = iterator.bind(null, defs);
 
-      _.each(items, iteratorPB);
+          _.each(items, iteratorPB);
 
-      return result;
+          return result;
+        });
+
+      return promise;
     }
 
     function getClass(type) {
       switch (type) {
-      case 0:
-        return 'titan';
-      case 1:
-        return 'hunter';
-      case 2:
-        return 'warlock';
+        case 0:
+          return 'titan';
+        case 1:
+          return 'hunter';
+        case 2:
+          return 'warlock';
       }
       return 'unknown';
     }
 
     function getRace(hash) {
       switch (hash) {
-      case 3887404748:
-        return 'human';
-      case 898834093:
-        return 'exo';
-      case 2803282938:
-        return 'awoken';
+        case 3887404748:
+          return 'human';
+        case 898834093:
+          return 'exo';
+        case 2803282938:
+          return 'awoken';
       }
       return 'unknown';
     }
 
     function getGender(type) {
       switch (type) {
-      case 0:
-        return 'male';
-      case 1:
-        return 'female';
+        case 0:
+          return 'male';
+        case 1:
+          return 'female';
       }
       return 'unknown';
     }

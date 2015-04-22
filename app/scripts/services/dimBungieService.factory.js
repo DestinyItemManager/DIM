@@ -277,7 +277,7 @@
     function getGuardianInventoryRequest(token, platform, membershipId, character) {
       return {
         method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Inventory/?definitions=true',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Inventory/?definitions=false',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token
@@ -289,7 +289,7 @@
     function getDestinyVaultRequest(token, platform) {
       return {
         method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Vault/?definitions=true',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Vault/?definitions=false',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token
