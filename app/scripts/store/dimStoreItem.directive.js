@@ -21,7 +21,7 @@
       },
       template: [
         '<div ui-draggable="true" id="item-{{:: $id }}" drag-channel="{{ vm.item.type }}" title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" drag="\'item-\' + $id" ng-show="vm.item.visible" class="item" ng-class="{ \'complete\': vm.item.complete}">',
-        '  <img ui-draggable="false" ng-src="http://bungie.net/{{ vm.item.icon }}" ng-click="vm.clicked(vm.item, $event)">',
+        '  <img ui-draggable="false" ng-src="{{ vm.item.icon.slice(1) }}" ng-click="vm.clicked(vm.item, $event)">',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="damage-type" ng-if="vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
         '</div>'
