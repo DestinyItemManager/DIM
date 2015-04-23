@@ -224,7 +224,7 @@
           hash: item.itemHash,
           type: itemType,
           sort: itemSort,
-          tier: itemDef.tier,
+          tier: itemDef.tierTypeName,
           name: itemDef.itemName,
           icon: itemDef.icon,
           notransfer: itemDef.notransfer,
