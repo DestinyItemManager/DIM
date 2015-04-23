@@ -79,7 +79,7 @@
           });
       });
 
-      $timeout(cleanUI(), 50);
+      $timeout(cleanUI, 0);
     };
 
     var filterGenerator = function (predicate, switchParam) {

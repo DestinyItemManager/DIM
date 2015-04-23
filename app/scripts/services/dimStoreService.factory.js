@@ -210,8 +210,10 @@
         }
 
         var itemSort = sortItem(itemDef.itemTypeName);
+
         if (item.location === 4) {
           itemSort = 'Postmaster';
+          return;
         }
 
         var dmgName = ['kinetic', , 'arc', 'solar', 'void'][item.damageType];

@@ -22,7 +22,7 @@
         '    <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ value.join(\',\') }}">',
         '      <div class="title">',
         '        <span>{{ key }}</span>',
-        '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] }}/20</span>',
+        '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'">',
         '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ng-if="vm.data[vm.orderedTypes[type]].equipped" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ value.join(\',\') }}">',
@@ -52,9 +52,9 @@
     }
   }
 
-  StoreItemsCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', '$q', '$timeout'];
+  StoreItemsCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster'];
 
-  function StoreItemsCtrl($scope, dimStoreService, dimItemService, $q, $timeout) {
+  function StoreItemsCtrl($scope, dimStoreService, dimItemService, $q, $timeout, toaster) {
     var vm = this;
     var types = [ // Order of types in the rows.
       'Class',
@@ -234,13 +234,17 @@
       var target = vm.store;
 
       if (item.owner === vm.store.id) {
+        if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
+          return;
+        }
+
         promise = $q.when(vm.store);
+
       } else {
         promise = dimStoreService.getStore(item.owner);
       }
 
       var source;
-
 
       if (item.notransfer && item.owner !== target.id) {
         return $q.reject('Cannot move class to different store.');
@@ -273,13 +277,16 @@
           }
 
           return item;
+        })
+        .catch(function(a) {
+          toaster.pop('error', item.name, a.message);
         });
     };
 
     $scope.$watchCollection('vm.store.items', function(newVal) {
       vm.data = generateData();
 
-      $timeout(cleanUI(), 0);
+      $timeout(cleanUI, 0);
     });
   }
 

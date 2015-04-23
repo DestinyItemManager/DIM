@@ -32,7 +32,6 @@
 
     RateLimiterQueue.prototype.startProcessing = function() {
       if (!angular.isDefined(this.interval)) {
-        this.processQueue.bind(this);
         this.interval = $interval(this.processQueue.bind(this), this.timeLimit);
       }
     };

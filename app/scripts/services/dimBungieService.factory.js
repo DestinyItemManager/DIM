@@ -358,8 +358,6 @@
         membershipType: null
       };
 
-      console.log((new Date()).toLocaleTimeString());
-
       var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
       var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
       var getMembershipPB = getMembership.bind(null, platform);
@@ -386,13 +384,14 @@
                   } else {
                     $timeout(run, Math.pow(2, 4 - retries) * 1000);
                   }
+                } else if (response.data.ErrorCode > 1) {
+                  reject(new Error(response.data.Message));
                 } else {
-                  // debugger;
                   resolve(response);
                 }
               }, function failure(response) {
                 // debugger;
-                reject(response);
+                reject(new Error(response.data.Message));
               });
             }
 
@@ -409,14 +408,6 @@
     }
 
     function getTransferRequest(token, membershipType, item, store) {
-      console.log({
-        characterId: (store.id === 'vault') ? item.owner : store.id,
-        membershipType: membershipType,
-        itemId: item.id,
-        itemReferenceHash: item.hash,
-        stackSize: item.amount,
-        transferToVault: (store.id === 'vault')
-      });
       return {
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',

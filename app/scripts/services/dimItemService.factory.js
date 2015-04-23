@@ -99,7 +99,19 @@
 
       //TODO Hardcoded Item Quantity
       if (store.id === 'vault') {
-        typeQtyCap = 20;
+        switch (item.type) {
+        case 'Weapons':
+        case 'Weapon':
+          {
+            typeQtyCap = 15;
+            break;
+          }
+        default:
+          {
+            typeQtyCap = 24;
+            break;
+          }
+        }
       } else {
         switch (item.type) {
         case 'Material':
@@ -181,7 +193,7 @@
       //   .then(transferPB);
 
       promise = promise
-        .then(dimBungieService.transfer.bind(null, item, target)());
+        .then(dimBungieService.transfer.bind(null, item, target));
 
       // if (meta.item.inVault && meta.target.isGuardian) {
       //   promise = promise

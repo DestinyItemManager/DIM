@@ -124,7 +124,7 @@ body {
   min-width: 410px;
   margin: 0 auto;
   padding-top: 50px;
-  background: radial-gradient(transparent,70%,#000) fixed,url(https://www.bungie.net/img/theme/destiny/bgs/gradient_green.jpg) fixed;
+  background: radial-gradient(transparent,70%,#000) fixed,url(../images/gradient_green.jpg) fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

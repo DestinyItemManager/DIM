@@ -7,6 +7,7 @@
     'ang-drag-drop',
     'chromeStorage',
     'ngMessages',
-    'angularUUID2'
+    'angularUUID2',
+    'toaster'
   ]);
 })();
