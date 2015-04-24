@@ -168,7 +168,7 @@
       return $q.when((function() {
         return {
           method: 'GET',
-          url: 'https://www.bungie.net/Platform/Destiny/SearchDestinyPlayer/' + platform.type + '/' + platform.id + '/',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
           headers: {
             'X-API-Key': apiKey,
             'x-csrf': token
@@ -179,11 +179,11 @@
     }
 
     function processBnetMembershipRequest(response) {
-      if (_.size(response.data.Response) === 0) {
+      if (_.size(response.data.Response) === '0') {
         return $q.reject('The membership id was not available.');
       }
 
-      return $q.when(response.data.Response[0].membershipId);
+      return $q.when(response.data.Response);
     }
 
     function rejectBnetMembershipRequest(response) {
@@ -366,7 +366,8 @@
         .then(addTokenToDataPB)
         .then(getMembershipPB)
         .then(addMembershipTypeToDataPB)
-        .then(function() {
+        .then(function() { return store; })
+        .then(function(store) {
           return getTransferRequest(data.token, platform.type, item, store);
         })
         .then(function(request) {
@@ -432,9 +433,79 @@
     /************************************************************************************************************************************/
 
     function equip(item) {
-      var promise = getBungleToken();
+      var platform = dimState.active;
+      var membershipType = platform.type;
+      var data = {
+        token: null,
+        membershipType: null
+      };
+
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
+      var getMembershipPB = getMembership.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(addMembershipTypeToDataPB)
+        .then(function() {
+          return getEquipRequest(data.token, platform.type, item);
+        })
+        .then(function(request) {
+          return $q(function(resolve, reject) {
+            var retries = 4;
+
+            function run() {
+              $http(request).then(function success(response) {
+                if (response.data.ErrorCode === 36) {
+                  retries = retries - 1;
+
+                  if (retries <= 0) {
+                    // debugger;
+                    reject(response);
+                  } else {
+                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
+                  }
+                } else if (response.data.ErrorCode > 1) {
+                  reject(new Error(response.data.Message));
+                } else {
+                  resolve(response);
+                }
+              }, function failure(response) {
+                // debugger;
+                reject(new Error(response.data.Message));
+              });
+            }
+
+            run();
+          });
+        })
+        .then(networkError)
+        .then(throttleCheck)
+        .then(function(response) {
+          var a = response.status;
+        });
 
       return promise;
+    }
+
+    function getEquipRequest(token, membershipType, item) {
+      return {
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token,
+          'content-type': 'application/json; charset=UTF-8;'
+        },
+        data: {
+          characterId: item.owner,
+          membershipType: membershipType,
+          itemId: item.id
+        },
+        dataType: 'json',
+        withCredentials: true
+      };
     }
   }
 })();

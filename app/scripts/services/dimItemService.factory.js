@@ -14,11 +14,7 @@
     };
 
     function equipItem(item) {
-      return $q(function (resolve, reject) {
-        console.log('Equipping Item: i:' + item.id + ' o:' + item.owner);
-
-        resolve();
-      });
+      return dimBungieService.equip(item);
     }
 
     function dequipItem(item, equipExotic) {
@@ -26,11 +22,7 @@
         equipExotic = false;
       }
 
-      return $q(function (resolve, reject) {
-        console.log('Dequipping Item: i:' + item.id + ' s:' + item.owner);
-
-        resolve();
-      });
+      return dimBungieService.equip(item, store);
     }
 
     function moveToVault(item) {
@@ -38,12 +30,7 @@
     }
 
     function moveToStore(item, store) {
-      var deferred = $q.defer();
-      var promise = deferred.promise;
-
-      deferred.resolve();
-
-      return promise;
+      return dimBungieService.transfer(item, store);
     }
 
     function canEquipExotic(item, store) {
@@ -93,6 +80,12 @@
           .value();
 
         slotsNeededForTransfer = Math.ceil((stackAmount + item.amount) / item.maxStackSize) - Math.ceil((stackAmount) / item.maxStackSize);
+      } else {
+        if (item.owner === store.id) {
+          slotsNeededForTransfer = 0;
+        } else {
+          slotsNeededForTransfer = 1;
+        }
       }
 
       var typeQtyCap = 10;
@@ -129,7 +122,7 @@
       }
 
       // TODO Need to add support to transfer partial stacks.
-      if ((itemsInStore + slotsNeededForTransfer) < typeQtyCap) {
+      if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
         deferred.resolve(true);
       } else {
         deferred.reject('There are too many items in the category \'' + (store.id === 'vault' ? item.sort : item.type) + '\'');
@@ -189,47 +182,39 @@
 
       var promise = isValidTransfer(item, target, equip);
 
-      // promise
-      //   .then(transferPB);
+      if (meta.item.inVault && meta.target.isGuardian) {
+        promise = promise
+          .then(moveToStore.bind(null, item, target));
 
-      promise = promise
-        .then(dimBungieService.transfer.bind(null, item, target));
+        if (equip) {
+          promise = promise
+            .then(equipItem.bind(null, item));
+        }
+      } else if (!meta.item.inVault && meta.target.isVault) {
+        if (item.equipped) {
+          promise = promise
+            .then(dequipItem.bind(null, item))
+        }
 
-      // if (meta.item.inVault && meta.target.isGuardian) {
-      //   promise = promise
-      //     .then(moveToStore.bind(null, item, target));
-      //
-      //   if (equip) {
-      //     promise = promise
-      //       .then(equipItem.bind(null, item));
-      //   }
-      // } else if (!meta.item.inVault) {
-      //   if (item.owner !== target.id) {
-      //     if (item.equipped) {
-      //       promise = promise
-      //         .then(dequipItem.bind(null, item))
-      //         .then(moveToVault.bind(null, item));
-      //     }
-      //
-      //     if (meta.target.isGuardian) {
-      //       promise = promise
-      //         .then(moveToStore.bind(null, item, target));
-      //
-      //       if (equip) {
-      //         promise = promise
-      //           .then(equipItem.bind(null, item));
-      //       }
-      //     }
-      //   } else {
-      //     if (item.equipped) {
-      //       promise = promise
-      //         .then(dequipItem.bind(null, item));
-      //     } else {
-      //       promise = promise
-      //         .then(equipItem.bind(null, item));
-      //     }
-      //   }
-      // }
+        promise = promise
+          .then(moveToVault.bind(null, item));
+      } else if (!meta.item.inVault && meta.target.isGuardian) {
+        if (item.equipped && !equip) {
+          promise = promise
+            .then(dequipItem.bind(null, item))
+        }
+
+        if (item.owner !== target.id) {
+          promise = promise
+            .then(moveToVault.bind(null, item))
+            .then(moveToStore.bind(null, item, target));
+        }
+
+        if (!item.equipped && equip) {
+          promise = promise
+            .then(equipItem.bind(null, item))
+        }
+      }
 
       return promise;
     }

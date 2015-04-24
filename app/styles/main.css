@@ -316,13 +316,13 @@ img.void {
 }
 
 .item {
+    margin: 2px;
     position: relative;
     display: inline-block;
     width: 44px;
     height: 44px;
     background-color: #5c7183;
     cursor: pointer;
-    margin: 2;
     border: 2px solid #DDD;
 }
 .item.popup-open:before {
@@ -336,7 +336,7 @@ img.void {
     position: absolute;
     z-index: 2;
 }
-.item>img {
+.item > .img {
   width: 44px;
   height: 44px;
 }
@@ -631,7 +631,7 @@ body.ngdialog-open {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
-  width: 300px;
+  width: 320px;
   top: initial;
   left: initial;
   right: initial;
