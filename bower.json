@@ -19,5 +19,8 @@
     "angular-messages": "~1.4.x",
     "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git",
     "angularjs-toaster": "~0.4.12"
+  },
+  "resolutions": {
+    "angular": "1.4.0-rc.1"
   }
 }
