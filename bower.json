@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "angularjs": "~1.4.x",
+    "angular-animate": "~1.4.x",
     "underscore": "~1.8.x",
     "ngDialog": "~0.3.x",
     "angular-native-dragdrop": "https://github.com/angular-dragdrop/angular-dragdrop.git",
