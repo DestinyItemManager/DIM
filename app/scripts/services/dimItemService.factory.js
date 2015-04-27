@@ -102,17 +102,19 @@
         }
       }
 
-      var prefix = _(store.items)
-        .chain()
-        .filter(function(i) {
-          return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic);
-        });
+      if (result !== null && result.tier === dimItemTier.exotic) {
+        var prefix = _(store.items)
+          .chain()
+          .filter(function(i) {
+            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic);
+          });
 
-      if (prefix.size()
-        .value() === 0) {
-          return result;
-      } else {
-        return null;
+        if (prefix.size()
+          .value() === 0) {
+            return result;
+        } else {
+          return null;
+        }
       }
 
 

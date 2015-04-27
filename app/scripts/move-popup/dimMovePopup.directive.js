@@ -48,23 +48,22 @@
     var vm = this;
 
     function moveToVaultFn(store, e) {
-      var promise = $q.when(vm.item);
-
-      if (vm.item.equipped) {
-        var item = vm.getSimilarItem(vm.item);
-
-        if (item) {
-
-        } else {
-          // Can't find item to replace.
-        }
-        // get comparable item
-        // equip comparable item
-      } else {
-        promise
-          .then(dimItemService.moveTo.bind(null, vm.item, store))
-          .then(moveItemUI.bind(null, vm.item, store));
-      }
+      // var promise = $q.when(vm.item);
+      //
+      // if (vm.item.equipped) {
+      //   var item = vm.getSimilarItem(vm.item);
+      //
+      //   if (item) {
+      //
+      //   } else {
+      //     // Can't find item to replace.
+      //   }
+      //   // get comparable item
+      //   // equip comparable item
+      // } else {
+        dimItemService.moveTo(vm.item, store);
+          // .then(moveItemUI.bind(null, vm.item, store));
+      // }
 
 
 
@@ -111,15 +110,16 @@
     }
 
     function moveToGuardianFn(store, e) {
-      if (vm.item.equipped) {
-        var item = vm.getSimilarItem(vm.item)
-          .then(function(item) {
-            vm.item.equipped = false;
-            moveItemUI(vm.item, store);
-            moveItemUI(item, vm.store);
-            item.equipped = true;
-          });
-      }
+      dimItemService.moveTo(vm.item, store);
+      // if (vm.item.equipped) {
+      //   var item = vm.getSimilarItem(vm.item)
+      //     .then(function(item) {
+      //       vm.item.equipped = false;
+      //       moveItemUI(vm.item, store);
+      //       moveItemUI(item, vm.store);
+      //       item.equipped = true;
+      //     });
+      // }
       //
       // if ((vm.item.owner !== store.id) && (store.id !== 'vault')) {
       //   // move to vault
@@ -131,17 +131,18 @@
     }
 
     function moveToEquipFn(store, e) {
-      if (vm.item.equipped && (vm.item.owner !== store.id)) {
-        var item = vm.getSimilarItem(vm.item)
-          .then(function(item) {
-            moveItemUI(vm.item, store);
-            moveItemUI(item, vm.store);
-            item.equipped = vm.item.equipped;
-            vm.item.equipped = true;
-          });
-        // get comparable item
-        // equip comparable item
-      }
+      dimItemService.moveTo(vm.item, store, true);
+      // if (vm.item.equipped && (vm.item.owner !== store.id)) {
+      //   var item = vm.getSimilarItem(vm.item)
+      //     .then(function(item) {
+      //       moveItemUI(vm.item, store);
+      //       moveItemUI(item, vm.store);
+      //       item.equipped = vm.item.equipped;
+      //       vm.item.equipped = true;
+      //     });
+      //   // get comparable item
+      //   // equip comparable item
+      // }
       //
       // if ((vm.item.owner !== store.id) && (store.id !== 'vault')) {
       //   // move to vault
