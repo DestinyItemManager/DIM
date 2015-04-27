@@ -14,7 +14,7 @@
         deferred.resolve(data);
       })
       .error(function(data) {
-        deferred.reject(data);
+        deferred.reject(new Error('The items definition file was not parsed correctly.'));
       });
 
     return {

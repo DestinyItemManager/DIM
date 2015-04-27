@@ -4,9 +4,9 @@
     angular.module('dimApp')
       .factory('dimBungieService', BungieService);
 
-    BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue'];
+    BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
 
-    function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue) {
+    function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
       var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
       var tokenPromise = null;
       var platformPromise = null;
@@ -41,7 +41,7 @@
         if (response.status >= 200 && response.status < 400) {
           return response;
         } else {
-          return $q.reject('Network error: ' + response.status);
+          return $q.reject(new Error('Network error: ' + response.status));
         }
       }
 
@@ -70,7 +70,7 @@
           if (_.size(cookies) > 0) {
             resolve(cookies);
           } else {
-            reject('No cookies found.');
+            reject(new Error('No cookies found.'));
           }
         }
       });
@@ -100,7 +100,7 @@
                 }, 5000);
               }
 
-              reject('No bungled cookie found.');
+              reject(new Error('No bungled cookie found.'));
             }
           });
         })
@@ -119,7 +119,10 @@
         .then($http)
         .then(networkError)
         .then(throttleCheck)
-        .then(processBnetPlatformsRequest, rejectBnetPlatformsRequest);
+        .then(processBnetPlatformsRequest, rejectBnetPlatformsRequest)
+        .catch(function(e) {
+          toaster.pop('error', '', e.message);
+        });
 
       return platformPromise;
     }
@@ -138,14 +141,14 @@
 
     function processBnetPlatformsRequest(response) {
       if (response.data.ErrorCode === 99) {
-        return ($q.reject("Please log into Bungie.net before using this extension."));
+        return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
       }
 
       return (response);
     }
 
     function rejectBnetPlatformsRequest(error) {
-      return $q.reject("Message missing.");
+      return $q.reject(new Error('Message missing.'));
     }
 
     /************************************************************************************************************************************/
@@ -180,14 +183,14 @@
 
     function processBnetMembershipRequest(response) {
       if (_.size(response.data.Response) === '0') {
-        return $q.reject('The membership id was not available.');
+        return $q.reject(new Error('The membership id was not available.'));
       }
 
       return $q.when(response.data.Response);
     }
 
     function rejectBnetMembershipRequest(response) {
-      return $q.reject('The membership id request failed.');
+      return $q.reject(new Error('The membership id request failed.'));
     }
 
     /************************************************************************************************************************************/
@@ -232,7 +235,7 @@
 
     function processBnetCharactersRequest(response) {
       if (_.size(response.data.Response) === 0) {
-        $q.reject('The membership id was not available.');
+        $q.reject(new Error('The membership id was not available.'));
       }
 
       return $q.when((function() {
@@ -246,7 +249,7 @@
     }
 
     function rejectBnetCharactersRequest(response) {
-      $q.reject('The characters request failed.');
+      $q.reject(new Error('The characters request failed.'));
     }
 
     /************************************************************************************************************************************/
@@ -310,7 +313,7 @@
     }
 
     function rejectInventoryResponse(error) {
-      $q.reject('The store inventory was not available.');
+      $q.reject(new Error('The store inventory was not available.'));
     }
 
     function getDestinyInventories(token, platform, membershipId, characters) {
@@ -381,7 +384,7 @@
 
                   if (retries <= 0) {
                     // debugger;
-                    reject(response);
+                    reject(new Error(response.data.Message));
                   } else {
                     $timeout(run, Math.pow(2, 4 - retries) * 1000);
                   }
@@ -462,7 +465,7 @@
 
                   if (retries <= 0) {
                     // debugger;
-                    reject(response);
+                    reject(new Error(response.data.Message));
                   } else {
                     $timeout(run, Math.pow(2, 4 - retries) * 1000);
                   }

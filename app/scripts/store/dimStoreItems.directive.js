@@ -19,13 +19,13 @@
       template: [
         '<div>',
         '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-        '    <div ng-repeat="(key, value) in vm.categories" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ value.join(\',\') }}">',
+          '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ value.join(\',\') }}">',
         '      <div class="title">',
         '        <span>{{ key }}</span>',
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'">',
-        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ng-if="vm.data[vm.orderedTypes[type]].equipped" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ value.join(\',\') }}">',
+        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\' && vm.data[vm.orderedTypes[type]].equipped" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ value.join(\',\') }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
         '        <div ng-class="vm.styles[type].unequipped">',
@@ -114,6 +114,8 @@
         'Material'
       ]
     };
+
+    vm.keys = _.keys(vm.categories);
 
     vm.styles = { // Styles of the types in the rows.
       Class: {
@@ -247,7 +249,7 @@
       var source;
 
       if (item.notransfer && item.owner !== target.id) {
-        return $q.reject('Cannot move class to different store.');
+        return $q.reject(new Error('Cannot move class to different store.'));
       }
 
       promise
@@ -255,39 +257,16 @@
           source = s;
         })
         .then(dimItemService.moveTo.bind(null, item, target, equip))
-        .then(function(p) {
-          var index = _.findIndex(source.items, function(i) {
-            return (item.index === i.index);
-          });
-
-          if (index >= 0) {
-            item.owner = target.id;
-
-            if (equip) {
-              var equipped = _.findWhere(target.items, {
-                equipped: true,
-                type: item.type
-              });
-              equipped.equipped = false;
-              item.equipped = true;
-            }
-
-            source.items.splice(index, 1);
-            target.items.push(item);
-          }
-
-          return item;
-        })
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
         });
     };
 
-    $scope.$watchCollection('vm.store.items', function(newVal) {
+    $scope.$watch('vm.store.items', function(newVal) {
       vm.data = generateData();
 
       $timeout(cleanUI, 0);
-    });
+    }, true);
   }
 
   function outerHeight(el) {

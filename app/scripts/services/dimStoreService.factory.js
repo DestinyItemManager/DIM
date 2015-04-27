@@ -227,7 +227,7 @@
           tier: itemDef.tierTypeName,
           name: itemDef.itemName,
           icon: itemDef.icon,
-          notransfer: itemDef.notransfer,
+          notransfer: itemDef.nonTransferrable,
           id: item.itemInstanceId,
           equipped: item.isEquipped,
           equipment: item.isEquipment,
