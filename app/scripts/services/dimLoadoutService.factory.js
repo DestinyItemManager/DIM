@@ -24,31 +24,38 @@
       });
     }
 
+    function processLoadout(data) {
+      if (!_.isUndefined(data)) {
+        _loadouts.splice(0);
+
+        // Remove null loadouts.
+        data = _.filter(data, function(primitive) {
+          return !_.isNull(primitive);
+        });
+
+        _.each(data, function(primitive) {
+          // Add id to loadout.
+          _loadouts.push(hydrate(primitive));
+        });
+      } else {
+        _loadouts = _loadouts.splice(0);
+      }
+    }
+
     function getLoadouts(getLatest) {
       var deferred = $q.defer();
       var result = deferred.promise;
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        chrome.storage.sync.get('loadouts', function(data) {
-          if (!_.isUndefined(data)) {
-            _loadouts.splice(0);
-
-            if (data.loadouts) {
-              data = data.loadouts;
-            }
-
-            // Remove null loadouts.
-            data = _.filter(data, function(primitive) {
-              return !_.isNull(primitive);
-            });
-
-            _.each(data, function(primitive) {
-              // Add id to loadout.
-              _loadouts.push(hydrate(primitive));
-            });
+        chrome.storage.sync.get('loadouts-v2.0', function(data) {
+          if (_.isUndefined(data['loadouts-v2.0'])) {
+            chrome.storage.sync.get('loadouts', function(oldData) {
+              processLoadout((oldData.loadouts) ? oldData.loadouts : undefined);
+              saveLoadouts(_loadouts);
+            })
           } else {
-            _loadouts = _loadouts.splice(0);
+            processLoadout((data['loadouts-v2.0']) ? data['loadouts-v2.0'] : undefined);
           }
 
           deferred.resolve(_loadouts);
@@ -79,7 +86,7 @@
           });
         })
         .then(function(loadoutPrimitives) {
-          chrome.storage.sync.set({ loadouts: loadoutPrimitives }, function(e) {
+          chrome.storage.sync.set({ 'loadouts-v2.0': loadoutPrimitives }, function(e) {
             deferred.resolve(loadoutPrimitives);
           });
 
@@ -136,20 +143,20 @@
       var result;
       var hydration = {
         'v1.0': hydratev1d0,
-        'v1.1': hydratev1d1,
-        'default': hydratev1d1
+        'v2.0': hydratev2d0,
+        'default': hydratev2d0
       }
 
       // v1.0 did not have a 'version' property so if it fails, we'll assume.
       return (hydration[(loadout.version)] || hydration['v1.0'])(loadout);
     }
 
-    function hydratev1d1(loadoutPrimitive) {
+    function hydratev2d0(loadoutPrimitive) {
       var result = {
         id: loadoutPrimitive.id,
         name: loadoutPrimitive.name,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
-        version: 'v1.1',
+        version: 'v2.0',
         items: {}
       };
 
@@ -177,7 +184,7 @@
         id: uuid2.newguid(),
         name: loadoutPrimitive.name,
         classType: -1,
-        version: 'v1.1',
+        version: 'v2.0',
         items: {}
       };
 
@@ -202,7 +209,7 @@
         id: loadout.id,
         name: loadout.name,
         classType: loadout.classType,
-        version: 'v1.1',
+        version: 'v2.0',
         items: []
       };
 
