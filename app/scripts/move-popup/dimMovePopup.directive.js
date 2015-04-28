@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -42,9 +42,9 @@
     };
   }
 
-  MovePopupController.$inject = ['dimStoreService', 'dimItemService', 'ngDialog', '$q'];
+  MovePopupController.$inject = ['dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
 
-  function MovePopupController(dimStoreService, dimItemService, ngDialog, $q) {
+  function MovePopupController(dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
     function moveToVaultFn(store, e) {
@@ -61,8 +61,11 @@
       //   // get comparable item
       //   // equip comparable item
       // } else {
-        dimItemService.moveTo(vm.item, store);
-          // .then(moveItemUI.bind(null, vm.item, store));
+      dimItemService.moveTo(vm.item, store)
+        .catch(function(a) {
+          toaster.pop('error', vm.item.name, a.message);
+        });
+      // .then(moveItemUI.bind(null, vm.item, store));
       // }
 
 
@@ -110,7 +113,10 @@
     }
 
     function moveToGuardianFn(store, e) {
-      dimItemService.moveTo(vm.item, store);
+      dimItemService.moveTo(vm.item, store)
+      .catch(function(a) {
+        toaster.pop('error', vm.item.name, a.message);
+      });
       // if (vm.item.equipped) {
       //   var item = vm.getSimilarItem(vm.item)
       //     .then(function(item) {
@@ -131,7 +137,10 @@
     }
 
     function moveToEquipFn(store, e) {
-      dimItemService.moveTo(vm.item, store, true);
+      dimItemService.moveTo(vm.item, store, true)
+        .catch(function(a) {
+          toaster.pop('error', vm.item.name, a.message);
+        });
       // if (vm.item.equipped && (vm.item.owner !== store.id)) {
       //   var item = vm.getSimilarItem(vm.item)
       //     .then(function(item) {
@@ -157,9 +166,9 @@
 
     function getSimilarItemFn(item) {
       return dimStoreService.getStore(item.owner)
-        .then(function (store) {
+        .then(function(store) {
           var result = null;
-          var stores = _.sortBy(vm.stores, function (s) {
+          var stores = _.sortBy(vm.stores, function(s) {
             if (store.id === s.id) {
               return 0;
             } else if (s.id === 'vault') {
@@ -169,7 +178,7 @@
             }
           });
 
-          _.each(stores, function (s) {
+          _.each(stores, function(s) {
             if (_.isNull(result)) {
               result = getItemFn(item, s);
             }
@@ -191,8 +200,10 @@
       };
 
       var results = _.chain(fnStore.items)
-        .where({ classType: fnItem.classType })
-        .sortBy(function (i) {
+        .where({
+          classType: fnItem.classType
+        })
+        .sortBy(function(i) {
           return sortType[i.tier];
         })
         .where({

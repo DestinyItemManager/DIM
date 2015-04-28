@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimLoadoutService', LoadoutService);
 
-  LoadoutService.$inject = ['chromeStorage', '$q', '$rootScope', 'uuid2', 'dimItemService'];
+  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService'];
 
-  function LoadoutService(chromeStorage, $q, $rootScope, uuid2, dimItemService) {
+  function LoadoutService($q, $rootScope, uuid2, dimItemService) {
     var _loadouts = [];
 
     return {
@@ -25,30 +25,34 @@
     }
 
     function getLoadouts(getLatest) {
-      var result;
+      var deferred = $q.defer();
+      var result = deferred.promise;
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        result = chromeStorage.get('loadouts')
-          .then(function(data) {
-            if (!_.isUndefined(data)) {
-              _loadouts.splice(0);
+        chrome.storage.sync.get('loadouts', function(data) {
+          if (!_.isUndefined(data)) {
+            _loadouts.splice(0);
 
-              // Remove null loadouts.
-              data = _.filter(data, function(primitive) {
-                return !_.isNull(primitive);
-              });
-
-              _.each(data, function(primitive) {
-                // Add id to loadout.
-                _loadouts.push(hydrate(primitive));
-              });
-            } else {
-              _loadouts = _loadouts.splice(0);
+            if (data.loadouts) {
+              data = data.loadouts;
             }
 
-            return _loadouts;
-          });
+            // Remove null loadouts.
+            data = _.filter(data, function(primitive) {
+              return !_.isNull(primitive);
+            });
+
+            _.each(data, function(primitive) {
+              // Add id to loadout.
+              _loadouts.push(hydrate(primitive));
+            });
+          } else {
+            _loadouts = _loadouts.splice(0);
+          }
+
+          deferred.resolve(_loadouts);
+        });
       } else {
         result = $q.when(_loadouts);
       }
@@ -57,6 +61,7 @@
     }
 
     function saveLoadouts(loadouts) {
+      var deferred = $q.defer();
       var result;
 
       if (!_.isUndefined(loadouts)) {
@@ -74,9 +79,11 @@
           });
         })
         .then(function(loadoutPrimitives) {
-          chromeStorage.set('loadouts', loadoutPrimitives);
+          chrome.storage.sync.set({ loadouts: loadoutPrimitives }, function(e) {
+            deferred.resolve(loadoutPrimitives);
+          });
 
-          return loadouts;
+          return deferred.promise;
         });
     }
 
@@ -175,7 +182,7 @@
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
-        var item = _.clone(dimItemService.getItem(itemPrimitive.id));
+        var item = _.clone(dimItemService.getItem(itemPrimitive));
 
         if (item) {
           var discriminator = item.type.toLowerCase();

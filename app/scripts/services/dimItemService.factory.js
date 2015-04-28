@@ -193,7 +193,14 @@
           return dimBungieService.transfer(item, scope.target);
         })
         .then(function() {
-          return updateItemModel(item, scope.source, scope.target, equip);
+          return updateItemModel(item, scope.source, scope.target, false);
+        })
+        .then(function(item) {
+          if ((item.owner !== 'vault') && equip) {
+            return equipItem(item);
+          } else {
+            return item;
+          }
         });
     }
 
@@ -345,8 +352,8 @@
                 promise = promise.then(dequipItem.bind(null, item));
               }
 
-              promise = promise.then(moveToVault.bind(null, item));
-              promise = promise.then(moveToStore.bind(null, item, data.target, equip));
+              promise = promise.then(moveToVault.bind(null, item))
+                .then(moveToStore.bind(null, item, data.target, equip));
             }
 
             if (!item.equipped && equip) {

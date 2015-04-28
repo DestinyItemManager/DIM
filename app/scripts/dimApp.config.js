@@ -57,7 +57,8 @@
       }
     ])
     .config(["rateLimiterConfigProvider", function(rateLimiterConfigProvider) {
-      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1100);
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1250);
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1250);
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("rateLimiterInterceptor");

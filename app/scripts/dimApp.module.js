@@ -3,10 +3,11 @@
 
   angular.module('dimApp', [
     'ui.router',
+    'ngAnimate',
     'ngDialog',
+    'ngMessages',
     'ang-drag-drop',
     'chromeStorage',
-    'ngMessages',
     'angularUUID2',
     'toaster'
   ]);

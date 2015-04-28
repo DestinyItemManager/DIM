@@ -1,4 +1,7 @@
-
+.item img {
+  width: 44px;
+  height: 44px;
+}
 
 
 @-webkit-keyframes ngdialog-fadeout {
