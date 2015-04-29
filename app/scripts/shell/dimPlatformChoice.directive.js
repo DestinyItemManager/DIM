@@ -16,8 +16,8 @@
       scope: {},
       restrict: 'A',
       template: [
-        '<span id="user" class="header-right">{{ vm.active.id }}</span>',
-        '<select id="system" ng-options="platform.label for platform in vm.platforms" ng-model="vm.active" ng-change="vm.update()"></select>'
+        '<select id="system" ng-if="vm.platforms.length > 1" ng-options="platform.label for platform in vm.platforms" ng-model="vm.active" ng-change="vm.update()"></select>',
+        '<span style="margin: 0 10px;" id="user" class="header-right">{{ vm.active.id }}</span>'
       ].join('')
     };
   }

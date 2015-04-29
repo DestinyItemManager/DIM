@@ -12,7 +12,8 @@
       bindToController: true,
       restrict: 'A',
       scope: {
-        classType: '=dimClass'
+        classType: '=dimClass',
+        store: '=dimLoadoutPopup'
       },
       replace: true,
       template: [
@@ -30,9 +31,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster) {
     var vm = this;
 
     vm.classTypeId = -1;
@@ -61,6 +62,15 @@
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
       dimLoadoutService.deleteLoadout(loadout);
+
+      dimLoadoutService.getLoadouts()
+        .then(function(loadouts) {
+          vm.loadouts = loadouts || [];
+
+          vm.loadouts = _.filter(vm.loadouts, function(item) {
+            return ((item.classType === -1) || (item.classType === vm.classTypeId));
+          });
+        });
     };
 
     vm.editLoadout = function editLoadout(loadout, $event) {
@@ -71,7 +81,31 @@
     };
 
     vm.applyLoadout = function applyLoadout(loadout, $event) {
+      ngDialog.closeAll();
 
+      var items = _.chain(loadout.items)
+        .values()
+        .flatten()
+        .value();
+
+        applyLoadoutItems(items, loadout);
     };
+
+    function applyLoadoutItems(items, loadout) {
+      if (items.length > 0) {
+        var pseudoItem = items.splice(0, 1)[0];
+        var item = dimItemService.getItem(pseudoItem);
+
+        var promise = dimItemService.moveTo(item, vm.store, pseudoItem.equipped)
+          .catch(function(a) {
+            toaster.pop('error', item.name, a.message);
+          })
+          .finally(function() {
+            applyLoadoutItems(items, loadout);
+          });
+      } else {
+        toaster.pop('success', loadout.name, "Your loadout has been transfered.");
+      }
+    }
   }
 })();

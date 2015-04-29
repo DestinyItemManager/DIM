@@ -1,4 +1,4 @@
-(function() {
+  (function() {
   'use strict';
 
   angular.module('dimApp')
@@ -455,8 +455,15 @@
       return returnValue;
     }
 
-    function getItem(id) {
-      var items = getItems();
+    function getItem(id, hash, amount, store) {
+      var items;
+
+      if (store) {
+        items = store.items;
+      } else {
+        items = getItems();
+      }
+
       var item;
 
       if (_.isObject(id)) {
@@ -466,9 +473,17 @@
           return ((item.id === primitive.id) || (item.hash === primitive.hash));
         });
       } else {
-        item = _.find(items, function(item) {
-          return item.id === id;
-        });
+        predicate = {};
+
+        if (!_.isEmpty(id)) {
+          predicate.id = id;
+        }
+
+        if (!_.isEmpty(hash)) {
+          predicate.hash = hash;
+        }
+
+        item = _.findWhere(items, predicate);
       }
 
       return item;

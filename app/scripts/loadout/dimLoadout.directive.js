@@ -136,7 +136,7 @@
     };
 
     vm.add = function add(item) {
-      var clone = angular.copy(item);
+      var clone = _.clone(item);
 
       var discriminator = clone.type.toLowerCase();
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
