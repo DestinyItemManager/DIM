@@ -1,0 +1,17 @@
+{
+  "name": "angular",
+  "version": "1.4.0-rc.1",
+  "main": "./angular.js",
+  "ignore": [],
+  "dependencies": {},
+  "homepage": "https://github.com/angular/bower-angular",
+  "_release": "1.4.0-rc.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.4.0-rc.1",
+    "commit": "f26bf48643e6fdfc193ca0cff1009f8eb5c27edd"
+  },
+  "_source": "git://github.com/angular/bower-angular.git",
+  "_target": "~1.4.x",
+  "_originalSource": "angularjs"
+}
