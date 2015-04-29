@@ -13,7 +13,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input type="search">'
+        '<input placeholder="filter items or is:arc" type="search" name="filter" ng-model="vm.search" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
       ].join('')
     };
   }
