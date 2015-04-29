@@ -19,7 +19,7 @@
       template: [
         '<div>',
         '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-          '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ value.join(\',\') }}">',
+        '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ value.join(\',\') }}">',
         '      <div class="title">',
         '        <span>{{ key }}</span>',
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',
@@ -286,40 +286,40 @@
   }
 
   function cleanUI() {
-    var weapons = document.querySelectorAll('.weapons');
-    var armor = document.querySelectorAll('.armor');
-
-    var wHeight = _.reduce(weapons, function(memo, section) {
+    var fn = function(memo, section) {
       var childHeight = 0;
       _.each(section.children, function(child) {
         childHeight += outerHeight(child);
       });
-
 
       if (childHeight > memo) {
         memo = childHeight;
       }
 
       return memo;
-    }, 0);
+    };
 
-    var aHeight = _.reduce(armor, function(memo, section) {
-      var childHeight = 0;
-      _.each(section.children, function(child) {
-        childHeight += outerHeight(child);
-      });
+    var setHeight = function(query) {
+      var height = _.reduce(document.querySelectorAll(query), fn, 0);
 
+      var style = document.querySelectorAll('style[id=' + (query.replace(/\./g,'')) + ']');
 
-      if (childHeight > memo) {
-        memo = childHeight;
+      if (style.length > 0) {
+        style = style[0];
+      } else {
+        style = document.createElement('style');
+        style.type = 'text/css';
+        style.id = query.replace(/\./g,'');
+        document.getElementsByTagName('head')[0].appendChild(style);
       }
 
-      return memo;
-    }, 0);
+      style.innerHTML = query + ' { min-height: ' + height + 'px; }';
+    };
 
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = '.armor { min-height: ' + (aHeight) + 'px; } .weapons { min-height: ' + (wHeight) + 'px; }';
-    document.getElementsByTagName('head')[0].appendChild(style);
+    setHeight('.sub-section.sort-primary');
+    setHeight('.sub-section.sort-special');
+    setHeight('.sub-section.sort-heavy');
+    setHeight('.weapons');
+    setHeight('.armor');
   }
 })();

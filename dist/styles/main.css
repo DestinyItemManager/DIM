@@ -3,6 +3,34 @@
   height: 44px;
 }
 
+.sub-section:before {
+  /* content: 'Primary'; */
+  margin: 5px 0;
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid;
+  font-size: 1.2em;
+  font-weight: 400;
+  color: #ddd;
+  letter-spacing: 1px;
+}
+
+.sub-section.sort-class:before {
+  content: 'Subclass';
+}
+
+.sub-section.sort-primary:before {
+  content: 'Primary';
+}
+
+.sub-section.sort-special:before {
+  content: 'Special';
+}
+
+.sub-section.sort-heavy:before {
+  content: 'Heavy';
+}
+
 
 @-webkit-keyframes ngdialog-fadeout {
   0% {

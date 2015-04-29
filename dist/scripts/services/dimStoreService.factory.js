@@ -305,12 +305,12 @@
       }
       if (["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
         return 'Heavy';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond"].indexOf(type) != -1)
+      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
         return 'ClassItem';
       if (["Gauntlet Engram"].indexOf(type) != -1)
         return 'Gauntlets';
       if (["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
-        return type.split(' ')[0];
+        return (type.split(' ')[0] === 'Body') ? "Chest" : type.split(' ')[0];
       if (["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
         return 'Class';
       if (["Restore Defaults"].indexOf(type) != -1)
