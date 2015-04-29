@@ -45,9 +45,9 @@
           if (filterResult !== '') {
             if (['arc', 'solar', 'void', 'kinetic'].indexOf(filterResult) >= 0) {
               special = 'elemental';
-            } else if (['primary', 'special', 'heavy'].indexOf(filterResult) >= 0) {
+            } else if (['primary', 'special', 'heavy', 'helmet',' legs', 'gauntlets', 'chest', 'class', 'classitem'].indexOf(filterResult) >= 0) {
               special = 'type';
-            } else if (['basic', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filterResult) >= 0) {
+            } else if (['basic', 'common', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filterResult) >= 0) {
               special = 'tier';
             } else if (['incomplete'].indexOf(filterResult) >= 0) {
               special = 'incomplete';
@@ -111,15 +111,15 @@
         }
       case 'incomplete':
         {
-          result = function (item) {
-            return !item.complete;
+          result = function (p, item) {
+            return item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
           };
           break;
         }
       case 'complete':
         {
-          result = function (item) {
-            return (item.complete);
+          result = function (p, item) {
+            return (item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
           };
           break;
         }
