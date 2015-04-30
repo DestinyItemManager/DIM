@@ -105,13 +105,13 @@
         'ClassItem',
       ],
       General: [
+        'Consumable',
+        'Material',
         'Emblem',
         'Armor',
         'Ghost',
         'Ship',
-        'Vehicle',
-        'Consumable',
-        'Material'
+        'Vehicle'
       ]
     };
 
