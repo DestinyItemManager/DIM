@@ -3,8 +3,7 @@
   height: 44px;
 }
 
-.sub-section:before {
-  /* content: 'Primary'; */
+/*.sub-section:before {
   margin: 5px 0;
   display: block;
   width: 100%;
@@ -29,7 +28,7 @@
 
 .sub-section.sort-heavy:before {
   content: 'Heavy';
-}
+}*/
 
 @-webkit-keyframes ngdialog-fadeout {
   0% {
@@ -245,7 +244,7 @@ img.void {
   display: inline-block;
 }
 
-.vault {
+.items.vault {
   background-color: rgba(245,245,245,0.25);
   padding: 0 12px 1px;
   margin: 0 -12px;
