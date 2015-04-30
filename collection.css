@@ -1,0 +1,50 @@
+#collection {
+    overflow: scroll;
+}
+#collection h2 {
+    margin: 50px 0 20px;
+}
+#collection .content {
+    padding: 5px 5px 50px;
+}
+#collection .content div.collection-item {
+    display: inline-block;
+    height: 145px;
+    text-align: center;
+    vertical-align: top;
+    width: 120px;
+}
+#collection .content div {
+    width: auto;
+    float: none;
+    text-align: center;
+}
+#collection .collection-item img {
+    border: solid white 3px;
+    border-radius: 50%;
+}
+#collection .collection-item img.completed {
+    border: solid yellow 3px;
+}
+#collection .collection-item img.completed {
+    border: solid yellow 3px;
+}
+#collection .collection-item img.missing {
+    opacity:0.3;
+}
+#collection .collection-item img.missing:hover {
+    opacity: 1;
+}
+#collection .content div p {
+    margin: 5px;
+    text-align: center;
+}
+#collection .content .done {
+    color: yellow;
+}
+#collection .content .has {
+    color: white;
+}
+#collection .content .missing {
+    color: grey;
+}

@@ -50,15 +50,15 @@ function report() {
 			has.innerHTML = '';
 			missing.innerHTML = '';
 
-			for(var h in collection[c].completed) {
-				done.innerHTML += ('<p>' + _itemDefs[collection[c].completed[h]].name + '</p>');
-			}
-			for(var h in collection[c].collected) {
-				has.innerHTML += ('<p>' + _itemDefs[collection[c].collected[h]].name + '</p>');
-			}
-			for(var h in collection[c].missing) {
-				missing.innerHTML += ('<p>' + _itemDefs[collection[c].missing[h]].name + '</p>');
-			}
+            for(var h in collection[c].completed) {
+                done.innerHTML += ('<div class="collection-item"><img src="http://bungie.net/' + _itemDefs[collection[c].completed[h]].icon + '" class="completed" /><p>' + _itemDefs[collection[c].completed[h]].name + '</p></div>');
+            }
+            for(var h in collection[c].collected) {
+                has.innerHTML += ('<div class="collection-item"><img src="http://bungie.net/' + _itemDefs[collection[c].collected[h]].icon + '" class="collected" /><p>' + _itemDefs[collection[c].collected[h]].name + '</p></div>');
+            }
+            for(var h in collection[c].missing) {
+                missing.innerHTML += ('<div class="collection-item"><img src="http://bungie.net/' + _itemDefs[collection[c].missing[h]].icon + '" class="missing" /><p>' + _itemDefs[collection[c].missing[h]].name + '</p></div>');
+            }
 		}
 	}
 }
