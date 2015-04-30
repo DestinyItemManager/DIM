@@ -86,7 +86,8 @@
         })
         .where({
           type: item.type,
-          equipped: false
+          equipped: false,
+          equipment: true
         })
         .value();
 
