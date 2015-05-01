@@ -265,72 +265,7 @@
     $scope.$watch('vm.store.items', function(newVal) {
       vm.data = generateData();
 
-      $timeout(cleanUI, 0);
+      $timeout(dimStoreService.setHeights, 0);
     }, true);
-  }
-
-  function outerHeight(el) {
-    var height = el.offsetHeight;
-    var style = getComputedStyle(el);
-
-    height += parseInt(style.marginTop) + parseInt(style.marginBottom);
-    return height;
-  }
-
-  function outerWidth(el) {
-    var width = el.offsetWidth;
-    var style = getComputedStyle(el);
-
-    width += parseInt(style.marginLeft) + parseInt(style.marginRight);
-    return width;
-  }
-
-  function cleanUI() {
-    var fn = function(memo, section) {
-      var childHeight = 0;
-      _.each(section.children, function(child) {
-        childHeight += outerHeight(child);
-      });
-
-      if (childHeight > memo) {
-        memo = childHeight;
-      }
-
-      return memo;
-    };
-
-    var setHeight = function(query) {
-      var height = _.reduce(document.querySelectorAll(query), fn, 0);
-
-      var style = document.querySelectorAll('style[id=' + ((query.replace(/\./g, '')).replace(/\s/g, '')) + ']');
-
-      if (style.length > 0) {
-        style = style[0];
-      } else {
-        style = document.createElement('style');
-        style.type = 'text/css';
-        style.id = (query.replace(/\./g, '')).replace(/\s/g, '');
-        document.getElementsByTagName('head')[0].appendChild(style);
-      }
-
-      style.innerHTML = query + ' { min-height: ' + (height - 50) + 'px; }';
-    };
-
-    setHeight('.guardian .sub-section.sort-primary');
-    setHeight('.guardian .sub-section.sort-special');
-    setHeight('.guardian .sub-section.sort-heavy');
-    setHeight('.guardian .sub-section.sort-helmet');
-    setHeight('.guardian .sub-section.sort-chest');
-    setHeight('.guardian .sub-section.sort-gauntlets');
-    setHeight('.guardian .sub-section.sort-leg');
-    setHeight('.guardian .sub-section.sort-classitem');
-    setHeight('.guardian .sub-section.sort-emblem');
-    setHeight('.guardian .sub-section.sort-armor');
-    setHeight('.guardian .sub-section.sort-ghost');
-    setHeight('.guardian .sub-section.sort-ship');
-    setHeight('.guardian .sub-section.sort-vehicle');
-    setHeight('.guardian .sub-section.sort-consumable');
-    setHeight('.guardian .weapons');
-    setHeight('.guardian .armor');
   }
 })();

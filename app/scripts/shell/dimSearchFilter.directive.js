@@ -79,7 +79,7 @@
           });
       });
 
-      $timeout(cleanUI, 0);
+      $timeout(dimStoreService.setHeights, 32);
     };
 
     var filterGenerator = function (predicate, switchParam) {
@@ -135,58 +135,58 @@
       return result.bind(null, predicate);
     };
 
-    function outerHeight(el) {
-      var height = el.offsetHeight;
-      var style = getComputedStyle(el);
-
-      height += parseInt(style.marginTop) + parseInt(style.marginBottom);
-      return height;
-    }
-
-    function outerWidth(el) {
-      var width = el.offsetWidth;
-      var style = getComputedStyle(el);
-
-      width += parseInt(style.marginLeft) + parseInt(style.marginRight);
-      return width;
-    }
-
-    function cleanUI() {
-      var weapons = document.querySelectorAll('.weapons');
-      var armor = document.querySelectorAll('.armor');
-
-      var wHeight = _.reduce(weapons, function (memo, section) {
-        var childHeight = 0;
-        _.each(section.children, function(child) {
-          childHeight += outerHeight(child);
-        });
-
-
-        if (childHeight > memo) {
-          memo = childHeight;
-        }
-
-        return memo;
-      }, 0);
-
-      var aHeight = _.reduce(armor, function (memo, section) {
-        var childHeight = 0;
-        _.each(section.children, function(child) {
-          childHeight += outerHeight(child);
-        });
-
-
-        if (childHeight > memo) {
-          memo = childHeight;
-        }
-
-        return memo;
-      }, 0);
-
-      var style = document.createElement('style');
-      style.type = 'text/css';
-      style.innerHTML = '.armor { min-height: ' + (aHeight) + 'px; } .weapons { min-height: ' + (wHeight) + 'px; }';
-      document.getElementsByTagName('head')[0].appendChild(style);
-    }
+    // function outerHeight(el) {
+    //   var height = el.offsetHeight;
+    //   var style = getComputedStyle(el);
+    //
+    //   height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+    //   return height;
+    // }
+    //
+    // function outerWidth(el) {
+    //   var width = el.offsetWidth;
+    //   var style = getComputedStyle(el);
+    //
+    //   width += parseInt(style.marginLeft) + parseInt(style.marginRight);
+    //   return width;
+    // }
+    //
+    // function cleanUI() {
+    //   var weapons = document.querySelectorAll('.weapons');
+    //   var armor = document.querySelectorAll('.armor');
+    //
+    //   var wHeight = _.reduce(weapons, function (memo, section) {
+    //     var childHeight = 0;
+    //     _.each(section.children, function(child) {
+    //       childHeight += outerHeight(child);
+    //     });
+    //
+    //
+    //     if (childHeight > memo) {
+    //       memo = childHeight;
+    //     }
+    //
+    //     return memo;
+    //   }, 0);
+    //
+    //   var aHeight = _.reduce(armor, function (memo, section) {
+    //     var childHeight = 0;
+    //     _.each(section.children, function(child) {
+    //       childHeight += outerHeight(child);
+    //     });
+    //
+    //
+    //     if (childHeight > memo) {
+    //       memo = childHeight;
+    //     }
+    //
+    //     return memo;
+    //   }, 0);
+    //
+    //   var style = document.createElement('style');
+    //   style.type = 'text/css';
+    //   style.innerHTML = '.armor { min-height: ' + (aHeight) + 'px; } .weapons { min-height: ' + (wHeight) + 'px; }';
+    //   document.getElementsByTagName('head')[0].appendChild(style);
+    // }
   }
 })();
