@@ -310,6 +310,7 @@ img.void {
   margin: 2px;
   position: relative;
   display: inline-block;
+  float: left;
   width: 44px;
   height: 44px;
   background-color: #5c7183;
