@@ -357,10 +357,18 @@
                 .then(moveToStore.bind(null, item, data.target, equip));
             }
 
-            if (!item.equipped && equip) {
-              promise = promise.then(equipItem.bind(null, item));
-            } else if (item.equipped && !equip) {
-              promise = promise.then(dequipItem.bind(null, item));
+            if (equip) {
+              promise = promise.then(function(item) {
+                if (!item.equipped) {
+                  equipItem.bind(null, item)();
+                }
+              });
+            } else if (!equip) {
+              promise = promise.then(function(item) {
+                if (item.equipped) {
+                  dequipItem.bind(null, item)();
+                }
+              });
             }
           } else if (data.isVault.source && data.isVault.target) { // Vault to Vault
             // Do Nothing.
