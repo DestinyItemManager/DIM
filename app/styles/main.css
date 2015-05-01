@@ -127,7 +127,6 @@
 }
 
 .ngdialog-close:before {
-  font-family: 'Helvetica', Arial, sans-serif;
   content: '\00D7';
   cursor: pointer;
 }
@@ -153,13 +152,9 @@ body {
   min-width: 410px;
   margin: 0 auto;
   padding-top: 50px;
-  background: radial-gradient(transparent,70%,#000) fixed,url(../images/gradient_green.jpg) fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  background-color: #434444;
   color: #fff;
-  font-family: HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family: 'Open Sans',sans-serif;
 }
 body>div {
   text-align: center;
@@ -416,7 +411,7 @@ img.void {
   text-transform: capitalize;
   position: relative;
   display: block;
-  top: 4px;
+  top: 2px;
   font-size: 16px;
   font-weight: 400;
 }
@@ -426,7 +421,6 @@ img.void {
 }
 .character-box .race-gender {
   text-transform: capitalize;
-  top: 3px;
   position: relative;
 }
 .character-box .level {
