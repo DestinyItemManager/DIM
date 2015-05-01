@@ -88,6 +88,7 @@
       setHeight('.guardian .sub-section.sort-ship');
       setHeight('.guardian .sub-section.sort-vehicle');
       setHeight('.guardian .sub-section.sort-consumable');
+      setHeight('.guardian .sub-section.sort-material');
       setHeight('.guardian .weapons');
       setHeight('.guardian .armor');
     }
