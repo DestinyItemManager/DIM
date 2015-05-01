@@ -62,6 +62,7 @@
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
       dimLoadoutService.deleteLoadout(loadout);
+      $rootScope.$broadcast('dim-delete-loadout', {});
 
       dimLoadoutService.getLoadouts()
         .then(function(loadouts) {

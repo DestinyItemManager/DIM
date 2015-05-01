@@ -73,13 +73,13 @@
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
 
-        vm.loadout = _.clone(vm.defaults);
+        vm.loadout = angular.copy(vm.defaults);
       });
 
       scope.$on('dim-delete-loadout', function(event, args) {
         vm.show = false;
         dimLoadoutService.dialogOpen = false;
-        vm.loadout = _.clone(vm.defaults);
+        vm.loadout = angular.copy(vm.defaults);
       });
 
       scope.$on('dim-edit-loadout', function(event, args) {
@@ -115,7 +115,7 @@
       classType: -1,
       items: {}
     };
-    vm.loadout = _.clone(vm.defaults);
+    vm.loadout = angular.copy(vm.defaults);
 
     vm.save = function save() {
       if (_.has(vm.loadout, 'id')) {
@@ -124,19 +124,19 @@
         dimLoadoutService.saveLoadout(vm.loadout);
       }
 
-      vm.loadout = _.clone(vm.defaults);
+      vm.loadout = angular.copy(vm.defaults);
       vm.show = false;
       dimLoadoutService.dialogOpen = false;
     };
 
     vm.cancel = function cancel() {
-      vm.loadout = _.clone(vm.defaults);
+      vm.loadout = angular.copy(vm.defaults);
       dimLoadoutService.dialogOpen = false;
       vm.show = false;
     };
 
     vm.add = function add(item) {
-      var clone = _.clone(item);
+      var clone = angular.copy(item);
 
       var discriminator = clone.type.toLowerCase();
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
