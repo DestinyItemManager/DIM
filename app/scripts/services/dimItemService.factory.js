@@ -358,13 +358,13 @@
             }
 
             if (equip) {
-              promise = promise.then(function(item) {
+              promise = promise.then(function() {
                 if (!item.equipped) {
                   equipItem.bind(null, item)();
                 }
               });
             } else if (!equip) {
-              promise = promise.then(function(item) {
+              promise = promise.then(function() {
                 if (item.equipped) {
                   dequipItem.bind(null, item)();
                 }
