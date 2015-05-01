@@ -115,7 +115,7 @@
       classType: -1,
       items: {}
     };
-    vm.loadout = angular.copy(vm.defaults);
+    vm.loadout = _.clone(vm.defaults);
 
     vm.save = function save() {
       if (_.has(vm.loadout, 'id')) {
@@ -124,13 +124,13 @@
         dimLoadoutService.saveLoadout(vm.loadout);
       }
 
-      vm.loadout = angular.copy(vm.defaults);
+      vm.loadout = _.clone(vm.defaults);
       vm.show = false;
       dimLoadoutService.dialogOpen = false;
     };
 
     vm.cancel = function cancel() {
-      vm.loadout = angular.copy(vm.defaults);
+      vm.loadout = _.clone(vm.defaults);
       dimLoadoutService.dialogOpen = false;
       vm.show = false;
     };
