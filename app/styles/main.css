@@ -10,7 +10,8 @@
   background-color: rgba(128, 128, 128, .15);
 }
 .item.search-hidden > div:nth-child(1),
-.item.search-hidden > div:nth-child(2) {
+.item.search-hidden > div.damage-type,
+.item.search-hidden > div.counter {
   opacity: .15;
 }
 /*.sub-section:before {
