@@ -224,6 +224,7 @@ img.void {
 }
 .sub-section {
   margin-bottom: 20px;
+  position: relative;
 }
 .equippable {
   display: inline-block;
@@ -235,21 +236,27 @@ img.void {
 .vault .unequippable {
   width: 208px;
 }
+
+.sub-section {
+  clear: both;
+}
 .equipped {
   width: 52px;
   margin-right: 12px;
 }
-.unequipped {
+.guardian .unequipped {
   width: 156px;
 }
 .vault .unequipped {
   width: 208px;
 }
-.equipped.on-drag-enter .item {
-  box-shadow: 0 0 10px #ddd;
+.sub-section.on-drag-enter {
+  box-shadow: 0 0 10px rgba(170,170,170,.5);;
+  background-color: rgba(170,170,170,.5);;
 }
-.equipped.on-drag-hover .item {
-  box-shadow: 0 0 10px 2px #fff;
+.sub-section.on-drag-hover {
+  box-shadow: 0 0 10px 2px rgba(200,200,200,.5);;
+  background-color: rgba(200,200,200,.5);
 }
 .item-target {
   vertical-align: top;
@@ -266,13 +273,13 @@ img.void {
   display: inline-block;
   box-shadow: none;
 }
-.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target {
+/*.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target {
   display: inline-block;
   box-shadow: 0 0 10px #ccc;
 }
 .unequipped.on-drag-hover .item-target, .unequippable.on-drag-enter .item-target {
   box-shadow: 0 0 10px 2px #eee;
-}
+}*/
 .counter {
   position: absolute;
   bottom: -2px;
@@ -307,10 +314,9 @@ img.void {
   border-color: transparent transparent #b184c5 transparent;
 }
 .item {
-  margin: 2px;
+  margin: 0 2px;
   position: relative;
   display: inline-block;
-  float: left;
   width: 44px;
   height: 44px;
   background-color: #5c7183;
