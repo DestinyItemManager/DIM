@@ -268,15 +268,32 @@ img.void {
   box-shadow: 0 0 15px 2px rgba(170,170,170,.5);
   background-color: rgba(170,170,170,.5);
 }
-.unequipped.on-drag-hover, .equipped.on-drag-hover {
+
+.unequipped.on-drag-hover {
+  box-shadow: 0 0 15px 2px rgba(200,200,200,.7) !important;
+  background-color: rgba(200,200,200,.7) !important;
+}
+
+.equipped.on-drag-hover {
+  box-shadow: 0 0 15px 2px rgba(255,255,255,.7) !important;
+  background-color: rgba(255,255,255,.7) !important;
+}
+
+.sub-section.on-drag-enter .unequipped {
+  box-shadow: 0 0 15px 2px rgba(170,170,170,.5);
+  background-color: rgba(170,170,170,.5);
+}
+
+.sub-section.on-drag-hover .unequipped {
   box-shadow: 0 0 15px 2px rgba(200,200,200,.7);
   background-color: rgba(200,200,200,.7);
 }
-.vault .unequipped.on-drag-enter, .equipped.on-drag-enter {
+
+.vault .unequipped.on-drag-enter {
   box-shadow: 0 0 15px 2px rgba(210,210,210,.5);
   background-color: rgba(210,210,210,.5);
 }
-.vault .unequipped.on-drag-hover, .equipped.on-drag-hover {
+.vault .unequipped.on-drag-hover {
   box-shadow: 0 0 15px 2px rgba(240,240,240,.7);
   background-color: rgba(240,240,240,.7);
 }
@@ -336,7 +353,8 @@ img.void {
   border-color: transparent transparent #b184c5 transparent;
 }
 .item {
-  margin: 0 2px;
+  float: left;
+  margin: 2px;
   position: relative;
   display: inline-block;
   width: 44px;
