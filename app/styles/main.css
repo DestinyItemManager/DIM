@@ -353,8 +353,7 @@ img.void {
   border-color: transparent transparent #b184c5 transparent;
 }
 .item {
-  float: left;
-  margin: 2px;
+  margin: 2px 2px -2px 2px;
   position: relative;
   display: inline-block;
   width: 44px;
