@@ -123,10 +123,13 @@
     }
 
     function equipItem(item) {
-      return dimBungieService.equip(item)
+      return $q.when(dimBungieService.equip(item))
         .then(dimStoreService.getStore.bind(null, item.owner))
         .then(function(store) {
           updateItemModel(item, store, store, true);
+        })
+        .catch(function(e) {
+          return $q.reject(e);
         });
     }
 
@@ -171,6 +174,9 @@
         })
         .then(function() {
           return updateItemModel(scope.similarItem, scope.source, scope.source, true);
+        })
+        .catch(function(e) {
+          return $q.reject(e);
         });
     }
 
@@ -350,7 +356,8 @@
           if (!data.isVault.source && !data.isVault.target) { // Guardian to Guardian
             if (data.source.id != data.target.id) { // Different Guardian
               if (item.equipped) {
-                promise = promise.then(dequipItem.bind(null, item));
+                promise = promise.then(dequipItem.bind(null, item))
+                .catch(function(e) { debugger; });
               }
 
               promise = promise.then(moveToVault.bind(null, item))
@@ -360,13 +367,17 @@
             if (equip) {
               promise = promise.then(function() {
                 if (!item.equipped) {
-                  equipItem.bind(null, item)();
+                  return equipItem(item);
+                } else {
+                  return $q.when(null);
                 }
               });
             } else if (!equip) {
               promise = promise.then(function() {
                 if (item.equipped) {
-                  dequipItem.bind(null, item)();
+                  return dequipItem.bind(null, item)();
+                } else {
+                  return $q.when(null);
                 }
               });
             }
@@ -384,7 +395,14 @@
             promise = promise.then(moveToStore.bind(null, item, data.target, equip));
           }
 
+          promise = promise.catch(function(e) {
+            return $q.reject(e);
+          });
+
           return promise;
+        })
+        .catch(function(e) {
+          return $q.reject(e);
         });
 
       return movePlan;

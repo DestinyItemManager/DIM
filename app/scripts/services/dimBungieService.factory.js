@@ -455,7 +455,7 @@
           return getEquipRequest(data.token, platform.type, item);
         })
         .then(function(request) {
-          return $q(function(resolve, reject) {
+          var a = $q(function(resolve, reject) {
             var retries = 4;
 
             function run() {
@@ -482,12 +482,19 @@
 
             run();
           });
+
+          return a;
         })
         .then(networkError)
         .then(throttleCheck)
         .then(function(response) {
           var a = response.status;
         });
+        // .catch(function(e) {
+        //   toaster.pop('error', '', e.message);
+        //
+        //   throw e;
+        // });
 
       return promise;
     }

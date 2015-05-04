@@ -2,6 +2,21 @@
   width: 44px;
   height: 44px;
 }
+.button-name {
+  float: left;
+  width: 123px;
+  background-color: rgba(195, 188, 180, .7);
+  padding-left: 4px;
+}
+.button-delete, .button-edit {
+  text-align: center;
+}
+.loadout-set {
+  padding-left: 4px;
+}
+.loadout-list > .loadout-set {
+  padding-left: 0px;
+}
 .vault .sort-class {
   display: none;
 }
@@ -9,21 +24,17 @@
   border-color: rgba(245, 220, 86, .15);
   background-color: rgba(128, 128, 128, .15);
 }
-.item.search-hidden > div:nth-child(1),
-.item.search-hidden > div.damage-type,
-.item.search-hidden > div.counter {
+.item.search-hidden > div:nth-child(1), .item.search-hidden > div.damage-type, .item.search-hidden > div.counter {
   opacity: .15;
 }
-
 .unequippable, .equippable {
   /*position: absolute;*/
+
   min-height: 52px;
 }
-
 div[dim-search-filter] {
   margin-top: -3px;
 }
-
 /*.sub-section:before {
   margin: 5px 0;
   display: block;
@@ -250,7 +261,6 @@ img.void {
 .vault .unequippable {
   width: 208px;
 }
-
 .sub-section {
   clear: both;
 }
@@ -265,37 +275,32 @@ img.void {
   width: 208px;
 }
 .unequipped.on-drag-enter, .equipped.on-drag-enter {
-  box-shadow: 0 0 15px 2px rgba(170,170,170,.5);
-  background-color: rgba(170,170,170,.5);
+  box-shadow: 0 0 15px 2px rgba(170, 170, 170, .5);
+  background-color: rgba(170, 170, 170, .5);
 }
-
 .unequipped.on-drag-hover {
-  box-shadow: 0 0 15px 2px rgba(200,200,200,.7) !important;
-  background-color: rgba(200,200,200,.7) !important;
+  box-shadow: 0 0 15px 2px rgba(200, 200, 200, .7) !important;
+  background-color: rgba(200, 200, 200, .7) !important;
 }
-
 .equipped.on-drag-hover {
-  box-shadow: 0 0 15px 2px rgba(255,255,255,.7) !important;
-  background-color: rgba(255,255,255,.7) !important;
+  box-shadow: 0 0 15px 2px rgba(255, 255, 255, .7) !important;
+  background-color: rgba(255, 255, 255, .7) !important;
 }
-
 .sub-section.on-drag-enter .unequipped {
-  box-shadow: 0 0 15px 2px rgba(170,170,170,.5);
-  background-color: rgba(170,170,170,.5);
+  box-shadow: 0 0 15px 2px rgba(170, 170, 170, .5);
+  background-color: rgba(170, 170, 170, .5);
 }
-
 .sub-section.on-drag-hover .unequipped {
-  box-shadow: 0 0 15px 2px rgba(200,200,200,.7);
-  background-color: rgba(200,200,200,.7);
+  box-shadow: 0 0 15px 2px rgba(200, 200, 200, .7);
+  background-color: rgba(200, 200, 200, .7);
 }
-
 .vault .unequipped.on-drag-enter {
-  box-shadow: 0 0 15px 2px rgba(210,210,210,.5);
-  background-color: rgba(210,210,210,.5);
+  box-shadow: 0 0 15px 2px rgba(210, 210, 210, .5);
+  background-color: rgba(210, 210, 210, .5);
 }
 .vault .unequipped.on-drag-hover {
-  box-shadow: 0 0 15px 2px rgba(240,240,240,.7);
-  background-color: rgba(240,240,240,.7);
+  box-shadow: 0 0 15px 2px rgba(240, 240, 240, .7);
+  background-color: rgba(240, 240, 240, .7);
 }
 .item-target {
   vertical-align: top;
@@ -319,6 +324,7 @@ img.void {
 .unequipped.on-drag-hover .item-target, .unequippable.on-drag-enter .item-target {
   box-shadow: 0 0 10px 2px #eee;
 }*/
+
 .counter {
   position: absolute;
   bottom: -2px;
