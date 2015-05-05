@@ -371,9 +371,9 @@
 
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
         return 'Primary';
-      if (["Sniper Rifle", "Shotgun", "Fusion Rifle"].indexOf(type) != -1) {
+      if (["Sniper Rifle", "Shotgun", "Fusion Rifle", "Special Weapon Engram"].indexOf(type) != -1) {
         // detect special case items that are actually primary weapons.
-        if (["Vex Mythoclast", "Universal Remote", "No Land Beyond", "Special Weapon Engram"].indexOf(name) != -1)
+        if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
           return 'Primary';
         return 'Special';
       }
