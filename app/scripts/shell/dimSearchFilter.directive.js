@@ -53,6 +53,10 @@
               special = 'incomplete';
             } else if (['complete'].indexOf(filterResult) >= 0) {
               special = 'complete';
+            } else if (['xpincomplete'].indexOf(filterResult) >= 0) {
+              special = 'xpincomplete';
+            } else if (['xpcomplete'].indexOf(filterResult) >= 0) {
+              special = 'xpcomplete';
             }
 
             tempFns.push(filterGenerator(filterResult, special));
@@ -120,6 +124,20 @@
         {
           result = function (p, item) {
             return (item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
+          };
+          break;
+        }
+      case 'xpincomplete':
+        {
+          result = function (p, item) {
+            return (item.xpComplete && item.hasXP) || (!item.hasXP);
+          };
+          break;
+        }
+      case 'xpcomplete':
+        {
+          result = function (p, item) {
+            return (!item.xpComplete && item.hasXP) || (!item.hasXP);
           };
           break;
         }

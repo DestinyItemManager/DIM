@@ -47,13 +47,6 @@
   function MovePopupController(dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
-    function moveToVaultFn(store, e) {
-      dimItemService.moveTo(vm.item, store)
-        .catch(function(a) {
-          toaster.pop('error', vm.item.name, a.message);
-        });
-    }
-
     function moveItemUI(item, targetStore) {
       var sourceStore = (item.owner === targetStore.id) ? $q.when(targetStore) : dimStoreService.getStore(item.owner);
 
@@ -74,6 +67,13 @@
       .catch(function(a) {
         toaster.pop('error', vm.item.name, a.message);
       });
+    }
+
+    function moveToVaultFn(store, e) {
+      dimItemService.moveTo(vm.item, store)
+        .catch(function(a) {
+          toaster.pop('error', vm.item.name, a.message);
+        });
     }
 
     function moveToEquipFn(store, e) {

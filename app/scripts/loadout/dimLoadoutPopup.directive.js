@@ -97,13 +97,19 @@
         var pseudoItem = items.splice(0, 1)[0];
         var item = dimItemService.getItem(pseudoItem);
 
-        var promise = dimItemService.moveTo(item, vm.store, pseudoItem.equipped)
-          .catch(function(a) {
-            toaster.pop('error', item.name, a.message);
-          })
-          .finally(function() {
-            applyLoadoutItems(items, loadout);
-          });
+        if (item.type === 'Class') {
+          item = _.findWhere(vm.store.items, { hash: pseudoItem.hash });
+        }
+
+        if (item) {
+          var promise = dimItemService.moveTo(item, vm.store, pseudoItem.equipped)
+            .catch(function(a) {
+              toaster.pop('error', item.name, a.message);
+            })
+            .finally(function() {
+              applyLoadoutItems(items, loadout);
+            });
+        }
       } else {
         toaster.pop('success', loadout.name, "Your loadout has been transfered.");
       }

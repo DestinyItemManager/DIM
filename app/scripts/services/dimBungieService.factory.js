@@ -490,11 +490,6 @@
         .then(function(response) {
           var a = response.status;
         });
-        // .catch(function(e) {
-        //   toaster.pop('error', '', e.message);
-        //
-        //   throw e;
-        // });
 
       return promise;
     }

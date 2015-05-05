@@ -304,6 +304,8 @@
           equipped: item.isEquipped,
           equipment: item.isEquipment,
           complete: item.isGridComplete,
+          hasXP: (!!item.progression),
+          xpComplete: (!!item.progression && item.progression.progressToNextLevel === 0 && item.progression.currentProgress > 0),
           amount: item.stackSize,
           primStat: item.primaryStat,
           stats: item.stats,
