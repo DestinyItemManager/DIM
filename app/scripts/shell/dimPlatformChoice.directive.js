@@ -22,9 +22,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', '$rootScope'];
 
-  function PlatformChoiceCtrl($scope, dimPlatformService, dimState) {
+  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, $rootScope) {
     var vm = this;
 
     vm.active = null;
@@ -36,7 +36,9 @@
     activate();
 
     function activate() {
-      dimPlatformService.getPlatforms();
+      var promise = dimPlatformService.getPlatforms();
+
+      $rootScope.loadingTracker.addPromise(promise);
     }
 
     $scope.$on('dim-platforms-updated', function(e, args) {

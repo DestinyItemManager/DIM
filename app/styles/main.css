@@ -424,7 +424,7 @@ img.void {
 }
 .character-box .level {
   position: absolute;
-  top: 7px;
+  top: 5px;
   right: 45px;
   font-weight: 200;
   font-size: 22px;

@@ -21,18 +21,20 @@
     };
   }
 
-  StoresCtrl.$inject = ['$scope', 'dimStoreService'];
+  StoresCtrl.$inject = ['$scope', 'dimStoreService', '$rootScope', '$q'];
 
-  function StoresCtrl($scope, dimStoreService) {
+  function StoresCtrl($scope, dimStoreService, $rootScope, $q) {
     var vm = this;
 
     vm.stores = null;
 
     $scope.$on('dim-active-platform-updated', function(e, args) {
-      dimStoreService.getStores(true)
+      var promise = $q.when(dimStoreService.getStores(true))
         .then(function(stores) {
           vm.stores = stores;
         });
+
+      $rootScope.loadingTracker.addPromise(promise);
     });
   }
 })();
