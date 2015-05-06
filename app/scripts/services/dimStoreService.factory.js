@@ -290,7 +290,7 @@
 
         var dmgName = ['kinetic', , 'arc', 'solar', 'void'][item.damageType];
 
-        result.push({
+        var createdItem = {
           index: getNextIndex(),
           owner: owner,
           hash: item.itemHash,
@@ -314,7 +314,15 @@
           /* 0: titan, 1: hunter, 2: warlock, 3: any */
           dmg: dmgName,
           visible: true
-        });
+        };
+
+        if (item.itemHash === 2809229973) { // Necrochasm
+          createdItem.hasXP = true;
+          createdItem.xpComplete = true;
+          createdItem.complete = true;
+        }
+
+        result.push(createdItem);
       };
 
       var promise = dimItemDefinitions.getDefinitions()
