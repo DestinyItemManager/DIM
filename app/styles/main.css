@@ -698,18 +698,24 @@ body.ngdialog-open {
 .close {
   width: 16px;
   height: 16px;
-  background-color: white;
   display: inline-block;
   position: absolute;
   top: 0;
   right: 0;
+  background-image: url('../images/close.png');
+  background-size: 16px 16px;
+  background-color: rgba(100,100,100,.6);
+  border: 1px solid #333;
 }
 #loadout-contents .equipped {
   width: 16px;
   height: 16px;
-  background-color: green;
   display: inline-block;
   position: absolute;
   top: 0;
   left: 0;
+  background-image: url('../images/spartan.png');
+  background-color: rgba(255,0,0,.6);
+  background-size: 16px 16px;
+  border: 1px solid #333;
 }
