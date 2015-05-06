@@ -1,61 +1,61 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    angular.module('dimApp')
-      .factory('dimBungieService', BungieService);
+  angular.module('dimApp')
+    .factory('dimBungieService', BungieService);
 
-    BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
 
-    function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
-      var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
-      var tokenPromise = null;
-      var platformPromise = null;
-      var membershipPromise = null;
-      var charactersPromise = null;
+  function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
+    var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
+    var tokenPromise = null;
+    var platformPromise = null;
+    var membershipPromise = null;
+    var charactersPromise = null;
 
-      //var transferRateLimit = dimRateLimit.rateLimit(transfer, 3000);
+    //var transferRateLimit = dimRateLimit.rateLimit(transfer, 3000);
 
-      $rootScope.$on('dim-active-platform-updated', function(event, args) {
-        tokenPromise = null;
-        platformPromise = null;
-        membershipPromise = null;
-        charactersPromise = null;
-      });
+    $rootScope.$on('dim-active-platform-updated', function(event, args) {
+      tokenPromise = null;
+      platformPromise = null;
+      membershipPromise = null;
+      charactersPromise = null;
+    });
 
-      var service = {
-        getPlatforms: getPlatforms,
-        getStores: getStores,
-        transfer: transfer,
-        equip: equip
-      };
+    var service = {
+      getPlatforms: getPlatforms,
+      getStores: getStores,
+      transfer: transfer,
+      equip: equip
+    };
 
-      return service;
+    return service;
 
-      function assignResultAndForward(dataset, attribute, result) {
-        dataset[attribute] = result;
+    function assignResultAndForward(dataset, attribute, result) {
+      dataset[attribute] = result;
 
-        return result;
+      return result;
+    }
+
+    function networkError(response) {
+      if (response.status >= 200 && response.status < 400) {
+        return response;
+      } else {
+        return $q.reject(new Error('Network error: ' + response.status));
       }
+    }
 
-      function networkError(response) {
-        if (response.status >= 200 && response.status < 400) {
-          return response;
+    function throttleCheck(response) {
+      return $q(function(resolve, reject) {
+        if (response.data.ErrorCode !== 36) {
+          return resolve(response);
         } else {
-          return $q.reject(new Error('Network error: ' + response.status));
+          return reject({
+            errorCode: 36,
+            message: 'Throttle limit exceeded.  Retry.'
+          });
         }
-      }
-
-      function throttleCheck(response) {
-        return $q(function(resolve, reject) {
-            if (response.data.  ErrorCode !== 36) {
-              return resolve(response);
-            } else {
-              return reject({
-                errorCode: 36,
-                message: 'Throttle limit exceeded.  Retry.'
-              });
-          }
-        });
+      });
     }
 
     /************************************************************************************************************************************/
@@ -119,9 +119,11 @@
         .then($http)
         .then(networkError)
         .then(throttleCheck)
-        .then(processBnetPlatformsRequest, rejectBnetPlatformsRequest)
+        .then(processBnetPlatformsRequest)
         .catch(function(e) {
           toaster.pop('error', '', e.message);
+
+          return $q.reject(e);
         });
 
       return platformPromise;
@@ -142,6 +144,10 @@
     function processBnetPlatformsRequest(response) {
       if (response.data.ErrorCode === 99) {
         return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
+      } else if (response.data.ErrorCode === 5) {
+        return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
+      } else if (response.data.ErrorCode > 1) {
+        return $q.reject(new Error(response.data.Message));
       }
 
       return (response);
@@ -234,8 +240,10 @@
     }
 
     function processBnetCharactersRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        $q.reject(new Error('The membership id was not available.'));
+      if (response.data.ErrorCode === 5) {
+        return $q.reject(new Error('Bungie.net is down for maintenance.'));
+      } else if (_.size(response.data.Response) === 0) {
+        return $q.reject(new Error('The membership id was not available.'));
       }
 
       return $q.when((function() {
@@ -274,6 +282,11 @@
         .then(addCharactersToData)
         .then(function() {
           return getDestinyInventories(data.token, platform, data.membershipId, data.characters);
+        })
+        .catch(function(e) {
+          toaster.pop('error', '', e.message);
+
+          return $q.reject(e);
         });
 
       return promise;
@@ -369,7 +382,9 @@
         .then(addTokenToDataPB)
         .then(getMembershipPB)
         .then(addMembershipTypeToDataPB)
-        .then(function() { return store; })
+        .then(function() {
+          return store;
+        })
         .then(function(store) {
           return getTransferRequest(data.token, platform.type, item, store);
         })
