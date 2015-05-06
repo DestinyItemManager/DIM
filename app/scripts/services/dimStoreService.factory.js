@@ -322,6 +322,13 @@
           createdItem.complete = true;
         }
 
+        // Fixes items that are marked as complete, but the data didn't reflect
+        // that status.  Must be a bug in Bungie's data.
+        if (createdItem.complete) {
+          createdItem.hasXP = true;
+          createdItem.xpComplete = true;
+        }
+
         result.push(createdItem);
       };
 
