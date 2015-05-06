@@ -320,6 +320,74 @@
         return promise;
       }
 
+      function createSpace(item, target) {
+        var source = null;
+        var checkVault = true;
+
+        return dimStoreService.getStore(item.owner)
+          .then(function(store) {
+            source = store;
+
+            if ((source.id === target.id) || (source.id === 'vault') || (target.id === 'vault')) {
+              checkVault = false;
+            }
+
+            if (checkVault) {
+              var itemToMove;
+              var stores;
+              var vault;
+
+              return dimStoreService.getStores()
+                .then(function(_stores) {
+                  stores = _stores;
+
+                  vault = _.findWhere(stores, {
+                    id: 'vault'
+                  });
+
+                  itemToMove = _.findWhere(store.items, {
+                    equipped: false,
+                    type: item.type
+                  });
+                })
+                .then(function() {
+                  var overflow = _.chain(stores)
+                    .sortBy(function(s) {
+                      if (s.id === 'vault') {
+                        return 0;
+                      } else if (s.id === source.id) {
+                        return 2;
+                      } else if (s.id === target.id) {
+                        return 3;
+                      } else {
+                        return 1;
+                      }
+                    })
+                    .filter(function(s) {
+                      var count = _.chain(s.items)
+                        .where({
+                          equipped: false,
+                          type: item.type
+                        })
+                        .size()
+                        .value();
+
+                        if (size < 9)
+
+                      return ((s.id !== 'vault') && (s.id !== source.id) && (s.id !== target.id));
+                    });
+
+                  if (_.isUndefined(overflow)) {
+
+                  }
+                });
+            }
+          })
+          .then(function() {
+
+          });
+      }
+
       function isVaultToVault(item, store) {
         var deferred = $q.defer();
         var promise = deferred.promise;
@@ -443,7 +511,7 @@
           var primitive = id;
 
           item = _.find(items, function(item) {
-            return ((item.id === primitive.id) || (item.hash === primitive.hash));
+            return ((item.id === primitive.id) && (item.hash === primitive.hash));
           });
         } else {
           predicate = {};
