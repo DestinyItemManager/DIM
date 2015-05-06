@@ -57,6 +57,8 @@
               special = 'xpincomplete';
             } else if (['xpcomplete'].indexOf(filterResult) >= 0) {
               special = 'xpcomplete';
+            } else if (['upgraded'].indexOf(filterResult) >= 0) {
+              special = 'upgraded';
             }
 
             tempFns.push(filterGenerator(filterResult, special));
@@ -116,7 +118,7 @@
       case 'incomplete':
         {
           result = function (p, item) {
-            return item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
+            return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ( (item.xpComplete && item.hasXP) || (!item.hasXP)));
           };
           break;
         }
@@ -141,6 +143,12 @@
           };
           break;
         }
+      case 'upgraded': {
+        result = function (p, item) {
+          return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
+        };
+        break;
+      }
       default:
         {
           result = function (p, item) {
