@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -23,11 +23,11 @@
   function SearchFilterCtrl($scope, dimStoreService, $timeout) {
     var vm = this;
 
-    $scope.$on('dim-stores-updated', function (arg) {
+    $scope.$on('dim-stores-updated', function(arg) {
       vm.filter();
     });
 
-    vm.filter = function () {
+    vm.filter = function() {
 
       var filterValue = (vm.search) ? vm.search.toLowerCase() : '';
       var filterResults;
@@ -39,13 +39,13 @@
       if (special) {
         filterResults = filterValue.split('is:');
 
-        _.each(filterResults, function (filterResult) {
+        _.each(filterResults, function(filterResult) {
           filterResult = filterResult.trim();
 
           if (filterResult !== '') {
             if (['arc', 'solar', 'void', 'kinetic'].indexOf(filterResult) >= 0) {
               special = 'elemental';
-            } else if (['primary', 'special', 'heavy', 'helmet',' legs', 'gauntlets', 'chest', 'class', 'classitem'].indexOf(filterResult) >= 0) {
+            } else if (['primary', 'special', 'heavy', 'helmet', ' legs', 'gauntlets', 'chest', 'class', 'classitem'].indexOf(filterResult) >= 0) {
               special = 'type';
             } else if (['basic', 'common', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filterResult) >= 0) {
               special = 'tier';
@@ -59,6 +59,8 @@
               special = 'xpcomplete';
             } else if (['upgraded'].indexOf(filterResult) >= 0) {
               special = 'upgraded';
+            } else if (['titan', 'hunter', 'warlock'].indexOf(filterResult) >= 0) {
+              special = 'classType';
             }
 
             tempFns.push(filterGenerator(filterResult, special));
@@ -68,19 +70,19 @@
         tempFns.push(filterGenerator(filterValue, ''));
       }
 
-      filterFn = function (item) {
-        return (_.reduce(tempFns, function (memo, fn) {
+      filterFn = function(item) {
+        return (_.reduce(tempFns, function(memo, fn) {
           return memo || fn(item);
         }, false));
       };
 
-      _.each(dimStoreService.getStores(), function (store) {
+      _.each(dimStoreService.getStores(), function(store) {
         _.chain(store.items)
-          .each(function (item) {
+          .each(function(item) {
             item.visible = true; // resets the visiblity
           })
           .filter(filterFn)
-          .each(function (item) {
+          .each(function(item) {
             item.visible = false; // hides it if it passes
           });
       });
@@ -88,74 +90,96 @@
       $timeout(dimStoreService.setHeights, 32);
     };
 
-    var filterGenerator = function (predicate, switchParam) {
-      var result = function (predicate, item) {
+    var filterGenerator = function(predicate, switchParam) {
+      var result = function(predicate, item) {
         return true;
       };
 
       switch (switchParam) {
-      case 'elemental':
-        {
-          result = function (p, item) {
-            return (item.dmg !== p);
-          };
-          break;
-        }
-      case 'type':
-        {
-          result = function (p, item) {
-            return (item.type.toLowerCase() !== p);
-          };
-          break;
-        }
-      case 'tier':
-        {
-          result = function (p, item) {
-            return (item.tier.toLowerCase() !== p);
-          };
-          break;
-        }
-      case 'incomplete':
-        {
-          result = function (p, item) {
-            return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ( (item.xpComplete && item.hasXP) || (!item.hasXP)));
-          };
-          break;
-        }
-      case 'complete':
-        {
-          result = function (p, item) {
-            return (item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
-          };
-          break;
-        }
-      case 'xpincomplete':
-        {
-          result = function (p, item) {
-            return (item.xpComplete && item.hasXP) || (!item.hasXP);
-          };
-          break;
-        }
-      case 'xpcomplete':
-        {
-          result = function (p, item) {
-            return (!item.xpComplete && item.hasXP) || (!item.hasXP);
-          };
-          break;
-        }
-      case 'upgraded': {
-        result = function (p, item) {
-          return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
-        };
-        break;
-      }
-      default:
-        {
-          result = function (p, item) {
-            return (item.name.toLowerCase()
-              .indexOf(p) === -1);
-          };
-        }
+        case 'elemental':
+          {
+            result = function(p, item) {
+              return (item.dmg !== p);
+            };
+            break;
+          }
+        case 'type':
+          {
+            result = function(p, item) {
+              return (item.type.toLowerCase() !== p);
+            };
+            break;
+          }
+        case 'tier':
+          {
+            result = function(p, item) {
+              return (item.tier.toLowerCase() !== p);
+            };
+            break;
+          }
+        case 'incomplete':
+          {
+            result = function(p, item) {
+              return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((item.xpComplete && item.hasXP) || (!item.hasXP)));
+            };
+            break;
+          }
+        case 'complete':
+          {
+            result = function(p, item) {
+              return (item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
+            };
+            break;
+          }
+        case 'xpincomplete':
+          {
+            result = function(p, item) {
+              return (item.xpComplete && item.hasXP) || (!item.hasXP);
+            };
+            break;
+          }
+        case 'xpcomplete':
+          {
+            result = function(p, item) {
+              return (!item.xpComplete && item.hasXP) || (!item.hasXP);
+            };
+            break;
+          }
+        case 'upgraded':
+          {
+            result = function(p, item) {
+              return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
+            };
+            break;
+          }
+        case 'classType':
+          {
+            result = function(p, item) {
+              var value;
+
+              switch (p) {
+                case 'titan':
+                  value = 0;
+                  break;
+                case 'hunter':
+                  value = 1;
+                  break;
+                case 'warlock':
+                  value = 2;
+                  break;
+              }
+
+              return (item.classType !== value);
+            };
+            break;
+          }
+        default:
+          {
+            result = function(p, item) {
+              return (item.name.toLowerCase()
+                .indexOf(p) === -1);
+            };
+          }
       }
 
       return result.bind(null, predicate);

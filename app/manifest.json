@@ -16,7 +16,7 @@
   },
   "permissions": [
     "storage",
-    "*://*.bungie.net/*",
+    "*://www.bungie.net/*",
     "*://fonts.gstatic.com/*",
     "cookies",
     "tabs"
