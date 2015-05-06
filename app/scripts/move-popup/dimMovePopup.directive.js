@@ -42,9 +42,9 @@
     };
   }
 
-  MovePopupController.$inject = ['dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
 
-  function MovePopupController(dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
     function moveItemUI(item, targetStore) {
@@ -63,24 +63,30 @@
     }
 
     function moveToGuardianFn(store, e) {
-      dimItemService.moveTo(vm.item, store)
+      var promise = dimItemService.moveTo(vm.item, store)
       .catch(function(a) {
         toaster.pop('error', vm.item.name, a.message);
       });
+
+      $rootScope.loadingTracker.addPromise(promise);
     }
 
     function moveToVaultFn(store, e) {
-      dimItemService.moveTo(vm.item, store)
+      var promise = dimItemService.moveTo(vm.item, store)
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
+
+      $rootScope.loadingTracker.addPromise(promise);
     }
 
     function moveToEquipFn(store, e) {
-      dimItemService.moveTo(vm.item, store, true)
+      var promise = dimItemService.moveTo(vm.item, store, true)
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
+
+      $rootScope.loadingTracker.addPromise(promise);
     }
 
     vm.moveToVault = moveToVaultFn;

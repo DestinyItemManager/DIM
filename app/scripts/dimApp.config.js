@@ -46,6 +46,11 @@
     });
 
   angular.module('dimApp')
+    .run(function($rootScope, promiseTracker) {
+      $rootScope.loadingTracker = promiseTracker();
+    });
+
+  angular.module('dimApp')
     .config([
       '$compileProvider',
       function($compileProvider) {

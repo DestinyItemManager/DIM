@@ -281,6 +281,7 @@
       -moz-transition: 1000ms linear none;
       -ms-transition: 1000ms linear none;
       -o-transition: 1000ms linear none;*/
+
       transition: 10ms linear none;
     }
 
@@ -297,7 +298,7 @@
     .toast::before {
       content: '';
       position: absolute;
-      background-color: rgba(255,255,255,.5);
+      background-color: rgba(255, 255, 255, .5);
       height: 6px;
       bottom: 0px;
       left: 0px;
@@ -319,6 +320,22 @@
       transition: width 0s linear !important;
       width: 0px !important;
     }
+
+    .sprite-spinner {
+      overflow: hidden;
+      position: relative;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .spinner-wrap {}
+
+    .my-super-awesome-loading-box {
+      display: inline-block;
+      vertical-align: text-top;
+      margin-top: -2px;
+      margin-left: 2px;
+    }
   </style>
 </head>
 
@@ -328,6 +345,13 @@
       <div class="content">
         <span>Destiny Item Manager v3 Beta</span>
         <span id="faq-button">?</span>
+        <div class="my-super-awesome-loading-box" ng-show="loadingTracker.active()">
+          <div class="spinner-wrap">
+            <div class="sprite-spinner">
+              <img src="images/spiffygif_22x22.png" alt="" />
+            </div>
+          </div>
+        </div>
         <span class="header-right">
           <div dim-platform-choice class="header-right"></div>
           <div dim-search-filter class="header-right"></div>
@@ -335,15 +359,15 @@
       </div>
     </div>
     <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
-
     <div id="content" ui-view></div>
   </div>
 
   <!-- begin vendor scripts -->
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
   <script src="vendor/angular/angular.min.js"></script>
   <script src="vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
   <script src="vendor/angular-animate/angular-animate.min.js"></script>
-  <script src="vendor/angularjs-toaster/toaster.js"></script>
+  <script src="scripts/toaster.js"></script>
   <script src="vendor/angular-native-dragdrop/draganddrop.js"></script>
   <script src="vendor/ngDialog/js/ngDialog.min.js"></script>
   <script src="vendor/Angular.uuid2/dist/angular-uuid2.min.js"></script>
@@ -351,6 +375,7 @@
   <script src="vendor/lz-string/libs/lz-string.min.js"></script>
   <script src="vendor/angular-chrome-storage/angular-chrome-storage.js"></script>
   <script src="vendor/angular-messages/angular-messages.min.js"></script>
+  <script src="vendor/angular-promise-tracker/promise-tracker.js"></script>
   <!-- end vendor scripts -->
 
   <!-- begin app scripts -->

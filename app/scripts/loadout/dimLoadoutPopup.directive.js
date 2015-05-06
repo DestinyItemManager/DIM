@@ -187,6 +187,8 @@
             .finally(function() {
               applyLoadoutItems(items, loadout, _items, scope);
             });
+
+          $rootScope.loadingTracker.addPromise(promise);
         }
       } else {
         var value = 'success';

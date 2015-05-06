@@ -52,9 +52,9 @@
     }
   }
 
-  StoreItemsCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster'];
+  StoreItemsCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster'];
 
-  function StoreItemsCtrl($scope, dimStoreService, dimItemService, $q, $timeout, toaster) {
+  function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster) {
     var vm = this;
     var types = [ // Order of types in the rows.
       'Class',
@@ -252,7 +252,7 @@
         return $q.reject(new Error('Cannot move class to different store.'));
       }
 
-      promise
+      promise = promise
         .then(function(s) {
           source = s;
         })
@@ -260,6 +260,8 @@
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
         });
+
+      $rootScope.loadingTracker.addPromise(promise);
     };
 
     $scope.$watch('vm.store.items', function(newVal) {

@@ -17,6 +17,8 @@
     "angular-ui-router": "~0.2.x",
     "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git",
     "ngDialog": "~0.3.x",
-    "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x"
+    "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
+    "angular-promise-tracker": "~2.1.0",
+    "jquery": "~2"
   }
 }
