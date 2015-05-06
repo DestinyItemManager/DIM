@@ -31,9 +31,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', '$q', 'dimStoreService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, $q, dimStoreService) {
     var vm = this;
 
     vm.classTypeId = -1;
@@ -84,34 +84,120 @@
     vm.applyLoadout = function applyLoadout(loadout, $event) {
       ngDialog.closeAll();
 
+      var scope = {
+        failed: false
+      };
+
       var items = _.chain(loadout.items)
         .values()
         .flatten()
         .value();
 
-        applyLoadoutItems(items, loadout);
+      var _types = _.chain(items)
+        .pluck('type')
+        .uniq()
+        .value();
+
+      var _items = _.chain(vm.store.items)
+        .filter(function(item) {
+          return _.contains(_types, item.type);
+        })
+        .filter(function(item) {
+          return (!_.some(items, function(i) {
+            return ((i.id === item.id) && (i.hash === item.hash));
+          }));
+        })
+        .groupBy(function(item) {
+          return item.type;
+        })
+        .value();
+
+      applyLoadoutItems(items, loadout, _items, scope);
     };
 
-    function applyLoadoutItems(items, loadout) {
+    function applyLoadoutItems(items, loadout, _items, scope) {
       if (items.length > 0) {
         var pseudoItem = items.splice(0, 1)[0];
         var item = dimItemService.getItem(pseudoItem);
 
         if (item.type === 'Class') {
-          item = _.findWhere(vm.store.items, { hash: pseudoItem.hash });
+          item = _.findWhere(vm.store.items, {
+            hash: pseudoItem.hash
+          });
         }
 
         if (item) {
-          var promise = dimItemService.moveTo(item, vm.store, pseudoItem.equipped)
+          var size = _.chain(vm.store.items)
+            .filter(function(i) {
+              return item.type === i.type;
+            })
+            .size()
+            .value();
+
+          var p = $q.when(item);
+
+          var target;
+
+          if (size === 10) {
+            if (item.owner !== vm.store.id) {
+              var moveItem = _items[item.type].splice(0, 1);
+              p = $q.when(dimStoreService.getStores())
+                .then(function(stores) {
+                  return _.chain(stores)
+                    .filter(function(s) {
+                      return (s.id !== 'vault');
+                    })
+                    .sortBy(function(s) {
+                      if (s.id === vm.store.id) {
+                        return 2;
+                      } else if (s.id === vm.store.id) {
+                        return 0;
+                      } else {
+                        return 1;
+                      }
+                    })
+                    .value();
+                })
+                .then(function(sortedStores) {
+                  return _.find(sortedStores, function(s) {
+                    return _.chain(s.items)
+                      .filter(function(i) {
+                        return item.type === i.type;
+                      })
+                      .size()
+                      .value() < 10;
+                  });
+                })
+                .then(function(t) {
+                  target = t;
+
+                  return dimItemService.moveTo(moveItem[0], target);
+                });
+            }
+          }
+
+          var promise = p
+            .then(function() {
+              return dimItemService.moveTo(item, vm.store, pseudoItem.equipped);
+            })
             .catch(function(a) {
+              scope.failed = true;
               toaster.pop('error', item.name, a.message);
             })
             .finally(function() {
-              applyLoadoutItems(items, loadout);
+              applyLoadoutItems(items, loadout, _items, scope);
             });
         }
       } else {
-        toaster.pop('success', loadout.name, "Your loadout has been transfered.");
+        var value = 'success';
+        var message = 'Your loadout has been transfered.';
+
+        if (scope.failed) {
+          value = 'warning';
+          message = 'Your loadout has been transfered, with errors.'
+        }
+
+        toaster.pop(value, loadout.name, message);
       }
     }
   }

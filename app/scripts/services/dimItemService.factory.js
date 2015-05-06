@@ -247,12 +247,15 @@
         var promise = deferred.promise;
         var stackAmount = 0;
         var slotsNeededForTransfer = 0;
+        var predicate = (store.id === 'vault') ? {
+          sort: item.sort
+        } : {
+          type: item.type
+        };
 
         var itemsInStore = _(store.items)
           .chain()
-          .where({
-            type: item.type
-          })
+          .where(predicate)
           .size()
           .value();
 
@@ -312,80 +315,133 @@
 
         // TODO Need to add support to transfer partial stacks.
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
-          deferred.resolve(true);
+          if ((item.owner !== store.id) && (store.id !== 'vault')) {
+            var vault;
+
+            dimStoreService.getStore('vault')
+              .then(function(v) {
+                vault = v;
+                return canMoveToStore(item, v);
+              })
+              .then(function() {
+                deferred.resolve(true);
+              })
+              .catch(function(err) {
+                // createSpace(vault, item, store)
+                //   .then(function() {
+                    deferred.reject(err);
+                  // });
+              });
+          } else {
+            deferred.resolve(true);
+          }
         } else {
-          deferred.reject(new Error('There are too many items in the category \'' + (store.id === 'vault' ? item.sort : item.type) + '\''));
+          // if (store.id !== 'vault') {
+          //   createSpace(store, item, store)
+          //     .catch(function() {
+          //       deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+          //     });
+          // } else {
+            deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+          // }
         }
 
         return promise;
       }
 
-      function createSpace(item, target) {
-        var source = null;
-        var checkVault = true;
+      function createSpace(store, item, target) {
+        var targetIsSource = (store.id === target.id);
+        var scope = {};
 
-        return dimStoreService.getStore(item.owner)
-          .then(function(store) {
-            source = store;
+        var promise = $q.when(dimStoreService.getStores())
+          .then(function(stores) {
+            // var sortedStores = _.chain(stores)
+            //   .filter(function(s) {
+            //     return (s.id !== 'vault');
+            //   })
+            //   .sortBy(function(s) {
+            //        if (s.id === store.id) {
+            //          return 2;
+            //        } else if (s.id === target.id) {
+            //          return 0;
+            //        } else {
+            //          return 1;
+            //       }
+            //    })
+            //   .value();
+            //
+            // var i = _.findWhere(store.items, { type: item.type, equipped: false });
 
-            if ((source.id === target.id) || (source.id === 'vault') || (target.id === 'vault')) {
-              checkVault = false;
-            }
-
-            if (checkVault) {
-              var itemToMove;
-              var stores;
-              var vault;
-
-              return dimStoreService.getStores()
-                .then(function(_stores) {
-                  stores = _stores;
-
-                  vault = _.findWhere(stores, {
-                    id: 'vault'
-                  });
-
-                  itemToMove = _.findWhere(store.items, {
-                    equipped: false,
-                    type: item.type
-                  });
-                })
-                .then(function() {
-                  var overflow = _.chain(stores)
-                    .sortBy(function(s) {
-                      if (s.id === 'vault') {
-                        return 0;
-                      } else if (s.id === source.id) {
-                        return 2;
-                      } else if (s.id === target.id) {
-                        return 3;
-                      } else {
-                        return 1;
-                      }
-                    })
-                    .filter(function(s) {
-                      var count = _.chain(s.items)
-                        .where({
-                          equipped: false,
-                          type: item.type
-                        })
-                        .size()
-                        .value();
-
-                        if (size < 9)
-
-                      return ((s.id !== 'vault') && (s.id !== source.id) && (s.id !== target.id));
-                    });
-
-                  if (_.isUndefined(overflow)) {
-
-                  }
-                });
-            }
-          })
-          .then(function() {
-
+            return $q.reject('woopsie');
           });
+
+        return promise;
+
+        // var source = null;
+        // var checkVault = true;
+        //
+        // return dimStoreService.getStore(item.owner)
+        //   .then(function(store) {
+        //     source = store;
+        //
+        //     if ((source.id === target.id) || (source.id === 'vault') || (target.id === 'vault')) {
+        //       checkVault = false;
+        //     }
+        //
+        //     if (checkVault) {
+        //       var itemToMove;
+        //       var stores;
+        //       var vault;
+        //
+        //       return dimStoreService.getStores()
+        //         .then(function(_stores) {
+        //           stores = _stores;
+        //
+        //           vault = _.findWhere(stores, {
+        //             id: 'vault'
+        //           });
+        //
+        //           itemToMove = _.findWhere(store.items, {
+        //             equipped: false,
+        //             type: item.type
+        //           });
+        //         })
+        //         .then(function() {
+        //           // var overflow = _.chain(stores)
+        //           //   .sortBy(function(s) {
+        //           //     if (s.id === 'vault') {
+        //           //       return 0;
+        //           //     } else if (s.id === source.id) {
+        //           //       return 2;
+        //           //     } else if (s.id === target.id) {
+        //           //       return 3;
+        //           //     } else {
+        //           //       return 1;
+        //           //     }
+        //           //   })
+        //           //   .filter(function(s) {
+        //           //     var count = _.chain(s.items)
+        //           //       .where({
+        //           //         equipped: false,
+        //           //         type: item.type
+        //           //       })
+        //           //       .size()
+        //           //       .value();
+        //           //
+        //           //     if (size < 9)
+        //           //
+        //           //       return ((s.id !== 'vault') && (s.id !== source.id) && (s.id !== target.id));
+        //           //   });
+        //           //
+        //           // if (_.isUndefined(overflow)) {
+        //           //
+        //           // }
+        //         });
+        //     }
+        //   })
+        //   .then(function() {
+        //
+        //   });
       }
 
       function isVaultToVault(item, store) {
@@ -432,9 +488,6 @@
 
             return isValidTransfer(equip, target, item);
           })
-          // .then(function(validResults) {
-          //   debugger;
-          // })
           .then(function(a) {
             var promise = $q.when();
 

@@ -96,9 +96,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster) {
     var vm = this;
 
     vm.types = _.chain(dimCategory)
@@ -136,26 +136,30 @@
     };
 
     vm.add = function add(item) {
-      var clone = angular.copy(item);
+      if (item.equipment) {
+        var clone = angular.copy(item);
 
-      var discriminator = clone.type.toLowerCase();
-      var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
+        var discriminator = clone.type.toLowerCase();
+        var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
-      var dupe = _.find(typeInventory, function(i) {
-        return (i.id === clone.id);
-      });
+        var dupe = _.find(typeInventory, function(i) {
+          return (i.id === clone.id);
+        });
 
-      if (_.isUndefined(dupe) && (_.size(typeInventory) < 9)) {
-        clone.equipped = false;
+        if (_.isUndefined(dupe) && (_.size(typeInventory) < 9)) {
+          clone.equipped = false;
 
-        if (clone.type === 'Class') {
-          if (_.has(vm.loadout.items, 'class')) {
-            vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
-            clone.equipped = true;
+          if (clone.type === 'Class') {
+            if (_.has(vm.loadout.items, 'class')) {
+              vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
+              clone.equipped = true;
+            }
           }
-        }
 
-        typeInventory.push(clone);
+          typeInventory.push(clone);
+        }
+      } else {
+        toaster.pop('warning', '', 'Only equippable items can be added to a loadout.');
       }
     };
 
