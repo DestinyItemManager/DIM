@@ -110,6 +110,7 @@ body.support.ngdialog-open,
 body.about.ngdialog-open {
   overflow: hidden !important;
 }
+
 a {
   color: #aac;
   font-size: 13px;
@@ -255,7 +256,7 @@ a {
   cursor: pointer;
 }
 body.ngdialog-open {
-  overflow: hidden;
+  overflow: auto;
 }
 body {
   overflow-y: scroll;
