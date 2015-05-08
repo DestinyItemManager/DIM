@@ -46,10 +46,14 @@
               plain: true,
               appendTo: 'div[id="item-' + scope.$id + '"]',
               overlay: false,
-              className: 'move-popup' + (((element[0].offsetLeft + 320) >= document.documentElement.clientWidth) ? ' move-popup-right' : ''),
+              className: 'move-popup' + ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : ''),
               showClose: false,
               scope: scope
             });
+
+            // if (($('body').width() - $(element).offset().left - 320) < 0) {
+            //   $('.ngdialog.move-popup').css('left', $('body').width() - $(element).offset().left - 340);
+            // }
 
             dialogResult.closePromise.then(function(data) {
               dialogResult = null;

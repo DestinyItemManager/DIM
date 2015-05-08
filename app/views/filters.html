@@ -1,0 +1,110 @@
+<div id="filter-view" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
+  <h3>Filters</h3>
+  <p>
+    DIM has support for many filters to help you find your gear quickly. You can combine filters to find the right items for your activity.
+  </p>
+  <p>
+    You can search with multiple filters.  Each filter is applied using 'and' logic.  For example, "is:arc is:solar" would not work because there are no weapons that shoot both arc and solar at the same time.  Do not pick multiple items within a row.
+  </p>
+  <style>
+    td {
+      vertical-align: top;
+    }
+
+    tr:nth-child(2n) {
+      background-color: rgba(255, 255, 255, .1);
+    }
+
+    td:nth-child(1) {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    td span {
+      margin: 2px 4px;
+      color: #eee;
+      display: block;
+    }
+
+    td span:hover {
+      color: #aac;
+      cursor: pointer;
+    }
+  </style>
+  <table>
+    <tr>
+      <th>Filter</td>
+        <td>Description</td>
+    </tr>
+    <tr>
+      <td>
+        <span>item name</span>
+      </td>
+      <td>Shows items where their name has a partial match to the filter text.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:arc</span>
+        <span>is:solar</span>
+        <span>is:void</span>
+        <span>is:kinetic</span>
+      </td>
+      <td>Shows items based on their damage type.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:class</span>
+        <span>is:primary</span>
+        <span>is:special</span>
+        <span>is:heavy</span>
+      </td>
+      <td>Shows items based on their weapon classes.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:helmet</span>
+        <span>is:gauntlets</span>
+        <span>is:chest</span>
+        <span>is:leg</span>
+        <span>is:classitem</span>
+      </td>
+      <td>Shows armors based on their category.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:common</span>
+        <span>is:uncommon</span>
+        <span>is:rare</span>
+        <span>is:legendary</span>
+        <span>is:exotic</span>
+      </td>
+      <td>Shows items based on their rarity tier.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:incomplete</span>
+        <span>is:upgraded</span>
+        <span>is:complete</span>
+      </td>
+      <td>Shows items at various states of leveling. Incomplete will show items that need XP. Upgraded will show items that have enough XP to unlocked all their nodes and only need materials. Complete shows items that are fully leveled.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:xpincomplete</span>
+        <span>is:xpcomplete</span>
+      </td>
+      <td>Shows items based on their XP status.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>is:titan</span>
+        <span>is:hunter</span>
+        <span>is:warlock</span>
+      </td>
+      <td>Shows items based on their class affinty.</td>
+    </tr>
+  </table>

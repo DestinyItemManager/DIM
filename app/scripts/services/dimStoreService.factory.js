@@ -329,7 +329,9 @@
           createdItem.xpComplete = true;
         }
 
-        result.push(createdItem);
+        if (createdItem.tier !== 'Basic') {
+          result.push(createdItem);
+        }
       };
 
       var promise = dimItemDefinitions.getDefinitions()
