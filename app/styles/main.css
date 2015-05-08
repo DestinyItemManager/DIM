@@ -3,6 +3,10 @@
   height: 44px;
 }
 
+div[dim-search-filter] input {
+  width: 300px;
+}
+
 dt {
   font-style: italic;
   font-weight: bold;
@@ -11,6 +15,16 @@ dt {
 
 dd {
   margin: 3px 20px;
+}
+
+body > div, #header {
+  /*min-width: 1000px;*/
+}
+
+body.about .about,
+body.support .support,
+body.fitlers .fitlers {
+  display: inline-block;
 }
 
 .button-name {
@@ -83,8 +97,6 @@ div[dim-search-filter] {
   left: 25%;
   width: 50%;
   height: 50%;
-  max-width: 600px;
-  max-height: 400px;
   color: #fff;
   font-size: 13px;
   border: 1px solid #333;

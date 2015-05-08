@@ -45,7 +45,7 @@
         supportResult = ngDialog.open({
           template: 'views/support.html',
           overlay: false,
-          className: 'about',
+          className: 'support',
           scope: $('body > div').scope()
         });
         $('body').addClass('support');
@@ -60,7 +60,7 @@
     vm.showFilters = function(e) {
       e.stopPropagation();
 
-      if (!_.isNull(supportResult)) {
+      if (!_.isNull(filterResult)) {
         filterResult.close();
       } else {
         ngDialog.closeAll();
@@ -68,7 +68,7 @@
         filterResult = ngDialog.open({
           template: 'views/filters.html',
           overlay: false,
-          className: 'about',
+          className: 'filters',
           scope: $('body > div').scope()
         });
         $('body').addClass('filters');
