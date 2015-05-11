@@ -86,6 +86,8 @@
               return cookie.name === 'bungled';
             });
 
+            //debugger;
+
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
             } else {
