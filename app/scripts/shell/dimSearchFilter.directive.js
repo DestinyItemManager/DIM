@@ -61,7 +61,9 @@
               special = 'upgraded';
             } else if (['titan', 'hunter', 'warlock'].indexOf(filterResult) >= 0) {
               special = 'classType';
-            }
+						} else if (!!~["pulserifle","scoutrifle","handcannon","autorifle","primaryweaponengram","sniperrifle","shotgun","fusionrifle","specialweaponengram","rocketlauncher","machinegun","heavyweaponengram"].indexOf(filterResult)) {
+				special = 'weapontype';
+			}
 
             tempFns.push(filterGenerator(filterResult, special));
           }
@@ -173,6 +175,13 @@
             };
             break;
           }
+				case 'weapontype':
+					{
+							result = function(p, item) {
+									return p.toLowerCase().replace(/\s/g, '') !== item.specificType;
+							};
+							break;
+					}
         default:
           {
             result = function(p, item) {
