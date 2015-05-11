@@ -22,10 +22,8 @@
             return (item.index === i.index);
           });
 
-          if (item.maxStackSize > 1) {
-            // Balance the stacks.
-
-            if (item.moveAmount && item.moveAmount > 0) {
+          if (item.maxStackSize > 1 && item.amount < item.maxStackSize) { // Balance the stacks.
+            if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
               matchingItem = _.reduce(source.items, function(memo, i) {
                 if (item.hash === i.hash) {
                   if (!(_.has(i, 'moveAmount')) || ((_.has(i, 'moveAmount') && i.moveAmount === 0))) {
@@ -41,9 +39,12 @@
               }, null);
 
               if (!_.isNull(matchingItem)) {
-                matchingItem.amount = matchingItem.amount - item.amount;
+                if (item.moveAmount > item.amount) {
+                  matchingItem.amount = matchingItem.amount + (item.amount - item.moveAmount);
+                }
               }
 
+              item.amount = item.moveAmount;
               item.moveAmount = 0;
             }
 
@@ -250,9 +251,9 @@
           .then(function(source) {
             scope.source = source;
 
-            if (item.moveAmount && item.amount === 0) {
-              item.amount = item.moveAmount;
-            }
+            // if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
+            //   item.amount = item.moveAmount;
+            // }
 
             return dimBungieService.transfer(item, scope.target);
           })
