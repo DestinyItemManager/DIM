@@ -45,8 +45,9 @@
               }
 
               item.amount = item.moveAmount;
-              item.moveAmount = 0;
             }
+
+            item.moveAmount = 0;
 
             matchingItem = _.filter(target.items, function(i) {
               return ((i.amount < item.maxStackSize) && (i.hash === item.hash));
@@ -500,6 +501,11 @@
 
               promise = promise.then(moveToStore.bind(null, item, data.target, equip));
             }
+
+            promise = promise
+              .then(function() {
+                item.moveAmount = 0;
+              });
 
             return promise;
           })
