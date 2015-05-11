@@ -276,13 +276,13 @@
         // }
 
         var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
-  var specificType = null;
+        var specificType = null;
 
-  if(itemType !== null && itemType.hasOwnProperty('general'))
-  {
-   specificType = itemType.specific;
-   itemType = itemType.general;
-  }
+        if(itemType !== null && itemType.hasOwnProperty('general'))
+        {
+          specificType = itemType.specific;
+          itemType = itemType.general;
+        }
 
         if (!itemType) {
           return;
