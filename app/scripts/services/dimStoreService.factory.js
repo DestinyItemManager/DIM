@@ -276,6 +276,13 @@
         // }
 
         var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+        var specificType = null;
+
+        if(itemType !== null && itemType.hasOwnProperty('general'))
+        {
+          specificType = itemType.specific;
+          itemType = itemType.general;
+        }
 
         if (!itemType) {
           return;
@@ -308,6 +315,7 @@
           xpComplete: (!!item.progression && item.progression.progressToNextLevel === 0 && item.progression.currentProgress > 0),
           amount: item.stackSize,
           primStat: item.primaryStat,
+          specificType: specificType,
           stats: item.stats,
           maxStackSize: definitions[item.itemHash].maxStackSize,
           classType: itemDef.classType,
@@ -386,16 +394,22 @@
         return null;
       }
 
+   var _ret = {
+     general: null,
+     specific: type.toLowerCase().replace(/\s/g, '')
+   };
+
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
-        return 'Primary';
+     _ret.general = 'Primary';
+
       if (["Sniper Rifle", "Shotgun", "Fusion Rifle", "Special Weapon Engram"].indexOf(type) != -1) {
         // detect special case items that are actually primary weapons.
         if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
-          return 'Primary';
-        return 'Special';
+          _ret.general = 'Primary';
+        _ret.general = 'Special';
       }
       if (["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
-        return 'Heavy';
+        _ret.general = 'Heavy';
       if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
         return 'ClassItem';
       if (["Gauntlet Engram"].indexOf(type) != -1)
@@ -413,6 +427,12 @@
       }
       if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material"].indexOf(type) != -1)
         return type.split(' ')[0];
+
+   if(_ret.general !== null)
+     return _ret;
+
+   if(_ret.general !== null)
+     return _ret;
 
       return null;
     }
