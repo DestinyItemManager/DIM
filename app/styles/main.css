@@ -359,6 +359,18 @@ img.void {
   margin-bottom: 20px;
   position: relative;
 }
+.sub-section  h3 {
+  margin-bottom: 5px;
+}
+.sub-section  hr {
+  margin-top: 0px;
+}
+.guardian .sub-section {
+  height: 180px;
+}
+.guardian .sort-class {
+  height: 90px;
+}
 .equippable {
   display: inline-block;
   vertical-align: top;
