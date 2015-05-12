@@ -285,7 +285,7 @@
 
         if (item.location === 4) {
           itemSort = 'Postmaster';
-          return;
+          itemType = 'Postmaster';
         }
 
         var dmgName = ['kinetic', , 'arc', 'solar', 'void'][item.damageType];
@@ -299,7 +299,7 @@
           tier: itemDef.tierTypeName,
           name: itemDef.itemName,
           icon: itemDef.icon,
-          notransfer: itemDef.nonTransferrable,
+          notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
           id: item.itemInstanceId,
           equipped: item.isEquipped,
           equipment: item.isEquipment,
