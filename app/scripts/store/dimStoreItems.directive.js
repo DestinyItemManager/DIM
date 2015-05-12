@@ -25,6 +25,7 @@
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
+        '        <h3>{{type}}</h3><hr />',
         '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
@@ -38,7 +39,7 @@
         '</div>'
       ].join('')
     };
-
+    
     function Link(scope, element, attrs) {
       scope.vm.onDrop = function(id, $event, equip) {
         var vm = scope.vm;
