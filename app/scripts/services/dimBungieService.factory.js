@@ -86,6 +86,8 @@
               return cookie.name === 'bungled';
             });
 
+            //debugger;
+
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
             } else {
@@ -440,7 +442,7 @@
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,
-          stackSize: item.amount,
+          stackSize: (_.has(item, 'moveAmount') && item.moveAmount > 0) ? item.moveAmount : item.amount,
           transferToVault: (store.id === 'vault')
         },
         dataType: 'json',
