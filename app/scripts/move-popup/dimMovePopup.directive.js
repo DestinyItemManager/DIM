@@ -167,13 +167,13 @@
       }
 
       if (!item.notransfer) {
-        if ((itemStore.id !== buttonStore.id) && (itemSort !== 'Postmaster')) {
+        if ((itemStore.id !== buttonStore.id) && (item.sort !== 'Postmaster')) {
           return true;
-        } else if ((!item.equipped) && (itemSort !== 'Postmaster')) {
+        } else if ((!item.equipped) && (item.sort !== 'Postmaster')) {
           return true;
         }
       } else {
-        if ((!item.equipped) && (itemStore.id === buttonStore.id) && (itemSort !== 'Postmaster')) {
+        if ((!item.equipped) && (itemStore.id === buttonStore.id) && (item.sort !== 'Postmaster')) {
           return true;
         }
       }
