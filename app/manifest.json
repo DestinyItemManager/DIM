@@ -17,8 +17,6 @@
   "permissions": [
     "storage",
     "*://www.bungie.net/*",
-    "*://ssl.google-analytics.com/*",
-    "*://fonts.gstatic.com/*",
     "cookies",
     "tabs"
   ],
