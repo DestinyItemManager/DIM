@@ -64,6 +64,9 @@
             } else if (!!~["pulserifle","scoutrifle","handcannon","autorifle","primaryweaponengram","sniperrifle","shotgun","fusionrifle","specialweaponengram","rocketlauncher","machinegun","heavyweaponengram"].indexOf(filterResult)) {
               special = 'weapontype';
             }
+            else if (!!~['stackable'].indexOf(filterResult)) {
+              special = 'stackable';
+            }
 
             tempFns.push(filterGenerator(filterResult, special));
           }
@@ -177,16 +180,16 @@
           }
         case 'weapontype':
           {
-              result = function(p, item) {
-                  return p.toLowerCase().replace(/\s/g, '') !== item.specificType;
-              };
-              break;
-          }
-        case 'weapontype':
-          {
             result = function(p, item) {
               return p.toLowerCase().replace(/\s/g, '') !== item.specificType;
             };
+            break;
+          }
+        case 'stackable':
+          {
+            result = function(p, item) {
+              return !(item.maxStackSize > 1);
+            }
             break;
           }
         default:
