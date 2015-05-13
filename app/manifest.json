@@ -17,6 +17,7 @@
   "permissions": [
     "storage",
     "*://www.bungie.net/*",
+    "*://ssl.google-analytics.com/*",
     "*://fonts.gstatic.com/*",
     "cookies",
     "tabs"
@@ -24,7 +25,7 @@
   "browser_action": {
     "default_icon": "icon128.png"
   },
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://www.bungie.net ; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false
 }
