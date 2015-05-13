@@ -90,6 +90,12 @@ $(document).ready(function() {
       style.innerHTML = '.about.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (verge.viewportW()	- $(window).width()) + 'px; }';
       document.getElementsByTagName('head')[0].appendChild(style);
   }
-
-
 });
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://ssl.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-60316581-1', 'auto');
+ga('send', 'pageview');
