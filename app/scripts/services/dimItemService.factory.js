@@ -15,14 +15,67 @@
       };
 
       function updateItemModel(item, source, target, equip) {
+        var matchingItem;
+
         if (source.id !== target.id) {
           var index = _.findIndex(source.items, function(i) {
             return (item.index === i.index);
           });
 
+          if (item.maxStackSize > 1 && item.amount < item.maxStackSize) { // Balance the stacks.
+            if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
+              matchingItem = _.reduce(source.items, function(memo, i) {
+                if (item.hash === i.hash) {
+                  if (!(_.has(i, 'moveAmount')) || ((_.has(i, 'moveAmount') && i.moveAmount === 0))) {
+                    if (memo === null) {
+                      memo = i;
+                    } else if (memo.amount > i.amount) {
+                      memo = i;
+                    }
+                  }
+                }
+
+                return memo;
+              }, null);
+
+              if (!_.isNull(matchingItem)) {
+                if (item.moveAmount > item.amount) {
+                  matchingItem.amount = matchingItem.amount + (item.amount - item.moveAmount);
+                }
+              }
+
+              item.amount = item.moveAmount;
+            }
+
+            item.moveAmount = 0;
+
+            matchingItem = _.filter(target.items, function(i) {
+              return ((i.amount < item.maxStackSize) && (i.hash === item.hash));
+            });
+
+            if (_.size(matchingItem) > 0) {
+              var mItem = matchingItem[0];
+              var combinedTotal = mItem.amount + item.amount;
+
+              item.moveAmount = item.amount;
+
+              if (combinedTotal <= item.maxStackSize) {
+                mItem.amount = combinedTotal;
+                item.amount = 0;
+              } else {
+                mItem.amount = mItem.maxStackSize;
+                item.amount = combinedTotal - item.maxStackSize;
+              }
+            }
+          }
+
+          item.owner = target.id;
+
           if (index >= 0) {
-            item.owner = target.id;
             source.items.splice(index, 1);
+          }
+
+          if (item.amount > 0) {
             target.items.push(item);
           }
         }
@@ -147,9 +200,9 @@
             scope.similarItem = similarItem;
 
             if (!equipExotic && (similarItem) && (similarItem.tier === 'Exotic')) {
-              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.')
+              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
             } else if (!similarItem) {
-              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.')
+              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
             }
 
             return dimStoreService.getStore(item.owner);
@@ -167,7 +220,7 @@
             } else {
               return dimBungieService.transfer(scope.similarItem, scope.source)
                 .then(function() {
-                  updateItemModel(scope.similarItem, scope.target, scope.source, false)
+                  updateItemModel(scope.similarItem, scope.target, scope.source, false);
                 });
             }
           })
@@ -198,6 +251,10 @@
         return dimStoreService.getStore(item.owner)
           .then(function(source) {
             scope.source = source;
+
+            // if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
+            //   item.amount = item.moveAmount;
+            // }
 
             return dimBungieService.transfer(item, scope.target);
           })
@@ -328,8 +385,8 @@
               .catch(function(err) {
                 // createSpace(vault, item, store)
                 //   .then(function() {
-                    deferred.reject(err);
-                  // });
+                deferred.reject(err);
+                // });
               });
           } else {
             deferred.resolve(true);
@@ -341,7 +398,7 @@
           //       deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
           //     });
           // } else {
-            deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+          deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
           // }
         }
 
@@ -354,93 +411,10 @@
 
         var promise = $q.when(dimStoreService.getStores())
           .then(function(stores) {
-            // var sortedStores = _.chain(stores)
-            //   .filter(function(s) {
-            //     return (s.id !== 'vault');
-            //   })
-            //   .sortBy(function(s) {
-            //        if (s.id === store.id) {
-            //          return 2;
-            //        } else if (s.id === target.id) {
-            //          return 0;
-            //        } else {
-            //          return 1;
-            //       }
-            //    })
-            //   .value();
-            //
-            // var i = _.findWhere(store.items, { type: item.type, equipped: false });
-
             return $q.reject('woopsie');
           });
 
         return promise;
-
-        // var source = null;
-        // var checkVault = true;
-        //
-        // return dimStoreService.getStore(item.owner)
-        //   .then(function(store) {
-        //     source = store;
-        //
-        //     if ((source.id === target.id) || (source.id === 'vault') || (target.id === 'vault')) {
-        //       checkVault = false;
-        //     }
-        //
-        //     if (checkVault) {
-        //       var itemToMove;
-        //       var stores;
-        //       var vault;
-        //
-        //       return dimStoreService.getStores()
-        //         .then(function(_stores) {
-        //           stores = _stores;
-        //
-        //           vault = _.findWhere(stores, {
-        //             id: 'vault'
-        //           });
-        //
-        //           itemToMove = _.findWhere(store.items, {
-        //             equipped: false,
-        //             type: item.type
-        //           });
-        //         })
-        //         .then(function() {
-        //           // var overflow = _.chain(stores)
-        //           //   .sortBy(function(s) {
-        //           //     if (s.id === 'vault') {
-        //           //       return 0;
-        //           //     } else if (s.id === source.id) {
-        //           //       return 2;
-        //           //     } else if (s.id === target.id) {
-        //           //       return 3;
-        //           //     } else {
-        //           //       return 1;
-        //           //     }
-        //           //   })
-        //           //   .filter(function(s) {
-        //           //     var count = _.chain(s.items)
-        //           //       .where({
-        //           //         equipped: false,
-        //           //         type: item.type
-        //           //       })
-        //           //       .size()
-        //           //       .value();
-        //           //
-        //           //     if (size < 9)
-        //           //
-        //           //       return ((s.id !== 'vault') && (s.id !== source.id) && (s.id !== target.id));
-        //           //   });
-        //           //
-        //           // if (_.isUndefined(overflow)) {
-        //           //
-        //           // }
-        //         });
-        //     }
-        //   })
-        //   .then(function() {
-        //
-        //   });
       }
 
       function isVaultToVault(item, store) {
@@ -527,6 +501,11 @@
 
               promise = promise.then(moveToStore.bind(null, item, data.target, equip));
             }
+
+            promise = promise
+              .then(function() {
+                item.moveAmount = 0;
+              });
 
             return promise;
           })
