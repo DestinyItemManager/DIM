@@ -266,6 +266,7 @@ body {
   background-color: #434444;
   color: #fff;
   font-family: 'Open Sans', sans-serif;
+  margin-bottom: 100px;
 }
 #system {
   margin-top: -2px;
@@ -286,7 +287,7 @@ body>div * {
   left: 0;
   right: 0;
   height: 32px;
-  background: rgba(195, 188, 180, .9);
+  background: rgb(195, 188, 180);
   color: #1a1e24;
   box-shadow: 0 2px 20px 2px #000;
 }
@@ -1095,6 +1096,8 @@ button.toast-close-button {
   position: relative;
   display: inline-block;
   text-align: left;
+  width: 22px;
+  height: 22px;
 }
 .my-super-awesome-loading-box {
   margin-left: 15px;

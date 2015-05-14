@@ -24,19 +24,28 @@
       });
     }
 
-    function processLoadout(data) {
+    function processLoadout(data, version) {
       if (!_.isUndefined(data)) {
-        _loadouts.splice(0);
+        if (version === 'v3.0') {
+          var ids = data['loadouts-v3.0'];
+          _loadouts.splice(0);
 
-        // Remove null loadouts.
-        data = _.filter(data, function(primitive) {
-          return !_.isNull(primitive);
-        });
+          _.each(ids, function(id) {
+            _loadouts.push(hydrate(data[id]));
+          });
+        } else {
+          _loadouts.splice(0);
 
-        _.each(data, function(primitive) {
-          // Add id to loadout.
-          _loadouts.push(hydrate(primitive));
-        });
+          // Remove null loadouts.
+          data = _.filter(data, function(primitive) {
+            return !_.isNull(primitive);
+          });
+
+          _.each(data, function(primitive) {
+            // Add id to loadout.
+            _loadouts.push(hydrate(primitive));
+          });
+        }
       } else {
         _loadouts = _loadouts.splice(0);
       }
@@ -48,14 +57,24 @@
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        chrome.storage.sync.get('loadouts-v2.0', function(data) {
-          if (_.isUndefined(data['loadouts-v2.0'])) {
-            chrome.storage.sync.get('loadouts', function(oldData) {
-              processLoadout((oldData.loadouts) ? oldData.loadouts : undefined);
-              saveLoadouts(_loadouts);
-            })
+        chrome.storage.sync.get(null, function(data) {
+          // if (_.isUndefined(data['loadouts-v2.0'])) {
+          //   chrome.storage.sync.get('loadouts', function(oldData) {
+          //     processLoadout((oldData.loadouts) ? oldData.loadouts : undefined);
+          //     saveLoadouts(_loadouts);
+          //   })
+          // } else {
+          //   processLoadout((data['loadouts-v2.0']) ? data['loadouts-v2.0'] : undefined);
+          // }
+
+          if (_.has(data, 'loadouts-v3.0')) {
+            processLoadout(data, 'v3.0');
+          } else if (_.has(data, 'loadouts-v2.0')) {
+            processLoadout(data['loadouts-v2.0'], 'v2.0');
+
+            saveLoadouts(_loadouts);
           } else {
-            processLoadout((data['loadouts-v2.0']) ? data['loadouts-v2.0'] : undefined);
+            processLoadout(undefined);
           }
 
           deferred.resolve(_loadouts);
@@ -86,7 +105,16 @@
           });
         })
         .then(function(loadoutPrimitives) {
-          chrome.storage.sync.set({ 'loadouts-v2.0': loadoutPrimitives }, function(e) {
+          var data = {
+            'loadouts-v3.0': []
+          };
+
+          _.each(loadoutPrimitives, function(l) {
+            data['loadouts-v3.0'].push(l.id);
+            data[l.id] = l;
+          });
+
+          chrome.storage.sync.set(data, function(e) {
             deferred.resolve(loadoutPrimitives);
           });
 
@@ -104,6 +132,8 @@
           if (index >= 0) {
             loadouts.splice(index, 1);
           }
+
+          chrome.storage.sync.remove(loadout.id.toString(), function() {});
 
           return (loadouts);
         })
@@ -144,11 +174,40 @@
       var hydration = {
         'v1.0': hydratev1d0,
         'v2.0': hydratev2d0,
-        'default': hydratev2d0
+        'v3.0': hydratev3d0,
+        'default': hydratev3d0
       }
 
       // v1.0 did not have a 'version' property so if it fails, we'll assume.
       return (hydration[(loadout.version)] || hydration['v1.0'])(loadout);
+    }
+
+    function hydratev3d0(loadoutPrimitive) {
+      var result = {
+        id: loadoutPrimitive.id,
+        name: loadoutPrimitive.name,
+        classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
+        version: 'v3.0',
+        items: {}
+      };
+
+      _.each(loadoutPrimitive.items, function(itemPrimitive) {
+        var item = _.clone(dimItemService.getItem({
+          id: itemPrimitive.id,
+          hash: itemPrimitive.hash
+        }));
+
+        if (item) {
+          var discriminator = item.type.toLowerCase();
+
+          item.equipped = itemPrimitive.equipped;
+
+          result.items[discriminator] = (result.items[discriminator] || []);
+          result.items[discriminator].push(item);
+        }
+      });
+
+      return result;
     }
 
     function hydratev2d0(loadoutPrimitive) {
@@ -156,7 +215,7 @@
         id: loadoutPrimitive.id,
         name: loadoutPrimitive.name,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
-        version: 'v2.0',
+        version: 'v3.0',
         items: {}
       };
 
@@ -184,7 +243,7 @@
         id: uuid2.newguid(),
         name: loadoutPrimitive.name,
         classType: -1,
-        version: 'v2.0',
+        version: 'v3.0',
         items: {}
       };
 
@@ -209,7 +268,7 @@
         id: loadout.id,
         name: loadout.name,
         classType: loadout.classType,
-        version: 'v2.0',
+        version: 'v3.0',
         items: []
       };
 

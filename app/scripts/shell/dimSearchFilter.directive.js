@@ -61,6 +61,8 @@
               special = 'upgraded';
             } else if (['titan', 'hunter', 'warlock'].indexOf(filterResult) >= 0) {
               special = 'classType';
+            } else if (['dupe', 'duplicate'].indexOf(filterResult) >= 0) {
+              special = 'dupe';
             }
 
             tempFns.push(filterGenerator(filterResult, special));
@@ -91,6 +93,8 @@
     };
 
     var filterGenerator = function(predicate, switchParam) {
+      var   _duplicates = {};
+
       var result = function(predicate, item) {
         return true;
       };
@@ -151,7 +155,32 @@
               return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
             };
             break;
-          }
+            }
+          case 'dupe':
+            {
+              result = function(p, item) {
+                if (!_duplicates.hasOwnProperty('dupes')) {
+                  var allItems = _.chain(dimStoreService.getStores())
+                    .map(function(store) {
+                      return store.items;
+                    })
+                    .flatten()
+                    .sortBy('hash')
+                    .value();
+
+                  _duplicates.dupes = [];
+
+                  for (var i = 0; i < allItems.length - 1; i++) {
+                    if (allItems[i + 1].hash == allItems[i].hash) {
+                      _duplicates.dupes.push(allItems[i].hash);
+                    }
+                  }
+                }
+
+                return !_.some(_duplicates.dupes, function(hash) { return item.hash === hash; });
+              };
+              break;
+            }
         case 'classType':
           {
             result = function(p, item) {

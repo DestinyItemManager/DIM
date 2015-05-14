@@ -36,9 +36,20 @@
     activate();
 
     function activate() {
-      var promise = dimPlatformService.getPlatforms();
 
-      $rootScope.loadingTracker.addPromise(promise);
+      var iframe = $('<div></div>');
+      iframe.addClass('bungie-source');
+      iframe.hide();
+
+      $.get('https://www.bungie.net', '', function() {
+        setTimeout(function() {
+          var promise = dimPlatformService.getPlatforms();
+
+          $rootScope.loadingTracker.addPromise(promise);
+        }, 250);
+      });
+
+      $('body').append(iframe);
     }
 
     $scope.$on('dim-platforms-updated', function(e, args) {
