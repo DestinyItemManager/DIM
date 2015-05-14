@@ -17,13 +17,12 @@
   "permissions": [
     "storage",
     "*://www.bungie.net/*",
-    "*://fonts.gstatic.com/*",
-    "cookies",
-    "tabs"
+    "cookies"
   ],
   "browser_action": {
     "default_icon": "icon128.png"
   },
+  "options_page": "index.html",
   "incognito": "split",
   "offline_enabled": false
 }
