@@ -5,6 +5,7 @@
 
 div[dim-search-filter] input {
   width: 300px;
+  min-height: 25px;
 }
 
 dt {
@@ -1102,4 +1103,7 @@ button.toast-close-button {
   display: inline-block;
   vertical-align: text-top;
   margin-top: -2px;
+}
+.dropdown-filters{
+  margin:0 10px;
 }

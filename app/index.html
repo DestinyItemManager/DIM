@@ -21,7 +21,52 @@
         <span class="header-right">
           <div dim-platform-choice class="header-right"></div>
           <div dim-search-filter class="header-right"></div>
-          <div class="header-right"><span class="link" ng-click="app.showFilters($event)">Filters</span></div>
+          <div class="header-right dropdown-filters">
+            <label for="select-filters"><span class="link" ng-click="app.showFilters($event)">Filters</span></label>
+            <select name="" id="select-filters" class="" ng-model="selectFilter" ng-change="app.triggerFilters(selectFilter)">
+              <option value="">-</option>
+              <optgroup label="Damage Type">
+                <option value="is:arc">Arc</option>
+                <option value="is:void">Void</option>
+                <option value="is:solar">Solar</option>
+                <option value="is:kinetic">Kinetic</option>
+              </optgroup>
+              <optgroup label="Weapon Class">
+                <option value="is:class">Class</option>
+                <option value="is:primary">Primary</option>
+                <option value="is:special">Special</option>
+                <option value="is:heavy">Heavy</option>
+              </optgroup>
+              <optgroup label="Armor Category">
+                <option value="is:helmet">Helmet</option>
+                <option value="is:gauntlets">Gauntlets</option>
+                <option value="is:chest">Chest</option>
+                <option value="is:leg">Leg</option>
+                <option value="is:classitem">Class Item</option>
+              </optgroup>
+              <optgroup label="Rarity Type">
+                <option value="is:common">Common</option>
+                <option value="is:uncommon">Uncommon</option>
+                <option value="is:rare">Rare</option>
+                <option value="is:legendary">Legendary</option>
+                <option value="is:exotic">Exotic</option>
+              </optgroup>
+              <optgroup label="Leveling State">
+                <option value="is:incomplete">Incomplete</option>
+                <option value="is:upgraded">Upgraded</option>
+                <option value="is:complete">Complete</option>
+              </optgroup>
+              <optgroup label="XP Status">
+                <option value="is:xpincomplete">Incomplete</option>
+                <option value="is:xpcomplete">Complete</option>
+              </optgroup>
+              <optgroup label="Class Affinity">
+                <option value="is:titan">Titan</option>
+                <option value="is:hunter">Hunter</option>
+                <option value="is:warlock">Warlock</option>
+              </optgroup>
+            </select>
+          </div>
         </span>
         <span>Destiny Item Manager v3</span>
         <span class="link" ng-click="app.showAbout($event)">About</span>
