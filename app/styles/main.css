@@ -1105,3 +1105,9 @@ button.toast-close-button {
   vertical-align: text-top;
   margin-top: -2px;
 }
+
+/** Issue #116, make Mats and Consumables 4-column **/
+.section.general .sort-consumable .unequipped,
+.section.general .sort-material .unequipped {
+  width: 208px;
+}
