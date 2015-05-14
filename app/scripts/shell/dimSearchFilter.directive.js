@@ -63,6 +63,8 @@
               special = 'classType';
             } else if (['dupe', 'duplicate'].indexOf(filterResult) >= 0) {
               special = 'dupe';
+            } else if (!!~['stackable'].indexOf(filterResult)) {
+              special = 'stackable';
             }
 
             tempFns.push(filterGenerator(filterResult, special));
@@ -200,6 +202,13 @@
 
               return (item.classType !== value);
             };
+            break;
+          }
+        case 'stackable':
+          {
+            result = function(p, item) {
+              return item.maxStackSize <= 1;
+            }
             break;
           }
         default:
