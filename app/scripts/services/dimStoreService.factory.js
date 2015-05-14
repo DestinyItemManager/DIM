@@ -397,10 +397,10 @@
         return null;
       }
 
-   var _ret = {
-     general: null,
-     specific: type.toLowerCase().replace(/\s/g, '')
-   };
+      var _ret = {
+          general: null,
+          specific: type.toLowerCase().replace(/\s/g, '')
+      };
 
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
      _ret.general = 'Primary';
@@ -431,11 +431,8 @@
       if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material"].indexOf(type) != -1)
         return type.split(' ')[0];
 
-   if(_ret.general !== null)
-     return _ret;
-
-   if(_ret.general !== null)
-     return _ret;
+      if(_ret.general !== null)
+          return _ret;
 
       return null;
     }
