@@ -54,9 +54,9 @@
       };
 
       var setHeight = function(query) {
-        var height = _.reduce(document.querySelectorAll(query), fn, 0);
-
         var style = document.querySelectorAll('style[id=' + ((query.replace(/\./g, '')).replace(/\s/g, '')) + ']');
+        if (style.length > 0) style[0].innerHTML = '';
+        var height = _.reduce(document.querySelectorAll(query), fn, 0);
 
         if (style.length > 0) {
           style = style[0];
@@ -68,7 +68,6 @@
         }
 
         style.innerHTML = query + ' { min-height: ' + (height) + 'px; }';
-        console.log('height set for ' + query);
       };
 
       setHeight('.guardian .sub-section.sort-class');
