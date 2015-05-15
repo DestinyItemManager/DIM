@@ -48,7 +48,7 @@
 
     dimLoadoutService.getLoadouts()
       .then(function(loadouts) {
-        vm.loadouts = loadouts || [];
+        vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
         vm.loadouts = _.filter(vm.loadouts, function(item) {
           return ((item.classType === -1) || (item.classType === vm.classTypeId));
@@ -66,7 +66,7 @@
 
       dimLoadoutService.getLoadouts()
         .then(function(loadouts) {
-          vm.loadouts = loadouts || [];
+          vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
           vm.loadouts = _.filter(vm.loadouts, function(item) {
             return ((item.classType === -1) || (item.classType === vm.classTypeId));
