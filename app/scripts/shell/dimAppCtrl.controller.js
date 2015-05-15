@@ -92,6 +92,11 @@
       }
     };
 
+    vm.triggerFilters = function(value){
+      resetFilters();
+      addFilter(value);
+    }
+
     vm.closeLoadoutPopup = function closeLoadoutPopup() {
       if (!_.isNull(aboutResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
         ngDialog.closeAll();
@@ -100,6 +105,11 @@
   }
 })();
 
+function resetFilters(){
+  var input = $('input[name=filter]');
+  input.val('');
+  input.change();
+}
 
 function addFilter(filter) {
   var input = $('input[name=filter]');
