@@ -42,15 +42,12 @@
       }
 
       var fn = function(memo, section) {
-        var childHeight = 0;
+        var sectionHeight = 0;
 
-        _.each(section.children, function(child) {
-          var t = outerHeight(child);
-          childHeight = (childHeight > t) ? childHeight : t;
-        });
+        sectionHeight = outerHeight(section);
 
-        if (childHeight > memo) {
-          memo = childHeight;
+        if (sectionHeight > memo) {
+          memo = sectionHeight;
         }
 
         return memo;
@@ -71,6 +68,7 @@
         }
 
         style.innerHTML = query + ' { min-height: ' + (height) + 'px; }';
+        console.log('height set for ' + query);
       };
 
       setHeight('.guardian .sub-section.sort-class');
@@ -89,8 +87,9 @@
       setHeight('.guardian .sub-section.sort-vehicle');
       setHeight('.guardian .sub-section.sort-consumable');
       setHeight('.guardian .sub-section.sort-material');
-      setHeight('.guardian .weapons');
-      setHeight('.guardian .armor');
+      setHeight('.section.weapons');
+      setHeight('.section.armor');
+      setHeight('.section.general');
     }
 
     function getStores(getFromBungie) {
