@@ -46,9 +46,6 @@ body.fitlers .fitlers {
 .loadout-list > .loadout-set {
   padding-left: 0px;
 }
-.vault .sort-class {
-  display: none;
-}
 .item.search-hidden {
   border-color: rgba(245, 220, 86, .15);
   background-color: rgba(128, 128, 128, .15);
@@ -1105,3 +1102,32 @@ button.toast-close-button {
   vertical-align: text-top;
   margin-top: -2px;
 }
+
+/* Alignment. Simple and Straightforward. */
+
+.guardian .weapons,
+.vault .weapons {
+  min-height: 634px;
+}
+.guardian .armor,
+.vault .armor {
+  min-height: 914px;
+}
+
+.vault .sort-class {
+  min-height: 52px;
+}
+.vault .sort-class * {
+  display: none;
+}
+
+.sub-section.sort-primary,
+.sub-section.sort-special,
+.sub-section.sort-heavy,
+.sub-section.sort-helmet,
+.sub-section.sort-chest,
+.sub-section.sort-leg,
+.sub-section.sort-guantlet {
+  min-height: 156px;
+}
+
