@@ -283,12 +283,11 @@
 
         var itemSort = sortItem(itemDef.itemTypeName);
 
-        if (itemDef.itemTypeName === 'ClassItem')
-          debugger;
-
         if (item.location === 4) {
           itemSort = 'Postmaster';
-          itemType = 'Postmaster';
+
+          if (itemType !== 'Messages')
+            itemType = 'Lost Items';
         }
 
         var dmgName = ['kinetic', , 'arc', 'solar', 'void'][item.damageType];
@@ -414,6 +413,11 @@
           return '';
         return 'Material';
       }
+
+      if (["Public Event Completed"].indexOf(name) != -1) {
+        return "Messages";
+      }
+
       if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material"].indexOf(type) != -1)
         return type.split(' ')[0];
 

@@ -73,7 +73,8 @@
       'Vehicle',
       'Consumable',
       'Material',
-      'Postmaster'
+      'Messages',
+      'Lost Items'
     ];
     vm.orderedTypes = {};
 
@@ -115,7 +116,8 @@
         'Vehicle'
       ],
       Postmaster: [
-        'Postmaster'
+        'Messages',
+        'Lost Items'
       ]
     };
 
@@ -186,7 +188,11 @@
         equipped: '',
         unequipped: 'unequipped equippable',
       },
-      Postmaster: {
+      Messages: {
+        equipped: '',
+        unequipped: 'unequipped equippable',
+      },
+      'Lost Items': {
         equipped: '',
         unequipped: 'unequipped equippable',
       }
