@@ -46,8 +46,10 @@ body.fitlers .fitlers {
 .loadout-list > .loadout-set {
   padding-left: 0px;
 }
-.vault .sort-class {
-  display: none;
+.vault .sort-class,
+.vault .section.postmaster {
+  /*display: none;*/
+  visibility: hidden;
 }
 .item.search-hidden {
   border-color: rgba(245, 220, 86, .15);

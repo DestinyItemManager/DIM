@@ -19,7 +19,7 @@
       template: [
         '<div>',
         '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-        '    <div ng-repeat="key in vm.keys" ng-hide="((vm.store.id === \'vault\') && (key === \'Postmaster\'))" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}">',
+        '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}">',
         '      <div class="title">',
         '        <span>{{ key }}</span>',
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',

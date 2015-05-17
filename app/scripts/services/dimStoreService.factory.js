@@ -73,24 +73,25 @@
         style.innerHTML = query + ' { min-height: ' + (height) + 'px; }';
       };
 
-      setHeight('.guardian .sub-section.sort-class');
-      setHeight('.guardian .sub-section.sort-primary');
-      setHeight('.guardian .sub-section.sort-special');
-      setHeight('.guardian .sub-section.sort-heavy');
-      setHeight('.guardian .sub-section.sort-helmet');
-      setHeight('.guardian .sub-section.sort-chest');
-      setHeight('.guardian .sub-section.sort-gauntlets');
-      setHeight('.guardian .sub-section.sort-leg');
-      setHeight('.guardian .sub-section.sort-classitem');
-      setHeight('.guardian .sub-section.sort-emblem');
-      setHeight('.guardian .sub-section.sort-armor');
-      setHeight('.guardian .sub-section.sort-ghost');
-      setHeight('.guardian .sub-section.sort-ship');
-      setHeight('.guardian .sub-section.sort-vehicle');
-      setHeight('.guardian .sub-section.sort-consumable');
-      setHeight('.guardian .sub-section.sort-material');
-      setHeight('.guardian .weapons');
-      setHeight('.guardian .armor');
+      setHeight('.sub-section.sort-class');
+      setHeight('.sub-section.sort-primary');
+      setHeight('.sub-section.sort-special');
+      setHeight('.sub-section.sort-heavy');
+      setHeight('.sub-section.sort-helmet');
+      setHeight('.sub-section.sort-chest');
+      setHeight('.sub-section.sort-gauntlets');
+      setHeight('.sub-section.sort-leg');
+      setHeight('.sub-section.sort-classitem');
+      setHeight('.sub-section.sort-emblem');
+      setHeight('.sub-section.sort-armor');
+      setHeight('.sub-section.sort-ghost');
+      setHeight('.sub-section.sort-ship');
+      setHeight('.sub-section.sort-vehicle');
+      setHeight('.sub-section.sort-consumable');
+      setHeight('.sub-section.sort-material');
+      setHeight('.weapons');
+      setHeight('.armor');
+      setHeight('.general');
     }
 
     function getStores(getFromBungie) {

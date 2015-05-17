@@ -86,25 +86,19 @@
               return cookie.name === 'bungled';
             });
 
-            //debugger;
-
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
             } else {
-              if (_.isUndefined(location.search.split('reloaded')[1])) {
-                chrome.tabs.query({ 'url': '*://*.bungie.net/*' }, function(tabs) {
-                  if (_.size(tabs) === 0) {
-                    chrome.tabs.create({
-                      url: 'http://bungie.net',
-                      active: false
-                    });
-
-                    setTimeout(function() {
-                      window.location = window.location.origin + window.location.pathname + "?reloaded=true" + window.location.hash;
-                    }, 5000);
-                  }
-                });
-              }
+              chrome.tabs.query({
+                'url': '*://*.bungie.net/*'
+              }, function(tabs) {
+                if (_.size(tabs) === 0) {
+                  chrome.tabs.create({
+                    url: 'http://bungie.net',
+                    active: false
+                  });
+                }
+              });
 
               reject(new Error('No bungled cookie found.'));
             }
@@ -149,20 +143,16 @@
 
     function processBnetPlatformsRequest(response) {
       if (response.data.ErrorCode === 99) {
-        if (_.isUndefined(location.search.split('reloaded')[1])) {
-          chrome.tabs.query({ 'url': '*://*.bungie.net/*' }, function(tabs) {
-            if (_.size(tabs) === 0) {
-              chrome.tabs.create({
-                url: 'http://bungie.net',
-                active: false
-              });
-
-              setTimeout(function() {
-                window.location = window.location.origin + window.location.pathname + "?reloaded=true" + window.location.hash;
-              }, 5000);
-            }
-          });
-        }
+        chrome.tabs.query({
+          'url': '*://*.bungie.net/*'
+        }, function(tabs) {
+          if (_.size(tabs) === 0) {
+            chrome.tabs.create({
+              url: 'http://bungie.net',
+              active: false
+            });
+          }
+        });
 
         return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
       } else if (response.data.ErrorCode === 5) {
