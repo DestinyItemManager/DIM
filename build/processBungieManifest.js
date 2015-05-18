@@ -4,9 +4,10 @@
 //   response.pipe(file);
 // });
 
-var rp = require('request-promise');
 var http = require('http');
 var fs = require('fs');
+
+var rp = require('request-promise');
 var AdmZip = require('adm-zip');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require("underscore");
