@@ -69,7 +69,7 @@ rp(options)
         db = new sqlite3.Database('manifest/' + dbFile);
         var items = {};
 
-        db.all('select * from destinyInventoryItemDefinition', function(err, rows) {
+        db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
           items = {};
 
           rows.forEach(function(row) {
@@ -85,7 +85,7 @@ rp(options)
           defs.write(JSON.stringify(items));
         });
 
-        db.all('select * from destinyInventoryBucketDefinition', function(err, rows) {
+        db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
           items = {};
 
           rows.forEach(function(row) {
