@@ -70,6 +70,8 @@ rp(options)
         var items = {};
 
         db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
+          if(err) { throw err; }
+
           items = {};
 
           rows.forEach(function(row) {
@@ -86,6 +88,8 @@ rp(options)
         });
 
         db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
+          if(err) { throw err; }
+
           items = {};
 
           rows.forEach(function(row) {
