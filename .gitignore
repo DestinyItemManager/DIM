@@ -1,3 +1,11 @@
 app/vendor/
 dist/
 node_modules/
+
+build/manifest.zip
+build/common/
+build/img/
+build/manifest/
+
+!do-not-delete.txt
+!build/img/misc/missing_icon.png

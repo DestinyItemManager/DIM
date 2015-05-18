@@ -4,9 +4,10 @@
 //   response.pipe(file);
 // });
 
-var rp = require('request-promise');
 var http = require('http');
 var fs = require('fs');
+
+var rp = require('request-promise');
 var AdmZip = require('adm-zip');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require("underscore");
@@ -70,6 +71,8 @@ rp(options)
         var items = {};
 
         db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
+          if(err) { throw err; }
+
           items = {};
 
           rows.forEach(function(row) {
@@ -86,6 +89,8 @@ rp(options)
         });
 
         db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
+          if(err) { throw err; }
+
           items = {};
 
           rows.forEach(function(row) {
