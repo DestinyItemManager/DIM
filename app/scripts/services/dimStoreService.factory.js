@@ -291,7 +291,7 @@
             itemType = 'Lost Items';
         }
 
-        var dmgName = ['kinetic', , 'arc', 'solar', 'void'][item.damageType];
+        var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
         var createdItem = {
           index: getNextIndex(),
