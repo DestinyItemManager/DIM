@@ -33,248 +33,174 @@
       var filterResults;
       var filterResult = '';
       var filterFn;
-      var tempFns = [];
-      var special = filterValue.indexOf('is:') >= 0;
+      var tempFns = {
+        is: [],
+        not: []
+      };
 
-      if (special) {
+      var isSpecial = !!~filterValue.indexOf('is:');
+      var notSpecial = !!~filterValue.indexOf('not:');
+
+      if (isSpecial) {
         filterResults = filterValue.split('is:');
 
         _.each(filterResults, function(filterResult) {
           filterResult = filterResult.trim();
 
           if (filterResult !== '') {
-            if (['arc', 'solar', 'void', 'kinetic'].indexOf(filterResult) >= 0) {
-              special = 'elemental';
-            } else if (['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem'].indexOf(filterResult) >= 0) {
-              special = 'type';
-            } else if (['common', 'uncommon', 'rare', 'legendary', 'exotic'].indexOf(filterResult) >= 0) {
-              special = 'tier';
-            } else if (['incomplete'].indexOf(filterResult) >= 0) {
-              special = 'incomplete';
-            } else if (['complete'].indexOf(filterResult) >= 0) {
-              special = 'complete';
-            } else if (['xpincomplete'].indexOf(filterResult) >= 0) {
-              special = 'xpincomplete';
-            } else if (['xpcomplete'].indexOf(filterResult) >= 0) {
-              special = 'xpcomplete';
-            } else if (['upgraded'].indexOf(filterResult) >= 0) {
-              special = 'upgraded';
-            } else if (['titan', 'hunter', 'warlock'].indexOf(filterResult) >= 0) {
-              special = 'classType';
-            } else if (['dupe', 'duplicate'].indexOf(filterResult) >= 0) {
-              special = 'dupe';
-            } else if (!!~['stackable'].indexOf(filterResult)) {
-              special = 'stackable';
-            }
+            isSpecial = _checkSpecial(filterResult) || isSpecial;
 
-            tempFns.push(filterGenerator(filterResult, special));
+            tempFns.is.push(filterGenerator(filterResult, isSpecial));
+          }
+        });
+      } else if(notSpecial) {
+        filterResults = filterValue.split('not:');
+
+        _.each(filterResults, function(filterResult) {
+          filterResult = filterResult.trim();
+
+          if (filterResult !== '') {
+            isSpecial = _checkSpecial(filterResult) || isSpecial;
+
+            tempFns.not.push(filterGenerator(filterResult, isSpecial));
           }
         });
       } else {
-        tempFns.push(filterGenerator(filterValue, ''));
+        tempFns.is.push(filterGenerator(filterValue, ''));
       }
 
       filterFn = function(item) {
-        return (_.reduce(tempFns, function(memo, fn) {
+        var fn = (_.reduce(tempFns.is, function(memo, fn) {
           return memo || fn(item);
         }, false));
+
+        // Try "not:"
+        if(!fn)
+          fn = (_.reduce(tempFns.not, function(memo, fn) {
+            return memo || !fn(item);
+          }, false));
+
+        // Back to default. Probably something better to be done here
+        return fn || (_.reduce(tempFns.is, function(memo, fn) {
+          return memo || fn(item);
+        }, false));
+
       };
 
       _.each(dimStoreService.getStores(), function(store) {
         _.chain(store.items)
           .each(function(item) {
-            item.visible = true; // resets the visiblity
-          })
-          .filter(filterFn)
-          .each(function(item) {
-            item.visible = false; // hides it if it passes
+            item.visible = !filterFn(item);
           });
       });
 
       $timeout(dimStoreService.setHeights, 32);
     };
 
+    var _filterFns = {
+      'elemental': function(p, item) {
+        return (item.dmg !== p);
+      },
+      'type': function(p, item) {
+        return (item.type.toLowerCase() !== p);
+      },
+      'tier': function(p, item) {
+        return (item.tier.toLowerCase() !== p);
+      },
+      'incomplete': function(p, item) {
+        return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((item.xpComplete && item.hasXP) || (!item.hasXP)));
+      },
+      'complete': function(p, item) {
+        return (item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
+      },
+      'xpincomplete': function(p, item) {
+        return (item.xpComplete && item.hasXP) || (!item.hasXP);
+      },
+      'xpcomplete': function(p, item) {
+        return (!item.xpComplete && item.hasXP) || (!item.hasXP);
+      },
+      'upgraded': function(p, item) {
+        return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
+      },
+      'classType': function(p, item) {
+        var value;
+        switch (p) {
+          case 'titan':
+            value = 0;
+            break;
+          case 'hunter':
+            value = 1;
+            break;
+          case 'warlock':
+            value = 2;
+            break;
+        }
+        return (item.classType !== value);
+      },
+      'stackable': function(p, item) {
+        return item.maxStackSize <= 1;
+      }
+    };
+
     var filterGenerator = function(predicate, switchParam) {
-      var   _duplicates = {};
+      var _duplicates = {};
 
-      var result = function(predicate, item) {
-        return true;
-      };
+      var result = function(p, item) {
+        return (item.name.toLowerCase().indexOf(p) === -1);
+      }
 
-      switch (switchParam) {
-        case 'elemental':
-          {
-            result = function(p, item) {
-              return (item.dmg !== p);
-            };
-            break;
-          }
-        case 'type':
-          {
-            result = function(p, item) {
-              return (item.type.toLowerCase() !== p);
-            };
-            break;
-          }
-        case 'tier':
-          {
-            result = function(p, item) {
-              return (item.tier.toLowerCase() !== p);
-            };
-            break;
-          }
-        case 'incomplete':
-          {
-            result = function(p, item) {
-              return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((item.xpComplete && item.hasXP) || (!item.hasXP)));
-            };
-            break;
-          }
-        case 'complete':
-          {
-            result = function(p, item) {
-              return (item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
-            };
-            break;
-          }
-        case 'xpincomplete':
-          {
-            result = function(p, item) {
-              return (item.xpComplete && item.hasXP) || (!item.hasXP);
-            };
-            break;
-          }
-        case 'xpcomplete':
-          {
-            result = function(p, item) {
-              return (!item.xpComplete && item.hasXP) || (!item.hasXP);
-            };
-            break;
-          }
-        case 'upgraded':
-          {
-            result = function(p, item) {
-              return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
-            };
-            break;
-            }
-          case 'dupe':
-            {
-              result = function(p, item) {
-                if (!_duplicates.hasOwnProperty('dupes')) {
-                  var allItems = _.chain(dimStoreService.getStores())
-                    .map(function(store) {
-                      return store.items;
-                    })
-                    .flatten()
-                    .sortBy('hash')
-                    .value();
-
-                  _duplicates.dupes = [];
-
-                  for (var i = 0; i < allItems.length - 1; i++) {
-                    if (allItems[i + 1].hash == allItems[i].hash) {
-                      _duplicates.dupes.push(allItems[i].hash);
-                    }
-                  }
-                }
-
-                return !_.some(_duplicates.dupes, function(hash) { return item.hash === hash; });
-              };
-              break;
-            }
-        case 'classType':
-          {
-            result = function(p, item) {
-              var value;
-
-              switch (p) {
-                case 'titan':
-                  value = 0;
-                  break;
-                case 'hunter':
-                  value = 1;
-                  break;
-                case 'warlock':
-                  value = 2;
-                  break;
+      if(_filterFns.hasOwnProperty(switchParam) && !~['dupe', 'duplicate'].indexOf(switchParam))
+        result = _filterFns[switchParam];
+      else if(!!~['dupe', 'duplicate'].indexOf(switchParam))
+      {
+        result = function(p, item){
+          if (!_duplicates.hasOwnProperty('dupes')) {
+            var allItems = _.chain(dimStoreService.getStores())
+              .map(function(store) {
+                return store.items;
+              })
+            .flatten()
+              .sortBy('hash')
+              .value();
+            _duplicates.dupes = [];
+            for (var i = 0; i < allItems.length - 1; i++) {
+              if (allItems[i + 1].hash == allItems[i].hash) {
+                _duplicates.dupes.push(allItems[i].hash);
               }
-
-              return (item.classType !== value);
-            };
-            break;
-          }
-        case 'stackable':
-          {
-            result = function(p, item) {
-              return item.maxStackSize <= 1;
             }
-            break;
           }
-        default:
-          {
-            result = function(p, item) {
-              return (item.name.toLowerCase()
-                .indexOf(p) === -1);
-            };
-          }
+          return !_.some(_duplicates.dupes, function(hash) { return item.hash === hash; });
+        };
       }
 
       return result.bind(null, predicate);
     };
+  }
 
-    // function outerHeight(el) {
-    //   var height = el.offsetHeight;
-    //   var style = getComputedStyle(el);
-    //
-    //   height += parseInt(style.marginTop) + parseInt(style.marginBottom);
-    //   return height;
-    // }
-    //
-    // function outerWidth(el) {
-    //   var width = el.offsetWidth;
-    //   var style = getComputedStyle(el);
-    //
-    //   width += parseInt(style.marginLeft) + parseInt(style.marginRight);
-    //   return width;
-    // }
-    //
-    // function cleanUI() {
-    //   var weapons = document.querySelectorAll('.weapons');
-    //   var armor = document.querySelectorAll('.armor');
-    //
-    //   var wHeight = _.reduce(weapons, function (memo, section) {
-    //     var childHeight = 0;
-    //     _.each(section.children, function(child) {
-    //       childHeight += outerHeight(child);
-    //     });
-    //
-    //
-    //     if (childHeight > memo) {
-    //       memo = childHeight;
-    //     }
-    //
-    //     return memo;
-    //   }, 0);
-    //
-    //   var aHeight = _.reduce(armor, function (memo, section) {
-    //     var childHeight = 0;
-    //     _.each(section.children, function(child) {
-    //       childHeight += outerHeight(child);
-    //     });
-    //
-    //
-    //     if (childHeight > memo) {
-    //       memo = childHeight;
-    //     }
-    //
-    //     return memo;
-    //   }, 0);
-    //
-    //   var style = document.createElement('style');
-    //   style.type = 'text/css';
-    //   style.innerHTML = '.armor { min-height: ' + (aHeight) + 'px; } .weapons { min-height: ' + (wHeight) + 'px; }';
-    //   document.getElementsByTagName('head')[0].appendChild(style);
-    // }
+  /**
+   * Can easily add more filter sets
+   * '<key>': [Array of possible matches]
+   * Key is what filter should be used
+   * Array is what will be searched for
+   */
+  var _filterSets = {
+    'elemental': ['arc', 'solar', 'void', 'kinetic'],
+    'type': ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem'],
+    'tier': ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
+    'incomplete': ['incomplete'],
+    'complete': ['complete'],
+    'xpincomplete': ['xpincomplete'],
+    'xpcomplete': ['xpcomplete'],
+    'upgraded': ['upgraded'],
+    'classType': ['titan', 'hunter', 'warlock'],
+    'dupe': ['dupe', 'duplicate'],
+    'stackable': ['stackable']
+  };
+
+  function _checkSpecial(filterResult)
+  {
+    for(var key in _filterSets)
+      if(_filterSets.hasOwnProperty(key) && !!~_filterSets[key].indexOf(filterResult))
+        return key;
   }
 })();
