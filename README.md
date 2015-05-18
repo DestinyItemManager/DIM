@@ -33,4 +33,4 @@ Follow the conversation on [reddit](http://www.reddit.com/r/DestinyItemManager/)
 Chat with the developers on gitter.im.  [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kyleshay/DIM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge).
 
 ##License
-Code released under [the MIT license](https://github.com/twbs/bootstrap/blob/master/LICENSE).
+Code released under [the MIT license](http://choosealicense.com/licenses/mit/).
