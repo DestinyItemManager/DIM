@@ -16,9 +16,9 @@ DIM is an extension that runs within the Chrome Desktop Web Browser.
 
 Clone the repo: git clone https://github.com/kyleshay/DIM.
 
-Read the [Getting started page](https://github.com/kyleshay/DIM/wiki/Getting-Started) for information on the framework contents, dependencies, and more.
+Install dependencies: `bower install` (if you don't already have bower installed, install it with `npm install -g bower`)
 
-You can run this locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01).
+You can run this locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
 
 ##Bugs and feature requests
 
