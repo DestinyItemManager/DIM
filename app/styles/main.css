@@ -3,6 +3,18 @@
   height: 44px;
 }
 
+.img.how:before {
+  content: '';
+  display: block;
+  background-image: url(../images/how.png);
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  background-size: 16px;
+  right: 0;
+  box-shadow: inset 0 0 10px 0px #B84;
+}
+
 div[dim-search-filter] input {
   width: 300px;
 }
