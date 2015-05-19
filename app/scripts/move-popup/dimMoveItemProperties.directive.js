@@ -68,23 +68,9 @@
         // 	case 'void': vm.color = '#b184c5'; break;
         // }
 
-        switch (vm.item.dmg) {
-        case 'arc':
-          {
-            vm.classes['is-arc'] = true;
-            break;
-          }
-        case 'solar':
-          {
-            vm.classes['is-solar'] = true;
-            break;
-          }
-        case 'void':
-          {
-            vm.classes['is-void'] = true;
-            break;
-          }
-        }
+        vm.classes['is-arc'] = _.contains(vm.item.dmg, 'arc');
+        vm.classes['is-solar'] = _.contains(vm.item.dmg, 'solar');
+        vm.classes['is-void'] = _.contains(vm.item.dmg, 'void');
 
         vm.stats.push({
           'label': 'Atk:',

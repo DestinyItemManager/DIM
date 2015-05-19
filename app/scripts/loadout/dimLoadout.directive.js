@@ -39,7 +39,7 @@
         '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
         '            <div class="close" ng-click="vm.remove(item); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
         '            <div class="equipped" ng-show="item.equipped"></div>',
-        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
+        '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg[0]"></div>',
         '          </div>',
         '        </span>',
         '      </span>',

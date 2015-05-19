@@ -103,7 +103,7 @@
         case 'elemental':
           {
             result = function(p, item) {
-              return (item.dmg !== p);
+              return !_.contains(item.dmg, p);
             };
             break;
           }

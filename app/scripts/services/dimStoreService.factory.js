@@ -380,7 +380,17 @@
           4248486431
         ];
 
-        var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
+        var dmgTypes = [ [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType] ];
+
+        var dmgTypePerks = {
+          3787917923: [ 'arc', 'solar' ]
+        };
+
+        _.forEach(dmgTypePerks, function(perkDmgTypes, perkHash) {
+          if (_.any(item.perks, function(perk) { return perk.perkHash == perkHash; })) {
+            [].push.apply(dmgTypes, perkDmgTypes);
+          }
+        });
 
         var createdItem = {
           index: getNextIndex(),
@@ -405,7 +415,7 @@
           maxStackSize: definitions[item.itemHash].maxStackSize,
           classType: itemDef.classType,
           /* 0: titan, 1: hunter, 2: warlock, 3: any */
-          dmg: dmgName,
+          dmg: dmgTypes,
           visible: true
         };
 
