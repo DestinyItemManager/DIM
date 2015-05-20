@@ -664,6 +664,10 @@ img.void {
 .item-name.is-void {
   background-color: #b184c5;
 }
+.move-popup input[type=number] {
+  width: 50px;
+  height: 38px;
+}
 .move-popup .move-button {
   background-size: cover;
   width: 37px;
