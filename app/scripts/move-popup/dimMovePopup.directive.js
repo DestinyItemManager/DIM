@@ -96,12 +96,8 @@
 
     vm.stores = dimStoreService.getStores();
 
-    this.canShowAmount = function(item, itemStore, buttonStore) {
-      var result = false;
-      if (item.amount > 1) {
-        result = true;
-      }
-      return result;
+    this.canShowAmount = function(item) {
+      return item.amount > 1;
     };
 
     vm.canShowItem = function canShowItem(item, itemStore, buttonStore) {
