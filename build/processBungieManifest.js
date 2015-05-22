@@ -1,38 +1,32 @@
-//
-// var file = fs.createWriteStream("file.jpg");
-// var request = http.get("http://www.bungie.net/platform/Destiny/Manifest/", function(response) {
-//   response.pipe(file);
-// });
-
 var http = require('http');
 var fs = require('fs');
 
-var rp = require('request-promise');
-var AdmZip = require('adm-zip');
+var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require("underscore");
-
-var file = fs.createWriteStream('manifest.zip');
-var options = {
-  uri: 'http://www.bungie.net/platform/Destiny/Manifest/',
-  method: 'GET'
-};
+var unzip = require('unzip');
 
 var db;
 var dbFile;
+var version;
 
 function processItemRow(row, pRow) {
-  var imageRequest = http.get('http://www.bungie.net' + row.icon, function(imageResponse) {
-    var imgFS = fs.createWriteStream('.' + row.icon);
-    imageResponse.on('end', function() {
-      console.log(row.icon);
-      imgFS.end();
-      pRow.next();
+  var exists = fs.existsSync('.' + row.icon);
+
+  if (!exists) {
+    var imageRequest = http.get('http://www.bungie.net' + row.icon, function(imageResponse) {
+      var imgFS = fs.createWriteStream('.' + row.icon);
+      imageResponse.on('end', function() {
+        console.log(row.icon);
+        imgFS.end();
+        pRow.next();
+      });
+
+      imageResponse.pipe(imgFS);
     });
-
-    imageResponse.pipe(imgFS);
-
-  });
+  } else {
+    pRow.next();
+  }
 }
 
 function processItemRows(rows) {
@@ -52,59 +46,89 @@ function processItemRows(rows) {
   }
 }
 
-rp(options)
-  .then(JSON.parse)
-  .then(function(response) {
-    var request = http.get('http://www.bungie.net' + response.Response.mobileWorldContentPaths.en, function(response) {
+function onManifestRequest(error, response, body) {
+  var parsedResponse = JSON.parse(body);
+  var manifestFile = fs.createWriteStream("manifest.zip");
 
-      response.on('end', function() {
-        file.end();
-        var zip = new AdmZip('manifest.zip');
-        var zipEntries = zip.getEntries();
-        zipEntries.forEach(function(zipEntry) {
-          dbFile = zipEntry.name;
-        });
+  version = parsedResponse.Response.version;
 
-        zip.extractAllTo('manifest');
 
-        db = new sqlite3.Database('manifest/' + dbFile);
-        var items = {};
+  var exists = fs.existsSync(version + '.txt');
 
-        db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
-          if(err) { throw err; }
+  if (!exists) {
+    var versionFile = fs.createWriteStream(version + '.txt');
+    versionFile.write(JSON.stringify(parsedResponse, null, 2));
+    versionFile.end();
 
-          items = {};
+    request
+      .get('http://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
+      .pipe(manifestFile)
+      .on('close', onManifestDownloaded);
+  } else {
+    console.log('Version already exist, \'' + version + '\'.');
+  }
+}
 
-          rows.forEach(function(row) {
-            var item = JSON.parse(row.json);
-            delete item.equippingBlock;
-            items[item.itemHash] = item;
-          });
+function onManifestDownloaded() {
+  fs.createReadStream('manifest.zip')
+    .pipe(unzip.Parse())
+    .on('entry', function(entry) {
+      ws = fs.createWriteStream('manifest/' + entry.path);
 
-          var pRow = processItemRows(items);
-          pRow.next();
+      ws.on('finish', function() {
+        var exists = fs.existsSync('manifest/' + entry.path);
 
-          var defs = fs.createWriteStream('items.json');
-          defs.write(JSON.stringify(items));
-        });
-
-        db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
-          if(err) { throw err; }
-
-          items = {};
-
-          rows.forEach(function(row) {
-            var item = JSON.parse(row.json);
-            delete item.equippingBlock;
-            items[item.itemHash] = item;
-          });
-
-          var defs = fs.createWriteStream('buckets.json');
-          defs.write(JSON.stringify(items));
-        });
+        if (exists) {
+          extractDB('manifest/' + entry.path);
+        }
       });
 
-      response.pipe(file);
+      entry.pipe(ws);
     });
-  })
-  .catch(console.error);
+}
+
+function extractDB(dbFile) {
+  db = new sqlite3.Database(dbFile);
+  var items = {};
+
+  db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      delete item.equippingBlock;
+      items[item.itemHash] = item;
+    });
+
+    var pRow = processItemRows(items);
+    pRow.next();
+
+    var defs = fs.createWriteStream('items.json');
+    defs.write(JSON.stringify(items));
+    defs.end();
+  });
+
+  db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      delete item.equippingBlock;
+      items[item.itemHash] = item;
+    });
+
+    var defs = fs.createWriteStream('buckets.json');
+    defs.write(JSON.stringify(items));
+  });
+}
+
+request
+  .get('http://www.bungie.net/platform/Destiny/Manifest/', onManifestRequest);

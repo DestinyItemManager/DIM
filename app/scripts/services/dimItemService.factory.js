@@ -218,9 +218,25 @@
             if (scope.source.id === scope.target.id) {
               return null;
             } else {
-              return dimBungieService.transfer(scope.similarItem, scope.source)
+              var p = $q.when();
+              var vault;
+
+              if (scope.similarItem.owner !== 'vault') {
+                p = dimStoreService.getStore('vault')
+                  .then(function(v) {
+                    vault = v;
+                    return dimBungieService.transfer(scope.similarItem, vault);
+                  })
+                  .then(function() {
+                    updateItemModel(scope.similarItem, vault, scope.source, false);
+                  });
+              }
+
+              return p.then(function() {
+                  return dimBungieService.transfer(scope.similarItem, scope.source);
+                })
                 .then(function() {
-                  updateItemModel(scope.similarItem, scope.target, scope.source, false);
+                  updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
                 });
             }
           })
@@ -374,20 +390,24 @@
           if ((item.owner !== store.id) && (store.id !== 'vault')) {
             var vault;
 
-            dimStoreService.getStore('vault')
-              .then(function(v) {
-                vault = v;
-                return canMoveToStore(item, v);
-              })
-              .then(function() {
-                deferred.resolve(true);
-              })
-              .catch(function(err) {
-                // createSpace(vault, item, store)
-                //   .then(function() {
-                deferred.reject(err);
-                // });
-              });
+            if (item.owner !== 'vault') {
+              dimStoreService.getStore('vault')
+                .then(function(v) {
+                  vault = v;
+                  return canMoveToStore(item, v);
+                })
+                .then(function() {
+                  deferred.resolve(true);
+                })
+                .catch(function(err) {
+                  // createSpace(vault, item, store)
+                  //   .then(function() {
+                  deferred.reject(err);
+                  // });
+                });
+            } else {
+              deferred.resolve(true);
+            }
           } else {
             deferred.resolve(true);
           }
