@@ -1,8 +1,11 @@
 app/vendor/
 dist/
 node_modules/
-build/
+build/common
+build/img
+build/manifest
+build/*.json
+build/manifest.zip
 
 !do-not-delete.txt
 !build/img/misc/missing_icon.png
-!build/processBungieManifest.js
