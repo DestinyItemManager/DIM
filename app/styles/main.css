@@ -600,7 +600,7 @@ img.void {
 .barFill.prestige {
   background-color: #f5dc56;
 }
-.loadout-button {
+.guardian-popup-button {
   position: relative;
   display: inline-block;
   width: 40px;
@@ -613,11 +613,11 @@ img.void {
   padding: 0;
   cursor: pointer;
 }
-.loadout-button:hover {
+.guardian-popup-button:hover {
   background-color: rgba(245, 245, 245, .25);
   color: rgba(245, 245, 245, .75);
 }
-.loadout-button .active {
+.guardian-popup-button .active {
   background-color: rgba(10, 10, 10, .25);
   color: rgba(245, 245, 245, .75);
 }
@@ -636,6 +636,13 @@ img.void {
   left: -220px;
   z-index: 2;
   cursor: pointer;
+}
+.engram-farming-popup {
+  background: rgba(10, 10, 10, 0.85);
+  display: block;
+  clear: both;
+  line-height: 40px;
+  padding-left: 1px;
 }
 .move-popup.little {
   width: 85px;

@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreHeading', StoreHeading);
 
-  StoreHeading.$inject = ['ngDialog'];
+  StoreHeading.$inject = ['ngDialog', 'dimEngramFarmingService'];
 
-  function StoreHeading(ngDialog) {
+  function StoreHeading(ngDialog, dimEngramFarmingService) {
     return {
       controller: StoreHeadingCtrl,
       controllerAs: 'vm',
@@ -27,7 +27,7 @@
         '    <div class="barFill" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'" ng-style="{width: vm.percentToNextLevel + \'%\'}"></div>',
         '  </div>',
         '</div>',
-        '<div class="loadout-button" ng-show="vm.isGuardian" ng-click="vm.openLoadoutPopup($event)">&#x25BC;</div>',
+        '<div class="guardian-popup-button" ng-show="vm.isGuardian" ng-click="vm.openGuardianPopup($event)">&#x25BC;</div>',
         '<div loadout-id="{{ vm.store.id }}" style="position: relative;"></div>'
       ].join('')
     };
@@ -36,7 +36,7 @@
       var vm = scope.vm;
       var dialogResult = null;
 
-      vm.openLoadoutPopup = function openLoadoutPopup(e) {
+      vm.openGuardianPopup = function openGuardianPopup(e) {
         e.stopPropagation();
 
         if (!_.isNull(dialogResult)) {
@@ -45,7 +45,12 @@
           ngDialog.closeAll();
 
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-class="vm[\'class\']" dim-click-anywhere-but-here="vm.closeLoadoutPopup()" dim-loadout-popup="vm.store"></div>',
+            template: [
+              '<div ng-click="$event.stopPropagation();" dim-class="vm[\'class\']" dim-click-anywhere-but-here="vm.closeLoadoutPopup()">',
+              '  <div dim-loadout-popup="vm.store"></div>',
+              '  <div class="engram-farming-popup"><label><input ng-show="vm.isGuardian" type="checkbox" ng-checked="vm.farmingEnabled()" ng-click="vm.toggleFarming()">Engram Farming</label></div>',
+              '</div>'
+            ].join(''),
             plain: true,
             appendTo: 'div[loadout-id="' + vm.store.id + '"]',
             overlay: false,
@@ -66,6 +71,14 @@
         }
       };
 
+      vm.farmingEnabled = function() {
+        return dimEngramFarmingService.farmingEnabledFor(vm.store.id);
+      };
+
+      vm.toggleFarming = function() {
+        dimEngramFarmingService.toggleFarmingFor(vm.store.id);
+      };
+
       element.addClass('character');
 
       if (vm.isGuardian) {
@@ -82,9 +95,9 @@
     }
   }
 
-  StoreHeadingCtrl.$inject = [];
+  StoreHeadingCtrl.$inject = [ 'dimEngramFarmingService' ];
 
-  function StoreHeadingCtrl() {
+  function StoreHeadingCtrl(dimEngramFarmingService) {
     var vm = this;
 
     vm.isGuardian = (vm.store.id !== 'vault');
