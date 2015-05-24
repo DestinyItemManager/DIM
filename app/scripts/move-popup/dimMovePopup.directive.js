@@ -37,6 +37,7 @@
         '      <span>Equip</span>',
         '    </div>',
         '  </div>',
+        '  <input ng-if="vm.canShowAmount(vm.item, vm.store, store)" type="number" min="0" ng-model="vm.item.moveAmount" ng-init="item.amout">',
         '</div>'
       ].join('')
     };
@@ -94,6 +95,10 @@
     vm.moveToGuardian = moveToGuardianFn;
 
     vm.stores = dimStoreService.getStores();
+
+    this.canShowAmount = function(item) {
+      return item.amount > 1;
+    };
 
     vm.canShowItem = function canShowItem(item, itemStore, buttonStore) {
       var result = false;
