@@ -21,5 +21,8 @@
     "request-promise": "^0.4.2",
     "sqlite3": "^3.0.8",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "uglify-js": "^2.4.23"
   }
 }

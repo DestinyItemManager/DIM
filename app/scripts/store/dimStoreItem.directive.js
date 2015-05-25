@@ -21,7 +21,7 @@
       },
       template: [
         '<div ui-draggable="{{ (vm.item.type !== \'Lost Items\') && (vm.item.type !== \'Messages\')  }}" id="item-{{:: $id }}" drag-channel="{{ vm.item.type }}" title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" drag="\'item-\' + $id" class="item" ng-class="{ \'search-hidden\': !vm.item.visible, \'complete\': vm.item.complete}">',
-        '  <div ui-draggable="false" class="img" ng-class="{ \'how\': vm.item.inHoW }" style="background-size: 44px 44px; background-image: url({{ vm.item.icon.slice(1) }})" ng-click="vm.clicked(vm.item, $event)"></div>',
+        '  <div ui-draggable="false" class="img" ng-class="{ \'how\': vm.item.inHoW }" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="damage-type" ng-if="vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
         '</div>'
@@ -31,6 +31,9 @@
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
+
+      element[0].querySelector('.img')
+        .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
