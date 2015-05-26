@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService'];
 
-  function DimApp(ngDialog) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService) {
     var vm = this;
     var aboutResult = null;
     var supportResult = null;
@@ -32,6 +32,10 @@
           $('body').removeClass('about');
         });
       }
+    };
+
+    vm.refresh = function refresh() {
+      $rootScope.$broadcast('dim-active-platform-updated', { platform: dimPlatformService.getActive() });
     };
 
     vm.showSupport = function(e) {
