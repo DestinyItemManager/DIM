@@ -35,7 +35,7 @@
         '      <span id="loadout-contents">',
         '        <span ng-repeat="value in vm.types" class="loadout-{{ value }}">',
         '          <div ng-repeat="item in vm.loadout.items[value]" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <img ng-src="{{ item.icon }}">',
+        '            <img ng-src="{{ item.icon }}" title="{{ item.primStat.value }} {{ item.name }}">',
         '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
         '            <div class="close" ng-click="vm.remove(item); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
         '            <div class="equipped" ng-show="item.equipped"></div>',
