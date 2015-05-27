@@ -55,7 +55,7 @@ function onManifestRequest(error, response, body) {
 
   var exists = fs.existsSync(version + '.txt');
 
-  if (!exists) {
+  // if (!exists) {
     var versionFile = fs.createWriteStream(version + '.txt');
     versionFile.write(JSON.stringify(parsedResponse, null, 2));
     versionFile.end();
@@ -64,9 +64,9 @@ function onManifestRequest(error, response, body) {
       .get('http://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
       .pipe(manifestFile)
       .on('close', onManifestDownloaded);
-  } else {
-    console.log('Version already exist, \'' + version + '\'.');
-  }
+  // } else {
+  //   console.log('Version already exist, \'' + version + '\'.');
+  // }
 }
 
 function onManifestDownloaded() {
@@ -126,6 +126,23 @@ function extractDB(dbFile) {
     });
 
     var defs = fs.createWriteStream('buckets.json');
+    defs.write(JSON.stringify(items));
+  });
+
+  db.all('select * from DestinyTalentGridDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      //delete item.equippingBlock;
+      items[item.gridHash] = item;
+    });
+
+    var defs = fs.createWriteStream('talent.json');
     defs.write(JSON.stringify(items));
   });
 }

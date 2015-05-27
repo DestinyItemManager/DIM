@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -264,7 +264,7 @@
     function getItems(owner, items, definitions) {
       var result = [];
 
-      var iterator = function(definitions, item, index) {
+      var iterator = function(definitions, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
 
         // Missing definition?
@@ -406,7 +406,9 @@
           classType: itemDef.classType,
           /* 0: titan, 1: hunter, 2: warlock, 3: any */
           dmg: dmgName,
-          visible: true
+          visible: true,
+          hasAscendNode: false,
+          ascended: false
         };
 
         if (item.itemHash === 2809229973) { // Necrochasm
@@ -422,14 +424,56 @@
           createdItem.xpComplete = true;
         }
 
+        var talents = talentDefs.data[item.talentGridHash];
+
+        var ascendNode = (talents) ? _.filter(talents.nodes, function(node) {
+          return _.some(node.steps, function(step) { return step.nodeStepName === 'Ascend' });
+        }) : undefined;
+
+
+        // var talentDef = null;
+        //
+        // dimTalentDefinitions.getDefinitions()
+        //   .then(function(defs) {
+        //
+        //   });
+
+        // var ascendNode = _.find(item.nodes, function(node) {
+        //   return (node.state === 6);
+        // });
+
+        if (!_.isUndefined(ascendNode) && _.size(ascendNode) > 0) {
+          createdItem.hasAscendNode = true;
+          createdItem.ascended = _.filter(item.nodes, function(node) { return node.nodeHash === ascendNode[0].nodeHash; })[0].isActivated;
+
+          if (!createdItem.ascended) {
+            createdItem.complete = false;
+          }
+        }
+
+        // if (!_.isUndefined(ascendNode)) {
+        //   if ((!ascendNode.isActivated) && (item.primaryStat)) {
+        //     if ((item.primaryStat.statHash === 368428387) && (item.primaryStat.value === 331)) {
+        //
+        //     }
+        //
+        //   }
+        // }
+
         if (createdItem.tier !== 'Basic') {
           result.push(createdItem);
         }
       };
 
+      var iteratorPB;
+
       var promise = dimItemDefinitions.getDefinitions()
         .then(function(defs) {
-          var iteratorPB = iterator.bind(null, defs);
+          iteratorPB = iterator.bind(null, defs);
+        })
+        .then(dimTalentDefinitions.getDefinitions)
+        .then(function(defs) {
+          iteratorPB = iteratorPB.bind(null, defs);
 
           _.each(items, iteratorPB);
 
