@@ -67,8 +67,6 @@
       .catch(function(a) {
         toaster.pop('error', vm.item.name, a.message);
       });
-
-      $rootScope.loadingTracker.addPromise(promise);
     }
 
     function moveToVaultFn(store, e) {
@@ -76,8 +74,6 @@
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
-
-      $rootScope.loadingTracker.addPromise(promise);
     }
 
     function moveToEquipFn(store, e) {
@@ -85,8 +81,6 @@
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
-
-      $rootScope.loadingTracker.addPromise(promise);
     }
 
     vm.moveToVault = moveToVaultFn;

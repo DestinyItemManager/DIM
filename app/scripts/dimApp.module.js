@@ -10,6 +10,6 @@
     'chromeStorage',
     'angularUUID2',
     'toaster',
-    'ajoslin.promise-tracker'
+    'angular-loading-bar'
   ]);
 })();

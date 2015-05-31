@@ -33,8 +33,6 @@
         .then(function(stores) {
           vm.stores = stores;
         });
-
-      $rootScope.loadingTracker.addPromise(promise);
     });
   }
 })();
