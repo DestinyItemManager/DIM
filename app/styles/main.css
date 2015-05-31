@@ -729,6 +729,8 @@ img.void {
   padding: 2px;
   white-space: nowrap;
   display: inline-block;
+  -webkit-user-select: none;
+  user-select: none;
 }
 #content div * {
   white-space: normal;
