@@ -408,7 +408,9 @@
           dmg: dmgName,
           visible: true,
           hasAscendNode: false,
-          ascended: false
+          ascended: false,
+          lockable: item.lockable,
+          locked: item.locked
         };
 
         if (item.itemHash === 2809229973) { // Necrochasm
