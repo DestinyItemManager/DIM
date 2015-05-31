@@ -13,7 +13,6 @@ var uglified = uglify.minify([
   'app/vendor/underscore/underscore-min.js',
   'app/vendor/lz-string/libs/lz-string.min.js',
   'app/vendor/angular-messages/angular-messages.min.js',
-  'app/vendor/angular-promise-tracker/promise-tracker.js',
   'app/vendor/verge/verge.js'
 ]);
 

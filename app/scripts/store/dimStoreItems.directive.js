@@ -274,8 +274,6 @@
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
         });
-
-      $rootScope.loadingTracker.addPromise(promise);
     };
 
     $scope.$watch('vm.store.items', function(newVal) {
