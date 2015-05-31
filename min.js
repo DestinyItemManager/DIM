@@ -14,6 +14,7 @@ var uglified = uglify.minify([
   'app/vendor/lz-string/libs/lz-string.min.js',
   'app/vendor/angular-messages/angular-messages.min.js',
   'app/vendor/angular-promise-tracker/promise-tracker.js',
+  'app/scripts/tooltips.js',
   'app/vendor/verge/verge.js'
 ]);
 

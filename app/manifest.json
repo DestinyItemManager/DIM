@@ -23,7 +23,7 @@
     "default_icon": "icon128.png"
   },
   "options_page": "index.html",
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://destinydb.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false
 }
