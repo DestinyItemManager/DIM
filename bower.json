@@ -20,6 +20,7 @@
     "ngDialog": "~0.3.x",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
     "jquery": "~2",
-    "verge": "https://github.com/ryanve/verge.git"
+    "verge": "https://github.com/ryanve/verge.git",
+    "angular-loading-bar": "~0.7.1"
   }
 }

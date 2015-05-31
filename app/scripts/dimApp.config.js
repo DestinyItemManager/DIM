@@ -46,6 +46,10 @@
     });
 
   angular.module('dimApp')
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+      cfpLoadingBarProvider.includeSpinner = false;
+      cfpLoadingBarProvider.latencyThreshold = 300;
+    }])
     .config([
       '$compileProvider',
       function($compileProvider) {

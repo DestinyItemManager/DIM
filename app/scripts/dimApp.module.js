@@ -9,6 +9,7 @@
     'ang-drag-drop',
     'chromeStorage',
     'angularUUID2',
-    'toaster'
+    'toaster',
+    'angular-loading-bar'
   ]);
 })();
