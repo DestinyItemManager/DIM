@@ -664,6 +664,15 @@ img.void {
 .item-name.is-void {
   background-color: #b184c5;
 }
+.item-name .locked {
+  background-image: url('../images/lockeditem.png');
+  height: 15px;
+  width: 15px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: text-top;
+}
 .move-popup a {
   color: #000;
 }
