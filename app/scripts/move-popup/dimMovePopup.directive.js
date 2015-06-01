@@ -20,7 +20,7 @@
       template: [
         '<div class="move-popup">',
         '  <div dim-move-item-properties="vm.item"></div>',
-        '  <div class="locations" ng-repeat="store in vm.stores">',
+        '  <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '    <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" ',
         '      ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveToVault(store, $event)" ',
         '      data-type="item" data-character="{{ store.id }}">',

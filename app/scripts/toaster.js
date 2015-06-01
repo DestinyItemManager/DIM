@@ -360,7 +360,7 @@ function ($parse, $rootScope, $interval, $sce, toasterConfig, toaster, toasterEv
         }],
         template:
         '<div id="toast-container" ng-class="[config.position, config.animation]">' +
-          '<div ng-repeat="toaster in toasters" class="toast" ng-class="[toaster.type,toaster.stopTimerClass]" ng-click="click(toaster)" ng-mouseover="stopTimer(toaster)" ng-mouseout="restartTimer(toaster)">' +
+          '<div ng-repeat="toaster in toasters track by toaster.id" class="toast" ng-class="[toaster.type,toaster.stopTimerClass]" ng-click="click(toaster)" ng-mouseover="stopTimer(toaster)" ng-mouseout="restartTimer(toaster)">' +
             '<button type="button" class="toast-close-button" ng-show="toaster.showCloseButton" ng-click="click(toaster)">&times;</button>' +
             '<div ng-class="config.title">{{toaster.title}}</div>' +
             '<div ng-class="config.message" ng-switch on="toaster.bodyOutputType">' +
