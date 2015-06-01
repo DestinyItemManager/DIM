@@ -303,7 +303,7 @@ body>div * {
   height: 32px;
   background: rgb(195, 188, 180);
   color: #1a1e24;
-  box-shadow: 0 2px 20px 2px #000;
+  box-shadow: 0 8px 20px -8px #222;
 }
 #header .header-right {
   float: right;
@@ -1152,5 +1152,9 @@ button.toast-close-button {
   height: 80px;
   position: fixed;
   z-index: 4;
-  box-shadow: 0 10px 10px -10px #333;
+  box-shadow: 0 8px 20px -8px #222;
+}
+
+.something-is-sticky .character.scroll-to-fixed-fixed {
+  top: 52px !important;
 }
