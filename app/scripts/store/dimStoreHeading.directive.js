@@ -1,6 +1,6 @@
 /*jshint -W027*/
 
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -36,6 +36,20 @@
       var vm = scope.vm;
       var dialogResult = null;
 
+      $(document).ready(function() {
+        element.scrollToFixed({
+          marginTop: 51,
+          fixed: function() {
+            $(document.body).addClass('something-is-sticky');
+            $(this).addClass('fixed-header');
+          },
+          unfixed: function() {
+            $(document.body).removeClass('something-is-sticky');
+            $(this).removeClass('fixed-header');
+          }
+        });
+      });
+
       vm.openLoadoutPopup = function openLoadoutPopup(e) {
         e.stopPropagation();
 
@@ -54,7 +68,7 @@
             scope: scope
           });
 
-          dialogResult.closePromise.then(function (data) {
+          dialogResult.closePromise.then(function(data) {
             dialogResult = null;
           });
         }

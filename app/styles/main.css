@@ -1143,3 +1143,14 @@ button.toast-close-button {
 .section.general .sort-material .unequipped {
   width: 208px;
 }
+
+.something-is-sticky .sticky-header-background {
+  left: 0;
+  right: 0;
+  top: 32px;
+  background-color: #434444;
+  height: 80px;
+  position: fixed;
+  z-index: 4;
+  box-shadow: 0 10px 10px -10px #333;
+}
