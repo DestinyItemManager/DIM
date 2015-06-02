@@ -18,20 +18,20 @@
       },
       replace: true,
       template: [
-        '<div class="move-popup">',
+        '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item"></div>',
         '  <div class="locations" ng-repeat="store in vm.stores">',
-        '    <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" ',
+        '    <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
         '      ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveToVault(store, $event)" ',
         '      data-type="item" data-character="{{ store.id }}">',
         '      <span>Vault</span>',
         '    </div>',
-        '    <div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" ',
+        '    <div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
         '      ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveToGuardian(store, $event)" ',
         '      data-type="item" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})"> ',
         '      <span>Store</span>',
         '    </div>',
-        '    <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" ',
+        '    <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
         '      ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveToEquip(store, $event)" ',
         '      data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})">',
         '      <span>Equip</span>',
@@ -46,6 +46,18 @@
 
   function MovePopupController($rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
+
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    vm.characterInfo = function characterInfo(store) {
+      if (store.id === 'vault') {
+        return 'Vault';
+      } else {
+        return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
+      }
+    };
 
     function moveItemUI(item, targetStore) {
       var sourceStore = (item.owner === targetStore.id) ? $q.when(targetStore) : dimStoreService.getStore(item.owner);

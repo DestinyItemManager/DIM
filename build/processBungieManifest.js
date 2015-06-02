@@ -56,9 +56,9 @@ function onManifestRequest(error, response, body) {
   var exists = fs.existsSync(version + '.txt');
 
   // if (!exists) {
-    var versionFile = fs.createWriteStream(version + '.txt');
-    versionFile.write(JSON.stringify(parsedResponse, null, 2));
-    versionFile.end();
+    // var versionFile = fs.createWriteStream(version + '.txt');
+    // versionFile.write(JSON.stringify(parsedResponse, null, 2));
+    // versionFile.end();
 
     request
       .get('http://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
