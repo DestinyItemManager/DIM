@@ -360,10 +360,13 @@ img.void {
   width: 30px
 }
 .storage {
-  width: auto;
+  width: 224px;
   padding: 0 12px;
   vertical-align: top;
   display: inline-block;
+}
+.storage.vault {
+  width: 209px;
 }
 .items.vault {
   background-color: rgba(245, 245, 245, 0.25);
@@ -524,6 +527,7 @@ img.void {
 }
 .character {
   margin-bottom: 16px;
+  height: 45px;
 }
 .character-box {
   position: relative;
@@ -1158,3 +1162,9 @@ button.toast-close-button {
 .something-is-sticky .character.scroll-to-fixed-fixed {
   top: 52px !important;
 }
+
+.fixed-header {
+  left: auto !important;
+}
+
+.something-is-sticky .fixed-header-placeholder { height: 61px !important; }

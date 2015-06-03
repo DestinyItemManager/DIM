@@ -18,9 +18,11 @@
   "homepage": "https://github.com/kyleshay/DIM",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "request": "^2.57.0",
     "request-promise": "^0.4.2",
     "sqlite3": "^3.0.8",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "unzip": "^0.1.11"
   },
   "devDependencies": {
     "uglify-js": "^2.4.23"
