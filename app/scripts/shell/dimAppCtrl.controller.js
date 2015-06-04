@@ -35,7 +35,11 @@
     };
 
     vm.refresh = function refresh() {
-      $rootScope.$broadcast('dim-active-platform-updated', { platform: dimPlatformService.getActive() });
+      (function(activePlatform) {
+        if (!_.isNull(activePlatform)) {
+          $rootScope.$broadcast('dim-active-platform-updated', { platform: activePlatform });
+        }
+      })(dimPlatformService.getActive());
     };
 
     vm.showSupport = function(e) {
