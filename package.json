@@ -18,6 +18,7 @@
   "homepage": "https://github.com/kyleshay/DIM",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "mkdirp": "^0.5.1",
     "request": "^2.57.0",
     "request-promise": "^0.4.2",
     "sqlite3": "^3.0.8",

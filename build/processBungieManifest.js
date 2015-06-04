@@ -5,6 +5,7 @@ var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require("underscore");
 var unzip = require('unzip');
+var mkdirp = require('mkdirp');
 
 var db;
 var dbFile;
@@ -146,6 +147,9 @@ function extractDB(dbFile) {
     defs.write(JSON.stringify(items));
   });
 }
+
+mkdirp('img/misc', function(err) { });
+mkdirp('common/destiny_content/icons', function(err) { });
 
 request
   .get('http://www.bungie.net/platform/Destiny/Manifest/', onManifestRequest);
