@@ -144,14 +144,14 @@
               p = $q.when(dimStoreService.getStores())
                 .then(function(stores) {
                   return _.chain(stores)
-                    .filter(function(s) {
-                      return (s.id !== 'vault');
-                    })
+                    // .filter(function(s) {
+                    //   return (s.id !== 'vault');
+                    // })
                     .sortBy(function(s) {
                       if (s.id === vm.store.id) {
-                        return 2;
-                      } else if (s.id === vm.store.id) {
                         return 0;
+                      } else if (s.id === 'vault') {
+                        return 2;
                       } else {
                         return 1;
                       }
@@ -165,10 +165,13 @@
                         return item.type === i.type;
                       })
                       .size()
-                      .value() < 10;
+                      .value() < ((s.id === 'vault') ? 36 : 10);
                   });
                 })
                 .then(function(t) {
+                  if (_.isUndefined(t)) {
+                    throw new Error('Collector eh?  All your characters ' + moveItem[0].type.toLowerCase() + ' slots are full and I can\'t move items of characters, yet... Clear a slot on a character and I can complete the loadout.');
+                  }
                   target = t;
 
                   return dimItemService.moveTo(moveItem[0], target);
