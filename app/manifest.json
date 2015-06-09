@@ -16,7 +16,7 @@
   },
   "permissions": [
     "storage",
-    "*://www.bungie.net/*",
+    "*://*.bungie.net/*",
     "cookies"
   ],
   "browser_action": {
