@@ -410,7 +410,8 @@
           hasAscendNode: false,
           ascended: false,
           lockable: item.lockable,
-          locked: item.locked
+          locked: item.locked,
+          itemTypeName: itemDef.itemTypeName
         };
 
         if (item.itemHash === 2809229973) { // Necrochasm
