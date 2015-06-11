@@ -48,6 +48,23 @@
   angular.module('dimApp')
     .run(function($rootScope, promiseTracker) {
       $rootScope.loadingTracker = promiseTracker();
+
+      //1 Hour
+      $rootScope.inactivityLength = 60 * 60 * 1000;
+
+      $rootScope.isUserInactive = function () {
+        var currentTime = new Date;
+
+        //Has This User Been Inactive For More Than An Hour
+        return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
+      };
+
+      $rootScope.trackActivity = function () {
+        $rootScope.lastActivity = new Date();
+      };
+
+      //Track Our Initial Activity of Starting the App
+      $rootScope.trackActivity();
     });
 
   angular.module('dimApp')
@@ -83,11 +100,9 @@
 $(document).ready(function() {
   if (verge.viewportW()	!== $(window).width()) {
     $('body').addClass('pad-margin');
-
-
-      var style = document.createElement('style');
-      style.type = 'text/css';
-      style.innerHTML = '.about.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (verge.viewportW()	- $(window).width()) + 'px; }';
-      document.getElementsByTagName('head')[0].appendChild(style);
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = '.about.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (verge.viewportW()	- $(window).width()) + 'px; }';
+    document.getElementsByTagName('head')[0].appendChild(style);
   }
 });

@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', '$interval'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService, $interval) {
     var vm = this;
     var aboutResult = null;
     var supportResult = null;
@@ -105,6 +105,20 @@
         ngDialog.closeAll();
       }
     };
+
+    vm.startAutoRefreshTimer = function () {
+      var secondsToWait = 60;
+
+      $rootScope.autoRefreshTimer = $interval(function () {
+        //Only Refresh If We're Not Already Doing Something
+        //And We're Not Inactive
+        if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
+          vm.refresh();
+        }
+      }, secondsToWait * 1000);
+    };
+
+    vm.startAutoRefreshTimer();
   }
 })();
 
