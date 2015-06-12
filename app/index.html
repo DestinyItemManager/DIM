@@ -15,7 +15,7 @@
 </head>
 
 <body ng-app="dimApp" ng-strict-di>
-  <div ng-controller="dimAppCtrl as app" ng-click="app.about = false">
+  <div ng-controller="dimAppCtrl as app" ng-click="app.about = false; trackActivity()">
     <div id="header">
       <div class="content">
         <span class="header-right">
