@@ -22,8 +22,6 @@
       return _index++;
     }
 
-
-
     function setHeights() {
       function outerHeight(el) {
         //var height = el.offsetHeight;
@@ -277,9 +275,15 @@
         // }
 
         var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+        var weaponClass = null;
 
         if (!itemType) {
           return;
+        }
+
+        if (itemType.hasOwnProperty('general') && itemType.general !== '') {
+          weaponClass = itemType.weaponClass;
+          itemType = itemType.general;
         }
 
         var itemSort = sortItem(itemDef.itemTypeName);
@@ -410,7 +414,8 @@
           hasAscendNode: false,
           ascended: false,
           lockable: item.lockable,
-          locked: item.locked
+          locked: item.locked,
+          weaponClass: weaponClass || ''
         };
 
         if (item.itemHash === 2809229973) { // Necrochasm
@@ -429,7 +434,7 @@
         var talents = talentDefs.data[item.talentGridHash];
 
         var ascendNode = (talents) ? _.filter(talents.nodes, function(node) {
-          return _.some(node.steps, function(step) { return step.nodeStepName === 'Ascend' });
+          return _.some(node.steps, function(step) { return step.nodeStepName === 'Ascend'; });
         }) : undefined;
 
 
@@ -525,16 +530,22 @@
         return null;
       }
 
+      // Used to find a "weaponClass" type to send back
+      var typeObj = {
+        general: '',
+        weaponClass: type.toLowerCase().replace(/\s/g, '')
+      };
+
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
-        return 'Primary';
+        typeObj.general = 'Primary';
       if (["Sniper Rifle", "Shotgun", "Fusion Rifle", "Sidearm", "Special Weapon Engram"].indexOf(type) != -1) {
         // detect special case items that are actually primary weapons.
         if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
-          return 'Primary';
-        return 'Special';
+          typeObj.general = 'Primary';
+        typeObj.general = 'Special';
       }
       if (["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
-        return 'Heavy';
+        typeObj.general = 'Heavy';
       if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
         return 'ClassItem';
       if (["Gauntlet Engram"].indexOf(type) != -1)
@@ -549,6 +560,10 @@
         if (["Vanguard Marks", "Crucible Marks"].indexOf(name) != -1)
           return '';
         return 'Material';
+      }
+
+      if(typeObj.general !== '') {
+        return typeObj;
       }
 
       if (["Public Event Completed"].indexOf(name) != -1) {

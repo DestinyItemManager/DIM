@@ -110,7 +110,8 @@
       'ascended':     ['ascended', 'assended', 'asscended'],
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
-      'stackable':    ['stackable']
+      'stackable':    ['stackable'],
+      'weaponclass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"]
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -207,6 +208,9 @@
       },
       'stackable': function(predicate, item) {
         return item.maxStackSize > 1;
+      },
+      'weaponclass': function(predicate, item) {
+        return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
       }
     };
   }
