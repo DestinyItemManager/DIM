@@ -109,7 +109,8 @@
       'unascended':   ['unascended', 'unassended', 'unasscended'],
       'ascended':     ['ascended', 'assended', 'asscended'],
       'locked':       ['locked'],
-      'unlocked':     ['unlocked']
+      'unlocked':     ['unlocked'],
+      'stackable':    ['stackable']
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -203,6 +204,9 @@
         }
 
         return (item.classType == value);
+      },
+      'stackable': function(predicate, item) {
+        return item.maxStackSize > 1;
       }
     };
   }
