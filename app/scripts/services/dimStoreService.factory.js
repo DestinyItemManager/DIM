@@ -270,6 +270,10 @@
           return;
         }
 
+        if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
+          return;
+        }
+
         // if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
         //   return;
         // }
@@ -525,6 +529,13 @@
     }
 
     function getItemType(type, name) {
+      if (_.isUndefined(type) || _.isUndefined(name)) {
+        return {
+          'general': 'General',
+          'weaponClass': 'General'
+        };
+      }
+
       //if(type.indexOf("Engram") != -1 || name.indexOf("Marks") != -1) {
       if (name.indexOf("Marks") != -1) {
         return null;
@@ -539,10 +550,12 @@
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
         typeObj.general = 'Primary';
       if (["Sniper Rifle", "Shotgun", "Fusion Rifle", "Sidearm", "Special Weapon Engram"].indexOf(type) != -1) {
-        // detect special case items that are actually primary weapons.
-        if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1)
-          typeObj.general = 'Primary';
         typeObj.general = 'Special';
+
+        // detect special case items that are actually primary weapons.
+        if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1) {
+          typeObj.general = 'Primary';
+        }
       }
       if (["Rocket Launcher", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
         typeObj.general = 'Heavy';
