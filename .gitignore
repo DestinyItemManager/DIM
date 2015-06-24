@@ -1,5 +1,7 @@
 app/vendor/
 dist/
+.settings/
+.idea/
 node_modules/
 build/common
 build/img

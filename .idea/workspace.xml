@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da5dc431-7604-45d5-8d3f-93f9b35873a9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/scripts/shell/dimAppCtrl.controller.js" afterPath="$PROJECT_DIR$/app/scripts/shell/dimAppCtrl.controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/scripts/shell/dimPlatformChoice.directive.js" afterPath="$PROJECT_DIR$/app/scripts/shell/dimPlatformChoice.directive.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
     </list>
     <ignored path="DIM.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,15 +35,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dimPlatformChoice.directive.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="dimPlatformChoice.directive.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/scripts/shell/dimPlatformChoice.directive.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.74418604" vertical-offset="464" max-vertical-offset="1152">
+            <state vertical-scroll-proportion="0.0" vertical-offset="464" max-vertical-offset="1152">
               <caret line="61" column="10" selection-start-line="61" selection-start-column="10" selection-end-line="61" selection-end-column="10" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <marker date="1435112498110" expanded="false" signature="553:568" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.086330935" vertical-offset="0" max-vertical-offset="556">
+              <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -64,6 +73,7 @@
       <list>
         <option value="$PROJECT_DIR$/app/scripts/shell/dimAppCtrl.controller.js" />
         <option value="$PROJECT_DIR$/app/scripts/shell/dimPlatformChoice.directive.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -118,60 +128,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DIM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="shell" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -248,12 +204,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/scripts/shell/dimPlatformChoice.directive.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74418604" vertical-offset="464" max-vertical-offset="1152">
+        <state vertical-scroll-proportion="0.0" vertical-offset="464" max-vertical-offset="1152">
           <caret line="61" column="10" selection-start-line="61" selection-start-column="10" selection-end-line="61" selection-end-column="10" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <marker date="1435112498110" expanded="false" signature="553:568" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.086330935" vertical-offset="0" max-vertical-offset="556">
+          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+          <folding />
         </state>
       </provider>
     </entry>
