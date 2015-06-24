@@ -57,9 +57,9 @@
       if (_.isNull(args.platform)) {
         dimState.active = vm.active = null;
       } else {
-        if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
+        //if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
           dimState.active = vm.active = args.platform;
-        }
+        //}
       }
     });
   }
