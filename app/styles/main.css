@@ -17,6 +17,9 @@
 
 div[dim-search-filter] input {
   width: 300px;
+  -webkit-appearance: none;
+  border: 1px solid #999;
+  padding: 3px 2px;
 }
 
 dt {
