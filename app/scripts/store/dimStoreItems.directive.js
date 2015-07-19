@@ -25,12 +25,16 @@
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
-        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '        <div class="col-xs-3">',
+        '         <div class="col-xs-12" ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type }}">',
+        '           <div class="col-xs-12" ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '         </div>',
         '        </div>',
-        '        <div ng-class="vm.styles[type].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
-        '          <div class="item-target"></div>',
+        '        <div class="col-xs-9">',
+        '         <div class="col-xs-12" ng-class="vm.styles[type].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
+        '           <div class="col-xs-4" ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '           <div class="item-target"></div>',
+        '         </div>',
         '        </div>',
         '      </div>',
         '    </div>',
@@ -74,7 +78,7 @@
       'Consumable',
       'Material',
       'Messages',
-      'Lost Items'
+      'Lost-Items'
     ];
     vm.orderedTypes = {};
 
@@ -117,7 +121,7 @@
       ],
       Postmaster: [
         'Messages',
-        'Lost Items'
+        'Lost-Items'
       ]
     };
 
@@ -192,7 +196,7 @@
         equipped: '',
         unequipped: 'unequipped equippable',
       },
-      'Lost Items': {
+      'Lost-Items': {
         equipped: '',
         unequipped: 'unequipped equippable',
       }

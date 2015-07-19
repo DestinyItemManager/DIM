@@ -18,12 +18,12 @@
       replace: true,
       template: [
         '<div class="loadout-popup-content">',
-        '  <div class="loadout-set" ng-click="vm.newLoadout($event)">+ Create Loadout</div>',
+        '  <div class="loadout-set" ng-click="vm.newLoadout($event)"><i class="fa fa-plus"></i><span>Create Loadout</span></div>',
         '  <div class="loadout-list">',
         '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
         '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
-        '      <span class="button-delete" ng-click="vm.deleteLoadout(loadout, $event)">Delete</span>',
-        '      <span class="button-edit" ng-click="vm.editLoadout(loadout, $event)">Edit</span>',
+        '      <span class="button-delete" ng-click="vm.deleteLoadout(loadout, $event)"><i class="fa fa-trash-o"></i></span>',
+        '      <span class="button-edit" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </div>',
         '  </div>',
         '</div>'
