@@ -1,3 +1,8 @@
+# THIS IS NOT THE OFFICIAL DIM
+this is just a development copy of it. so you can not download it in the chrome store.
+to use it locally to try it out you can download the zip file (right sidebar), unzip it somewhere locally and add it in chrome like this:
+chrome://extensions/ > check Developer mode > "Load unzipped extension" > point to the downloaded zip files "app" folder.
+
 # Destiny Item Manager
 Destiny Item Manager (DIM) lets players the game [Destiny](http://destinythegame.com/) to easily move items between their Guardians and the Vault. The goals of DIM is to let players equip their guardians quickly.  It does this by removing manual steps needed when transfering items and with our Loadouts feature.  
 
