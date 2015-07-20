@@ -258,11 +258,15 @@
       }
 
       return $q.when((function() {
-        return _.map(response.data.Response.data.characters, function(character) {
+        var characters = _.map(response.data.Response.data.characters, function(character) {
           return {
             'id': character.characterBase.characterId,
             'base': character
           };
+        });
+
+        return _.sortBy(characters, function(character) {
+          return character.id;
         });
       })());
     }
