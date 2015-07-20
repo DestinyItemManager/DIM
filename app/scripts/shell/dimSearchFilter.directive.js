@@ -71,6 +71,8 @@
               special = 'locked';
             } else if (['unlocked'].indexOf(filterResult) >= 0) {
               special = 'unlocked';
+            } else if (['rifle', 'scout rifle', 'scout', 'pulse rifle', 'pulse', 'auto rifle', 'auto', 'hand cannon', 'hand', 'cannon', 'shotgun', 'shot', 'sidearm', 'sniper rifle', 'sniper', 'fusion rifle', 'fusion', 'machine gun', 'machine', 'rocket launcher', 'rocket', 'launcher']) {
+              special = 'itemtype';
             }
 
             tempFns.push(filterGenerator(filterResult, special));
@@ -235,6 +237,13 @@
               }
 
               return (item.classType !== value);
+            };
+            break;
+          }
+        case 'itemtype':
+          {
+            result = function(p, item) {
+              return (item.itemTypeName.toLowerCase().indexOf(p) === -1);
             };
             break;
           }
