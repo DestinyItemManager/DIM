@@ -23,5 +23,8 @@
     "jquery": "~2",
     "verge": "https://github.com/ryanve/verge.git",
     "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6"
+  },
+  "resolutions": {
+    "angular": "1.4.x"
   }
 }
