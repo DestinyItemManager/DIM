@@ -106,19 +106,19 @@
       }
     };
 
-//    vm.startAutoRefreshTimer = function () {
-//      var secondsToWait = 60;
-//
-//      $rootScope.autoRefreshTimer = $interval(function () {
-//        //Only Refresh If We're Not Already Doing Something
-//        //And We're Not Inactive
-//        if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
-//          vm.refresh();
-//        }
-//      }, secondsToWait * 1000);
-//    };
+    vm.startAutoRefreshTimer = function () {
+      var secondsToWait = 360;
 
-    //vm.startAutoRefreshTimer();
+      $rootScope.autoRefreshTimer = $interval(function () {
+       //Only Refresh If We're Not Already Doing Something
+       //And We're Not Inactive
+       if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
+         vm.refresh();
+       }
+      }, secondsToWait * 1000);
+    };
+
+    vm.startAutoRefreshTimer();
   }
 })();
 

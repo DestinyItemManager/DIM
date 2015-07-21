@@ -13,7 +13,7 @@
       bindToController: true,
       scope: {},
       template: [
-        '<div ng-repeat="store in vm.stores" class="storage" ng-class="{ guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '<div ng-repeat="store in vm.stores track by store.id" class="storage" ng-class="{ guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
         '  <div dim-store-heading store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
