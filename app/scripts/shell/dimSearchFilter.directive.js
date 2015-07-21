@@ -18,13 +18,23 @@
     };
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', '$timeout'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', '$timeout', '$interval'];
 
-  function SearchFilterCtrl($scope, dimStoreService, $timeout) {
+  function SearchFilterCtrl($scope, dimStoreService, $timeout, $interval) {
     var vm = this;
 
     $scope.$on('dim-stores-updated', function(arg) {
       vm.filter();
+    });
+
+    $scope.$on('dim-active-platform-updated', function(event, args) {
+      $scope.filterTimer = $interval(function () {
+        // Wait until the interface has finished loading.
+        if (!$scope.loadingTracker.active() && !$scope.isUserInactive()) {
+          vm.filter();
+          $interval.cancel($scope.filterTimer);
+        }
+      }, 300);
     });
 
     vm.filter = function() {
