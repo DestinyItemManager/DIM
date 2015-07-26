@@ -73,6 +73,8 @@
       'Vehicle',
       'Consumable',
       'Material',
+      'Missions',
+      'Bounties',
       'Messages',
       'Lost Items'
     ];
@@ -113,7 +115,9 @@
         'Armor',
         'Ghost',
         'Ship',
-        'Vehicle'
+        'Vehicle',
+        'Missions',
+        'Bounties'
       ],
       Postmaster: [
         'Messages',
