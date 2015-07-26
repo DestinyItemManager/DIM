@@ -228,7 +228,9 @@
         .then(function(membershipId) {
           return getBnetCharactersRequest(data.token, platform, membershipId);
         })
-        .then($http)
+        .then(function(request) {
+          return $http(request);
+        })
         .then(networkError)
         .then(throttleCheck)
         .then(processBnetCharactersRequest, rejectBnetCharactersRequest);
@@ -245,7 +247,10 @@
             'X-API-Key': apiKey,
             'x-csrf': token
           },
-          withCredentials: true
+          withCredentials: true,
+          transformResponse: function(data, headers) {
+            return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
+          }
         };
       })());
     }

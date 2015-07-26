@@ -87,6 +87,8 @@
       setHeight('.sub-section.sort-vehicle');
       setHeight('.sub-section.sort-consumable');
       setHeight('.sub-section.sort-material');
+      setHeight('.sub-section.sort-missions');
+      setHeight('.sub-section.sort-bounties');
       setHeight('.weapons');
       setHeight('.armor');
       setHeight('.general');
@@ -574,6 +576,25 @@
           return '';
         return 'Material';
       }
+      if (["Commendation", "Trials of Osiris"].indexOf(type) != -1) {
+        if (name.indexOf("Redeemed") != -1) {
+          return null;
+        }
+
+        return 'Missions';
+      }
+
+      if (type.indexOf(" Bounty") != -1) {
+        return 'Bounties';
+      }
+
+      if (type.indexOf("Quest") != -1) {
+        return 'Bounties';
+      }
+
+      if (type.indexOf("Package") != -1) {
+        return 'Messages';
+      }
 
       if(typeObj.general !== '') {
         return typeObj;
@@ -583,7 +604,11 @@
         return "Messages";
       }
 
-      if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material"].indexOf(type) != -1)
+      if (["Vehicle Upgrade"].indexOf(type) != -1) {
+        return "Consumable";
+      }
+
+      if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Ship Schematics"].indexOf(type) != -1)
         return type.split(' ')[0];
 
       return null;
