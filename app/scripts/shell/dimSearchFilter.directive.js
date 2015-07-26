@@ -13,7 +13,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input placeholder="filter items or is:arc" type="search" name="filter" ng-model="vm.search" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
+        '<input id="filter-input" placeholder="filter items or is:arc" type="search" name="filter" ng-model="search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
       ].join('')
     };
   }
@@ -22,9 +22,27 @@
 
   function SearchFilterCtrl($scope, dimStoreService, $timeout, $interval) {
     var vm = this;
+    var filterInputSelector = '#filter-input';
+
+    $scope.search = {
+      'query': ""
+    };
 
     $scope.$on('dim-stores-updated', function(arg) {
       vm.filter();
+    });
+
+    $scope.$on('dim-focus-filter-input', function(arg) {
+      $scope.focusFilterInput();
+    });
+
+    $scope.$on('dim-escape-filter-input', function(arg) {
+      $scope.blurFilterInputIfEmpty();
+      $scope.clearFilter();
+    });
+
+    $scope.$on('dim-clear-filter-input', function(arg) {
+      $scope.clearFilter();
     });
 
     $scope.$on('dim-active-platform-updated', function(event, args) {
@@ -37,9 +55,27 @@
       }, 300);
     });
 
-    vm.filter = function() {
+    $scope.blurFilterInputIfEmpty = function () {
+      if ($scope.search.query === "") {
+        $scope.blurFilterInput();
+      }
+    };
 
-      var filterValue = (vm.search) ? vm.search.toLowerCase() : '';
+    $scope.focusFilterInput = function () {
+      $(filterInputSelector).focus();
+    };
+
+    $scope.blurFilterInput = function () {
+      $(filterInputSelector).blur();
+    };
+
+    $scope.clearFilter = function () {
+      $scope.search.query = "";
+      vm.filter();
+    };
+
+    vm.filter = function() {
+      var filterValue = ($scope.search.query) ? $scope.search.query.toLowerCase() : '';
       var filterResults;
       var filterResult = '';
       var filterFn;

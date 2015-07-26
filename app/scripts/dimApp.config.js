@@ -69,6 +69,12 @@
 
   angular.module('dimApp')
     .config([
+      'hotkeysProvider',
+      function(hotkeysProvider) {
+        hotkeysProvider.includeCheatSheet = false;
+      }
+    ])
+    .config([
       '$compileProvider',
       function($compileProvider) {
         var currentImgSrcSanitizationWhitelist = $compileProvider.imgSrcSanitizationWhitelist();
