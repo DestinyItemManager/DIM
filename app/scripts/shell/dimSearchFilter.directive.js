@@ -13,7 +13,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="filter items or is:arc" type="search" name="filter" ng-model="search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
+        '<input id="filter-input" placeholder="filter items or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
       ].join('')
     };
   }
@@ -24,7 +24,7 @@
     var vm = this;
     var filterInputSelector = '#filter-input';
 
-    $scope.search = {
+    vm.search = {
       'query': ""
     };
 
@@ -33,16 +33,16 @@
     });
 
     $scope.$on('dim-focus-filter-input', function(arg) {
-      $scope.focusFilterInput();
+      vm.focusFilterInput();
     });
 
     $scope.$on('dim-escape-filter-input', function(arg) {
-      $scope.blurFilterInputIfEmpty();
-      $scope.clearFilter();
+      vm.blurFilterInputIfEmpty();
+      vm.clearFilter();
     });
 
     $scope.$on('dim-clear-filter-input', function(arg) {
-      $scope.clearFilter();
+      vm.clearFilter();
     });
 
     $scope.$on('dim-active-platform-updated', function(event, args) {
@@ -55,27 +55,27 @@
       }, 300);
     });
 
-    $scope.blurFilterInputIfEmpty = function () {
-      if ($scope.search.query === "") {
-        $scope.blurFilterInput();
+    vm.blurFilterInputIfEmpty = function () {
+      if (vm.search.query === "") {
+        vm.blurFilterInput();
       }
     };
 
-    $scope.focusFilterInput = function () {
+    vm.focusFilterInput = function () {
       $(filterInputSelector).focus();
     };
 
-    $scope.blurFilterInput = function () {
+    vm.blurFilterInput = function () {
       $(filterInputSelector).blur();
     };
 
-    $scope.clearFilter = function () {
-      $scope.search.query = "";
+    vm.clearFilter = function () {
+      vm.search.query = "";
       vm.filter();
     };
 
     vm.filter = function() {
-      var filterValue = ($scope.search.query) ? $scope.search.query.toLowerCase() : '';
+      var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
       var filterResults;
       var filterResult = '';
       var filterFn;
