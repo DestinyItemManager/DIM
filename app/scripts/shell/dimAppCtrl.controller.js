@@ -3,13 +3,42 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', '$interval'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, $interval) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval) {
     var vm = this;
     var aboutResult = null;
+    var settingResult = null;
     var supportResult = null;
     var filterResult = null;
+
+    vm.settings = {
+      condensedItems: false,
+      characterOrder: 'mostRecent'
+    };
+
+    vm.showSetting = function(e) {
+      e.stopPropagation();
+
+      if (!_.isNull(settingResult)) {
+        settingResult.close();
+      } else {
+        ngDialog.closeAll();
+
+        settingResult = ngDialog.open({
+          template: 'views/setting.html',
+          overlay: false,
+          className: 'setting',
+          scope: $('body > div').scope()
+        });
+        $('body').addClass('setting');
+
+        settingResult.closePromise.then(function() {
+          settingResult = null;
+          $('body').removeClass('setting');
+        });
+      }
+    };
 
     vm.showAbout = function(e) {
       e.stopPropagation();
@@ -101,7 +130,7 @@
     };
 
     vm.closeLoadoutPopup = function closeLoadoutPopup() {
-      if (!_.isNull(aboutResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
+      if (!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
         ngDialog.closeAll();
       }
     };
@@ -119,6 +148,14 @@
     };
 
     vm.startAutoRefreshTimer();
+
+    $rootScope.$on('dim-settings-updated', function(event, arg) {
+      if (_.has(arg, 'characterOrder')) {
+        vm.refresh();
+      } else if (_.has(arg, 'condensed')) {
+        vm.refresh();
+      }
+    });
   }
 })();
 
