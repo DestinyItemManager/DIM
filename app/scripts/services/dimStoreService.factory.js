@@ -94,8 +94,8 @@
       setHeight('.general');
     }
 
-    function getStores(getFromBungie) {
-      if (!getFromBungie) {
+    function getStores(getFromBungie, withOrder) {
+      if (!getFromBungie && !!withOrder) {
         return settings.getSetting('characterOrder')
           .then(function(characterOrder) {
             if (characterOrder === 'mostRecent') {
@@ -104,7 +104,8 @@
               return _.sortBy(_stores, 'id');
             }
           });
-        //return _stores;
+      } else if (!getFromBungie && _.isUndefined(withOrder)) {
+        return _stores;
       } else {
         var promise = dimBungieService.getStores(dimPlatformService.getActive())
           .then(function(stores) {
