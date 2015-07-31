@@ -3,7 +3,7 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', hotkeys];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys'];
 
   function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys) {
     var vm = this;
