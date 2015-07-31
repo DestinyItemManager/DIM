@@ -29,6 +29,13 @@
       }
     });
 
+    hotkeys.add({
+      combo: ['r'],
+      callback: function(event, hotkey) {
+        vm.refresh();
+      }
+    });
+
     vm.showAbout = function(e) {
       e.stopPropagation();
 
