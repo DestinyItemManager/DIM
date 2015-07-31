@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -96,11 +96,20 @@
 
     function getStores(getFromBungie) {
       if (!getFromBungie) {
-        return _stores;
+        return settings.getSetting('characterOrder')
+          .then(function(characterOrder) {
+            if (characterOrder === 'mostRecent') {
+              return _.sortBy(_stores, 'lastPlayed').reverse();
+            } else {
+              return _.sortBy(_stores, 'id');
+            }
+          });
+        //return _stores;
       } else {
         var promise = dimBungieService.getStores(dimPlatformService.getActive())
           .then(function(stores) {
             _stores.splice(0);
+            var asyncItems = [];
 
             _.each(stores, function(raw) {
               var store;
@@ -109,6 +118,7 @@
               if (raw.id === 'vault') {
                 store = {
                   'id': 'vault',
+                  'lastPlayed': '2005-01-01T12:00:01Z',
                   'icon': '',
                   'items': [],
                   'bucketCounts': {},
@@ -149,6 +159,7 @@
                 store = {
                   id: raw.id,
                   icon: raw.character.base.emblemPath,
+                  lastPlayed: raw.character.base.characterBase.dateLastPlayed,
                   background: raw.character.base.backgroundPath,
                   level: raw.character.base.characterLevel,
                   class: getClass(raw.character.base.characterBase.classType),
@@ -206,40 +217,55 @@
 
               }
 
-              var i = getItems(store.id, items, raw.definitions);
+              var i = getItems(store.id, items, raw.definitions)
+                .then(function(items) {
+                  items = _.sortBy(items, function(item) {
+                    return item.name;
+                  });
 
-              i.then(function(items) {
-                items = _.sortBy(items, function(item) {
-                  return item.name;
+                  items = _.sortBy(items, function(item) {
+
+                    switch (item.tier) {
+                      case 'Exotic':
+                        return 0;
+                      case 'Legendary':
+                        return 1;
+                      case 'Rare':
+                        return 2;
+                      case 'Uncommon':
+                        return 3;
+                      case 'Common':
+                        return 4;
+                      default:
+                        return 5;
+                    }
+                  });
+
+                  store.items = items;
+
+                  _stores.push(store);
+
+                  return store;
                 });
 
-                items = _.sortBy(items, function(item) {
-
-                  switch (item.tier) {
-                    case 'Exotic':
-                      return 0;
-                    case 'Legendary':
-                      return 1;
-                    case 'Rare':
-                      return 2;
-                    case 'Uncommon':
-                      return 3;
-                    case 'Common':
-                      return 4;
-                    default:
-                      return 5;
-                  }
-                });
-
-                store.items = items;
-
-                _stores.push(store);
-
-                return store;
-              });
+              asyncItems.push(i);
             });
 
-            return $q.when(_stores);
+            return $q.all(asyncItems);
+          })
+          .then(function() {
+            var stores = _stores;
+
+            return $q(function(resolve, reject) {
+              settings.getSetting('characterOrder')
+                .then(function(characterOrder) {
+                  if (characterOrder === 'mostRecent') {
+                    resolve(_.sortBy(stores, 'lastPlayed').reverse());
+                  } else {
+                    resolve(_.sortBy(stores, 'id'));
+                  }
+                });
+            });
           })
           .then(function(stores) {
             $rootScope.$broadcast('dim-stores-updated', {
@@ -440,7 +466,9 @@
         var talents = talentDefs.data[item.talentGridHash];
 
         var ascendNode = (talents) ? _.filter(talents.nodes, function(node) {
-          return _.some(node.steps, function(step) { return step.nodeStepName === 'Ascend'; });
+          return _.some(node.steps, function(step) {
+            return step.nodeStepName === 'Ascend';
+          });
         }) : undefined;
 
 
@@ -457,7 +485,9 @@
 
         if (!_.isUndefined(ascendNode) && _.size(ascendNode) > 0) {
           createdItem.hasAscendNode = true;
-          createdItem.ascended = _.filter(item.nodes, function(node) { return node.nodeHash === ascendNode[0].nodeHash; })[0].isActivated;
+          createdItem.ascended = _.filter(item.nodes, function(node) {
+            return node.nodeHash === ascendNode[0].nodeHash;
+          })[0].isActivated;
 
           if (!createdItem.ascended) {
             createdItem.complete = false;
@@ -596,7 +626,7 @@
         return 'Messages';
       }
 
-      if(typeObj.general !== '') {
+      if (typeObj.general !== '') {
         return typeObj;
       }
 

@@ -16,7 +16,7 @@
 }
 
 div[dim-search-filter] input {
-  width: 300px;
+  width: 250px;
 }
 
 dt {
@@ -34,6 +34,7 @@ body > div, #header {
 }
 
 body.about .about,
+body.setting .setting,
 body.support .support,
 body.fitlers .fitlers {
   display: inline-block;
@@ -44,11 +45,16 @@ body.fitlers .fitlers {
   width: 123px;
   background-color: rgba(195, 188, 180, .7);
   padding-left: 4px;
-  height: 39px;
+  height: 38px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+
+.condensed .button-name {
+  width: 178px;
+}
+
 .button-delete, .button-edit {
   text-align: center;
 }
@@ -104,6 +110,7 @@ div[dim-search-filter] {
   border: 5px solid #f5dc56;
 }
 .about.ngdialog,
+.setting.ngdialog,
 .filters.ngdialog,
 .support.ngdialog {
   position: fixed;
@@ -121,6 +128,7 @@ div[dim-search-filter] {
 }
 body.filters.ngdialog-open,
 body.support.ngdialog-open,
+body.setting.ngdialog-open,
 body.about.ngdialog-open {
   overflow: hidden !important;
 }
@@ -130,6 +138,7 @@ a {
   font-size: 13px;
 }
 .about.ngdialog .ngdialog-content,
+.setting.ngdialog .ngdialog-content,
 .filters.ngdialog .ngdialog-content,
 .support.ngdialog .ngdialog-content {
   padding: 10px 20px;
@@ -141,6 +150,7 @@ a {
   bottom: 5px;
 }
 .about.ngdialog:before,
+.setting.ngdialog:before,
 .filters.ngdialog:before,
 .support.ngdialog:before {
   content: " ";
@@ -153,6 +163,7 @@ a {
   border: 5px solid #f5dc56;
 }
 .about.ngdialog .ngdialog-close,
+.setting.ngdialog .ngdialog-close,
 .filters.ngdialog .ngdialog-close,
 .support.ngdialog .ngdialog-close {
   position: absolute;
@@ -365,8 +376,15 @@ img.void {
   vertical-align: top;
   display: inline-block;
 }
+.storage.condensed {
+  width: 278px;
+}
+
 .storage.vault {
   width: 209px;
+}
+.storage.vault.condensed {
+  width: 310px;
 }
 .items.vault {
   background-color: rgba(245, 245, 245, 0.25);
@@ -384,8 +402,14 @@ img.void {
 .unequippable {
   width: 220px;
 }
+.condensed .unequippable {
+  width: 220px;
+}
 .vault .unequippable {
   width: 208px;
+}
+.vault.condensed .unequippable {
+  width: 310px;
 }
 .sub-section {
   clear: both;
@@ -397,8 +421,14 @@ img.void {
 .guardian .unequipped {
   width: 156px;
 }
+.guardian.condensed .unequipped {
+  width: 208px;
+}
 .vault .unequipped {
   width: 208px;
+}
+.vault.condensed .unequipped {
+  width: 310px;
 }
 .unequipped.on-drag-enter, .equipped.on-drag-enter {
   box-shadow: 0 0 15px 2px rgba(170, 170, 170, .5);
@@ -542,10 +572,16 @@ img.void {
   text-decoration: none;
   background-size: cover;
 }
+.condensed .character-box {
+  width: 194px;
+}
 .character-box.vault-box {
   padding: 0 1em;
   width: 208px;
   box-sizing: border-box;
+}
+.condensed .character-box.vault-box {
+  width: 305px;
 }
 .character-box .emblem {
   position: absolute;
@@ -865,6 +901,9 @@ ialog-open {
   padding: 0;
   border-width: 0
 }
+.condensed .character .ngdialog {
+  width: 278px;
+}
 .character div[loadout-id] {
   top: 0;
 }
@@ -1149,8 +1188,9 @@ button.toast-close-button {
 
 /** Issue #116, make Mats and Consumables 4-column **/
 .section.general .sort-consumable .unequipped,
-.section.general .sort-material .unequipped {
-  width: 208px;
+.section.general .sort-material .unequipped,
+.section.postmaster .unequipped {
+    width: 260px !important;;
 }
 
 .something-is-sticky .sticky-header-background {
