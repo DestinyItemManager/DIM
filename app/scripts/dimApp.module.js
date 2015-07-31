@@ -10,6 +10,7 @@
     'chromeStorage',
     'angularUUID2',
     'toaster',
-    'ajoslin.promise-tracker'
+    'ajoslin.promise-tracker',
+    'cfp.hotkeys'
   ]);
 })();

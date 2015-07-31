@@ -22,7 +22,8 @@
     "angular-promise-tracker": "~2.1.0",
     "jquery": "~2",
     "verge": "https://github.com/ryanve/verge.git",
-    "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6"
+    "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5"
   },
   "resolutions": {
     "angular": "1.4.x"

@@ -3,14 +3,39 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
     var supportResult = null;
-    var filterResult = null;
+    var filterResult  = null;
+
+    hotkeys.add({
+      combo: ['f'],
+      callback: function(event, hotkey) {
+        $rootScope.$broadcast('dim-focus-filter-input');
+
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
+
+    hotkeys.add({
+      combo: ['esc'],
+      allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+      callback: function(event, hotkey) {
+        $rootScope.$broadcast('dim-escape-filter-input');
+      }
+    });
+
+    hotkeys.add({
+      combo: ['r'],
+      callback: function(event, hotkey) {
+        vm.refresh();
+      }
+    });
 
     vm.settings = {
       condensedItems: false,
