@@ -1190,7 +1190,14 @@ button.toast-close-button {
 .section.general .sort-consumable .unequipped,
 .section.general .sort-material .unequipped,
 .section.postmaster .unequipped {
-    width: 260px !important;;
+    width: 208px !important;
+}
+
+/** Issue #116, make Mats and Consumables 4-column **/
+.condensed .section.general .sort-consumable .unequipped,
+.condensed .section.general .sort-material .unequipped,
+.condensed .section.postmaster .unequipped {
+    width: 260px !important;
 }
 
 .something-is-sticky .sticky-header-background {
