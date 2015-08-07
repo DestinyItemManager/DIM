@@ -105,7 +105,10 @@
     vm.moveToEquip = moveToEquipFn;
     vm.moveToGuardian = moveToGuardianFn;
 
-    vm.stores = dimStoreService.getStores();
+    dimStoreService.getStores(false, true)
+      .then(function(stores) {
+        vm.stores = stores;
+      });
 
     vm.canShowItem = function canShowItem(item, itemStore, buttonStore) {
       var result = false;

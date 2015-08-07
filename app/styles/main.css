@@ -1,3 +1,8 @@
+.pull-right {
+  float: right;
+  text-align: right;
+}
+
 .item img {
   width: 44px;
   height: 44px;
@@ -719,6 +724,44 @@ img.void {
 .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
 }
+
+.item-details .stat-box-outer, .item-details .stat-box-inner {
+  display: inline-block;
+  height: 18px;
+  /*margin: 1px;*/
+  width: 200px;
+  vertical-align: middle;
+  background-color: rgba(209, 219, 215, .1);
+}
+.item-details .stat-box-inner {
+  background-color: white;
+  color: black;
+  padding-left: 2px;
+}
+.item-details .stat-box-text {
+  display: inline-block;
+  width: 75px;
+  text-align: right;
+  padding-right: 5px;
+}
+.item-details.stat-box-row {
+  padding-bottom: 3px;
+}
+.item-details .item-perks, .item-details .item-stats{
+  display: table;
+  margin: 0 auto;
+}
+.item-details .item-perks div { 
+  display: inline-block; 
+  background-color: #4887ba; 
+  border-radius: 50%;
+  margin: 4px;
+  background-size: 36px;
+  background-repeat: no-repeat;
+  background-position: 4px;
+  width: 44px;
+  height: 44px;
+}
 .move-popup a {
   color: #000;
 }
@@ -1190,7 +1233,14 @@ button.toast-close-button {
 .section.general .sort-consumable .unequipped,
 .section.general .sort-material .unequipped,
 .section.postmaster .unequipped {
-    width: 260px !important;;
+    width: 208px !important;
+}
+
+/** Issue #116, make Mats and Consumables 4-column **/
+.condensed .section.general .sort-consumable .unequipped,
+.condensed .section.general .sort-material .unequipped,
+.condensed .section.postmaster .unequipped {
+    width: 260px !important;
 }
 
 .something-is-sticky .sticky-header-background {
