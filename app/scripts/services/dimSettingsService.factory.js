@@ -18,6 +18,7 @@
 
     function loadSettings() {
       settingState = {
+        itemDetails: false,
         condensed: false,
         characterOrder: 'mostRecent'
         //characterOrder: 'fixed'

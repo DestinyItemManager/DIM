@@ -38,6 +38,7 @@
     });
 
     vm.settings = {
+      itemDetails: false,
       condensedItems: false,
       characterOrder: 'mostRecent'
     };
@@ -178,6 +179,8 @@
       if (_.has(arg, 'characterOrder')) {
         vm.refresh();
       } else if (_.has(arg, 'condensed')) {
+        vm.refresh();
+      } else if (_.has(arg, 'itemDetails')) {
         vm.refresh();
       }
     });
