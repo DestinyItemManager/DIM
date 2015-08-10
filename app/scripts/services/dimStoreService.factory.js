@@ -427,6 +427,7 @@
           sort: itemSort,
           tier: itemDef.tierTypeName,
           name: itemDef.itemName,
+          description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
           icon: itemDef.icon,
           inHoW: _.contains(how, itemDef.itemHash),
           notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
