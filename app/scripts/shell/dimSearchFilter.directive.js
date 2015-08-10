@@ -113,13 +113,9 @@
       filterFn = function(item) {
         var checks = 0;
         _.each(filters, function(filter){
-          if(item.hasOwnProperty([filter.predicate])){
-            if(item[filter.predicate]){
-              item[filter.predicate].toLowerCase() === filter.value ? checks++ : null;
-            }
-          }
+          filterFns[filter.predicate](filter.value, item) ? checks++ : null;
         });
-        return checks === filters.length ? true : false;
+        return checks === filters.length;
       };
 
       _.each(dimStoreService.getStores(), function(store) {
