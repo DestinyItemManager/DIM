@@ -121,7 +121,7 @@
       _.each(dimStoreService.getStores(), function(store) {
         _.chain(store.items)
           .each(function(item) {
-            filters.length > 0 ? item.visible = filterFn(item) : item.visible = true;
+              item.visible = filterFn(item);
           });
       });
 
