@@ -81,6 +81,7 @@
       var filterFn;
       var tempFns = [];
       var special = filterValue.indexOf('is:') >= 0;
+      var filters = [];
 
       if (special) {
         filterResults = filterValue.split('is:');
@@ -101,7 +102,7 @@
                 }
               }
             }
-
+            filters.push({predicate: special, value: filterResult});
             tempFns.push(filterGenerator(filterResult, special));
           }
         });
@@ -110,15 +111,17 @@
       }
 
       filterFn = function(item) {
-        return (_.reduce(tempFns, function(memo, fn) {
-          return memo || fn(item);
-        }, false));
+        var checks = 0;
+        _.each(filters, function(filter){
+          filterFns[filter.predicate](filter.value, item) ? checks++ : null;
+        });
+        return checks === filters.length;
       };
 
       _.each(dimStoreService.getStores(), function(store) {
         _.chain(store.items)
           .each(function(item) {
-            item.visible = filterFn(item);
+            filters.length > 0 ? item.visible = filterFn(item) : item.visible = true;
           });
       });
 
@@ -142,7 +145,7 @@
      * values that will set the left-hand to the "match."
      */
     var filterTrans = {
-      'elemental':    ['arc', 'solar', 'void', 'kinetic'],
+      'dmg':          ['arc', 'solar', 'void', 'kinetic'],
       'type':         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem'],
       'tier':         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
       'incomplete':   ['incomplete'],
@@ -157,7 +160,7 @@
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
       'stackable':    ['stackable'],
-      'weaponclass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"]
+      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"]
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -176,7 +179,7 @@
      * @return {Boolean} Returns false for a match, true for a non-match (@TODO make this less confusing)
      */
     var filterFns = {
-      'elemental': function(predicate, item) {
+      'dmg': function(predicate, item) {
         return (item.dmg === predicate);
       },
       'type': function(predicate, item) {
@@ -255,7 +258,7 @@
       'stackable': function(predicate, item) {
         return item.maxStackSize > 1;
       },
-      'weaponclass': function(predicate, item) {
+      'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
       }
     };
