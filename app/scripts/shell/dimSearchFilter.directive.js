@@ -76,39 +76,30 @@
 
     vm.filter = function() {
       var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
-      var filterResults;
-      var filterResult = '';
+      var searchTerms = filterValue.split(" ");
+      var filter, predicate = '';
       var filterFn;
-      var tempFns = [];
-      var special = filterValue.indexOf('is:') >= 0;
       var filters = [];
 
-      if (special) {
-        filterResults = filterValue.split('is:');
-
-        _.each(filterResults, function(filterResult) {
-          filterResult = filterResult.trim();
-
-          if (filterResult !== '') {
-
-            if(_cachedFilters[filterResult]) {
-              special = _cachedFilters[filterResult];
-            } else {
-              for(var key in filterTrans) {
-                if(filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filterResult)) {
-                  special = key;
-                  _cachedFilters[filterResult] = key;
-                  break;
-                }
+      _.each(searchTerms, function(term){
+        if(term.indexOf('is:') >=0) {
+          filter = term.replace('is:', '');
+          if(_cachedFilters[filter]) {
+            predicate = _cachedFilters[filter];
+          } else {
+            for(var key in filterTrans) {
+              if(filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filter)) {
+                predicate = key;
+                _cachedFilters[filter] = key;
+                break;
               }
             }
-            filters.push({predicate: special, value: filterResult});
-            tempFns.push(filterGenerator(filterResult, special));
           }
-        });
-      } else {
-        tempFns.push(filterGenerator(filterValue, ''));
-      }
+          filters.push({predicate: predicate, value: filter});
+        } else {
+          filters.push({predicate: "keyword", value: term});
+        }
+      });
 
       filterFn = function(item) {
         var checks = 0;
@@ -121,23 +112,11 @@
       _.each(dimStoreService.getStores(), function(store) {
         _.chain(store.items)
           .each(function(item) {
-              item.visible = filterFn(item);
+              filters.length > 0 ? item.visible = filterFn(item) : item.visible = true;
           });
       });
 
       $timeout(dimStoreService.setHeights, 32);
-    };
-
-    var filterGenerator = function(predicate, switchParam) {
-      var result = function(predicate, item) {
-        return !!~item.name.toLowerCase().indexOf(predicate);
-      };
-
-      if(filterFns.hasOwnProperty(switchParam)) {
-        result = filterFns[switchParam];
-      }
-
-      return result.bind(null, predicate);
     };
 
     /**
@@ -260,6 +239,9 @@
       },
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
+      },
+      'keyword': function(predicate, item){
+        return !!~item.name.toLowerCase().indexOf(predicate);
       }
     };
   }
