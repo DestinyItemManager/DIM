@@ -20,7 +20,7 @@
         'item': '=itemData'
       },
       template: [
-        '<div ui-draggable="{{ (vm.item.type !== \'Lost Items\') && (vm.item.type !== \'Messages\')  }}" id="item-{{:: $id }}" drag-channel="{{ vm.item.type }}" title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" drag="\'item-\' + $id" class="item" ng-class="{ \'search-hidden\': !vm.item.visible, \'complete\': vm.item.complete }">',
+        '<div ui-draggable="{{ (vm.item.type !== \'Lost Items\') && (vm.item.type !== \'Messages\')  }}" id="item-{{:: $id }}" drag-channel="{{ vm.item.type }}" title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" drag="\'item-\' + $id" class="item" ng-class="{ \'search-hidden\': !vm.item.visible, \'search-item-hidden\': vm.item.visible === false && vm.hideFilteredItems === true, \'complete\': vm.item.complete }">',
         '  <div ui-draggable="false" class="img" ng-class="{ \'how\': vm.item.inHoW }" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="counter ng-binding ng-scope" ng-if="vm.item.type === \'Bounties\' && vm.item.hasXP">{{vm.item.xpComplete}}%</div>',
@@ -88,10 +88,24 @@
     }
   }
 
-  StoreItemCtrl.$inject = ['$rootScope'];
+  StoreItemCtrl.$inject = ['$rootScope', 'dimSettingsService'];
 
-  function StoreItemCtrl($rootScope) {
+  function StoreItemCtrl($rootScope, settings) {
     var vm = this;
+
+    vm.hideFilteredItems = false;
+
+    settings.getSetting('hideFilteredItems')
+      .then(function(hideFilteredItems) {
+        vm.hideFilteredItems = hideFilteredItems;
+      });
+
+
+    $rootScope.$on('dim-settings-updated', function(event, arg) {
+      if (_.has(arg, 'hideFilteredItems')) {
+        vm.hideFilteredItems = arg.hideFilteredItems;
+      }
+    });
 
     vm.itemClicked = function clicked(item) {
       $rootScope.$broadcast('dim-store-item-clicked', {
