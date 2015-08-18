@@ -23,7 +23,8 @@
     "jquery": "~2",
     "verge": "https://github.com/ryanve/verge.git",
     "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6",
-    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5"
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5",
+    "flexboxgrid": "~6.2.0"
   },
   "resolutions": {
     "angular": "1.4.x"
