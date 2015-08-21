@@ -22,6 +22,7 @@
             resolve(data["settings-v1.0"]);
           } else {
             resolve({
+              hideFilteredItems: false,
               condensed: false,
               characterOrder: 'mostRecent'
             });

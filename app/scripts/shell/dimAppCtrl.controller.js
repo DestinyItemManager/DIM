@@ -179,6 +179,8 @@
         vm.refresh();
       } else if (_.has(arg, 'condensed')) {
         vm.refresh();
+      } else if (_.has(arg, 'hideFilteredItems')) {
+        vm.refresh();
       }
     });
   }

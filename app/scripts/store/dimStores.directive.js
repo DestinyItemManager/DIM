@@ -31,7 +31,7 @@
 
     settings.getSetting('condensed')
       .then(function(condensed) {
-        vm.condensed = true;
+        vm.condensed = condensed;
       });
 
 
