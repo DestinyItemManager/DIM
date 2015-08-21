@@ -4,14 +4,24 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    cssmin: {
+      options: {
+        shorthandCompacting: false
+      },
+      target: {
+        files: {
+          'app/styles/main.css': 'app/styles/main.css'
+        }
+      }
+    },
     sass: {
         options: {
-            sourceMap: true
+          sourceMap: true
         },
         dist: {
-            files: {
-                'app/styles/main.css': 'app/styles/main.scss'
-            }
+          files: {
+            'app/styles/main.css': 'app/styles/main.scss'
+          }
         }
     },
     watch: {

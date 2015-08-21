@@ -4,13 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>DIM v3</title>
+  <title>DIM v4</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="stylesheet" href="styles/font-awesome.min.css">
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
@@ -21,16 +22,15 @@
         <span class="header-right">
           <div dim-platform-choice class="header-right"></div>
           <div dim-search-filter class="header-right"></div>
-          <div class="header-right"><span class="link" ng-click="app.showFilters($event)">Filters</span></div>
+          <div class="header-right">
+            <span ng-class="{spin: loadingTracker.active()}" class="link" ng-click="app.refresh($event)"><i class="fa fa-refresh"></i></span>
+            <span class="link" ng-click="app.showSetting($event)"><i class="fa fa-gear"></i></span>
+            <span class="link" ng-click="app.showFilters($event)"><i class="fa fa-filter"></i></span>
+          </div>
         </span>
-        <span>Destiny Item Manager v3</span>
+        <span class="logo"></span>
         <span class="link" ng-click="app.showAbout($event)">About</span>
-        <span class="link" ng-click="app.showSetting($event)">Settings</span>
         <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
-        <span class="link" ng-click="app.refresh($event)">Refresh</span>
-        <div class="my-super-awesome-loading-box" ng-show="loadingTracker.active()">
-          <img src="images/712.GIF" style="width: 22px !important; height: 22px !important;" alt="" />
-        </div>
       </div>
     </div>
     <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>

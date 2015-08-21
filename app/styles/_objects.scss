@@ -1,0 +1,108 @@
+/**
+    HTML Objects
+    Forms, Inputs, Fields, etc
+**/
+
+div[dim-search-filter] {
+    input {
+        width: 250px;
+    }
+}
+
+input, select, option {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/**
+    Icons
+**/
+
+.fa {
+    &:before {
+        font-size: 16px;
+    }
+}
+
+/**
+    Buttons
+**/
+
+.button-name {
+    float: left;
+    width: 123px;
+    background-color: rgba(195, 188, 180, .7);
+    padding-left: 4px;
+    height: 38px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
+
+.condensed .button-name {
+    width: 178px;
+}
+
+.button-delete, .button-edit {
+    text-align: center;
+}
+
+#faq-button {
+    display: inline-block;
+    background-color: #5b6e6c;
+    color: rgba(245, 245, 245, .6);
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    line-height: 14px!important;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 10px!important;
+
+    &:hover {
+        background-color: #628e89
+    }
+}
+
+/**
+    Loaders
+**/
+
+.sprite-spinner {
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    width: 22px;
+    height: 22px;
+}
+
+/**
+    Modals
+**/
+
+.modal-dialog {
+    position: fixed;
+    height: 50%;
+    width: 50%;
+    background-color: #333;
+    z-index: 10001;
+    margin: 0 auto;
+    top: 0;
+    top: 25%;
+    left: 25%;
+    color: #fff;
+    padding: 20px;
+    font-size: 13px;
+    border: 1px solid #333;
+
+    &:before {
+        content: " ";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 5px solid #f5dc56;
+    }
+}
