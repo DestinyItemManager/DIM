@@ -58,7 +58,7 @@
     vm.title = $sce.trustAsHtml(vm.item.name);
     vm.light = 0;
     vm.stats = [];
-    vm.itemDetails = true;
+    vm.itemDetails = false;
     settings.getSetting('itemDetails')
           .then(function(show) {
             vm.itemDetails = show;
