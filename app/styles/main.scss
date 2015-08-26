@@ -5,10 +5,14 @@ Created: Aug 18, 2015
 Modified: Aug 20, 2015
 */
 
+// Bootstrap Flex Support
+@import "bootstrap/bootstrap-flex";
+@import "bootstrap/glyphicons";
+
 // Import Partials
 @import "animation"; // css animation, keyframes
-@import "objects"; // Buttons, loaders, modals, dialogues, etc.
-@import "layout"; // Layout-centric stuff goes here
+@import "objects";   // Buttons, loaders, modals, dialogues, etc.
+@import "layout";    // Layout-centric stuff goes here
 
 // Header
 #header {

@@ -1,6 +1,6 @@
 /**
     HTML Objects
-    Forms, Inputs, Fields, etc
+    Forms, Inputs, Fields, Dropdowns, etc
 **/
 
 div[dim-search-filter] {
@@ -11,6 +11,17 @@ div[dim-search-filter] {
 
 input, select, option {
     font-family: 'Open Sans', sans-serif;
+}
+
+// Nav Dropdown
+nav {
+    .dropdown {
+        display: none;
+
+        @media all and (max-width: 480px) {
+            display: block;
+        }
+    }
 }
 
 /**
