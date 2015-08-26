@@ -8,6 +8,10 @@
   height: 44px;
 }
 
+.search-item-hidden {
+  display: none !important;
+}
+
 .img.how:before {
   content: '';
   display: block;

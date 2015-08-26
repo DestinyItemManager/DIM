@@ -22,10 +22,10 @@
         '  <span ng-show="vm.item.locked" class="locked"></span>',
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-show="vm.light > 0"> &#10022; {{ vm.light }}</span>',
-        '  <span ng-repeat="stat in vm.stats track by stat"> | {{ stat.label }} {{ stat.value }}</span>',
-        '  <span class="pull-right" ng-mouseover="itemdetails = true;" ng-show="!itemdetails">Show Details</span>',
+        '  <span ng-repeat="stat in vm.stats track by stat.label"> | {{ stat.label }} {{ stat.value }}</span>',
+        '  <span class="pull-right" ng-mouseover="vm.itemDetails = true;" ng-show="!vm.itemDetails">Show Details</span>',
         '</div>',
-        '<div class="item-details" ng-show="itemdetails">',
+        '<div class="item-details" ng-show="vm.itemDetails">',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
         '    <div class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
@@ -38,7 +38,6 @@
         '  <div class="item-perks">',
         '    <div ng-repeat="perk in vm.item.perks track by $index" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
         '  </div>',
-        '</div>',
         '</div>'
       ].join('')
     };
@@ -112,7 +111,7 @@
         vm.stats.push({
           'label': 'Atk:',
           'value': vm.item.primStat.value
-        });        
+        });
       }
     }
   }

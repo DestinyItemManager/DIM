@@ -5,6 +5,14 @@
     <table>
       <tr>
         <td>
+          <label for="condensedItems">Hide Filtered Items</label>
+        </td>
+        <td>
+          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('hideFilteredItems')"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="details">Always Show Item Details</label>
         </td>
         <td>

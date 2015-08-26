@@ -9,8 +9,6 @@
   function SettingsService($q, $rootScope, uuid2) {
     var settingState;
 
-    loadSettings();
-
     return {
       'getSetting': getSetting,
       'saveSetting': saveSetting
@@ -20,35 +18,62 @@
       settingState = {
         itemDetails: false,
         condensed: false,
-        characterOrder: 'mostRecent'
-        //characterOrder: 'fixed'
+        characterOrder: 'mostRecent',
+        itemDetails: false
       };
+
+      return $q(function(resolve, reject) {
+
+        function processStorageSettings(data) {
+          if (_.has(data, "settings-v1.0")) {
+            resolve(data["settings-v1.0"]);
+          } else {
+            resolve({
+              hideFilteredItems: false,
+              condensed: false,
+              characterOrder: 'mostRecent',
+              itemDetails: false
+            });
+          }
+        }
+
+        chrome.storage.sync.get(null, processStorageSettings);
+      });
     }
 
     function getSetting(key) {
-      return $q(function(resolve, reject) {
-        if (_.isUndefined(key)) {
-          resolve(settingState);
-        } else if (_.has(settingState, key)) {
-          resolve(_.propertyOf(settingState)(key));
-        } else {
-          reject([key, undefined]);
-        }
-      });
+      return loadSettings()
+        .then(function(settings) {
+          if (_.isUndefined(key)) {
+            return settings;
+          } else if (_.has(settings, key)) {
+            return _.propertyOf(settings)(key);
+          } else {
+            return $q.reject("The key is not defined in the settings.");
+          }
+        });
     }
 
     function saveSetting(key, value) {
-      return $q(function(resolve) {
-        settingState[key] = value;
+      return getSetting()
+        .then(function(settings) {
+          settings[key] = value;
+          var data = {};
+          var kvp = {};
 
-        var kvp = {};
+          kvp[key] = value;
 
-        kvp[key] = value;
+          data["settings-v1.0"] = settings;
 
-        $rootScope.$broadcast('dim-settings-updated', kvp);
-
-        resolve([key, value]);
-      });
+          chrome.storage.sync.set(data, function(e) {
+            if (chrome.runtime.lastError) {
+              $q.reject(chrome.runtime.lastError);
+            } else {
+              $rootScope.$broadcast('dim-settings-updated', kvp);
+              return true;
+            }
+          });
+        });
     }
   }
 })();

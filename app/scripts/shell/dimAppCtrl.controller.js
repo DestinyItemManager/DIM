@@ -182,6 +182,8 @@
         vm.refresh();
       } else if (_.has(arg, 'itemDetails')) {
         vm.refresh();
+      } else if (_.has(arg, 'hideFilteredItems')) {
+        vm.refresh();
       }
     });
   }
