@@ -11,6 +11,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="stylesheet" href="styles/font-awesome.min.css">
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
@@ -22,26 +23,14 @@
           <div dim-platform-choice class="header-right"></div>
           <div dim-search-filter class="header-right"></div>
           <div class="header-right">
-            <span ng-class="{spin: loadingTracker.active()}" class="link" ng-click="app.refresh($event)"><i class="glyphicon glyphicon-refresh"></i></span>
-            <span class="link" ng-click="app.showSetting($event)"><i class="glyphicon glyphicon-cog"></i></span>
-            <span class="link" ng-click="app.showFilters($event)"><i class="glyphicon glyphicon-filter"></i></span>
+            <span ng-class="{spin: loadingTracker.active()}" class="link" ng-click="app.refresh($event)"><i class="fa fa-refresh"></i></span>
+            <span class="link" ng-click="app.showSetting($event)"><i class="fa fa-cog"></i></span>
+            <span class="link" ng-click="app.showFilters($event)"><i class="fa fa-filter"></i></span>
           </div>
         </span>
         <span class="logo"></span>
-        <ul class="nav nav-tabs">
-          <span class="link" ng-click="app.showSetting($event)"><i class="glyphicon glyphicon-cog"></i> Settings</span>
-          <span class="link" ng-click="app.showAbout($event)">About</span>
-          <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
-          <li role="presentation" class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              Dropdown <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <div class="link" ng-click="app.showAbout($event)">About</div>
-              <div class="link" ng-click="app.showSupport($event)">Support DIM</div>
-            </ul>
-          </li>
-        </ul>
+        <span class="link" ng-click="app.showAbout($event)">About</span>
+        <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
       </div>
     </div>
     <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
