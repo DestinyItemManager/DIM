@@ -15,6 +15,13 @@
     };
 
     function loadSettings() {
+      settingState = {
+        itemDetails: false,
+        condensed: false,
+        characterOrder: 'mostRecent',
+        itemDetails: false
+      };
+
       return $q(function(resolve, reject) {
 
         function processStorageSettings(data) {
@@ -24,7 +31,8 @@
             resolve({
               hideFilteredItems: false,
               condensed: false,
-              characterOrder: 'mostRecent'
+              characterOrder: 'mostRecent',
+              itemDetails: false
             });
           }
         }

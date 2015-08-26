@@ -11,14 +11,14 @@ var db;
 var dbFile;
 var version;
 
-function processItemRow(row, pRow) {
+function processItemRow(icon, pRow) {
   var exists = fs.existsSync('.' + row.icon);
 
   if (!exists) {
-    var imageRequest = http.get('http://www.bungie.net' + row.icon, function(imageResponse) {
-      var imgFS = fs.createWriteStream('.' + row.icon);
+    var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
+      var imgFS = fs.createWriteStream('.' + icon);
       imageResponse.on('end', function() {
-        console.log(row.icon);
+        console.log(icon);
         imgFS.end();
         pRow.next();
       });
@@ -30,7 +30,7 @@ function processItemRow(row, pRow) {
   }
 }
 
-function processItemRows(rows) {
+function processItemRows(rows, prop) {
   var keys = _.keys(rows);
   var i = 0;
 
@@ -42,7 +42,7 @@ function processItemRows(rows) {
     i = i + 1;
 
     if (i < keys.length) {
-      processItemRow(rows[keys[i]], this);
+      processItemRow(rows[keys[i]][prop], this);
     }
   }
 }
@@ -105,7 +105,7 @@ function extractDB(dbFile) {
       items[item.itemHash] = item;
     });
 
-    var pRow = processItemRows(items);
+    var pRow = processItemRows(items, 'icon');
     pRow.next();
 
     var defs = fs.createWriteStream('items.json');
@@ -142,6 +142,9 @@ function extractDB(dbFile) {
       //delete item.equippingBlock;
       items[item.gridHash] = item;
     });
+
+    var pRow = processItemRows(items, 'iconPath');
+    pRow.next();
 
     var defs = fs.createWriteStream('talent.json');
     defs.write(JSON.stringify(items));

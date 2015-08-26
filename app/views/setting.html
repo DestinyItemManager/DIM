@@ -13,10 +13,18 @@
       </tr>
       <tr>
         <td>
-          <label for="condensedItems">Condensed Items</label>
+          <label for="details">Always Show Item Details</label>
         </td>
         <td>
-          <input type="checkbox" ng-model="vm.settings.condensed" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('condensed')"></input>
+          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemDetails')"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="condensed">Condensed Items</label>
+        </td>
+        <td>
+          <input type="checkbox" id="condensed" ng-model="vm.settings.condensed" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('condensed')"></input>
         </td>
       </tr>
       <tr>
