@@ -81,23 +81,28 @@
       var filterFn;
       var filters = [];
 
+      function addPredicate(predicate, filter){
+        filters.push({predicate: predicate, value: filter});
+      }
+
       _.each(searchTerms, function(term){
         if(term.indexOf('is:') >=0) {
           filter = term.replace('is:', '');
           if(_cachedFilters[filter]) {
             predicate = _cachedFilters[filter];
+            addPredicate(predicate, filter);
           } else {
             for(var key in filterTrans) {
               if(filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filter)) {
                 predicate = key;
                 _cachedFilters[filter] = key;
+                addPredicate(predicate, filter);
                 break;
               }
             }
           }
-          filters.push({predicate: predicate, value: filter});
         } else {
-          filters.push({predicate: "keyword", value: term});
+          addPredicate("keyword", term);
         }
       });
 
