@@ -26,6 +26,9 @@
 
 div[dim-search-filter] input {
   width: 250px;
+  -webkit-appearance: none;
+  border: 1px solid #999;
+  padding: 2px 2px;
 }
 
 dt {
@@ -755,9 +758,9 @@ img.void {
   display: table;
   margin: 0 auto;
 }
-.item-details .item-perks div { 
-  display: inline-block; 
-  background-color: #4887ba; 
+.item-details .item-perks div {
+  display: inline-block;
+  background-color: #4887ba;
   border-radius: 50%;
   margin: 4px;
   background-size: 36px;
