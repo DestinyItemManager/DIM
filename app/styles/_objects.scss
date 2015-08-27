@@ -1,0 +1,185 @@
+/**
+    HTML Objects
+    Forms, Inputs, Fields, items, etc
+**/
+
+div[dim-search-filter] {
+    input {
+        width: 250px;
+        margin-top: -3px;
+    }
+}
+
+input, select, option {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/**
+    Icons
+**/
+
+.fa {
+    &:before {
+        font-size: 16px;
+    }
+}
+
+/**
+    Buttons
+**/
+
+.button-name {
+    float: left;
+    width: 123px;
+    background-color: rgba(195, 188, 180, .7);
+    padding-left: 4px;
+    height: 38px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
+
+.condensed .button-name {
+    width: 178px;
+}
+
+.button-delete, .button-edit {
+    text-align: center;
+}
+
+#faq-button {
+    display: inline-block;
+    background-color: #5b6e6c;
+    color: rgba(245, 245, 245, .6);
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    line-height: 14px!important;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 10px!important;
+
+    &:hover {
+        background-color: #628e89
+    }
+}
+
+/**
+    Items
+**/
+
+.item {
+    margin: 2px 2px -2px 2px;
+    position: relative;
+    display: inline-block;
+    background-color: #5c7183;
+    cursor: pointer;
+    border: 2px solid #DDD;
+
+    &.popup-open:before {
+        border: solid;
+        border-color: rgba(0, 0, 0, .8) transparent;
+        border-width: .4em .4em 0;
+        top: -6px;
+        content: "";
+        display: block;
+        left: 16px;
+        position: absolute;
+        z-index: 2;
+    }
+
+    &.search-hidden {
+        border-color: rgba(245, 220, 86, .15);
+        background-color: rgba(128, 128, 128, .15);
+
+        > div:nth-child(1),
+        > div.damage-type,
+        > div.counter {
+            opacity: .15;
+        }
+    }
+
+    > .img,
+    img {
+        width: 44px;
+        height: 44px;
+    }
+
+    .stack {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 1px;
+        max-width: 20px;
+        text-align: center;
+        background: #F5f5f5;
+        color: #24282b;
+    }
+}
+
+.items {
+    &.vault {
+        background-color: rgba(245, 245, 245, 0.25);
+        padding: 0 12px 1px;
+        margin: 0 -12px;
+    }
+
+    .equippable {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .equipped {
+        width: 52px;
+        margin-right: 12px;
+
+        &.on-drag-hover {
+            box-shadow: 0 0 15px 2px rgba(255, 255, 255, .7) !important;
+            background-color: rgba(255, 255, 255, .7) !important;
+        }
+    }
+}
+
+/**
+    Loaders
+**/
+
+.sprite-spinner {
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    width: 22px;
+    height: 22px;
+}
+
+/**
+    Modals
+**/
+
+.modal-dialog {
+    position: fixed;
+    height: 50%;
+    width: 50%;
+    background-color: #333;
+    z-index: 10001;
+    margin: 0 auto;
+    top: 0;
+    top: 25%;
+    left: 25%;
+    color: #fff;
+    padding: 20px;
+    font-size: 13px;
+    border: 1px solid #333;
+
+    &:before {
+        content: " ";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 5px solid #f5dc56;
+    }
+}

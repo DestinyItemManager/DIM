@@ -17,7 +17,18 @@
       restrict: 'A',
       template: [
         '<select id="system" ng-if="vm.platforms.length > 1" ng-options="platform.label for platform in vm.platforms" ng-model="vm.active" ng-change="vm.update()"></select>',
-        '<span style="margin: 0 10px;" id="user" class="header-right">{{ vm.active.id }}</span>'
+        '<ul class="nav nav-tabs header-right">',
+          '<li role="presentation" class="dropdown">',
+            '<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">',
+              '{{ vm.active.id }}',
+            '</a>',
+            '<ul class="dropdown-menu" ng-controller="dimAppCtrl as app" ng-click="app.about = false; trackActivity()">',
+              '<li ng-click="app.showSetting($event)"><i class="fa fa-cog"></i> Settings</li>',
+              '<li ng-click="app.showAbout($event)">About</li>',
+              '<li ng-click="app.showSupport($event)">Support DIM</li>',
+            '</ul>',
+          '</li>',
+        '</ul>'
       ].join('')
     };
   }
