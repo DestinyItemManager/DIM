@@ -15,26 +15,83 @@
 <body>
   <div>
     <nav class="navbar navbar-dark">
-      <button class="navbar-toggler hidden-sm-up fa fa-bars" type="button"></button>
-      <a class="navbar-brand" href="#">DIM</a>
-    </nav>
-    <div class="container">
-      <div class="row row-xs-center header">
-        <div class="col-xs-12">
-          <div class="row row-xs-center">
-            <div class="col-xs-2">
-              <img src="http://www.bungie.net/common/destiny_content/icons/aafa2e55f71e2f88156bfef6d8fda0b8.jpg" width="32" height="32" />
-            </div>
-            <div class="col-xs-8">
-              <div>Warlock 34</div>
-              <div>Female Exo</div>
-            </div>
-            <div class="col-xs-2">
-              <div>280</div>
-            </div>
-          </div>
+      <div class="row row-xs">
+        <div class="col-xs-2">
+          <button class="navbar-toggler hidden-sm-up fa fa-bars fa-lg" type="button"></button>
+        </div>
+        <div class="col-xs-4">
+          <a class="navbar-brand" href="#">DIM</a>
+        </div>
+        <div class="col-xs-6 text-right">
+          <a class="fa fa-tag fa-lg"></a>
+          <a id="toggleFilterPanel" class="fa fa-filter fa-lg"></a>
+          <a class="fa fa-ellipsis-v fa-lg"></a>
         </div>
       </div>
+    </nav>
+    <div class="container">
+      <div id="characterSelect" class="dropdown">
+        <a id="dLabel" data-target="#" href="http://example.com" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <div class="row row-xs-center header">
+            <div class="col-xs-12">
+              <div class="row row-xs-center">
+                <div class="col-xs-2">
+                  <img src="http://www.bungie.net/common/destiny_content/icons/aafa2e55f71e2f88156bfef6d8fda0b8.jpg" width="32" height="32" />
+                </div>
+                <div class="col-xs-6">
+                  <div>Warlock 34</div>
+                  <div>Female Exo</div>
+                </div>
+                <div class="col-xs-2">
+                  <div>280</div>
+                </div>
+                <div class="col-xs-2">
+                  <div><span class="fa fa-lg fa-chevron-down"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dLabel">
+          <li>
+            <div class="row row-xs-center header">
+              <div class="col-xs-12">
+                <div class="row row-xs-center">
+                  <div class="col-xs-2">
+                    <img src="http://www.bungie.net/common/destiny_content/icons/66e5d267b1c8cfd41a109f9fdc3942e3.jpg" width="32" height="32" />
+                  </div>
+                  <div class="col-xs-8">
+                    <div>Titan 34</div>
+                    <div>Male Human</div>
+                  </div>
+                  <div class="col-xs-2">
+                    <div>280</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="row row-xs-center header">
+              <div class="col-xs-12">
+                <div class="row row-xs-center">
+                  <div class="col-xs-2">
+                    <img src="http://www.bungie.net/common/destiny_content/icons/01e92aa9288da062ef7cd735e6b25909.jpg" width="32" height="32" />
+                  </div>
+                  <div class="col-xs-8">
+                    <div>Hunter 34</div>
+                    <div>Female Awoken</div>
+                  </div>
+                  <div class="col-xs-2">
+                    <div>280</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
       <div class="row row-xs-center inventory">
         <div class="col-xs-12">
           <div class="row row-xs-center">
@@ -60,10 +117,67 @@
           </div>
         </div>
       </div>
+      <div class="row row-xs-center inventory">
+        <div class="col-xs-12">
+          <div class="row row-xs-center">
+            <div class="col-xs-12">
+              Special Weapons
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+            </div>
+            <div class="col-xs-9">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row row-xs-center inventory">
+        <div class="col-xs-12">
+          <div class="row row-xs-center">
+            <div class="col-xs-12">
+              Heavy Weapons
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+            </div>
+            <div class="col-xs-9">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div id="filterPanel">Mah filters!</div>
   </div>
   <script src="vendor/jquery/dist/jquery.js"></script>
   <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script>
+    $("#toggleFilterPanel").on("click", function(){
+      $("#toggleFilterPanel").toggleClass("selected");
+      $("#filterPanel").toggleClass("visible");
+    });
+  </script>
 </body>
 
 </html>
