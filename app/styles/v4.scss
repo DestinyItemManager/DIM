@@ -1,6 +1,11 @@
 body {
   background-color: #1E242B;
   color: #fff;
+  padding-top: 3rem;
+}
+
+.navbar {
+  background-color: #1E242B;
 }
 
 .navbar-toggler {
@@ -17,14 +22,26 @@ body {
   // margin-left: 3rem;
 }
 
-.navbar {
-  background-color: transparent;
-}
-
 .header {
   background-color: #2A333E;
 }
 
 .inventory img {
   margin: .25rem;
+}
+
+.item {
+  width: 3.25rem;
+  height: 3.25rem;
+  border: .125rem solid #bbb;
+}
+
+div[class^="col-xs-"] {
+  padding-right: .5rem;
+  padding-left: .5rem;
+}
+
+.row {
+  margin-right: -.5rem;
+  margin-left: -.5rem;
 }
