@@ -37,4 +37,10 @@ body {
   bottom:0px;
   margin-bottom:-200px; }
 
+#characterSelect ul {
+  width:100%;
+  background:none;
+  margin:0px;
+  padding:0px 0px;}
+
 /*# sourceMappingURL=v4.css.map */
