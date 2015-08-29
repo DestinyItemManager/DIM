@@ -2,9 +2,6 @@ body {
   background-color: #1E242B;
   color: #fff; }
 
-*:hover {
-  text-decoration: none !important; }
-
 .navbar-toggler {
   color: #FFCE1F; }
 
@@ -20,44 +17,5 @@ body {
 
 .inventory img {
   margin: .25rem; }
-
-.navbar a {
-  color: #FFCE1F;
-  padding:8px; }
-
-.navbar a.selected {
-  color: #1E242B;
-  background: #FFCE1F; }
-
-#filterPanel {
-  width:100%;
-  height:200px;
-  border:medium solid #FFCE1F;
-  position: absolute;
-  bottom:0px;
-  margin-bottom:-200px;
-  display:none;
-  background: rgba(0, 0, 0, 0.75);
-  transition: all 1s;
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s; }
-
-#filterPanel.visible {
-  margin-bottom:0px;
-  display:block;
-  transition: all 1s;
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s; }
-
-#characterSelect #dLabel {
-  color:#FFF; }
-
-#characterSelect ul {
-  width:100%;
-  margin:0px;
-  padding:0px 0px;
-  background:none; }
 
 /*# sourceMappingURL=v4.css.map */
