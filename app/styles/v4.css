@@ -18,8 +18,16 @@ body {
 .inventory img {
   margin: .25rem; }
 
-.navbar i {
-  color: #FFCE1F; }
+.navbar a {
+  color: #FFCE1F;
+  padding:8px; }
+
+.navbar a:hover {
+  text-decoration: none;}
+
+.navbar a.selected {
+  color: #1E242B;
+  background: #FFCE1F; }
 
 #filterPanel {
   width:100%;

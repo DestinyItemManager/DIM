@@ -23,13 +23,13 @@
           <a class="navbar-brand" href="#">DIM</a>
         </div>
         <div class="col-xs-1">
-          <i class="fa fa-tag fa-lg"></i>
+          <a class="fa fa-tag fa-lg"></a>
         </div>
         <div class="col-xs-1">
-          <i id="toggleFilterPanel" class="fa fa-filter fa-lg"></i>
+          <a id="toggleFilterPanel" class="fa fa-filter fa-lg"></a>
         </div>
         <div class="col-xs-1">
-          <i class="fa fa-ellipsis-v fa-lg"></i>
+          <a class="fa fa-ellipsis-v fa-lg"></a>
         </div>
       </div>
     </nav>
@@ -82,7 +82,10 @@
   <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
   <script>
     $("#toggleFilterPanel").on("click", function(){
+      var btn = $("#toggleFilterPanel");
       var panel = $("#filterPanel");
+
+      btn.toggleClass("selected");
       if(panel.hasClass("visible")){
         panel.removeClass("visible").animate({'margin-bottom':'-200px'});
       } else {
