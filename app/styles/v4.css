@@ -2,4 +2,20 @@ body {
   background-color: #1E242B;
   color: #fff; }
 
+.navbar-toggler {
+  color: #FFCE1F; }
+
+.navbar-brand {
+  float: none;
+  padding-left: .5rem; }
+
+.navbar {
+  background-color: transparent; }
+
+.header {
+  background-color: #2A333E; }
+
+.inventory img {
+  margin: .25rem; }
+
 /*# sourceMappingURL=v4.css.map */

@@ -2,3 +2,29 @@ body {
   background-color: #1E242B;
   color: #fff;
 }
+
+.navbar-toggler {
+  color: #FFCE1F;
+  // position: absolute;
+  // top: .22rem;
+  // font-size: 1.5rem;
+  // padding: .4rem .7rem;
+}
+
+.navbar-brand {
+  float: none;
+  padding-left: .5rem;
+  // margin-left: 3rem;
+}
+
+.navbar {
+  background-color: transparent;
+}
+
+.header {
+  background-color: #2A333E;
+}
+
+.inventory img {
+  margin: .25rem;
+}
