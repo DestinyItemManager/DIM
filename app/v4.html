@@ -19,16 +19,12 @@
         <div class="col-xs-2">
           <button class="navbar-toggler hidden-sm-up fa fa-bars fa-lg" type="button"></button>
         </div>
-        <div class="col-xs-7">
+        <div class="col-xs-4">
           <a class="navbar-brand" href="#">DIM</a>
         </div>
-        <div class="col-xs-1">
+        <div class="col-xs-6 text-right">
           <a class="fa fa-tag fa-lg"></a>
-        </div>
-        <div class="col-xs-1">
           <a id="toggleFilterPanel" class="fa fa-filter fa-lg"></a>
-        </div>
-        <div class="col-xs-1">
           <a class="fa fa-ellipsis-v fa-lg"></a>
         </div>
       </div>
@@ -121,6 +117,56 @@
           </div>
         </div>
       </div>
+      <div class="row row-xs-center inventory">
+        <div class="col-xs-12">
+          <div class="row row-xs-center">
+            <div class="col-xs-12">
+              Special Weapons
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+            </div>
+            <div class="col-xs-9">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg" width="48">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row row-xs-center inventory">
+        <div class="col-xs-12">
+          <div class="row row-xs-center">
+            <div class="col-xs-12">
+              Heavy Weapons
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+            </div>
+            <div class="col-xs-9">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+              <img src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg" width="48">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div id="filterPanel">Mah filters!</div>
   </div>
@@ -128,15 +174,8 @@
   <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
   <script>
     $("#toggleFilterPanel").on("click", function(){
-      var btn = $("#toggleFilterPanel");
-      var panel = $("#filterPanel");
-
-      btn.toggleClass("selected");
-      if(panel.hasClass("visible")){
-        panel.removeClass("visible").animate({'margin-bottom':'-200px'});
-      } else {
-        panel.addClass("visible").animate({'margin-bottom':'0px'});
-      }
+      $("#toggleFilterPanel").toggleClass("selected");
+      $("#filterPanel").toggleClass("visible");
     });
   </script>
 </body>
