@@ -18,4 +18,15 @@ body {
 .inventory img {
   margin: .25rem; }
 
+.navbar i {
+  color: #FFCE1F; }
+
+#filterPanel {
+  width:100%;
+  height:200px;
+  border:medium solid #FFCE1F;
+  position: absolute;
+  bottom:0px;
+  margin-bottom:-200px; }
+
 /*# sourceMappingURL=v4.css.map */

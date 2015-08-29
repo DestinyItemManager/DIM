@@ -15,10 +15,25 @@
 <body>
   <div>
     <nav class="navbar navbar-dark">
-      <button class="navbar-toggler hidden-sm-up fa fa-bars" type="button"></button>
-      <a class="navbar-brand" href="#">DIM</a>
+      <div class="row row-xs">
+        <div class="col-xs-2">
+          <button class="navbar-toggler hidden-sm-up fa fa-bars fa-lg" type="button"></button>
+        </div>
+        <div class="col-xs-7">
+          <a class="navbar-brand" href="#">DIM</a>
+        </div>
+        <div class="col-xs-1">
+          <i class="fa fa-tag fa-lg"></i>
+        </div>
+        <div class="col-xs-1">
+          <i id="toggleFilterPanel" class="fa fa-filter fa-lg"></i>
+        </div>
+        <div class="col-xs-1">
+          <i class="fa fa-ellipsis-v fa-lg"></i>
+        </div>
+      </div>
     </nav>
-    <div class="container">
+    <div class="character container">
       <div class="row row-xs-center header">
         <div class="col-xs-12">
           <div class="row row-xs-center">
@@ -61,9 +76,20 @@
         </div>
       </div>
     </div>
+    <div id="filterPanel">Mah filters!</div>
   </div>
   <script src="vendor/jquery/dist/jquery.js"></script>
   <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script>
+    $("#toggleFilterPanel").on("click", function(){
+      var panel = $("#filterPanel");
+      if(panel.hasClass("visible")){
+        panel.removeClass("visible").animate({'margin-bottom':'-200px'});
+      } else {
+        panel.addClass("visible").animate({'margin-bottom':'0px'});
+      }
+    });
+  </script>
 </body>
 
 </html>
