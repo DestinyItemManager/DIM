@@ -24,6 +24,10 @@ body {
       padding: 0 !important;
       margin: 0; }
 
+.character-card,
+.character-card > div {
+  height: 3.125rem; }
+
 .inventory img {
   margin: .25rem; }
 
