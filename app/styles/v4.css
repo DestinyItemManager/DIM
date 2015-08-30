@@ -13,8 +13,16 @@ body {
   float: none;
   padding-left: .5rem; }
 
-.header {
+.character {
   background-color: #2A333E; }
+  .character .dropdown-menu {
+    width: 100%;
+    padding: 0;
+    border: none;
+    background-color: #2A333E; }
+    .character .dropdown-menu li {
+      padding: 0 !important;
+      margin: 0; }
 
 .inventory img {
   margin: .25rem; }
