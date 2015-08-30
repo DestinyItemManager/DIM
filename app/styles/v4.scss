@@ -16,6 +16,10 @@ body {
   // padding: .4rem .7rem;
 }
 
+.type-title-double {
+  font-weight: 700;
+}
+
 .navbar-brand {
   float: none;
   padding-left: .5rem;
@@ -51,6 +55,10 @@ body {
   width: 3.25rem;
   height: 3.25rem;
   border: .125rem solid #bbb;
+
+  &.single {
+    border-color: #ffce1f;
+  }
 }
 
 div[class^="col-xs-"] {

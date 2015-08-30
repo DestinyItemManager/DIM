@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="">
+<html lang="" ng-app="dim">
 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>DIM v4</title>
   <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link rel="stylesheet" type="text/css" href="vendor/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="styles/v4.css">
 </head>
 
-<body>
+<body ng-controller="dimAppCtrl as vm">
   <div>
     <nav class="navbar navbar-dark navbar-fixed-top">
       <div class="row row-xs row-xs-center">
@@ -31,23 +31,26 @@
     </nav>
     <div class="container">
       <div class="dropdown character">
+
         <div class="row row-xs-center header"  id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <div class="col-xs-12 character-card">
             <div class="row row-xs-center">
               <div class="col-xs-2">
-                <img src="http://www.bungie.net/common/destiny_content/icons/aafa2e55f71e2f88156bfef6d8fda0b8.jpg" width="32" height="32" />
+                <img ng-src="{{ vm.current.engram }}" width="32" height="32" />
               </div>
               <div class="col-xs-8">
-                <div>Warlock 34</div>
-                <div>Female Exo</div>
+                <div>{{ vm.current.class }} {{ vm.current.level }}</div>
+                <div>{{ vm.current.sex }} {{ vm.current.race }}</div>
               </div>
               <div class="col-xs-2">
-                <div>280</div>
+                <div>{{ vm.current.lightLevel }}</div>
               </div>
             </div>
           </div>
         </div>
+
         <ul class="dropdown-menu" aria-labelledby="dLabel" class="row">
+
           <li class="col-xs-12 character-card">
             <div class="row row-xs-center header">
               <div class="col-xs-12">
@@ -66,6 +69,7 @@
               </div>
             </div>
           </li>
+
           <li class="col-xs-12 character-card">
             <div class="row row-xs-center header">
               <div class="col-xs-12">
@@ -84,6 +88,7 @@
               </div>
             </div>
           </li>
+
           <li class="col-xs-12 character-card">
             <div class="row row-xs-center header">
               <div class="col-xs-12">
@@ -97,82 +102,44 @@
               </div>
             </div>
           </li>
+
         </ul>
       </div>
 
-      <div class="row row-xs-center inventory">
-        <div class="col-xs-12">
+      <div class="row row-xs-center inventory" ng-repeat="type in vm.types">
+        <div class="col-xs-12" ng-init="items = vm.getItemsByType(vm.current, type)">
           <div class="row row-xs-center">
-            <div class="col-xs-12">
-              Primary Weapons
+            <div class="col-xs-12 type-title" ng-class="{ 'type-title-double': vm.multiselectEnabled}">
+              <span style="text-transform: capitalize;">{{ type }}</span> Weapons
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-3">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
+            <div class="col-xs-3" ng-dblclick="vm.double()">
+              <span ng-repeat="item in items.equipped" class="tint" ng-class="{ 'single': item.single, 'double': item.double }">
+                <img ng-class="{ 'single': vm.isItemSelected(item) }" ng-tap="vm.single(item)" ng-doubletap="vm.double(item)" class="item" ng-src="{{ item.image }}">
+              </span>
             </div>
             <div class="col-xs-9">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/6871909234b94f192e2f94153536ef04.jpg">
+              <span ng-repeat="item in items.unequipped" class="tint" ng-class="{ 'single': item.single, 'double': item.double }">
+                <img ng-class="{ 'single': vm.isItemSelected(item) }" ng-tap="vm.single(item)" ng-doubletap="vm.double(item)" class="item" ng-src="{{ item.image }}">
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="row row-xs-center inventory">
-        <div class="col-xs-12">
-          <div class="row row-xs-center">
-            <div class="col-xs-12">
-              Special Weapons
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-3">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-            </div>
-            <div class="col-xs-9">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/32ee4898d395699de588756b963e26dd.jpg">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row row-xs-center inventory">
-        <div class="col-xs-12">
-          <div class="row row-xs-center">
-            <div class="col-xs-12">
-              Heavy Weapons
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-3">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg">
-            </div>
-            <div class="col-xs-9">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg">
-              <img class="item" src="http://www.bungie.net/common/destiny_content/icons/eb8377390504838c0190d8d56e70d28e.jpg">
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
     <div id="filterPanel">Mah filters!</div>
   </div>
   <script src="vendor/jquery/dist/jquery.js"></script>
   <script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="vendor/angular/angular.js"></script>
+  <script src="vendor/underscore/underscore-min.js"></script>
+  <script src="vendor/hammerjs/hammer.js"></script>
+
+  <script src="v4-scripts/dim.module.js"></script>
+  <script src="v4-scripts/dimAppCtrl.controller.js"></script>
+
   <script>
     $("#toggleFilterPanel").on("click", function(){
       $("#toggleFilterPanel").toggleClass("selected");

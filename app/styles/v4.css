@@ -9,6 +9,9 @@ body {
 .navbar-toggler {
   color: #FFCE1F; }
 
+.type-title-double {
+  font-weight: 700; }
+
 .navbar-brand {
   float: none;
   padding-left: .5rem; }
@@ -35,6 +38,8 @@ body {
   width: 3.25rem;
   height: 3.25rem;
   border: .125rem solid #bbb; }
+  .item.single {
+    border-color: #ffce1f; }
 
 div[class^="col-xs-"] {
   padding-right: .5rem;
