@@ -21,6 +21,7 @@
         '<div ng-class="vm.classes">',
         '  <span ng-show="vm.item.locked" class="locked"></span>',
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
+        '  <span ng-show="vm.item.type === \'Bounties\' && vm.item.hasXP" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
         '  <span ng-show="vm.light > 0"> &#10022; {{ vm.light }}</span>',
         '  <span ng-repeat="stat in vm.stats track by stat.label"> | {{ stat.label }} {{ stat.value }}</span>',
         '  <span class="pull-right" ng-mouseover="vm.itemDetails = true;" ng-show="!vm.itemDetails">Show Details</span>',

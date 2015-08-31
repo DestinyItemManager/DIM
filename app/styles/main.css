@@ -707,6 +707,10 @@ img.void {
   padding: 1px;
   padding-left: 3px;
 }
+.move-popup .bounty-description {
+  padding: 5px;
+  display: inline-block;
+}
 .item-name.is-arc {
   background-color: #85c5ec;
 }
