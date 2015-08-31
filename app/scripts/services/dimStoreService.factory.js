@@ -427,6 +427,7 @@
           sort: itemSort,
           tier: itemDef.tierTypeName,
           name: itemDef.itemName,
+          description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
           icon: itemDef.icon,
           inHoW: _.contains(how, itemDef.itemHash),
           notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
@@ -435,7 +436,7 @@
           equipment: item.isEquipment,
           complete: item.isGridComplete,
           hasXP: (!!item.progression),
-          xpComplete: (!!item.progression && item.progression.progressToNextLevel === 0 && item.progression.currentProgress > 0),
+          xpComplete: (item.progression && item.progression.currentProgress > 0) ? Math.round((item.progression.currentProgress / item.progression.nextLevelAt)*100) : 0,
           amount: item.stackSize,
           primStat: item.primaryStat,
           stats: item.stats,
