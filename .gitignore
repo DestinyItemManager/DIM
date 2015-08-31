@@ -8,8 +8,7 @@ build/img
 build/manifest
 build/*.json
 build/manifest.zip
-.DS_Store
-app/.DS_Store
+*.DS_Store
 
 !do-not-delete.txt
 !build/img/misc/missing_icon.png
