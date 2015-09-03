@@ -1098,7 +1098,7 @@ button.toast-close-button {
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   border-radius: 3px 3px 3px 3px;
-  background-position: 15px center;
+  background-position: 15px 15px;
   background-repeat: no-repeat;
   -moz-box-shadow: 0 0 12px #999999;
   -webkit-box-shadow: 0 0 12px #999999;

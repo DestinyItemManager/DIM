@@ -8,22 +8,23 @@
     "url": "https://github.com/kyleshay/DIM.git"
   },
   "dependencies": {
-    "underscore": "~1.8.x",
     "angular": "1.4.x",
     "angular-animate": "1.4.x",
     "angular-chrome-storage": "infomofo/angular-chrome-storage",
+    "angular-cookies": "~1.4.5",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5",
     "angular-messages": "~1.3.x",
     "angular-native-dragdrop": "https://github.com/angular-dragdrop/angular-dragdrop.git",
-    "angularjs-toaster": "~0.4.12",
+    "angular-promise-tracker": "~2.1.0",
     "angular-ui-router": "~0.2.x",
     "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git",
-    "ngDialog": "~0.3.x",
-    "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
-    "angular-promise-tracker": "~2.1.0",
+    "AngularJS-Toaster": "https://github.com/DestinyItemManager/AngularJS-Toaster.git#master",
     "jquery": "~2",
-    "verge": "https://github.com/ryanve/verge.git",
+    "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
+    "ngDialog": "~0.3.x",
     "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6",
-    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5"
+    "underscore": "~1.8.x",
+    "verge": "https://github.com/ryanve/verge.git"
   },
   "resolutions": {
     "angular": "1.4.x"

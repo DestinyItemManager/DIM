@@ -4,6 +4,7 @@
   angular.module('dimApp', [
     'ui.router',
     'ngAnimate',
+    'ngCookies',
     'ngDialog',
     'ngMessages',
     'ang-drag-drop',
