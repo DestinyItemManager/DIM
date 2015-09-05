@@ -16,10 +16,10 @@
 
     function loadSettings() {
       settingState = {
+        hideFilteredItems: false,
         itemDetails: false,
         condensed: false,
-        characterOrder: 'mostRecent',
-        itemDetails: false
+        characterOrder: 'mostRecent'
       };
 
       return $q(function(resolve, reject) {
