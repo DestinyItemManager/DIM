@@ -264,9 +264,12 @@
 
       return $q.when((function() {
         return _.map(response.data.Response.data.characters, function(character) {
+          var c = character;
+          c.inventory = response.data.Response.data.inventory;
+
           return {
-            'id': character.characterBase.characterId,
-            'base': character
+            'id': c.characterBase.characterId,
+            'base': c
           };
         });
       })());
@@ -332,7 +335,7 @@
       };
     }
 
-    function processInventoryResponse(character, response) {
+    function processInventoryResponse(character, characters, response) {
       var payload = response.data.Response;
 
       payload.id = character.id;
@@ -352,7 +355,7 @@
 
       // Guardians
       _.each(characters, function(character) {
-        processPB = processInventoryResponse.bind(null, character);
+        processPB = processInventoryResponse.bind(null, character, characters);
 
         promise = $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
           .then($http)
@@ -368,7 +371,8 @@
       processPB = processInventoryResponse.bind(null, {
         id: 'vault',
         base: null
-      });
+      }, characters);
+
       promise = $q.when(getDestinyVaultRequest(token, platform))
         .then($http)
         .then(networkError)

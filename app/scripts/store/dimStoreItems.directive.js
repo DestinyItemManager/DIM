@@ -24,11 +24,11 @@
         '        <span>{{ key }}</span>',
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ key === \'Weapons\' ? 36 : 24 }}  </span>',
         '      </div>',
-        '      <div ng-repeat="type in value" class="sub-section sort-{{ type.toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
-        '        <div ng-class="vm.styles[type].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type }}">',
+        '      <div ng-repeat="type in value" class="sub-section sort-{{ type.replace(\' \', \'-\').toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
+        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
-        '        <div ng-class="vm.styles[type].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
+        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '          <div class="item-target"></div>',
         '        </div>',
@@ -76,6 +76,7 @@
       'Missions',
       'Bounties',
       'Messages',
+      'Special Orders',
       'Lost Items'
     ];
     vm.orderedTypes = {};
@@ -121,6 +122,7 @@
       ],
       Postmaster: [
         'Messages',
+        'Special Orders',
         'Lost Items'
       ]
     };
@@ -196,7 +198,11 @@
         equipped: '',
         unequipped: 'unequipped equippable',
       },
-      'Lost Items': {
+      'Special-Orders': {
+        equipped: '',
+        unequipped: 'unequipped equippable',
+      },
+      'Lost-Items': {
         equipped: '',
         unequipped: 'unequipped equippable',
       }
