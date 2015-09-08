@@ -163,6 +163,7 @@
                   lastPlayed: raw.character.base.characterBase.dateLastPlayed,
                   background: raw.character.base.backgroundPath,
                   level: raw.character.base.characterLevel,
+                  powerLevel: raw.character.base.characterBase.powerLevel,
                   class: getClass(raw.character.base.characterBase.classType),
                   gender: getGender(raw.character.base.characterBase.genderType),
                   race: getRace(raw.character.base.characterBase.raceHash),

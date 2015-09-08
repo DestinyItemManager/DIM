@@ -57,7 +57,7 @@ body.fitlers .fitlers {
   width: 123px;
   background-color: rgba(195, 188, 180, .7);
   padding-left: 4px;
-  height: 38px;
+  height: 39px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
@@ -622,15 +622,22 @@ img.void {
 }
 .character-box .level {
   position: absolute;
-  top: 5px;
+  top: 2px;
   right: 45px;
   font-weight: 200;
-  font-size: 22px;
+  font-size: 14px;
+}
+.character-box .level.powerLevel {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-weight: 200;
+  font-size: 14px;
 }
 .character-box .level.prestige {
   color: #f5dc56;
 }
-.character-box .level:before {
+.character-box .powerLevel:before {
   content: "\2726";
   display: inline-block;
   vertical-align: 25%;

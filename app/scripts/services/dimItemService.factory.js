@@ -359,13 +359,14 @@
           switch (item.sort) {
             case 'Weapons':
             case 'Weapon':
+            case 'Armor':
               {
-                typeQtyCap = 36;
+                typeQtyCap = 72;
                 break;
               }
             default:
               {
-                typeQtyCap = 24;
+                typeQtyCap = 36;
                 break;
               }
           }

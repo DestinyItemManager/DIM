@@ -165,7 +165,7 @@
                         return item.type === i.type;
                       })
                       .size()
-                      .value() < ((s.id === 'vault') ? 36 : 10);
+                      .value() < ((s.id === 'vault') ? 72 : 10);
                   });
                 })
                 .then(function(t) {

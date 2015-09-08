@@ -12,7 +12,12 @@ var dbFile;
 var version;
 
 function processItemRow(icon, pRow) {
-  var exists = fs.existsSync('.' + row.icon);
+
+  var exists = fs.existsSync('.' + icon);
+
+  if (icon === undefined) {
+    exists = true;
+  }
 
   if (!exists) {
     var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
