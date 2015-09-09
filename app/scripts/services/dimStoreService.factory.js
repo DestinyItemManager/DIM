@@ -437,6 +437,11 @@
         // }
 
         var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+
+        if (item.itemHash === 937555249) {
+          itemType = "Material";
+        }
+        
         var weaponClass = null;
 
         if (!itemType) {

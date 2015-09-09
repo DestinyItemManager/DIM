@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -61,9 +61,9 @@
     vm.stats = [];
     vm.itemDetails = false;
     settings.getSetting('itemDetails')
-          .then(function(show) {
-            vm.itemDetails = show;
-          });
+      .then(function(show) {
+        vm.itemDetails = show;
+      });
 
     if (vm.item.primStat) {
       if (vm.item.primStat.statHash === 3897883278) {
@@ -72,18 +72,53 @@
           vm.light = vm.item.stats[0].value;
         }
 
-        var stats = ['Int:', 'Dis:', 'Str:'];
+        var stats = [{
+          name: 'Intellect',
+          abbr: 'Int:'
+        }, {
+          name: 'Discipline',
+          abbr: 'Dis:'
+        }, {
+          name: 'Strength',
+          abbr: 'Str:'
+        }];
+
         var val = 0;
 
-        for (var s = 0; s < stats.length; s++) {
-          val = vm.item.stats[s + (vm.item.stats.length === 4 ? 1 : 0)].value;
-          if (val !== 0) {
-            vm.stats.push({
-              'label': stats[s],
-              'value': val
-            });
+        vm.stats = _.reduce(stats, function(memo, pStat) {
+          var iStat = _.find(vm.item.stats, function(stat) {
+            return stat.name === pStat.name;
+          });
+
+          if (!_.isUndefined(iStat)) {
+            if (iStat.value !== 0) {
+              memo.push({
+                'label': pStat.abbr,
+                'value': iStat.value
+              });
+            }
           }
-        }
+
+          return memo;
+        }, []);
+
+        vm.stats.unshift({
+          'label': 'Def:',
+          'value': vm.item.primStat.value
+        });
+
+        // for (var s = 0; s < stats.length; s++) {
+        //   if (vm.item.stats.length > 0) {
+        //
+        //     val = vm.item.stats[s + (vm.item.stats.length === 4 ? 1 : 0)].value;
+        //     if (val !== 0) {
+        //       vm.stats.push({
+        //         'label': stats[s],
+        //         'value': val
+        //       });
+        //     }
+        //   }
+        // }
       } else if (vm.item.primStat.statHash === 368428387) {
         // switch(vm.item.dmg) {
         // 	case 'arc': vm.color = '#85c5ec'; break;
@@ -92,21 +127,21 @@
         // }
 
         switch (vm.item.dmg) {
-        case 'arc':
-          {
-            vm.classes['is-arc'] = true;
-            break;
-          }
-        case 'solar':
-          {
-            vm.classes['is-solar'] = true;
-            break;
-          }
-        case 'void':
-          {
-            vm.classes['is-void'] = true;
-            break;
-          }
+          case 'arc':
+            {
+              vm.classes['is-arc'] = true;
+              break;
+            }
+          case 'solar':
+            {
+              vm.classes['is-solar'] = true;
+              break;
+            }
+          case 'void':
+            {
+              vm.classes['is-void'] = true;
+              break;
+            }
         }
 
         vm.stats.push({
