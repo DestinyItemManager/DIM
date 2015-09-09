@@ -375,7 +375,7 @@
             case 'Material':
             case 'Consumable':
               {
-                typeQtyCap = 15;
+                typeQtyCap = 20;
                 break;
               }
             default:
