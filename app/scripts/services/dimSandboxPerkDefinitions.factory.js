@@ -22,7 +22,6 @@
 
     return {
       'getDefinitions': function() { return deferred.promise; }
-      }
     };
   }
 })(angular);

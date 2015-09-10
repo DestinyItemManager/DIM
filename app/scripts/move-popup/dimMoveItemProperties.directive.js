@@ -37,7 +37,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
+        '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}\n{{perk.displayDescription}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -155,6 +155,7 @@
             var perk = perkDefinitions.data[value.perkHash];
             if (perk) {
               vm.item.perks[key]['displayName'] = perk.displayName;
+              vm.item.perks[key]['displayDescription'] = perk.displayDescription;
             }
           });
         });
