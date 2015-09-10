@@ -1,3 +1,43 @@
+/**
+  Header Area 
+**/
+
+.logo {
+  background:url('../favicon-96x96.png') no-repeat;
+  background-size: 20px;
+  height: 25px;
+  padding-left: 28px;
+}
+
+#header .fa {
+  font-size: 15px;
+  color: #fff;
+}
+
+/* Spin Animation */
+.spin {
+    -animation: spin .7s infinite linear;
+    -ms-animation: spin .7s infinite linear;
+    -webkit-animation: spinw .7s infinite linear;
+    -moz-animation: spinm .7s infinite linear;
+}
+ 
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+  
+@-webkit-keyframes spinw {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+ 
+@-moz-keyframes spinm {
+    from { -moz-transform: rotate(0deg);}
+    to { -moz-transform: rotate(360deg);}
+}
+
+
 .pull-right {
   float: right;
   text-align: right;
@@ -28,7 +68,8 @@ div[dim-search-filter] input {
   width: 250px;
   -webkit-appearance: none;
   border: 1px solid #999;
-  padding: 2px 2px;
+  padding: 2px;
+  margin: 1px 15px 0 10px;
 }
 
 dt {
@@ -185,11 +226,9 @@ a {
   height: 20px;
   font-size: 20px;
 }
-#header .content .header-right span {
-  margin-right: 15px;
-}
+
 #header .content span {
-  margin-left: 15px;
+  margin: 0 8px;
   text-decoration: none;
   display: inline-block;
   font-size: 13px;
