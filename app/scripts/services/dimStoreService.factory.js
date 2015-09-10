@@ -441,7 +441,7 @@
         if (item.itemHash === 937555249) {
           itemType = "Material";
         }
-        
+
         var weaponClass = null;
 
         if (!itemType) {
@@ -501,6 +501,10 @@
           locked: item.locked,
           weaponClass: weaponClass || ''
         };
+
+        if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
+          createdItem.complete = item.objectives[0].isComplete;
+        }
 
         _.each(item.stats, function(stat) {
           stat.name = statNames[stat.statHash];
