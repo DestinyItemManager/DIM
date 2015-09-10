@@ -543,6 +543,29 @@ img.void {
   min-width: 10px;
   text-align: center;
 }
+.item-stat {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  font-size: 10px;
+  padding: 0 2px;
+  background: #ddd;
+  color: #000;
+  min-width: 10px;
+  text-align: center;
+}
+.stat-damage-arc {
+  background: #85c5ec;
+  color: #fff;
+}
+.stat-damage-solar {
+  background: #f2721b;
+  color: #fff;
+}
+.stat-damage-void {
+  background: #b184c5;
+  color: #fff;
+}
 .damage-type {
   position: absolute;
   bottom: 0;

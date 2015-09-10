@@ -39,6 +39,7 @@
 
     vm.settings = {
       itemDetails: false,
+      itemStat: false,
       condensedItems: false,
       characterOrder: 'mostRecent'
     };
@@ -181,6 +182,8 @@
       } else if (_.has(arg, 'condensed')) {
         vm.refresh();
       } else if (_.has(arg, 'itemDetails')) {
+        vm.refresh();
+      } else if (_.has(arg, 'itemStat')) {
         vm.refresh();
       } else if (_.has(arg, 'hideFilteredItems')) {
         vm.refresh();
