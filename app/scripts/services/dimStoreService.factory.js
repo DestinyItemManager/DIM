@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions', 'dimPerkDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions, dimPerkDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -420,7 +420,7 @@
           4248486431
         ];
 
-      var iterator = function(definitions, talentDefs, item, index) {
+      var iterator = function(definitions, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
 
         // Missing definition?
@@ -528,17 +528,6 @@
           });
         }) : undefined;
 
-        // var talentDef = null;
-        //
-        // dimTalentDefinitions.getDefinitions()
-        //   .then(function(defs) {
-        //
-        //   });
-
-        // var ascendNode = _.find(item.nodes, function(node) {
-        //   return (node.state === 6);
-        // });
-
         if (!_.isUndefined(ascendNode) && _.size(ascendNode) > 0) {
           createdItem.hasAscendNode = true;
           createdItem.ascended = _.filter(item.nodes, function(node) {
@@ -549,6 +538,17 @@
             createdItem.complete = false;
           }
         }
+
+        _.each(createdItem.perks, function(perk) {
+          var perkDef = perkDefs.data[perk.perkHash];
+          if (perkDef) {
+            _.each(['displayName', 'displayDescription'], function(attr) {
+              if (perkDef[attr]) {
+                perk[attr] = perkDef[attr];
+              }
+            });
+          }
+        });
 
         // if (!_.isUndefined(ascendNode)) {
         //   if ((!ascendNode.isActivated) && (item.primaryStat)) {
@@ -570,6 +570,10 @@
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
         })
+        .then(dimPerkDefinitions.getDefinitions)
+        .then(function(defs) {
+            iteratorPB = iteratorPB.bind(null, defs);
+        })
         .then(dimTalentDefinitions.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
@@ -578,7 +582,6 @@
 
           return result;
         });
-
       return promise;
     }
 
