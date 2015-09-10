@@ -18,6 +18,7 @@
       settingState = {
         hideFilteredItems: false,
         itemDetails: false,
+        itemStat: false,
         condensed: false,
         characterOrder: 'mostRecent'
       };
@@ -32,7 +33,8 @@
               hideFilteredItems: false,
               condensed: false,
               characterOrder: 'mostRecent',
-              itemDetails: false
+              itemDetails: false,
+              itemStat: false
             });
           }
         }

@@ -21,6 +21,14 @@
       </tr>
       <tr>
         <td>
+          <label for="itemStat">Display Primary Stat Values on Items</label>
+        </td>
+        <td>
+          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemStat')"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="condensed">Condensed Items</label>
         </td>
         <td>

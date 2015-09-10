@@ -24,7 +24,8 @@
         '  <div ui-draggable="false" class="img" ng-class="{ \'how\': vm.item.inHoW }" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         // '  <div ui-draggable="false" class="counter ng-binding ng-scope" ng-if="vm.item.type === \'Bounties\' && vm.item.hasXP">{{vm.item.xpComplete}}%</div>',
-        '  <div ui-draggable="false" class="damage-type" ng-if="vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
+        '  <div ui-draggable="false" class="damage-type" ng-if="!vm.itemStat && vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
+        '  <div ui-draggable="false" class="item-stat" ng-if="vm.itemStat && vm.item.primStat.value" ng-class="\'stat-damage-\' + vm.item.dmg">{{ vm.item.primStat.value }}</div>',
         '</div>'
       ].join('')
     };
@@ -94,16 +95,25 @@
     var vm = this;
 
     vm.hideFilteredItems = false;
+    vm.itemStat = false;
 
-    settings.getSetting('hideFilteredItems')
-      .then(function(hideFilteredItems) {
-        vm.hideFilteredItems = hideFilteredItems;
+    settings.getSetting('itemStat')
+      .then(function(itemStat) {
+        vm.itemStat = itemStat;
+      });
+      
+    settings.getSetting('itemStat')
+      .then(function(itemStat) {
+        vm.itemStat = itemStat;
       });
 
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       if (_.has(arg, 'hideFilteredItems')) {
         vm.hideFilteredItems = arg.hideFilteredItems;
+      }
+      if (_.has(arg, 'itemStat')) {
+        vm.itemStat = arg.itemStat;
       }
     });
 
