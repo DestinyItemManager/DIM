@@ -44,9 +44,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'dimSandboxPerkDefinitions'];
 
-  function MoveItemPropertiesCtrl($sce, settings) {
+  function MoveItemPropertiesCtrl($sce, settings, dimSandboxPerkDefinitions) {
     var vm = this;
 
     vm.classes = {
@@ -148,6 +148,18 @@
           'label': 'Atk:',
           'value': vm.item.primStat.value
         });
+
+        // Decorate the perks object with displayName
+        dimSandboxPerkDefinitions.getDefinitions().then(function(perkDefinitions) {
+          _.each(vm.item.perks, function(value, key) {
+            var perk = perkDefinitions.data[value.perkHash];
+            if (perk) {
+              vm.item.perks[key]['displayName'] = perk.displayName;
+              vm.item.perks[key]['displayDescription'] = perk.displayDescription;
+            }
+          });
+        });
+
       }
     }
   }
