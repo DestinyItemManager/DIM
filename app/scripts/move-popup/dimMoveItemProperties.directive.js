@@ -37,16 +37,16 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div ng-repeat="perk in vm.item.perks track by $index" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
+        '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
         '  </div>',
         '</div>'
       ].join('')
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'dimSandboxPerkDefinitions'];
 
-  function MoveItemPropertiesCtrl($sce, settings) {
+  function MoveItemPropertiesCtrl($sce, settings, dimSandboxPerkDefinitions) {
     var vm = this;
 
     vm.classes = {
@@ -148,6 +148,17 @@
           'label': 'Atk:',
           'value': vm.item.primStat.value
         });
+
+        // Decorate the perks object with displayName
+        dimSandboxPerkDefinitions.getDefinitions().then(function(perkDefinitions) {
+          _.each(vm.item.perks, function(value, key) {
+            var perk = perkDefinitions.data[value.perkHash];
+            if (perk) {
+              vm.item.perks[key]['displayName'] = perk.displayName;
+            }
+          });
+        });
+
       }
     }
   }
