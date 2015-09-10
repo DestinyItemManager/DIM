@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions', 'dimPerkDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions, dimPerkDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -570,7 +570,7 @@
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
         })
-        .then(dimPerkDefinitions.getDefinitions)
+        .then(dimSandboxPerkDefinitions.getDefinitions)
         .then(function(defs) {
             iteratorPB = iteratorPB.bind(null, defs);
         })
