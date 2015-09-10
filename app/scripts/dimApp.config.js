@@ -66,61 +66,33 @@
       //Track Our Initial Activity of Starting the App
       $rootScope.trackActivity();
 
-      chrome.storage.sync.get('2015.09.02-Blacksmith', function(data) {
-        if (_.isNull(data) || _.isEmpty(data)) {
-          $timeout(function() {
-            toaster.pop({
-              type: 'info',
-              title: 'Blacksmith Shader Giveaway',
-              body: '<p>The DIM team is giving away six Blacksmith shaders on Twitter to celebrate your #YearOneGear.</p><p>Visit us at <a href="https://twitter.com/ThisIsDIM/status/639237265944899584" target="_blank">@ThisIsDIM</a> on twitter or the <a href="https://www.reddit.com/r/DestinyItemManager/comments/3jfl0f/blacksmith_shader_giveaway/" target="_blank">/r/destinyitemmanager</a> subreddit to learn how to enter.</p><p>See you starside Guardians.</p><p><input style="margin-top: 1px; vertical-align: middle;" id="20150902Checkbox" type="checkbox"> <label for="20150902Checkbox">Hide This Popup</label></p>',
-              timeout: 0,
-              bodyOutputType: 'trustedHtml',
-              showCloseButton: true,
-              clickHandler: function(a,b,c,d,e,f,g) {
-                if (b) {
-                  return true;
-                }
-                
-                return false;
-              },
-              onHideCallback: function() {
-                if ($('#20150902Checkbox').is(':checked')) {
-                  chrome.storage.sync.set({
-                    "2015.09.02-Blacksmith": 1
-                  }, function(e) {});
-                }
-              }
-            });
-          }, 3000);
-        }
-      });
-
-      // var cookie = window.chrome.cookies.get({
-      //   url: '.' + chrome.runtime.id,
-      //   name: '2015.09.02-Blacksmith'
-      // }, function(cookie) {
+      // chrome.storage.sync.get('2015.09.02-Blacksmith', function(data) {
+      //   if (_.isNull(data) || _.isEmpty(data)) {
+      //     $timeout(function() {
+      //       toaster.pop({
+      //         type: 'info',
+      //         title: 'Blacksmith Shader Giveaway',
+      //         body: '<p>The DIM team is giving away six Blacksmith shaders on Twitter to celebrate your #YearOneGear.</p><p>Visit us at <a href="https://twitter.com/ThisIsDIM/status/639237265944899584" target="_blank">@ThisIsDIM</a> on twitter or the <a href="https://www.reddit.com/r/DestinyItemManager/comments/3jfl0f/blacksmith_shader_giveaway/" target="_blank">/r/destinyitemmanager</a> subreddit to learn how to enter.</p><p>See you starside Guardians.</p><p><input style="margin-top: 1px; vertical-align: middle;" id="20150902Checkbox" type="checkbox"> <label for="20150902Checkbox">Hide This Popup</label></p>',
+      //         timeout: 0,
+      //         bodyOutputType: 'trustedHtml',
+      //         showCloseButton: true,
+      //         clickHandler: function(a,b,c,d,e,f,g) {
+      //           if (b) {
+      //             return true;
+      //           }
       //
-      //         if (_.isUndefined(cookie)) {
-      //           $timeout(function() {
-      //             toaster.pop({
-      //               type: 'info',
-      //               title: 'Blacksmith Shader Giveaway',
-      //               body: '<p>The DIM team is giving away six Blacksmith shaders on Twitter to celebrate your #YearOneGear.</p><p>Visit us at <a href="https://twitter.com/ThisIsDIM/status/639237265944899584" target="_blank">@ThisIsDIM</a> on twitter or the <a href="https://www.reddit.com/r/DestinyItemManager/comments/3jfl0f/blacksmith_shader_giveaway/" target="_blank">/r/destinyitemmanager</a> subreddit to learn how to enter.</p><p>See you starside Guardians.</p>',
-      //               timeout: 0,
-      //               bodyOutputType: 'trustedHtml',
-      //               showCloseButton: true,
-      //               onHideCallback: function() {
-      //                 var date = new Date();
-      //
-      //                 date.setDate(date.getDate() + 365);
-      //
-      //                 $cookies.put("2015.09.02-Blacksmith", 'hide', {
-      //                   expires: date
-      //                 });
-      //               }
-      //             });
-      //           }, 3000);
+      //           return false;
+      //         },
+      //         onHideCallback: function() {
+      //           if ($('#20150902Checkbox').is(':checked')) {
+      //             chrome.storage.sync.set({
+      //               "2015.09.02-Blacksmith": 1
+      //             }, function(e) {});
+      //           }
       //         }
+      //       });
+      //     }, 3000);
+      //   }
       // });
 
     });
