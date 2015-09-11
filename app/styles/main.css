@@ -9,19 +9,13 @@
   padding-left: 28px;
 }
 
-#header .link.icon {
-  width: 15px;
-  height: 15px;
-  vertical-align: middle;
-  text-align: center;
-  line-height: 1em;
-  font-size: 1px;
-  margin-bottom: 2px;
+#header .fa {
+  font-size: 15px;
+  color: #fff;
 }
 
 #header .icon .fa {
-  font-size: 15px;
-  color: #fff;
+  margin-left: -.5px;
 }
 
 /* Spin Animation */
