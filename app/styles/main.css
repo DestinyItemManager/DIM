@@ -9,9 +9,35 @@
   padding-left: 28px;
 }
 
+#header #user {
+  color: #fff;
+}
+
 #header .fa {
   font-size: 15px;
   color: #fff;
+}
+
+#header .content span {
+  margin: 0 8px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 25px;
+  text-align: center;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#header .content span.link {
+  color: white;
+}
+#header .content span.link:hover {
+  color: #EEE;
+  cursor: pointer;
 }
 
 .pull-right {
@@ -202,27 +228,6 @@ a {
   font-size: 20px;
 }
 
-#header .content span {
-  margin: 0 8px;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 13px;
-  line-height: 25px;
-  text-align: center;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-#header .content span.link {
-  color: white;
-}
-#header .content span.link:hover {
-  color: #EEE;
-  cursor: pointer;
-}
 @-webkit-keyframes ngdialog-fadeout {
   0% {
     opacity: 1;
