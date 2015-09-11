@@ -154,6 +154,22 @@ function extractDB(dbFile) {
     var defs = fs.createWriteStream('talent.json');
     defs.write(JSON.stringify(items));
   });
+
+    db.all('select * from DestinySandboxPerkDefinition', function(err, rows) {
+        if (err) {
+            throw err;
+        }
+
+        items = {};
+
+        rows.forEach(function(row) {
+            var item = JSON.parse(row.json);
+            items[item.perkHash] = item;
+        });
+
+        var defs = fs.createWriteStream('perks.json');
+        defs.write(JSON.stringify(items));
+    });
 }
 
 mkdirp('img/misc', function(err) { });
