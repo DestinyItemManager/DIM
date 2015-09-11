@@ -29,7 +29,7 @@
         '  </div>',
         '</div>',
         '<div class="loadout-button" ng-show="vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
-        '<div loadout-id="{{ vm.store.id }}" style="position: relative;"></div>'
+        '<div loadout-id="{{ vm.store.id }}" style="position: relative; top: 50px;"></div>'
       ].join('')
     };
 

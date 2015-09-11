@@ -626,16 +626,14 @@ img.void {
 }
 .character {
   margin-bottom: 16px;
-  height: 45px;
+  height: 50px;
 }
 .character-box {
-  position: relative;
+  position: absolute;
   display: inline-block;
   width: 202px;
   height: 50px;
   padding: 0 30px 0 44px;
-  margin-right: -40px;
-  opacity: 1;
   background: rgba(30, 36, 43, .5);
   text-shadow: 1px 1px 1px #000000;
   color: #f5f5f5;
@@ -768,7 +766,7 @@ img.void {
   left: 39px;
 }
 .move-popup {
-  background-color: rgba(21, 13, 13, 1);
+  background-color: #222;
   cursor: default;
 }
 .move-popup .item-name {
@@ -805,6 +803,10 @@ img.void {
 .item-name.is-solar .locked,
 .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
+}
+
+.item-details {
+  padding: 10px;
 }
 
 .item-details .stat-box-outer, .item-details .stat-box-inner {
