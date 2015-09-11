@@ -14,21 +14,17 @@
   color: #fff;
 }
 
-#header .icon .fa {
-  margin-left: -.5px;
-}
-
 /* Spin Animation */
 .spin {
-    -animation: spin .7s infinite linear;
+    animation: spin .7s infinite linear;
     -ms-animation: spin .7s infinite linear;
     -webkit-animation: spinw .7s infinite linear;
     -moz-animation: spinm .7s infinite linear;
 }
 
 @keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
+    from { transform: rotate(0deg);}
+    to { transform: rotate(360deg);}
 }
 
 @-webkit-keyframes spinw {
