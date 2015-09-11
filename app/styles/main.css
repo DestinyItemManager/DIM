@@ -401,7 +401,7 @@ img.void {
   width: 30px
 }
 .storage {
-  width: 224px;
+  width: 235px;
   padding: 0 12px;
   vertical-align: top;
   display: inline-block;
@@ -615,8 +615,8 @@ img.void {
 .character-box {
   position: relative;
   display: inline-block;
-  width: 139px;
-  height: 45px;
+  width: 150px;
+  height: 50px;
   padding: 0 40px 0 44px;
   margin-right: -40px;
   opacity: 1;
@@ -638,7 +638,7 @@ img.void {
 }
 .character-box .emblem {
   position: absolute;
-  top: 1px;
+  top: 3px;
   left: 1px;
   width: 38px;
   height: 38px;
@@ -996,7 +996,7 @@ ialog-open {
 }
 .character .ngdialog {
   display: block;
-  width: 223px;
+  width: 234px;
   position: absolute;
   z-index: 2;
   top: 0;
