@@ -14,10 +14,6 @@
   color: #fff;
 }
 
-#header .icon .fa {
-  margin-left: -.5px;
-}
-
 /* Spin Animation */
 .spin {
     animation: spin .7s infinite linear;
