@@ -313,11 +313,14 @@ body {
   overflow-y: scroll;
   min-width: 410px;
   margin: 0 auto;
-  padding-top: 50px;
+  padding-top: 40px;
   background-color: #434444;
   color: #fff;
   font-family: 'Open Sans', sans-serif;
   margin-bottom: 100px;
+}
+body > div:first-child {
+  padding-top: 10px;
 }
 #system {
   margin-top: -2px;
