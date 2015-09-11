@@ -37,7 +37,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div ng-repeat="perk in vm.item.perks track by $index" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
+        '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}\n{{perk.displayDescription}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
         '  </div>',
         '</div>'
       ].join('')

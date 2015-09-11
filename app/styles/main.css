@@ -1,5 +1,5 @@
 /**
-  Header Area 
+  Header Area
 **/
 
 .logo {
@@ -14,6 +14,10 @@
   color: #fff;
 }
 
+#header .icon .fa {
+  margin-left: -.5px;
+}
+
 /* Spin Animation */
 .spin {
     animation: spin .7s infinite linear;
@@ -21,17 +25,17 @@
     -webkit-animation: spinw .7s infinite linear;
     -moz-animation: spinm .7s infinite linear;
 }
- 
+
 @keyframes spin {
     from { transform: rotate(0deg);}
     to { transform: rotate(360deg);}
 }
-  
+
 @-webkit-keyframes spinw {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}
 }
- 
+
 @-moz-keyframes spinm {
     from { -moz-transform: rotate(0deg);}
     to { -moz-transform: rotate(360deg);}
