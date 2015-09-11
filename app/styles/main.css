@@ -366,7 +366,7 @@ body>div * {
   top: 0;
   left: 0;
   right: 0;
-  height: 32px;
+  height: 40px;
   background: rgb(195, 188, 180);
   color: #1a1e24;
   box-shadow: 0 8px 20px -8px #222;
@@ -923,8 +923,12 @@ img.void {
 }
 #header .content {
   margin: 0 auto;
-  padding: 7px 1em;
   max-width: 1088px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  position: relative;
 }
 div[dim-loadout] {
   left: 0;
