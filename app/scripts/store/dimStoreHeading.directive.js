@@ -28,7 +28,7 @@
         '    <div class="barFill" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'" ng-style="{width: vm.percentToNextLevel + \'%\'}"></div>',
         '  </div>',
         '</div>',
-        '<div class="loadout-button" ng-show="vm.isGuardian" ng-click="vm.openLoadoutPopup($event)">&#x25BC;</div>',
+        '<div class="loadout-button" ng-show="vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '<div loadout-id="{{ vm.store.id }}" style="position: relative;"></div>'
       ].join('')
     };

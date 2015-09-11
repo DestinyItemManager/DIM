@@ -388,7 +388,7 @@ img.void {
   margin-bottom: 10px
 }
 .title {
-  margin: 0 -12px 14px;
+  margin: 0 -12px 14px 0;
   padding: 0 16px;
   font-weight: 500;
   background-color: rgba(10, 10, 10, 0.25);
@@ -399,6 +399,12 @@ img.void {
   letter-spacing: 2px;
   font-size: 14px;
 }
+.storage:last-child .title {
+  margin-left: -12px;
+}
+.storage:nth-child(3) .title {
+  margin-right: 0;
+}
 .bucket-count {
   float: right;
 }
@@ -406,10 +412,13 @@ img.void {
   width: 30px
 }
 .storage {
-  width: 235px;
-  padding: 0 12px;
+  width: 277px;
+  padding-right: 12px;
   vertical-align: top;
   display: inline-block;
+}
+.storage:last-child {
+  padding-right: 0;
 }
 .storage.condensed {
   width: 278px;
@@ -620,12 +629,13 @@ img.void {
 .character-box {
   position: relative;
   display: inline-block;
-  width: 150px;
+  width: 202px;
   height: 50px;
-  padding: 0 40px 0 44px;
+  padding: 0 30px 0 44px;
   margin-right: -40px;
   opacity: 1;
   background: rgba(30, 36, 43, .5);
+  text-shadow: 1px 1px 1px #000000;
   color: #f5f5f5;
   text-decoration: none;
   background-size: cover;
@@ -654,7 +664,7 @@ img.void {
   text-transform: capitalize;
   position: relative;
   display: block;
-  top: 2px;
+  top: 5px;
   font-size: 16px;
   font-weight: 400;
 }
@@ -663,20 +673,23 @@ img.void {
   line-height: 38px;
 }
 .character-box .race-gender {
-  text-transform: capitalize;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9em;
+  top: 1px;
   position: relative;
 }
 .character-box .level {
   position: absolute;
-  top: 2px;
-  right: 45px;
+  top: 5px;
+  right: 35px;
   font-weight: 200;
   font-size: 14px;
 }
 .character-box .level.powerLevel {
   position: absolute;
   top: 20px;
-  right: 45px;
+  right: 35px;
   font-weight: 200;
   font-size: 14px;
   color: #f5dc56;
@@ -708,13 +721,14 @@ img.void {
 }
 .loadout-button {
   position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 40px;
+  background-color: rgba(58, 58, 58, 0.7);
+  width: 30px;
+  float: right;
+  right: 1px;
+  height: 45px;
   color: #5B6E6C;
-  vertical-align: top;
   text-align: center;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 41px;
   padding: 0;
   cursor: pointer;
@@ -1001,7 +1015,7 @@ ialog-open {
 }
 .character .ngdialog {
   display: block;
-  width: 234px;
+  width: 276px;
   position: absolute;
   z-index: 2;
   top: 0;
