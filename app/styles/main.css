@@ -342,6 +342,7 @@ body>div * {
   color: #1a1e24;
   box-shadow: 0 8px 20px -8px #222;
 }
+
 #header .header-right {
   float: right;
 }
@@ -892,14 +893,11 @@ img.void {
 #content div * {
   white-space: normal;
 }
+
 #header .content {
   margin: 0 auto;
   max-width: 1088px;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  position: relative;
+  padding: 8px 0;
 }
 div[dim-loadout] {
   left: 0;
