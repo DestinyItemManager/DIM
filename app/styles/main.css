@@ -99,9 +99,8 @@ body.fitlers .fitlers {
 
 .button-name {
   float: left;
-  width: 123px;
-  background-color: rgba(195, 188, 180, .7);
-  padding-left: 4px;
+  width: 60%;
+  padding-left: 10px;
   height: 39px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -116,10 +115,13 @@ body.fitlers .fitlers {
   text-align: center;
 }
 .loadout-set {
-  padding-left: 4px;
+  padding-left: 10px;
 }
 .loadout-list > .loadout-set {
   padding-left: 0px;
+  overflow: hidden;
+  border-bottom: solid 1px #383838;
+  background-color: #222;
 }
 .vault .sort-class,
 .vault .section.postmaster {
@@ -743,7 +745,8 @@ img.void {
 }
 .loadout-popup-content {
   line-height: 39px;
-  background-color: rgba(245, 245, 245, 0.6);
+  background-color: #333;
+  color: #E4E4E4;
 }
 .loadout-popup {
   display: none;
@@ -956,15 +959,13 @@ div[dim-loadout] {
   padding-left: 10px;
 }
 .loadout-list .loadout-set:hover, .loadout-new:hover, .loadout-options span:hover {
-  background-color: #628e89
+  background-color: #3A3A3A;
+  border-bottom: solid 1px #6D6D6D;
 }
 .loadout-set .button-edit, .loadout-set .button-delete {
-  background-color: rgba(195, 188, 180, .9);
-  color: #1a1e24;
   float: right;
-  width: 50px;
-  border-right: 1px solid rgba(195, 188, 180, .7);
-  border-left: 1px solid rgba(195, 188, 180, .9);
+  width: 20%;
+  font-size: 1.2em
 }
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
   background-color: rgba(195, 188, 180, .6);
@@ -984,7 +985,7 @@ ialog-open {
 .ngdialog {
   position: absolute;
   display: block;
-  background-color: black;
+  background-color: #222;
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
