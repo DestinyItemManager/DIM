@@ -107,8 +107,12 @@ body.fitlers .fitlers {
   white-space: nowrap !important;
 }
 
+.condensed .character-box {
+  width: 203px;
+}
+
 .condensed .button-name {
-  width: 178px;
+  width: 177px;
 }
 
 .button-delete, .button-edit {
@@ -640,9 +644,6 @@ img.void {
   text-decoration: none;
   background-size: cover;
 }
-.condensed .character-box {
-  width: 194px;
-}
 .character-box.vault-box {
   padding: 0 1em;
   width: 208px;
@@ -1026,9 +1027,6 @@ ialog-open {
   margin: 0;
   padding: 0;
   border-width: 0
-}
-.condensed .character .ngdialog {
-  width: 278px;
 }
 .character div[loadout-id] {
   top: 0;
