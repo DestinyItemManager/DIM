@@ -106,13 +106,11 @@ body.fitlers .fitlers {
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
-
-.condensed .character-box {
-  width: 203px;
+.condensed .character .ngdialog {
+  width: 289px;
 }
-
-.condensed .button-name {
-  width: 177px;
+.condensed .character-box {
+  width: 215px;
 }
 
 .button-delete, .button-edit {
@@ -427,14 +425,14 @@ img.void {
   padding-right: 0;
 }
 .storage.condensed {
-  width: 278px;
+  width: 290px;
 }
 
 .storage.vault {
   width: 209px;
 }
 .storage.vault.condensed {
-  width: 310px;
+  width: 260px;
 }
 .items.vault {
   background-color: rgba(245, 245, 245, 0.25);
@@ -650,7 +648,7 @@ img.void {
   box-sizing: border-box;
 }
 .condensed .character-box.vault-box {
-  width: 305px;
+  width: 255px;
 }
 .character-box .emblem {
   position: absolute;
