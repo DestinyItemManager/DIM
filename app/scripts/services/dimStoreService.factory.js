@@ -485,7 +485,7 @@
           equipment: item.isEquipment,
           complete: item.isGridComplete,
           hasXP: (!!item.progression),
-          xpComplete: (item.progression && item.progression.currentProgress > 0) ? Math.round((item.progression.currentProgress / item.progression.nextLevelAt) * 100) : 0,
+          xpComplete: 0,
           amount: item.stackSize,
           primStat: item.primaryStat,
           stats: item.stats,
@@ -502,8 +502,11 @@
           weaponClass: weaponClass || ''
         };
 
+        // Bounties
         if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
           createdItem.complete = item.objectives[0].isComplete;
+          createdItem.xpComplete = item.objectives[0].progress
+          //(item.progression && item.progression.currentProgress > 0) ? Math.round((item.progression.currentProgress / item.progression.nextLevelAt) * 100) : 0
         }
 
         _.each(item.stats, function(stat) {
