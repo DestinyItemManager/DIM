@@ -107,6 +107,15 @@ body.fitlers .fitlers {
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+.button-create {
+  float: left;
+  width: 100%;
+  padding-left: 10px;
+  height: 39px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
 .condensed .character .ngdialog {
   width: 289px;
 }
@@ -333,6 +342,7 @@ body > div:first-child {
   padding-top: 10px;
 }
 #system {
+  outline: none;
   margin-top: 2px;
 }
 input, select, option {
@@ -637,7 +647,7 @@ img.void {
   width: 202px;
   height: 50px;
   padding: 0 30px 0 44px;
-  background: rgba(30, 36, 43, .5);
+  /* background: rgba(30, 36, 43, .5); */
   text-shadow: 1px 1px 1px #000000;
   color: #f5f5f5;
   text-decoration: none;
@@ -721,21 +731,24 @@ img.void {
 }
 .loadout-button {
   position: relative;
-  background-color: rgba(58, 58, 58, 0.7);
+  background-color: rgba(58, 58, 58, .8);
   width: 30px;
   float: right;
   right: 1px;
   height: 45px;
-  color: #5B6E6C;
+  color: rgba(200, 200, 200, 1  );
   text-align: center;
   font-size: 15px;
   line-height: 41px;
   padding: 0;
+  border: 1px solid rgba(32,32,32,.5);
+  box-sizing: border-box;
   cursor: pointer;
 }
 .loadout-button:hover {
-  background-color: rgba(245, 245, 245, .25);
-  color: rgba(245, 245, 245, .75);
+  background-color: rgba(160, 160, 160, .8);
+  border: 1px solid rgba(32,32,32,0);
+  color: rgba(245, 245, 245, 1);
 }
 .loadout-button .active {
   background-color: rgba(10, 10, 10, .25);
@@ -743,7 +756,7 @@ img.void {
 }
 .loadout-popup-content {
   line-height: 39px;
-  background-color: #333;
+  background-color: #3A4150;
   color: #E4E4E4;
 }
 .loadout-popup {
