@@ -19,6 +19,7 @@
       template: [
         '<div class="loadout-popup-content">',
         '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span></div></div>',
+        '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.equipRandom($event)">Randomize Equipped Items</span></div></div>',
         '  <div class="loadout-list">',
         '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
         '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
@@ -114,6 +115,79 @@
 
       applyLoadoutItems(items, loadout, _items, scope);
     };
+    
+    vm.equipRandom = function equipRandom($event) {
+      var classType, items = [], exoticArmorFound = false, exoticWeaponFound = false;
+      
+      ngDialog.closeAll();
+
+      var scope = {
+        failed: false
+      };
+      
+      switch(vm.store.class) {
+        case "titan":
+          classType = 0;
+          break;
+        case "hunter":
+          classType = 1;
+          break;
+        case "warlock":
+          classType = 2;
+          break;
+      }
+      
+      var groups = _.groupBy(_.shuffle(_.where(dimItemService.getItems(),{equipment:true})), 'type');
+      
+      _.each(groups, function(group) {
+        var match = angular.copy(_.find(group, function(item) {
+          if (item.tier === "Exotic" && ((item.sort === "Armor" && exoticArmorFound) || (item.sort === "Weapon" && exoticWeaponFound)) || item.name === "Default Shader") {
+            return false;
+          } else if ((item.type === "Class" || item.sort === "Armor") && item.classType !== classType) {
+            return false;
+          } else {
+            return true;
+          }
+        }));
+        if (match) {
+          if (match.tier === "Exotic") {
+            if (match.sort === "Armor") exoticArmorFound = true;
+            if (match.sort === "Weapon") exoticWeaponFound = true;
+          }
+          match.equipped = true;
+          items.push(match);
+        }
+      });
+
+      items = _.chain(items)
+        .values()
+        .flatten()
+        .value();
+
+      var _types = _.chain(items)
+        .pluck('type')
+        .uniq()
+        .value();
+
+      var _items = _.chain(vm.store.items)
+        .filter(function(item) {
+          return _.contains(_types, item.type);
+        })
+        .filter(function(item) {
+          return (!_.some(items, function(i) {
+            return ((i.id === item.id) && (i.hash === item.hash));
+          }));
+        })
+        .groupBy(function(item) {
+          return item.type;
+        })
+        .value();
+        
+      var loadout = new Object();
+      loadout.name = 'Randomized Loadout';
+
+      applyLoadoutItems(items, loadout, _items, scope);
+    }
 
     function applyLoadoutItems(items, loadout, _items, scope) {
       if (items.length > 0) {
