@@ -436,7 +436,7 @@ img.void {
   width: 30px
 }
 .storage {
-  width: 277px;
+  width: 240px;
   padding-right: 12px;
   vertical-align: top;
   display: inline-block;
@@ -452,7 +452,7 @@ img.void {
   width: 209px;
 }
 .storage.vault.condensed {
-  width: 260px;
+  width: 312px;
 }
 .items.vault {
   background-color: rgba(245, 245, 245, 0.25);
@@ -477,7 +477,7 @@ img.void {
   width: 208px;
 }
 .vault.condensed .unequippable {
-  width: 310px;
+  width: 312px;
 }
 .sub-section {
   clear: both;
@@ -496,7 +496,7 @@ img.void {
   width: 208px;
 }
 .vault.condensed .unequipped {
-  width: 310px;
+  width: 312px;
 }
 .unequipped.on-drag-enter, .equipped.on-drag-enter {
   box-shadow: 0 0 15px 2px rgba(170, 170, 170, .5);
@@ -653,7 +653,7 @@ img.void {
 .character-box {
   position: absolute;
   display: inline-block;
-  width: 202px;
+  width: 165px;
   height: 50px;
   padding: 0 30px 0 44px;
   /* background: rgba(30, 36, 43, .5); */
