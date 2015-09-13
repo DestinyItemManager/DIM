@@ -21,7 +21,7 @@
         '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
         '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}">',
         '      <div class="title">',
-        '        <span>{{ key }}</span>',
+        '        <span>{{ ::key }}</span>',
         '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.replace(\' \', \'-\').toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type }}">',

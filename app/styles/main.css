@@ -3,10 +3,11 @@
 **/
 
 .logo {
-  background:url('../favicon-96x96.png') no-repeat;
-  background-size: 20px;
-  height: 25px;
-  padding-left: 28px;
+  background:url('../logo.png') no-repeat;
+  background-position: left center;
+  background-size: 24px;
+  height: 24px;
+  padding-left: 32px;
 }
 
 #header #user {
@@ -31,6 +32,10 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+#actions .fa:hover {
+    color: #EEE;
+    cursor: pointer;
 }
 #header .content span.link {
   color: white;
@@ -91,7 +96,7 @@ body > div, #header {
 }
 
 body.about .about,
-body.setting .setting,
+body.app-settings .app-settings,
 body.support .support,
 body.fitlers .fitlers {
   display: inline-block;
@@ -100,6 +105,15 @@ body.fitlers .fitlers {
 .button-name {
   float: left;
   width: 60%;
+  padding-left: 10px;
+  height: 39px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+.button-create {
+  float: left;
+  width: 100%;
   padding-left: 10px;
   height: 39px;
   overflow: hidden;
@@ -168,7 +182,7 @@ body.fitlers .fitlers {
   border: 5px solid #f5dc56;
 }
 .about.ngdialog,
-.setting.ngdialog,
+.app-settings.ngdialog,
 .filters.ngdialog,
 .support.ngdialog {
   position: fixed;
@@ -186,7 +200,7 @@ body.fitlers .fitlers {
 }
 body.filters.ngdialog-open,
 body.support.ngdialog-open,
-body.setting.ngdialog-open,
+body.app-settings.ngdialog-open,
 body.about.ngdialog-open {
   overflow: hidden !important;
 }
@@ -196,7 +210,7 @@ a {
   font-size: 13px;
 }
 .about.ngdialog .ngdialog-content,
-.setting.ngdialog .ngdialog-content,
+.app-settings.ngdialog .ngdialog-content,
 .filters.ngdialog .ngdialog-content,
 .support.ngdialog .ngdialog-content {
   padding: 10px 20px;
@@ -208,7 +222,7 @@ a {
   bottom: 5px;
 }
 .about.ngdialog:before,
-.setting.ngdialog:before,
+.app-settings.ngdialog:before,
 .filters.ngdialog:before,
 .support.ngdialog:before {
   content: " ";
@@ -221,7 +235,7 @@ a {
   border: 5px solid #f5dc56;
 }
 .about.ngdialog .ngdialog-close,
-.setting.ngdialog .ngdialog-close,
+.app-settings.ngdialog .ngdialog-close,
 .filters.ngdialog .ngdialog-close,
 .support.ngdialog .ngdialog-close {
   position: absolute;
@@ -332,7 +346,8 @@ body > div:first-child {
   padding-top: 10px;
 }
 #system {
-  margin-top: -2px;
+  outline: none;
+  margin-top: 2px;
 }
 input, select, option {
   font-family: 'Open Sans', sans-serif;
@@ -356,6 +371,7 @@ body>div * {
 }
 
 #header .header-right {
+  cursor: default;
   float: right;
 }
 #system {
@@ -363,6 +379,10 @@ body>div * {
   color: rgba(245, 245, 245, .6);
   float: right;
   margin-right: 5px;
+  cursor: pointer;
+}
+#system option {
+  cursor: pointer;
 }
 #filter-text {
   display: inline-block;
@@ -636,7 +656,7 @@ img.void {
   width: 202px;
   height: 50px;
   padding: 0 30px 0 44px;
-  background: rgba(30, 36, 43, .5);
+  /* background: rgba(30, 36, 43, .5); */
   text-shadow: 1px 1px 1px #000000;
   color: #f5f5f5;
   text-decoration: none;
@@ -720,21 +740,24 @@ img.void {
 }
 .loadout-button {
   position: relative;
-  background-color: rgba(58, 58, 58, 0.7);
+  background-color: rgba(58, 58, 58, .8);
   width: 30px;
   float: right;
   right: 1px;
   height: 45px;
-  color: #5B6E6C;
+  color: rgba(200, 200, 200, 1  );
   text-align: center;
   font-size: 15px;
   line-height: 41px;
   padding: 0;
+  border: 1px solid rgba(32,32,32,.5);
+  box-sizing: border-box;
   cursor: pointer;
 }
 .loadout-button:hover {
-  background-color: rgba(245, 245, 245, .25);
-  color: rgba(245, 245, 245, .75);
+  background-color: rgba(160, 160, 160, .8);
+  border: 1px solid rgba(32,32,32,0);
+  color: rgba(245, 245, 245, 1);
 }
 .loadout-button .active {
   background-color: rgba(10, 10, 10, .25);
@@ -742,7 +765,7 @@ img.void {
 }
 .loadout-popup-content {
   line-height: 39px;
-  background-color: #333;
+  background-color: #3A4150;
   color: #E4E4E4;
 }
 .loadout-popup {

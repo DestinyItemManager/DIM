@@ -18,7 +18,7 @@
       replace: true,
       template: [
         '<div class="loadout-popup-content">',
-        '  <div class="loadout-set" ng-click="vm.newLoadout($event)">+ Create Loadout</div>',
+        '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span></div></div>',
         '  <div class="loadout-list">',
         '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
         '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
