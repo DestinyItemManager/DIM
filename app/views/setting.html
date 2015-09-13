@@ -5,7 +5,7 @@
     <table>
       <tr>
         <td>
-          <label for="condensedItems">Hide Filtered Items</label>
+          <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
           <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('hideFilteredItems')"></input>
@@ -13,7 +13,7 @@
       </tr>
       <tr>
         <td>
-          <label for="details">Always Show Item Details</label>
+          <label for="details" title="Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.">Always Show Item Details</label>
         </td>
         <td>
           <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemDetails')"></input>
@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <td>
-          <label for="itemStat">Display Primary Stat Values on Items</label>
+          <label for="itemStat" title="Will display information in the lower-right of the item that is appropriate to the item such as attack, defense, and bounty status.">Display Primary Stat Values on Items</label>
         </td>
         <td>
           <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemStat')"></input>
@@ -29,7 +29,7 @@
       </tr>
       <tr>
         <td>
-          <label for="condensed">Condensed Items</label>
+          <label for="condensed" title="Increases the number of columns for character inventories and the vault.">Add Columns to Inventories</label>
         </td>
         <td>
           <input type="checkbox" id="condensed" ng-model="vm.settings.condensed" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('condensed')"></input>
@@ -37,7 +37,7 @@
       </tr>
       <tr>
         <td>
-          <label>Character Order</label>
+          <label title="Characters can be ordered by last login or based on their creation date.">Character Order</label>
         </td>
         <td>
           <label>
