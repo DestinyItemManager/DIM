@@ -295,8 +295,8 @@
                 return dStore.id === bStore.id;
               });
 
-              dStore.level = newStore.characterLevel;
-              dStore.percentToNextLevel = newStore.percentToNextLevel;
+              dStore.level = bStore.base.characterLevel;
+              dStore.percentToNextLevel = bStore.base.percentToNextLevel;
               dStore.powerLevel = bStore.base.characterBase.powerLevel;
               dStore.background = bStore.base.backgroundPath;
               dStore.icon = bStore.base.emblemPath;
