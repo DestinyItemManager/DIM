@@ -118,6 +118,24 @@ function extractDB(dbFile) {
     defs.end();
   });
 
+  // Get objectives for progress tracking JFLAY2015
+  db.all('select * from DestinyObjectiveDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      delete item.equippingBlock;
+      items[item.objectiveHash] = item;
+    });
+
+    var defs = fs.createWriteStream('objectives.json');
+    defs.write(JSON.stringify(items));
+  });
+
   db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
     if (err) {
       throw err;

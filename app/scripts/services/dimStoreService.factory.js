@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -420,7 +420,7 @@
           4248486431
         ];
 
-      var iterator = function(definitions, perkDefs, talentDefs, item, index) {
+      var iterator = function(definitions, objectiveDef, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
 
         // Missing definition?
@@ -504,9 +504,11 @@
 
         // Bounties
         if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
-          createdItem.complete = item.objectives[0].isComplete;
-          createdItem.xpComplete = item.objectives[0].progress
-          //(item.progression && item.progression.currentProgress > 0) ? Math.round((item.progression.currentProgress / item.progression.nextLevelAt) * 100) : 0
+          var objectiveDefObj = objectiveDef[item.objectives[0].objectiveHash],
+              progressGoal    = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
+
+          createdItem.complete   = item.objectives[0].isComplete;
+          createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
         }
 
         _.each(item.stats, function(stat) {
@@ -557,15 +559,6 @@
           }
         });
 
-        // if (!_.isUndefined(ascendNode)) {
-        //   if ((!ascendNode.isActivated) && (item.primaryStat)) {
-        //     if ((item.primaryStat.statHash === 368428387) && (item.primaryStat.value === 331)) {
-        //
-        //     }
-        //
-        //   }
-        // }
-
         if (createdItem.tier !== 'Basic') {
           result.push(createdItem);
         }
@@ -573,9 +566,14 @@
 
       var iteratorPB;
 
+      // Bind our arguments to the iterator method
       var promise = dimItemDefinitions.getDefinitions()
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
+        })
+        .then(dimObjectiveDefinitions.getDefinitions)
+        .then(function(defs) {
+            iteratorPB = iteratorPB.bind(null, defs);
         })
         .then(dimSandboxPerkDefinitions.getDefinitions)
         .then(function(defs) {
