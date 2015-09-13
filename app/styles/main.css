@@ -1365,3 +1365,13 @@ button.toast-close-button {
 }
 
 .something-is-sticky .fixed-header-placeholder { height: 61px !important; }
+
+.move-popup-info-detail {
+  padding: 2px 5px;
+  font-size: 1.3em;
+  height: 1.3em;
+}
+
+.move-popup-info-detail .fa {
+  vertical-align: top;
+}
