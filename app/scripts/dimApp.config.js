@@ -138,7 +138,7 @@ $(document).ready(function() {
     $('body').addClass('pad-margin');
     var style = document.createElement('style');
     style.type = 'text/css';
-    style.innerHTML = '.about.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (verge.viewportW() - $(window).width()) + 'px; }';
+    style.innerHTML = '.about.ngdialog-open.pad-margin #header, .app-settings.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (verge.viewportW() - $(window).width()) + 'px; }';
     document.getElementsByTagName('head')[0].appendChild(style);
   }
 });

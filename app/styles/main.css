@@ -3,7 +3,7 @@
 **/
 
 .logo {
-  background:url('../favicon-96x96.png') no-repeat;
+  background:url('../logo.png') no-repeat;
   background-position: left center;
   background-size: 24px;
   height: 24px;
@@ -32,6 +32,10 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+#actions .fa:hover {
+    color: #EEE;
+    cursor: pointer;
 }
 #header .content span.link {
   color: white;
@@ -92,7 +96,7 @@ body > div, #header {
 }
 
 body.about .about,
-body.setting .setting,
+body.app-settings .app-settings,
 body.support .support,
 body.fitlers .fitlers {
   display: inline-block;
@@ -178,7 +182,7 @@ body.fitlers .fitlers {
   border: 5px solid #f5dc56;
 }
 .about.ngdialog,
-.setting.ngdialog,
+.app-settings.ngdialog,
 .filters.ngdialog,
 .support.ngdialog {
   position: fixed;
@@ -196,7 +200,7 @@ body.fitlers .fitlers {
 }
 body.filters.ngdialog-open,
 body.support.ngdialog-open,
-body.setting.ngdialog-open,
+body.app-settings.ngdialog-open,
 body.about.ngdialog-open {
   overflow: hidden !important;
 }
@@ -206,7 +210,7 @@ a {
   font-size: 13px;
 }
 .about.ngdialog .ngdialog-content,
-.setting.ngdialog .ngdialog-content,
+.app-settings.ngdialog .ngdialog-content,
 .filters.ngdialog .ngdialog-content,
 .support.ngdialog .ngdialog-content {
   padding: 10px 20px;
@@ -218,7 +222,7 @@ a {
   bottom: 5px;
 }
 .about.ngdialog:before,
-.setting.ngdialog:before,
+.app-settings.ngdialog:before,
 .filters.ngdialog:before,
 .support.ngdialog:before {
   content: " ";
@@ -231,7 +235,7 @@ a {
   border: 5px solid #f5dc56;
 }
 .about.ngdialog .ngdialog-close,
-.setting.ngdialog .ngdialog-close,
+.app-settings.ngdialog .ngdialog-close,
 .filters.ngdialog .ngdialog-close,
 .support.ngdialog .ngdialog-close {
   position: absolute;
@@ -367,6 +371,7 @@ body>div * {
 }
 
 #header .header-right {
+  cursor: default;
   float: right;
 }
 #system {
@@ -374,6 +379,10 @@ body>div * {
   color: rgba(245, 245, 245, .6);
   float: right;
   margin-right: 5px;
+  cursor: pointer;
+}
+#system option {
+  cursor: pointer;
 }
 #filter-text {
   display: inline-block;

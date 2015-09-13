@@ -55,14 +55,14 @@
         settingResult = ngDialog.open({
           template: 'views/setting.html',
           overlay: false,
-          className: 'setting',
+          className: 'app-settings',
           scope: $('body > div').scope()
         });
-        $('body').addClass('setting');
+        $('body').addClass('app-settings');
 
         settingResult.closePromise.then(function() {
           settingResult = null;
-          $('body').removeClass('setting');
+          $('body').removeClass('app-settings');
         });
       }
     };
