@@ -24,6 +24,7 @@
 
     var service = {
       getPlatforms: getPlatforms,
+      getCharacters: getCharacters,
       getStores: getStores,
       transfer: transfer,
       equip: equip
@@ -222,7 +223,7 @@
       var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      charactersPromise = charactersPromise || getBungleToken()
+      charactersPromise = getBungleToken()
         .then(addTokenToData)
         .then(getMembershipPB)
         .then(function(membershipId) {

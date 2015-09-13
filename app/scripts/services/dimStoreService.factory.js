@@ -13,10 +13,15 @@
     var service = {
       getStores: getStores,
       getStore: getStore,
+      updateStores: updateStores,
       setHeights: setHeights
     };
 
     return service;
+
+    function updateStores() {
+      return dimBungieService.getCharacters(dimPlatformService.getActive());
+    }
 
     function getNextIndex() {
       return _index++;

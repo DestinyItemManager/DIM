@@ -37,6 +37,30 @@
       var vm = scope.vm;
       var dialogResult = null;
 
+      scope.$watch('vm.store.percentToNextLevel', function(percentToNextLevel) {
+        vm.percentToNextLevel = percentToNextLevel;
+      });
+
+      scope.$watch('vm.store.level', function(level) {
+        vm.level = level;
+      });
+
+      scope.$watch('vm.store.background', function(background) {
+        vm.characterBoxUrl = 'http://bungie.net' + background;
+
+        if (vm.isGuardian) {
+          element[0].querySelector('.character-box').style.backgroundImage = 'url(' + vm.characterBoxUrl + ')';
+        }
+      });
+
+      scope.$watch('vm.store.icon', function(icon) {
+        vm.emblemUrl = 'http://bungie.net' + icon;
+
+        if (vm.isGuardian) {
+          element[0].querySelector('.emblem').style.backgroundImage = 'url(' + vm.emblemUrl + ')';
+        }
+      });
+
       $(document).ready(function() {
         element.scrollToFixed({
           marginTop: 51,
@@ -97,9 +121,9 @@
     }
   }
 
-  StoreHeadingCtrl.$inject = [];
+  StoreHeadingCtrl.$inject = ['$scope'];
 
-  function StoreHeadingCtrl() {
+  function StoreHeadingCtrl($scope) {
     var vm = this;
 
     vm.isGuardian = (vm.store.id !== 'vault');

@@ -276,11 +276,33 @@
         return $q.reject(new Error('Cannot move class to different store.'));
       }
 
+      var dimStores = null;
+
       promise = promise
         .then(function(s) {
           source = s;
         })
         .then(dimItemService.moveTo.bind(null, item, target, equip))
+        .then(dimStoreService.getStores)
+        .then(function(stores) {
+          dimStores = stores;
+          return dimStoreService.updateStores();
+        })
+        .then(function(bungieStores) {
+          _.each(dimStores, function(dStore) {
+            if (dStore.id !== 'vault') {
+              var bStore = _.find(bungieStores, function(bStore) {
+                return dStore.id === bStore.id;
+              });
+
+              dStore.level = newStore.characterLevel;
+              dStore.percentToNextLevel = newStore.percentToNextLevel;
+              dStore.powerLevel = bStore.base.characterBase.powerLevel;
+              dStore.background = bStore.base.backgroundPath;
+              dStore.icon = bStore.base.emblemPath;
+            }
+          })
+        })
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
         });

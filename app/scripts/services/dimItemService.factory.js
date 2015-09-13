@@ -537,6 +537,9 @@
         return movePlan;
       }
 
+      function updateLevels() {
+      }
+
       function getItems() {
         var returnValue = [];
         var stores = dimStoreService.getStores();

@@ -194,15 +194,39 @@
           $rootScope.loadingTracker.addPromise(promise);
         }
       } else {
-        var value = 'success';
-        var message = 'Your loadout has been transfered.';
+        var dimStores;
 
-        if (scope.failed) {
-          value = 'warning';
-          message = 'Your loadout has been transfered, with errors.'
-        }
+        $q.when(dimStoreService.getStores())
+          .then(function(stores) {
+            dimStores = stores;
+            return dimStoreService.updateStores();
+          })
+          .then(function(bungieStores) {
+            _.each(dimStores, function(dStore) {
+              if (dStore.id !== 'vault') {
+                var bStore = _.find(bungieStores, function(bStore) {
+                  return dStore.id === bStore.id;
+                });
 
-        toaster.pop(value, loadout.name, message);
+                dStore.level = bStore.base.characterLevel;
+                dStore.percentToNextLevel = bStore.base.percentToNextLevel;
+                dStore.powerLevel = bStore.base.characterBase.powerLevel;
+                dStore.background = bStore.base.backgroundPath;
+                dStore.icon = bStore.base.emblemPath;
+              }
+            })
+          })
+          .then(function() {
+            var value = 'success';
+            var message = 'Your loadout has been transfered.';
+
+            if (scope.failed) {
+              value = 'warning';
+              message = 'Your loadout has been transfered, with errors.'
+            }
+
+            toaster.pop(value, loadout.name, message);
+          });
       }
     }
   }
