@@ -39,14 +39,14 @@
   user-select: none;
 }
 #actions .fa:hover {
-    color: #bbb;
+    color: #68a0b7;
     cursor: pointer;
 }
 #header .content span.link {
   color: white;
 }
 #header .content span.link:hover {
-  color: #bbb;
+  color: #68a0b7;
   cursor: pointer;
 }
 
@@ -82,6 +82,7 @@ div[dim-search-filter] input {
   width: 250px;
   -webkit-appearance: none;
   border: 1px solid #999;
+  border-radius: 3px;
   padding: 2px 10px;
   margin: 0px 15px 0 10px;
   background-color: #fafafa;
@@ -112,7 +113,6 @@ body.fitlers .fitlers {
   float: left;
   width: 60%;
   padding-left: 10px;
-  height: 39px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
@@ -142,7 +142,8 @@ body.fitlers .fitlers {
 .loadout-list > .loadout-set {
   padding-left: 0px;
   overflow: hidden;
-  border-bottom: solid 1px #383838;
+  border-top: solid 1px #383838;
+  border-bottom: solid 1px #111;
   background-color: #222;
 }
 .vault .sort-class,
@@ -371,11 +372,9 @@ body>div * {
   top: 0;
   left: 0;
   right: 0;
-  height: 40px;
-  /*background: rgb(195, 188, 180);*/
+  height: 50px;
   background-color: #222;
-  color: #1a1e24;
-  box-shadow: 0 8px 20px -8px #222;
+  border-bottom: solid 1px #6D6D6D;
 }
 
 #header .header-right {
@@ -420,14 +419,18 @@ img.void {
 .title {
   margin: 0 -12px 14px 0;
   padding: 0 16px;
-  font-weight: 500;
-  background-color: rgba(10, 10, 10, 0.25);
+  background-color: #353535;
   color: #FFF;
   line-height: 40px;
   height: 40px;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 14px;
+  border-bottom: solid 1px #6D6D6D;
+  border-top: solid 1px #2B2B2B;
+}
+.storage:first-child .title {
+  border-left: solid 1px #2b2b2b;
 }
 .storage:last-child .title {
   margin-left: -12px;
@@ -770,7 +773,7 @@ img.void {
   color: rgba(245, 245, 245, .75);
 }
 .loadout-popup-content {
-  line-height: 39px;
+  line-height: 35px;
   background-color: #3A4150;
   color: #E4E4E4;
 }
@@ -936,7 +939,7 @@ img.void {
 }
 #content {
   margin: 0 auto;
-  padding: 2px;
+  margin-top: 15px;
   white-space: nowrap;
   display: inline-block;
   -webkit-user-select: none;
@@ -952,7 +955,7 @@ img.void {
 #header .content {
   margin: 0 auto;
   max-width: 1088px;
-  padding: 8px 0;
+  padding: 12px 0;
 }
 div[dim-loadout] {
   left: 0;
@@ -989,8 +992,8 @@ div[dim-loadout] {
   padding-left: 10px;
 }
 .loadout-list .loadout-set:hover, .loadout-new:hover, .loadout-options span:hover {
-  background-color: #3A3A3A;
-  border-bottom: solid 1px #6D6D6D;
+  background-color: #151515;
+  border-top: solid 1px #151515;
 }
 .loadout-set .button-edit, .loadout-set .button-delete {
   float: right;
@@ -998,7 +1001,8 @@ div[dim-loadout] {
   font-size: 1.2em
 }
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
-  background-color: rgba(195, 188, 180, .6);
+  background-color: #68a0b7;
+  color: #222;
 }
 .loadout-new {
   text-align: center;
@@ -1046,14 +1050,15 @@ ialog-open {
 }
 .character .ngdialog {
   display: block;
-  width: 276px;
+  width: 239px;
   position: absolute;
   z-index: 2;
   top: 0;
   bottom: initial;
   margin: 0;
   padding: 0;
-  border-width: 0
+  border: solid 1px #131313;
+  border-top: none;
 }
 .character div[loadout-id] {
   top: 0;
@@ -1354,16 +1359,16 @@ button.toast-close-button {
 .something-is-sticky .sticky-header-background {
   left: 0;
   right: 0;
-  top: 32px;
+  top: 50px;
   background-color: #434444;
-  height: 80px;
+  height: 60px;
   position: fixed;
   z-index: 4;
-  box-shadow: 0 8px 20px -8px #222;
+  box-shadow: 0 1px 6px 0px #222;
 }
 
 .something-is-sticky .character.scroll-to-fixed-fixed {
-  top: 52px !important;
+  top: 55px !important;
 }
 
 .fixed-header {
