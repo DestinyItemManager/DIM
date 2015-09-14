@@ -872,9 +872,9 @@ img.void {
 .move-popup .item-name {
   background-color: #fff;
   color: #000;
-  margin: 1px;
-  padding: 1px;
-  padding-left: 3px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .move-popup .bounty-description {
   padding: 5px;
@@ -904,36 +904,55 @@ img.void {
 .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
 }
-
+/**
+ * Move Popup - Details
+ */
 .item-details {
   padding: 10px;
 }
-
-.item-details .stat-box-outer, .item-details .stat-box-inner {
-  display: inline-block;
-  height: 18px;
-  /*margin: 1px;*/
-  width: 200px;
-  vertical-align: middle;
-  background-color: rgba(209, 219, 215, .1);
+.item-stats {
+  width: 100%;
+}
+.stat-box-row {
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.item-details .stat-box-text {
+    display: block;
+    float: left;
+    line-height: 20px;
+    padding-right: 10px;
+    width: 30%;
+    text-align: right;
+}
+.item-details .stat-box-val {
+    display: block;
+    float: left;
+    line-height: 20px;
+    width: 10%;
+    text-align: left;
+    padding-left: 5px;
+}
+.item-details .stat-box-outer, 
+.item-details .stat-box-inner {
+    display: block;
+    height: 20px;
+    width: 60%;
+    float: left;
+    background-color: #333;
 }
 .item-details .stat-box-inner {
   background-color: white;
   color: black;
-  padding-left: 2px;
+  padding-left: 5px;
+  line-height: 20px;
+  border-right: solid 1px #000;
 }
-.item-details .stat-box-text {
-  display: inline-block;
-  width: 75px;
-  text-align: right;
-  padding-right: 5px;
+.item-details .stat-box-outer span:last-child {
+  padding-left: 5px;
 }
 .item-details.stat-box-row {
   padding-bottom: 3px;
-}
-.item-details .item-perks, .item-details .item-stats{
-  display: table;
-  margin: 0 auto;
 }
 .item-details .item-perks div {
   display: inline-block;
