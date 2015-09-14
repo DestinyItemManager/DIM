@@ -21,7 +21,7 @@
         '<div ng-class="vm.classes">',
         '  <span ng-if="vm.item.locked" class="locked"></span>',
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
-        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete && !vm.itemStat" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
+        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
         '  <span ng-if="vm.light > 0"> &#10022; {{ vm.light }}</span>',
         '  <span ng-repeat="stat in vm.stats track by stat.label"> | {{ stat.label }} {{ stat.value }}</span>',
         '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.itemDetails && vm.item.type != \'Bounties\'"><span class="fa fa-info-circle"></span></span>',
