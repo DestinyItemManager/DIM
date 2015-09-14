@@ -19,7 +19,6 @@
       template: [
         '<div class="loadout-popup-content">',
         '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span></div></div>',
-        '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.equipRandom($event)">Randomize Equipped Items</span></div></div>',
         '  <div class="loadout-list">',
         '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
         '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
@@ -27,6 +26,12 @@
         '      <span class="button-edit" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </div>',
         '  </div>',
+        '  <div class="loadout-list"><div class="loadout-set">',
+        '    <span class="button-name button-random-name">Randomize</span>',
+        '    <span title="Randomize Weapons" class="button-random-option button-weapons" ng-click="vm.randomToggle(0)" ng-class="{ \'button-random-option-active\': vm.randomWeapons }"><i class="fa fa-hand-o-right"></i></span>',
+        '    <span title="Randomize Armor" class="button-random-option button-armor" ng-click="vm.randomToggle(1)" ng-class="{ \'button-random-option-active\': vm.randomArmor }"><i class="fa fa-shield"></i></span>',
+        '    <span title="Apply Randomizaion" class="button-apply" ng-show="vm.randomWeapons || vm.randomArmor" ng-click="vm.equipRandom(vm.randomWeapons, vm.randomArmor, $event)"><i class="fa fa-check"></i></span>',
+        '  </div></div>',
         '</div>'
       ].join('')
     };
@@ -116,14 +121,31 @@
       applyLoadoutItems(items, loadout, _items, scope);
     };
     
-    vm.equipRandom = function equipRandom($event) {
-      var classType, items = [], exoticArmorFound = false, exoticWeaponFound = false;
+    vm.randomWeapons = false;
+    vm.randomArmor = false;
+    
+    vm.randomToggle = function(option) {
+      switch(option) {
+        case 0:
+          vm.randomWeapons = !vm.randomWeapons;
+          break;
+        case 1:
+          vm.randomArmor = !vm.randomArmor;
+          break;
+      }
+    }  
+    
+    vm.equipRandom = function equipRandom(weapons, armor, $event) {
+      var classType, items = [], matchList = [], matchGroups = [], exoticArmorFound = false, exoticWeaponFound = false;
       
       ngDialog.closeAll();
 
       var scope = {
         failed: false
       };
+      
+      if (weapons) matchList.push('Class','Primary','Special','Heavy');
+      if (armor) matchList.push('Helmet','Gauntlets','Chest','Leg','ClassItem','Armor');
       
       switch(vm.store.class) {
         case "titan":
@@ -139,15 +161,23 @@
       
       var groups = _.groupBy(_.shuffle(_.where(dimItemService.getItems(),{equipment:true})), 'type');
       
-      _.each(groups, function(group) {
+      _.each(matchList, function(match) {
+        matchGroups.push(groups[match]);
+      });
+      
+      _.each(matchGroups, function(group) {
         var match = angular.copy(_.find(group, function(item) {
-          if (item.tier === "Exotic" && ((item.sort === "Armor" && exoticArmorFound) || (item.sort === "Weapon" && exoticWeaponFound)) || item.name === "Default Shader") {
+          if (item.name === "Default Shader") {
             return false;
-          } else if ((item.type === "Class" || item.sort === "Armor") && item.classType !== classType) {
-            return false;
-          } else {
-            return true;
           }
+          if (item.tier === "Exotic" && ((item.sort === "Armor" && exoticArmorFound) || (item.sort === "Weapon" && exoticWeaponFound))) {
+            console.log('ignored second exotic');
+            return false;
+          }
+          if ((item.type === "Class" || item.sort === "Armor") && item.classType !== classType) {
+            return false;
+          }
+          return true;
         }));
         if (match) {
           if (match.tier === "Exotic") {
@@ -184,7 +214,13 @@
         .value();
         
       var loadout = new Object();
-      loadout.name = 'Randomized Loadout';
+      if (weapons && armor) {
+        loadout.name = 'Randomized Loadout';
+      } else if (weapons) {
+        loadout.name = 'Randomized Weapon Loadout';
+      } else if (armor) {
+        loadout.name = 'Randomized Armor Loadout';
+      }
 
       applyLoadoutItems(items, loadout, _items, scope);
     }

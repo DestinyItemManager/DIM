@@ -111,6 +111,9 @@ body.fitlers .fitlers {
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+.button-random-name {
+  width: 40%;
+}
 .button-create {
   float: left;
   width: 100%;
@@ -127,7 +130,7 @@ body.fitlers .fitlers {
   width: 215px;
 }
 
-.button-delete, .button-edit {
+.button-delete, .button-edit, .button-apply, .button-random-option {
   text-align: center;
 }
 .loadout-set {
@@ -991,8 +994,19 @@ div[dim-loadout] {
   width: 20%;
   font-size: 1.2em
 }
+.loadout-set .button-apply, .loadout-set .button-random-option {
+  float: left;
+  width: 20%;
+  font-size: 1.2em
+}
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
   background-color: rgba(195, 188, 180, .6);
+}
+.loadout-set .button-random-option-active, .loadout-set .button-random-option:hover, .loadout-set .button-apply:hover {
+  background-color: rgba(180, 255, 180, .6);
+}
+.loadout-set .button-random-option-active:hover {
+  background-color: rgba(255, 180, 180, .6);
 }
 .loadout-new {
   text-align: center;
