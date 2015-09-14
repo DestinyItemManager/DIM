@@ -27,10 +27,9 @@
         '    </div>',
         '  </div>',
         '  <div class="loadout-list"><div class="loadout-set">',
-        '    <span class="button-name button-random-name">Randomize</span>',
-        '    <span title="Randomize Weapons" class="button-random-option button-weapons" ng-click="vm.randomToggle(0)" ng-class="{ \'button-random-option-active\': vm.randomWeapons }"><i class="fa fa-hand-o-right"></i></span>',
+        '    <span class="button-name button-random-name" ng-click="vm.equipRandom(vm.randomWeapons, vm.randomArmor, $event)"><i class="fa fa-random"></i> Randomize</span>',
         '    <span title="Randomize Armor" class="button-random-option button-armor" ng-click="vm.randomToggle(1)" ng-class="{ \'button-random-option-active\': vm.randomArmor }"><i class="fa fa-shield"></i></span>',
-        '    <span title="Apply Randomizaion" class="button-apply" ng-show="vm.randomWeapons || vm.randomArmor" ng-click="vm.equipRandom(vm.randomWeapons, vm.randomArmor, $event)"><i class="fa fa-check"></i></span>',
+        '    <span title="Randomize Weapons" class="button-random-option button-weapons" ng-click="vm.randomToggle(0)" ng-class="{ \'button-random-option-active\': vm.randomWeapons }"><i class="fa fa-hand-o-right"></i></span>',
         '  </div></div>',
         '</div>'
       ].join('')
@@ -222,7 +221,11 @@
         loadout.name = 'Randomized Armor Loadout';
       }
 
-      applyLoadoutItems(items, loadout, _items, scope);
+      if (weapons || armor) {
+        applyLoadoutItems(items, loadout, _items, scope);
+      } else {
+        toaster.pop('error', 'Randomized Nothing', 'Select Weapons, Armor, or Both before clicking Randomize.');
+      }
     }
 
     function applyLoadoutItems(items, loadout, _items, scope) {
