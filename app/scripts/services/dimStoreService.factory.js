@@ -446,7 +446,7 @@
         //   return;
         // }
 
-        var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName);
+        var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName, itemDef);
 
         if (item.itemHash === 937555249) {
           itemType = "Material";
@@ -464,6 +464,10 @@
         }
 
         var itemSort = sortItem(itemDef.itemTypeName);
+
+        if (_.isUndefined(itemSort)) {
+          console.log(itemDef.itemTypeName + " does not have a sort property.");
+        }
 
         if (item.location === 4) {
           itemSort = 'Postmaster';
@@ -515,9 +519,9 @@
         // Bounties
         if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
           var objectiveDefObj = objectiveDef[item.objectives[0].objectiveHash],
-              progressGoal    = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
+            progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
 
-          createdItem.complete   = item.objectives[0].isComplete;
+          createdItem.complete = item.objectives[0].isComplete;
           createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
         }
 
@@ -583,11 +587,11 @@
         })
         .then(dimObjectiveDefinitions.getDefinitions)
         .then(function(defs) {
-            iteratorPB = iteratorPB.bind(null, defs);
+          iteratorPB = iteratorPB.bind(null, defs);
         })
         .then(dimSandboxPerkDefinitions.getDefinitions)
         .then(function(defs) {
-            iteratorPB = iteratorPB.bind(null, defs);
+          iteratorPB = iteratorPB.bind(null, defs);
         })
         .then(dimTalentDefinitions.getDefinitions)
         .then(function(defs) {
@@ -634,7 +638,21 @@
       return 'unknown';
     }
 
-    function getItemType(type, name) {
+    /* Not Implemented */
+    // Faction Badge,
+    // Engram,
+    // Trials Reward,
+    // Currency,
+    // Material Exchange,
+    // Equipment,
+    // Invitation,
+    // Camera,
+    // Buff,
+    // Bribe,
+    // Incomplete Engrams,
+    // Corrupted Engrams,
+
+    function getItemType(type, name, def) {
       if (_.isUndefined(type) || _.isUndefined(name)) {
         return {
           'general': 'General',
@@ -644,6 +662,10 @@
 
       //if(type.indexOf("Engram") != -1 || name.indexOf("Marks") != -1) {
       if (name.indexOf("Marks") != -1) {
+        return null;
+      }
+
+      if (type === 'Mission Reward') {
         return null;
       }
 
@@ -697,6 +719,29 @@
       }
 
       if (type.indexOf(" Bounty") != -1) {
+        if (def.hasAction === true) {
+          return 'Bounties';
+        } else {
+          return null;
+        }
+      }
+
+      if (type.indexOf("Treasure Map") != -1) {
+        return 'Bounties';
+      }
+
+      if (type.indexOf("Bounty Reward") != -1) {
+        return 'Bounties';
+      }
+
+      if (type.indexOf("Queen's Orders") != -1) {
+        return 'Bounties';
+      }
+
+      if (type.indexOf("Curio") != -1) {
+        return 'Bounties';
+      }
+      if (type.indexOf("Vex Technology") != -1) {
         return 'Bounties';
       }
 
@@ -704,8 +749,20 @@
         return 'Bounties';
       }
 
+      if (type.indexOf("Relic") != -1) {
+        return 'Bounties';
+      }
+
+      if (type.indexOf("Message ") != -1) {
+        return 'Messages';
+      }
+
       if (type.indexOf("Package") != -1) {
         return 'Messages';
+      }
+
+      if (type.indexOf("Armsday Order") != -1) {
+        return 'Special Orders';
       }
 
       if (typeObj.general !== '') {
@@ -716,7 +773,7 @@
         return "Messages";
       }
 
-      if (["Vehicle Upgrade"].indexOf(type) != -1) {
+      if (["Vehicle Upgrade", "Summoning Rune"].indexOf(type) != -1) {
         return "Consumable";
       }
 
@@ -729,10 +786,17 @@
     function sortItem(type) {
       if (["Pulse Rifle", "Sword", "Sniper Rifle", "Shotgun", "Scout Rifle", "Sidearm", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
         return 'Weapons';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
+      if (["Titan Mark", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
         return 'Armor';
-      if (["Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+      if (["Quest Step", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         return 'General';
+      if (["Daily Reward", "Package", "Armsday Order"]) {
+        return 'Postmaster';
+      }
+
+      if (type.indexOf("Message ") != -1) {
+        return 'Postmaster';
+      }
     }
   }
 })();
