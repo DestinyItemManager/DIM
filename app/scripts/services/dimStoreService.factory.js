@@ -94,6 +94,9 @@
       setHeight('.sub-section.sort-material');
       setHeight('.sub-section.sort-missions');
       setHeight('.sub-section.sort-bounties');
+      setHeight('.sub-section.sort-messages');
+      setHeight('.sub-section.sort-special-orders');
+      setHeight('.sub-section.sort-lost-items');
       setHeight('.weapons');
       setHeight('.armor');
       setHeight('.general');

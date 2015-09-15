@@ -1460,21 +1460,23 @@ button.toast-close-button {
   right: 0;
   top: 50px;
   background-color: #434444;
-  height: 60px;
+  height: 75px;
   position: fixed;
   z-index: 4;
   box-shadow: 0 1px 6px 0px #222;
 }
 
 .something-is-sticky .character.scroll-to-fixed-fixed {
-  top: 55px !important;
+  top: 65px !important;
 }
 
 .fixed-header {
   left: auto !important;
 }
 
-.something-is-sticky .fixed-header-placeholder { height: 61px !important; }
+.something-is-sticky .fixed-header-placeholder {
+  height: 71px !important;
+}
 
 .move-popup-info-detail {
   padding: 2px 5px;
