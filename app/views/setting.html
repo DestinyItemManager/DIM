@@ -1,7 +1,12 @@
 <div ng-controller="dimSettingsCtrl" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
   <h1>Settings</h1>
   <h2>Look and Feel</h2>
-  <form>
+  <style>
+  .settings td:nth-child(2) {
+    white-space: nowrap;
+  }
+  </style>
+  <form class="settings">
     <table>
       <tr>
         <td>

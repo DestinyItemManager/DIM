@@ -20,7 +20,7 @@
         'item': '=itemData'
       },
       template: [
-        '<div ui-draggable="{{ (vm.item.type !== \'Lost Items\') && (vm.item.type !== \'Special Orders\') && (vm.item.type !== \'Messages\')  }}" id="item-{{:: $id }}" drag-channel="{{ vm.item.type }}" title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" drag="\'item-\' + $id" class="item" ng-class="{ \'search-hidden\': !vm.item.visible, \'search-item-hidden\': vm.item.visible === false && vm.hideFilteredItems === true, \'complete\': vm.item.complete }">',
+        '<div ui-draggable="{{ (vm.item.type !== \'Lost Items\') && (vm.item.type !== \'Missions\') && (vm.item.type !== \'Bounties\') && (vm.item.type !== \'Special Orders\') && (vm.item.type !== \'Messages\')  }}" id="item-{{:: $id }}" drag-channel="{{ (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type }}" title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" drag="\'item-\' + $id" class="item" ng-class="{ \'search-hidden\': !vm.item.visible, \'search-item-hidden\': vm.item.visible === false && vm.hideFilteredItems === true, \'complete\': vm.item.complete }">',
         '  <div ui-draggable="false" class="img" ng-class="{ \'how\': vm.item.inHoW }" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="counter ng-binding ng-scope" ng-if="vm.item.type === \'Bounties\' && !vm.item.complete && vm.itemStat">{{vm.item.xpComplete}}%</div>',
@@ -101,7 +101,7 @@
       .then(function(itemStat) {
         vm.itemStat = itemStat;
       });
-      
+
     settings.getSetting('itemStat')
       .then(function(itemStat) {
         vm.itemStat = itemStat;
