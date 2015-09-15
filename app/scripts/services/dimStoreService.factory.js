@@ -85,9 +85,11 @@
       setHeight('.sub-section.sort-gauntlets');
       setHeight('.sub-section.sort-leg');
       setHeight('.sub-section.sort-classitem');
+      setHeight('.sub-section.sort-artifact');
       setHeight('.sub-section.sort-emblem');
       setHeight('.sub-section.sort-armor');
       setHeight('.sub-section.sort-ghost');
+      setHeight('.sub-section.sort-emote');
       setHeight('.sub-section.sort-ship');
       setHeight('.sub-section.sort-vehicle');
       setHeight('.sub-section.sort-consumable');
@@ -686,6 +688,14 @@
         return 'Missions';
       }
 
+      if (type.indexOf("Emote") != -1) {
+        return "Emote";
+      }
+
+      if (type.indexOf("Artifact") != -1) {
+        return "Artifact";
+      }
+
       if (type.indexOf(" Bounty") != -1) {
         return 'Bounties';
       }
@@ -721,7 +731,7 @@
         return 'Weapons';
       if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
         return 'Armor';
-      if (["Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+      if (["Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         return 'General';
     }
   }

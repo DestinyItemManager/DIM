@@ -66,11 +66,13 @@
       'Chest',
       'Leg',
       'ClassItem',
+      'Artifact',
       'Ghost',
       'Emblem',
       'Armor',
       'Ship',
       'Vehicle',
+      'Emote',
       'Consumable',
       'Material',
       'Missions',
@@ -107,7 +109,8 @@
         'Gauntlets',
         'Chest',
         'Leg',
-        'ClassItem'
+        'ClassItem',
+        'Artifact'
       ],
       General: [
         'Ghost',
@@ -115,6 +118,7 @@
         'Material',
         'Emblem',
         'Armor',
+        'Emote',
         'Ship',
         'Vehicle',
         'Missions',
@@ -166,11 +170,19 @@
         equipped: 'equipped equippable',
         unequipped: 'unequipped equippable',
       },
+      Artifact: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
       Emblem: {
         equipped: 'equipped equippable',
         unequipped: 'unequipped equippable',
       },
       Armor: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Emote: {
         equipped: 'equipped equippable',
         unequipped: 'unequipped equippable',
       },

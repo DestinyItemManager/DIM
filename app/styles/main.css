@@ -868,6 +868,8 @@ img.void {
 .move-popup {
   background-color: #222;
   cursor: default;
+  bottom: 50px;
+  min-height: 77px;
 }
 .move-popup .item-name {
   background-color: #fff;
@@ -1482,6 +1484,9 @@ button.toast-close-button {
   padding: 2px 5px;
   font-size: 1.3em;
   height: 1.3em;
+  top: 5px;
+  right: 2px;
+  position: absolute;
 }
 
 .move-popup-info-detail .fa {
