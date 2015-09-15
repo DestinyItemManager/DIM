@@ -1146,6 +1146,9 @@ ialog-open {
 .move-popup-right {
   right: 0;
 }
+.move-popup-bottom {
+  top: 50px;
+}
 .locations {
   display: inline-block;
 }
@@ -1478,6 +1481,12 @@ button.toast-close-button {
 
 .something-is-sticky .fixed-header-placeholder {
   height: 71px !important;
+}
+
+.inline-stats {
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 15px;
 }
 
 .move-popup-info-detail {

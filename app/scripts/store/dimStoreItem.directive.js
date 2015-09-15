@@ -58,12 +58,15 @@
           ngDialog.closeAll();
 
           if (!dimLoadoutService.dialogOpen) {
+            var bottom = ($(element).offset().top < 300) ? ' move-popup-bottom' : '';
+            var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
+
             dialogResult = ngDialog.open({
               template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
               plain: true,
               appendTo: 'div[id="item-' + scope.$id + '"]',
               overlay: false,
-              className: 'move-popup' + ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : ''),
+              className: 'move-popup' + right +  bottom,
               showClose: false,
               scope: scope
             });
