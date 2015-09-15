@@ -26,7 +26,7 @@
         '  <span ng-repeat="stat in vm.stats track by stat.label"> | {{ stat.label }} {{ stat.value }}</span>',
         '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.itemDetails && vm.item.type != \'Bounties\'"><span class="fa fa-info-circle"></span></span>',
         '</div>',
-        '<div class="item-details" ng-if="vm.itemDetails && vm.item.type != \'Bounties\'">',
+        '<div class="item-details" ng-show="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
         '    <div class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
