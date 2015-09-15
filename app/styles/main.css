@@ -39,14 +39,14 @@
   user-select: none;
 }
 #actions .fa:hover {
-    color: #bbb;
+    color: #68a0b7;
     cursor: pointer;
 }
 #header .content span.link {
   color: white;
 }
 #header .content span.link:hover {
-  color: #bbb;
+  color: #68a0b7;
   cursor: pointer;
 }
 
@@ -82,6 +82,7 @@ div[dim-search-filter] input {
   width: 250px;
   -webkit-appearance: none;
   border: 1px solid #999;
+  border-radius: 3px;
   padding: 2px 10px;
   margin: 0px 15px 0 10px;
   background-color: #fafafa;
@@ -112,7 +113,6 @@ body.fitlers .fitlers {
   float: left;
   width: 60%;
   padding-left: 10px;
-  height: 39px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
@@ -142,7 +142,8 @@ body.fitlers .fitlers {
 .loadout-list > .loadout-set {
   padding-left: 0px;
   overflow: hidden;
-  border-bottom: solid 1px #383838;
+  border-top: solid 1px #383838;
+  border-bottom: solid 1px #111;
   background-color: #222;
 }
 .vault .sort-class,
@@ -192,17 +193,11 @@ body.fitlers .fitlers {
 .filters.ngdialog,
 .support.ngdialog {
   position: fixed;
-  top: 25%;
-  left: 25%;
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
   color: #fff;
   font-size: 13px;
-  border: 1px solid #333;
-  background-color: #333;
-  -webkit-box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.5);
-  box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.85);
 }
 body.filters.ngdialog-open,
 body.support.ngdialog-open,
@@ -212,44 +207,53 @@ body.about.ngdialog-open {
 }
 
 a {
-  color: #aac;
+  color: #68a0b7;
   font-size: 13px;
+}
+.ngdialog {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: fixed;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 10000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 .about.ngdialog .ngdialog-content,
 .app-settings.ngdialog .ngdialog-content,
 .filters.ngdialog .ngdialog-content,
 .support.ngdialog .ngdialog-content {
-  padding: 10px 20px;
-  top: 5px;
+  width: 50%;
+  height: 70%;
+  top: 15%;
+  left: 25%;
+  background-color: #222;
+  border: solid 1px #3e3e3e;
   overflow-y: scroll;
   position: absolute;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-}
-.about.ngdialog:before,
-.app-settings.ngdialog:before,
-.filters.ngdialog:before,
-.support.ngdialog:before {
-  content: " ";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 5px solid #f5dc56;
 }
 .about.ngdialog .ngdialog-close,
 .app-settings.ngdialog .ngdialog-close,
 .filters.ngdialog .ngdialog-close,
 .support.ngdialog .ngdialog-close {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
+  top: 20px;
+  right: 20px;
   font-size: 20px;
+}
+.ngdialog-close:hover {
+  color: #f59e1f;
+}
+/* settings dialog */
+.ngdialog.app-settings .ngdialog-content {
+    width: 40%;
+    height: 50%;
+    left: 30%;
+    top: 20%;
 }
 
 @-webkit-keyframes ngdialog-fadeout {
@@ -284,25 +288,10 @@ a {
     opacity: 1;
   }
 }
-.ngdialog {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
 .ngdialog *, .ngdialog *:before, .ngdialog *:after {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
-}
-.ngdialog {
-  position: fixed;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  z-index: 10000;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
 }
 .ngdialog-overlay {
   position: fixed;
@@ -321,10 +310,90 @@ a {
   animation: ngdialog-fadeout 0s;
 }
 .ngdialog-content {
-  background: white;
-  -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadein 0s;
-  animation: ngdialog-fadein 0s;
+  color: #e0e0e0;
+}
+.ngdialog-content .orange {
+  color: #f59e1f;
+}
+.ngdialog-content > div > h1,
+.ngdialog-content > div > h2,
+.ngdialog-content > div > h3,
+.ngdialog-content > div > p,
+.ngdialog-content > div > table,
+.ngdialog-content > div > dl {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.ngdialog-content form {
+  padding: 0;
+}
+.ngdialog-content h1,h2,h3 {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+.ngdialog-content h1 {
+  margin-top: 0;
+  padding: 20px 25px;
+  background-color: #101010;
+  border-bottom: solid 1px #3e3e3e;
+}
+.ngdialog-content > p {
+  padding: 0 25px;
+  margin: 5px 0;
+}
+.ngdialog-content dl {
+    background-color: #2F2F2F;
+    border-radius: 6px;
+    padding: 5px 15px;
+    margin: 0 25px;
+    margin-bottom: 10px;
+}
+.ngdialog-content dt {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.1em;
+    margin-top: 10px;
+    color: #f59e1f;
+}
+.ngdialog-content dd {
+    margin: 10px 10px 15px 10px;
+}
+.ngdialog-content table {
+    margin: 0 25px 20px 25px;
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #222;
+}
+.ngdialog-content table tr:nth-child(2n+1) {
+    background-color: #1B1B1B;
+}
+.ngdialog-content tr td:first-child {
+    border-left-style: solid;
+    border-left-width: 1px;
+}
+.ngdialog-content td {
+    border-color: #1B1B1B;
+    border-style: none solid solid none;
+    border-top: medium none;
+    border-width: medium 1px 1px medium;
+    font-size: 13px;
+    padding: 15px;
+}
+.ngdialog-content td span {
+    margin: 2px 4px;
+    color: #eee;
+    display: block;
+}
+.ngdialog-content td span:hover {
+    color: #68a0b7;
+    cursor: pointer;
+}
+.ngdialog-content input[type="checkbox"],
+.ngdialog-content input[type="radio"] {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
 }
 .ngdialog.ngdialog-closing .ngdialog-content {
   -webkit-backface-visibility: hidden;
@@ -332,7 +401,8 @@ a {
   animation: ngdialog-fadeout 0s;
 }
 .ngdialog-close:before {
-  content: '\00D7';
+  content: '\f00d';
+  font-family: 'FontAwesome';
   cursor: pointer;
 }
 body.ngdialog-open {
@@ -371,11 +441,9 @@ body>div * {
   top: 0;
   left: 0;
   right: 0;
-  height: 40px;
-  /*background: rgb(195, 188, 180);*/
+  height: 50px;
   background-color: #222;
-  color: #1a1e24;
-  box-shadow: 0 8px 20px -8px #222;
+  border-bottom: solid 1px #6D6D6D;
 }
 
 #header .header-right {
@@ -420,14 +488,18 @@ img.void {
 .title {
   margin: 0 -12px 14px 0;
   padding: 0 16px;
-  font-weight: 500;
-  background-color: rgba(10, 10, 10, 0.25);
+  background-color: #353535;
   color: #FFF;
   line-height: 40px;
   height: 40px;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 14px;
+  border-bottom: solid 1px #6D6D6D;
+  border-top: solid 1px #2B2B2B;
+}
+.storage:first-child .title {
+  border-left: solid 1px #2b2b2b;
 }
 .storage:last-child .title {
   margin-left: -12px;
@@ -770,7 +842,7 @@ img.void {
   color: rgba(245, 245, 245, .75);
 }
 .loadout-popup-content {
-  line-height: 39px;
+  line-height: 35px;
   background-color: #3A4150;
   color: #E4E4E4;
 }
@@ -800,9 +872,9 @@ img.void {
 .move-popup .item-name {
   background-color: #fff;
   color: #000;
-  margin: 1px;
-  padding: 1px;
-  padding-left: 3px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .move-popup .bounty-description {
   padding: 5px;
@@ -832,36 +904,55 @@ img.void {
 .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
 }
-
+/**
+ * Move Popup - Details
+ */
 .item-details {
   padding: 10px;
 }
-
-.item-details .stat-box-outer, .item-details .stat-box-inner {
-  display: inline-block;
-  height: 18px;
-  /*margin: 1px;*/
-  width: 200px;
-  vertical-align: middle;
-  background-color: rgba(209, 219, 215, .1);
+.item-stats {
+  width: 100%;
+}
+.stat-box-row {
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.item-details .stat-box-text {
+    display: block;
+    float: left;
+    line-height: 20px;
+    padding-right: 10px;
+    width: 30%;
+    text-align: right;
+}
+.item-details .stat-box-val {
+    display: block;
+    float: left;
+    line-height: 20px;
+    width: 10%;
+    text-align: left;
+    padding-left: 5px;
+}
+.item-details .stat-box-outer, 
+.item-details .stat-box-inner {
+    display: block;
+    height: 20px;
+    width: 60%;
+    float: left;
+    background-color: #333;
 }
 .item-details .stat-box-inner {
   background-color: white;
   color: black;
-  padding-left: 2px;
+  padding-left: 5px;
+  line-height: 20px;
+  border-right: solid 1px #000;
 }
-.item-details .stat-box-text {
-  display: inline-block;
-  width: 75px;
-  text-align: right;
-  padding-right: 5px;
+.item-details .stat-box-outer span:last-child {
+  padding-left: 5px;
 }
 .item-details.stat-box-row {
   padding-bottom: 3px;
-}
-.item-details .item-perks, .item-details .item-stats{
-  display: table;
-  margin: 0 auto;
 }
 .item-details .item-perks div {
   display: inline-block;
@@ -936,7 +1027,7 @@ img.void {
 }
 #content {
   margin: 0 auto;
-  padding: 2px;
+  margin-top: 15px;
   white-space: nowrap;
   display: inline-block;
   -webkit-user-select: none;
@@ -952,7 +1043,7 @@ img.void {
 #header .content {
   margin: 0 auto;
   max-width: 1088px;
-  padding: 8px 0;
+  padding: 12px 0;
 }
 div[dim-loadout] {
   left: 0;
@@ -989,8 +1080,8 @@ div[dim-loadout] {
   padding-left: 10px;
 }
 .loadout-list .loadout-set:hover, .loadout-new:hover, .loadout-options span:hover {
-  background-color: #3A3A3A;
-  border-bottom: solid 1px #6D6D6D;
+  background-color: #151515;
+  border-top: solid 1px #151515;
 }
 .loadout-set .button-edit, .loadout-set .button-delete {
   float: right;
@@ -998,7 +1089,8 @@ div[dim-loadout] {
   font-size: 1.2em
 }
 .loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
-  background-color: rgba(195, 188, 180, .6);
+  background-color: #68a0b7;
+  color: #222;
 }
 .loadout-new {
   text-align: center;
@@ -1023,11 +1115,13 @@ ialog-open {
   top: initial;
   left: initial;
   right: initial;
-  bottom: 52px;
   overflow: visible;
 }
 .ngdialog-content {
   background-color: transparent;
+}
+.ngdialog h1,h2,h3,h4 {
+  font-weight: 400;
 }
 .drag-enter {
   background-color: rgba(255, 255, 255, .1);
@@ -1046,14 +1140,15 @@ ialog-open {
 }
 .character .ngdialog {
   display: block;
-  width: 276px;
+  width: 239px;
   position: absolute;
   z-index: 2;
   top: 0;
   bottom: initial;
   margin: 0;
   padding: 0;
-  border-width: 0
+  border: solid 1px #131313;
+  border-top: none;
 }
 .character div[loadout-id] {
   top: 0;
@@ -1354,16 +1449,16 @@ button.toast-close-button {
 .something-is-sticky .sticky-header-background {
   left: 0;
   right: 0;
-  top: 32px;
+  top: 50px;
   background-color: #434444;
-  height: 80px;
+  height: 60px;
   position: fixed;
   z-index: 4;
-  box-shadow: 0 8px 20px -8px #222;
+  box-shadow: 0 1px 6px 0px #222;
 }
 
 .something-is-sticky .character.scroll-to-fixed-fixed {
-  top: 52px !important;
+  top: 55px !important;
 }
 
 .fixed-header {
