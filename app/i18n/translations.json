@@ -1,23 +1,47 @@
 {
   "en": {
+    "LEVEL": "Level",
+    "WEAPONS": "Weapons",
+    "ARMOR": "Armor",
     "EQUIP": "Equip",
     "VAULT": "Vault",
     "WARLOCK": "Warlock",
     "HUNTER": "Hunter",
-    "TITAN": "Titan"
+    "TITAN": "Titan",
+    "AWOKEN": "Awoken",
+    "EXO": "Exo",
+    "HUMAN": "Human",
+    "MALE": "Male",
+    "FEMALE": "Female"
   },
   "it": {
+    "LEVEL": "Livello",
+    "WEAPONS": "Armi",
+    "ARMOR": "Armatura",
     "EQUIP": "Equipaggia",
     "VAULT": "Deposito",
     "WARLOCK": "Stregone",
     "HUNTER": "Cacciatore",
-    "TITAN": "Titano"
+    "TITAN": "Titano",
+    "AWOKEN": "Insonne",
+    "EXO": "Exo",
+    "HUMAN": "Umano",
+    "MALE": "Maschio",
+    "FEMALE": "Femmina"
   },
   "de": {
+    "LEVEL": "Level",
+    "WEAPONS": "Weapons",
+    "ARMOR": "Armor",
     "EQUIP": "Ausstatten",
-    "VAULT": "",
+    "VAULT": "Ausrüstungstresor",
     "WARLOCK": "Warlock",
     "HUNTER": "Jäger",
-    "TITAN": "Titan"
+    "TITAN": "Titan",
+    "AWOKEN": "Erwachter",
+    "EXO": "Exo",
+    "HUMAN": "Mensch",
+    "MALE": "Männlich",
+    "FEMALE": "Weiblich"
   }
 }
