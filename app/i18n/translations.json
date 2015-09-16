@@ -1,0 +1,23 @@
+{
+  "en": {
+    "EQUIP": "Equip",
+    "VAULT": "Vault",
+    "WARLOCK": "Warlock",
+    "HUNTER": "Hunter",
+    "TITAN": "Titan"
+  },
+  "it": {
+    "EQUIP": "Equipaggia",
+    "VAULT": "Deposito",
+    "WARLOCK": "Stregone",
+    "HUNTER": "Cacciatore",
+    "TITAN": "Titano"
+  },
+  "de": {
+    "EQUIP": "Ausstatten",
+    "VAULT": "",
+    "WARLOCK": "Warlock",
+    "HUNTER": "Jäger",
+    "TITAN": "Titan"
+  }
+}

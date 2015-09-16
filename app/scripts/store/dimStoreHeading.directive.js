@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreHeading', StoreHeading);
 
-  StoreHeading.$inject = ['ngDialog'];
+  StoreHeading.$inject = ['ngDialog', '$translate'];
 
-  function StoreHeading(ngDialog) {
+  function StoreHeading(ngDialog, $translate) {
     return {
       controller: StoreHeadingCtrl,
       controllerAs: 'vm',
@@ -121,13 +121,19 @@
     }
   }
 
-  StoreHeadingCtrl.$inject = ['$scope'];
+  StoreHeadingCtrl.$inject = ['$scope', '$translate'];
 
-  function StoreHeadingCtrl($scope) {
+  function StoreHeadingCtrl($scope, $translate) {
     var vm = this;
 
     vm.isGuardian = (vm.store.id !== 'vault');
-    vm.class = vm.store.class;
+
+    if (vm.store.class) {
+      $translate(vm.store.class.toUpperCase()).then(function(guardianClass) {
+        vm.class = guardianClass;
+      });
+    }
+
     vm.level = vm.store.level;
     vm.race = vm.store.race;
     vm.gender = vm.store.gender;
