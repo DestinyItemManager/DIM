@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -430,7 +430,7 @@
           4248486431
         ];
 
-      var iterator = function(definitions, objectiveDef, perkDefs, talentDefs, item, index) {
+      var iterator = function(definitions, itemBucketDef, objectiveDef, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
 
         // Missing definition?
@@ -446,7 +446,7 @@
         //   return;
         // }
 
-        var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName, itemDef);
+        var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName, itemDef, itemBucketDef);
 
         if (item.itemHash === 937555249) {
           itemType = "Material";
@@ -488,7 +488,7 @@
           hash: item.itemHash,
           type: itemType,
           sort: itemSort,
-          tier: itemDef.tierTypeName,
+          tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
           name: itemDef.itemName,
           description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
           icon: itemDef.icon,
@@ -585,6 +585,10 @@
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
         })
+        .then(dimItemBucketDefinitions.getDefinitions)
+        .then(function(defs) {
+          iteratorPB = iteratorPB.bind(null, defs);
+        })
         .then(dimObjectiveDefinitions.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
@@ -651,7 +655,7 @@
     // Incomplete Engrams,
     // Corrupted Engrams,
 
-    function getItemType(type, name, def) {
+    function getItemType(type, name, def, buckets) {
       if (_.isUndefined(type) || _.isUndefined(name)) {
         return {
           'general': 'General',
@@ -761,7 +765,16 @@
       }
 
       if (type.indexOf("Armsday Order") != -1) {
-        return 'Special Orders';
+        switch (def.bucketTypeHash) {
+          case 2465295065:
+            return 'Speical';
+          case 1498876634:
+            return 'Primary';
+          case 953998645:
+            return 'Heavy';
+          default:
+            return 'Special Orders';
+        }
       }
 
       if (typeObj.general !== '') {
