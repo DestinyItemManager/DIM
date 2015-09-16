@@ -639,7 +639,6 @@
     }
 
     /* Not Implemented */
-    // Faction Badge,
     // Engram,
     // Trials Reward,
     // Currency,
@@ -702,7 +701,7 @@
           return '';
         return 'Material';
       }
-      if (["Commendation", "Trials of Osiris"].indexOf(type) != -1) {
+      if (["Commendation", "Trials of Osiris", "Faction Badge"].indexOf(type) != -1) {
         if (name.indexOf("Redeemed") != -1) {
           return null;
         }
@@ -788,7 +787,7 @@
         return 'Weapons';
       if (["Titan Mark", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
         return 'Armor';
-      if (["Quest Step", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+      if (["Quest Step", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         return 'General';
       if (["Daily Reward", "Package", "Armsday Order"]) {
         return 'Postmaster';
