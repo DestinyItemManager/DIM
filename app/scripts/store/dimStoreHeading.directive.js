@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreHeading', StoreHeading);
 
-  StoreHeading.$inject = ['ngDialog'];
+  StoreHeading.$inject = ['ngDialog', '$translate'];
 
-  function StoreHeading(ngDialog) {
+  function StoreHeading(ngDialog, $translate) {
     return {
       controller: StoreHeadingCtrl,
       controllerAs: 'vm',
@@ -20,9 +20,9 @@
       template: [
         '<div class="character-box" ng-class="vm.isGuardian ? \'\' : \'vault-box\'">',
         '  <div class="emblem" ng-show="vm.isGuardian"></div>',
-        '  <div class="class">{{ vm.class || "Vault" }}</div>',
-        '  <div class="race-gender" ng-show="vm.isGuardian">{{ vm.race }} {{ vm.gender }}</div>',
-        '  <div class="level" ng-show="vm.isGuardian" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'">Level {{ vm.level }}</div>',
+        '  <div class="class">{{ vm.class }}</div>',
+        '  <div class="race-gender" ng-show="vm.isGuardian">{{ vm.race.toUpperCase() | translate }} {{ vm.gender.toUpperCase() | translate }}</div>',
+        '  <div class="level" ng-show="vm.isGuardian" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'">{{ "LEVEL" | translate }} {{ vm.level }}</div>',
         '  <div class="level powerLevel" ng-show="vm.isGuardian" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'">{{ vm.store.powerLevel }}</div>',
         '  <div class="levelBar" ng-show="vm.isGuardian">',
         '    <div class="barFill" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'" ng-style="{width: vm.percentToNextLevel + \'%\'}"></div>',
@@ -121,20 +121,33 @@
     }
   }
 
-  StoreHeadingCtrl.$inject = ['$scope'];
+  StoreHeadingCtrl.$inject = ['$scope', '$translate'];
 
-  function StoreHeadingCtrl($scope) {
+  function StoreHeadingCtrl($scope, $translate) {
     var vm = this;
 
     vm.isGuardian = (vm.store.id !== 'vault');
-    vm.class = vm.store.class;
-    vm.level = vm.store.level;
+
+    // this could be null...
+    if (vm.store.class) {
+      $translate(vm.store.class.toUpperCase()).then(function(guardianClass) {
+        vm.class = guardianClass;
+      });
+    }
+    else {
+      $translate("Vault".toUpperCase()).then(function(vault) {
+        vm.class = vault;
+      });
+    }
+
     vm.race = vm.store.race;
     vm.gender = vm.store.gender;
+    vm.level = vm.store.level;
     vm.isPrestigeLevel = vm.store.isPrestigeLevel;
     vm.percentToNextLevel = vm.store.percentToNextLevel;
     vm.maxLevel = (vm.store.level >= 20);
     vm.characterBoxUrl = 'http://bungie.net' + vm.store.background;
     vm.emblemUrl = 'http://bungie.net' + vm.store.icon;
+
   }
 })();

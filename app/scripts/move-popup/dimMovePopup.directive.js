@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .directive('dimMovePopup', MovePopup);
 
-  MovePopup.$inject = ['ngDialog'];
+  MovePopup.$inject = ['ngDialog', '$translate'];
 
-  function MovePopup(ngDialog) {
+  function MovePopup(ngDialog, $translate) {
     return {
       controller: MovePopupController,
       controllerAs: 'vm',
@@ -36,7 +36,7 @@
         '      <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveToEquip(store, $event)" ',
         '        data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})">',
-        '        <span>Equip</span>',
+        '        <span>{{ "EQUIP" | translate }}</span>',
         '      </div>',
         '    </div>',
         '  </div>',

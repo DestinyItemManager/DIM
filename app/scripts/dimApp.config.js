@@ -48,7 +48,7 @@
     });
 
   angular.module('dimApp')
-    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster) {
+    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster, dimSettingsService, $translate) {
       $rootScope.loadingTracker = promiseTracker();
 
       //1 Hour
@@ -67,6 +67,10 @@
 
       //Track Our Initial Activity of Starting the App
       $rootScope.trackActivity();
+
+      dimSettingsService.getSetting('locale').then(function(localeSetting) {
+        $translate.use(localeSetting || "en");
+      });
 
       // chrome.storage.sync.get('2015.09.02-Blacksmith', function(data) {
       //   if (_.isNull(data) || _.isEmpty(data)) {
@@ -131,9 +135,21 @@
           url: "/inventory",
           templateUrl: "views/inventory.html"
         });
-    });
+    })
+    .config(['$translateProvider', function ($translateProvider) {
+        $translateProvider.useLoader('translationsAsyncLoader');
+    }])
+    .factory('translationsAsyncLoader', ['$http', '$q', function ($http, $q) {
+      return function (options) {
+        var deferred = $q.defer();
+        $http.get('i18n/translations.json').then(function(i18n) {
+          var translations = i18n.data[options.key];
+          deferred.resolve(translations);
+        });
+        return deferred.promise;
+      };
+    }])
 })();
-
 
 $(document).ready(function() {
   if (verge.viewportW() !== $(window).width()) {

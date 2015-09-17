@@ -10,6 +10,18 @@
     <table>
       <tr>
         <td>
+          <label for="locale" title="Language">Preferred Language</label>
+        </td>
+        <td>
+          <select id="locale" ng-model="vm.settings.locale" ng-change="vm.save('locale')">
+            <option value="en">English</option>
+            <option value="de">Deutch</option>
+            <option value="it">Italiano</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>

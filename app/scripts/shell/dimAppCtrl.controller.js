@@ -187,6 +187,8 @@
         vm.refresh();
       } else if (_.has(arg, 'hideFilteredItems')) {
         vm.refresh();
+      } else if (_.has(arg, 'locale')) {
+        window.location.reload();
       }
     });
   }
