@@ -2,9 +2,9 @@
   <h1>Settings</h1>
   <h2>Look and Feel</h2>
   <style>
-  .settings td:nth-child(2) {
-    white-space: nowrap;
-  }
+    .settings td:nth-child(2) {
+      white-space: nowrap;
+    }
   </style>
   <form class="settings">
     <table>
@@ -30,6 +30,18 @@
         </td>
         <td>
           <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemStat')"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="itemSort" title="Sort items by rarity or their primary stat value.">Sort Items by:</label>
+        </td>
+        <td>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemSort')">Primary Stat</label>
+          <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemSort')">Rarity</label>
         </td>
       </tr>
       <tr>

@@ -52,9 +52,9 @@
     }
   }
 
-  StoreItemsCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster'];
+  StoreItemsCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService'];
 
-  function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster) {
+  function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
     var vm = this;
     var types = [ // Order of types in the rows.
       'Class',
@@ -221,50 +221,57 @@
     };
 
     function generateData() {
-      if (vm.store.id === 'vault') {
-        vm.sortSize = _(vm.store.items)
-          .chain()
-          .groupBy(function(i) {
-            return i.sort;
-          })
-          .mapObject(function(val, key) {
-            return _.size(val);
-          })
-          .value();
-      }
-
-      return _.chain(vm.store.items)
-        .sortBy(function(item) {
-          return item.name;
-        })
-        .sortBy(function(item) {
-          switch (item.tier) {
-            case 'Exotic':
-              return 0;
-            case 'Legendary':
-              return 1;
-            case 'Rare':
-              return 2;
-            case 'Uncommon':
-              return 3;
-            case 'Common':
-              return 4;
-            default:
-              return 5;
+      return dimSettingsService.getSetting('itemSort')
+        .then(function(sort) {
+          if (vm.store.id === 'vault') {
+            vm.sortSize = _(vm.store.items)
+              .chain()
+              .groupBy(function(i) {
+                return i.sort;
+              })
+              .mapObject(function(val, key) {
+                return _.size(val);
+              })
+              .value();
           }
-        })
-        .sortBy(function(item) {
-          return vm.orderedTypes[item.type];
-        })
-        .groupBy(function(item) {
-          return vm.orderedTypes[item.type];
-        })
-        .mapObject(function(values, key) {
-          return _.groupBy(values, function(item) {
-            return (item.equipped ? 'equipped' : 'unequipped');
-          });
-        })
-        .value();
+
+          return _.chain(vm.store.items)
+            .sortBy(function(item) {
+              return item.name;
+            })
+            .sortBy(function(item) {
+              if (sort === 'rarity') {
+                switch (item.tier) {
+                  case 'Exotic':
+                    return 0;
+                  case 'Legendary':
+                    return 1;
+                  case 'Rare':
+                    return 2;
+                  case 'Uncommon':
+                    return 3;
+                  case 'Common':
+                    return 4;
+                  default:
+                    return 5;
+                }
+              } else {
+                return ((item.primStat) ? -1 * item.primStat.value : 1000);
+              }
+            })
+            .sortBy(function(item) {
+              return vm.orderedTypes[item.type];
+            })
+            .groupBy(function(item) {
+              return vm.orderedTypes[item.type];
+            })
+            .mapObject(function(values, key) {
+              return _.groupBy(values, function(item) {
+                return (item.equipped ? 'equipped' : 'unequipped');
+              });
+            })
+            .value();
+        });
     }
 
     vm.moveDroppedItem = function(item, equip) {
@@ -323,9 +330,11 @@
     };
 
     $scope.$watch('vm.store.items', function(newVal) {
-      vm.data = generateData();
-
-      $timeout(dimStoreService.setHeights, 0);
+      generateData()
+        .then(function(data) {
+          vm.data = data;
+          $timeout(dimStoreService.setHeights, 0);
+        });
     }, true);
   }
 })();
