@@ -63,7 +63,7 @@
 
       $(document).ready(function() {
         element.scrollToFixed({
-          marginTop: 51,
+          marginTop: 61,
           fixed: function() {
             $(document.body).addClass('something-is-sticky');
             $(this).addClass('fixed-header');

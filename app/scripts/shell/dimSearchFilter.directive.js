@@ -23,12 +23,14 @@
   function SearchFilterCtrl($scope, dimStoreService, $timeout, $interval) {
     var vm = this;
     var filterInputSelector = '#filter-input';
+    var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
     vm.search = {
       'query': ""
     };
 
     $scope.$on('dim-stores-updated', function(arg) {
+      _duplicates = null;
       vm.filter();
     });
 
@@ -151,8 +153,6 @@
     // make the for(...) loop for filterTrans a little more bearable for the readability tradeoff.
     var _cachedFilters = {};
 
-    var _duplicates = {}; // Holds...well, duplicates
-
     /**
      * Filter groups keyed by type check. Key is what the user will search for, e.g.
      * is:complete
@@ -202,25 +202,15 @@
         return !filterFns.unlocked(predicate, item);
       },
       'dupe': function(predicate, item) {
-        if (!_duplicates.hasOwnProperty('dupes')) {
-          var allItems = _.chain(dimStoreService.getStores())
-            .map(function(store) {
-              return store.items;
-            })
-          .flatten()
-            .sortBy('hash')
+        if (_duplicates === null) {
+          _duplicates = _.chain(dimStoreService.getStores())
+            .pluck('items')
+            .flatten()
+            .countBy('hash')
             .value();
-
-          _duplicates.dupes = [];
-
-          for (var i = 0; i < allItems.length - 1; i++) {
-            if (allItems[i + 1].hash == allItems[i].hash) {
-              _duplicates.dupes.push(allItems[i].hash);
-            }
-          }
         }
 
-        return _.some(_duplicates.dupes, function(hash) { return item.hash === hash; });
+        return _duplicates[item.hash] > 1;
       },
       'classType': function(predicate, item) {
         var value;

@@ -145,8 +145,7 @@ function extractDB(dbFile) {
 
     rows.forEach(function(row) {
       var item = JSON.parse(row.json);
-      delete item.equippingBlock;
-      items[item.itemHash] = item;
+      items[item.bucketHash] = item;
     });
 
     var defs = fs.createWriteStream('buckets.json');
