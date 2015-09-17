@@ -3,7 +3,7 @@
 **/
 
 .logo {
-  background:url('../logo.png') no-repeat;
+  background:url('../logoA.png') no-repeat;
   background-position: left center;
   background-size: 24px;
   height: 24px;
@@ -12,6 +12,44 @@
   font-size: 16px !important;
   font-weight: bold;
   color: #E8A534;
+  position: relative;
+}
+.logoBg {
+  background:url('../logoB.png') no-repeat;
+  background-position: left center;
+  background-size: 24px;
+  width: 24px;
+  height: 24px;
+  margin: 0px !important;
+  position: absolute;
+  left: 0px;
+  z-index: -10;
+}
+.logo-spin {
+  -webkit-animation: logo-spin .25s infinite linear;
+          animation: logo-spin .25s infinite linear;
+}
+
+@-webkit-keyframes logo-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(44deg);
+            transform: rotate(44deg);
+  }
+}
+
+@keyframes logo-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(44deg);
+            transform: rotate(44deg);
+  }
 }
 
 #header #user {
