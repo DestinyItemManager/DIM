@@ -144,7 +144,7 @@
       };
       
       if (weapons) matchList.push('Class','Primary','Special','Heavy');
-      if (armor) matchList.push('Helmet','Gauntlets','Chest','Leg','ClassItem','Armor');
+      if (armor) matchList.push('Helmet','Gauntlets','Chest','Leg','ClassItem','Artifact','Armor');
       
       switch(vm.store.class) {
         case "titan":
