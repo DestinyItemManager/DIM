@@ -133,7 +133,7 @@ body.fitlers .fitlers {
   width: 215px;
 }
 
-.button-delete, .button-edit {
+.button-delete, .button-edit, .button-random-option {
   text-align: center;
 }
 .loadout-set {
@@ -1094,14 +1094,20 @@ div[dim-loadout] {
   background-color: #151515;
   border-top: solid 1px #151515;
 }
-.loadout-set .button-edit, .loadout-set .button-delete {
+.loadout-set .button-edit, .loadout-set .button-delete, .loadout-set .button-random-option {
   float: right;
   width: 20%;
   font-size: 1.2em
 }
-.loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
+.loadout-set .button-delete:hover, .loadout-set .button-edit:hover, .loadout-set .button-random-option:hover {
   background-color: #68a0b7;
   color: #222;
+}
+.loadout-set .button-random-option-active {
+  background-color: rgba(180, 255, 180, .6);
+}
+.loadout-set .button-random-option-active:hover {
+  background-color: rgba(255, 180, 180, .6);
 }
 .loadout-new {
   text-align: center;

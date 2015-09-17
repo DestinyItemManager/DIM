@@ -26,6 +26,11 @@
         '      <span class="button-edit" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </div>',
         '  </div>',
+        '  <div class="loadout-list"><div class="loadout-set">',
+        '    <span class="button-name button-random-name" ng-click="vm.equipRandom(vm.randomWeapons, vm.randomArmor, $event)"><i class="fa fa-random"></i> Randomize</span>',
+        '    <span title="Randomize Armor" class="button-random-option button-armor" ng-click="vm.randomToggle(1)" ng-class="{ \'button-random-option-active\': vm.randomArmor }"><i class="fa fa-shield"></i></span>',
+        '    <span title="Randomize Weapons" class="button-random-option button-weapons" ng-click="vm.randomToggle(0)" ng-class="{ \'button-random-option-active\': vm.randomWeapons }"><i class="fa fa-hand-o-right"></i></span>',
+        '  </div></div>',
         '</div>'
       ].join('')
     };
@@ -114,6 +119,114 @@
 
       applyLoadoutItems(items, loadout, _items, scope);
     };
+    
+    vm.randomWeapons = false;
+    vm.randomArmor = false;
+    
+    vm.randomToggle = function(option) {
+      switch(option) {
+        case 0:
+          vm.randomWeapons = !vm.randomWeapons;
+          break;
+        case 1:
+          vm.randomArmor = !vm.randomArmor;
+          break;
+      }
+    }  
+    
+    vm.equipRandom = function equipRandom(weapons, armor, $event) {
+      var classType, items = [], matchList = [], matchGroups = [], exoticArmorFound = false, exoticWeaponFound = false;
+      
+      ngDialog.closeAll();
+
+      var scope = {
+        failed: false
+      };
+      
+      if (weapons) matchList.push('Class','Primary','Special','Heavy');
+      if (armor) matchList.push('Helmet','Gauntlets','Chest','Leg','ClassItem','Artifact','Armor');
+      
+      switch(vm.store.class) {
+        case "titan":
+          classType = 0;
+          break;
+        case "hunter":
+          classType = 1;
+          break;
+        case "warlock":
+          classType = 2;
+          break;
+      }
+      
+      var groups = _.groupBy(_.shuffle(_.where(dimItemService.getItems(),{equipment:true})), 'type');
+      
+      _.each(matchList, function(match) {
+        matchGroups.push(groups[match]);
+      });
+      
+      _.each(matchGroups, function(group) {
+        var match = angular.copy(_.find(group, function(item) {
+          if (item.name === "Default Shader") {
+            return false;
+          }
+          if (item.tier === "Exotic" && ((item.sort === "Armor" && exoticArmorFound) || (item.sort === "Weapon" && exoticWeaponFound))) {
+            console.log('ignored second exotic');
+            return false;
+          }
+          if ((item.type === "Class" || item.sort === "Armor") && item.classType !== classType) {
+            return false;
+          }
+          return true;
+        }));
+        if (match) {
+          if (match.tier === "Exotic") {
+            if (match.sort === "Armor") exoticArmorFound = true;
+            if (match.sort === "Weapon") exoticWeaponFound = true;
+          }
+          match.equipped = true;
+          items.push(match);
+        }
+      });
+
+      items = _.chain(items)
+        .values()
+        .flatten()
+        .value();
+
+      var _types = _.chain(items)
+        .pluck('type')
+        .uniq()
+        .value();
+
+      var _items = _.chain(vm.store.items)
+        .filter(function(item) {
+          return _.contains(_types, item.type);
+        })
+        .filter(function(item) {
+          return (!_.some(items, function(i) {
+            return ((i.id === item.id) && (i.hash === item.hash));
+          }));
+        })
+        .groupBy(function(item) {
+          return item.type;
+        })
+        .value();
+        
+      var loadout = new Object();
+      if (weapons && armor) {
+        loadout.name = 'Randomized Loadout';
+      } else if (weapons) {
+        loadout.name = 'Randomized Weapon Loadout';
+      } else if (armor) {
+        loadout.name = 'Randomized Armor Loadout';
+      }
+
+      if (weapons || armor) {
+        applyLoadoutItems(items, loadout, _items, scope);
+      } else {
+        toaster.pop('error', 'Randomized Nothing', 'Select Weapons, Armor, or Both before clicking Randomize.');
+      }
+    }
 
     function applyLoadoutItems(items, loadout, _items, scope) {
       if (items.length > 0) {
