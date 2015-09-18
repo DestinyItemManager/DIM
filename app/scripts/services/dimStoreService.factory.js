@@ -784,7 +784,7 @@
       if (type.indexOf("Armsday Order") != -1) {
         switch (def.bucketTypeHash) {
           case 2465295065:
-            return 'Speical';
+            return 'Special';
           case 1498876634:
             return 'Primary';
           case 953998645:
