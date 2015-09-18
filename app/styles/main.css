@@ -1469,40 +1469,58 @@ button.toast-close-button {
 .dim-col-3 {
   width: 240px;
 }
+.dim-col-3.guardian .character-box {
+  width: 165px;
+}
+.dim-col-3.guardian .character .ngdialog {
+  width: 239px;
+}
 .dim-col-4 {
   width: 292px;
 }
-.vault.dim-col-4 {
+.dim-col-4.guardian .character-box {
+  width: 217px;
+}
+.dim-col-4.guardian .character .ngdialog {
+  width: 291px;
+}
+.dim-col-4.vault {
   width: 208px;
 }
 .dim-col-5 {
   width: 344px;
 }
-.vault.dim-col-5 {
+.dim-col-5.guardian .character-box {
+  width: 269px;
+}
+.dim-col-5.guardian .character .ngdialog {
+  width: 343px;
+}
+.dim-col-5.vault {
   width: 262px;
 }
 .dim-col-6 {
   width: 396px;
 }
-.vault.dim-col-6 {
+.dim-col-6.vault {
   width: 314px;
 }
 .dim-col-7 {
   width: 448px;
 }
-.vault.dim-col-7 {
+.dim-col-7.vault {
   width: 366px;
 }
 .dim-col-8 {
   width: 500px;
 }
-.vault.dim-col-8 {
+.dim-col-8.vault {
   width: 418px;
 }
 .dim-col-9 {
   width: 552px;
 }
-.vault.dim-col-9 {
+.dim-col-9.vault {
   width: 470px;
 }
 
