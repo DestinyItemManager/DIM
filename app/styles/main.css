@@ -222,9 +222,9 @@ a {
 
 .ngdialog.app-settings .ngdialog-content {
   width: 40%;
-  height: 50%;
+  height: 70%;
   left: 30%;
-  top: 20%;
+  top: 10%;
 }
 @-webkit-keyframes ngdialog-fadeout {
   0% {
