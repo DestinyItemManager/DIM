@@ -134,7 +134,6 @@
     });
 })();
 
-
 $(document).ready(function() {
   if (verge.viewportW() !== $(window).width()) {
     $('body').addClass('pad-margin');
@@ -145,67 +144,35 @@ $(document).ready(function() {
   }
 });
 
-if (typeof window.onerror == "object")
-{
-    window.onerror = function (err, url, line)
-    {
-    };
+if (typeof window.onerror == "object") {
+  window.onerror = function(err, url, line) {};
 }
 
+(function(window) {
+  // Retain a reference to the previous global error handler, in case it has been set:
+  var originalWindowErrorCallback = window.onerror;
 
-/**
- * Send JavaScript error information to Google Analytics.
- *
- * @param  {Window} window A reference to the "window".
- * @return {void}
- * @author Philippe Sawicki <https://github.com/philsawicki>
- */
-(function (window) {
-    // Retain a reference to the previous global error handler, in case it has been set:
-    var originalWindowErrorCallback = window.onerror;
+  window.onerror = function customErrorHandler(errorMessage, url, lineNumber, columnNumber, errorObject) {
+      var exceptionDescription = errorMessage;
+      if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
+        exceptionDescription = errorObject.message;
+      }
 
-    /**
-     * Log any script error to Google Analytics.
-     *
-     * Third-party scripts without CORS will only provide "Script Error." as an error message.
-     *
-     * @param  {String}           errorMessage Error message.
-     * @param  {String}           url          URL where error was raised.
-     * @param  {Number}           lineNumber   Line number where error was raised.
-     * @param  {Number|undefined} columnNumber Column number for the line where the error occurred.
-     * @param  {Object|undefined} errorObject  Error Object.
-     * @return {Boolean}                       When the function returns true, this prevents the
-     *                                         firing of the default event handler.
-     */
-    window.onerror = function customErrorHandler (errorMessage, url, lineNumber, columnNumber, errorObject) {
-        // Send error details to Google Analytics, if the library is already available:
-        if (typeof ga === 'function') {
-            // In case the "errorObject" is available, use its data, else fallback
-            // on the default "errorMessage" provided:
-            var exceptionDescription = errorMessage;
-            if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
-                exceptionDescription = errorObject.message;
-            }
+      _gaq.push([
+        'errorTracker._trackEvent',
+        'DIM - Chrome Extension - v3.1.5',
+        exceptionDescription,
+        ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
+        0,
+        true
+      ]);
+  //  }
 
-            // Format the message to log to Analytics (might also use "errorObject.stack" if defined):
-            exceptionDescription += ' @ ' + url + ':' + lineNumber + ':' + columnNumber;
-
-            ga('errorTracker.send', 'exception', {
-                'exDescription': exceptionDescription,
-                'exFatal': false, // Some Error types might be considered as fatal.
-                'appName': 'DIM - Chrome Extension',
-                'appVersion': 'v3.1.5'
-            });
-        }
-
-        // If the previous "window.onerror" callback can be called, pass it the data:
-        if (typeof originalWindowErrorCallback === 'function') {
-            return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
-        }
-        // Otherwise, Let the default handler run:
-        return false;
-    };
+    // If the previous "window.onerror" callback can be called, pass it the data:
+    if (typeof originalWindowErrorCallback === 'function') {
+      return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
+    }
+    // Otherwise, Let the default handler run:
+    return false;
+  };
 })(window);
-
-// Generate an error, for demonstration purposes:
-// throw new Error('Crash!');
