@@ -1525,10 +1525,12 @@ button.toast-close-button {
 }
 
 .unequipped {
-  padding-left: 64px;
+  margin-left: 64px;
+  margin-right: 20px;
 }
 .postmaster .unequipped, .sort-consumable .unequipped, .sort-material .unequipped, .vault .unequipped {
-  padding-left: 0px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .equipped {
