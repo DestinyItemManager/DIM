@@ -105,9 +105,9 @@
         vm.itemStat = itemStat;
       });
 
-    settings.getSetting('itemStat')
-      .then(function(itemStat) {
-        vm.itemStat = itemStat;
+    settings.getSetting('hideFilteredItems')
+      .then(function(hideFilteredItems) {
+        vm.hideFilteredItems = hideFilteredItems;
       });
 
 
@@ -115,6 +115,7 @@
       if (_.has(arg, 'hideFilteredItems')) {
         vm.hideFilteredItems = arg.hideFilteredItems;
       }
+
       if (_.has(arg, 'itemStat')) {
         vm.itemStat = arg.itemStat;
       }

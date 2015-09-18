@@ -138,7 +138,10 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   border-color: rgba(245, 220, 86, .15);
   background-color: rgba(128, 128, 128, .15);
 }
-.item.search-hidden > div:nth-child(1), .item.search-hidden > div.damage-type, .item.search-hidden > div.counter {
+.item.search-hidden > div:nth-child(1),
+.item.search-hidden > div.damage-type,
+.item.search-hidden > div.counter,
+.item.search-hidden > div.item-stat {
   opacity: .15;
 }
 .unequippable, .equippable {

@@ -668,6 +668,10 @@
           return null;
       }
 
+      if (def.bucketTypeHash === 375726501) {
+        return 'Missions';
+      }
+
 
       if (_.isUndefined(type) || _.isUndefined(name)) {
         return {
