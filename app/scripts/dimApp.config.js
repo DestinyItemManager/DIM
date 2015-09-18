@@ -194,7 +194,7 @@ if (typeof window.onerror == "object")
                 'exDescription': exceptionDescription,
                 'exFatal': false, // Some Error types might be considered as fatal.
                 'appName': 'DIM - Chrome Extension',
-                'appVersion': 'v3.1.4'
+                'appVersion': 'v3.1.5'
             });
         }
 
