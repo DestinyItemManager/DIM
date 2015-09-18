@@ -46,6 +46,22 @@
       </tr>
       <tr>
         <td>
+          <label for="charCol" title="Select the number of columns for character inventory.">Character Inventory Columns</label>
+        </td>
+        <td>
+          <select id="charCol" ng-model="vm.settings.charCol" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-options="option.id as option.name for option in vm.charColOptions" required ng-change="vm.save('charCol')"></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="vaultCol" title="Select the number of columns for character inventory.">Vault Columns</label>
+        </td>
+        <td>
+          <select id="vaultCol" ng-model="vm.settings.vaultCol" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-options="option.id as option.name for option in vm.vaultColOptions" required ng-change="vm.save('vaultCol')"></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="condensed" title="Increases the number of columns for character inventories and the vault.">Add Columns to Inventories</label>
         </td>
         <td>

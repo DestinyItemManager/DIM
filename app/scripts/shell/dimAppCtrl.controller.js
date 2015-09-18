@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -176,18 +176,12 @@
 
     vm.startAutoRefreshTimer();
 
+    var refresh = _.debounce(vm.refresh, 300);
+
     $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'characterOrder')) {
-        vm.refresh();
-      } else if (_.has(arg, 'condensed')) {
-        vm.refresh();
-      } else if (_.has(arg, 'itemDetails')) {
-        vm.refresh();
-      } else if (_.has(arg, 'itemStat')) {
-        vm.refresh();
-      } else if (_.has(arg, 'hideFilteredItems')) {
-        vm.refresh();
-      }
+      // if ((!_.has(arg, 'charCol')) && (!_.has(arg, 'vaultCol'))) {
+        refresh();
+      // }
     });
   }
 })();

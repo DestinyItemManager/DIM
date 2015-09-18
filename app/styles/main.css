@@ -3,7 +3,7 @@
 **/
 
 .logo {
-  background:url('../logo.png') no-repeat;
+  background: url('../logo.png') no-repeat;
   background-position: left center;
   background-size: 24px;
   height: 24px;
@@ -13,16 +13,13 @@
   font-weight: bold;
   color: #E8A534;
 }
-
 #header #user {
   color: #fff;
 }
-
 #header .fa {
   font-size: 15px;
   color: #fafafa;
 }
-
 #header .content span {
   vertical-align: middle;
   margin: 0 8px;
@@ -39,8 +36,8 @@
   user-select: none;
 }
 #actions .fa:hover {
-    color: #68a0b7;
-    cursor: pointer;
+  color: #68a0b7;
+  cursor: pointer;
 }
 #header .content span.link {
   color: white;
@@ -49,21 +46,17 @@
   color: #68a0b7;
   cursor: pointer;
 }
-
 .pull-right {
   float: right;
   text-align: right;
 }
-
 .item img {
   width: 44px;
   height: 44px;
 }
-
 .search-item-hidden {
   display: none !important;
 }
-
 .img.how:before {
   content: '';
   display: block;
@@ -87,28 +80,20 @@ div[dim-search-filter] input {
   margin: 0px 15px 0 10px;
   background-color: #fafafa;
 }
-
 dt {
   font-style: italic;
   font-weight: bold;
   margin-top: 8px;
 }
-
 dd {
   margin: 3px 20px;
 }
-
 body > div, #header {
   /*min-width: 1000px;*/
 }
-
-body.about .about,
-body.app-settings .app-settings,
-body.support .support,
-body.fitlers .fitlers {
+body.about .about, body.app-settings .app-settings, body.support .support, body.fitlers .fitlers {
   display: inline-block;
 }
-
 .button-name {
   float: left;
   width: 60%;
@@ -126,13 +111,12 @@ body.fitlers .fitlers {
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
-.condensed .character .ngdialog {
+/*.condensed .character .ngdialog {
   width: 289px;
 }
 .condensed .character-box {
   width: 215px;
-}
-
+}*/
 .button-delete, .button-edit {
   text-align: center;
 }
@@ -146,8 +130,7 @@ body.fitlers .fitlers {
   border-bottom: solid 1px #111;
   background-color: #222;
 }
-.vault .sort-class,
-.vault .section.postmaster {
+.vault .sort-class, .vault .section.postmaster {
   /*display: none;*/
   visibility: hidden;
 }
@@ -160,7 +143,6 @@ body.fitlers .fitlers {
 }
 .unequippable, .equippable {
   /*position: absolute;*/
-
   min-height: 52px;
 }
 .modal-dialog {
@@ -188,10 +170,7 @@ body.fitlers .fitlers {
   bottom: 0;
   border: 5px solid #f5dc56;
 }
-.about.ngdialog,
-.app-settings.ngdialog,
-.filters.ngdialog,
-.support.ngdialog {
+.about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -199,13 +178,9 @@ body.fitlers .fitlers {
   font-size: 13px;
   background-color: rgba(0, 0, 0, 0.85);
 }
-body.filters.ngdialog-open,
-body.support.ngdialog-open,
-body.app-settings.ngdialog-open,
-body.about.ngdialog-open {
+body.filters.ngdialog-open, body.support.ngdialog-open, body.app-settings.ngdialog-open, body.about.ngdialog-open {
   overflow: hidden !important;
 }
-
 a {
   color: #68a0b7;
   font-size: 13px;
@@ -223,10 +198,7 @@ a {
   bottom: 0;
   left: 0;
 }
-.about.ngdialog .ngdialog-content,
-.app-settings.ngdialog .ngdialog-content,
-.filters.ngdialog .ngdialog-content,
-.support.ngdialog .ngdialog-content {
+.about.ngdialog .ngdialog-content, .app-settings.ngdialog .ngdialog-content, .filters.ngdialog .ngdialog-content, .support.ngdialog .ngdialog-content {
   width: 50%;
   height: 70%;
   top: 15%;
@@ -236,10 +208,7 @@ a {
   overflow-y: scroll;
   position: absolute;
 }
-.about.ngdialog .ngdialog-close,
-.app-settings.ngdialog .ngdialog-close,
-.filters.ngdialog .ngdialog-close,
-.support.ngdialog .ngdialog-close {
+.about.ngdialog .ngdialog-close, .app-settings.ngdialog .ngdialog-close, .filters.ngdialog .ngdialog-close, .support.ngdialog .ngdialog-close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -248,14 +217,15 @@ a {
 .ngdialog-close:hover {
   color: #f59e1f;
 }
-/* settings dialog */
-.ngdialog.app-settings .ngdialog-content {
-    width: 40%;
-    height: 50%;
-    left: 30%;
-    top: 20%;
-}
 
+/* settings dialog */
+
+.ngdialog.app-settings .ngdialog-content {
+  width: 40%;
+  height: 50%;
+  left: 30%;
+  top: 20%;
+}
 @-webkit-keyframes ngdialog-fadeout {
   0% {
     opacity: 1;
@@ -315,19 +285,14 @@ a {
 .ngdialog-content .orange {
   color: #f59e1f;
 }
-.ngdialog-content > div > h1,
-.ngdialog-content > div > h2,
-.ngdialog-content > div > h3,
-.ngdialog-content > div > p,
-.ngdialog-content > div > table,
-.ngdialog-content > div > dl {
+.ngdialog-content > div > h1, .ngdialog-content > div > h2, .ngdialog-content > div > h3, .ngdialog-content > div > p, .ngdialog-content > div > table, .ngdialog-content > div > dl {
   padding-left: 25px;
   padding-right: 25px;
 }
 .ngdialog-content form {
   padding: 0;
 }
-.ngdialog-content h1,h2,h3 {
+.ngdialog-content h1, h2, h3 {
   margin-top: 20px;
   margin-bottom: 15px;
 }
@@ -342,58 +307,57 @@ a {
   margin: 5px 0;
 }
 .ngdialog-content dl {
-    background-color: #2F2F2F;
-    border-radius: 6px;
-    padding: 5px 15px;
-    margin: 0 25px;
-    margin-bottom: 10px;
+  background-color: #2F2F2F;
+  border-radius: 6px;
+  padding: 5px 15px;
+  margin: 0 25px;
+  margin-bottom: 10px;
 }
 .ngdialog-content dt {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.1em;
-    margin-top: 10px;
-    color: #f59e1f;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.1em;
+  margin-top: 10px;
+  color: #f59e1f;
 }
 .ngdialog-content dd {
-    margin: 10px 10px 15px 10px;
+  margin: 10px 10px 15px 10px;
 }
 .ngdialog-content table {
-    margin: 0 25px 20px 25px;
-    padding: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #222;
+  margin: 0 25px 20px 25px;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background-color: #222;
 }
 .ngdialog-content table tr:nth-child(2n+1) {
-    background-color: #1B1B1B;
+  background-color: #1B1B1B;
 }
 .ngdialog-content tr td:first-child {
-    border-left-style: solid;
-    border-left-width: 1px;
+  border-left-style: solid;
+  border-left-width: 1px;
 }
 .ngdialog-content td {
-    border-color: #1B1B1B;
-    border-style: none solid solid none;
-    border-top: medium none;
-    border-width: medium 1px 1px medium;
-    font-size: 13px;
-    padding: 15px;
+  border-color: #1B1B1B;
+  border-style: none solid solid none;
+  border-top: medium none;
+  border-width: medium 1px 1px medium;
+  font-size: 13px;
+  padding: 15px;
 }
 .ngdialog-content td span {
-    margin: 2px 4px;
-    color: #eee;
-    display: block;
+  margin: 2px 4px;
+  color: #eee;
+  display: block;
 }
 .ngdialog-content td span:hover {
-    color: #68a0b7;
-    cursor: pointer;
+  color: #68a0b7;
+  cursor: pointer;
 }
-.ngdialog-content input[type="checkbox"],
-.ngdialog-content input[type="radio"] {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
+.ngdialog-content input[type="checkbox"], .ngdialog-content input[type="radio"] {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
 }
 .ngdialog.ngdialog-closing .ngdialog-content {
   -webkit-backface-visibility: hidden;
@@ -445,7 +409,6 @@ body>div * {
   background-color: #222;
   border-bottom: solid 1px #6D6D6D;
 }
-
 #header .header-right {
   cursor: default;
   float: right;
@@ -514,23 +477,26 @@ img.void {
   width: 30px
 }
 .storage {
-  width: 240px;
   padding-right: 12px;
   vertical-align: top;
   display: inline-block;
 }
-.storage:last-child {
-  padding-right: 0;
+.col-3 .storage {
+  width: 240px;
 }
-.storage.condensed {
+.col-4 .storage {
   width: 290px;
 }
-
-.storage.vault {
+.col-5 .storage {}
+.col-3 .vault.storage {
   width: 209px;
 }
-.storage.vault.condensed {
+.col-4 .vault.storage {
   width: 312px;
+}
+.col-5 .vault.storage {}
+.storage:last-child {
+  padding-right: 0;
 }
 .items.vault {
   background-color: rgba(245, 245, 245, 0.25);
@@ -545,18 +511,21 @@ img.void {
   display: inline-block;
   vertical-align: top;
 }
-.unequippable {
+
+.col-3 .unequippable {
   width: 220px;
 }
-.condensed .unequippable {
-  width: 220px;
-}
-.vault .unequippable {
+.col-3 .vault .unequippable {
   width: 208px;
 }
-.vault.condensed .unequippable {
+
+.col-4 .unequippable {}
+.col-4 .vault .unequippable {
   width: 312px;
 }
+
+.col-5 .unequippable {}
+.col-5 .vault .unequippable {}
 .sub-section {
   clear: both;
 }
@@ -564,18 +533,18 @@ img.void {
   width: 52px;
   margin-right: 12px;
 }
-.guardian .unequipped {
+/*.guardian .unequipped {
   width: 156px;
 }
 .guardian.condensed .unequipped {
   width: 208px;
-}
-.vault .unequipped {
+}*/
+/*.vault .unequipped {
   width: 208px;
 }
 .vault.condensed .unequipped {
   width: 312px;
-}
+}*/
 .unequipped.on-drag-enter, .equipped.on-drag-enter {
   box-shadow: 0 0 15px 2px rgba(170, 170, 170, .5);
   background-color: rgba(170, 170, 170, .5);
@@ -619,6 +588,7 @@ img.void {
   display: inline-block;
   box-shadow: none;
 }
+
 /*.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target {
   display: inline-block;
   box-shadow: 0 0 10px #ccc;
@@ -652,14 +622,17 @@ img.void {
 .stat-damage-arc {
   background: #85c5ec;
   color: #fff;
+  text-shadow: 1px 1px .5px rgba(0,0,0,.65);
 }
 .stat-damage-solar {
   background: #f2721b;
   color: #fff;
+  text-shadow: 1px 1px .5px rgba(0,0,0,.65);
 }
 .stat-damage-void {
   background: #b184c5;
   color: #fff;
+  text-shadow: 1px 1px .5px rgba(0,0,0,.65);
 }
 .damage-type {
   position: absolute;
@@ -742,12 +715,12 @@ img.void {
 }
 .character-box.vault-box {
   padding: 0 1em;
-  width: 208px;
+  /*width: 208px;*/
   box-sizing: border-box;
 }
-.condensed .character-box.vault-box {
+/*.condensed .character-box.vault-box {
   width: 255px;
-}
+}*/
 .character-box .emblem {
   position: absolute;
   top: 3px;
@@ -823,18 +796,18 @@ img.void {
   float: right;
   right: 1px;
   height: 45px;
-  color: rgba(200, 200, 200, 1  );
+  color: rgba(200, 200, 200, 1);
   text-align: center;
   font-size: 15px;
   line-height: 41px;
   padding: 0;
-  border: 1px solid rgba(0,0,0,.1);
+  border: 1px solid rgba(0, 0, 0, .1);
   box-sizing: border-box;
   cursor: pointer;
 }
 .loadout-button:hover {
   background-color: rgba(160, 160, 160, .8);
-  border: 1px solid rgba(32,32,32,0);
+  border: 1px solid rgba(32, 32, 32, 0);
   color: rgba(245, 245, 245, 1);
 }
 .loadout-button .active {
@@ -901,14 +874,14 @@ img.void {
   vertical-align: text-top;
   margin-top: 1px;
 }
-.item-name.is-arc .locked,
-.item-name.is-solar .locked,
-.item-name.is-void .locked {
+.item-name.is-arc .locked, .item-name.is-solar .locked, .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
 }
+
 /**
  * Move Popup - Details
  */
+
 .item-details {
   padding: 10px;
 }
@@ -920,28 +893,27 @@ img.void {
   margin-bottom: 5px;
 }
 .item-details .stat-box-text {
-    display: block;
-    float: left;
-    line-height: 20px;
-    padding-right: 10px;
-    width: 30%;
-    text-align: right;
+  display: block;
+  float: left;
+  line-height: 20px;
+  padding-right: 10px;
+  width: 30%;
+  text-align: right;
 }
 .item-details .stat-box-val {
-    display: block;
-    float: left;
-    line-height: 20px;
-    width: 10%;
-    text-align: left;
-    padding-left: 5px;
+  display: block;
+  float: left;
+  line-height: 20px;
+  width: 10%;
+  text-align: left;
+  padding-left: 5px;
 }
-.item-details .stat-box-outer,
-.item-details .stat-box-inner {
-    display: block;
-    height: 20px;
-    width: 60%;
-    float: left;
-    background-color: #333;
+.item-details .stat-box-outer, .item-details .stat-box-inner {
+  display: block;
+  height: 20px;
+  width: 60%;
+  float: left;
+  background-color: #333;
 }
 .item-details .stat-box-inner {
   background-color: white;
@@ -1041,21 +1013,17 @@ img.void {
 #content div * {
   white-space: normal;
 }
-
 #header .content {
   margin: 0 auto;
   max-width: 1088px;
   padding: 12px 0;
 }
-
 #header .content > .link {
   margin-top: 1px;
 }
-
 #header .content > .header-right {
   margin-top: 1px;
 }
-
 div[dim-loadout] {
   left: 0;
   right: 0;
@@ -1131,7 +1099,7 @@ ialog-open {
 .ngdialog-content {
   background-color: transparent;
 }
-.ngdialog h1,h2,h3,h4 {
+.ngdialog h1, h2, h3, h4 {
   font-weight: 400;
 }
 .drag-enter {
@@ -1230,6 +1198,7 @@ ialog-open {
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
     filter: alpha(opacity=40);*/
 }
+
 /*Additional properties for button version
    iOS requires the button element instead of an anchor tag.
    If you want the anchor version, it requires `href="#"`.*/
@@ -1321,7 +1290,6 @@ button.toast-close-button {
   /*opacity: 1;
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     filter: alpha(opacity=100);*/
-
   cursor: pointer;
 }
 #toast-container > .toast-info {
@@ -1362,6 +1330,7 @@ button.toast-close-button {
 .toast-warning {
   background-color: #f89406;
 }
+
 /*Responsive Design*/
 
 @media all and (max-width: 240px) {
@@ -1390,6 +1359,7 @@ button.toast-close-button {
     width: 25em;
   }
 }
+
 /*
     * AngularJS-Toaster
     * Version 0.3
@@ -1400,7 +1370,6 @@ button.toast-close-button {
       -moz-transition: 1000ms linear none;
       -ms-transition: 1000ms linear none;
       -o-transition: 1000ms linear none;*/
-
   transition: 10ms linear none;
 }
 :not(.no-enter)#toast-container > div.ng-enter.ng-enter-active, :not(.no-leave)#toast-container > div.ng-leave {
@@ -1447,19 +1416,20 @@ button.toast-close-button {
 }
 
 /** Issue #116, make Mats and Consumables 4-column **/
-.section.general .sort-consumable .unequipped,
-.section.general .sort-material .unequipped,
-.section.postmaster .unequipped {
-    width: 208px !important;
+
+.col-3 .section.general .sort-consumable .unequipped,
+.col-3 .section.general .sort-material .unequipped,
+.col-3 .section.postmaster .unequipped {
+  width: 208px !important;
 }
 
 /** Issue #116, make Mats and Consumables 4-column **/
-.condensed .section.general .sort-consumable .unequipped,
-.condensed .section.general .sort-material .unequipped,
-.condensed .section.postmaster .unequipped {
-    width: 260px !important;
-}
 
+.col-4 .section.general .sort-consumable .unequipped,
+.col-4 .section.general .sort-material .unequipped,
+.col-4 .section.postmaster .unequipped {
+  width: 260px !important;
+}
 .something-is-sticky .sticky-header-background {
   left: 0;
   right: 0;
@@ -1470,25 +1440,20 @@ button.toast-close-button {
   z-index: 4;
   box-shadow: 0 1px 6px 0px #222;
 }
-
 .something-is-sticky .character.scroll-to-fixed-fixed {
   top: 65px !important;
 }
-
 .fixed-header {
   left: auto !important;
 }
-
 .something-is-sticky .fixed-header-placeholder {
   height: 71px !important;
 }
-
 .inline-stats {
   display: inline-block;
   white-space: nowrap;
   margin-right: 15px;
 }
-
 .move-popup-info-detail {
   padding: 2px 5px;
   font-size: 1.3em;
@@ -1497,7 +1462,57 @@ button.toast-close-button {
   right: 2px;
   position: absolute;
 }
-
 .move-popup-info-detail .fa {
   vertical-align: top;
+}
+
+.dim-col-3 {
+  width: 240px;
+}
+.dim-col-4 {
+  width: 292px;
+}
+.vault.dim-col-4 {
+  width: 208px;
+}
+.dim-col-5 {
+  width: 344px;
+}
+.vault.dim-col-5 {
+  width: 262px;
+}
+.dim-col-6 {
+  width: 396px;
+}
+.vault.dim-col-6 {
+  width: 314px;
+}
+.dim-col-7 {
+  width: 448px;
+}
+.vault.dim-col-7 {
+  width: 366px;
+}
+.dim-col-8 {
+  width: 500px;
+}
+.vault.dim-col-8 {
+  width: 418px;
+}
+.dim-col-9 {
+  width: 552px;
+}
+.vault.dim-col-9 {
+  width: 470px;
+}
+
+.unequipped {
+  padding-left: 64px;
+}
+.postmaster .unequipped, .sort-consumable .unequipped, .sort-material .unequipped, .vault .unequipped {
+  padding-left: 0px;
+}
+
+.equipped {
+  position: absolute;
 }

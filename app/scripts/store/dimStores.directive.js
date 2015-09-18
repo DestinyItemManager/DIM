@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -13,7 +13,7 @@
       bindToController: true,
       scope: {},
       template: [
-        '<div ng-repeat="store in vm.stores track by store.id" class="storage" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '<div ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
         '  <div dim-store-heading store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
@@ -28,17 +28,23 @@
 
     vm.stores = null;
     vm.condensed = false;
+    vm.charCol = 3;
+    vm.vaultCol = 4;
 
-    settings.getSetting('condensed')
-      .then(function(condensed) {
-        vm.condensed = condensed;
+    settings.getSettings()
+      .then(function(settings) {
+        vm.condensed = settings.condensed;
+        vm.charCol = settings.charCol;
+        vm.vaultCol = settings.vaultCol;
       });
-
-
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       if (_.has(arg, 'condensed')) {
         vm.condensed = arg.condensed;
+      } else if (_.has(arg, 'charCol')) {
+        vm.charCol = arg.charCol;
+      } else if (_.has(arg, 'vaultCol')) {
+        vm.vaultCol = arg.vaultCol;
       }
     });
 

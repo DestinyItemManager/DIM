@@ -446,7 +446,7 @@
         //   return;
         // }
 
-        var itemType = getItemType(itemDef.itemTypeName, itemDef.itemName, itemDef, itemBucketDef);
+        var itemType = getItemType(item, itemDef, itemBucketDef);
 
         if (item.itemHash === 937555249) {
           itemType = "Material";
@@ -573,9 +573,9 @@
           }
         });
 
-        if (createdItem.tier !== 'Basic') {
+        // if (createdItem.tier !== 'Basic') {
           result.push(createdItem);
-        }
+        // }
       };
 
       var iteratorPB;
@@ -655,7 +655,20 @@
     // Incomplete Engrams,
     // Corrupted Engrams,
 
-    function getItemType(type, name, def, buckets) {
+    function getItemType(item, def, buckets) {
+      var type = def.itemTypeName;
+      var name = def.itemName;
+
+      if (def.bucketTypeHash === 3621873013) {
+        return null;
+      }
+
+      if (def.bucketTypeHash === 2422292810) {
+        if (item.location !== 4)
+          return null;
+      }
+
+
       if (_.isUndefined(type) || _.isUndefined(name)) {
         return {
           'general': 'General',
@@ -711,6 +724,10 @@
         }
 
         return 'Missions';
+      }
+
+      if (type.indexOf("Summoning Rune") != -1) {
+        return "Material";
       }
 
       if (type.indexOf("Emote") != -1) {
@@ -785,7 +802,7 @@
         return "Messages";
       }
 
-      if (["Vehicle Upgrade", "Summoning Rune"].indexOf(type) != -1) {
+      if (["Vehicle Upgrade"].indexOf(type) != -1) {
         return "Consumable";
       }
 

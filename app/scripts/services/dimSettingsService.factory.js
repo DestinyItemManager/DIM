@@ -12,6 +12,7 @@
 
     return {
       'getSetting': getSetting,
+      'getSettings': getSettings,
       'saveSetting': saveSetting
     };
 
@@ -22,7 +23,9 @@
         itemStat: false,
         condensed: false,
         characterOrder: 'mostRecent',
-        itemSort: 'primaryStat'
+        itemSort: 'primaryStat',
+        charCol: 3,
+        vaultCol: 4
       };
 
       if (currentSettings !== null) {
@@ -38,7 +41,14 @@
               var diff = _.difference(defaultKeys, currentKeys);
 
               _.each(diff, function(key) {
-                currentSettings[key] = settingState[key];
+                if ((key === 'charCol') && currentSettings.condensed) {
+                  currentSettings.charCol = 4;
+                } else if ((key === 'vaultCol') && currentSettings.condensed) {
+                  currentSettings.vaultCol = 6;
+                } else {
+                  currentSettings[key] = settingState[key];
+                }
+
               });
 
               if (diff.length > 0) {
@@ -53,7 +63,7 @@
                 itemStat: false,
                 itemSort: 'primaryStat'
               };
-              
+
               saveSettings()
             }
 
@@ -63,6 +73,10 @@
           chrome.storage.sync.get(null, processStorageSettings);
         });
       }
+    }
+
+    function getSettings() {
+      return loadSettings();
     }
 
     function getSetting(key) {
