@@ -435,6 +435,29 @@
 
         // Missing definition?
         if (itemDef === undefined) {
+          // It is probably classified...
+          // itemDef = {
+          //   itemName: 'Classified'
+          // }
+          //
+          // switch (item.itemHash) {
+          //   case 1177550375: {
+          //     itemDef.bucketTypeHash = 1498876634;
+          //     itemDef.classType = 3;
+          //     itemDef.equippable = true;
+          //     itemDef.hasAction = true;
+          //     itemDef.itemType = 2;
+          //     itemDef.icon = '/common/destiny_content/icons/80da6cbfde86ecd6a8bb720c3df54d0b.jpg';
+          //     itemDef.itemTypeName = 'Pulse Rifle';
+          //     itemDef.itemName = 'Red Death - Classified';
+          //     itemDef.maxStackSize = 1;
+          //     itemDef.tierTypeName = "Exotic";
+          //     break;
+          //   }
+          //   case 2: {
+          //     break;
+          //   }
+          // }
           return;
         }
 
@@ -504,7 +527,7 @@
           primStat: item.primaryStat,
           stats: item.stats,
           perks: item.perks,
-          maxStackSize: definitions[item.itemHash].maxStackSize,
+          maxStackSize: itemDef.maxStackSize,
           classType: itemDef.classType,
           /* 0: titan, 1: hunter, 2: warlock, 3: any */
           dmg: dmgName,
@@ -680,7 +703,7 @@
         if (["Public Event Completed"].indexOf(name) != -1) {
           return "Messages";
         }
-        
+
         return 'Missions';
       }
 
