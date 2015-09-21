@@ -55,14 +55,7 @@
                 saveSettings();
               }
             } else {
-              currentSettings = {
-                hideFilteredItems: false,
-                condensed: false,
-                characterOrder: 'mostRecent',
-                itemDetails: false,
-                itemStat: false,
-                itemSort: 'primaryStat'
-              };
+              currentSettings = _.clone(settingState);
 
               saveSettings()
             }
