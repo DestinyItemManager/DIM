@@ -35,7 +35,7 @@
       .then(function(settings) {
         vm.condensed = settings.condensed;
         vm.charCol = (settings.charCol > 2 && settings.charCol < 6) ? settings.charCol : 3;
-        vm.vaultCol = (settings.charCol > 3 && settings.charCol < 10) ? settings.vaultCol : 4;
+        vm.vaultCol = (settings.vaultCol > 3 && settings.vaultCol < 10) ? settings.vaultCol : 4;
       });
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
