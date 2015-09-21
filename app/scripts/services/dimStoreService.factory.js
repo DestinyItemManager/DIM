@@ -669,6 +669,18 @@
       }
 
       if (def.bucketTypeHash === 375726501) {
+        if (type.indexOf("Message ") != -1) {
+          return 'Messages';
+        }
+
+        if (type.indexOf("Package") != -1) {
+          return 'Messages';
+        }
+
+        if (["Public Event Completed"].indexOf(name) != -1) {
+          return "Messages";
+        }
+        
         return 'Missions';
       }
 
