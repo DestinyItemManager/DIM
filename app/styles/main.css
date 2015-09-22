@@ -703,6 +703,7 @@ img.void {
 .character {
   margin-bottom: 16px;
   height: 50px;
+  position: relative;
 }
 .character-box {
   position: absolute;
@@ -718,7 +719,7 @@ img.void {
 }
 .character-box.vault-box {
   padding: 0 1em;
-  /*width: 208px;*/
+  width: 100%;
   box-sizing: border-box;
 }
 /*.condensed .character-box.vault-box {
@@ -743,7 +744,7 @@ img.void {
 }
 .vault-box .class {
   font-size: 25px;
-  line-height: 38px;
+  line-height: 38px
 }
 .character-box .race-gender {
   text-transform: uppercase;
@@ -759,6 +760,22 @@ img.void {
   font-weight: 200;
   font-size: 14px;
 }
+
+.character-box .legendaryMarks,
+.character-box .glimmer {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-weight: 200;
+  font-size: 14px;
+}
+
+.character-box .legendaryMarks {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+}
+
 .character-box .level.powerLevel {
   position: absolute;
   top: 20px;

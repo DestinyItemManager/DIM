@@ -121,6 +121,7 @@
           .then(function(stores) {
             _stores.splice(0);
             var asyncItems = [];
+            var glimmer, marks;
 
             _.each(stores, function(raw) {
               var store;
@@ -132,6 +133,8 @@
                   'lastPlayed': '2005-01-01T12:00:01Z',
                   'icon': '',
                   'items': [],
+                  legendaryMarks: marks,
+                  glimmer: glimmer,
                   'bucketCounts': {},
                   hasExotic: function(type) {
                     var predicate = {
@@ -167,6 +170,16 @@
                   items = _.union(items, bucket.items);
                 });
               } else {
+
+
+                try {
+                  glimmer = _.find(raw.data.currencies, function(cur) { return cur.itemHash === 3159615086 }).value;
+                  marks = _.find(raw.data.currencies, function(cur) { return cur.itemHash === 2534352370 }).value;
+                } catch (e) {
+                  glimmer = 0;
+                  marks = 0;
+                }
+                
                 store = {
                   id: raw.id,
                   icon: raw.character.base.emblemPath,
