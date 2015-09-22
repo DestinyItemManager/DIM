@@ -21,6 +21,9 @@
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item"></div>',
         '  <span ng-show="vm.item.type === \'Bounties\'" class="bounty-description">{{vm.item.description}}</span>',
+        '  <div>',
+        '  <span ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</span>',
+        '  </div>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
@@ -45,9 +48,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
 
-  function MovePopupController($rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($scope, $rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
     function capitalizeFirstLetter(string) {
@@ -61,6 +64,26 @@
         return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
       }
     };
+
+    vm.infuse = function infuse(store, item, e) {
+      e.stopPropagation();
+
+      var infuseScope = $scope.$new(true);
+      infuseScope.store = store;
+      infuseScope.item = item;
+
+      var infuse = ngDialog.open({
+        template: 'views/infuse.html',
+        overlay: false,
+        className: 'app-settings',
+        scope: infuseScope
+      });
+
+      infuse.closePromise.then(function(data) {
+        console.log("dialog closed.")
+      });
+
+    }
 
     // function moveItemUI(item, targetStore) {
     //   var sourceStore = (item.owner === targetStore.id) ? $q.when(targetStore) : dimStoreService.getStore(item.owner);

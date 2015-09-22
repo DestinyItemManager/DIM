@@ -1,0 +1,15 @@
+<div>
+  <h2>Infuse</h2>
+
+  <!-- <p ng-click="infuse.onClick()">Prova</p> -->
+  <div style="padding-left: 25px;" ng-controller="dimInfuseCtrl as infuse">
+    <p>You want to infuse this weapon:</p>
+    <div dim-store-item store-data="infuse.store" item-data="infuse.item"></div>
+
+    <p>With one of these</p>
+    <div ng-repeat="value in infuse.infusable">
+      <div dim-store-item store-data="infuse.store" item-data="value"></div>
+    </div>
+  </div>
+
+</div>
