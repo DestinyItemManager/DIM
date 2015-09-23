@@ -1,15 +1,22 @@
-<div>
+<div ng-controller="dimInfuseCtrl as infuse">
   <h2>Infuse</h2>
 
-  <!-- <p ng-click="infuse.onClick()">Prova</p> -->
-  <div style="padding-left: 25px;" ng-controller="dimInfuseCtrl as infuse">
-    <p>You want to infuse this weapon:</p>
-    <div dim-store-item store-data="infuse.store" item-data="infuse.item"></div>
+  <div style="padding-left: 25px;">
+    <p>Disclaimer: DIM cannot in any way infuse your weapons, it's impossible.</p>
+    <p>You can to infuse this weapon:</p>
+    <div dim-infuse-item item-data="infuse.item"></div>
 
     <p>With one of these</p>
     <div ng-repeat="value in infuse.infusable">
-      <div dim-store-item store-data="infuse.store" item-data="value"></div>
+      <div style="float: left;" dim-infuse-item item-data="value"></div>
     </div>
-  </div>
 
+    <br style="clear: both;" />
+
+    <div>
+      <p>The result after infusion:</p>
+      <h3>{{infuse.infuseService.light.infused}}</h3>
+    </div>
+
+  </div>
 </div>

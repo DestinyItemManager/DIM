@@ -22,7 +22,7 @@
         '  <div dim-move-item-properties="vm.item"></div>',
         '  <span ng-show="vm.item.type === \'Bounties\'" class="bounty-description">{{vm.item.description}}</span>',
         '  <div>',
-        '  <span ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</span>',
+        '  <div class="move-button move-store" ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</div>',
         '  </div>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
@@ -69,7 +69,7 @@
       e.stopPropagation();
 
       var infuseScope = $scope.$new(true);
-      infuseScope.store = store;
+      // infuseScope.store = store;
       infuseScope.item = item;
 
       var infuse = ngDialog.open({
