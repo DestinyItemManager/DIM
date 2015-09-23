@@ -32,10 +32,10 @@
         'Gauntlets',
         'Chest',
         'Leg',
-        'ClassItem',
-        'Artifact'
+        'ClassItem'
       ],
       General: [
+        'Artifact',
         'Emote',
         'Emblem',
         'Armor',

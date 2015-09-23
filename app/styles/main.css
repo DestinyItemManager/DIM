@@ -2,6 +2,11 @@
   Header Area
 **/
 
+.glimmer img, .legendaryMarks img {
+  vertical-align: middle;
+  height: 17px;
+}
+
 .logo {
   background: url('../logo.png') no-repeat;
   background-position: left center;
@@ -718,6 +723,7 @@ img.void {
   background-size: cover;
 }
 .character-box.vault-box {
+  position: relative !important;
   padding: 0 1em;
   width: 100%;
   box-sizing: border-box;

@@ -109,10 +109,10 @@
         'Gauntlets',
         'Chest',
         'Leg',
-        'ClassItem',
-        'Artifact'
+        'ClassItem'
       ],
       General: [
+        'Artifact',
         'Ghost',
         'Consumable',
         'Material',

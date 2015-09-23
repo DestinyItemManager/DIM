@@ -179,7 +179,7 @@
                   glimmer = 0;
                   marks = 0;
                 }
-                
+
                 store = {
                   id: raw.id,
                   icon: raw.character.base.emblemPath,
@@ -445,9 +445,9 @@
 
       var iterator = function(definitions, itemBucketDef, objectiveDef, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
-
         // Missing definition?
         if (itemDef === undefined) {
+          window.onerror("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js', 451, 11);
           // It is probably classified...
           // itemDef = {
           //   itemName: 'Classified'
@@ -867,9 +867,9 @@
     function sortItem(type) {
       if (["Pulse Rifle", "Sword", "Sniper Rifle", "Shotgun", "Scout Rifle", "Sidearm", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
         return 'Weapons';
-      if (["Titan Mark", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
+      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
         return 'Armor';
-      if (["Quest Step", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         return 'General';
       if (["Daily Reward", "Package", "Armsday Order"]) {
         return 'Postmaster';
