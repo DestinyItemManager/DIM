@@ -141,6 +141,7 @@
       'upgraded':     ['upgraded'],
       'classType':    ['titan', 'hunter', 'warlock'],
       'dupe':         ['dupe', 'duplicate'],
+      'unique':       ['unique'],
       'unascended':   ['unascended', 'unassended', 'unasscended'],
       'ascended':     ['ascended', 'assended', 'asscended'],
       'locked':       ['locked'],
@@ -211,6 +212,27 @@
         }
 
         return _duplicates[item.hash] > 1;
+      },
+      'unique': function() {
+          if (!_duplicates.hasOwnProperty('dupes')) {
+          var allItems = _.chain(dimStoreService.getStores())
+            .map(function(store) {
+              return store.items;
+            })
+          .flatten()
+            .sortBy('hash')
+            .value();
+
+          _duplicates.dupes = [];
+
+          for (var i = 0; i < allItems.length - 1; i++) {
+            if (allItems[i + 1].hash == allItems[i].hash) {
+              _duplicates.dupes.push(allItems[i].hash);
+            }
+          }
+        }
+
+        return _.all(_duplicates.dupes, function(hash) { return item.hash !== hash; });
       },
       'classType': function(predicate, item) {
         var value;
