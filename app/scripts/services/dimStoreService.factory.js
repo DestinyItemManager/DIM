@@ -450,7 +450,7 @@
           // maybe it is classified...
           itemDef = {
             classified: true,
-            icon: '/common/destiny_content/icons/bddcb2c4342a66c996689449a737fea0.jpg'
+            icon: '/common/destiny_content/icons/f0dcc71487f77a69005bec2e3fb6e4e8.jpg'
           }
 
           switch (item.itemHash) {
@@ -473,7 +473,7 @@
 
           // unidentified item.
           if(!itemDef.itemName) {
-            console.error("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js#491');
+            window.onerror("Missing Item Definition - " + _.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash'), 'dimStoreService.factory.js', 491, 11);
           }
         }
 
