@@ -457,6 +457,7 @@
             case 3227022822: {
               item.isEquipment = true;
 
+              item.primaryStat = {value: 'Spindle'};
               itemDef.bucketTypeHash = 2465295065;
               itemDef.classType = 3;
               itemDef.equippable = true;

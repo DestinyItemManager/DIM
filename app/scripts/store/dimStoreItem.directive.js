@@ -25,7 +25,7 @@
         '  <div ui-draggable="false" class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
         '  <div ui-draggable="false" class="counter ng-binding ng-scope" ng-if="vm.item.type === \'Bounties\' && !vm.item.complete && vm.itemStat">{{vm.item.xpComplete}}%</div>',
         '  <div ui-draggable="false" class="damage-type" ng-if="!vm.itemStat && vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
-        '  <div ui-draggable="false" class="item-stat" ng-if="vm.itemStat && vm.item.primStat.value && !vm.item.classified" ng-class="\'stat-damage-\' + vm.item.dmg">{{ vm.item.primStat.value }}</div>',
+        '  <div ui-draggable="false" class="item-stat" ng-if="vm.itemStat && vm.item.primStat.value" ng-class="\'stat-damage-\' + vm.item.dmg">{{ vm.item.primStat.value }}</div>',
         '</div>'
       ].join('')
     };
