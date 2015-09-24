@@ -3,7 +3,7 @@
 **/
 
 .glimmer img, .legendaryMarks img {
-  vertical-align: middle;
+  vertical-align: text-bottom;
   height: 17px;
 }
 
@@ -778,7 +778,7 @@ img.void {
 
 .character-box .legendaryMarks {
   position: absolute;
-  top: 20px;
+  top: 24px;
   right: 10px;
 }
 

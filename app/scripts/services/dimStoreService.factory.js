@@ -173,8 +173,8 @@
 
 
                 try {
-                  glimmer = _.find(raw.data.currencies, function(cur) { return cur.itemHash === 3159615086 }).value;
-                  marks = _.find(raw.data.currencies, function(cur) { return cur.itemHash === 2534352370 }).value;
+                  glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086 }).value;
+                  marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370 }).value;
                 } catch (e) {
                   glimmer = 0;
                   marks = 0;
@@ -447,7 +447,6 @@
         var itemDef = definitions[item.itemHash];
         // Missing definition?
         if (itemDef === undefined) {
-          window.onerror("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js', 451, 11);
           // It is probably classified...
           // itemDef = {
           //   itemName: 'Classified'
