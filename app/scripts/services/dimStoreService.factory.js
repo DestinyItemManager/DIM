@@ -454,21 +454,6 @@
           }
 
           switch (item.itemHash) {
-            case 1177550375: {
-              item.isEquipment = true;
-
-              itemDef.bucketTypeHash = 1498876634;
-              itemDef.classType = 3;
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.itemType = 2;
-              itemDef.icon = '/common/destiny_content/icons/80da6cbfde86ecd6a8bb720c3df54d0b.jpg';
-              itemDef.itemTypeName = 'Pulse Rifle';
-              itemDef.itemName = 'Red Death - Classified';
-              itemDef.maxStackSize = 1;
-              itemDef.tierTypeName = "Exotic";
-              break;
-            }
             case 3227022822: {
               item.isEquipment = true;
 
@@ -488,7 +473,7 @@
 
           // unidentified item.
           if(!itemDef.itemName) {
-            console.err("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js#491');
+            console.error("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js#491');
           }
         }
 
