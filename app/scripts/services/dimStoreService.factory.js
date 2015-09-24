@@ -447,31 +447,49 @@
         var itemDef = definitions[item.itemHash];
         // Missing definition?
         if (itemDef === undefined) {
-          window.onerror("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js', 451, 11);
-          // It is probably classified...
-          // itemDef = {
-          //   itemName: 'Classified'
-          // }
-          //
-          // switch (item.itemHash) {
-          //   case 1177550375: {
-          //     itemDef.bucketTypeHash = 1498876634;
-          //     itemDef.classType = 3;
-          //     itemDef.equippable = true;
-          //     itemDef.hasAction = true;
-          //     itemDef.itemType = 2;
-          //     itemDef.icon = '/common/destiny_content/icons/80da6cbfde86ecd6a8bb720c3df54d0b.jpg';
-          //     itemDef.itemTypeName = 'Pulse Rifle';
-          //     itemDef.itemName = 'Red Death - Classified';
-          //     itemDef.maxStackSize = 1;
-          //     itemDef.tierTypeName = "Exotic";
-          //     break;
-          //   }
-          //   case 2: {
-          //     break;
-          //   }
-          // }
-          return;
+          // maybe it is classified...
+          itemDef = {
+            classified: true,
+            icon: '/common/destiny_content/icons/bddcb2c4342a66c996689449a737fea0.jpg'
+          }
+
+          switch (item.itemHash) {
+            case 1177550375: {
+              item.isEquipment = true;
+
+              itemDef.bucketTypeHash = 1498876634;
+              itemDef.classType = 3;
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.itemType = 2;
+              itemDef.icon = '/common/destiny_content/icons/80da6cbfde86ecd6a8bb720c3df54d0b.jpg';
+              itemDef.itemTypeName = 'Pulse Rifle';
+              itemDef.itemName = 'Red Death - Classified';
+              itemDef.maxStackSize = 1;
+              itemDef.tierTypeName = "Exotic";
+              break;
+            }
+            case 3227022822: {
+              item.isEquipment = true;
+
+              itemDef.bucketTypeHash = 2465295065;
+              itemDef.classType = 3;
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Sniper Rifle';
+              itemDef.itemName = 'Black Spindle - Classified';
+              itemDef.maxStackSize = 1;
+              itemDef.tierTypeName = "Exotic";
+              itemDef.nonTransferrable = true;
+              break;
+            }
+          }
+
+          // unidentified item.
+          if(!itemDef.itemName) {
+            console.err("Missing Item Definition - hash: " + item.itemHash, 'dimStoreService.factory.js#491');
+          }
         }
 
         if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
@@ -489,6 +507,7 @@
         }
 
         var weaponClass = null;
+
 
         if (!itemType) {
           return;
@@ -517,6 +536,7 @@
         }
 
         var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
+
 
         var createdItem = {
           index: getNextIndex(),
@@ -549,7 +569,8 @@
           ascended: false,
           lockable: item.lockable,
           locked: item.locked,
-          weaponClass: weaponClass || ''
+          weaponClass: weaponClass || '',
+          classified: itemDef.classified
         };
 
         // Bounties
