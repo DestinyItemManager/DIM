@@ -493,7 +493,7 @@
 
           // unidentified item.
           if(!itemDef.itemName) {
-            window.onerror("Missing Item Definition - " + _.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash'), 'dimStoreService.factory.js', 491, 11);
+            window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
           }
         }
 
