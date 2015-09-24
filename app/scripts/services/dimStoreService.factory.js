@@ -456,17 +456,36 @@
           switch (item.itemHash) {
             case 3227022822: {
               item.isEquipment = true;
-
               item.primaryStat = {value: 'Spindle'};
+
               itemDef.bucketTypeHash = 2465295065;
               itemDef.classType = 3;
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
               itemDef.itemType = 3;
               itemDef.itemTypeName = 'Sniper Rifle';
               itemDef.itemName = 'Black Spindle - Classified';
+
               itemDef.maxStackSize = 1;
               itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
+
+            case 3688594189: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'Malice'};
+
+              itemDef.bucketTypeHash = 1498876634;
+              itemDef.classType = 3;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Scout Rifle';
+              itemDef.itemName = 'Touch of Malice - Classified';
+
+              itemDef.maxStackSize = 1;
+              itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
               itemDef.nonTransferrable = true;
               break;
             }
