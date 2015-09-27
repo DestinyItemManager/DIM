@@ -290,10 +290,15 @@
         var deferred = $q.defer();
         var promise = deferred.promise;
 
+        if (item.type === 'ClassItem') {
+          deferred.resolve(true);
+          return promise;
+        }
+
         var prefix = _(store.items)
           .chain()
           .filter(function(i) {
-            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic)
+            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic && i.type !== 'ClassItem')
           });
 
         if (prefix.size()
