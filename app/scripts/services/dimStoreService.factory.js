@@ -565,6 +565,9 @@
           primStat: item.primaryStat,
           stats: item.stats,
           perks: item.perks,
+          nodes: item.nodes,
+          //talents: talentDefs.data[item.talentGridHash],
+          talentPerks: getTalentPerks(item, talentDefs),
           maxStackSize: itemDef.maxStackSize,
           classType: itemDef.classType,
           /* 0: titan, 1: hunter, 2: warlock, 3: any */
@@ -702,6 +705,21 @@
           return 'female';
       }
       return 'unknown';
+    }
+
+    function getTalentPerks(item, talents) {
+      var talent = talents.data[item.talentGridHash];
+
+      if (talent) {
+        return _.chain(talent.nodes).map(function(node) {
+            return node.steps;
+          })
+          .flatten()
+          .pluck('nodeStepHash')
+          .value();
+      } else {
+        return [];
+      }
     }
 
     /* Not Implemented */

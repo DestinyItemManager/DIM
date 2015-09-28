@@ -289,31 +289,66 @@
       function canEquipExotic(item, store) {
         var deferred = $q.defer();
         var promise = deferred.promise;
-
-        if (item.type === 'ClassItem') {
-          deferred.resolve(true);
-          return promise;
-        }
+        var hasLifeExotic = _.contains(item.talentPerks, 4044819214);
 
         var prefix = _(store.items)
           .chain()
           .filter(function(i) {
-            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic && i.type !== 'ClassItem')
+            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic)
           });
 
-        if (prefix.size()
-          .value() === 0) {
+        var amount = prefix.size().value();
+
+        // Fix for "The Life Exotic" Perk on Exotic Items
+        // Can equip multiples
+
+        if (amount === 0) {
           deferred.resolve(true);
-        } else {
+        } else if (amount === 1) {
           var exoticItem = prefix.value()[0];
 
-          dequipItem(exoticItem)
-            .then(function(result) {
-              deferred.resolve(true);
-            })
-            .catch(function(err) {
-              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
-            });
+          if (hasLifeExotic) {
+            deferred.resolve(true);
+          } else if (_.contains(exoticItem.talentPerks, 4044819214)) {
+            deferred.resolve(true);
+          } else {
+            dequipItem(exoticItem)
+              .then(function(result) {
+                deferred.resolve(true);
+              })
+              .catch(function(err) {
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+              });
+          }
+        } else if (amount === 2) {
+          // Assume that only one item type has 'The Life Exotic' perk
+          var exoticItems = prefix.value();
+
+          var exoticItem = _.find(exoticItems, function(item) {
+            return !_.contains(item.talentPerks, 4044819214);
+          });
+
+          var exoticItemWithPerk = _.find(exoticItems, function(item) {
+            return _.contains(item.talentPerks, 4044819214);
+          });
+
+          if (hasLifeExotic) {
+            dequipItem(exoticItemWithPerk)
+              .then(function(result) {
+                deferred.resolve(true);
+              })
+              .catch(function(err) {
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+              });
+          } else {
+            dequipItem(exoticItem)
+              .then(function(result) {
+                deferred.resolve(true);
+              })
+              .catch(function(err) {
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+              });
+          }
         }
 
         return promise;

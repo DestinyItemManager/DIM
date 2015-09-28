@@ -9,7 +9,7 @@
   function dimSandboxPerkDefinitions($q, $http) {
     var deferred = $q.defer();
 
-    $http.get('scripts/api-manifest/perks.json?v=3.1.9')
+    $http.get('scripts/api-manifest/perks.json?v=3.1.9.1')
       .then(function(data) {
         deferred.resolve(data);
       },
