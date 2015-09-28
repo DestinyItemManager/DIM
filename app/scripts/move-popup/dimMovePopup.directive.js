@@ -22,7 +22,7 @@
         '  <div dim-move-item-properties="vm.item"></div>',
         '  <span ng-show="vm.item.type === \'Bounties\'" class="bounty-description">{{vm.item.description}}</span>',
         '  <div>',
-        '  <div class="move-button move-store" ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</div>',
+        '  <div class="move-button move-store" ng-if="vm.item.tier == \'Legendary\' || vm.item.tier == \'Exotic\'" ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</div>',
         '  </div>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
@@ -68,19 +68,23 @@
     vm.infuse = function infuse(store, item, e) {
       e.stopPropagation();
 
+      /*
       var infuseScope = $scope.$new(true);
-      // infuseScope.store = store;
       infuseScope.item = item;
+      */
 
+      // Close the move-popup
+      ngDialog.closeAll();
+
+      // Open the infuse window
       var infuse = ngDialog.open({
         template: 'views/infuse.html',
         overlay: false,
         className: 'app-settings',
-        scope: infuseScope
-      });
-
-      infuse.closePromise.then(function(data) {
-        console.log("dialog closed.")
+        controller: ['shareDataService', function(shareDataService) {
+          shareDataService.setItem(item);
+        }]
+        // scope: infuseScope
       });
 
     }

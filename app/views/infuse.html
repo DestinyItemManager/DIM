@@ -1,21 +1,37 @@
-<div ng-controller="dimInfuseCtrl as infuse">
-  <h2>Infuse</h2>
+<div ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
+  <h2>Infuse calculator</h2>
 
   <div style="padding-left: 25px;">
     <p>Disclaimer: DIM cannot in any way infuse your weapons, it's impossible.</p>
-    <p>You can to infuse this weapon:</p>
-    <div dim-infuse-item item-data="infuse.item"></div>
+    <p>You can infuse this weapon:</p>
 
-    <p>With one of these</p>
-    <div ng-repeat="value in infuse.infusable">
-      <div style="float: left;" dim-infuse-item item-data="value"></div>
+    <div style="">
+      <div dim-infuse-item item-data="infuse.item" style="float: left; width: 48px; height: 48px;"></div>
+      <div style="float: left; margin-left: 20px;">
+        <span><strong>{{infuse.item.name}}</strong></span><br />
+        <span>{{infuse.item.type}}</span>
+      </div>
+      <div style="float: left; margin-left: 30px;">
+        <span>Attack</span><br />
+        <span style="font-size:32px;">{{infuse.item.primStat.value}}</span>
+      </div>
     </div>
 
     <br style="clear: both;" />
 
-    <div>
-      <p>The result after infusion:</p>
-      <h3>{{infuse.infuseService.light.infused}}</h3>
+    <p>With one of these:</p>
+    <div style="background-color: #000;">
+      <div ng-repeat="value in infuse.infusable">
+        <div style="float: left; margin: 5px; width: 48px; height: 48px;" dim-infuse-item item-data="value"></div>
+      </div>
+    </div>
+
+    <br style="clear: both;" />
+
+    <div ng-show="infuse.infuseService.light.infused != 0">
+      <span>Will bring the gear to</span>
+      <span style="font-size: 32px;">{{infuse.infuseService.light.infused}}</span>
+      <span style="color: green;">(+ {{infuse.infuseService.light.difference}})</span>
     </div>
 
   </div>

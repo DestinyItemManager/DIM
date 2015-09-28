@@ -2,24 +2,69 @@
   'use strict';
 
   angular.module('dimApp')
+    .factory('shareDataService', shareDataService);
+
+  shareDataService.$inject = []
+
+  function shareDataService() {
+
+    var shareDataService = this;
+    var item = null;
+
+    return {
+      getItem: function() {
+        return shareDataService.item;
+      },
+      setItem: function(item) {
+        shareDataService.item = item;
+      }
+    }
+
+  }
+
+  angular.module('dimApp')
     .factory('infuseService', infuseService);
 
-  infuseService.$inject = ['$rootScope'];
+  infuseService.$inject = [];
 
-  function infuseService($rootScope) {
+  function infuseService() {
 
     var data = {
       source: 0,
-      infused: 0
+      targets: [],
+      infused: 0,
+      calculate: function() {
+        var result = 0;
+        for(var i=0;i<data.targets.length;i++) {
+          var target = data.targets[i].primStat.value;
+          if (result > 0) { var source = result; }
+          else { var source = data.source; }
+          result = Math.round((target - source) * 0.8 + source);
+        }
+        return result;
+      }
     };
 
     return {
       setSource: function(source) {
+        // Set the source and reset the targets
         data.source = source;
+        data.infused = 0;
+        data.targets = [];
       },
-      setTarget: function(target) {
-        data.infused = Math.round((target - data.source) * 0.8 + data.source);
-        $rootScope.$emit('infuse', data.infused);
+      toggleItem: function(item) {
+
+        var index = _.indexOf(data.targets, item);
+        if (index > -1) {
+          data.targets.splice(index, 1);
+        }
+        else {
+          data.targets.push(item);
+        }
+
+        data.infused = data.calculate();
+        data.difference = data.infused - data.source;
+
       },
       light: data
     }
@@ -40,19 +85,20 @@
       },
       template: [
         '<div title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" class="item" ng-class="{ \'search-hidden\': !vm.item.visible, \'search-item-hidden\': vm.item.visible === false && vm.hideFilteredItems === true, \'complete\': vm.item.complete }">',
-        '  <div class="img" ng-class="{ \'how\': vm.item.inHoW }" ng-click="vm.calculate(vm.item.primStat.value)" style="background-size: 44px 44px;"></div>',
-        '  <div class="counter" ng-if="vm.item.amount > 1">{{ vm.item.amount }}</div>',
-        '  <div class="damage-type" ng-if="!vm.itemStat && vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
-        '  <div class="item-stat" ng-if="vm.itemStat && vm.item.primStat.value" ng-class="\'stat-damage-\' + vm.item.dmg">{{ vm.item.primStat.value }}</div>',
+        '  <div class="img" ng-click="vm.toggleItem(vm.item)" style="background-size: 44px 44px;"></div>',
+        '  <div class="damage-type" ng-if="!vm.item.itemStat && vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
+        '  <div class="item-stat" ng-if="vm.item.primStat.value" ng-class="\'stat-damage-\' + vm.item.dmg">{{ vm.item.primStat.value }}</div>',
         '</div>'
       ].join(''),
       bindToController: true,
       controllerAs: 'vm',
-      controller: ['$rootScope', 'infuseService', function($rootScope, infuseService) {
+      controller: ['infuseService', function(infuseService) {
         var vm = this;
-        vm.calculate = function(value) {
-          infuseService.setTarget(value);
+
+        vm.toggleItem = function(item) {
+          infuseService.toggleItem(item);
         }
+
       }],
       link: function (scope, element, attrs) {
         var vm = scope.vm;
@@ -72,13 +118,13 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'infuseService'];
+  dimInfuseCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'infuseService', 'shareDataService'];
 
-  function dimInfuseCtrl($scope, $rootScope, dimStoreService, dimItemService, infuseService) {
+  function dimInfuseCtrl($scope, $rootScope, dimStoreService, dimItemService, infuseService, shareDataService) {
     var vm = this;
 
-    // vm.store = $scope.store;
-    vm.item = $scope.item;
+    // vm.item = $scope.item;
+    vm.item = shareDataService.getItem();
     vm.infuseService = infuseService;
     vm.infusable = [];
 
@@ -91,11 +137,6 @@
           vm.infusable.push(item);
         }
       });
-    });
-
-    $rootScope.$on('infuse', function(event, data) {
-      vm.infused = data;
-      console.log(data);
     });
 
   }
