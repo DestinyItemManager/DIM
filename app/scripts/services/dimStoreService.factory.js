@@ -542,9 +542,16 @@
 
         var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
+        // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+        var index = item.itemHash + '-';
+        if (item.itemInstanceId === '0') {
+          index = index + getNextIndex();
+        } else {
+          index = index + item.itemInstanceId;
+        }
 
         var createdItem = {
-          index: getNextIndex(),
+          index: index,
           owner: owner,
           hash: item.itemHash,
           type: itemType,
