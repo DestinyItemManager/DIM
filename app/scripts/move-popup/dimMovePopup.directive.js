@@ -22,7 +22,7 @@
         '  <div dim-move-item-properties="vm.item"></div>',
         '  <span ng-show="vm.item.type === \'Bounties\'" class="bounty-description">{{vm.item.description}}</span>',
         '  <div>',
-        '  <div class="move-button move-store" ng-if="vm.item.tier == \'Legendary\' || vm.item.tier == \'Exotic\'" ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</div>',
+        '  <div class="move-button move-store" ng-if="vm.isInfusable(vm.item)" ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</div>',
         '  </div>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
@@ -64,6 +64,15 @@
         return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
       }
     };
+
+    /*
+    * Check that the current item is infusable
+    * Only legendary or Exotic items are infusable.
+    */
+    vm.isInfusable = function isInfusable(item) {
+      var types = ['Primary', 'Special', 'Heavy', 'Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'];
+      return (item.tier == 'Legendary' || item.tier == 'Exotic') && (_.contains(types, item.type));
+    }
 
     vm.infuse = function infuse(store, item, e) {
       e.stopPropagation();

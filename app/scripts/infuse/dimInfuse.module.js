@@ -29,16 +29,18 @@
 
   function infuseService() {
 
-    var data = {
+    var _data = {
       source: 0,
       targets: [],
       infused: 0,
+      view: [],
+      infusable: [],
       calculate: function() {
         var result = 0;
-        for(var i=0;i<data.targets.length;i++) {
-          var target = data.targets[i].primStat.value;
+        for(var i=0;i<_data.targets.length;i++) {
+          var target = _data.targets[i].primStat.value;
           if (result > 0) { var source = result; }
-          else { var source = data.source; }
+          else { var source = _data.source; }
           result = Math.round((target - source) * 0.8 + source);
         }
         return result;
@@ -48,25 +50,40 @@
     return {
       setSource: function(source) {
         // Set the source and reset the targets
-        data.source = source;
-        data.infused = 0;
-        data.targets = [];
+        _data.source = source;
+        _data.infused = 0;
+        _data.targets = [];
+      },
+      setInfusable: function(items) {
+        _data.infusable = items;
+        _data.view = items;
       },
       toggleItem: function(item) {
 
-        var index = _.indexOf(data.targets, item);
+        // Add or remove the item from the infusion chain
+        var index = _.indexOf(_data.targets, item);
         if (index > -1) {
-          data.targets.splice(index, 1);
+          _data.targets.splice(index, 1);
         }
         else {
-          data.targets.push(item);
+          _data.targets.push(item);
         }
 
-        data.infused = data.calculate();
-        data.difference = data.infused - data.source;
+        // Value of infused result
+        _data.infused = _data.calculate();
+        // The difference from start to finish
+        _data.difference = _data.infused - _data.source;
+
+        // let's remove the used gear and the one that are lower than the infused result
+        _data.view = _.chain(_data.infusable)
+          .difference(_data.targets)
+          .filter(function(item) {
+            return item.primStat.value > _data.infused;
+          })
+          .value();
 
       },
-      light: data
+      data: _data,
     }
 
   }
@@ -74,9 +91,9 @@
   angular.module('dimApp')
     .directive('dimInfuseItem', dimItem);
 
-  dimItem.$inject = ['$rootScope', 'dimStoreService', 'dimItemService'];
+  dimItem.$inject = ['dimStoreService', 'dimItemService'];
 
-  function dimItem($rootScope, dimStoreService, dimItemService) {
+  function dimItem(dimStoreService, dimItemService) {
     return {
       replace: true,
       scope: {
@@ -94,11 +111,9 @@
       controllerAs: 'vm',
       controller: ['infuseService', function(infuseService) {
         var vm = this;
-
         vm.toggleItem = function(item) {
           infuseService.toggleItem(item);
         }
-
       }],
       link: function (scope, element, attrs) {
         var vm = scope.vm;
@@ -118,25 +133,29 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'infuseService', 'shareDataService'];
+  dimInfuseCtrl.$inject = ['dimStoreService', 'dimItemService', 'infuseService', 'shareDataService'];
 
-  function dimInfuseCtrl($scope, $rootScope, dimStoreService, dimItemService, infuseService, shareDataService) {
+  function dimInfuseCtrl(dimStoreService, dimItemService, infuseService, shareDataService) {
     var vm = this;
 
     // vm.item = $scope.item;
     vm.item = shareDataService.getItem();
     vm.infuseService = infuseService;
-    vm.infusable = [];
 
     infuseService.setSource(vm.item.primStat.value);
 
     dimStoreService.getStore(vm.item.owner).then(function(store) {
-      _.each(store.items, function(item) {
-        // The item is the same type and with more light
-        if (item.primStat && (item.type == vm.item.type && item.primStat.value > vm.item.primStat.value)) {
-          vm.infusable.push(item);
-        }
-      });
+
+      var items = _.chain(store.items).filter(function(item) {
+          return (item.primStat && (item.type == vm.item.type && item.primStat.value > vm.item.primStat.value))
+        })
+        .sortBy(function(item) {
+          return item.primStat.value;
+        })
+        .value();
+
+      infuseService.setInfusable(items);
+
     });
 
   }
