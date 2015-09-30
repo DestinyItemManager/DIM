@@ -582,6 +582,7 @@
           visible: true,
           hasAscendNode: false,
           ascended: false,
+          hasReforgeNode: false,
           lockable: item.lockable,
           locked: item.locked,
           weaponClass: weaponClass || '',
@@ -617,21 +618,31 @@
 
         var talents = talentDefs.data[item.talentGridHash];
 
-        var ascendNode = (talents) ? _.filter(talents.nodes, function(node) {
-          return _.some(node.steps, function(step) {
-            return step.nodeStepName === 'Ascend';
+        if (talents) {
+          var ascendNode = _.filter(talents.nodes, function(node) {
+            return _.any(node.steps, function(step) {
+              return step.nodeStepName === 'Ascend';
+            });
           });
-        }) : undefined;
 
-        if (!_.isUndefined(ascendNode) && _.size(ascendNode) > 0) {
-          createdItem.hasAscendNode = true;
-          createdItem.ascended = _.filter(item.nodes, function(node) {
-            return node.nodeHash === ascendNode[0].nodeHash;
-          })[0].isActivated;
+          if (!_.isEmpty(ascendNode)) {
+            createdItem.hasAscendNode = true;
+            createdItem.ascended = _.filter(item.nodes, function(node) {
+              return node.nodeHash === ascendNode[0].nodeHash;
+            })[0].isActivated;
 
-          if (!createdItem.ascended) {
-            createdItem.complete = false;
+            if (!createdItem.ascended) {
+              createdItem.complete = false;
+            }
           }
+
+          var reforgeNodes = _.filter(talents.nodes, function(node) {
+            return _.any(node.steps, function(step) {
+              return step.nodeStepName === 'Reforge Ready';
+            });
+          });
+
+          createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
         }
 
         _.each(createdItem.perks, function(perk) {

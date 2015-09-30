@@ -143,6 +143,7 @@
       'dupe':         ['dupe', 'duplicate'],
       'unascended':   ['unascended', 'unassended', 'unasscended'],
       'ascended':     ['ascended', 'assended', 'asscended'],
+      'reforgeable':  ['reforgeable', 'reforge', 'rerollable', 'reroll'],
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
       'stackable':    ['stackable'],
@@ -194,6 +195,9 @@
       },
       'unascended': function(predicate, item) {
         return !filterFns.ascended(predicate, item);
+      },
+      'reforgeable': function(predicate, item) {
+        return item.hasReforgeNode;
       },
       'unlocked': function(predicate, item) {
         return item.lockable && !item.locked;
