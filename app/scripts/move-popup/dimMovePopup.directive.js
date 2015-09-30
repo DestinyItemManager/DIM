@@ -21,9 +21,6 @@
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item"></div>',
         '  <span ng-show="vm.item.type === \'Bounties\'" class="bounty-description">{{vm.item.description}}</span>',
-        '  <div>',
-        '  <div class="move-button move-store" ng-if="vm.isInfusable(vm.item)" ng-click="vm.infuse(vm.store, vm.item, $event)">Infuse</div>',
-        '  </div>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
@@ -64,39 +61,6 @@
         return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
       }
     };
-
-    /*
-    * Check that the current item is infusable
-    * Only legendary or Exotic items are infusable.
-    */
-    vm.isInfusable = function isInfusable(item) {
-      var types = ['Primary', 'Special', 'Heavy', 'Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'];
-      return (item.tier == 'Legendary' || item.tier == 'Exotic') && (_.contains(types, item.type));
-    }
-
-    vm.infuse = function infuse(store, item, e) {
-      e.stopPropagation();
-
-      /*
-      var infuseScope = $scope.$new(true);
-      infuseScope.item = item;
-      */
-
-      // Close the move-popup
-      ngDialog.closeAll();
-
-      // Open the infuse window
-      var infuse = ngDialog.open({
-        template: 'views/infuse.html',
-        overlay: false,
-        className: 'app-settings',
-        controller: ['shareDataService', function(shareDataService) {
-          shareDataService.setItem(item);
-        }]
-        // scope: infuseScope
-      });
-
-    }
 
     // function moveItemUI(item, targetStore) {
     //   var sourceStore = (item.owner === targetStore.id) ? $q.when(targetStore) : dimStoreService.getStore(item.owner);

@@ -1,5 +1,5 @@
 <div ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
-  <h2>Infuse calculator</h2>
+  <h2>Infusion Calculator</h2>
 
   <div style="margin-left: 25px;">
     <p>Disclaimer: DIM cannot in any way infuse your weapons, it's impossible.</p>
@@ -43,6 +43,7 @@
         <span>Will bring the gear to</span>
         <span style="font-size: 32px;">{{infuse.infuseService.data.infused}}</span>
         <span style="color: green;">(+ {{infuse.infuseService.data.difference}})</span>
+        <span style="">with {{infuse.infuseService.data.targets.length*3}} <img style="height: 17px;" src="/images/legendaryMarks.png"></span>
       </div>
     </div>
   </div>
