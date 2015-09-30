@@ -3,8 +3,6 @@
 
   <div style="margin-left: 25px;">
     <p>Disclaimer: DIM cannot in any way infuse your weapons, it's impossible.</p>
-    <p>Infused with the following gear:</p>
-
     <div style="float: left; height: 65px; width: 100%;">
       <div dim-infuse-item item-data="infuse.item" style="float: left; width: 48px; height: 48px;"></div>
       <div style="float: left; margin-left: 20px;">
@@ -17,26 +15,22 @@
       </div>
     </div>
   </div>
-
   <br style="clear: both;" />
-
   <div style="height: 130px; background-color: #6D6D6D; float: left; width: 100%; padding: 10px 0px 25px 25px;">
-    <p>With one of these:</p>
+    <p>Infused with the following gear:</p>
     <div>
       <div ng-repeat="value in infuse.infuseService.data.view">
-        <div style="float: left; margin: 0 3px 0 3px; width: 48px; height: 48px;" dim-infuse-item item-data="value"></div>
+        <div style="float: left; margin: 0 3px 0 3px; width: 48px; height: 48px;" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
       </div>
       <span ng-if="infuse.infuseService.data.view.length < 1"><strong>...grind for better gear :)</strong></span>
     </div>
   </div>
-
   <br style="clear: both;" />
-
   <div style="background-color: #222222; float: left; width: 100%; padding: 10px 0px 25px 25px;">
     <div ng-show="infuse.infuseService.data.infused != 0">
       <div ng-repeat="value in infuse.infuseService.data.targets">
         <div style="float: left; margin: 5px; font-size: 32px;" ng-if="!$first">+</div>
-        <div style="float: left; margin: 5px; width: 48px; height: 48px;" dim-infuse-item item-data="value"></div>
+        <div style="float: left; margin: 5px; width: 48px; height: 48px;" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
       </div>
       <br style="clear: both;" />
       <div>
@@ -47,5 +41,4 @@
       </div>
     </div>
   </div>
-
 </div>
