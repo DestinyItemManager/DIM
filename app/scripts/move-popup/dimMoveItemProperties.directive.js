@@ -39,7 +39,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div ng-if="vm.isInfusable(vm.item)" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.icon(vm.item)}}.png\')"></div>',
+        '    <div ng-if="vm.isInfusable(vm.item)" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\')"></div>',
         '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}\n{{perk.displayDescription}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
         '  </div>',
         '</div>'
@@ -164,20 +164,6 @@
     }
 
     /*
-    * Show the icon for infusion, weapon or armor
-    */
-    vm.icon = function icon(item) {
-      var icon = "";
-      if (item.sort && item.sort === "Weapons") {
-        icon = "weapon";
-      }
-      else {
-        icon = "armor"
-      }
-      return icon;
-    }
-
-    /*
     * Open up the dialog for infusion by passing
     * the selected item
     */
@@ -192,7 +178,7 @@
         template: 'views/infuse.html',
         overlay: false,
         className: 'app-settings',
-        controller: ['shareDataService', function(shareDataService) {
+        controller: ['dimShareData', function(shareDataService) {
           shareDataService.setItem(item);
         }]
       });

@@ -45,9 +45,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
 
-  function MovePopupController($scope, $rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
     function capitalizeFirstLetter(string) {
