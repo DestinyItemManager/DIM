@@ -329,12 +329,18 @@
       $rootScope.loadingTracker.addPromise(promise);
     };
 
+    function resetData() {
+        generateData()
+          .then(function(data) {
+            vm.data = data;
+            $timeout(dimStoreService.setHeights, 0);
+          });
+    }
+
+    var debounceResetData = _.debounce(resetData, 500);
+
     $scope.$watch('vm.store.items', function(newVal) {
-      generateData()
-        .then(function(data) {
-          vm.data = data;
-          $timeout(dimStoreService.setHeights, 0);
-        });
+      resetData();
     }, true);
   }
 })();
