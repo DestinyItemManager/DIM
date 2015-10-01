@@ -16,6 +16,7 @@
       infusable: [],
       calculate: function() {
         var result = 0;
+        var source = _data.source;
         for(var i=0;i<_data.targets.length;i++) {
 
           var target = _data.targets[i].primStat.value;
@@ -25,19 +26,14 @@
           if (result > 0) {
             var source = result;
           }
-          // if it's the first loop
-          else {
-            var source = _data.source;
-          }
-
-          // Exotics get 70%
-          var multiplier = (tier === 'Exotic') ? 0.7 : 0.8;
 
           // rares and legendaries that are within 6 points infuse at 100%
-          if (!tier === 'Exotic' && (target - source > 7)) {
+          if ((target - source < 7) && tier !== 'Exotic') {
             result = target;
           }
           else {
+            // Exotics get 70%
+            var multiplier = (tier === 'Exotic') ? 0.7 : 0.8;
             result = Math.round((target - source) * multiplier + source);
           }
 
