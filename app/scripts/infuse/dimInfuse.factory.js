@@ -9,47 +9,47 @@
   function infuseService() {
 
     var _data = {
-      source: 0,
+      source: null,
       targets: [],
       infused: 0,
       view: [],
       infusable: [],
       calculate: function() {
+
         var result = 0;
-        var source = _data.source;
+        var source = _data.source.primStat.value;
+
+        // Exotics get 70%
+        var multiplier = (_data.source.tier === 'Exotic') ? 0.7 : 0.8;
+
         for(var i=0;i<_data.targets.length;i++) {
-
           var target = _data.targets[i].primStat.value;
-          var tier = _data.targets[i].tier;
-
           // if we already have a partial
           if (result > 0) {
             var source = result;
           }
-
           // rares and legendaries that are within 6 points infuse at 100%
-          if ((target - source < 7) && tier !== 'Exotic') {
+          if (target - source < 7) {
             result = target;
           }
           else {
-            // Exotics get 70%
-            var multiplier = (tier === 'Exotic') ? 0.7 : 0.8;
-            result = Math.round((target - source) * multiplier + source);
+            // result = Math.round((target - source) * multiplier + source);
+            // Some says...that numbers are Ceiling...not rounded
+            result = Math.ceil((target - source) * multiplier + source);
           }
-
         }
         return result;
       }
     };
 
     return {
-      setSource: function(source) {
+      setSourceItem: function(item) {
         // Set the source and reset the targets
-        _data.source = source;
+        _data.source = item;
         _data.infused = 0;
         _data.targets = [];
       },
-      setInfusable: function(items) {
+      setInfusibleItems: function(items) {
         _data.infusable = items;
         _data.view = items;
       },
@@ -67,7 +67,7 @@
         // Value of infused result
         _data.infused = _data.calculate();
         // The difference from start to finish
-        _data.difference = _data.infused - _data.source;
+        _data.difference = _data.infused - _data.source.primStat.value;
 
         // let's remove the used gear and the one that are lower than the infused result
         _data.view = _.chain(_data.infusable)

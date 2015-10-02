@@ -9,11 +9,12 @@
   function dimInfuseCtrl(dimStoreService, dimItemService, infuseService, shareDataService) {
     var vm = this;
 
-    // vm.item = $scope.item;
+    // Get the source item
     vm.item = shareDataService.getItem();
-    vm.infuseService = infuseService;
+    infuseService.setSourceItem(vm.item);
 
-    infuseService.setSource(vm.item.primStat.value);
+    // Expose the service to view
+    vm.infuseService = infuseService;
 
     dimStoreService.getStore(vm.item.owner).then(function(store) {
 
@@ -25,7 +26,7 @@
         })
         .value();
 
-      infuseService.setInfusable(items);
+      infuseService.setInfusibleItems(items);
 
     });
 
