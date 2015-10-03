@@ -43,9 +43,9 @@
       scope.vm.onDrop = function(id, $event, equip) {
         var vm = scope.vm;
 
-        var srcElement = $window.document.querySelector('#' + id);
+        var srcElement = $('#' + id);
 
-        vm.moveDroppedItem(angular.element(srcElement)
+        vm.moveDroppedItem(angular.element(srcElement[0])
           .scope()
           .item, equip);
       };
@@ -56,6 +56,8 @@
 
   function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
     var vm = this;
+
+
     var types = [ // Order of types in the rows.
       'Class',
       'Primary',
