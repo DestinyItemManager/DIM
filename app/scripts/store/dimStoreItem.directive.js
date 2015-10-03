@@ -20,11 +20,11 @@
         'item': '=itemData'
       },
       template: [
-        '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ vm.dragChannel }}" ',
-        '  title="{{ vm.item.primStat.value + \' \' + vm.item.name }}" ',
-        '  drag="vm.item.index" ng-class="vm.itemClassNames">',
+        '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ :: vm.dragChannel }}" ',
+        '  title="{{ :: vm.item.primStat.value + \' \' + vm.item.name }}" ',
+        '  drag="::vm.item.index" ng-class="::vm.itemClassNames">',
         '  <div ui-draggable="false" class="img" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
-        '  <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  <div ui-draggable="false" ng-class="::vm.badgeClassNames" ng-if="::vm.showBadge">{{ vm.badgeCount }}</div>',
         '</div>'
       ].join('')
     };
@@ -32,6 +32,21 @@
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
+
+      // var watchers;
+      //
+      // scope.$on('suspend', function() {
+      //   watchers = scope.$$watchers;
+      //   scope.$$watchers = [];
+      // });
+      //
+      // scope.$on('resume', function() {
+      //   if (watchers)
+      //     scope.$$watchers = watchers;
+      //
+      //   // discard our copy of the watchers
+      //   watchers = void 0;
+      // });
 
       $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
         $(this).remove();
@@ -87,18 +102,6 @@
       }, function(newItem) {
         processItem(vm, vm.item);
       });
-
-      // scope.$watch('vm.item', function(newItem) {
-      //   processItem(vm, newItem);
-      // }, true);
-
-      // scope.$watch('vm.item.visible', function(newItem) {
-      //   processItem(vm, vm.item);
-      // });
-
-      // scope.$watch('vm', function(newVM) {
-      //   processItem(vm, vm.item);
-      // });
     }
   }
 
@@ -185,12 +188,12 @@
     settings.getSettings()
       .then(function(settings) {
         processSettings(vm, settings);
-        processItem(vm, vm.item);
+        //processItem(vm, vm.item);
       });
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       processSettings(vm, arg);
-      processItem(vm, vm.item);
+      //processItem(vm, vm.item);
     });
 
     vm.itemClicked = function clicked(item) {
