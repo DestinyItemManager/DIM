@@ -39,6 +39,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
+        '    <div ng-if="vm.isInfusable(vm.item)" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\')"></div>',
         '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}\n{{perk.displayDescription}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
         '  </div>',
         '</div>'
@@ -46,9 +47,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'ngDialog'];
 
-  function MoveItemPropertiesCtrl($sce, settings) {
+  function MoveItemPropertiesCtrl($sce, settings, ngDialog) {
     var vm = this;
 
     vm.classes = {
@@ -152,5 +153,36 @@
         });
       }
     }
+
+    /*
+    * Check that the current item is infusable
+    * Only legendary or Exotic items are infusable.
+    */
+    vm.isInfusable = function isInfusable(item) {
+      // Infuse perk's id is 1270552711
+      return _.contains(item.talentPerks, 1270552711);
+    }
+
+    /*
+    * Open up the dialog for infusion by passing
+    * the selected item
+    */
+    vm.infuse = function infuse(item, e) {
+      e.stopPropagation();
+
+      // Close the move-popup
+      ngDialog.closeAll();
+
+      // Open the infuse window
+      var infuse = ngDialog.open({
+        template: 'views/infuse.html',
+        overlay: false,
+        className: 'app-settings',
+        controller: ['dimShareData', function(shareDataService) {
+          shareDataService.setItem(item);
+        }]
+      });
+    }
+
   }
 })();

@@ -1,0 +1,44 @@
+<div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
+  <h2>Infusion Calculator</h2>
+
+  <div class="container">
+    <p>Disclaimer: DIM cannot in any way infuse any of your weapons, it's impossible.</p>
+    <div class="details">
+      <div class="infuseSourceItem" dim-infuse-item item-data="infuse.item"></div>
+      <div class="infuseSourceDetails">
+        <span><strong>{{infuse.item.name}}</strong></span><br />
+        <span>{{infuse.item.type}}</span>
+      </div>
+      <div class="infuseSourceDetailsRow">
+        <span>Attack</span><br />
+        <span class="bigValue">{{infuse.item.primStat.value}}</span>
+      </div>
+    </div>
+  </div>
+  <br class="clear" />
+  <div class="gearsContainer grey">
+    <p>Infused with the following gear:</p>
+    <div>
+      <div ng-repeat="value in infuse.infuseService.data.view">
+        <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
+      </div>
+      <span ng-if="infuse.infuseService.data.view.length < 1"><strong>...grind for better gear :)</strong></span>
+    </div>
+  </div>
+  <br class="clear" />
+  <div class="gearsContainer black">
+    <div ng-show="infuse.infuseService.data.infused != 0">
+      <div ng-repeat="value in infuse.infuseService.data.targets">
+        <div class="plusSeparator" ng-if="!$first">+</div>
+        <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
+      </div>
+      <br class="clear" />
+      <div class="result">
+        <span>Will bring the gear to</span>
+        <span class="bigValue">{{infuse.infuseService.data.infused}}</span>
+        <span class="green">(+ {{infuse.infuseService.data.difference}})</span>
+        <span>with {{infuse.infuseService.data.targets.length*3}} <span class="legendaryMarks"><img src="/images/legendaryMarks.png"></span></span>
+      </div>
+    </div>
+  </div>
+</div>
