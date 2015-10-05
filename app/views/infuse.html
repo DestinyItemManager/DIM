@@ -1,43 +1,43 @@
-<div ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
+<div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
   <h2>Infusion Calculator</h2>
 
-  <div style="margin-left: 25px;">
-    <p>Disclaimer: DIM cannot in any way infuse your weapons, it's impossible.</p>
-    <div style="float: left; height: 65px; width: 100%;">
-      <div dim-infuse-item item-data="infuse.item" style="float: left; width: 48px; height: 48px;"></div>
-      <div style="float: left; margin-left: 20px;">
+  <div class="container">
+    <p>Disclaimer: DIM cannot in any way infuse any of your weapons, it's impossible.</p>
+    <div class="details">
+      <div class="infuseSourceItem" dim-infuse-item item-data="infuse.item"></div>
+      <div class="infuseSourceDetails">
         <span><strong>{{infuse.item.name}}</strong></span><br />
         <span>{{infuse.item.type}}</span>
       </div>
-      <div style="float: left; margin-left: 30px;">
+      <div class="infuseSourceDetailsRow">
         <span>Attack</span><br />
-        <span style="font-size:32px;">{{infuse.item.primStat.value}}</span>
+        <span class="bigValue">{{infuse.item.primStat.value}}</span>
       </div>
     </div>
   </div>
-  <br style="clear: both;" />
-  <div style="height: 130px; background-color: #6D6D6D; float: left; width: 100%; padding: 10px 0px 25px 25px;">
+  <br class="clear" />
+  <div class="gearsContainer grey">
     <p>Infused with the following gear:</p>
     <div>
       <div ng-repeat="value in infuse.infuseService.data.view">
-        <div style="float: left; margin: 0 3px 0 3px; width: 48px; height: 48px;" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
+        <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
       </div>
       <span ng-if="infuse.infuseService.data.view.length < 1"><strong>...grind for better gear :)</strong></span>
     </div>
   </div>
-  <br style="clear: both;" />
-  <div style="background-color: #222222; float: left; width: 100%; padding: 10px 0px 25px 25px;">
+  <br class="clear" />
+  <div class="gearsContainer black">
     <div ng-show="infuse.infuseService.data.infused != 0">
       <div ng-repeat="value in infuse.infuseService.data.targets">
-        <div style="float: left; margin: 5px; font-size: 32px;" ng-if="!$first">+</div>
-        <div style="float: left; margin: 5px; width: 48px; height: 48px;" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
+        <div class="plusSeparator" ng-if="!$first">+</div>
+        <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
       </div>
-      <br style="clear: both;" />
-      <div>
+      <br class="clear" />
+      <div class="result">
         <span>Will bring the gear to</span>
-        <span style="font-size: 32px;">{{infuse.infuseService.data.infused}}</span>
-        <span style="color: green;">(+ {{infuse.infuseService.data.difference}})</span>
-        <span style="">with {{infuse.infuseService.data.targets.length*3}} <img style="height: 17px;" src="/images/legendaryMarks.png"></span>
+        <span class="bigValue">{{infuse.infuseService.data.infused}}</span>
+        <span class="green">(+ {{infuse.infuseService.data.difference}})</span>
+        <span>with {{infuse.infuseService.data.targets.length*3}} <span class="legendaryMarks"><img src="/images/legendaryMarks.png"></span></span>
       </div>
     </div>
   </div>

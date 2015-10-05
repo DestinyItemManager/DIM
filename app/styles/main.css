@@ -1562,3 +1562,86 @@ button.toast-close-button {
 .equipped {
   position: absolute;
 }
+
+/* Infuse */
+
+.clear {
+  clear: both;
+}
+
+.infuseDialog {
+
+}
+
+.infuseDialog .container {
+  margin-left: 25px;
+}
+
+.infuseDialog .details {
+  float: left;
+  height: 65px;
+  width: 100%;
+}
+
+.infuseDialog .infuseSourceItem {
+  float: left;
+  width: 48px;
+  height: 48px;
+}
+
+.infuseDialog .infuseSourceDetails {
+  float: left;
+  margin-left: 20px;
+}
+
+.infuseDialog .infuseSourceDetailsRow {
+  float: left;
+  margin-left: 30px;
+}
+
+.black {
+  background-color: #222222;
+}
+
+.grey {
+  background-color: #6D6D6D;
+}
+
+.green {
+  color: green;
+}
+
+.infuseDialog .gearsContainer {
+  height: 130px;
+  float: left;
+  width: 100%;
+  padding: 10px 0px 25px 25px;
+}
+
+.gearsContainer .item {
+  float: left;
+  margin: 0 3px 0 3px;
+  width: 48px;
+  height: 48px;
+}
+
+.gearsContainer .infusedItem {
+  float: left;
+  margin: 5px;
+  width: 48px;
+  height: 48px;
+}
+
+.gearsContainer .plusSeparator {
+  float: left;
+  margin: 5px;
+  font-size: 32px;
+}
+
+.infuseDialog .result {
+
+}
+
+.infuseDialog .bigValue {
+  font-size: 32px;
+}
