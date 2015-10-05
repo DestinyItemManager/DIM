@@ -160,7 +160,7 @@ if (typeof window.onerror == "object") {
 
       _gaq.push([
         'errorTracker._trackEvent',
-        'DIM - Chrome Extension - v3.1.11',
+        'DIM - Chrome Extension - v3.1.11.1',
         exceptionDescription,
         ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
         0,
