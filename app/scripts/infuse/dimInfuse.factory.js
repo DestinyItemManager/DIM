@@ -19,9 +19,9 @@
         var result = 0;
         var source = _data.source.primStat.value;
 
-	// Exotics guaranteed up to 4; legendaries, 6
+        // Exotics guaranteed up to 4; legendaries, 6
         // Otherwise, take a percentage.  Exotics get 70%
-	var guarantee  = (_data.source.tier === 'Exotic') ? 4 : 6;
+        var guarantee  = (_data.source.tier === 'Exotic') ? 4 : 6;
         var multiplier = (_data.source.tier === 'Exotic') ? 0.7 : 0.8;
 
         for(var i=0;i<_data.targets.length;i++) {
@@ -31,7 +31,7 @@
             var source = result;
           }
 
-	  // infuse at 100% if difference not greater than the guarantee
+          // infuse at 100% if difference not greater than the guarantee
           if (target - source <= guarantee) {
             result = target;
           }
