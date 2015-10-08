@@ -22,7 +22,7 @@
       <div ng-repeat="value in infuse.infuseService.data.view">
         <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
       </div>
-      <span ng-if="infuse.infuseService.data.view.length < 1"><strong>...grind for better gear :)</strong></span>
+      <span ng-if="infuse.infuseService.data.view.length < 1"><strong>No infusable items available.</strong></span>
     </div>
   </div>
   <br class="clear" />
