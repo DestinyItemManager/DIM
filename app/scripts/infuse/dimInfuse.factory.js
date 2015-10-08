@@ -19,7 +19,9 @@
         var result = 0;
         var source = _data.source.primStat.value;
 
-        // Exotics get 70%
+	// Exotics guaranteed up to 4; legendaries, 6
+        // Otherwise, take a percentage.  Exotics get 70%
+	var guarantee  = (_data.source.tier === 'Exotic') ? 4 : 6;
         var multiplier = (_data.source.tier === 'Exotic') ? 0.7 : 0.8;
 
         for(var i=0;i<_data.targets.length;i++) {
@@ -28,8 +30,9 @@
           if (result > 0) {
             var source = result;
           }
-          // rares and legendaries that are within 6 points infuse at 100%
-          if (target - source < 7) {
+
+	  // infuse at 100% if difference not greater than the guarantee
+          if (target - source <= guarantee) {
             result = target;
           }
           else {
