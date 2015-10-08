@@ -454,6 +454,25 @@
           }
 
           switch (item.itemHash) {
+            case 3012398149: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'Sleeper'};
+
+              itemDef.itemHash = 3012398149;
+              itemDef.bucketTypeHash = 953998645;
+              itemDef.classType = 3;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Fusion Rifle';
+              itemDef.itemName = 'Sleeper Simulant - Classified';
+
+              itemDef.maxStackSize = 1;
+              itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
+
             case 3227022822: {
               item.isEquipment = true;
               item.primaryStat = {value: 'Spindle'};
@@ -802,6 +821,10 @@
         // detect special case items that are actually primary weapons.
         if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1) {
           typeObj.general = 'Primary';
+        }
+
+        if (def.itemHash === 3012398149) {
+          typeObj.general = 'Heavy';
         }
       }
       if (["Rocket Launcher", "Sword", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
