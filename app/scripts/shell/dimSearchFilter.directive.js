@@ -103,6 +103,9 @@
               }
             }
           }
+        } else if(term.indexOf('light:') >=0) {
+          filter = term.replace('light:', '');
+          addPredicate("light", filter);
         } else {
           addPredicate("keyword", term);
         }
@@ -146,7 +149,8 @@
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
       'stackable':    ['stackable'],
-      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"]
+      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"],
+      'light':        ['light', 'level']
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -237,6 +241,36 @@
       },
       'keyword': function(predicate, item){
         return !!~item.name.toLowerCase().indexOf(predicate);
+      },
+      'light': function(predicate, item){
+        if (predicate.length === 0 || item.primStat == undefined) return false;
+        if (item.primStat.statHash != '3897883278' && item.primStat.statHash != '368428387') return false;
+        
+        var operands = ['=','>','<'];
+        var result = false;
+        var operand = 'none';
+        operands.forEach(function(element) {
+          if (predicate.substring(0,element.length) === element) {
+            operand = element;
+            predicate = predicate.substring(element.length);
+          }
+        }, this);
+        
+        switch (operand) {
+          case 'none':
+            result = (item.primStat.value == predicate)
+            break;
+          case '=':
+            result = (item.primStat.value == predicate)
+            break;
+          case '<':
+            result = (item.primStat.value <= predicate)
+            break;
+          case '>':
+            result = (item.primStat.value >= predicate)
+            break;
+        }
+        return result;
       }
     };
   }
