@@ -246,13 +246,15 @@
         if (predicate.length === 0 || item.primStat == undefined) return false;
         if (item.primStat.statHash != '3897883278' && item.primStat.statHash != '368428387') return false;
         
-        var operands = ['=','>','<'];
-        var result = false;
+        var operands = ['<=','>=','=','>','<'];
         var operand = 'none';
+        var result = false;
+        
         operands.forEach(function(element) {
           if (predicate.substring(0,element.length) === element) {
             operand = element;
             predicate = predicate.substring(element.length);
+            return false;
           }
         }, this);
         
@@ -264,9 +266,15 @@
             result = (item.primStat.value == predicate)
             break;
           case '<':
+            result = (item.primStat.value < predicate)
+            break;
+          case '<=':
             result = (item.primStat.value <= predicate)
             break;
           case '>':
+            result = (item.primStat.value > predicate)
+            break;
+          case '>=':
             result = (item.primStat.value >= predicate)
             break;
         }
