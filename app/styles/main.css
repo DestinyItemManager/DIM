@@ -926,13 +926,25 @@ img.void {
   width: 30%;
   text-align: right;
 }
-.item-details .stat-box-val {
+.item-details .stat-box-val{
   display: block;
   float: left;
   line-height: 20px;
   width: 10%;
   text-align: left;
   padding-left: 5px;
+}
+.item-details .higher-stats{
+  color:#7DC878;
+}
+.item-details .lower-stats{
+  color:#985C58;
+}
+.item-details .stat-box-inner.higher-stats{
+  background-color:#7DC878;
+}
+.item-details .stat-box-inner.lower-stats{
+  background-color:#985C58;
 }
 .item-details .stat-box-outer, .item-details .stat-box-inner {
   display: block;
