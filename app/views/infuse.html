@@ -5,14 +5,23 @@
     <p>Disclaimer: DIM cannot in any way infuse any of your weapons, it's impossible.</p>
     <div class="details">
       <div class="infuseSourceItem" dim-infuse-item item-data="infuse.item"></div>
-      <div class="infuseSourceDetails">
+
+      <div class="infuseSourceDetailsRow">
         <span><strong>{{infuse.item.name}}</strong></span><br />
         <span>{{infuse.item.type}}</span>
       </div>
+
       <div class="infuseSourceDetailsRow">
         <span>Attack</span><br />
         <span class="bigValue">{{infuse.item.primStat.value}}</span>
       </div>
+
+      <div class="infuseSourceDetailsRow">
+        <input class="controls" type="checkbox" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><span>Show items from every character</span>
+        <br class="clear" />
+        <input class="controls" type="checkbox" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><span>Show locked items</span>
+      </div>
+
     </div>
   </div>
   <br class="clear" />
