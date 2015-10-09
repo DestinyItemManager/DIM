@@ -14,8 +14,25 @@
       infused: 0,
       view: [],
       infusable: [],
-      calculate: function() {
+      // huge props to /u/Apswny
+      // https://www.reddit.com/r/destinythegame/comments/3n6pox/python_infusion_calculator
+      getThreshold: function(target, source) {
+        if(source.tier === 'Exotic') {
+          // upgrade exotic with rare or legendary, threshold = 4
+          if(target.tier === 'Rare' || target.tier === 'Legendary') return 4;
 
+          // upgrade exotic with an exotic, threshold = 5
+          if(target.tier === 'Exotic') return 5;
+        }
+
+        // infusing a rare or legendary with a rare or legendary, threshold = 6
+        if((source.tier === 'Rare' || source.tier === 'Legendary') &&
+           (source.tier === 'Rare' || source.tier === 'Legendary')) return 6;
+
+        // otherwise we're upgradeing a rare/legendary with an exotic, threshold = 7
+        return 7;
+      },
+      calculate: function() {
         var result = 0;
         var source = _data.source.primStat.value;
 
@@ -29,7 +46,7 @@
             var source = result;
           }
           // rares and legendaries that are within 6 points infuse at 100%
-          if (target - source < 7) {
+          if (target - source <= _data.getThreshold(_data.targets[i], _data.source)) {
             result = target;
           }
           else {
