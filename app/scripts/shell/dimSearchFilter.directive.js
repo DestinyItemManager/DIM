@@ -103,8 +103,8 @@
               }
             }
           }
-        } else if(term.indexOf('light:') >=0) {
-          filter = term.replace('light:', '');
+        } else if(term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
+          filter = term.replace('light:', '').replace('level:', '');
           addPredicate("light", filter);
         } else {
           addPredicate("keyword", term);
@@ -149,8 +149,7 @@
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
       'stackable':    ['stackable'],
-      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"],
-      'light':        ['light', 'level']
+      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"]
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
