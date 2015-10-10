@@ -196,6 +196,32 @@ function addFilter(filter) {
     filter = prompt("Enter an item name:");
     filter = filter.trim();
   }
+  
+  if (filter.indexOf('light:') == 0) {
+    var lightFilterType = filter.substring(6);
+    var light = prompt("Enter a light value:").trim();
+    filter = 'light:';
+    switch (lightFilterType) {
+      case 'value':
+        filter += light;
+        break;
+      case '>value':
+        filter += '>' + light;
+        break;
+      case '>=value':
+        filter += '>=' + light;
+        break;
+      case '<value':
+        filter += '<' + light;
+        break;
+      case '<=value':
+        filter += '<=' + light;
+        break;
+      default:
+        filter = '';
+        break;
+    }
+  }
 
   var text = input.val();
 
