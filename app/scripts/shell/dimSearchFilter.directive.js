@@ -242,7 +242,7 @@
         return !!~item.name.toLowerCase().indexOf(predicate);
       },
       'light': function(predicate, item){
-        if (predicate.length === 0 || item.primStat == undefined || !item.equipment) return false;
+        if (predicate.length === 0 || item.primStat == undefined) return false;
         
         var operands = ['<=','>=','=','>','<'];
         var operand = 'none';
