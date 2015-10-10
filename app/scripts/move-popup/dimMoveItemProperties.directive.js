@@ -29,7 +29,23 @@
         '<div class="item-details" ng-show="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '<div class="item-details" ng-show="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
-        '    <div class="stat-box-row">',
+        '    <div ng-if="vm.item.sort === \'Weapons\' && vm.item.owner != \'vault\'" class="stat-box-row">',
+        '       <span class="stat-box-text"> {{ stat.name }} </span>',
+        '       <span class="stat-box-outer">',
+        '         <span ng-if="stat.value === stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
+        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
+        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.equippedStatsValue - stat.value}}" class="stat-box-inner lower-stats" style="width: {{ stat.equippedStatsValue - stat.value }}%"></span>',
+        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.equippedStatsValue }}" class="stat-box-inner" style="width: {{ stat.equippedStatsValue }}%"></span>',
+        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.value - stat.equippedStatsValue}}" class="stat-box-inner higher-stats" style="width: {{ stat.value - stat.equippedStatsValue }}%"></span>',
+        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="lower-stats">{{ stat.value }}</span>',
+        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="higher-stats">{{ stat.value }}</span>',
+        '         <span ng-if="stat.value === stat.equippedStatsValue" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
+        '       </span>',
+        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
+        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="higher-stats stat-box-val">{{ stat.value }}</span>',
+        '         <span ng-if="stat.value === stat.equippedStatsValue || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-val">{{ stat.value }}</span>',
+        '    </div>',
+        '    <div ng-if="vm.item.sort != \'Weapons\' || vm.item.owner === \'vault\'" class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
         '       <span class="stat-box-outer">',
         '         <span ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
@@ -47,9 +63,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'ngDialog'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'ngDialog', '$scope'];
 
-  function MoveItemPropertiesCtrl($sce, settings, ngDialog) {
+  function MoveItemPropertiesCtrl($sce, settings, ngDialog, $scope) {
     var vm = this;
 
     vm.classes = {
@@ -124,9 +140,9 @@
         // }
       } else if (vm.item.primStat.statHash === 368428387) {
         // switch(vm.item.dmg) {
-        // 	case 'arc': vm.color = '#85c5ec'; break;
-        // 	case 'solar': vm.color = '#f2721b';  break;
-        // 	case 'void': vm.color = '#b184c5'; break;
+        //  case 'arc': vm.color = '#85c5ec'; break;
+        //  case 'solar': vm.color = '#f2721b';  break;
+        //  case 'void': vm.color = '#b184c5'; break;
         // }
 
         switch (vm.item.dmg) {
@@ -184,5 +200,19 @@
       });
     }
 
+    /*
+    * Get the item stats and its stat name 
+    * of the equipped item for comparison
+    */
+    var items = $scope.$parent.$parent.vm.store.items;
+
+    for (var item of items) {
+      if (item.equipped && item.type === vm.item.type) {
+        for (var key in vm.item.stats) {
+          vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
+          vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+        }
+      }
+    }
   }
 })();
