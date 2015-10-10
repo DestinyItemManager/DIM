@@ -242,8 +242,7 @@
         return !!~item.name.toLowerCase().indexOf(predicate);
       },
       'light': function(predicate, item){
-        if (predicate.length === 0 || item.primStat == undefined) return false;
-        if (item.primStat.statHash != '3897883278' && item.primStat.statHash != '368428387') return false;
+        if (predicate.length === 0 || item.primStat == undefined || !item.equipment) return false;
         
         var operands = ['<=','>=','=','>','<'];
         var operand = 'none';
