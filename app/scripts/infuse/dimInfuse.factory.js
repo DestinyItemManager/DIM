@@ -45,14 +45,11 @@
           if (result > 0) {
             var source = result;
           }
-          // rares and legendaries that are within 6 points infuse at 100%
+          // compute threshold 
           if (target - source <= _data.getThreshold(_data.targets[i], _data.source)) {
             result = target;
-          }
-          else {
-            // result = Math.round((target - source) * multiplier + source);
-            // Some says...that numbers are Ceiling...not rounded
-            result = Math.ceil((target - source) * multiplier + source);
+          } else {
+            result = Math.round((target - source) * multiplier + source);
           }
         }
         return result;
