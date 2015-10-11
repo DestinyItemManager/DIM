@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -322,128 +322,98 @@
     }
 
     function getItems(owner, items, definitions) {
-      var result = [];
+      var result = [],
+          how = [
+            27147831,
+            42955693,
+            67667123,
+            90237898,
+            218050499,
+            265815054,
+            335523232,
+            339830484,
+            393928834,
+            396000457,
+            458051526,
+            503662095,
+            523254923,
+            539209176,
+            561917151,
+            624069029,
+            714364949,
+            775290250,
+            795669148,
+            860021733,
+            882909349,
+            995864459,
+            904421510,
+            1066225282,
+            1089438744,
+            1107880514,
+            1160431986,
+            1220059831,
+            1254374620,
+            1254481871,
+            1264686852,
+            1323306343,
+            1402638106,
+            1451036562,
+            1519653029,
+            1550472824,
+            1594939317,
+            1656716862,
+            1828077147,
+            1847790745,
+            1873618131,
+            2012670844,
+            2026407600,
+            2083636246,
+            2166567782,
+            2204090140,
+            2205157361,
+            2218769485,
+            2225640336,
+            2254085097,
+            2291003580,
+            2328256155,
+            2438950138,
+            2465557612,
+            2475938409,
+            2480655802,
+            2535110885,
+            2557913516,
+            2558819340,
+            2582896251,
+            2591286232,
+            2642620856,
+            2668404053,
+            2729377859,
+            2733667410,
+            2741119693,
+            2762611443,
+            2773297359,
+            2834869470,
+            2858888526,
+            3072387149,
+            3013056390,
+            3083393861,
+            3102889189,
+            3170350942,
+            3252749793,
+            3604975945,
+            3698237992,
+            3744470365,
+            3904617893,
+            3975149217,
+            3992691386,
+            4029879832,
+            4068960035,
+            4143281036,
+            4160874107,
+            4248486431
+          ];
 
-      var statNames = {
-          2391494160: "Light",
-          2523465841: "Velocity",
-          2715839340: "Recoil direction",
-          2961396640: "Charge Rate",
-          2996146975: "Agility",
-          3555269338: "Optics",
-          3597844532: "Precision Damage",
-          3614673599: "Blast Radius",
-          3871231066: "Magazine",
-          3897883278: "Defense",
-          3907551967: "Move speed",
-          3988418950: "ADS Speed",
-          4043523819: "Impact",
-          4188031367: "Reload",
-          4244567218: "Strength",
-          4284893193: "Rate of Fire",
-          144602215: "Intellect",
-          155624089: "Stability",
-          360359141: "Durability",
-          368428387: "Attack",
-          392767087: "Armor",
-          943549884: "Equip Speed",
-          1240592695: "Range",
-          1345609583: "Aim assistance",
-          1501155019: "Speed",
-          1735777505: "Discipline",
-          1931675084: "Inventory Size",
-          1943323491: "Recovery"
-        },
-        how = [27147831,
-          42955693,
-          67667123,
-          90237898,
-          218050499,
-          265815054,
-          335523232,
-          339830484,
-          393928834,
-          396000457,
-          458051526,
-          503662095,
-          523254923,
-          539209176,
-          561917151,
-          624069029,
-          714364949,
-          775290250,
-          795669148,
-          860021733,
-          882909349,
-          995864459,
-          904421510,
-          1066225282,
-          1089438744,
-          1107880514,
-          1160431986,
-          1220059831,
-          1254374620,
-          1254481871,
-          1264686852,
-          1323306343,
-          1402638106,
-          1451036562,
-          1519653029,
-          1550472824,
-          1594939317,
-          1656716862,
-          1828077147,
-          1847790745,
-          1873618131,
-          2012670844,
-          2026407600,
-          2083636246,
-          2166567782,
-          2204090140,
-          2205157361,
-          2218769485,
-          2225640336,
-          2254085097,
-          2291003580,
-          2328256155,
-          2438950138,
-          2465557612,
-          2475938409,
-          2480655802,
-          2535110885,
-          2557913516,
-          2558819340,
-          2582896251,
-          2591286232,
-          2642620856,
-          2668404053,
-          2729377859,
-          2733667410,
-          2741119693,
-          2762611443,
-          2773297359,
-          2834869470,
-          2858888526,
-          3072387149,
-          3013056390,
-          3083393861,
-          3102889189,
-          3170350942,
-          3252749793,
-          3604975945,
-          3698237992,
-          3744470365,
-          3904617893,
-          3975149217,
-          3992691386,
-          4029879832,
-          4068960035,
-          4143281036,
-          4160874107,
-          4248486431
-        ];
-
-      var iterator = function(definitions, itemBucketDef, objectiveDef, perkDefs, talentDefs, item, index) {
+      var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
         // Missing definition?
         if (itemDef === undefined) {
@@ -456,6 +426,7 @@
           switch (item.itemHash) {
             case 3012398149: {
               item.isEquipment = true;
+              itemDef.icon = 'http://www.bungie.net/common/destiny_content/icons/9be72c64fdd81ccd068e766365cd38c6.jpg';
               item.primaryStat = {value: 'Sleeper'};
 
               itemDef.itemHash = 3012398149;
@@ -596,6 +567,7 @@
           talentPerks: getTalentPerks(item, talentDefs),
           maxStackSize: itemDef.maxStackSize,
           classType: itemDef.classType,
+          classTypeName: getClass(itemDef.classType),
           /* 0: titan, 1: hunter, 2: warlock, 3: any */
           dmg: dmgName,
           visible: true,
@@ -617,7 +589,7 @@
         }
 
         _.each(item.stats, function(stat) {
-          stat.name = statNames[stat.statHash];
+          stat.name = statDef[stat.statHash].statName;
           stat.bar = stat.statHash !== 3871231066 && item.primaryStat.statHash !== 3897883278;
         });
 
@@ -677,6 +649,10 @@
           iteratorPB = iterator.bind(null, defs);
         })
         .then(dimItemBucketDefinitions.getDefinitions)
+        .then(function(defs) {
+          iteratorPB = iteratorPB.bind(null, defs);
+        })
+        .then(dimStatDefinitions.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
         })

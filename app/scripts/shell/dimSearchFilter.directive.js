@@ -103,6 +103,9 @@
               }
             }
           }
+        } else if(term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
+          filter = term.replace('light:', '').replace('level:', '');
+          addPredicate("light", filter);
         } else {
           addPredicate("keyword", term);
         }
@@ -237,6 +240,43 @@
       },
       'keyword': function(predicate, item){
         return !!~item.name.toLowerCase().indexOf(predicate);
+      },
+      'light': function(predicate, item){
+        if (predicate.length === 0 || item.primStat == undefined) return false;
+        
+        var operands = ['<=','>=','=','>','<'];
+        var operand = 'none';
+        var result = false;
+        
+        operands.forEach(function(element) {
+          if (predicate.substring(0,element.length) === element) {
+            operand = element;
+            predicate = predicate.substring(element.length);
+            return false;
+          }
+        }, this);
+        
+        switch (operand) {
+          case 'none':
+            result = (item.primStat.value == predicate)
+            break;
+          case '=':
+            result = (item.primStat.value == predicate)
+            break;
+          case '<':
+            result = (item.primStat.value < predicate)
+            break;
+          case '<=':
+            result = (item.primStat.value <= predicate)
+            break;
+          case '>':
+            result = (item.primStat.value > predicate)
+            break;
+          case '>=':
+            result = (item.primStat.value >= predicate)
+            break;
+        }
+        return result;
       }
     };
   }

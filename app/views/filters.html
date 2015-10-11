@@ -1,10 +1,10 @@
 <div id="filter-view" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
   <h1 class="orange">Filters</h1>
   <p>
-    DIM has support for many filters to help you find your gear quickly. You can combine filters to find the right items for your activity.
+    Click filters below to apply, or by typing in the search box.
   </p>
   <p>
-    You can search with multiple filters. Each filter is applied using 'and' logic. For example, "is:arc is:solar" would not work because there are no weapons that shoot both arc and solar at the same time. Do not pick multiple items within a row.
+    Filters are combined using 'and' logic, for example "is:arc light:>300" will return all arc items with over 300 light.
   </p>
   <table>
     <tr>
@@ -25,6 +25,16 @@
         <span>is:kinetic</span>
       </td>
       <td>Shows items based on their damage type.</td>
+    </tr>
+    <tr>
+      <td>
+        <span>light:value</span>
+        <span>light:&gt;=value</span>
+        <span>light:&gt;value</span>
+        <span>light:&lt;value</span>
+        <span>light:&lt;=value</span>
+      </td>
+      <td>Shows items based on their light level (Attack for Weapons; Defense for Armor).</td>
     </tr>
     <tr>
       <td>

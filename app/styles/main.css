@@ -926,13 +926,25 @@ img.void {
   width: 30%;
   text-align: right;
 }
-.item-details .stat-box-val {
+.item-details .stat-box-val{
   display: block;
   float: left;
   line-height: 20px;
   width: 10%;
   text-align: left;
   padding-left: 5px;
+}
+.item-details .higher-stats{
+  color:#7DC878;
+}
+.item-details .lower-stats{
+  color:#985C58;
+}
+.item-details .stat-box-inner.higher-stats{
+  background-color:#7DC878;
+}
+.item-details .stat-box-inner.lower-stats{
+  background-color:#985C58;
 }
 .item-details .stat-box-outer, .item-details .stat-box-inner {
   display: block;
@@ -1569,29 +1581,10 @@ button.toast-close-button {
   clear: both;
 }
 
-.infuseDialog {
-
-}
-
-.infuseDialog .container {
-  margin-left: 25px;
-}
-
-.infuseDialog .details {
-  float: left;
-  height: 65px;
-  width: 100%;
-}
-
 .infuseDialog .infuseSourceItem {
   float: left;
   width: 48px;
   height: 48px;
-}
-
-.infuseDialog .infuseSourceDetails {
-  float: left;
-  margin-left: 20px;
 }
 
 .infuseDialog .infuseSourceDetailsRow {
@@ -1611,8 +1604,11 @@ button.toast-close-button {
   color: green;
 }
 
+.infuseDialog .locked {
+  position: absolute;
+}
+
 .infuseDialog .gearsContainer {
-  height: 130px;
   float: left;
   width: 100%;
   padding: 10px 0px 25px 25px;
@@ -1620,7 +1616,7 @@ button.toast-close-button {
 
 .gearsContainer .item {
   float: left;
-  margin: 0 3px 0 3px;
+  margin: 3px 3px;
   width: 48px;
   height: 48px;
 }
@@ -1634,12 +1630,8 @@ button.toast-close-button {
 
 .gearsContainer .plusSeparator {
   float: left;
-  margin: 5px;
+  margin-top: 5px;
   font-size: 32px;
-}
-
-.infuseDialog .result {
-
 }
 
 .infuseDialog .bigValue {
