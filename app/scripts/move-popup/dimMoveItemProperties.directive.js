@@ -46,7 +46,7 @@
         '       </span>',
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="higher-stats stat-box-val">{{ stat.value }}</span>',
-        '         <span ng-if="stat.value === stat.equippedStatsValue || stat.equippedStatsName != stat.name || stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-show="{{ stat.bar }}" class="stat-box-val">{{ stat.value }}</span>',
+        '         <span ng-if="stat.value === stat.equippedStatsValue || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-val">{{ stat.value }}</span>',
         '    </div>',
         '    <div ng-if="(vm.item.sort != \'Weapons\' && vm.item.type != \'Vehicle\') || vm.item.owner === \'vault\'" class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
