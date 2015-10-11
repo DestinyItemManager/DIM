@@ -1601,14 +1601,13 @@ button.toast-close-button {
   height: 48px;
 }
 
-.infuseDialog .infuseSourceDetails {
-  float: left;
-  margin-left: 20px;
-}
-
 .infuseDialog .infuseSourceDetailsRow {
   float: left;
   margin-left: 30px;
+}
+
+.infuseDialog .controls {
+  float: left;  
 }
 
 .black {
@@ -1624,7 +1623,6 @@ button.toast-close-button {
 }
 
 .infuseDialog .gearsContainer {
-  height: 130px;
   float: left;
   width: 100%;
   padding: 10px 0px 25px 25px;
@@ -1632,7 +1630,7 @@ button.toast-close-button {
 
 .gearsContainer .item {
   float: left;
-  margin: 0 3px 0 3px;
+  margin: 3px 3px;
   width: 48px;
   height: 48px;
 }
