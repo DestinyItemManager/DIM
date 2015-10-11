@@ -199,7 +199,12 @@ function addFilter(filter) {
   
   if (filter.indexOf('light:') == 0) {
     var lightFilterType = filter.substring(6);
-    var light = prompt("Enter a light value:").trim();
+    var light = prompt("Enter a light value:");
+    if(light) {
+      light = light.trim();
+    } else {
+      return;
+    }
     filter = 'light:';
     switch (lightFilterType) {
       case 'value':

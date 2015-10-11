@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['$q', 'dimStoreService', 'dimItemService', 'infuseService', 'dimShareData'];
+  dimInfuseCtrl.$inject = ['dimStoreService', 'dimItemService', 'infuseService', 'dimShareData'];
 
-  function dimInfuseCtrl($q, dimStoreService, dimItemService, infuseService, shareDataService) {
+  function dimInfuseCtrl(dimStoreService, dimItemService, infuseService, shareDataService) {
     var vm = this;
 
     vm.getAllItems = false;

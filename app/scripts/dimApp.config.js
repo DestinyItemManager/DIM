@@ -97,6 +97,34 @@
       //   }
       // });
 
+      chrome.storage.sync.get('2015.10.10-Infuse', function(data) {
+        if (_.isNull(data) || _.isEmpty(data)) {
+          $timeout(function() {
+            toaster.pop({
+              type: 'info',
+              title: 'Infusion Calculator!',
+              body: '<p>Check out DIM\'s built-in infusion calculator! <a href="http://i.imgur.com/WUrlERP.gifv" target="_blank">Here\'s how to access and use it!</a><p><input style="margin-top: 1px; vertical-align: middle;" id="20151010Checkbox" type="checkbox"> <label for="20151010Checkbox">Hide This Popup</label></p>',
+              timeout: 0,
+              bodyOutputType: 'trustedHtml',
+              showCloseButton: true,
+              clickHandler: function(a,b,c,d,e,f,g) {
+                if (b) {
+                  return true;
+                }
+      
+                return false;
+              },
+              onHideCallback: function() {
+                if ($('#20151010Checkbox').is(':checked')) {
+                  chrome.storage.sync.set({
+                    "2015.10.10-Infuse": 1
+                  }, function(e) {});
+                }
+              }
+            });
+          }, 3000);
+        }
+      });
     });
 
   angular.module('dimApp')
@@ -160,7 +188,7 @@ if (typeof window.onerror == "object") {
 
       _gaq.push([
         'errorTracker._trackEvent',
-        'DIM - Chrome Extension - v3.1.12.2',
+        'DIM - Chrome Extension - v3.1.13',
         exceptionDescription,
         ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
         0,
