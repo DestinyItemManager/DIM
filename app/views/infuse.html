@@ -1,40 +1,33 @@
 <div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
-  <h2>Infusion Calculator</h2>
+  <h1>Infusion Calculator</h1>
+  <p>
+    <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show all infusable items</label>
+    <br class="clear" />
+    <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>
+  </p>
 
-  <div class="container">
-    <p>Disclaimer: DIM cannot in any way infuse any of your weapons, it's impossible.</p>
-    <div class="details">
-      <div class="infuseSourceItem" dim-infuse-item item-data="infuse.item"></div>
+  <p>
+    <span class="infuseSourceItem" dim-infuse-item item-data="infuse.item"></span>
 
-      <div class="infuseSourceDetailsRow">
-        <span><strong>{{infuse.item.name}}</strong></span><br />
-        <span>{{infuse.item.type}}</span>
-      </div>
+    <span class="infuseSourceDetailsRow">
+      <span><strong>{{infuse.item.name}}</strong></span><br />
+      <span>{{infuse.item.type}}</span>
+    </span>
 
-      <div class="infuseSourceDetailsRow">
-        <span>Attack</span><br />
-        <span class="bigValue">{{infuse.item.primStat.value}}</span>
-      </div>
+    <span class="infuseSourceDetailsRow">
+      <span>Attack</span><br />
+      <span class="bigValue">{{infuse.item.primStat.value}}</span>
+    </span>
+  </p>
 
-      <div class="infuseSourceDetailsRow">
-        <input class="controls" type="checkbox" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><span>Show items from every character</span>
-        <br class="clear" />
-        <input class="controls" type="checkbox" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><span>Show locked items</span>
-      </div>
-
-    </div>
-  </div>
-  <br class="clear" />
   <div class="gearsContainer grey">
-    <p>Infused with the following gear:</p>
-    <div>
-      <div ng-repeat="value in infuse.infuseService.data.view">
-        <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
-      </div>
-      <span ng-if="infuse.infuseService.data.view.length < 1"><strong>No infusable items available.</strong></span>
+    <span ng-if="!infuse.infuseService.data.view.length"><strong>No infusable items available.</strong></span>
+    <span ng-if="infuse.infuseService.data.view.length">Select items to infuse:</span>
+    <div ng-repeat="value in infuse.infuseService.data.view">
+      <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
     </div>
   </div>
-  <br class="clear" />
+
   <div class="gearsContainer black">
     <div ng-show="infuse.infuseService.data.infused != 0">
       <div ng-repeat="value in infuse.infuseService.data.targets">
@@ -50,4 +43,8 @@
       </div>
     </div>
   </div>
+
+  <br class="clear" />
+  
+  <div class='gearsContainer'><small>This calculator uses the best known algorithm for infusing. If you find any discrepancies <a href='https://www.reddit.com/r/DestinyTheGame/comments/3o48e2/infusion_data_collection_request/'>let us know.</a></small></div>
 </div>

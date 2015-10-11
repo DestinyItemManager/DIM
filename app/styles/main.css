@@ -1581,20 +1581,6 @@ button.toast-close-button {
   clear: both;
 }
 
-.infuseDialog {
-
-}
-
-.infuseDialog .container {
-  margin-left: 25px;
-}
-
-.infuseDialog .details {
-  float: left;
-  height: 65px;
-  width: 100%;
-}
-
 .infuseDialog .infuseSourceItem {
   float: left;
   width: 48px;
@@ -1604,10 +1590,6 @@ button.toast-close-button {
 .infuseDialog .infuseSourceDetailsRow {
   float: left;
   margin-left: 30px;
-}
-
-.infuseDialog .controls {
-  float: left;  
 }
 
 .black {
@@ -1620,6 +1602,10 @@ button.toast-close-button {
 
 .green {
   color: green;
+}
+
+.infuseDialog .locked {
+  position: absolute;
 }
 
 .infuseDialog .gearsContainer {
@@ -1644,12 +1630,8 @@ button.toast-close-button {
 
 .gearsContainer .plusSeparator {
   float: left;
-  margin: 5px;
+  margin-top: 5px;
   font-size: 32px;
-}
-
-.infuseDialog .result {
-
 }
 
 .infuseDialog .bigValue {
