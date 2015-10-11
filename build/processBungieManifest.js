@@ -117,6 +117,22 @@ function extractDB(dbFile) {
     defs.end();
   });
 
+  db.all('select * from DestinyStatDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      items[item.statHash] = item;
+    });
+
+    var defs = fs.createWriteStream('stats.json');
+    defs.write(JSON.stringify(items));
+  });
+
   // Get objectives for progress tracking JFLAY2015
   db.all('select * from DestinyObjectiveDefinition', function(err, rows) {
     if (err) {
@@ -171,23 +187,23 @@ function extractDB(dbFile) {
     defs.write(JSON.stringify(items));
   });
 
-    db.all('select * from DestinySandboxPerkDefinition', function(err, rows) {
-        if (err) {
-            throw err;
-        }
+  db.all('select * from DestinySandboxPerkDefinition', function(err, rows) {
+      if (err) {
+          throw err;
+      }
 
-        items = {};
+      items = {};
 
-        rows.forEach(function(row) {
-            var item = JSON.parse(row.json);
-            items[item.perkHash] = item;
-        });
+      rows.forEach(function(row) {
+          var item = JSON.parse(row.json);
+          items[item.perkHash] = item;
+      });
 
-        var defs = fs.createWriteStream('perks.json');
-        defs.write(JSON.stringify(items));
-    });
+      var defs = fs.createWriteStream('perks.json');
+      defs.write(JSON.stringify(items));
+  });
 
-    console.log("done.");
+  console.log("done.");
 }
 
 mkdirp('img/misc', function(err) { });
