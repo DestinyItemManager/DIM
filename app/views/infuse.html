@@ -1,7 +1,7 @@
 <div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
   <h1>Infusion Calculator</h1>
   <p>
-    <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show all infusable items</label>
+    <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show infusable items across all characters and vault</label>
     <br class="clear" />
     <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>
   </p>

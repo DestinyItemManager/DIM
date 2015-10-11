@@ -27,7 +27,7 @@
         '</div>',
         '<div class="item-details" ng-show="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '<div class="item-details" ng-show="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
-        '  <div ng-if="vm.classType" class="stat-box-row">',
+        '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
