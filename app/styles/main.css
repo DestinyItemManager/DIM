@@ -230,7 +230,8 @@ a {
 
 .ngdialog.app-settings .ngdialog-content {
   width: 40%;
-  height: 70%;
+  height: auto;
+  min-height: 70%;
   left: 30%;
   top: 10%;
 }
