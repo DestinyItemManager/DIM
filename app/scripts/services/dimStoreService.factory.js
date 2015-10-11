@@ -426,7 +426,7 @@
           switch (item.itemHash) {
             case 3012398149: {
               item.isEquipment = true;
-              itemDef.icon = 'http://www.bungie.net/common/destiny_content/icons/9be72c64fdd81ccd068e766365cd38c6.jpg';
+              itemDef.icon = '/common/destiny_content/icons/9be72c64fdd81ccd068e766365cd38c6.jpg';
               item.primaryStat = {value: 'Sleeper'};
 
               itemDef.itemHash = 3012398149;
