@@ -103,7 +103,7 @@
             toaster.pop({
               type: 'info',
               title: 'Infusion Calculator!',
-              body: '<p>Check out DIM\'s built-in infusion calculator! <a href="">Here\'s how to access and use it!</a><p><input style="margin-top: 1px; vertical-align: middle;" id="20151010Checkbox" type="checkbox"> <label for="20151010Checkbox">Hide This Popup</label></p>',
+              body: '<p>Check out DIM\'s built-in infusion calculator! <a href="http://i.imgur.com/WUrlERP.gifv" target="_blank">Here\'s how to access and use it!</a><p><input style="margin-top: 1px; vertical-align: middle;" id="20151010Checkbox" type="checkbox"> <label for="20151010Checkbox">Hide This Popup</label></p>',
               timeout: 0,
               bodyOutputType: 'trustedHtml',
               showCloseButton: true,
