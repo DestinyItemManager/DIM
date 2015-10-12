@@ -1003,6 +1003,10 @@ img.void {
   line-height: 10px;
   cursor: pointer;
   display: inline-block;
+  opacity:0.4;
+}
+.move-popup .move-button:hover{   
+  opacity: 1;    
 }
 #faq-button {
   display: inline-block;
