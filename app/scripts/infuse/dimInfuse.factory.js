@@ -18,16 +18,14 @@
       // https://www.reddit.com/r/destinythegame/comments/3n6pox/python_infusion_calculator
       getThreshold: function(target, source) {
         if(source.tier === 'Exotic') {
-          // upgrade exotic with rare or legendary, threshold = 4
-          if(target.tier === 'Rare' || target.tier === 'Legendary') return 4;
-
           // upgrade exotic with an exotic, threshold = 5
-          if(target.tier === 'Exotic') return 5;
+          // else we're upgrading exotic with rare or legendary, threshold = 4
+          return target.tier === 'Exotic' ? 5 : 4;
         }
 
         // infusing a rare or legendary with a rare or legendary, threshold = 6
         if((source.tier === 'Rare' || source.tier === 'Legendary') &&
-           (source.tier === 'Rare' || source.tier === 'Legendary')) return 6;
+           (target.tier === 'Rare' || target.tier === 'Legendary')) return 6;
 
         // otherwise we're upgradeing a rare/legendary with an exotic, threshold = 7
         return 7;
