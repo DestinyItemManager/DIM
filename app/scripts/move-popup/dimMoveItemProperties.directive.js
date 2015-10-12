@@ -152,7 +152,8 @@
     */
     var items = $scope.$parent.$parent.vm.store.items;
 
-    for (var item of items) {
+    for (var item in items) {
+      item = items[item]; 
       if (item.equipped && item.type === vm.item.type) {
         for (var key in vm.item.stats) {
           if(item.stats.length) {
