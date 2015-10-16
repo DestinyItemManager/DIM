@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$q', '$rootScope', 'uuid2'];
+  SettingsService.$inject = ['$q', '$rootScope', 'uuid2', 'SyncService'];
 
-  function SettingsService($q, $rootScope, uuid2) {
+  function SettingsService($q, $rootScope, uuid2, SyncService) {
     var settingState;
     var currentSettings = null;
 
@@ -63,7 +63,7 @@
             resolve(currentSettings);
           }
 
-          chrome.storage.sync.get(null, processStorageSettings);
+          SyncService.get().then(processStorageSettings);
         });
       }
     }
@@ -100,14 +100,8 @@
 
           data["settings-v1.0"] = settings;
 
-          chrome.storage.sync.set(data, function(e) {
-            if (chrome.runtime.lastError) {
-              $q.reject(chrome.runtime.lastError);
-            } else {
-              $rootScope.$broadcast('dim-settings-updated', kvp);
-              return true;
-            }
-          });
+          SyncService.set(data);
+          $rootScope.$broadcast('dim-settings-updated', kvp);
         });
     }
 
@@ -118,13 +112,7 @@
 
           data["settings-v1.0"] = settings;
 
-          chrome.storage.sync.set(data, function(e) {
-            if (chrome.runtime.lastError) {
-              $q.reject(chrome.runtime.lastError);
-            } else {
-              return true;
-            }
-          });
+          SyncService.set(data);
         });
     }
   }

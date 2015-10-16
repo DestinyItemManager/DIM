@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope'];
+  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService'];
 
-  function SettingsController(settings, $scope) {
+  function SettingsController(settings, $scope, SyncService) {
     var vm = $scope.vm = {};
 
     vm.charColOptions = [
@@ -28,8 +28,15 @@
         vm.settings = s;
       });
 
-    vm.save = function(key) {      
+    vm.save = function(key) {
       settings.saveSetting(key, vm.settings[key]);
+    };
+
+    vm.driveSync = function() {
+      console.log(' you\'re crazy')
+      SyncService.authorize('test').then(function(data) {
+        console.log('hmm..', data)
+      });
     };
   }
 })();

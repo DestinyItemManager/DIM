@@ -48,7 +48,7 @@
     });
 
   angular.module('dimApp')
-    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster) {
+    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster, SyncService) {
       $rootScope.loadingTracker = promiseTracker();
 
       //1 Hour
@@ -68,7 +68,7 @@
       //Track Our Initial Activity of Starting the App
       $rootScope.trackActivity();
 
-      // chrome.storage.sync.get('2015.09.02-Blacksmith', function(data) {
+      // SyncService.get('2015.09.02-Blacksmith').then(function(data) {
       //   if (_.isNull(data) || _.isEmpty(data)) {
       //     $timeout(function() {
       //       toaster.pop({
@@ -87,7 +87,7 @@
       //         },
       //         onHideCallback: function() {
       //           if ($('#20150902Checkbox').is(':checked')) {
-      //             chrome.storage.sync.set({
+      //             SyncStorage.set({
       //               "2015.09.02-Blacksmith": 1
       //             }, function(e) {});
       //           }
@@ -97,7 +97,7 @@
       //   }
       // });
 
-      chrome.storage.sync.get('2015.10.10-Infuse', function(data) {
+      SyncService.get('2015.10.10-Infuse').then(function(data) {
         if (_.isNull(data) || _.isEmpty(data)) {
           $timeout(function() {
             toaster.pop({
@@ -111,14 +111,12 @@
                 if (b) {
                   return true;
                 }
-      
+
                 return false;
               },
               onHideCallback: function() {
                 if ($('#20151010Checkbox').is(':checked')) {
-                  chrome.storage.sync.set({
-                    "2015.10.10-Infuse": 1
-                  }, function(e) {});
+                  SyncService.set({'2015.10.10-Infuse': 1});
                 }
               }
             });

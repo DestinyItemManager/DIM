@@ -13,7 +13,6 @@
     "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6",
     "angular": "1.4.x",
     "angular-animate": "1.4.x",
-    "angular-chrome-storage": "infomofo/angular-chrome-storage",
     "angular-cookies": "~1.4.5",
     "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5",
     "angular-messages": "~1.3.x",

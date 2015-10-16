@@ -3,9 +3,9 @@
 
   angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
-  PlatformService.$inject = ['$rootScope', '$q', 'dimBungieService', 'chromeStorage'];
+  PlatformService.$inject = ['$rootScope', '$q', 'dimBungieService', 'SyncService'];
 
-  function PlatformService($rootScope, $q, dimBungieService, chromeStorage) {
+  function PlatformService($rootScope, $q, dimBungieService, SyncService) {
     var _platforms = [];
     var _active = null;
 
@@ -56,7 +56,8 @@
     }
 
     function getActivePlatform() {
-      var promise = chromeStorage.get('platformType').then(function(previousPlatformType) {
+      var promise = SyncService.get().then(function(data) {
+        var previousPlatformType = data.platformType;
         if (_.isUndefined(previousPlatformType)) {
           previousPlatformType = null;
         }
@@ -101,9 +102,9 @@
       var promise;
 
       if (_.isNull(platform)) {
-        promise = chromeStorage.drop('platformType');
+        promise = SyncService.remove('platformType');
       } else {
-        promise = chromeStorage.set('platformType', platform.type);
+        promise = SyncService.set({'platformType': platform.type});
       }
 
       $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });

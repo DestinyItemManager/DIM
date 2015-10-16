@@ -8,7 +8,6 @@
     'ngDialog',
     'ngMessages',
     'ang-drag-drop',
-    'chromeStorage',
     'angularUUID2',
     'toaster',
     'ajoslin.promise-tracker',

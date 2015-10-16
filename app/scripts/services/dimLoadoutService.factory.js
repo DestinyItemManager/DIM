@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimLoadoutService', LoadoutService);
 
-  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService'];
+  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'SyncService'];
 
-  function LoadoutService($q, $rootScope, uuid2, dimItemService) {
+  function LoadoutService($q, $rootScope, uuid2, dimItemService, SyncService) {
     var _loadouts = [];
 
     return {
@@ -57,9 +57,9 @@
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        chrome.storage.sync.get(null, function(data) {
+        SyncService.get().then(function(data) {
           // if (_.isUndefined(data['loadouts-v2.0'])) {
-          //   chrome.storage.sync.get('loadouts', function(oldData) {
+          //   SyncService.get('loadouts').then(function(oldData) {
           //     processLoadout((oldData.loadouts) ? oldData.loadouts : undefined);
           //     saveLoadouts(_loadouts);
           //   })
@@ -114,9 +114,10 @@
             data[l.id] = l;
           });
 
-          chrome.storage.sync.set(data, function(e) {
-            deferred.resolve(loadoutPrimitives);
-          });
+          console.log('saving', data);
+          SyncService.set(data);
+
+          deferred.resolve(loadoutPrimitives);
 
           return deferred.promise;
         });
@@ -133,7 +134,7 @@
             loadouts.splice(index, 1);
           }
 
-          chrome.storage.sync.remove(loadout.id.toString(), function() {});
+          SyncService.remove(loadout.id.toString());
 
           return (loadouts);
         })
