@@ -1,3 +1,4 @@
+
 (function() {
   'use strict';
 
@@ -48,7 +49,7 @@
     });
 
   angular.module('dimApp')
-    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster, SyncService) {
+    .run(function($rootScope, $window, promiseTracker, $cookies, $timeout, toaster, SyncService) {
       $rootScope.loadingTracker = promiseTracker();
 
       //1 Hour
@@ -97,8 +98,12 @@
       //   }
       // });
 
-      SyncService.get('2015.10.10-Infuse').then(function(data) {
-        if (_.isNull(data) || _.isEmpty(data)) {
+      $window.initgapi = function() {
+       SyncService.init();
+      }
+
+      SyncService.get().then(function(data) {
+        if (!data || !data['2015.10.10-Infuse']) {
           $timeout(function() {
             toaster.pop({
               type: 'info',

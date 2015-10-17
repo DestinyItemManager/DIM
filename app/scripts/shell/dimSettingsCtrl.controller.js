@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService'];
+  SettingsController.$inject = ['dimSettingsService', '$scope', '$rootScope', 'SyncService'];
 
-  function SettingsController(settings, $scope, SyncService) {
+  function SettingsController(settings, $scope, $rootScope, SyncService) {
     var vm = $scope.vm = {};
 
     vm.charColOptions = [
@@ -32,10 +32,14 @@
       settings.saveSetting(key, vm.settings[key]);
     };
 
+    vm.showSync = function() {
+      return SyncService.drive();
+    }
+
     vm.driveSync = function() {
-      console.log(' you\'re crazy')
-      SyncService.authorize('test').then(function(data) {
-        console.log('hmm..', data)
+      SyncService.authorize().then(function(data) {
+        // TODO: still requires a hard refresh... why does this not work?
+        $rootScope.$broadcast('dim-settings-updated');
       });
     };
   }
