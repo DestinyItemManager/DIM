@@ -75,10 +75,8 @@
           }).execute(function(file) {
             console.log('created DIM-'+membershipId);
             fileId = file.id;
-            get(true).then(function(data) {
-              set(data, true);
-              deferred.resolve()
-            });
+            set({'fileId': fileId});
+            deferred.resolve()
           });
         });
       });
