@@ -24,6 +24,16 @@
       infuseService.toggleItem(item);
     };
 
+    vm.maximizeAttack = function(e) {
+      e.stopPropagation();
+      infuseService.maximizeAttack();
+    }
+
+    vm.statType =
+      vm.item.primStat.statHash === 3897883278? 'Defense': // armor item
+      vm.item.primStat.statHash === 368428387?  'Attack':  // weapon item
+                                                'Unknown'; // new item?
+
     // get Items for infusion
     vm.getItems = function() {
 

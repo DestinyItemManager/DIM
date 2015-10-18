@@ -31,6 +31,30 @@
         }
         return source + halfToEven(diff * (_data.exotic ? 0.7 : 0.8));
       },
+      getInfusionResult: function(target, sourceItem, sourceStat) {
+        var targetStat = target.primStat.value;
+
+        // see if we can absorb the entire stat value
+        if (targetStat - sourceStat <= _data.getThreshold(target, sourceItem)) {
+          return targetStat;
+        }
+
+        // otherwise we take a % value
+        var multiplier = (sourceItem.tier === 'Exotic')? 0.7: 0.8;
+        return Math.round((targetStat - sourceStat) * multiplier + sourceStat);
+      },
+      getInfusionResult: function(target, sourceItem, sourceStat) {
+        var targetStat = target.primStat.value;
+
+        // see if we can absorb the entire stat value
+        if (targetStat - sourceStat <= _data.getThreshold(target, sourceItem)) {
+          return targetStat;
+        }
+
+        // otherwise we take a % value
+        var multiplier = (sourceItem.tier === 'Exotic')? 0.7: 0.8;
+        return Math.round((targetStat - sourceStat) * multiplier + sourceStat);
+      },
       calculate: function() {
         var result = _data.source.primStat.value;
 
@@ -38,6 +62,61 @@
           result = _data.infuse(result, target.primStat.value);
         });
         return result;
+      },
+      walkPaths: function(list, cameFrom, paths, currentStat) {
+        var start = -1;
+
+        // find the first viable item
+        var start = _.findIndex(list, function(item) {
+          return item.primStat.value > currentStat;
+        });
+        // base case, we've exhausted the list of viable targets
+        if (start === -1) return;
+
+        for (;start != list.length;++start) {
+          var currentNodes = cameFrom.slice(0); // clone
+          currentNodes.push(list[start]);
+
+          var result = _data.getInfusionResult(list[start], _data.source, currentStat);
+
+          // see if a current path exists
+          var existingPath = _.find(paths, function(p) {
+            return p.light === result;
+          });
+          if (existingPath) {
+              // let's see if this one beats it
+            if (currentNodes.length < existingPath.path.length) {
+              existingPath.path = currentNodes; // better path
+            }
+          }
+          else {
+            paths.push({light:result, path:currentNodes}); // add the current path
+          }
+
+          // move to next node (depth first)
+          var next = list.slice(0); // clone
+          next.splice(start, 1); // remove current node
+          _data.walkPaths(next, currentNodes, paths, result);
+        }
+      },
+      maximizeAttack: function() {
+        // we want to use the entire list of infusable items but only use the ones that are possible infusion targets
+        var possibleTargets = _data.infusable.slice(0); // clone
+        var paths = [];
+        _data.walkPaths(possibleTargets, [], paths, _data.source.primStat.value);
+
+        if (_.isEmpty(paths)) return; // no suitable path found
+
+        // find the max light stat
+        var max = _.max(paths, function(path) {
+          return path.light;
+        });
+
+        // apply to view
+        _data.view       = []; // there are no other options
+        _data.targets    = max.path;
+        _data.infused    = max.light;
+        _data.difference = _data.infused - _data.source.primStat.value;
       }
     };
 
@@ -74,11 +153,14 @@
         // let's remove the used gear and the one that are lower than the infused result
         _data.view = _.chain(_data.infusable)
           .difference(_data.targets)
-          .filter(function(item) {
+          .select(function(item) {
             return item.primStat.value > _data.infused;
           })
           .value();
 
+      },
+      maximizeAttack: function() {
+        _data.maximizeAttack();
       },
       data: _data
     };
