@@ -424,55 +424,16 @@
           }
 
           switch (item.itemHash) {
-            case 3012398149: {
+            case 4097026463: {
               item.isEquipment = true;
-              itemDef.icon = '/common/destiny_content/icons/9be72c64fdd81ccd068e766365cd38c6.jpg';
-              item.primaryStat = {value: 'Sleeper'};
+              item.primaryStat = {value: 'No Time'};
 
-              itemDef.itemHash = 3012398149;
-              itemDef.bucketTypeHash = 953998645;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Fusion Rifle';
-              itemDef.itemName = 'Sleeper Simulant - Classified';
-
-              itemDef.maxStackSize = 1;
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-
-            case 3227022822: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'Spindle'};
-
-              itemDef.bucketTypeHash = 2465295065;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Sniper Rifle';
-              itemDef.itemName = 'Black Spindle - Classified';
-
-              itemDef.maxStackSize = 1;
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-
-            case 3688594189: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'Malice'};
-
+              itemDef.itemHash = 4097026463;
               itemDef.bucketTypeHash = 1498876634;
               itemDef.classType = 3;
               itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Scout Rifle';
-              itemDef.itemName = 'Touch of Malice - Classified';
-
-              itemDef.maxStackSize = 1;
+              itemDef.itemTypeName = 'Pulse Rifle';
+              itemDef.itemName = 'No Time To Explain - Classified';
               itemDef.tierTypeName = "Exotic";
               itemDef.equippable = true;
               itemDef.hasAction = true;
@@ -483,8 +444,15 @@
 
           // unidentified item.
           if(!itemDef.itemName) {
+              console.error('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
             window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
           }
+        }
+
+
+
+        if(itemDef.itemName === 'Red Death') {
+            console.log(itemDef);
         }
 
         if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
