@@ -1,4 +1,4 @@
-<div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
+<div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="infuse.closeDialog()">
   <h1>Infusion Calculator</h1>
   <p>
     <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show infusable items across all characters and vault</label>
@@ -24,7 +24,7 @@
     <span ng-if="!infuse.infuseService.data.view.length"><strong>No infusable items available.</strong></span>
     <span ng-if="infuse.infuseService.data.view.length">Select items to infuse:</span>
     <div ng-repeat="value in infuse.infuseService.data.view">
-      <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
+      <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
     </div>
   </div>
 
@@ -32,7 +32,7 @@
     <div ng-show="infuse.infuseService.data.infused != 0">
       <div ng-repeat="value in infuse.infuseService.data.targets">
         <div class="plusSeparator" ng-if="!$first">+</div>
-        <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem(value)"></div>
+        <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
       </div>
       <br class="clear" />
       <div class="result">

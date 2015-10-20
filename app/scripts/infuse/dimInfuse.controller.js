@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['dimStoreService', 'dimItemService', 'infuseService', 'dimShareData'];
+  dimInfuseCtrl.$inject = ['dimStoreService', 'dimItemService', 'infuseService', 'dimShareData', 'ngDialog'];
 
-  function dimInfuseCtrl(dimStoreService, dimItemService, infuseService, shareDataService) {
+  function dimInfuseCtrl(dimStoreService, dimItemService, infuseService, shareDataService, ngDialog) {
     var vm = this;
 
     vm.getAllItems = false;
@@ -19,7 +19,8 @@
     // Expose the service to view
     vm.infuseService = infuseService;
 
-    vm.toggleItem = function(item) {
+    vm.toggleItem = function(e, item) {
+      e.stopPropagation();
       infuseService.toggleItem(item);
     }
 
@@ -56,6 +57,10 @@
 
       });
 
+    }
+
+    vm.closeDialog = function() {
+        ngDialog.closeAll();
     }
 
     vm.getItems();

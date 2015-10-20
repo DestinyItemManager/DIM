@@ -111,7 +111,7 @@
                 if (b) {
                   return true;
                 }
-      
+
                 return false;
               },
               onHideCallback: function() {
@@ -188,7 +188,7 @@ if (typeof window.onerror == "object") {
 
       _gaq.push([
         'errorTracker._trackEvent',
-        'DIM - Chrome Extension - v3.1.14',
+        'DIM - Chrome Extension - v3.1.15',
         exceptionDescription,
         ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
         0,
