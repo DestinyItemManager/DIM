@@ -142,7 +142,8 @@
         className: 'app-settings',
         controller: ['dimShareData', function(shareDataService) {
           shareDataService.setItem(item);
-        }]
+        }],
+        scope: $('#infuseDialog').scope()
       });
     }
 
