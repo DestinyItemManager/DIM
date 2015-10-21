@@ -23,8 +23,9 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{ vm.item.primStat.value + \' \' + vm.item.name }}" ',
         '  drag="::vm.item.index" ng-class="vm.itemClassNames">',
-        '  <div ui-draggable="false" class="img" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
-        '  <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  <div ui-draggable="false" class="img" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
