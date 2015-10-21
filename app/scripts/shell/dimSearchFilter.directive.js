@@ -125,8 +125,6 @@
               filters.length > 0 ? item.visible = filterFn(item) : item.visible = true;
           });
       });
-
-      $timeout(dimStoreService.setHeights, 32);
     };
 
     /**
@@ -247,11 +245,11 @@
       },
       'light': function(predicate, item){
         if (predicate.length === 0 || item.primStat == undefined) return false;
-        
+
         var operands = ['<=','>=','=','>','<'];
         var operand = 'none';
         var result = false;
-        
+
         operands.forEach(function(element) {
           if (predicate.substring(0,element.length) === element) {
             operand = element;
@@ -259,7 +257,7 @@
             return false;
           }
         }, this);
-        
+
         switch (operand) {
           case 'none':
             result = (item.primStat.value == predicate)

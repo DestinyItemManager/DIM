@@ -335,7 +335,6 @@
         generateData()
           .then(function(data) {
             vm.data = data;
-            $timeout(dimStoreService.setHeights, 0);
           });
     }
 

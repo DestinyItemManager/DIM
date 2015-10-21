@@ -13,9 +13,17 @@
       bindToController: true,
       scope: {},
       template: [
-        '<div ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
-        '  <div dim-store-heading store-data="store"></div>',
-        '  <div dim-store-items store-data="store"></div>',
+        '<div class="container">',
+        '  <div class="row">',
+        '    <div class="col-xl-3" ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '      <div dim-store-heading store-data="store"></div>',
+        '    </div>',
+        '  </div>',
+        '  <div class="row">',
+        '    <div class="col-xl-3" ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '      <div dim-store-items store-data="store"></div>',
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
