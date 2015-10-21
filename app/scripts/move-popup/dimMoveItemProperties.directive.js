@@ -20,18 +20,18 @@
         '<div>',
         '<div ng-class="vm.classes">',
         '  <span ng-if="vm.item.locked" class="locked"></span>',
-        '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
-        '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
+        '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{::vm.item.hash}}" ng-bind="::vm.title"></a></span>',
+        '  <span ng-show="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.itemDetails && vm.item.type != \'Bounties\' && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
+        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="vm.item.stats.length"><span class="fa fa-info-circle"></span></span>',
         '</div>',
-        '<div class="item-details" ng-show="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
-        '<div class="item-details" ng-show="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
+        '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
+        '<div class="item-details" ng-if="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
-        '    <div ng-if="(vm.item.sort === \'Weapons\' || vm.item.type === \'Vehicle\') && vm.item.owner != \'vault\'" class="stat-box-row">',
+        '    <div ng-if="vm.canCompare()" class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
         '       <span class="stat-box-outer">',
         '         <span ng-if="stat.value === stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
@@ -42,13 +42,13 @@
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="lower-stats">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="higher-stats">{{ stat.value }}</span>',
         '         <span ng-if="stat.value === stat.equippedStatsValue" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
-        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',        
+        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
         '       </span>',
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="higher-stats stat-box-val">{{ stat.value }}</span>',
         '         <span ng-if="stat.value === stat.equippedStatsValue || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-val">{{ stat.value }}</span>',
         '    </div>',
-        '    <div ng-if="(vm.item.sort != \'Weapons\' && vm.item.type != \'Vehicle\') || vm.item.owner === \'vault\'" class="stat-box-row">',
+        '    <div ng-if="!vm.canCompare()" class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
         '       <span class="stat-box-outer">',
         '         <span ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
@@ -91,11 +91,11 @@
       vm.light = vm.item.primStat.value.toString();
       if (vm.item.primStat.statHash === 3897883278) {
         // it's armor.
-        vm.light += ' Defense';
+//        vm.light += ' Defense';
         vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
       } else if (vm.item.primStat.statHash === 368428387) {
         // it's a weapon.
-        vm.light += ' Attack';
+//        vm.light += ' Attack';
         switch (vm.item.dmg) {
           case 'arc':
             {
@@ -147,22 +147,28 @@
       });
     }
 
+    vm.canCompare = function() {
+        return (vm.item.sort === 'Weapons' || vm.item.type === 'Vehicle') &&
+                vm.item.stats.length &&
+                vm.item.owner !== 'vault';
+    }
+
     /*
-    * Get the item stats and its stat name 
+    * Get the item stats and its stat name
     * of the equipped item for comparison
     */
-    var items = $scope.$parent.$parent.vm.store.items;
 
-    for (var item in items) {
-      item = items[item]; 
-      if (item.equipped && item.type === vm.item.type) {
-        for (var key in vm.item.stats) {
-          if(item.stats.length) {
-            vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
-            vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
-          }
-        }
-      }
+    if(vm.canCompare()) {
+        var items = $scope.$parent.$parent.vm.store.items;
+
+        items = _.filter(items, function(item){ return item.equipped && item.type === vm.item.type; });
+
+        items.forEach(function(item, key) {
+            if(item.stats.length) {
+                vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
+                vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+            }
+        });
     }
   }
 })();
