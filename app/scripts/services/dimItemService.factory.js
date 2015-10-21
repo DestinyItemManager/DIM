@@ -89,7 +89,23 @@
           item.equipped = true;
         }
 
+        updateStoreModel(item, source, target, equip);
+
         return item;
+      }
+
+      function updateStoreModel(item, source, target, equip) {
+        var items = dimStoreService.itemsByLocation;
+        var s = items[item.bucket][item.owner];
+
+        var a = s.unequipped.splice(_.findIndex(s.unequipped, function(i) { return i.index === item.index }), 1);
+        var b = s.equipped.splice(0, 1);
+
+        a[0].equipped = true;
+        b[0].equipped = false;
+
+        s.equipped.push(a[0]);
+        s.unequipped.push(b[0]);
       }
 
       function getSimilarItem(item) {

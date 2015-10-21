@@ -8,9 +8,13 @@
 
   function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
+    var _itemsByLocation = {};
+    var _storesByLocation = [];
     var _index = 0;
 
     var service = {
+      itemsByLocation: _itemsByLocation,
+      storesByLocation: _storesByLocation,
       getStores: getStores,
       getStore: getStore,
       updateStores: updateStores
@@ -25,23 +29,24 @@
     function getNextIndex() {
       return _index++;
     }
-    
+
     function getStores(getFromBungie, withOrder) {
       if (!getFromBungie && !!withOrder) {
-        return settings.getSetting('characterOrder')
-          .then(function(characterOrder) {
-            if (characterOrder === 'mostRecent') {
-              return _.sortBy(_stores, 'lastPlayed').reverse();
-            } else {
-              return _.sortBy(_stores, 'id');
-            }
-          });
+        return _stores;
+        // return settings.getSetting('characterOrder')
+        //   .then(function(characterOrder) {
+        //     if (characterOrder === 'mostRecent') {
+        //       return _.sortBy(_stores, 'lastPlayed').reverse();
+        //     } else {
+        //       return _.sortBy(_stores, 'id');
+        //     }
+        //   });
       } else if (!getFromBungie && _.isUndefined(withOrder)) {
         return _stores;
       } else {
         var promise = dimBungieService.getStores(dimPlatformService.getActive())
           .then(function(stores) {
-            _stores.splice(0);
+            _stores.splice(0, _stores.length);
             var asyncItems = [];
             var glimmer, marks;
 
@@ -210,18 +215,64 @@
             return $q.all(asyncItems);
           })
           .then(function() {
-            var stores = _stores;
+            _storesByLocation = angular.copy(_stores);
 
-            return $q(function(resolve, reject) {
-              settings.getSetting('characterOrder')
-                .then(function(characterOrder) {
-                  if (characterOrder === 'mostRecent') {
-                    resolve(_.sortBy(stores, 'lastPlayed').reverse());
+            //_itemsByLocation = _itemsByLocation.splice(0, _itemsByLocation.length);
+
+            function getItems(items) {
+              return items;
+            }
+
+            _.each(_storesByLocation, function(store) {
+              store.getItems = getItems.bind(store, store.items);
+
+              var bucket = _.groupBy(store.items, 'bucket');
+              var kvp = _.pairs(bucket);
+
+              _.each(kvp, function(kvpItem) {
+                var key = kvpItem[0];
+                var value = kvpItem[1];
+
+                if (!_.has(_itemsByLocation, key)) {
+                  _itemsByLocation[key] = {
+                    id: key
+                  };
+                }
+
+                var collection = _itemsByLocation[key][store.id.toString()] = {
+                  id: store.id,
+                  equipped: [],
+                  unequipped: []
+                };
+
+                _.each(value, function(item) {
+                  if (item.equipped) {
+                    collection.equipped.push(item);
                   } else {
-                    resolve(_.sortBy(stores, 'id'));
+                    collection.unequipped.push(item);
                   }
                 });
+
+                //_itemsByLocation[key].push.apply(_itemsByLocation[key], value);
+              });
+
+              delete store.items;
             });
+
+            // var stores = _stores;
+
+            return (_stores);
+
+            // return $q(function(resolve, reject) {
+            //   settings.getSetting('characterOrder')
+            //     .then(function(characterOrder) {
+            //       if (characterOrder === 'mostRecent') {
+            //         resolve(_.sortBy(stores, 'lastPlayed').reverse());
+            //       } else {
+            //         resolve(_.sortBy(stores, 'id'));
+            //       }
+            //     });
+            // });
           })
           .then(function(stores) {
             $rootScope.$broadcast('dim-stores-updated', {
@@ -428,6 +479,7 @@
           index: index,
           owner: owner,
           hash: item.itemHash,
+          bucket: itemDef.bucketTypeHash,
           type: itemType,
           sort: itemSort,
           tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
@@ -605,18 +657,18 @@
     }
 
     function getTalentPerks(item, talents) {
-      var talent = talents.data[item.talentGridHash];
-
-      if (talent) {
-        return _.chain(talent.nodes).map(function(node) {
-            return node.steps;
-          })
-          .flatten()
-          .pluck('nodeStepHash')
-          .value();
-      } else {
+      // var talent = talents.data[item.talentGridHash];
+      //
+      // if (talent) {
+      //   return _.chain(talent.nodes).map(function(node) {
+      //       return node.steps;
+      //     })
+      //     .flatten()
+      //     .pluck('nodeStepHash')
+      //     .value();
+      // } else {
         return [];
-      }
+      // }
     }
 
     /* Not Implemented */

@@ -627,7 +627,7 @@ img.void {
   border-width: 0 0 10px 10px;
   border-color: transparent transparent #b184c5 transparent;
 }
-.item {
+/*.item {
   margin: 2px 2px -2px 2px;
   position: relative;
   display: inline-block;
@@ -636,7 +636,7 @@ img.void {
   background-color: #5c7183;
   cursor: pointer;
   border: 2px solid #DDD;
-}
+}*/
 .item.popup-open:before {
   border: solid;
   border-color: rgba(0, 0, 0, .8) transparent;
@@ -1004,7 +1004,7 @@ img.void {
   margin: 0 auto;
   margin-top: 15px;
   white-space: nowrap;
-  display: inline-block;
+  /*display: inline-block;*/
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -2956,4 +2956,93 @@ button.toast-close-button {
     -ms-flex-item-align: end;
             align-self: flex-end;
   }
+}
+
+
+
+
+
+
+  .dim-character-items .row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: -.2rem;
+    margin-left: -.2rem;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+
+  .dim-character-items {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .equipped {
+    background-color: rgba(0, 0, 0, .1);
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 3.25rem;
+    -ms-flex: 0 0 3.25rem;
+    flex: 0 0 3.25rem;
+    margin-right: .25rem;
+    bottom: 0;
+    top: 0;
+  }
+
+  .unequipped {
+    -webkit-box-flex: 3;
+    -webkit-flex: 3 0 3.25rem;
+    -ms-flex: 3 0 3.25rem;
+    flex: 3 0 3.25rem;
+  }
+
+  .item {
+    width: 100%;
+    height: 0;
+    /*padding-bottom: 100%;*/
+    width: 100vh;
+    height: 100vh;
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background-color: blue;
+    background-size: 48px 48px;
+    background-position: center center;
+  }
+
+
+
+
+    .dim-character-items .row {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      margin-right: -.2rem;
+      margin-left: -.2rem;
+      -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+    }
+
+    .dim-character-items {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+    }
+
+.inventory-item-group {
+  display: flex;
 }

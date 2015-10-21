@@ -22,7 +22,7 @@
         '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}">',
         '      <div class="title">',
         '        <span>{{ ::key }}</span>',
-        '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
+        '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">0/{{ (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
         '      </div>',
         '      <div ng-repeat="type in value" class="sub-section sort-{{ type.replace(\' \', \'-\').toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
         '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
@@ -57,7 +57,6 @@
   function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
     var vm = this;
 
-
     var types = [ // Order of types in the rows.
       'Class',
       'Primary',
@@ -89,15 +88,15 @@
       vm.orderedTypes[value] = index;
     });
 
-    vm.sortSize = _(vm.store.items)
-      .chain()
-      .groupBy(function(i) {
-        return i.sort;
-      })
-      .mapObject(function(val, key) {
-        return _.size(val);
-      })
-      .value();
+    // vm.sortSize = _(vm.store.items)
+    //   .chain()
+    //   .groupBy(function(i) {
+    //     return i.sort;
+    //   })
+    //   .mapObject(function(val, key) {
+    //     return _.size(val);
+    //   })
+    //   .value();
 
     vm.categories = { // Grouping of the types in the rows.
       Weapons: [
@@ -222,59 +221,59 @@
       }
     };
 
-    function generateData() {
-      return dimSettingsService.getSetting('itemSort')
-        .then(function(sort) {
-          if (vm.store.id === 'vault') {
-            vm.sortSize = _(vm.store.items)
-              .chain()
-              .groupBy(function(i) {
-                return i.sort;
-              })
-              .mapObject(function(val, key) {
-                return _.size(val);
-              })
-              .value();
-          }
+    // function generateData() {
+      // return dimSettingsService.getSetting('itemSort')
+      //   .then(function(sort) {
+          // if (vm.store.id === 'vault') {
+          //   vm.sortSize = _(vm.store.items)
+          //     .chain()
+          //     .groupBy(function(i) {
+          //       return i.sort;
+          //     })
+          //     .mapObject(function(val, key) {
+          //       return _.size(val);
+          //     })
+          //     .value();
+          // }
 
-          return _.chain(vm.store.items)
-            .sortBy(function(item) {
-              return item.name;
-            })
-            .sortBy(function(item) {
-              if (sort === 'rarity') {
-                switch (item.tier) {
-                  case 'Exotic':
-                    return 0;
-                  case 'Legendary':
-                    return 1;
-                  case 'Rare':
-                    return 2;
-                  case 'Uncommon':
-                    return 3;
-                  case 'Common':
-                    return 4;
-                  default:
-                    return 5;
-                }
-              } else {
-                return ((item.primStat) ? -1 * item.primStat.value : 1000);
-              }
-            })
-            .sortBy(function(item) {
-              return vm.orderedTypes[item.type];
-            })
-            .groupBy(function(item) {
-              return vm.orderedTypes[item.type];
-            })
-            .mapObject(function(values, key) {
-              return _.groupBy(values, function(item) {
-                return (item.equipped ? 'equipped' : 'unequipped');
-              });
-            })
-            .value();
-        });
-    }
+          // return _.chain(vm.store.items)
+          //   .sortBy(function(item) {
+          //     return item.name;
+          //   })
+          //   .sortBy(function(item) {
+          //     if (sort === 'rarity') {
+          //       switch (item.tier) {
+          //         case 'Exotic':
+          //           return 0;
+          //         case 'Legendary':
+          //           return 1;
+          //         case 'Rare':
+          //           return 2;
+          //         case 'Uncommon':
+          //           return 3;
+          //         case 'Common':
+          //           return 4;
+          //         default:
+          //           return 5;
+          //       }
+          //     } else {
+          //       return ((item.primStat) ? -1 * item.primStat.value : 1000);
+          //     }
+          //   })
+          //   .sortBy(function(item) {
+          //     return vm.orderedTypes[item.type];
+          //   })
+          //   .groupBy(function(item) {
+          //     return vm.orderedTypes[item.type];
+          //   })
+          //   .mapObject(function(values, key) {
+          //     return _.groupBy(values, function(item) {
+          //       return (item.equipped ? 'equipped' : 'unequipped');
+          //     });
+          //   })
+          //   .value();
+        // });
+    // }
 
     vm.moveDroppedItem = function(item, equip) {
       var promise = null;
@@ -331,17 +330,17 @@
       $rootScope.loadingTracker.addPromise(promise);
     };
 
-    function resetData() {
-        generateData()
-          .then(function(data) {
-            vm.data = data;
-          });
-    }
-
-    var debounceResetData = _.debounce(resetData, 500);
-
-    $scope.$watch('vm.store.items', function(newVal) {
-      resetData();
-    }, true);
+    // function resetData() {
+    //     generateData()
+    //       .then(function(data) {
+    //         vm.data = data;
+    //       });
+    // }
+    //
+    // var debounceResetData = _.debounce(resetData, 500);
+    //
+    // $scope.$watch('vm.store.items', function(newVal) {
+    //   resetData();
+    // }, true);
   }
 })();
