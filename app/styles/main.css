@@ -40,6 +40,12 @@
   -ms-user-select: none;
   user-select: none;
 }
+#actions{
+  margin-top:1px;  
+}
+#actions .fa{
+ font-size:20px; 
+}
 #actions .fa:hover {
   color: #68a0b7;
   cursor: pointer;
