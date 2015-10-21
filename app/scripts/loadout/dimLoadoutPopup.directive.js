@@ -123,18 +123,21 @@
       // These types contribute to light level
       var lightTypes = ['Primary', 'Special', 'Heavy', 'Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'];
 
+      // TODO: this should be a method somewhere that gets all items equippable by a character
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.equipment &&
-          i.primStat !== undefined &&
-          (i.classTypeName === 'unknown' || i.classTypeName === vm.classType) &&
-          _.contains(lightTypes, i.type);
+          i.primStat !== undefined && // has a primary stat (sanity check)
+          (i.classTypeName === 'unknown' || i.classTypeName === vm.classType) && // for our class
+          i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
+          _.contains(lightTypes, i.type); // one of our selected types
       });
       var itemsByType = _.groupBy(applicableItems, 'type');
 
       var bestItemFn = function(item) {
         // Add .1 to the value if equipped, to break ties and avoid changing currently-equipped items out
         // for other stuff with the same level.
-        return item.primStat.value + (item.equipped ? 0.1 : 0);
+        // Add another .1 to prefer breaking ties with items already on this character.
+        return item.primStat.value + (item.equipped ? 0.1 : 0) + (item.owner == vm.store.id ? 0.1 : 0);
       };
       var isExotic = function(item) {
         return item.tier === dimItemTier.exotic;
@@ -143,7 +146,9 @@
       // Pick the best item by primary stat
       var items = {};
       _.each(lightTypes, function(type) {
-        items[type] = _.max(itemsByType[type], bestItemFn);
+        if (itemsByType.hasOwnProperty(type)) {
+          items[type] = _.max(itemsByType[type], bestItemFn);
+        }
       });
 
       // Solve for the case where our optimizer decided to equip two exotics
@@ -162,7 +167,7 @@
               // Switch the other exotic items to the next best non-exotic
               _.each(_.omit(itemsInGroup, type), function(otherItem, otherType) {
                 if (isExotic(otherItem)) {
-                  var nonExotics = _.reject(itemsByType[type], isExotic);
+                  var nonExotics = _.reject(itemsByType[otherType], isExotic);
                   if (_.isEmpty(nonExotics)) {
                     // this option isn't usable because we couldn't swap this exotic for any non-exotic
                     optionValid = false;

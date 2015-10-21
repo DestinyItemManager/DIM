@@ -615,6 +615,7 @@
           stats: item.stats,
           perks: item.perks,
           nodes: item.nodes,
+          equipRequiredLevel: item.equipRequiredLevel,
           //talents: talentDefs.data[item.talentGridHash],
           talentPerks: getTalentPerks(item, talentDefs),
           maxStackSize: itemDef.maxStackSize,
