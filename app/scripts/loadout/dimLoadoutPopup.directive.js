@@ -129,7 +129,8 @@
           i.primStat !== undefined && // has a primary stat (sanity check)
           (i.classTypeName === 'unknown' || i.classTypeName === vm.classType) && // for our class
           i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
-          _.contains(lightTypes, i.type); // one of our selected types
+          _.contains(lightTypes, i.type) && // one of our selected types
+          !i.notransfer; // can be moved
       });
       var itemsByType = _.groupBy(applicableItems, 'type');
 
