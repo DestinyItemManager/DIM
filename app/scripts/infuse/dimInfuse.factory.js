@@ -15,21 +15,21 @@
       view: [],
       infusable: [],
       // huge props to /u/Apswny https://github.com/Apsu
-      infuse: function(source, target, exotic) {
+      infuse: function(source, target) {
         var diff = target - source;
 
-        if (diff <= (exotic ? 4 : 6)) {
+        if (diff <= (_data.exotic ? 4 : 6)) {
             return target;
         }
-        return source + Math.round(diff * (exotic ? 0.7 : 0.8));
+        return source + Math.round(diff * (_data.exotic ? 0.7 : 0.8));
       },
       calculate: function() {
-        var base = _data.source.primStat.value;
+        var result = _data.source.primStat.value;
 
         _data.targets.forEach(function(target) {
-          base = _data.infuse(base, target.primStat.value, _data.source.tier === 'Exotic');
+          result = _data.infuse(result, target.primStat.value);
         });
-        return base;
+        return result;
       }
     };
 
@@ -37,6 +37,7 @@
       setSourceItem: function(item) {
         // Set the source and reset the targets
         _data.source = item;
+        _data.exotic = _data.source.tier === 'Exotic';
         _data.infused = 0;
         _data.targets = [];
       },
