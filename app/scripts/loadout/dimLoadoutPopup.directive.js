@@ -138,7 +138,7 @@
         // Add .1 to the value if equipped, to break ties and avoid changing currently-equipped items out
         // for other stuff with the same level.
         // Add another .1 to prefer breaking ties with items already on this character.
-        return item.primStat.value + (item.equipped ? 0.1 : 0) + (item.owner == vm.store.id ? 0.1 : 0);
+        return item.primStat.value + (item.owner == vm.store.id ? (item.equipped ? 0.2 : 0.1) : 0);
       };
       var isExotic = function(item) {
         return item.tier === dimItemTier.exotic;
