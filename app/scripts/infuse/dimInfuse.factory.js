@@ -14,43 +14,23 @@
       infused: 0,
       view: [],
       infusable: [],
-      // huge props to /u/Apswny
-      // https://www.reddit.com/r/destinythegame/comments/3n6pox/python_infusion_calculator
-      getThreshold: function(target, source) {
-        if(source.tier === 'Exotic') {
-          // upgrade exotic with an exotic, threshold = 5
-          // else we're upgrading exotic with rare or legendary, threshold = 4
-          return target.tier === 'Exotic' ? 5 : 4;
-        }
-
-        // infusing a rare or legendary with a rare or legendary, threshold = 6
-        if((source.tier === 'Rare' || source.tier === 'Legendary') &&
-           (target.tier === 'Rare' || target.tier === 'Legendary')) return 6;
-
-        // otherwise we're upgradeing a rare/legendary with an exotic, threshold = 7
-        return 7;
-      },
+      // huge props to /u/Apswny https://github.com/Apsu
       calculate: function() {
-        var result = 0;
-        var source = _data.source.primStat.value;
+        var base = _data.source.primStat.value,
+            scaler = _data.source.tier === 'Exotic' ? 0.7 : 0.8,
+            step = _data.source.tier === 'Exotic' ? 4 : 6;
 
-        // Exotics get 70%
-        var multiplier = (_data.source.tier === 'Exotic') ? 0.7 : 0.8;
+        _data.targets.forEach(function(target) {
+          var target = target.primStat.value,
+              diff = target - base;
 
-        for(var i=0;i<_data.targets.length;i++) {
-          var target = _data.targets[i].primStat.value;
-          // if we already have a partial
-          if (result > 0) {
-            var source = result;
-          }
-          // compute threshold 
-          if (target - source <= _data.getThreshold(_data.targets[i], _data.source)) {
-            result = target;
+        if (diff <= step) {
+            base = target;
           } else {
-            result = Math.round((target - source) * multiplier + source);
+            base += Math.round(diff * scaler);
           }
-        }
-        return result;
+        });
+        return base;
       }
     };
 
