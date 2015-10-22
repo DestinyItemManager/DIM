@@ -10,7 +10,7 @@
 
     function halfToEven(n) {
         var i = Math.floor(n),
-            f = n - i,
+            f = (n - i).toFixed(8),
             e = 1e-8; // Allow for rounding errors in f
         return (f > 0.5 - e && f < 0.5 + e) ?
             ((i % 2 == 0) ? i : i + 1) : Math.round(n);
