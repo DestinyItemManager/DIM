@@ -19,6 +19,10 @@
     // Expose the service to view
     vm.infuseService = infuseService;
 
+    vm.isCalculating = function() {
+      return infuseService.isCalculating();
+    }
+
     vm.toggleItem = function(e, item) {
       e.stopPropagation();
       infuseService.toggleItem(item);

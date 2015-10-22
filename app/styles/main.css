@@ -1590,6 +1590,12 @@ button.toast-close-button {
   margin-left: 30px;
 }
 
+.infuseCalculating {
+  background-size: 22px;
+  height: 22px;
+  display: inline-block;
+}
+
 .black {
   background-color: #222222;
 }
