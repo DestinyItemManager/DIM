@@ -135,11 +135,26 @@
       var itemsByType = _.groupBy(applicableItems, 'type');
 
       var bestItemFn = function(item) {
-        // Add .1 to the value if equipped, to break ties and avoid changing currently-equipped items out
-        // for other stuff with the same level.
-        // Add another .1 to prefer breaking ties with items already on this character.
-        return item.primStat.value + (item.owner == vm.store.id ? (item.equipped ? 0.2 : 0.1) : 0);
+        var value = item.primStat.value;
+
+        // Break ties when items have the same stats. Note that this should only
+        // add less than 0.25 total, since in the exotics special case there can be
+        // three items in consideration and you don't want to go over 1 total.
+        if (item.owner == vm.store.id) {
+          // Prefer items owned by this character
+          value += 0.1;
+          if (item.equipped) {
+            // Prefer them even more if they're already equipped
+            value += 0.1;
+          }
+        } else if (item.owner == 'vault') {
+          // Prefer items in the vault over items owned by a different character
+          // (but not as much as items owned by this character)
+          value += 0.05;
+        }
+        return value;
       };
+
       var isExotic = function(item) {
         return item.tier === dimItemTier.exotic;
       };

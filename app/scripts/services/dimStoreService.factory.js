@@ -710,6 +710,8 @@
       var iteratorPB;
 
       // Bind our arguments to the iterator method
+      // TODO: promise.all
+      // TODO: this iteratively binds arguments, but that's BS
       var promise = dimItemDefinitions.getDefinitions()
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
