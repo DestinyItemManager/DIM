@@ -8,6 +8,14 @@
 
   function infuseService() {
 
+    function halfToEven(n) {
+        var i = Math.floor(n),
+            f = n - i,
+            e = 1e-8; // Allow for rounding errors in f
+        return (f > 0.5 - e && f < 0.5 + e) ?
+            ((i % 2 == 0) ? i : i + 1) : Math.round(n);
+    }
+
     var _data = {
       source: null,
       targets: [],
@@ -21,7 +29,7 @@
         if (diff <= (_data.exotic ? 4 : 6)) {
             return target;
         }
-        return source + Math.round(diff * (_data.exotic ? 0.7 : 0.8));
+        return source + halfToEven(diff * (_data.exotic ? 0.7 : 0.8));
       },
       calculate: function() {
         var result = _data.source.primStat.value;
