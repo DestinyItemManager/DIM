@@ -15,21 +15,19 @@
       view: [],
       infusable: [],
       // huge props to /u/Apswny https://github.com/Apsu
-      infuse: function(source, target, scaler, step) {
+      infuse: function(source, target, exotic) {
         var diff = target - source;
 
-        if (diff <= step) {
+        if (diff <= (exotic ? 4 : 6)) {
             return target;
         }
-        return source + Math.round(diff * scaler);
+        return source + Math.round(diff * (exotic ? 0.7 : 0.8));
       },
       calculate: function() {
-        var base = _data.source.primStat.value,
-            scaler = _data.source.tier === 'Exotic' ? 0.7 : 0.8,
-            step = _data.source.tier === 'Exotic' ? 4 : 6;
+        var base = _data.source.primStat.value;
 
         _data.targets.forEach(function(target) {
-          base = _data.infuse(base, target.primStat.value, scaler, step);
+          base = _data.infuse(base, target.primStat.value, _data.source.tier === 'Exotic');
         });
         return base;
       }
