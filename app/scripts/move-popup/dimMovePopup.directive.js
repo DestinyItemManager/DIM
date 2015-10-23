@@ -20,22 +20,22 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item"></div>',
-        '  <span ng-show="vm.item.type === \'Bounties\'" class="bounty-description">{{vm.item.description}}</span>',
+        '  <span ng-if="vm.item.type === \'Bounties\'" class="bounty-description" ng-bind="::vm.item.description"></span>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
-        '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store)}}" ',
         '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveToVault(store, $event)" ',
-        '        data-type="item" data-character="{{ store.id }}">',
+        '        data-type="item" data-character="{{::store.id}}">',
         '        <span>Vault</span>',
         '      </div>',
-        '      <div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store)}}" ',
         '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveToGuardian(store, $event)" ',
-        '        data-type="item" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})"> ',
+        '        data-type="item" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})"> ',
         '        <span>Store</span>',
         '      </div>',
-        '      <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" alt="{{ vm.characterInfo(store) }}" title="{{ vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store)}}" ',
         '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveToEquip(store, $event)" ',
-        '        data-type="equip" data-character="{{ store.id }}" style="background-image: url(http://bungie.net{{ store.icon }})">',
+        '        data-type="equip" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
         '    </div>',
@@ -78,9 +78,12 @@
     // }
 
     function moveToGuardianFn(store, e) {
-      var dimStores;
-      var promise = dimItemService.moveTo(vm.item, store)
-        .then(dimStoreService.getStores)
+      var dimStores,
+          reload = vm.item.equipped,
+          promise = dimItemService.moveTo(vm.item, store)
+
+      if(reload) {
+        promise.then(dimStoreService.getStores)
         .then(function(stores) {
           dimStores = stores;
           return dimStoreService.updateStores();
@@ -103,36 +106,13 @@
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
-
+      }
       $rootScope.loadingTracker.addPromise(promise);
     }
 
     function moveToVaultFn(store, e) {
       var dimStores;
-      var promise = dimItemService.moveTo(vm.item, store)
-        .then(dimStoreService.getStores)
-        .then(function(stores) {
-          dimStores = stores;
-          return dimStoreService.updateStores();
-        })
-        .then(function(bungieStores) {
-          _.each(dimStores, function(dStore) {
-            if (dStore.id !== 'vault') {
-              var bStore = _.find(bungieStores, function(bStore) {
-                return dStore.id === bStore.id;
-              });
-
-              dStore.level = bStore.base.characterLevel;
-              dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-              dStore.powerLevel = bStore.base.characterBase.powerLevel;
-              dStore.background = bStore.base.backgroundPath;
-              dStore.icon = bStore.base.emblemPath;
-            }
-          })
-        })
-        .catch(function(a) {
-          toaster.pop('error', vm.item.name, a.message);
-        });
+      var promise = dimItemService.moveTo(vm.item, store);
 
       $rootScope.loadingTracker.addPromise(promise);
     }
@@ -240,11 +220,7 @@
     };
 
     this.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault') {
-        return false;
-      }
-
-      if (!item.equipment) {
+      if (buttonStore.id === 'vault' || !item.equipment) {
         return false;
       }
 
