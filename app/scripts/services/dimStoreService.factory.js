@@ -14,7 +14,7 @@
 
     var service = {
       itemsByLocation: _itemsByLocation,
-      storesByLocation: _storesByLocation,
+      filteredItems: [],
       getStores: getStores,
       getStore: getStore,
       updateStores: updateStores
@@ -49,9 +49,6 @@
             _stores.splice(0, _stores.length);
             var asyncItems = [];
             var glimmer, marks;
-
-                        var a = window.performance.now();
-                        console.info(window.performance.now());
 
             _.each(stores, function(raw) {
               var store;
@@ -215,8 +212,6 @@
               asyncItems.push(i);
             });
 
-                        var b = window.performance.now();
-                        console.info(b + ' - ' + (b - a));
 
             return $q.all(asyncItems);
           })
@@ -228,9 +223,6 @@
             function getItems(items) {
               return items;
             }
-
-            var a = window.performance.now();
-            console.info(window.performance.now());
 
             _.each(_stores, function(store) {
               store.getItems = getItems.bind(store, store.items);
@@ -246,13 +238,25 @@
                   _itemsByLocation[key] = {
                     id: key
                   };
+                } else {
+
                 }
 
-                var collection = _itemsByLocation[key][store.id.toString()] = {
-                  id: store.id,
-                  equipped: [],
-                  unequipped: []
-                };
+                var collection;
+
+                if (!_.has(_itemsByLocation[key], store.id.toString())) {
+                  collection = _itemsByLocation[key][store.id.toString()] = {
+                    id: store.id,
+                    equipped: [],
+                    unequipped: []
+                  };
+                } else {
+                  collection = _itemsByLocation[key][store.id.toString()];
+
+                  collection.equipped.splice(0, collection.equipped.length);
+                  collection.unequipped.splice(0, collection.unequipped.length);
+                }
+
 
                 _.each(value, function(item) {
                   if (item.equipped) {
@@ -267,10 +271,6 @@
 
               //delete store.items;
             });
-
-
-            var b = window.performance.now();
-            console.info(b + ' - ' + (b - a));
 
             // var stores = _stores;
 
