@@ -32,7 +32,7 @@
 
     function getStores(getFromBungie, withOrder) {
       if (!getFromBungie && !!withOrder) {
-        return _stores;
+        return $q.when(_stores);
         // return settings.getSetting('characterOrder')
         //   .then(function(characterOrder) {
         //     if (characterOrder === 'mostRecent') {
@@ -49,6 +49,9 @@
             _stores.splice(0, _stores.length);
             var asyncItems = [];
             var glimmer, marks;
+
+                        var a = window.performance.now();
+                        console.info(window.performance.now());
 
             _.each(stores, function(raw) {
               var store;
@@ -212,10 +215,13 @@
               asyncItems.push(i);
             });
 
+                        var b = window.performance.now();
+                        console.info(b + ' - ' + (b - a));
+
             return $q.all(asyncItems);
           })
           .then(function() {
-            _storesByLocation = angular.copy(_stores);
+            //_storesByLocation = angular.copy(_stores);
 
             //_itemsByLocation = _itemsByLocation.splice(0, _itemsByLocation.length);
 
@@ -223,7 +229,10 @@
               return items;
             }
 
-            _.each(_storesByLocation, function(store) {
+            var a = window.performance.now();
+            console.info(window.performance.now());
+
+            _.each(_stores, function(store) {
               store.getItems = getItems.bind(store, store.items);
 
               var bucket = _.groupBy(store.items, 'bucket');
@@ -256,8 +265,12 @@
                 //_itemsByLocation[key].push.apply(_itemsByLocation[key], value);
               });
 
-              delete store.items;
+              //delete store.items;
             });
+
+
+            var b = window.performance.now();
+            console.info(b + ' - ' + (b - a));
 
             // var stores = _stores;
 

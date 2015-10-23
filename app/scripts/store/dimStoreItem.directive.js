@@ -23,7 +23,7 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{ vm.item.primStat.value + \' \' + vm.item.name }}" ',
         '  drag="::vm.item.index" ng-class="vm.itemClassNames">',
-        '  <div ui-draggable="false" class="img" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
+        '  <div ui-draggable="false" class="img" style="background-image: url(\'http://www.bungie.net{{ vm.item.icon }}\');" ng-click="vm.clicked(vm.item, $event)"></div>',
         '  <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '</div>'
       ].join('')
@@ -48,15 +48,15 @@
       //   watchers = void 0;
       // });
 
-      $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
-      }).error(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
-      });
+      // $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
+      //   $(this).remove();
+      //   element[0].querySelector('.img')
+      //     .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
+      // }).error(function() {
+      //   $(this).remove();
+      //   element[0].querySelector('.img')
+      //     .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
+      // });
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -151,7 +151,7 @@
       'stat-damage-kinetic': false
     }
 
-    vm.dragChannel = (item.notransfer) ? item.owner + item.type : item.type;
+    vm.dragChannel = (item.notransfer) ? item.owner + item.bucket : item.bucket;
     vm.stackable = item.maxStackSize > 1;
     vm.showBountyPercentage = ((item.type === 'Bounties') && (!item.complete) && (vm.itemStat));
     vm.showStats = vm.itemStat && item.primStat && item.primStat.value;

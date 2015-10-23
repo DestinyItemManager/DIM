@@ -235,6 +235,38 @@ a {
   left: 30%;
   top: 10%;
 }
+@-webkit-keyframes ngdialog-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes ngdialog-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes ngdialog-fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes ngdialog-fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .ngdialog *, .ngdialog *:before, .ngdialog *:after {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
@@ -248,9 +280,13 @@ a {
   bottom: 0;
   left: 0;
   -webkit-backface-visibility: hidden;
+  -webkit-animation: ngdialog-fadein 0s;
+  animation: ngdialog-fadein 0s;
 }
 .ngdialog.ngdialog-closing .ngdialog-overlay {
   -webkit-backface-visibility: hidden;
+  -webkit-animation: ngdialog-fadeout 0s;
+  animation: ngdialog-fadeout 0s;
 }
 .ngdialog-content {
   color: #e0e0e0;
@@ -334,6 +370,8 @@ a {
 }
 .ngdialog.ngdialog-closing .ngdialog-content {
   -webkit-backface-visibility: hidden;
+  -webkit-animation: ngdialog-fadeout 0s;
+  animation: ngdialog-fadeout 0s;
 }
 .ngdialog-close:before {
   content: '\f00d';
@@ -647,10 +685,6 @@ img.void {
   left: 16px;
   position: absolute;
   z-index: 2;
-}
-.item > .img {
-  width: 44px;
-  height: 44px;
 }
 .item .stack {
   position: absolute;
@@ -3013,11 +3047,19 @@ button.toast-close-button {
     display: inline-block;
     width: 48px;
     height: 48px;
-    background-color: blue;
+    position: relative;
+    margin: 2px 2px -2px 2px;
+    background-color: #5c7183;
+    cursor: pointer;
+    border: 2px solid #DDD;
+  }
+
+  .item .img {
+    width: 48px;
+    height: 48px;
     background-size: 48px 48px;
     background-position: center center;
   }
-
 
 
 
@@ -3045,4 +3087,13 @@ button.toast-close-button {
 
 .inventory-item-group {
   display: flex;
+}
+
+
+.container {
+  width: 1360px;
+}
+
+.col-xl-3 {
+  width: 280px;
 }

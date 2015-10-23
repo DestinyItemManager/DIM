@@ -17,6 +17,10 @@
       function updateItemModel(item, source, target, equip) {
         var matchingItem;
 
+////////////////////////////
+        var items = dimStoreService.itemsByLocation;
+////////////////////////////
+
         if (source.id !== target.id) {
           var index = _.findIndex(source.items, function(i) {
             return (item.index === i.index);
@@ -80,6 +84,47 @@
           }
         }
 
+
+
+        ///
+
+        //
+        //
+        // var altSource = items[item.bucket][source.id];
+        // var altTarget = items[item.bucket][target.id];
+        //
+        // if (source.id !== target.id) {
+        //   var altIndex = _.findIndex(altSource, function(i) {
+        //     return (item.index === i.index);
+        //   });
+        //
+        //   if (equip) {
+        //     var bb = altTarget.equipped[0];
+        //
+        //     altTarget.unequipped.push(bb);
+        //     altTarget.equipped.splice(0, 1);
+        //
+        //     bb.equipped = false;
+        //
+        //     if (item.equipped) {
+        //
+        //       item.equipped = true;
+        //     }
+        //   // if (altIndex >= 0) {
+        //   //   altSource.splice(index, 1);
+        //   // }
+        //   //
+        //   // if (item.amount > 0) {
+        //   //   altTarget.push(item);
+        //   // }
+        // } else {
+        //
+        // }
+        // ///
+
+        var altSource = items[item.bucket][source.id];
+        var altTarget = items[item.bucket][target.id];
+
         if (equip) {
           var equipped = _.findWhere(target.items, {
             equipped: true,
@@ -87,9 +132,38 @@
           });
           equipped.equipped = false;
           item.equipped = true;
+
+          var bb = altTarget.equipped[0];
+
+          var altIndex = _.findIndex(altSource.unequipped, function(i) {
+            return (item.index === i.index);
+          });
+
+          var aa = altSource.unequipped[altIndex];
+
+          altSource.unequipped.splice(altIndex, 1);
+
+          altTarget.equipped.splice(0, 1);
+          altTarget.unequipped.push(bb);
+
+          altTarget.equipped.push(item);
+        } else {
+          var aa;
+          var altIndex ;
+
+          if (altSource.equipped.length > 0 && altSource.equipped[0].index === item.index) {
+            altSource.equipped.splice(0, 1);
+          } else {
+            altIndex = _.findIndex(altSource.unequipped, function(i, ii) { return i.index === item.index; });
+            altSource.unequipped.splice(altIndex, 1);
+          }
+
+          altTarget.unequipped.push(item);
+
+
         }
 
-        updateStoreModel(item, source, target, equip);
+        //updateStoreModel(item, source, target, equip);
 
         return item;
       }

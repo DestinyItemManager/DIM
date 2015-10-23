@@ -42,7 +42,7 @@
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="lower-stats">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="higher-stats">{{ stat.value }}</span>',
         '         <span ng-if="stat.value === stat.equippedStatsValue" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
-        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',        
+        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
         '       </span>',
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="higher-stats stat-box-val">{{ stat.value }}</span>',
@@ -66,9 +66,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'ngDialog', '$scope'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'ngDialog', '$scope', 'dimStoreService'];
 
-  function MoveItemPropertiesCtrl($sce, settings, ngDialog, $scope) {
+  function MoveItemPropertiesCtrl($sce, settings, ngDialog, $scope, dimStoreService) {
     var vm = this;
 
     vm.classes = {
@@ -148,21 +148,27 @@
     }
 
     /*
-    * Get the item stats and its stat name 
+    * Get the item stats and its stat name
     * of the equipped item for comparison
     */
-    var items = $scope.$parent.$parent.vm.store.items;
 
-    for (var item in items) {
-      item = items[item]; 
-      if (item.equipped && item.type === vm.item.type) {
-        for (var key in vm.item.stats) {
-          if(item.stats.length) {
-            vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
-            vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+    dimStoreService.getStore(vm.item.owner)
+      .then(function(store) {
+        return store.items;
+      })
+      .then(function(items) {
+        for (var item in items) {
+          item = items[item];
+          if (item.equipped && item.type === vm.item.type) {
+            for (var key in vm.item.stats) {
+              if(item.stats.length) {
+                vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
+                vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+              }
+            }
           }
         }
-      }
-    }
+      });
+
   }
 })();

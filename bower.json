@@ -23,7 +23,7 @@
     "components-font-awesome": "~4.4.0",
     "jquery": "~2",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
-    "ngDialog": "~0.3.x",
+    "ngDialog": "0.3.x",
     "underscore": "~1.8.x",
     "verge": "https://github.com/ryanve/verge.git"
   },

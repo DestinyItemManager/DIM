@@ -4,6 +4,35 @@
   angular.module('dimApp')
     .directive('dimStores', Stores);
 
+  angular.module('dimApp')
+    .directive('dimItemType', ItemTypes);
+
+  ItemTypes.$inject = [];
+
+  function ItemTypes() {
+    return {
+      controller: ['$scope', function($scope) {
+        if ($scope.vm.itemsByLocation[$scope.bucketId] && $scope.vm.itemsByLocation[$scope.bucketId][$scope.store.id]) {
+          $scope.equipped = $scope.vm.itemsByLocation[$scope.bucketId][$scope.store.id].equipped;
+          $scope.unequipped = $scope.vm.itemsByLocation[$scope.bucketId][$scope.store.id].unequipped;
+        }
+      }],
+      replace: true,
+      template: [
+      //'   <div>',
+      '      <div class="dim-character-items">',
+      '        <div class="equipped" ng-if="store.id != \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucketId + \',\' + store.id + \'\' + bucketId }}">',
+      //'          <div ng-repeat="item in equipped track by item.index" id="{{ item.index }}" ui-draggable="true" drag-channel="{{ (item.notransfer) ? item.owner + \'\' + item.bucket : item.bucket }}" drag="item.index" style="background-image: url(http://www.bungie.net{{ item.icon }})" class="item"></div>',
+      '          <div ng-repeat="item in equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+      '        </div>',
+      '        <div class="unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucketId + \',\' + vm.store.id + \'\' + bucketId }}">',
+      '          <div ng-repeat="item in unequipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
+      //'          <div ng-repeat="item in unequipped track by item.index" ui-draggable="true" id="{{ item.index }}" drag-channel="{{ (item.notransfer) ? item.owner + \'\' + item.bucket : item.bucket }}" drag="item.index" style="background-image: url(http://www.bungie.net{{ item.icon }})" class="item"></div>',
+      '        </div>',
+      '    </div>'].join('')
+    };
+  }
+
   Stores.$inject = ['ngDialog'];
 
   function Stores(ngDialog) {
@@ -21,16 +50,7 @@
         '  </div>',
         '  <div class="row" ng-repeat="bucketId in vm.buckets">',
         '    <div class="inventory-item-group col-xl-3" ng-repeat="store in vm.stores track by store.id" class="storage" ng-class="{ guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
-        '      <div class="dim-character-items">',
-        '        <div class="equipped" ng-if="store.id != \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucketId + \',\' + store.id + \'\' + bucketId }}">',
-        '          <div ng-repeat="item in vm.itemsByLocation[bucketId][store.id].equipped track by item.index" id="{{ item.index }}" ui-draggable="true" drag-channel="{{ (item.notransfer) ? item.owner + \'\' + item.bucket : item.bucket }}" style="background-image: url(http://www.bungie.net{{ item.icon }})" class="item"></div>',
-        '        </div>',
-        '        <div ng-if="store.equipped.length == 0" class="unequipped"></div>',
-        '        <div class="unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucketId + \',\' + vm.store.id + \'\' + bucketId }}">',
-        '          <div ng-repeat="item in vm.itemsByLocation[bucketId][store.id].unequipped track by item.index" ui-draggable="true" id="{{ item.index }}" drag-channel="{{ (item.notransfer) ? item.owner + \'\' + item.bucket : item.bucket }}" drag="item.index" style="background-image: url(http://www.bungie.net{{ item.icon }})" class="item"></div>',
-        '        </div>',
-        '        <div ng-if="store.unequipped.length == 0" class="unequipped"></div>',
-        '      </div>',
+        '      <div dim-item-type></div>',
         '    </div>',
         '  </div>',
         '</div>'
@@ -81,9 +101,10 @@
 
     vm.onDrop = function onDrop(id, $event, equip) {
       var srcElement = $('#' + id);
-      var scope = angular.element(srcElement[0]).scope();
+      var item = angular.element(srcElement[0]).scope().item;
+      var store = angular.element($event.currentTarget).scope().store;
 
-      moveDroppedItem(scope.item, scope.store, equip);
+      moveDroppedItem(item, store, equip);
     };
 
 
