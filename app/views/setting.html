@@ -72,6 +72,15 @@
             <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('characterOrder')">Fixed</label>
         </td>
       </tr>
+      <!--Auto Refresh Settings -->
+      <tr>
+        <td>
+          <label title="DIM can auto-refresh to keep inventory up to day">Auto-Refresh Enabled</label>
+        </td>
+         <td>
+          <input type="checkbox" id="autoRefresh" ng-model="vm.settings.autoRefresh" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('autoRefresh')"></input>
+        </td>
+      </tr>
     </table>
   </form>
 </div>

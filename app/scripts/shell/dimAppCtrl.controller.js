@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService','dimSettingsService'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, settings) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -160,19 +160,30 @@
       if (!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
         ngDialog.closeAll();
       }
+    }; 
+
+
+    vm.startAutoRefreshTimer = function() {
+        settings.getSetting('autoRefresh')
+            .then(function(autoRefreshEnabled) {
+                if (autoRefreshEnabled) {
+
+                    var secondsToWait = 360;
+
+                    $rootScope.autoRefreshTimer = $interval(function() {
+                        //Only Refresh If We're Not Already Doing Something
+                        //And We're Not Inactive
+                        if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
+                            vm.refresh();
+                        }
+                        
+                    }, secondsToWait * 1000);
+                }
+            });
     };
 
-    vm.startAutoRefreshTimer = function () {
-      var secondsToWait = 360;
 
-      $rootScope.autoRefreshTimer = $interval(function () {
-       //Only Refresh If We're Not Already Doing Something
-       //And We're Not Inactive
-       if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
-         vm.refresh();
-       }
-      }, secondsToWait * 1000);
-    };
+
 
     vm.startAutoRefreshTimer();
 
