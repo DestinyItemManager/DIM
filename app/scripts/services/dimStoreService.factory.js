@@ -449,12 +449,6 @@
           }
         }
 
-
-
-        if(itemDef.itemName === 'Red Death') {
-            console.log(itemDef);
-        }
-
         if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
           return;
         }
