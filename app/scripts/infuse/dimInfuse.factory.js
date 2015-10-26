@@ -8,48 +8,35 @@
 
   function infuseService() {
 
+    function halfToEven(n) {
+        var i = Math.floor(n),
+            f = (n - i).toFixed(8),
+            e = 1e-8; // Allow for rounding errors in f
+        return (f > 0.5 - e && f < 0.5 + e) ?
+            ((i % 2 == 0) ? i : i + 1) : Math.round(n);
+    }
+
     var _data = {
       source: null,
       targets: [],
       infused: 0,
       view: [],
       infusable: [],
-      // huge props to /u/Apswny
-      // https://www.reddit.com/r/destinythegame/comments/3n6pox/python_infusion_calculator
-      getThreshold: function(target, source) {
-        if(source.tier === 'Exotic') {
-          // upgrade exotic with an exotic, threshold = 5
-          // else we're upgrading exotic with rare or legendary, threshold = 4
-          return target.tier === 'Exotic' ? 5 : 4;
+      // huge props to /u/Apswny https://github.com/Apsu
+      infuse: function(source, target) {
+        var diff = target - source;
+
+        if (diff <= (_data.exotic ? 4 : 6)) {
+            return target;
         }
-
-        // infusing a rare or legendary with a rare or legendary, threshold = 6
-        if((source.tier === 'Rare' || source.tier === 'Legendary') &&
-           (target.tier === 'Rare' || target.tier === 'Legendary')) return 6;
-
-        // otherwise we're upgradeing a rare/legendary with an exotic, threshold = 7
-        return 7;
+        return source + halfToEven(diff * (_data.exotic ? 0.7 : 0.8));
       },
       calculate: function() {
-        var result = 0;
-        var source = _data.source.primStat.value;
+        var result = _data.source.primStat.value;
 
-        // Exotics get 70%
-        var multiplier = (_data.source.tier === 'Exotic') ? 0.7 : 0.8;
-
-        for(var i=0;i<_data.targets.length;i++) {
-          var target = _data.targets[i].primStat.value;
-          // if we already have a partial
-          if (result > 0) {
-            var source = result;
-          }
-          // compute threshold 
-          if (target - source <= _data.getThreshold(_data.targets[i], _data.source)) {
-            result = target;
-          } else {
-            result = Math.round((target - source) * multiplier + source);
-          }
-        }
+        _data.targets.forEach(function(target) {
+          result = _data.infuse(result, target.primStat.value);
+        });
         return result;
       }
     };
@@ -58,6 +45,7 @@
       setSourceItem: function(item) {
         // Set the source and reset the targets
         _data.source = item;
+        _data.exotic = _data.source.tier === 'Exotic';
         _data.infused = 0;
         _data.targets = [];
       },
