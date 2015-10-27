@@ -23,7 +23,7 @@
       '      <div class="dim-character-items">',
       '        <div class="equipped" ng-if="store.id != \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucketId + \',\' + store.id + \'\' + bucketId }}">',
       //'          <div ng-repeat="item in equipped track by item.index" id="{{ item.index }}" ui-draggable="true" drag-channel="{{ (item.notransfer) ? item.owner + \'\' + item.bucket : item.bucket }}" drag="item.index" style="background-image: url(http://www.bungie.net{{ item.icon }})" class="item"></div>',
-      '          <div ng-repeat="item in equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+      '          <div ng-repeat="item in equipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
       '        </div>',
       '        <div class="unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucketId + \',\' + vm.store.id + \'\' + bucketId }}">',
       '          <div ng-repeat="item in unequipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',

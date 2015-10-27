@@ -130,7 +130,7 @@
             equipped: true,
             type: item.type
           });
-          equipped.equipped = false;
+          if (equipped) { equipped.equipped = false };
           item.equipped = true;
 
           var bb = altTarget.equipped[0];

@@ -406,6 +406,11 @@
         var itemDef = definitions[item.itemHash];
         // Missing definition?
         if (itemDef === undefined || itemDef.itemName === 'Classified') {
+
+          if (item.bucket === 1801258597) { // If this is a quest...
+            return; // Don't show it.
+          }
+
           // maybe it is classified...
           itemDef = itemDef || {};
           itemDef.classified = true;
@@ -468,40 +473,40 @@
         //   return;
         // }
 
-        var itemType = getItemType(item, itemDef, itemBucketDef);
+        // var itemType = getItemType(item, itemDef, itemBucketDef);
+        //
+        // if (item.itemHash === 937555249) {
+        //   itemType = "Material";
+        // }
+        //
+        // var weaponClass = null;
+        //
+        //
+        // if (!itemType) {
+        //   return;
+        // }
+        //
+        // if (itemType.hasOwnProperty('general') && itemType.general !== '') {
+        //   weaponClass = itemType.weaponClass;
+        //   itemType = itemType.general;
+        // }
 
-        if (item.itemHash === 937555249) {
-          itemType = "Material";
-        }
+        //var itemSort = sortItem(itemDef.itemTypeName);
 
-        var weaponClass = null;
+        // if (_.isUndefined(itemSort)) {
+        //   console.log(itemDef.itemTypeName + " does not have a sort property.");
+        // }
 
-
-        if (!itemType) {
-          return;
-        }
-
-        if (itemType.hasOwnProperty('general') && itemType.general !== '') {
-          weaponClass = itemType.weaponClass;
-          itemType = itemType.general;
-        }
-
-        var itemSort = sortItem(itemDef.itemTypeName);
-
-        if (_.isUndefined(itemSort)) {
-          console.log(itemDef.itemTypeName + " does not have a sort property.");
-        }
-
-        if (item.location === 4) {
-          itemSort = 'Postmaster';
-
-          if (itemType !== 'Messages')
-            if (itemType === 'Consumable') {
-              itemType = 'Special Orders';
-            } else {
-              itemType = 'Lost Items';
-            }
-        }
+        // if (item.location === 4) {
+        //   itemSort = 'Postmaster';
+        //
+        //   if (itemType !== 'Messages')
+        //     if (itemType === 'Consumable') {
+        //       itemType = 'Special Orders';
+        //     } else {
+        //       itemType = 'Lost Items';
+        //     }
+        // }
 
         var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -518,14 +523,15 @@
           owner: owner,
           hash: item.itemHash,
           bucket: itemDef.bucketTypeHash,
-          type: itemType,
-          sort: itemSort,
+          // type: itemType,
+          // sort: itemSort,
           tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
           name: itemDef.itemName,
           description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
           icon: itemDef.icon,
           inHoW: _.contains(how, itemDef.itemHash),
-          notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+          // notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+          notransfer: itemDef.nonTransferrable,
           id: item.itemInstanceId,
           equipped: item.isEquipped,
           equipment: item.isEquipment,
@@ -550,9 +556,11 @@
           hasReforgeNode: false,
           lockable: item.lockable,
           locked: item.locked,
-          weaponClass: weaponClass || '',
+          // weaponClass: weaponClass || '',
           classified: itemDef.classified
         };
+
+
 
         // Bounties
         if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {

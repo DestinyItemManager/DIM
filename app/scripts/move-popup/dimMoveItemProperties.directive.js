@@ -66,9 +66,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', 'dimSettingsService', 'ngDialog', '$scope', 'dimStoreService'];
+  MoveItemPropertiesCtrl.$inject = ['$q', '$sce', 'dimSettingsService', 'ngDialog', '$scope', 'dimStoreService'];
 
-  function MoveItemPropertiesCtrl($sce, settings, ngDialog, $scope, dimStoreService) {
+  function MoveItemPropertiesCtrl($q, $sce, settings, ngDialog, $scope, dimStoreService) {
     var vm = this;
 
     vm.classes = {
@@ -91,11 +91,11 @@
       vm.light = vm.item.primStat.value.toString();
       if (vm.item.primStat.statHash === 3897883278) {
         // it's armor.
-//        vm.light += ' Defense';
+        //        vm.light += ' Defense';
         vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
       } else if (vm.item.primStat.statHash === 368428387) {
         // it's a weapon.
-//        vm.light += ' Attack';
+        //        vm.light += ' Attack';
         switch (vm.item.dmg) {
           case 'arc':
             {
@@ -117,18 +117,18 @@
     }
 
     /*
-    * Check that the current item is infusable
-    * Only legendary or Exotic items are infusable.
-    */
+     * Check that the current item is infusable
+     * Only legendary or Exotic items are infusable.
+     */
     vm.isInfusable = function isInfusable(item) {
       // Infuse perk's id is 1270552711
       return _.contains(item.talentPerks, 1270552711);
     }
 
     /*
-    * Open up the dialog for infusion by passing
-    * the selected item
-    */
+     * Open up the dialog for infusion by passing
+     * the selected item
+     */
     vm.infuse = function infuse(item, e) {
       e.stopPropagation();
 
@@ -148,30 +148,41 @@
     }
 
     vm.canCompare = function() {
-        return (vm.item.sort === 'Weapons' || vm.item.type === 'Vehicle') &&
-                vm.item.stats.length &&
-                vm.item.owner !== 'vault';
+      return (vm.item.sort === 'Weapons' || vm.item.type === 'Vehicle') &&
+        vm.item.stats.length &&
+        vm.item.owner !== 'vault';
     }
 
     /*
-    * Get the item stats and its stat name
-    * of the equipped item for comparison
-    */
+     * Get the item stats and its stat name
+     * of the equipped item for comparison
+     */
 
-    dimStoreService.getStore(vm.item.owner)
-      .then(function(store) {
-        return store.items;
-      })
-      .then(function(items) {
-        items = _.filter(items, function(item){ return item.equipped && item.type === vm.item.type; });
+    $q.when(dimStoreService.itemsByLocation)
+      .then(function(buckets) {
+        var equipped = buckets[vm.item.bucket][vm.item.owner].equipped;
 
-        items.forEach(function(item, key) {
-            if(vm.item.stats[key]) {
-                vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
-                vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
-            }
+        equipped.forEach(function(item, key) {
+          if (vm.item.stats[key]) {
+            vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
+            vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+          }
         });
-
       });
+
+
+    // dimStoreService.getStore(vm.item.owner)
+    //   .then(function(store) {
+    //     var items = _.filter(store.items, function(item) {
+    //       return item.equipped && item.type === vm.item.type;
+    //     });
+    //
+    //     items.forEach(function(item, key) {
+    //       if (vm.item.stats[key]) {
+    //         vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
+    //         vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+    //       }
+    //     });
+    //   });
   }
 })();
