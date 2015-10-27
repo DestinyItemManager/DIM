@@ -416,7 +416,7 @@
       var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
         // Missing definition?
-        if (itemDef === undefined) {
+        if (itemDef === undefined || itemDef.itemName === 'Classified') {
           // maybe it is classified...
           itemDef = {
             classified: true,
