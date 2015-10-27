@@ -163,6 +163,9 @@
 
                 _.each(raw.data.buckets, function(bucket) {
                   _.each(bucket, function(pail) {
+                    _.each(pail.items, function(item) {
+                        item.bucket = pail.bucketHash;
+                    });
                     items = _.union(items, pail.items);
                   });
                 });
@@ -402,35 +405,41 @@
       var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, item, index) {
         var itemDef = definitions[item.itemHash];
         // Missing definition?
-        if (itemDef === undefined) {
+        if (itemDef === undefined || itemDef.itemName === 'Classified') {
           // maybe it is classified...
-          itemDef = {
-            classified: true,
-            icon: '/common/destiny_content/icons/f0dcc71487f77a69005bec2e3fb6e4e8.jpg'
-          }
+          itemDef = itemDef || {};
+          itemDef.classified = true;
+          itemDef.icon = '/common/destiny_content/icons/f0dcc71487f77a69005bec2e3fb6e4e8.jpg';
+          itemDef.itemHash = item.itemHash;
+          itemDef.bucketTypeHash = item.bucket;
+          itemDef.itemName = 'Classified Item #'+itemDef.itemHash;
+
+          item.isEquipment = true;
+          itemDef.nonTransferrable = true;
+          itemDef.equippable = true;
+
+          itemDef.itemTypeName = 'Pulse Rifle';
+          itemDef.tierTypeName = "Exotic";
 
           switch (item.itemHash) {
             case 4097026463: {
-              item.isEquipment = true;
+              itemDef.hasAction = true; // needed?
+
               item.primaryStat = {value: 'No Time'};
 
-              itemDef.itemHash = 4097026463;
-              itemDef.bucketTypeHash = 1498876634;
+              itemDef.itemHash = item.itemHash;
               itemDef.classType = 3;
               itemDef.itemType = 3;
               itemDef.itemTypeName = 'Pulse Rifle';
               itemDef.itemName = 'No Time To Explain - Classified';
               itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
               break;
             }
           }
 
           // unidentified item.
-          if(!itemDef.itemName) {
-              console.error('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+          if(!itemDef.primaryStat) {
+              console.error('Missing Item Definition:\n\n', item, itemDef, '\n\nplease contact a developer to get this item added.');
             window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
           }
         }

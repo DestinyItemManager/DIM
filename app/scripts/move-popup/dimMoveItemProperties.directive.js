@@ -166,7 +166,7 @@
         items = _.filter(items, function(item){ return item.equipped && item.type === vm.item.type; });
 
         items.forEach(function(item, key) {
-            if(item.stats.length) {
+            if(vm.item.stats[key]) {
                 vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
                 vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
             }
