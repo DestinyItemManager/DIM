@@ -435,6 +435,22 @@
               itemDef.tierTypeName = "Exotic";
               break;
             }
+            case 3678707177: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'Skull'};
+
+              itemDef.itemHash = 3678707177;
+              itemDef.bucketTypeHash = 3448274439;
+              itemDef.classType = 3;
+              itemDef.itemType = 0;
+              itemDef.itemTypeName = 'Mask';
+              itemDef.itemName = 'Skull Mask - Classified';
+              itemDef.tierTypeName = "Legendary";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
           }
 
           // unidentified item.
@@ -576,9 +592,11 @@
 
           if (!_.isEmpty(ascendNode)) {
             createdItem.hasAscendNode = true;
-            createdItem.ascended = _.filter(item.nodes, function(node) {
+            var filteredAcendedTalet = _.filter(item.nodes, function(node) {
               return node.nodeHash === ascendNode[0].nodeHash;
-            })[0].isActivated;
+            });
+
+            createdItem.ascended = (filteredAcendedTalet.length > 0) ? filteredAcendedTalet[0].isActivated : false;
 
             if (!createdItem.ascended) {
               createdItem.complete = false;
