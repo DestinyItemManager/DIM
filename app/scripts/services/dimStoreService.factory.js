@@ -440,6 +440,22 @@
               itemDef.nonTransferrable = true;
               break;
             }
+            case 3678707177: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'Skull'};
+
+              itemDef.itemHash = 3678707177;
+              itemDef.bucketTypeHash = 3448274439;
+              itemDef.classType = 3;
+              itemDef.itemType = 0;
+              itemDef.itemTypeName = 'Mask';
+              itemDef.itemName = 'Skull Mask - Classified';
+              itemDef.tierTypeName = "Legendary";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
           }
 
           // unidentified item.
