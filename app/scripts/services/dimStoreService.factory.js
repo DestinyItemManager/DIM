@@ -580,9 +580,11 @@
 
           if (!_.isEmpty(ascendNode)) {
             createdItem.hasAscendNode = true;
-            createdItem.ascended = _.filter(item.nodes, function(node) {
+            var filteredAcendedTalet = _.filter(item.nodes, function(node) {
               return node.nodeHash === ascendNode[0].nodeHash;
-            })[0].isActivated;
+            });
+
+            createdItem.ascended = (filteredAcendedTalet.length > 0) ? filteredAcendedTalet[0].isActivated : false;
 
             if (!createdItem.ascended) {
               createdItem.complete = false;
