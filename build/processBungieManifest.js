@@ -109,6 +109,47 @@ function extractDB(dbFile) {
       items[item.itemHash] = item;
     });
 
+    // No Time To Explain
+    if (!(4097026463 in items)) {
+      items[4097026463] = {
+        itemHash: 4097026463,
+        itemName: 'No Time To Explain - Classified',
+        bucketTypeHash: 1498876634,
+        classType: 3,
+        itemType: 3,
+        itemTypeName: 'Pulse Rifle',
+        tierTypeName: "Exotic",
+        equippable: true,
+        hasAction: true,
+        nonTransferrable: true,
+        classified: true,
+        icon: '/img/destiny_content/items/NoTimeToExplain.png'
+      };
+    } else {
+      console.log('No Time To Explain now exists in the manifest file and the override can be removed.');
+    }
+
+    // Skull Mask
+    if ((3678707177 in items) && items[3678707177].itemName == 'Classified') {
+      items[3678707177] = {
+        itemHash: 3678707177,
+        itemName: 'Skull Mask',
+        itemDescription: 'Festival of the Lost 2015\nYou have risen from eternal night to haunt the dreams of your enemies.',
+        bucketTypeHash: 3448274439,
+        classType: 3,
+        itemType: 0,
+        tierTypeName: "Legendary",
+        itemTypeName: "Mask",
+        equippable: true,
+        hasAction: true,
+        nonTransferrable: true,
+        classified: true,
+        icon: '/img/destiny_content/items/SkullMask.jpg'
+      };
+    } else {
+      console.log('Skull Mask now exists in the manifest file and the override can be removed.');
+    }
+
     var pRow = processItemRows(items, 'icon');
     pRow.next();
 
@@ -210,9 +251,6 @@ mkdirp('img/misc', function(err) { });
 mkdirp('common/destiny_content/icons', function(err) { });
 
 request({
-    headers: {
-      'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0'
-    },
-    uri: 'http://www.bungie.net/platform/Destiny/Manifest/',
+    uri: 'https://www.bungie.net/platform/Destiny/Manifest/',
     method: 'GET'
   }, onManifestRequest);

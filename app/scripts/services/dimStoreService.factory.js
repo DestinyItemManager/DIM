@@ -421,26 +421,10 @@
           itemDef = {
             classified: true,
             icon: '/common/destiny_content/icons/f0dcc71487f77a69005bec2e3fb6e4e8.jpg'
-          }
+          };
 
-          switch (item.itemHash) {
-            case 4097026463: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'No Time'};
-
-              itemDef.itemHash = 4097026463;
-              itemDef.bucketTypeHash = 1498876634;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Pulse Rifle';
-              itemDef.itemName = 'No Time To Explain - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-          }
+          item.isEquipment = true;
+          item.primaryStat = {value: ''};
 
           // unidentified item.
           if(!itemDef.itemName) {
