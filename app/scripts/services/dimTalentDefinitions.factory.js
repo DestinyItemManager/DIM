@@ -9,7 +9,7 @@
   function TalentDefinitions($q, $timeout, $http) {
     var deferred = $q.defer();
 
-    $http.get('api-manifest/talent.json?v=3.1.17')
+    $http.get('api-manifest/talent.json?v=3.1.17.1')
       .then(function(data) {
         deferred.resolve(data);
       },
