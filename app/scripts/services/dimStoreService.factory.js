@@ -497,14 +497,18 @@
           console.log(itemDef.itemTypeName + " does not have a sort property.");
         }
 
+        var bucket = itemDef.bucketTypeHash;
+
         if (item.location === 4) {
           itemSort = 'Postmaster';
 
           if (itemType !== 'Messages')
             if (itemType === 'Consumable') {
               itemType = 'Special Orders';
+              bucket = 1367666825;
             } else {
               itemType = 'Lost Items';
+              bucket = 215593132;
             }
         }
 
@@ -522,7 +526,7 @@
           index: index,
           owner: owner,
           hash: item.itemHash,
-          bucket: itemDef.bucketTypeHash,
+          bucket: bucket,
           type: itemType,
           sort: itemSort,
           tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
