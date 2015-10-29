@@ -705,9 +705,6 @@ img.void {
   background: #F5f5f5;
   color: #24282b;
 }
-.complete {
-  border-color: #f5dc56
-}
 .over {
   background: rgba(0, 0, 0, .5)
 }
@@ -3071,6 +3068,10 @@ button.toast-close-button {
     cursor: pointer;
     border: 2px solid #DDD;
   }
+
+.complete {
+  border-color: #f5dc56
+}
 
   .item .img {
     width: 48px;
