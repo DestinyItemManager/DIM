@@ -709,18 +709,18 @@
     }
 
     function getTalentPerks(item, talents) {
-      // var talent = talents.data[item.talentGridHash];
-      //
-      // if (talent) {
-      //   return _.chain(talent.nodes).map(function(node) {
-      //       return node.steps;
-      //     })
-      //     .flatten()
-      //     .pluck('nodeStepHash')
-      //     .value();
-      // } else {
-        return [];
-      // }
+        var talent = talents.data[item.talentGridHash];
+
+        if (talent && talent.nodes) {
+            return _.chain(talent.nodes).map(function(node) {
+                return node.steps;
+            })
+            .flatten()
+            .pluck('nodeStepHash')
+            .value();
+        } else {
+            return [];
+        }
     }
 
     /* Not Implemented */
