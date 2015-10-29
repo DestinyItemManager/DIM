@@ -24,10 +24,12 @@
         '  <div class="race-gender" ng-show="vm.isGuardian">{{ vm.race }} {{ vm.gender }}</div>',
         '  <div class="level" ng-show="vm.isGuardian" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'">Level {{ vm.level }}</div>',
         '  <div class="level powerLevel" ng-show="vm.isGuardian" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'">{{ vm.store.powerLevel }}</div>',
-        '  <div class="glimmer" ng-show="!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
-        '  <div class="legendaryMarks" ng-show="!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
-        '  <div class="levelBar" ng-show="vm.isGuardian">',
-        '    <div class="barFill" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'" ng-style="{width: vm.percentToNextLevel + \'%\'}"></div>',
+        '  <span class="glimmer" ng-show="!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></span>',
+        '  <span class="legendaryMarks" ng-show="!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></span>',
+        '  <div class="space" ng-show="!vm.isGuardian">Armor: {{vm.vault.Armor}}/72 <br>Weapons: {{vm.vault.Weapons}}/72 <br>General: {{vm.vault.General}}/72</div>',
+        '    <div class="levelBar" ng-show="vm.isGuardian">',
+        '      <div class="barFill" ng-class="vm.isPrestigeLevel ? \'prestige\' : \'\'" ng-style="{width: vm.percentToNextLevel + \'%\'}"></div>',
+        '    </div>',
         '  </div>',
         '</div>',
         '<div class="loadout-button" ng-show="vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
@@ -138,5 +140,6 @@
     vm.maxLevel = (vm.store.level >= 20);
     vm.characterBoxUrl = 'http://bungie.net' + vm.store.background;
     vm.emblemUrl = 'http://bungie.net' + vm.store.icon;
+    vm.vault = vm.store.bucketCounts;
   }
 })();

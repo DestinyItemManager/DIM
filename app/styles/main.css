@@ -458,6 +458,14 @@ img.void {
   margin-bottom: 10px
 }
 .title {
+    margin: 15px 0 5px 0;
+    color: #FFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    border-bottom: solid 1px #6D6D6D;
+
+/* OLD STYLE:
   margin: 0 -12px 14px 0;
   padding: 0 16px;
   background-color: #353535;
@@ -469,6 +477,7 @@ img.void {
   font-size: 14px;
   border-bottom: solid 1px #6D6D6D;
   border-top: solid 1px #2B2B2B;
+*/
 }
 .storage:first-child .title {
   border-left: solid 1px #2b2b2b;
@@ -703,7 +712,7 @@ img.void {
   background: rgba(0, 0, 0, .5)
 }
 .character {
-  margin-bottom: 16px;
+/*  margin-bottom: 16px;*/
   height: 50px;
   position: relative;
 }
@@ -764,6 +773,15 @@ img.void {
   font-size: 14px;
 }
 
+.character-box .space {
+  font-weight: 200;
+  font-size: 0.9em;
+
+  position: absolute;
+  top: 5px;
+  right: 90px;
+}
+
 .character-box .legendaryMarks,
 .character-box .glimmer {
   position: absolute;
@@ -799,7 +817,7 @@ img.void {
 .levelBar {
   height: 5px;
   background-color: rgba(245, 245, 245, 0.1);
-  width: 100%;
+  width: 239px;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -817,7 +835,7 @@ img.void {
   background-color: rgba(120, 120, 120, .7);
   width: 30px;
   float: right;
-  right: 1px;
+  right: 57px;
   height: 45px;
   color: rgba(200, 200, 200, 1);
   text-align: center;
@@ -3021,7 +3039,7 @@ button.toast-close-button {
   }
 
   .equipped {
-    background-color: rgba(0, 0, 0, .1);
+/*    background-color: rgba(0, 0, 0, .1);*/
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 3.25rem;
     -ms-flex: 0 0 3.25rem;
