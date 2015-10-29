@@ -160,29 +160,17 @@
 
     $q.when(dimStoreService.itemsByLocation)
       .then(function(buckets) {
-        var equipped = buckets[vm.item.bucket][vm.item.owner].equipped;
+        if(!buckets[vm.item.bucket][vm.item.owner].equipped.length) {
+            return;
+        }
+        var equipped = buckets[vm.item.bucket][vm.item.owner].equipped[0].stats;
 
         equipped.forEach(function(item, key) {
           if (vm.item.stats[key]) {
-            vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
-            vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+            vm.item.stats[key]['equippedStatsValue'] = item.value;
+            vm.item.stats[key]['equippedStatsName'] = item.name;
           }
         });
       });
-
-
-    // dimStoreService.getStore(vm.item.owner)
-    //   .then(function(store) {
-    //     var items = _.filter(store.items, function(item) {
-    //       return item.equipped && item.type === vm.item.type;
-    //     });
-    //
-    //     items.forEach(function(item, key) {
-    //       if (vm.item.stats[key]) {
-    //         vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
-    //         vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
-    //       }
-    //     });
-    //   });
   }
 })();
