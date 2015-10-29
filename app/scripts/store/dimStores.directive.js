@@ -49,7 +49,7 @@
         '    </div>',
         '  </div>',
         '  <div ng-if="vm.stores && vm.hasItems(bucket)" class="row" ng-repeat="bucket in vm.buckets">',
-        '    <div class="title col-xl-12" ng-bind="bucket.name"></div>',
+        '    <div class="title col-xs-12" ng-bind="bucket.name"></div>',
         '    <div class="inventory-item-group col-xl-3" ng-repeat="store in vm.stores track by store.id" class="storage" ng-class="{ guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
         '      <div dim-item-type></div>',
         '    </div>',
