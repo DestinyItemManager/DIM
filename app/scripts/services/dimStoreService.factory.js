@@ -473,40 +473,40 @@
         //   return;
         // }
 
-        // var itemType = getItemType(item, itemDef, itemBucketDef);
-        //
-        // if (item.itemHash === 937555249) {
-        //   itemType = "Material";
-        // }
-        //
-        // var weaponClass = null;
-        //
-        //
-        // if (!itemType) {
-        //   return;
-        // }
-        //
-        // if (itemType.hasOwnProperty('general') && itemType.general !== '') {
-        //   weaponClass = itemType.weaponClass;
-        //   itemType = itemType.general;
-        // }
+        var itemType = getItemType(item, itemDef, itemBucketDef);
 
-        //var itemSort = sortItem(itemDef.itemTypeName);
+        if (item.itemHash === 937555249) {
+          itemType = "Material";
+        }
 
-        // if (_.isUndefined(itemSort)) {
-        //   console.log(itemDef.itemTypeName + " does not have a sort property.");
-        // }
+        var weaponClass = null;
 
-        // if (item.location === 4) {
-        //   itemSort = 'Postmaster';
-        //
-        //   if (itemType !== 'Messages')
-        //     if (itemType === 'Consumable') {
-        //       itemType = 'Special Orders';
-        //     } else {
-        //       itemType = 'Lost Items';
-        //     }
-        // }
+
+        if (!itemType) {
+          return;
+        }
+
+        if (itemType.hasOwnProperty('general') && itemType.general !== '') {
+          weaponClass = itemType.weaponClass;
+          itemType = itemType.general;
+        }
+
+        var itemSort = sortItem(itemDef.itemTypeName);
+
+        if (_.isUndefined(itemSort)) {
+          console.log(itemDef.itemTypeName + " does not have a sort property.");
+        }
+
+        if (item.location === 4) {
+          itemSort = 'Postmaster';
+
+          if (itemType !== 'Messages')
+            if (itemType === 'Consumable') {
+              itemType = 'Special Orders';
+            } else {
+              itemType = 'Lost Items';
+            }
+        }
 
         var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -523,14 +523,14 @@
           owner: owner,
           hash: item.itemHash,
           bucket: itemDef.bucketTypeHash,
-          // type: itemType,
-          // sort: itemSort,
+          type: itemType,
+          sort: itemSort,
           tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
           name: itemDef.itemName,
           description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
           icon: itemDef.icon,
           inHoW: _.contains(how, itemDef.itemHash),
-          // notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+          notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
           notransfer: itemDef.nonTransferrable,
           id: item.itemInstanceId,
           equipped: item.isEquipped,
@@ -556,7 +556,7 @@
           hasReforgeNode: false,
           lockable: item.lockable,
           locked: item.locked,
-          // weaponClass: weaponClass || '',
+          weaponClass: weaponClass || '',
           classified: itemDef.classified
         };
 

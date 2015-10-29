@@ -63,9 +63,9 @@
   function StoresCtrl(settings, $scope, dimStoreService, $rootScope, $q, dimItemService, toaster) {
     var vm = this;
 
-    $scope.$watch(function() {
-      console.log('Digesting');
-    });
+    // $scope.$watch(function() {
+    //   console.log('Digesting');
+    // });
 
     vm.stores = null;
     vm.items = dimStoreService.itemsByLocation;
