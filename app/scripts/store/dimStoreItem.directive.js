@@ -60,6 +60,7 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
+        debugger
 
         if (!_.isNull(dialogResult)) {
           dialogResult.close();
@@ -70,13 +71,23 @@
 
             var settings = dimSettingsService.getSettings().$$state.value,
               verbosePerks = settings.verbosePerks,
-              minOffset = 300 + (item.perks.length * 44 * verbosePerks);
+              minOffset = 300 + (item.perks.length * 44 * verbosePerks),
+              perkStateString = verbosePerks ? 'verbose-perks' :'quiet-perks',
 
-            var bottom = ($(element).offset().top < minOffset) ? ' move-popup-bottom' : '';
-            var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
+              bottom = ($(element).offset().top < minOffset) ? ' move-popup-bottom' : '',
+              right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : ''),
+              templateString =
+                `
+                  <div ng-click="$event.stopPropagation();"
+                    class="${perkStateString}" dim-click-anywhere-but-here="vm.closePopup()"
+                    dim-move-popup
+                    dim-store="vm.store"
+                    dim-item="vm.item">
+                  </div>
+                `;
 
             dialogResult = ngDialog.open({
-              template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+              template: templateString,
               plain: true,
               appendTo: 'div[id="' + item.index + '"]',
               overlay: false,

@@ -971,19 +971,21 @@ img.void {
 .item-details .item-perks {
   min-height: 44px;
 }
-.item-perks.quiet-perks .perk-title,.item-perks.quiet-perks .perk-description {
+div.quiet-perks .item-perks .perk-title,
+div.quiet-perks .item-perks .perk-description {
   display: none;
 }
 
-.item-perks.verbose-perks>.item-perk-row{
+div.quiet-perks .item-perks>.item-perk-row{
+  clear: none;
+  display: inline-block;
+}
+
+div.verbose-perks .item-perks>.item-perk-row{
   clear: left;
   display: block;
 }
 
-.item-perks.quiet-perks>.item-perk-row{
-  clear: none;
-  display: inline-block;
-}
 
 .item-details .item-perks>.item-perk-row {
   margin-bottom: 7px;

@@ -4,12 +4,9 @@
   angular.module('dimApp')
     .directive('dimMoveItemProperties', MoveItemProperties);
 
-  MoveItemProperties.$inject = ['$sce','dimSettingsService'];
+  MoveItemProperties.$inject = ['$sce'];
 
-  function MoveItemProperties($sce,dimSettingsService) {
-    var settings = dimSettingsService.getSettings().$$state.value,
-      verbosePerks = settings.verbosePerks,
-      perkDescriptions = verbosePerks ? 'verbose-perks' : 'quiet-perks';
+  function MoveItemProperties($sce) {
 
     return {
       bindToController: true,
@@ -62,7 +59,7 @@
                <span class="stat-box-val" ng-show="{{ stat.bar }}">{{ stat.value }}</span>
             </div>
           </div>
-          <div class="item-perks ${perkDescriptions}">
+          <div class="item-perks">
             <div ng-repeat="perk in vm.item.perks track by $index" class="item-perk-row">
               <div class="item-perk-icon"
                 title="{{perk.displayName}}"
