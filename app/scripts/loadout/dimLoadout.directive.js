@@ -3,10 +3,10 @@
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService','dimSettingsService'];
+  Loadout.$inject = ['dimLoadoutService'];
 
   function Loadout(dimLoadoutService) {
-    var verbosePerks = dimSettingsService.getSetting('verbosePerks');
+
     return {
       controller: LoadoutCtrl,
       controllerAs: 'vm',
