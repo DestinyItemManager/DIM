@@ -59,49 +59,52 @@
       });
 
       vm.clicked = function openPopup(item, e) {
-        e.stopPropagation();
+        function handleSettingsResult(settings){
+          e.stopPropagation();
 
-        if (!_.isNull(dialogResult)) {
-          dialogResult.close();
-        } else {
-          ngDialog.closeAll();
-
-          if (!dimLoadoutService.dialogOpen) {
-
-            var settings = dimSettingsService.getSettings().$$state.value,
-              verbosePerks = settings.verbosePerks,
-              minOffset = 300 + (item.perks.length * 44 * verbosePerks),
-              perkStateString = verbosePerks ? 'verbose-perks' :'quiet-perks',
-
-              bottom = ($(element).offset().top < minOffset) ? ' move-popup-bottom' : '',
-              right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : ''),
-              templateString =
-                `
-                  <div ng-click="$event.stopPropagation();"
-                    class="${perkStateString}" dim-click-anywhere-but-here="vm.closePopup()"
-                    dim-move-popup
-                    dim-store="vm.store"
-                    dim-item="vm.item">
-                  </div>
-                `;
-
-            dialogResult = ngDialog.open({
-              template: templateString,
-              plain: true,
-              appendTo: 'div[id="' + item.index + '"]',
-              overlay: false,
-              className: 'move-popup' + right + bottom,
-              showClose: false,
-              scope: scope
-            });
-
-            dialogResult.closePromise.then(function(data) {
-              dialogResult = null;
-            });
+          if (!_.isNull(dialogResult)) {
+            dialogResult.close();
           } else {
-            dimLoadoutService.addItemToLoadout(item);
+            ngDialog.closeAll();
+
+            if (!dimLoadoutService.dialogOpen) {
+
+              var verbosePerks = settings.verbosePerks,
+                minOffset = 300 + (item.perks.length * 44 * verbosePerks),
+                perkStateString = verbosePerks ? 'verbose-perks' :'quiet-perks',
+
+                bottom = ($(element).offset().top < minOffset) ? ' move-popup-bottom' : '',
+                right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : ''),
+                templateString =
+                  `
+                    <div ng-click="$event.stopPropagation();"
+                      class="${perkStateString}" dim-click-anywhere-but-here="vm.closePopup()"
+                      dim-move-popup
+                      dim-store="vm.store"
+                      dim-item="vm.item">
+                    </div>
+                  `;
+
+              dialogResult = ngDialog.open({
+                template: templateString,
+                plain: true,
+                appendTo: 'div[id="' + item.index + '"]',
+                overlay: false,
+                className: 'move-popup' + right + bottom,
+                showClose: false,
+                scope: scope
+              });
+
+              dialogResult.closePromise.then(function(data) {
+                dialogResult = null;
+              });
+            } else {
+              dimLoadoutService.addItemToLoadout(item);
+            }
           }
+
         }
+        dimSettingsService.getSettings().then(handleSettingsResult);
       };
 
       vm.closePopup = function closePopup() {
