@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreItem', StoreItem);
 
-  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService'];
+  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService','dimSettingsService'];
 
-  function StoreItem(dimStoreService, ngDialog, dimLoadoutService) {
+  function StoreItem(dimStoreService, ngDialog, dimLoadoutService,dimSettingsService) {
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -67,7 +67,12 @@
           ngDialog.closeAll();
 
           if (!dimLoadoutService.dialogOpen) {
-            var bottom = ($(element).offset().top < 300) ? ' move-popup-bottom' : '';
+
+            var settings = dimSettingsService.getSettings().$$state.value,
+              verbosePerks = settings.verbosePerks,
+              minOffset = 300 + (item.perks.length * 44 * verbosePerks);
+
+            var bottom = ($(element).offset().top < minOffset) ? ' move-popup-bottom' : '';
             var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
 
             dialogResult = ngDialog.open({

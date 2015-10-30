@@ -967,7 +967,30 @@ img.void {
 .item-details.stat-box-row {
   padding-bottom: 3px;
 }
-.item-details .item-perks div {
+
+.item-details .item-perks {
+  min-height: 44px;
+}
+.item-perks.quiet-perks .perk-title,.item-perks.quiet-perks .perk-description {
+  display: none;
+}
+
+.item-perks.verbose-perks>.item-perk-row{
+  clear: left;
+  display: block;
+}
+
+.item-perks.quiet-perks>.item-perk-row{
+  clear: none;
+  display: inline-block;
+}
+
+.item-details .item-perks>.item-perk-row {
+  margin-bottom: 7px;
+  min-height: 44px;
+}
+
+.item-perk-row>.item-perk-icon {
   display: inline-block;
   background-color: #4887ba;
   border-radius: 50%;
@@ -977,7 +1000,18 @@ img.void {
   background-position: 4px;
   width: 44px;
   height: 44px;
+  float: left;
 }
+
+.item-perk-row>.perk-title {
+  font-weight: bold;
+}
+
+.item-perk-row>.perk-title::after {
+   content: " - ";
+   font-weight: bold;
+}
+
 .move-popup a {
   color: #000;
 }
