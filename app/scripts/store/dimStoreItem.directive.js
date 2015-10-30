@@ -60,7 +60,6 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
-        debugger
 
         if (!_.isNull(dialogResult)) {
           dialogResult.close();
