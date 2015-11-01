@@ -8,11 +8,13 @@
 
   function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
+    var _sortedStoreIds = [];
     var _itemsByLocation = {};
     var _storesByLocation = [];
     var _index = 0;
 
     var service = {
+      sortedStoreIds: _sortedStoreIds,
       itemsByLocation: _itemsByLocation,
       filteredItems: [],
       getStores: getStores,
@@ -29,6 +31,14 @@
     function getNextIndex() {
       return _index++;
     }
+
+    $rootScope.$watch(function() {
+      return settings.current;
+    }, function(newSettings, oldSettings) {
+      if (newSettings.characterOrder !== oldSettings.characterOrder) {
+
+      }
+    });
 
     function getStores(getFromBungie, withOrder) {
       if (!getFromBungie && !!withOrder) {

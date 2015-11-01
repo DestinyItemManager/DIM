@@ -84,49 +84,11 @@
           }
         }
 
-
-
-        ///
-
-        //
-        //
-        // var altSource = items[item.bucket][source.id];
-        // var altTarget = items[item.bucket][target.id];
-        //
-        // if (source.id !== target.id) {
-        //   var altIndex = _.findIndex(altSource, function(i) {
-        //     return (item.index === i.index);
-        //   });
-        //
-        //   if (equip) {
-        //     var bb = altTarget.equipped[0];
-        //
-        //     altTarget.unequipped.push(bb);
-        //     altTarget.equipped.splice(0, 1);
-        //
-        //     bb.equipped = false;
-        //
-        //     if (item.equipped) {
-        //
-        //       item.equipped = true;
-        //     }
-        //   // if (altIndex >= 0) {
-        //   //   altSource.splice(index, 1);
-        //   // }
-        //   //
-        //   // if (item.amount > 0) {
-        //   //   altTarget.push(item);
-        //   // }
-        // } else {
-        //
-        // }
-        // ///
-
         var altSource = items[item.bucket][source.id];
         var altTarget = items[item.bucket][target.id];
 
         if (equip) {
-          var equipped = _.findWhere(target.items, {
+          var equipped = _.findWhere(target .items, {
             equipped: true,
             type: item.type
           });
@@ -159,11 +121,15 @@
           }
 
           altTarget.unequipped.push(item);
-
-
         }
 
-        //updateStoreModel(item, source, target, equip);
+        var zeroedIndex = _.findIndex(altTarget.unequipped, function(i) {
+          return i.amount == 0;
+        });
+
+        if (zeroedIndex >= 0) {
+          altTarget.unequipped.splice(zeroedIndex, 1);
+        }
 
         return item;
       }
@@ -665,9 +631,6 @@
           });
 
         return movePlan;
-      }
-
-      function updateLevels() {
       }
 
       function getItems() {

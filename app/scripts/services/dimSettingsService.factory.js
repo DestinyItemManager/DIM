@@ -11,6 +11,7 @@
     var currentSettings = null;
 
     return {
+      'current': currentSettings,
       'getSetting': getSetting,
       'getSettings': getSettings,
       'saveSetting': saveSetting
