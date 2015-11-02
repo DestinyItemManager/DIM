@@ -160,10 +160,24 @@
 
     $q.when(dimStoreService.itemsByLocation)
       .then(function(buckets) {
-        if(!buckets[vm.item.bucket][vm.item.owner].equipped.length) {
+        var bucket = _.find(buckets, function(bucket) { return bucket.bucketHash === vm.item.bucket; });
+        var equipped = null;
+
+        if (bucket) {
+          var bucketStore = _.find(bucket.stores, function(store) {
+            return store.id === vm.item.owner;
+          });
+
+          if (bucketStore && bucketStore.items.equipped.length === 0) {
             return;
+          } else {
+            equipped = bucketStore.items.equipped[0].stats;
+          }
         }
-        var equipped = buckets[vm.item.bucket][vm.item.owner].equipped[0].stats;
+        // if (!buckets[vm.item.bucket][vm.item.owner].equipped.length) {
+        //   return;
+        // }
+        // var equipped = buckets[vm.item.bucket][vm.item.owner].equipped[0].stats;
 
         equipped.forEach(function(item, key) {
           if (vm.item.stats[key]) {

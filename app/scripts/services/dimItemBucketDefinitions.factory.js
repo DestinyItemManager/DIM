@@ -16,6 +16,9 @@
       .error(function(data) {
         deferred.reject(new Error('The item buckets definition file was not parsed correctly.'));
       });
+      // .then(function(defs) {
+      //     deferred.resolve(_.chain(defs.data).toArray().sortBy(function(bucket) { return bucket.bucketOrder; }).value());
+      // });
 
     return {
       'getDefinitions': function() { return deferred.promise; }

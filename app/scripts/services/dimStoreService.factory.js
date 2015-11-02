@@ -9,7 +9,7 @@
   function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
     var _sortedStoreIds = [];
-    var _itemsByLocation = {};
+    var _itemsByLocation = [];
     var _storesByLocation = [];
     var _index = 0;
 
@@ -229,76 +229,115 @@
             return $q.all(asyncItems);
           })
           .then(function() {
-            //_storesByLocation = angular.copy(_stores);
-
-            //_itemsByLocation = _itemsByLocation.splice(0, _itemsByLocation.length);
-
             function getItems(items) {
               return items;
             }
 
             _.each(_stores, function(store) {
               store.getItems = getItems.bind(store, store.items);
-
-              var bucket = _.groupBy(store.items, 'bucket');
-              var kvp = _.pairs(bucket);
-
-              _.each(kvp, function(kvpItem) {
-                var key = kvpItem[0];
-                var value = kvpItem[1];
-
-                if (!_.has(_itemsByLocation, key)) {
-                  _itemsByLocation[key] = {
-                    id: key
-                  };
-                } else {
-
-                }
-
-                var collection;
-
-                if (!_.has(_itemsByLocation[key], store.id.toString())) {
-                  collection = _itemsByLocation[key][store.id.toString()] = {
-                    id: store.id,
-                    equipped: [],
-                    unequipped: []
-                  };
-                } else {
-                  collection = _itemsByLocation[key][store.id.toString()];
-
-                  collection.equipped.splice(0, collection.equipped.length);
-                  collection.unequipped.splice(0, collection.unequipped.length);
-                }
-
-
-                _.each(value, function(item) {
-                  if (item.equipped) {
-                    collection.equipped.push(item);
-                  } else {
-                    collection.unequipped.push(item);
-                  }
-                });
-
-                //_itemsByLocation[key].push.apply(_itemsByLocation[key], value);
-              });
-
-              //delete store.items;
             });
 
-            // var stores = _stores;
+            var temp = initBucketItems(_stores);
+
+            _itemsByLocation.splice(0, _itemsByLocation.length)
+
+            Array.prototype.push.apply(_itemsByLocation, temp);
+
+            var bucketSort = {
+              3284755031: { // Subclass
+                sort: 10
+              },
+              1498876634: { // Primary
+                sort: 20
+              },
+              2465295065: { // Special
+                sort: 30
+              },
+              953998645: { // Heavy
+                sort: 40
+              },
+              3448274439: { // Helmet
+                sort: 50
+              },
+              3551918588: { // Gauntlets
+                sort: 60
+              },
+              14239492: { // Chest Armor
+                sort: 70
+              },
+              20886954: { // Leg Armor
+                sort: 80
+              },
+              1585787867: { // Class Armor
+                sort: 90
+              },
+              4023194814: { // Ghosts
+                sort: 100
+              },
+              434908299: { // Artifcts
+                sort: 110
+              },
+              4274335291: { // Emblems
+                sort: 120
+              },
+              2973005342: { // Shaders
+                sort: 130
+              },
+              3054419239: { // Emotes
+                sort: 140
+              },
+              284967655: { // Ships
+                sort: 150
+              },
+              2025709351: { // Vehicles
+                sort: 160
+              },
+              1469714392: { // Consumables
+                sort: 170
+              },
+              3865314626: { // Materials
+                sort: 180
+              },
+              2197472680: { // Bounties
+                sort: 190
+              },
+              1801258597: { // Quests
+                sort: 200
+              },
+              375726501: { // Missions
+                sort: 210
+              },
+              1367666825: { // Speical Orders
+                sort: 220
+              },
+              215593132: { // Lost Items
+                sort: 230
+              },
+              2422292810: { // Temporary
+                sort: 240
+              },
+              3621873013: { // Hidden
+                sort: 250
+              }
+            };
+
+            dimItemBucketDefinitions.getDefinitions()
+              .then(function(defs) {
+                _itemsByLocation.sort(function(a,b) {
+                  var bucketA = bucketSort[a.bucketHash];
+                  var bucketB = bucketSort[b.bucketHash];
+
+                  if (bucketA.sort < bucketB.sort) {
+                    return -1;
+                  } else if (bucketA.sort > bucketB.sort) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
+              });
 
             return (_stores);
-
-            // return $q(function(resolve, reject) {
-            //   settings.getSetting('characterOrder')
-            //     .then(function(characterOrder) {
-            //       if (characterOrder === 'mostRecent') {
-            //         resolve(_.sortBy(stores, 'lastPlayed').reverse());
-            //       } else {
-            //         resolve(_.sortBy(stores, 'id'));
-            //       }
-            //     });
-            // });
           })
           .then(function(stores) {
             $rootScope.$broadcast('dim-stores-updated', {
@@ -310,6 +349,58 @@
 
         return promise;
       }
+    }
+
+    function initBucketItems(_store) {
+      var buckets = [];
+
+      _.each(_store, function(store) {
+        var storeBuckets = _.groupBy(store.items, 'bucket');
+
+        _.each(storeBuckets, function(storeBucketItems, key) {
+          key = parseInt(key, 10);
+          var bucket = _.find(buckets, function(bucket) { return bucket.bucketHash === key; });
+
+          if (bucket) {
+            var bucketStore = _.find(bucket.stores, function(bucketStore) { return bucketStore.id === store.id; });
+
+            if (bucketStore) {
+              store.items = getBucketItems(storeBucketItems);
+            } else {
+              bucket.stores.push({
+                id: store.id,
+                items: getBucketItems(storeBucketItems)
+              });
+            }
+          } else {
+            buckets.push({
+              bucketHash: key,
+              stores: [{
+                  id: store.id,
+                  items: getBucketItems(storeBucketItems)
+              }]
+            });
+          }
+        });
+      });
+
+      return buckets;
+    }
+
+    function getBucketItems(items) {
+      var result = _.groupBy(items, function(item) {
+        return (item.equipped) ? 'equipped' : 'unequipped';
+      });
+
+      if (!result.equipped) {
+        result.equipped = [];
+      }
+
+      if (!result.unequipped) {
+        result.unequipped = [];
+      }
+
+      return result;
     }
 
     function getStore(id) {

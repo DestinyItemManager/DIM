@@ -83,52 +83,65 @@
             target.items.push(item);
           }
         }
+//////////////
 
-        var altSource = items[item.bucket][source.id];
-        var altTarget = items[item.bucket][target.id];
+        var bucket = _.find(items, function(bucket) { return bucket.bucketHash === item.bucket; });
+        var altSource;
+        var altTarget;
+
+        if (bucket) {
+          altSource = _.find(bucket.stores, function(store) {
+            return store.id === source.id;
+          });
+
+          altTarget = _.find(bucket.stores, function(store) {
+            return store.id === target.id;
+          });
+        }
 
         if (equip) {
-          var equipped = _.findWhere(target .items, {
+          var equipped = _.findWhere(target.items, {
             equipped: true,
             type: item.type
           });
+
           if (equipped) { equipped.equipped = false };
           item.equipped = true;
 
-          var bb = altTarget.equipped[0];
+          var bb = altTarget.items.equipped[0];
 
-          var altIndex = _.findIndex(altSource.unequipped, function(i) {
+          var altIndex = _.findIndex(altSource.items.unequipped, function(i) {
             return (item.index === i.index);
           });
 
-          var aa = altSource.unequipped[altIndex];
+          var aa = altSource.items.unequipped[altIndex];
 
-          altSource.unequipped.splice(altIndex, 1);
+          altSource.items.unequipped.splice(altIndex, 1);
 
-          altTarget.equipped.splice(0, 1);
-          altTarget.unequipped.push(bb);
+          altTarget.items.equipped.splice(0, 1);
+          altTarget.items.unequipped.push(bb);
 
-          altTarget.equipped.push(item);
+          altTarget.items.equipped.push(item);
         } else {
           var aa;
           var altIndex ;
 
-          if (altSource.equipped.length > 0 && altSource.equipped[0].index === item.index) {
-            altSource.equipped.splice(0, 1);
+          if (altSource.items.equipped.length > 0 && altSource.items.equipped[0].index === item.index) {
+            altSource.items.equipped.splice(0, 1);
           } else {
-            altIndex = _.findIndex(altSource.unequipped, function(i, ii) { return i.index === item.index; });
-            altSource.unequipped.splice(altIndex, 1);
+            altIndex = _.findIndex(altSource.items.unequipped, function(i, ii) { return i.index === item.index; });
+            altSource.items.unequipped.splice(altIndex, 1);
           }
 
-          altTarget.unequipped.push(item);
+          altTarget.items.unequipped.push(item);
         }
-
-        var zeroedIndex = _.findIndex(altTarget.unequipped, function(i) {
+////////////
+        var zeroedIndex = _.findIndex(altTarget.items.unequipped, function(i) {
           return i.amount == 0;
         });
 
         if (zeroedIndex >= 0) {
-          altTarget.unequipped.splice(zeroedIndex, 1);
+          altTarget.items.unequipped.splice(zeroedIndex, 1);
         }
 
         return item;
