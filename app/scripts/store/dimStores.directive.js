@@ -4,32 +4,32 @@
   angular.module('dimApp')
     .directive('dimStores', Stores);
 
-  angular.module('dimApp')
-    .directive('dimItemType', ItemTypes);
+  // angular.module('dimApp')
+  //   .directive('dimItemType', ItemTypes);
 
-  ItemTypes.$inject = [];
-
-  function ItemTypes() {
-    return {
-      controller: ['$scope', function($scope) {
-        if ($scope.vm.itemsByLocation[$scope.bucket.hash] && $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id]) {
-          $scope.equipped = $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id].equipped;
-          $scope.unequipped = $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id].unequipped;
-        }
-      }],
-      replace: true,
-      template: [
-        '<div class="dim-character-items">',
-        '  <div class="equipped" ng-if="equipped.length" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.hash + \',\' + store.id + \'\' + bucket.hash }}">',
-        '    <div ng-repeat="item in equipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
-        '  </div>',
-        '  <div ng-class="{unequipped: true || equipped.length}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucket.hash + \',\' + vm.store.id + \'\' + bucket.hash }}">',
-        '    <div ng-repeat="item in unequipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
-        '  </div>',
-        '</div>'
-      ].join('')
-    };
-  }
+  // ItemTypes.$inject = [];
+  //
+  // function ItemTypes() {
+  //   return {
+  //     controller: ['$scope', function($scope) {
+  //       if ($scope.vm.itemsByLocation[$scope.bucket.hash] && $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id]) {
+  //         $scope.equipped = $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id].equipped;
+  //         $scope.unequipped = $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id].unequipped;
+  //       }
+  //     }],
+  //     replace: true,
+  //     template: [
+  //       '<div class="dim-character-items">',
+  //       '  <div class="equipped" ng-if="equipped.length" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
+  //       '    <div ng-repeat="item in equipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
+  //       '  </div>',
+  //       '  <div ng-class="{unequipped: true || equipped.length}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
+  //       '    <div ng-repeat="item in unequipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
+  //       '  </div>',
+  //       '</div>'
+  //     ].join('')
+  //   };
+  // }
 
   Stores.$inject = ['ngDialog'];
 
@@ -50,10 +50,10 @@
         '    <div class="title col-xs-12">{{ vm.bucketDefinitions[bucket.bucketHash].bucketName }}</div>',
         '    <div class="inventory-item-group col-xl-3" ng-repeat="store in bucket.stores track by store.id" class="storage" ng-class="{ guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
         '      <div class="dim-character-items">',
-        '        <div class="equipped" ng-if="store.items.equipped.length" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.hash + \',\' + store.id + \'\' + bucket.hash }}">',
+        '        <div class="equipped" ng-if="store.items.equipped.length" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
         '          <div ng-repeat="item in store.items.equipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
         '        </div>',
-        '        <div ng-class="{unequipped: store.items.equipped.length}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucket.hash + \',\' + vm.store.id + \'\' + bucket.hash }}">',
+        '        <div ng-class="{unequipped: store.items.equipped.length}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
         '          <div ng-repeat="item in store.items.unequipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
         '        </div>',
         '      </div>',
@@ -83,7 +83,11 @@
       var item = angular.element(srcElement[0]).scope().item;
       var store = angular.element($event.currentTarget).scope().store;
 
-      moveDroppedItem(item, store, equip);
+      dimStoreService.getStore(store.id).then(
+        function(store) {
+          moveDroppedItem(item, store, equip);
+        }
+      );
     };
 
 

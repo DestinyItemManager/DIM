@@ -152,7 +152,7 @@
       'stat-damage-kinetic': false
     }
 
-    vm.dragChannel = (item.notransfer) ? item.owner + item.bucket : item.bucket;
+    vm.dragChannel = (item.notransfer) ? item.bucket + '' + item.owner : item.bucket;
     vm.stackable = item.maxStackSize > 1;
     vm.showBountyPercentage = ((item.type === 'Bounties') && (!item.complete) && (vm.itemStat));
     vm.showStats = vm.itemStat && item.primStat && item.primStat.value;
