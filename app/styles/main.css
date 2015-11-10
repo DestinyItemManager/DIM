@@ -19,11 +19,15 @@
   color: #E8A534;
 }
 #header #user {
+  padding-top: 1px;
   color: #fff;
 }
 #header .fa {
   font-size: 15px;
   color: #fafafa;
+}
+#header .fa-search {
+  padding-top: 5px;
 }
 #header .content span {
   vertical-align: middle;
@@ -3115,4 +3119,13 @@ button.toast-close-button {
 
 .col-xl-3 {
   width: 280px;
+}
+
+#filter-input {
+  margin-left: -25px;
+  padding-left: 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
 }
