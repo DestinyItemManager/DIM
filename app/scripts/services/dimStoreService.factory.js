@@ -8,15 +8,11 @@
 
   function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
     var _stores = [];
-    var _sortedStoreIds = [];
     var _itemsByLocation = [];
-    var _storesByLocation = [];
     var _index = 0;
 
     var service = {
-      sortedStoreIds: _sortedStoreIds,
       itemsByLocation: _itemsByLocation,
-      filteredItems: [],
       getStores: getStores,
       getStore: getStore,
       updateStores: updateStores
