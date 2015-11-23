@@ -18,6 +18,8 @@
   "homepage": "https://github.com/kyleshay/DIM",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "eslint": "^1.10.1",
+    "jshint": "^2.8.0",
     "mkdirp": "^0.5.1",
     "request": "^2.57.0",
     "request-promise": "^0.4.2",
