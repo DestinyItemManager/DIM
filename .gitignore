@@ -11,4 +11,5 @@ build/manifest.zip
 *.DS_Store
 
 !do-not-delete.txt
+!build/itemHashes.json
 !build/img/misc/missing_icon.png
