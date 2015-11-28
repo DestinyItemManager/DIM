@@ -22,9 +22,9 @@ function processItemRow(icon, pRow, itemHash) {
   
   var contains = true;
   
-  if (itemHash) {
-    contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
-  }
+  // if (itemHash) {
+  //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
+  // }
   
   if (contains) {
     if (!exists) {

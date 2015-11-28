@@ -9,7 +9,7 @@
   function StatDefinitions($q, $timeout, $http) {
     var deferred = $q.defer();
 
-    $http.get('scripts/api-manifest/stats.json?v=3.1.18')
+    $http.get('scripts/api-manifest/stats.json?v=3.1.19')
       .success(function(data) {
         deferred.resolve(data);
       })
