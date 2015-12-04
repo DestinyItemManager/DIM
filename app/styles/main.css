@@ -12,17 +12,21 @@
   background-size: 24px;
   height: 24px;
   padding-left: 32px;
-  color: #999;
   font-size: 16px !important;
   font-weight: bold;
   color: #E8A534;
+  cursor: pointer;
 }
 #header #user {
+  padding-top: 1px;
   color: #fff;
 }
 #header .fa {
   font-size: 15px;
   color: #fafafa;
+}
+#header .fa-search {
+  padding-top: 5px;
 }
 #header .content span {
   vertical-align: middle;
@@ -40,14 +44,14 @@
   user-select: none;
 }
 #actions .fa:hover {
-  color: #68a0b7;
+  color: #E8A534;
   cursor: pointer;
 }
-#header .content span.link {
+#header .content .link {
   color: white;
 }
-#header .content span.link:hover {
-  color: #68a0b7;
+#header .content .link:hover {
+  color: #E8A534;
   cursor: pointer;
 }
 .pull-right {
@@ -2906,6 +2910,15 @@ button.toast-close-button {
 
 .guardian.dim-col-8 {
   flex: 0 0 31.5rem; }
-
+  
 .guardian.dim-col-9 {
   flex: 0 0 35rem; }
+
+#filter-input {
+  margin-left: -25px;
+  padding-left: 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+}

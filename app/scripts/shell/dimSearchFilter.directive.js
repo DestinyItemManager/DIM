@@ -1,6 +1,15 @@
 (function() {
   'use strict';
 
+    angular.module('dimApp')
+        .directive('focusOn', function() {
+           return function(scope, elem, attr) {
+              scope.$on(attr.focusOn, function(e) {
+                  elem[0].focus();
+              });
+           };
+        });
+
   angular.module('dimApp')
     .directive('dimSearchFilter', SearchFilter);
 
@@ -13,7 +22,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="filter items or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
+        '<input id="filter-input" placeholder="Search or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
       ].join('')
     };
   }

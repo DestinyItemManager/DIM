@@ -21,16 +21,19 @@
       <div class="content">
         <span class="header-right">
           <div dim-platform-choice class="header-right"></div>
-          <div dim-search-filter class="header-right"></div>
           <div class="header-right" id="actions">
-            <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-            <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
-            <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
+            <span class="link" ng-click="app.showSupport($event)" title="<3">Support DIM</span>
+            <span class="link">
+                <a href='https://twitter.com/ThisIsDIM' target="_blank"><i class="fa fa-twitter"></i></a>
+                <a href='https://www.reddit.com/r/DestinyItemManager' target="_blank"><i class="fa fa-reddit"></i></a>
+            </span>
           </div>
         </span>
-        <span class="logo">DIM</span>
-        <span class="link" ng-click="app.showAbout($event)">About</span>
-        <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
+        <span class="logo" ng-click="app.showAbout($event)">DIM</span> |
+        <span class="link fa fa-cog" ng-click="app.showSetting($event)" title="Settings"> Settings</span>
+        <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="link fa fa-refresh"></i></span>
+        <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="link fa fa-filter"></i></span>
+        <span class="link"><i class="fa fa-search" ng-click="$broadcast('newItemAdded')"></i><span focus-on="clicked" dim-search-filter></span></span>
       </div>
     </div>
     <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
