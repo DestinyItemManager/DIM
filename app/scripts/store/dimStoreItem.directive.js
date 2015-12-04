@@ -23,7 +23,7 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{ vm.item.primStat.value + \' \' + vm.item.name }}" ',
         '  drag="::vm.item.index" ng-class="vm.itemClassNames">',
-        '  <div ui-draggable="false" class="img" style="background-image: url(\'http://www.bungie.net{{ vm.item.icon }}\');" ng-click="vm.clicked(vm.item, $event)">',
+        '  <div ui-draggable="false" class="img" style="background-image: url(\'http://www.bungie.net{{:: vm.item.icon }}\');" ng-click="vm.clicked(vm.item, $event)">',
         '    <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'
@@ -33,22 +33,7 @@
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
-
-      // var watchers;
-      //
-      // scope.$on('suspend', function() {
-      //   watchers = scope.$$watchers;
-      //   scope.$$watchers = [];
-      // });
-      //
-      // scope.$on('resume', function() {
-      //   if (watchers)
-      //     scope.$$watchers = watchers;
-      //
-      //   // discard our copy of the watchers
-      //   watchers = void 0;
-      // });
-
+      
       // $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
       //   $(this).remove();
       //   element[0].querySelector('.img')
@@ -96,23 +81,9 @@
         }
       };
 
-      scope.$watch(function() {
-        return vm.dragChannel + ((vm.item.primStat) ? vm.item.primStat.value : 0) + vm.item.name +
-          vm.showBadge + vm.badgeCount + vm.hideFilteredItems + vm.itemStat + vm.item.visible + vm.item.complete +
-          vm.maxStackSize + vm.item.owner + vm.item.type + vm.item.sort + vm.item.amount + vm.item.xpComplete;
-      }, function(newItem) {
+      scope.$watch('vm.item', function(newItem) {
         processItem(vm, vm.item);
       });
-    }
-  }
-
-  function processSettings(vm, settings) {
-    if (_.has(settings, 'hideFilteredItems')) {
-      vm.hideFilteredItems = settings.hideFilteredItems;
-    }
-
-    if (_.has(settings, 'itemStat')) {
-      vm.itemStat = settings.itemStat;
     }
   }
 
@@ -154,9 +125,9 @@
 
     vm.dragChannel = (item.notransfer) ? item.bucket + '' + item.owner : item.bucket;
     vm.stackable = item.maxStackSize > 1;
-    vm.showBountyPercentage = ((item.type === 'Bounties') && (!item.complete) && (vm.itemStat));
-    vm.showStats = vm.itemStat && item.primStat && item.primStat.value;
-    vm.showDamageType = !vm.itemStat && (vm.item.sort === 'Weapons');
+    vm.showBountyPercentage = ((item.type === 'Bounties') && !item.complete);
+    vm.showStats = item.primStat && item.primStat.value;
+    vm.showDamageType = vm.item.sort === 'Weapons';
     vm.showBadge = (vm.stackable || vm.showBountyPercentage || vm.showStats || vm.showDamageType);
 
     if (vm.stackable) {
@@ -181,21 +152,7 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.hideFilteredItems = false;
-    vm.itemStat = false;
-
     processItem(vm, vm.item);
-
-    settings.getSettings()
-      .then(function(settings) {
-        processSettings(vm, settings);
-        //processItem(vm, vm.item);
-      });
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      processSettings(vm, arg);
-      //processItem(vm, vm.item);
-    });
 
     vm.itemClicked = function clicked(item) {
       $rootScope.$broadcast('dim-store-item-clicked', {

@@ -23,12 +23,12 @@
       { id: 9, name: '9' }
     ];
 
-    settings.getSetting()
+    settings.getSettings()
       .then(function(s) {
         vm.settings = s;
       });
 
-    vm.save = function(key) {      
+    vm.save = function(key) {
       settings.saveSetting(key, vm.settings[key]);
     };
   }

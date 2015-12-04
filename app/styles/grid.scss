@@ -1,0 +1,26 @@
+@mixin make-grid-columns() {
+  // Common properties for all breakpoints
+  %grid-column {
+    position: relative;
+    // Prevent columns from collapsing when empty
+    min-height: 1px;
+    // Inner gutter via padding
+  }
+  
+  @for $i from 3 through 9 {
+    .dim-col-#{$i} {
+      @extend %grid-column;
+      flex: 0 0 ($i * 3.5rem);
+    }
+  }
+  
+  @for $i from 3 through 9 {
+    .guardian {
+      &.dim-col-#{$i} {
+        flex: 0 0 (($i + 1) * 3.5rem);
+      }
+    }
+  }
+}
+
+@include make-grid-columns();

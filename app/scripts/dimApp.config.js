@@ -55,10 +55,10 @@
       $rootScope.inactivityLength = 60 * 60 * 1000;
 
       $rootScope.isUserInactive = function() {
-        var currentTime = new Date;
+        var currentTime = new Date();
 
         //Has This User Been Inactive For More Than An Hour
-        return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
+        return ((currentTime.now) - $rootScope.lastActivity) > $rootScope.inactivityLength;
       };
 
       $rootScope.trackActivity = function() {
@@ -158,6 +158,10 @@
         .state('inventory', {
           url: "/inventory",
           templateUrl: "views/inventory.html"
+        })
+        .state('settings', {
+          url: "/settings",
+          templateUrl: "views/setting.html"
         });
     });
 })();

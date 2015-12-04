@@ -2,38 +2,49 @@
   'use strict';
 
   angular.module('dimApp')
+    .directive('dimStoreColumn', StoreColumn);
+
+  StoreColumn.$inject = [];
+
+  function StoreColumn() {
+    return {
+      controller: StoreColumnCtrl,
+      controllerAs: 'vm',
+      bindToController: true,
+      scope: {
+        store: '=dimStore'
+      },
+      transpile: true,
+      template: [
+        '<div ng-class="vm.classNames" ng-transclude></div>'
+      ].join('')
+    }
+  }
+
+  StoreColumnCtrl.$inject = ['$scope', 'dimSettingsService'];
+
+  function StoreColumnCtrl($scope, settings) {
+    var vm = this;
+
+    $scope.$watch(function() {
+      return settings.current;
+    }, function(newValue, oldValue) {
+      if (vm.store.id === 'vault') {
+        delete vm.classNames['dim-col-' + oldValue.vaultCol];
+        vm.classNames['dim-col-' + newValue.vaultCol] = newValue.vaultCol;
+      } else {
+        delete vm.classNames['dim-col-' + oldValue.charCol];
+        vm.classNames['dim-col-' + newValue.charCol] = newValue.charCol;
+      }
+    }, true);
+  }
+
+  angular.module('dimApp')
     .directive('dimStores', Stores);
 
-  // angular.module('dimApp')
-  //   .directive('dimItemType', ItemTypes);
+  Stores.$inject = ['ngDialog', 'dimSettingsService'];
 
-  // ItemTypes.$inject = [];
-  //
-  // function ItemTypes() {
-  //   return {
-  //     controller: ['$scope', function($scope) {
-  //       if ($scope.vm.itemsByLocation[$scope.bucket.hash] && $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id]) {
-  //         $scope.equipped = $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id].equipped;
-  //         $scope.unequipped = $scope.vm.itemsByLocation[$scope.bucket.hash][$scope.store.id].unequipped;
-  //       }
-  //     }],
-  //     replace: true,
-  //     template: [
-  //       '<div class="dim-character-items">',
-  //       '  <div class="equipped" ng-if="equipped.length" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
-  //       '    <div ng-repeat="item in equipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
-  //       '  </div>',
-  //       '  <div ng-class="{unequipped: true || equipped.length}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
-  //       '    <div ng-repeat="item in unequipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
-  //       '  </div>',
-  //       '</div>'
-  //     ].join('')
-  //   };
-  // }
-
-  Stores.$inject = ['ngDialog'];
-
-  function Stores(ngDialog) {
+  function Stores(ngDialog, settings) {
     return {
       controller: StoresCtrl,
       controllerAs: 'vm',
@@ -42,15 +53,15 @@
       template: [
         '<div class="container">',
         '  <div class="row">',
-        '    <div class="col-xl-3" ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '    <div ng-repeat="store in vm.stores track by store.id" class="col-xs-3 storage" ng-class="vm.getClassNames(store)">',
         '      <div dim-store-heading store-data="store"></div>',
         '    </div>',
         '  </div>',
         '  <div ng-repeat="bucket in vm.itemsByLocation track by bucket.bucketHash" class="row">',
         '    <div class="title col-xs-12">{{ vm.bucketDefinitions[bucket.bucketHash].bucketName }}</div>',
-        '    <div class="inventory-item-group col-xl-3" ng-repeat="store in bucket.stores track by store.id" class="storage" ng-class="{ guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '    <div ng-repeat="store in bucket.stores track by store.id" class="inventory-item-group storage" ng-class="vm.getClassNames(store)">',
         '      <div class="dim-character-items">',
-        '        <div class="equipped" ng-if="store.items.equipped.length" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
+        '        <div class="equipped" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
         '          <div ng-repeat="item in store.items.equipped track by item.index" dim-store-item store-data="store" item-data="item"></div>',
         '        </div>',
         '        <div ng-class="{unequipped: store.items.equipped.length}" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ bucket.bucketHash + \',\' + store.id + \'\' + bucket.bucketHash }}">',
@@ -64,9 +75,9 @@
     };
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', '$rootScope', '$q', 'dimItemService', 'toaster', 'dimItemBucketDefinitions'];
+  StoresCtrl.$inject = ['$scope', 'dimStoreService', '$rootScope', '$q', 'dimItemService', 'toaster', 'dimItemBucketDefinitions', 'dimSettingsService'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, $rootScope, $q, dimItemService, toaster, dimItemBucketDefinitions) {
+  function StoresCtrl($scope, dimStoreService, $rootScope, $q, dimItemService, toaster, dimItemBucketDefinitions, settings) {
     var vm = this;
 
     vm.stores = null;
@@ -74,9 +85,22 @@
     dimItemBucketDefinitions.getDefinitions().then(function(defs) {
       vm.bucketDefinitions = defs;
     });
-    vm.condensed = false;
-    vm.charCol = 3;
-    vm.vaultCol = 4;
+
+    vm.getClassNames = function getClassNames(store) {
+      var className = {
+        condensed: settings.current.condensed,
+        guardian: store.id !== 'vault',
+        vault: store.id === 'vault'
+      };
+
+      if (store.id === 'vault') {
+        className['dim-col-' + settings.current.vaultCol] = true;
+      } else {
+        className['dim-col-' + settings.current.charCol] = true;
+      }
+
+      return className;
+    }
 
     vm.onDrop = function onDrop(id, $event, equip) {
       var srcElement = $('#' + id);
@@ -148,23 +172,6 @@
 
       $rootScope.loadingTracker.addPromise(promise);
     };
-
-    // settings.getSettings()
-    //   .then(function(settings) {
-    //     vm.condensed = settings.condensed;
-    //     vm.charCol = (settings.charCol > 2 && settings.charCol < 6) ? settings.charCol : 3;
-    //     vm.vaultCol = (settings.vaultCol > 3 && settings.vaultCol < 10) ? settings.vaultCol : 4;
-    //   });
-
-    // $rootScope.$on('dim-settings-updated', function(event, arg) {
-    //   if (_.has(arg, 'condensed')) {
-    //     vm.condensed = arg.condensed;
-    //   } else if (_.has(arg, 'charCol')) {
-    //     vm.charCol = arg.charCol;
-    //   } else if (_.has(arg, 'vaultCol')) {
-    //     vm.vaultCol = arg.vaultCol;
-    //   }
-    // });
 
     $scope.$on('dim-active-platform-updated', function(e, args) {
       var promise = $q.when(dimStoreService.getStores(true))

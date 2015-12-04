@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .directive('dimMoveItemProperties', MoveItemProperties);
 
-  MoveItemProperties.$inject = ['$sce'];
+  MoveItemProperties.$inject = ['$sce', 'dimSettingsService'];
 
-  function MoveItemProperties($sce) {
+  function MoveItemProperties($sce, settings) {
     return {
       bindToController: true,
       controller: MoveItemPropertiesCtrl,
@@ -23,10 +23,10 @@
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{::vm.item.hash}}" ng-bind="::vm.title"></a></span>',
         '  <span ng-show="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{::vm.item.xpComplete}}%</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="vm.item.stats.length && !vm.itemDetails"><span class="fa fa-info-circle"></span></span>',
+        '  <span class="pull-right move-popup-info-detail" ng-mouseover="settings.current.itemDetails = true;" ng-if="vm.item.stats.length && !settings.current.itemDetails"><span class="fa fa-info-circle"></span></span>',
         '</div>',
         '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
-        '<div class="item-details" ng-if="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
+        '<div class="item-details" ng-if="settings.current.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
@@ -66,9 +66,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$q', '$sce', 'dimSettingsService', 'ngDialog', '$scope', 'dimStoreService'];
+  MoveItemPropertiesCtrl.$inject = ['$q', '$sce', 'ngDialog', '$scope', 'dimStoreService'];
 
-  function MoveItemPropertiesCtrl($q, $sce, settings, ngDialog, $scope, dimStoreService) {
+  function MoveItemPropertiesCtrl($q, $sce, ngDialog, $scope, dimStoreService) {
     var vm = this;
 
     vm.classes = {
@@ -81,11 +81,6 @@
     vm.title = $sce.trustAsHtml(vm.item.name);
     vm.light = '';
     vm.classType = '';
-    vm.itemDetails = false;
-    settings.getSetting('itemDetails')
-      .then(function(show) {
-        vm.itemDetails = show;
-      });
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();

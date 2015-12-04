@@ -4,9 +4,23 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
+  StoreService.$inject = [
+    '$rootScope',
+    '$q',
+    'dimBungieService',
+    'dimSettingsService',
+    'dimPlatformService',
+    'dimItemTier',
+    'dimCategory',
+    'dimItemDefinitions',
+    'dimItemBucketDefinitions',
+    'dimObjectiveDefinitions',
+    'dimTalentDefinitions',
+    'dimSandboxPerkDefinitions',
+    'dimStatDefinitions'
+  ];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
+  function StoreService($rootScope, $q, bungieService, settings, platformService, itemTiers, categories, itemDefs, itemBucketDefs, objectiveDefs, talentDefs, sandboxPerkDefs, statDefs) {
     var _stores = [];
     var _itemsByLocation = [];
     var _index = 0;
@@ -21,7 +35,7 @@
     return service;
 
     function updateStores() {
-      return dimBungieService.getCharacters(dimPlatformService.getActive());
+      return bungieService.getCharacters(platformService.getActive());
     }
 
     function getNextIndex() {
@@ -50,7 +64,7 @@
       } else if (!getFromBungie && _.isUndefined(withOrder)) {
         return _stores;
       } else {
-        var promise = dimBungieService.getStores(dimPlatformService.getActive())
+        var promise = bungieService.getStores(platformService.getActive())
           .then(function(stores) {
             _stores.splice(0, _stores.length);
             var asyncItems = [];
@@ -71,7 +85,7 @@
                   'bucketCounts': {},
                   hasExotic: function(type) {
                     var predicate = {
-                      'tier': dimItemTier.exotic,
+                      'tier': itemTiers.exotic,
                       'type': type
                     };
 
@@ -127,7 +141,7 @@
                   percentToNextLevel: raw.character.base.percentToNextLevel,
                   hasExotic: function(type, equipped) {
                     var predicate = {
-                      'tier': dimItemTier.exotic,
+                      'tier': itemTiers.exotic,
                       'type': type
                     };
 
@@ -148,7 +162,7 @@
                       .value() < 10;
                   },
                   canEquipExotic: function(itemType) {
-                    var types = _.chain(dimCategory)
+                    var types = _.chain(categories)
                       .pairs()
                       .find(function(cat) {
                         return _.some(cat[1],
@@ -317,7 +331,7 @@
               }
             };
 
-            dimItemBucketDefinitions.getDefinitions()
+            itemBucketDefs.getDefinitions()
               .then(function(defs) {
                 _itemsByLocation.sort(function(a,b) {
                   var bucketA = bucketSort[a.bucketHash];
@@ -377,6 +391,24 @@
               }]
             });
           }
+        });
+      });
+      
+      var storeIds = _.pluck(_store, 'id');
+      
+      _.each(buckets, function(bucket) {
+        var bucketStoreIds = _.pluck(bucket.stores, 'id');
+        
+        var uniques = _.difference(storeIds, bucketStoreIds);
+        
+        _.each(uniques, function(storeId) {
+          bucket.stores.push({
+            id: storeId,
+            items: {
+              equipped: [],
+              unequipped: []
+            }
+          });
         });
       });
 
@@ -740,27 +772,27 @@
       var iteratorPB;
 
       // Bind our arguments to the iterator method
-      var promise = dimItemDefinitions.getDefinitions()
+      var promise = itemDefs.getDefinitions()
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
         })
-        .then(dimItemBucketDefinitions.getDefinitions)
+        .then(itemBucketDefs.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
         })
-        .then(dimStatDefinitions.getDefinitions)
+        .then(statDefs.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
         })
-        .then(dimObjectiveDefinitions.getDefinitions)
+        .then(objectiveDefs.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
         })
-        .then(dimSandboxPerkDefinitions.getDefinitions)
+        .then(sandboxPerkDefs.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
         })
-        .then(dimTalentDefinitions.getDefinitions)
+        .then(talentDefs.getDefinitions)
         .then(function(defs) {
           iteratorPB = iteratorPB.bind(null, defs);
 
