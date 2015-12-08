@@ -185,16 +185,15 @@ if (typeof window.onerror == "object") {
       if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
         exceptionDescription = errorObject.message;
       }
-
-      _gaq.push([
-        'errorTracker._trackEvent',
-        'DIM - Chrome Extension - v3.1.19',
-        exceptionDescription,
-        ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
-        0,
-        true
-      ]);
-  //  }
+      // 
+      // _gaq.push([
+      //   'errorTracker._trackEvent',
+      //   'DIM - Chrome Extension - v3.1.21',
+      //   exceptionDescription,
+      //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
+      //   0,
+      //   true
+      // ]);
 
     // If the previous "window.onerror" callback can be called, pass it the data:
     if (typeof originalWindowErrorCallback === 'function') {

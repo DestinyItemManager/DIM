@@ -92,6 +92,7 @@
       setHeight('.sub-section.sort-emote');
       setHeight('.sub-section.sort-ship');
       setHeight('.sub-section.sort-vehicle');
+      setHeight('.sub-section.sort-horn');
       setHeight('.sub-section.sort-consumable');
       setHeight('.sub-section.sort-material');
       setHeight('.sub-section.sort-missions');
@@ -860,6 +861,10 @@
       if (type.indexOf("Vex Technology") != -1) {
         return 'Bounties';
       }
+      
+      if (type.indexOf("Horn") != -1) {
+        return "Horn";
+      }
 
       if (type.indexOf("Quest") != -1) {
         return 'Bounties';
@@ -913,7 +918,7 @@
         return 'Weapons';
       if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
         return 'Armor';
-      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Horn", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         return 'General';
       if (["Daily Reward", "Package", "Armsday Order"]) {
         return 'Postmaster';

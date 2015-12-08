@@ -9,7 +9,7 @@
   function ItemDefinitions($q, $timeout, $http) {
     var deferred = $q.defer();
 
-    $http.get('scripts/api-manifest/items.json?v=3.1.19')
+    $http.get('scripts/api-manifest/items.json?v=3.1.21')
       .success(function(data) {
         deferred.resolve(data);
       })
