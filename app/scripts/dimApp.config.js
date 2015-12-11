@@ -185,10 +185,10 @@ if (typeof window.onerror == "object") {
       if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
         exceptionDescription = errorObject.message;
       }
-      // 
+      //
       // _gaq.push([
       //   'errorTracker._trackEvent',
-      //   'DIM - Chrome Extension - v3.1.21',
+      //   'DIM - Chrome Extension - v3.1.22',
       //   exceptionDescription,
       //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
       //   0,

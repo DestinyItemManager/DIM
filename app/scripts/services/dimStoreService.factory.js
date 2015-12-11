@@ -168,6 +168,10 @@
                   if (bucket.bucketHash === 4046403665)
                     store.bucketCounts.Weapons = _.size(bucket.items);
 
+                  _.each(bucket.items, function(item) {
+                    item.bucket = bucket.bucketHash;
+                  });
+
                   items = _.union(items, bucket.items);
                 });
               } else {
@@ -237,6 +241,10 @@
 
                 _.each(raw.data.buckets, function(bucket) {
                   _.each(bucket, function(pail) {
+                    _.each(pail.items, function(item) {
+                      item.bucket = pail.bucketHash;
+                    });
+
                     items = _.union(items, pail.items);
                   });
                 });
@@ -421,37 +429,101 @@
           // maybe it is classified...
           itemDef = {
             classified: true,
-            icon: '/common/destiny_content/icons/f0dcc71487f77a69005bec2e3fb6e4e8.jpg'
+            icon: '/img/misc/missing_icon.png'
           }
 
           switch (item.itemHash) {
-            case 4097026463: {
+            case 2808364179: {
               item.isEquipment = true;
-              item.primaryStat = {value: 'No Time'};
+              item.primaryStat = {value: 'DB'};
 
-              itemDef.itemHash = 4097026463;
-              itemDef.bucketTypeHash = 1498876634;
+              itemDef.itemHash = 2808364179;
+              itemDef.bucketTypeHash = 953998645;
               itemDef.classType = 3;
               itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Pulse Rifle';
-              itemDef.itemName = 'No Time To Explain - Classified';
+              itemDef.itemTypeName = 'Rocket Launcher';
+              itemDef.itemName = 'Dragon\'s Breath - Classified';
               itemDef.tierTypeName = "Exotic";
               itemDef.equippable = true;
               itemDef.hasAction = true;
               itemDef.nonTransferrable = true;
               break;
             }
-            case 3678707177: {
+            case 1346849289: {
               item.isEquipment = true;
-              item.primaryStat = {value: 'Skull'};
+              item.primaryStat = {value: 'MIDA'};
 
-              itemDef.itemHash = 3678707177;
-              itemDef.bucketTypeHash = 3448274439;
+              itemDef.itemHash = 1346849289;
+              itemDef.bucketTypeHash = 1498876634;
               itemDef.classType = 3;
-              itemDef.itemType = 0;
-              itemDef.itemTypeName = 'Mask';
-              itemDef.itemName = 'Skull Mask - Classified';
-              itemDef.tierTypeName = "Legendary";
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Scout Rifle';
+              itemDef.itemName = 'MIDA - Classified';
+              itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
+            case 2055601060: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'HL'};
+
+              itemDef.itemHash = 2055601060;
+              itemDef.bucketTypeHash = 1498876634;
+              itemDef.classType = 3;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Auto Rifle';
+              itemDef.itemName = 'Hardlight - Classified';
+              itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
+            case 57660786: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'SGA'};
+
+              itemDef.itemHash = 57660786;
+              itemDef.bucketTypeHash = 953998645;
+              itemDef.classType = 3;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Machine Gun';
+              itemDef.itemName = 'Super Good Advice - Classified';
+              itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
+            case 3078564839: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'Plan C'};
+
+              itemDef.itemHash = 3078564839;
+              itemDef.bucketTypeHash = 2465295065;
+              itemDef.classType = 3;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Fusion Rifle';
+              itemDef.itemName = 'Plan C - Classified';
+              itemDef.tierTypeName = "Exotic";
+              itemDef.equippable = true;
+              itemDef.hasAction = true;
+              itemDef.nonTransferrable = true;
+              break;
+            }
+            case 3835813881: {
+              item.isEquipment = true;
+              item.primaryStat = {value: 'NLB'};
+
+              itemDef.itemHash = 3835813881;
+              itemDef.bucketTypeHash = 2465295065;
+              itemDef.classType = 3;
+              itemDef.itemType = 3;
+              itemDef.itemTypeName = 'Sniper Rifle';
+              itemDef.itemName = 'No Land Beyond - Classified';
+              itemDef.tierTypeName = "Exotic";
               itemDef.equippable = true;
               itemDef.hasAction = true;
               itemDef.nonTransferrable = true;
@@ -533,6 +605,7 @@
           notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
           id: item.itemInstanceId,
           equipped: item.isEquipped,
+          bucket: item.bucket,
           equipment: item.isEquipment,
           complete: item.isGridComplete,
           hasXP: (!!item.progression),
@@ -861,7 +934,7 @@
       if (type.indexOf("Vex Technology") != -1) {
         return 'Bounties';
       }
-      
+
       if (type.indexOf("Horn") != -1) {
         return "Horn";
       }
