@@ -687,6 +687,28 @@
             });
           });
 
+          // lets just see only the activated nodes for this item instance.
+          var activated = _.filter(item.nodes, function(node) {
+            return node.isActivated;
+          });
+
+          // loop over the exclusive set talents grid for that weapon type
+          _.each(talents.exclusiveSets, function(set) {
+            _.each(activated, function(active) {
+              if(set.nodeIndexes.indexOf(active.nodeHash) > -1) {
+
+                var node = talents.nodes[active.nodeHash].steps[active.stepIndex]
+                createdItem.perks.push({
+                  'displayName': node.nodeStepName,
+                  'displayDescription': node.nodeStepDescription,
+                  'iconPath': node.icon
+                });
+              }
+            });
+          });
+          // other useful information about the item (this has info about reforge/etc)
+          // _.each(talents.independentNodeIndexes, function(set) {
+
           createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
         }
 
