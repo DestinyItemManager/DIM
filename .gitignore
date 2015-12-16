@@ -6,6 +6,7 @@ node_modules/
 build/common
 build/img
 build/manifest
+build/api-manifest/*.json
 build/*.json
 build/manifest.zip
 *.DS_Store
@@ -13,3 +14,4 @@ build/manifest.zip
 !do-not-delete.txt
 !build/itemHashes.json
 !build/img/misc/missing_icon.png
+

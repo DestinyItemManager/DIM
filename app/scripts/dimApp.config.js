@@ -188,7 +188,7 @@ if (typeof window.onerror == "object") {
       //
       // _gaq.push([
       //   'errorTracker._trackEvent',
-      //   'DIM - Chrome Extension - v3.1.22',
+      //   'DIM - Chrome Extension - v3.1.24',
       //   exceptionDescription,
       //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
       //   0,
