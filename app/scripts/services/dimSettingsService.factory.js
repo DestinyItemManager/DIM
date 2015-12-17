@@ -25,7 +25,8 @@
         characterOrder: 'mostRecent',
         itemSort: 'primaryStat',
         charCol: 3,
-        vaultCol: 4
+        vaultCol: 4,
+        autoRefresh: true
       };
 
       if (currentSettings !== null) {

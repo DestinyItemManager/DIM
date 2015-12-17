@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService','dimSettingsService'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
+  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, settings) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -160,27 +160,42 @@
       if (!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
         ngDialog.closeAll();
       }
+    };    
+
+    vm.updateAutoRefreshTimer = function() {
+        settings.getSetting('autoRefresh')
+            .then(function(autoRefreshEnabled) {
+                if (autoRefreshEnabled) {
+                    var secondsToWait = 360;
+                    $rootScope.autoRefreshTimer = $interval(function() {
+                        //Only Refresh If We're Not Already Doing Something
+                        //And We're Not Inactive
+                        if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
+                            vm.refresh();
+                        }
+
+                    }, secondsToWait * 1000);
+                }
+                else{                 
+                  $interval.cancel($rootScope.autoRefreshTimer);
+                }
+            })
+            .catch(function(error){
+              console.log("Something went wrong with the auto-refresh timer", error);
+            });
     };
 
-    vm.startAutoRefreshTimer = function () {
-      var secondsToWait = 360;
 
-      $rootScope.autoRefreshTimer = $interval(function () {
-       //Only Refresh If We're Not Already Doing Something
-       //And We're Not Inactive
-       if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
-         vm.refresh();
-       }
-      }, secondsToWait * 1000);
-    };
 
-    vm.startAutoRefreshTimer();
+
+    vm.updateAutoRefreshTimer();
 
     var refresh = _.debounce(vm.refresh, 300);
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       // if ((!_.has(arg, 'charCol')) && (!_.has(arg, 'vaultCol'))) {
         refresh();
+        vm.updateAutoRefreshTimer();
       // }
     });
   }
