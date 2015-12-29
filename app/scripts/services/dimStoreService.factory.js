@@ -249,7 +249,7 @@
 
             var temp = initBucketItems(_stores);
 
-            _itemsByLocation.splice(0, _itemsByLocation.length)
+            _itemsByLocation.splice(0, _itemsByLocation.length);
 
             Array.prototype.push.apply(_itemsByLocation, temp);
 
@@ -317,7 +317,7 @@
               375726501: { // Missions
                 sort: 210
               },
-              1367666825: { // Speical Orders
+              1367666825: { // Special Orders
                 sort: 220
               },
               215593132: { // Lost Items
@@ -334,8 +334,10 @@
             itemBucketDefs.getDefinitions()
               .then(function(defs) {
                 _itemsByLocation.sort(function(a,b) {
-                  var bucketA = bucketSort[a.bucketHash];
-                  var bucketB = bucketSort[b.bucketHash];
+                  // Handle the case when there's a new category we
+                  // don't yet know about.
+                  var bucketA = bucketSort[a.bucketHash] || { sort: 300 };
+                  var bucketB = bucketSort[b.bucketHash] || { sort: 300 };
 
                   if (bucketA.sort < bucketB.sort) {
                     return -1;
@@ -393,14 +395,14 @@
           }
         });
       });
-      
+
       var storeIds = _.pluck(_store, 'id');
-      
+
       _.each(buckets, function(bucket) {
         var bucketStoreIds = _.pluck(bucket.stores, 'id');
-        
+
         var uniques = _.difference(storeIds, bucketStoreIds);
-        
+
         _.each(uniques, function(storeId) {
           bucket.stores.push({
             id: storeId,
