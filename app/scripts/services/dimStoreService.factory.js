@@ -750,7 +750,6 @@
           notransfer: itemDef.nonTransferrable,
           id: item.itemInstanceId,
           equipped: item.isEquipped,
-          bucket: item.bucket,
           equipment: item.isEquipment,
           complete: item.isGridComplete,
           hasXP: (!!item.progression),
