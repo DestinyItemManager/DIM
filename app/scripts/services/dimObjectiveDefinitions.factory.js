@@ -9,7 +9,7 @@
   function ObjectiveDefinitions($q, $timeout, $http) {
     var deferred = $q.defer();
 
-    $http.get('api-manifest/objectives.json?v=3.1.18.1')
+    $http.get('api-manifest/objectives.json?v=3.1.24')
       .success(function(data) {
         deferred.resolve(data);
       })

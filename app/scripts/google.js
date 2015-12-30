@@ -1,8 +1,8 @@
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-60316581-1']);
 _gaq.push(['_trackPageview']);
-_gaq.push(['errorTracker._setAccount', 'UA-60316581-3']);
-_gaq.push(['errorTracker._trackPageview']);
+// _gaq.push(['errorTracker._setAccount', 'UA-60316581-3']);
+// _gaq.push(['errorTracker._trackPageview']);
 
 (function() {
   var ga = document.createElement('script');
