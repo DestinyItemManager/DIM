@@ -47,14 +47,14 @@
  font-size:20px;
 }
 #actions .fa:hover {
-  color: #68a0b7;
+  color: #E8A534;
   cursor: pointer;
 }
-#header .content span.link {
+#header .content .link {
   color: white;
 }
-#header .content span.link:hover {
-  color: #68a0b7;
+#header .content .link:hover {
+  color: #E8A534;
   cursor: pointer;
 }
 .pull-right {
