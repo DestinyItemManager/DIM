@@ -23,7 +23,7 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index" ng-class="vm.itemClassNames">',
-        '  <div ui-draggable="false" class="img" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
+        '  <div ui-draggable="false" class="img" style="background-image: url(\'http://www.bungie.net{{:: vm.item.icon }}\');" ng-click="vm.clicked(vm.item, $event)">',
         '  <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '</div>'
       ].join('')
@@ -32,31 +32,6 @@
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
-
-      // var watchers;
-      //
-      // scope.$on('suspend', function() {
-      //   watchers = scope.$$watchers;
-      //   scope.$$watchers = [];
-      // });
-      //
-      // scope.$on('resume', function() {
-      //   if (watchers)
-      //     scope.$$watchers = watchers;
-      //
-      //   // discard our copy of the watchers
-      //   watchers = void 0;
-      // });
-
-      $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
-      }).error(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
-      });
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();

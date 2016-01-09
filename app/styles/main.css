@@ -695,6 +695,7 @@ img.void {
 .item > .img {
   width: 44px;
   height: 44px;
+  background-size: cover;
 }
 .item .stack {
   position: absolute;
