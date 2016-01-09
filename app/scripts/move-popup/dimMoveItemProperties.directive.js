@@ -153,13 +153,15 @@
     */
     var items = $scope.$parent.$parent.vm.store.items;
 
-    for (var item in items) {
-      item = items[item]; 
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
       if (item.equipped && item.type === vm.item.type) {
-        for (var key in vm.item.stats) {
-          if(item.stats.length) {
-            vm.item.stats[key]['equippedStatsValue'] = item.stats[key].value;
-            vm.item.stats[key]['equippedStatsName'] = item.stats[key].name;
+        for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
+          var itemStats = item.stats[key];
+          if (itemStats) {
+            var vmItemStats = vm.item.stats[key];
+            vmItemStats.equippedStatsValue = itemStats.value;
+            vmItemStats.equippedStatsName = itemStats.name;
           }
         }
       }
