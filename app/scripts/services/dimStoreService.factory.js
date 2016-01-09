@@ -330,303 +330,298 @@
       return $q.when(store);
     }
 
-    function getItems(owner, items) {
-      var result = [];
-
-      var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, item) {
-        var itemDef = definitions[item.itemHash];
-        // Missing definition?
-        if (itemDef === undefined || itemDef.itemName === 'Classified') {
-          // maybe it is classified...
-          itemDef = {
-            classified: true,
-            icon: '/img/misc/missing_icon.png'
-          };
-
-          switch (item.itemHash) {
-            case 2808364179: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'DB'};
-
-              itemDef.itemHash = 2808364179;
-              itemDef.bucketTypeHash = 953998645;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Rocket Launcher';
-              itemDef.itemName = 'Dragon\'s Breath - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-            case 1346849289: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'MIDA'};
-
-              itemDef.itemHash = 1346849289;
-              itemDef.bucketTypeHash = 1498876634;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Scout Rifle';
-              itemDef.itemName = 'MIDA - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-            case 2055601060: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'HL'};
-
-              itemDef.itemHash = 2055601060;
-              itemDef.bucketTypeHash = 1498876634;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Auto Rifle';
-              itemDef.itemName = 'Hardlight - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-            case 57660786: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'SGA'};
-
-              itemDef.itemHash = 57660786;
-              itemDef.bucketTypeHash = 953998645;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Machine Gun';
-              itemDef.itemName = 'Super Good Advice - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-            case 3078564839: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'Plan C'};
-
-              itemDef.itemHash = 3078564839;
-              itemDef.bucketTypeHash = 2465295065;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Fusion Rifle';
-              itemDef.itemName = 'Plan C - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-            case 3835813881: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'NLB'};
-
-              itemDef.itemHash = 3835813881;
-              itemDef.bucketTypeHash = 2465295065;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Sniper Rifle';
-              itemDef.itemName = 'No Land Beyond - Classified';
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-          }
-
-          // unidentified item.
-          if(!itemDef.itemName) {
-            console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
-            window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
-          }
-        }
-
-        if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
-          return;
-        }
-
-        // if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
-        //   return;
-        // }
-
-        var itemType = getItemType(item, itemDef, itemBucketDef);
-
-        if (item.itemHash === 937555249) {
-          itemType = "Material";
-        }
-
-        var weaponClass = null;
-
-
-        if (!itemType) {
-          return;
-        }
-
-        if (itemType.hasOwnProperty('general') && itemType.general !== '') {
-          weaponClass = itemType.weaponClass;
-          itemType = itemType.general;
-        }
-
-        var itemSort = sortItem(itemDef.itemTypeName);
-
-        if (_.isUndefined(itemSort)) {
-          console.log(itemDef.itemTypeName + " does not have a sort property.");
-        }
-
-        if (item.location === 4) {
-          itemSort = 'Postmaster';
-
-          if (itemType !== 'Messages')
-            if (itemType === 'Consumable') {
-              itemType = 'Special Orders';
-            } else {
-              itemType = 'Lost Items';
-            }
-        }
-
-        var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
-
-        // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-        var index = item.itemHash + '-';
-        if (item.itemInstanceId === '0') {
-          index = index + getNextIndex();
-        } else {
-          index = index + item.itemInstanceId;
-        }
-
-        /* Artifacts are missing appropiate class types
-        0: titan, 1: hunter, 2: warlock, 3: any */
-        var artifactTypes = ["Titan Artifact","Hunter Artifact","Warlock Artifact"];
-        var artifactIndex = artifactTypes.indexOf(itemDef.itemTypeName);
-        if(artifactIndex != -1)
-        {
-            itemDef.classType = artifactIndex;
-        }
-
-        var createdItem = {
-          index: index,
-          owner: owner,
-          hash: item.itemHash,
-          type: itemType,
-          sort: itemSort,
-          tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
-          name: itemDef.itemName,
-          description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
-          icon: itemDef.icon,
-          notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
-          id: item.itemInstanceId,
-          equipped: item.isEquipped,
-          bucket: item.bucket,
-          equipment: item.isEquipment,
-          complete: item.isGridComplete,
-          hasXP: (!!item.progression),
-          xpComplete: 0,
-          amount: item.stackSize,
-          primStat: item.primaryStat,
-          stats: item.stats,
-          perks: item.perks,
-          nodes: item.nodes,
-          equipRequiredLevel: item.equipRequiredLevel,
-          //talents: talentDefs.data[item.talentGridHash],
-          talentPerks: getTalentPerks(item, talentDefs),
-          maxStackSize: itemDef.maxStackSize,
-          classType: itemDef.classType,
-          classTypeName: getClass(itemDef.classType),
-          /* 0: titan, 1: hunter, 2: warlock, 3: any */
-          dmg: dmgName,
-          visible: true,
-          hasAscendNode: false,
-          ascended: false,
-          hasReforgeNode: false,
-          year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-          lockable: item.lockable,
-          locked: item.locked,
-          weaponClass: weaponClass || '',
-          classified: itemDef.classified
+    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, item) {
+      var itemDef = definitions[item.itemHash];
+      // Missing definition?
+      if (itemDef === undefined || itemDef.itemName === 'Classified') {
+        // maybe it is classified...
+        itemDef = {
+          classified: true,
+          icon: '/img/misc/missing_icon.png'
         };
 
-        // Bounties
-        if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
-          var objectiveDefObj = objectiveDef[item.objectives[0].objectiveHash],
-            progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
+        switch (item.itemHash) {
+        case 2808364179: {
+          item.isEquipment = true;
+          item.primaryStat = {value: 'DB'};
 
-          createdItem.complete = item.objectives[0].isComplete;
-          createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
+          itemDef.itemHash = 2808364179;
+          itemDef.bucketTypeHash = 953998645;
+          itemDef.classType = 3;
+          itemDef.itemType = 3;
+          itemDef.itemTypeName = 'Rocket Launcher';
+          itemDef.itemName = 'Dragon\'s Breath - Classified';
+          itemDef.tierTypeName = "Exotic";
+          itemDef.equippable = true;
+          itemDef.hasAction = true;
+          itemDef.nonTransferrable = true;
+          break;
+        }
+        case 1346849289: {
+          item.isEquipment = true;
+          item.primaryStat = {value: 'MIDA'};
+
+          itemDef.itemHash = 1346849289;
+          itemDef.bucketTypeHash = 1498876634;
+          itemDef.classType = 3;
+          itemDef.itemType = 3;
+          itemDef.itemTypeName = 'Scout Rifle';
+          itemDef.itemName = 'MIDA - Classified';
+          itemDef.tierTypeName = "Exotic";
+          itemDef.equippable = true;
+          itemDef.hasAction = true;
+          itemDef.nonTransferrable = true;
+          break;
+        }
+        case 2055601060: {
+          item.isEquipment = true;
+          item.primaryStat = {value: 'HL'};
+
+          itemDef.itemHash = 2055601060;
+          itemDef.bucketTypeHash = 1498876634;
+          itemDef.classType = 3;
+          itemDef.itemType = 3;
+          itemDef.itemTypeName = 'Auto Rifle';
+          itemDef.itemName = 'Hardlight - Classified';
+          itemDef.tierTypeName = "Exotic";
+          itemDef.equippable = true;
+          itemDef.hasAction = true;
+          itemDef.nonTransferrable = true;
+          break;
+        }
+        case 57660786: {
+          item.isEquipment = true;
+          item.primaryStat = {value: 'SGA'};
+
+          itemDef.itemHash = 57660786;
+          itemDef.bucketTypeHash = 953998645;
+          itemDef.classType = 3;
+          itemDef.itemType = 3;
+          itemDef.itemTypeName = 'Machine Gun';
+          itemDef.itemName = 'Super Good Advice - Classified';
+          itemDef.tierTypeName = "Exotic";
+          itemDef.equippable = true;
+          itemDef.hasAction = true;
+          itemDef.nonTransferrable = true;
+          break;
+        }
+        case 3078564839: {
+          item.isEquipment = true;
+          item.primaryStat = {value: 'Plan C'};
+
+          itemDef.itemHash = 3078564839;
+          itemDef.bucketTypeHash = 2465295065;
+          itemDef.classType = 3;
+          itemDef.itemType = 3;
+          itemDef.itemTypeName = 'Fusion Rifle';
+          itemDef.itemName = 'Plan C - Classified';
+          itemDef.tierTypeName = "Exotic";
+          itemDef.equippable = true;
+          itemDef.hasAction = true;
+          itemDef.nonTransferrable = true;
+          break;
+        }
+        case 3835813881: {
+          item.isEquipment = true;
+          item.primaryStat = {value: 'NLB'};
+
+          itemDef.itemHash = 3835813881;
+          itemDef.bucketTypeHash = 2465295065;
+          itemDef.classType = 3;
+          itemDef.itemType = 3;
+          itemDef.itemTypeName = 'Sniper Rifle';
+          itemDef.itemName = 'No Land Beyond - Classified';
+          itemDef.tierTypeName = "Exotic";
+          itemDef.equippable = true;
+          itemDef.hasAction = true;
+          itemDef.nonTransferrable = true;
+          break;
+        }
         }
 
-        _.each(item.stats, function(stat) {
-          stat.name = statDef[stat.statHash].statName;
-          stat.bar = stat.statHash !== 3871231066 && item.primaryStat.statHash !== 3897883278;
-        });
-
-        if (item.itemHash === 2809229973) { // Necrochasm
-          createdItem.hasXP = true;
-          createdItem.xpComplete = true;
-          createdItem.complete = true;
+        // unidentified item.
+        if(!itemDef.itemName) {
+          console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+          window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
         }
+      }
 
-        // Fixes items that are marked as complete, but the data didn't reflect
-        // that status.  Must be a bug in Bungie's data.
-        if (createdItem.complete) {
-          createdItem.hasXP = true;
-          createdItem.xpComplete = true;
-        }
+      if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
+        return null;
+      }
 
-        var talents = talentDefs.data[item.talentGridHash];
+      // if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
+      //   return;
+      // }
 
-        if (talents) {
-          var ascendNode = _.filter(talents.nodes, function(node) {
-            return _.any(node.steps, function(step) {
-              return step.nodeStepName === 'Ascend';
-            });
-          });
+      var itemType = getItemType(item, itemDef, itemBucketDef);
 
-          if (!_.isEmpty(ascendNode)) {
-            createdItem.hasAscendNode = true;
-            var filteredAcendedTalet = _.filter(item.nodes, function(node) {
-              return node.nodeHash === ascendNode[0].nodeHash;
-            });
+      if (item.itemHash === 937555249) {
+        itemType = "Material";
+      }
 
-            createdItem.ascended = (filteredAcendedTalet.length > 0) ? filteredAcendedTalet[0].isActivated : false;
+      var weaponClass = null;
 
-            if (!createdItem.ascended) {
-              createdItem.complete = false;
-            }
+
+      if (!itemType) {
+        return null;
+      }
+
+      if (itemType.hasOwnProperty('general') && itemType.general !== '') {
+        weaponClass = itemType.weaponClass;
+        itemType = itemType.general;
+      }
+
+      var itemSort = sortItem(itemDef.itemTypeName);
+
+      if (_.isUndefined(itemSort)) {
+        console.log(itemDef.itemTypeName + " does not have a sort property.");
+      }
+
+      if (item.location === 4) {
+        itemSort = 'Postmaster';
+
+        if (itemType !== 'Messages')
+          if (itemType === 'Consumable') {
+            itemType = 'Special Orders';
+          } else {
+            itemType = 'Lost Items';
           }
+      }
 
-          var reforgeNodes = _.filter(talents.nodes, function(node) {
-            return _.any(node.steps, function(step) {
-              return step.nodeStepName === 'Reforge Ready';
-            });
-          });
+      var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-          createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
-        }
+      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+      var index = item.itemHash + '-';
+      if (item.itemInstanceId === '0') {
+        index = index + getNextIndex();
+      } else {
+        index = index + item.itemInstanceId;
+      }
 
-        _.each(createdItem.perks, function(perk) {
-          var perkDef = perkDefs.data[perk.perkHash];
-          if (perkDef) {
-            _.each(['displayName', 'displayDescription'], function(attr) {
-              if (perkDef[attr]) {
-                perk[attr] = perkDef[attr];
-              }
-            });
-          }
-        });
+      /* Artifacts are missing appropiate class types
+       0: titan, 1: hunter, 2: warlock, 3: any */
+      var artifactTypes = ["Titan Artifact","Hunter Artifact","Warlock Artifact"];
+      var artifactIndex = artifactTypes.indexOf(itemDef.itemTypeName);
+      if(artifactIndex != -1)
+      {
+        itemDef.classType = artifactIndex;
+      }
 
-        // if (createdItem.tier !== 'Basic') {
-          result.push(createdItem);
-        // }
+      var createdItem = {
+        index: index,
+        hash: item.itemHash,
+        type: itemType,
+        sort: itemSort,
+        tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
+        name: itemDef.itemName,
+        description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
+        icon: itemDef.icon,
+        notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+        id: item.itemInstanceId,
+        equipped: item.isEquipped,
+        bucket: item.bucket,
+        equipment: item.isEquipment,
+        complete: item.isGridComplete,
+        hasXP: (!!item.progression),
+        xpComplete: 0,
+        amount: item.stackSize,
+        primStat: item.primaryStat,
+        stats: item.stats,
+        perks: item.perks,
+        nodes: item.nodes,
+        equipRequiredLevel: item.equipRequiredLevel,
+        //talents: talentDefs.data[item.talentGridHash],
+        talentPerks: getTalentPerks(item, talentDefs),
+        maxStackSize: itemDef.maxStackSize,
+        classType: itemDef.classType,
+        classTypeName: getClass(itemDef.classType),
+        /* 0: titan, 1: hunter, 2: warlock, 3: any */
+        dmg: dmgName,
+        visible: true,
+        hasAscendNode: false,
+        ascended: false,
+        hasReforgeNode: false,
+        year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
+        lockable: item.lockable,
+        locked: item.locked,
+        weaponClass: weaponClass || '',
+        classified: itemDef.classified
       };
 
+      // Bounties
+      if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
+        var objectiveDefObj = objectiveDef[item.objectives[0].objectiveHash],
+            progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
+
+        createdItem.complete = item.objectives[0].isComplete;
+        createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
+      }
+
+      _.each(item.stats, function(stat) {
+        stat.name = statDef[stat.statHash].statName;
+        stat.bar = stat.statHash !== 3871231066 && item.primaryStat.statHash !== 3897883278;
+      });
+
+      if (item.itemHash === 2809229973) { // Necrochasm
+        createdItem.hasXP = true;
+        createdItem.xpComplete = true;
+        createdItem.complete = true;
+      }
+
+      // Fixes items that are marked as complete, but the data didn't reflect
+      // that status.  Must be a bug in Bungie's data.
+      if (createdItem.complete) {
+        createdItem.hasXP = true;
+        createdItem.xpComplete = true;
+      }
+
+      var talents = talentDefs.data[item.talentGridHash];
+
+      if (talents) {
+        var ascendNode = _.filter(talents.nodes, function(node) {
+          return _.any(node.steps, function(step) {
+            return step.nodeStepName === 'Ascend';
+          });
+        });
+
+        if (!_.isEmpty(ascendNode)) {
+          createdItem.hasAscendNode = true;
+          var filteredAcendedTalet = _.filter(item.nodes, function(node) {
+            return node.nodeHash === ascendNode[0].nodeHash;
+          });
+
+          createdItem.ascended = (filteredAcendedTalet.length > 0) ? filteredAcendedTalet[0].isActivated : false;
+
+          if (!createdItem.ascended) {
+            createdItem.complete = false;
+          }
+        }
+
+        var reforgeNodes = _.filter(talents.nodes, function(node) {
+          return _.any(node.steps, function(step) {
+            return step.nodeStepName === 'Reforge Ready';
+          });
+        });
+
+        createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
+      }
+
+      _.each(createdItem.perks, function(perk) {
+        var perkDef = perkDefs.data[perk.perkHash];
+        if (perkDef) {
+          _.each(['displayName', 'displayDescription'], function(attr) {
+            if (perkDef[attr]) {
+              perk[attr] = perkDef[attr];
+            }
+          });
+        }
+      });
+
+      return createdItem;
+    }
+
+    function getItems(owner, items) {
       return $q.all([
         dimItemDefinitions,
         dimItemBucketDefinitions,
@@ -638,8 +633,13 @@
           return o.getDefinitions();
         }))
       .then(function(args) {
+        var result = [];
         _.each(items, function (item) {
-          iterator.apply(undefined, args.concat([item]));
+          var createdItem = processSingleItem.apply(undefined, args.concat(item));
+          if (createdItem !== null) {
+            createdItem.owner = owner;
+            result.push(createdItem);
+          }
         });
         return result;
       });
