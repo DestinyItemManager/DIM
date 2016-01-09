@@ -73,6 +73,7 @@
       'Armor',
       'Ship',
       'Vehicle',
+      'Horn',
       'Emote',
       'Consumable',
       'Material',
@@ -122,6 +123,7 @@
         'Emote',
         'Ship',
         'Vehicle',
+        'Horn',
         'Missions',
         'Bounties'
       ],
@@ -196,6 +198,10 @@
         unequipped: 'unequipped equippable',
       },
       Vehicle: {
+        equipped: 'equipped equippable',
+        unequipped: 'unequipped equippable',
+      },
+      Horn: {
         equipped: 'equipped equippable',
         unequipped: 'unequipped equippable',
       },
