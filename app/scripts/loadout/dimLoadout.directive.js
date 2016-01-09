@@ -6,6 +6,7 @@
   Loadout.$inject = ['dimLoadoutService'];
 
   function Loadout(dimLoadoutService) {
+
     return {
       controller: LoadoutCtrl,
       controllerAs: 'vm',
