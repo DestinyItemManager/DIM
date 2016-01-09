@@ -98,7 +98,7 @@
               dStore.background = bStore.base.backgroundPath;
               dStore.icon = bStore.base.emblemPath;
             }
-          })
+          });
         })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
@@ -128,7 +128,7 @@
               dStore.background = bStore.base.backgroundPath;
               dStore.icon = bStore.base.emblemPath;
             }
-          })
+          });
         })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
@@ -159,7 +159,7 @@
               dStore.background = bStore.base.backgroundPath;
               dStore.icon = bStore.base.emblemPath;
             }
-          })
+          });
         })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);

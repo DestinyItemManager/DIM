@@ -42,7 +42,7 @@
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="lower-stats">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="higher-stats">{{ stat.value }}</span>',
         '         <span ng-if="stat.value === stat.equippedStatsValue" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
-        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',        
+        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
         '       </span>',
         '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
         '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="higher-stats stat-box-val">{{ stat.value }}</span>',
@@ -123,7 +123,7 @@
     vm.isInfusable = function isInfusable(item) {
       // Infuse perk's id is 1270552711
       return _.contains(item.talentPerks, 1270552711);
-    }
+    };
 
     /*
     * Open up the dialog for infusion by passing
@@ -136,7 +136,7 @@
       ngDialog.closeAll();
 
       // Open the infuse window
-      var infuse = ngDialog.open({
+      ngDialog.open({
         template: 'views/infuse.html',
         overlay: false,
         className: 'app-settings',
@@ -145,10 +145,10 @@
         }],
         scope: $('#infuseDialog').scope()
       });
-    }
+    };
 
     /*
-    * Get the item stats and its stat name 
+    * Get the item stats and its stat name
     * of the equipped item for comparison
     */
     var items = $scope.$parent.$parent.vm.store.items;

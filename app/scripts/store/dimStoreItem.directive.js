@@ -135,7 +135,7 @@
       'search-hidden': !item.visible,
       'search-item-hidden': item.visible === false && vm.hideFilteredItems === true,
       'complete': item.complete
-    }
+    };
 
     vm.badgeClassNames = {
       'counter': false,
@@ -149,7 +149,7 @@
       'stat-damage-arc': false,
       'stat-damage-void': false,
       'stat-damage-kinetic': false
-    }
+    };
 
     vm.dragChannel = (item.notransfer) ? item.owner + item.type : item.type;
     vm.stackable = item.maxStackSize > 1;
@@ -188,12 +188,10 @@
     settings.getSettings()
       .then(function(settings) {
         processSettings(vm, settings);
-        //processItem(vm, vm.item);
       });
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       processSettings(vm, arg);
-      //processItem(vm, vm.item);
     });
 
     vm.itemClicked = function clicked(item) {

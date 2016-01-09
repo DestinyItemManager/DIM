@@ -57,7 +57,6 @@
   function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
     var vm = this;
 
-
     var types = [ // Order of types in the rows.
       'Class',
       'Primary',
@@ -328,7 +327,7 @@
               dStore.background = bStore.base.backgroundPath;
               dStore.icon = bStore.base.emblemPath;
             }
-          })
+          });
         })
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
