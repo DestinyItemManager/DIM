@@ -128,16 +128,16 @@
 
     vm.dragChannel = (item.notransfer) ? item.owner + item.type : item.type;
     vm.stackable = item.maxStackSize > 1;
-    vm.showBountyPercentage = ((item.type === 'Bounties') && (!item.complete) && (vm.itemStat));
-    vm.showStats = vm.itemStat && item.primStat && item.primStat.value;
-    vm.showDamageType = !vm.itemStat && (vm.item.sort === 'Weapons');
+    vm.showBountyPercentage = ((item.type === 'Bounties') && !item.complete);
+    vm.showStats = item.primStat && item.primStat.value;
+    vm.showDamageType = vm.item.sort === 'Weapons';
     vm.showBadge = (vm.stackable || vm.showBountyPercentage || vm.showStats || vm.showDamageType);
 
     if (vm.stackable) {
-      vm.badgeClassNames['counter'] = true;
+      vm.badgeClassNames.counter = true;
       vm.badgeCount = item.amount;
     } else if (vm.showBountyPercentage) {
-      vm.badgeClassNames['counter'] = true;
+      vm.badgeClassNames.counter = true;
       vm.badgeCount = item.xpComplete + '%';
     } else if (vm.showStats) {
       vm.badgeClassNames['item-stat'] = true;
