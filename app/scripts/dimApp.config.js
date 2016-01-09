@@ -55,14 +55,14 @@
       $rootScope.inactivityLength = 60 * 60 * 1000;
 
       $rootScope.isUserInactive = function() {
-        var currentTime = new Date;
+        var currentTime = Date.now();
 
         //Has This User Been Inactive For More Than An Hour
         return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
       };
 
       $rootScope.trackActivity = function() {
-        $rootScope.lastActivity = new Date();
+        $rootScope.lastActivity = Date.now();
       };
 
       //Track Our Initial Activity of Starting the App
