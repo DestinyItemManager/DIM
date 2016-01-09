@@ -178,8 +178,8 @@
 
 
                 try {
-                  glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086 }).value;
-                  marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370 }).value;
+                  glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                  marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
                 } catch (e) {
                   glimmer = 0;
                   marks = 0;
@@ -260,7 +260,7 @@
 
               }
 
-              var i = getItems(store.id, items, raw.definitions)
+              var i = getItems(store.id, items)
                 .then(function(items) {
                   items = _.sortBy(items, function(item) {
                     return item.name;
@@ -330,10 +330,10 @@
       return $q.when(store);
     }
 
-    function getItems(owner, items, definitions) {
+    function getItems(owner, items) {
       var result = [];
 
-      var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, item, index) {
+      var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, item) {
         var itemDef = definitions[item.itemHash];
         // Missing definition?
         if (itemDef === undefined || itemDef.itemName === 'Classified') {
@@ -341,7 +341,7 @@
           itemDef = {
             classified: true,
             icon: '/img/misc/missing_icon.png'
-          }
+          };
 
           switch (item.itemHash) {
             case 2808364179: {
@@ -627,44 +627,22 @@
         // }
       };
 
-      var iteratorPB;
-
-      // Bind our arguments to the iterator method
-      // TODO: promise.all
-      // TODO: this iteratively binds arguments, but that's BS
-      var promise = dimItemDefinitions.getDefinitions()
-        .then(function(defs) {
-          iteratorPB = iterator.bind(null, defs);
-        })
-        .then(dimItemBucketDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimStatDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimObjectiveDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimSandboxPerkDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimTalentDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimYearsDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-
-          _.each(items, iteratorPB);
-
-          return result;
+      return $q.all([
+        dimItemDefinitions,
+        dimItemBucketDefinitions,
+        dimStatDefinitions,
+        dimObjectiveDefinitions,
+        dimSandboxPerkDefinitions,
+        dimTalentDefinitions,
+        dimYearsDefinitions].map(function (o) {
+          return o.getDefinitions();
+        }))
+      .then(function(args) {
+        _.each(items, function (item) {
+          iterator.apply(undefined, args.concat([item]));
         });
-      return promise;
+        return result;
+      });
     }
 
     function getClass(type) {
