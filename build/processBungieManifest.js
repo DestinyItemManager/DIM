@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var http = require('http');
 var fs = require('fs');
 var request = require('request');
@@ -19,13 +21,13 @@ function processItemRow(icon, pRow, itemHash) {
   if (icon === undefined) {
     exists = true;
   }
-  
+
   var contains = true;
-  
+
   // if (itemHash) {
   //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
   // }
-  
+
   if (contains) {
     if (!exists) {
       var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
@@ -35,7 +37,7 @@ function processItemRow(icon, pRow, itemHash) {
           imgFS.end();
           pRow.next();
         });
-  
+
         imageResponse.pipe(imgFS);
       });
     } else {
