@@ -200,7 +200,7 @@
     }
 
     function processBnetMembershipRequest(response) {
-      if (_.size(response.data.Response) === '0') {
+      if (_.size(response.data.Response) === 0) {
         return $q.reject(new Error('The membership id was not available.'));
       }
 
@@ -220,7 +220,6 @@
       };
 
       var addTokenToData = assignResultAndForward.bind(null, data, 'token');
-      var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
       var getMembershipPB = getMembership.bind(null, platform);
 
       charactersPromise = getBungleToken()
@@ -389,7 +388,6 @@
 
     function transfer(item, store) {
       var platform = dimState.active;
-      var membershipType = platform.type;
       var data = {
         token: null,
         membershipType: null
@@ -439,10 +437,7 @@
           });
         })
         .then(networkError)
-        .then(throttleCheck)
-        .then(function(response) {
-          var a = response.status;
-        });
+        .then(throttleCheck);
 
       return promise;
     }
@@ -473,7 +468,6 @@
 
     function equip(item) {
       var platform = dimState.active;
-      var membershipType = platform.type;
       var data = {
         token: null,
         membershipType: null
@@ -522,10 +516,7 @@
           return a;
         })
         .then(networkError)
-        .then(throttleCheck)
-        .then(function(response) {
-          var a = response.status;
-        });
+        .then(throttleCheck);
 
       return promise;
     }
