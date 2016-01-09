@@ -615,6 +615,7 @@
           stats: item.stats,
           perks: item.perks,
           nodes: item.nodes,
+          equipRequiredLevel: item.equipRequiredLevel,
           //talents: talentDefs.data[item.talentGridHash],
           talentPerks: getTalentPerks(item, talentDefs),
           maxStackSize: itemDef.maxStackSize,
@@ -709,6 +710,8 @@
       var iteratorPB;
 
       // Bind our arguments to the iterator method
+      // TODO: promise.all
+      // TODO: this iteratively binds arguments, but that's BS
       var promise = dimItemDefinitions.getDefinitions()
         .then(function(defs) {
           iteratorPB = iterator.bind(null, defs);
