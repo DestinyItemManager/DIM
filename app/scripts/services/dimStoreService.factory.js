@@ -351,10 +351,6 @@
         return null;
       }
 
-      // if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
-      //   return;
-      // }
-
       var itemType = getItemType(item, itemDef, itemBucketDef);
 
       if (item.itemHash === 937555249) {
