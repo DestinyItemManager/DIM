@@ -75,21 +75,21 @@
         }
       };
 
-      scope.$watch(function() {
-        return vm.dragChannel + ((vm.item.primStat) ? vm.item.primStat.value : 0) + vm.item.name +
-          vm.showBadge + vm.badgeCount + vm.hideFilteredItems + vm.itemStat + vm.item.complete +
-          vm.maxStackSize + vm.item.owner + vm.item.type + vm.item.sort + vm.item.amount + vm.item.xpComplete;
-      }, function(newItem) {
+      scope.$watchGroup([
+        'vm.item.primStat.value',
+        'vm.itemStat',
+        'vm.item.complete',
+        'vm.item.type',
+        'vm.item.sort',
+        'vm.item.amount',
+        'vm.item.xpComplete'],
+      function(newItem) {
         processItem(vm, vm.item);
       });
     }
   }
 
   function processSettings(vm, settings) {
-    if (_.has(settings, 'hideFilteredItems')) {
-      vm.hideFilteredItems = settings.hideFilteredItems;
-    }
-
     if (_.has(settings, 'itemStat')) {
       vm.itemStat = settings.itemStat;
     }
@@ -124,14 +124,13 @@
       'stat-damage-kinetic': false
     };
 
-    vm.dragChannel = (item.notransfer) ? item.owner + item.type : item.type;
-    vm.stackable = item.maxStackSize > 1;
-    vm.showBountyPercentage = ((item.type === 'Bounties') && !item.complete);
-    vm.showStats = item.primStat && item.primStat.value;
-    vm.showDamageType = vm.item.sort === 'Weapons';
-    vm.showBadge = (vm.stackable || vm.showBountyPercentage || vm.showStats || vm.showDamageType);
+    var stackable = item.maxStackSize > 1;
+    vm.showBountyPercentage = ((item.type === 'Bounties') && !item.complete) && vm.itemStat;
+    vm.showStats = vm.itemStat && item.primStat && item.primStat.value;
+    vm.showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
+    vm.showBadge = (stackable || vm.showBountyPercentage || vm.showStats || vm.showDamageType);
 
-    if (vm.stackable) {
+    if (stackable) {
       vm.badgeClassNames.counter = true;
       vm.badgeCount = item.amount;
     } else if (vm.showBountyPercentage) {
@@ -153,8 +152,8 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.hideFilteredItems = false;
     vm.itemStat = false;
+    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
 
     processItem(vm, vm.item);
 
