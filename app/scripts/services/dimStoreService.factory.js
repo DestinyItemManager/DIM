@@ -262,32 +262,8 @@
 
               var i = getItems(store.id, items)
                 .then(function(items) {
-                  items = _.sortBy(items, function(item) {
-                    return item.name;
-                  });
-
-                  items = _.sortBy(items, function(item) {
-
-                    switch (item.tier) {
-                      case 'Exotic':
-                        return 0;
-                      case 'Legendary':
-                        return 1;
-                      case 'Rare':
-                        return 2;
-                      case 'Uncommon':
-                        return 3;
-                      case 'Common':
-                        return 4;
-                      default:
-                        return 5;
-                    }
-                  });
-
                   store.items = items;
-
                   _stores.push(store);
-
                   return store;
                 });
 
