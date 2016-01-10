@@ -61,10 +61,6 @@
   float: right;
   text-align: right;
 }
-.item img {
-  width: 44px;
-  height: 44px;
-}
 .hide-filtered .search-hidden {
   display: none !important;
 }

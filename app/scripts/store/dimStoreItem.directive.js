@@ -23,7 +23,6 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
-        "  ng-style=\"::{'background-image':'url(http://www.bungie.net' + vm.item.icon + ')'}\"",
         '  ng-click="vm.clicked(vm.item, $event)"',
         '  ng-class="{',
         "    'item': true,",
@@ -38,6 +37,14 @@
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
+
+      $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
+        $(this).remove();
+        element[0].style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
+      }).error(function() {
+        $(this).remove();
+        element[0].style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
+      });
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
