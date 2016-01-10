@@ -340,7 +340,7 @@
       }
     });
 
-    $scope.$watchCollection('vm.store.items', function (newItems) {
+    $scope.$watchCollection('vm.store.items', function () {
       if (vm.store.id === 'vault') {
         vm.sortSize = _.countBy(vm.store.items, 'sort');
       }

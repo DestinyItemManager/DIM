@@ -83,17 +83,26 @@
         }
       };
 
-      scope.$watchGroup([
-        'vm.item.primStat.value',
-        'vm.itemStat',
-        'vm.item.complete',
-        'vm.item.type',
-        'vm.item.sort',
-        'vm.item.amount',
-        'vm.item.xpComplete'],
-      function(newItem) {
-        processItem(vm, vm.item);
-      });
+      if (vm.item.type === 'Bounties') {
+        scope.$watchGroup([
+          'vm.item.xpComplete',
+          'vm.itemStat',
+          'vm.item.complete'], function() {
+            processBounty(vm, vm.item);
+          });
+      } else if (vm.item.maxStackSize > 1) {
+        scope.$watchGroup([
+          'vm.item.amount'], function() {
+            processStackable(vm, vm.item);
+          });
+      } else {
+        scope.$watchGroup([
+          'vm.item.primStat.value',
+          'vm.itemStat',
+          'vm.item.sort'], function() {
+            processItem(vm, vm.item);
+          });
+      }
     }
   }
 
@@ -103,21 +112,22 @@
     }
   }
 
-  function processItem(vm, item) {
-    switch (item.type) {
-      case 'Lost Items':
-      case 'Missions':
-      case 'Bounties':
-      case 'Special Orders':
-      case 'Messages':
-        {
-          vm.draggable = false;
-          break;
-        }
-      default:
-        vm.draggable = true;
-    }
+  function processBounty(vm, item) {
+    var showBountyPercentage = !item.complete && vm.itemStat;
+    vm.showBadge = showBountyPercentage;
 
+    if (showBountyPercentage) {
+      vm.badgeClassNames = { counter: true };
+      vm.badgeCount = item.xpComplete + '%';
+    }
+  }
+
+  function processStackable(vm, item) {
+    vm.badgeClassNames = { counter: true };
+    vm.badgeCount = item.amount;
+  }
+
+  function processItem(vm, item) {
     vm.badgeClassNames = {
       'counter': false,
       'damage-type': false,
@@ -132,23 +142,15 @@
       'stat-damage-kinetic': false
     };
 
-    var stackable = item.maxStackSize > 1;
-    vm.showBountyPercentage = ((item.type === 'Bounties') && !item.complete) && vm.itemStat;
-    vm.showStats = vm.itemStat && item.primStat && item.primStat.value;
-    vm.showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
-    vm.showBadge = (stackable || vm.showBountyPercentage || vm.showStats || vm.showDamageType);
+    var showStats = vm.itemStat && item.primStat && item.primStat.value;
+    var showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
+    vm.showBadge = (showStats || showDamageType);
 
-    if (stackable) {
-      vm.badgeClassNames.counter = true;
-      vm.badgeCount = item.amount;
-    } else if (vm.showBountyPercentage) {
-      vm.badgeClassNames.counter = true;
-      vm.badgeCount = item.xpComplete + '%';
-    } else if (vm.showStats) {
+    if (showStats) {
       vm.badgeClassNames['item-stat'] = true;
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
-    } else if (vm.showDamageType) {
+    } else if (showDamageType) {
       vm.badgeClassNames['damage-' + item.dmg] = true;
       vm.badgeClassNames['damage-type'] = true;
       vm.badgeCount = '';
@@ -162,8 +164,19 @@
 
     vm.itemStat = false;
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
-
-    processItem(vm, vm.item);
+    switch (vm.item.type) {
+    case 'Lost Items':
+    case 'Missions':
+    case 'Bounties':
+    case 'Special Orders':
+    case 'Messages':
+      {
+        vm.draggable = false;
+        break;
+      }
+    default:
+      vm.draggable = true;
+    }
 
     settings.getSettings()
       .then(function(settings) {
