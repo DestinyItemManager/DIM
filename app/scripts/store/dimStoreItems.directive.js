@@ -2,7 +2,42 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreItems', StoreItems);
+    .directive('dimStoreItems', StoreItems)
+    .filter('equipped', function() {
+      return function(items, isEquipped) {
+        return _.select(items || [], function (item) {
+          return item.equipped === isEquipped;
+        });
+      };
+    })
+    .filter('sortItems', function() {
+      return function(items, sort) {
+        return _(items || [])
+              .chain()
+              .sortBy('name')
+              .sortBy(function(item) {
+                if (sort === 'rarity') {
+                  switch (item.tier) {
+                  case 'Exotic':
+                    return 0;
+                  case 'Legendary':
+                    return 1;
+                  case 'Rare':
+                    return 2;
+                  case 'Uncommon':
+                    return 3;
+                  case 'Common':
+                    return 4;
+                  default:
+                    return 5;
+                  }
+                } else {
+                  return (item.primStat) ? (-1 * item.primStat.value) : 1000;
+                }
+              })
+              .value();
+      };
+    });
 
   StoreItems.$inject = ['dimStoreService', '$window'];
 
@@ -18,18 +53,24 @@
       },
       template: [
         '<div>',
-        '  <div class="items {{ vm.store.id }}" data-type="item" data-character="{{ vm.store.id }}">',
-        '    <div ng-repeat="key in vm.keys" ng-init="value = vm.categories[key]" class="section {{ key.toLowerCase() }}">',
+        '  <div class="items {{::vm.store.id }}" data-type="item" data-character="{{::vm.store.id }}">',
+        '    <div ng-repeat="key in ::vm.keys track by key" ng-init="value = vm.categories[key]" class="section" ng-class="::key.toLowerCase()">',
         '      <div class="title">',
         '        <span>{{ ::key }}</span>',
-        '        <span class="bucket-count" ng-if="vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{ (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
+        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{:: (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
         '      </div>',
-        '      <div ng-repeat="type in value" class="sub-section sort-{{ type.replace(\' \', \'-\').toLowerCase() }}" ng-class="vm.data[vm.orderedTypes[type]] ? \'\' : \'empty\'" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
-        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped" ng-if="vm.store.id !== \'vault\'" ui-on-drop="vm.onDrop($data, $event, true)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].equipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '      <div ng-repeat="type in ::value track by type" class="sub-section"',
+        '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[vm.orderedTypes[type]] }]"',
+        '           ui-on-drop="vm.onDrop($data, $event, false)"',
+        '           drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
+        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped"',
+        '             ng-if="::vm.store.id !== \'vault\'"',
+        '             ui-on-drop="vm.onDrop($data, $event, true)"',
+        '              drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
+        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
         '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]].unequipped track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:false | sortItems:vm.sort track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '          <div class="item-target"></div>',
         '        </div>',
         '      </div>',
@@ -89,15 +130,7 @@
       vm.orderedTypes[value] = index;
     });
 
-    vm.sortSize = _(vm.store.items)
-      .chain()
-      .groupBy(function(i) {
-        return i.sort;
-      })
-      .mapObject(function(val, key) {
-        return _.size(val);
-      })
-      .value();
+    vm.sortSize = _.countBy(vm.store.items, 'sort');
 
     vm.categories = { // Grouping of the types in the rows.
       Weapons: [
@@ -227,60 +260,6 @@
       }
     };
 
-    function generateData() {
-      return dimSettingsService.getSetting('itemSort')
-        .then(function(sort) {
-          if (vm.store.id === 'vault') {
-            vm.sortSize = _(vm.store.items)
-              .chain()
-              .groupBy(function(i) {
-                return i.sort;
-              })
-              .mapObject(function(val, key) {
-                return _.size(val);
-              })
-              .value();
-          }
-
-          return _.chain(vm.store.items)
-            .sortBy(function(item) {
-              return item.name;
-            })
-            .sortBy(function(item) {
-              if (sort === 'rarity') {
-                switch (item.tier) {
-                  case 'Exotic':
-                    return 0;
-                  case 'Legendary':
-                    return 1;
-                  case 'Rare':
-                    return 2;
-                  case 'Uncommon':
-                    return 3;
-                  case 'Common':
-                    return 4;
-                  default:
-                    return 5;
-                }
-              } else {
-                return ((item.primStat) ? -1 * item.primStat.value : 1000);
-              }
-            })
-            .sortBy(function(item) {
-              return vm.orderedTypes[item.type];
-            })
-            .groupBy(function(item) {
-              return vm.orderedTypes[item.type];
-            })
-            .mapObject(function(values, key) {
-              return _.groupBy(values, function(item) {
-                return (item.equipped ? 'equipped' : 'unequipped');
-              });
-            })
-            .value();
-        });
-    }
-
     vm.moveDroppedItem = function(item, equip) {
       var promise = null;
       var target = vm.store;
@@ -340,17 +319,35 @@
     };
 
     function resetData() {
-        generateData()
-          .then(function(data) {
-            vm.data = data;
-            $timeout(dimStoreService.setHeights, 0);
-          });
+      if (vm.store.id === 'vault') {
+        vm.sortSize = _.countBy(vm.store.items, 'sort');
+      }
+
+      vm.data = _.groupBy(vm.store.items, function(item) {
+        return vm.orderedTypes[item.type];
+      });
     }
 
     var debounceResetData = _.debounce(resetData, 500);
 
-    $scope.$watch('vm.store.items', function(newVal) {
-      resetData();
-    }, true);
+    dimSettingsService.getSetting('itemSort').then(function(sort) {
+      vm.itemSort = sort;
+    });
+
+    $rootScope.$on('dim-settings-updated', function(event, arg) {
+      if (_.has(settings, 'itemSort')) {
+        vm.itemSort = settings.itemSort;
+      }
+    });
+
+    $scope.$watchCollection('vm.store.items', function (newItems) {
+      if (vm.store.id === 'vault') {
+        vm.sortSize = _.countBy(vm.store.items, 'sort');
+      }
+
+      vm.data = _.groupBy(vm.store.items, function(item) {
+        return vm.orderedTypes[item.type];
+      });
+    });
   }
 })();
