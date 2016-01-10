@@ -23,12 +23,12 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
-        '  ng-click="vm.clicked(vm.item, $event)"',
         '  ng-class="{',
         "    'item': true,",
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
+        '  <div class="img" ng-click="vm.clicked(vm.item, $event)">',
         '  <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '</div>'
       ].join('')
@@ -40,10 +40,12 @@
 
       $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
         $(this).remove();
-        element[0].style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
+        element[0].querySelector('.img')
+          .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
       }).error(function() {
         $(this).remove();
-        element[0].style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
+        element[0].querySelector('.img')
+          .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
       });
 
       vm.clicked = function openPopup(item, e) {
