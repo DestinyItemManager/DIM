@@ -282,16 +282,13 @@
       }
 
       var dimStores = null;
-      var reload = item.equipped || equip;
 
       promise = promise
         .then(function(s) {
           source = s;
         })
-        .then(dimItemService.moveTo.bind(null, item, target, equip));
-
-      if (reload) {
-        promise.then(dimStoreService.getStores)
+        .then(dimItemService.moveTo.bind(null, item, target, equip))
+        .then(dimStoreService.getStores)
         .then(function(stores) {
           dimStores = stores;
           return dimStoreService.updateStores();
@@ -314,7 +311,7 @@
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
         });
-      }
+
       $rootScope.loadingTracker.addPromise(promise);
     };
 

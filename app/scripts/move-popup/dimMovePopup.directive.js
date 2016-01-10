@@ -78,12 +78,9 @@
     // }
 
     function moveToGuardianFn(store, e) {
-      var dimStores,
-          reload = vm.item.equipped,
-          promise = dimItemService.moveTo(vm.item, store);
-
-      if (reload) {
-        promise.then(dimStoreService.getStores)
+      var dimStores;
+      var promise = dimItemService.moveTo(vm.item, store)
+        .then(dimStoreService.getStores)
         .then(function(stores) {
           dimStores = stores;
           return dimStoreService.updateStores();
@@ -106,13 +103,36 @@
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
-      }
+
       $rootScope.loadingTracker.addPromise(promise);
     }
 
     function moveToVaultFn(store, e) {
       var dimStores;
-      var promise = dimItemService.moveTo(vm.item, store);
+      var promise = dimItemService.moveTo(vm.item, store)
+        .then(dimStoreService.getStores)
+        .then(function(stores) {
+          dimStores = stores;
+          return dimStoreService.updateStores();
+        })
+        .then(function(bungieStores) {
+          _.each(dimStores, function(dStore) {
+            if (dStore.id !== 'vault') {
+              var bStore = _.find(bungieStores, function(bStore) {
+                return dStore.id === bStore.id;
+              });
+
+              dStore.level = bStore.base.characterLevel;
+              dStore.percentToNextLevel = bStore.base.percentToNextLevel;
+              dStore.powerLevel = bStore.base.characterBase.powerLevel;
+              dStore.background = bStore.base.backgroundPath;
+              dStore.icon = bStore.base.emblemPath;
+            }
+          });
+        })
+        .catch(function(a) {
+          toaster.pop('error', vm.item.name, a.message);
+        });
 
       $rootScope.loadingTracker.addPromise(promise);
     }
@@ -220,7 +240,7 @@
     };
 
     this.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault' || !item.equipment) {
+      if (buttonStore.id === 'vault') {
         return false;
       }
 
