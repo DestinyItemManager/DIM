@@ -47,16 +47,6 @@
       vm.clearFilter();
     });
 
-    $scope.$on('dim-active-platform-updated', function(event, args) {
-      $scope.filterTimer = $interval(function () {
-        // Wait until the interface has finished loading.
-        if (!$scope.loadingTracker.active() && !$scope.isUserInactive()) {
-          vm.filter();
-          $interval.cancel($scope.filterTimer);
-        }
-      }, 300);
-    });
-
     vm.blurFilterInputIfEmpty = function () {
       if (vm.search.query === "") {
         vm.blurFilterInput();
