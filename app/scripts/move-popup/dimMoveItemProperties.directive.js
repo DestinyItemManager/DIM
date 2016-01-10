@@ -160,8 +160,10 @@
           var itemStats = item.stats[key];
           if (itemStats) {
             var vmItemStats = vm.item.stats[key];
-            vmItemStats.equippedStatsValue = itemStats.value;
-            vmItemStats.equippedStatsName = itemStats.name;
+            if (vmItemStats) {
+              vmItemStats.equippedStatsValue = itemStats.value;
+              vmItemStats.equippedStatsName = itemStats.name;
+            }
           }
         }
       }
