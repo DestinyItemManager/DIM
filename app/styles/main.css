@@ -65,7 +65,7 @@
   width: 44px;
   height: 44px;
 }
-.search-item-hidden {
+.hide-filtered .search-hidden {
   display: none !important;
 }
 .img.how:before {

@@ -13,7 +13,13 @@
       bindToController: true,
       scope: {},
       template: [
-        '<div ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}" ng-class="{ condensed: vm.condensed, guardian: store.id !== \'vault\', vault: store.id === \'vault\' }">',
+        '<div ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}"',
+        '  ng-class="{ ',
+        '    condensed: vm.condensed,',
+        "    guardian: store.id !== 'vault',",
+        "    vault: store.id === 'vault',",
+        "    'hide-filtered': vm.hideFilteredItems",
+        '  }">',
         '  <div dim-store-heading store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
@@ -33,6 +39,7 @@
 
     settings.getSettings()
       .then(function(settings) {
+        vm.hideFilteredItems = settings.hideFilteredItems;
         vm.condensed = settings.condensed;
         vm.charCol = (settings.charCol > 2 && settings.charCol < 6) ? settings.charCol : 3;
         vm.vaultCol = (settings.vaultCol > 3 && settings.vaultCol < 10) ? settings.vaultCol : 4;
@@ -45,6 +52,8 @@
         vm.charCol = arg.charCol;
       } else if (_.has(arg, 'vaultCol')) {
         vm.vaultCol = arg.vaultCol;
+      } else if (_.has(arg, 'hideFilteredItems')) {
+        vm.hideFilteredItems = arg.hideFilteredItems;
       }
     });
 

@@ -22,7 +22,12 @@
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
-        '  drag="::vm.item.index" ng-class="vm.itemClassNames">',
+        '  drag="::vm.item.index"',
+        '  ng-class="{',
+        "    'item': true,",
+        "    'search-hidden': !vm.item.visible,",
+        "    'complete': vm.item.complete",
+        '  }">',
         '  <div ui-draggable="false" class="img" style="background-image: url(\'http://www.bungie.net{{:: vm.item.icon }}\');" ng-click="vm.clicked(vm.item, $event)">',
         '  <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '</div>'
@@ -72,7 +77,7 @@
 
       scope.$watch(function() {
         return vm.dragChannel + ((vm.item.primStat) ? vm.item.primStat.value : 0) + vm.item.name +
-          vm.showBadge + vm.badgeCount + vm.hideFilteredItems + vm.itemStat + vm.item.visible + vm.item.complete +
+          vm.showBadge + vm.badgeCount + vm.hideFilteredItems + vm.itemStat + vm.item.complete +
           vm.maxStackSize + vm.item.owner + vm.item.type + vm.item.sort + vm.item.amount + vm.item.xpComplete;
       }, function(newItem) {
         processItem(vm, vm.item);
@@ -104,13 +109,6 @@
       default:
         vm.draggable = true;
     }
-
-    vm.itemClassNames = {
-      'item': true,
-      'search-hidden': !item.visible,
-      'search-item-hidden': item.visible === false && vm.hideFilteredItems === true,
-      'complete': item.complete
-    };
 
     vm.badgeClassNames = {
       'counter': false,
