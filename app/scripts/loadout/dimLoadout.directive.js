@@ -126,9 +126,7 @@
         dimLoadoutService.saveLoadout(vm.loadout);
       }
 
-      vm.loadout = angular.copy(vm.defaults);
-      vm.show = false;
-      dimLoadoutService.dialogOpen = false;
+      vm.cancel();
     };
 
     vm.cancel = function cancel() {

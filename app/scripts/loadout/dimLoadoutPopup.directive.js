@@ -17,7 +17,10 @@
       replace: true,
       template: [
         '<div class="loadout-popup-content">',
-        '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span></div></div>',
+        '  <div class="loadout-list"><div class="loadout-set">',
+        '    <span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span>',
+        '    <span class="button-create-equipped" ng-click="vm.newLoadoutFromEquipped($event)">From Equipped</span>',
+        '  </div></div>',
         '  <div class="loadout-list">',
         '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
         '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
@@ -61,7 +64,29 @@
 
     vm.newLoadout = function newLoadout($event) {
       ngDialog.closeAll();
-      $rootScope.$broadcast('dim-create-new-loadout', {});
+      $rootScope.$broadcast('dim-create-new-loadout', { });
+    };
+
+    vm.newLoadoutFromEquipped = function newLoadout($event) {
+      ngDialog.closeAll();
+
+      var loadout = loadoutFromCurrentlyEquipped(vm.store.items, "");
+      // We don't want to prepopulate the loadout with a bunch of cosmetic junk
+      // like emblems and ships and horns.
+      loadout.items = _.pick(loadout.items,
+                             'class',
+                             'primary',
+                             'special',
+                             'heavy',
+                             'helmet',
+                             'gauntlets',
+                             'chest',
+                             'leg',
+                             'classitem',
+                             'artifact',
+                             'ghost');
+      loadout.classType = vm.classTypeId;
+      vm.editLoadout(loadout, $event);
     };
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
