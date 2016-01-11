@@ -12,7 +12,6 @@
       bindToController: true,
       restrict: 'A',
       scope: {
-        classType: '=dimClass',
         store: '=dimLoadoutPopup'
       },
       replace: true,
@@ -39,15 +38,11 @@
   function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, $q, dimStoreService, dimItemTier) {
     var vm = this;
 
-    vm.classTypeId = -1;
-
-    var chooseClass = {
+    vm.classTypeId = {
       'warlock': 0,
       'titan': 1,
       'hunter': 2
-    };
-
-    vm.classTypeId = chooseClass[vm.classType] || 0;
+    }[vm.store.class] || 0;
 
     dimLoadoutService.getLoadouts()
       .then(function(loadouts) {
@@ -121,13 +116,22 @@
     // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
     vm.maxLightLoadout = function maxLightLoadout($event) {
       // These types contribute to light level
-      var lightTypes = ['Primary', 'Special', 'Heavy', 'Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'];
+      var lightTypes = ['Primary',
+                        'Special',
+                        'Heavy',
+                        'Helmet',
+                        'Gauntlets',
+                        'Chest',
+                        'Leg',
+                        'ClassItem',
+                        'Artifact',
+                        'Ghost'];
 
       // TODO: this should be a method somewhere that gets all items equippable by a character
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.equipment &&
           i.primStat !== undefined && // has a primary stat (sanity check)
-          (i.classTypeName === 'unknown' || i.classTypeName === vm.classType) && // for our class
+          (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) && // for our class
           i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
           _.contains(lightTypes, i.type) && // one of our selected types
           !i.notransfer; // can be moved

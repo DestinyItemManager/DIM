@@ -22,12 +22,12 @@
         '  <div class="emblem" ng-if="::vm.isGuardian" ng-style="{ \'background-image\': \'url(http://bungie.net\' + vm.store.icon + \')\' }"></div>',
         '  <div class="class">{{:: vm.store.class || "Vault" }}</div>',
         '  <div class="race-gender" ng-if="::vm.isGuardian">{{:: vm.store.race }} {{:: vm.store.gender }}</div>',
-        '  <div class="level" ng-if="::vm.isGuardian" ng-class="{ prestige: vm.isPrestigeLevel, maxLevel: (vm.store.level >= 40) }">Level {{ vm.store.level }}</div>',
-        '  <div class="level powerLevel" ng-if="vm.isGuardian" ng-class="{ prestige: vm.isPrestigeLevel }">{{ vm.store.powerLevel }}</div>',
+        '  <div class="level" ng-if="::vm.isGuardian" ng-class="{ prestige: vm.store.isPrestigeLevel, maxLevel: (vm.store.level >= 40) }">Level {{ vm.store.level }}</div>',
+        '  <div class="level powerLevel" ng-if="vm.isGuardian" ng-class="{ prestige: vm.store.isPrestigeLevel }">{{ vm.store.powerLevel }}</div>',
         '  <div class="glimmer" ng-if="::!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
         '  <div class="legendaryMarks" ng-if="::!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
         '  <div class="levelBar" ng-if="::vm.isGuardian">',
-        '    <div class="barFill" ng-class="{ prestige: vm.isPrestigeLevel }" ng-style="{width: vm.store.percentToNextLevel + \'%\'}"></div>',
+        '    <div class="barFill" ng-class="{ prestige: vm.store.isPrestigeLevel }" ng-style="{width: vm.store.percentToNextLevel + \'%\'}"></div>',
         '  </div>',
         '</div>',
         '<div class="loadout-button" ng-if="::vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
@@ -62,7 +62,7 @@
           ngDialog.closeAll();
 
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-class="vm[\'class\']" dim-click-anywhere-but-here="vm.closeLoadoutPopup()" dim-loadout-popup="vm.store"></div>',
+            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closeLoadoutPopup()" dim-loadout-popup="vm.store"></div>',
             plain: true,
             appendTo: 'div[loadout-id="' + vm.store.id + '"]',
             overlay: false,
