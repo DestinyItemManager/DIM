@@ -144,12 +144,10 @@
         var discriminator = clone.type.toLowerCase();
         var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
-        var dupe = _.find(typeInventory, function(i) {
-          return (i.id === clone.id);
-        });
+        var dupe = _.findWhere(typeInventory, {id: clone.id});
 
-        if (_.isUndefined(dupe) && (_.size(typeInventory) < 9)) {
-          clone.equipped = false;
+        if (!dupe && typeInventory.length < 9) {
+          clone.equipped = (typeInventory.length === 0);
 
           if (clone.type === 'Class') {
             if (_.has(vm.loadout.items, 'class')) {
@@ -175,6 +173,10 @@
 
       if (index >= 0) {
         typeInventory.splice(index, 1);
+      }
+
+      if (item.equipped && typeInventory.length > 0) {
+        typeInventory[0].equipped = true;
       }
     };
 
