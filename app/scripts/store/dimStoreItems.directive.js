@@ -325,7 +325,6 @@
       });
     }
 
-    var debounceResetData = _.debounce(resetData, 500);
 
     dimSettingsService.getSetting('itemSort').then(function(sort) {
       vm.itemSort = sort;
@@ -337,14 +336,6 @@
       }
     });
 
-    $scope.$watchCollection('vm.store.items', function () {
-      if (vm.store.id === 'vault') {
-        vm.sortSize = _.countBy(vm.store.items, 'sort');
-      }
-
-      vm.data = _.groupBy(vm.store.items, function(item) {
-        return vm.orderedTypes[item.type];
-      });
-    });
+    $scope.$watchCollection('vm.store.items', resetData);
   }
 })();
