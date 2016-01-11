@@ -109,6 +109,9 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+.button-full {
+  width: 100%;
+}
 .button-create {
   float: left;
   width: 100%;
