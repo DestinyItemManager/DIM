@@ -688,7 +688,7 @@ img.void {
   position: absolute;
   z-index: 2;
 }
-.item > .img {
+.item > .img, .item > img {
   width: 44px;
   height: 44px;
   background-size: cover;
