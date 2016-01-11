@@ -195,7 +195,6 @@
                   class: getClass(raw.character.base.characterBase.classType),
                   gender: getGender(raw.character.base.characterBase.genderType),
                   race: getRace(raw.character.base.characterBase.raceHash),
-                  isPrestigeLevel: raw.character.base.isPrestigeLevel,
                   percentToNextLevel: raw.character.base.percentToNextLevel,
                   hasExotic: function(type, equipped) {
                     var predicate = {

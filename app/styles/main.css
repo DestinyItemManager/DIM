@@ -794,9 +794,6 @@ img.void {
   font-size: 14px;
   color: #f5dc56;
 }
-.character-box .level.prestige {
-  color: #f5dc56;
-}
 .character-box .powerLevel:before {
   content: "\2726";
   display: inline-block;
@@ -815,9 +812,6 @@ img.void {
   background-color: #5da469;
   height: 5px;
   width: 0%;
-}
-.barFill.prestige {
-  background-color: #f5dc56;
 }
 .loadout-button {
   position: relative;
