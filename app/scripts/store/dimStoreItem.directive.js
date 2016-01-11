@@ -125,6 +125,7 @@
   }
 
   function processStackable(vm, item) {
+    vm.showBadge = true;
     vm.badgeClassNames = { counter: true };
     vm.badgeCount = item.amount;
   }
