@@ -45,7 +45,7 @@
         vm.vaultCol = (settings.vaultCol > 3 && settings.vaultCol < 10) ? settings.vaultCol : 4;
       });
 
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
+    $scope.$on('dim-settings-updated', function(event, arg) {
       if (_.has(arg, 'condensed')) {
         vm.condensed = arg.condensed;
       } else if (_.has(arg, 'charCol')) {

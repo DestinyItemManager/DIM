@@ -57,7 +57,7 @@
             } else {
               currentSettings = _.clone(settingState);
 
-              saveSettings()
+              saveSettings();
             }
 
             resolve(currentSettings);
@@ -104,7 +104,9 @@
             if (chrome.runtime.lastError) {
               $q.reject(chrome.runtime.lastError);
             } else {
-              $rootScope.$broadcast('dim-settings-updated', kvp);
+              $rootScope.$apply(function() {
+                $rootScope.$broadcast('dim-settings-updated', kvp);
+              });
               return true;
             }
           });

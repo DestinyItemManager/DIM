@@ -180,9 +180,9 @@
     vm.startAutoRefreshTimer();
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
-      // if ((!_.has(arg, 'charCol')) && (!_.has(arg, 'vaultCol'))) {
+      if (_.has(arg, 'characterOrder')) {
         refresh();
-      // }
+      }
     });
 
     // Refresh when the user comes back to the page
