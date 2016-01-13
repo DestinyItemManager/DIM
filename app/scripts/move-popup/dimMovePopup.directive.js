@@ -24,17 +24,17 @@
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveToVault(store, $event)" ',
+        '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}">',
         '        <span>Vault</span>',
         '      </div>',
         '      <div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveToGuardian(store, $event)" ',
+        '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})"> ',
         '        <span>Store</span>',
         '      </div>',
         '      <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveToEquip(store, $event)" ',
+        '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store, true)" ',
         '        data-type="equip" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
@@ -45,9 +45,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
 
-  function MovePopupController($rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($scope, $rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
     function capitalizeFirstLetter(string) {
@@ -77,9 +77,13 @@
     //     });
     // }
 
-    function moveToGuardianFn(store, e) {
+    /**
+     * Move the item to the specified store. Equip it if equip is true.
+     */
+    vm.moveItemTo = function moveItemTo(store, equip) {
       var dimStores;
-      var promise = dimItemService.moveTo(vm.item, store)
+
+      var promise = dimItemService.moveTo(vm.item, store, equip)
         .then(dimStoreService.getStores)
         .then(function(stores) {
           dimStores = stores;
@@ -105,72 +109,8 @@
         });
 
       $rootScope.loadingTracker.addPromise(promise);
-    }
-
-    function moveToVaultFn(store, e) {
-      var dimStores;
-      var promise = dimItemService.moveTo(vm.item, store)
-        .then(dimStoreService.getStores)
-        .then(function(stores) {
-          dimStores = stores;
-          return dimStoreService.updateStores();
-        })
-        .then(function(bungieStores) {
-          _.each(dimStores, function(dStore) {
-            if (dStore.id !== 'vault') {
-              var bStore = _.find(bungieStores, function(bStore) {
-                return dStore.id === bStore.id;
-              });
-
-              dStore.level = bStore.base.characterLevel;
-              dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-              dStore.powerLevel = bStore.base.characterBase.powerLevel;
-              dStore.background = bStore.base.backgroundPath;
-              dStore.icon = bStore.base.emblemPath;
-            }
-          });
-        })
-        .catch(function(a) {
-          toaster.pop('error', vm.item.name, a.message);
-        });
-
-      $rootScope.loadingTracker.addPromise(promise);
-    }
-
-    function moveToEquipFn(store, e) {
-      var dimStores;
-
-      var promise = dimItemService.moveTo(vm.item, store, true)
-        .then(dimStoreService.getStores)
-        .then(function(stores) {
-          dimStores = stores;
-          return dimStoreService.updateStores();
-        })
-        .then(function(bungieStores) {
-          _.each(dimStores, function(dStore) {
-            if (dStore.id !== 'vault') {
-              var bStore = _.find(bungieStores, function(bStore) {
-                return dStore.id === bStore.id;
-              });
-
-              dStore.level = bStore.base.characterLevel;
-              dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-              dStore.powerLevel = bStore.base.characterBase.powerLevel;
-              dStore.background = bStore.base.backgroundPath;
-              dStore.icon = bStore.base.emblemPath;
-            }
-          });
-        })
-        .catch(function(a) {
-          toaster.pop('error', vm.item.name, a.message);
-        });
-
-      $rootScope.loadingTracker.addPromise(promise);
-    }
-
-    vm.moveToVault = moveToVaultFn;
-    vm.moveToEquip = moveToEquipFn;
-    vm.moveToGuardian = moveToGuardianFn;
+      $scope.$parent.closeThisDialog();
+    };
 
     dimStoreService.getStores(false, true)
       .then(function(stores) {
@@ -199,7 +139,7 @@
       return result;
     };
 
-    this.canShowVault = function canShowButton(item, itemStore, buttonStore) {
+    vm.canShowVault = function canShowButton(item, itemStore, buttonStore) {
       // If my itemStore is the vault, don't show a vault button.
       // Can't vault a vaulted item.
       if (itemStore.id === 'vault') {
@@ -219,7 +159,7 @@
       return true;
     };
 
-    this.canShowStore = function canShowButton(item, itemStore, buttonStore) {
+    vm.canShowStore = function canShowButton(item, itemStore, buttonStore) {
       if (buttonStore.id === 'vault') {
         return false;
       }
@@ -239,12 +179,8 @@
       return false;
     };
 
-    this.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault') {
-        return false;
-      }
-
-      if (!item.equipment) {
+    vm.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
+      if (buttonStore.id === 'vault' || !item.equipment) {
         return false;
       }
 
