@@ -12,30 +12,32 @@
     })
     .filter('sortItems', function() {
       return function(items, sort) {
-        return _(items || [])
-              .chain()
-              .sortBy('name')
-              .sortBy(function(item) {
-                if (sort === 'rarity') {
-                  switch (item.tier) {
-                  case 'Exotic':
-                    return 0;
-                  case 'Legendary':
-                    return 1;
-                  case 'Rare':
-                    return 2;
-                  case 'Uncommon':
-                    return 3;
-                  case 'Common':
-                    return 4;
-                  default:
-                    return 5;
-                  }
-                } else {
-                  return (item.primStat) ? (-1 * item.primStat.value) : 1000;
-                }
-              })
-              .value();
+        items = _(items || [])
+          .chain()
+          .sortBy('name')
+          .sortBy(function(item) {
+            return (item.primStat) ? (-1 * item.primStat.value) : 1000;
+          }).value();
+
+        if (sort === 'rarity') {
+          items = _.sortBy(items, function(item) {
+            switch (item.tier) {
+            case 'Exotic':
+              return 0;
+            case 'Legendary':
+              return 1;
+            case 'Rare':
+              return 2;
+            case 'Uncommon':
+              return 3;
+            case 'Common':
+              return 4;
+            default:
+              return 5;
+            }
+          });
+        }
+        return items;
       };
     });
 
