@@ -12,14 +12,13 @@
     })
     .filter('sortItems', function() {
       return function(items, sort) {
-        items = _(items || [])
-          .chain()
-          .sortBy('name')
-          .sortBy(function(item) {
+        items = _.sortBy(items || [], 'name');
+        if (sort === 'primaryStat' || sort === 'rarityThenPrimary') {
+          items = _.sortBy(items, function(item) {
             return (item.primStat) ? (-1 * item.primStat.value) : 1000;
-          }).value();
-
-        if (sort === 'rarity') {
+          });
+        }
+        if (sort === 'rarity' || sort === 'rarityThenPrimary') {
           items = _.sortBy(items, function(item) {
             switch (item.tier) {
             case 'Exotic':
