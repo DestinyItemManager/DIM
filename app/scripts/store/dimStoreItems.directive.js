@@ -310,9 +310,13 @@
             });
           });
       }
-      promise = promise.catch(function(a) {
-        toaster.pop('error', item.name, a.message);
-      });
+      promise = promise
+        .then(function() {
+          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        })
+        .catch(function(a) {
+          toaster.pop('error', item.name, a.message);
+        });
 
       $rootScope.loadingTracker.addPromise(promise);
       return promise;
@@ -336,6 +340,9 @@
     $scope.$on('dim-settings-updated', function(event, settings) {
       if (_.has(settings, 'itemSort')) {
         vm.itemSort = settings.itemSort;
+      }
+      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
+        setTimeout(function() { dimStoreService.setHeights(); }, 0);
       }
     });
 

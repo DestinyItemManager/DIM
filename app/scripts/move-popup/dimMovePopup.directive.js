@@ -108,9 +108,13 @@
           });
       }
 
-      promise = promise.catch(function(a) {
-        toaster.pop('error', vm.item.name, a.message);
-      });
+      promise = promise
+        .then(function() {
+          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        })
+        .catch(function(a) {
+          toaster.pop('error', vm.item.name, a.message);
+        });
 
       $rootScope.loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
