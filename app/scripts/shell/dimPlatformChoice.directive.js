@@ -22,9 +22,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', '$rootScope'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker'];
 
-  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, $rootScope) {
+  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker) {
     var vm = this;
 
     vm.active = null;
@@ -40,13 +40,9 @@
         setTimeout(function() {
           var promise = dimPlatformService.getPlatforms();
 
-          $rootScope.loadingTracker.addPromise(promise);
+          loadingTracker.addPromise(promise);
         }, 250);
       });
-
-      // var promise = dimPlatformService.getPlatforms();
-      //
-      // $rootScope.loadingTracker.addPromise(promise);
     }
 
     $scope.$on('dim-platforms-updated', function(e, args) {

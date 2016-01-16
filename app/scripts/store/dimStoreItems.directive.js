@@ -94,9 +94,9 @@
     }
   }
 
-  StoreItemsCtrl.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService'];
 
-  function StoreItemsCtrl($scope, $rootScope, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
     var vm = this;
 
     var types = [ // Order of types in the rows.
@@ -317,7 +317,7 @@
           toaster.pop('error', item.name, a.message);
         });
 
-      $rootScope.loadingTracker.addPromise(promise);
+      loadingTracker.addPromise(promise);
       return promise;
     };
 

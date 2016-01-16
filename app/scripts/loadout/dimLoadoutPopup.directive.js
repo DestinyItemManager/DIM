@@ -33,9 +33,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', '$q', 'dimStoreService', 'dimItemTier'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'loadingTracker', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', '$q', 'dimStoreService', 'dimItemTier'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, $q, dimStoreService, dimItemTier) {
+  function LoadoutPopupCtrl($rootScope, loadingTracker, ngDialog, dimLoadoutService, dimItemService, toaster, $q, dimStoreService, dimItemTier) {
     var vm = this;
 
     vm.classTypeId = {
@@ -302,7 +302,7 @@
               applyLoadoutItems(items, loadout, _items, scope);
             });
 
-          $rootScope.loadingTracker.addPromise(promise);
+          loadingTracker.addPromise(promise);
         }
       } else {
         var dimStores;
