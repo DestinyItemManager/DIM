@@ -354,7 +354,7 @@
         return promise;
       }
 
-      function canMoveToStore(item, store) {
+      function canMoveToStore(item, store, triedFallback) {
         var deferred = $q.defer();
         var promise = deferred.promise;
         var stackAmount = 0;
@@ -453,14 +453,17 @@
             deferred.resolve(true);
           }
         } else {
-          // if (store.id !== 'vault') {
-          //   createSpace(store, item, store)
-          //     .catch(function() {
-          //       deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
-          //     });
-          // } else {
-          deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
-          // }
+          // Not enough space!
+          if (!triedFallback) {
+            // Refresh the store
+            return $q.when(dimStoreService.getStores(true, false))
+              .then(function(stores) {
+                store = _.find(stores, { id: store.id });
+                return canMoveToStore(item, store, true);
+              });
+          } else {
+            deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+          }
         }
 
         return promise;
@@ -521,6 +524,13 @@
             data.source = store;
 
             return isValidTransfer(equip, target, item);
+          })
+          .then(function() {
+            // Reload the target store - isValidTransfer may have replaced it
+            return dimStoreService.getStore(target.id);
+          })
+          .then(function(targetStore) {
+            data.target = targetStore;
           })
           .then(function(a) {
             var promise = $q.when();
