@@ -355,8 +355,6 @@
       }
 
       function canMoveToStore(item, store, triedFallback) {
-        var deferred = $q.defer();
-        var promise = deferred.promise;
         var stackAmount = 0;
         var slotsNeededForTransfer = 0;
         var predicate = (store.id === 'vault') ? {
@@ -428,29 +426,16 @@
 
         // TODO Need to add support to transfer partial stacks.
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
-          if ((item.owner !== store.id) && (store.id !== 'vault')) {
-            var vault;
-
-            if (item.owner !== 'vault') {
-              dimStoreService.getStore('vault')
-                .then(function(v) {
-                  vault = v;
-                  return canMoveToStore(item, v);
-                })
-                .then(function() {
-                  deferred.resolve(true);
-                })
-                .catch(function(err) {
-                  // createSpace(vault, item, store)
-                  //   .then(function() {
-                  deferred.reject(err);
-                  // });
-                });
-            } else {
-              deferred.resolve(true);
-            }
+          if ((item.owner !== store.id) && (store.id !== 'vault') && (item.owner !== 'vault')) {
+            // It's a guardian-to-guardian move, so we need to check
+            // if there's space in the vault since the item has to go
+            // through there.
+            return dimStoreService.getStore('vault')
+              .then(function(vault) {
+                return canMoveToStore(item, vault);
+              });
           } else {
-            deferred.resolve(true);
+            return $q.resolve(true);
           }
         } else {
           // Not enough space!
@@ -462,11 +447,9 @@
                 return canMoveToStore(item, store, true);
               });
           } else {
-            deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+            return $q.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
           }
         }
-
-        return promise;
       }
 
       function createSpace(store, item, target) {
