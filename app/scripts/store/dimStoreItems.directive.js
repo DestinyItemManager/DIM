@@ -262,13 +262,14 @@
       }
     };
 
+    // TODO: Consolidate this with the same code in dimMovePopup.directive.js
     vm.moveDroppedItem = function(item, equip) {
       var promise = null;
       var target = vm.store;
 
       if (item.owner === vm.store.id) {
         if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
-          return;
+          return $q.resolve();
         }
 
         promise = $q.when(vm.store);
@@ -277,44 +278,48 @@
         promise = dimStoreService.getStore(item.owner);
       }
 
-      var source;
-
       if (item.notransfer && item.owner !== target.id) {
-        return $q.reject(new Error('Cannot move class to different store.'));
+        promise = $q.reject(new Error('Cannot move that item off this character.'));
       }
 
       var dimStores = null;
 
-      promise = promise
-        .then(function(s) {
-          source = s;
-        })
-        .then(dimItemService.moveTo.bind(null, item, target, equip))
-        .then(dimStoreService.getStores)
-        .then(function(stores) {
-          dimStores = stores;
-          return dimStoreService.updateStores();
-        })
-        .then(function(bungieStores) {
-          _.each(dimStores, function(dStore) {
-            if (dStore.id !== 'vault') {
-              var bStore = _.find(bungieStores, function(bStore) {
-                return dStore.id === bStore.id;
-              });
+      var reload = item.equipped || equip;
 
-              dStore.level = bStore.base.characterLevel;
-              dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-              dStore.powerLevel = bStore.base.characterBase.powerLevel;
-              dStore.background = bStore.base.backgroundPath;
-              dStore.icon = bStore.base.emblemPath;
-            }
+      promise = promise.then(dimItemService.moveTo.bind(null, item, target, equip));
+
+      if (reload) {
+        promise = promise.then(dimStoreService.getStores)
+          .then(function(stores) {
+            dimStores = stores;
+            return dimStoreService.updateStores();
+          })
+          .then(function(bungieStores) {
+            _.each(dimStores, function(dStore) {
+              if (dStore.id !== 'vault') {
+                var bStore = _.find(bungieStores, function(bStore) {
+                  return dStore.id === bStore.id;
+                });
+
+                dStore.level = bStore.base.characterLevel;
+                dStore.percentToNextLevel = bStore.base.percentToNextLevel;
+                dStore.powerLevel = bStore.base.characterBase.powerLevel;
+                dStore.background = bStore.base.backgroundPath;
+                dStore.icon = bStore.base.emblemPath;
+              }
+            });
           });
+      }
+      promise = promise
+        .then(function() {
+          setTimeout(function() { dimStoreService.setHeights(); }, 0);
         })
         .catch(function(a) {
           toaster.pop('error', item.name, a.message);
         });
 
       $rootScope.loadingTracker.addPromise(promise);
+      return promise;
     };
 
     function resetData() {
@@ -335,6 +340,9 @@
     $scope.$on('dim-settings-updated', function(event, settings) {
       if (_.has(settings, 'itemSort')) {
         vm.itemSort = settings.itemSort;
+      }
+      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
+        setTimeout(function() { dimStoreService.setHeights(); }, 0);
       }
     });
 
