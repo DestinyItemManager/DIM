@@ -38,10 +38,13 @@
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort', $event)">Primary Stat</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
           <br>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-change="vm.save('itemSort', $event)">Rarity</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary" ng-change="vm.save('itemSort')">Rarity, then primary stat</label>
+          <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-change="vm.save('itemSort')">Rarity, then name</label>
         </td>
       </tr>
       <tr>
