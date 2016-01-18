@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -171,7 +171,7 @@
       $rootScope.autoRefreshTimer = $interval(function () {
        //Only Refresh If We're Not Already Doing Something
        //And We're Not Inactive
-       if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+       if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
          refresh();
        }
       }, secondsToWait * 1000);
@@ -187,7 +187,7 @@
 
     // Refresh when the user comes back to the page
     document.addEventListener("visibilitychange", function() {
-      if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
         refresh();
       }
     }, false);

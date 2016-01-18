@@ -45,11 +45,16 @@
         'Consumable',
         'Material'
       ]
-    });
+    })
+    .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
+      return promiseTracker();
+    }]);
+
 
   angular.module('dimApp')
-    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster) {
-      $rootScope.loadingTracker = promiseTracker();
+    .run(['$rootScope', 'loadingTracker', '$cookies', '$timeout', 'toaster',
+          function($rootScope, loadingTracker, $cookies, $timeout, toaster) {
+      $rootScope.loadingTracker = loadingTracker;
 
       //1 Hour
       $rootScope.inactivityLength = 60 * 60 * 1000;
@@ -125,7 +130,7 @@
           }, 3000);
         }
       });
-    });
+    }]);
 
   angular.module('dimApp')
     .config([

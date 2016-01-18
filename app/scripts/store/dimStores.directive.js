@@ -27,9 +27,9 @@
     };
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', '$rootScope', '$q'];
+  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'loadingTracker', '$q'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, $rootScope, $q) {
+  function StoresCtrl(settings, $scope, dimStoreService, loadingTracker, $q) {
     var vm = this;
 
     vm.stores = null;
@@ -63,7 +63,7 @@
           vm.stores = stores;
         });
 
-      $rootScope.loadingTracker.addPromise(promise);
+      loadingTracker.addPromise(promise);
     });
   }
 })();

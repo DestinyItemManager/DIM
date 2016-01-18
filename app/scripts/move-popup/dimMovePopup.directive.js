@@ -45,9 +45,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', '$rootScope', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
 
-  function MovePopupController($scope, $rootScope, dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
     function capitalizeFirstLetter(string) {
@@ -116,7 +116,7 @@
           toaster.pop('error', vm.item.name, a.message);
         });
 
-      $rootScope.loadingTracker.addPromise(promise);
+      loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
     };
