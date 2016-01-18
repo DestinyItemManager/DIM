@@ -22,7 +22,7 @@
     vm.toggleItem = function(e, item) {
       e.stopPropagation();
       infuseService.toggleItem(item);
-    }
+    };
 
     // get Items for infusion
     vm.getItems = function() {
@@ -57,11 +57,11 @@
 
       });
 
-    }
+    };
 
     vm.closeDialog = function() {
         ngDialog.closeAll();
-    }
+    };
 
     vm.getItems();
 

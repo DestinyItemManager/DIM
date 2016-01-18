@@ -61,7 +61,9 @@
           _data.targets.splice(index, 1);
         }
         else {
-          _data.targets.push(item);
+          var sortedIndex = _.sortedIndex(_data.targets, item,
+                                          function(i) { return i.primStat.value; });
+          _data.targets.splice(sortedIndex, 0, item);
         }
 
         // Value of infused result
@@ -78,8 +80,8 @@
           .value();
 
       },
-      data: _data,
-    }
+      data: _data
+    };
 
   }
 
