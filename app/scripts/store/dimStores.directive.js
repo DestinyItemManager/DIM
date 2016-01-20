@@ -57,12 +57,12 @@
       }
     });
 
-    $scope.$on('dim-active-platform-updated', function(e, args) {
-      var promise = $q.when(dimStoreService.getStores(true))
-        .then(function(stores) {
-          vm.stores = stores;
-        });
+    $scope.$on('dim-stores-updated', function (e, stores) {
+      vm.stores = stores.stores;
+    });
 
+    $scope.$on('dim-active-platform-updated', function(e, args) {
+      var promise = $q.when(dimStoreService.getStores(true));
       loadingTracker.addPromise(promise);
     });
   }
