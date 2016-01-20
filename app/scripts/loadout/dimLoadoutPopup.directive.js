@@ -17,7 +17,10 @@
       replace: true,
       template: [
         '<div class="loadout-popup-content">',
-        '  <div class="loadout-list"><div class="loadout-set"><span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span></div></div>',
+        '  <div class="loadout-list"><div class="loadout-set">',
+        '    <span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span>',
+        '    <span class="button-create-equipped" ng-click="vm.newLoadoutFromEquipped($event)">From Equipped</span>',
+        '  </div></div>',
         '  <div class="loadout-list">',
         '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
         '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
@@ -25,9 +28,14 @@
         '      <span class="button-edit" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </div>',
         '  </div>',
-        '  <div class="loadout-list"><div class="loadout-set">',
-        '    <span class="button-name button-random-name" ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
-        '  </div></div>',
+        '  <div class="loadout-list">',
+        '    <div class="loadout-set">',
+        '      <span class="button-name button-full" ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
+        '    </div>',
+        '    <div class="loadout-set" ng-if="vm.previousLoadout">',
+        '      <span class="button-name button-full" ng-click="vm.applyLoadout(vm.previousLoadout, $event)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
@@ -37,6 +45,7 @@
 
   function LoadoutPopupCtrl($rootScope, loadingTracker, ngDialog, dimLoadoutService, dimItemService, toaster, $q, dimStoreService, dimItemTier) {
     var vm = this;
+    vm.previousLoadout = dimLoadoutService.previousLoadout;
 
     vm.classTypeId = {
       'warlock': 0,
@@ -55,7 +64,29 @@
 
     vm.newLoadout = function newLoadout($event) {
       ngDialog.closeAll();
-      $rootScope.$broadcast('dim-create-new-loadout', {});
+      $rootScope.$broadcast('dim-create-new-loadout', { });
+    };
+
+    vm.newLoadoutFromEquipped = function newLoadout($event) {
+      ngDialog.closeAll();
+
+      var loadout = loadoutFromCurrentlyEquipped(vm.store.items, "");
+      // We don't want to prepopulate the loadout with a bunch of cosmetic junk
+      // like emblems and ships and horns.
+      loadout.items = _.pick(loadout.items,
+                             'class',
+                             'primary',
+                             'special',
+                             'heavy',
+                             'helmet',
+                             'gauntlets',
+                             'chest',
+                             'leg',
+                             'classitem',
+                             'artifact',
+                             'ghost');
+      loadout.classType = vm.classTypeId;
+      vm.editLoadout(loadout, $event);
     };
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
@@ -79,8 +110,31 @@
       });
     };
 
+    function loadoutFromCurrentlyEquipped(items, name) {
+      return {
+        classType: -1,
+        name: name,
+        items: _(items)
+          .chain()
+          .select('equipped')
+          .map(function (i) {
+            return angular.copy(i);
+          })
+          .groupBy(function(i) {
+            return i.type.toLowerCase();
+          }).value()
+      };
+    }
+
     vm.applyLoadout = function applyLoadout(loadout, $event) {
       ngDialog.closeAll();
+
+      if (loadout === vm.previousLoadout) {
+        vm.previousLoadout = undefined;
+      } else {
+        vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
+      }
+      dimLoadoutService.previousLoadout = vm.previousLoadout; // ugly hack
 
       var scope = {
         failed: false

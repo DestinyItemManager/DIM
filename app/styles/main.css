@@ -109,14 +109,22 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+.button-full {
+  width: 100%;
+}
 .button-create {
   float: left;
-  width: 100%;
+  width: 60%;
   padding-left: 10px;
   height: 35px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
+}
+.button-create-equipped {
+  text-align: center;
+  float: right;
+  width: 40%;
 }
 /*.condensed .character .ngdialog {
   width: 289px;
@@ -1103,7 +1111,7 @@ div[dim-loadout] {
   width: 20%;
   font-size: 1.2em
 }
-.loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
+.loadout-set .button-delete:hover, .loadout-set .button-edit:hover, .loadout-set .button-create-equipped:hover {
   background-color: #68a0b7;
   color: #222;
 }
