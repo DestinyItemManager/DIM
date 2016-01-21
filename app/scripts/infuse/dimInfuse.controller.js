@@ -19,10 +19,24 @@
     // Expose the service to view
     vm.infuseService = infuseService;
 
+    vm.isCalculating = function() {
+      return infuseService.isCalculating();
+    }
+
     vm.toggleItem = function(e, item) {
       e.stopPropagation();
       infuseService.toggleItem(item);
+    };
+
+    vm.maximizeAttack = function(e) {
+      e.stopPropagation();
+      infuseService.maximizeAttack();
     }
+
+    vm.statType =
+      vm.item.primStat.statHash === 3897883278? 'Defense': // armor item
+      vm.item.primStat.statHash === 368428387?  'Attack':  // weapon item
+                                                'Unknown'; // new item?
 
     // get Items for infusion
     vm.getItems = function() {
@@ -57,11 +71,11 @@
 
       });
 
-    }
+    };
 
     vm.closeDialog = function() {
         ngDialog.closeAll();
-    }
+    };
 
     vm.getItems();
 

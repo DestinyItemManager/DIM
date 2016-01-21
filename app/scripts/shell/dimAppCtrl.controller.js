@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -162,27 +162,35 @@
       }
     };
 
+    // Don't refresh more than once a minute
+    var refresh = _.throttle(vm.refresh, 60 * 1000);
+
     vm.startAutoRefreshTimer = function () {
       var secondsToWait = 360;
 
       $rootScope.autoRefreshTimer = $interval(function () {
        //Only Refresh If We're Not Already Doing Something
        //And We're Not Inactive
-       if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
-         vm.refresh();
+       if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+         refresh();
        }
       }, secondsToWait * 1000);
     };
 
     vm.startAutoRefreshTimer();
 
-    var refresh = _.debounce(vm.refresh, 300);
-
     $rootScope.$on('dim-settings-updated', function(event, arg) {
-      // if ((!_.has(arg, 'charCol')) && (!_.has(arg, 'vaultCol'))) {
+      if (_.has(arg, 'characterOrder')) {
         refresh();
-      // }
+      }
     });
+
+    // Refresh when the user comes back to the page
+    document.addEventListener("visibilitychange", function() {
+      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+        refresh();
+      }
+    }, false);
   }
 })();
 
@@ -196,7 +204,7 @@ function addFilter(filter) {
     filter = prompt("Enter an item name:");
     filter = filter.trim();
   }
-  
+
   if (filter.indexOf('light:') == 0) {
     var lightFilterType = filter.substring(6);
     var light = prompt("Enter a light value:");

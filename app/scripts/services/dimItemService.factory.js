@@ -354,9 +354,7 @@
         return promise;
       }
 
-      function canMoveToStore(item, store) {
-        var deferred = $q.defer();
-        var promise = deferred.promise;
+      function canMoveToStore(item, store, triedFallback) {
         var stackAmount = 0;
         var slotsNeededForTransfer = 0;
         var predicate = (store.id === 'vault') ? {
@@ -428,42 +426,30 @@
 
         // TODO Need to add support to transfer partial stacks.
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
-          if ((item.owner !== store.id) && (store.id !== 'vault')) {
-            var vault;
-
-            if (item.owner !== 'vault') {
-              dimStoreService.getStore('vault')
-                .then(function(v) {
-                  vault = v;
-                  return canMoveToStore(item, v);
-                })
-                .then(function() {
-                  deferred.resolve(true);
-                })
-                .catch(function(err) {
-                  // createSpace(vault, item, store)
-                  //   .then(function() {
-                  deferred.reject(err);
-                  // });
-                });
-            } else {
-              deferred.resolve(true);
-            }
+          if ((item.owner !== store.id) && (store.id !== 'vault') && (item.owner !== 'vault')) {
+            // It's a guardian-to-guardian move, so we need to check
+            // if there's space in the vault since the item has to go
+            // through there.
+            return dimStoreService.getStore('vault')
+              .then(function(vault) {
+                return canMoveToStore(item, vault);
+              });
           } else {
-            deferred.resolve(true);
+            return $q.resolve(true);
           }
         } else {
-          // if (store.id !== 'vault') {
-          //   createSpace(store, item, store)
-          //     .catch(function() {
-          //       deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
-          //     });
-          // } else {
-          deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
-          // }
+          // Not enough space!
+          if (!triedFallback) {
+            // Refresh the store
+            return $q.when(dimStoreService.getStores(true, false))
+              .then(function(stores) {
+                store = _.find(stores, { id: store.id });
+                return canMoveToStore(item, store, true);
+              });
+          } else {
+            return $q.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+          }
         }
-
-        return promise;
       }
 
       function createSpace(store, item, target) {
@@ -522,6 +508,13 @@
 
             return isValidTransfer(equip, target, item);
           })
+          .then(function() {
+            // Reload the target store - isValidTransfer may have replaced it
+            return dimStoreService.getStore(target.id);
+          })
+          .then(function(targetStore) {
+            data.target = targetStore;
+          })
           .then(function(a) {
             var promise = $q.when();
 
@@ -575,9 +568,6 @@
           });
 
         return movePlan;
-      }
-
-      function updateLevels() {
       }
 
       function getItems() {

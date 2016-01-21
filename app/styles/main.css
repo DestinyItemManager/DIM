@@ -40,26 +40,28 @@
   -ms-user-select: none;
   user-select: none;
 }
+#actions{
+  margin-top:1px;
+}
+#actions .fa{
+ font-size:20px;
+}
 #actions .fa:hover {
-  color: #68a0b7;
+  color: #E8A534;
   cursor: pointer;
 }
-#header .content span.link {
+#header .content .link {
   color: white;
 }
-#header .content span.link:hover {
-  color: #68a0b7;
+#header .content .link:hover {
+  color: #E8A534;
   cursor: pointer;
 }
 .pull-right {
   float: right;
   text-align: right;
 }
-.item img {
-  width: 44px;
-  height: 44px;
-}
-.search-item-hidden {
+.hide-filtered .search-hidden {
   display: none !important;
 }
 .img.how:before {
@@ -107,14 +109,22 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+.button-full {
+  width: 100%;
+}
 .button-create {
   float: left;
-  width: 100%;
+  width: 60%;
   padding-left: 10px;
   height: 35px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
+}
+.button-create-equipped {
+  text-align: center;
+  float: right;
+  width: 40%;
 }
 /*.condensed .character .ngdialog {
   width: 289px;
@@ -686,9 +696,10 @@ img.void {
   position: absolute;
   z-index: 2;
 }
-.item > .img {
+.item > .img, .item > img {
   width: 44px;
   height: 44px;
+  background-size: cover;
 }
 .item .stack {
   position: absolute;
@@ -791,9 +802,6 @@ img.void {
   font-size: 14px;
   color: #f5dc56;
 }
-.character-box .level.prestige {
-  color: #f5dc56;
-}
 .character-box .powerLevel:before {
   content: "\2726";
   display: inline-block;
@@ -812,9 +820,6 @@ img.void {
   background-color: #5da469;
   height: 5px;
   width: 0%;
-}
-.barFill.prestige {
-  background-color: #f5dc56;
 }
 .loadout-button {
   position: relative;
@@ -1106,7 +1111,7 @@ div[dim-loadout] {
   width: 20%;
   font-size: 1.2em
 }
-.loadout-set .button-delete:hover, .loadout-set .button-edit:hover {
+.loadout-set .button-delete:hover, .loadout-set .button-edit:hover, .loadout-set .button-create-equipped:hover {
   background-color: #68a0b7;
   color: #222;
 }
@@ -1591,6 +1596,12 @@ button.toast-close-button {
 .infuseDialog .infuseSourceDetailsRow {
   float: left;
   margin-left: 30px;
+}
+
+.infuseCalculating {
+  background-size: 22px;
+  height: 22px;
+  display: inline-block;
 }
 
 .black {

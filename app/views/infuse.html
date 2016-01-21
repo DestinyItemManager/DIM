@@ -4,6 +4,10 @@
     <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show infusable items across all characters and vault</label>
     <br class="clear" />
     <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>
+    <br class="clear" />
+    <br class="clear" />
+    <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" />
+    <img ng-if="infuse.isCalculating()" class="infuseCalculating" src="../images/712.GIF"></img>
   </p>
 
   <p>
@@ -15,7 +19,7 @@
     </span>
 
     <span class="infuseSourceDetailsRow">
-      <span>Attack</span><br />
+      <span>{{infuse.statType}}</span><br />
       <span class="bigValue">{{infuse.item.primStat.value}}</span>
     </span>
   </p>

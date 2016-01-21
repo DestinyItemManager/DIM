@@ -47,16 +47,6 @@
       vm.clearFilter();
     });
 
-    $scope.$on('dim-active-platform-updated', function(event, args) {
-      $scope.filterTimer = $interval(function () {
-        // Wait until the interface has finished loading.
-        if (!$scope.loadingTracker.active() && !$scope.isUserInactive()) {
-          vm.filter();
-          $interval.cancel($scope.filterTimer);
-        }
-      }, 300);
-    });
-
     vm.blurFilterInputIfEmpty = function () {
       if (vm.search.query === "") {
         vm.blurFilterInput();
@@ -106,24 +96,21 @@
         } else if(term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
           filter = term.replace('light:', '').replace('level:', '');
           addPredicate("light", filter);
-        } else {
+        } else if (!/^\s*$/.test(term)) {
           addPredicate("keyword", term);
         }
       });
 
       filterFn = function(item) {
-        var checks = 0;
-        _.each(filters, function(filter){
-          filterFns[filter.predicate](filter.value, item) ? checks++ : null;
+        return _.all(filters, function(filter){
+          return filterFns[filter.predicate](filter.value, item);
         });
-        return checks === filters.length;
       };
 
       _.each(dimStoreService.getStores(), function(store) {
-        _.chain(store.items)
-          .each(function(item) {
-              filters.length > 0 ? item.visible = filterFn(item) : item.visible = true;
-          });
+        _.each(store.items, function(item) {
+          item.visible = (filters.length > 0) ? filterFn(item) : true;
+        });
       });
 
       $timeout(dimStoreService.setHeights, 32);
@@ -150,7 +137,8 @@
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
       'stackable':    ['stackable'],
-      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"]
+      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"],
+      'year':         ['year1', 'year2']
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -242,16 +230,16 @@
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
       },
-      'keyword': function(predicate, item){
-        return !!~item.name.toLowerCase().indexOf(predicate);
+      'keyword': function(predicate, item) {
+        return item.name.toLowerCase().indexOf(predicate) >= 0;
       },
-      'light': function(predicate, item){
+      'light': function(predicate, item) {
         if (predicate.length === 0 || item.primStat == undefined) return false;
-        
+
         var operands = ['<=','>=','=','>','<'];
         var operand = 'none';
         var result = false;
-        
+
         operands.forEach(function(element) {
           if (predicate.substring(0,element.length) === element) {
             operand = element;
@@ -259,7 +247,7 @@
             return false;
           }
         }, this);
-        
+
         switch (operand) {
           case 'none':
             result = (item.primStat.value == predicate)
@@ -281,6 +269,15 @@
             break;
         }
         return result;
+      },
+      'year': function(predicate, item) {
+        if (predicate === 'year1') {
+          return item.year === 1;
+        } else if (predicate === 'year2') {
+          return item.year === 2;
+        } else {
+          return false;
+        }
       }
     };
   }

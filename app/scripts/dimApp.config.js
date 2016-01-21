@@ -45,24 +45,29 @@
         'Consumable',
         'Material'
       ]
-    });
+    })
+    .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
+      return promiseTracker();
+    }]);
+
 
   angular.module('dimApp')
-    .run(function($rootScope, promiseTracker, $cookies, $timeout, toaster) {
-      $rootScope.loadingTracker = promiseTracker();
+    .run(['$rootScope', 'loadingTracker', '$cookies', '$timeout', 'toaster',
+          function($rootScope, loadingTracker, $cookies, $timeout, toaster) {
+      $rootScope.loadingTracker = loadingTracker;
 
       //1 Hour
       $rootScope.inactivityLength = 60 * 60 * 1000;
 
       $rootScope.isUserInactive = function() {
-        var currentTime = new Date;
+        var currentTime = Date.now();
 
         //Has This User Been Inactive For More Than An Hour
         return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
       };
 
       $rootScope.trackActivity = function() {
-        $rootScope.lastActivity = new Date();
+        $rootScope.lastActivity = Date.now();
       };
 
       //Track Our Initial Activity of Starting the App
@@ -97,13 +102,17 @@
       //   }
       // });
 
-      chrome.storage.sync.get('2015.10.10-Infuse', function(data) {
+      chrome.storage.sync.get('2016.01.18-Perf', function(data) {
         if (_.isNull(data) || _.isEmpty(data)) {
           $timeout(function() {
             toaster.pop({
               type: 'info',
-              title: 'Infusion Calculator!',
-              body: '<p>Check out DIM\'s built-in infusion calculator! <a href="http://i.imgur.com/6XNnmoF.gifv" target="_blank">Here\'s how to access and use it!</a><p><input style="margin-top: 1px; vertical-align: middle;" id="20151010Checkbox" type="checkbox"> <label for="20151010Checkbox">Hide This Popup</label></p>',
+              title: 'v3.2 Released',
+              body: [
+'<p>We\'ve added a \'Maximum Light\' loadout, greatly improved the performance while moving items, and added <span style="font-style: italic">is:year1</span> and <span style="font-style: italic">is:year2</span> filters.',
+'<p><a href="http://bit.ly/1SssIq9" target="_blank">Learn more about the the updates in v3.2.</a>',
+'<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><img title="/r/DIM on Reddit" style="vertical-align: text-bottom;" src="images/reddit.png"></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><img style="vertical-align: text-bottom;" title="@ThisIsDIM on Twitter" src="images/twitter.png"></a>',
+'<p><input style="margin-top: 1px; vertical-align: middle;" id="20151010Checkbox" type="checkbox"> <label for="20151010Checkbox">Hide This Popup</label></p>'].join(''),
               timeout: 0,
               bodyOutputType: 'trustedHtml',
               showCloseButton: true,
@@ -117,7 +126,7 @@
               onHideCallback: function() {
                 if ($('#20151010Checkbox').is(':checked')) {
                   chrome.storage.sync.set({
-                    "2015.10.10-Infuse": 1
+                    "2016.01.18-Perf": 1
                   }, function(e) {});
                 }
               }
@@ -125,7 +134,7 @@
           }, 3000);
         }
       });
-    });
+    }]);
 
   angular.module('dimApp')
     .config([
@@ -188,7 +197,7 @@ if (typeof window.onerror == "object") {
       //
       // _gaq.push([
       //   'errorTracker._trackEvent',
-      //   'DIM - Chrome Extension - v3.1.22',
+      //   'DIM - Chrome Extension - v3.2.0',
       //   exceptionDescription,
       //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
       //   0,

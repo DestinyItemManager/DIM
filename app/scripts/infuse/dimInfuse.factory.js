@@ -4,44 +4,33 @@
   angular.module('dimApp')
     .factory('infuseService', infuseService);
 
-  infuseService.$inject = [];
+  infuseService.$inject = ['dimWebWorker'];
 
-  function infuseService() {
-
-    function halfToEven(n) {
-        var i = Math.floor(n),
-            f = (n - i).toFixed(8),
-            e = 1e-8; // Allow for rounding errors in f
-        return (f > 0.5 - e && f < 0.5 + e) ?
-            ((i % 2 == 0) ? i : i + 1) : Math.round(n);
-    }
+  function infuseService(dimWebWorker) {
 
     var _data = {
       source: null,
       targets: [],
       infused: 0,
+      exotic: false,
       view: [],
       infusable: [],
-      // huge props to /u/Apswny https://github.com/Apsu
-      infuse: function(source, target) {
-        var diff = target - source;
-
-        if (diff <= (_data.exotic ? 4 : 6)) {
-            return target;
-        }
-        return source + halfToEven(diff * (_data.exotic ? 0.7 : 0.8));
-      },
+      calculating: false,
       calculate: function() {
         var result = _data.source.primStat.value;
 
         _data.targets.forEach(function(target) {
-          result = _data.infuse(result, target.primStat.value);
+          result = InfuseUtil.infuse(result, target.primStat.value, _data.exotic);
         });
+
         return result;
       }
     };
 
     return {
+      isCalculating: function() {
+        return _data.calculating;
+      },
       setSourceItem: function(item) {
         // Set the source and reset the targets
         _data.source = item;
@@ -54,14 +43,15 @@
         _data.view = items;
       },
       toggleItem: function(item) {
-
         // Add or remove the item from the infusion chain
         var index = _.indexOf(_data.targets, item);
         if (index > -1) {
           _data.targets.splice(index, 1);
         }
         else {
-          _data.targets.push(item);
+          var sortedIndex = _.sortedIndex(_data.targets, item,
+                                          function(i) { return i.primStat.value; });
+          _data.targets.splice(sortedIndex, 0, item);
         }
 
         // Value of infused result
@@ -72,14 +62,51 @@
         // let's remove the used gear and the one that are lower than the infused result
         _data.view = _.chain(_data.infusable)
           .difference(_data.targets)
-          .filter(function(item) {
+          .select(function(item) {
             return item.primStat.value > _data.infused;
           })
           .value();
 
       },
-      data: _data,
-    }
+      maximizeAttack: function() {
+        if (_data.calculating) return; // no work to do
+
+        var worker = new dimWebWorker({
+          fn:function(args) {
+            var data = JSON.parse(args.data);
+            var max = InfuseUtil.maximizeAttack(data.infusable, data.source, data.exotic);
+
+            if (!max) {
+              this.postMessage('undefined');
+            }
+            else {
+              this.postMessage(JSON.stringify(max));
+            }
+          },
+          include:['vendor/underscore/underscore-min.js', 'scripts/infuse/dimInfuse.util.js']
+        });
+
+        _data.calculating = true;
+        worker.do(JSON.stringify(_data))
+        .then(function(message) {
+          _data.calculating = false;
+
+          if (message === 'undefined') return; // no suitable path found
+
+          var max = JSON.parse(message);
+
+          _data.view       = []; // there are no other options
+          _data.targets    = max.path;
+          _data.infused    = max.light;
+          _data.difference = _data.infused - _data.source.primStat.value;
+        })
+        .then(function() {
+          // cleanup worker
+          worker.destroy();
+        });
+      },
+      data: _data
+    };
 
   }
 
