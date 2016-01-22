@@ -448,9 +448,22 @@
         createdItem.xpComplete = true;
       }
 
+      _.each(createdItem.perks, function(perk) {
+        var perkDef = perkDefs.data[perk.perkHash];
+        if (perkDef) {
+          _.each(['displayName', 'displayDescription'], function(attr) {
+            if (perkDef[attr]) {
+              perk[attr] = perkDef[attr];
+            }
+          });
+        }
+      });
+
       var talents = talentDefs.data[item.talentGridHash];
 
       if (talents) {
+        var activePerks = _.pluck(createdItem.perks, 'displayName');
+
         var ascendNode = _.filter(talents.nodes, function(node) {
           return _.any(node.steps, function(step) {
             return step.nodeStepName === 'Ascend';
@@ -476,19 +489,46 @@
           });
         });
 
+        // lets just see only the activated nodes for this item instance.
+        var activated = _.filter(item.nodes, function(node) {
+          return node.isActivated;
+        });
+
+        // loop over the exclusive set talents grid for that weapon type
+        _.each(talents.exclusiveSets, function(set) {
+          _.each(activated, function(active) {
+            if(set.nodeIndexes.indexOf(active.nodeHash) > -1) {
+
+              var node = talents.nodes[active.nodeHash].steps[active.stepIndex];
+              if(!_.contains(activePerks, node.nodeStepName)) {
+                createdItem.perks.push({
+                  'displayName': node.nodeStepName,
+                  'displayDescription': node.nodeStepDescription,
+                  'iconPath': node.icon,
+                  'isActive': true,
+                  'order': active.nodeHash
+                });
+              } else {
+                var perk = _.findIndex(createdItem.perks, {displayName: node.nodeStepName});
+
+                createdItem.perks[perk].order = active.nodeHash;
+              }
+            }
+          });
+        });
+        // other useful information about the item (this has info about reforge/etc)
+        // _.each(talents.independentNodeIndexes, function(set) {
+
         createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
       }
 
-      _.each(createdItem.perks, function(perk) {
-        var perkDef = perkDefs.data[perk.perkHash];
-        if (perkDef) {
-          _.each(['displayName', 'displayDescription'], function(attr) {
-            if (perkDef[attr]) {
-              perk[attr] = perkDef[attr];
-            }
-          });
-        }
+      // remove inactive perks, with this we actually lose passive perks (like exotic perks)
+      createdItem.perks = _.filter(createdItem.perks, function(perk) {
+        return perk.isActive;
       });
+
+      // sort the items by their node hashes
+      createdItem.perks = _.sortBy(createdItem.perks, 'order')
 
       return createdItem;
     }
