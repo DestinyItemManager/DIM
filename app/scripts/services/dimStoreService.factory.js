@@ -403,7 +403,7 @@
         perks: item.perks,
         nodes: item.nodes,
         equipRequiredLevel: item.equipRequiredLevel,
-        //talents: talentDefs.data[item.talentGridHash],
+        //talents: talentDefs[item.talentGridHash],
         talentPerks: getTalentPerks(item, talentDefs),
         maxStackSize: itemDef.maxStackSize,
         classType: itemDef.classType,
@@ -449,7 +449,7 @@
       }
 
       _.each(createdItem.perks, function(perk) {
-        var perkDef = perkDefs.data[perk.perkHash];
+        var perkDef = perkDefs[perk.perkHash];
         if (perkDef) {
           _.each(['displayName', 'displayDescription'], function(attr) {
             if (perkDef[attr]) {
@@ -459,7 +459,7 @@
         }
       });
 
-      var talents = talentDefs.data[item.talentGridHash];
+      var talents = talentDefs[item.talentGridHash];
 
       if (talents) {
         var activePerks = _.pluck(createdItem.perks, 'displayName');
@@ -528,7 +528,7 @@
       });
 
       // sort the items by their node hashes
-      createdItem.perks = _.sortBy(createdItem.perks, 'order')
+      createdItem.perks = _.sortBy(createdItem.perks, 'order');
 
       return createdItem;
     }
@@ -541,20 +541,19 @@
         dimObjectiveDefinitions,
         dimSandboxPerkDefinitions,
         dimTalentDefinitions,
-        dimYearsDefinitions].map(function (o) {
-          return o.getDefinitions();
-        }))
-      .then(function(args) {
-        var result = [];
-        _.each(items, function (item) {
-          var createdItem = processSingleItem.apply(undefined, args.concat(item));
-          if (createdItem !== null) {
-            createdItem.owner = owner;
-            result.push(createdItem);
-          }
+        dimYearsDefinitions])
+        .then(function(args) {
+          var result = [];
+          _.each(items, function (item) {
+            var createdItem = processSingleItem.apply(undefined, args.concat(item));
+            if (createdItem !== null) {
+              createdItem.owner = owner;
+              result.push(createdItem);
+            }
+          });
+          console.timeEnd("StoreService");
+          return result;
         });
-        return result;
-      });
     }
 
     function getClass(type) {
@@ -592,7 +591,7 @@
     }
 
     function getTalentPerks(item, talents) {
-      var talent = talents.data[item.talentGridHash];
+      var talent = talents[item.talentGridHash];
 
       if (talent) {
         return _.chain(talent.nodes).map(function(node) {
