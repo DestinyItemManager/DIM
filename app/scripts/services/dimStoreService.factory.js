@@ -333,7 +333,7 @@
         itemType = "Material";
       }
 
-      var weaponClass = null;
+      var weaponClass = null, weaponClassName = null;
 
 
       if (!itemType) {
@@ -342,6 +342,7 @@
 
       if (itemType.hasOwnProperty('general') && itemType.general !== '') {
         weaponClass = itemType.weaponClass;
+        weaponClassName = itemType.weaponClassName;
         itemType = itemType.general;
       }
 
@@ -406,6 +407,7 @@
         lockable: item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
+        weaponClassName: weaponClassName,
         classified: itemDef.classified
       };
 
@@ -750,7 +752,8 @@
       // Used to find a "weaponClass" type to send back
       var typeObj = {
         general: '',
-        weaponClass: type.toLowerCase().replace(/\s/g, '')
+        weaponClass: type.toLowerCase().replace(/\s/g, ''),
+        weaponClassName: type
       };
 
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)

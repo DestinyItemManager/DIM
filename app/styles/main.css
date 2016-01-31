@@ -887,9 +887,12 @@ img.void {
 .move-popup .item-name {
   background-color: #fff;
   color: #000;
-  padding: 5px 10px;
+  padding: 5px 28px 5px 10px;
+  text-overflow: ellipsis;
   text-transform: uppercase;
   letter-spacing: 1px;
+  overflow: hidden;
+  white-space: nowrap !important;
 }
 .move-popup .bounty-description {
   padding: 5px;
@@ -1169,7 +1172,7 @@ img.void {
   -ms-user-select: none;
   user-select: none;
 }
-#content div * {
+.sub-section > div {
   white-space: normal;
 }
 #header .content {
