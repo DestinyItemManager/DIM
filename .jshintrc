@@ -1,7 +1,6 @@
 {
   "globals": {
     "angular": true,
-    "verge": true,
     "$": true,
     "_": true,
     "chrome": true
