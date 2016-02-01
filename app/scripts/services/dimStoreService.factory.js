@@ -472,11 +472,11 @@
 
         if (!_.isEmpty(ascendNode)) {
           createdItem.hasAscendNode = true;
-          var filteredAcendedTalet = _.filter(item.nodes, function(node) {
+          var filteredAcendedTalent = _.filter(item.nodes, function(node) {
             return node.nodeHash === ascendNode[0].nodeHash;
           });
 
-          createdItem.ascended = (filteredAcendedTalet.length > 0) ? filteredAcendedTalet[0].isActivated : false;
+          createdItem.ascended = (filteredAcendedTalent.length > 0) ? filteredAcendedTalent[0].isActivated : false;
 
           if (!createdItem.ascended) {
             createdItem.complete = false;
@@ -490,9 +490,7 @@
         });
 
         // lets just see only the activated nodes for this item instance.
-        var activated = _.filter(item.nodes, function(node) {
-          return node.isActivated;
-        });
+        var activated = _.filter(item.nodes, 'isActivated');
 
         // loop over the exclusive set talents grid for that weapon type
         _.each(talents.exclusiveSets, function(set) {
@@ -502,16 +500,16 @@
               var node = talents.nodes[active.nodeHash].steps[active.stepIndex];
               if(!_.contains(activePerks, node.nodeStepName)) {
                 createdItem.perks.push({
-                  'displayName': node.nodeStepName,
-                  'displayDescription': node.nodeStepDescription,
-                  'iconPath': node.icon,
-                  'isActive': true,
-                  'order': active.nodeHash
+                  displayName: node.nodeStepName,
+                  displayDescription: node.nodeStepDescription,
+                  iconPath: node.icon,
+                  isActive: true,
+                  order: active.column
                 });
               } else {
                 var perk = _.findIndex(createdItem.perks, {displayName: node.nodeStepName});
 
-                createdItem.perks[perk].order = active.nodeHash;
+                createdItem.perks[perk].order = active.column;
               }
             }
           });
@@ -520,12 +518,23 @@
         // _.each(talents.independentNodeIndexes, function(set) {
 
         createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
+
+        // Fill in order for stuff that wasn't "activated"
+        _.each(createdItem.perks, function(perk) {
+          if (!perk.order) {
+            var node = _.find(talents.nodes, function(node) {
+              return _.any(node.steps, function(step) { return step.nodeStepName == perk.displayName; });
+            });
+
+            if (node) {
+              perk.order = node.column;
+            }
+          }
+        });
       }
 
       // remove inactive perks, with this we actually lose passive perks (like exotic perks)
-      createdItem.perks = _.filter(createdItem.perks, function(perk) {
-        return perk.isActive;
-      });
+      createdItem.perks = _.filter(createdItem.perks, 'isActive');
 
       // sort the items by their node hashes
       createdItem.perks = _.sortBy(createdItem.perks, 'order');

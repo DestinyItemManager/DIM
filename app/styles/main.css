@@ -977,9 +977,9 @@ img.void {
   background-color: #4887ba;
   border-radius: 50%;
   margin: 4px;
-  background-size: 36px;
+  background-size: 80%;
   background-repeat: no-repeat;
-  background-position: 4px;
+  background-position: center;
   width: 44px;
   height: 44px;
 }
