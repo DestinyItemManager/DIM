@@ -1651,24 +1651,58 @@ button.toast-close-button {
 }
 
 .crimson {
-  background-color: #610000;
+  background-color: #6f0003;
 }
-
 .crimson #header {
-  background-color: #560000;
-  border-bottom: 1px solid #863031;
+  background-color: #560001;
+  border-bottom: solid 1px #863031;
 }
-
+.crimson .title {
+  background-color: #560001;
+  border-top: solid 1px #460000;
+  border-bottom: solid 1px #863031;
+}
+.crimson .storage:first-child .title {
+  border-left: solid 1px #460000;
+}
+.crimson .move-popup {
+  background-color: #560001;
+}
+.crimson .character .ngdialog {
+  border: solid 1px #460000;
+}
+.crimson .loadout-list > .loadout-set {
+  background-color: #560001;
+  border-top: solid 1px #863031;
+  border-bottom: solid 1px #460000;
+}
+.crimson .loadout-list .loadout-set:hover, .crimson .loadout-new:hover, .crimson .loadout-options span:hover {
+  background-color: #460000;
+  border-top: solid 1px #460000;
+}
+.crimson .about.ngdialog, .crimson .app-settings.ngdialog, .crimson .filters.ngdialog, .crimson .support.ngdialog {
+  background-color: rgba(10, 0, 0, 0.85);
+}
+.crimson .about.ngdialog .ngdialog-content, .crimson .app-settings.ngdialog .ngdialog-content, .crimson .filters.ngdialog .ngdialog-content, .crimson .support.ngdialog .ngdialog-content {
+  background-color: #6f0003;
+  border: solid 1px #863031;
+}
+.crimson .ngdialog-content h1 {
+  background-color: #560001;
+  border-bottom: solid 1px #863031;
+}
+.crimson .ngdialog-content dl {
+  background-color: #560001;
+}
+.crimson .ngdialog-content td {
+  border-color: #6f0003;
+}
+.crimson .ngdialog-content table {
+  background-color: #863031;
+}
+.crimson .ngdialog-content table tr:nth-child(2n+1) {
+  background-color: #560001;
+}
 .crimson .sticky-header-background {
   background-color: #560000;
-}
-
-.crimson .title {
-  background-color: #560000;
-  border-top: 1px solid #460000;
-  border-bottom: 1px solid #863031;
-}
-
-.crimson .storage:first-child .title {
-  border-left: 1px solid #460000;
 }
