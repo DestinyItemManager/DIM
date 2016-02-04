@@ -1649,3 +1649,26 @@ button.toast-close-button {
 .infuseDialog .bigValue {
   font-size: 32px;
 }
+
+.crimson {
+  background-color: #610000;
+}
+
+.crimson #header {
+  background-color: #560000;
+  border-bottom: 1px solid #863031;
+}
+
+.crimson .sticky-header-background {
+  background-color: #560000;
+}
+
+.crimson .title {
+  background-color: #560000;
+  border-top: 1px solid #460000;
+  border-bottom: 1px solid #863031;
+}
+
+.crimson .storage:first-child .title {
+  border-left: 1px solid #460000;
+}
