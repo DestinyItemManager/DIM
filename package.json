@@ -1,6 +1,6 @@
 {
   "name": "DIM",
-  "version": "0.0.1",
+  "version": "3.2.1",
   "description": "Destiny Item Manager - Chrome app",
   "main": "app/index.html",
   "scripts": {

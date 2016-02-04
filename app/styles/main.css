@@ -1706,3 +1706,8 @@ button.toast-close-button {
 .crimson .sticky-header-background {
   background-color: #560000;
 }
+
+.crimson .toast-info {
+  background-color: #06283C;
+  box-shadow: 0 1px 6px 0px #422;
+}

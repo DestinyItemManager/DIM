@@ -19,7 +19,7 @@
   _.each(definitions, function(file, name) {
     var factory = function($http) {
       //console.time("loading " + name);
-      return $http.get('scripts/api-manifest/' + file + '.json?v=3.2.0')
+      return $http.get('scripts/api-manifest/' + file + '.json?v=3.2.1')
         .then(function(json) {
           //console.timeEnd("loading " + name);
           return json.data;
