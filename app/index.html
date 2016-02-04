@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
-<body ng-app="dimApp" ng-strict-di class="crimson">
+<body ng-app="dimApp" ng-strict-di class="">
   <div ng-controller="dimAppCtrl as app" ng-click="app.about = false; trackActivity()">
     <div id="header">
       <div class="content">
@@ -31,6 +31,7 @@
       <span class="logo">DIM</span>
       <span class="link" ng-click="app.showAbout($event)">About</span>
       <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
+      <span class="link" ng-click="app.toggleCrimsonDays()">Toggle Crimson Days</span>
     </div>
   </div>
   <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
@@ -103,7 +104,7 @@
   <!-- <script src="scripts/scripts.min.js?v=3.2.0"></script> -->
 
   <style>
-    .october-leaf {
+    .crimson .october-leaf {
       position: absolute;
       background-color: transparent;
       background-image: url('leaves.png');
