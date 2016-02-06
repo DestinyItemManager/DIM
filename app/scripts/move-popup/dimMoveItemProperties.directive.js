@@ -140,9 +140,7 @@
         template: 'views/infuse.html',
         overlay: false,
         className: 'app-settings',
-        controller: ['dimShareData', function(shareDataService) {
-          shareDataService.setItem(item);
-        }],
+        data: item,
         scope: $('#infuseDialog').scope()
       });
     };

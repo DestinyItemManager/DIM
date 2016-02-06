@@ -6,43 +6,43 @@
     <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>
     <br class="clear" />
     <br class="clear" />
-    <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" ng-disabled="infuse.isCalculating()" />
+    <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" ng-disabled="infuse.calculating" />
   </p>
 
   <p>
-    <span class="infuseSourceItem" dim-infuse-item item-data="infuse.item"></span>
+    <span class="infuseSourceItem" dim-infuse-item item-data="infuse.source"></span>
 
     <span class="infuseSourceDetailsRow">
-      <span><strong>{{infuse.item.name}}</strong></span><br />
-      <span>{{infuse.item.type}}</span>
+      <span><strong>{{infuse.source.name}}</strong></span><br />
+      <span>{{infuse.source.type}}</span>
     </span>
 
     <span class="infuseSourceDetailsRow">
       <span>{{infuse.statType}}</span><br />
-      <span class="bigValue">{{infuse.item.primStat.value}}</span>
+      <span class="bigValue">{{infuse.source.primStat.value}}</span>
     </span>
   </p>
 
   <div class="gearsContainer grey">
-    <span ng-if="!infuse.infuseService.data.view.length"><strong>No infusable items available.</strong></span>
-    <span ng-if="infuse.infuseService.data.view.length">Select items to infuse:</span>
-    <div ng-repeat="value in infuse.infuseService.data.view">
+    <span ng-if="!infuse.view.length"><strong>No infusable items available.</strong></span>
+    <span ng-if="infuse.view.length">Select items to infuse:</span>
+    <div ng-repeat="value in infuse.view">
       <div class="item" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
     </div>
   </div>
 
   <div class="gearsContainer black">
-    <div ng-show="infuse.infuseService.data.infused != 0">
-      <div ng-repeat="value in infuse.infuseService.data.targets">
+    <div ng-show="infuse.infused != 0">
+      <div ng-repeat="value in infuse.targets">
         <div class="plusSeparator" ng-if="!$first">+</div>
         <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
       </div>
       <br class="clear" />
       <div class="result">
         <span>Will bring the gear to</span>
-        <span class="bigValue">{{infuse.infuseService.data.infused}}</span>
-        <span class="green">(+ {{infuse.infuseService.data.difference}})</span>
-        <span>with {{infuse.infuseService.data.targets.length*3}} <span class="legendaryMarks"><img src="/images/legendaryMarks.png"></span></span>
+        <span class="bigValue">{{infuse.infused}}</span>
+        <span class="green">(+ {{infuse.difference}})</span>
+        <span>with {{infuse.targets.length*3}} <span class="legendaryMarks"><img src="/images/legendaryMarks.png"></span></span>
       </div>
     </div>
   </div>

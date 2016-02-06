@@ -4,81 +4,158 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['dimStoreService', 'dimItemService', 'infuseService', 'dimShareData', 'ngDialog'];
+  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimWebWorker'];
 
-  function dimInfuseCtrl(dimStoreService, dimItemService, infuseService, shareDataService, ngDialog) {
+  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimWebWorker) {
     var vm = this;
 
-    vm.getAllItems = false;
-    vm.showLockedItems = false;
+    angular.extend(vm, {
+      getAllItems: false,
+      showLockedItems: false,
+      targets: [],
+      infused: 0,
+      exotic: false,
+      view: [],
+      infusable: [],
+      calculating: false,
 
-    // Get the source item
-    vm.item = shareDataService.getItem();
-    infuseService.setSourceItem(vm.item);
+      calculate: function() {
+        return vm.targets.reduce(function(light, target) {
+          return InfuseUtil.infuse(light, target.primStat.value, vm.exotic);
+        }, vm.source.primStat.value);
+      },
 
-    // Expose the service to view
-    vm.infuseService = infuseService;
+      setSourceItem: function(item) {
+        // Set the source and reset the targets
+        vm.source = item;
+        vm.exotic = vm.source.tier === 'Exotic';
+        vm.infused = 0;
+        vm.targets = [];
+        vm.statType =
+          vm.source.primStat.statHash === 3897883278 ? 'Defense' : // armor item
+          vm.source.primStat.statHash === 368428387 ?  'Attack' :  // weapon item
+                                                       'Unknown'; // new item?
+      },
 
-    vm.isCalculating = function() {
-      return infuseService.isCalculating();
-    };
+      setInfusibleItems: function(items) {
+        vm.infusable = items;
+        vm.setView();
+      },
 
-    vm.toggleItem = function(e, item) {
-      e.stopPropagation();
-      infuseService.toggleItem(item);
-    };
+      setView: function() {
+        // let's remove the used gear and the one that are lower than the infused result
+        vm.view = _.chain(vm.infusable)
+          .select(function(item) {
+            return item.primStat.value > vm.infused;
+          })
+          .reject(function(item) {
+            return _.any(vm.targets, function(otherItem) { return otherItem.id === item.id; });
+          })
+          .value();
+      },
 
-    vm.maximizeAttack = function(e) {
-      e.stopPropagation();
-      infuseService.maximizeAttack();
-    };
+      toggleItem: function(e, item) {
+        e.stopPropagation();
 
-    vm.statType =
-      vm.item.primStat.statHash === 3897883278? 'Defense': // armor item
-      vm.item.primStat.statHash === 368428387?  'Attack':  // weapon item
-                                                'Unknown'; // new item?
-
-    // get Items for infusion
-    vm.getItems = function() {
-
-      dimStoreService.getStores(false, true).then(function(stores) {
-
-        var allItems = [];
-
-        // If we want ALL our weapons, including vault's one
-        if (!vm.getAllItems) {
-          stores = _.filter(stores, function(store) {
-            return store.id === vm.item.owner;
-          });
+        // Add or remove the item from the infusion chain
+        var index = _.indexOf(vm.targets, item);
+        if (index > -1) {
+          vm.targets.splice(index, 1);
+        } else {
+          var sortedIndex = _.sortedIndex(vm.targets, item,
+                                          function(i) { return i.primStat.value; });
+          vm.targets.splice(sortedIndex, 0, item);
         }
 
-        // all stores
-        _.each(stores, function(store, id, list) {
-          // all items in store
-          var items = _.filter(store.items, function(item) {
-            return (item.primStat && (!item.locked || vm.showLockedItems) && item.type == vm.item.type && item.primStat.value > vm.item.primStat.value);
+        // Value of infused result
+        vm.infused = vm.calculate();
+        // The difference from start to finish
+        vm.difference = vm.infused - vm.source.primStat.value;
+        vm.setView();
+      },
+
+      maximizeAttack: function(e) {
+        e.stopPropagation();
+
+        if (vm.calculating) return; // no work to do
+
+        var worker = new dimWebWorker({
+          fn:function(args) {
+            var data = JSON.parse(args.data);
+            var max = InfuseUtil.maximizeAttack(data.infusable, data.source, data.exotic);
+
+            if (!max) {
+              this.postMessage('undefined');
+            }
+            else {
+              this.postMessage(JSON.stringify(max));
+            }
+          },
+          include:['vendor/underscore/underscore-min.js', 'scripts/infuse/dimInfuse.util.js']
+        });
+
+        vm.calculating = true;
+        worker.do(JSON.stringify(vm))
+          .then(function(message) {
+            vm.calculating = false;
+
+            if (message === 'undefined') return; // no suitable path found
+
+            var max = JSON.parse(message);
+
+            vm.infused    = max.light;
+            vm.difference = vm.infused - vm.source.primStat.value;
+            vm.targets = max.path.map(function(item) {
+              return vm.infusable.find(function(otherItem) {
+                return otherItem.id === item.id;
+              });
+            });
+            vm.setView();
+          })
+          .then(function() {
+            // cleanup worker
+            worker.destroy();
+          });
+      },
+
+      // get Items for infusion
+      getItems: function() {
+        dimStoreService.getStores(false, true).then(function(stores) {
+
+          var allItems = [];
+
+          // If we want ALL our weapons, including vault's one
+          if (!vm.getAllItems) {
+            stores = _.filter(stores, function(store) {
+              return store.id === vm.source.owner;
+            });
+          }
+
+          // all stores
+          _.each(stores, function(store, id, list) {
+            // all items in store
+            var items = _.filter(store.items, function(item) {
+              return (item.primStat && (!item.locked || vm.showLockedItems) && item.type == vm.source.type && item.primStat.value > vm.source.primStat.value);
+            });
+
+            allItems = allItems.concat(items);
+
           });
 
-          allItems = allItems.concat(items);
+          allItems = _.sortBy(allItems, function(item) {
+            return item.primStat.value;
+          });
 
+          vm.setInfusibleItems(allItems);
         });
+      },
 
-        allItems = _.sortBy(allItems, function(item) {
-          return item.primStat.value;
-        });
+      closeDialog: function() {
+        $scope.$parent.closeThisDialog();
+      }
+    });
 
-        infuseService.setInfusibleItems(allItems);
-
-      });
-
-    };
-
-    vm.closeDialog = function() {
-        ngDialog.closeAll();
-    };
-
+    vm.setSourceItem($scope.$parent.ngDialogData);
     vm.getItems();
-
   }
-
 })();
