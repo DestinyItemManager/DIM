@@ -21,7 +21,7 @@
 
     vm.isCalculating = function() {
       return infuseService.isCalculating();
-    }
+    };
 
     vm.toggleItem = function(e, item) {
       e.stopPropagation();
@@ -31,7 +31,7 @@
     vm.maximizeAttack = function(e) {
       e.stopPropagation();
       infuseService.maximizeAttack();
-    }
+    };
 
     vm.statType =
       vm.item.primStat.statHash === 3897883278? 'Defense': // armor item

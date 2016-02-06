@@ -39,19 +39,26 @@ var InfuseUtil = {
       return;
     }
 
+    var previousLight = 0;
     for (;candidateItemIndex != possibleTargets.length; ++candidateItemIndex) {
       var candidateItem = possibleTargets[candidateItemIndex];
+      var newLight = InfuseUtil.infuse(currentStat, candidateItem.primStat.value, sourceIsExotic);
+
+      // If this doesn't improve on the light we got in the previous iteraction, ignore it.
+      if (newLight <= previousLight) {
+        continue;
+      }
+      previousLight = newLight;
+
       var currentNodes = cameFrom.slice(0); // clone
       currentNodes.push(candidateItem);
-
-      var newLight = InfuseUtil.infuse(currentStat, candidateItem.primStat.value, sourceIsExotic);
 
       // see if a current path exists
       var existingPath = _.find(paths, function(p) {
         return p.light === newLight;
       });
       if (existingPath) {
-          // let's see if this one beats it
+        // let's see if this one beats it
         if (currentNodes.length < existingPath.path.length) {
           existingPath.path = currentNodes; // better path
         }

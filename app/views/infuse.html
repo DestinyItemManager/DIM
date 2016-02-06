@@ -6,8 +6,7 @@
     <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>
     <br class="clear" />
     <br class="clear" />
-    <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" />
-    <img ng-if="infuse.isCalculating()" class="infuseCalculating" src="../images/712.GIF"></img>
+    <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" ng-disabled="infuse.isCalculating()" />
   </p>
 
   <p>
@@ -49,6 +48,6 @@
   </div>
 
   <br class="clear" />
-  
+
   <div class='gearsContainer'><small>This calculator uses the best known algorithm for infusing. If you find any discrepancies <a href='https://www.reddit.com/r/DestinyTheGame/comments/3o48e2/infusion_data_collection_request/' target='_blank'>let us know.</a></small></div>
 </div>

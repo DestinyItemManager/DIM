@@ -1,3 +1,7 @@
+# Next
+
+* Infusion auto calculator is much faster.
+
 # 3.2.3
 
 * Updated Crimson Days Theme.
