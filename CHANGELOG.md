@@ -1,6 +1,10 @@
 # Next
 
 * Infusion auto calculator is much faster.
+* Items in the infusion calculator don't grey out when a search is active anymore.
+* Full cost of infusions is now shown, including exotic shards, weapon parts / armor materials, and glimmer.
+* Show a better error message when trying to equip an item for the wrong class. Before it would say you weren't experienced enough.
+* Add a button to the infusion calculator that moves the planned items to your character.
 
 # 3.2.3
 
