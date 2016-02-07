@@ -1,3 +1,12 @@
+# 3.2.3
+
+* Updated Crimson Days Theme.
+* Removed verge.js
+
+# 3.2.2
+
+* Updated Crimson Days Theme.
+
 # 3.2.1
 
 * Crimson Days theme.
