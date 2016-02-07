@@ -474,6 +474,15 @@
         return promise;
       }
 
+      function canEquip(item, store) {
+        return $q(function(resolve, reject) {
+          if (item.classTypeName === store.class) {
+            resolve(true);
+          } else {
+            reject(new Error("This can only be equipped on " + item.classTypeName + "s."));
+          }
+        });
+      }
 
       function isValidTransfer(equip, store, item) {
         return $q(function(resolve, reject) {
@@ -481,6 +490,10 @@
 
           promises.push(isVaultToVault(item, store));
           promises.push(canMoveToStore(item, store));
+
+          if (equip) {
+            promises.push(canEquip(item, store));
+          }
 
           if ((item.tier === 'Exotic') && equip) {
             promises.push(canEquipExotic(item, store));

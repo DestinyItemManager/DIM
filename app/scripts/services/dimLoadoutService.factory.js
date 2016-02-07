@@ -213,7 +213,7 @@
         })
         .value();
 
-      applyLoadoutItems(store, items, loadout, _items, scope);
+      return applyLoadoutItems(store, items, loadout, _items, scope);
     }
 
     function applyLoadoutItems(store, items, loadout, _items, scope) {
@@ -286,15 +286,18 @@
               toaster.pop('error', item.name, a.message);
             })
             .finally(function() {
-              applyLoadoutItems(store, items, loadout, _items, scope);
+              return applyLoadoutItems(store, items, loadout, _items, scope);
             });
 
           loadingTracker.addPromise(promise);
+          return promise;
+        } else {
+          return $q.when();
         }
       } else {
         var dimStores;
 
-        $q.when(dimStoreService.getStores())
+        return $q.when(dimStoreService.getStores())
           .then(function(stores) {
             dimStores = stores;
             return dimStoreService.updateStores();
