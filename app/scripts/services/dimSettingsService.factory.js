@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$q', '$rootScope', 'uuid2'];
+  SettingsService.$inject = ['$q', '$rootScope'];
 
-  function SettingsService($q, $rootScope, uuid2) {
+  function SettingsService($q, $rootScope) {
     var settingState;
     var currentSettings = null;
 
