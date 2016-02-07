@@ -875,6 +875,10 @@ img.void {
   bottom: 50px;
   min-height: 77px;
 }
+.move-popup .interaction {
+  display: flex;
+  flex-direction: row;
+}
 .move-popup .item-name {
   background-color: #fff;
   color: #000;
@@ -971,7 +975,7 @@ img.void {
 .item-details.stat-box-row {
   padding-bottom: 3px;
 }
-.item-details .item-perks div {
+.item-details .item-perks div, .infuse-perk {
   display: inline-block;
   background-color: #4887ba;
   border-radius: 50%;
@@ -982,6 +986,7 @@ img.void {
   width: 44px;
   height: 44px;
 }
+
 .move-popup a {
   color: #000;
 }
@@ -994,6 +999,12 @@ img.void {
   margin: 6px;
   cursor: pointer;
   display: inline-block;
+}
+.move-popup .infuse-perk {
+  width: 37px;
+  height: 37px;
+  margin: 6px;
+  cursor: pointer;
 }
 .move-popup .move-button span {
   display: inline-block;
@@ -1133,7 +1144,7 @@ ialog-open {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
-  width: 320px;
+  width: 343px;
   top: initial;
   left: initial;
   right: initial;
@@ -1161,7 +1172,8 @@ ialog-open {
   top: 50px;
 }
 .locations {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
 }
 .character .ngdialog {
   display: block;

@@ -8,6 +8,7 @@
 * Add a filter to the infusion calculator to limit the search to only rare (blue) items.
 * The infusion auto calculator runs automatically, and now presents a list of different attack/defense values for you to choose from. Selecting one will show the best path to get to that light level.
 * The infusion calculator greys out items that are already used or are too low light to use, rather than hiding them.
+* The item move popup now has an entry for the infusion calculator, to make it easier to find.
 
 # 3.2.3
 
