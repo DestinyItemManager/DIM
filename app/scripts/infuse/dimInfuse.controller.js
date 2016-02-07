@@ -8,9 +8,13 @@
 
   function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimWebWorker, dimLoadoutService) {
     var vm = this;
+    var manualPath = {
+      light: "Manual",
+      path: []
+    };
 
     angular.extend(vm, {
-      getAllItems: false,
+      getAllItems: true,
       showLockedItems: false,
       onlyBlues: false,
       targets: [],
@@ -18,6 +22,7 @@
       exotic: false,
       view: [],
       infusable: [],
+      paths: [manualPath],
       calculating: false,
       transferInProgress: false,
 
@@ -64,11 +69,16 @@
         if (index > -1) {
           vm.targets.splice(index, 1);
         } else {
+          if (!_.contains(vm.view, item)) {
+            // Not clickable
+            return;
+          }
           var sortedIndex = _.sortedIndex(vm.targets, item,
                                           function(i) { return i.primStat.value; });
           vm.targets.splice(sortedIndex, 0, item);
         }
 
+        vm.selectedPath = vm.paths[0];
         // Value of infused result
         vm.infused = vm.calculate();
         // The difference from start to finish
@@ -76,9 +86,28 @@
         vm.setView();
       },
 
-      maximizeAttack: function(e) {
-        e.stopPropagation();
+      selectInfusionPath: function() {
+        if (vm.selectedPath === vm.paths[0]) {
+          vm.targets = [];
+          vm.infused = 0;
+          vm.difference = 0;
+        } else {
+          vm.infused = vm.selectedPath.light;
+          vm.difference = vm.infused - vm.source.primStat.value;
+          vm.targets = vm.selectedPath.path.map(function(item) {
+            return vm.infusable.find(function(otherItem) {
+              return otherItem.id === item.id;
+            });
+          });
+        }
+        vm.setView();
+      },
 
+      inView: function(item) {
+        return _.contains(vm.view, item) ? '' : 'search-hidden';
+      },
+
+      maximizeAttack: function(e) {
         if (vm.calculating) return; // no work to do
 
         var worker = new dimWebWorker({
@@ -101,18 +130,13 @@
           .then(function(message) {
             vm.calculating = false;
 
+            vm.paths = [manualPath];
+
             if (message === 'undefined') return; // no suitable path found
 
-            var max = JSON.parse(message);
-
-            vm.infused    = max.light;
-            vm.difference = vm.infused - vm.source.primStat.value;
-            vm.targets = max.path.map(function(item) {
-              return vm.infusable.find(function(otherItem) {
-                return otherItem.id === item.id;
-              });
-            });
-            vm.setView();
+            vm.paths = vm.paths.concat(JSON.parse(message));
+            vm.selectedPath = vm.paths[0];
+            vm.selectInfusionPath();
           })
           .then(function() {
             // cleanup worker
@@ -153,6 +177,7 @@
           });
 
           vm.setInfusibleItems(allItems);
+          vm.maximizeAttack();
         });
       },
 

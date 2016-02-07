@@ -1598,9 +1598,6 @@ button.toast-close-button {
 .infuseControls label {
   display: block;
 }
-.infuseControls button {
-  margin-top: 1rem;
-}
 
 .infuseDialog {
   width: 100%;
@@ -1608,6 +1605,14 @@ button.toast-close-button {
   display: flex;
   flex-direction: column;
   overflow: auto;
+}
+.infuseDialog small {
+  font-size: 10px;
+}
+
+.infuseHeader {
+  display: flex;
+  flex-direction: row;
 }
 
 .infuseDialog .infuseSourceItem {

@@ -78,12 +78,11 @@ var InfuseUtil = {
 
     if (_.isEmpty(paths)) return undefined; // no suitable path found
 
-    // find the max light stat
-    var max = _.max(paths, function(path) {
-      return path.light;
+    paths = _.sortBy(paths, function(path) {
+      return -path.light;
     });
 
-    return max;
+    return paths;
   }
 
 };

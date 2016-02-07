@@ -6,6 +6,8 @@
 * Show a better error message when trying to equip an item for the wrong class. Before it would say you weren't experienced enough.
 * Add a button to the infusion calculator that moves the planned items to your character.
 * Add a filter to the infusion calculator to limit the search to only rare (blue) items.
+* The infusion auto calculator runs automatically, and now presents a list of different attack/defense values for you to choose from. Selecting one will show the best path to get to that light level.
+* The infusion calculator greys out items that are already used or are too low light to use, rather than hiding them.
 
 # 3.2.3
 
