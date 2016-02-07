@@ -240,7 +240,6 @@ a {
 
 .ngdialog.app-settings .ngdialog-content {
   width: 40%;
-  height: auto;
   min-height: 70%;
   left: 30%;
   top: 10%;
@@ -1587,21 +1586,45 @@ button.toast-close-button {
   clear: both;
 }
 
+.infuseSourceItemInfo {
+  padding: 10px 0px 0px 25px;
+  display: flex;
+  flex-direction: row;
+}
+
+.infuseControls {
+  padding: 10px 0px 10px 25px;
+}
+.infuseControls label {
+  display: block;
+}
+.infuseControls button {
+  margin-top: 1rem;
+}
+
+.infuseDialog {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
 .infuseDialog .infuseSourceItem {
-  float: left;
   width: 48px;
   height: 48px;
 }
 
 .infuseDialog .infuseSourceDetailsRow {
-  float: left;
-  margin-left: 30px;
+  margin-left: 1rem;
 }
 
-.infuseCalculating {
-  background-size: 22px;
-  height: 22px;
-  display: inline-block;
+.infuseResults {
+  flex: 1;
+}
+
+.infuseTargets {
+  overflow: auto;
 }
 
 .black {
@@ -1621,9 +1644,9 @@ button.toast-close-button {
 }
 
 .infuseDialog .gearsContainer {
-  float: left;
   width: 100%;
   padding: 10px 0px 25px 25px;
+  overflow: hidden;
 }
 
 .gearsContainer .item {

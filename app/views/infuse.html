@@ -1,29 +1,25 @@
 <div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="infuse.closeDialog()">
   <h1>Infusion Calculator</h1>
-  <p>
-    <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show infusable items across all characters and vault</label>
-    <br class="clear" />
-    <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>'
-    <br class="clear" />
-    <input class="controls" type="checkbox" id="infuse-blues" ng-model="infuse.onlyBlues" ng-change="infuse.getItems()"><label for="infuse-blues">Limit to rare (blue) items</label>
-    <br class="clear" />
-    <br class="clear" />
-    <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" ng-disabled="infuse.calculating" />
-  </p>
+  <div class="infuseControls">
+    <label><input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()">Show infusable items across all characters and vault</label>
+    <label><input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()">Include 'locked' items</label>
+    <label><input class="controls" type="checkbox" id="infuse-blues" ng-model="infuse.onlyBlues" ng-change="infuse.getItems()">Limit to rare (blue) items</label>
+    <button ng-click="infuse.maximizeAttack($event)" ng-disabled="infuse.calculating">Maximize {{infuse.statType}}</button>
+  </div>
 
-  <p>
-    <span class="infuseSourceItem" dim-infuse-item item-data="infuse.source"></span>
+  <div class="infuseSourceItemInfo">
+    <div class="infuseSourceItem" dim-infuse-item item-data="infuse.source"></div>
 
-    <span class="infuseSourceDetailsRow">
-      <span><strong>{{infuse.source.name}}</strong></span><br />
-      <span>{{infuse.source.type}}</span>
-    </span>
+    <div class="infuseSourceDetailsRow">
+      <div><strong>{{infuse.source.name}}</strong></div>
+      <div>{{infuse.source.type}}</div>
+    </div>
 
-    <span class="infuseSourceDetailsRow">
-      <span>{{infuse.statType}}</span><br />
-      <span class="bigValue">{{infuse.source.primStat.value}}</span>
-    </span>
-  </p>
+    <div class="infuseSourceDetailsRow">
+      <div>{{infuse.statType}}</div>
+      <div class="bigValue">{{infuse.source.primStat.value}}</div>
+    </div>
+  </div>
 
   <div class="gearsContainer grey">
     <span ng-if="!infuse.view.length"><strong>No infusable items available.</strong></span>
@@ -33,13 +29,14 @@
     </div>
   </div>
 
-  <div class="gearsContainer black">
+  <div class="gearsContainer black infuseResults">
     <div ng-show="infuse.infused != 0">
-      <div ng-repeat="value in infuse.targets">
-        <div class="plusSeparator" ng-if="!$first">+</div>
-        <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
+      <div class="infuseTargets">
+        <div ng-repeat="value in infuse.targets">
+          <div class="plusSeparator" ng-if="!$first">+</div>
+          <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
+        </div>
       </div>
-      <br class="clear" />
       <div class="result">
         <span>Will bring the gear to</span>
         <span class="bigValue">{{infuse.infused}}</span>
@@ -53,8 +50,6 @@
       <button ng-if="infuse.getAllItems" ng-disabled="infuse.transferInProgress" ng-click="infuse.transferItems()">Transfer items</button>
     </div>
   </div>
-
-  <br class="clear" />
 
   <div class='gearsContainer'><small>This calculator uses the best known algorithm for infusing. If you find any discrepancies <a href='https://www.reddit.com/r/DestinyTheGame/comments/3o48e2/infusion_data_collection_request/' target='_blank'>let us know.</a></small></div>
 </div>
