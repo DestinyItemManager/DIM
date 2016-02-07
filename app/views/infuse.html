@@ -48,6 +48,7 @@
         <span>+ {{infuse.targets.length*10 | number}} <span class="glimmer"><img alt="Materials" title="Materials" ng-src="http://www.bungie.net/common/destiny_content/icons/{{infuse.statType == 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3' : '972ae2c6ccbf59cde293a2ed50a57a93'}}.jpg"></span></span>
 
       </div>
+      <button ng-if="infuse.getAllItems" ng-disabled="infuse.transferInProgress" ng-click="infuse.transferItems()">Transfer items</button>
     </div>
   </div>
 
