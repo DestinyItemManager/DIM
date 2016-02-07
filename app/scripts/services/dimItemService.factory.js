@@ -476,7 +476,7 @@
 
       function canEquip(item, store) {
         return $q(function(resolve, reject) {
-          if (item.classTypeName === store.class) {
+          if (item.classTypeName === 'unknown' || item.classTypeName === store.class) {
             resolve(true);
           } else {
             reject(new Error("This can only be equipped on " + item.classTypeName + "s."));
