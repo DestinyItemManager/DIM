@@ -1711,3 +1711,9 @@ button.toast-close-button {
   background-color: #06283C;
   box-shadow: 0 1px 6px 0px #422;
 }
+
+.crimson .logo {
+  background-image: url("../crimsonlogo.png");
+  color: #FFFFFF;
+  text-shadow: 1px 1px #000;
+}

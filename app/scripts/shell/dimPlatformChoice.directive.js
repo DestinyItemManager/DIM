@@ -36,13 +36,9 @@
     activate();
 
     function activate() {
-      $.get('https://www.bungie.net', '', function() {
-        setTimeout(function() {
-          var promise = dimPlatformService.getPlatforms();
+      var promise = dimPlatformService.getPlatforms();
 
-          loadingTracker.addPromise(promise);
-        }, 250);
-      });
+      loadingTracker.addPromise(promise);
     }
 
     $scope.$on('dim-platforms-updated', function(e, args) {
