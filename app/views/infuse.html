@@ -3,7 +3,9 @@
   <p>
     <input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()"><label for="infuse-all">Show infusable items across all characters and vault</label>
     <br class="clear" />
-    <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>
+    <input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()"><label for="infuse-locked">Include 'locked' items</label>'
+    <br class="clear" />
+    <input class="controls" type="checkbox" id="infuse-blues" ng-model="infuse.onlyBlues" ng-change="infuse.getItems()"><label for="infuse-blues">Limit to rare (blue) items</label>
     <br class="clear" />
     <br class="clear" />
     <input type="button" ng-click="infuse.maximizeAttack($event)" value="Maximize {{infuse.statType}}" ng-disabled="infuse.calculating" />

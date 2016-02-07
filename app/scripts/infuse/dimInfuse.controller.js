@@ -12,6 +12,7 @@
     angular.extend(vm, {
       getAllItems: false,
       showLockedItems: false,
+      onlyBlues: false,
       targets: [],
       infused: 0,
       exotic: false,
@@ -136,7 +137,11 @@
           _.each(stores, function(store, id, list) {
             // all items in store
             var items = _.filter(store.items, function(item) {
-              return (item.primStat && (!item.locked || vm.showLockedItems) && item.type == vm.source.type && item.primStat.value > vm.source.primStat.value);
+              return item.primStat &&
+                (!item.locked || vm.showLockedItems) &&
+                item.type == vm.source.type &&
+                item.primStat.value > vm.source.primStat.value &&
+                (!vm.onlyBlues || item.tier === 'Rare');
             });
 
             allItems = allItems.concat(items);

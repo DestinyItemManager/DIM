@@ -5,6 +5,7 @@
 * Full cost of infusions is now shown, including exotic shards, weapon parts / armor materials, and glimmer.
 * Show a better error message when trying to equip an item for the wrong class. Before it would say you weren't experienced enough.
 * Add a button to the infusion calculator that moves the planned items to your character.
+* Add a filter to the infusion calculator to limit the search to only rare (blue) items.
 
 # 3.2.3
 
