@@ -22,14 +22,19 @@
       exotic: false,
       view: [],
       infusable: [],
+      excluded: [],
       paths: [manualPath],
       calculating: false,
       transferInProgress: false,
 
       calculate: function() {
-        return vm.targets.reduce(function(light, target) {
-          return InfuseUtil.infuse(light, target.primStat.value, vm.exotic);
-        }, vm.source.primStat.value);
+        if (vm.targets.length === 0) {
+          return 0;
+        } else {
+          return vm.targets.reduce(function(light, target) {
+            return InfuseUtil.infuse(light, target.primStat.value, vm.exotic);
+          }, vm.source.primStat.value);
+        }
       },
 
       setSourceItem: function(item) {
@@ -55,42 +60,68 @@
           .select(function(item) {
             return item.primStat.value > vm.infused;
           })
-          .reject(function(item) {
-            return _.any(vm.targets, function(otherItem) { return otherItem.id === item.id; });
-          })
+          .difference(vm.excluded, vm.targets)
           .value();
       },
 
       toggleItem: function(e, item) {
         e.stopPropagation();
 
-        // Add or remove the item from the infusion chain
-        var index = _.indexOf(vm.targets, item);
-        if (index > -1) {
-          vm.targets.splice(index, 1);
-        } else {
-          if (!_.contains(vm.view, item)) {
-            // Not clickable
-            return;
-          }
-          var sortedIndex = _.sortedIndex(vm.targets, item,
-                                          function(i) { return i.primStat.value; });
-          vm.targets.splice(sortedIndex, 0, item);
+        function setManualPath() {
+          vm.selectedPath = vm.paths[0];
+          // Value of infused result
+          vm.infused = vm.calculate();
+          // The difference from start to finish
+          vm.difference = vm.infused - vm.source.primStat.value;
+          vm.setView();
         }
 
-        vm.selectedPath = vm.paths[0];
-        // Value of infused result
-        vm.infused = vm.calculate();
-        // The difference from start to finish
-        vm.difference = vm.infused - vm.source.primStat.value;
-        vm.setView();
+        var index = _.indexOf(vm.targets, item);
+
+        if (e.shiftKey) {
+          // Hold shift to toggle excluding the item from calculations
+          var excludedIndex = _.indexOf(vm.excluded, item);
+          if (excludedIndex > -1) {
+            // Remove from exclusions
+            vm.excluded.splice(excludedIndex, 1);
+          } else {
+            // Add to exclusions, and remove from targets if it's there.
+            vm.excluded.push(item);
+            if (index > -1) {
+              vm.targets.splice(index, 1);
+              setManualPath();
+            }
+          }
+
+          vm.maximizeAttack();
+        } else {
+          // Add or remove the item from the infusion chain
+          if (index > -1) {
+            // Remove from targets
+            vm.targets.splice(index, 1);
+          } else {
+            // Check if it's clickable
+            if (!_.contains(vm.view, item) || _.contains(vm.excluded, item)) {
+              return;
+            }
+
+            // Add it to targets
+            var sortedIndex = _.sortedIndex(vm.targets, item,
+                                            function(i) { return i.primStat.value; });
+            vm.targets.splice(sortedIndex, 0, item);
+          }
+
+          setManualPath();
+        }
       },
 
-      selectInfusionPath: function() {
+      selectInfusionPath: function(reset) {
         if (vm.selectedPath === vm.paths[0]) {
-          vm.targets = [];
-          vm.infused = 0;
-          vm.difference = 0;
+          if (reset) {
+            vm.targets = [];
+            vm.infused = 0;
+            vm.difference = 0;
+          }
         } else {
           vm.infused = vm.selectedPath.light;
           vm.difference = vm.infused - vm.source.primStat.value;
@@ -108,6 +139,8 @@
           return '';
         } else if (_.contains(vm.targets, item)) {
           return 'infuse-selected';
+        } else if (_.contains(vm.excluded, item)) {
+          return 'infuse-excluded';
         } else {
           return 'infuse-hidden';
         }
@@ -120,7 +153,14 @@
         var worker = new dimWebWorker({
           fn:function(args) {
             var data = JSON.parse(args.data);
-            var max = InfuseUtil.maximizeAttack(data.infusable, data.source, data.exotic);
+            var max = InfuseUtil.maximizeAttack(
+              _.reject(data.infusable, function(item) {
+                return _.any(data.excluded, function(otherItem) {
+                  return item.id == otherItem.id;
+                });
+              }),
+              data.source,
+              data.exotic);
 
             if (!max) {
               this.postMessage('undefined');
@@ -142,8 +182,9 @@
             if (message === 'undefined') return; // no suitable path found
 
             vm.paths = vm.paths.concat(JSON.parse(message));
+            var reset = (vm.selectedPath !== vm.paths[0]);
             vm.selectedPath = vm.paths[0];
-            vm.selectInfusionPath();
+            vm.selectInfusionPath(reset);
           })
           .then(function() {
             // cleanup worker

@@ -636,6 +636,7 @@ img.void {
   color: #000;
   min-width: 10px;
   text-align: center;
+  -webkit-user-select: none;
 }
 .stat-damage-arc {
   background: #85c5ec;
@@ -1599,13 +1600,13 @@ button.toast-close-button {
 }
 
 .infuseSourceItemInfo {
-  padding: 10px 0px 0px 25px;
+  padding: 0px 0px 10px 25px;
   display: flex;
   flex-direction: row;
 }
 
 .infuseControls {
-  padding: 10px 0px 10px 25px;
+  padding: 0px 0px 10px 25px;
 }
 .infuseControls label {
   display: block;
@@ -1647,7 +1648,16 @@ button.toast-close-button {
 .infuse-selected {
   outline: 2px solid black;
 }
+
+.bestInfusion label {
+  display: inline;
+  margin-right: 22px;
+}
 .infuse-hidden {
+  opacity: 0.35;
+}
+.infuse-excluded {
+  -webkit-filter: grayscale();
   opacity: 0.15;
 }
 
@@ -1669,7 +1679,7 @@ button.toast-close-button {
 
 .infuseDialog .gearsContainer {
   width: 100%;
-  padding: 10px 0px 25px 25px;
+  padding: 10px 0px 10px 25px;
   overflow: hidden;
 }
 
