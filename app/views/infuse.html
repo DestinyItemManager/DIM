@@ -33,7 +33,7 @@
     <span ng-if="!infuse.view.length"><strong>No infusable items available.</strong></span>
     <span ng-if="infuse.view.length">Select items to infuse:</span>
     <div ng-repeat="value in infuse.infusable">
-      <div class="item {{infuse.inView(value)}}" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
+      <div class="{{infuse.inView(value)}}" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
     </div>
   </div>
 

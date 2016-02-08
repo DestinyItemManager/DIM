@@ -104,7 +104,14 @@
       },
 
       inView: function(item) {
-        return _.contains(vm.view, item) ? '' : 'search-hidden';
+        if (_.contains(vm.view, item)) {
+          return '';
+        } else if (_.contains(vm.targets, item)) {
+          return 'infuse-selected';
+        } else {
+          return 'infuse-hidden';
+        }
+        //return _.contains(vm.view, item) ? '' : 'search-hidden';
       },
 
       maximizeAttack: function(e) {

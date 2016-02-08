@@ -239,9 +239,9 @@ a {
 /* settings dialog */
 
 .ngdialog.app-settings .ngdialog-content {
-  width: 40%;
-  min-height: 70%;
-  left: 30%;
+  width: 60%;
+  min-height: 80%;
+  left: 20%;
   top: 10%;
 }
 @-webkit-keyframes ngdialog-fadeout {
@@ -1644,6 +1644,13 @@ button.toast-close-button {
   overflow: auto;
 }
 
+.infuse-selected {
+  outline: 2px solid black;
+}
+.infuse-hidden {
+  opacity: 0.15;
+}
+
 .black {
   background-color: #222222;
 }
@@ -1688,6 +1695,7 @@ button.toast-close-button {
 
 .infuseDialog .bigValue {
   font-size: 32px;
+  line-height: 1em;
 }
 
 .crimson {
