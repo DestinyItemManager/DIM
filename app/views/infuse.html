@@ -25,7 +25,7 @@
   <div class="bestInfusion infuseControls">
     <label>
       Infuse {{infuse.statType}} up to:
-      <select ng-options="path as path.light for path in infuse.paths" ng-model="infuse.selectedPath" ng-change="infuse.selectInfusionPath()"></select>
+      <select ng-options="path as path.light + (path.light == 'Manual' ? '' : (' (' + path.path.length + ')')) for path in infuse.paths" ng-model="infuse.selectedPath" ng-change="infuse.selectInfusionPath()"></select>
     </label>
   </div>
 
