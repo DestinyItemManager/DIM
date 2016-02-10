@@ -205,6 +205,28 @@ function extractDB(dbFile) {
       defs.write(JSON.stringify(items));
   });
 
+
+  db.all('select * from DestinyProgressionDefinition', function(err, rows) {
+      if (err) {
+          throw err;
+      }
+
+      items = {};
+
+      rows.forEach(function(row) {
+          var item = JSON.parse(row.json);
+          items[item.progressionHash] = item;
+          delete item.progressionHash;
+          delete item.hash;
+          delete item.icon;
+          delete item.name;
+          item.steps = item.steps.map(function(i) { return i.progressTotal; });
+      });
+
+      var defs = fs.createWriteStream('api-manifest/progression.json');
+      defs.write(JSON.stringify(items));
+  });
+
   console.log("done.");
 }
 

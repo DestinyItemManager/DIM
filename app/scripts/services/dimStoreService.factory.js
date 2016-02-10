@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -305,7 +305,7 @@
       return $q.when(store);
     }
 
-    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, item) {
+    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (itemDef === undefined || itemDef.itemName === 'Classified') {
@@ -396,7 +396,7 @@
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         hasXP: (!!item.progression),
-        xpComplete: 0,
+        xpComplete: false,
         amount: item.stackSize,
         primStat: item.primaryStat,
         stats: item.stats,
@@ -555,7 +555,8 @@
         dimObjectiveDefinitions,
         dimSandboxPerkDefinitions,
         dimTalentDefinitions,
-        dimYearsDefinitions])
+        dimYearsDefinitions,
+        dimProgressionDefinitions])
         .then(function(args) {
           var result = [];
           _.each(items, function (item) {
@@ -565,7 +566,6 @@
               result.push(createdItem);
             }
           });
-          console.timeEnd("StoreService");
           return result;
         });
     }
