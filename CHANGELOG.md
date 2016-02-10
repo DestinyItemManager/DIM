@@ -1,3 +1,16 @@
+# Next
+
+* Infusion auto calculator is much faster.
+* Items in the infusion calculator don't grey out when a search is active anymore.
+* Full cost of infusions is now shown, including exotic shards, weapon parts / armor materials, and glimmer.
+* Show a better error message when trying to equip an item for the wrong class. Before it would say you weren't experienced enough.
+* Add a button to the infusion calculator that moves the planned items to your character.
+* Add a filter to the infusion calculator to limit the search to only rare (blue) items.
+* The infusion auto calculator runs automatically, and now presents a list of different attack/defense values for you to choose from. Selecting one will show the best path to get to that light level.
+* The infusion calculator greys out items that are already used or are too low light to use, rather than hiding them.
+* The item move popup now has an entry for the infusion calculator, to make it easier to find.
+* Hold Shift and click on items in the infusion calculator to prevent the calculator from using that item.
+
 # 3.2.3
 
 * Updated Crimson Days Theme.

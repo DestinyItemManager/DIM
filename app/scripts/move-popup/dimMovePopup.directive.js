@@ -19,7 +19,7 @@
       replace: true,
       template: [
         '<div class="move-popup" alt="" title="">',
-        '  <div dim-move-item-properties="vm.item"></div>',
+        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
         '  <span ng-if="::vm.item.type === \'Bounties\'" class="bounty-description" ng-bind="::vm.item.description"></span>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
@@ -39,6 +39,7 @@
         '        <span>Equip</span>',
         '      </div>',
         '    </div>',
+        '  <div class="infuse-perk" ng-if="vm.item.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -50,9 +51,30 @@
   function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
+
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+    /*
+    * Open up the dialog for infusion by passing
+    * the selected item
+    */
+    vm.infuse = function infuse(item, e) {
+      e.stopPropagation();
+
+      // Close the move-popup
+      ngDialog.closeAll();
+
+      // Open the infuse window
+      ngDialog.open({
+        template: 'views/infuse.html',
+        overlay: false,
+        className: 'app-settings',
+        data: item,
+        scope: $('#infuseDialog').scope()
+      });
+    };
 
     vm.characterInfo = function characterInfo(store) {
       if (store.id === 'vault') {

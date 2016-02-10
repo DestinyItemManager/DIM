@@ -414,6 +414,7 @@
         hasAscendNode: false,
         ascended: false,
         hasReforgeNode: false,
+        infusable: false,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
         lockable: item.lockable,
         locked: item.locked,
@@ -458,6 +459,10 @@
           });
         }
       });
+
+      // Only legendary or Exotic items are infusable.
+      // Infuse perk's id is 1270552711
+      createdItem.infusable = _.contains(createdItem.talentPerks, 1270552711);
 
       var talents = talentDefs[item.talentGridHash];
 

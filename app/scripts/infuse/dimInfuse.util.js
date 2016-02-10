@@ -5,51 +5,70 @@ var InfuseUtil = {
           f = (n - i).toFixed(8),
           e = 1e-8; // Allow for rounding errors in f
       return (f > 0.5 - e && f < 0.5 + e) ?
-          ((i % 2 == 0) ? i : i + 1) : Math.round(n);
+          ((i % 2 === 0) ? i : i + 1) : Math.round(n);
   },
-  // huge props to /u/Apswny https://github.com/Apsu
+
+  /**
+   * Calculate the new atk/def (light) of an item if target were infused into
+   * source.
+   *
+   * Huge props to /u/Apswny https://github.com/Apsu
+   *
+   * @param {number} source primary stat of the source item.
+   * @param {number} target primary stat of the target item.
+   * @param {boolean} exotic Whether source is exotic.
+   * @return {number} the new stat after infusion
+   */
   infuse: function(source, target, exotic) {
     var diff = target - source;
 
+    // Within this difference, you get the full value of the infusion.
     if (diff <= (exotic ? 4 : 6)) {
         return target;
     }
+
     return source + InfuseUtil.halfToEven(diff * (exotic ? 0.7 : 0.8));
   },
-  walkPaths: function(list, cameFrom, paths, currentStat, source, sourceIsExotic) {
-    var start = -1;
-
+  walkPaths: function(possibleTargets, cameFrom, paths, currentStat, source, sourceIsExotic) {
     // find the first viable item
-    start = _.findIndex(list, function(item) {
+    var candidateItemIndex = _.findIndex(possibleTargets, function(item) {
       return item.primStat.value > currentStat;
     });
     // base case, we've exhausted the list of viable targets
-    if (start === -1) return;
+    if (candidateItemIndex === -1) {
+      return;
+    }
 
-    for (;start != list.length;++start) {
+    var previousLight = 0;
+    for (;candidateItemIndex != possibleTargets.length; ++candidateItemIndex) {
+      var candidateItem = possibleTargets[candidateItemIndex];
+      var newLight = InfuseUtil.infuse(currentStat, candidateItem.primStat.value, sourceIsExotic);
+
+      // If this doesn't improve on the light we got in the previous iteraction, ignore it.
+      if (newLight <= previousLight) {
+        continue;
+      }
+      previousLight = newLight;
+
       var currentNodes = cameFrom.slice(0); // clone
-      currentNodes.push(list[start]);
-
-      var result = InfuseUtil.infuse(currentStat, list[start].primStat.value, sourceIsExotic);
+      currentNodes.push(candidateItem);
 
       // see if a current path exists
       var existingPath = _.find(paths, function(p) {
-        return p.light === result;
+        return p.light === newLight;
       });
       if (existingPath) {
-          // let's see if this one beats it
+        // let's see if this one beats it
         if (currentNodes.length < existingPath.path.length) {
           existingPath.path = currentNodes; // better path
         }
-      }
-      else {
-        paths.push({light:result, path:currentNodes}); // add the current path
+      } else {
+        paths.push({light:newLight, path:currentNodes}); // add the current path
       }
 
       // move to next node (depth first)
-      var next = list.slice(0); // clone
-      next.splice(start, 1); // remove current node
-      InfuseUtil.walkPaths(next, currentNodes, paths, result, source, sourceIsExotic);
+      var next = possibleTargets.slice(candidateItemIndex + 1); // clone starting at next node after current
+      InfuseUtil.walkPaths(next, currentNodes, paths, newLight, source, sourceIsExotic);
     }
   },
   maximizeAttack: function(possibleTargets, source, sourceIsExotic) {
@@ -59,12 +78,11 @@ var InfuseUtil = {
 
     if (_.isEmpty(paths)) return undefined; // no suitable path found
 
-    // find the max light stat
-    var max = _.max(paths, function(path) {
-      return path.light;
+    paths = _.sortBy(paths, function(path) {
+      return -path.light;
     });
 
-    return max;
+    return paths;
   }
 
 };

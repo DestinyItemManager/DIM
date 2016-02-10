@@ -41,11 +41,11 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'loadingTracker', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', '$q', 'dimStoreService', 'dimItemTier'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier'];
 
-  function LoadoutPopupCtrl($rootScope, loadingTracker, ngDialog, dimLoadoutService, dimItemService, toaster, $q, dimStoreService, dimItemTier) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier) {
     var vm = this;
-    vm.previousLoadout = dimLoadoutService.previousLoadout;
+    vm.previousLoadout = dimLoadoutService.previousLoadouts[vm.store.id];
 
     vm.classTypeId = {
       'warlock': 0,
@@ -134,37 +134,9 @@
       } else {
         vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
       }
-      dimLoadoutService.previousLoadout = vm.previousLoadout; // ugly hack
+      dimLoadoutService.previousLoadouts[vm.store.id] = vm.previousLoadout; // ugly hack
 
-      var scope = {
-        failed: false
-      };
-
-      var items = _.chain(loadout.items)
-        .values()
-        .flatten()
-        .value();
-
-      var _types = _.chain(items)
-        .pluck('type')
-        .uniq()
-        .value();
-
-      var _items = _.chain(vm.store.items)
-        .filter(function(item) {
-          return _.contains(_types, item.type);
-        })
-        .filter(function(item) {
-          return (!_.some(items, function(i) {
-            return ((i.id === item.id) && (i.hash === item.hash));
-          }));
-        })
-        .groupBy(function(item) {
-          return item.type;
-        })
-        .value();
-
-      applyLoadoutItems(items, loadout, _items, scope);
+      dimLoadoutService.applyLoadout(vm.store, loadout);
     };
 
     // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
@@ -279,120 +251,5 @@
 
       vm.applyLoadout(loadout, $event);
     };
-
-    function applyLoadoutItems(items, loadout, _items, scope) {
-      if (items.length > 0) {
-        var pseudoItem = items.splice(0, 1)[0];
-        var item = dimItemService.getItem(pseudoItem);
-
-        if (item.type === 'Class') {
-          item = _.findWhere(vm.store.items, {
-            hash: pseudoItem.hash
-          });
-        }
-
-        if (item) {
-          var size = _.chain(vm.store.items)
-            .filter(function(i) {
-              return item.type === i.type;
-            })
-            .size()
-            .value();
-
-          var p = $q.when(item);
-
-          var target;
-
-          if (size === 10) {
-            if (item.owner !== vm.store.id) {
-              var moveItem = _items[item.type].splice(0, 1);
-              p = $q.when(dimStoreService.getStores())
-                .then(function(stores) {
-                  return _.chain(stores)
-                    // .filter(function(s) {
-                    //   return (s.id !== 'vault');
-                    // })
-                    .sortBy(function(s) {
-                      if (s.id === vm.store.id) {
-                        return 0;
-                      } else if (s.id === 'vault') {
-                        return 2;
-                      } else {
-                        return 1;
-                      }
-                    })
-                    .value();
-                })
-                .then(function(sortedStores) {
-                  return _.find(sortedStores, function(s) {
-                    return _.chain(s.items)
-                      .filter(function(i) {
-                        return item.type === i.type;
-                      })
-                      .size()
-                      .value() < ((s.id === 'vault') ? 72 : 10);
-                  });
-                })
-                .then(function(t) {
-                  if (_.isUndefined(t)) {
-                    throw new Error('Collector eh?  All your characters ' + moveItem[0].type.toLowerCase() + ' slots are full and I can\'t move items of characters, yet... Clear a slot on a character and I can complete the loadout.');
-                  }
-                  target = t;
-
-                  return dimItemService.moveTo(moveItem[0], target);
-                });
-            }
-          }
-
-          var promise = p
-            .then(function() {
-              return dimItemService.moveTo(item, vm.store, pseudoItem.equipped);
-            })
-            .catch(function(a) {
-              scope.failed = true;
-              toaster.pop('error', item.name, a.message);
-            })
-            .finally(function() {
-              applyLoadoutItems(items, loadout, _items, scope);
-            });
-
-          loadingTracker.addPromise(promise);
-        }
-      } else {
-        var dimStores;
-
-        $q.when(dimStoreService.getStores())
-          .then(function(stores) {
-            dimStores = stores;
-            return dimStoreService.updateStores();
-          })
-          .then(function(bungieStores) {
-            _.each(dimStores, function(dStore) {
-              if (dStore.id !== 'vault') {
-                var bStore = _.find(bungieStores, function(bStore) {
-                  return dStore.id === bStore.id;
-                });
-
-                dStore.level = bStore.base.characterLevel;
-                dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-                dStore.powerLevel = bStore.base.characterBase.powerLevel;
-                dStore.background = bStore.base.backgroundPath;
-                dStore.icon = bStore.base.emblemPath;
-              }
-            })
-          })
-          .then(function() {
-            var value = 'success';
-            var message = 'Your loadout has been transfered.';
-
-            if (scope.failed) {
-              value = 'warning';
-              message = 'Your loadout has been transfered, with errors.'
-            }
-
-            toaster.pop(value, loadout.name, message);
-          });
-      }
-    }
   }
 })();

@@ -239,10 +239,9 @@ a {
 /* settings dialog */
 
 .ngdialog.app-settings .ngdialog-content {
-  width: 40%;
-  height: auto;
-  min-height: 70%;
-  left: 30%;
+  width: 60%;
+  min-height: 80%;
+  left: 20%;
   top: 10%;
 }
 @-webkit-keyframes ngdialog-fadeout {
@@ -637,6 +636,7 @@ img.void {
   color: #000;
   min-width: 10px;
   text-align: center;
+  -webkit-user-select: none;
 }
 .stat-damage-arc {
   background: #85c5ec;
@@ -876,6 +876,10 @@ img.void {
   bottom: 50px;
   min-height: 77px;
 }
+.move-popup .interaction {
+  display: flex;
+  flex-direction: row;
+}
 .move-popup .item-name {
   background-color: #fff;
   color: #000;
@@ -972,7 +976,7 @@ img.void {
 .item-details.stat-box-row {
   padding-bottom: 3px;
 }
-.item-details .item-perks div {
+.item-details .item-perks div, .infuse-perk {
   display: inline-block;
   background-color: #4887ba;
   border-radius: 50%;
@@ -983,6 +987,7 @@ img.void {
   width: 44px;
   height: 44px;
 }
+
 .move-popup a {
   color: #000;
 }
@@ -995,6 +1000,12 @@ img.void {
   margin: 6px;
   cursor: pointer;
   display: inline-block;
+}
+.move-popup .infuse-perk {
+  width: 37px;
+  height: 37px;
+  margin: 6px;
+  cursor: pointer;
 }
 .move-popup .move-button span {
   display: inline-block;
@@ -1134,7 +1145,7 @@ ialog-open {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
-  width: 320px;
+  width: 343px;
   top: initial;
   left: initial;
   right: initial;
@@ -1162,7 +1173,8 @@ ialog-open {
   top: 50px;
 }
 .locations {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
 }
 .character .ngdialog {
   display: block;
@@ -1587,21 +1599,66 @@ button.toast-close-button {
   clear: both;
 }
 
+.infuseSourceItemInfo {
+  padding: 0px 0px 10px 25px;
+  display: flex;
+  flex-direction: row;
+}
+
+.infuseControls {
+  padding: 0px 0px 10px 25px;
+}
+.infuseControls label {
+  display: block;
+}
+
+.infuseDialog {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.infuseDialog small {
+  font-size: 10px;
+}
+
+.infuseHeader {
+  display: flex;
+  flex-direction: row;
+}
+
 .infuseDialog .infuseSourceItem {
-  float: left;
   width: 48px;
   height: 48px;
 }
 
 .infuseDialog .infuseSourceDetailsRow {
-  float: left;
-  margin-left: 30px;
+  margin-left: 1rem;
 }
 
-.infuseCalculating {
-  background-size: 22px;
-  height: 22px;
-  display: inline-block;
+.infuseResults {
+  flex: 1;
+}
+
+.infuseTargets {
+  overflow: auto;
+}
+
+.infuse-selected {
+  outline: 2px solid black;
+}
+
+.bestInfusion label {
+  display: inline;
+  margin-right: 22px;
+}
+.infuse-hidden {
+  opacity: 0.35;
+}
+.infuse-excluded {
+  -webkit-filter: grayscale();
+  opacity: 0.15;
 }
 
 .black {
@@ -1621,9 +1678,9 @@ button.toast-close-button {
 }
 
 .infuseDialog .gearsContainer {
-  float: left;
   width: 100%;
-  padding: 10px 0px 25px 25px;
+  padding: 10px 0px 10px 25px;
+  overflow: hidden;
 }
 
 .gearsContainer .item {
@@ -1648,6 +1705,7 @@ button.toast-close-button {
 
 .infuseDialog .bigValue {
   font-size: 32px;
+  line-height: 1em;
 }
 
 .crimson {
