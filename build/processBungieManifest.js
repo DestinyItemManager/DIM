@@ -95,7 +95,7 @@ function onManifestDownloaded() {
 }
 
 function extractDB(dbFile) {
-  db = new sqlite3.Database(dbFile);
+  db = new sqlite3.Database(dbFile, sqlite3.OPEN_READONLY);
   var items = {};
 
   db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {

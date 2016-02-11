@@ -547,6 +547,139 @@
       return createdItem;
     }
 
+    // Some utility functions missing from underscore
+    function sum(list, summer) {
+      return _.reduce(list, function(memo, val, index) {
+        return memo + _.iteratee(summer)(val, index);
+      }, 0);
+    }
+
+    // Count the number of "true" values
+    function count(list, predicate) {
+      return sum(list, function(item, index) {
+        return _.iteratee(predicate)(item, index) ? 1 : 0;
+      });
+    }
+
+    function buildTalentGrid(item, talentDefs, progressDefs, name) {
+      var talentGridDef = talentDefs[item.talentGridHash];
+      if (!item.progression || !talentGridDef) {
+        return undefined;
+      }
+
+      var totalXP = item.progression.currentProgress;
+      var totalLevel = item.progression.level; // Can be way over max
+
+      // progressSteps gives the XP needed to reach each level, with
+      // the last element repeating infinitely.
+      var progressSteps = progressDefs[item.progression.progressionHash].steps;
+      function xpToReachLevel(level) {
+        if (level === 0) {
+          return 0;
+        }
+        return progressSteps[Math.min(level, progressSteps.length) - 1];
+      }
+
+      var possibleNodes = talentGridDef.nodes;
+
+      var gridNodes = item.nodes.map(function(node) {
+        var talentNodeGroup = possibleNodes[node.nodeHash];
+        var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+
+        // We don't include hidden nodes. These are weird things with
+        // no name, or unused nodes like "Twist Fate" on random
+        // legendaries, or "Reforge Artifact".
+        if (node.hidden || talentNodeGroup.column < 0) {
+          return undefined;
+        }
+
+        // Only one node in this column can be selected (scopes, etc)
+        var exclusiveInColumn = !!(talentNodeGroup.exlusiveWithNodes &&
+                                   talentNodeGroup.exlusiveWithNodes.length > 0);
+
+        // Unlocked is whether or not the material cost has been paid
+        // for the node
+        var unlocked = node.isActivated ||
+              talentNodeGroup.autoUnlocks ||
+              // If only one can be activated, the cost only needs to be
+              // paid once per row.
+              (exclusiveInColumn &&
+               _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
+                 return item.nodes[nodeIndex].isActivated;
+               }));
+
+        var activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+        var xpRequired = xpToReachLevel(activatedAtGridLevel);
+        var xp = Math.max(0, Math.min(totalXP - talentNodeSelected.startProgressionBarAtProgress, xpRequired));
+
+        // There's a lot more here, but we're taking just what we need
+        return {
+          name: talentNodeSelected.nodeStepName,
+          description: talentNodeSelected.nodeStepDescription,
+          icon: talentNodeSelected.icon,
+          // XP put into this node
+          xp: xp,
+          // XP needed for this node to unlock
+          xpRequired: xpRequired,
+          // Position in the grid
+          column: talentNodeGroup.column,
+          row: talentNodeGroup.row,
+          // Is the node selected (lit up in the grid)
+          activated: node.isActivated,
+          // The item level at which this node can be unlocked
+          activatedAtGridLevel: activatedAtGridLevel,
+          // Only one node in this column can be selected (scopes, etc)
+          exclusiveInColumn: exclusiveInColumn,
+          // Whether there's enough XP in the item to buy the node
+          xpRequirementMet: activatedAtGridLevel <= totalLevel,
+          // Whether or not the material cost has been paid for the node
+          unlocked: unlocked
+
+          // This list of material requirements to unlock the
+          // item are a mystery. These hashes don't exist anywhere in
+          // the manifest database. Also, the activationRequirement
+          // object doesn't say how much of the material is
+          // needed. There's got to be some missing DB somewhere with
+          // this info.
+          //materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+
+          // These are useful for debugging or searching for new properties,
+          // but they don't need to be included in the result.
+          //talentNodeGroup: talentNodeGroup,
+          //talentNodeSelected: talentNodeSelected,
+          //itemNode: node
+        };
+      });
+      gridNodes = _.compact(gridNodes);
+
+      // This can be handy for visualization/debugging
+      //var columns = _.groupBy(gridNodes, 'column');
+
+      var maxLevelRequired = _.max(_.pluck(gridNodes, 'activatedAtGridLevel'));
+      var totalXPRequired = 0;
+      for (var level = 1; level <= maxLevelRequired; level++) {
+        totalXPRequired += xpToReachLevel(level);
+      }
+
+      var ascendNode = _.find(gridNodes, { name: 'Ascend' });
+
+      // Something wrong w/ will of crota
+
+      // node has activationRequirement.gridlevel, max of all of those is max level!
+      // startProgressionBarAtProgress is when it starts filling... not sure it's useful
+      return {
+        nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
+        xpComplete: totalXPRequired <= totalXP,
+        complete: item.isGridComplete,
+        totalXPRequired: totalXPRequired,
+        totalXP: Math.min(totalXPRequired, totalXP),
+        hasAscendNode: !!ascendNode,
+        ascended: !!(ascendNode && ascendNode.activated),
+        hasReforgeNode: _.any(gridNodes, { name: 'Reforge Ready' }),
+        infusable: _.any(gridNodes, { name: 'Infuse' })
+      };
+    }
+
     function getItems(owner, items) {
       return $q.all([
         dimItemDefinitions,
