@@ -371,15 +371,6 @@
         index = index + item.itemInstanceId;
       }
 
-      /* Artifacts are missing appropiate class types
-       0: titan, 1: hunter, 2: warlock, 3: any */
-      var artifactTypes = ["Titan Artifact","Hunter Artifact","Warlock Artifact"];
-      var artifactIndex = artifactTypes.indexOf(itemDef.itemTypeName);
-      if(artifactIndex != -1)
-      {
-        itemDef.classType = artifactIndex;
-      }
-
       var createdItem = {
         index: index,
         hash: item.itemHash,
