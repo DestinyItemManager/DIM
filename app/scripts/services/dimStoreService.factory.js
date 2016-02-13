@@ -393,7 +393,7 @@
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, itemDef.itemName),
+        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs, itemDef.itemName),
         maxStackSize: itemDef.maxStackSize,
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
@@ -440,7 +440,7 @@
       });
     }
 
-    function buildTalentGrid(item, talentDefs, progressDefs, name) {
+    function buildTalentGrid(item, talentDefs, progressDefs, perkDefs, name) {
       var talentGridDef = talentDefs[item.talentGridHash];
       if (!item.progression || !talentGridDef) {
         return undefined;
@@ -461,14 +461,18 @@
 
       var possibleNodes = talentGridDef.nodes;
 
+      var featuredPerkNames = item.perks.map(function(perk) {
+        return perkDefs[perk.perkHash].displayName;
+      });
+
       var gridNodes = item.nodes.map(function(node) {
         var talentNodeGroup = possibleNodes[node.nodeHash];
         var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
+        var nodeName = talentNodeSelected.nodeStepName;
+
         // Filter out some weird bogus nodes
-        if (!talentNodeSelected.nodeStepName ||
-            talentNodeSelected.nodeStepName.length === 0 ||
-            talentNodeGroup.column < 0) {
+        if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
           return undefined;
         }
 
@@ -493,7 +497,7 @@
 
         // There's a lot more here, but we're taking just what we need
         return {
-          name: talentNodeSelected.nodeStepName,
+          name: nodeName,
           description: talentNodeSelected.nodeStepDescription,
           icon: talentNodeSelected.icon,
           // XP put into this node
@@ -514,7 +518,13 @@
           // Whether or not the material cost has been paid for the node
           unlocked: unlocked,
           // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: node.hidden
+          hidden: node.hidden,
+
+          // Whether (and in which order) this perk should be
+          // "featured" on an abbreviated info panel, as in the
+          // game. 0 = not featured, positive numbers signify the
+          // order of the featured perks.
+          featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
           // This list of material requirements to unlock the
           // item are a mystery. These hashes don't exist anywhere in
