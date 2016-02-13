@@ -452,11 +452,17 @@
       // progressSteps gives the XP needed to reach each level, with
       // the last element repeating infinitely.
       var progressSteps = progressDefs[item.progression.progressionHash].steps;
+      // Total XP to get to specified level
       function xpToReachLevel(level) {
         if (level === 0) {
           return 0;
         }
-        return progressSteps[Math.min(level, progressSteps.length) - 1];
+        var totalXPRequired = 0;
+        for (var step = 1; step <= level; step++) {
+          totalXPRequired += progressSteps[Math.min(step, progressSteps.length) - 1];
+        }
+
+        return totalXPRequired;
       }
 
       var possibleNodes = talentGridDef.nodes;
@@ -491,9 +497,11 @@
                  return item.nodes[nodeIndex].isActivated;
                }));
 
+        // Calculate relative XP for just this node
+        var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
         var activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
-        var xpRequired = xpToReachLevel(activatedAtGridLevel);
-        var xp = Math.max(0, Math.min(totalXP - talentNodeSelected.startProgressionBarAtProgress, xpRequired));
+        var xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
+        var xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
 
         // There's a lot more here, but we're taking just what we need
         return {
@@ -547,17 +555,10 @@
       //var columns = _.groupBy(gridNodes, 'column');
 
       var maxLevelRequired = _.max(_.pluck(gridNodes, 'activatedAtGridLevel'));
-      var totalXPRequired = 0;
-      for (var level = 1; level <= maxLevelRequired; level++) {
-        totalXPRequired += xpToReachLevel(level);
-      }
+      var totalXPRequired = xpToReachLevel(maxLevelRequired);
 
       var ascendNode = _.find(gridNodes, { name: 'Ascend' });
 
-      // Something wrong w/ will of crota
-
-      // node has activationRequirement.gridlevel, max of all of those is max level!
-      // startProgressionBarAtProgress is when it starts filling... not sure it's useful
       return {
         nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
         xpComplete: totalXPRequired <= totalXP,
