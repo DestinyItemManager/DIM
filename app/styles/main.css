@@ -1551,6 +1551,14 @@ button.toast-close-button {
 .move-popup-info-detail .fa {
   vertical-align: top;
 }
+.item-xp-bar {
+  height: 4px;
+  width: 100%;
+}
+.item-xp-bar div {
+  height: 100%;
+  background-color: #5EA16A;
+}
 
 .dim-col-3 {
   width: 240px;
