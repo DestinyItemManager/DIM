@@ -10,6 +10,7 @@
 * The infusion calculator greys out items that are already used or are too low light to use, rather than hiding them.
 * The item move popup now has an entry for the infusion calculator, to make it easier to find.
 * Hold Shift and click on items in the infusion calculator to prevent the calculator from using that item.
+* If you have an exotic class item (with "The Life Exotic" perk) equipped, you can now equip another exotic without having the class item get automatically de-equipped. Previously, this worked only if you equipped the non-class-item exotic first.
 
 # 3.2.3
 

@@ -289,64 +289,58 @@
       function canEquipExotic(item, store) {
         var deferred = $q.defer();
         var promise = deferred.promise;
-        var hasLifeExotic = _.contains(item.talentPerks, 4044819214);
 
-        var prefix = _(store.items)
-          .chain()
-          .filter(function(i) {
-            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic)
+        var equippedExotics = _.filter(store.items, function(i) {
+            return (i.equipped &&
+                    i.type !== item.type &&
+                    i.sort === item.sort &&
+                    i.tier === 'Exotic');
           });
-
-        var amount = prefix.size().value();
 
         // Fix for "The Life Exotic" Perk on Exotic Items
         // Can equip multiples
+        function hasLifeExotic(item) {
+          return _.contains(item.talentPerks, 4044819214);
+        }
 
-        if (amount === 0) {
+        if (equippedExotics.length === 0) {
           deferred.resolve(true);
-        } else if (amount === 1) {
-          var exoticItem = prefix.value()[0];
+        } else if (equippedExotics.length === 1) {
+          var equippedExotic = equippedExotics[0];
 
-          if (hasLifeExotic) {
-            deferred.resolve(true);
-          } else if (_.contains(exoticItem.talentPerks, 4044819214)) {
+          if (hasLifeExotic(item) || hasLifeExotic(equippedExotic)) {
             deferred.resolve(true);
           } else {
-            dequipItem(exoticItem)
+            dequipItem(equippedExotic)
               .then(function(result) {
                 deferred.resolve(true);
               })
               .catch(function(err) {
-                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
               });
           }
-        } else if (amount === 2) {
-          // Assume that only one item type has 'The Life Exotic' perk
-          var exoticItems = prefix.value();
-
-          var exoticItem = _.find(exoticItems, function(item) {
-            return !_.contains(item.talentPerks, 4044819214);
-          });
-
-          var exoticItemWithPerk = _.find(exoticItems, function(item) {
-            return _.contains(item.talentPerks, 4044819214);
-          });
-
-          if (hasLifeExotic) {
+        } else if (equippedExotics.length === 2) {
+          // Assume that only one of the equipped items has 'The Life Exotic' perk
+          if (hasLifeExotic(item)) {
+            var exoticItemWithPerk = _.find(equippedExotics, hasLifeExotic(item));
             dequipItem(exoticItemWithPerk)
               .then(function(result) {
                 deferred.resolve(true);
               })
               .catch(function(err) {
-                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
               });
           } else {
-            dequipItem(exoticItem)
+            var equippedExoticWithoutPerk = _.find(equippedExotics, function(item) {
+              return !hasLifeExotic(item);
+            });
+
+            dequipItem(equippedExoticWithoutPerk)
               .then(function(result) {
                 deferred.resolve(true);
               })
               .catch(function(err) {
-                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
               });
           }
         }
