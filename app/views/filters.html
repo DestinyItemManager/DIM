@@ -83,18 +83,21 @@
     </tr>
     <tr>
       <td>
-        <span>is:incomplete</span>
-        <span>is:upgraded</span>
         <span>is:complete</span>
-      </td>
-      <td>Shows items at various states of leveling. Incomplete will show items that need XP. Upgraded will show items that have enough XP to unlocked all their nodes and only need materials. Complete shows items that are fully leveled.</td>
-    </tr>
-    <tr>
-      <td>
+        <span>is:incomplete</span>
         <span>is:xpincomplete</span>
         <span>is:xpcomplete</span>
+        <span>is:upgraded</span>
       </td>
-      <td>Shows items based on their XP status.</td>
+      <td>Shows items at various states of leveling:
+        <ul>
+          <li>Complete shows items that are totally complete - every upgrade unlocked.</li>
+          <li>Incomplete shows items that are not complete - there's still at least one upgrade to unlock.</li>
+          <li>xpincomplete shows items that can still have XP put into them.</li>
+          <li>xpcomplete shows items that cannot have XP put into them (whether or not their upgrades have been unlocked).</li>
+          <li>Upgraded shows items that have enough XP to unlock all their nodes, but not all the nodes have been unlocked.</li>
+        </ul>
+      </td>
     </tr>
     <tr>
       <td>

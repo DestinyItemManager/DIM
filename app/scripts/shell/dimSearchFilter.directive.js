@@ -152,49 +152,63 @@
      * Value is the checking function
      * @param {String} predicate The predicate - for example, is:arc gets the 'elemental' filter function, with predicate='arc'
      * @param {Object} item The item to test against.
-     * @return {Boolean} Returns false for a match, true for a non-match (@TODO make this less confusing)
+     * @return {Boolean} Returns true for a match, false for a non-match
      */
     var filterFns = {
       'dmg': function(predicate, item) {
-        return (item.dmg === predicate);
+        return item.dmg === predicate;
       },
       'type': function(predicate, item) {
-        return (item.type.toLowerCase() === predicate);
+        return item.type.toLowerCase() === predicate;
       },
       'tier': function(predicate, item) {
-        return (item.tier.toLowerCase() === predicate);
+        return item.tier.toLowerCase() === predicate;
       },
-      // @TODO This logic breaks my brain, I can't really reverse it tonight so just not(!)'ing it for now...cheap way
-      // out I know. This applies to incomplete, complete, and upgraded
+      // Incomplete will show items that are not fully leveled.
       'incomplete': function(predicate, item) {
-        return !((item.complete !== true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((item.xpComplete && item.hasXP) || (!item.hasXP)));
+        return item.talentGrid &&
+          !item.complete;
       },
+      // Complete shows items that are fully leveled.
       'complete': function(predicate, item) {
-        return !(item.complete === false) || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class');
+        return item.complete;
       },
+      // Upgraded will show items that have enough XP to unlock all
+      // their nodes and only need the nodes to be purchased.
       'upgraded': function(predicate, item) {
-        return ((item.complete === true || (!item.primStat && item.type !== 'Class') || item.type === 'Vehicle' || (item.tier === 'Common' && item.type !== 'Class')) || ((!item.xpComplete && item.hasXP) || (!item.hasXP)));
+        return item.talentGrid &&
+          item.talentGrid.xpComplete &&
+          !item.complete;
       },
       'xpincomplete': function(predicate, item) {
-        return item.hasXP && !item.xpComplete;
+        return item.talentGrid &&
+          !item.talentGrid.xpComplete;
       },
       'xpcomplete': function(predicate, item) {
-        return !item.hasXP || item.xpComplete;
+        return item.talentGrid &&
+          item.talentGrid.xpComplete;
       },
       'ascended': function(predicate, item) {
-        return item.hasAscendNode && item.ascended;
+        return item.talentGrid &&
+          item.talentGrid.hasAscendNode &&
+          item.talentGrid.ascended;
       },
       'unascended': function(predicate, item) {
-        return !filterFns.ascended(predicate, item);
+        return item.talentGrid &&
+          item.talentGrid.hasAscendNode &&
+          !item.talentGrid.ascended;
       },
       'reforgeable': function(predicate, item) {
-        return item.hasReforgeNode;
+        return item.talentGrid &&
+          item.talentGrid.hasReforgeNode;
       },
       'unlocked': function(predicate, item) {
-        return item.lockable && !item.locked;
+        return item.lockable &&
+          !item.locked;
       },
       'locked': function(predicate, item) {
-        return !filterFns.unlocked(predicate, item);
+        return item.lockable &&
+          item.locked;
       },
       'dupe': function(predicate, item) {
         if (_duplicates === null) {
@@ -234,7 +248,9 @@
         return item.name.toLowerCase().indexOf(predicate) >= 0;
       },
       'light': function(predicate, item) {
-        if (predicate.length === 0 || item.primStat == undefined) return false;
+        if (predicate.length === 0 || item.primStat === undefined) {
+          return false;
+        }
 
         var operands = ['<=','>=','=','>','<'];
         var operand = 'none';
@@ -250,22 +266,22 @@
 
         switch (operand) {
           case 'none':
-            result = (item.primStat.value == predicate)
+            result = (item.primStat.value == predicate);
             break;
           case '=':
-            result = (item.primStat.value == predicate)
+            result = (item.primStat.value == predicate);
             break;
           case '<':
-            result = (item.primStat.value < predicate)
+            result = (item.primStat.value < predicate);
             break;
           case '<=':
-            result = (item.primStat.value <= predicate)
+            result = (item.primStat.value <= predicate);
             break;
           case '>':
-            result = (item.primStat.value > predicate)
+            result = (item.primStat.value > predicate);
             break;
           case '>=':
-            result = (item.primStat.value >= predicate)
+            result = (item.primStat.value >= predicate);
             break;
         }
         return result;

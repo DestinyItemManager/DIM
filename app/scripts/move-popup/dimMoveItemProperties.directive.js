@@ -2,7 +2,32 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimMoveItemProperties', MoveItemProperties);
+    .directive('dimMoveItemProperties', MoveItemProperties)
+    .filter('talentGridNodes', function() {
+      return function(nodes) {
+        var result = [];
+        (nodes || []).forEach(function(node) {
+          if (node.hidden || ['Infuse', 'Upgrade Damage', 'Upgrade Defense', 'Arc Damage', 'Solar Damage', 'Void Damage'].indexOf(node.name) >= 0) {
+            return;
+          }
+
+          var column = result[node.column] = result[node.column] || [];
+
+          if (node.exclusiveInColumn) {
+            if (column.length === 0) {
+              column.push(node);
+            } else if (!column[0].activated && node.activated) {
+              result[node.column] = [node];
+            }
+          } else {
+            column.push(node);
+          }
+        });
+        return _.compact(_.flatten(result));
+      };
+    });
+
+
 
   MoveItemProperties.$inject = ['$sce'];
 
@@ -47,8 +72,9 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div ng-if="vm.item.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');cursor:pointer;"></div>',
-        '    <div ng-repeat="perk in vm.item.perks track by $index" title="{{perk.displayName}}\n{{perk.displayDescription}}" style="background-image: url(http://bungie.net{{ perk.iconPath }})"></div>',
+        '    <div class="talent-node-active" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');cursor:pointer;"></div>',
+        // TODO: rebuild the full talent grid!
+        '    <div ng-repeat="node in vm.item.talentGrid.nodes | talentGridNodes track by $index" title="{{node.name}}\n{{node.description}}" style="background-image: url(http://bungie.net{{ node.icon }})" ng-class="{ \'talent-node-active\': node.activated }"></div>',
         '  </div>',
         '</div>'
       ].join('')
