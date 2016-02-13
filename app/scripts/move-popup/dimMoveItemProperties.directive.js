@@ -78,7 +78,7 @@
         // TODO: rebuild the full talent grid!
         '    <div class="talent-node" ng-repeat="node in vm.item.talentGrid.nodes | talentGridNodes track by $index" ng-class="{ \'talent-node-active\': node.activated }" title="{{node.name}}\n{{node.description}}">',
         '    <div class="talent-node-icon" style="background-image: url(http://bungie.net{{ node.icon }})"></div>',
-        '    <svg ng-if="!node.activated && node.xpRequired" viewBox="-1 -1 34 34" height="44" width="44"><circle ng-attr-stroke-dasharray="{{100.0 * node.xp / node.xpRequired}} 100" fill="none" stroke="#5EA16A" stroke-width="2" r="16" cx="16" cy="16" /></svg>',
+        '    <svg ng-if="!node.activated && node.xpRequired" viewBox="-1 -1 34 34" height="44" width="44"><circle ng-attr-stroke-dasharray="{{100.0 * node.xp / node.xpRequired}} 100" stroke-width="2" r="16" cx="16" cy="16" /></svg>',
         '    </div>',
         '</div>',
         '  </div>',

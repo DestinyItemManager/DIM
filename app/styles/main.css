@@ -1009,10 +1009,12 @@ img.void {
 }
 
 .item-details .talent-node svg {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
   transform: rotate(-90deg);
+  stroke: #5EA16A;
+  fill: none;
 }
 
 
