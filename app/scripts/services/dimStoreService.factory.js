@@ -386,26 +386,20 @@
         bucket: item.bucket,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
-        hasXP: (!!item.progression),
-        xpComplete: false,
         amount: item.stackSize,
         primStat: item.primaryStat,
         stats: item.stats,
-        perks: item.perks,
-        nodes: item.nodes,
+        // "perks" are the two or so talent grid items that are "featured" for an
+        // item in its popup in the game. We don't currently use these.
+        //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        //talents: talentDefs[item.talentGridHash],
-        talentPerks: getTalentPerks(item, talentDefs),
+        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, itemDef.itemName),
         maxStackSize: itemDef.maxStackSize,
+        // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),
-        /* 0: titan, 1: hunter, 2: warlock, 3: any */
         dmg: dmgName,
         visible: true,
-        hasAscendNode: false,
-        ascended: false,
-        hasReforgeNode: false,
-        infusable: false,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
         lockable: item.lockable,
         locked: item.locked,
@@ -419,6 +413,8 @@
             progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
 
         createdItem.complete = item.objectives[0].isComplete;
+        // TODO: xpComplete for bounties is a different thing. Until we
+        // redo "objectives", keep this as a property on the item.
         createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
       }
 
@@ -426,114 +422,6 @@
         stat.name = statDef[stat.statHash].statName;
         stat.bar = stat.name !== 'Magazine' && stat.name !== 'Energy'; // energy == magazine for swords
       });
-
-      if (item.itemHash === 2809229973) { // Necrochasm
-        createdItem.hasXP = true;
-        createdItem.xpComplete = true;
-        createdItem.complete = true;
-      }
-
-      // Fixes items that are marked as complete, but the data didn't reflect
-      // that status.  Must be a bug in Bungie's data.
-      if (createdItem.complete) {
-        createdItem.hasXP = true;
-        createdItem.xpComplete = true;
-      }
-
-      _.each(createdItem.perks, function(perk) {
-        var perkDef = perkDefs[perk.perkHash];
-        if (perkDef) {
-          _.each(['displayName', 'displayDescription'], function(attr) {
-            if (perkDef[attr]) {
-              perk[attr] = perkDef[attr];
-            }
-          });
-        }
-      });
-
-      // Only legendary or Exotic items are infusable.
-      // Infuse perk's id is 1270552711
-      createdItem.infusable = _.contains(createdItem.talentPerks, 1270552711);
-
-      var talents = talentDefs[item.talentGridHash];
-
-      if (talents) {
-        var activePerks = _.pluck(createdItem.perks, 'displayName');
-
-        var ascendNode = _.filter(talents.nodes, function(node) {
-          return _.any(node.steps, function(step) {
-            return step.nodeStepName === 'Ascend';
-          });
-        });
-
-        if (!_.isEmpty(ascendNode)) {
-          createdItem.hasAscendNode = true;
-          var filteredAcendedTalent = _.filter(item.nodes, function(node) {
-            return node.nodeHash === ascendNode[0].nodeHash;
-          });
-
-          createdItem.ascended = (filteredAcendedTalent.length > 0) ? filteredAcendedTalent[0].isActivated : false;
-
-          if (!createdItem.ascended) {
-            createdItem.complete = false;
-          }
-        }
-
-        var reforgeNodes = _.filter(talents.nodes, function(node) {
-          return _.any(node.steps, function(step) {
-            return step.nodeStepName === 'Reforge Ready';
-          });
-        });
-
-        // lets just see only the activated nodes for this item instance.
-        var activated = _.filter(item.nodes, 'isActivated');
-
-        // loop over the exclusive set talents grid for that weapon type
-        _.each(talents.exclusiveSets, function(set) {
-          _.each(activated, function(active) {
-            if(set.nodeIndexes.indexOf(active.nodeHash) > -1) {
-
-              var node = talents.nodes[active.nodeHash].steps[active.stepIndex];
-              if(!_.contains(activePerks, node.nodeStepName)) {
-                createdItem.perks.push({
-                  displayName: node.nodeStepName,
-                  displayDescription: node.nodeStepDescription,
-                  iconPath: node.icon,
-                  isActive: true,
-                  order: active.column
-                });
-              } else {
-                var perk = _.findIndex(createdItem.perks, {displayName: node.nodeStepName});
-
-                createdItem.perks[perk].order = active.column;
-              }
-            }
-          });
-        });
-        // other useful information about the item (this has info about reforge/etc)
-        // _.each(talents.independentNodeIndexes, function(set) {
-
-        createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
-
-        // Fill in order for stuff that wasn't "activated"
-        _.each(createdItem.perks, function(perk) {
-          if (!perk.order) {
-            var node = _.find(talents.nodes, function(node) {
-              return _.any(node.steps, function(step) { return step.nodeStepName == perk.displayName; });
-            });
-
-            if (node) {
-              perk.order = node.column;
-            }
-          }
-        });
-      }
-
-      // remove inactive perks, with this we actually lose passive perks (like exotic perks)
-      createdItem.perks = _.filter(createdItem.perks, 'isActive');
-
-      // sort the items by their node hashes
-      createdItem.perks = _.sortBy(createdItem.perks, 'order');
 
       return createdItem;
     }
@@ -577,10 +465,10 @@
         var talentNodeGroup = possibleNodes[node.nodeHash];
         var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
-        // We don't include hidden nodes. These are weird things with
-        // no name, or unused nodes like "Twist Fate" on random
-        // legendaries, or "Reforge Artifact".
-        if (node.hidden || talentNodeGroup.column < 0) {
+        // Filter out some weird bogus nodes
+        if (!talentNodeSelected.nodeStepName ||
+            talentNodeSelected.nodeStepName.length === 0 ||
+            talentNodeGroup.column < 0) {
           return undefined;
         }
 
@@ -624,7 +512,9 @@
           // Whether there's enough XP in the item to buy the node
           xpRequirementMet: activatedAtGridLevel <= totalLevel,
           // Whether or not the material cost has been paid for the node
-          unlocked: unlocked
+          unlocked: unlocked,
+          // Some nodes don't show up in the grid, like purchased ascend nodes
+          hidden: node.hidden
 
           // This list of material requirements to unlock the
           // item are a mystery. These hashes don't exist anywhere in
@@ -661,7 +551,6 @@
       return {
         nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
         xpComplete: totalXPRequired <= totalXP,
-        complete: item.isGridComplete,
         totalXPRequired: totalXPRequired,
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: !!ascendNode,
@@ -726,21 +615,6 @@
           return 'female';
       }
       return 'unknown';
-    }
-
-    function getTalentPerks(item, talents) {
-      var talent = talents[item.talentGridHash];
-
-      if (talent) {
-        return _.chain(talent.nodes).map(function(node) {
-            return node.steps;
-          })
-          .flatten()
-          .pluck('nodeStepHash')
-          .value();
-      } else {
-        return [];
-      }
     }
 
     /* Not Implemented */
