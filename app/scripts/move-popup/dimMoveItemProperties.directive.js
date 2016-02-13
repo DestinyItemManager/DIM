@@ -72,9 +72,15 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div class="talent-node-active" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');cursor:pointer;"></div>',
+        '    <div class="talent-node talent-node-active" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator">',
+        '      <div class="talent-node-icon" style="background-image: url(\'/images/{{vm.item.sort}}.png\');cursor:pointer;"></div>',
+        '  </div>',
         // TODO: rebuild the full talent grid!
-        '    <div ng-repeat="node in vm.item.talentGrid.nodes | talentGridNodes track by $index" title="{{node.name}}\n{{node.description}}" style="background-image: url(http://bungie.net{{ node.icon }})" ng-class="{ \'talent-node-active\': node.activated }"></div>',
+        '    <div class="talent-node" ng-repeat="node in vm.item.talentGrid.nodes | talentGridNodes track by $index" ng-class="{ \'talent-node-active\': node.activated }" title="{{node.name}}\n{{node.description}}">',
+        '    <div class="talent-node-icon" style="background-image: url(http://bungie.net{{ node.icon }})"></div>',
+        '    <svg ng-if="!node.activated && node.xpRequired" viewBox="-1 -1 34 34" height="44" width="44"><circle ng-attr-stroke-dasharray="{{100.0 * node.xp / node.xpRequired}} 100" fill="none" stroke="#5EA16A" stroke-width="2" r="16" cx="16" cy="16" /></svg>',
+        '    </div>',
+        '</div>',
         '  </div>',
         '</div>'
       ].join('')

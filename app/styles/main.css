@@ -983,21 +983,36 @@ img.void {
 .item-details.stat-box-row {
   padding-bottom: 3px;
 }
-.item-details .item-perks div, .infuse-perk {
+.item-details .talent-node, .infuse-perk {
   display: inline-block;
   border-radius: 50%;
   margin: 4px;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(255,255,255,0.1);
+  position: relative;
+}
+.item-details .talent-node-icon, .infuse-perk {
+  opacity: 0.25;
+  height: 100%;
+  width: 100%;
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: rgba(255,255,255,0.4);
-  width: 44px;
-  height: 44px;
-  opacity: 0.25;
 }
-.item-details .item-perks div.talent-node-active, .infuse-perk {
+.item-details .talent-node.talent-node-active, .infuse-perk {
   background-color: #4887ba;
   opacity: 1.0;
+}
+.item-details .talent-node.talent-node-active .talent-node-icon {
+  opacity: 1.0;
+}
+
+.item-details .talent-node svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  transform: rotate(-90deg);
 }
 
 
