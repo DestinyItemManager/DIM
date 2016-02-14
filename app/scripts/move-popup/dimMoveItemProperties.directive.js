@@ -30,7 +30,7 @@
         '  <div ng-style="{ width: (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) + \'%\' }"></div>',
         '</div>',
         '<div class="item-details" ng-show="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
-        '<div class="item-details" ng-show="vm.itemDetails && vm.item.stats.length && vm.item.type != \'Bounties\'">',
+        '<div class="item-details" ng-show="vm.itemDetails && (vm.item.stats.length || vm.item.talentGrid) && vm.item.type != \'Bounties\'">',
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
