@@ -554,10 +554,16 @@
       // This can be handy for visualization/debugging
       //var columns = _.groupBy(gridNodes, 'column');
 
-      var maxLevelRequired = _.max(_.pluck(gridNodes, 'activatedAtGridLevel'));
+      var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
       var totalXPRequired = xpToReachLevel(maxLevelRequired);
 
       var ascendNode = _.find(gridNodes, { name: 'Ascend' });
+
+      // Fix for stuff that has nothing in early columns
+      var minColumn = _.min(gridNodes, 'column').column;
+      if (minColumn > 0) {
+        gridNodes.forEach(function(node) { node.column -= minColumn; });
+      }
 
       return {
         nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
