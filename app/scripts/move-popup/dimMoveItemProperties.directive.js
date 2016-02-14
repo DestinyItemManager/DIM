@@ -50,10 +50,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <div class="talent-node talent-node-active" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator">',
-        '      <div class="talent-node-icon" style="background-image: url(\'/images/{{vm.item.sort}}.png\');cursor:pointer;"></div>',
-        '  </div>',
-        '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse"/>',
+        '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
         '  </div>',
         '</div>'
       ].join('')

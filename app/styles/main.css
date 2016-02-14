@@ -983,7 +983,8 @@ img.void {
 .item-details.stat-box-row {
   padding-bottom: 3px;
 }
-.item-details .talent-node, .infuse-perk {
+
+.infuse-perk {
   display: inline-block;
   border-radius: 50%;
   margin: 4px;
@@ -991,32 +992,36 @@ img.void {
   height: 44px;
   background-color: rgba(255,255,255,0.1);
   position: relative;
-}
-.item-details .talent-node-icon, .infuse-perk {
-  opacity: 0.25;
   height: 100%;
   width: 100%;
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
-}
-.item-details .talent-node.talent-node-active, .infuse-perk {
   background-color: #4887ba;
-  opacity: 1.0;
-}
-.item-details .talent-node.talent-node-active .talent-node-icon {
-  opacity: 1.0;
 }
 
-.item-details .talent-node svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: rotate(-90deg);
+.talent-grid {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  margin-top: .5rem;
+}
+.talent-node-xp {
+  fill: rgba(255,255,255,0.1);
+  stroke: none;
+}
+.talent-node-showxp .talent-node-xp {
   stroke: #5EA16A;
-  fill: none;
 }
-
+.talent-node-activated .talent-node-xp {
+  fill: #4887ba;
+}
+.talent-node-img {
+  opacity: 0.25;
+}
+.talent-node-activated .talent-node-img {
+  opacity: 1;
+}
 
 .move-popup a {
   color: #000;
