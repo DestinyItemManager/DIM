@@ -50,7 +50,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
-        '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '    <dim-talent-grid ng-if="::vm.item.talentGrid" dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
         '  </div>',
         '</div>'
       ].join('')

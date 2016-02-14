@@ -64,7 +64,9 @@
     vm.nodePadding = 4;
     vm.scaleFactor = 1.3;
     vm.totalNodeSize = vm.nodeSize + vm.nodePadding;
-    vm.numColumns = _.max(vm.talentGrid.nodes, 'column').column + 1;
-    vm.numRows = _.max(vm.talentGrid.nodes, 'row').row + 1;
+    if (vm.talentGrid) {
+      vm.numColumns = _.max(vm.talentGrid.nodes, 'column').column + 1;
+      vm.numRows = _.max(vm.talentGrid.nodes, 'row').row + 1;
+    }
   }
 })();
