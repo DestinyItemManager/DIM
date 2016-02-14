@@ -32,30 +32,18 @@
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
-        '    <div ng-if="(vm.item.sort === \'Weapons\' || vm.item.type === \'Vehicle\') && vm.item.owner != \'vault\'" class="stat-box-row">',
+        '    <div class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
         '       <span class="stat-box-outer">',
-        '         <span ng-if="stat.value === stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
-        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
-        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.equippedStatsValue - stat.value}}" class="stat-box-inner lower-stats" style="width: {{ stat.equippedStatsValue - stat.value }}%"></span>',
-        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.equippedStatsValue }}" class="stat-box-inner" style="width: {{ stat.equippedStatsValue }}%"></span>',
-        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName != \'Magazine\' && stat.equippedStatsName === stat.name" ng-show="{{ stat.value - stat.equippedStatsValue}}" class="stat-box-inner higher-stats" style="width: {{ stat.value - stat.equippedStatsValue }}%"></span>',
-        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="lower-stats">{{ stat.value }}</span>',
-        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === \'Magazine\' && stat.equippedStatsName === stat.name" ng-hide="{{ stat.bar }}" class="higher-stats">{{ stat.value }}</span>',
-        '         <span ng-if="stat.value === stat.equippedStatsValue" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
-        '         <span ng-if="stat.name === \'Magazine\' && stat.equippedStatsName === \'Energy\'" ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
+        '         <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
+        '         <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
+        '         <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" style="width: {{ stat.equippedStatsValue - stat.value }}%"></span>',
+        '         <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ stat.equippedStatsValue }}%"></span>',
+        '         <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" style="width: {{ stat.value - stat.equippedStatsValue }}%"></span>',
+
+        '         <span ng-if="!stat.bar && stat.comparable" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '       </span>',
-        '         <span ng-if="stat.value < stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
-        '         <span ng-if="stat.value > stat.equippedStatsValue && stat.equippedStatsName === stat.name" ng-show="{{ stat.bar }}" class="higher-stats stat-box-val">{{ stat.value }}</span>',
-        '         <span ng-if="stat.value === stat.equippedStatsValue || stat.equippedStatsName != stat.name" ng-show="{{ stat.bar }}" class="stat-box-val">{{ stat.value }}</span>',
-        '    </div>',
-        '    <div ng-if="(vm.item.sort != \'Weapons\' && vm.item.type != \'Vehicle\') || vm.item.owner === \'vault\'" class="stat-box-row">',
-        '       <span class="stat-box-text"> {{ stat.name }} </span>',
-        '       <span class="stat-box-outer">',
-        '         <span ng-show="{{ stat.bar }}" class="stat-box-inner" style="width: {{ stat.value }}%"></span>',
-        '         <span ng-hide="{{ stat.bar }}">{{ stat.value }}</span>',
-        '       </span>',
-        '       <span class="stat-box-val" ng-show="{{ stat.bar }}">{{ stat.value }}</span>',
+        '         <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
         '    </div>',
         '  </div>',
         '  <div class="item-perks">',
@@ -97,46 +85,35 @@
       } else if (vm.item.primStat.statHash === 368428387) {
         // it's a weapon.
         vm.light += ' Attack';
-        switch (vm.item.dmg) {
-          case 'arc':
-            {
-              vm.classes['is-arc'] = true;
-              break;
-            }
-          case 'solar':
-            {
-              vm.classes['is-solar'] = true;
-              break;
-            }
-          case 'void':
-            {
-              vm.classes['is-void'] = true;
-              break;
-            }
-        }
+        vm.classes['is-' + vm.item.dmg] = true;
       }
     }
 
     /*
-    * Get the item stats and its stat name
-    * of the equipped item for comparison
-    */
-    var items = $scope.$parent.$parent.vm.store.items;
-
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item.equipped && item.type === vm.item.type) {
-        for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
-          var itemStats = item.stats[key];
-          if (itemStats) {
-            var vmItemStats = vm.item.stats[key];
-            if (vmItemStats) {
-              vmItemStats.equippedStatsValue = itemStats.value;
-              vmItemStats.equippedStatsName = itemStats.name;
+     * Get the item stats and its stat name
+     * of the equipped item for comparison
+     */
+    if (vm.item.equipment) {
+      $scope.$watch('$parent.$parent.vm.store.items', function(items) {
+        var item = _.find(items, function(item) {
+          return item.equipped && item.type === vm.item.type;
+        });
+        if (item) {
+          for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
+            var itemStats = item.stats && item.stats[key];
+            if (itemStats) {
+              var vmItemStats = vm.item.stats[key];
+              if (vmItemStats) {
+                vmItemStats.equippedStatsValue = itemStats.value;
+                vmItemStats.equippedStatsName = itemStats.name;
+                vmItemStats.comparable = vmItemStats.equippedStatsName === vmItemStats.name ||
+                  (vmItemStats.name === 'Magazine' && vmItemStats.equippedStatsName === 'Energy') ||
+                  (vmItemStats.name === 'Energy' && vmItemStats.equippedStatsName === 'Magazine');
+              }
             }
           }
         }
-      }
+      });
     }
   }
 })();

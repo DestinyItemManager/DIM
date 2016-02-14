@@ -433,7 +433,7 @@
 
       _.each(item.stats, function(stat) {
         stat.name = statDef[stat.statHash].statName;
-        stat.bar = stat.statHash !== 3871231066 && item.primaryStat.statHash !== 3897883278;
+        stat.bar = stat.name !== 'Magazine' && stat.name !== 'Energy'; // energy == magazine for swords
       });
 
       if (item.itemHash === 2809229973) { // Necrochasm
