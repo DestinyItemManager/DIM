@@ -100,6 +100,7 @@
       setHeight('.sub-section.sort-messages');
       setHeight('.sub-section.sort-special-orders');
       setHeight('.sub-section.sort-lost-items');
+      setHeight('.sub-section.sort-quests');
       setHeight('.weapons');
       setHeight('.armor');
       setHeight('.general');
@@ -393,7 +394,8 @@
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs, itemDef.itemName),
+        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
+        objectives: buildObjectives(item, objectiveDef, itemDef),
         maxStackSize: itemDef.maxStackSize,
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
@@ -407,15 +409,12 @@
         classified: itemDef.classified
       };
 
-      // Bounties
-      if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
-        var objectiveDefObj = objectiveDef[item.objectives[0].objectiveHash],
-            progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
-
-        createdItem.complete = item.objectives[0].isComplete;
-        // TODO: xpComplete for bounties is a different thing. Until we
-        // redo "objectives", keep this as a property on the item.
-        createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
+      // More objectives properties
+      if (createdItem.objectives) {
+        createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
+        createdItem.xpComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+          return (objective.progress / objective.completionValue) / createdItem.objectives.length;
+        }));
       }
 
       _.each(item.stats, function(stat) {
@@ -440,7 +439,7 @@
       });
     }
 
-    function buildTalentGrid(item, talentDefs, progressDefs, perkDefs, name) {
+    function buildTalentGrid(item, talentDefs, progressDefs, perkDefs) {
       var talentGridDef = talentDefs[item.talentGridHash];
       if (!item.progression || !talentGridDef) {
         return undefined;
@@ -575,6 +574,24 @@
         hasReforgeNode: _.any(gridNodes, { name: 'Reforge Ready' }),
         infusable: _.any(gridNodes, { name: 'Infuse' })
       };
+    }
+
+    function buildObjectives(item, objectiveDef, def) {
+      if (!item.objectives || !item.objectives.length) {
+        return undefined;
+      }
+
+      return item.objectives.map(function(objective) {
+        var def = objectiveDef[objective.objectiveHash];
+
+        return {
+          description: def.displayDescription,
+          progress: objective.progress,
+          completionValue: def.completionValue,
+          complete: objective.isComplete,
+          boolean: def.completionValue === 1
+        };
+      });
     }
 
     function getItems(owner, items) {
@@ -785,7 +802,7 @@
       }
 
       if (type.indexOf("Quest") != -1) {
-        return 'Bounties';
+        return 'Quests';
       }
 
       if (type.indexOf("Relic") != -1) {

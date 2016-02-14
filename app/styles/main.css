@@ -145,7 +145,7 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   border-bottom: solid 1px #111;
   background-color: #222;
 }
-.vault .sort-class, .vault .section.postmaster {
+.vault .sort-class, .vault .section.postmaster, .vault .sort-class, .vault .section.progress {
   /*display: none;*/
   visibility: hidden;
 }
@@ -923,19 +923,23 @@ img.void {
  */
 
 .item-details {
-  padding: 10px;
+  margin: 10px;
+}
+.item-description {
+  margin: 10px;
+  white-space: pre-wrap;
 }
 .item-stats {
   width: 100%;
 }
 .stat-box-row {
   overflow: hidden;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 .item-details .stat-box-text {
   display: block;
   float: left;
-  line-height: 20px;
+  line-height: 14px;
   padding-right: 10px;
   width: 30%;
   text-align: right;
@@ -943,7 +947,7 @@ img.void {
 .item-details .stat-box-val{
   display: block;
   float: left;
-  line-height: 20px;
+  line-height: 14px;
   width: 10%;
   text-align: left;
   padding-left: 5px;
@@ -962,7 +966,8 @@ img.void {
 }
 .item-details .stat-box-outer, .item-details .stat-box-inner {
   display: block;
-  height: 20px;
+  height: 14px;
+  line-height: 14px;
   width: 60%;
   float: left;
   background-color: #333;
@@ -982,6 +987,68 @@ img.void {
 }
 .item-details.stat-box-row {
   padding-bottom: 3px;
+}
+
+.objective-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 4px;
+}
+.objective-checkbox {
+  width: 17px;
+  height: 17px;
+  border: 1px solid #999;
+  margin-right: 4px;
+}
+.objective-complete {
+  opacity: 0.5;
+}
+.objective-complete .objective-progress {
+  background-color: #111;
+}
+.objective-complete .objective-progress-bar {
+  display: none;
+}
+.objective-complete .objective-checkbox div {
+  margin: 2px;
+  height: 11px;
+  width: 11px;
+  background-color: #7DC878;
+}
+.objective-progress {
+  flex: 1;
+  background-color: black;
+  position: relative;
+  min-height: 17px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+}
+.objective-progress-bar {
+  background-color: #7DC878;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+.objective-description {
+  position: relative;
+  padding: 0 4px;
+  flex: 1;
+}
+.objective-text {
+  margin-right: 4px;
+  z-index: 100;
+}
+.objective-boolean .objective-progress-bar, .objective-boolean .objective-text {
+  display: none;
+}
+.objective-boolean .objective-progress {
+  background-color: transparent;
+}
+.objective-boolean .objective-description {
+  padding: 0;
 }
 
 .infuse-perk {
@@ -1004,7 +1071,6 @@ img.void {
   max-width: 100%;
   height: auto;
   width: auto;
-  margin-top: .5rem;
 }
 .talent-node-xp {
   fill: rgba(255,255,255,0.1);

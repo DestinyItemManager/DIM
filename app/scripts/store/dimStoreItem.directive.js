@@ -85,7 +85,7 @@
         }
       };
 
-      if (vm.item.type === 'Bounties') {
+      if (!vm.item.primStat && vm.item.objectives) {
         scope.$watchGroup([
           'vm.item.xpComplete',
           'vm.itemStat',
@@ -171,6 +171,7 @@
     case 'Lost Items':
     case 'Missions':
     case 'Bounties':
+    case 'Quests':
     case 'Special Orders':
     case 'Messages':
       {

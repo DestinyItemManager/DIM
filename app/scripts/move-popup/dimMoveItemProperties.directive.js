@@ -24,13 +24,14 @@
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="vm.item.stats.length && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
+        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.n(vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
-        '<div class="item-xp-bar" ng-if="vm.item.talentGrid && !vm.item.complete">',
-        '  <div ng-style="{ width: (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) + \'%\' }"></div>',
+        '<div class="item-xp-bar" ng-if="(vm.item.talentGrid || vm.item.xpComplete) && !vm.item.complete && vm.item.objectives.length !== 1">',
+        '  <div ng-style="{ width: vm.item.talentGrid ? (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) : vm.item.xpComplete + \'%\' }"></div>',
         '</div>',
-        '<div class="item-details" ng-show="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
-        '<div class="item-details" ng-show="vm.itemDetails && (vm.item.stats.length || vm.item.talentGrid) && vm.item.type != \'Bounties\'">',
+        '<div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
+        '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
+        '<div class="item-details" ng-if="vm.itemDetails && vm.hasDetails">',
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
@@ -49,8 +50,18 @@
         '         <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
         '    </div>',
         '  </div>',
-        '  <div class="item-perks">',
-        '    <dim-talent-grid ng-if="::vm.item.talentGrid" dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '</div>',
+        '<div class="item-details item-perks" ng-if="::vm.item.talentGrid">',
+        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '</div>',
+        '<div class="item-details item-objectives" ng-if="vm.item.objectives.length">',
+        '  <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
+        '     <div class="objective-checkbox"><div></div></div>',
+        '     <div class="objective-progress">',
+        '       <div class="objective-progress-bar" style="width: {{ 100 * objective.progress / objective.completionValue }}%"></div>',
+        '       <div class="objective-description">{{ objective.description || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
+        '       <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
+        '     </div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -62,6 +73,12 @@
   function MoveItemPropertiesCtrl($sce, settings, ngDialog, $scope) {
     var vm = this;
 
+    vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
+      vm.item.talentGrid ||
+      vm.item.objectives;
+    vm.showDescription = vm.item.description.length &&
+      !vm.item.equipment;
+
     vm.classes = {
       'item-name': true,
       'is-arc': false,
@@ -72,10 +89,10 @@
     vm.title = $sce.trustAsHtml(vm.item.name);
     vm.light = '';
     vm.classType = '';
-    vm.itemDetails = false;
+    vm.itemDetails = vm.item.notransfer;
     settings.getSetting('itemDetails')
       .then(function(show) {
-        vm.itemDetails = show;
+        vm.itemDetails = vm.itemDetails || show;
       });
 
     if (vm.item.primStat) {

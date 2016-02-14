@@ -121,6 +121,7 @@
       'Material',
       'Missions',
       'Bounties',
+      'Quests',
       'Messages',
       'Special Orders',
       'Lost Items'
@@ -157,9 +158,11 @@
         'Emote',
         'Ship',
         'Vehicle',
-        'Horn',
+        'Horn'],
+      Progress: [
+        'Bounties',
+        'Quests',
         'Missions',
-        'Bounties'
       ],
       Postmaster: [
         'Messages',

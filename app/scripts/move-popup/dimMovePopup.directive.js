@@ -20,7 +20,6 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
-        '  <span ng-if="::vm.item.type === \'Bounties\'" class="bounty-description" ng-bind="::vm.item.description"></span>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
@@ -39,7 +38,7 @@
         '        <span>Equip</span>',
         '      </div>',
         '    </div>',
-        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
+        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -61,6 +60,9 @@
     * the selected item
     */
     vm.infuse = function infuse(item, e) {
+      if (item.sort === 'Postmaster') {
+        return;
+      }
       e.stopPropagation();
 
       // Close the move-popup

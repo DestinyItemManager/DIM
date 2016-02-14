@@ -16,6 +16,9 @@
 * The talent grid for an item are now shown in the item details, just like in the game, including XP per node.
 * Subclasses show a talent grid as well!
 * The item stats comparison will no longer be cleared if DIM reloads items while an item popup is open.
+* Bounties and quests are now separated, and under their own "Progress" heading.
+* Bounties, quests, and anything else that can have objectives (like test weapons and runes) now show their objectives and the progress towards them. As a result, completion percentages are also now accurate for those items.
+* Descriptions are now available as details for non-equipment items.
 
 # 3.2.3
 
