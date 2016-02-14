@@ -970,6 +970,9 @@ img.void {
   line-height: 20px;
   border-right: solid 1px #000;
 }
+.item-details .stat-box-inner:last-child {
+  border-right: none;
+}
 .item-details .stat-box-outer span:last-child {
   padding-left: 5px;
 }
