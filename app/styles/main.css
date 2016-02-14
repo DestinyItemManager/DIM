@@ -1022,6 +1022,9 @@ img.void {
 .talent-node-activated .talent-node-img {
   opacity: 1;
 }
+.talent-node-default .talent-node-xp {
+  fill: rgba(255,255,255,0.4)
+}
 
 .move-popup a {
   color: #000;
