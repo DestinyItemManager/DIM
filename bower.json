@@ -1,11 +1,11 @@
 {
-  "name": "Destiny Item Manager",
-  "description": "A Google Chrome extension that can move items between Guardians and their Vault.",
-  "version": "3.2.1",
-  "homepage": "https://github.com/kyleshay/DIM",
+  "name": "dim",
+  "description": "An item manager for Destiny.",
+  "version": "3.3",
+  "homepage": "https://github.com/DestinyItemManager/DIM",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kyleshay/DIM.git"
+    "url": "https://github.com/DestinyItemManager/DIM.git"
   },
   "dependencies": {
     "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git",

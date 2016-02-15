@@ -1,4 +1,4 @@
-# Next
+# 3.3
 
 * Infusion auto calculator is much faster.
 * Items in the infusion calculator don't grey out when a search is active anymore.
@@ -21,6 +21,8 @@
 * Descriptions are now shown for all items.
 * Include hidden stats "Aim Assist" and "Equip Speed" for all weapons. You can still see all hidden stats by visiting DTR via the link at the top of item details.
 * Weapon types are now included in their popup title.
+* Removed Crimson Days theme.  It will return.
+* Fixed issue at starts up when DIM cannot resolve if the user is logged into Bungie.net.
 
 # 3.2.3
 
