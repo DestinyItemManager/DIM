@@ -122,12 +122,12 @@
      */
     var filterTrans = {
       'dmg':          ['arc', 'solar', 'void', 'kinetic'],
-      'type':         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem'],
+      'type':         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
       'tier':         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
       'incomplete':   ['incomplete'],
       'complete':     ['complete'],
       'xpcomplete':   ['xpcomplete'],
-      'xpincomplete': ['xpincomplete'],
+      'xpincomplete': ['xpincomplete', 'needsxp'],
       'upgraded':     ['upgraded'],
       'classType':    ['titan', 'hunter', 'warlock'],
       'dupe':         ['dupe', 'duplicate'],
@@ -137,7 +137,8 @@
       'locked':       ['locked'],
       'unlocked':     ['unlocked'],
       'stackable':    ['stackable'],
-      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"],
+      'engram':       ['engram'],
+      'weaponClass':  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
       'year':         ['year1', 'year2']
     };
 
@@ -240,6 +241,9 @@
       },
       'stackable': function(predicate, item) {
         return item.maxStackSize > 1;
+      },
+      'engram': function(predicate, item) {
+        return item.type.toLowerCase().indexOf('Engram') >= 0;
       },
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
