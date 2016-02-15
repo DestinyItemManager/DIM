@@ -249,7 +249,11 @@
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
       },
       'keyword': function(predicate, item) {
-        return item.name.toLowerCase().indexOf(predicate) >= 0;
+        return item.name.toLowerCase().indexOf(predicate) >= 0 ||
+          // Search perks as well
+          (item.talentGrid && _.any(item.talentGrid.nodes, function(node) {
+            return node.name.toLowerCase().indexOf(predicate) >= 0;
+          }));
       },
       'light': function(predicate, item) {
         if (predicate.length === 0 || item.primStat === undefined) {
