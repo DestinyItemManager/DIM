@@ -19,6 +19,7 @@
 * Bounties and quests are now separated, and under their own "Progress" heading.
 * Bounties, quests, and anything else that can have objectives (like test weapons and runes) now show their objectives and the progress towards them. As a result, completion percentages are also now accurate for those items.
 * Descriptions are now shown for all items.
+* Include hidden stats "Aim Assist" and "Equip Speed" for all weapons. You can still see all hidden stats by visiting DTR via the link at the top of item details.
 
 # 3.2.3
 

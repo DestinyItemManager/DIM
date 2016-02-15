@@ -389,7 +389,7 @@
         complete: item.isGridComplete,
         amount: item.stackSize,
         primStat: item.primaryStat,
-        stats: item.stats,
+        stats: buildStats(item, itemDef, statDef),
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
@@ -416,11 +416,6 @@
           return (objective.progress / objective.completionValue) / createdItem.objectives.length;
         }));
       }
-
-      _.each(item.stats, function(stat) {
-        stat.name = statDef[stat.statHash].statName;
-        stat.bar = stat.name !== 'Magazine' && stat.name !== 'Energy'; // energy == magazine for swords
-      });
 
       return createdItem;
     }
@@ -592,6 +587,48 @@
           boolean: def.completionValue === 1
         };
       });
+    }
+
+    function buildStats(item, itemDef, statDef) {
+      if (!item.stats || !item.stats.length) {
+        return undefined;
+      }
+      return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
+        var def = statDef[stat.statHash];
+        var name = def.statName;
+        if (name === 'Aim assistance') {
+          name = 'Aim Assist';
+        }
+
+        // Only include these hidden stats, in this order
+        var secondarySort = ['Aim Assist', 'Equip Speed'];
+        var secondaryIndex = -1;
+
+        var sort = _.findIndex(item.stats, { statHash: stat.statHash });
+        var itemStat;
+        if (sort < 0) {
+          secondaryIndex = secondarySort.indexOf(name);
+          sort = 50 + secondaryIndex;
+        } else {
+          itemStat = item.stats[sort];
+          // Always at the end
+          if (name === 'Magazine' || name === 'Energy') {
+            sort = 100;
+          }
+        }
+
+        if (!itemStat && secondaryIndex < 0) {
+          return undefined;
+        }
+
+        return {
+          name: name,
+          sort: sort,
+          value: itemStat ? itemStat.value : stat.value,
+          maximumValue: itemStat ? itemStat.maximumValue : 100,
+          bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
+        };
+      })), 'sort');
     }
 
     function getItems(owner, items) {
