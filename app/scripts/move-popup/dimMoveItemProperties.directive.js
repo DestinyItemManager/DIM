@@ -24,7 +24,7 @@
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.n(vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
+        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.item.notransfer && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
         '<div class="item-xp-bar" ng-if="(vm.item.talentGrid || vm.item.xpComplete) && !vm.item.complete && vm.item.objectives.length !== 1">',
         '  <div ng-style="{ width: vm.item.talentGrid ? (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) : vm.item.xpComplete + \'%\' }"></div>',
