@@ -15,3 +15,5 @@ build/manifest.zip
 !build/itemHashes.json
 !build/img/misc/missing_icon.png
 
+build/extension
+build/dim-extension.zip

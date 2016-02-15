@@ -1,6 +1,6 @@
 {
   "name": "DIM",
-  "version": "3.2.1",
+  "version": "3.2.3",
   "description": "Destiny Item Manager - Chrome app",
   "main": "app/index.html",
   "scripts": {
@@ -28,6 +28,12 @@
     "unzip": "^0.1.11"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-compress": "^0.14.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-text-replace": "^0.4.0",
+    "grunt-webstore-upload": "^0.8.10",
     "uglify-js": "^2.4.23"
   }
 }

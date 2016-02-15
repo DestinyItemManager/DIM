@@ -1,0 +1,10 @@
+language: node_js
+node_js: "node"
+before_install: npm install -g grunt-cli
+install: npm install
+before_script: grunt publish_beta
+
+branches:
+  # Only the dev branch publishes beta releases
+  only:
+    - dev
