@@ -12,7 +12,8 @@
     SandboxPerk: 'perks',
     Stat: 'stats',
     Talent: 'talent',
-    Years: 'year1'
+    Years: 'year1',
+    Progression: 'progression'
   };
 
   var mod = angular.module('dimApp');

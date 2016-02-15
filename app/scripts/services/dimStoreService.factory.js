@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
 
@@ -305,7 +305,7 @@
       return $q.when(store);
     }
 
-    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, item) {
+    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (itemDef === undefined || itemDef.itemName === 'Classified') {
@@ -371,15 +371,6 @@
         index = index + item.itemInstanceId;
       }
 
-      /* Artifacts are missing appropiate class types
-       0: titan, 1: hunter, 2: warlock, 3: any */
-      var artifactTypes = ["Titan Artifact","Hunter Artifact","Warlock Artifact"];
-      var artifactIndex = artifactTypes.indexOf(itemDef.itemTypeName);
-      if(artifactIndex != -1)
-      {
-        itemDef.classType = artifactIndex;
-      }
-
       var createdItem = {
         index: index,
         hash: item.itemHash,
@@ -395,26 +386,20 @@
         bucket: item.bucket,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
-        hasXP: (!!item.progression),
-        xpComplete: 0,
         amount: item.stackSize,
         primStat: item.primaryStat,
         stats: item.stats,
-        perks: item.perks,
-        nodes: item.nodes,
+        // "perks" are the two or so talent grid items that are "featured" for an
+        // item in its popup in the game. We don't currently use these.
+        //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        //talents: talentDefs[item.talentGridHash],
-        talentPerks: getTalentPerks(item, talentDefs),
+        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs, itemDef.itemName),
         maxStackSize: itemDef.maxStackSize,
+        // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),
-        /* 0: titan, 1: hunter, 2: warlock, 3: any */
         dmg: dmgName,
         visible: true,
-        hasAscendNode: false,
-        ascended: false,
-        hasReforgeNode: false,
-        infusable: false,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
         lockable: item.lockable,
         locked: item.locked,
@@ -428,6 +413,8 @@
             progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
 
         createdItem.complete = item.objectives[0].isComplete;
+        // TODO: xpComplete for bounties is a different thing. Until we
+        // redo "objectives", keep this as a property on the item.
         createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
       }
 
@@ -436,115 +423,158 @@
         stat.bar = stat.name !== 'Magazine' && stat.name !== 'Energy'; // energy == magazine for swords
       });
 
-      if (item.itemHash === 2809229973) { // Necrochasm
-        createdItem.hasXP = true;
-        createdItem.xpComplete = true;
-        createdItem.complete = true;
+      return createdItem;
+    }
+
+    // Some utility functions missing from underscore
+    function sum(list, summer) {
+      return _.reduce(list, function(memo, val, index) {
+        return memo + _.iteratee(summer)(val, index);
+      }, 0);
+    }
+
+    // Count the number of "true" values
+    function count(list, predicate) {
+      return sum(list, function(item, index) {
+        return _.iteratee(predicate)(item, index) ? 1 : 0;
+      });
+    }
+
+    function buildTalentGrid(item, talentDefs, progressDefs, perkDefs, name) {
+      var talentGridDef = talentDefs[item.talentGridHash];
+      if (!item.progression || !talentGridDef) {
+        return undefined;
       }
 
-      // Fixes items that are marked as complete, but the data didn't reflect
-      // that status.  Must be a bug in Bungie's data.
-      if (createdItem.complete) {
-        createdItem.hasXP = true;
-        createdItem.xpComplete = true;
-      }
+      var totalXP = item.progression.currentProgress;
+      var totalLevel = item.progression.level; // Can be way over max
 
-      _.each(createdItem.perks, function(perk) {
-        var perkDef = perkDefs[perk.perkHash];
-        if (perkDef) {
-          _.each(['displayName', 'displayDescription'], function(attr) {
-            if (perkDef[attr]) {
-              perk[attr] = perkDef[attr];
-            }
-          });
+      // progressSteps gives the XP needed to reach each level, with
+      // the last element repeating infinitely.
+      var progressSteps = progressDefs[item.progression.progressionHash].steps;
+      // Total XP to get to specified level
+      function xpToReachLevel(level) {
+        if (level === 0) {
+          return 0;
         }
+        var totalXPRequired = 0;
+        for (var step = 1; step <= level; step++) {
+          totalXPRequired += progressSteps[Math.min(step, progressSteps.length) - 1];
+        }
+
+        return totalXPRequired;
+      }
+
+      var possibleNodes = talentGridDef.nodes;
+
+      var featuredPerkNames = item.perks.map(function(perk) {
+        return perkDefs[perk.perkHash].displayName;
       });
 
-      // Only legendary or Exotic items are infusable.
-      // Infuse perk's id is 1270552711
-      createdItem.infusable = _.contains(createdItem.talentPerks, 1270552711);
+      var gridNodes = item.nodes.map(function(node) {
+        var talentNodeGroup = possibleNodes[node.nodeHash];
+        var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
-      var talents = talentDefs[item.talentGridHash];
+        var nodeName = talentNodeSelected.nodeStepName;
 
-      if (talents) {
-        var activePerks = _.pluck(createdItem.perks, 'displayName');
-
-        var ascendNode = _.filter(talents.nodes, function(node) {
-          return _.any(node.steps, function(step) {
-            return step.nodeStepName === 'Ascend';
-          });
-        });
-
-        if (!_.isEmpty(ascendNode)) {
-          createdItem.hasAscendNode = true;
-          var filteredAcendedTalent = _.filter(item.nodes, function(node) {
-            return node.nodeHash === ascendNode[0].nodeHash;
-          });
-
-          createdItem.ascended = (filteredAcendedTalent.length > 0) ? filteredAcendedTalent[0].isActivated : false;
-
-          if (!createdItem.ascended) {
-            createdItem.complete = false;
-          }
+        // Filter out some weird bogus nodes
+        if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+          return undefined;
         }
 
-        var reforgeNodes = _.filter(talents.nodes, function(node) {
-          return _.any(node.steps, function(step) {
-            return step.nodeStepName === 'Reforge Ready';
-          });
-        });
+        // Only one node in this column can be selected (scopes, etc)
+        var exclusiveInColumn = !!(talentNodeGroup.exlusiveWithNodes &&
+                                   talentNodeGroup.exlusiveWithNodes.length > 0);
 
-        // lets just see only the activated nodes for this item instance.
-        var activated = _.filter(item.nodes, 'isActivated');
+        // Unlocked is whether or not the material cost has been paid
+        // for the node
+        var unlocked = node.isActivated ||
+              talentNodeGroup.autoUnlocks ||
+              // If only one can be activated, the cost only needs to be
+              // paid once per row.
+              (exclusiveInColumn &&
+               _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
+                 return item.nodes[nodeIndex].isActivated;
+               }));
 
-        // loop over the exclusive set talents grid for that weapon type
-        _.each(talents.exclusiveSets, function(set) {
-          _.each(activated, function(active) {
-            if(set.nodeIndexes.indexOf(active.nodeHash) > -1) {
+        // Calculate relative XP for just this node
+        var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
+        var activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+        var xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
+        var xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
 
-              var node = talents.nodes[active.nodeHash].steps[active.stepIndex];
-              if(!_.contains(activePerks, node.nodeStepName)) {
-                createdItem.perks.push({
-                  displayName: node.nodeStepName,
-                  displayDescription: node.nodeStepDescription,
-                  iconPath: node.icon,
-                  isActive: true,
-                  order: active.column
-                });
-              } else {
-                var perk = _.findIndex(createdItem.perks, {displayName: node.nodeStepName});
+        // There's a lot more here, but we're taking just what we need
+        return {
+          name: nodeName,
+          description: talentNodeSelected.nodeStepDescription,
+          icon: talentNodeSelected.icon,
+          // XP put into this node
+          xp: xp,
+          // XP needed for this node to unlock
+          xpRequired: xpRequired,
+          // Position in the grid
+          column: talentNodeGroup.column,
+          row: talentNodeGroup.row,
+          // Is the node selected (lit up in the grid)
+          activated: node.isActivated,
+          // The item level at which this node can be unlocked
+          activatedAtGridLevel: activatedAtGridLevel,
+          // Only one node in this column can be selected (scopes, etc)
+          exclusiveInColumn: exclusiveInColumn,
+          // Whether there's enough XP in the item to buy the node
+          xpRequirementMet: activatedAtGridLevel <= totalLevel,
+          // Whether or not the material cost has been paid for the node
+          unlocked: unlocked,
+          // Some nodes don't show up in the grid, like purchased ascend nodes
+          hidden: node.hidden,
 
-                createdItem.perks[perk].order = active.column;
-              }
-            }
-          });
-        });
-        // other useful information about the item (this has info about reforge/etc)
-        // _.each(talents.independentNodeIndexes, function(set) {
+          // Whether (and in which order) this perk should be
+          // "featured" on an abbreviated info panel, as in the
+          // game. 0 = not featured, positive numbers signify the
+          // order of the featured perks.
+          featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
-        createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
+          // This list of material requirements to unlock the
+          // item are a mystery. These hashes don't exist anywhere in
+          // the manifest database. Also, the activationRequirement
+          // object doesn't say how much of the material is
+          // needed. There's got to be some missing DB somewhere with
+          // this info.
+          //materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
 
-        // Fill in order for stuff that wasn't "activated"
-        _.each(createdItem.perks, function(perk) {
-          if (!perk.order) {
-            var node = _.find(talents.nodes, function(node) {
-              return _.any(node.steps, function(step) { return step.nodeStepName == perk.displayName; });
-            });
+          // These are useful for debugging or searching for new properties,
+          // but they don't need to be included in the result.
+          //talentNodeGroup: talentNodeGroup,
+          //talentNodeSelected: talentNodeSelected,
+          //itemNode: node
+        };
+      });
+      gridNodes = _.compact(gridNodes);
 
-            if (node) {
-              perk.order = node.column;
-            }
-          }
-        });
+      // This can be handy for visualization/debugging
+      //var columns = _.groupBy(gridNodes, 'column');
+
+      var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
+      var totalXPRequired = xpToReachLevel(maxLevelRequired);
+
+      var ascendNode = _.find(gridNodes, { name: 'Ascend' });
+
+      // Fix for stuff that has nothing in early columns
+      var minColumn = _.min(gridNodes, 'column').column;
+      if (minColumn > 0) {
+        gridNodes.forEach(function(node) { node.column -= minColumn; });
       }
 
-      // remove inactive perks, with this we actually lose passive perks (like exotic perks)
-      createdItem.perks = _.filter(createdItem.perks, 'isActive');
-
-      // sort the items by their node hashes
-      createdItem.perks = _.sortBy(createdItem.perks, 'order');
-
-      return createdItem;
+      return {
+        nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
+        xpComplete: totalXPRequired <= totalXP,
+        totalXPRequired: totalXPRequired,
+        totalXP: Math.min(totalXPRequired, totalXP),
+        hasAscendNode: !!ascendNode,
+        ascended: !!(ascendNode && ascendNode.activated),
+        hasReforgeNode: _.any(gridNodes, { name: 'Reforge Ready' }),
+        infusable: _.any(gridNodes, { name: 'Infuse' })
+      };
     }
 
     function getItems(owner, items) {
@@ -555,7 +585,8 @@
         dimObjectiveDefinitions,
         dimSandboxPerkDefinitions,
         dimTalentDefinitions,
-        dimYearsDefinitions])
+        dimYearsDefinitions,
+        dimProgressionDefinitions])
         .then(function(args) {
           var result = [];
           _.each(items, function (item) {
@@ -565,7 +596,6 @@
               result.push(createdItem);
             }
           });
-          console.timeEnd("StoreService");
           return result;
         });
     }
@@ -602,21 +632,6 @@
           return 'female';
       }
       return 'unknown';
-    }
-
-    function getTalentPerks(item, talents) {
-      var talent = talents[item.talentGridHash];
-
-      if (talent) {
-        return _.chain(talent.nodes).map(function(node) {
-            return node.steps;
-          })
-          .flatten()
-          .pluck('nodeStepHash')
-          .value();
-      } else {
-        return [];
-      }
     }
 
     /* Not Implemented */

@@ -362,6 +362,7 @@ a {
   border-width: medium 1px 1px medium;
   font-size: 13px;
   padding: 15px;
+  vertical-align: top;
 }
 .ngdialog-content td span {
   margin: 2px 4px;
@@ -438,6 +439,9 @@ body>div * {
 }
 #system option {
   cursor: pointer;
+}
+#filter-view ul {
+  padding-left: 2em;
 }
 #filter-text {
   display: inline-block;
@@ -979,16 +983,47 @@ img.void {
 .item-details.stat-box-row {
   padding-bottom: 3px;
 }
-.item-details .item-perks div, .infuse-perk {
+
+.infuse-perk {
   display: inline-block;
-  background-color: #4887ba;
   border-radius: 50%;
   margin: 4px;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(255,255,255,0.1);
+  position: relative;
+  height: 100%;
+  width: 100%;
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
-  width: 44px;
-  height: 44px;
+  background-color: #4887ba;
+}
+
+.talent-grid {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  margin-top: .5rem;
+}
+.talent-node-xp {
+  fill: rgba(255,255,255,0.1);
+  stroke: none;
+}
+.talent-node-showxp .talent-node-xp {
+  stroke: #5EA16A;
+}
+.talent-node-activated .talent-node-xp {
+  fill: #4887ba;
+}
+.talent-node-img {
+  opacity: 0.25;
+}
+.talent-node-activated .talent-node-img {
+  opacity: 1;
+}
+.talent-node-default .talent-node-xp {
+  fill: rgba(255,255,255,0.4)
 }
 
 .move-popup a {
@@ -1523,6 +1558,14 @@ button.toast-close-button {
 }
 .move-popup-info-detail .fa {
   vertical-align: top;
+}
+.item-xp-bar {
+  height: 4px;
+  width: 100%;
+}
+.item-xp-bar div {
+  height: 100%;
+  background-color: #5EA16A;
 }
 
 .dim-col-3 {

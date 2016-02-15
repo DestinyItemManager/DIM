@@ -300,7 +300,7 @@
         // Fix for "The Life Exotic" Perk on Exotic Items
         // Can equip multiples
         function hasLifeExotic(item) {
-          return _.contains(item.talentPerks, 4044819214);
+          return _.find(item.talentGrid.nodes, { name: 'The Life Exotic' }) !== undefined;
         }
 
         if (equippedExotics.length === 0) {

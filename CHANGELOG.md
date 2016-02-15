@@ -12,6 +12,10 @@
 * Hold Shift and click on items in the infusion calculator to prevent the calculator from using that item.
 * If you have an exotic class item (with "The Life Exotic" perk) equipped, you can now equip another exotic without having the class item get automatically de-equipped. Previously, this worked only if you equipped the non-class-item exotic first.
 * Armor, Artifacts, and Ghosts now show the difference in stats with your currently equipped item. Also, magazine/energy between swords and other heavy weapons compares correctly.
+* The is:complete, is:incomplete, is:upgraded, is:xpincomplete, and is:xpcomplete search keywords all work again, and their meanings have been tweaked so they are all useful.
+* The talent grid for an item are now shown in the item details, just like in the game, including XP per node.
+* Subclasses show a talent grid as well!
+* The item stats comparison will no longer be cleared if DIM reloads items while an item popup is open.
 
 # 3.2.3
 
