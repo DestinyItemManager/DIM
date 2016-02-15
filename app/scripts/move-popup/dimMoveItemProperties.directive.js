@@ -24,7 +24,7 @@
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.item.notransfer && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
+        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
         '<div class="item-xp-bar" ng-if="(vm.item.talentGrid || vm.item.xpComplete) && !vm.item.complete && vm.item.objectives.length !== 1">',
         '  <div ng-style="{ width: vm.item.talentGrid ? (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) : vm.item.xpComplete + \'%\' }"></div>',
@@ -51,10 +51,10 @@
         '    </div>',
         '  </div>',
         '</div>',
-        '<div class="item-details item-perks" ng-if="::vm.item.talentGrid">',
+        '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
         '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
         '</div>',
-        '<div class="item-details item-objectives" ng-if="vm.item.objectives.length">',
+        '<div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '  <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
         '     <div class="objective-checkbox"><div></div></div>',
         '     <div class="objective-progress">',
@@ -89,7 +89,8 @@
     vm.title = $sce.trustAsHtml(vm.item.name);
     vm.light = '';
     vm.classType = '';
-    vm.itemDetails = vm.item.notransfer;
+    vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
+    vm.itemDetails = vm.showDetailsByDefault;
     settings.getSetting('itemDetails')
       .then(function(show) {
         vm.itemDetails = vm.itemDetails || show;
