@@ -61,6 +61,11 @@
       vm.stores = stores.stores;
     });
 
+    if ($scope.$root.activePlatformUpdated) {
+      loadingTracker.addPromise($q.when(dimStoreService.getStores(true)));
+      $scope.$root.activePlatformUpdated = false;
+    }
+
     $scope.$on('dim-active-platform-updated', function(e, args) {
       var promise = $q.when(dimStoreService.getStores(true));
       loadingTracker.addPromise(promise);

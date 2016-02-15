@@ -22,9 +22,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker', '$http'];
 
-  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker) {
+  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker, $http) {
     var vm = this;
 
     vm.active = null;
@@ -36,7 +36,14 @@
     activate();
 
     function activate() {
-      var promise = dimPlatformService.getPlatforms();
+      var promise = $http.get('https://www.bungie.net', {
+          timeout: 5000
+        })
+        .then(function() {
+          return dimPlatformService.getPlatforms();
+        }, function() {
+          return dimPlatformService.getPlatforms();
+        });
 
       loadingTracker.addPromise(promise);
     }
