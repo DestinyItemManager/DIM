@@ -76,8 +76,8 @@
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
       vm.item.talentGrid ||
       vm.item.objectives;
-    vm.showDescription = vm.item.description.length &&
-      !vm.item.equipment;
+    vm.showDescription = true;// || (vm.item.description.length &&
+                              //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
 
     vm.classes = {
       'item-name': true,
