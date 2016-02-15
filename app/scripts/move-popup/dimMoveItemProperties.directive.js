@@ -36,7 +36,6 @@
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
-        '  <span ng-bind="vm.item.weaponClassName"></span>',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
         '    <div class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
