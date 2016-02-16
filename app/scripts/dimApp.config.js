@@ -73,50 +73,42 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        // chrome.storage.sync.get('2016.02.04-Crimson', function(data) {
-        //   if(_.isNull(data) || _.isEmpty(data)) {
-        //     $timeout(function() {
-        //       toaster.pop({
-        //         type: 'info',
-        //         title: 'Crimson Days, February 9th - 16th',
-        //         body: [
-        //           '<p>We\'ve been looking forward to the Crimson Days. Our only bit of advice, <a href="http://i.imgur.com/5HrbN28.gif" target="_blank">never leave your wingman.</a>',
-        //           '<p>If you want to use the old theme, there is a toggle next to the \'Support DIM\' donation link in the header.',
-        //           '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><img title="/r/DIM on Reddit" style="vertical-align: text-bottom;" src="images/reddit.png"></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><img style="vertical-align: text-bottom;" title="@ThisIsDIM on Twitter" src="images/twitter.png"></a>',
-        //           '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160204Crimson" type="checkbox"> <label for="20160204Crimson">Hide This Popup</label></p>'
-        //         ].join(''),
-        //         timeout: 0,
-        //         bodyOutputType: 'trustedHtml',
-        //         showCloseButton: true,
-        //         clickHandler: function(a, b, c, d, e, f, g) {
-        //           if(b) {
-        //             return true;
-        //           }
-        //
-        //           return false;
-        //         },
-        //         onHideCallback: function() {
-        //           if($('#20160204Crimson')
-        //             .is(':checked')) {
-        //             chrome.storage.sync.set({
-        //               "2016.02.04-Crimson": 1
-        //             }, function(e) {});
-        //           }
-        //           if($('#20160204CrimsonTheme')
-        //             .is(':checked')) {
-        //             $('body')
-        //               .removeClass('crimson');
-        //             $(document)
-        //               .octoberLeaves('stop');
-        //             chrome.storage.sync.set({
-        //               "20160204CrimsonTheme": 1
-        //             }, function(e) {});
-        //           }
-        //         }
-        //       });
-        //     }, 3000);
-        //   }
-        // });
+        chrome.storage.sync.get('2016.02.15-v3.3', function(data) {
+          if(_.isNull(data) || _.isEmpty(data)) {
+            $timeout(function() {
+              toaster.pop({
+                type: 'info',
+                title: 'DIM v3.3 Released',
+                body: [
+                  '<p>A lot work went into DIM the past few weeks. We\'ve added all the perks for an item, including indicators if they are enabled or need XP. This update allowed us to fix the filters for xpincomplete and xpcomplete too.',
+                  '<p>We have removed the Crimson Days theme as the event has finished, but there was such a positive response to the update that we\'re looking into adding a more personal experience to DIM in the future.',
+                  '<p>The Infusion Calculator now has the ability determine the optimal path to infuse an item, show you the necessary materials, and can move the items and materials to your guardian on demand.',
+                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.3.',
+                  '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><img title="/r/DIM on Reddit" style="vertical-align: text-bottom;" src="images/reddit.png"></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><img style="vertical-align: text-bottom;" title="@ThisIsDIM on Twitter" src="images/twitter.png"></a>',
+                  '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160215v33" type="checkbox"> <label for="20160215v33">Hide This Popup</label></p>'
+                ].join(''),
+                timeout: 0,
+                bodyOutputType: 'trustedHtml',
+                showCloseButton: true,
+                clickHandler: function(a, b, c, d, e, f, g) {
+                  if(b) {
+                    return true;
+                  }
+
+                  return false;
+                },
+                onHideCallback: function() {
+                  if($('#20160215v33')
+                    .is(':checked')) {
+                    chrome.storage.sync.set({
+                      "2016.02.15-v3.3": 1
+                    }, function(e) {});
+                  }
+                }
+              });
+            }, 3000);
+          }
+        });
 
       }
     ]);
