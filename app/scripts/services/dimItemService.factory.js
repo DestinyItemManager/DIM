@@ -11,8 +11,16 @@
         getSimilarItem: getSimilarItem,
         getItem: getItem,
         getItems: getItems,
-        moveTo: moveTo
+        moveTo: moveTo,
+        setLockState: setLockState
       };
+
+      function setLockState(item, store, lockState) {
+        return dimBungieService.setLockState(item, store, lockState)
+          .then(function() {
+            return lockState;
+          });
+      }
 
       function updateItemModel(item, source, target, equip) {
         var matchingItem;

@@ -27,7 +27,8 @@
       getCharacters: getCharacters,
       getStores: getStores,
       transfer: transfer,
-      equip: equip
+      equip: equip,
+      setLockState: setLockState
     };
 
     return service;
@@ -534,6 +535,84 @@
           characterId: item.owner,
           membershipType: membershipType,
           itemId: item.id
+        },
+        dataType: 'json',
+        withCredentials: true
+      };
+    }
+
+    /************************************************************************************************************************************/
+
+    function setLockState(item, store, lockState) {
+      var platform = dimState.active;
+      var data = {
+        token: null,
+        membershipType: null
+      };
+
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
+      var getMembershipPB = getMembership.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(addMembershipTypeToDataPB)
+        .then(function() {
+          return store;
+        })
+        .then(function(store) {
+          return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
+        })
+        .then(function(request) {
+          return $q(function(resolve, reject) {
+            var retries = 4;
+
+            function run() {
+              $http(request).then(function success(response) {
+                if (response.data.ErrorCode === 36) {
+                  retries = retries - 1;
+
+                  if (retries <= 0) {
+                    // debugger;
+                    reject(new Error(response.data.Message));
+                  } else {
+                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
+                  }
+                } else if (response.data.ErrorCode > 1) {
+                  reject(new Error(response.data.Message));
+                } else {
+                  resolve(response);
+                }
+              }, function failure(response) {
+                // debugger;
+                reject(new Error(response.data.Message));
+              });
+            }
+
+            run();
+          });
+        })
+        .then(networkError)
+        .then(throttleCheck);
+
+      return promise;
+    }
+
+    function getSetLockStateRequest(token, membershipType, item, store, lockState) {
+      return {
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/Destiny/SetLockState/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token,
+          'content-type': 'application/json; charset=UTF-8;'
+        },
+        data: {
+          characterId: (store.id === 'vault') ? item.owner : store.id,
+          membershipType: membershipType,
+          itemId: item.id,
+          state: lockState
         },
         dataType: 'json',
         withCredentials: true
