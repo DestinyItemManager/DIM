@@ -920,9 +920,9 @@ img.void {
 .item-name .locked {
   background-image: url('../images/lockeditem_black.png');
 }
-.item-name.is-arc .locked, .item-name.is-solar .locked, .item-name.is-void .locked {
+/*.item-name.is-arc .locked, .item-name.is-solar .locked, .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
-}
+}*/
 
 /**
  * Move Popup - Details
