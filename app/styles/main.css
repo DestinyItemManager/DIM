@@ -907,8 +907,8 @@ img.void {
 .item-name.is-void {
   background-color: #b184c5;
 }
-.item-name .locked {
-  background-image: url('../images/lockeditem_black.png');
+.item-name .lock-icon {
+  background-image: url('../images/unlockeditem_black.png');
   height: 15px;
   width: 15px;
   display: inline-block;
@@ -916,6 +916,9 @@ img.void {
   background-repeat: no-repeat;
   vertical-align: text-top;
   margin-top: 1px;
+}
+.item-name .locked {
+  background-image: url('../images/lockeditem_black.png');
 }
 .item-name.is-arc .locked, .item-name.is-solar .locked, .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');
