@@ -1,3 +1,7 @@
+# 3.3.1
+
+* Updated the manifest file.
+
 # 3.3
 
 * Infusion auto calculator is much faster.
