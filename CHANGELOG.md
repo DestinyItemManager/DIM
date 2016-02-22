@@ -1,6 +1,8 @@
 # Next
 
-* If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
+* If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for in
+* Keyword search also searches perks on items.
+* New search terms for is:engram, is:sword, is:artifact, is:ghost, is:consumable, is:material, etc.
 
 # 3.3
 
