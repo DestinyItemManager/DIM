@@ -37,6 +37,9 @@ function processItemRow(icon, pRow, itemHash) {
           imgFS.end();
           pRow.next();
         });
+        imageResponse.on('error', function(e) {
+          console.log("Image download error", e);
+        });
 
         imageResponse.pipe(imgFS);
       });
@@ -182,7 +185,16 @@ function extractDB(dbFile) {
       items[item.gridHash] = item;
     });
 
-    var pRow = processItemRows(items, 'iconPath');
+    var nodes = {};
+    var index = 0;
+    _.values(items).forEach(function (item) {
+      item.nodes.forEach(function(node) {
+        node.steps.forEach(function(step) {
+          nodes[step.icon] = step; // index by icon so we get all the icons
+        });
+      });
+    });
+    var pRow = processItemRows(nodes, 'icon');
     pRow.next();
 
     var defs = fs.createWriteStream('api-manifest/talent.json');
