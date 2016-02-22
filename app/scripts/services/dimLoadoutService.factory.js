@@ -102,11 +102,10 @@
         .then(function(loadouts) {
           _loadouts = loadouts;
 
-          return _.map(loadouts, function(loadout) {
+          var loadoutPrimitives = _.map(loadouts, function(loadout) {
             return dehydrate(loadout);
           });
-        })
-        .then(function(loadoutPrimitives) {
+
           var data = {
             'loadouts-v3.0': []
           };
@@ -158,7 +157,13 @@
             loadout.id = uuid2.newguid();
           }
 
-          loadouts.push(loadout);
+          // Handle overwriting an old loadout
+          var existingLoadoutIndex = _.findIndex(loadouts, {id: loadout.id});
+          if (existingLoadoutIndex > -1) {
+            loadouts[existingLoadoutIndex] = loadout;
+          } else {
+            loadouts.push(loadout);
+          }
 
           return saveLoadouts(loadouts);
         })

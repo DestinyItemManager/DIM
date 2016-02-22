@@ -5,6 +5,7 @@
 * New search terms for is:engram, is:sword, is:artifact, is:ghost, is:consumable, is:material, etc.
 * Items can be locked and unlocked by clicking the log icon next to their name.
 * Display intellect/discipline/strength bars and cooldown for each character
+* Loadouts have a "Save as New" button which will let you save your modified loadout as a new loadout without changing the loadout you started editing.
 
 # 3.3
 
