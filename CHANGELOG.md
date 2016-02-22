@@ -1,3 +1,7 @@
+# Next
+
+* If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
+
 # 3.3
 
 * Infusion auto calculator is much faster.

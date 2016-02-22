@@ -106,8 +106,9 @@
             }
 
             // Add it to targets
-            var sortedIndex = _.sortedIndex(vm.targets, item,
-                                            function(i) { return i.primStat.value; });
+            var sortedIndex = _.sortedIndex(vm.targets, item, function(i) {
+              return i.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
+            });
             vm.targets.splice(sortedIndex, 0, item);
           }
 
@@ -221,7 +222,7 @@
           });
 
           allItems = _.sortBy(allItems, function(item) {
-            return item.primStat.value;
+            return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
           });
 
           vm.setInfusibleItems(allItems);
