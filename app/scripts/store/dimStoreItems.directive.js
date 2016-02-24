@@ -293,23 +293,7 @@
       if (reload) {
         promise = promise.then(dimStoreService.getStores)
           .then(function(stores) {
-            dimStores = stores;
-            return dimStoreService.updateStores();
-          })
-          .then(function(bungieStores) {
-            _.each(dimStores, function(dStore) {
-              if (dStore.id !== 'vault') {
-                var bStore = _.find(bungieStores, function(bStore) {
-                  return dStore.id === bStore.id;
-                });
-
-                dStore.level = bStore.base.characterLevel;
-                dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-                dStore.powerLevel = bStore.base.characterBase.powerLevel;
-                dStore.background = bStore.base.backgroundPath;
-                dStore.icon = bStore.base.emblemPath;
-              }
-            });
+            dimStores = dimStoreService.updateStores(stores);
           });
       }
       promise = promise
