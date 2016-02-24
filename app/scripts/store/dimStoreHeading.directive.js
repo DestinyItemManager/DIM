@@ -66,7 +66,7 @@
       });
 
       vm.formatTooltip = function(which) {
-        var next = '',
+        var next = ' (' + vm.store.stats[which].value + '/300)',
             tier = vm.store.stats[which].tier;
         if(tier !== 5) {
           next = ' (' + (vm.store.stats[which].value%60) + '/60 for T' + (tier+1) + ')';

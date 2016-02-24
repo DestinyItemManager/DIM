@@ -830,6 +830,7 @@ img.void {
   position: relative;
   top: 54px;
   left: 0;
+  opacity: .8;
 }
 .character .stats .stat {
   display: inline-block;
