@@ -722,7 +722,7 @@ img.void {
   background: rgba(0, 0, 0, .5)
 }
 .character {
-  margin-bottom: 16px;
+  margin-bottom: 30px;
   height: 50px;
   position: relative;
 }
@@ -824,6 +824,36 @@ img.void {
   background-color: #5da469;
   height: 5px;
   width: 0%;
+}
+.character .stats {
+  width: 100%;
+  position: relative;
+  top: 54px;
+  left: 0;
+}
+.character .stats .stat {
+  display: inline-block;
+  width: 33.33%;
+}
+.character .stats .stat .bar {
+  display: inline-block;
+  width: 9px;
+  height: 7px;
+  margin: 0 1px;
+  border-radius: 2px;
+  background-color: gray;
+}
+.character .stats .stat .bar .progress {
+  display: inline-block;
+  height: 7px;
+  margin-bottom: 7px;
+  border-radius: 2px;
+  background-color: white;
+}
+.character .stats .stat img {
+  height: 16px;
+  vertical-align: 15%;
+  margin-right: 2px;
 }
 .loadout-button {
   position: relative;
@@ -1601,7 +1631,7 @@ button.toast-close-button {
   right: 0;
   top: 50px;
   background-color: #434444;
-  height: 75px;
+  height: 90px;
   position: fixed;
   z-index: 4;
   box-shadow: 0 1px 6px 0px #222;

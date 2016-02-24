@@ -31,7 +31,18 @@
         '  </div>',
         '</div>',
         '<div class="loadout-button" ng-if="::vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
-        '<div loadout-id="{{:: vm.store.id }}" style="position: relative; top: 50px;"></div>'
+        '<div loadout-id="{{:: vm.store.id }}" style="position: relative; top: 50px;"></div>',
+        '<div class="stats" ng-if="vm.isGuardian">',
+        '  <span class="stat" title="T{{vm.store.stats.STAT_INTELLECT.tier}} intellect cooldown: {{vm.store.stats.STAT_INTELLECT.cooldown}}">',
+        '    <img src="images/intellect.png" /><span class="bar" ng-repeat="n in vm.store.stats.STAT_INTELLECT.tiers track by $index">',
+        '      <span class="progress" style="width:{{n/60*100}}%"></span></span></span>',
+        '  <span class="stat" title="T{{vm.store.stats.STAT_DISCIPLINE.tier}} discipline cooldown: {{vm.store.stats.STAT_DISCIPLINE.cooldown}}">',
+        '    <img src="images/discipline.png" /><span class="bar" ng-repeat="n in vm.store.stats.STAT_DISCIPLINE.tiers track by $index">',
+        '      <span class="progress" style="width:{{n/60*100}}%"></span></span></span>',
+        '  <span class="stat" title="T{{vm.store.stats.STAT_STRENGTH.tier}} strength cooldown: {{vm.store.stats.STAT_STRENGTH.cooldown}}">',
+        '    <img src="images/strength.png" /><span class="bar" ng-repeat="n in vm.store.stats.STAT_STRENGTH.tiers track by $index">',
+        '      <span class="progress" style="width:{{n/60*100}}%"></span></span></span>',
+        '</div>'
       ].join('')
     };
 
