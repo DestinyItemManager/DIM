@@ -953,6 +953,11 @@
       var ret = {};
       for (var s = 0; s < stats.length; s++) {
         var statHash = {};
+        switch(stats[s]) {
+          case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
+          case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
+          case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
+        }
         statHash.value = data.stats[stats[s]].value;
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {

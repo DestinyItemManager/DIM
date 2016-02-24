@@ -67,17 +67,11 @@
 
       vm.formatTooltip = function(which) {
         var next = ' (' + vm.store.stats[which].value + '/300)',
-            tier = vm.store.stats[which].tier,
-            type = '';
-        switch(which) {
-          case 'STAT_INTELLECT': type = 'Super'; break;
-          case 'STAT_DISCIPLINE': type = 'Grenade'; break;
-          case 'STAT_STRENGTH': type = 'Melee'; break;
-        }
+            tier = vm.store.stats[which].tier;
         if(tier !== 5) {
           next = ' (' + (vm.store.stats[which].value%60) + '/60 for T' + (tier+1) + ')';
         }
-        return 'T' + tier + ' Intellect' + next + '\n' + type + ' cooldown: ' + vm.store.stats[which].cooldown;
+        return 'T' + tier + ' ' + vm.store.stats[which].name + next + '\n' + vm.store.stats[which].effect + ' cooldown: ' + vm.store.stats[which].cooldown;
 
       };
 
