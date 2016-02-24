@@ -34,13 +34,13 @@
         '<div class="loadout-button" ng-if="::vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '<div loadout-id="{{:: vm.store.id }}" style="position: relative; top: 50px;"></div>',
         '<div class="stats" ng-if="vm.isGuardian">',
-        '  <span class="stat" title="T{{vm.store.stats.STAT_INTELLECT.tier}} intellect cooldown: {{vm.store.stats.STAT_INTELLECT.cooldown}}">',
+        '  <span class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">',
         '    <img src="images/intellect.png" /><span class="bar bar-{{vm.charCol}}" ng-repeat="n in vm.store.stats.STAT_INTELLECT.tiers track by $index">',
         '      <span class="progress" style="width:{{n/60*100}}%"></span></span></span>',
-        '  <span class="stat" title="T{{vm.store.stats.STAT_DISCIPLINE.tier}} discipline cooldown: {{vm.store.stats.STAT_DISCIPLINE.cooldown}}">',
+        '  <span class="stat" title="{{vm.formatTooltip(\'STAT_DISCIPLINE\')}}">',
         '    <img src="images/discipline.png" /><span class="bar bar-{{vm.charCol}}" ng-repeat="n in vm.store.stats.STAT_DISCIPLINE.tiers track by $index">',
         '      <span class="progress" style="width:{{n/60*100}}%"></span></span></span>',
-        '  <span class="stat" title="T{{vm.store.stats.STAT_STRENGTH.tier}} strength cooldown: {{vm.store.stats.STAT_STRENGTH.cooldown}}">',
+        '  <span class="stat" title="{{vm.formatTooltip(\'STAT_STRENGTH\')}}">',
         '    <img src="images/strength.png" /><span class="bar bar-{{vm.charCol}}" ng-repeat="n in vm.store.stats.STAT_STRENGTH.tiers track by $index">',
         '      <span class="progress" style="width:{{n/60*100}}%"></span></span></span>',
         '</div>'
@@ -64,6 +64,16 @@
           }
         });
       });
+
+      vm.formatTooltip = function(which) {
+        var next = '',
+            tier = vm.store.stats[which].tier;
+        if(tier !== 5) {
+          next = ' (' + (vm.store.stats[which].value%60) + '/60 for T' + (tier+1) + ')';
+        }
+        return 'T' + tier + ' Intellect' + next + '\nSuper cooldown: ' + vm.store.stats[which].cooldown;
+
+      };
 
       vm.openLoadoutPopup = function openLoadoutPopup(e) {
         e.stopPropagation();
