@@ -4,6 +4,7 @@
 * Keyword search also searches perks on items.
 * New search terms for is:engram, is:sword, is:artifact, is:ghost, is:consumable, is:material, etc.
 * Items can be locked and unlocked by clicking the log icon next to their name.
+* Display intellect/discipline/strength bars and cooldown for each character
 
 # 3.3
 
