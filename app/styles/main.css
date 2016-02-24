@@ -837,17 +837,26 @@ img.void {
 }
 .character .stats .stat .bar {
   display: inline-block;
-  width: 9px;
+  width: 10px;
   height: 7px;
-  margin: 0 1px;
-  border-radius: 2px;
+  margin-left: 1px;
+  border-radius: 1px;
   background-color: gray;
+}
+.character .stats .stat .bar.bar-3 {
+  width: 10px;
+}
+.character .stats .stat .bar.bar-4 {
+  width: 13.5px;
+}
+.character .stats .stat .bar.bar-5 {
+  width: 16.75px;
 }
 .character .stats .stat .bar .progress {
   display: inline-block;
   height: 7px;
-  margin-bottom: 7px;
-  border-radius: 2px;
+  margin-bottom: 8px;
+  border-radius: 1px;
   background-color: white;
 }
 .character .stats .stat img {
