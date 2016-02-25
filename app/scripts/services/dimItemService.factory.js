@@ -139,7 +139,7 @@
 
         var results = _.chain(store.items)
           .where({
-            classType: item.classType
+            classType: item.sort === 'Weapons' ? 3 : item.classType
           })
           .sortBy(function(i) {
             return sortType[i.tier];
