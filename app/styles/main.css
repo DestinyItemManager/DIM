@@ -149,15 +149,8 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   /*display: none;*/
   visibility: hidden;
 }
-.item.search-hidden {
-  border-color: rgba(245, 220, 86, .15);
-  background-color: rgba(128, 128, 128, .15);
-}
-.item.search-hidden > div:nth-child(1),
-.item.search-hidden > div.damage-type,
-.item.search-hidden > div.counter,
-.item.search-hidden > div.item-stat {
-  opacity: .15;
+.item-elem.search-hidden {
+  opacity: .20;
 }
 .unequippable, .equippable {
   /*position: absolute;*/
@@ -632,8 +625,8 @@ img.void {
 }
 .item-stat {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
+  bottom: 0;
+  right: 0;
   font-size: 10px;
   padding: 0 2px;
   background: #ddd;
@@ -683,11 +676,6 @@ img.void {
   margin: 2px 2px -2px 2px;
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 44px;
-  background-color: #5c7183;
-  cursor: pointer;
-  border: 2px solid #DDD;
 }
 .item.popup-open:before {
   border: solid;
@@ -700,10 +688,16 @@ img.void {
   position: absolute;
   z-index: 2;
 }
-.item > .img, .item > img {
+.item-elem {
+  background-color: #5c7183;
+  cursor: pointer;
+  border: 2px solid #DDD;
+}
+.item-elem > .img, .item-elem > img {
   width: 44px;
   height: 44px;
   background-size: cover;
+  display: block;
 }
 .item .stack {
   position: absolute;
@@ -1866,6 +1860,50 @@ button.toast-close-button {
   line-height: 1em;
 }
 
+
+/* Textcomplete */
+
+.dropdown-menu {
+  border: 1px solid #ddd;
+  background-color: white;
+  transform: translate(-10px,-7px);
+}
+
+.dropdown-menu li {
+  border-top: 1px solid #ddd;
+  padding: 2px 5px;
+}
+
+.dropdown-menu li:first-child {
+  border-top: none;
+}
+
+.dropdown-menu li:hover,
+.dropdown-menu .active {
+  background-color: #555;
+}
+.dropdown-menu li:hover a,
+.dropdown-menu .active a {
+  color: white;
+}
+
+.dropdown-menu a {
+  color: #333;
+  font-size: 11px;
+}
+
+.dropdown-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu a:hover {
+  cursor: pointer;
+}
+
+
+
 .crimson {
   background-color: #6f0003;
 }
@@ -1933,3 +1971,5 @@ button.toast-close-button {
   color: #FFFFFF;
   text-shadow: 1px 1px #000;
 }
+
+

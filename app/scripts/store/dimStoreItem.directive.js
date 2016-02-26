@@ -23,13 +23,14 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
-        '  ng-class="{',
-        "    'item': true,",
+        '  class="item">',
+        '  <div class="item-elem" ng-class="{',
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
-        '  <div class="img" ng-click="vm.clicked(vm.item, $event)">',
-        '  <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '    <div class="img" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
