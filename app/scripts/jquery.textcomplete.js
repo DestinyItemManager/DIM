@@ -456,8 +456,6 @@ if (typeof jQuery === 'undefined') {
     },
 
     setPosition: function (pos) {
-      this.$el.css(this._applyPlacement(pos));
-
       // Make the dropdown fixed if the input is also fixed
       // This can't be done during init, as textcomplete may be used on multiple elements on the same page
       // Because the same dropdown is reused behind the scenes, we need to recheck every time the dropdown is showed
@@ -467,10 +465,13 @@ if (typeof jQuery === 'undefined') {
         if($(this).css('position') === 'absolute') // The element has absolute positioning, so it's all OK
           return false;
         if($(this).css('position') === 'fixed') {
+          pos.top -= $(window).scrollTop();
+          pos.left -= $(window).scrollLeft();
           position = 'fixed';
           return false;
         }
       });
+      this.$el.css(this._applyPlacement(pos));
       this.$el.css({ position: position }); // Update positioning
 
       return this;
