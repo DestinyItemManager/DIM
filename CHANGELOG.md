@@ -7,6 +7,7 @@
 * Display intellect/discipline/strength bars and cooldown for each character
 * Loadouts have a "Save as New" button which will let you save your modified loadout as a new loadout without changing the loadout you started editing.
 * Autocomplete for search filters.
+* Comparing stats for armor now shows red and green better/worse bars correctly.
 
 # 3.3
 

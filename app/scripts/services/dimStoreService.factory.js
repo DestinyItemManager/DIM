@@ -644,11 +644,16 @@
           return undefined;
         }
 
+        var maximumValue = 100;
+        if (itemStat && itemStat.maximumValue) {
+          maximumValue = itemStat.maximumValue;
+        }
+
         return {
           name: name,
           sort: sort,
           value: itemStat ? itemStat.value : stat.value,
-          maximumValue: itemStat ? itemStat.maximumValue : 100,
+          maximumValue: maximumValue,
           bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
         };
       })), 'sort');
