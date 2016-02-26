@@ -53,14 +53,19 @@
       'hunter': 2
     }[vm.store.class] || 0;
 
-    dimLoadoutService.getLoadouts()
-      .then(function(loadouts) {
-        vm.loadouts = _.sortBy(loadouts, 'name') || [];
+    function initLoadouts() {
+      dimLoadoutService.getLoadouts()
+        .then(function(loadouts) {
+          vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
-        vm.loadouts = _.filter(vm.loadouts, function(item) {
-          return ((item.classType === -1) || (item.classType === vm.classTypeId));
+          vm.loadouts = _.filter(vm.loadouts, function(item) {
+            return ((item.classType === -1) || (item.classType === vm.classTypeId));
+          });
         });
-      });
+    }
+    $rootScope.$on('dim-save-loadout', initLoadouts);
+    $rootScope.$on('dim-delete-loadout', initLoadouts);
+    initLoadouts();
 
     vm.newLoadout = function newLoadout($event) {
       ngDialog.closeAll();
@@ -91,16 +96,6 @@
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
       dimLoadoutService.deleteLoadout(loadout);
-      $rootScope.$broadcast('dim-delete-loadout', {});
-
-      dimLoadoutService.getLoadouts()
-        .then(function(loadouts) {
-          vm.loadouts = _.sortBy(loadouts, 'name') || [];
-
-          vm.loadouts = _.filter(vm.loadouts, function(item) {
-            return ((item.classType === -1) || (item.classType === vm.classTypeId));
-          });
-        });
     };
 
     vm.editLoadout = function editLoadout(loadout, $event) {
