@@ -20,7 +20,7 @@
         "    vault: store.id === 'vault',",
         "    'hide-filtered': vm.hideFilteredItems",
         '  }">',
-        '  <div dim-store-heading store-data="store" char-col="vm.charCol"></div>',
+        '  <div dim-store-heading store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
       ].join('')
