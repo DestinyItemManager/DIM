@@ -120,20 +120,19 @@
     vm.showBadge = showBountyPercentage;
 
     if (showBountyPercentage) {
-      vm.badgeClassNames = { counter: true };
+      vm.badgeClassNames = { 'item-stat': true };
       vm.badgeCount = item.xpComplete + '%';
     }
   }
 
   function processStackable(vm, item) {
     vm.showBadge = true;
-    vm.badgeClassNames = { counter: true };
+    vm.badgeClassNames = { 'item-stat': true };
     vm.badgeCount = item.amount;
   }
 
   function processItem(vm, item) {
     vm.badgeClassNames = {
-      'counter': false,
       'damage-type': false,
       'damage-solar': false,
       'damage-arc': false,

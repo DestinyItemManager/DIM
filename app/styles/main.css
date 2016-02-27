@@ -612,17 +612,6 @@ img.void {
   box-shadow: 0 0 10px 2px #eee;
 }*/
 
-.counter {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  font-size: 10px;
-  padding: 0 2px;
-  background: #ddd;
-  color: #000;
-  min-width: 10px;
-  text-align: center;
-}
 .item-stat {
   position: absolute;
   bottom: 0;

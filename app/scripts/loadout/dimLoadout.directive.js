@@ -38,7 +38,7 @@
         '          <div ng-repeat="item in vm.loadout.items[value] track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
         '            <div class="item-elem">',
         '            <img ng-src="{{ item.icon }}" title="{{ item.primStat.value }} {{ item.name }}">',
-        '            <div class="counter" ng-if="item.amount > 1">{{ item.amount }}</div>',
+        '            <div class="item-stat" ng-if="item.amount > 1">{{ item.amount }}</div>',
         '            <div class="close" ng-click="vm.remove(item); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
         '            <div class="equipped" ng-show="item.equipped"></div>',
         // '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
