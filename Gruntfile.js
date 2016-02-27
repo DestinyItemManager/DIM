@@ -55,17 +55,11 @@ module.exports = function(grunt) {
         // export CHROME_REFRESH_TOKEN="baz"
         //
         // Then run "source ./beta_credentials; grunt publish-beta"
-        // "default": { //account under this section will be used by default
-        //   publish: true, //publish item right after uploading. default false
-        //   client_id: process.env.CHROME_CLIENT_ID,
-        //   client_secret: process.env.CHROME_SECRET,
-        //   refresh_token: process.env.CHROME_REFRESH_TOKEN
-        // }
         "default": { //account under this section will be used by default
           publish: true, //publish item right after uploading. default false
-          client_id: '259313796625-54o35mrqpii649ui959v8p53uo9s8rht.apps.googleusercontent.com',
-          client_secret: 'nOjGSSz5KS9PuXRT1qtQS5t-',
-          refresh_token: '1/j6FEPgnGzkW76o2sye-9wSkVVud4CgijCeoQ9VT37UF90RDknAdJa_sgfheVM0XT'
+          client_id: process.env.CHROME_CLIENT_ID,
+          client_secret: process.env.CHROME_SECRET,
+          refresh_token: process.env.CHROME_REFRESH_TOKEN
         }
       },
       "extensions": {
@@ -88,7 +82,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('publish_beta', ['clean',
                               'copy',
-                              'compress',
                               'replace:beta_version',
+                              'compress',
                               'webstore_upload:beta']);
 };
