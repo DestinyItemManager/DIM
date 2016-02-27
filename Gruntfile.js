@@ -55,6 +55,11 @@ module.exports = function(grunt) {
         // export CHROME_REFRESH_TOKEN="baz"
         //
         // Then run "source ./beta_credentials; grunt publish-beta"
+        //
+        // To set up these variables to be available in Travis:
+        // travis encrypt CHROME_CLIENT_ID=super_secret --add env.matrix
+        // travis encrypt CHROME_SECRET=super_secret --add env.matrix
+        // travis encrypt CHROME_REFRESH_TOKEN=super_secret --add env.matrix
         "default": { //account under this section will be used by default
           publish: true, //publish item right after uploading. default false
           client_id: process.env.CHROME_CLIENT_ID,
