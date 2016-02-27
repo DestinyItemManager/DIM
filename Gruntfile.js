@@ -36,7 +36,7 @@ module.exports = function(grunt) {
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
-          to: "<%= grunt.template.today('yyyy-mm-dd-hh-MM-ss') %>"
+          to: pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24276617)
         }]
       }
     },
