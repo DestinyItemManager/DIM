@@ -20,7 +20,7 @@
       template: [
         '<div>',
         '<div ng-class="vm.classes">',
-        '  <span ng-if="vm.item.lockable" class="lock-icon" ng-class="{ locked: vm.item.locked }" ng-click="vm.setLockState(vm.item);"></span>',
+        '  <span ng-if="vm.item.lockable" class="lock-icon" ng-class="{ locked: vm.item.locked, locking: vm.locking }" ng-click="vm.setLockState(vm.item);"></span>',
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="::vm.item.weaponClassName" ng-bind="::vm.item.weaponClassName"></span>',
@@ -69,9 +69,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope'];
 
-  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope) {
+  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope) {
     var vm = this;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
@@ -79,8 +79,12 @@
       vm.item.objectives;
     vm.showDescription = true;// || (vm.item.description.length &&
                               //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
+    vm.locking = false;
 
     vm.setLockState = function setLockState(item) {
+      if (vm.locking) {
+        return;
+      }
       var storeId = item.owner;
       var storePromise;
 
@@ -93,14 +97,20 @@
         storePromise = storeService.getStore(item.owner);
       }
 
+      vm.locking = true;
+
       storePromise
         .then(function(store) {
           return itemService.setLockState(item, store, !item.locked)
             .then(function(lockState) {
               item.locked = lockState;
+              $rootScope.$broadcast('dim-filter-invalidate');
+            })
+            .finally(function() {
+              vm.locking = false;
             });
-        })
-    }
+        });
+    };
 
     vm.classes = {
       'item-name': true,
