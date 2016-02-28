@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
+  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24276617);
+
   grunt.initConfig({
     pkg: pkg,
 
@@ -7,6 +9,12 @@ module.exports = function(grunt) {
       // Copy all files to a staging directory
       main: {
         cwd: 'app/',
+        src: '**',
+        dest: 'build/extension/',
+        expand: true
+      },
+      beta_icons: {
+        cwd: 'beta-icons/',
         src: '**',
         dest: 'build/extension/',
         expand: true
@@ -36,7 +44,7 @@ module.exports = function(grunt) {
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
-          to: pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24276617)
+          to: betaVersion
         }]
       }
     },
@@ -85,9 +93,23 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
+  grunt.registerTask('update_beta_manifest', function() {
+    var manifest = grunt.file.readJSON('build/extension/manifest.json');
+    manifest.name = manifest.name + " Beta";
+    manifest.version = betaVersion;
+    grunt.file.write('build/extension/manifest.json', JSON.stringify(manifest));
+  });
+
+  grunt.registerTask('log_beta_version', function() {
+    grunt.log.ok("New Beta version is " + betaVersion);
+  });
+
   grunt.registerTask('publish_beta', ['clean',
-                              'copy',
-                              'replace:beta_version',
-                              'compress',
-                              'webstore_upload:beta']);
+                                      'copy:main',
+                                      'copy:beta_icons',
+                                      'replace:beta_version',
+                                      'update_beta_manifest',
+                                      'compress',
+                                      'webstore_upload:beta',
+                                      'log_beta_version']);
 };
