@@ -935,9 +935,13 @@ img.void {
   background-repeat: no-repeat;
   vertical-align: text-top;
   margin-top: 1px;
+  cursor: pointer;
 }
 .item-name .locked {
   background-image: url('../images/lockeditem_black.png');
+}
+.item-name .lock-icon.locking {
+  opacity: .5;
 }
 /*.item-name.is-arc .locked, .item-name.is-solar .locked, .item-name.is-void .locked {
   background-image: url('../images/lockeditem_white.png');

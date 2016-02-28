@@ -87,6 +87,12 @@
       vm.filter();
     });
 
+    // Something has changed that could invalidate filters
+    $scope.$on('dim-filter-invalidate', function(arg) {
+      _duplicates = null;
+      vm.filter();
+    });
+
     $scope.$on('dim-focus-filter-input', function(arg) {
       vm.focusFilterInput();
     });
