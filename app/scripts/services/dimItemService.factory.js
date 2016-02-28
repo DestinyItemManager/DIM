@@ -142,7 +142,7 @@
               i.type === item.type &&
               !i.equipped &&
               // Compatible with this class
-              (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) &&
+              (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
               i.id !== item.id &&
               i.hash !== item.hash;
