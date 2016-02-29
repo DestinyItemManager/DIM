@@ -20,7 +20,8 @@
       getStores: getStores,
       getStore: getStore,
       updateStores: updateStores,
-      setHeights: setHeights
+      setHeights: setHeights,
+      createItemIndex: createItemIndex
     };
 
     return service;
@@ -327,6 +328,18 @@
       return $q.when(store);
     }
 
+    // Set an ID for the item that should be unique across all items
+    function createItemIndex(item) {
+      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+      var index = item.hash + '-';
+      if (item.id === '0') {
+        index = index + getNextIndex();
+      } else {
+        index = index + item.id;
+      }
+      return index;
+    }
+
     function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
@@ -386,16 +399,7 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-      var index = item.itemHash + '-';
-      if (item.itemInstanceId === '0') {
-        index = index + getNextIndex();
-      } else {
-        index = index + item.itemInstanceId;
-      }
-
       var createdItem = {
-        index: index,
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -431,6 +435,7 @@
         weaponClassName: weaponClassName,
         classified: itemDef.classified
       };
+      createdItem.index = createItemIndex(createdItem);
 
       // More objectives properties
       if (createdItem.objectives) {

@@ -22,70 +22,84 @@
           });
       }
 
+      // TODO: Switch away from moveAmount property towards an explicit parameter like equip is
+      // Returns the new or updated item (it may create a new item!)
       function updateItemModel(item, source, target, equip) {
-        var matchingItem;
-
+        // If we've moved to a new place
         if (source.id !== target.id) {
-          var index = _.findIndex(source.items, function(i) {
-            return (item.index === i.index);
-          });
+          // We handle moving stackable and nonstackable items almost exactly the same!
+          var stackable = item.maxStackSize > 1;
+          // Items to be decremented
+          var sourceItems = stackable ?
+                _.sortBy(_.select(source.items, function(i) {
+                  return i.hash === item.hash &&
+                    i.id === item.id;
+                }), 'amount') : [item];
+          // Items to be incremented. There's really only ever at most one of these, but
+          // it's easier to deal with as a list.
+          var targetItems = stackable ?
+                _.sortBy(_.select(target.items, function(i) {
+                  return i.hash === item.hash &&
+                    i.id === item.id &&
+                    // Don't consider full stacks as targets
+                    i.amount !== i.maxStackSize;
+                }), 'amount') : [];
+          // moveAmount could be more than maxStackSize if there is more than one stack on a character!
+          var moveAmount = item.moveAmount || item.amount;
+          var addAmount = moveAmount;
+          var removeAmount = moveAmount;
+          var removedSourceItem = false;
 
-          if (item.maxStackSize > 1 && item.amount < item.maxStackSize) { // Balance the stacks.
-            if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
-              matchingItem = _.reduce(source.items, function(memo, i) {
-                if (item.hash === i.hash) {
-                  if (!(_.has(i, 'moveAmount')) || ((_.has(i, 'moveAmount') && i.moveAmount === 0))) {
-                    if (memo === null) {
-                      memo = i;
-                    } else if (memo.amount > i.amount) {
-                      memo = i;
-                    }
-                  }
-                }
-
-                return memo;
-              }, null);
-
-              if (!_.isNull(matchingItem)) {
-                if (item.moveAmount > item.amount) {
-                  matchingItem.amount = matchingItem.amount + (item.amount - item.moveAmount);
-                }
-              }
-
-              item.amount = item.moveAmount;
+          // Remove inventory from the source
+          while (removeAmount > 0) {
+            var sourceItem = sourceItems.shift();
+            if (!sourceItem) {
+              throw new Error("Looks like you requested to move more of this item than exists in the source!");
             }
 
-            item.moveAmount = 0;
-
-            matchingItem = _.filter(target.items, function(i) {
-              return ((i.amount < item.maxStackSize) && (i.hash === item.hash));
-            });
-
-            if (_.size(matchingItem) > 0) {
-              var mItem = matchingItem[0];
-              var combinedTotal = mItem.amount + item.amount;
-
-              item.moveAmount = item.amount;
-
-              if (combinedTotal <= item.maxStackSize) {
-                mItem.amount = combinedTotal;
-                item.amount = 0;
-              } else {
-                mItem.amount = mItem.maxStackSize;
-                item.amount = combinedTotal - item.maxStackSize;
+            var amountToRemove = Math.min(removeAmount, sourceItem.amount);
+            if (amountToRemove === sourceItem.amount) {
+              // Completely remove the source item
+              var sourceIndex = _.findIndex(source.items, function(i) {
+                return sourceItem.index === i.index;
+              });
+              if (sourceIndex >= 0) {
+                source.items.splice(sourceIndex, 1);
+                removedSourceItem = sourceItem.index === item.index;
               }
+            } else {
+              sourceItem.amount -= amountToRemove;
             }
+
+            removeAmount -= amountToRemove;
           }
 
-          item.owner = target.id;
+          // Add inventory to the target (destination)
+          var targetItem;
+          while (addAmount > 0) {
+            targetItem = targetItems.shift();
 
-          if (index >= 0) {
-            source.items.splice(index, 1);
-          }
+            if (!targetItem) {
+              targetItem = item;
+              if (!removedSourceItem) {
+                targetItem = angular.copy(item);
+                targetItem.index = dimStoreService.createItemIndex(targetItem);
+                delete item.moveAmount; // TODO: get rid of this
+              }
+              removedSourceItem = false; // only move without cloning once
+              targetItem.amount = 0; // We'll increment amount below
+              target.items.push(targetItem);
+              targetItem.owner = target.id;
+            }
 
-          if (item.amount > 0) {
-            target.items.push(item);
+            var amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
+            targetItem.amount += amountToAdd;
+            addAmount -= amountToAdd;
           }
+          item = targetItem; // The item we're operating on switches to the last target
+
+
+          item.moveAmount = moveAmount;
         }
 
         if (equip) {
@@ -175,7 +189,7 @@
         return dimBungieService.equip(item)
           .then(dimStoreService.getStore.bind(null, item.owner))
           .then(function(store) {
-            updateItemModel(item, store, store, true);
+            return updateItemModel(item, store, store, true);
           });
       }
 
@@ -226,7 +240,7 @@
                     return dimBungieService.transfer(scope.similarItem, vault);
                   })
                   .then(function() {
-                    updateItemModel(scope.similarItem, vault, scope.source, false);
+                    return updateItemModel(scope.similarItem, vault, scope.source, false);
                   });
               }
 
@@ -234,7 +248,7 @@
                   return dimBungieService.transfer(scope.similarItem, scope.source);
                 })
                 .then(function() {
-                  updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
+                  return updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
                 });
             }
           })
@@ -265,10 +279,6 @@
         return dimStoreService.getStore(item.owner)
           .then(function(source) {
             scope.source = source;
-
-            // if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
-            //   item.amount = item.moveAmount;
-            // }
 
             return dimBungieService.transfer(item, scope.target);
           })
@@ -416,7 +426,6 @@
           }
         }
 
-        // TODO Need to add support to transfer partial stacks.
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
           if ((item.owner !== store.id) && (store.id !== 'vault') && (item.owner !== 'vault')) {
             // It's a guardian-to-guardian move, so we need to check
@@ -530,7 +539,9 @@
                 }
 
                 promise = promise.then(moveToVault.bind(null, item))
-                  .then(moveToStore.bind(null, item, data.target, equip));
+                  .then(function(item) {
+                    return moveToStore(item, data.target, equip);
+                  });
               }
 
               if (equip) {
@@ -544,7 +555,7 @@
               } else if (!equip) {
                 promise = promise.then(function() {
                   if (item.equipped) {
-                    return dequipItem.bind(null, item)();
+                    return dequipItem(item);
                   } else {
                     return $q.when(null);
                   }
@@ -561,10 +572,9 @@
               promise = promise.then(moveToStore.bind(null, item, data.target, equip));
             }
 
-            promise = promise
-              .then(function() {
-                item.moveAmount = 0;
-              });
+            promise = promise.then(function() {
+              delete item.moveAmount;
+            });
 
             return promise;
           })

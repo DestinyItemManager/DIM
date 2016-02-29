@@ -269,6 +269,11 @@
       var promise = null;
       var target = vm.store;
 
+      if (item.notransfer && item.owner !== target.id) {
+        promise = $q.reject(new Error('Cannot move that item off this character.'));
+        return promise;
+      }
+
       if (item.owner === vm.store.id) {
         if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
           return $q.resolve();
@@ -279,11 +284,6 @@
       } else {
         promise = dimStoreService.getStore(item.owner);
       }
-
-      if (item.notransfer && item.owner !== target.id) {
-        promise = $q.reject(new Error('Cannot move that item off this character.'));
-      }
-
       var dimStores = null;
 
       var reload = item.equipped || equip;
