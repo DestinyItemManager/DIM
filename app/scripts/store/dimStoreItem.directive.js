@@ -58,7 +58,7 @@
           ngDialog.closeAll();
 
           if (!dimLoadoutService.dialogOpen) {
-            var bottom = ($(element).offset().top < 370) ? ' move-popup-bottom' : '';
+            var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
             var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
 
             dialogResult = ngDialog.open({
