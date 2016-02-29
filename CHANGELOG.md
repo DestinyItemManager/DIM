@@ -9,6 +9,8 @@
 * Autocomplete for search filters.
 * Comparing stats for armor now shows red and green better/worse bars correctly.
 * Fixed showing magazine stat for weapons in the vault.
+* Fixed infusion material cost for Ghosts and Artifacts (they cost motes of light).
+* Fix a case where the item properties popup may be cut off above the top of the screen.
 
 # 3.3
 
