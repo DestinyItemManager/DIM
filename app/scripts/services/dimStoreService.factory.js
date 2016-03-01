@@ -14,7 +14,7 @@
     var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
     var cooldownsSuperB  = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
-    var cooldownsMelee   = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
+    var cooldownsMelee   = ['1:??', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
     var service = {
       getStores: getStores,
@@ -935,10 +935,10 @@
     function getAbilityCooldown(subclass, ability, tier) {
       if (ability === 'STAT_INTELLECT') {
         switch (subclass) {
-          case 2007186000: //'Defender':
-          case 4143670656: //'Nightstalker':
-          case 2455559914: //'Striker':
-          case 3658182170: //'Sunsinger':
+          case 2007186000: // Defender
+          case 4143670656: // Nightstalker
+          case 2455559914: // Striker
+          case 3658182170: // Sunsinger
             return cooldownsSuperA[tier];
           default:
             return cooldownsSuperB[tier];
@@ -946,7 +946,18 @@
       } else if (ability === 'STAT_DISCIPLINE') {
         return cooldownsGrenade[tier];
       } else if (ability === 'STAT_STRENGTH') {
-        return cooldownsMelee[tier];
+        switch (subclass) {
+          case 2962927168: // Bladedancer
+//          ?case 2455559914: // Striker
+//          ?case 3828867689: // Voidwalker
+//          ?case 3658182170: // Sunsinger
+//          ?case 21395673: // Sunbreaker
+//          ?case 1256644901: // Stormcaller
+//          ?case 2007186000: // Defender
+            return cooldownsGrenade[tier];
+          default:
+            return cooldownsMelee[tier];
+        }
       } else {
         return '-:--';
       }
