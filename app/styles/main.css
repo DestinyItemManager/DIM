@@ -87,6 +87,19 @@ div[dim-search-filter] input {
   margin: 0px 15px 0 10px;
   background-color: #fafafa;
 }
+#filter-input {
+  margin-left: -10px;
+  padding-left: 5px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+}
+#filter-input:hover, #filter-input:focus {
+  outline: none;
+  border-bottom: 1px solid #E8A534;
+}
 dt {
   font-style: italic;
   font-weight: bold;
