@@ -12,6 +12,7 @@
     'angularUUID2',
     'toaster',
     'ajoslin.promise-tracker',
-    'cfp.hotkeys'
+    'cfp.hotkeys',
+    'rzModule'
   ]);
 })();

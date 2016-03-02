@@ -20,6 +20,7 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
+        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.item.moveAmount" maximum="vm.item.amount"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
@@ -50,6 +51,13 @@
   function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster) {
     var vm = this;
 
+    // TODO: cache this, instead?
+    $scope.$watch('vm.item', function() {
+      if (vm.item.amount > 1) {
+        // TODO: sum up all the quantity of the item
+        vm.item.moveAmount = vm.item.amount;
+      }
+    });
 
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);

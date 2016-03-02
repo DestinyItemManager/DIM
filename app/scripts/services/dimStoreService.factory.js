@@ -328,12 +328,16 @@
       return $q.when(store);
     }
 
+    var fuckit = {};
+
     // Set an ID for the item that should be unique across all items
     function createItemIndex(item) {
       // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
       var index = item.hash + '-';
       if (item.id === '0') {
-        index = index + getNextIndex();
+        index = index + item.amount;
+        fuckit[index] = (fuckit[index] || 0) + 1;
+        index = index + '-' + fuckit[index];
       } else {
         index = index + item.id;
       }
@@ -665,6 +669,7 @@
     }
 
     function getItems(owner, items) {
+      fuckit = {};
       return $q.all([
         dimItemDefinitions,
         dimItemBucketDefinitions,

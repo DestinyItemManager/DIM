@@ -266,17 +266,21 @@
 
     // TODO: Consolidate this with the same code in dimMovePopup.directive.js
     vm.moveDroppedItem = function(item, equip) {
-      var promise = null;
       var target = vm.store;
 
-      if (item.notransfer && item.owner !== target.id) {
-        promise = $q.reject(new Error('Cannot move that item off this character.'));
-        return promise;
+      if (item.maxStackSize > 1) {
+        console.log(item);
+        //item.moveAmount = 100;
       }
 
+      if (item.notransfer && item.owner !== target.id) {
+        return $q.reject(new Error('Cannot move that item off this character.'));
+      }
+
+      var promise;
       if (item.owner === vm.store.id) {
         if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
-          return $q.resolve();
+          return $q.resolve(item);
         }
 
         promise = $q.when(vm.store);
