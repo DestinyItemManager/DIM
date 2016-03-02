@@ -76,17 +76,19 @@
   box-shadow: inset 0 0 10px 0px #B84;
 }
 #filter-input {
+  width: 250px;
   margin-left: -10px;
   padding-left: 5px;
   padding-right: 10px;
   margin-bottom: 4px;
   height: 22px;
-  background: transparent;
+  background: rgb(46,46,46);
   border: none;
   border-bottom: 1px solid gray;
   color: white;
 }
 #filter-input:hover, #filter-input:focus {
+  background: transparent;
   outline: none;
   border-bottom: 1px solid #E8A534;
 }
