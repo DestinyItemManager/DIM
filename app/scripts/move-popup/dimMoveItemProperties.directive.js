@@ -23,7 +23,7 @@
         '  <span ng-if="vm.item.lockable" class="fa-stack lock-icon" ng-class="{ locking: vm.locking }" ng-click="vm.setLockState(vm.item);">',
         '    <i class="fa fa-circle fa-stack-2x"></i>',
         '    <i class="fa fa-stack-1x fa-inverse" ng-class="{ \'fa-lock\': vm.item.locked, \'fa-unlock\': !vm.item.locked, locking: vm.locking }"></i>',
-        '  </span>’,
+        '  </span>',
         '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="::vm.item.weaponClassName" ng-bind="::vm.item.weaponClassName"></span>',
