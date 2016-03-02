@@ -11,6 +11,7 @@
 * Fixed showing magazine stat for weapons in the vault.
 * Fixed infusion material cost for Ghosts and Artifacts (they cost motes of light).
 * Fix a case where the item properties popup may be cut off above the top of the screen.
+* Transfer/equip/dequip actions for edge cases will now succeed as expected without errors.
 
 # 3.3
 
