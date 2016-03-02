@@ -84,7 +84,7 @@
                   '<p>We have removed the Crimson Days theme as the event has finished, but there was such a positive response to the update that we\'re looking into adding a more personal experience to DIM in the future.',
                   '<p>The Infusion Calculator now has the ability determine the optimal path to infuse an item, show you the necessary materials, and can move the items and materials to your guardian on demand.',
                   '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.3.',
-                  '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><img title="/r/DIM on Reddit" style="vertical-align: text-bottom;" src="images/reddit.png"></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><img style="vertical-align: text-bottom;" title="@ThisIsDIM on Twitter" src="images/twitter.png"></a>',
+                  '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><i<i class="fa fa-reddit fa-2x"></i></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>',
                   '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160215v33" type="checkbox"> <label for="20160215v33">Hide This Popup</label></p>'
                 ].join(''),
                 timeout: 0,
