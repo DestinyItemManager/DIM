@@ -440,6 +440,10 @@
         }));
       }
 
+      if(createdItem.name === 'Light Beyond Nemesis') {
+      console.log(createdItem)
+      }
+
       return createdItem;
     }
 

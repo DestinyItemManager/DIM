@@ -1,0 +1,11 @@
+<div class="minMaxDialog" ng-controller="dimMinMaxCtrl as minmax" dim-click-anywhere-but-here="minmax.closeDialog()">
+  <h1>Min/Max Calculator</h1>
+  <div class="minmaxHeader">
+    <div class="minmaxControls">
+      <label><input class="controls" type="checkbox" id="minmax-blues" ng-model="minmax.onlyBlues" ng-change="minmax.getItems()">Include rare (blue) items</label>
+    </div>
+  </div>
+  {{calculating ? 'loading.........' : ''}}
+{{combinations}}
+
+</div>

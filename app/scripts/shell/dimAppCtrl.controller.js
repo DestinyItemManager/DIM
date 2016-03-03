@@ -9,6 +9,7 @@
   function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
     var vm = this;
     var aboutResult = null;
+    var minmaxResult = null;
     var settingResult = null;
     var supportResult = null;
     var filterResult = null;
@@ -127,6 +128,32 @@
           aboutResult = null;
           $('body')
             .removeClass('about');
+        });
+      }
+    };
+
+    vm.showMinMax = function(e) {
+      e.stopPropagation();
+
+      if(!_.isNull(minmaxResult)) {
+        minmaxResult.close();
+      } else {
+        ngDialog.closeAll();
+
+        minmaxResult = ngDialog.open({
+          template: 'views/minmax.html',
+          overlay: false,
+          className: 'minmax',
+          scope: $('body > div')
+            .scope()
+        });
+        $('body')
+          .addClass('minmax');
+
+        minmaxResult.closePromise.then(function() {
+          minmaxResult = null;
+          $('body')
+            .removeClass('minmax');
         });
       }
     };

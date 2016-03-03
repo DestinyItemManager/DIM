@@ -30,11 +30,13 @@
       </span>
       <span class="logo">DIM</span>
       <span class="link" ng-click="app.showAbout($event)">About</span>
+      <span class="link" ng-click="app.showMinMax($event)">MinMax</span>
       <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
     </div>
   </div>
   <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
   <div class="about modal-dialog" ng-show="app.about"></div>
+  <div class="minmax modal-dialog" ng-show="app.minmax"></div>
   <div class="donate modal-dialog" ng-show="app.donate"></div>
   <div class="filters modal-dialog" ng-show="app.filters"></div>
   <div id="content" ui-view></div>
@@ -90,9 +92,11 @@
   <script src="scripts/move-popup/dimMovePopup.directive.js?v=3.3.0"></script>
   <script src="scripts/move-popup/dimTalentGrid.directive.js?v=3.3.0"></script>
   <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=3.3.0"></script>
-  <script src="scripts/infuse/dimInfuse.util.js?v=3.3.0"></script>
+<!--  <script src="scripts/infuse/dimInfuse.util.js?v=3.3.0"></script>-->
   <script src="scripts/infuse/dimInfuseItem.directive.js?v=3.3.0"></script>
   <script src="scripts/infuse/dimInfuse.controller.js?v=3.3.0"></script>
+<!--  <script src="scripts/minmax/dimMinMax.util.js?v=3.3.0"></script>-->
+  <script src="scripts/minmax/dimMinMax.controller.js?v=3.3.0"></script>
   <!-- end app scripts -->
 
   <script src="scripts/3d-falling-leaves.js" type="text/javascript"></script>
