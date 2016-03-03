@@ -937,6 +937,7 @@ img.void {
 }
 .item-name .lock-icon {
   padding: 0 5px;
+  top: 1px;
   cursor: pointer;
   font-size: .75em;
   float: left;
@@ -1617,8 +1618,8 @@ button.toast-close-button {
 }
 .move-popup-info-detail {
   padding: 0px 5px;
-  font-size: 1.45em;
-  right: 2px;
+  top: 6px;
+  font-size: 1.5em;
   position: absolute;
 }
 .move-popup .fa {
