@@ -926,9 +926,21 @@ img.void {
 .item-name.is-void {
   background-color: #b184c5;
 }
+.item-name.is-arc .fa-lock, .item-name.is-arc .fa-unlock {
+  color: #85c5ec;
+}
+.item-name.is-solar .fa-lock, .item-name.is-solar .fa-unlock {
+  color: #f2721b;
+}
+.item-name.is-void .fa-lock,.item-name.is-void .fa-unlock {
+  color: #b184c5;
+}
 .item-name .lock-icon {
+  padding: 0 5px;
   cursor: pointer;
   font-size: .75em;
+  float: left;
+  margin-right: 3px;
 }
 .item-name .lock-icon.locking {
   opacity: .5;
@@ -1604,14 +1616,12 @@ button.toast-close-button {
   margin-right: 15px;
 }
 .move-popup-info-detail {
-  padding: 2px 5px;
-  font-size: 1.3em;
-  height: 1.3em;
-  top: 5px;
+  padding: 0px 5px;
+  font-size: 1.45em;
   right: 2px;
   position: absolute;
 }
-.move-popup-info-detail .fa {
+.move-popup .fa {
   vertical-align: top;
 }
 .item-xp-bar {
