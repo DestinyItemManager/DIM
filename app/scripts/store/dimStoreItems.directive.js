@@ -254,6 +254,18 @@
         equipped: '',
         unequipped: 'unequipped equippable',
       },
+      Bounties: {
+        equipped: '',
+        unequipped: 'unequipped equippable',
+      },
+      Quests: {
+        equipped: '',
+        unequipped: 'unequipped equippable',
+      },
+      Missions: {
+        equipped: '',
+        unequipped: 'unequipped equippable',
+      },
       'Special-Orders': {
         equipped: '',
         unequipped: 'unequipped equippable',
