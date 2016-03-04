@@ -289,12 +289,11 @@
 
       var promise = $q.when(item);
 
-      console.log(item.moveAmount);
+      item.moveAmount = item.amount;
 
       // TODO: dwell trigger
       if (item.maxStackSize > 1 && item.amount > 1 && $event.shiftKey) {
         console.log(item, $event);
-        item.moveAmount = item.amount;
 
         var dialogResult = ngDialog.open({
           // TODO: break this out into a separate service/directive?

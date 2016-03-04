@@ -530,7 +530,7 @@
             data.target = targetStore;
           })
           .then(function(a) {
-            var promise = $q.when();
+            var promise = $q.when(item);
 
             if (!data.isVault.source && !data.isVault.target) { // Guardian to Guardian
               if (data.source.id != data.target.id) { // Different Guardian
@@ -549,7 +549,7 @@
                   if (!item.equipped) {
                     return equipItem(item);
                   } else {
-                    return $q.when(null);
+                    return $q.when(item);
                   }
                 });
               } else if (!equip) {
@@ -557,7 +557,7 @@
                   if (item.equipped) {
                     return dequipItem(item);
                   } else {
-                    return $q.when(null);
+                    return $q.when(item);
                   }
                 });
               }
