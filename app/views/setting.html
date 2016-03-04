@@ -13,7 +13,15 @@
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
-          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')"></input>
+          <input type="checkbox" id="condensedItems" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="showMinYear" title="Weapons and armor to show from which year">Minimum year of armor and weapons to show</label>
+        </td>
+        <td>
+          <input type="text" id="showMinYear" ng-model="vm.settings.showMinYear" ng-change="vm.save('showMinYear')" />
         </td>
       </tr>
       <tr>
@@ -21,7 +29,7 @@
           <label for="details" title="Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.">Always Show Item Details</label>
         </td>
         <td>
-          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-change="vm.save('itemDetails')"></input>
+          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-change="vm.save('itemDetails')" />
         </td>
       </tr>
       <tr>
@@ -29,7 +37,7 @@
           <label for="itemStat" title="Will display information in the lower-right of the item that is appropriate to the item such as attack, defense, and bounty status.">Display Primary Stat Values on Items</label>
         </td>
         <td>
-          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-change="vm.save('itemStat')"></input>
+          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-change="vm.save('itemStat')" />
         </td>
       </tr>
       <tr>

@@ -71,7 +71,7 @@
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
         '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:false | sortItems:vm.itemSort track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:false | sortItems:vm.itemSort track by item.index" dim-store-item min-year="vm.minYear" store-data="vm.store" item-data="item"></div>',
         '          <div class="item-target"></div>',
         '        </div>',
         '      </div>',
@@ -321,6 +321,10 @@
 
     dimSettingsService.getSetting('itemSort').then(function(sort) {
       vm.itemSort = sort;
+    });
+
+    dimSettingsService.getSetting('showMinYear').then(function(min) {
+      vm.minYear = min;
     });
 
     $scope.$on('dim-settings-updated', function(event, settings) {
