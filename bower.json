@@ -1,7 +1,7 @@
 {
   "name": "dim",
   "description": "An item manager for Destiny.",
-  "version": "3.3",
+  "version": "3.3.2",
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "repository": {
     "type": "git",
@@ -30,4 +30,3 @@
     "angular": "1.4.x"
   }
 }
- 
