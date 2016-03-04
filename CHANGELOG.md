@@ -1,3 +1,8 @@
+# Next
+
+* Infusion calculator performance enhancements
+* Larger lock icon
+
 # 3.3.2
 
 * If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
