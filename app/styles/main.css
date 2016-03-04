@@ -1,3 +1,7 @@
+div:focus, span:focus {
+  outline-width: 0;
+}
+
 /**
   Header Area
 **/
@@ -286,6 +290,8 @@ a {
 }
 .ngdialog-content {
   color: #e0e0e0;
+  background-color: transparent;
+  position: relative;
 }
 .ngdialog-content .orange {
   color: #f59e1f;
@@ -1246,6 +1252,9 @@ rzslider .rz-bubble.rz-limit {
   cursor: pointer;
   display: inline-block;
 }
+.move-popup .move-button:focus {
+  outline-width: 5px;
+}
 .move-popup .infuse-perk {
   width: 37px;
   height: 37px;
@@ -1395,9 +1404,6 @@ ialog-open {
   left: initial;
   right: initial;
   overflow: visible;
-}
-.ngdialog-content {
-  background-color: transparent;
 }
 .ngdialog h1, h2, h3, h4 {
   font-weight: 400;
