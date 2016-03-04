@@ -157,7 +157,7 @@
 
         var worker = new dimWebWorker({
           fn:function(args) {
-            var data = JSON.parse(args.data);
+            var data = args.data;
             var max = InfuseUtil.maximizeAttack(
               _.reject(data.infusable, function(item) {
                 return _.any(data.excluded, function(otherItem) {
@@ -178,8 +178,12 @@
         });
 
         vm.calculating = true;
-        worker.do(JSON.stringify(vm))
-          .then(function(message) {
+        worker.do({
+          infusable: vm.infusable,
+          excluded: vm.excluded,
+          source: vm.source,
+          exotic: vm.exotic,
+        }).then(function(message) {
             vm.calculating = false;
 
             vm.paths = [manualPath];
