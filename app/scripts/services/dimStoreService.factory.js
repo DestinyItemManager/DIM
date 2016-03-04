@@ -654,6 +654,7 @@
         }
 
         return {
+          statHash: stat.statHash,
           name: name,
           sort: sort,
           value: itemStat ? itemStat.value : stat.value,

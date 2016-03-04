@@ -1,11 +1,93 @@
 <div class="minMaxDialog" ng-controller="dimMinMaxCtrl as minmax" dim-click-anywhere-but-here="minmax.closeDialog()">
   <h1>Min/Max Calculator</h1>
+
+<!--
+  <div ng-repeat="(bucket, buckets) in minmax.ranked">
+    <h3>{{bucket}}</h3>
+    <div ng-repeat="(type, items) in buckets">
+      <h4>{{type}}</h4>
+      <span style='display: inline-block; margin-right: 20px'>
+        <div><small>Intellect</small></div>
+        <div><small>Discipline</small></div>
+        <div><small>Strength</small></div>
+      </span>
+      <span ng-repeat="item in items">
+        <div style='display: inline-block'>
+          <div style='display: inline-block'>
+            <div ng-repeat="stat in item.stats">
+              <small>{{stat.value}}</small>
+            </div>
+          </div>
+          <div dim-store-item item-data="item"></div>
+        </div>
+      </span>
+
+    </div>
+  </div>
+-->
+
+
+<!--  filter: <input type="text" ng-model="filterint">-->
+  <p>Order by: <select ng-model='minmax.statOrder'>
+    <option value='-stats.int'>Intellect</option>
+    <option value='-stats.dis'>Discipline</option>
+    <option value='-stats.str'>Strength</option>
+  </select></p>
+
+  <div class="character">
+    <div class="stats">
+      <div class="stat" title="Intellect">
+        <img src="images/intellect.png" /><div ng-click='minmax.filter.int = $index + 1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4, 5] track by $index">
+          <div class="progress" style="width:{{n < minmax.filter.int ? 100 : 0}}%"></div></div></div>
+      <div class="stat" title="Discipline">
+        <img src="images/discipline.png" /><div ng-click='minmax.filter.dis = $index + 1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4, 5] track by $index">
+          <div class="progress" style="width:{{n < minmax.filter.dis ? 100 : 0}}%"></div></div></div>
+      <div class="stat" title="Strength">
+        <img src="images/strength.png" /><div ng-click='minmax.filter.str = $index + 1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4, 5] track by $index">
+          <div class="progress" style="width:{{n < minmax.filter.str ? 100 : 0}}%"></div></div></div>
+    </div>
+  </div>
+
+  <p>Min Intellect: <input type='text' ng-model='minmax.filter.int' />
+  Min Discipline: <input type='text' ng-model='minmax.filter.dis' />
+  Min Strength: <input type='text' ng-model='minmax.filter.str' /></p>
+
+  <p>Found {{results.length}} combinations:</p>
+  <p ng-repeat="combo in minmax.combinations | filter:minmax.filterFunction | orderBy:minmax.statOrder as results">
+    <span ng-repeat="item in combo.armor " dim-store-item item-data="item"></span>
+    <span ng-repeat="(k, stat) in combo.stats">{{k}}:{{stat}} </span>
+    <input type="button" value="Create Loadout" />
+<!--    <h3>{{buckets}}</h3>-->
+<!--
+    <div ng-repeat="(type, items) in buckets">
+      <h4>{{type}}</h4>
+      <span style='display: inline-block; margin-right: 20px'>
+        <div><small>Intellect</small></div>
+        <div><small>Discipline</small></div>
+        <div><small>Strength</small></div>
+      </span>
+      <span ng-repeat="item in items">
+        <div style='display: inline-block'>
+          <div style='display: inline-block'>
+            <div ng-repeat="stat in item.stats">
+              <small>{{stat.value}}</small>
+            </div>
+          </div>
+          <div dim-store-item item-data="item"></div>
+        </div>
+      </span>
+
+    </div>
+-->
+  </p>
+
+
+<!--
   <div class="minmaxHeader">
     <div class="minmaxControls">
       <label><input class="controls" type="checkbox" id="minmax-blues" ng-model="minmax.onlyBlues" ng-change="minmax.getItems()">Include rare (blue) items</label>
     </div>
   </div>
-  {{calculating ? 'loading.........' : ''}}
-{{combinations}}
+-->
 
 </div>

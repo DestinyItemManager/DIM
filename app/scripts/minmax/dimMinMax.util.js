@@ -1,97 +1,88 @@
 var MinMaxUtil = {
   getIterations: function(_class) {
+    console.log('start')
     var iterations = [];
 
-    console.log(_class)
-    for(var h in _class.helmet) {
-      for(var g in _class.gauntlets) {
-        for(var c in _class.chest) {
-          for(var l in _class.leg) {
-            for(var ci in _class.classItem) {
-              for(var a in _class.artifact) {
-                for(var gh in _class.ghost) {
-                  var exotics = 0;
+    var h = 0, hlen = _class.helmet.length,
+        g = 0, glen = _class.gauntlets.length,
+        c = 0, clen = _class.chest.length,
+        l = 0, llen = _class.leg.length,
+        ci = 0, cilen = _class.classItem.length,
+        a = 0, alen = _class.artifact.length,
+        gh = 0, ghlen = _class.ghost.length;
 
-                  exotics += _class.helmet[h].tier === 'Exotic' ? 1 : 0;
-                  exotics += _class.gauntlets[g].tier === 'Exotic' ? 1 : 0;
-                  exotics += _class.chest[c].tier === 'Exotic' ? 1 : 0;
-                  exotics += _class.leg[l].tier === 'Exotic' ? 1 : 0;
-                  exotics += _class.classItem[ci].tier === 'Exotic' ? 1 : 0;
-                  exotics += _class.artifact[a].tier === 'Exotic' ? 1 : 0;
-                  exotics += _class.ghost[gh].tier === 'Exotic' ? 1 : 0;
 
-                  if(_class.classItem[ci].tier === 'Exotic' && exotics > 2) {
-                      continue;
-                  } else if(exotics > 1) {
-                    continue;
-                  }
+    console.log(hlen*glen*clen*llen*cilen*alen*ghlen)
+    for(h=0;h < hlen; h++) {
+    for(g=0;g < glen; g++) {
+    for(c=0;c < clen; c++) {
+    for(l=0;l < llen; l++) {
+    for(ci=0;ci < cilen; ci++) {
+    for(a=0;a < alen; a++) {
+    for(gh=0;gh < ghlen; gh++) {
+      var exotics = 0;
 
-                  var set = {
-                    armor: [
-                      _class.helmet[h],
-                      _class.gauntlets[g],
-                      _class.chest[c],
-                      _class.leg[l],
-                      _class.classItem[ci],
-                      _class.artifact[a],
-                      _class.ghost[gh]
-                    ],
-                    stats: {
-                      light: 0,
-                      int: 0,
-                      dis: 0,
-                      str: 0
-                    }
-                  };
+      exotics += _class.helmet[h].tier === 'Exotic' ? 1 : 0;
+      exotics += _class.gauntlets[g].tier === 'Exotic' ? 1 : 0;
+      exotics += _class.chest[c].tier === 'Exotic' ? 1 : 0;
+      exotics += _class.leg[l].tier === 'Exotic' ? 1 : 0;
+      exotics += _class.classItem[ci].tier === 'Exotic' ? 1 : 0;
+//                  exotics += _class.artifact[a].tier === 'Exotic' ? 1 : 0;
+//                  exotics += _class.ghost[gh].tier === 'Exotic' ? 1 : 0;
 
-                  for(var a in set.armor) {
-                    for(var s in set.armor[a].stats) {
-                      switch(set.armor[a].stats[s].statHash) {
-                        case 2391494160: //light
-                          set.stats.light += set.armor[a].stats[s].value;
-                          break;
-                        case 144602215: //int
-                          set.stats.int += set.armor[a].stats[s].value;
-                          break;
-                        case 1735777505: //dis
-                          set.stats.dis += set.armor[a].stats[s].value;
-                          break;
-                        case 4244567218: //str
-                          set.stats.str += set.armor[a].stats[s].value;
-                          break;
-                      }
-                    }
-                  }
-
-                  iterations.push(set);
-                }
-              }
-            }
-          }
-        }
+      if(_class.classItem[ci].tier === 'Exotic' && exotics > 2) {
+          continue;
+      } else if(exotics > 1) {
+        continue;
       }
-    }
+
+      var set = {
+        armor: [
+          {hash: _class.helmet[h].hash, name: _class.helmet[h].name, stats: _class.helmet[h].stats},
+          {hash: _class.gauntlets[g].hash, name: _class.gauntlets[g].name, stats: _class.gauntlets[g].stats},
+          {hash: _class.chest[c].hash, name: _class.chest[c].name, stats: _class.chest[c].stats},
+          {hash: _class.leg[l].hash, name: _class.leg[l].name, stats: _class.leg[l].stats},
+          {hash: _class.classItem[ci].hash, name: _class.leg[l].name, stats: _class.leg[l].stats},
+          {hash: _class.artifact[a].hash, name: _class.artifact[a].name, stats: _class.artifact[a].stats},
+          {hash: _class.ghost[gh].hash, name: _class.ghost[gh].name, stats: _class.ghost[gh].stats}
+        ],
+        stats: {
+          light: 0,
+          int: 0,
+          dis: 0,
+          str: 0
+        }
+      };
+
+//
+//      set.armor.forEach(function(armor) {
+//        armor.stats.forEach(function(stats) {
+//          switch(stats.statHash) {
+//            case 2391494160: //light
+//              set.stats.light += stats.value;
+//              break;
+//            case 144602215: //int
+//              set.stats.int += stats.value;
+//              break;
+//            case 1735777505: //dis
+//              set.stats.dis += stats.value;
+//              break;
+//            case 4244567218: //str
+//              set.stats.str += stats.value;
+//              break;
+//          }
+//        });
+//
+//        delete armor.stats;
+//      });
+
+//      if(set.stats.int > 200) {
+        iterations.push(set);
+//      }
+    }}}}}}}
+    console.log('end', iterations.length)
+//    console.log('added', JSON.stringify (iterations[0]))
     return iterations;
-  },
-
-  getBuckets: function(items) {
-    return {
-      helmet: items.filter(function(item) { return item.bucket === 3448274439; }),
-      gauntlets: items.filter(function(item) { return item.type === 3551918588; }),
-      chest: items.filter(function(item) { return item.type === 14239492; }),
-      leg: items.filter(function(item) { return item.type === 20886954; }),
-      classItem: items.filter(function(item) { return item.type === 1585787867; }),
-      ghost: items.filter(function(item) { return item.type === 4023194814; }),
-      artifact: items.filter(function(item) { return item.type === 434908299; }),
-    };
-  },
-
-  getSets: function(items) { // titan, hunter, warlock
-    return {
-      titan: MinMaxUtil.getIterations(MinMaxUtil.getBuckets(items.filter(function(item) { return item.classType === 0; }))),
-      hunter: MinMaxUtil.getIterations(MinMaxUtil.getBuckets(items.filter(function(item) { return item.classType === 1; }))),
-      warlock: MinMaxUtil.getIterations(MinMaxUtil.getBuckets(items.filter(function(item) { return item.classType === 2; })))
-    };
   }
 };
 

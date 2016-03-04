@@ -234,7 +234,7 @@
     };
 
     vm.closeLoadoutPopup = function closeLoadoutPopup() {
-      if(!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
+      if(!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)|| !_.isNull(minmaxResult)) {
         ngDialog.closeAll();
       }
     };
