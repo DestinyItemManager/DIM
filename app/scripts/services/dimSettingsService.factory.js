@@ -19,6 +19,7 @@
     function loadSettings() {
       settingState = {
         hideFilteredItems: false,
+        showMinYear: 0,
         itemDetails: false,
         itemStat: false,
         condensed: false,

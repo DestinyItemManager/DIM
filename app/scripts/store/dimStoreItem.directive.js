@@ -17,10 +17,11 @@
       replace: true,
       scope: {
         'store': '=storeData',
-        'item': '=itemData'
+        'item': '=itemData',
+        'minYear': '='
       },
       template: [
-        '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
+        '<div ng-hide="vm.hideItem()" ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
         '  class="item">',
@@ -48,6 +49,11 @@
         element[0].querySelector('.img')
           .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
       });
+
+      vm.hideItem = function() {
+        return (vm.item.primStat.statHash === 3897883278 ||
+                vm.item.primStat.statHash === 368428387) && vm.item.year <= vm.minYear
+      }
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
