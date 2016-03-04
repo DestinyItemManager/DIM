@@ -87,16 +87,14 @@
 
         var srcElement = $('#' + id);
 
-        vm.moveDroppedItem(angular.element(srcElement[0])
-          .scope()
-          .item, equip);
+        vm.moveDroppedItem(angular.element(srcElement[0]).scope().item, equip, $event);
       };
     }
   }
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog) {
     var vm = this;
 
     var types = [ // Order of types in the rows.
@@ -276,51 +274,100 @@
       }
     };
 
-    // TODO: Consolidate this with the same code in dimMovePopup.directive.js
-    vm.moveDroppedItem = function(item, equip) {
+    vm.moveDroppedItem = function(item, equip, $event) {
       var target = vm.store;
-
-      if (item.maxStackSize > 1) {
-        console.log(item);
-        //item.moveAmount = 100;
-      }
 
       if (item.notransfer && item.owner !== target.id) {
         return $q.reject(new Error('Cannot move that item off this character.'));
       }
 
-      var promise;
       if (item.owner === vm.store.id) {
         if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
           return $q.resolve(item);
         }
-
-        promise = $q.when(vm.store);
-
-      } else {
-        promise = dimStoreService.getStore(item.owner);
       }
-      var dimStores = null;
 
-      var reload = item.equipped || equip;
+      var promise = $q.when(item);
 
-      promise = promise.then(dimItemService.moveTo.bind(null, item, target, equip));
+      console.log(item.moveAmount);
 
-      if (reload) {
-        promise = promise.then(dimStoreService.getStores)
-          .then(function(stores) {
-            dimStores = dimStoreService.updateStores(stores);
-          });
-      }
-      promise = promise
-        .then(function() {
-          setTimeout(function() { dimStoreService.setHeights(); }, 0);
-        })
-        .catch(function(a) {
-          toaster.pop('error', item.name, a.message);
+      // TODO: dwell trigger
+      if (item.maxStackSize > 1 && item.amount > 1 && $event.shiftKey) {
+        console.log(item, $event);
+        item.moveAmount = item.amount;
+
+        var dialogResult = ngDialog.open({
+          // TODO: break this out into a separate service/directive?
+          template: [
+            '<div ng-click="$event.stopPropagation();">',
+            '  <h1>',
+            '    <dim-infuse-item item-data="vm.item"></dim-infuse-item>',
+            '    How much {{vm.item.name}} to move?',
+            '  </h1>',
+            '  <form ng-submit="vm.finish()">',
+            '    <dim-move-amount amount="vm.item.moveAmount" maximum="vm.item.amount"></dim-move-amount>',
+            '  </form>',
+            '  <div class="buttons"><button ng-click="vm.finish()">Move</button></buttons>',
+            '</div>'].join(''),
+          scope: $scope,
+          controllerAs: 'vm',
+          controller: ['$scope', function($scope) {
+            var vm = this;
+            vm.item = $scope.ngDialogData;
+            vm.finish = function() {
+              $scope.closeThisDialog(vm.item.moveAmount);
+            };
+          }],
+          plain: true,
+          data: item,
+          appendTo: 'body',
+          overlay: true,
+          className: 'move-amount-popup'
         });
 
+        promise = dialogResult.closePromise.then(function(data) {
+          console.log(data);
+          if (typeof data.value === 'string') {
+            return $q.reject(new Error("move-canceled"));
+          }
+          item.moveAmount = data.value;
+          return item;
+        });
+      }
+
+      promise.then(function(item) {
+        var getStore;
+        if (item.owner === vm.store.id) {
+          getStore = $q.when(vm.store);
+        } else {
+          getStore = dimStoreService.getStore(item.owner);
+        }
+        var dimStores = null;
+
+        var movePromise = getStore.then(function() {
+          return dimItemService.moveTo(item, target, equip);
+        });
+
+        var reload = item.equipped || equip;
+        if (reload) {
+          movePromise = movePromise
+            .then(dimStoreService.getStores)
+            .then(function(stores) {
+              dimStores = dimStoreService.updateStores(stores);
+            });
+        }
+        return movePromise.then(function() {
+          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        });
+      }).catch(function(e) {
+        if (e.message !== 'move-canceled') {
+          toaster.pop('error', item.name, e.message);
+        }
+      });
+;
+
       loadingTracker.addPromise(promise);
+
       return promise;
     };
 

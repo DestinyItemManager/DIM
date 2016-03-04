@@ -572,7 +572,7 @@
               promise = promise.then(moveToStore.bind(null, item, data.target, equip));
             }
 
-            promise = promise.then(function() {
+            promise = promise.then(function(item) {
               delete item.moveAmount;
             });
 

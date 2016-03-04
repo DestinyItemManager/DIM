@@ -179,7 +179,7 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   bottom: 0;
   border: 5px solid #f5dc56;
 }
-.about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog {
+.about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog, .move-amount-popup.ngdialog {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -217,7 +217,7 @@ a {
   overflow-y: scroll;
   position: absolute;
 }
-.about.ngdialog .ngdialog-close, .app-settings.ngdialog .ngdialog-close, .filters.ngdialog .ngdialog-close, .support.ngdialog .ngdialog-close {
+.ngdialog-close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -292,6 +292,7 @@ a {
   color: #e0e0e0;
   background-color: transparent;
   position: relative;
+  z-index: 100;
 }
 .ngdialog-content .orange {
   color: #f59e1f;
@@ -949,6 +950,45 @@ img.void {
 }
 .move-amount-arrow:hover {
   color: white;
+}
+
+.move-amount-popup .ngdialog-content {
+  width: 40%;
+  top: 40%;
+  left: 30%;
+  background-color: #222;
+  border: solid 1px #3e3e3e;
+  overflow-y: scroll;
+  position: fixed;
+  padding-bottom: 1em;
+}
+
+.move-amount-popup h1 {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 14px;
+  padding-left: 10px !important;
+  font-size: 1.65em;
+}
+.move-amount-popup .item {
+  margin-right: .5em;
+}
+.move-amount-popup .buttons {
+  text-align: center;
+  margin-top: 1em;
+}
+.move-amount-popup button {
+  border: 1px solid #3e3e3e;
+  color: #e0e0e0;
+  background-color: #101010;
+  padding: 8px 16px;
+  font-size: 1.4em;
+}
+.move-amount-popup button:hover {
+  /*color: #101010;*/
+  background-color: #444;
+  border-color: black;
 }
 
 /* rzslider */
