@@ -9,7 +9,7 @@
       };
     }).filter('bungieIcon', function ($sce) {
       return function(icon) {
-        return $sce.trustAsResourceUrl('http://bungie.net/' + icon);
+        return $sce.trustAsResourceUrl(chrome.extension.getURL(icon));
       };
     }).directive('svgBindViewbox', function () {
       return {

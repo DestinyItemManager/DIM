@@ -102,11 +102,10 @@
         .then(function(loadouts) {
           _loadouts = loadouts;
 
-          return _.map(loadouts, function(loadout) {
+          var loadoutPrimitives = _.map(loadouts, function(loadout) {
             return dehydrate(loadout);
           });
-        })
-        .then(function(loadoutPrimitives) {
+
           var data = {
             'loadouts-v3.0': []
           };
@@ -158,7 +157,13 @@
             loadout.id = uuid2.newguid();
           }
 
-          loadouts.push(loadout);
+          // Handle overwriting an old loadout
+          var existingLoadoutIndex = _.findIndex(loadouts, {id: loadout.id});
+          if (existingLoadoutIndex > -1) {
+            loadouts[existingLoadoutIndex] = loadout;
+          } else {
+            loadouts.push(loadout);
+          }
 
           return saveLoadouts(loadouts);
         })
@@ -299,23 +304,7 @@
 
         return $q.when(dimStoreService.getStores())
           .then(function(stores) {
-            dimStores = stores;
-            return dimStoreService.updateStores();
-          })
-          .then(function(bungieStores) {
-            _.each(dimStores, function(dStore) {
-              if (dStore.id !== 'vault') {
-                var bStore = _.find(bungieStores, function(bStore) {
-                  return dStore.id === bStore.id;
-                });
-
-                dStore.level = bStore.base.characterLevel;
-                dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-                dStore.powerLevel = bStore.base.characterBase.powerLevel;
-                dStore.background = bStore.base.backgroundPath;
-                dStore.icon = bStore.base.emblemPath;
-              }
-            });
+            dimStores = dimStoreService.updateStores(stores);
           })
           .then(function() {
             var value = 'success';

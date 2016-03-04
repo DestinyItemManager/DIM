@@ -23,13 +23,14 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
-        '  ng-class="{',
-        "    'item': true,",
+        '  class="item">',
+        '  <div class="item-elem" ng-class="{',
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
-        '  <div class="img" ng-click="vm.clicked(vm.item, $event)">',
-        '  <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '    <div class="img" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
@@ -57,7 +58,7 @@
           ngDialog.closeAll();
 
           if (!dimLoadoutService.dialogOpen) {
-            var bottom = ($(element).offset().top < 370) ? ' move-popup-bottom' : '';
+            var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
             var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
 
             dialogResult = ngDialog.open({
@@ -119,20 +120,19 @@
     vm.showBadge = showBountyPercentage;
 
     if (showBountyPercentage) {
-      vm.badgeClassNames = { counter: true };
+      vm.badgeClassNames = { 'item-stat': true };
       vm.badgeCount = item.xpComplete + '%';
     }
   }
 
   function processStackable(vm, item) {
     vm.showBadge = true;
-    vm.badgeClassNames = { counter: true };
+    vm.badgeClassNames = { 'item-stat': true };
     vm.badgeCount = item.amount;
   }
 
   function processItem(vm, item) {
     vm.badgeClassNames = {
-      'counter': false,
       'damage-type': false,
       'damage-solar': false,
       'damage-arc': false,

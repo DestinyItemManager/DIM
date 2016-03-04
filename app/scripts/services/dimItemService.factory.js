@@ -11,8 +11,16 @@
         getSimilarItem: getSimilarItem,
         getItem: getItem,
         getItems: getItems,
-        moveTo: moveTo
+        moveTo: moveTo,
+        setLockState: setLockState
       };
+
+      function setLockState(item, store, lockState) {
+        return dimBungieService.setLockState(item, store, lockState)
+          .then(function() {
+            return lockState;
+          });
+      }
 
       function updateItemModel(item, source, target, equip) {
         var matchingItem;
@@ -120,7 +128,6 @@
       }
 
       function searchForSimilarItem(item, store) {
-        var result = null;
         var sortType = {
           Legendary: 0,
           Rare: 1,
@@ -129,41 +136,32 @@
           Exotic: 5
         };
 
-        var results = _.chain(store.items)
-          .where({
-            classType: item.classType
+        var result = _.chain(store.items)
+          .filter(function(i) {
+            return i.equipment &&
+              i.type === item.type &&
+              !i.equipped &&
+              // Compatible with this class
+              (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
+              // Not the same item
+              i.id !== item.id &&
+              i.hash !== item.hash;
           })
           .sortBy(function(i) {
             return sortType[i.tier];
           })
-          .where({
-            type: item.type,
-            equipped: false,
-            equipment: true
-          })
+          .first()
           .value();
 
-        if (_.size(results) > 0) {
-          result = results[0];
+        if (result && result.tier === dimItemTier.exotic) {
+          var prefix = _.filter(store.items, function(i) {
+            return i.equipped &&
+              i.type !== item.type &&
+              i.sort === item.sort &&
+              i.tier === dimItemTier.exotic;
+          });
 
-          if ((result.id === item.id) && (result.hash === item.hash)) {
-            if (_.size(results) > 1) {
-              result = results[1];
-            } else {
-              result = null;
-            }
-          }
-        }
-
-        if (result !== null && result.tier === dimItemTier.exotic) {
-          var prefix = _(store.items)
-            .chain()
-            .filter(function(i) {
-              return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic);
-            });
-
-          if (prefix.size()
-            .value() === 0) {
+          if (prefix.length === 0) {
             return result;
           } else {
             return null;

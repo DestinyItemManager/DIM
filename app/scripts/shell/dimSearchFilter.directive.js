@@ -10,12 +10,65 @@
     return {
       controller: SearchFilterCtrl,
       controllerAs: 'vm',
+      link: Link,
       bindToController: true,
       restrict: 'A',
       template: [
         '<input id="filter-input" placeholder="filter items or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
       ].join('')
     };
+  }
+
+  /**
+   * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
+   * values that will set the left-hand to the "match."
+   */
+  var filterTrans = {
+    'dmg':          ['arc', 'solar', 'void', 'kinetic'],
+    'type':         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
+    'tier':         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
+    'incomplete':   ['incomplete'],
+    'complete':     ['complete'],
+    'xpcomplete':   ['xpcomplete'],
+    'xpincomplete': ['xpincomplete', 'needsxp'],
+    'upgraded':     ['upgraded'],
+    'classType':    ['titan', 'hunter', 'warlock'],
+    'dupe':         ['dupe', 'duplicate'],
+    'unascended':   ['unascended', 'unassended', 'unasscended'],
+    'ascended':     ['ascended', 'assended', 'asscended'],
+    'reforgeable':  ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    'locked':       ['locked'],
+    'unlocked':     ['unlocked'],
+    'stackable':    ['stackable'],
+    'engram':       ['engram'],
+    'weaponClass':  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
+    'year':         ['year1', 'year2']
+  };
+
+  var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
+    return "is:" + word;
+  });
+  keywords.push("light:<", "light:>", "light:<=", "light:>=",
+                "level:<", "level:>", "level:<=", "level:>=");
+
+  function Link(scope, element, attrs) {
+    element.find('input').textcomplete([
+      {
+        words: keywords,
+        match: /\b((li|le|is:)\w*)$/,
+        search: function (term, callback) {
+          callback($.map(this.words, function (word) {
+            return word.indexOf(term) === 0 ? word : null;
+          }));
+        },
+        index: 1,
+        replace: function (word) {
+          return word.indexOf('is:') === 0 ? (word + ' ') : word;
+        }
+      }
+    ], {
+      zIndex: 1000
+    });
   }
 
   SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', '$timeout', '$interval'];
@@ -30,6 +83,12 @@
     };
 
     $scope.$on('dim-stores-updated', function(arg) {
+      _duplicates = null;
+      vm.filter();
+    });
+
+    // Something has changed that could invalidate filters
+    $scope.$on('dim-filter-invalidate', function(arg) {
       _duplicates = null;
       vm.filter();
     });
@@ -114,31 +173,6 @@
       });
 
       $timeout(dimStoreService.setHeights, 32);
-    };
-
-    /**
-     * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
-     * values that will set the left-hand to the "match."
-     */
-    var filterTrans = {
-      'dmg':          ['arc', 'solar', 'void', 'kinetic'],
-      'type':         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem'],
-      'tier':         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
-      'incomplete':   ['incomplete'],
-      'complete':     ['complete'],
-      'xpcomplete':   ['xpcomplete'],
-      'xpincomplete': ['xpincomplete'],
-      'upgraded':     ['upgraded'],
-      'classType':    ['titan', 'hunter', 'warlock'],
-      'dupe':         ['dupe', 'duplicate'],
-      'unascended':   ['unascended', 'unassended', 'unasscended'],
-      'ascended':     ['ascended', 'assended', 'asscended'],
-      'reforgeable':  ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-      'locked':       ['locked'],
-      'unlocked':     ['unlocked'],
-      'stackable':    ['stackable'],
-      'weaponClass':  ["pulserifle", "scoutrifle", "handcannon", "autorifle", "primaryweaponengram", "sniperrifle", "shotgun", "fusionrifle", "specialweaponengram", "rocketlauncher", "machinegun", "heavyweaponengram", "sidearm"],
-      'year':         ['year1', 'year2']
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -241,11 +275,18 @@
       'stackable': function(predicate, item) {
         return item.maxStackSize > 1;
       },
+      'engram': function(predicate, item) {
+        return item.type.toLowerCase().indexOf('Engram') >= 0;
+      },
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
       },
       'keyword': function(predicate, item) {
-        return item.name.toLowerCase().indexOf(predicate) >= 0;
+        return item.name.toLowerCase().indexOf(predicate) >= 0 ||
+          // Search perks as well
+          (item.talentGrid && _.any(item.talentGrid.nodes, function(node) {
+            return node.name.toLowerCase().indexOf(predicate) >= 0;
+          }));
       },
       'light': function(predicate, item) {
         if (predicate.length === 0 || item.primStat === undefined) {

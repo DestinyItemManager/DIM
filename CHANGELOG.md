@@ -1,3 +1,19 @@
+# 3.3.2
+
+* If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
+* Keyword search also searches perks on items.
+* New search terms for is:engram, is:sword, is:artifact, is:ghost, is:consumable, is:material, etc.
+* Items can be locked and unlocked by clicking the log icon next to their name.
+* Display intellect/discipline/strength bars and cooldown for each character
+* Loadouts have a "Save as New" button which will let you save your modified loadout as a new loadout without changing the loadout you started editing.
+* Autocomplete for search filters.
+* Comparing stats for armor now shows red and green better/worse bars correctly.
+* Fixed showing magazine stat for weapons in the vault.
+* Fixed infusion material cost for Ghosts and Artifacts (they cost motes of light).
+* Fix a case where the item properties popup may be cut off above the top of the screen.
+* Transfer/equip/dequip actions for edge cases will now succeed as expected without errors.
+* Manifest file update.
+
 # 3.3.1
 
 * Updated the manifest file.

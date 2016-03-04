@@ -10,6 +10,12 @@
     var _stores = [];
     var _index = 0;
 
+    // Cooldowns
+    var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
+    var cooldownsSuperB  = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
+    var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
+    var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
+
     var service = {
       getStores: getStores,
       getStore: getStore,
@@ -19,8 +25,24 @@
 
     return service;
 
-    function updateStores() {
-      return dimBungieService.getCharacters(dimPlatformService.getActive());
+    function updateStores(dimStores) {
+      return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
+        _.each(dimStores, function(dStore) {
+          if (dStore.id !== 'vault') {
+            var bStore = _.find(bungieStores, function(bStore) {
+              return dStore.id === bStore.id;
+            });
+
+            dStore.level = bStore.base.characterLevel;
+            dStore.percentToNextLevel = bStore.base.percentToNextLevel;
+            dStore.powerLevel = bStore.base.characterBase.powerLevel;
+            dStore.background = bStore.base.backgroundPath;
+            dStore.icon = bStore.base.emblemPath;
+            dStore.stats = getStatsData(bStore.base.characterBase);
+          }
+        });
+        return dimStores;
+      });
     }
 
     function getNextIndex() {
@@ -193,6 +215,7 @@
                   background: raw.character.base.backgroundPath,
                   level: raw.character.base.characterLevel,
                   powerLevel: raw.character.base.characterBase.powerLevel,
+                  stats: getStatsData(raw.character.base.characterBase),
                   class: getClass(raw.character.base.characterBase.classType),
                   gender: getGender(raw.character.base.characterBase.genderType),
                   race: getRace(raw.character.base.characterBase.raceHash),
@@ -236,8 +259,6 @@
                     }, false, this)) === 0;
                   }
                 };
-
-
 
                 _.each(raw.data.buckets, function(bucket) {
                   _.each(bucket, function(pail) {
@@ -623,11 +644,16 @@
           return undefined;
         }
 
+        var maximumValue = 100;
+        if (itemStat && itemStat.maximumValue) {
+          maximumValue = itemStat.maximumValue;
+        }
+
         return {
           name: name,
           sort: sort,
           value: itemStat ? itemStat.value : stat.value,
-          maximumValue: itemStat ? itemStat.maximumValue : 100,
+          maximumValue: maximumValue,
           bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
         };
       })), 'sort');
@@ -903,5 +929,66 @@
         return 'Postmaster';
       }
     }
+
+
+    //---- following code is from https://github.com/DestinyTrialsReport
+    function getAbilityCooldown(subclass, ability, tier) {
+      if (ability === 'STAT_INTELLECT') {
+        switch (subclass) {
+          case 2007186000: // Defender
+          case 4143670656: // Nightstalker
+          case 2455559914: // Striker
+          case 3658182170: // Sunsinger
+            return cooldownsSuperA[tier];
+          default:
+            return cooldownsSuperB[tier];
+        }
+      } else if (ability === 'STAT_DISCIPLINE') {
+        return cooldownsGrenade[tier];
+      } else if (ability === 'STAT_STRENGTH') {
+        switch (subclass) {
+          case 4143670656: // Nightstalker
+          case 1716862031: // Gunslinger
+            return cooldownsMelee[tier];
+          default:
+            return cooldownsGrenade[tier];
+        }
+      } else {
+        return '-:--';
+      }
+    }
+
+    function getStatsData(data) {
+      var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
+      var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
+      var ret = {};
+      for (var s = 0; s < stats.length; s++) {
+        var statHash = {};
+        switch(stats[s]) {
+          case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
+          case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
+          case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
+        }
+        statHash.value = data.stats[stats[s]].value;
+
+        if (statsWithTiers.indexOf(stats[s]) > -1) {
+          statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
+          statHash.tier = Math.floor(statHash.normalized / 60);
+          statHash.tiers = [];
+          statHash.remaining = statHash.value;
+          for (var t = 0; t < 5; t++) {
+            statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
+          }
+          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
+        } else {
+          statHash.percentage = +(100 * statHash.value / 10).toFixed();
+        }
+
+        ret[stats[s]] = statHash;
+      }
+      return ret;
+    }
+    // code above is from https://github.com/DestinyTrialsReport
   }
 })();

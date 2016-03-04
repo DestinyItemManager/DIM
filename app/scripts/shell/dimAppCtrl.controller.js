@@ -45,6 +45,12 @@
       characterOrder: 'mostRecent'
     };
 
+    vm.cakeDay = function(e) {
+      e.stopPropagation();
+
+      $('.cards').toggle();
+    }
+
     vm.showSetting = function(e) {
       e.stopPropagation();
 

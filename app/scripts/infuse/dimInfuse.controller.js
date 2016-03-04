@@ -47,6 +47,10 @@
           vm.source.primStat.statHash === 3897883278 ? 'Defense' : // armor item
           vm.source.primStat.statHash === 368428387 ?  'Attack' :  // weapon item
                                                        'Unknown'; // new item?
+        vm.wildcardMaterialIcon = item.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1' :
+          vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3' : '972ae2c6ccbf59cde293a2ed50a57a93';
+        // 2 motes, or 10 armor/weapon materials
+        vm.wildcardMaterialCost = item.sort === 'General' ? 2 : 10;
       },
 
       setInfusibleItems: function(items) {
@@ -106,8 +110,9 @@
             }
 
             // Add it to targets
-            var sortedIndex = _.sortedIndex(vm.targets, item,
-                                            function(i) { return i.primStat.value; });
+            var sortedIndex = _.sortedIndex(vm.targets, item, function(i) {
+              return i.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
+            });
             vm.targets.splice(sortedIndex, 0, item);
           }
 
@@ -152,7 +157,7 @@
 
         var worker = new dimWebWorker({
           fn:function(args) {
-            var data = JSON.parse(args.data);
+            var data = args.data;
             var max = InfuseUtil.maximizeAttack(
               _.reject(data.infusable, function(item) {
                 return _.any(data.excluded, function(otherItem) {
@@ -173,8 +178,12 @@
         });
 
         vm.calculating = true;
-        worker.do(JSON.stringify(vm))
-          .then(function(message) {
+        worker.do({
+          infusable: vm.infusable,
+          excluded: vm.excluded,
+          source: vm.source,
+          exotic: vm.exotic,
+        }).then(function(message) {
             vm.calculating = false;
 
             vm.paths = [manualPath];
@@ -221,7 +230,7 @@
           });
 
           allItems = _.sortBy(allItems, function(item) {
-            return item.primStat.value;
+            return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
           });
 
           vm.setInfusibleItems(allItems);
