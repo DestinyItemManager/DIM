@@ -29,24 +29,25 @@
 
 <!--  filter: <input type="text" ng-model="filterint">-->
   <p>Order by: <select ng-model='minmax.statOrder'>
-    <option value='-stats.int'>Intellect</option>
-    <option value='-stats.dis'>Discipline</option>
-    <option value='-stats.str'>Strength</option>
+    <option value='-stats.STAT_INTELLECT.value'>Intellect</option>
+    <option value='-stats.STAT_DISCIPLINE.value'>Discipline</option>
+    <option value='-stats.STAT_STRENGTH.value'>Strength</option>
   </select></p>
 
-  <div class="character">
-    <div class="stats">
-      <div class="stat" title="Intellect">
-        <img src="images/intellect.png" /><div ng-click='minmax.filter.int = $index + 1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4, 5] track by $index">
-          <div class="progress" style="width:{{n < minmax.filter.int ? 100 : 0}}%"></div></div></div>
-      <div class="stat" title="Discipline">
-        <img src="images/discipline.png" /><div ng-click='minmax.filter.dis = $index + 1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4, 5] track by $index">
-          <div class="progress" style="width:{{n < minmax.filter.dis ? 100 : 0}}%"></div></div></div>
-      <div class="stat" title="Strength">
-        <img src="images/strength.png" /><div ng-click='minmax.filter.str = $index + 1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4, 5] track by $index">
-          <div class="progress" style="width:{{n < minmax.filter.str ? 100 : 0}}%"></div></div></div>
-    </div>
+<!--
+
+  <div class="stats">
+    <div class="stat" title="Intellect">
+      <img src="images/intellect.png" /><div ng-click='minmax.filter.int = $index+1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4]">
+        <div class="progress" style="width:{{n < minmax.filter.int ? 100 : 0}}%"></div></div></div>
+    <div class="stat" title="Discipline">
+      <img src="images/discipline.png" /><div ng-click='minmax.filter.dis = $index+1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4]">
+        <div class="progress" style="width:{{n < minmax.filter.dis ? 100 : 0}}%"></div></div></div>
+    <div class="stat" title="Strength">
+      <img src="images/strength.png" /><div ng-click='minmax.filter.str = $index+1' class="bar" ng-repeat="n in [0, 1, 2, 3, 4]">
+        <div class="progress" style="width:{{n < minmax.filter.str ? 100 : 0}}%"></div></div></div>
   </div>
+-->
 
   <p>Min Intellect: <input type='text' ng-model='minmax.filter.int' />
   Min Discipline: <input type='text' ng-model='minmax.filter.dis' />
@@ -54,8 +55,9 @@
 
   <p>Found {{results.length}} combinations:</p>
   <p ng-repeat="combo in minmax.combinations | filter:minmax.filterFunction | orderBy:minmax.statOrder as results">
-    <span ng-repeat="item in combo.armor " dim-store-item item-data="item"></span>
-    <span ng-repeat="(k, stat) in combo.stats">{{k}}:{{stat}} </span>
+    <span ng-repeat="item in combo.armor" dim-store-item item-data="item"></span>
+    <span dim-stats stats="combo.stats"></span>
+<!--    <span ng-repeat="(k, stat) in combo.stats"></span>-->
     <input type="button" value="Create Loadout" />
 <!--    <h3>{{buckets}}</h3>-->
 <!--

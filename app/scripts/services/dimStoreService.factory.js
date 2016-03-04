@@ -20,7 +20,8 @@
       getStores: getStores,
       getStore: getStore,
       updateStores: updateStores,
-      setHeights: setHeights
+      setHeights: setHeights,
+      getStatsData: getStatsData
     };
 
     return service;
@@ -974,6 +975,9 @@
           case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
           case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
+        if(!data.stats[stats[s]]) {
+          continue;
+        }
         statHash.value = data.stats[stats[s]].value;
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {
@@ -984,7 +988,9 @@
           for (var t = 0; t < 5; t++) {
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
-          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          if(data.peerView) {
+            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          }
           statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
         } else {
           statHash.percentage = +(100 * statHash.value / 10).toFixed();

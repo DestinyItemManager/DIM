@@ -32,16 +32,7 @@
         '  <div class="loadout-button" ng-if="::vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '</div>',
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
-        '<div class="stats" ng-if="vm.isGuardian">',
-        '  <div class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">',
-        '    <img src="images/intellect.png" /><div class="bar" ng-repeat="n in vm.store.stats.STAT_INTELLECT.tiers track by $index">',
-        '      <div class="progress" style="width:{{n/60*100}}%"></div></div></div>',
-        '  <div class="stat" title="{{vm.formatTooltip(\'STAT_DISCIPLINE\')}}">',
-        '    <img src="images/discipline.png" /><div class="bar" ng-repeat="n in vm.store.stats.STAT_DISCIPLINE.tiers track by $index">',
-        '      <div class="progress" style="width:{{n/60*100}}%"></div></div></div>',
-        '  <div class="stat" title="{{vm.formatTooltip(\'STAT_STRENGTH\')}}">',
-        '    <img src="images/strength.png" /><div class="bar" ng-repeat="n in vm.store.stats.STAT_STRENGTH.tiers track by $index">',
-        '      <div class="progress" style="width:{{n/60*100}}%"></div></div></div>',
+        '<div dim-stats stats="vm.store.stats" ng-if="vm.isGuardian"></div>',
         '</div>'
       ].join('')
     };
@@ -63,16 +54,6 @@
           }
         });
       });
-
-      vm.formatTooltip = function(which) {
-        var next = ' (' + vm.store.stats[which].value + '/300)',
-            tier = vm.store.stats[which].tier;
-        if(tier !== 5) {
-          next = ' (' + (vm.store.stats[which].value%60) + '/60 for T' + (tier+1) + ')';
-        }
-        return 'T' + tier + ' ' + vm.store.stats[which].name + next + '\n' + vm.store.stats[which].effect + ' cooldown: ' + vm.store.stats[which].cooldown;
-
-      };
 
       vm.openLoadoutPopup = function openLoadoutPopup(e) {
         e.stopPropagation();

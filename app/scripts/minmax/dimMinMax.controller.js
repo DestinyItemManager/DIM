@@ -90,9 +90,9 @@
             _class.ghost[gh]
           ],
           stats: {
-            int: 0,
-            dis: 0,
-            str: 0
+            STAT_INTELLECT: {value: 0},
+            STAT_DISCIPLINE: {value: 0},
+            STAT_STRENGTH: {value: 0}
           }
         };
 
@@ -100,18 +100,19 @@
           armor.stats.forEach(function(stats) {
             switch(stats.statHash) {
               case 144602215: //int
-                set.stats.int += stats.value;
+                set.stats.STAT_INTELLECT.value += stats.value;
                 break;
               case 1735777505: //dis
-                set.stats.dis += stats.value;
+                set.stats.STAT_DISCIPLINE.value += stats.value;
                 break;
               case 4244567218: //str
-                set.stats.str += stats.value;
+                set.stats.STAT_STRENGTH.value += stats.value;
                 break;
             }
           });
         });
 
+        set.stats = dimStoreService.getStatsData(set)
         iterations.push(set);
       }}}}}}}
 
@@ -130,16 +131,15 @@
       showBlues: false,
       showExotics: true,
       combinations: null,
-      statOrder: '-stats.int',
+      statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
-      five: new Array(5),
       filter: {
-        int: 4,
-        dis: 0,
+        int: 3,
+        dis: 2,
         str: 2
       },
       filterFunction: function(element) {
-        return element.stats.int > vm.filter.int*60 && element.stats.dis > vm.filter.dis*60 && element.stats.str > vm.filter.str*60;
+        return element.stats.STAT_INTELLECT.tier >= vm.filter.int && element.stats.STAT_DISCIPLINE.tier >= vm.filter.dis && element.stats.STAT_STRENGTH.tier >= vm.filter.str;
       },
 
       // get Items for infusion

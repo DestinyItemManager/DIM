@@ -798,24 +798,24 @@ img.void {
 }
 
 /* INT/DIS/STR bars below character tile */
-.character .stats {
+.stats {
   width: 100%;
   opacity: .8;
   display: flex;
   flex-direction: row;
   margin-top: 4px;
 }
-.character .stats .stat {
+.stats .stat {
   flex: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-right: 8px;
 }
-.character .stats .stat:last-child {
+.stats .stat:last-child {
   margin-right: 0;
 }
-.character .stats .stat .bar {
+.stats .stat .bar {
   flex: 1;
   height: 7px;
   margin-left: 1px;
@@ -823,11 +823,11 @@ img.void {
   background-color: gray;
   overflow: hidden;
 }
-.character .stats .stat .bar .progress {
+.stats .stat .bar .progress {
   height: 100%;
   background-color: white;
 }
-.character .stats .stat img {
+.stats .stat img {
   height: 16px;
   width: 16px;
   margin-right: 2px;
