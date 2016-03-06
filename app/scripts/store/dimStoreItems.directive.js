@@ -47,7 +47,6 @@
       controller: StoreItemsCtrl,
       controllerAs: 'vm',
       bindToController: true,
-      link: Link,
       replace: true,
       scope: {
         'store': '=storeData'
@@ -62,11 +61,11 @@
         '      </div>',
         '      <div ng-repeat="type in ::value track by type" class="sub-section"',
         '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[vm.orderedTypes[type]] }]"',
-        '           ui-on-drop="vm.onDrop($data, $event, false)"',
+        '           ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)"',
         '           drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
         '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped"',
         '             ng-if="::vm.store.id !== \'vault\'"',
-        '             ui-on-drop="vm.onDrop($data, $event, true)"',
+        '             ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)"',
         '              drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
@@ -80,22 +79,28 @@
         '</div>'
       ].join('')
     };
-
-    function Link(scope, element, attrs) {
-      scope.vm.onDrop = function(id, $event, equip) {
-        var vm = scope.vm;
-
-        var srcElement = $('#' + id);
-
-        vm.moveDroppedItem(angular.element(srcElement[0]).scope().item, equip, $event);
-      };
-    }
   }
 
   StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog'];
 
   function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog) {
     var vm = this;
+
+    vm.onDrop = function(id, $event, equip) {
+      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
+    };
+
+    // Detect when we're hovering a dragged item over a target
+    // TODO: visual feedback!
+    var dragTimer = null;
+    var hovering = false;
+    vm.onDragEnter = function($event) {
+      hovering = false;
+      $timeout.cancel(dragTimer);
+      dragTimer = $timeout(500).then(function() {
+        hovering = true;
+      });
+    };
 
     var types = [ // Order of types in the rows.
       'Class',
@@ -291,14 +296,13 @@
 
       item.moveAmount = item.amount;
 
-      // TODO: dwell trigger
-      if (item.maxStackSize > 1 && item.amount > 1 && $event.shiftKey) {
+      if (item.maxStackSize > 1 && item.amount > 1 && ($event.shiftKey || hovering)) {
         console.log(item, $event);
 
         var dialogResult = ngDialog.open({
           // TODO: break this out into a separate service/directive?
           template: [
-            '<div ng-click="$event.stopPropagation();">',
+            '<div>',
             '  <h1>',
             '    <dim-infuse-item item-data="vm.item"></dim-infuse-item>',
             '    How much {{vm.item.name}} to move?',
