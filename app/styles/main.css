@@ -102,9 +102,6 @@ dd {
 body > div, #header {
   /*min-width: 1000px;*/
 }
-body.about .about, body.app-settings .app-settings, body.support .support, body.fitlers .fitlers {
-  display: inline-block;
-}
 .button-name {
   float: left;
   width: 60%;
@@ -186,6 +183,9 @@ body.about .about, body.app-settings .app-settings, body.support .support, body.
   color: #fff;
   font-size: 13px;
   background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 body.filters.ngdialog-open, body.support.ngdialog-open, body.app-settings.ngdialog-open, body.about.ngdialog-open {
   overflow: hidden !important;
@@ -208,15 +208,24 @@ a {
   left: 0;
 }
 .about.ngdialog .ngdialog-content, .app-settings.ngdialog .ngdialog-content, .filters.ngdialog .ngdialog-content, .support.ngdialog .ngdialog-content {
-  width: 50%;
-  height: 70%;
-  top: 15%;
-  left: 25%;
+  max-height: 70%;
+  max-width: 50%;
   background-color: #222;
   border: solid 1px #3e3e3e;
-  overflow-y: scroll;
-  position: absolute;
+  height: 100%;
 }
+.ngdialog-content > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.ngdialog-inner-content {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  padding: 15px;
+}
+
 .ngdialog-close {
   position: absolute;
   top: 20px;
@@ -229,12 +238,6 @@ a {
 
 /* settings dialog */
 
-.ngdialog.app-settings .ngdialog-content {
-  width: 60%;
-  min-height: 80%;
-  left: 20%;
-  top: 10%;
-}
 @-webkit-keyframes ngdialog-fadeout {
   0% {
     opacity: 1;
@@ -310,12 +313,12 @@ a {
 }
 .ngdialog-content h1 {
   margin-top: 0;
+  margin-bottom: 0;
   padding: 20px 25px;
   background-color: #101010;
   border-bottom: solid 1px #3e3e3e;
 }
-.ngdialog-content > p {
-  padding: 0 25px;
+.ngdialog-content > p, .ngdialog-inner-content > p {
   margin: 5px 0;
 }
 .ngdialog-content dl {
@@ -336,7 +339,6 @@ a {
   margin: 10px 10px 15px 10px;
 }
 .ngdialog-content table {
-  margin: 0 25px 20px 25px;
   padding: 0;
   border-collapse: collapse;
   border-spacing: 0;
@@ -953,14 +955,14 @@ img.void {
 }
 
 .move-amount-popup .ngdialog-content {
-  width: 40%;
-  top: 40%;
-  left: 30%;
+  width: 40em;
   background-color: #222;
   border: solid 1px #3e3e3e;
   overflow-y: scroll;
-  position: fixed;
-  padding-bottom: 1em;
+}
+.move-amount-popup .ngdialog-inner-content {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .move-amount-popup h1 {
@@ -1878,6 +1880,10 @@ button.toast-close-button {
 .infuseDialog small {
   font-size: 10px;
 }
+.infuseDialog .ngdialog-inner-content {
+  padding-left: 0;
+  padding-right: 0;
+}
 
 .infuseHeader {
   display: flex;
@@ -1935,7 +1941,7 @@ button.toast-close-button {
 
 .infuseDialog .gearsContainer {
   width: 100%;
-  padding: 10px 0px 10px 25px;
+  padding: 10px 25px;
   overflow: hidden;
 }
 
