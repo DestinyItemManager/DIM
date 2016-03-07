@@ -257,13 +257,48 @@
           // Include the source, since we wouldn't want it to get moved out of the way
           items[vm.source.type.toLowerCase()].push(vm.source);
 
+          items['material'] = [];
+          if (vm.sort === 'General') {
+            // Mote of Light
+            items['material'].push({
+              id: '0',
+              hash: 937555249,
+              amount: 2 * vm.targets.length,
+              equipped: false
+            });
+          } else if (vm.statType === 'Attack') {
+            // Weapon Parts
+            items['material'].push({
+              id: '0',
+              hash: 1898539128,
+              amount: 10 * vm.targets.length,
+              equipped: false
+            });
+          } else {
+            // Armor Materials
+            items['material'].push({
+              id: '0',
+              hash: 1542293174,
+              amount: 10 * vm.targets.length,
+              equipped: false
+            });
+          }
+          if (vm.exotic) {
+            // Exotic shard
+            items['material'].push({
+              id: '0',
+              hash: 452597397,
+              amount: vm.targets.length,
+              equipped: false
+            });
+          }
+
           var loadout = {
             classType: -1,
             name: 'Infusion Materials',
             items: items
           };
 
-          // TODO: when loadouts can take consumables, move them too
           vm.transferInProgress = true;
           dimLoadoutService.applyLoadout(store, loadout).then(function() {
             vm.transferInProgress = false;

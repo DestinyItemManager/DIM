@@ -207,10 +207,9 @@
       // Existing items on the character, minus ones that we want as part of the loadout
       var existingItems = _.chain(store.items)
         .filter(function(item) {
-          // TODO: not sure what this is doing
           return _.contains(_types, item.type) &&
-            (!_.some(items, function(i) {
-              return ((i.id === item.id) && (i.hash === item.hash));
+            (!_.any(items, function(i) {
+              return i.id === item.id && i.hash === item.hash;
             }));
         })
         .groupBy('type')
@@ -242,14 +241,14 @@
       var pseudoItem = items.shift();
       var item = dimItemService.getItem(pseudoItem);
 
-      // TODO: this'll be different for materials! should probably take from richest character?
-      // Plus need to consider current character amount
       if (item.type === 'Material' || item.type === 'Consumable') {
         // handle consumables!
         var amountNeeded = pseudoItem.amount - store.amountOfItem(pseudoItem);
         if (amountNeeded > 0) {
-          // TODO: move some in
-          var storesByAmount = _.sortBy(dimStoreService.getStores().map(function(store) {
+          var otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
+            return store.id == otherStore.id;
+          });
+          var storesByAmount = _.sortBy(otherStores.map(function(store) {
             return {
               store: store,
               amount: store.amountOfItem(pseudoItem)
@@ -261,7 +260,7 @@
             var amountToMove = Math.min(source.amount, amountNeeded);
             var sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
 
-            if (!sourceItem) {
+            if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(function() {
                 return $q.reject(new Error("There's not enough " + item.name + " to fulfill your loadout."));
               });
@@ -323,7 +322,7 @@
         }
       }
 
-      promise
+      promise = promise
         .catch(function(e) {
           scope.failed = true;
           toaster.pop('error', item.name, e.message);
