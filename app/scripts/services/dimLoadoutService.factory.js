@@ -199,118 +199,30 @@
         failed: false
       };
 
-      var items = _.chain(loadout.items)
-        .values()
-        .flatten()
-        .value();
+      var items = _.flatten(loadout.items);
 
-      var _types = _.chain(items)
-        .pluck('type')
-        .uniq()
-        .value();
+      var _types = _.uniq(_.pluck(items, 'type'));
 
-      var _items = _.chain(store.items)
+      // Existing items on the character, minus ones that we want as part of the loadout
+      var existingItems = _.chain(store.items)
         .filter(function(item) {
-          return _.contains(_types, item.type);
+          // TODO: not sure what this is doing
+          return _.contains(_types, item.type) &&
+            (!_.some(items, function(i) {
+              return ((i.id === item.id) && (i.hash === item.hash));
+            }));
         })
-        .filter(function(item) {
-          return (!_.some(items, function(i) {
-            return ((i.id === item.id) && (i.hash === item.hash));
-          }));
-        })
-        .groupBy(function(item) {
-          return item.type;
-        })
+        .groupBy('type')
         .value();
 
-      return applyLoadoutItems(store, items, loadout, _items, scope);
+      return applyLoadoutItems(store, items, loadout, existingItems, scope);
     }
 
-    function applyLoadoutItems(store, items, loadout, _items, scope) {
-      if (items.length > 0) {
-        var pseudoItem = items.splice(0, 1)[0];
-        var item = dimItemService.getItem(pseudoItem);
-
-        if (item.type === 'Class') {
-          item = _.findWhere(store.items, {
-            hash: pseudoItem.hash
-          });
-        }
-
-        if (item) {
-          var size = _.chain(store.items)
-            .filter(function(i) {
-              return item.type === i.type;
-            })
-            .size()
-            .value();
-
-          var p = $q.when(item);
-
-          var target;
-
-          if (size === 10) {
-            if (item.owner !== store.id) {
-              var moveItem = _items[item.type].splice(0, 1);
-              p = $q.when(dimStoreService.getStores())
-                .then(function(stores) {
-                  return _.chain(stores)
-                    .sortBy(function(s) {
-                      if (s.id === store.id) {
-                        return 0;
-                      } else if (s.id === 'vault') {
-                        return 2;
-                      } else {
-                        return 1;
-                      }
-                    })
-                    .value();
-                })
-                .then(function(sortedStores) {
-                  return _.find(sortedStores, function(s) {
-                    return _.chain(s.items)
-                      .filter(function(i) {
-                        return item.type === i.type;
-                      })
-                      .size()
-                      .value() < ((s.id === 'vault') ? 72 : 10);
-                  });
-                })
-                .then(function(t) {
-                  if (_.isUndefined(t)) {
-                    throw new Error('Collector eh?  All your characters ' + moveItem[0].type.toLowerCase() + ' slots are full and I can\'t move items of characters, yet... Clear a slot on a character and I can complete the loadout.');
-                  }
-                  target = t;
-
-                  return dimItemService.moveTo(moveItem[0], target);
-                });
-            }
-          }
-
-          var promise = p
-            .then(function() {
-              return dimItemService.moveTo(item, store, pseudoItem.equipped);
-            })
-            .catch(function(a) {
-              scope.failed = true;
-              toaster.pop('error', item.name, a.message);
-            })
-            .finally(function() {
-              return applyLoadoutItems(store, items, loadout, _items, scope);
-            });
-
-          loadingTracker.addPromise(promise);
-          return promise;
-        } else {
-          return $q.when();
-        }
-      } else {
-        var dimStores;
-
-        return $q.when(dimStoreService.getStores())
-          .then(function(stores) {
-            dimStores = dimStoreService.updateStores(stores);
-          })
+    // Move one loadout item at a time. Called recursively to move items!
+    function applyLoadoutItems(store, items, loadout, existingItems, scope) {
+      if (items.length == 0) {
+        // We're done!
+        return dimStoreService.updateStores(dimStoreService.getStores())
           .then(function() {
             var value = 'success';
             var message = 'Your loadout has been transfered.';
@@ -322,6 +234,69 @@
 
             toaster.pop(value, loadout.name, message);
           });
+      }
+
+      var pseudoItem = items.shift();
+      var item = dimItemService.getItem(pseudoItem);
+
+      // TODO: this'll be different for materials! should probably take from richest character?
+      // Plus need to consider current character amount
+
+      if (item.type === 'Class') {
+        item = _.findWhere(store.items, {
+          hash: pseudoItem.hash
+        });
+      }
+
+      if (item) {
+        var size = _.where(store.items, { type: item.type }).length;
+
+        var promise = $q.when(item);
+
+        // If full, make room. TODO: put this in the move service!
+        if (size === 10) {
+          if (item.owner !== store.id) {
+            // TODO: should probably choose the least-desirable item
+            var moveAwayItem = existingItems[item.type].shift();
+            var sortedStores = _.sortBy(dimStoreService.getStores(), function(s) {
+              if (s.id === store.id) {
+                return 0;
+              } else if (s.id === 'vault') {
+                return 2;
+              } else {
+                return 1;
+              }
+            });
+            // Get the first store with space
+            // TODO: handle consumable capacity
+            var target = _.find(sortedStores, function(s) {
+              var capacity = (s.id === 'vault' ? 72 : 10);
+              return _.where(s.items, { type: item.type }).length < capacity;
+            });
+            if (!target) {
+              promise = $q.reject(new Error("Collector, eh?  All your characters' " + moveAwayItem.type.toLowerCase() + ' slots are full and I can\'t move items off characters, yet... Clear a slot on a character and I can complete the loadout.'));
+            } else {
+              promise = dimItemService.moveTo(moveAwayItem, target);
+            }
+          }
+        }
+
+        promise = promise
+          .then(function() {
+            return dimItemService.moveTo(item, store, pseudoItem.equipped);
+          })
+          .catch(function(a) {
+            scope.failed = true;
+            toaster.pop('error', item.name, a.message);
+          })
+          .finally(function() {
+            return applyLoadoutItems(store, items, loadout, existingItems, scope);
+          });
+
+        loadingTracker.addPromise(promise);
+        return promise;
+      } else {
+        return $q.when();
       }
     }
 

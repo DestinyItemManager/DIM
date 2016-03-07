@@ -233,7 +233,7 @@
 
       promise = promise.then(function() {
         setTimeout(function() { dimStoreService.setHeights(); }, 0);
-        toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' are now equally divided between characters.');
+        toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' is now equally divided between characters.');
       })
       .catch(function(a) {
         toaster.pop('error', vm.item.name, a.message);

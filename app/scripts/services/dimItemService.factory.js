@@ -577,47 +577,15 @@
 
       function getItems() {
         var returnValue = [];
-        var stores = dimStoreService.getStores();
-
-        angular.forEach(stores, function(store) {
+        dimStoreService.getStores().forEach(function(store) {
           returnValue = returnValue.concat(store.items);
         });
-
         return returnValue;
       }
 
-      function getItem(id, hash, amount, store) {
-        var items;
-
-        if (store) {
-          items = store.items;
-        } else {
-          items = getItems();
-        }
-
-        var item;
-
-        if (_.isObject(id)) {
-          var primitive = id;
-
-          item = _.find(items, function(item) {
-            return ((item.id === primitive.id) && (item.hash === primitive.hash));
-          });
-        } else {
-          predicate = {};
-
-          if (!_.isEmpty(id)) {
-            predicate.id = id;
-          }
-
-          if (!_.isEmpty(hash)) {
-            predicate.hash = hash;
-          }
-
-          item = _.findWhere(items, predicate);
-        }
-
-        return item;
+      function getItem(params, store) {
+        var items = store ? store.items : getItems();
+        return _.findWhere(items, { id: params.id, hash: params.hash });
       }
 
       return service;
