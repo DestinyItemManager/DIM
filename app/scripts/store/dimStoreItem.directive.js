@@ -97,7 +97,7 @@
               dialogResult = null;
             });
           } else {
-            dimLoadoutService.addItemToLoadout(item);
+            dimLoadoutService.addItemToLoadout(item, e);
           }
         }
       };
@@ -212,11 +212,5 @@
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       processSettings(vm, arg);
     });
-
-    vm.itemClicked = function clicked(item) {
-      $rootScope.$broadcast('dim-store-item-clicked', {
-        item: item
-      });
-    };
   }
 })();

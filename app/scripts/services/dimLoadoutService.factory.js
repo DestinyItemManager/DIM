@@ -19,9 +19,10 @@
       previousLoadouts: {} // by character ID
     };
 
-    function addItemToLoadout(item) {
+    function addItemToLoadout(item, $event) {
       $rootScope.$broadcast('dim-store-item-clicked', {
-        item: item
+        item: item,
+        clickEvent: $event
       });
     }
 
