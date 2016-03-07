@@ -116,10 +116,10 @@
       }
     };
     vm.onDrop = function(id, $event, equip) {
+      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
       hovering = false;
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
-      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
     };
 
     var types = [ // Order of types in the rows.
