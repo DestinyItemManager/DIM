@@ -167,7 +167,7 @@
                       'type': type
                     };
 
-                    return _.where(tems, predicate);
+                    return _.where(items, predicate);
                   },
                   getTypeCount: function(item) {
                     return _.where(this.items, { type: item.type }).length < 10;
