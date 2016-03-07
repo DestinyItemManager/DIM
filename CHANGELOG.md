@@ -5,6 +5,7 @@
 * Infusion calculator performance enhancements
 * Larger lock icon
 * Completed segments of Intelligence, Discipline, and Strength are now colored orange.
+* New loadouts are now scoped to the platform they're created on, rather than applying across accounts.
 
 # 3.3.2
 

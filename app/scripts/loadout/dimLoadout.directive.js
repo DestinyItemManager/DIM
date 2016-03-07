@@ -3,9 +3,9 @@
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService'];
+  Loadout.$inject = ['dimLoadoutService', 'dimPlatformService'];
 
-  function Loadout(dimLoadoutService) {
+  function Loadout(dimLoadoutService, dimPlatformService) {
     return {
       controller: LoadoutCtrl,
       controllerAs: 'vm',
@@ -27,7 +27,7 @@
         '          <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" placeholder="Loadout Name..." />',
         '          <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
         '          <input type="button" ng-disabled="vm.form.$invalid" value="Save" ng-click="vm.save()"></input>',
-        '          <input type="button" ng-disabled="vm.form.$invalid" value="Save as New" ng-click="vm.saveAsNew()"></input>',
+        '          <input type="button" ng-disabled="vm.form.$invalid || !vm.loadout.id" value="Save as New" ng-click="vm.saveAsNew()"></input>',
         '          <input type="button" ng-click="vm.cancel()" value="Cancel"></input>',
         '          <span>Items with the <img src="images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> icon will be equipped.  Click on an item toggle equip.</span>',
         '          <p id="loadout-error"></p>',
@@ -79,6 +79,8 @@
         dimLoadoutService.dialogOpen = true;
 
         vm.loadout = angular.copy(vm.defaults);
+        var platform = dimPlatformService.getActive();
+        vm.loadout.platform = platform.label; // Playstation or Xbox
       });
 
       scope.$on('dim-delete-loadout', function(event, args) {
