@@ -607,6 +607,28 @@ img.void {
   box-shadow: none;
 }
 
+#drag-help {
+  font-size: 1.5em;
+  position: fixed;
+  bottom: 2em;
+  transition: transform .5s, opacity .5s, background-color .1s;
+  background-color: rgba(0, 0, 0, .8);
+  left: calc(50% - 15em);
+  width: 30em;
+  right: 0;
+  border-radius: .5em;
+  text-align: center;
+  padding: .5em .5em;
+  color: #e0e0e0;
+}
+.drag-help-hidden {
+  transform: translateY(5em);
+  opacity: 0;
+}
+#drag-help.drag-shift-activated, #drag-help.drag-dwell-activated {
+  background-color: rgba(0, 60, 0, .8);
+}
+
 /*.unequipped.on-drag-enter .item-target, .unequippable.on-drag-enter .item-target {
   display: inline-block;
   box-shadow: 0 0 10px #ccc;

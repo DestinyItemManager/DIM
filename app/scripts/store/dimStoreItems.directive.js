@@ -61,15 +61,15 @@
         '      </div>',
         '      <div ng-repeat="type in ::value track by type" class="sub-section"',
         '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[vm.orderedTypes[type]] }]"',
-        '           ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)"',
+        '           ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
         '           drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
         '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped"',
         '             ng-if="::vm.store.id !== \'vault\'"',
-        '             ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)"',
+        '             ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
         '              drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
-        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
+        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
         '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:false | sortItems:vm.itemSort track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '          <div class="item-target"></div>',
         '        </div>',
@@ -81,9 +81,10 @@
     };
   }
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog) {
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope'];
+
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope) {
     var vm = this;
 
     vm.onDrop = function(id, $event, equip) {
@@ -91,15 +92,30 @@
     };
 
     // Detect when we're hovering a dragged item over a target
-    // TODO: visual feedback!
     var dragTimer = null;
     var hovering = false;
+    var dragHelp = document.getElementById('drag-help');
+    var entered = 0;
     vm.onDragEnter = function($event) {
-      hovering = false;
-      $timeout.cancel(dragTimer);
-      dragTimer = $timeout(500).then(function() {
-        hovering = true;
-      });
+      if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
+        entered = entered + 1;
+        if (entered === 1) {
+          dragTimer = $timeout(function() {
+            hovering = true;
+            dragHelp.classList.add('drag-dwell-activated');
+          }, 1000);
+        }
+      }
+    };
+    vm.onDragLeave = function($event) {
+      if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
+        entered = entered - 1;
+        if (entered === 0) {
+          hovering = false;
+          dragHelp.classList.remove('drag-dwell-activated');
+          $timeout.cancel(dragTimer);
+        }
+      }
     };
 
     var types = [ // Order of types in the rows.
