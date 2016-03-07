@@ -20,7 +20,7 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
-        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.item.moveAmount" maximum="vm.item.amount"></dim-move-amount>',
+        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.item.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
@@ -56,6 +56,11 @@
       if (vm.item.amount > 1) {
         // TODO: sum up all the quantity of the item
         vm.item.moveAmount = vm.item.amount;
+        dimStoreService.getStore(vm.item.owner)
+          .then(function(store) {
+            vm.maximum = sum(_.where(store.items, { hash: vm.item.hash }), 'amount');
+            vm.item.moveAmount = vm.maximum;
+          });
       }
     });
 

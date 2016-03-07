@@ -313,8 +313,6 @@
       item.moveAmount = item.amount;
 
       if (item.maxStackSize > 1 && item.amount > 1 && ($event.shiftKey || hovering)) {
-        console.log(item, $event);
-
         var dialogResult = ngDialog.open({
           // TODO: break this out into a separate service/directive?
           template: [
@@ -325,15 +323,24 @@
             '  </h1>',
             '  <div class="ngdialog-inner-content">',
             '    <form ng-submit="vm.finish()">',
-            '      <dim-move-amount amount="vm.item.moveAmount" maximum="vm.item.amount"></dim-move-amount>',
+            '      <dim-move-amount amount="vm.item.moveAmount" maximum="vm.maximum"></dim-move-amount>',
             '    </form>',
             '    <div class="buttons"><button ng-click="vm.finish()">Move</button></buttons>',
             '  </div>',
             '</div>'].join(''),
           scope: $scope,
+          resolve: {
+            maximum: function() {
+              return dimStoreService.getStore(item.owner)
+                .then(function(store) {
+                  return sum(_.where(store.items, { hash: item.hash }), 'amount');
+                });
+            }
+          },
           controllerAs: 'vm',
-          controller: ['$scope', function($scope) {
+          controller: ['$scope', 'maximum', function($scope, maximum) {
             var vm = this;
+            vm.maximum = maximum;
             vm.item = $scope.ngDialogData;
             vm.finish = function() {
               $scope.closeThisDialog(vm.item.moveAmount);
@@ -347,7 +354,6 @@
         });
 
         promise = dialogResult.closePromise.then(function(data) {
-          console.log(data);
           if (typeof data.value === 'string') {
             return $q.reject(new Error("move-canceled"));
           }
