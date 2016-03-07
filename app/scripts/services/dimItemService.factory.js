@@ -210,11 +210,11 @@
           .then(function(similarItem) {
             scope.similarItem = similarItem;
 
+            // TODO: move something in from the vault to equip!
+            // TODO: do we need this exotic logic?
             // could this be removed now, along with all refrences to `equipExotic` that are passed in?
-            if (!equipExotic && (similarItem) && (similarItem.tier === 'Exotic')) {
-              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
-            } else if (!similarItem) {
-              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
+            if ((!equipExotic && similarItem && similarItem.tier === 'Exotic') || !similarItem) {
+              return $q.reject(new Error('There are no items to equip in the \'' + item.type + '\' slot.'));
             }
 
             return dimStoreService.getStore(item.owner);
