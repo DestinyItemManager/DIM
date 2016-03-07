@@ -1329,6 +1329,10 @@ g {
   margin: 6px;
   cursor: pointer;
 }
+.move-button.move-consolidate, .move-button.move-distribute {
+  width: auto;
+}
+
 .move-popup .move-button span {
   display: inline-block;
   text-transform: uppercase;
@@ -1865,7 +1869,7 @@ button.toast-close-button {
   margin-left: 64px;
   margin-right: 20px;
 }
-.postmaster .unequipped, .sort-consumable .unequipped, .sort-material .unequipped, .sort-bounties, .sort-quests, .sort-missions  {
+.postmaster .unequipped, .sort-consumable .unequipped, .sort-material .unequipped, .sort-bounties .unequipped, .sort-quests .unequipped, .sort-missions .unequipped {
   margin-left: 12px;
   margin-right: 20px;
 }

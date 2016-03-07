@@ -322,7 +322,7 @@
       return $q.when(store);
     }
 
-    var fuckit = {};
+    var idTracker = {};
 
     // Set an ID for the item that should be unique across all items
     function createItemIndex(item) {
@@ -330,8 +330,8 @@
       var index = item.hash + '-';
       if (item.id === '0') {
         index = index + item.amount;
-        fuckit[index] = (fuckit[index] || 0) + 1;
-        index = index + '-' + fuckit[index];
+        idTracker[index] = (idTracker[index] || 0) + 1;
+        index = index + '-' + idTracker[index];
       } else {
         index = index + item.id;
       }
@@ -649,7 +649,7 @@
     }
 
     function getItems(owner, items) {
-      fuckit = {};
+      idTracker = {};
       return $q.all([
         dimItemDefinitions,
         dimItemBucketDefinitions,

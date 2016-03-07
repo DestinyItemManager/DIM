@@ -39,6 +39,14 @@
         '        <span>Equip</span>',
         '      </div>',
         '    </div>',
+        '    <div class="move-button move-consolidate" ng-class="{ \'little\': item.notransfer }" alt="Consolidate" title="Consolidate" ',
+        '      ng-if="vm.item.maxStackSize > 1" ng-click="vm.consolidate()">',
+        '      <span>Consolidate</span>',
+        '    </div>',
+        '    <div class="move-button move-distribute" ng-class="{ \'little\': item.notransfer }" alt="Distribute Evenly" title="Distribute Evenly" ',
+        '      ng-if="vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
+        '      <span>Distribute</span>',
+        '    </div>',
         '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
@@ -79,7 +87,7 @@
       e.stopPropagation();
 
       // Close the move-popup
-      ngDialog.closeAll();
+      $scope.$parent.closeThisDialog();
 
       // Open the infuse window
       ngDialog.open({
@@ -98,21 +106,6 @@
         return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
       }
     };
-
-    // function moveItemUI(item, targetStore) {
-    //   var sourceStore = (item.owner === targetStore.id) ? $q.when(targetStore) : dimStoreService.getStore(item.owner);
-    //
-    //   return sourceStore
-    //     .then(function(sourceStore) {
-    //       var i = _.indexOf(sourceStore.items, item);
-    //
-    //       if (i >= 0) {
-    //         sourceStore.items.splice(i, 1);
-    //         targetStore.items.push(item);
-    //         item.owner = targetStore.id;
-    //       }
-    //     });
-    // }
 
     /**
      * Move the item to the specified store. Equip it if equip is true.
@@ -136,6 +129,115 @@
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
+
+      loadingTracker.addPromise(promise);
+      $scope.$parent.closeThisDialog();
+      return promise;
+    };
+
+    vm.consolidate = function() {
+      var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && s.id !== 'vault'; });
+      var vault = _.findWhere(dimStoreService.getStores(), { id: 'vault' });
+      var promise = $q.when();
+
+      // Do the moves serially for now
+      stores.forEach(function(store) {
+        // First move everything into the vault
+        promise = promise.then(function() {
+          var item = _.findWhere(store.items, { hash: vm.item.hash });
+          if (item) {
+            var amount = store.amountOfItem(vm.item);
+            item.moveAmount = amount;
+            return dimItemService.moveTo(item, vault, false);
+          }
+        });
+      });
+
+      // Then move from the vault to the character
+      if (vm.store.id !== 'vault') {
+        promise = promise.then(function() {
+          var item = _.findWhere(vault.items, { hash: vm.item.hash });
+          if (item) {
+            var amount = vault.amountOfItem(vm.item);
+            item.moveAmount = amount;
+            return dimItemService.moveTo(item, vm.store, false);
+          }
+        });
+      }
+
+      promise = promise.then(function() {
+        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        toaster.pop('success', 'Consolidated ' + vm.item.name, 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".");
+      })
+      .catch(function(a) {
+        toaster.pop('error', vm.item.name, a.message);
+      });
+
+      loadingTracker.addPromise(promise);
+      $scope.$parent.closeThisDialog();
+      return promise;
+    };
+
+    vm.distribute = function() {
+      var stores = stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== 'vault'; });
+
+      var total = 0;
+      var amounts = stores.map(function(store) {
+        var amount = store.amountOfItem(vm.item);
+        total += amount;
+        return amount;
+      });
+
+      var remainder = total % stores.length;
+      var targets = stores.map(function(store) {
+        var result;
+        if (remainder > 0) {
+          result = Math.ceil(total / stores.length);
+        } else {
+          result = Math.floor(total / stores.length);
+        }
+        remainder--;
+        return result;
+      });
+      var deltas = _.zip(amounts, targets).map(function(pair) {
+        return pair[1] - pair[0];
+      });
+
+      var moves = [];
+      var iter = 0;
+      while(iter < 10 && _.any(deltas, function(d) { return d !== 0; })) {
+        var sourceIndex = _.findIndex(deltas, function(d) { return d < 0; });
+        var targetIndex = _.findIndex(deltas, function(d) { return d > 0; });
+
+        var amount = Math.min(-1 * deltas[sourceIndex], deltas[targetIndex]);
+        moves.push({
+          source: stores[sourceIndex],
+          target: stores[targetIndex],
+          amount: amount
+        });
+
+        deltas[sourceIndex] += amount;
+        deltas[targetIndex] -= amount;
+        iter++;
+      }
+
+      var promise = $q.when();
+
+      moves.forEach(function(move) {
+        promise = promise.then(function() {
+          var item = _.findWhere(move.source.items, { hash: vm.item.hash });
+          item.moveAmount = move.amount;
+          return dimItemService.moveTo(item, move.target, false);
+        });
+      });
+
+      promise = promise.then(function() {
+        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' are now equally divided between characters.');
+      })
+      .catch(function(a) {
+        toaster.pop('error', vm.item.name, a.message);
+      });
 
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
