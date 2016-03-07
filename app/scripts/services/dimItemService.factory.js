@@ -372,17 +372,7 @@
           .value();
 
         if (item.maxStackSize > 1) {
-          stackAmount = _(store.items)
-            .chain()
-            .where({
-              hash: item.hash
-            })
-            .pluck('amount')
-            .reduce(function(memo, amount) {
-              return memo + amount;
-            }, 0)
-            .value();
-
+          stackAmount = sum(_.where(store.items, { hash: item.hash }), 'amount');
           slotsNeededForTransfer = Math.ceil((stackAmount + item.amount) / item.maxStackSize) - Math.ceil((stackAmount) / item.maxStackSize);
         } else {
           if (item.owner === store.id) {

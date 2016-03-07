@@ -225,7 +225,7 @@
           });
 
           // Pick the option where the primary stats add up to the biggest number, again favoring equipped stuff
-          var bestOption = _.max(options, function(opt) { return _.reduce(_.values(opt), function(sum, i) { return bestItemFn(i) + sum; }, 0) });
+          var bestOption = _.max(options, function(opt) { return sum(_.values(opt), bestItemFn); });
           _.assign(items, bestOption);
         }
       });
