@@ -87,10 +87,6 @@
   function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope) {
     var vm = this;
 
-    vm.onDrop = function(id, $event, equip) {
-      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
-    };
-
     // Detect when we're hovering a dragged item over a target
     var dragTimer = null;
     var hovering = false;
@@ -101,8 +97,10 @@
         entered = entered + 1;
         if (entered === 1) {
           dragTimer = $timeout(function() {
-            hovering = true;
-            dragHelp.classList.add('drag-dwell-activated');
+            if ($rootScope.dragItem) {
+              hovering = true;
+              dragHelp.classList.add('drag-dwell-activated');
+            }
           }, 1000);
         }
       }
@@ -116,6 +114,12 @@
           $timeout.cancel(dragTimer);
         }
       }
+    };
+    vm.onDrop = function(id, $event, equip) {
+      hovering = false;
+      dragHelp.classList.remove('drag-dwell-activated');
+      $timeout.cancel(dragTimer);
+      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
     };
 
     var types = [ // Order of types in the rows.
