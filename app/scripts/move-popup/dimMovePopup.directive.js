@@ -58,7 +58,7 @@
         vm.item.moveAmount = vm.item.amount;
         dimStoreService.getStore(vm.item.owner)
           .then(function(store) {
-            vm.maximum = sum(_.where(store.items, { hash: vm.item.hash }), 'amount');
+            vm.maximum = store.amountOfItem(vm.item);
             vm.item.moveAmount = vm.maximum;
           });
       }

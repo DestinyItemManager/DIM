@@ -167,20 +167,17 @@
                       'type': type
                     };
 
-                    return _.chain(items)
-                      .where(predicate)
-                      .value();
+                    return _.where(tems, predicate);
                   },
                   getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
+                    return _.where(this.items, { type: item.type }).length < 10;
                   },
                   canEquipExotic: function(item) {
                     return this.getTypeCount(item);
+                  },
+                  // Get the total amount of this item in the store, across all stacks.
+                  amountOfItem: function(item) {
+                    return sum(_.where(store.items, { hash: item.hash }), 'amount');
                   }
                 };
 
@@ -231,17 +228,10 @@
                       predicate.equipped = equipped;
                     }
 
-                    return _.chain(this.items)
-                      .where(predicate)
-                      .value();
+                    return _.where(this.items, predicate);
                   },
                   getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
+                    return _.where(this.items, { type: item.type }).length < 10;
                   },
                   canEquipExotic: function(itemType) {
                     var types = _.chain(dimCategory)
@@ -258,6 +248,10 @@
                     return _.size(_.reduce(types, function(memo, type) {
                       return memo || this.hasExotic(type, true);
                     }, false, this)) === 0;
+                  },
+                  // Get the total amount of this item in the store, across all stacks.
+                  amountOfItem: function(item) {
+                    return sum(_.where(store.items, { hash: item.hash }), 'amount');
                   }
                 };
 

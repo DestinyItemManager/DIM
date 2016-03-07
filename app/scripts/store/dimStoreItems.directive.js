@@ -333,7 +333,7 @@
             maximum: function() {
               return dimStoreService.getStore(item.owner)
                 .then(function(store) {
-                  return sum(_.where(store.items, { hash: item.hash }), 'amount');
+                  return store.amountOfItem(item);
                 });
             }
           },

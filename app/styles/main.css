@@ -1302,6 +1302,10 @@ rzslider .rz-bubble.rz-limit {
 .talent-node-default .talent-node-xp {
   fill: rgba(255,255,255,0.4)
 }
+g {
+  outline-width: 0;
+}
+
 
 .move-popup a {
   color: #000;
