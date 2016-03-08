@@ -430,7 +430,7 @@
           // Not enough space!
           if (!triedFallback) {
             // Refresh the store
-            return $q.when(dimStoreService.getStores(true, false))
+            return dimStoreService.reloadStores()
               .then(function(stores) {
                 store = _.find(stores, { id: store.id });
                 return canMoveToStore(item, store, true);

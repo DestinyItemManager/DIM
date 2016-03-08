@@ -203,39 +203,37 @@
 
       // get Items for infusion
       getItems: function() {
-        dimStoreService.getStores(false, true).then(function(stores) {
+        var stores = dimStoreService.getStores();
+        var allItems = [];
 
-          var allItems = [];
+        // If we want ALL our weapons, including vault's one
+        if (!vm.getAllItems) {
+          stores = _.filter(stores, function(store) {
+            return store.id === vm.source.owner;
+          });
+        }
 
-          // If we want ALL our weapons, including vault's one
-          if (!vm.getAllItems) {
-            stores = _.filter(stores, function(store) {
-              return store.id === vm.source.owner;
-            });
-          }
-
-          // all stores
-          _.each(stores, function(store, id, list) {
-            // all items in store
-            var items = _.filter(store.items, function(item) {
-              return item.primStat &&
-                (!item.locked || vm.showLockedItems) &&
-                item.type == vm.source.type &&
-                item.primStat.value > vm.source.primStat.value &&
-                (!vm.onlyBlues || item.tier === 'Rare');
-            });
-
-            allItems = allItems.concat(items);
-
+        // all stores
+        _.each(stores, function(store, id, list) {
+          // all items in store
+          var items = _.filter(store.items, function(item) {
+            return item.primStat &&
+              (!item.locked || vm.showLockedItems) &&
+              item.type == vm.source.type &&
+              item.primStat.value > vm.source.primStat.value &&
+              (!vm.onlyBlues || item.tier === 'Rare');
           });
 
-          allItems = _.sortBy(allItems, function(item) {
-            return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
-          });
+          allItems = allItems.concat(items);
 
-          vm.setInfusibleItems(allItems);
-          vm.maximizeAttack();
         });
+
+        allItems = _.sortBy(allItems, function(item) {
+          return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
+        });
+
+        vm.setInfusibleItems(allItems);
+        vm.maximizeAttack();
       },
 
       closeDialog: function() {

@@ -247,10 +247,7 @@
       return promise;
     };
 
-    dimStoreService.getStores(false, true)
-      .then(function(stores) {
-        vm.stores = stores;
-      });
+    vm.stores = dimStoreService.getStores();
 
     vm.canShowItem = function canShowItem(item, itemStore, buttonStore) {
       var result = false;

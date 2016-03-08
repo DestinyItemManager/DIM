@@ -27,17 +27,26 @@
 
     var service = {
       getStores: getStores,
+      reloadStores: reloadStores,
       getStore: getStore,
       updateCharacters: updateCharacters,
       setHeights: setHeights,
       createItemIndex: createItemIndex
     };
 
+    $rootScope.$on('dim-settings-updated', function(setting) {
+      if (_.has(setting, 'characterOrder')) {
+        sortStores(_stores).then(function(stores) {
+          _stores = stores;
+        });
+      }
+    });
+
     return service;
 
     // Update the high level character information for all the stores
     // (level, light, int/dis/str, etc.). This does not update the
-    // items in the stores - to do that, call getStores(true).
+    // items in the stores - to do that, call reloadStores.
     function updateCharacters() {
       return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
         _.each(_stores, function(dStore) {
@@ -141,138 +150,118 @@
       setHeight('.general');
     }
 
-    // Without arguments, this returns the list of stores.  With
-    // arguments, it may refresh from Bungie (getFromBungie) and/or
-    // sort the stores based on the user's preference, but in both
-    // cases it will return a promise for the list of stores.
-    function getStores(getFromBungie, withOrder) {
-      if (!getFromBungie && !!withOrder) {
-        return settings.getSetting('characterOrder')
-          .then(function(characterOrder) {
-            if (characterOrder === 'mostRecent') {
-              return _.sortBy(_stores, 'lastPlayed').reverse();
+    function sortStores(stores) {
+      return settings.getSetting('characterOrder')
+        .then(function(characterOrder) {
+          if (characterOrder === 'mostRecent') {
+            return _.sortBy(stores, 'lastPlayed').reverse();
+          } else {
+            return _.sortBy(stores, 'id');
+          }
+        });
+    }
+
+    function getStores() {
+      return _stores;
+    }
+
+    // Returns a promise for a fresh view of the stores and their items.
+    function reloadStores() {
+      return dimBungieService.getStores(dimPlatformService.getActive())
+        .then(function(rawStores) {
+          var glimmer, marks;
+
+          return $q.all(rawStores.map(function(raw) {
+            var store;
+            var items = [];
+
+            if (raw.id === 'vault') {
+              store = angular.extend(Object.create(StoreProto), {
+                id: 'vault',
+                lastPlayed: '2005-01-01T12:00:01Z',
+                icon: '',
+                items: [],
+                legendaryMarks: marks,
+                glimmer: glimmer,
+                bucketCounts: {}
+              });
+
+              _.each(raw.data.buckets, function(bucket) {
+                if (bucket.bucketHash === 3003523923)
+                  store.bucketCounts.Armor = _.size(bucket.items);
+                if (bucket.bucketHash === 138197802)
+                  store.bucketCounts.General = _.size(bucket.items);
+                if (bucket.bucketHash === 4046403665)
+                  store.bucketCounts.Weapons = _.size(bucket.items);
+
+                _.each(bucket.items, function(item) {
+                  item.bucket = bucket.bucketHash;
+                });
+
+                items = _.union(items, bucket.items);
+              });
             } else {
-              return _.sortBy(_stores, 'id');
-            }
-          });
-      } else if (!getFromBungie && _.isUndefined(withOrder)) {
-        return _stores;
-      } else {
-        var promise = dimBungieService.getStores(dimPlatformService.getActive())
-          .then(function(stores) {
-            _stores.splice(0);
-            var asyncItems = [];
-            var glimmer, marks;
-
-            _.each(stores, function(raw) {
-              var store;
-              var items = [];
-
-              if (raw.id === 'vault') {
-                store = angular.extend(Object.create(StoreProto), {
-                  id: 'vault',
-                  lastPlayed: '2005-01-01T12:00:01Z',
-                  icon: '',
-                  items: [],
-                  legendaryMarks: marks,
-                  glimmer: glimmer,
-                  bucketCounts: {}
-                });
-
-                _.each(raw.data.buckets, function(bucket) {
-                  if (bucket.bucketHash === 3003523923)
-                    store.bucketCounts.Armor = _.size(bucket.items);
-                  if (bucket.bucketHash === 138197802)
-                    store.bucketCounts.General = _.size(bucket.items);
-                  if (bucket.bucketHash === 4046403665)
-                    store.bucketCounts.Weapons = _.size(bucket.items);
-
-                  _.each(bucket.items, function(item) {
-                    item.bucket = bucket.bucketHash;
-                  });
-
-                  items = _.union(items, bucket.items);
-                });
-              } else {
 
 
-                try {
-                  glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
-                  marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
-                } catch (e) {
-                  glimmer = 0;
-                  marks = 0;
-                }
-
-                store = angular.extend(Object.create(StoreProto), {
-                  id: raw.id,
-                  icon: raw.character.base.emblemPath,
-                  lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                  background: raw.character.base.backgroundPath,
-                  level: raw.character.base.characterLevel,
-                  powerLevel: raw.character.base.characterBase.powerLevel,
-                  stats: getStatsData(raw.character.base.characterBase),
-                  class: getClass(raw.character.base.characterBase.classType),
-                  gender: getGender(raw.character.base.characterBase.genderType),
-                  race: getRace(raw.character.base.characterBase.raceHash),
-                  percentToNextLevel: raw.character.base.percentToNextLevel
-                });
-
-                _.each(raw.data.buckets, function(bucket) {
-                  _.each(bucket, function(pail) {
-                    _.each(pail.items, function(item) {
-                      item.bucket = pail.bucketHash;
-                    });
-
-                    items = _.union(items, pail.items);
-                  });
-                });
-
-                if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
-                  if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
-                    _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
-                      items = _.union(items, pail.items);
-                    });
-                  }
-                }
+              try {
+                glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+              } catch (e) {
+                glimmer = 0;
+                marks = 0;
               }
 
-              var i = getItems(store.id, items)
-                .then(function(items) {
-                  store.items = items;
-                  _stores.push(store);
-                  return store;
+              store = angular.extend(Object.create(StoreProto), {
+                id: raw.id,
+                icon: raw.character.base.emblemPath,
+                lastPlayed: raw.character.base.characterBase.dateLastPlayed,
+                background: raw.character.base.backgroundPath,
+                level: raw.character.base.characterLevel,
+                powerLevel: raw.character.base.characterBase.powerLevel,
+                stats: getStatsData(raw.character.base.characterBase),
+                class: getClass(raw.character.base.characterBase.classType),
+                gender: getGender(raw.character.base.characterBase.genderType),
+                race: getRace(raw.character.base.characterBase.raceHash),
+                percentToNextLevel: raw.character.base.percentToNextLevel
+              });
+
+              _.each(raw.data.buckets, function(bucket) {
+                _.each(bucket, function(pail) {
+                  _.each(pail.items, function(item) {
+                    item.bucket = pail.bucketHash;
+                  });
+
+                  items = _.union(items, pail.items);
                 });
+              });
 
-              asyncItems.push(i);
+              if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
+                if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
+                  _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+                    items = _.union(items, pail.items);
+                  });
+                }
+              }
+            }
+
+            return getItems(store.id, items).then(function(items) {
+              store.items = items;
+              return store;
             });
+          }));
+        })
+        .then(function(stores) {
+          return sortStores(stores);
+        })
+        .then(function(stores) {
+          _stores = stores;
 
-            return $q.all(asyncItems);
-          })
-          .then(function() {
-            var stores = _stores;
-
-            return $q(function(resolve, reject) {
-              settings.getSetting('characterOrder')
-                .then(function(characterOrder) {
-                  if (characterOrder === 'mostRecent') {
-                    resolve(_.sortBy(stores, 'lastPlayed').reverse());
-                  } else {
-                    resolve(_.sortBy(stores, 'id'));
-                  }
-                });
-            });
-          })
-          .then(function(stores) {
-            $rootScope.$broadcast('dim-stores-updated', {
-              stores: stores
-            });
-
-            return stores;
+          $rootScope.$broadcast('dim-stores-updated', {
+            stores: stores
           });
 
-        return promise;
-      }
+          return stores;
+        });
     }
 
     function getStore(id) {
