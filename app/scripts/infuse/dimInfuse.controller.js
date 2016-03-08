@@ -241,66 +241,65 @@
       },
 
       transferItems: function() {
-        dimStoreService.getStore(vm.source.owner).then(function(store) {
-          var items = {};
-          vm.targets.forEach(function(item) {
-            var key = item.type.toLowerCase();
-            items[key] = items[key] || [];
-            if (items[key].length < 8) {
-              var itemCopy = angular.copy(item);
-              itemCopy.equipped = false;
-              items[key].push(itemCopy);
-            }
-          });
-          // Include the source, since we wouldn't want it to get moved out of the way
-          items[vm.source.type.toLowerCase()].push(vm.source);
-
-          items['material'] = [];
-          if (vm.sort === 'General') {
-            // Mote of Light
-            items['material'].push({
-              id: '0',
-              hash: 937555249,
-              amount: 2 * vm.targets.length,
-              equipped: false
-            });
-          } else if (vm.statType === 'Attack') {
-            // Weapon Parts
-            items['material'].push({
-              id: '0',
-              hash: 1898539128,
-              amount: 10 * vm.targets.length,
-              equipped: false
-            });
-          } else {
-            // Armor Materials
-            items['material'].push({
-              id: '0',
-              hash: 1542293174,
-              amount: 10 * vm.targets.length,
-              equipped: false
-            });
+        var store = dimStoreService.getStore(vm.source.owner);
+        var items = {};
+        vm.targets.forEach(function(item) {
+          var key = item.type.toLowerCase();
+          items[key] = items[key] || [];
+          if (items[key].length < 8) {
+            var itemCopy = angular.copy(item);
+            itemCopy.equipped = false;
+            items[key].push(itemCopy);
           }
-          if (vm.exotic) {
-            // Exotic shard
-            items['material'].push({
-              id: '0',
-              hash: 452597397,
-              amount: vm.targets.length,
-              equipped: false
-            });
-          }
+        });
+        // Include the source, since we wouldn't want it to get moved out of the way
+        items[vm.source.type.toLowerCase()].push(vm.source);
 
-          var loadout = {
-            classType: -1,
-            name: 'Infusion Materials',
-            items: items
-          };
-
-          vm.transferInProgress = true;
-          dimLoadoutService.applyLoadout(store, loadout).then(function() {
-            vm.transferInProgress = false;
+        items['material'] = [];
+        if (vm.sort === 'General') {
+          // Mote of Light
+          items['material'].push({
+            id: '0',
+            hash: 937555249,
+            amount: 2 * vm.targets.length,
+            equipped: false
           });
+        } else if (vm.statType === 'Attack') {
+          // Weapon Parts
+          items['material'].push({
+            id: '0',
+            hash: 1898539128,
+            amount: 10 * vm.targets.length,
+            equipped: false
+          });
+        } else {
+          // Armor Materials
+          items['material'].push({
+            id: '0',
+            hash: 1542293174,
+            amount: 10 * vm.targets.length,
+            equipped: false
+          });
+        }
+        if (vm.exotic) {
+          // Exotic shard
+          items['material'].push({
+            id: '0',
+            hash: 452597397,
+            amount: vm.targets.length,
+            equipped: false
+          });
+        }
+
+        var loadout = {
+          classType: -1,
+          name: 'Infusion Materials',
+          items: items
+        };
+
+        vm.transferInProgress = true;
+        return dimLoadoutService.applyLoadout(store, loadout).then(function() {
+          vm.transferInProgress = false;
         });
       }
     });

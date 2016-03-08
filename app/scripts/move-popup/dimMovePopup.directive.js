@@ -62,13 +62,9 @@
     // TODO: cache this, instead?
     $scope.$watch('vm.item', function() {
       if (vm.item.amount > 1) {
-        // TODO: sum up all the quantity of the item
-        vm.moveAmount = vm.item.amount;
-        dimStoreService.getStore(vm.item.owner)
-          .then(function(store) {
-            vm.maximum = store.amountOfItem(vm.item);
-            vm.moveAmount = vm.maximum;
-          });
+        var store = dimStoreService.getStore(vm.item.owner);
+        vm.maximum = store.amountOfItem(vm.item);
+        vm.moveAmount = vm.maximum;
       }
     });
 

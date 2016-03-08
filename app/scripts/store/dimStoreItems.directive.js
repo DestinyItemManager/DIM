@@ -331,20 +331,12 @@
             '  </div>',
             '</div>'].join(''),
           scope: $scope,
-          resolve: {
-            maximum: function() {
-              return dimStoreService.getStore(item.owner)
-                .then(function(store) {
-                  return store.amountOfItem(item);
-                });
-            }
-          },
           controllerAs: 'vm',
-          controller: ['$scope', 'maximum', function($scope, maximum) {
+          controller: ['$scope', function($scope) {
             var vm = this;
             vm.item = $scope.ngDialogData;
             vm.moveAmount = vm.item.amount;
-            vm.maximum = maximum;
+            vm.maximum = dimStoreService.getStore(vm.item.owner).amountOfItem(item);
             vm.finish = function() {
               $scope.closeThisDialog(vm.moveAmount);
             };
@@ -366,16 +358,7 @@
       }
 
       promise.then(function(moveAmount) {
-        var getStore;
-        if (item.owner === vm.store.id) {
-          getStore = $q.when(vm.store);
-        } else {
-          getStore = dimStoreService.getStore(item.owner);
-        }
-
-        var movePromise = getStore.then(function() {
-          return dimItemService.moveTo(item, target, equip, moveAmount);
-        });
+        var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
         var reload = item.equipped || equip;
         if (reload) {

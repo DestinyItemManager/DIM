@@ -29,6 +29,7 @@
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
+      getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       setHeights: setHeights,
       createItemIndex: createItemIndex
@@ -265,11 +266,7 @@
     }
 
     function getStore(id) {
-      var store = _.find(_stores, function(store) {
-        return store.id === id;
-      });
-
-      return $q.when(store);
+      return _.find(_stores, { id: id });
     }
 
     var idTracker = {};
