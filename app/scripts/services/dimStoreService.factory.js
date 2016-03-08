@@ -16,6 +16,15 @@
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
+    // Prototype for Store objects - add methods to this to add them to all
+    // stores.
+    var StoreProto = {
+      // Get the total amount of this item in the store, across all stacks.
+      amountOfItem: function(item) {
+        return sum(_.where(this.items, { hash: item.hash }), 'amount');
+      }
+    };
+
     var service = {
       getStores: getStores,
       getStore: getStore,
@@ -153,33 +162,15 @@
               var items = [];
 
               if (raw.id === 'vault') {
-                store = {
-                  'id': 'vault',
-                  'lastPlayed': '2005-01-01T12:00:01Z',
-                  'icon': '',
-                  'items': [],
+                store = angular.extend(Object.create(StoreProto), {
+                  id: 'vault',
+                  lastPlayed: '2005-01-01T12:00:01Z',
+                  icon: '',
+                  items: [],
                   legendaryMarks: marks,
                   glimmer: glimmer,
-                  'bucketCounts': {},
-                  hasExotic: function(type) {
-                    var predicate = {
-                      'tier': dimItemTier.exotic,
-                      'type': type
-                    };
-
-                    return _.where(items, predicate);
-                  },
-                  getTypeCount: function(item) {
-                    return _.where(this.items, { type: item.type }).length < 10;
-                  },
-                  canEquipExotic: function(item) {
-                    return this.getTypeCount(item);
-                  },
-                  // Get the total amount of this item in the store, across all stacks.
-                  amountOfItem: function(item) {
-                    return sum(_.where(this.items, { hash: item.hash }), 'amount');
-                  }
-                };
+                  bucketCounts: {}
+                });
 
                 _.each(raw.data.buckets, function(bucket) {
                   if (bucket.bucketHash === 3003523923)
@@ -206,7 +197,7 @@
                   marks = 0;
                 }
 
-                store = {
+                store = angular.extend(Object.create(StoreProto), {
                   id: raw.id,
                   icon: raw.character.base.emblemPath,
                   lastPlayed: raw.character.base.characterBase.dateLastPlayed,
@@ -217,43 +208,8 @@
                   class: getClass(raw.character.base.characterBase.classType),
                   gender: getGender(raw.character.base.characterBase.genderType),
                   race: getRace(raw.character.base.characterBase.raceHash),
-                  percentToNextLevel: raw.character.base.percentToNextLevel,
-                  hasExotic: function(type, equipped) {
-                    var predicate = {
-                      'tier': dimItemTier.exotic,
-                      'type': type
-                    };
-
-                    if (!_.isUndefined(equipped)) {
-                      predicate.equipped = equipped;
-                    }
-
-                    return _.where(this.items, predicate);
-                  },
-                  getTypeCount: function(item) {
-                    return _.where(this.items, { type: item.type }).length < 10;
-                  },
-                  canEquipExotic: function(itemType) {
-                    var types = _.chain(dimCategory)
-                      .pairs()
-                      .find(function(cat) {
-                        return _.some(cat[1],
-                          function(type) {
-                            return (type == itemType);
-                          }
-                        );
-                      })
-                      .value()[1];
-
-                    return _.size(_.reduce(types, function(memo, type) {
-                      return memo || this.hasExotic(type, true);
-                    }, false, this)) === 0;
-                  },
-                  // Get the total amount of this item in the store, across all stacks.
-                  amountOfItem: function(item) {
-                    return sum(_.where(this.items, { hash: item.hash }), 'amount');
-                  }
-                };
+                  percentToNextLevel: raw.character.base.percentToNextLevel
+                });
 
                 _.each(raw.data.buckets, function(bucket) {
                   _.each(bucket, function(pail) {
@@ -271,9 +227,7 @@
                       items = _.union(items, pail.items);
                     });
                   }
-
                 }
-
               }
 
               var i = getItems(store.id, items)
