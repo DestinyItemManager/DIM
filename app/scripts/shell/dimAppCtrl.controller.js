@@ -45,12 +45,6 @@
       characterOrder: 'mostRecent'
     };
 
-    vm.cakeDay = function(e) {
-      e.stopPropagation();
-
-      $('.cards').toggle();
-    }
-
     vm.showSetting = function(e) {
       e.stopPropagation();
 
@@ -76,40 +70,6 @@
         });
       }
     };
-
-    vm.toggleCrimsonDays = function() {
-      if(!$('body')
-        .hasClass('crimson')) {
-        $('body')
-          .addClass('crimson');
-        $(document)
-          .octoberLeaves({
-            leafStyles: 3, // Number of leaf styles in the sprite (leaves.png)
-            speedC: 2, // Speed of leaves
-            rotation: 1, // Define rotation of leaves
-            rotationTrue: 1, // Whether leaves rotate (1) or not (0)
-            numberOfLeaves: 15, // Number of leaves
-            size: 20, // General size of leaves, final size is calculated randomly (with this number as general parameter)
-            cycleSpeed: 30 // <a href="http://www.jqueryscript.net/animation/">Animation</a> speed (Inverse frames per second) (10-100)
-          });
-        $(document)
-          .octoberLeaves('start');
-        chrome.storage.sync.set({
-          "20160204CrimsonTheme": 1
-        }, function(e) {});
-      } else {
-        $('body')
-          .removeClass('crimson');
-        $(document)
-          .ready(function() {
-            $(document)
-              .octoberLeaves('stop');
-          });
-        chrome.storage.sync.set({
-          "20160204CrimsonTheme": 0
-        }, function(e) {});
-      }
-    }
 
     vm.showAbout = function(e) {
       e.stopPropagation();
