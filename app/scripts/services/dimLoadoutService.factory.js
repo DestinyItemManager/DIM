@@ -243,7 +243,7 @@
     function applyLoadoutItems(store, items, loadout, existingItems, scope) {
       if (items.length == 0) {
         // We're done!
-        return dimStoreService.updateStores(dimStoreService.getStores())
+        return dimStoreService.updateCharacters()
           .then(function() {
             var value = 'success';
             var message = 'Your loadout has been transfered.';

@@ -28,20 +28,21 @@
     var service = {
       getStores: getStores,
       getStore: getStore,
-      updateStores: updateStores,
+      updateCharacters: updateCharacters,
       setHeights: setHeights,
       createItemIndex: createItemIndex
     };
 
     return service;
 
-    function updateStores(dimStores) {
+    // Update the high level character information for all the stores
+    // (level, light, int/dis/str, etc.). This does not update the
+    // items in the stores - to do that, call getStores(true).
+    function updateCharacters() {
       return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
-        _.each(dimStores, function(dStore) {
+        _.each(_stores, function(dStore) {
           if (dStore.id !== 'vault') {
-            var bStore = _.find(bungieStores, function(bStore) {
-              return dStore.id === bStore.id;
-            });
+            var bStore = _.findWhere(bungieStores, { id: dStore.id });
 
             dStore.level = bStore.base.characterLevel;
             dStore.percentToNextLevel = bStore.base.percentToNextLevel;
@@ -51,7 +52,7 @@
             dStore.stats = getStatsData(bStore.base.characterBase);
           }
         });
-        return dimStores;
+        return _stores;
       });
     }
 
@@ -59,6 +60,8 @@
       return _index++;
     }
 
+    // Equalize the heights of the various rows of items.
+    // TODO: replace with flexbox
     function setHeights() {
       function outerHeight(el) {
         //var height = el.offsetHeight;
@@ -138,6 +141,10 @@
       setHeight('.general');
     }
 
+    // Without arguments, this returns the list of stores.  With
+    // arguments, it may refresh from Bungie (getFromBungie) and/or
+    // sort the stores based on the user's preference, but in both
+    // cases it will return a promise for the list of stores.
     function getStores(getFromBungie, withOrder) {
       if (!getFromBungie && !!withOrder) {
         return settings.getSetting('characterOrder')

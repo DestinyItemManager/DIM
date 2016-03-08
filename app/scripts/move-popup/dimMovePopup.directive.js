@@ -111,15 +111,14 @@
      * Move the item to the specified store. Equip it if equip is true.
      */
     vm.moveItemTo = function moveItemTo(store, equip) {
-      var dimStores;
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
       if (reload) {
-        promise = promise.then(dimStoreService.getStores)
-          .then(function(stores) {
-            dimStores = dimStoreService.updateStores(stores);
-          });
+        // Refresh light levels and such
+        promise = promise.then(function() {
+          return dimStoreService.updateCharacters();
+        });
       }
 
       promise = promise

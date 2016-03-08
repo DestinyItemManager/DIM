@@ -372,7 +372,6 @@
         } else {
           getStore = dimStoreService.getStore(item.owner);
         }
-        var dimStores = null;
 
         var movePromise = getStore.then(function() {
           return dimItemService.moveTo(item, target, equip, moveAmount);
@@ -380,11 +379,9 @@
 
         var reload = item.equipped || equip;
         if (reload) {
-          movePromise = movePromise
-            .then(dimStoreService.getStores)
-            .then(function(stores) {
-              dimStores = dimStoreService.updateStores(stores);
-            });
+          movePromise = movePromise.then(function() {
+            return dimStoreService.updateCharacters();
+          });
         }
         return movePromise.then(function() {
           setTimeout(function() { dimStoreService.setHeights(); }, 0);
@@ -394,7 +391,6 @@
           toaster.pop('error', item.name, e.message);
         }
       });
-;
 
       loadingTracker.addPromise(promise);
 
