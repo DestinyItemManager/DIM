@@ -202,31 +202,38 @@
         return pair[1] - pair[0];
       });
 
-      var moves = [];
-      var iter = 0;
-      while(iter < 10 && _.any(deltas, function(d) { return d !== 0; })) {
-        var sourceIndex = _.findIndex(deltas, function(d) { return d < 0; });
-        var targetIndex = _.findIndex(deltas, function(d) { return d > 0; });
+      var vaultMoves = [];
+      var targetMoves = [];
+      var vault = stores[stores.length - 1];
 
-        var amount = Math.min(-1 * deltas[sourceIndex], deltas[targetIndex]);
-        moves.push({
-          source: stores[sourceIndex],
-          target: stores[targetIndex],
-          amount: amount
-        });
+      deltas.forEach(function(delta, index) {
+        if (delta < 0) {
+          vaultMoves.push({
+            source: stores[index],
+            target: vault,
+            amount: -delta
+          });
+        } else if (delta > 0) {
+          targetMoves.push({
+            source: vault,
+            target: stores[index],
+            amount: delta
+          });
+        }
+      });
 
-        deltas[sourceIndex] += amount;
-        deltas[targetIndex] -= amount;
-        iter++;
-      }
-
-      // Do all the moves in parallel.
-      var promise = promise.then(function() {
+      // All moves to vault in parallel, then all moves to targets in parallel
+      function applyMoves(moves) {
         return $q.all(moves.map(function(move) {
           var item = _.findWhere(move.source.items, { hash: vm.item.hash });
           return dimItemService.moveTo(item, move.target, false, move.amount);
         }));
-      });
+      };
+
+      var promise = applyMoves(vaultMoves)
+            .then(function() {
+              return applyMoves(targetMoves);
+            });
 
       promise = promise.then(function() {
         setTimeout(function() { dimStoreService.setHeights(); }, 0);
