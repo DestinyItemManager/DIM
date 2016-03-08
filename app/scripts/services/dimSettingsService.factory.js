@@ -83,6 +83,7 @@
             // Found default
             settings[key] = settingState[key];
             saveSetting(key, settingState[key]);
+            return _.propertyOf(settings)(key);
           } else {
             return $q.reject("The key is not defined in the settings.");
           }
