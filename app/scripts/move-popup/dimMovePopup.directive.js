@@ -119,7 +119,7 @@
 
       promise = promise
         .then(function() {
-          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+          dimStoreService.setHeights();
         })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
@@ -155,7 +155,7 @@
       }
 
       promise = promise.then(function() {
-        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        dimStoreService.setHeights();
         toaster.pop('success', 'Consolidated ' + vm.item.name, 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".");
       })
       .catch(function(a) {
@@ -231,7 +231,7 @@
             });
 
       promise = promise.then(function() {
-        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        dimStoreService.setHeights();
         toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' is now equally divided between characters.');
       })
       .catch(function(a) {

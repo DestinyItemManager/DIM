@@ -367,7 +367,7 @@
           });
         }
         return movePromise.then(function() {
-          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+          dimStoreService.setHeights();
         });
       }).catch(function(e) {
         if (e.message !== 'move-canceled') {
@@ -400,7 +400,7 @@
         vm.itemSort = settings.itemSort;
       }
       if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
-        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        dimStoreService.setHeights();
       }
     });
 

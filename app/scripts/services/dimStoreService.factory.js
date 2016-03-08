@@ -31,7 +31,7 @@
       getStore: getStore,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
-      setHeights: setHeights,
+      setHeights: setHeightsAsync,
       createItemIndex: createItemIndex
     };
 
@@ -68,6 +68,10 @@
 
     function getNextIndex() {
       return _index++;
+    }
+
+    function setHeightsAsync() {
+      setTimeout(setHeights, 0);
     }
 
     // Equalize the heights of the various rows of items.
@@ -260,6 +264,7 @@
           $rootScope.$broadcast('dim-stores-updated', {
             stores: stores
           });
+          setHeightsAsync();
 
           return stores;
         });

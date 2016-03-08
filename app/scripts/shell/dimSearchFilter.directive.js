@@ -71,9 +71,9 @@
     });
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', '$timeout', '$interval'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', '$interval', 'dimSettingsService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, $timeout, $interval) {
+  function SearchFilterCtrl($scope, dimStoreService, $interval, dimSettingsService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -172,7 +172,11 @@
         });
       });
 
-      $timeout(dimStoreService.setHeights, 32);
+      dimSettingsService.getSetting('hideFilteredItems').then(function(hideFilteredItems) {
+        if (hideFilteredItems) {
+          dimStoreService.setHeights();
+        }
+      });
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
