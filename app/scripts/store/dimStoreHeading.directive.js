@@ -35,13 +35,13 @@
         '<div class="stats" ng-if="vm.isGuardian">',
         '  <div class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">',
         '    <img src="images/intellect.png" /><div class="bar" ng-repeat="n in vm.store.stats.STAT_INTELLECT.tiers track by $index">',
-        '      <div class="progress" style="width:{{n/60*100}}%"></div></div></div>',
+        '      <div class="progress" ng-class="{ \'complete\': (n / 60) === 1 }" style="width:{{n/60*100}}%"></div></div></div>',
         '  <div class="stat" title="{{vm.formatTooltip(\'STAT_DISCIPLINE\')}}">',
         '    <img src="images/discipline.png" /><div class="bar" ng-repeat="n in vm.store.stats.STAT_DISCIPLINE.tiers track by $index">',
-        '      <div class="progress" style="width:{{n/60*100}}%"></div></div></div>',
+        '      <div class="progress" ng-class="{ \'complete\': (n / 60) === 1 }" style="width:{{n/60*100}}%"></div></div></div>',
         '  <div class="stat" title="{{vm.formatTooltip(\'STAT_STRENGTH\')}}">',
         '    <img src="images/strength.png" /><div class="bar" ng-repeat="n in vm.store.stats.STAT_STRENGTH.tiers track by $index">',
-        '      <div class="progress" style="width:{{n/60*100}}%"></div></div></div>',
+        '      <div class="progress" ng-class="{ \'complete\': (n / 60) === 1 }" style="width:{{n/60*100}}%"></div></div></div>',
         '</div>'
       ].join('')
     };
