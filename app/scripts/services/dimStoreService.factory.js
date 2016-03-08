@@ -177,7 +177,7 @@
                   },
                   // Get the total amount of this item in the store, across all stacks.
                   amountOfItem: function(item) {
-                    return sum(_.where(store.items, { hash: item.hash }), 'amount');
+                    return sum(_.where(this.items, { hash: item.hash }), 'amount');
                   }
                 };
 
@@ -251,7 +251,7 @@
                   },
                   // Get the total amount of this item in the store, across all stacks.
                   amountOfItem: function(item) {
-                    return sum(_.where(store.items, { hash: item.hash }), 'amount');
+                    return sum(_.where(this.items, { hash: item.hash }), 'amount');
                   }
                 };
 

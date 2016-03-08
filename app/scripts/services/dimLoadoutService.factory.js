@@ -267,12 +267,11 @@
               break;
             }
 
-            sourceItem.moveAmount = amountToMove;
             source.amount -= amountToMove;
             amountNeeded -= amountToMove;
 
             promise = promise.then(function() {
-              return dimItemService.moveTo(sourceItem, store, false);
+              return dimItemService.moveTo(sourceItem, store, false, amountToMove);
             });
           }
         }

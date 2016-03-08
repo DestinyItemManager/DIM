@@ -20,7 +20,7 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
-        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.item.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
@@ -63,11 +63,11 @@
     $scope.$watch('vm.item', function() {
       if (vm.item.amount > 1) {
         // TODO: sum up all the quantity of the item
-        vm.item.moveAmount = vm.item.amount;
+        vm.moveAmount = vm.item.amount;
         dimStoreService.getStore(vm.item.owner)
           .then(function(store) {
             vm.maximum = store.amountOfItem(vm.item);
-            vm.item.moveAmount = vm.maximum;
+            vm.moveAmount = vm.maximum;
           });
       }
     });
@@ -113,7 +113,7 @@
     vm.moveItemTo = function moveItemTo(store, equip) {
       var dimStores;
       var reload = vm.item.equipped || equip;
-      var promise = dimItemService.moveTo(vm.item, store, equip);
+      var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
       if (reload) {
         promise = promise.then(dimStoreService.getStores)
@@ -138,20 +138,15 @@
     vm.consolidate = function() {
       var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && s.id !== 'vault'; });
       var vault = _.findWhere(dimStoreService.getStores(), { id: 'vault' });
-      var promise = $q.when();
 
-      // Do the moves serially for now
-      stores.forEach(function(store) {
+      var promise = $q.all(stores.map(function(store) {
         // First move everything into the vault
-        promise = promise.then(function() {
-          var item = _.findWhere(store.items, { hash: vm.item.hash });
-          if (item) {
-            var amount = store.amountOfItem(vm.item);
-            item.moveAmount = amount;
-            return dimItemService.moveTo(item, vault, false);
-          }
-        });
-      });
+        var item = _.findWhere(store.items, { hash: vm.item.hash });
+        if (item) {
+          var amount = store.amountOfItem(vm.item);
+          return dimItemService.moveTo(item, vault, false, amount);
+        }
+      }));
 
       // Then move from the vault to the character
       if (vm.store.id !== 'vault') {
@@ -159,8 +154,7 @@
           var item = _.findWhere(vault.items, { hash: vm.item.hash });
           if (item) {
             var amount = vault.amountOfItem(vm.item);
-            item.moveAmount = amount;
-            return dimItemService.moveTo(item, vm.store, false);
+            return dimItemService.moveTo(item, vm.store, false, amount);
           }
         });
       }
@@ -179,7 +173,8 @@
     };
 
     vm.distribute = function() {
-      var stores = stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== 'vault'; });
+      // Sort vault to the end
+      var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id == 'vault' ? 2 : 1; });
 
       var total = 0;
       var amounts = stores.map(function(store) {
@@ -188,13 +183,17 @@
         return amount;
       });
 
-      var remainder = total % stores.length;
-      var targets = stores.map(function(store) {
+      var numTargets = stores.length - 1; // exclude the vault
+      var remainder = total % numTargets;
+      var targets = stores.map(function(store, index) {
+        if (index >= numTargets) {
+          return 0; // don't want any in the vault
+        }
         var result;
         if (remainder > 0) {
-          result = Math.ceil(total / stores.length);
+          result = Math.ceil(total / numTargets);
         } else {
-          result = Math.floor(total / stores.length);
+          result = Math.floor(total / numTargets);
         }
         remainder--;
         return result;
@@ -221,14 +220,12 @@
         iter++;
       }
 
-      var promise = $q.when();
-
-      moves.forEach(function(move) {
-        promise = promise.then(function() {
+      // Do all the moves in parallel.
+      var promise = promise.then(function() {
+        return $q.all(moves.map(function(move) {
           var item = _.findWhere(move.source.items, { hash: vm.item.hash });
-          item.moveAmount = move.amount;
-          return dimItemService.moveTo(item, move.target, false);
-        });
+          return dimItemService.moveTo(item, move.target, false, move.amount);
+        }));
       });
 
       promise = promise.then(function() {

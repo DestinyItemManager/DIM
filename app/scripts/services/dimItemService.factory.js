@@ -24,7 +24,7 @@
 
       // TODO: Switch away from moveAmount property towards an explicit parameter like equip is
       // Returns the new or updated item (it may create a new item!)
-      function updateItemModel(item, source, target, equip) {
+      function updateItemModel(item, source, target, equip, amount) {
         // If we've moved to a new place
         if (source.id !== target.id) {
           // We handle moving stackable and nonstackable items almost exactly the same!
@@ -45,7 +45,7 @@
                     i.amount !== i.maxStackSize;
                 }), 'amount') : [];
           // moveAmount could be more than maxStackSize if there is more than one stack on a character!
-          var moveAmount = item.moveAmount || item.amount;
+          var moveAmount = amount || item.amount;
           var addAmount = moveAmount;
           var removeAmount = moveAmount;
           var removedSourceItem = false;
@@ -84,7 +84,6 @@
               if (!removedSourceItem) {
                 targetItem = angular.copy(item);
                 targetItem.index = dimStoreService.createItemIndex(targetItem);
-                delete item.moveAmount; // TODO: get rid of this
               }
               removedSourceItem = false; // only move without cloning once
               targetItem.amount = 0; // We'll increment amount below
@@ -97,9 +96,6 @@
             addAmount -= amountToAdd;
           }
           item = targetItem; // The item we're operating on switches to the last target
-
-
-          item.moveAmount = moveAmount;
         }
 
         if (equip) {
@@ -187,7 +183,9 @@
 
       function equipItem(item) {
         return dimBungieService.equip(item)
-          .then(dimStoreService.getStore.bind(null, item.owner))
+          .then(function() {
+            return dimStoreService.getStore(item.owner);
+          })
           .then(function(store) {
             return updateItemModel(item, store, store, true);
           });
@@ -263,14 +261,14 @@
           });
       }
 
-      function moveToVault(item) {
+      function moveToVault(item, amount) {
         return dimStoreService.getStore('vault')
           .then(function(target) {
-            return moveToStore(item, target, false);
+            return moveToStore(item, target, false, amount);
           });
       }
 
-      function moveToStore(item, store, equip) {
+      function moveToStore(item, store, equip, amount) {
         var scope = {
           source: null,
           target: store
@@ -280,10 +278,10 @@
           .then(function(source) {
             scope.source = source;
 
-            return dimBungieService.transfer(item, scope.target);
+            return dimBungieService.transfer(item, scope.target, amount);
           })
           .then(function() {
-            return updateItemModel(item, scope.source, scope.target, false);
+            return updateItemModel(item, scope.source, scope.target, false, amount);
           })
           .then(function(item) {
             if ((item.owner !== 'vault') && equip) {
@@ -494,7 +492,7 @@
         });
       }
 
-      function moveTo(item, target, equip) {
+      function moveTo(item, target, equip, amount) {
         var data = {
           item: item,
           source: null,
@@ -525,12 +523,17 @@
             if (!data.isVault.source && !data.isVault.target) { // Guardian to Guardian
               if (data.source.id != data.target.id) { // Different Guardian
                 if (item.equipped) {
-                  promise = promise.then(dequipItem.bind(null, item));
+                  promise = promise.then(function() {
+                    return dequipItem(item);
+                  });
                 }
 
-                promise = promise.then(moveToVault.bind(null, item))
+                promise = promise
+                  .then(function() {
+                    return moveToVault(item, amount);
+                  })
                   .then(function(item) {
-                    return moveToStore(item, data.target, equip);
+                    return moveToStore(item, data.target, equip, amount);
                   });
               }
 
@@ -556,15 +559,15 @@
               //console.log('vault-to-vault');
             } else if (data.isVault.source || data.isVault.target) { // Guardian to Vault
               if (item.equipped) {
-                promise = promise.then(dequipItem.bind(null, item));
+                promise = promise.then(function() {
+                  return dequipItem(item);
+                });
               }
 
-              promise = promise.then(moveToStore.bind(null, item, data.target, equip));
+              promise = promise.then(function() {
+                return moveToStore(item, data.target, equip, amount);
+              });
             }
-
-            promise = promise.then(function(item) {
-              delete item.moveAmount;
-            });
 
             return promise;
           })

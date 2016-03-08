@@ -385,7 +385,7 @@
 
     /************************************************************************************************************************************/
 
-    function transfer(item, store) {
+    function transfer(item, store, amount) {
       var platform = dimState.active;
       var data = {
         token: null,
@@ -404,7 +404,7 @@
           return store;
         })
         .then(function(store) {
-          return getTransferRequest(data.token, platform.type, item, store);
+          return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(function(request) {
           return $q(function(resolve, reject) {
@@ -441,7 +441,7 @@
       return promise;
     }
 
-    function getTransferRequest(token, membershipType, item, store) {
+    function getTransferRequest(token, membershipType, item, store, amount) {
       return {
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
@@ -455,7 +455,7 @@
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,
-          stackSize: (_.has(item, 'moveAmount') && item.moveAmount > 0) ? item.moveAmount : item.amount,
+          stackSize: amount || item.amount,
           transferToVault: (store.id === 'vault')
         },
         dataType: 'json',

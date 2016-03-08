@@ -312,9 +312,7 @@
         }
       }
 
-      var promise = $q.when(item);
-
-      item.moveAmount = item.amount;
+      var promise = $q.when(item.amount);
 
       if (item.maxStackSize > 1 && item.amount > 1 && ($event.shiftKey || hovering)) {
         var dialogResult = ngDialog.open({
@@ -327,7 +325,7 @@
             '  </h1>',
             '  <div class="ngdialog-inner-content">',
             '    <form ng-submit="vm.finish()">',
-            '      <dim-move-amount amount="vm.item.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+            '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
             '    </form>',
             '    <div class="buttons"><button ng-click="vm.finish()">Move</button></buttons>',
             '  </div>',
@@ -344,10 +342,11 @@
           controllerAs: 'vm',
           controller: ['$scope', 'maximum', function($scope, maximum) {
             var vm = this;
-            vm.maximum = maximum;
             vm.item = $scope.ngDialogData;
+            vm.moveAmount = vm.item.amount;
+            vm.maximum = maximum;
             vm.finish = function() {
-              $scope.closeThisDialog(vm.item.moveAmount);
+              $scope.closeThisDialog(vm.moveAmount);
             };
           }],
           plain: true,
@@ -361,12 +360,12 @@
           if (typeof data.value === 'string') {
             return $q.reject(new Error("move-canceled"));
           }
-          item.moveAmount = data.value;
-          return item;
+          var moveAmount = data.value;
+          return moveAmount;
         });
       }
 
-      promise.then(function(item) {
+      promise.then(function(moveAmount) {
         var getStore;
         if (item.owner === vm.store.id) {
           getStore = $q.when(vm.store);
@@ -376,7 +375,7 @@
         var dimStores = null;
 
         var movePromise = getStore.then(function() {
-          return dimItemService.moveTo(item, target, equip);
+          return dimItemService.moveTo(item, target, equip, moveAmount);
         });
 
         var reload = item.equipped || equip;
