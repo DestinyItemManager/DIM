@@ -826,6 +826,10 @@ img.void {
 .stats .stat .bar .progress {
   height: 100%;
   background-color: white;
+  /*transition: all .250s ease-out;*/
+}
+.character .stats .stat .bar .progress.complete {
+  background-color: #FB9F28;
 }
 .stats .stat img {
   height: 16px;
@@ -1917,5 +1921,3 @@ button.toast-close-button {
   color: #FFFFFF;
   text-shadow: 1px 1px #000;
 }
-
-

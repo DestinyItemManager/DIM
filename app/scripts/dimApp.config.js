@@ -73,19 +73,19 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        chrome.storage.sync.get('2016.02.15-v3.3', function(data) {
+        chrome.storage.sync.get('2016.03.04-v3.3.2', function(data) {
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
                 type: 'info',
-                title: 'DIM v3.3 Released',
+                title: 'DIM v3.3.2 Released',
                 body: [
-                  '<p>A lot work went into DIM the past few weeks. We\'ve added all the perks for an item, including indicators if they are enabled or need XP. This update allowed us to fix the filters for xpincomplete and xpcomplete too.',
-                  '<p>We have removed the Crimson Days theme as the event has finished, but there was such a positive response to the update that we\'re looking into adding a more personal experience to DIM in the future.',
-                  '<p>The Infusion Calculator now has the ability determine the optimal path to infuse an item, show you the necessary materials, and can move the items and materials to your guardian on demand.',
-                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.3.',
+                  '<p>It\'s our cake-day!  Let us celebrate by putting out another feature rich update.',
+                  '<p>We\'ve added autocomplete to the search box, and added new search terms. You can lock/unlock items from their details screen.  You can view your character stats in the header now.  Finally, you can copy a modified loadout to easily save variants.',
+                  '<p>Our <a href="https://www.reddit.com/r/DestinyItemManager/comments/48wof0/v332_released_happy_cake_day/" target="_blank">changelog</a> is available if you would like to know more.',
+                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.3.2',
                   '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><i<i class="fa fa-reddit fa-2x"></i></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>',
-                  '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160215v33" type="checkbox"> <label for="20160215v33">Hide This Popup</label></p>'
+                  '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160304v332" type="checkbox"> <label for="20160304v332">Hide This Popup</label></p>'
                 ].join(''),
                 timeout: 0,
                 bodyOutputType: 'trustedHtml',
@@ -98,10 +98,10 @@
                   return false;
                 },
                 onHideCallback: function() {
-                  if($('#20160215v33')
+                  if($('#20160304v332')
                     .is(':checked')) {
                     chrome.storage.sync.set({
-                      "2016.02.15-v3.3": 1
+                      "2016.03.04-v3.3.2": 1
                     }, function(e) {});
                   }
                 }

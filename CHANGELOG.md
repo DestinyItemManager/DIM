@@ -1,5 +1,13 @@
 # Next
 
+# 3.3.3
+
+* Infusion calculator performance enhancements
+* Larger lock icon
+* Completed segments of Intelligence, Discipline, and Strength are now colored orange.
+
+# 3.3.2
+
 * If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
 * Keyword search also searches perks on items.
 * New search terms for is:engram, is:sword, is:artifact, is:ghost, is:consumable, is:material, etc.
@@ -12,6 +20,11 @@
 * Fixed infusion material cost for Ghosts and Artifacts (they cost motes of light).
 * Fix a case where the item properties popup may be cut off above the top of the screen.
 * Transfer/equip/dequip actions for edge cases will now succeed as expected without errors.
+* Manifest file update.
+
+# 3.3.1
+
+* Updated the manifest file.
 
 # 3.3
 
