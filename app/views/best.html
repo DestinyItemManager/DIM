@@ -36,7 +36,7 @@
         <div style='display: inline-block'>
           <div style='display: inline-block'>
             <div ng-repeat="stat in item.stats track by $index">
-              <small>{{stat.base}}/{{item.normalStats[$index].base}}</small>
+              <small ng-bind="item.normalStats[$index].base"></small>
             </div>
           </div>
           <div dim-store-item item-data="item"></div>
