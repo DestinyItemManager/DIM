@@ -9,7 +9,6 @@
   function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
     var vm = this;
     var aboutResult = null;
-    var minmaxResult = null;
     var settingResult = null;
     var supportResult = null;
     var filterResult = null;
@@ -132,32 +131,6 @@
       }
     };
 
-    vm.showMinMax = function(e) {
-      e.stopPropagation();
-
-      if(!_.isNull(minmaxResult)) {
-        minmaxResult.close();
-      } else {
-        ngDialog.closeAll();
-
-        minmaxResult = ngDialog.open({
-          template: 'views/minmax.html',
-          overlay: false,
-          className: 'minmax',
-          scope: $('body > div')
-            .scope()
-        });
-        $('body')
-          .addClass('minmax');
-
-        minmaxResult.closePromise.then(function() {
-          minmaxResult = null;
-          $('body')
-            .removeClass('minmax');
-        });
-      }
-    };
-
     vm.refresh = function refresh() {
       (function(activePlatform) {
         if(!_.isNull(activePlatform)) {
@@ -234,7 +207,7 @@
     };
 
     vm.closeLoadoutPopup = function closeLoadoutPopup() {
-      if(!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)|| !_.isNull(minmaxResult)) {
+      if(!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
         ngDialog.closeAll();
       }
     };

@@ -721,7 +721,7 @@
                (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
                (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
                (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
-              base = val - bonus;
+              base = Math.max(0, val - bonus);
             }
           }
         }
