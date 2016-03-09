@@ -156,7 +156,6 @@
         if (result && result.tier === dimItemTier.exotic) {
           var prefix = _.filter(store.items, function(i) {
             return i.equipped &&
-              i.type !== item.type &&
               i.sort === item.sort &&
               i.tier === dimItemTier.exotic;
           });
@@ -197,6 +196,7 @@
           .then(function(similarItem) {
             scope.similarItem = similarItem;
 
+            // could this be removed now, along with all refrences to `equipExotic` that are passed in?
             if (!equipExotic && (similarItem) && (similarItem.tier === 'Exotic')) {
               return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
             } else if (!similarItem) {
