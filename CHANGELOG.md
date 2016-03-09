@@ -1,7 +1,10 @@
 # Next
 
+# 3.3.3
+
 * Infusion calculator performance enhancements
 * Larger lock icon
+* Completed segments of Intelligence, Discipline, and Strength are now colored orange.
 
 # 3.3.2
 
