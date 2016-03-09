@@ -50,10 +50,10 @@
   color: #E8A534;
   cursor: pointer;
 }
-#header .content .link {
+.link {
   color: white;
 }
-#header .content .link:hover {
+.link:hover {
   color: #E8A534;
   cursor: pointer;
 }
