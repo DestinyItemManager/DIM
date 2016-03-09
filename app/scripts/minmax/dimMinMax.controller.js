@@ -173,8 +173,6 @@
           }), true)
         };
 
-        console.log(normalized)
-
         vm.ranked = doRankArmor(normalized, getBestArmor(normalized));
       },
       filterFunction: function(element) {
@@ -203,6 +201,9 @@
 
           buckets = initBuckets(allItems);
           vm.normalizeBuckets();
+
+          //playground:
+
 //          console.log(buckets)
 //          console.log(bestArmor)
 //          var warlock = normalizeBuckets(buckets.warlock, 320);
