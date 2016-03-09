@@ -20,7 +20,7 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
-        '  <div class="interaction">',
+        '  <div ng-if="vm.store" class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',

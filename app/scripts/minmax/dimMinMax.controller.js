@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimWebWorker', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$q', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimWebWorker', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, dimStoreService, dimItemService, ngDialog, dimWebWorker, dimLoadoutService) {
+  function dimMinMaxCtrl($scope, $q, loadingTracker, dimStoreService, dimItemService, ngDialog, dimWebWorker, dimLoadoutService) {
     var vm = this, buckets = [];
 
     function getBestArmor(bucket) {
@@ -29,8 +29,8 @@
       var armor = {};
       for(var i in bucket) {
         armor[i] = {
-          best: best[i],
-          other: _.difference(bucket[i], best[i])
+          Best: best[i],
+          Other: _.difference(bucket[i], best[i])
         };
       }
       return armor;
@@ -128,6 +128,8 @@
     }
 
     angular.extend(vm, {
+      active: 'warlock',
+      normalize: 320,
       showBlues: false,
       showExotics: true,
       combinations: null,
@@ -138,13 +140,51 @@
         dis: 2,
         str: 2
       },
+      normalizeBuckets: function() {
+        function normalizeStats(item, mod) {
+          item.normalStats = _.map(item.stats, function(stat) {
+            return {base: (stat.base*vm.normalize/item.primStat.value).toFixed(0)};
+          });
+          return item;
+        }
+
+        // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
+        var normalized = {
+          helmet: _.flatten(buckets[vm.active].helmet.map(function(item) {
+            return normalizeStats(item);
+          }), true),
+          gauntlets: _.flatten(buckets[vm.active].gauntlets.map(function(item) {
+            return normalizeStats(item);
+          }), true),
+          chest: _.flatten(buckets[vm.active].chest.map(function(item) {
+            return normalizeStats(item);
+          }), true),
+          leg: _.flatten(buckets[vm.active].leg.map(function(item) {
+            return normalizeStats(item);
+          }), true),
+          classItem: _.flatten(buckets[vm.active].classItem.map(function(item) {
+            return normalizeStats(item);
+          }), true),
+          ghost: _.flatten(buckets[vm.active].ghost.map(function(item) {
+            return normalizeStats(item);
+          }), true),
+          artifact: _.flatten(buckets[vm.active].artifact.map(function(item) {
+            return normalizeStats(item);
+          }), true)
+        };
+
+        console.log(normalized)
+
+        vm.ranked = doRankArmor(normalized, getBestArmor(normalized));
+      },
       filterFunction: function(element) {
         return element.stats.STAT_INTELLECT.tier >= vm.filter.int && element.stats.STAT_DISCIPLINE.tier >= vm.filter.dis && element.stats.STAT_STRENGTH.tier >= vm.filter.str;
       },
-
+      getBonus: dimStoreService.getBonus,
       // get Items for infusion
       getItems: function() {
-        dimStoreService.getStores(false, true).then(function(stores) {
+
+        return dimStoreService.getStores(true).then(function(stores) {
           var allItems = [];
 
           // all stores
@@ -162,19 +202,20 @@
           });
 
           buckets = initBuckets(allItems);
-console.time('elapsed');
-          var bestArmor = getBestArmor(buckets.titan);
-
-          vm.ranked = doRankArmor(buckets.titan, bestArmor);
-//          vm.combinations = getIterations(buckets.titan);
-          vm.combinations = getIterations(bestArmor);
-console.timeEnd('elapsed');
-          console.log(vm.combinations.length)
+          vm.normalizeBuckets();
+//          console.log(buckets)
+//          console.log(bestArmor)
+//          var warlock = normalizeBuckets(buckets.warlock, 320);
+//          console.log('done')
+//console.time('elapsed');
+//          var bestArmor = getBestArmor(warlock);
+//
+//          vm.ranked = doRankArmor(warlock, bestArmor);
+////          vm.combinations = getIterations(buckets.titan);
+////          vm.combinations = getIterations(bestArmor);
+//console.timeEnd('elapsed');
+////          console.log(vm.combinations.length)
         });
-      },
-
-      closeDialog: function() {
-        $scope.$parent.closeThisDialog();
       }
     });
 

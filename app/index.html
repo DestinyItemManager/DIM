@@ -24,19 +24,18 @@
           <div dim-search-filter class="header-right"></div>
           <div class="header-right" id="actions">
             <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-        <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
-        <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
-      </div>
+            <span ng-hide="loadingTracker.active()" ui-sref="best" class="link" title="MinMax"><i class="fa fa-bar-chart" ></i></span>
+            <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
+            <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
+          </div>
       </span>
       <span class="logo">DIM</span>
       <span class="link" ng-click="app.showAbout($event)">About</span>
-      <span class="link" ng-click="app.showMinMax($event)">MinMax</span>
       <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
     </div>
   </div>
   <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
   <div class="about modal-dialog" ng-show="app.about"></div>
-  <div class="minmax modal-dialog" ng-show="app.minmax"></div>
   <div class="donate modal-dialog" ng-show="app.donate"></div>
   <div class="filters modal-dialog" ng-show="app.filters"></div>
   <div id="content" ui-view></div>
@@ -93,10 +92,9 @@
   <script src="scripts/move-popup/dimMovePopup.directive.js?v=3.3.0"></script>
   <script src="scripts/move-popup/dimTalentGrid.directive.js?v=3.3.0"></script>
   <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=3.3.0"></script>
-<!--  <script src="scripts/infuse/dimInfuse.util.js?v=3.3.0"></script>-->
+  <script src="scripts/infuse/dimInfuse.util.js?v=3.3.0"></script>
   <script src="scripts/infuse/dimInfuseItem.directive.js?v=3.3.0"></script>
   <script src="scripts/infuse/dimInfuse.controller.js?v=3.3.0"></script>
-<!--  <script src="scripts/minmax/dimMinMax.util.js?v=3.3.0"></script>-->
   <script src="scripts/minmax/dimMinMax.controller.js?v=3.3.0"></script>
   <!-- end app scripts -->
 

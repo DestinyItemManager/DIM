@@ -21,7 +21,8 @@
       getStore: getStore,
       updateStores: updateStores,
       setHeights: setHeights,
-      getStatsData: getStatsData
+      getStatsData: getStatsData,
+      getBonus: getBonus
     };
 
     return service;
@@ -395,6 +396,8 @@
         index = index + item.itemInstanceId;
       }
 
+      var talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
+
       var createdItem = {
         index: index,
         hash: item.itemHash,
@@ -412,12 +415,12 @@
         complete: item.isGridComplete,
         amount: item.stackSize,
         primStat: item.primaryStat,
-        stats: buildStats(item, itemDef, statDef),
+        stats: buildStats(item, itemDef, statDef, talentGrid, itemType),
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
+        talentGrid: talentGrid,
         objectives: buildObjectives(item, objectiveDef, itemDef),
         maxStackSize: itemDef.maxStackSize,
         // 0: titan, 1: hunter, 2: warlock, 3: any
@@ -441,7 +444,7 @@
         }));
       }
 
-      if(createdItem.name === 'Light Beyond Nemesis') {
+      if(createdItem.hash === 2150667281) {
       console.log(createdItem)
       }
 
@@ -528,6 +531,7 @@
         // There's a lot more here, but we're taking just what we need
         return {
           name: nodeName,
+          hash: talentNodeSelected.nodeStepHash,
           description: talentNodeSelected.nodeStepDescription,
           icon: talentNodeSelected.icon,
           // XP put into this node
@@ -617,10 +621,59 @@
       });
     }
 
-    function buildStats(item, itemDef, statDef) {
+    // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
+    function getBonus(light, type) {
+      type = type.toLowerCase();
+      switch(type) {
+        case 'helmet':
+          return light < 291 ? 15 :
+                 light < 307 ? 16 :
+                 light < 319 ? 17 : 18;
+        case 'gauntlets':
+          return light < 287 ? 13 :
+                 light < 305 ? 14 :
+                 light < 319 ? 15 : 16;
+        case 'chest':
+          return light < 287 ? 20 :
+                 light < 299 ? 21 :
+                 light < 310 ? 22 :
+                 light < 319 ? 23 : 24;
+        case 'leg':
+          return light < 284 ? 18 :
+                 light < 298 ? 19 :
+                 light < 309 ? 20 :
+                 light < 319 ? 21 : 22;
+        case 'classitem':
+        case 'ghost':
+          return light < 295 ? 8 :
+                 light < 319 ? 9 : 10;
+        case 'artifact':
+          return light < 287 ? 34 :
+                 light < 295 ? 35 :
+                 light < 302 ? 36 :
+                 light < 308 ? 37 :
+                 light < 314 ? 38 :
+                 light < 319 ? 39 : 40;
+      }
+      console.warn('item bonus not found');
+      return 0;
+    }
+
+    function buildStats(item, itemDef, statDef, grid, type) {
       if (!item.stats || !item.stats.length) {
         return undefined;
       }
+
+      var armorNodes, activeArmorNode;
+      if(grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+        armorNodes = _.filter(grid.nodes, function(node) {
+          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
+        });
+        if(armorNodes) {
+          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || {hash: 0};
+        }
+      }
+
       return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
         var def = statDef[stat.statHash];
         var name = def.statName;
@@ -654,11 +707,32 @@
           maximumValue = itemStat.maximumValue;
         }
 
+        var val = itemStat ? itemStat.value : stat.value;
+        var base = val;
+        var bonus = 0;
+
+        if(item.primaryStat.statHash === 3897883278) {
+          if((name === 'Intellect' && _.find(armorNodes, {name: 'Increase Intellect'})) ||
+             (name === 'Discipline' && _.find(armorNodes, {name: 'Increase Discipline'})) ||
+             (name === 'Strength' && _.find(armorNodes, {name: 'Increase Strength'}))) {
+            bonus = getBonus(item.primaryStat.value, type);
+
+            if(activeArmorNode &&
+               (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
+               (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
+               (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
+              base = val - bonus;
+            }
+          }
+        }
+
         return {
+          base: base,
+          bonus: bonus,
           statHash: stat.statHash,
           name: name,
           sort: sort,
-          value: itemStat ? itemStat.value : stat.value,
+          value: val,
           maximumValue: maximumValue,
           bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
         };

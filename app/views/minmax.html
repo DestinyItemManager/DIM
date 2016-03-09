@@ -1,31 +1,5 @@
-<div class="minMaxDialog" ng-controller="dimMinMaxCtrl as minmax" dim-click-anywhere-but-here="minmax.closeDialog()">
+<div ng-controller="dimMinMaxCtrl as minmax">
   <h1>Min/Max Calculator</h1>
-
-<!--
-  <div ng-repeat="(bucket, buckets) in minmax.ranked">
-    <h3>{{bucket}}</h3>
-    <div ng-repeat="(type, items) in buckets">
-      <h4>{{type}}</h4>
-      <span style='display: inline-block; margin-right: 20px'>
-        <div><small>Intellect</small></div>
-        <div><small>Discipline</small></div>
-        <div><small>Strength</small></div>
-      </span>
-      <span ng-repeat="item in items">
-        <div style='display: inline-block'>
-          <div style='display: inline-block'>
-            <div ng-repeat="stat in item.stats">
-              <small>{{stat.value}}</small>
-            </div>
-          </div>
-          <div dim-store-item item-data="item"></div>
-        </div>
-      </span>
-
-    </div>
-  </div>
--->
-
 
 <!--  filter: <input type="text" ng-model="filterint">-->
   <p>Order by: <select ng-model='minmax.statOrder'>

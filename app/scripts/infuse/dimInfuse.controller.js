@@ -19,6 +19,7 @@
       onlyBlues: false,
       targets: [],
       infused: 0,
+      stats: [],
       exotic: false,
       view: [],
       infusable: [],
@@ -42,6 +43,7 @@
         vm.source = item;
         vm.exotic = vm.source.tier === 'Exotic';
         vm.infused = 0;
+        vm.stats = [];
         vm.targets = [];
         vm.statType =
           vm.source.primStat.statHash === 3897883278 ? 'Defense' : // armor item
@@ -75,6 +77,10 @@
           vm.selectedPath = vm.paths[0];
           // Value of infused result
           vm.infused = vm.calculate();
+          // The new stats of the item
+          vm.stats = _.map(vm.source.stats, function(stat) {
+            return {before: stat.base, after: (stat.base*vm.infused/vm.source.primStat.value).toFixed(0)};
+          });
           // The difference from start to finish
           vm.difference = vm.infused - vm.source.primStat.value;
           vm.setView();
@@ -125,10 +131,14 @@
           if (reset) {
             vm.targets = [];
             vm.infused = 0;
+            vm.stats = [];
             vm.difference = 0;
           }
         } else {
           vm.infused = vm.selectedPath.light;
+          vm.stats = _.map(vm.source.stats, function(stat) {
+            return {before: stat.base, after: (stat.base*vm.infused/vm.source.primStat.value).toFixed(0)};
+          });
           vm.difference = vm.infused - vm.source.primStat.value;
           vm.targets = vm.selectedPath.path.map(function(item) {
             return vm.infusable.find(function(otherItem) {

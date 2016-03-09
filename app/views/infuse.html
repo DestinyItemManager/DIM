@@ -47,18 +47,25 @@
         </div>
       </div>
       <div class="result">
-        <span>Will bring the gear to</span>
-        <span class="bigValue">{{infuse.infused}}</span>
-        <span class="green">(+ {{infuse.difference}})</span>
-        <span>using {{infuse.targets.length*3}} <span class="legendaryMarks"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
-        <span ng-if="infuse.exotic">+ {{infuse.targets.length}} <span class="legendaryMarks"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
-        <span>+ {{infuse.targets.length*250 | number}} <span class="glimmer"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
-        <span>+ {{infuse.targets.length*infuse.wildcardMaterialCost | number}} <span class="glimmer"><img alt="Materials" title="Materials" ng-src="http://www.bungie.net/common/destiny_content/icons/{{infuse.wildcardMaterialIcon}}.jpg"></span></span>
+        <p>
+          <span>Light level: {{infuse.infused}} <span class="green">(+{{infuse.difference}})</span></span>
+          <ul ng-show="infuse.statType=='Defense'">
+            <li>Intellect: {{infuse.stats[0].before}} <i class="fa fa-arrow-circle-right"></i> {{infuse.stats[0].after}}</li>
+            <li>Discipline: {{infuse.stats[1].before}} <i class="fa fa-arrow-circle-right"></i> {{infuse.stats[1].after}}</li>
+            <li>Strength: {{infuse.stats[2].before}} <i class="fa fa-arrow-circle-right"></i> {{infuse.stats[2].after}}</li>
+          </ul>
+        </p>
+        <p>
+          <span>Using {{infuse.targets.length*3}} <span class="legendaryMarks"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
+          <span ng-if="infuse.exotic">+ {{infuse.targets.length}} <span class="legendaryMarks"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
+          <span>+ {{infuse.targets.length*250 | number}} <span class="glimmer"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
+          <span>+ {{infuse.targets.length*infuse.wildcardMaterialCost | number}} <span class="glimmer"><img alt="Materials" title="Materials" ng-src="http://www.bungie.net/common/destiny_content/icons/{{infuse.wildcardMaterialIcon}}.jpg"></span></span>
+        </p>
 
       </div>
       <button ng-if="infuse.getAllItems" ng-disabled="infuse.transferInProgress" ng-click="infuse.transferItems()">Transfer items</button>
     </div>
   </div>
 
-  <div class='gearsContainer'><small>This calculator uses the best known algorithm for infusing. If you find any discrepancies <a href='https://www.reddit.com/r/DestinyTheGame/comments/3o48e2/infusion_data_collection_request/' target='_blank'>let us know.</a> DIM can't actually perform infusions, it can just tell you what you'll get.</small></div>
+<!--  <div class='gearsContainer'><small>This calculator uses the best known algorithm for infusing. If you find any discrepancies <a href='https://www.reddit.com/r/DestinyTheGame/comments/3o48e2/infusion_data_collection_request/' target='_blank'>let us know.</a> DIM can't actually perform infusions, it can just tell you what you'll get.</small></div>-->
 </div>
