@@ -4,16 +4,15 @@
   angular.module('dimApp')
     .factory('dimLoadoutService', LoadoutService);
 
-  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker'];
+  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService'];
 
-  function LoadoutService($q, $rootScope, uuid2, dimItemService, dimStoreService, toaster, loadingTracker) {
+  function LoadoutService($q, $rootScope, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService) {
     var _loadouts = [];
 
     return {
       dialogOpen: false,
       getLoadouts: getLoadouts,
       deleteLoadout: deleteLoadout,
-      saveLoadouts: saveLoadouts,
       saveLoadout: saveLoadout,
       addItemToLoadout: addItemToLoadout,
       applyLoadout: applyLoadout,
@@ -85,7 +84,13 @@
         result = $q.when(_loadouts);
       }
 
-      return result;
+      return result.then(function(loadouts) {
+        // Filter to current platform
+        var platform = dimPlatformService.getActive();
+        return _.filter(loadouts, function(loadout) {
+          return loadout.platform === undefined || loadout.platform === platform.label; // Playstation or Xbox
+        });
+      });
     }
 
     function saveLoadouts(loadouts) {
@@ -407,6 +412,7 @@
         name: loadout.name,
         classType: loadout.classType,
         version: 'v3.0',
+        platform: loadout.platform,
         items: []
       };
 
