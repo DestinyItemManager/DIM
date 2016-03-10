@@ -1,5 +1,7 @@
 # Next
 
+* Moving and equipping items, especially many at a time (loadouts) is faster.
+
 # 3.3.3
 
 * Infusion calculator performance enhancements

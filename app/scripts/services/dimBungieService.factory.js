@@ -4,16 +4,14 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
+  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
     var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
     var charactersPromise = null;
-
-    //var transferRateLimit = dimRateLimit.rateLimit(transfer, 3000);
 
     $rootScope.$on('dim-active-platform-updated', function(event, args) {
       tokenPromise = null;
