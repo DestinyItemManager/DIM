@@ -60,15 +60,6 @@
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
         chrome.storage.sync.get(null, function(data) {
-          // if (_.isUndefined(data['loadouts-v2.0'])) {
-          //   chrome.storage.sync.get('loadouts', function(oldData) {
-          //     processLoadout((oldData.loadouts) ? oldData.loadouts : undefined);
-          //     saveLoadouts(_loadouts);
-          //   })
-          // } else {
-          //   processLoadout((data['loadouts-v2.0']) ? data['loadouts-v2.0'] : undefined);
-          // }
-
           if (_.has(data, 'loadouts-v3.0')) {
             processLoadout(data, 'v3.0');
           } else if (_.has(data, 'loadouts-v2.0')) {
