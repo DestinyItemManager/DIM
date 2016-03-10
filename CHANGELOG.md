@@ -5,7 +5,7 @@
 * Infusion calculator performance enhancements
 * Larger lock icon
 * Completed segments of Intelligence, Discipline, and Strength are now colored orange.
-* New loadouts are now scoped to the platform they're created on, rather than applying across accounts.
+* When you save a loadout, it is now scoped to the platform it's created on, rather than applying across accounts. Loadouts created on one account used to show on both accounts, but wouldn't work on the wrong account.
 
 # 3.3.2
 

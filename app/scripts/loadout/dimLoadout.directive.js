@@ -78,8 +78,6 @@
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
 
-        vm.loadout = angular.copy(vm.defaults);
-        var platform = dimPlatformService.getActive();
         vm.loadout.platform = platform.label; // Playstation or Xbox
       });
 
@@ -125,6 +123,8 @@
     vm.loadout = angular.copy(vm.defaults);
 
     vm.save = function save() {
+      var platform = dimPlatformService.getActive();
+      vm.loadout.platform = platform.label; // Playstation or Xbox
       dimLoadoutService.saveLoadout(vm.loadout);
       vm.cancel();
     };
