@@ -213,9 +213,29 @@
             }));
         })
         .groupBy('type')
+        .mapObject(function(items) {
+          // The order of items determines which ones get moved away to make space
+          // TODO: move all this into a "moveAsideItem" function in itemService
+          return _.sortBy(items, function(item) {
+            // Lower means more likely to get moved away
+            // Prefer not moving the equipped item
+            var value = item.equipped ? 10 : 0;
+            // Prefer moving lower-tier
+            value += {
+              Common: 0,
+              Uncommon: 1,
+              Rare: 2,
+              Legendary: 3,
+              Exotic: 4
+            }[item.tier];
+            if (item.primStat) {
+              value += item.primStat.value / 1000.0;
+            }
+            return value;
+          });
+        })
         .value();
 
-      // TODO: parallelize builds between "weapons" and "general" and "armor", etc
       return applyLoadoutItems(store, items, loadout, existingItems, scope);
     }
 
@@ -288,14 +308,14 @@
           // If full, make room. TODO: put this in the move service!
           if (size === 10) {
             if (item.owner !== store.id) {
-              // TODO: should probably choose the least-desirable item
               var moveAwayItem = existingItems[item.type].shift();
               var sortedStores = _.sortBy(dimStoreService.getStores(), function(s) {
-                if (s.id === store.id) {
+                if (s.id === 'vault') {
                   return 0;
-                } else if (s.id === 'vault') {
+                } else if (s.id !== store.id) {
                   return 1;
                 } else {
+                  // Same store... shouldn't ever work
                   return 2;
                 }
               });
