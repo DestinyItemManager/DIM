@@ -16,7 +16,7 @@
   </head>
 
   <body ng-app="dimApp" ng-strict-di class="">
-    <div ng-controller="dimAppCtrl as app" ng-click="app.about = false; trackActivity()">
+    <div class="ng-cloak" ng-controller="dimAppCtrl as app" ng-click="app.about = false; trackActivity()">
       <div id="header">
         <div class="content">
           <span class="header-right">
@@ -53,6 +53,7 @@
     <script src="vendor/angular/angular.min.js?v=3.3.3"></script>
     <script src="vendor/angular-ui-router/release/angular-ui-router.min.js?v=3.3.3"></script>
     <script src="vendor/angular-animate/angular-animate.min.js?v=3.3.3"></script>
+    <script src="vendor/angular-aria/angular-aria.min.js?v=3.3.3"></script>
     <script src="scripts/toaster.js?v=3.3.3"></script>
     <script src="vendor/angular-native-dragdrop/draganddrop.js?v=3.3.3"></script>
     <script src="vendor/ngDialog/js/ngDialog.min.js?v=3.3.3"></script>
@@ -63,6 +64,7 @@
     <script src="vendor/angular-messages/angular-messages.min.js?v=3.3.3"></script>
     <script src="vendor/angular-promise-tracker/promise-tracker.js?v=3.3.3"></script>
     <script src="scripts/jquery.textcomplete.js?v=3.3.3"></script>
+    <script src="vendor/angularjs-slider/dist/rzslider.js"></script>
     <!-- end vendor scripts -->
 
     <script src="scripts/ScrollToFixed.js?v=3.3.3"></script>
@@ -71,6 +73,7 @@
     <script src="vendor/angular-hotkeys/build/hotkeys.js?v=3.3.3"></script>
 
     <!-- begin app scripts -->
+    <script src="scripts/util.js?v=3.3.3"></script>
     <script src="scripts/dimApp.module.js?v=3.3.3"></script>
     <script src="scripts/dimApp.config.js?v=3.3.3"></script>
     <script src="scripts/dimWebWorker.factory.js?v=3.3.3"></script>
@@ -93,6 +96,7 @@
     <script src="scripts/store/dimStoreItems.directive.js?v=3.3.3"></script>
     <script src="scripts/store/dimStoreItem.directive.js?v=3.3.3"></script>
     <script src="scripts/store/dimStoreHeading.directive.js?v=3.3.3"></script>
+    <script src="scripts/move-popup/dimMoveAmount.directive.js?v=3.3.3"></script>
     <script src="scripts/move-popup/dimMovePopup.directive.js?v=3.3.3"></script>
     <script src="scripts/move-popup/dimTalentGrid.directive.js?v=3.3.3"></script>
     <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=3.3.3"></script>

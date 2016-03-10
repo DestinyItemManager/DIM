@@ -39,7 +39,7 @@
         '            <div class="item-elem">',
         '            <img ng-src="{{ item.icon }}" title="{{ item.primStat.value }} {{ item.name }}">',
         '            <div class="item-stat" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="close" ng-click="vm.remove(item); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
+        '            <div class="close" ng-click="vm.remove(item, $event); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
         '            <div class="equipped" ng-show="item.equipped"></div>',
         // '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
         '            <div class="item-stat" ng-if="item.primStat.value" ng-class="\'stat-damage-\' + item.dmg">{{ item.primStat.value }}</div>',
@@ -96,7 +96,7 @@
       });
 
       scope.$on('dim-store-item-clicked', function(event, args) {
-        vm.add(args.item);
+        vm.add(args.item, args.clickEvent);
       });
     }
   }
@@ -140,18 +140,28 @@
       vm.show = false;
     };
 
-    vm.add = function add(item) {
-      if (item.equipment) {
+    vm.add = function add(item, $event) {
+      if (item.equipment || item.type === 'Material' || item.type === 'Consumable') {
         var clone = angular.copy(item);
 
         var discriminator = clone.type.toLowerCase();
         var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
-        var dupe = _.findWhere(typeInventory, {id: clone.id});
+        clone.amount = Math.min(clone.amount, $event.shiftKey ? 5 : 1);
 
-        if (!dupe && typeInventory.length < 9) {
-          clone.equipped = (typeInventory.length === 0);
+        var dupe = _.findWhere(typeInventory, {hash: clone.hash, id: clone.id});
 
+        var maxSlots = 10;
+        if (item.type === 'Material') {
+          maxSlots = 20;
+        } else if(item.type === 'Consumable') {
+          maxSlots = 19;
+        }
+
+        if (!dupe && typeInventory.length < maxSlots) {
+          clone.equipped = item.equipment && (typeInventory.length === 0);
+
+          // Only allow one subclass
           if (clone.type === 'Class') {
             if (_.has(vm.loadout.items, 'class')) {
               vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
@@ -160,22 +170,30 @@
           }
 
           typeInventory.push(clone);
+        } else if (dupe && clone.maxStackSize > 1) {
+          var increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
+          dupe.amount += increment;
+          // TODO: handle stack splits
         }
       } else {
-        toaster.pop('warning', '', 'Only equippable items can be added to a loadout.');
+        toaster.pop('warning', '', 'Only equippable items, materials, and consumables can be added to a loadout.');
       }
     };
 
-    vm.remove = function remove(item) {
+    vm.remove = function remove(item, $event) {
       var discriminator = item.type.toLowerCase();
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
       var index = _.findIndex(typeInventory, function(i) {
-        return i.id === item.id;
+        return i.hash == item.hash && i.id === item.id;
       });
 
       if (index >= 0) {
-        typeInventory.splice(index, 1);
+        var decrement = $event.shiftKey ? 5 : 1;
+        item.amount -= decrement;
+        if (item.amount <= 0) {
+          typeInventory.splice(index, 1);
+        }
       }
 
       if (item.equipped && typeInventory.length > 0) {

@@ -20,7 +20,8 @@
       getStores: getStores,
       getStore: getStore,
       updateStores: updateStores,
-      setHeights: setHeights
+      setHeights: setHeights,
+      createItemIndex: createItemIndex
     };
 
     return service;
@@ -166,20 +167,17 @@
                       'type': type
                     };
 
-                    return _.chain(items)
-                      .where(predicate)
-                      .value();
+                    return _.where(items, predicate);
                   },
                   getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
+                    return _.where(this.items, { type: item.type }).length < 10;
                   },
                   canEquipExotic: function(item) {
                     return this.getTypeCount(item);
+                  },
+                  // Get the total amount of this item in the store, across all stacks.
+                  amountOfItem: function(item) {
+                    return sum(_.where(this.items, { hash: item.hash }), 'amount');
                   }
                 };
 
@@ -230,17 +228,10 @@
                       predicate.equipped = equipped;
                     }
 
-                    return _.chain(this.items)
-                      .where(predicate)
-                      .value();
+                    return _.where(this.items, predicate);
                   },
                   getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
+                    return _.where(this.items, { type: item.type }).length < 10;
                   },
                   canEquipExotic: function(itemType) {
                     var types = _.chain(dimCategory)
@@ -257,6 +248,10 @@
                     return _.size(_.reduce(types, function(memo, type) {
                       return memo || this.hasExotic(type, true);
                     }, false, this)) === 0;
+                  },
+                  // Get the total amount of this item in the store, across all stacks.
+                  amountOfItem: function(item) {
+                    return sum(_.where(this.items, { hash: item.hash }), 'amount');
                   }
                 };
 
@@ -327,6 +322,22 @@
       return $q.when(store);
     }
 
+    var idTracker = {};
+
+    // Set an ID for the item that should be unique across all items
+    function createItemIndex(item) {
+      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+      var index = item.hash + '-';
+      if (item.id === '0') {
+        index = index + item.amount;
+        idTracker[index] = (idTracker[index] || 0) + 1;
+        index = index + '-' + idTracker[index];
+      } else {
+        index = index + item.id;
+      }
+      return index;
+    }
+
     function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
@@ -386,16 +397,7 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-      var index = item.itemHash + '-';
-      if (item.itemInstanceId === '0') {
-        index = index + getNextIndex();
-      } else {
-        index = index + item.itemInstanceId;
-      }
-
       var createdItem = {
-        index: index,
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -431,6 +433,7 @@
         weaponClassName: weaponClassName,
         classified: itemDef.classified
       };
+      createdItem.index = createItemIndex(createdItem);
 
       // More objectives properties
       if (createdItem.objectives) {
@@ -441,20 +444,6 @@
       }
 
       return createdItem;
-    }
-
-    // Some utility functions missing from underscore
-    function sum(list, summer) {
-      return _.reduce(list, function(memo, val, index) {
-        return memo + _.iteratee(summer)(val, index);
-      }, 0);
-    }
-
-    // Count the number of "true" values
-    function count(list, predicate) {
-      return sum(list, function(item, index) {
-        return _.iteratee(predicate)(item, index) ? 1 : 0;
-      });
     }
 
     function buildTalentGrid(item, talentDefs, progressDefs, perkDefs) {
@@ -660,6 +649,7 @@
     }
 
     function getItems(owner, items) {
+      idTracker = {};
       return $q.all([
         dimItemDefinitions,
         dimItemBucketDefinitions,
