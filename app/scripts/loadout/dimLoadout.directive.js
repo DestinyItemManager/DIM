@@ -77,8 +77,6 @@
       scope.$on('dim-create-new-loadout', function(event, args) {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
-
-        vm.loadout.platform = platform.label; // Playstation or Xbox
       });
 
       scope.$on('dim-delete-loadout', function(event, args) {
