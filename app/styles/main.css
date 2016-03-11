@@ -1530,6 +1530,9 @@ ialog-open {
   background-color: rgba(100, 100, 100, .6);
   border: 1px solid #333;
 }
+.close:hover {
+  background-color: rgba(0, 0, 0, .6);
+}
 
 
 .toast-title {
