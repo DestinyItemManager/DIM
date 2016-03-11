@@ -3,9 +3,9 @@
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService', 'dimPlatformService'];
+  Loadout.$inject = ['dimLoadoutService'];
 
-  function Loadout(dimLoadoutService, dimPlatformService) {
+  function Loadout(dimLoadoutService) {
     return {
       controller: LoadoutCtrl,
       controllerAs: 'vm',
@@ -99,9 +99,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService) {
     var vm = this;
 
     vm.types = _.chain(dimCategory)
@@ -156,18 +156,22 @@
           maxSlots = 19;
         }
 
-        if (!dupe && typeInventory.length < maxSlots) {
-          clone.equipped = item.equipment && (typeInventory.length === 0);
+        if (!dupe) {
+          if (typeInventory.length < maxSlots) {
+            clone.equipped = item.equipment && (typeInventory.length === 0);
 
-          // Only allow one subclass
-          if (clone.type === 'Class') {
-            if (_.has(vm.loadout.items, 'class')) {
-              vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
-              clone.equipped = true;
+            // Only allow one subclass
+            if (clone.type === 'Class') {
+              if (_.has(vm.loadout.items, 'class')) {
+                vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
+                clone.equipped = true;
+              }
             }
-          }
 
-          typeInventory.push(clone);
+            typeInventory.push(clone);
+          } else {
+            toaster.pop('warning', '', 'You can only have ' + maxSlots + ' of that kind of item in a loadout.');
+          }
         } else if (dupe && clone.maxStackSize > 1) {
           var increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
           dupe.amount += increment;
