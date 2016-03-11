@@ -154,8 +154,7 @@
               // Compatible with this class
               (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
-              i.id !== item.id &&
-              i.hash !== item.hash;
+              i.id !== item.id;
           })
           .sortBy(function(i) {
             return sortType[i.tier];
@@ -178,7 +177,7 @@
         }
 
 
-        return result;
+        return (result) ? result : null;
       }
 
       function equipItem(item) {
