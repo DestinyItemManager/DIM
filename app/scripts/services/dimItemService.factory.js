@@ -364,39 +364,7 @@
           }
         }
 
-        var typeQtyCap = 10;
-
-        //TODO Hardcoded Item Quantity
-        if (store.id === 'vault') {
-          switch (item.sort) {
-            case 'Weapons':
-            case 'Weapon':
-            case 'Armor':
-              {
-                typeQtyCap = 72;
-                break;
-              }
-            default:
-              {
-                typeQtyCap = 36;
-                break;
-              }
-          }
-        } else {
-          switch (item.type) {
-            case 'Material':
-            case 'Consumable':
-              {
-                typeQtyCap = 20;
-                break;
-              }
-            default:
-              {
-                typeQtyCap = 10;
-                break;
-              }
-          }
-        }
+        var typeQtyCap = store.capacityForItem(item);
 
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
           if ((item.owner !== store.id) && (store.id !== 'vault') && (item.owner !== 'vault')) {

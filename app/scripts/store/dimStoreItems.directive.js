@@ -57,7 +57,7 @@
         '    <div ng-repeat="key in ::vm.keys track by key" ng-init="value = vm.categories[key]" class="section" ng-class="::key.toLowerCase()">',
         '      <div class="title">',
         '        <span>{{ ::key }}</span>',
-        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{:: (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
+        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{::vm.store.capacityForItem({sort:key})}}  </span>',
         '      </div>',
         '      <div ng-repeat="type in ::value track by type" class="sub-section"',
         '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[vm.orderedTypes[type]] }]"',

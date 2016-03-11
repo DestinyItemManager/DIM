@@ -22,6 +22,10 @@
       // Get the total amount of this item in the store, across all stacks.
       amountOfItem: function(item) {
         return sum(_.where(this.items, { hash: item.hash }), 'amount');
+      },
+      // How much of items like this item can fit in this store?
+      capacityForItem: function(item) {
+        return (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
       }
     };
 
@@ -188,7 +192,11 @@
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
-                bucketCounts: {}
+                bucketCounts: {},
+                // Vault has different capacity rules
+                capacityForItem: function(item) {
+                  return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
+                }
               });
 
               _.each(raw.data.buckets, function(bucket) {
