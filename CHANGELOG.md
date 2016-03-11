@@ -7,6 +7,7 @@
 * Loadouts can now contain materials and consumables. Add or remove 5 at a time by holding shift while clicking. When the loadout is applied, we'll make sure your character has *at least* that much of the consumable.
 * Loadouts can now contain 10 weapons or armor of a single type, not just 9.
 * When making space for a loadout, we'll prefer putting extra stuff in the vault rather than putting it on other characters. We'll also prefer moving aside non-equipped items of low rarity and light level.
+* The is:engram search filter actually works.
 
 # 3.3.3
 

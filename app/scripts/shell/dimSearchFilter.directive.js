@@ -276,7 +276,7 @@
         return item.maxStackSize > 1;
       },
       'engram': function(predicate, item) {
-        return item.type.toLowerCase().indexOf('Engram') >= 0;
+        return item.name.toLowerCase().indexOf('engram') >= 0 && !item.equipment;
       },
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
