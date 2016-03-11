@@ -8,6 +8,7 @@
 * Loadouts can now contain 10 weapons or armor of a single type, not just 9.
 * When making space for a loadout, we'll prefer putting extra stuff in the vault rather than putting it on other characters. We'll also prefer moving aside non-equipped items of low rarity and light level.
 * The is:engram search filter actually works.
+* Fixed an error where DIM would not replace an equipped item with an instance of the same item hash. This would cause an error with loadouts and moving items. [448](https://github.com/DestinyItemManager/DIM/issues/448)
 
 # 3.3.3
 
