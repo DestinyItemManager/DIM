@@ -59,6 +59,47 @@
       });
     }
 
+    function retryOnThrottled(request) {
+      var a = $q(function(resolve, reject) {
+        var retries = 4;
+
+        function run() {
+          $http(request).then(function success(response) {
+            if (response.data.ErrorCode === 36) {
+              retries = retries - 1;
+
+              if (retries <= 0) {
+                // debugger;
+                reject(new Error(response.data.Message));
+              } else {
+                $timeout(run, Math.pow(2, 4 - retries) * 1000);
+              }
+            } else if (response.data.ErrorCode > 1) {
+              reject(new Error(response.data.Message));
+            } else {
+              resolve(response);
+            }
+          }, function failure(response) {
+            // debugger;
+            reject(new Error(response.data.Message));
+          });
+        }
+
+        run();
+      });
+
+      return a;
+    }
+
+    function openBungieNetTab() {
+      if (_.size(tabs) === 0) {
+        chrome.tabs.create({
+          url: 'http://bungie.net',
+          active: false
+        });
+      }
+    }
+
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
@@ -90,17 +131,7 @@
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
             } else {
-              chrome.tabs.query({
-                'url': '*://*.bungie.net/*'
-              }, function(tabs) {
-                if (_.size(tabs) === 0) {
-                  chrome.tabs.create({
-                    url: 'http://bungie.net',
-                    active: false
-                  });
-                }
-              });
-
+              openBungieNetTab();
               reject(new Error('Please log into Bungie.net before using this extension.'));
             }
           });
@@ -144,16 +175,7 @@
 
     function processBnetPlatformsRequest(response) {
       if (response.data.ErrorCode === 99) {
-        chrome.tabs.query({
-          'url': '*://*.bungie.net/*'
-        }, function(tabs) {
-          if (_.size(tabs) === 0) {
-            chrome.tabs.create({
-              url: 'http://bungie.net',
-              active: false
-            });
-          }
-        });
+        openBungieNetTab();
 
         return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
       } else if (response.data.ErrorCode === 5) {
@@ -407,35 +429,7 @@
         .then(function(store) {
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
-        .then(function(request) {
-          return $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
@@ -484,37 +478,7 @@
         .then(function() {
           return getEquipRequest(data.token, platform.type, item);
         })
-        .then(function(request) {
-          var a = $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-
-          return a;
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
@@ -560,37 +524,7 @@
         .then(function() {
           return getEquipItemsRequest(data.token, platform.type, items);
         })
-        .then(function(request) {
-          var a = $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-
-          return a;
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
@@ -640,35 +574,7 @@
         .then(function(store) {
           return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
         })
-        .then(function(request) {
-          return $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
