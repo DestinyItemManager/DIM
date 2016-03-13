@@ -1,3 +1,8 @@
+# Next
+
+* DIM will now go to great lengths to make sure your transfer will succeed, even if your target's inventory is full, or the vault is full. It does this by moving stuff aside to make space, automatically.
+* Fixed a bug that would cause applying loadouts to fill up the vault and then fail.
+
 # 3.4.1
 
 * Bugfix to address an infinite loop while moving emotes.
