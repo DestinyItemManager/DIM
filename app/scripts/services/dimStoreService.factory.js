@@ -183,6 +183,9 @@
           return $q.all(rawStores.map(function(raw) {
             var store;
             var items = [];
+            if (!raw) {
+              return;
+            }
 
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
