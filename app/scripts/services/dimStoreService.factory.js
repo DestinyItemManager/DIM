@@ -55,7 +55,7 @@
     function updateCharacters() {
       return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
         _.each(_stores, function(dStore) {
-          if (dStore.id !== 'vault') {
+          if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
 
             dStore.level = bStore.base.characterLevel;
@@ -193,6 +193,7 @@
                 legendaryMarks: marks,
                 glimmer: glimmer,
                 bucketCounts: {},
+                isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
                   return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
@@ -235,7 +236,8 @@
                 class: getClass(raw.character.base.characterBase.classType),
                 gender: getGender(raw.character.base.characterBase.genderType),
                 race: getRace(raw.character.base.characterBase.raceHash),
-                percentToNextLevel: raw.character.base.percentToNextLevel
+                percentToNextLevel: raw.character.base.percentToNextLevel,
+                isVault: false
               });
 
               _.each(raw.data.buckets, function(bucket) {

@@ -381,7 +381,7 @@
     };
 
     function resetData() {
-      if (vm.store.id === 'vault') {
+      if (vm.store.isVault) {
         vm.sortSize = _.countBy(vm.store.items, 'sort');
       }
 

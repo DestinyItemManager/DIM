@@ -119,7 +119,7 @@
             var sortedStores = _.sortBy(stores, function(store) {
               if (source.id === store.id) {
                 return 0;
-              } else if (store.id === 'vault') {
+              } else if (store.isVault) {
                 return 1;
               } else {
                 return 2;
@@ -340,17 +340,13 @@
       function canMoveToStore(item, store, triedFallback) {
         var stackAmount = 0;
         var slotsNeededForTransfer = 0;
-        var predicate = (store.id === 'vault') ? {
+        var predicate = store.isVault ? {
           sort: item.sort
         } : {
           type: item.type
         };
 
-        var itemsInStore = _(store.items)
-          .chain()
-          .where(predicate)
-          .size()
-          .value();
+        var itemsInStore = _.where(store.items, predicate).length;
 
         if (item.maxStackSize > 1) {
           stackAmount = store.amountOfItem(item);
@@ -366,7 +362,7 @@
         var typeQtyCap = store.capacityForItem(item);
 
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
-          if ((item.owner !== store.id) && (store.id !== 'vault') && (item.owner !== 'vault')) {
+          if ((item.owner !== store.id) && !store.isVault && (item.owner !== 'vault')) {
             // It's a guardian-to-guardian move, so we need to check
             // if there's space in the vault since the item has to go
             // through there.
@@ -384,21 +380,9 @@
                 return canMoveToStore(item, store, true);
               });
           } else {
-            return $q.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
+            return $q.reject(new Error('There are too many \'' + (store.isVault ? item.sort : item.type) + '\' items in the ' + (store.isVault ? 'vault' : 'guardian') + '.'));
           }
         }
-      }
-
-      function createSpace(store, item, target) {
-        var targetIsSource = (store.id === target.id);
-        var scope = {};
-
-        var promise = $q.when(dimStoreService.getStores())
-          .then(function(stores) {
-            return $q.reject('woopsie');
-          });
-
-        return promise;
       }
 
       function canEquip(item, store) {
@@ -434,7 +418,7 @@
           target: target,
           isVault: {
             source: item.owner === 'vault',
-            target: target.id === 'vault'
+            target: target.isVault
           }
         };
 

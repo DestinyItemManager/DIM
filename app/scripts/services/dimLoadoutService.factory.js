@@ -301,7 +301,7 @@
             if (item.owner !== store.id) {
               var moveAwayItem = existingItems[item.type].shift();
               var sortedStores = _.sortBy(dimStoreService.getStores(), function(s) {
-                if (s.id === 'vault') {
+                if (s.isVault) {
                   return 0;
                 } else if (s.id !== store.id) {
                   return 1;
@@ -314,7 +314,7 @@
               // TODO: handle consumable capacity
               var target = _.find(sortedStores, function(s) {
                 var capacity = s.capacityForItem(item);
-                if (s.id === 'vault') {
+                if (s.isVault) {
                   // leave space for one item so we can still do guardian-guardian transfers
                   capacity -= 1;
                 }

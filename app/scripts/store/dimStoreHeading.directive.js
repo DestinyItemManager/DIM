@@ -111,6 +111,6 @@
 
   function StoreHeadingCtrl($scope) {
     var vm = this;
-    vm.isGuardian = (vm.store.id !== 'vault');
+    vm.isGuardian = !vm.store.isVault;
   }
 })();

@@ -96,7 +96,7 @@
     };
 
     vm.characterInfo = function characterInfo(store) {
-      if (store.id === 'vault') {
+      if (store.isVault) {
         return 'Vault';
       } else {
         return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
@@ -131,8 +131,8 @@
     };
 
     vm.consolidate = function() {
-      var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && s.id !== 'vault'; });
-      var vault = _.findWhere(dimStoreService.getStores(), { id: 'vault' });
+      var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && !s.isVault; });
+      var vault = dimStoreService.getVault();
 
       var promise = $q.all(stores.map(function(store) {
         // First move everything into the vault
@@ -144,7 +144,7 @@
       }));
 
       // Then move from the vault to the character
-      if (vm.store.id !== 'vault') {
+      if (!vm.store.isVault) {
         promise = promise.then(function() {
           var item = _.findWhere(vault.items, { hash: vm.item.hash });
           if (item) {
@@ -246,37 +246,15 @@
 
     vm.stores = dimStoreService.getStores();
 
-    vm.canShowItem = function canShowItem(item, itemStore, buttonStore) {
-      var result = false;
-      // The item is in the vault
-      if (item.id === 'vault') {
-        if (buttonStore.id === 'vault') { // What to do about sending item back to the vault?
-          return false;
-        } else { // Send the item to another Guardian.
-
-        }
-      } else { // or, the item is in a guardian's inventory
-        if (buttonStore.id === 'vault') { // What to do about sending item to the vault?
-
-        } else if (buttonStore.id === item.owner) { // What to about using item with it's owner?
-
-        } else { // Send the item to another Guardian.
-
-        }
-      }
-
-      return result;
-    };
-
     vm.canShowVault = function canShowButton(item, itemStore, buttonStore) {
       // If my itemStore is the vault, don't show a vault button.
       // Can't vault a vaulted item.
-      if (itemStore.id === 'vault') {
+      if (itemStore.isVault) {
         return false;
       }
 
       // If my buttonStore is the vault, then show a vault button.
-      if (buttonStore.id !== 'vault') {
+      if (!buttonStore.isVault) {
         return false;
       }
 
@@ -289,7 +267,7 @@
     };
 
     vm.canShowStore = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault') {
+      if (buttonStore.isVault) {
         return false;
       }
 
@@ -309,7 +287,7 @@
     };
 
     vm.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.id === 'vault' || !item.equipment) {
+      if (buttonStore.isVault || !item.equipment) {
         return false;
       }
 

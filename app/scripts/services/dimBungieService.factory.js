@@ -451,12 +451,12 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,
           stackSize: amount || item.amount,
-          transferToVault: (store.id === 'vault')
+          transferToVault: store.isVault
         },
         dataType: 'json',
         withCredentials: true
@@ -607,7 +607,7 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           state: lockState
