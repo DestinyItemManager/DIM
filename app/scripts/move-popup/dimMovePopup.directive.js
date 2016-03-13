@@ -204,10 +204,11 @@
 
       var vaultMoves = [];
       var targetMoves = [];
-      var vault = stores[stores.length - 1];
+      var vaultIndex = stores.length - 1;
+      var vault = stores[vaultIndex];
 
       deltas.forEach(function(delta, index) {
-        if (delta < 0) {
+        if (delta < 0 && index !== vaultIndex) {
           vaultMoves.push({
             source: stores[index],
             target: vault,
