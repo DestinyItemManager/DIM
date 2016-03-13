@@ -401,16 +401,6 @@
         return promise;
       }
 
-      function isVaultToVault(item, store) {
-        var deferred = $q.defer();
-        var promise = deferred.promise;
-        var result = ((item.owner === 'vault') && (store.id === 'vault'));
-
-        deferred.resolve(result ? deferred.reject(new Error('Cannot process vault-to-vault transfers.')) : false);
-
-        return promise;
-      }
-
       function canEquip(item, store) {
         return $q(function(resolve, reject) {
           if (item.classTypeName === 'unknown' || item.classTypeName === store.class) {
@@ -424,7 +414,6 @@
       function isValidTransfer(equip, store, item) {
         var promises = [];
 
-        promises.push(isVaultToVault(item, store));
         promises.push(canMoveToStore(item, store));
 
         if (equip) {
@@ -443,7 +432,6 @@
           item: item,
           source: dimStoreService.getStore(item.owner),
           target: target,
-          sameSource: (item.owner === target.id),
           isVault: {
             source: item.owner === 'vault',
             target: target.id === 'vault'
