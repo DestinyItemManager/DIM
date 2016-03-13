@@ -40,7 +40,7 @@
         },
 
         processQueue: function() {
-          do {
+          while (this.queue.length) {
             if (this.canProcess()) {
               var request = this.queue.shift();
               request.deferred.resolve(request.config);
@@ -48,7 +48,7 @@
               this.scheduleProcessing();
               return;
             }
-          } while(this.queue.length);
+          }
         },
 
         // Returns whether or not we can process a request right now. Mutates state.
