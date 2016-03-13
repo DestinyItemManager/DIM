@@ -10,6 +10,7 @@
 * The is:engram search filter actually works.
 * Fixed an error where DIM would not replace an equipped item with an instance of the same item hash. This would cause an error with loadouts and moving items. [448](https://github.com/DestinyItemManager/DIM/issues/448)
 * Loadouts can now display more than one line of items, for you mega-loadout lovers.
+* Items in the loadout editor are sorted according to your sort preference.
 
 # 3.3.3
 

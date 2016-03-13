@@ -34,7 +34,7 @@
         '    </div>',
         '    <div id="loadout-contents">',
         '      <div ng-repeat="value in vm.types track by value" class="loadout-{{ value }} loadout-bucket" ng-if="vm.loadout.items[value].length">',
-        '        <div ng-repeat="item in vm.loadout.items[value] track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
+        '        <div ng-repeat="item in vm.loadout.items[value] | sortItems:vm.itemSort track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
         '          <div class="item-elem">',
         '            <img ng-src="{{ item.icon }}" title="{{ item.primStat.value }} {{ item.name }}">',
         '            <div class="item-stat" ng-if="item.amount > 1">{{ item.amount }}</div>',
@@ -96,9 +96,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope) {
     var vm = this;
 
     vm.types = _.chain(dimCategory)
@@ -240,5 +240,18 @@
         }
       }
     };
+
+    dimSettingsService.getSetting('itemSort').then(function(sort) {
+      vm.itemSort = sort;
+    });
+
+    $scope.$on('dim-settings-updated', function(event, settings) {
+      if (_.has(settings, 'itemSort')) {
+        vm.itemSort = settings.itemSort;
+      }
+      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
+        dimStoreService.setHeights();
+      }
+    });
   }
 })();
