@@ -62,13 +62,9 @@
     // TODO: cache this, instead?
     $scope.$watch('vm.item', function() {
       if (vm.item.amount > 1) {
-        // TODO: sum up all the quantity of the item
-        vm.moveAmount = vm.item.amount;
-        dimStoreService.getStore(vm.item.owner)
-          .then(function(store) {
-            vm.maximum = store.amountOfItem(vm.item);
-            vm.moveAmount = vm.maximum;
-          });
+        var store = dimStoreService.getStore(vm.item.owner);
+        vm.maximum = store.amountOfItem(vm.item);
+        vm.moveAmount = vm.maximum;
       }
     });
 
@@ -111,20 +107,19 @@
      * Move the item to the specified store. Equip it if equip is true.
      */
     vm.moveItemTo = function moveItemTo(store, equip) {
-      var dimStores;
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
       if (reload) {
-        promise = promise.then(dimStoreService.getStores)
-          .then(function(stores) {
-            dimStores = dimStoreService.updateStores(stores);
-          });
+        // Refresh light levels and such
+        promise = promise.then(function() {
+          return dimStoreService.updateCharacters();
+        });
       }
 
       promise = promise
         .then(function() {
-          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+          dimStoreService.setHeights();
         })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
@@ -160,7 +155,7 @@
       }
 
       promise = promise.then(function() {
-        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        dimStoreService.setHeights();
         toaster.pop('success', 'Consolidated ' + vm.item.name, 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".");
       })
       .catch(function(a) {
@@ -237,7 +232,7 @@
             });
 
       promise = promise.then(function() {
-        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        dimStoreService.setHeights();
         toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' is now equally divided between characters.');
       })
       .catch(function(a) {
@@ -249,10 +244,7 @@
       return promise;
     };
 
-    dimStoreService.getStores(false, true)
-      .then(function(stores) {
-        vm.stores = stores;
-      });
+    vm.stores = dimStoreService.getStores();
 
     vm.canShowItem = function canShowItem(item, itemStore, buttonStore) {
       var result = false;

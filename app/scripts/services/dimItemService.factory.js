@@ -22,7 +22,6 @@
           });
       }
 
-      // TODO: Switch away from moveAmount property towards an explicit parameter like equip is
       // Returns the new or updated item (it may create a new item!)
       function updateItemModel(item, source, target, equip, amount) {
         // If we've moved to a new place
@@ -183,9 +182,7 @@
       function equipItem(item) {
         return dimBungieService.equip(item)
           .then(function() {
-            return dimStoreService.getStore(item.owner);
-          })
-          .then(function(store) {
+            var store = dimStoreService.getStore(item.owner);
             return updateItemModel(item, store, store, true);
           });
       }
@@ -231,11 +228,8 @@
               var vault;
 
               if (scope.similarItem.owner !== 'vault') {
-                p = dimStoreService.getStore('vault')
-                  .then(function(v) {
-                    vault = v;
-                    return dimBungieService.transfer(scope.similarItem, vault);
-                  })
+                vault = dimStoreService.getVault();
+                p = dimBungieService.transfer(scope.similarItem, vault)
                   .then(function() {
                     return updateItemModel(scope.similarItem, vault, scope.source, false);
                   });
@@ -261,32 +255,22 @@
       }
 
       function moveToVault(item, amount) {
-        return dimStoreService.getStore('vault')
-          .then(function(target) {
-            return moveToStore(item, target, false, amount);
-          });
+        return moveToStore(item, dimStoreService.getVault(), false, amount);
       }
 
       function moveToStore(item, store, equip, amount) {
         var scope = {
-          source: null,
+          source: dimStoreService.getStore(item.owner),
           target: store
         };
 
-        return dimStoreService.getStore(item.owner)
-          .then(function(source) {
-            scope.source = source;
-
-            return dimBungieService.transfer(item, scope.target, amount);
-          })
+        return dimBungieService.transfer(item, scope.target, amount)
           .then(function() {
-            return updateItemModel(item, scope.source, scope.target, false, amount);
-          })
-          .then(function(item) {
-            if ((item.owner !== 'vault') && equip) {
-              return equipItem(item);
+            var newItem = updateItemModel(item, scope.source, scope.target, false, amount);
+            if ((newItem.owner !== 'vault') && equip) {
+              return equipItem(newItem);
             } else {
-              return item;
+              return newItem;
             }
           });
       }
@@ -379,49 +363,14 @@
           }
         }
 
-        var typeQtyCap = 10;
-
-        //TODO Hardcoded Item Quantity
-        if (store.id === 'vault') {
-          switch (item.sort) {
-            case 'Weapons':
-            case 'Weapon':
-            case 'Armor':
-              {
-                typeQtyCap = 72;
-                break;
-              }
-            default:
-              {
-                typeQtyCap = 36;
-                break;
-              }
-          }
-        } else {
-          switch (item.type) {
-            case 'Material':
-            case 'Consumable':
-              {
-                typeQtyCap = 20;
-                break;
-              }
-            default:
-              {
-                typeQtyCap = 10;
-                break;
-              }
-          }
-        }
+        var typeQtyCap = store.capacityForItem(item);
 
         if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
           if ((item.owner !== store.id) && (store.id !== 'vault') && (item.owner !== 'vault')) {
             // It's a guardian-to-guardian move, so we need to check
             // if there's space in the vault since the item has to go
             // through there.
-            return dimStoreService.getStore('vault')
-              .then(function(vault) {
-                return canMoveToStore(item, vault);
-              });
+            return canMoveToStore(item, dimStoreService.getVault());
           } else {
             return $q.resolve(true);
           }
@@ -429,7 +378,7 @@
           // Not enough space!
           if (!triedFallback) {
             // Refresh the store
-            return $q.when(dimStoreService.getStores(true, false))
+            return dimStoreService.reloadStores()
               .then(function(stores) {
                 store = _.find(stores, { id: store.id });
                 return canMoveToStore(item, store, true);
@@ -473,28 +422,26 @@
       }
 
       function isValidTransfer(equip, store, item) {
-        return $q(function(resolve, reject) {
-          var promises = [];
+        var promises = [];
 
-          promises.push(isVaultToVault(item, store));
-          promises.push(canMoveToStore(item, store));
+        promises.push(isVaultToVault(item, store));
+        promises.push(canMoveToStore(item, store));
 
-          if (equip) {
-            promises.push(canEquip(item, store));
-          }
+        if (equip) {
+          promises.push(canEquip(item, store));
+        }
 
-          if ((item.tier === 'Exotic') && equip) {
-            promises.push(canEquipExotic(item, store));
-          }
+        if ((item.tier === 'Exotic') && equip) {
+          promises.push(canEquipExotic(item, store));
+        }
 
-          resolve($q.all(promises));
-        });
+        return $q.all(promises);
       }
 
       function moveTo(item, target, equip, amount) {
         var data = {
           item: item,
-          source: null,
+          source: dimStoreService.getStore(item.owner),
           target: target,
           sameSource: (item.owner === target.id),
           isVault: {
@@ -503,18 +450,10 @@
           }
         };
 
-        var movePlan = dimStoreService.getStore(item.owner)
-          .then(function(store) {
-            data.source = store;
-
-            return isValidTransfer(equip, target, item);
-          })
-          .then(function() {
-            // Reload the target store - isValidTransfer may have replaced it
-            return dimStoreService.getStore(target.id);
-          })
+        var movePlan = isValidTransfer(equip, target, item)
           .then(function(targetStore) {
-            data.target = targetStore;
+            // Replace the target store - isValidTransfer may have replaced it
+            data.target = dimStoreService.getStore(target.id);
           })
           .then(function(a) {
             var promise = $q.when(item);

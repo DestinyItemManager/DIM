@@ -234,7 +234,7 @@
     function applyLoadoutItems(store, items, loadout, existingItems, scope) {
       if (items.length == 0) {
         // We're done!
-        return dimStoreService.updateStores(dimStoreService.getStores())
+        return dimStoreService.updateCharacters()
           .then(function() {
             var value = 'success';
             var message = 'Your loadout has been transfered.';
@@ -297,7 +297,7 @@
           var size = _.where(store.items, { type: item.type }).length;
 
           // If full, make room. TODO: put this in the move service!
-          if (size === 10) {
+          if (size >= store.capacityForItem(item)) {
             if (item.owner !== store.id) {
               var moveAwayItem = existingItems[item.type].shift();
               var sortedStores = _.sortBy(dimStoreService.getStores(), function(s) {
@@ -313,7 +313,11 @@
               // Get the first store with space
               // TODO: handle consumable capacity
               var target = _.find(sortedStores, function(s) {
-                var capacity = (s.id === 'vault' ? 71 : 10);
+                var capacity = s.capacityForItem(item);
+                if (s.id === 'vault') {
+                  // leave space for one item so we can still do guardian-guardian transfers
+                  capacity -= 1;
+                }
                 return _.where(s.items, { type: item.type }).length < capacity;
               });
               if (!target) {

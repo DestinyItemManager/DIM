@@ -57,7 +57,7 @@
         '    <div ng-repeat="key in ::vm.keys track by key" ng-init="value = vm.categories[key]" class="section" ng-class="::key.toLowerCase()">',
         '      <div class="title">',
         '        <span>{{ ::key }}</span>',
-        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{:: (key === \'Weapons\' || key === \'Armor\') ? 72 : 36 }}  </span>',
+        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{::vm.store.capacityForItem({sort:key})}}  </span>',
         '      </div>',
         '      <div ng-repeat="type in ::value track by type" class="sub-section"',
         '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[vm.orderedTypes[type]] }]"',
@@ -331,20 +331,12 @@
             '  </div>',
             '</div>'].join(''),
           scope: $scope,
-          resolve: {
-            maximum: function() {
-              return dimStoreService.getStore(item.owner)
-                .then(function(store) {
-                  return store.amountOfItem(item);
-                });
-            }
-          },
           controllerAs: 'vm',
-          controller: ['$scope', 'maximum', function($scope, maximum) {
+          controller: ['$scope', function($scope) {
             var vm = this;
             vm.item = $scope.ngDialogData;
             vm.moveAmount = vm.item.amount;
-            vm.maximum = maximum;
+            vm.maximum = dimStoreService.getStore(vm.item.owner).amountOfItem(item);
             vm.finish = function() {
               $scope.closeThisDialog(vm.moveAmount);
             };
@@ -366,35 +358,22 @@
       }
 
       promise.then(function(moveAmount) {
-        var getStore;
-        if (item.owner === vm.store.id) {
-          getStore = $q.when(vm.store);
-        } else {
-          getStore = dimStoreService.getStore(item.owner);
-        }
-        var dimStores = null;
-
-        var movePromise = getStore.then(function() {
-          return dimItemService.moveTo(item, target, equip, moveAmount);
-        });
+        var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
         var reload = item.equipped || equip;
         if (reload) {
-          movePromise = movePromise
-            .then(dimStoreService.getStores)
-            .then(function(stores) {
-              dimStores = dimStoreService.updateStores(stores);
-            });
+          movePromise = movePromise.then(function() {
+            return dimStoreService.updateCharacters();
+          });
         }
         return movePromise.then(function() {
-          setTimeout(function() { dimStoreService.setHeights(); }, 0);
+          dimStoreService.setHeights();
         });
       }).catch(function(e) {
         if (e.message !== 'move-canceled') {
           toaster.pop('error', item.name, e.message);
         }
       });
-;
 
       loadingTracker.addPromise(promise);
 
@@ -421,7 +400,7 @@
         vm.itemSort = settings.itemSort;
       }
       if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
-        setTimeout(function() { dimStoreService.setHeights(); }, 0);
+        dimStoreService.setHeights();
       }
     });
 
