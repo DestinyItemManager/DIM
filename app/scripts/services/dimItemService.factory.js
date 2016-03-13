@@ -244,7 +244,7 @@
             }
           })
           .then(function() {
-            return dimBungieService.equip(scope.similarItem);
+            return equipItem(scope.similarItem);
           })
           .then(function() {
             return updateItemModel(scope.similarItem, scope.source, scope.source, true);
