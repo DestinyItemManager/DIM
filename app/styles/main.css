@@ -1422,29 +1422,38 @@ div[dim-loadout] {
   color: #1a1e24;
   box-shadow: 0 -1px 30px 2px #000;
 }
-.loadout-options {
-  margin: 5px
+.loadout-content {
+  padding: 1em;
 }
-.loadout-options input {
-  width: 150px
+#loadout-contents {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  min-height: 50px;
 }
-.loadout-options span {
+#loadout-contents .equipped {
+  width: 16px;
+  height: 16px;
   display: inline-block;
-  width: 65px;
-  border-radius: 3px;
-  background-color: #5b6e6c;
-  border: 1px solid rgba(245, 245, 245, .6);
-  border-bottom: 2px solid rgba(245, 245, 245, .6);
-  cursor: pointer;
-  color: rgba(245, 245, 245, .6);
-  text-align: center;
-  vertical-align: middle;
-  margin-left: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url('../images/spartan.png');
+  background-color: rgba(255, 0, 0, .6);
+  background-size: 16px 16px;
 }
-.loadout-options p {
-  display: inline;
-  padding-left: 10px;
+#loadout-contents .item {
+  margin-bottom: 2px;
 }
+.loadout-bucket {
+  display: flex;
+  margin-right: 8px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+
 .loadout-list .loadout-set:hover, .loadout-new:hover, .loadout-options span:hover {
   background-color: #151515;
   border-top: solid 1px #151515;
@@ -1518,20 +1527,12 @@ ialog-open {
   background-image: url('../images/close.png');
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, .6);
-  border: 1px solid #333;
 }
-#loadout-contents .equipped {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-image: url('../images/spartan.png');
-  background-color: rgba(255, 0, 0, .6);
-  background-size: 16px 16px;
-  border: 1px solid #333;
+.close:hover {
+  background-color: rgba(0, 0, 0, .6);
 }
+
+
 .toast-title {
   font-weight: bold;
 }
