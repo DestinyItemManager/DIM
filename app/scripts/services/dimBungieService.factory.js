@@ -26,6 +26,7 @@
       getStores: getStores,
       transfer: transfer,
       equip: equip,
+      equipItems: equipItems,
       setLockState: setLockState
     };
 
@@ -100,7 +101,7 @@
                 }
               });
 
-              reject(new Error('No bungled cookie found.'));
+              reject(new Error('Please log into Bungie.net before using this extension.'));
             }
           });
         })
@@ -538,6 +539,83 @@
         withCredentials: true
       };
     }
+
+    /************************************************************************************************************************************/
+
+    function equipItems(items) {
+      var platform = dimState.active;
+      var data = {
+        token: null,
+        membershipType: null
+      };
+
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
+      var getMembershipPB = getMembership.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(addMembershipTypeToDataPB)
+        .then(function() {
+          return getEquipItemsRequest(data.token, platform.type, items);
+        })
+        .then(function(request) {
+          var a = $q(function(resolve, reject) {
+            var retries = 4;
+
+            function run() {
+              $http(request).then(function success(response) {
+                if (response.data.ErrorCode === 36) {
+                  retries = retries - 1;
+
+                  if (retries <= 0) {
+                    // debugger;
+                    reject(new Error(response.data.Message));
+                  } else {
+                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
+                  }
+                } else if (response.data.ErrorCode > 1) {
+                  reject(new Error(response.data.Message));
+                } else {
+                  resolve(response);
+                }
+              }, function failure(response) {
+                // debugger;
+                reject(new Error(response.data.Message));
+              });
+            }
+
+            run();
+          });
+
+          return a;
+        })
+        .then(networkError)
+        .then(throttleCheck);
+
+      return promise;
+    }
+
+    function getEquipItemsRequest(token, membershipType, items) {
+      return {
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token,
+          'content-type': 'application/json; charset=UTF-8;'
+        },
+        data: {
+          characterId: items[0].owner,
+          membershipType: membershipType,
+          itemIds: _.pluck(items, 'id')
+        },
+        dataType: 'json',
+        withCredentials: true
+      };
+    }
+
 
     /************************************************************************************************************************************/
 
