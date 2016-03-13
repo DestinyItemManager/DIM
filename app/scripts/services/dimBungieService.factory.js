@@ -506,7 +506,8 @@
 
     /************************************************************************************************************************************/
 
-    function equipItems(items) {
+    // Returns a list of items that were successfully equipped
+    function equipItems(store, items) {
       var platform = dimState.active;
       var data = {
         token: null,
@@ -522,34 +523,35 @@
         .then(getMembershipPB)
         .then(addMembershipTypeToDataPB)
         .then(function() {
-          return getEquipItemsRequest(data.token, platform.type, items);
+          return {
+            method: 'POST',
+            url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
+            headers: {
+              'X-API-Key': apiKey,
+              'x-csrf': data.token,
+              'content-type': 'application/json; charset=UTF-8;'
+            },
+            data: {
+              characterId: store.id,
+              membershipType: platform.type,
+              itemIds: _.pluck(items, 'id')
+            },
+            dataType: 'json',
+            withCredentials: true
+          };
         })
         .then(retryOnThrottled)
         .then(networkError)
-        .then(throttleCheck);
+        .then(throttleCheck)
+        .then(function(response) {
+          return _.select(items, function(i) {
+            var item = _.find(response.data.Response.equipResults, {itemInstanceId: i.id});
+            return item && item.equipStatus === 1;
+          });
+        });
 
       return promise;
     }
-
-    function getEquipItemsRequest(token, membershipType, items) {
-      return {
-        method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token,
-          'content-type': 'application/json; charset=UTF-8;'
-        },
-        data: {
-          characterId: items[0].owner,
-          membershipType: membershipType,
-          itemIds: _.pluck(items, 'id')
-        },
-        dataType: 'json',
-        withCredentials: true
-      };
-    }
-
 
     /************************************************************************************************************************************/
 
