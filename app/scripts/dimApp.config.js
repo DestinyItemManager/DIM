@@ -73,7 +73,7 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        chrome.storage.sync.get('2016.03.13-v3.4.1', function(data) {
+        chrome.storage.sync.get('2016.03.13-v3.4.0', function(data) {
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
@@ -101,7 +101,7 @@
                   if($('#20160304v332')
                     .is(':checked')) {
                     chrome.storage.sync.set({
-                      "2016.03.13-v3.4.1": 1
+                      "2016.03.13-v3.4.0": 1
                     }, function(e) {});
                   }
                 }
