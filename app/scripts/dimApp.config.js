@@ -101,7 +101,7 @@
                   if($('#20160304v332')
                     .is(':checked')) {
                     chrome.storage.sync.set({
-                      "2016.03.04-v3.3.2": 1
+                      "2016.03.13-v3.4.0": 1
                     }, function(e) {});
                   }
                 }
