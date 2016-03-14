@@ -2,7 +2,7 @@
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
   <h1>Normalization Calculator</h1>
 
-  <p>All gear and their stats are normalized to light level 320.<br/>
+  <p>All gear and their stats are normalized to light level <input type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' />.<br/>
     The stats displayed are the BASE stats for the item.</p>
 
   <span class="link" ng-click="help=!help">Click here for more information</span>
@@ -29,7 +29,6 @@
     <option value='warlock'>Warlock</option>
   </select></p>
   <p>Armor: <select ng-model='normal.type' ng-change='normal.normalizeBuckets()' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select> (+{{normal.getBonus(normal.normalize, normal.type)}} bonus excluded)</p>
-<!--  <p>Normalize stats to light level: <input type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></p>-->
 
   <div ng-repeat="(type, items) in normal.ranked[normal.type]">
     <h3 ng-bind="type"></h3>
