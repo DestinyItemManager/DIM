@@ -1,4 +1,4 @@
-# Next
+# 3.4.0
 
 * Moving and equipping items, especially many at a time (loadouts) is faster.
 * When you save a loadout, it is now scoped to the platform it's created on, rather than applying across accounts. Loadouts created on one account used to show on both accounts, but wouldn't work on the wrong account.
