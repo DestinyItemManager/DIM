@@ -385,7 +385,7 @@
         equipRequiredLevel: item.equipRequiredLevel,
         talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
         objectives: buildObjectives(item, objectiveDef, itemDef),
-        maxStackSize: itemDef.maxStackSize,
+        maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),

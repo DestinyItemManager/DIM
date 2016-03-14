@@ -1,3 +1,7 @@
+# 3.4.1
+
+* Bugfix to address an infinite loop while moving emotes.
+
 # 3.4.0
 
 * Moving and equipping items, especially many at a time (loadouts) is faster.
