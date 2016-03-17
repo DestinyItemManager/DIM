@@ -1,7 +1,7 @@
 {
   "name": "dim",
   "description": "An item manager for Destiny.",
-  "version": "3.3.3",
+  "version": "3.4.1",
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "repository": {
     "type": "git",
@@ -23,8 +23,10 @@
     "components-font-awesome": "~4.4.0",
     "jquery": "~2",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
-    "ngDialog": "~0.3.x",
-    "underscore": "~1.8.x"
+    "ngDialog": "~0.5.x",
+    "underscore": "~1.8.x",
+    "angularjs-slider": "~2.10.2",
+    "angular-aria": "~1.5.0"
   },
   "resolutions": {
     "angular": "1.4.x"

@@ -73,17 +73,17 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        chrome.storage.sync.get('2016.03.04-v3.3.2', function(data) {
+        chrome.storage.sync.get('2016.03.13-v3.4.0', function(data) {
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
                 type: 'info',
-                title: 'DIM v3.3.2 Released',
+                title: 'DIM v3.4.1 Released',
                 body: [
-                  '<p>It\'s our cake-day!  Let us celebrate by putting out another feature rich update.',
-                  '<p>We\'ve added autocomplete to the search box, and added new search terms. You can lock/unlock items from their details screen.  You can view your character stats in the header now.  Finally, you can copy a modified loadout to easily save variants.',
-                  '<p>Our <a href="https://www.reddit.com/r/DestinyItemManager/comments/48wof0/v332_released_happy_cake_day/" target="_blank">changelog</a> is available if you would like to know more.',
-                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.3.2',
+                  "<p>You've been asking about it since DIM was first released, and it's finally here: you can now move partial quantities of stacked items! Hold shift when dragging, hover over the drop point, or use the popup to choose how much to move. New \"take\" and \"split\" commands and the ability to add consumables to your loadouts rounds out the new functionality.</p>",
+                  '<p>On top of that, DIM has gotten faster! You should notice transfers, especially with loadouts, zipping along more smoothly now.</p>',
+                  '<p>Our <a href="https://github.com/DestinyItemManager/DIM/blob/dev/CHANGELOG.md" target="_blank">changelog</a> is available if you would like to know more.',
+                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.4.1',
                   '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><i<i class="fa fa-reddit fa-2x"></i></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>',
                   '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160304v332" type="checkbox"> <label for="20160304v332">Hide This Popup</label></p>'
                 ].join(''),
@@ -101,7 +101,7 @@
                   if($('#20160304v332')
                     .is(':checked')) {
                     chrome.storage.sync.set({
-                      "2016.03.04-v3.3.2": 1
+                      "2016.03.13-v3.4.0": 1
                     }, function(e) {});
                   }
                 }
@@ -128,8 +128,12 @@
       }
     ])
     .config(["rateLimiterConfigProvider", function(rateLimiterConfigProvider) {
-      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1250);
-      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1250);
+      // Bungie's API will start throttling an API if it's called more than once per second. It does this
+      // by making responses take 2s to return, not by sending an error code or throttling response. Choosing
+      // our throttling limit to be 1 request every 1100ms lets us achieve best throughput while accounting for
+      // what I assume is clock skew between Bungie's hosts when they calculate a global rate limit.
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1100);
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1100);
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("rateLimiterInterceptor");

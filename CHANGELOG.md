@@ -1,4 +1,20 @@
-# Next
+# 3.4.1
+
+* Bugfix to address an infinite loop while moving emotes.
+
+# 3.4.0
+
+* Moving and equipping items, especially many at a time (loadouts) is faster.
+* When you save a loadout, it is now scoped to the platform it's created on, rather than applying across accounts. Loadouts created on one account used to show on both accounts, but wouldn't work on the wrong account.
+* You can now move partial amounts of materials. There's a slider in the move popup, and holding "shift" or hovering over the drop area will pop up a dialog for draggers. You can choose to move more than one stack's worth of an item, up to the total amount on a character.
+* New commands for materials to consolidate (move them all to this character) and distribute (divide evenly between all characters).
+* Loadouts can now contain materials and consumables. Add or remove 5 at a time by holding shift while clicking. When the loadout is applied, we'll make sure your character has *at least* that much of the consumable.
+* Loadouts can now contain 10 weapons or armor of a single type, not just 9.
+* When making space for a loadout, we'll prefer putting extra stuff in the vault rather than putting it on other characters. We'll also prefer moving aside non-equipped items of low rarity and light level.
+* The is:engram search filter actually works.
+* Fixed an error where DIM would not replace an equipped item with an instance of the same item hash. This would cause an error with loadouts and moving items. [448](https://github.com/DestinyItemManager/DIM/issues/448)
+* Loadouts can now display more than one line of items, for you mega-loadout lovers.
+* Items in the loadout editor are sorted according to your sort preference.
 
 # 3.3.3
 

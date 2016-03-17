@@ -92,30 +92,23 @@
       if (vm.locking) {
         return;
       }
-      var storeId = item.owner;
-      var storePromise;
 
-      if (storeId === 'vault') {
-        storePromise = $q.when(storeService.getStores())
-          .then(function(stores) {
-            return stores[0];
-          });
+      var store;
+      if (item.owner === 'vault') {
+        store = storeService.getStores()[0];
       } else {
-        storePromise = storeService.getStore(item.owner);
+        store = storeService.getStore(item.owner);
       }
 
       vm.locking = true;
 
-      storePromise
-        .then(function(store) {
-          return itemService.setLockState(item, store, !item.locked)
-            .then(function(lockState) {
-              item.locked = lockState;
-              $rootScope.$broadcast('dim-filter-invalidate');
-            })
-            .finally(function() {
-              vm.locking = false;
-            });
+      itemService.setLockState(item, store, !item.locked)
+        .then(function(lockState) {
+          item.locked = lockState;
+          $rootScope.$broadcast('dim-filter-invalidate');
+        })
+        .finally(function() {
+          vm.locking = false;
         });
     };
 

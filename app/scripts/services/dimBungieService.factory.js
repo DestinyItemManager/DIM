@@ -4,16 +4,14 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
+  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
     var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
     var charactersPromise = null;
-
-    //var transferRateLimit = dimRateLimit.rateLimit(transfer, 3000);
 
     $rootScope.$on('dim-active-platform-updated', function(event, args) {
       tokenPromise = null;
@@ -387,7 +385,7 @@
 
     /************************************************************************************************************************************/
 
-    function transfer(item, store) {
+    function transfer(item, store, amount) {
       var platform = dimState.active;
       var data = {
         token: null,
@@ -406,7 +404,7 @@
           return store;
         })
         .then(function(store) {
-          return getTransferRequest(data.token, platform.type, item, store);
+          return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(function(request) {
           return $q(function(resolve, reject) {
@@ -443,7 +441,7 @@
       return promise;
     }
 
-    function getTransferRequest(token, membershipType, item, store) {
+    function getTransferRequest(token, membershipType, item, store, amount) {
       return {
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
@@ -453,12 +451,12 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,
-          stackSize: (_.has(item, 'moveAmount') && item.moveAmount > 0) ? item.moveAmount : item.amount,
-          transferToVault: (store.id === 'vault')
+          stackSize: amount || item.amount,
+          transferToVault: store.isVault
         },
         dataType: 'json',
         withCredentials: true
@@ -609,7 +607,7 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           state: lockState

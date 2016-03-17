@@ -16,24 +16,49 @@
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
+    // Prototype for Store objects - add methods to this to add them to all
+    // stores.
+    var StoreProto = {
+      // Get the total amount of this item in the store, across all stacks.
+      amountOfItem: function(item) {
+        return sum(_.where(this.items, { hash: item.hash }), 'amount');
+      },
+      // How much of items like this item can fit in this store?
+      capacityForItem: function(item) {
+        return (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
+      }
+    };
+
     var service = {
       getStores: getStores,
+      reloadStores: reloadStores,
       getStore: getStore,
-      updateStores: updateStores,
-      setHeights: setHeights,
       getStatsData: getStatsData,
-      getBonus: getBonus
+      getBonus: getBonus,
+      getVault: getStore.bind(null, 'vault'),
+      updateCharacters: updateCharacters,
+      setHeights: setHeightsAsync,
+      createItemIndex: createItemIndex
     };
+
+    $rootScope.$on('dim-settings-updated', function(setting) {
+      if (_.has(setting, 'characterOrder')) {
+        sortStores(_stores).then(function(stores) {
+          _stores = stores;
+        });
+      }
+    });
 
     return service;
 
-    function updateStores(dimStores) {
+    // Update the high level character information for all the stores
+    // (level, light, int/dis/str, etc.). This does not update the
+    // items in the stores - to do that, call reloadStores.
+    function updateCharacters() {
       return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
-        _.each(dimStores, function(dStore) {
-          if (dStore.id !== 'vault') {
-            var bStore = _.find(bungieStores, function(bStore) {
-              return dStore.id === bStore.id;
-            });
+        _.each(_stores, function(dStore) {
+          if (!dStore.isVault) {
+            var bStore = _.findWhere(bungieStores, { id: dStore.id });
 
             dStore.level = bStore.base.characterLevel;
             dStore.percentToNextLevel = bStore.base.percentToNextLevel;
@@ -43,7 +68,7 @@
             dStore.stats = getStatsData(bStore.base.characterBase);
           }
         });
-        return dimStores;
+        return _stores;
       });
     }
 
@@ -51,6 +76,12 @@
       return _index++;
     }
 
+    function setHeightsAsync() {
+      setTimeout(setHeights, 0);
+    }
+
+    // Equalize the heights of the various rows of items.
+    // TODO: replace with flexbox
     function setHeights() {
       function outerHeight(el) {
         //var height = el.offsetHeight;
@@ -130,203 +161,148 @@
       setHeight('.general');
     }
 
-    function getStores(getFromBungie, withOrder) {
-      if (!getFromBungie && !!withOrder) {
-        return settings.getSetting('characterOrder')
-          .then(function(characterOrder) {
-            if (characterOrder === 'mostRecent') {
-              return _.sortBy(_stores, 'lastPlayed').reverse();
-            } else {
-              return _.sortBy(_stores, 'id');
+    function sortStores(stores) {
+      return settings.getSetting('characterOrder')
+        .then(function(characterOrder) {
+          if (characterOrder === 'mostRecent') {
+            return _.sortBy(stores, 'lastPlayed').reverse();
+          } else {
+            return _.sortBy(stores, 'id');
+          }
+        });
+    }
+
+    function getStores() {
+      return _stores;
+    }
+
+    // Returns a promise for a fresh view of the stores and their items.
+    function reloadStores() {
+      return dimBungieService.getStores(dimPlatformService.getActive())
+        .then(function(rawStores) {
+          var glimmer, marks;
+
+          return $q.all(rawStores.map(function(raw) {
+            var store;
+            var items = [];
+            if (!raw) {
+              return;
             }
-          });
-      } else if (!getFromBungie && _.isUndefined(withOrder)) {
-        return _stores;
-      } else {
-        var promise = dimBungieService.getStores(dimPlatformService.getActive())
-          .then(function(stores) {
-            _stores.splice(0);
-            var asyncItems = [];
-            var glimmer, marks;
 
-            _.each(stores, function(raw) {
-              var store;
-              var items = [];
-
-              if (raw.id === 'vault') {
-                store = {
-                  'id': 'vault',
-                  'lastPlayed': '2005-01-01T12:00:01Z',
-                  'icon': '',
-                  'items': [],
-                  legendaryMarks: marks,
-                  glimmer: glimmer,
-                  'bucketCounts': {},
-                  hasExotic: function(type) {
-                    var predicate = {
-                      'tier': dimItemTier.exotic,
-                      'type': type
-                    };
-
-                    return _.chain(items)
-                      .where(predicate)
-                      .value();
-                  },
-                  getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
-                  },
-                  canEquipExotic: function(item) {
-                    return this.getTypeCount(item);
-                  }
-                };
-
-                _.each(raw.data.buckets, function(bucket) {
-                  if (bucket.bucketHash === 3003523923)
-                    store.bucketCounts.Armor = _.size(bucket.items);
-                  if (bucket.bucketHash === 138197802)
-                    store.bucketCounts.General = _.size(bucket.items);
-                  if (bucket.bucketHash === 4046403665)
-                    store.bucketCounts.Weapons = _.size(bucket.items);
-
-                  _.each(bucket.items, function(item) {
-                    item.bucket = bucket.bucketHash;
-                  });
-
-                  items = _.union(items, bucket.items);
-                });
-              } else {
-
-
-                try {
-                  glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
-                  marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
-                } catch (e) {
-                  glimmer = 0;
-                  marks = 0;
+            if (raw.id === 'vault') {
+              store = angular.extend(Object.create(StoreProto), {
+                id: 'vault',
+                lastPlayed: '2005-01-01T12:00:01Z',
+                icon: '',
+                items: [],
+                legendaryMarks: marks,
+                glimmer: glimmer,
+                bucketCounts: {},
+                isVault: true,
+                // Vault has different capacity rules
+                capacityForItem: function(item) {
+                  return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
                 }
+              });
 
-                store = {
-                  id: raw.id,
-                  icon: raw.character.base.emblemPath,
-                  lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                  background: raw.character.base.backgroundPath,
-                  level: raw.character.base.characterLevel,
-                  powerLevel: raw.character.base.characterBase.powerLevel,
-                  stats: getStatsData(raw.character.base.characterBase),
-                  class: getClass(raw.character.base.characterBase.classType),
-                  gender: getGender(raw.character.base.characterBase.genderType),
-                  race: getRace(raw.character.base.characterBase.raceHash),
-                  percentToNextLevel: raw.character.base.percentToNextLevel,
-                  hasExotic: function(type, equipped) {
-                    var predicate = {
-                      'tier': dimItemTier.exotic,
-                      'type': type
-                    };
+              _.each(raw.data.buckets, function(bucket) {
+                if (bucket.bucketHash === 3003523923)
+                  store.bucketCounts.Armor = _.size(bucket.items);
+                if (bucket.bucketHash === 138197802)
+                  store.bucketCounts.General = _.size(bucket.items);
+                if (bucket.bucketHash === 4046403665)
+                  store.bucketCounts.Weapons = _.size(bucket.items);
 
-                    if (!_.isUndefined(equipped)) {
-                      predicate.equipped = equipped;
-                    }
-
-                    return _.chain(this.items)
-                      .where(predicate)
-                      .value();
-                  },
-                  getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
-                  },
-                  canEquipExotic: function(itemType) {
-                    var types = _.chain(dimCategory)
-                      .pairs()
-                      .find(function(cat) {
-                        return _.some(cat[1],
-                          function(type) {
-                            return (type == itemType);
-                          }
-                        );
-                      })
-                      .value()[1];
-
-                    return _.size(_.reduce(types, function(memo, type) {
-                      return memo || this.hasExotic(type, true);
-                    }, false, this)) === 0;
-                  }
-                };
-
-                _.each(raw.data.buckets, function(bucket) {
-                  _.each(bucket, function(pail) {
-                    _.each(pail.items, function(item) {
-                      item.bucket = pail.bucketHash;
-                    });
-
-                    items = _.union(items, pail.items);
-                  });
+                _.each(bucket.items, function(item) {
+                  item.bucket = bucket.bucketHash;
                 });
 
-                if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
-                  if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
-                    _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
-                      items = _.union(items, pail.items);
-                    });
-                  }
+                items = _.union(items, bucket.items);
+              });
+            } else {
 
-                }
 
+              try {
+                glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+              } catch (e) {
+                glimmer = 0;
+                marks = 0;
               }
 
-              var i = getItems(store.id, items)
-                .then(function(items) {
-                  store.items = items;
-                  _stores.push(store);
-                  return store;
+              store = angular.extend(Object.create(StoreProto), {
+                id: raw.id,
+                icon: raw.character.base.emblemPath,
+                lastPlayed: raw.character.base.characterBase.dateLastPlayed,
+                background: raw.character.base.backgroundPath,
+                level: raw.character.base.characterLevel,
+                powerLevel: raw.character.base.characterBase.powerLevel,
+                stats: getStatsData(raw.character.base.characterBase),
+                class: getClass(raw.character.base.characterBase.classType),
+                gender: getGender(raw.character.base.characterBase.genderType),
+                race: getRace(raw.character.base.characterBase.raceHash),
+                percentToNextLevel: raw.character.base.percentToNextLevel,
+                isVault: false
+              });
+
+              _.each(raw.data.buckets, function(bucket) {
+                _.each(bucket, function(pail) {
+                  _.each(pail.items, function(item) {
+                    item.bucket = pail.bucketHash;
+                  });
+
+                  items = _.union(items, pail.items);
                 });
+              });
 
-              asyncItems.push(i);
+              if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
+                if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
+                  _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+                    items = _.union(items, pail.items);
+                  });
+                }
+              }
+            }
+
+            return getItems(store.id, items).then(function(items) {
+              store.items = items;
+              return store;
             });
+          }));
+        })
+        .then(function(stores) {
+          return sortStores(stores);
+        })
+        .then(function(stores) {
+          _stores = stores;
 
-            return $q.all(asyncItems);
-          })
-          .then(function() {
-            var stores = _stores;
-
-            return $q(function(resolve, reject) {
-              settings.getSetting('characterOrder')
-                .then(function(characterOrder) {
-                  if (characterOrder === 'mostRecent') {
-                    resolve(_.sortBy(stores, 'lastPlayed').reverse());
-                  } else {
-                    resolve(_.sortBy(stores, 'id'));
-                  }
-                });
-            });
-          })
-          .then(function(stores) {
-            $rootScope.$broadcast('dim-stores-updated', {
-              stores: stores
-            });
-
-            return stores;
+          $rootScope.$broadcast('dim-stores-updated', {
+            stores: stores
           });
+          setHeightsAsync();
 
-        return promise;
-      }
+          return stores;
+        });
     }
 
     function getStore(id) {
-      var store = _.find(_stores, function(store) {
-        return store.id === id;
-      });
+      return _.find(_stores, { id: id });
+    }
 
-      return $q.when(store);
+    var idTracker = {};
+
+    // Set an ID for the item that should be unique across all items
+    function createItemIndex(item) {
+      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+      var index = item.hash + '-';
+      if (item.id === '0') {
+        index = index + item.amount;
+        idTracker[index] = (idTracker[index] || 0) + 1;
+        index = index + '-' + idTracker[index];
+      } else {
+        index = index + item.id;
+      }
+      return index;
     }
 
     function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
@@ -388,19 +364,10 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-      var index = item.itemHash + '-';
-      if (item.itemInstanceId === '0') {
-        index = index + getNextIndex();
-      } else {
-        index = index + item.itemInstanceId;
-      }
-
       var talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
           stats = buildStats(item, itemDef, statDef, talentGrid, itemType);
 
       var createdItem = {
-        index: index,
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -424,7 +391,7 @@
         equipRequiredLevel: item.equipRequiredLevel,
         talentGrid: talentGrid,
         objectives: buildObjectives(item, objectiveDef, itemDef),
-        maxStackSize: itemDef.maxStackSize,
+        maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),
@@ -437,6 +404,7 @@
         weaponClassName: weaponClassName,
         classified: itemDef.classified
       };
+      createdItem.index = createItemIndex(createdItem);
 
       // More objectives properties
       if (createdItem.objectives) {
@@ -451,20 +419,6 @@
       }
 
       return createdItem;
-    }
-
-    // Some utility functions missing from underscore
-    function sum(list, summer) {
-      return _.reduce(list, function(memo, val, index) {
-        return memo + _.iteratee(summer)(val, index);
-      }, 0);
-    }
-
-    // Count the number of "true" values
-    function count(list, predicate) {
-      return sum(list, function(item, index) {
-        return _.iteratee(predicate)(item, index) ? 1 : 0;
-      });
     }
 
     function buildTalentGrid(item, talentDefs, progressDefs, perkDefs) {
@@ -822,6 +776,7 @@
     }
 
     function getItems(owner, items) {
+      idTracker = {};
       return $q.all([
         dimItemDefinitions,
         dimItemBucketDefinitions,

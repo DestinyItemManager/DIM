@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreItem', StoreItem);
 
-  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService'];
+  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
-  function StoreItem(dimStoreService, ngDialog, dimLoadoutService) {
+  function StoreItem(dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -49,6 +49,28 @@
           .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
       });
 
+      var dragHelp = document.getElementById('drag-help');
+
+      if (vm.item.maxStackSize > 1) {
+        element.on('dragstart', function(e) {
+          $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
+          if (vm.item.amount > 1) {
+            dragHelp.classList.remove('drag-help-hidden');
+          }
+        });
+        element.on('dragend', function() {
+          dragHelp.classList.add('drag-help-hidden');
+          delete $rootScope.dragItem;
+        });
+        element.on('drag', function(e) {
+          if (e.shiftKey) {
+            dragHelp.classList.add('drag-shift-activated');
+          } else {
+            dragHelp.classList.remove('drag-shift-activated');
+          }
+        });
+      }
+
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
 
@@ -75,7 +97,7 @@
               dialogResult = null;
             });
           } else {
-            dimLoadoutService.addItemToLoadout(item);
+            dimLoadoutService.addItemToLoadout(item, e);
           }
         }
       };
@@ -190,11 +212,5 @@
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       processSettings(vm, arg);
     });
-
-    vm.itemClicked = function clicked(item) {
-      $rootScope.$broadcast('dim-store-item-clicked', {
-        item: item
-      });
-    };
   }
 })();

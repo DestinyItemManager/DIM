@@ -16,8 +16,8 @@
         '<div ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}"',
         '  ng-class="{ ',
         '    condensed: vm.condensed,',
-        "    guardian: store.id !== 'vault',",
-        "    vault: store.id === 'vault',",
+        "    guardian: !store.isVault,",
+        "    vault: store.isVault,",
         "    'hide-filtered': vm.hideFilteredItems",
         '  }">',
         '  <div dim-store-heading store-data="store"></div>',
@@ -62,13 +62,12 @@
     });
 
     if ($scope.$root.activePlatformUpdated) {
-      loadingTracker.addPromise($q.when(dimStoreService.getStores(true)));
+      loadingTracker.addPromise(dimStoreService.reloadStores());
       $scope.$root.activePlatformUpdated = false;
     }
 
     $scope.$on('dim-active-platform-updated', function(e, args) {
-      var promise = $q.when(dimStoreService.getStores(true));
-      loadingTracker.addPromise(promise);
+      loadingTracker.addPromise(dimStoreService.reloadStores());
     });
   }
 })();
