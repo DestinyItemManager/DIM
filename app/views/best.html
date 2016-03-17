@@ -4,7 +4,7 @@
 
   <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'></p>
   <p ng-show='normal.doNormalize'>Estimate stats at light level <input type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></p>
-  <p>The stats displayed are the BASE stats for the item.</p>
+  <p>The stats displayed are the <b>base</b> stats for the item.</p>
 
   <span class="link" ng-click="help=!help">Click here for more information</span>
 
@@ -17,7 +17,10 @@
       <li>The 'Stat roll quality' is where that item falls between the minimum and maximum total at that light level.</li>
       <li>The 'Stat roll quality' never changes as the item is infused to higher light levels.</li>
       <li>Generally, try to prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
-      <li>Clicking on an item will show you its perks. The infusion calculator also works in this view.</li>
+      <li>Just because something has a low quality stat roll, does not be mean you should toss it.</li>
+      <li>At 310 light, it's possible to hit tier 11 with an average of greater than 87% gear.</li>
+      <li>At 320 light, it's possible to hit tier 11 with an average of greater than 59% gear.</li>
+      <li>Clicking on an item will show you its perks, the infusion calculator, and move commands.</li>
       <li>Pure roll items generally are worse than split rolls.</li>
     </ul>
   </div>
