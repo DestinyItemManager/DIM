@@ -192,28 +192,27 @@
       },
       // get Items for infusion
       getItems: function() {
+        var stores = dimStoreService.getStores();
+        var allItems = [];
 
-        return dimStoreService.getStores(false, true).then(function(stores) {
-          var allItems = [];
+        // all stores
+        _.each(stores, function(store, id) {
 
-          // all stores
-          _.each(stores, function(store, id) {
-
-            // all armor in store
-            var items = _.filter(store.items, function(item) {
-              return item.primStat &&
-                item.primStat.statHash === 3897883278 && // has defence hash
-                ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.tier === 'Exotic')) &&
-                item.stats
-            });
-
-            allItems = allItems.concat(items);
+          // all armor in store
+          var items = _.filter(store.items, function(item) {
+            return item.primStat &&
+              item.primStat.statHash === 3897883278 && // has defence hash
+              ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.tier === 'Exotic')) &&
+              item.stats
           });
 
-          buckets = initBuckets(allItems);
-          vm.normalizeBuckets();
+          allItems = allItems.concat(items);
+        });
 
-          //playground:
+        buckets = initBuckets(allItems);
+        vm.normalizeBuckets();
+
+        //playground:
 
 //          console.log(buckets)
 //          console.log(bestArmor)
@@ -227,7 +226,6 @@
 ////          vm.combinations = getIterations(bestArmor);
 //console.timeEnd('elapsed');
 ////          console.log(vm.combinations.length)
-        });
       }
     });
 

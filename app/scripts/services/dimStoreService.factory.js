@@ -414,9 +414,9 @@
         }));
       }
 
-      if(createdItem.hash === 2150667281) {
-      console.log(createdItem)
-      }
+//      if(createdItem.hash === 2150667281) {
+//      console.log(createdItem)
+//      }
 
       return createdItem;
     }
@@ -644,9 +644,9 @@
         total += stat.base || 0;
       });
 
-      if(total < mm.min) {
-        console.log(who, stats, light, mm)
-      }
+//      if(total < mm.min) {
+//        console.log(who, stats, light, mm)
+//      }
 
       return Math.round(((total - mm.min) / (mm.max - mm.min))*100);
     }
