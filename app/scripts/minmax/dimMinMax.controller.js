@@ -190,6 +190,9 @@
         value = value < 0 ? 0 : value;
         return 'hsl(' + (value/100*120).toString(10) + ',90%,30%)';
       },
+      getStore: function(id) {
+        return dimStoreService.getStore(id);
+      },
       // get Items for infusion
       getItems: function() {
         var stores = dimStoreService.getStores();

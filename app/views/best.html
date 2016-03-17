@@ -43,7 +43,7 @@
             <small ng-bind="item.normalStats[$index].base"></small>
           </div>
         </div>
-        <div dim-store-item item-data="item"></div>
+        <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
         <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;"><small style="display:block;margin-left: 5px" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small></div>
       </div>
     </span>
