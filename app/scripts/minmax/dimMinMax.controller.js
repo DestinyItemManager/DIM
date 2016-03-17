@@ -9,43 +9,44 @@
   function dimMinMaxCtrl($scope, $q, loadingTracker, dimStoreService, dimItemService, ngDialog, dimWebWorker, dimLoadoutService) {
     var vm = this, buckets = [];
 
-    function getBestArmor(bucket) {
-      var armor = {};
-      for(var i in bucket) {
-        var best = [
-          _.max(bucket[i], function(o){return  (_.findWhere(o.stats, {statHash: 144602215}) || {value: 0}).value;}), // best intellect
-          _.max(bucket[i], function(o){return (_.findWhere(o.stats, {statHash: 1735777505}) || {value: 0}).value;}), // best discipline
-          _.max(bucket[i], function(o){return (_.findWhere(o.stats, {statHash: 4244567218}) || {value: 0}).value;}), // best strength
-          _.max(bucket[i], function(o){return  (_.findWhere(o.stats, {statHash: 144602215}) || {value: 0}).value + (_.findWhere(o.stats, {statHash: 1735777505}) || {value: 0}).value;}), // best int + dis
-          _.max(bucket[i], function(o){return  (_.findWhere(o.stats, {statHash: 144602215}) || {value: 0}).value + (_.findWhere(o.stats, {statHash: 4244567218}) || {value: 0}).value;}), // best int + str
-          _.max(bucket[i], function(o){return (_.findWhere(o.stats, {statHash: 1735777505}) || {value: 0}).value + (_.findWhere(o.stats, {statHash: 4244567218}) || {value: 0}).value;}) // best dis + str
-        ];
-        armor[i] = _.uniq(best);
-      }
-      return armor;
-    }
-
-    function doRankArmor(bucket, best) {
-      var armor = {};
-      for(var i in bucket) {
-        armor[i] = {
-          Best: best[i],
-          Other: _.difference(bucket[i], best[i])
-        };
-      }
-      return armor;
-    }
+//    function getBestArmor(bucket) {
+//      var armor = {};
+//      for(var i in bucket) {
+//        var best = [
+////          _.max(bucket[i], function(o){return  (_.findWhere(o.normalStats, {statHash: 144602215}) || {base: 0}).base;}), // best intellect
+////          _.max(bucket[i], function(o){return (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}).base;}), // best discipline
+////          _.max(bucket[i], function(o){return (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}).base;}), // best strength
+//          _.max(bucket[i], function(o){return  (_.findWhere(o.normalStats, {statHash: 144602215}) || {base: 0}).base + (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}).base;}), // best int + dis
+//          _.max(bucket[i], function(o){return  (_.findWhere(o.normalStats, {statHash: 144602215}) || {base: 0}).base + (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}).base;}), // best int + str
+//          _.max(bucket[i], function(o){return (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}).base + (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}).base;}) // best dis + str
+//        ];
+//        armor[i] = _.uniq(best);
+//      }
+//      return armor;
+//    }
+//
+//    function doRankArmor(bucket, best) {
+//      var armor = {};
+//      for(var i in bucket) {
+//        armor[i] = {
+//          All: bucket[i]
+////          Best: best[i],
+////          Other: _.difference(bucket[i], best[i])
+//        };
+//      }
+//      return armor;
+//    }
 
     function getBuckets(items) {
       // load the best items
       return {
-        helmet: items.filter(function(item) { return item.bucket === 3448274439; }),
-        gauntlets: items.filter(function(item) { return item.bucket === 3551918588; }),
-        chest: items.filter(function(item) { return item.bucket === 14239492; }),
-        leg: items.filter(function(item) { return item.bucket === 20886954; }),
-        classItem: items.filter(function(item) { return item.bucket === 1585787867; }),
-        ghost: items.filter(function(item) { return item.bucket === 4023194814; }),
-        artifact: items.filter(function(item) { return item.bucket === 434908299; })
+        helmet: items.filter(function(item) { return item.type === 'Helmet'; }),
+        gauntlets: items.filter(function(item) { return item.type === 'Gauntlets'; }),
+        chest: items.filter(function(item) { return item.type === 'Chest'; }),
+        leg: items.filter(function(item) { return item.type === 'Leg'; }),
+        classItem: items.filter(function(item) { return item.type === 'ClassItem'; }),
+        ghost: items.filter(function(item) { return item.type === 'Ghost'; }),
+        artifact: items.filter(function(item) { return item.type === 'Artifact'; })
       };
     }
 
@@ -119,6 +120,7 @@
       return iterations;
     }
 
+
     function initBuckets(items) {
       return {
         titan: getBuckets(items.filter(function(item) { return item.classType === 0 || item.classType === 3; })),
@@ -130,7 +132,8 @@
     angular.extend(vm, {
       active: 'warlock',
       normalize: 320,
-      type: 'helmet',
+      doNormalize: false,
+      type: 'Helmets',
       showBlues: false,
       showExotics: true,
       combinations: null,
@@ -144,50 +147,57 @@
       normalizeBuckets: function() {
         function normalizeStats(item, mod) {
           item.normalStats = _.map(item.stats, function(stat) {
-            return {base: (stat.base*vm.normalize/item.primStat.value).toFixed(0)};
+            return {
+              statHash: stat.statHash,
+              base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0)
+            };
           });
           return item;
         }
 
         // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
         var normalized = {
-          helmet: _.flatten(buckets[vm.active].helmet.map(function(item) {
+          'Helmets': _.flatten(buckets[vm.active].helmet.map(function(item) {
             return normalizeStats(item);
           }), true),
-          gauntlets: _.flatten(buckets[vm.active].gauntlets.map(function(item) {
+          'Gauntlets': _.flatten(buckets[vm.active].gauntlets.map(function(item) {
             return normalizeStats(item);
           }), true),
-          chest: _.flatten(buckets[vm.active].chest.map(function(item) {
+          'Chest Armor': _.flatten(buckets[vm.active].chest.map(function(item) {
             return normalizeStats(item);
           }), true),
-          leg: _.flatten(buckets[vm.active].leg.map(function(item) {
+          'Leg Armor': _.flatten(buckets[vm.active].leg.map(function(item) {
             return normalizeStats(item);
           }), true),
-          classItem: _.flatten(buckets[vm.active].classItem.map(function(item) {
+          'Class Items': _.flatten(buckets[vm.active].classItem.map(function(item) {
             return normalizeStats(item);
           }), true),
-          ghost: _.flatten(buckets[vm.active].ghost.map(function(item) {
+          'Ghosts': _.flatten(buckets[vm.active].ghost.map(function(item) {
             return normalizeStats(item);
           }), true),
-          artifact: _.flatten(buckets[vm.active].artifact.map(function(item) {
+          'Artifacts': _.flatten(buckets[vm.active].artifact.map(function(item) {
             return normalizeStats(item);
           }), true)
         };
 
-        vm.ranked = doRankArmor(normalized, getBestArmor(normalized));
+        vm.ranked = normalized;//doRankArmor(normalized, getBestArmor(normalized));
       },
       filterFunction: function(element) {
         return element.stats.STAT_INTELLECT.tier >= vm.filter.int && element.stats.STAT_DISCIPLINE.tier >= vm.filter.dis && element.stats.STAT_STRENGTH.tier >= vm.filter.str;
       },
       getBonus: dimStoreService.getBonus,
+      getColor: function(value) {
+        value = value < 0 ? 0 : value;
+        return 'hsl(' + (value/100*120).toString(10) + ',90%,30%)';
+      },
       // get Items for infusion
       getItems: function() {
 
-        return dimStoreService.getStores(true).then(function(stores) {
+        return dimStoreService.getStores(false, true).then(function(stores) {
           var allItems = [];
 
           // all stores
-          _.each(stores, function(store, id, list) {
+          _.each(stores, function(store, id) {
 
             // all armor in store
             var items = _.filter(store.items, function(item) {

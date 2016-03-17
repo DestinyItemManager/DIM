@@ -396,7 +396,8 @@
         index = index + item.itemInstanceId;
       }
 
-      var talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
+      var talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
+          stats = buildStats(item, itemDef, statDef, talentGrid, itemType);
 
       var createdItem = {
         index: index,
@@ -415,7 +416,8 @@
         complete: item.isGridComplete,
         amount: item.stackSize,
         primStat: item.primaryStat,
-        stats: buildStats(item, itemDef, statDef, talentGrid, itemType),
+        stats: stats,
+        quality: getQualityRating(stats, item.primaryStat, itemType, itemDef.itemName),
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
@@ -621,11 +623,86 @@
       });
     }
 
+    function getQualityRating(stats, light, type, who) {
+      if(!stats) {
+        return null;
+      }
+
+      type = type.toLowerCase();
+      light = light.value;
+      var mm = null;
+      switch(type) {
+        case 'helmet':
+          mm = light < 260 ? {min: 54, max: 64}:
+               light < 280 ? {min: 58, max: 69}:
+               light < 290 ? {min: 62, max: 75}:
+               light < 300 ? {min: 64, max: 77}:
+               light < 310 ? {min: 66, max: 80}:
+               light < 320 ? {min: 70, max: 83}: {min: 74, max: 86};
+          break;
+        case 'gauntlets':
+          mm = light < 260 ? {min: 48, max: 57}:
+               light < 280 ? {min: 52, max: 62}:
+               light < 290 ? {min: 56, max: 67}:
+               light < 300 ? {min: 58, max: 69}:
+               light < 310 ? {min: 62, max: 72}:
+               light < 320 ? {min: 62, max: 74}: {min: 66, max: 77};
+          break;
+        case 'chest':
+          mm = light < 260 ? {min: 70, max: 85}:
+               light < 280 ? {min: 76, max: 92}:
+               light < 290 ? {min: 82, max: 99}:
+               light < 300 ? {min: 84, max: 103}:
+               light < 310 ? {min: 88, max: 106}:
+               light < 320 ? {min: 92, max: 110}: {min: 96, max: 114};
+          break;
+        case 'leg':
+          mm = light < 260 ? {min: 64, max: 79}:
+               light < 280 ? {min: 68, max: 86}:
+               light < 290 ? {min: 74, max: 92}:
+               light < 300 ? {min: 76, max: 96}:
+               light < 310 ? {min: 80, max: 99}:
+               light < 320 ? {min: 84, max: 102}: {min: 88, max: 106};
+          break;
+        case 'classitem':
+        case 'ghost':
+          mm = light < 260 ? {min: 28, max: 36}:
+               light < 280 ? {min: 30, max: 39}:
+               light < 290 ? {min: 34, max: 42}:
+               light < 300 ? {min: 34, max: 43}:
+               light < 310 ? {min: 36, max: 45}:
+               light < 320 ? {min: 38, max: 46}: {min: 40, max: 48};
+          break;
+        case 'artifact':
+          mm = light < 260 ? {min: 40, max: 63}:
+               light < 280 ? {min: 43, max: 68}:
+               light < 290 ? {min: 46, max: 73}:
+               light < 300 ? {min: 48, max: 76}:
+               light < 310 ? {min: 50, max: 78}:
+               light < 320 ? {min: 53, max: 81}: {min: 56, max: 84};
+          break;
+        default:
+          return;
+      }
+
+      var total = 0;
+      stats.forEach(function(stat) {
+        total += stat.base || 0;
+      });
+
+      if(total < mm.min) {
+        console.log(who, stats, light, mm)
+      }
+
+      return Math.round(((total - mm.min) / (mm.max - mm.min))*100);
+    }
+
     // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
     function getBonus(light, type) {
       type = type.toLowerCase();
       switch(type) {
         case 'helmet':
+        case 'helmets':
           return light < 291 ? 15 :
                  light < 307 ? 16 :
                  light < 319 ? 17 : 18;
@@ -634,20 +711,25 @@
                  light < 305 ? 14 :
                  light < 319 ? 15 : 16;
         case 'chest':
+        case 'chest armor':
           return light < 287 ? 20 :
                  light < 299 ? 21 :
                  light < 310 ? 22 :
                  light < 319 ? 23 : 24;
         case 'leg':
+        case 'leg armor':
           return light < 284 ? 18 :
                  light < 298 ? 19 :
                  light < 309 ? 20 :
                  light < 319 ? 21 : 22;
         case 'classitem':
+        case 'class items':
         case 'ghost':
+        case 'ghosts':
           return light < 295 ? 8 :
                  light < 319 ? 9 : 10;
         case 'artifact':
+        case 'artifacts':
           return light < 287 ? 34 :
                  light < 295 ? 35 :
                  light < 302 ? 36 :

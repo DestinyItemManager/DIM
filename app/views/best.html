@@ -1,25 +1,24 @@
 <div ng-controller="dimMinMaxCtrl as normal" style="min-width:900px">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
-  <h1>Normalization Calculator</h1>
+  <h1>Armor Comparison</h1>
 
-  <p>All gear and their stats are normalized to light level <input type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' />.<br/>
-    The stats displayed are the BASE stats for the item.</p>
+  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'></p>
+  <p ng-show='normal.doNormalize'>Estimate stats at light level <input type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></p>
+  <p>The stats displayed are the BASE stats for the item.</p>
 
   <span class="link" ng-click="help=!help">Click here for more information</span>
 
   <div ng-show="help">
     <p>This page will help you determine what your best gear is.</p>
-    <p>When an item in infused to a higher light level, its stats also go up with it.<br/>
-      This page normalizes all of your gear to 320 light, so you can see the highest value a peice of armor will have.<br/>
-      The perks/bonus that increase intellect/dis/str are NOT included, only the "base" stats are shown.</p>
-    <p>The "best" gear is defined by having the highest value of the following:</p>
+    <p>When an item in infused to a higher light level, its stats also go up with it.</p>
+    <p>Tips:</p>
     <ul>
-      <li>Intellect</li>
-      <li>Discipline</li>
-      <li>Strength</li>
-      <li>Intellect + Discipline</li>
-      <li>Intellect + Strength</li>
-      <li>Discipline + Strength</li>
+      <li>The perks/bonus that increase intellect/dis/str are NOT included, only the "base" stats are shown.</li>
+      <li>The 'Stat roll quality' is where that item falls between the minimum and maximum total at that light level.</li>
+      <li>The 'Stat roll quality' never changes as the item is infused to higher light levels.</li>
+      <li>Generally, try to prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
+      <li>Clicking on an item will show you its perks. The infusion calculator also works in this view.</li>
+      <li>Pure roll items generally are worse than split rolls.</li>
     </ul>
   </div>
 
@@ -27,25 +26,26 @@
     <option value='titan'>Titan</option>
     <option value='hunter'>Hunter</option>
     <option value='warlock'>Warlock</option>
-  </select></p>
-  <p>Armor: <select ng-model='normal.type' ng-change='normal.normalizeBuckets()' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select> (+{{normal.getBonus(normal.normalize, normal.type)}} bonus excluded)</p>
+  </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select> <span ng-show="normal.doNormalize">(+{{normal.getBonus(normal.normalize, normal.type)}} bonus excluded)</span></p>
 
-  <div ng-repeat="(type, items) in normal.ranked[normal.type]">
-    <h3 ng-bind="type"></h3>
+<!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
+<!--    <h3 ng-bind="type"></h3>-->
     <span style='display: inline-block; margin-right: 20px'>
       <div><small>Intellect</small></div>
       <div><small>Discipline</small></div>
       <div><small>Strength</small></div>
+      <div><small>Stat roll quality</small></div>
     </span>
-    <span ng-repeat="item in items">
-      <div style='display: inline-block'>
+    <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
+      <div style='display: inline-block; padding: 3px 0 0 3px'>
         <div style='display: inline-block'>
           <div ng-repeat="stat in item.stats track by $index">
             <small ng-bind="item.normalStats[$index].base"></small>
           </div>
         </div>
         <div dim-store-item item-data="item"></div>
+        <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;"><small style="display:block;margin-left: 5px" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small></div>
       </div>
     </span>
-  </div>
+<!--  </div>-->
 </div>
