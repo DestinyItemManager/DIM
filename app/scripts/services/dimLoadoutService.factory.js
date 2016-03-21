@@ -198,7 +198,7 @@
       // Existing items on the character, minus ones that we want as part of the loadout
       var existingItems = _.chain(store.items)
         .filter(function(item) {
-          return _.contains(_types, item.type) &&
+          return !item.notransfer && _.contains(_types, item.type) &&
             (!_.any(items, function(i) {
               return i.id === item.id && i.hash === item.hash;
             }));
@@ -313,12 +313,12 @@
               // Get the first store with space
               // TODO: handle consumable capacity
               var target = _.find(sortedStores, function(s) {
-                var capacity = s.capacityForItem(item);
                 if (s.isVault) {
                   // leave space for one item so we can still do guardian-guardian transfers
-                  capacity -= 1;
+                  return s.spaceLeftForItem(moveAwayItem) > 1;
+                } else {
+                  return s.spaceLeftForItem(moveAwayItem) > 0;
                 }
-                return _.where(s.items, { type: item.type }).length < capacity;
               });
               if (!target) {
                 promise = $q.reject(new Error("Collector, eh?  All your characters' " + moveAwayItem.type.toLowerCase() + ' slots are full and I can\'t move items off characters, yet... Clear a slot on a character and I can complete the loadout.'));
