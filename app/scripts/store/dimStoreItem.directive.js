@@ -28,7 +28,7 @@
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
-        '    <div class="img" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'
@@ -38,16 +38,6 @@
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
-
-      $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
-      }).error(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
-      });
 
       var dragHelp = document.getElementById('drag-help');
 
