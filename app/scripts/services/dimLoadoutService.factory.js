@@ -187,61 +187,41 @@
     }
 
     function applyLoadout(store, loadout) {
-      var scope = {
-        failed: false
-      };
-
       var items = _.flatten(_.values(loadout.items));
 
       var _types = _.uniq(_.pluck(items, 'type'));
 
-      // Existing items on the character, minus ones that we want as part of the loadout
-      var existingItems = _.chain(store.items)
-        .filter(function(item) {
-          return _.contains(_types, item.type) &&
-            (!_.any(items, function(i) {
-              return i.id === item.id && i.hash === item.hash;
-            }));
-        })
-        .groupBy('type')
-        .mapObject(function(items) {
-          // The order of items determines which ones get moved away to make space
-          // TODO: move all this into a "moveAsideItem" function in itemService
-          return _.sortBy(items, function(item) {
-            // Lower means more likely to get moved away
-            // Prefer not moving the equipped item
-            var value = item.equipped ? 10 : 0;
-            // Prefer moving lower-tier
-            value += {
-              Common: 0,
-              Uncommon: 1,
-              Rare: 2,
-              Legendary: 3,
-              Exotic: 4
-            }[item.tier];
-            if (item.primStat) {
-              value += item.primStat.value / 1000.0;
-            }
-            return value;
-          });
-        })
-        .value();
+      var loadoutItemIds = items.map(function(i) {
+        return {
+          id: i.id,
+          hash: i.hash
+        };
+      });
 
-      return applyLoadoutItems(store, items, loadout, existingItems, scope);
+      var scope = {
+        failed: 0,
+        total: items.length
+      };
+      return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
     }
 
     // Move one loadout item at a time. Called recursively to move items!
-    function applyLoadoutItems(store, items, loadout, existingItems, scope) {
+    function applyLoadoutItems(store, items, loadout, loadoutItemIds, scope) {
       if (items.length == 0) {
         // We're done!
         return dimStoreService.updateCharacters()
           .then(function() {
             var value = 'success';
-            var message = 'Your loadout has been transfered.';
+            var message = 'Your loadout of ' + scope.total + ' items has been transfered.';
 
-            if (scope.failed) {
-              value = 'warning';
-              message = 'Your loadout has been transfered, with errors.';
+            if (scope.failed > 0) {
+              if (scope.failed === scope.total) {
+                value = 'error';
+                message = 'None of the items in your loadout could be transferred.';
+              } else {
+                value = 'warning';
+                message = 'Your loadout has been partially transferred, but ' + scope.failed + ' of ' + scope.total + ' items had errors.';
+              }
             }
 
             toaster.pop(value, loadout.name, message);
@@ -296,35 +276,11 @@
         if (item) {
           var size = _.where(store.items, { type: item.type }).length;
 
-          // If full, make room. TODO: put this in the move service!
+          // If full, make room.
           if (size >= store.capacityForItem(item)) {
             if (item.owner !== store.id) {
-              var moveAwayItem = existingItems[item.type].shift();
-              var sortedStores = _.sortBy(dimStoreService.getStores(), function(s) {
-                if (s.isVault) {
-                  return 0;
-                } else if (s.id !== store.id) {
-                  return 1;
-                } else {
-                  // Same store... shouldn't ever work
-                  return 2;
-                }
-              });
-              // Get the first store with space
-              // TODO: handle consumable capacity
-              var target = _.find(sortedStores, function(s) {
-                var capacity = s.capacityForItem(item);
-                if (s.isVault) {
-                  // leave space for one item so we can still do guardian-guardian transfers
-                  capacity -= 1;
-                }
-                return _.where(s.items, { type: item.type }).length < capacity;
-              });
-              if (!target) {
-                promise = $q.reject(new Error("Collector, eh?  All your characters' " + moveAwayItem.type.toLowerCase() + ' slots are full and I can\'t move items off characters, yet... Clear a slot on a character and I can complete the loadout.'));
-              } else {
-                promise = dimItemService.moveTo(moveAwayItem, target);
-              }
+              // Pass in the list of items that shouldn't be moved away
+              promise = dimItemService.makeRoomForItem(item, store, loadoutItemIds);
             }
           }
 
@@ -338,12 +294,12 @@
 
       promise = promise
         .catch(function(e) {
-          scope.failed = true;
+          scope.failed++;
           toaster.pop('error', item.name, e.message);
         })
         .finally(function() {
           // Keep going
-          return applyLoadoutItems(store, items, loadout, existingItems, scope);
+          return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
         });
 
       loadingTracker.addPromise(promise);

@@ -26,6 +26,10 @@
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
         return (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
+      },
+      // How many *more* items like this item can fit in this store?
+      spaceLeftForItem: function(item) {
+        return this.capacityForItem(item) - count(this.items, { type: item.type });
       }
     };
 
@@ -202,6 +206,9 @@
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
                   return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
+                },
+                spaceLeftForItem: function(item) {
+                  return this.capacityForItem(item) - count(this.items, { sort: item.sort });
                 }
               });
 

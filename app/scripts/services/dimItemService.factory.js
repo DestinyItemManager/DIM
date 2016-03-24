@@ -7,11 +7,20 @@
     ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimItemTier', 'dimCategory', '$q'];
 
     function ItemService(dimStoreService, dimBungieService, dimItemTier, dimCategory, $q) {
+      // We'll reload the stores to check if things have been
+      // thrown away or moved and we just don't have up to date info. But let's
+      // throttle these calls so we don't just keep refreshing over and over.
+      // This needs to be up here because of how we return the service object.
+      var throttledReloadStores = _.throttle(function() {
+        return dimStoreService.reloadStores();
+      }, 10000, { trailing: false });
+
       return {
         getSimilarItem: getSimilarItem,
         getItem: getItem,
         getItems: getItems,
         moveTo: moveTo,
+        makeRoomForItem: makeRoomForItem,
         setLockState: setLockState
       };
 
@@ -337,19 +346,127 @@
         return promise;
       }
 
-      function canMoveToStore(item, store, triedFallback) {
-        var stackAmount = 0;
-        var slotsNeededForTransfer = 0;
-        var predicate = store.isVault ? {
-          sort: item.sort
-        } : {
-          type: item.type
-        };
+      // Make room to move this item into a full store. This assumes you've already
+      // checked to see that the store is full. excludes are an optional list
+      // of which items we are not allowed to move. storeReservations is for recursion.
+      function makeRoomForItem(item, store, excludes, storeReservations) {
+        var stores = dimStoreService.getStores();
 
-        var itemsInStore = _.where(store.items, predicate).length;
+        if (!excludes) {
+          excludes = [];
+        }
+
+        // Reserve enough space for the transfer to succeed, even if we recurse
+        if (!storeReservations) {
+          storeReservations = {};
+          stores.forEach(function(s) {
+            storeReservations[s.id] = (s.id === store.id ? 1 : 0);
+          });
+          // guardian-to-guardian transfer will need space in the vault
+          if (item.owner !== 'vault' && !store.isVault) {
+            storeReservations['vault'] = 1;
+          }
+        }
+
+        function spaceLeft(s, i) {
+          return Math.max(s.spaceLeftForItem(i) - storeReservations[s.id], 0);
+        }
+
+        var moveAsideCandidates;
+        if (!moveAsideCandidates) {
+          if (store.isVault && !_.any(stores, function(s) { return spaceLeft(s, item); })) {
+            // If it's the vault, we can get rid of anything in the same sort category.
+            // Pick whatever we have the most space for on some guardian.
+            var bestType = _.max(dimCategory[item.sort], function(type) {
+              var res = _.max(stores.map(function(s) {
+                if (s.id == store.id || !_.any(store.items, { type: type })) {
+                  return 0;
+                } else {
+                  return spaceLeft(s, { type: type });
+                }
+              }));
+              return res;
+            });
+
+            moveAsideCandidates = _.filter(store.items, { type: bestType });
+          } else {
+            moveAsideCandidates = _.filter(store.items, { type: item.type });
+          }
+        }
+
+        // Don't move that which cannot be moved
+        moveAsideCandidates = _.reject(moveAsideCandidates, function(i) {
+          return i.notransfer || _.any(excludes, { id: i.id, hash: i.hash });
+        });
+
+        if (moveAsideCandidates.length === 0) {
+          return $q.reject(new Error("There's nothing we can move aside to make room for " + item.name));
+        }
+
+        // For the vault, try to move the highest-value item to a character. For a
+        // character, move the lowest-value item to the vault (or another character).
+        // We move the highest-value item out of the vault because it seems better
+        // not to gunk up characters with garbage or year 1 stuff.
+        var moveAsideItem = _[store.isVault ? 'max' : 'min'](moveAsideCandidates, function(i) {
+          // Lower means more likely to get moved away
+          // Prefer not moving the equipped item
+          var value = i.equipped ? 10 : 0;
+          // Prefer moving lower-tier
+          value += {
+            Common: 0,
+            Uncommon: 1,
+            Rare: 2,
+            Legendary: 3,
+            Exotic: 4
+          }[i.tier];
+          // And low-stat
+          if (i.primStat) {
+            value += i.primStat.value / 1000.0;
+          }
+          return value;
+        });
+
+        var target;
+        if (store.isVault) {
+          // Find the character with the most space
+          target = _.max(stores, function(s) { return spaceLeft(s, moveAsideItem); });
+        } else {
+          var vault = dimStoreService.getVault();
+          // Prefer moving to the vault
+          if (spaceLeft(vault, moveAsideItem) > 0) {
+            target = vault;
+          } else {
+            target = _.max(stores, function(s) { return spaceLeft(s, moveAsideItem); });
+          }
+        }
+
+        if (spaceLeft(target, moveAsideItem) <= 0) {
+          var failure = $q.reject(new Error('There are too many \'' + (store.isVault ? item.sort : item.type) + '\' items in the ' + (store.isVault ? 'vault' : 'guardian') + '.'));
+          if (!store.isVault) {
+            return makeRoomForItem(moveAsideItem, dimStoreService.getVault(), excludes, storeReservations)
+              .then(function() {
+                return makeRoomForItem(item, store, excludes, storeReservations);
+              })
+              .catch(function() { return failure; });
+          } else {
+            return failure;
+          }
+        } else {
+          return moveTo(moveAsideItem, target);
+        }
+      }
+
+      // Is there anough space to move the given item into store? This will refresh
+      // data and/or move items aside in an attempt to make a move possible.
+      function canMoveToStore(item, store, triedFallback) {
+        if (item.owner === store.id) {
+          return $q.resolve(true);
+        }
+
+        var slotsNeededForTransfer = 0;
 
         if (item.maxStackSize > 1) {
-          stackAmount = store.amountOfItem(item);
+          var stackAmount = store.amountOfItem(item);
           slotsNeededForTransfer = Math.ceil((stackAmount + item.amount) / item.maxStackSize) - Math.ceil((stackAmount) / item.maxStackSize);
         } else {
           if (item.owner === store.id) {
@@ -359,9 +476,7 @@
           }
         }
 
-        var typeQtyCap = store.capacityForItem(item);
-
-        if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
+        if (store.spaceLeftForItem(item) >= slotsNeededForTransfer) {
           if ((item.owner !== store.id) && !store.isVault && (item.owner !== 'vault')) {
             // It's a guardian-to-guardian move, so we need to check
             // if there's space in the vault since the item has to go
@@ -372,15 +487,20 @@
           }
         } else {
           // Not enough space!
-          if (!triedFallback) {
-            // Refresh the store
-            return dimStoreService.reloadStores()
-              .then(function(stores) {
-                store = _.find(stores, { id: store.id });
-                return canMoveToStore(item, store, true);
-              });
+          if (store.isVault || triedFallback) {
+            return makeRoomForItem(item, store).then(function() {
+              return canMoveToStore(item, store);
+            });
           } else {
-            return $q.reject(new Error('There are too many \'' + (store.isVault ? item.sort : item.type) + '\' items in the ' + (store.isVault ? 'vault' : 'guardian') + '.'));
+            // Refresh the store
+            var reloadPromise = throttledReloadStores();
+            if (!reloadPromise) {
+              reloadPromise = $q.when(dimStoreService.getStores());
+            }
+            return reloadPromise.then(function(stores) {
+              store = _.find(stores, { id: store.id });
+              return canMoveToStore(item, store, true);
+            });
           }
         }
       }
@@ -466,7 +586,6 @@
               }
             } else if (data.isVault.source && data.isVault.target) { // Vault to Vault
               // Do Nothing.
-              //console.log('vault-to-vault');
             } else if (data.isVault.source || data.isVault.target) { // Guardian to Vault
               if (item.equipped) {
                 promise = promise.then(function() {
@@ -480,9 +599,6 @@
             }
 
             return promise;
-          })
-          .catch(function(e) {
-            return $q.reject(e);
           });
 
         return movePlan;
