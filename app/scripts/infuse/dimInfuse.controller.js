@@ -49,6 +49,7 @@
                                                        'Unknown'; // new item?
         vm.wildcardMaterialIcon = item.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1' :
           vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3' : '972ae2c6ccbf59cde293a2ed50a57a93';
+        vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
         // 2 motes, or 10 armor/weapon materials
         vm.wildcardMaterialCost = item.sort === 'General' ? 2 : 10;
       },
@@ -157,7 +158,7 @@
 
         var worker = new dimWebWorker({
           fn:function(args) {
-            var data = JSON.parse(args.data);
+            var data = args.data;
             var max = InfuseUtil.maximizeAttack(
               _.reject(data.infusable, function(item) {
                 return _.any(data.excluded, function(otherItem) {
@@ -178,8 +179,12 @@
         });
 
         vm.calculating = true;
-        worker.do(JSON.stringify(vm))
-          .then(function(message) {
+        worker.do({
+          infusable: vm.infusable,
+          excluded: vm.excluded,
+          source: vm.source,
+          exotic: vm.exotic,
+        }).then(function(message) {
             vm.calculating = false;
 
             vm.paths = [manualPath];
@@ -199,39 +204,37 @@
 
       // get Items for infusion
       getItems: function() {
-        dimStoreService.getStores(false, true).then(function(stores) {
+        var stores = dimStoreService.getStores();
+        var allItems = [];
 
-          var allItems = [];
+        // If we want ALL our weapons, including vault's one
+        if (!vm.getAllItems) {
+          stores = _.filter(stores, function(store) {
+            return store.id === vm.source.owner;
+          });
+        }
 
-          // If we want ALL our weapons, including vault's one
-          if (!vm.getAllItems) {
-            stores = _.filter(stores, function(store) {
-              return store.id === vm.source.owner;
-            });
-          }
-
-          // all stores
-          _.each(stores, function(store, id, list) {
-            // all items in store
-            var items = _.filter(store.items, function(item) {
-              return item.primStat &&
-                (!item.locked || vm.showLockedItems) &&
-                item.type == vm.source.type &&
-                item.primStat.value > vm.source.primStat.value &&
-                (!vm.onlyBlues || item.tier === 'Rare');
-            });
-
-            allItems = allItems.concat(items);
-
+        // all stores
+        _.each(stores, function(store, id, list) {
+          // all items in store
+          var items = _.filter(store.items, function(item) {
+            return item.primStat &&
+              (!item.locked || vm.showLockedItems) &&
+              item.type == vm.source.type &&
+              item.primStat.value > vm.source.primStat.value &&
+              (!vm.onlyBlues || item.tier === 'Rare');
           });
 
-          allItems = _.sortBy(allItems, function(item) {
-            return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
-          });
+          allItems = allItems.concat(items);
 
-          vm.setInfusibleItems(allItems);
-          vm.maximizeAttack();
         });
+
+        allItems = _.sortBy(allItems, function(item) {
+          return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
+        });
+
+        vm.setInfusibleItems(allItems);
+        vm.maximizeAttack();
       },
 
       closeDialog: function() {
@@ -239,31 +242,65 @@
       },
 
       transferItems: function() {
-        dimStoreService.getStore(vm.source.owner).then(function(store) {
-          var items = {};
-          vm.targets.forEach(function(item) {
-            var key = item.type.toLowerCase();
-            items[key] = items[key] || [];
-            if (items[key].length < 8) {
-              var itemCopy = angular.copy(item);
-              itemCopy.equipped = false;
-              items[key].push(itemCopy);
-            }
-          });
-          // Include the source, since we wouldn't want it to get moved out of the way
-          items[vm.source.type.toLowerCase()].push(vm.source);
+        var store = dimStoreService.getStore(vm.source.owner);
+        var items = {};
+        vm.targets.forEach(function(item) {
+          var key = item.type.toLowerCase();
+          items[key] = items[key] || [];
+          if (items[key].length < 8) {
+            var itemCopy = angular.copy(item);
+            itemCopy.equipped = false;
+            items[key].push(itemCopy);
+          }
+        });
+        // Include the source, since we wouldn't want it to get moved out of the way
+        items[vm.source.type.toLowerCase()].push(vm.source);
 
-          var loadout = {
-            classType: -1,
-            name: 'Infusion Materials',
-            items: items
-          };
-
-          // TODO: when loadouts can take consumables, move them too
-          vm.transferInProgress = true;
-          dimLoadoutService.applyLoadout(store, loadout).then(function() {
-            vm.transferInProgress = false;
+        items['material'] = [];
+        if (vm.sort === 'General') {
+          // Mote of Light
+          items['material'].push({
+            id: '0',
+            hash: 937555249,
+            amount: 2 * vm.targets.length,
+            equipped: false
           });
+        } else if (vm.statType === 'Attack') {
+          // Weapon Parts
+          items['material'].push({
+            id: '0',
+            hash: 1898539128,
+            amount: 10 * vm.targets.length,
+            equipped: false
+          });
+        } else {
+          // Armor Materials
+          items['material'].push({
+            id: '0',
+            hash: 1542293174,
+            amount: 10 * vm.targets.length,
+            equipped: false
+          });
+        }
+        if (vm.exotic) {
+          // Exotic shard
+          items['material'].push({
+            id: '0',
+            hash: 452597397,
+            amount: vm.targets.length,
+            equipped: false
+          });
+        }
+
+        var loadout = {
+          classType: -1,
+          name: 'Infusion Materials',
+          items: items
+        };
+
+        vm.transferInProgress = true;
+        return dimLoadoutService.applyLoadout(store, loadout).then(function() {
+          vm.transferInProgress = false;
         });
       }
     });

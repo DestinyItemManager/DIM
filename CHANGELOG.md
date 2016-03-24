@@ -1,5 +1,34 @@
 # Next
 
+* DIM will now go to great lengths to make sure your transfer will succeed, even if your target's inventory is full, or the vault is full. It does this by moving stuff aside to make space, automatically.
+* Fixed a bug that would cause applying loadouts to fill up the vault and then fail.
+
+# 3.4.1
+
+* Bugfix to address an infinite loop while moving emotes.
+
+# 3.4.0
+
+* Moving and equipping items, especially many at a time (loadouts) is faster.
+* When you save a loadout, it is now scoped to the platform it's created on, rather than applying across accounts. Loadouts created on one account used to show on both accounts, but wouldn't work on the wrong account.
+* You can now move partial amounts of materials. There's a slider in the move popup, and holding "shift" or hovering over the drop area will pop up a dialog for draggers. You can choose to move more than one stack's worth of an item, up to the total amount on a character.
+* New commands for materials to consolidate (move them all to this character) and distribute (divide evenly between all characters).
+* Loadouts can now contain materials and consumables. Add or remove 5 at a time by holding shift while clicking. When the loadout is applied, we'll make sure your character has *at least* that much of the consumable.
+* Loadouts can now contain 10 weapons or armor of a single type, not just 9.
+* When making space for a loadout, we'll prefer putting extra stuff in the vault rather than putting it on other characters. We'll also prefer moving aside non-equipped items of low rarity and light level.
+* The is:engram search filter actually works.
+* Fixed an error where DIM would not replace an equipped item with an instance of the same item hash. This would cause an error with loadouts and moving items. [448](https://github.com/DestinyItemManager/DIM/issues/448)
+* Loadouts can now display more than one line of items, for you mega-loadout lovers.
+* Items in the loadout editor are sorted according to your sort preference.
+
+# 3.3.3
+
+* Infusion calculator performance enhancements
+* Larger lock icon
+* Completed segments of Intelligence, Discipline, and Strength are now colored orange.
+
+# 3.3.2
+
 * If multiple items in the infusion calculator have the same light, but different XP completion percentage, favor suggesting the item with the least XP for infusion.
 * Keyword search also searches perks on items.
 * New search terms for is:engram, is:sword, is:artifact, is:ghost, is:consumable, is:material, etc.
@@ -12,6 +41,11 @@
 * Fixed infusion material cost for Ghosts and Artifacts (they cost motes of light).
 * Fix a case where the item properties popup may be cut off above the top of the screen.
 * Transfer/equip/dequip actions for edge cases will now succeed as expected without errors.
+* Manifest file update.
+
+# 3.3.1
+
+* Updated the manifest file.
 
 # 3.3
 

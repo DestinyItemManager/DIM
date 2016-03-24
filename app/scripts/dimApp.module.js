@@ -4,6 +4,7 @@
   angular.module('dimApp', [
     'ui.router',
     'ngAnimate',
+    'ngAria',
     'ngCookies',
     'ngDialog',
     'ngMessages',
@@ -12,6 +13,7 @@
     'angularUUID2',
     'toaster',
     'ajoslin.promise-tracker',
-    'cfp.hotkeys'
+    'cfp.hotkeys',
+    'rzModule'
   ]);
 })();

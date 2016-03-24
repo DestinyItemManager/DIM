@@ -21,32 +21,29 @@
         '    <div ng-message="maxlength">...</div>',
         '  </div>',
         '  <div class="loadout-content">',
-        '    <div class="content" style="margin: 15px; min-height: 88px;">',
-        '      <div id="loadout-options">',
-        '        <form name="vm.form">',
-        '          <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" placeholder="Loadout Name..." />',
-        '          <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
-        '          <input type="button" ng-disabled="vm.form.$invalid" value="Save" ng-click="vm.save()"></input>',
-        '          <input type="button" ng-disabled="vm.form.$invalid" value="Save as New" ng-click="vm.saveAsNew()"></input>',
-        '          <input type="button" ng-click="vm.cancel()" value="Cancel"></input>',
-        '          <span>Items with the <img src="images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> icon will be equipped.  Click on an item toggle equip.</span>',
-        '          <p id="loadout-error"></p>',
-        '        </form>',
-        '      </div>',
-        '      <span id="loadout-contents">',
-        '        <span ng-repeat="value in vm.types track by value" class="loadout-{{ value }}">',
-        '          <div ng-repeat="item in vm.loadout.items[value] track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
-        '            <div class="item-elem">',
-        '            <img ng-src="{{ item.icon }}" title="{{ item.primStat.value }} {{ item.name }}">',
+        '    <div id="loadout-options">',
+        '      <form name="vm.form">',
+        '        <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" placeholder="Loadout Name..." />',
+        '        <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
+        '        <input type="button" ng-disabled="vm.form.$invalid" value="Save" ng-click="vm.save()"></input>',
+        '        <input type="button" ng-disabled="vm.form.$invalid || !vm.loadout.id" value="Save as New" ng-click="vm.saveAsNew()"></input>',
+        '        <input type="button" ng-click="vm.cancel()" value="Cancel"></input>',
+        '        <span>Items with the <img src="images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> icon will be equipped.  Click on an item toggle equip.</span>',
+        '        <p id="loadout-error"></p>',
+        '      </form>',
+        '    </div>',
+        '    <div id="loadout-contents">',
+        '      <div ng-repeat="value in vm.types track by value" class="loadout-{{ value }} loadout-bucket" ng-if="vm.loadout.items[value].length">',
+        '        <div ng-repeat="item in vm.loadout.items[value] | sortItems:vm.itemSort track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
+        '          <div class="item-elem">',
+        '            <img dim-bungie-image-fallback="::item.icon" title="{{ item.primStat.value }} {{ item.name }}">',
         '            <div class="item-stat" ng-if="item.amount > 1">{{ item.amount }}</div>',
-        '            <div class="close" ng-click="vm.remove(item); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
+        '            <div class="close" ng-click="vm.remove(item, $event); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
         '            <div class="equipped" ng-show="item.equipped"></div>',
-        // '            <div class="damage-type" ng-if="item.sort === \'Weapons\'" ng-class="\'damage-\' + item.dmg"></div>',
         '            <div class="item-stat" ng-if="item.primStat.value" ng-class="\'stat-damage-\' + item.dmg">{{ item.primStat.value }}</div>',
-        '            </div>',
         '          </div>',
-        '        </span>',
-        '      </span>',
+        '        </div>',
+        '      </div>',
         '    </div>',
         '  </div>',
         '</div>'
@@ -77,8 +74,6 @@
       scope.$on('dim-create-new-loadout', function(event, args) {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
-
-        vm.loadout = angular.copy(vm.defaults);
       });
 
       scope.$on('dim-delete-loadout', function(event, args) {
@@ -96,14 +91,14 @@
       });
 
       scope.$on('dim-store-item-clicked', function(event, args) {
-        vm.add(args.item);
+        vm.add(args.item, args.clickEvent);
       });
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope) {
     var vm = this;
 
     vm.types = _.chain(dimCategory)
@@ -123,6 +118,8 @@
     vm.loadout = angular.copy(vm.defaults);
 
     vm.save = function save() {
+      var platform = dimPlatformService.getActive();
+      vm.loadout.platform = platform.label; // Playstation or Xbox
       dimLoadoutService.saveLoadout(vm.loadout);
       vm.cancel();
     };
@@ -138,42 +135,64 @@
       vm.show = false;
     };
 
-    vm.add = function add(item) {
-      if (item.equipment) {
+    vm.add = function add(item, $event) {
+      if (item.equipment || item.type === 'Material' || item.type === 'Consumable') {
         var clone = angular.copy(item);
 
         var discriminator = clone.type.toLowerCase();
         var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
-        var dupe = _.findWhere(typeInventory, {id: clone.id});
+        clone.amount = Math.min(clone.amount, $event.shiftKey ? 5 : 1);
 
-        if (!dupe && typeInventory.length < 9) {
-          clone.equipped = (typeInventory.length === 0);
+        var dupe = _.findWhere(typeInventory, {hash: clone.hash, id: clone.id});
 
-          if (clone.type === 'Class') {
-            if (_.has(vm.loadout.items, 'class')) {
-              vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
-              clone.equipped = true;
+        var maxSlots = 10;
+        if (item.type === 'Material') {
+          maxSlots = 20;
+        } else if(item.type === 'Consumable') {
+          maxSlots = 19;
+        }
+
+        if (!dupe) {
+          if (typeInventory.length < maxSlots) {
+            clone.equipped = item.equipment && (typeInventory.length === 0);
+
+            // Only allow one subclass
+            if (clone.type === 'Class') {
+              if (_.has(vm.loadout.items, 'class')) {
+                vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
+                clone.equipped = true;
+              }
             }
-          }
 
-          typeInventory.push(clone);
+            typeInventory.push(clone);
+          } else {
+            toaster.pop('warning', '', 'You can only have ' + maxSlots + ' of that kind of item in a loadout.');
+          }
+        } else if (dupe && clone.maxStackSize > 1) {
+          var increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
+          dupe.amount += increment;
+          // TODO: handle stack splits
         }
       } else {
-        toaster.pop('warning', '', 'Only equippable items can be added to a loadout.');
+        toaster.pop('warning', '', 'Only equippable items, materials, and consumables can be added to a loadout.');
       }
     };
 
-    vm.remove = function remove(item) {
+    vm.remove = function remove(item, $event) {
       var discriminator = item.type.toLowerCase();
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
       var index = _.findIndex(typeInventory, function(i) {
-        return i.id === item.id;
+        return i.hash == item.hash && i.id === item.id;
       });
 
       if (index >= 0) {
-        typeInventory.splice(index, 1);
+        var decrement = $event.shiftKey ? 5 : 1;
+        item.amount -= decrement;
+        if (item.amount <= 0) {
+          typeInventory.splice(index, 1);
+        }
       }
 
       if (item.equipped && typeInventory.length > 0) {
@@ -221,5 +240,18 @@
         }
       }
     };
+
+    dimSettingsService.getSetting('itemSort').then(function(sort) {
+      vm.itemSort = sort;
+    });
+
+    $scope.$on('dim-settings-updated', function(event, settings) {
+      if (_.has(settings, 'itemSort')) {
+        vm.itemSort = settings.itemSort;
+      }
+      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
+        dimStoreService.setHeights();
+      }
+    });
   }
 })();

@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
-  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24276617);
+  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24298773);
 
   grunt.initConfig({
     pkg: pkg,
