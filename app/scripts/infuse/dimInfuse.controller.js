@@ -51,6 +51,7 @@
                                                        'Unknown'; // new item?
         vm.wildcardMaterialIcon = item.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1' :
           vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3' : '972ae2c6ccbf59cde293a2ed50a57a93';
+        vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
         // 2 motes, or 10 armor/weapon materials
         vm.wildcardMaterialCost = item.sort === 'General' ? 2 : 10;
       },

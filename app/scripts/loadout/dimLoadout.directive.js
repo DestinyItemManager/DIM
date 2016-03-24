@@ -36,7 +36,7 @@
         '      <div ng-repeat="value in vm.types track by value" class="loadout-{{ value }} loadout-bucket" ng-if="vm.loadout.items[value].length">',
         '        <div ng-repeat="item in vm.loadout.items[value] | sortItems:vm.itemSort track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="item" ng-class="{ \'complete\': item.complete}">',
         '          <div class="item-elem">',
-        '            <img ng-src="{{ item.icon }}" title="{{ item.primStat.value }} {{ item.name }}">',
+        '            <img dim-bungie-image-fallback="::item.icon" title="{{ item.primStat.value }} {{ item.name }}">',
         '            <div class="item-stat" ng-if="item.amount > 1">{{ item.amount }}</div>',
         '            <div class="close" ng-click="vm.remove(item, $event); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>',
         '            <div class="equipped" ng-show="item.equipped"></div>',
