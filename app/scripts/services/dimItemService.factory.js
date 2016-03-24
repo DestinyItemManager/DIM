@@ -7,77 +7,103 @@
     ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimItemTier', 'dimCategory', '$q'];
 
     function ItemService(dimStoreService, dimBungieService, dimItemTier, dimCategory, $q) {
+      // We'll reload the stores to check if things have been
+      // thrown away or moved and we just don't have up to date info. But let's
+      // throttle these calls so we don't just keep refreshing over and over.
+      // This needs to be up here because of how we return the service object.
+      var throttledReloadStores = _.throttle(function() {
+        return dimStoreService.reloadStores();
+      }, 10000, { trailing: false });
+
       return {
         getSimilarItem: getSimilarItem,
         getItem: getItem,
         getItems: getItems,
-        moveTo: moveTo
+        moveTo: moveTo,
+        makeRoomForItem: makeRoomForItem,
+        setLockState: setLockState
       };
 
-      function updateItemModel(item, source, target, equip) {
-        var matchingItem;
-
-        if (source.id !== target.id) {
-          var index = _.findIndex(source.items, function(i) {
-            return (item.index === i.index);
+      function setLockState(item, store, lockState) {
+        return dimBungieService.setLockState(item, store, lockState)
+          .then(function() {
+            return lockState;
           });
+      }
 
-          if (item.maxStackSize > 1 && item.amount < item.maxStackSize) { // Balance the stacks.
-            if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
-              matchingItem = _.reduce(source.items, function(memo, i) {
-                if (item.hash === i.hash) {
-                  if (!(_.has(i, 'moveAmount')) || ((_.has(i, 'moveAmount') && i.moveAmount === 0))) {
-                    if (memo === null) {
-                      memo = i;
-                    } else if (memo.amount > i.amount) {
-                      memo = i;
-                    }
-                  }
-                }
+      // Returns the new or updated item (it may create a new item!)
+      function updateItemModel(item, source, target, equip, amount) {
+        // If we've moved to a new place
+        if (source.id !== target.id) {
+          // We handle moving stackable and nonstackable items almost exactly the same!
+          var stackable = item.maxStackSize > 1;
+          // Items to be decremented
+          var sourceItems = stackable ?
+                _.sortBy(_.select(source.items, function(i) {
+                  return i.hash === item.hash &&
+                    i.id === item.id;
+                }), 'amount') : [item];
+          // Items to be incremented. There's really only ever at most one of these, but
+          // it's easier to deal with as a list.
+          var targetItems = stackable ?
+                _.sortBy(_.select(target.items, function(i) {
+                  return i.hash === item.hash &&
+                    i.id === item.id &&
+                    // Don't consider full stacks as targets
+                    i.amount !== i.maxStackSize;
+                }), 'amount') : [];
+          // moveAmount could be more than maxStackSize if there is more than one stack on a character!
+          var moveAmount = amount || item.amount;
+          var addAmount = moveAmount;
+          var removeAmount = moveAmount;
+          var removedSourceItem = false;
 
-                return memo;
-              }, null);
-
-              if (!_.isNull(matchingItem)) {
-                if (item.moveAmount > item.amount) {
-                  matchingItem.amount = matchingItem.amount + (item.amount - item.moveAmount);
-                }
-              }
-
-              item.amount = item.moveAmount;
+          // Remove inventory from the source
+          while (removeAmount > 0) {
+            var sourceItem = sourceItems.shift();
+            if (!sourceItem) {
+              throw new Error("Looks like you requested to move more of this item than exists in the source!");
             }
 
-            item.moveAmount = 0;
-
-            matchingItem = _.filter(target.items, function(i) {
-              return ((i.amount < item.maxStackSize) && (i.hash === item.hash));
-            });
-
-            if (_.size(matchingItem) > 0) {
-              var mItem = matchingItem[0];
-              var combinedTotal = mItem.amount + item.amount;
-
-              item.moveAmount = item.amount;
-
-              if (combinedTotal <= item.maxStackSize) {
-                mItem.amount = combinedTotal;
-                item.amount = 0;
-              } else {
-                mItem.amount = mItem.maxStackSize;
-                item.amount = combinedTotal - item.maxStackSize;
+            var amountToRemove = Math.min(removeAmount, sourceItem.amount);
+            if (amountToRemove === sourceItem.amount) {
+              // Completely remove the source item
+              var sourceIndex = _.findIndex(source.items, function(i) {
+                return sourceItem.index === i.index;
+              });
+              if (sourceIndex >= 0) {
+                source.items.splice(sourceIndex, 1);
+                removedSourceItem = sourceItem.index === item.index;
               }
+            } else {
+              sourceItem.amount -= amountToRemove;
             }
+
+            removeAmount -= amountToRemove;
           }
 
-          item.owner = target.id;
+          // Add inventory to the target (destination)
+          var targetItem;
+          while (addAmount > 0) {
+            targetItem = targetItems.shift();
 
-          if (index >= 0) {
-            source.items.splice(index, 1);
-          }
+            if (!targetItem) {
+              targetItem = item;
+              if (!removedSourceItem) {
+                targetItem = angular.copy(item);
+                targetItem.index = dimStoreService.createItemIndex(targetItem);
+              }
+              removedSourceItem = false; // only move without cloning once
+              targetItem.amount = 0; // We'll increment amount below
+              target.items.push(targetItem);
+              targetItem.owner = target.id;
+            }
 
-          if (item.amount > 0) {
-            target.items.push(item);
+            var amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
+            targetItem.amount += amountToAdd;
+            addAmount -= amountToAdd;
           }
+          item = targetItem; // The item we're operating on switches to the last target
         }
 
         if (equip) {
@@ -102,7 +128,7 @@
             var sortedStores = _.sortBy(stores, function(store) {
               if (source.id === store.id) {
                 return 0;
-              } else if (store.id === 'vault') {
+              } else if (store.isVault) {
                 return 1;
               } else {
                 return 2;
@@ -120,7 +146,6 @@
       }
 
       function searchForSimilarItem(item, store) {
-        var result = null;
         var sortType = {
           Legendary: 0,
           Rare: 1,
@@ -129,41 +154,30 @@
           Exotic: 5
         };
 
-        var results = _.chain(store.items)
-          .where({
-            classType: item.classType
+        var result = _.chain(store.items)
+          .filter(function(i) {
+            return i.equipment &&
+              i.type === item.type &&
+              !i.equipped &&
+              // Compatible with this class
+              (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
+              // Not the same item
+              i.id !== item.id;
           })
           .sortBy(function(i) {
             return sortType[i.tier];
           })
-          .where({
-            type: item.type,
-            equipped: false,
-            equipment: true
-          })
+          .first()
           .value();
 
-        if (_.size(results) > 0) {
-          result = results[0];
+        if (result && result.tier === dimItemTier.exotic) {
+          var prefix = _.filter(store.items, function(i) {
+            return i.equipped &&
+              i.sort === item.sort &&
+              i.tier === dimItemTier.exotic;
+          });
 
-          if ((result.id === item.id) && (result.hash === item.hash)) {
-            if (_.size(results) > 1) {
-              result = results[1];
-            } else {
-              result = null;
-            }
-          }
-        }
-
-        if (result !== null && result.tier === dimItemTier.exotic) {
-          var prefix = _(store.items)
-            .chain()
-            .filter(function(i) {
-              return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic);
-            });
-
-          if (prefix.size()
-            .value() === 0) {
+          if (prefix.length === 0) {
             return result;
           } else {
             return null;
@@ -171,14 +185,14 @@
         }
 
 
-        return result;
+        return (result) ? result : null;
       }
 
       function equipItem(item) {
         return dimBungieService.equip(item)
-          .then(dimStoreService.getStore.bind(null, item.owner))
-          .then(function(store) {
-            updateItemModel(item, store, store, true);
+          .then(function() {
+            var store = dimStoreService.getStore(item.owner);
+            return updateItemModel(item, store, store, true);
           });
       }
 
@@ -199,10 +213,11 @@
           .then(function(similarItem) {
             scope.similarItem = similarItem;
 
-            if (!equipExotic && (similarItem) && (similarItem.tier === 'Exotic')) {
-              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
-            } else if (!similarItem) {
-              return $q.reject('There are no items to equip in the \'' + item.type + '\' slot.');
+            // TODO: move something in from the vault to equip!
+            // TODO: do we need this exotic logic?
+            // could this be removed now, along with all refrences to `equipExotic` that are passed in?
+            if ((!equipExotic && similarItem && similarItem.tier === 'Exotic') || !similarItem) {
+              return $q.reject(new Error('There are no items to equip in the \'' + item.type + '\' slot.'));
             }
 
             return dimStoreService.getStore(item.owner);
@@ -222,13 +237,10 @@
               var vault;
 
               if (scope.similarItem.owner !== 'vault') {
-                p = dimStoreService.getStore('vault')
-                  .then(function(v) {
-                    vault = v;
-                    return dimBungieService.transfer(scope.similarItem, vault);
-                  })
+                vault = dimStoreService.getVault();
+                p = dimBungieService.transfer(scope.similarItem, vault)
                   .then(function() {
-                    updateItemModel(scope.similarItem, vault, scope.source, false);
+                    return updateItemModel(scope.similarItem, vault, scope.source, false);
                   });
               }
 
@@ -236,12 +248,12 @@
                   return dimBungieService.transfer(scope.similarItem, scope.source);
                 })
                 .then(function() {
-                  updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
+                  return updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
                 });
             }
           })
           .then(function() {
-            return dimBungieService.equip(scope.similarItem);
+            return equipItem(scope.similarItem);
           })
           .then(function() {
             return updateItemModel(scope.similarItem, scope.source, scope.source, true);
@@ -251,37 +263,23 @@
           });
       }
 
-      function moveToVault(item) {
-        return dimStoreService.getStore('vault')
-          .then(function(target) {
-            return moveToStore(item, target, false);
-          });
+      function moveToVault(item, amount) {
+        return moveToStore(item, dimStoreService.getVault(), false, amount);
       }
 
-      function moveToStore(item, store, equip) {
+      function moveToStore(item, store, equip, amount) {
         var scope = {
-          source: null,
+          source: dimStoreService.getStore(item.owner),
           target: store
         };
 
-        return dimStoreService.getStore(item.owner)
-          .then(function(source) {
-            scope.source = source;
-
-            // if (_.has(item, 'moveAmount') && (item.moveAmount > 0)) {
-            //   item.amount = item.moveAmount;
-            // }
-
-            return dimBungieService.transfer(item, scope.target);
-          })
+        return dimBungieService.transfer(item, scope.target, amount)
           .then(function() {
-            return updateItemModel(item, scope.source, scope.target, false);
-          })
-          .then(function(item) {
-            if ((item.owner !== 'vault') && equip) {
-              return equipItem(item);
+            var newItem = updateItemModel(item, scope.source, scope.target, false, amount);
+            if ((newItem.owner !== 'vault') && equip) {
+              return equipItem(newItem);
             } else {
-              return item;
+              return newItem;
             }
           });
       }
@@ -289,64 +287,58 @@
       function canEquipExotic(item, store) {
         var deferred = $q.defer();
         var promise = deferred.promise;
-        var hasLifeExotic = _.contains(item.talentPerks, 4044819214);
 
-        var prefix = _(store.items)
-          .chain()
-          .filter(function(i) {
-            return (i.equipped && i.type !== item.type && i.sort === item.sort && i.tier === dimItemTier.exotic)
+        var equippedExotics = _.filter(store.items, function(i) {
+            return (i.equipped &&
+                    i.type !== item.type &&
+                    i.sort === item.sort &&
+                    i.tier === 'Exotic');
           });
-
-        var amount = prefix.size().value();
 
         // Fix for "The Life Exotic" Perk on Exotic Items
         // Can equip multiples
+        function hasLifeExotic(item) {
+          return _.find(item.talentGrid.nodes, { name: 'The Life Exotic' }) !== undefined;
+        }
 
-        if (amount === 0) {
+        if (equippedExotics.length === 0) {
           deferred.resolve(true);
-        } else if (amount === 1) {
-          var exoticItem = prefix.value()[0];
+        } else if (equippedExotics.length === 1) {
+          var equippedExotic = equippedExotics[0];
 
-          if (hasLifeExotic) {
-            deferred.resolve(true);
-          } else if (_.contains(exoticItem.talentPerks, 4044819214)) {
+          if (hasLifeExotic(item) || hasLifeExotic(equippedExotic)) {
             deferred.resolve(true);
           } else {
-            dequipItem(exoticItem)
+            dequipItem(equippedExotic)
               .then(function(result) {
                 deferred.resolve(true);
               })
               .catch(function(err) {
-                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
               });
           }
-        } else if (amount === 2) {
-          // Assume that only one item type has 'The Life Exotic' perk
-          var exoticItems = prefix.value();
-
-          var exoticItem = _.find(exoticItems, function(item) {
-            return !_.contains(item.talentPerks, 4044819214);
-          });
-
-          var exoticItemWithPerk = _.find(exoticItems, function(item) {
-            return _.contains(item.talentPerks, 4044819214);
-          });
-
-          if (hasLifeExotic) {
+        } else if (equippedExotics.length === 2) {
+          // Assume that only one of the equipped items has 'The Life Exotic' perk
+          if (hasLifeExotic(item)) {
+            var exoticItemWithPerk = _.find(equippedExotics, hasLifeExotic(item));
             dequipItem(exoticItemWithPerk)
               .then(function(result) {
                 deferred.resolve(true);
               })
               .catch(function(err) {
-                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
               });
           } else {
-            dequipItem(exoticItem)
+            var equippedExoticWithoutPerk = _.find(equippedExotics, function(item) {
+              return !hasLifeExotic(item);
+            });
+
+            dequipItem(equippedExoticWithoutPerk)
               .then(function(result) {
                 deferred.resolve(true);
               })
               .catch(function(err) {
-                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItem.type + ' slot cannot be unequipped.'));
+                deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
               });
           }
         }
@@ -354,35 +346,127 @@
         return promise;
       }
 
-      function canMoveToStore(item, store) {
-        var deferred = $q.defer();
-        var promise = deferred.promise;
-        var stackAmount = 0;
-        var slotsNeededForTransfer = 0;
-        var predicate = (store.id === 'vault') ? {
-          sort: item.sort
-        } : {
-          type: item.type
-        };
+      // Make room to move this item into a full store. This assumes you've already
+      // checked to see that the store is full. excludes are an optional list
+      // of which items we are not allowed to move. storeReservations is for recursion.
+      function makeRoomForItem(item, store, excludes, storeReservations) {
+        var stores = dimStoreService.getStores();
 
-        var itemsInStore = _(store.items)
-          .chain()
-          .where(predicate)
-          .size()
-          .value();
+        if (!excludes) {
+          excludes = [];
+        }
+
+        // Reserve enough space for the transfer to succeed, even if we recurse
+        if (!storeReservations) {
+          storeReservations = {};
+          stores.forEach(function(s) {
+            storeReservations[s.id] = (s.id === store.id ? 1 : 0);
+          });
+          // guardian-to-guardian transfer will need space in the vault
+          if (item.owner !== 'vault' && !store.isVault) {
+            storeReservations['vault'] = 1;
+          }
+        }
+
+        function spaceLeft(s, i) {
+          return Math.max(s.spaceLeftForItem(i) - storeReservations[s.id], 0);
+        }
+
+        var moveAsideCandidates;
+        if (!moveAsideCandidates) {
+          if (store.isVault && !_.any(stores, function(s) { return spaceLeft(s, item); })) {
+            // If it's the vault, we can get rid of anything in the same sort category.
+            // Pick whatever we have the most space for on some guardian.
+            var bestType = _.max(dimCategory[item.sort], function(type) {
+              var res = _.max(stores.map(function(s) {
+                if (s.id == store.id || !_.any(store.items, { type: type })) {
+                  return 0;
+                } else {
+                  return spaceLeft(s, { type: type });
+                }
+              }));
+              return res;
+            });
+
+            moveAsideCandidates = _.filter(store.items, { type: bestType });
+          } else {
+            moveAsideCandidates = _.filter(store.items, { type: item.type });
+          }
+        }
+
+        // Don't move that which cannot be moved
+        moveAsideCandidates = _.reject(moveAsideCandidates, function(i) {
+          return i.notransfer || _.any(excludes, { id: i.id, hash: i.hash });
+        });
+
+        if (moveAsideCandidates.length === 0) {
+          return $q.reject(new Error("There's nothing we can move aside to make room for " + item.name));
+        }
+
+        // For the vault, try to move the highest-value item to a character. For a
+        // character, move the lowest-value item to the vault (or another character).
+        // We move the highest-value item out of the vault because it seems better
+        // not to gunk up characters with garbage or year 1 stuff.
+        var moveAsideItem = _[store.isVault ? 'max' : 'min'](moveAsideCandidates, function(i) {
+          // Lower means more likely to get moved away
+          // Prefer not moving the equipped item
+          var value = i.equipped ? 10 : 0;
+          // Prefer moving lower-tier
+          value += {
+            Common: 0,
+            Uncommon: 1,
+            Rare: 2,
+            Legendary: 3,
+            Exotic: 4
+          }[i.tier];
+          // And low-stat
+          if (i.primStat) {
+            value += i.primStat.value / 1000.0;
+          }
+          return value;
+        });
+
+        var target;
+        if (store.isVault) {
+          // Find the character with the most space
+          target = _.max(stores, function(s) { return spaceLeft(s, moveAsideItem); });
+        } else {
+          var vault = dimStoreService.getVault();
+          // Prefer moving to the vault
+          if (spaceLeft(vault, moveAsideItem) > 0) {
+            target = vault;
+          } else {
+            target = _.max(stores, function(s) { return spaceLeft(s, moveAsideItem); });
+          }
+        }
+
+        if (spaceLeft(target, moveAsideItem) <= 0) {
+          var failure = $q.reject(new Error('There are too many \'' + (store.isVault ? item.sort : item.type) + '\' items in the ' + (store.isVault ? 'vault' : 'guardian') + '.'));
+          if (!store.isVault) {
+            return makeRoomForItem(moveAsideItem, dimStoreService.getVault(), excludes, storeReservations)
+              .then(function() {
+                return makeRoomForItem(item, store, excludes, storeReservations);
+              })
+              .catch(function() { return failure; });
+          } else {
+            return failure;
+          }
+        } else {
+          return moveTo(moveAsideItem, target);
+        }
+      }
+
+      // Is there anough space to move the given item into store? This will refresh
+      // data and/or move items aside in an attempt to make a move possible.
+      function canMoveToStore(item, store, triedFallback) {
+        if (item.owner === store.id) {
+          return $q.resolve(true);
+        }
+
+        var slotsNeededForTransfer = 0;
 
         if (item.maxStackSize > 1) {
-          stackAmount = _(store.items)
-            .chain()
-            .where({
-              hash: item.hash
-            })
-            .pluck('amount')
-            .reduce(function(memo, amount) {
-              return memo + amount;
-            }, 0)
-            .value();
-
+          var stackAmount = store.amountOfItem(item);
           slotsNeededForTransfer = Math.ceil((stackAmount + item.amount) / item.maxStackSize) - Math.ceil((stackAmount) / item.maxStackSize);
         } else {
           if (item.owner === store.id) {
@@ -392,147 +476,95 @@
           }
         }
 
-        var typeQtyCap = 10;
-
-        //TODO Hardcoded Item Quantity
-        if (store.id === 'vault') {
-          switch (item.sort) {
-            case 'Weapons':
-            case 'Weapon':
-            case 'Armor':
-              {
-                typeQtyCap = 72;
-                break;
-              }
-            default:
-              {
-                typeQtyCap = 36;
-                break;
-              }
-          }
-        } else {
-          switch (item.type) {
-            case 'Material':
-            case 'Consumable':
-              {
-                typeQtyCap = 20;
-                break;
-              }
-            default:
-              {
-                typeQtyCap = 10;
-                break;
-              }
-          }
-        }
-
-        // TODO Need to add support to transfer partial stacks.
-        if ((itemsInStore + slotsNeededForTransfer) <= typeQtyCap) {
-          if ((item.owner !== store.id) && (store.id !== 'vault')) {
-            var vault;
-
-            if (item.owner !== 'vault') {
-              dimStoreService.getStore('vault')
-                .then(function(v) {
-                  vault = v;
-                  return canMoveToStore(item, v);
-                })
-                .then(function() {
-                  deferred.resolve(true);
-                })
-                .catch(function(err) {
-                  // createSpace(vault, item, store)
-                  //   .then(function() {
-                  deferred.reject(err);
-                  // });
-                });
-            } else {
-              deferred.resolve(true);
-            }
+        if (store.spaceLeftForItem(item) >= slotsNeededForTransfer) {
+          if ((item.owner !== store.id) && !store.isVault && (item.owner !== 'vault')) {
+            // It's a guardian-to-guardian move, so we need to check
+            // if there's space in the vault since the item has to go
+            // through there.
+            return canMoveToStore(item, dimStoreService.getVault());
           } else {
-            deferred.resolve(true);
+            return $q.resolve(true);
           }
         } else {
-          // if (store.id !== 'vault') {
-          //   createSpace(store, item, store)
-          //     .catch(function() {
-          //       deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
-          //     });
-          // } else {
-          deferred.reject(new Error('There are too many \'' + (store.id === 'vault' ? item.sort : item.type) + '\' items in the ' + (store.id === 'vault' ? 'vault' : 'guardian') + '.'));
-          // }
-        }
-
-        return promise;
-      }
-
-      function createSpace(store, item, target) {
-        var targetIsSource = (store.id === target.id);
-        var scope = {};
-
-        var promise = $q.when(dimStoreService.getStores())
-          .then(function(stores) {
-            return $q.reject('woopsie');
-          });
-
-        return promise;
-      }
-
-      function isVaultToVault(item, store) {
-        var deferred = $q.defer();
-        var promise = deferred.promise;
-        var result = ((item.owner === 'vault') && (store.id === 'vault'));
-
-        deferred.resolve(result ? deferred.reject(new Error('Cannot process vault-to-vault transfers.')) : false);
-
-        return promise;
-      }
-
-
-      function isValidTransfer(equip, store, item) {
-        return $q(function(resolve, reject) {
-          var promises = [];
-
-          promises.push(isVaultToVault(item, store));
-          promises.push(canMoveToStore(item, store));
-
-          if ((item.tier === 'Exotic') && equip) {
-            promises.push(canEquipExotic(item, store));
+          // Not enough space!
+          if (store.isVault || triedFallback) {
+            return makeRoomForItem(item, store).then(function() {
+              return canMoveToStore(item, store);
+            });
+          } else {
+            // Refresh the store
+            var reloadPromise = throttledReloadStores();
+            if (!reloadPromise) {
+              reloadPromise = $q.when(dimStoreService.getStores());
+            }
+            return reloadPromise.then(function(stores) {
+              store = _.find(stores, { id: store.id });
+              return canMoveToStore(item, store, true);
+            });
           }
+        }
+      }
 
-          resolve($q.all(promises));
+      function canEquip(item, store) {
+        return $q(function(resolve, reject) {
+          if (item.classTypeName === 'unknown' || item.classTypeName === store.class) {
+            resolve(true);
+          } else {
+            reject(new Error("This can only be equipped on " + item.classTypeName + "s."));
+          }
         });
       }
 
-      function moveTo(item, target, equip) {
+      function isValidTransfer(equip, store, item) {
+        var promises = [];
+
+        promises.push(canMoveToStore(item, store));
+
+        if (equip) {
+          promises.push(canEquip(item, store));
+        }
+
+        if ((item.tier === 'Exotic') && equip) {
+          promises.push(canEquipExotic(item, store));
+        }
+
+        return $q.all(promises);
+      }
+
+      function moveTo(item, target, equip, amount) {
         var data = {
           item: item,
-          source: null,
+          source: dimStoreService.getStore(item.owner),
           target: target,
-          sameSource: (item.owner === target.id),
           isVault: {
             source: item.owner === 'vault',
-            target: target.id === 'vault'
+            target: target.isVault
           }
         };
 
-        var movePlan = dimStoreService.getStore(item.owner)
-          .then(function(store) {
-            data.source = store;
-
-            return isValidTransfer(equip, target, item);
+        var movePlan = isValidTransfer(equip, target, item)
+          .then(function(targetStore) {
+            // Replace the target store - isValidTransfer may have replaced it
+            data.target = dimStoreService.getStore(target.id);
           })
           .then(function(a) {
-            var promise = $q.when();
+            var promise = $q.when(item);
 
             if (!data.isVault.source && !data.isVault.target) { // Guardian to Guardian
               if (data.source.id != data.target.id) { // Different Guardian
                 if (item.equipped) {
-                  promise = promise.then(dequipItem.bind(null, item));
+                  promise = promise.then(function() {
+                    return dequipItem(item);
+                  });
                 }
 
-                promise = promise.then(moveToVault.bind(null, item))
-                  .then(moveToStore.bind(null, item, data.target, equip));
+                promise = promise
+                  .then(function() {
+                    return moveToVault(item, amount);
+                  })
+                  .then(function(item) {
+                    return moveToStore(item, data.target, equip, amount);
+                  });
               }
 
               if (equip) {
@@ -540,89 +572,49 @@
                   if (!item.equipped) {
                     return equipItem(item);
                   } else {
-                    return $q.when(null);
+                    return $q.when(item);
                   }
                 });
               } else if (!equip) {
                 promise = promise.then(function() {
                   if (item.equipped) {
-                    return dequipItem.bind(null, item)();
+                    return dequipItem(item);
                   } else {
-                    return $q.when(null);
+                    return $q.when(item);
                   }
                 });
               }
             } else if (data.isVault.source && data.isVault.target) { // Vault to Vault
               // Do Nothing.
-              //console.log('vault-to-vault');
             } else if (data.isVault.source || data.isVault.target) { // Guardian to Vault
               if (item.equipped) {
-                promise = promise.then(dequipItem.bind(null, item));
+                promise = promise.then(function() {
+                  return dequipItem(item);
+                });
               }
 
-              promise = promise.then(moveToStore.bind(null, item, data.target, equip));
+              promise = promise.then(function() {
+                return moveToStore(item, data.target, equip, amount);
+              });
             }
 
-            promise = promise
-              .then(function() {
-                item.moveAmount = 0;
-              });
-
             return promise;
-          })
-          .catch(function(e) {
-            return $q.reject(e);
           });
 
         return movePlan;
       }
 
-      function updateLevels() {
-      }
-
       function getItems() {
         var returnValue = [];
-        var stores = dimStoreService.getStores();
-
-        angular.forEach(stores, function(store) {
+        dimStoreService.getStores().forEach(function(store) {
           returnValue = returnValue.concat(store.items);
         });
-
         return returnValue;
       }
 
-      function getItem(id, hash, amount, store) {
-        var items;
-
-        if (store) {
-          items = store.items;
-        } else {
-          items = getItems();
-        }
-
-        var item;
-
-        if (_.isObject(id)) {
-          var primitive = id;
-
-          item = _.find(items, function(item) {
-            return ((item.id === primitive.id) && (item.hash === primitive.hash));
-          });
-        } else {
-          predicate = {};
-
-          if (!_.isEmpty(id)) {
-            predicate.id = id;
-          }
-
-          if (!_.isEmpty(hash)) {
-            predicate.hash = hash;
-          }
-
-          item = _.findWhere(items, predicate);
-        }
-
-        return item;
+      function getItem(params, store) {
+        var items = store ? store.items : getItems();
+        return _.findWhere(items, { id: params.id, hash: params.hash });
       }
 
       return service;

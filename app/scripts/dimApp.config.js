@@ -46,89 +46,76 @@
         'Consumable',
         'Material'
       ]
-    });
+    })
+    .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
+      return promiseTracker();
+    }]);
+
 
   angular.module('dimApp')
-    .run(function($rootScope, $window, promiseTracker, $cookies, $timeout, toaster, SyncService) {
-      $rootScope.loadingTracker = promiseTracker();
+    .run(['$window', '$rootScope', 'loadingTracker', '$cookies', '$timeout', 'toaster', 'SyncService',
+      function($window, $rootScope, loadingTracker, $cookies, $timeout, toaster, SyncService) {
+        $rootScope.loadingTracker = loadingTracker;
 
-      //1 Hour
-      $rootScope.inactivityLength = 60 * 60 * 1000;
+        //1 Hour
+        $rootScope.inactivityLength = 60 * 60 * 1000;
 
-      $rootScope.isUserInactive = function() {
-        var currentTime = new Date;
+        $rootScope.isUserInactive = function() {
+          var currentTime = Date.now();
 
-        //Has This User Been Inactive For More Than An Hour
-        return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
-      };
+          //Has This User Been Inactive For More Than An Hour
+          return((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
+        };
 
-      $rootScope.trackActivity = function() {
-        $rootScope.lastActivity = new Date();
-      };
+        $rootScope.trackActivity = function() {
+          $rootScope.lastActivity = Date.now();
+        };
 
-      //Track Our Initial Activity of Starting the App
-      $rootScope.trackActivity();
+        //Track Our Initial Activity of Starting the App
+        $rootScope.trackActivity();
 
-      // SyncService.get('2015.09.02-Blacksmith').then(function(data) {
-      //   if (_.isNull(data) || _.isEmpty(data)) {
-      //     $timeout(function() {
-      //       toaster.pop({
-      //         type: 'info',
-      //         title: 'Blacksmith Shader Giveaway',
-      //         body: '<p>The DIM team is giving away six Blacksmith shaders on Twitter to celebrate your #YearOneGear.</p><p>Visit us at <a href="https://twitter.com/ThisIsDIM/status/639237265944899584" target="_blank">@ThisIsDIM</a> on twitter or the <a href="https://www.reddit.com/r/DestinyItemManager/comments/3jfl0f/blacksmith_shader_giveaway/" target="_blank">/r/destinyitemmanager</a> subreddit to learn how to enter.</p><p>See you starside Guardians.</p><p><input style="margin-top: 1px; vertical-align: middle;" id="20150902Checkbox" type="checkbox"> <label for="20150902Checkbox">Hide This Popup</label></p>',
-      //         timeout: 0,
-      //         bodyOutputType: 'trustedHtml',
-      //         showCloseButton: true,
-      //         clickHandler: function(a,b,c,d,e,f,g) {
-      //           if (b) {
-      //             return true;
-      //           }
-      //
-      //           return false;
-      //         },
-      //         onHideCallback: function() {
-      //           if ($('#20150902Checkbox').is(':checked')) {
-      //             SyncStorage.set({
-      //               "2015.09.02-Blacksmith": 1
-      //             }, function(e) {});
-      //           }
-      //         }
-      //       });
-      //     }, 3000);
-      //   }
-      // });
-
-      $window.initgapi = function() {
-       SyncService.init();
-      }
-
-      SyncService.get().then(function(data) {
-        if (!data || !data['2015.10.10-Infuse']) {
-          $timeout(function() {
-            toaster.pop({
-              type: 'info',
-              title: 'Infusion Calculator!',
-              body: '<p>Check out DIM\'s built-in infusion calculator! <a href="http://i.imgur.com/6XNnmoF.gifv" target="_blank">Here\'s how to access and use it!</a><p><input style="margin-top: 1px; vertical-align: middle;" id="20151010Checkbox" type="checkbox"> <label for="20151010Checkbox">Hide This Popup</label></p>',
-              timeout: 0,
-              bodyOutputType: 'trustedHtml',
-              showCloseButton: true,
-              clickHandler: function(a,b,c,d,e,f,g) {
-                if (b) {
-                  return true;
-                }
-
-                return false;
-              },
-              onHideCallback: function() {
-                if ($('#20151010Checkbox').is(':checked')) {
-                  SyncService.set({'2015.10.10-Infuse': 1});
-                }
-              }
-            });
-          }, 3000);
+        $window.initgapi = function() {
+          SyncService.init();
         }
-      });
-    });
+
+        chrome.storage.sync.get('2016.03.13-v3.4.0', function(data) {
+          if(_.isNull(data) || _.isEmpty(data)) {
+            $timeout(function() {
+              toaster.pop({
+                type: 'info',
+                title: 'DIM v3.4.1 Released',
+                body: [
+                  "<p>You've been asking about it since DIM was first released, and it's finally here: you can now move partial quantities of stacked items! Hold shift when dragging, hover over the drop point, or use the popup to choose how much to move. New \"take\" and \"split\" commands and the ability to add consumables to your loadouts rounds out the new functionality.</p>",
+                  '<p>On top of that, DIM has gotten faster! You should notice transfers, especially with loadouts, zipping along more smoothly now.</p>',
+                  '<p>Our <a href="https://github.com/DestinyItemManager/DIM/blob/dev/CHANGELOG.md" target="_blank">changelog</a> is available if you would like to know more.',
+                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.4.1',
+                  '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><i<i class="fa fa-reddit fa-2x"></i></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>',
+                  '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160304v332" type="checkbox"> <label for="20160304v332">Hide This Popup</label></p>'
+                ].join(''),
+                timeout: 0,
+                bodyOutputType: 'trustedHtml',
+                showCloseButton: true,
+                clickHandler: function(a, b, c, d, e, f, g) {
+                  if(b) {
+                    return true;
+                  }
+
+                  return false;
+                },
+                onHideCallback: function() {
+                  if($('#20160304v332')
+                    .is(':checked')) {
+                    chrome.storage.sync.set({
+                      "2016.03.13-v3.4.0": 1
+                    }, function(e) {});
+                  }
+                }
+              });
+            }, 3000);
+          }
+        });
+      }
+    ]);
 
   angular.module('dimApp')
     .config([
@@ -140,16 +127,17 @@
     .config([
       '$compileProvider',
       function($compileProvider) {
-        var currentImgSrcSanitizationWhitelist = $compileProvider.imgSrcSanitizationWhitelist();
-        var newImgSrcSanitizationWhiteList = currentImgSrcSanitizationWhitelist.toString().slice(0, -1) + '|chrome-extension:' + currentImgSrcSanitizationWhitelist.toString().slice(-1);
-
-        //console.log("Changing imgSrcSanitizationWhiteList from " + currentImgSrcSanitizationWhitelist + " to " + newImgSrcSanitizationWhiteList);
-        $compileProvider.imgSrcSanitizationWhitelist(newImgSrcSanitizationWhiteList);
+        // Allow chrome-extension: URLs in ng-src
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*((https?|chrome-extension):|data:image\/)/);
       }
     ])
     .config(["rateLimiterConfigProvider", function(rateLimiterConfigProvider) {
-      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1250);
-      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1250);
+      // Bungie's API will start throttling an API if it's called more than once per second. It does this
+      // by making responses take 2s to return, not by sending an error code or throttling response. Choosing
+      // our throttling limit to be 1 request every 1100ms lets us achieve best throughput while accounting for
+      // what I assume is clock skew between Bungie's hosts when they calculate a global rate limit.
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1100);
+      rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1100);
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("rateLimiterInterceptor");
@@ -166,11 +154,13 @@
 })();
 
 $(document).ready(function() {
-  if (verge.viewportW() !== $(window).width()) {
+  var viewportWidth = Math.max(document.documentElement.clientWidth,
+                               document.documentElement.innerWidth);
+  if (viewportWidth !== $(window).width()) {
     $('body').addClass('pad-margin');
     var style = document.createElement('style');
     style.type = 'text/css';
-    style.innerHTML = '.about.ngdialog-open.pad-margin #header, .app-settings.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (verge.viewportW() - $(window).width()) + 'px; }';
+    style.innerHTML = '.about.ngdialog-open.pad-margin #header, .app-settings.ngdialog-open.pad-margin #header, .support.ngdialog-open.pad-margin #header, .filters.ngdialog-open.pad-margin #header { padding-right: ' + (viewportWidth - $(window).width()) + 'px; }';
     document.getElementsByTagName('head')[0].appendChild(style);
   }
 });
@@ -184,23 +174,22 @@ if (typeof window.onerror == "object") {
   var originalWindowErrorCallback = window.onerror;
 
   window.onerror = function customErrorHandler(errorMessage, url, lineNumber, columnNumber, errorObject) {
-      var exceptionDescription = errorMessage;
-      if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
-        exceptionDescription = errorObject.message;
-      }
-
-      _gaq.push([
-        'errorTracker._trackEvent',
-        'DIM - Chrome Extension - v3.1.14',
-        exceptionDescription,
-        ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
-        0,
-        true
-      ]);
-  //  }
+    var exceptionDescription = errorMessage;
+    if(typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
+      exceptionDescription = errorObject.message;
+    }
+    //
+    // _gaq.push([
+    //   'errorTracker._trackEvent',
+    //   'DIM - Chrome Extension - v3.3',
+    //   exceptionDescription,
+    //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
+    //   0,
+    //   true
+    // ]);
 
     // If the previous "window.onerror" callback can be called, pass it the data:
-    if (typeof originalWindowErrorCallback === 'function') {
+    if(typeof originalWindowErrorCallback === 'function') {
       return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
     }
     // Otherwise, Let the default handler run:

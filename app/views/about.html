@@ -1,8 +1,9 @@
 <div dim-about dim-click-anywhere-but-here="app.closeLoadoutPopup()">
-    <h1 class="orange">About Destiny Item Manager (DIM)</h1>
-    <h3>Version 3.1.14</h3>
+  <h1 class="orange">About Destiny Item Manager (DIM)</h1>
+  <div class="ngdialog-inner-content">
+    <h3>Version 3.4.1</h3>
     <p>
-        DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox, if you have played on either platforms.
+      DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.
     </p>
     <!-- <h1>Blacksmith Shader Giveaway</h1>
   <p>The DIM team is giving away six Blacksmith shaders on Twitter to celebrate your #YearOneGear.</p><p>Visit us at <a href="https://twitter.com/ThisIsDIM/status/639237265944899584" target="_blank">@ThisIsDIM</a> on twitter or the <a href="https://www.reddit.com/r/DestinyItemManager/comments/3jfl0f/blacksmith_shader_giveaway/" target="_blank">/r/destinyitemmanager</a> subreddit to learn how to enter.</p><p>See you starside Guardians.</p> -->
@@ -13,25 +14,27 @@
                 Twitter
             </td>
             <td>
-                GitHub
+                Reddit
             </td>
             <td>
-                Subreddit
+                GitHub
             </td>
         </tr>
         <tr>
             <td>
-                <a href="http://twitter.com/ThisIsDIM" target="_blank">@ThisIsDIM</a>
+                Be sure to follow us to stay on top of updates and realtime application state information.
+                <br />
+                <a href="https://twitter.com/ThisIsDIM" target="_blank">@ThisIsDIM</a>
+            </td>
+            <td>
+                If you have questions, comments, or suggestions- let us know!
+                <br />
+                <a href="https://destinyitemmanager.reddit.com" target="_blank">/r/destinyitemmanager</a>
             </td>
             <td>
                 If you're interested in contributing to the project, visit us at our project page on GitHub.
                 <br />
                 <a href="https://github.com/kyleshay/DIM" target="_blank">DIM Git Repo</a>
-            </td>
-            <td>
-                If you have questions or comments, DIM has an active community on reddit and twitter.
-                <br />
-                <a href="http://destinyitemmanager.reddit.com" target="_blank">/r/destinyitemmanager</a>
             </td>
         </tr>
     </table>
@@ -39,15 +42,15 @@
     <p>
         <dl>
             <dt>How does DIM get access to my Destiny data?</dt>
-            <dd>Any chrome extension can ask for the data a website stores on your computer. When you log into Bungie.net, you are given a token that is based on your username and password. You use this token to communicate with Bungie securely. The token is more secure than sending your username and password with each request to Bungie's server. DIM uses this token to communicate with Bungie on your behalf.</dd>
+            <dd>Any chrome extension can ask for the data a website stores on your computer. When you log into Bungie.net, you are given a token (a cookie) that is generated uniquely for your account. You use this token to communicate with Bungie securely. The token is more secure than sending your username and password with each request to Bungie's server. DIM uses this token to communicate with Bungie on your behalf.</dd>
         </dl>
         <dl>
             <dt>How can I log out of DIM?</dt>
-            <dd>If you were to log out of Bungie.net in Chrome, the token that we use is invalidated, and we cannot communicate with Bunige again until you log back into Bungie.net.</dd>
+            <dd>Your session is tied to Bungie.net. If you logout on Bungie.net, you're effectively logged out of DIM.</dd>
         </dl>
         <dl>
             <dt>I lost my item using your tool!</dt>
-            <dd>More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check <a href="http://bungie.net" target="_blank">Bungie.net</a> to see if your item still exists.</dd>
+            <dd>More than likely a transfer failed, leaving your item in the vault or on another character. You could search for the item. If that doesn't turn it up, refresh the app by pressing F5. Check <a href="http://bungie.net" target="_blank">Bungie.net</a> or in game to see if your item still exists. We're sure it's still there.</dd>
         </dl>
         <dl>
             <dt>Hey, DIM duplicated my Gjallarhorn!</dt>
@@ -56,4 +59,5 @@
     </p>
 
     <p>All images and content are property of Bungie. Please contact us if there are any issues.</p>
+  </div>
 </div>

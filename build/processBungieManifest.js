@@ -1,17 +1,20 @@
+#!/usr/bin/env node
+
 var http = require('http');
 var fs = require('fs');
-
 var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require("underscore");
 var unzip = require('unzip');
 var mkdirp = require('mkdirp');
 
+var itemHashesJSON = require('./itemHashes.json');
+
 var db;
 var dbFile;
 var version;
 
-function processItemRow(icon, pRow) {
+function processItemRow(icon, pRow, itemHash) {
 
   var exists = fs.existsSync('.' + icon);
 
@@ -19,17 +22,30 @@ function processItemRow(icon, pRow) {
     exists = true;
   }
 
-  if (!exists) {
-    var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
-      var imgFS = fs.createWriteStream('.' + icon);
-      imageResponse.on('end', function() {
-        console.log(icon);
-        imgFS.end();
-        pRow.next();
-      });
+  var contains = true;
 
-      imageResponse.pipe(imgFS);
-    });
+  // if (itemHash) {
+  //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
+  // }
+
+  if (contains) {
+    if (!exists) {
+      var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
+        var imgFS = fs.createWriteStream('.' + icon);
+        imageResponse.on('end', function() {
+          console.log(icon);
+          imgFS.end();
+          pRow.next();
+        });
+        imageResponse.on('error', function(e) {
+          console.log("Image download error", e);
+        });
+
+        imageResponse.pipe(imgFS);
+      });
+    } else {
+      pRow.next();
+    }
   } else {
     pRow.next();
   }
@@ -47,7 +63,7 @@ function processItemRows(rows, prop) {
     i = i + 1;
 
     if (i < keys.length) {
-      processItemRow(rows[keys[i]][prop], this);
+      processItemRow(rows[keys[i]][prop], this, keys[i]);
     }
   }
 }
@@ -57,21 +73,10 @@ function onManifestRequest(error, response, body) {
   var manifestFile = fs.createWriteStream("manifest.zip");
   version = parsedResponse.Response.version;
 
-
-  var exists = fs.existsSync(version + '.txt');
-
-  // if (!exists) {
-    // var versionFile = fs.createWriteStream(version + '.txt');
-    // versionFile.write(JSON.stringify(parsedResponse, null, 2));
-    // versionFile.end();
-
-    request
-      .get('http://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
-      .pipe(manifestFile)
-      .on('close', onManifestDownloaded);
-  // } else {
-  //   console.log('Version already exist, \'' + version + '\'.');
-  // }
+  request
+    .get('http://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
+    .pipe(manifestFile)
+    .on('close', onManifestDownloaded);
 }
 
 function onManifestDownloaded() {
@@ -93,7 +98,7 @@ function onManifestDownloaded() {
 }
 
 function extractDB(dbFile) {
-  db = new sqlite3.Database(dbFile);
+  db = new sqlite3.Database(dbFile, sqlite3.OPEN_READONLY);
   var items = {};
 
   db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
@@ -112,7 +117,7 @@ function extractDB(dbFile) {
     var pRow = processItemRows(items, 'icon');
     pRow.next();
 
-    var defs = fs.createWriteStream('items.json');
+    var defs = fs.createWriteStream('api-manifest/items.json');
     defs.write(JSON.stringify(items));
     defs.end();
   });
@@ -129,7 +134,7 @@ function extractDB(dbFile) {
       items[item.statHash] = item;
     });
 
-    var defs = fs.createWriteStream('stats.json');
+    var defs = fs.createWriteStream('api-manifest/stats.json');
     defs.write(JSON.stringify(items));
   });
 
@@ -147,7 +152,7 @@ function extractDB(dbFile) {
       items[item.objectiveHash] = item;
     });
 
-    var defs = fs.createWriteStream('objectives.json');
+    var defs = fs.createWriteStream('api-manifest/objectives.json');
     defs.write(JSON.stringify(items));
   });
 
@@ -163,7 +168,7 @@ function extractDB(dbFile) {
       items[item.bucketHash] = item;
     });
 
-    var defs = fs.createWriteStream('buckets.json');
+    var defs = fs.createWriteStream('api-manifest/buckets.json');
     defs.write(JSON.stringify(items));
   });
 
@@ -180,10 +185,19 @@ function extractDB(dbFile) {
       items[item.gridHash] = item;
     });
 
-    var pRow = processItemRows(items, 'iconPath');
+    var nodes = {};
+    var index = 0;
+    _.values(items).forEach(function (item) {
+      item.nodes.forEach(function(node) {
+        node.steps.forEach(function(step) {
+          nodes[step.icon] = step; // index by icon so we get all the icons
+        });
+      });
+    });
+    var pRow = processItemRows(nodes, 'icon');
     pRow.next();
 
-    var defs = fs.createWriteStream('talent.json');
+    var defs = fs.createWriteStream('api-manifest/talent.json');
     defs.write(JSON.stringify(items));
   });
 
@@ -199,14 +213,38 @@ function extractDB(dbFile) {
           items[item.perkHash] = item;
       });
 
-      var defs = fs.createWriteStream('perks.json');
+      var defs = fs.createWriteStream('api-manifest/perks.json');
+      defs.write(JSON.stringify(items));
+  });
+
+
+  db.all('select * from DestinyProgressionDefinition', function(err, rows) {
+      if (err) {
+          throw err;
+      }
+
+      items = {};
+
+      rows.forEach(function(row) {
+          var item = JSON.parse(row.json);
+          items[item.progressionHash] = item;
+          delete item.progressionHash;
+          delete item.hash;
+          delete item.icon;
+          delete item.name;
+          item.steps = item.steps.map(function(i) { return i.progressTotal; });
+      });
+
+      var defs = fs.createWriteStream('api-manifest/progression.json');
       defs.write(JSON.stringify(items));
   });
 
   console.log("done.");
 }
 
+mkdirp('api-manifest', function(err) { });
 mkdirp('img/misc', function(err) { });
+mkdirp('img/destiny_content/items', function(err) { });
 mkdirp('common/destiny_content/icons', function(err) { });
 
 request({

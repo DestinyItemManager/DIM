@@ -4,29 +4,86 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
 
+    // Cooldowns
+    var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
+    var cooldownsSuperB  = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
+    var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
+    var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
+
+    // Prototype for Store objects - add methods to this to add them to all
+    // stores.
+    var StoreProto = {
+      // Get the total amount of this item in the store, across all stacks.
+      amountOfItem: function(item) {
+        return sum(_.where(this.items, { hash: item.hash }), 'amount');
+      },
+      // How much of items like this item can fit in this store?
+      capacityForItem: function(item) {
+        return (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
+      },
+      // How many *more* items like this item can fit in this store?
+      spaceLeftForItem: function(item) {
+        return this.capacityForItem(item) - count(this.items, { type: item.type });
+      }
+    };
+
     var service = {
       getStores: getStores,
+      reloadStores: reloadStores,
       getStore: getStore,
-      updateStores: updateStores,
-      setHeights: setHeights
+      getVault: getStore.bind(null, 'vault'),
+      updateCharacters: updateCharacters,
+      setHeights: setHeightsAsync,
+      createItemIndex: createItemIndex
     };
+
+    $rootScope.$on('dim-settings-updated', function(setting) {
+      if (_.has(setting, 'characterOrder')) {
+        sortStores(_stores).then(function(stores) {
+          _stores = stores;
+        });
+      }
+    });
 
     return service;
 
-    function updateStores() {
-      return dimBungieService.getCharacters(dimPlatformService.getActive());
+    // Update the high level character information for all the stores
+    // (level, light, int/dis/str, etc.). This does not update the
+    // items in the stores - to do that, call reloadStores.
+    function updateCharacters() {
+      return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
+        _.each(_stores, function(dStore) {
+          if (!dStore.isVault) {
+            var bStore = _.findWhere(bungieStores, { id: dStore.id });
+
+            dStore.level = bStore.base.characterLevel;
+            dStore.percentToNextLevel = bStore.base.percentToNextLevel;
+            dStore.powerLevel = bStore.base.characterBase.powerLevel;
+            dStore.background = bStore.base.backgroundPath;
+            dStore.icon = bStore.base.emblemPath;
+            dStore.stats = getStatsData(bStore.base.characterBase);
+          }
+        });
+        return _stores;
+      });
     }
 
     function getNextIndex() {
       return _index++;
     }
 
+    function setHeightsAsync() {
+      setTimeout(setHeights, 0);
+    }
+
+    // Equalize the heights of the various rows of items.
+    // TODO: replace with flexbox
     function setHeights() {
       function outerHeight(el) {
         //var height = el.offsetHeight;
@@ -92,6 +149,7 @@
       setHeight('.sub-section.sort-emote');
       setHeight('.sub-section.sort-ship');
       setHeight('.sub-section.sort-vehicle');
+      setHeight('.sub-section.sort-horn');
       setHeight('.sub-section.sort-consumable');
       setHeight('.sub-section.sort-material');
       setHeight('.sub-section.sort-missions');
@@ -99,591 +157,491 @@
       setHeight('.sub-section.sort-messages');
       setHeight('.sub-section.sort-special-orders');
       setHeight('.sub-section.sort-lost-items');
+      setHeight('.sub-section.sort-quests');
       setHeight('.weapons');
       setHeight('.armor');
       setHeight('.general');
     }
 
-    function getStores(getFromBungie, withOrder) {
-      if (!getFromBungie && !!withOrder) {
-        return settings.getSetting('characterOrder')
-          .then(function(characterOrder) {
-            if (characterOrder === 'mostRecent') {
-              return _.sortBy(_stores, 'lastPlayed').reverse();
-            } else {
-              return _.sortBy(_stores, 'id');
+    function sortStores(stores) {
+      return settings.getSetting('characterOrder')
+        .then(function(characterOrder) {
+          if (characterOrder === 'mostRecent') {
+            return _.sortBy(stores, 'lastPlayed').reverse();
+          } else {
+            return _.sortBy(stores, 'id');
+          }
+        });
+    }
+
+    function getStores() {
+      return _stores;
+    }
+
+    // Returns a promise for a fresh view of the stores and their items.
+    function reloadStores() {
+      return dimBungieService.getStores(dimPlatformService.getActive())
+        .then(function(rawStores) {
+          var glimmer, marks;
+
+          return $q.all(rawStores.map(function(raw) {
+            var store;
+            var items = [];
+            if (!raw) {
+              return;
             }
-          });
-      } else if (!getFromBungie && _.isUndefined(withOrder)) {
-        return _stores;
-      } else {
-        var promise = dimBungieService.getStores(dimPlatformService.getActive())
-          .then(function(stores) {
-            _stores.splice(0);
-            var asyncItems = [];
-            var glimmer, marks;
 
-            _.each(stores, function(raw) {
-              var store;
-              var items = [];
-
-              if (raw.id === 'vault') {
-                store = {
-                  'id': 'vault',
-                  'lastPlayed': '2005-01-01T12:00:01Z',
-                  'icon': '',
-                  'items': [],
-                  legendaryMarks: marks,
-                  glimmer: glimmer,
-                  'bucketCounts': {},
-                  hasExotic: function(type) {
-                    var predicate = {
-                      'tier': dimItemTier.exotic,
-                      'type': type
-                    };
-
-                    return _.chain(items)
-                      .where(predicate)
-                      .value();
-                  },
-                  getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
-                  },
-                  canEquipExotic: function(item) {
-                    return this.getTypeCount(item);
-                  }
-                };
-
-                _.each(raw.data.buckets, function(bucket) {
-                  if (bucket.bucketHash === 3003523923)
-                    store.bucketCounts.Armor = _.size(bucket.items);
-                  if (bucket.bucketHash === 138197802)
-                    store.bucketCounts.General = _.size(bucket.items);
-                  if (bucket.bucketHash === 4046403665)
-                    store.bucketCounts.Weapons = _.size(bucket.items);
-
-                  items = _.union(items, bucket.items);
-                });
-              } else {
-
-
-                try {
-                  glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086 }).value;
-                  marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370 }).value;
-                } catch (e) {
-                  glimmer = 0;
-                  marks = 0;
+            if (raw.id === 'vault') {
+              store = angular.extend(Object.create(StoreProto), {
+                id: 'vault',
+                lastPlayed: '2005-01-01T12:00:01Z',
+                icon: '',
+                items: [],
+                legendaryMarks: marks,
+                glimmer: glimmer,
+                bucketCounts: {},
+                isVault: true,
+                // Vault has different capacity rules
+                capacityForItem: function(item) {
+                  return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
+                },
+                spaceLeftForItem: function(item) {
+                  return this.capacityForItem(item) - count(this.items, { sort: item.sort });
                 }
+              });
 
-                store = {
-                  id: raw.id,
-                  icon: raw.character.base.emblemPath,
-                  lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                  background: raw.character.base.backgroundPath,
-                  level: raw.character.base.characterLevel,
-                  powerLevel: raw.character.base.characterBase.powerLevel,
-                  class: getClass(raw.character.base.characterBase.classType),
-                  gender: getGender(raw.character.base.characterBase.genderType),
-                  race: getRace(raw.character.base.characterBase.raceHash),
-                  isPrestigeLevel: raw.character.base.isPrestigeLevel,
-                  percentToNextLevel: raw.character.base.percentToNextLevel,
-                  hasExotic: function(type, equipped) {
-                    var predicate = {
-                      'tier': dimItemTier.exotic,
-                      'type': type
-                    };
+              _.each(raw.data.buckets, function(bucket) {
+                if (bucket.bucketHash === 3003523923)
+                  store.bucketCounts.Armor = _.size(bucket.items);
+                if (bucket.bucketHash === 138197802)
+                  store.bucketCounts.General = _.size(bucket.items);
+                if (bucket.bucketHash === 4046403665)
+                  store.bucketCounts.Weapons = _.size(bucket.items);
 
-                    if (!_.isUndefined(equipped)) {
-                      predicate.equipped = equipped;
-                    }
-
-                    return _.chain(this.items)
-                      .where(predicate)
-                      .value();
-                  },
-                  getTypeCount: function(item) {
-                    return _.chain(this.items)
-                      .filter(function(storeItem) {
-                        return item.type === storeItem.type;
-                      })
-                      .size()
-                      .value() < 10;
-                  },
-                  canEquipExotic: function(itemType) {
-                    var types = _.chain(dimCategory)
-                      .pairs()
-                      .find(function(cat) {
-                        return _.some(cat[1],
-                          function(type) {
-                            return (type == itemType);
-                          }
-                        );
-                      })
-                      .value()[1];
-
-                    return _.size(_.reduce(types, function(memo, type) {
-                      return memo || this.hasExotic(type, true);
-                    }, false, this)) === 0;
-                  }
-                };
-
-
-
-                _.each(raw.data.buckets, function(bucket) {
-                  _.each(bucket, function(pail) {
-                    items = _.union(items, pail.items);
-                  });
+                _.each(bucket.items, function(item) {
+                  item.bucket = bucket.bucketHash;
                 });
 
-                if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
-                  if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
-                    _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
-                      items = _.union(items, pail.items);
-                    });
-                  }
+                items = _.union(items, bucket.items);
+              });
+            } else {
 
-                }
 
+              try {
+                glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+              } catch (e) {
+                glimmer = 0;
+                marks = 0;
               }
 
-              var i = getItems(store.id, items, raw.definitions)
-                .then(function(items) {
-                  items = _.sortBy(items, function(item) {
-                    return item.name;
+              store = angular.extend(Object.create(StoreProto), {
+                id: raw.id,
+                icon: raw.character.base.emblemPath,
+                lastPlayed: raw.character.base.characterBase.dateLastPlayed,
+                background: raw.character.base.backgroundPath,
+                level: raw.character.base.characterLevel,
+                powerLevel: raw.character.base.characterBase.powerLevel,
+                stats: getStatsData(raw.character.base.characterBase),
+                class: getClass(raw.character.base.characterBase.classType),
+                gender: getGender(raw.character.base.characterBase.genderType),
+                race: getRace(raw.character.base.characterBase.raceHash),
+                percentToNextLevel: raw.character.base.percentToNextLevel,
+                isVault: false
+              });
+
+              _.each(raw.data.buckets, function(bucket) {
+                _.each(bucket, function(pail) {
+                  _.each(pail.items, function(item) {
+                    item.bucket = pail.bucketHash;
                   });
 
-                  items = _.sortBy(items, function(item) {
+                  items = _.union(items, pail.items);
+                });
+              });
 
-                    switch (item.tier) {
-                      case 'Exotic':
-                        return 0;
-                      case 'Legendary':
-                        return 1;
-                      case 'Rare':
-                        return 2;
-                      case 'Uncommon':
-                        return 3;
-                      case 'Common':
-                        return 4;
-                      default:
-                        return 5;
-                    }
+              if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
+                if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
+                  _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+                    items = _.union(items, pail.items);
                   });
+                }
+              }
+            }
 
-                  store.items = items;
-
-                  _stores.push(store);
-
-                  return store;
-                });
-
-              asyncItems.push(i);
+            return getItems(store.id, items).then(function(items) {
+              store.items = items;
+              return store;
             });
+          }));
+        })
+        .then(function(stores) {
+          return sortStores(stores);
+        })
+        .then(function(stores) {
+          _stores = stores;
 
-            return $q.all(asyncItems);
-          })
-          .then(function() {
-            var stores = _stores;
-
-            return $q(function(resolve, reject) {
-              settings.getSetting('characterOrder')
-                .then(function(characterOrder) {
-                  if (characterOrder === 'mostRecent') {
-                    resolve(_.sortBy(stores, 'lastPlayed').reverse());
-                  } else {
-                    resolve(_.sortBy(stores, 'id'));
-                  }
-                });
-            });
-          })
-          .then(function(stores) {
-            $rootScope.$broadcast('dim-stores-updated', {
-              stores: stores
-            });
-
-            return stores;
+          $rootScope.$broadcast('dim-stores-updated', {
+            stores: stores
           });
+          setHeightsAsync();
 
-        return promise;
-      }
+          return stores;
+        });
     }
 
     function getStore(id) {
-      var store = _.find(_stores, function(store) {
-        return store.id === id;
-      });
-
-      return $q.when(store);
+      return _.find(_stores, { id: id });
     }
 
-    function getItems(owner, items, definitions) {
-      var result = [],
-          how = [
-            27147831,
-            42955693,
-            67667123,
-            90237898,
-            218050499,
-            265815054,
-            335523232,
-            339830484,
-            393928834,
-            396000457,
-            458051526,
-            503662095,
-            523254923,
-            539209176,
-            561917151,
-            624069029,
-            714364949,
-            775290250,
-            795669148,
-            860021733,
-            882909349,
-            995864459,
-            904421510,
-            1066225282,
-            1089438744,
-            1107880514,
-            1160431986,
-            1220059831,
-            1254374620,
-            1254481871,
-            1264686852,
-            1323306343,
-            1402638106,
-            1451036562,
-            1519653029,
-            1550472824,
-            1594939317,
-            1656716862,
-            1828077147,
-            1847790745,
-            1873618131,
-            2012670844,
-            2026407600,
-            2083636246,
-            2166567782,
-            2204090140,
-            2205157361,
-            2218769485,
-            2225640336,
-            2254085097,
-            2291003580,
-            2328256155,
-            2438950138,
-            2465557612,
-            2475938409,
-            2480655802,
-            2535110885,
-            2557913516,
-            2558819340,
-            2582896251,
-            2591286232,
-            2642620856,
-            2668404053,
-            2729377859,
-            2733667410,
-            2741119693,
-            2762611443,
-            2773297359,
-            2834869470,
-            2858888526,
-            3072387149,
-            3013056390,
-            3083393861,
-            3102889189,
-            3170350942,
-            3252749793,
-            3604975945,
-            3698237992,
-            3744470365,
-            3904617893,
-            3975149217,
-            3992691386,
-            4029879832,
-            4068960035,
-            4143281036,
-            4160874107,
-            4248486431
-          ];
+    var idTracker = {};
 
-      var iterator = function(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, item, index) {
-        var itemDef = definitions[item.itemHash];
-        // Missing definition?
-        if (itemDef === undefined) {
-          // maybe it is classified...
-          itemDef = {
-            classified: true,
-            icon: '/common/destiny_content/icons/f0dcc71487f77a69005bec2e3fb6e4e8.jpg'
-          }
+    // Set an ID for the item that should be unique across all items
+    function createItemIndex(item) {
+      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+      var index = item.hash + '-';
+      if (item.id === '0') {
+        index = index + item.amount;
+        idTracker[index] = (idTracker[index] || 0) + 1;
+        index = index + '-' + idTracker[index];
+      } else {
+        index = index + item.id;
+      }
+      return index;
+    }
 
-          switch (item.itemHash) {
-            case 3012398149: {
-              item.isEquipment = true;
-              itemDef.icon = '/common/destiny_content/icons/9be72c64fdd81ccd068e766365cd38c6.jpg';
-              item.primaryStat = {value: 'Sleeper'};
-
-              itemDef.itemHash = 3012398149;
-              itemDef.bucketTypeHash = 953998645;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Fusion Rifle';
-              itemDef.itemName = 'Sleeper Simulant - Classified';
-
-              itemDef.maxStackSize = 1;
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-
-            case 3227022822: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'Spindle'};
-
-              itemDef.bucketTypeHash = 2465295065;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Sniper Rifle';
-              itemDef.itemName = 'Black Spindle - Classified';
-
-              itemDef.maxStackSize = 1;
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-
-            case 3688594189: {
-              item.isEquipment = true;
-              item.primaryStat = {value: 'Malice'};
-
-              itemDef.bucketTypeHash = 1498876634;
-              itemDef.classType = 3;
-              itemDef.itemType = 3;
-              itemDef.itemTypeName = 'Scout Rifle';
-              itemDef.itemName = 'Touch of Malice - Classified';
-
-              itemDef.maxStackSize = 1;
-              itemDef.tierTypeName = "Exotic";
-              itemDef.equippable = true;
-              itemDef.hasAction = true;
-              itemDef.nonTransferrable = true;
-              break;
-            }
-          }
-
-          // unidentified item.
-          if(!itemDef.itemName) {
-            window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
-          }
-        }
-
-        if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
-          return;
-        }
-
-        // if ((itemDef.type.indexOf('Bounty') != -1) || (itemDef.type.indexOf('Commendation') != -1)) {
-        //   return;
-        // }
-
-        var itemType = getItemType(item, itemDef, itemBucketDef);
-
-        if (item.itemHash === 937555249) {
-          itemType = "Material";
-        }
-
-        var weaponClass = null;
-
-
-        if (!itemType) {
-          return;
-        }
-
-        if (itemType.hasOwnProperty('general') && itemType.general !== '') {
-          weaponClass = itemType.weaponClass;
-          itemType = itemType.general;
-        }
-
-        var itemSort = sortItem(itemDef.itemTypeName);
-
-        if (_.isUndefined(itemSort)) {
-          console.log(itemDef.itemTypeName + " does not have a sort property.");
-        }
-
-        if (item.location === 4) {
-          itemSort = 'Postmaster';
-
-          if (itemType !== 'Messages')
-            if (itemType === 'Consumable') {
-              itemType = 'Special Orders';
-            } else {
-              itemType = 'Lost Items';
-            }
-        }
-
-        var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
-
-        // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-        var index = item.itemHash + '-';
-        if (item.itemInstanceId === '0') {
-          index = index + getNextIndex();
-        } else {
-          index = index + item.itemInstanceId;
-        }
-
-        var createdItem = {
-          index: index,
-          owner: owner,
-          hash: item.itemHash,
-          type: itemType,
-          sort: itemSort,
-          tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
-          name: itemDef.itemName,
-          description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
-          icon: itemDef.icon,
-          inHoW: _.contains(how, itemDef.itemHash),
-          notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
-          id: item.itemInstanceId,
-          equipped: item.isEquipped,
-          equipment: item.isEquipment,
-          complete: item.isGridComplete,
-          hasXP: (!!item.progression),
-          xpComplete: 0,
-          amount: item.stackSize,
-          primStat: item.primaryStat,
-          stats: item.stats,
-          perks: item.perks,
-          nodes: item.nodes,
-          //talents: talentDefs.data[item.talentGridHash],
-          talentPerks: getTalentPerks(item, talentDefs),
-          maxStackSize: itemDef.maxStackSize,
-          classType: itemDef.classType,
-          classTypeName: getClass(itemDef.classType),
-          /* 0: titan, 1: hunter, 2: warlock, 3: any */
-          dmg: dmgName,
-          visible: true,
-          hasAscendNode: false,
-          ascended: false,
-          hasReforgeNode: false,
-          lockable: item.lockable,
-          locked: item.locked,
-          weaponClass: weaponClass || '',
-          classified: itemDef.classified
+    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
+      var itemDef = definitions[item.itemHash];
+      // Missing definition?
+      if (itemDef === undefined || itemDef.itemName === 'Classified') {
+        // maybe it is classified...
+        itemDef = {
+          classified: true,
+          icon: '/img/misc/missing_icon.png'
         };
 
-        // Bounties
-        if (_.has(item, 'objectives') && (_.size(item.objectives) > 0) && (_.isNumber(item.objectives[0].objectiveHash))) {
-          var objectiveDefObj = objectiveDef[item.objectives[0].objectiveHash],
-            progressGoal = objectiveDefObj.completionValue > 0 ? objectiveDefObj.completionValue : 1;
-
-          createdItem.complete = item.objectives[0].isComplete;
-          createdItem.xpComplete = Math.floor(item.objectives[0].progress / progressGoal * 100);
+        // unidentified item.
+        if(!itemDef.itemName) {
+          console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+          window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
         }
+      }
 
-        _.each(item.stats, function(stat) {
-          stat.name = statDef[stat.statHash].statName;
-          stat.bar = stat.statHash !== 3871231066 && item.primaryStat.statHash !== 3897883278;
-        });
+      if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
+        return null;
+      }
 
-        if (item.itemHash === 2809229973) { // Necrochasm
-          createdItem.hasXP = true;
-          createdItem.xpComplete = true;
-          createdItem.complete = true;
-        }
+      var itemType = getItemType(item, itemDef, itemBucketDef);
 
-        // Fixes items that are marked as complete, but the data didn't reflect
-        // that status.  Must be a bug in Bungie's data.
-        if (createdItem.complete) {
-          createdItem.hasXP = true;
-          createdItem.xpComplete = true;
-        }
+      if (item.itemHash === 937555249) {
+        itemType = "Material";
+      }
 
-        var talents = talentDefs.data[item.talentGridHash];
+      var weaponClass = null, weaponClassName = null;
 
-        if (talents) {
-          var ascendNode = _.filter(talents.nodes, function(node) {
-            return _.any(node.steps, function(step) {
-              return step.nodeStepName === 'Ascend';
-            });
-          });
 
-          if (!_.isEmpty(ascendNode)) {
-            createdItem.hasAscendNode = true;
-            createdItem.ascended = _.filter(item.nodes, function(node) {
-              return node.nodeHash === ascendNode[0].nodeHash;
-            })[0].isActivated;
+      if (!itemType) {
+        return null;
+      }
 
-            if (!createdItem.ascended) {
-              createdItem.complete = false;
-            }
+      if (itemType.hasOwnProperty('general') && itemType.general !== '') {
+        weaponClass = itemType.weaponClass;
+        weaponClassName = itemType.weaponClassName;
+        itemType = itemType.general;
+      }
+
+      var itemSort = sortItem(itemDef.itemTypeName);
+
+      if (_.isUndefined(itemSort)) {
+        console.log(itemDef.itemTypeName + " does not have a sort property.");
+      }
+
+      if (item.location === 4) {
+        itemSort = 'Postmaster';
+
+        if (itemType !== 'Messages')
+          if (itemType === 'Consumable') {
+            itemType = 'Special Orders';
+          } else {
+            itemType = 'Lost Items';
           }
+      }
 
-          var reforgeNodes = _.filter(talents.nodes, function(node) {
-            return _.any(node.steps, function(step) {
-              return step.nodeStepName === 'Reforge Ready';
-            });
-          });
+      var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-          createdItem.hasReforgeNode = !_.isEmpty(reforgeNodes);
-        }
-
-        _.each(createdItem.perks, function(perk) {
-          var perkDef = perkDefs.data[perk.perkHash];
-          if (perkDef) {
-            _.each(['displayName', 'displayDescription'], function(attr) {
-              if (perkDef[attr]) {
-                perk[attr] = perkDef[attr];
-              }
-            });
-          }
-        });
-
-        // if (createdItem.tier !== 'Basic') {
-          result.push(createdItem);
-        // }
+      var createdItem = {
+        hash: item.itemHash,
+        type: itemType,
+        sort: itemSort,
+        tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
+        name: itemDef.itemName,
+        description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
+        icon: itemDef.icon,
+        notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+        id: item.itemInstanceId,
+        equipped: item.isEquipped,
+        bucket: item.bucket,
+        equipment: item.isEquipment,
+        complete: item.isGridComplete,
+        amount: item.stackSize,
+        primStat: item.primaryStat,
+        stats: buildStats(item, itemDef, statDef),
+        // "perks" are the two or so talent grid items that are "featured" for an
+        // item in its popup in the game. We don't currently use these.
+        //perks: item.perks,
+        equipRequiredLevel: item.equipRequiredLevel,
+        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
+        objectives: buildObjectives(item, objectiveDef, itemDef),
+        maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
+        // 0: titan, 1: hunter, 2: warlock, 3: any
+        classType: itemDef.classType,
+        classTypeName: getClass(itemDef.classType),
+        dmg: dmgName,
+        visible: true,
+        year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
+        lockable: item.lockable,
+        locked: item.locked,
+        weaponClass: weaponClass || '',
+        weaponClassName: weaponClassName,
+        classified: itemDef.classified
       };
+      createdItem.index = createItemIndex(createdItem);
 
-      var iteratorPB;
+      // More objectives properties
+      if (createdItem.objectives) {
+        createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
+        createdItem.xpComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+          return (objective.progress / objective.completionValue) / createdItem.objectives.length;
+        }));
+      }
 
-      // Bind our arguments to the iterator method
-      var promise = dimItemDefinitions.getDefinitions()
-        .then(function(defs) {
-          iteratorPB = iterator.bind(null, defs);
-        })
-        .then(dimItemBucketDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimStatDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimObjectiveDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimSandboxPerkDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
-        })
-        .then(dimTalentDefinitions.getDefinitions)
-        .then(function(defs) {
-          iteratorPB = iteratorPB.bind(null, defs);
+      return createdItem;
+    }
 
-          _.each(items, iteratorPB);
+    function buildTalentGrid(item, talentDefs, progressDefs, perkDefs) {
+      var talentGridDef = talentDefs[item.talentGridHash];
+      if (!item.progression || !talentGridDef) {
+        return undefined;
+      }
 
+      var totalXP = item.progression.currentProgress;
+      var totalLevel = item.progression.level; // Can be way over max
+
+      // progressSteps gives the XP needed to reach each level, with
+      // the last element repeating infinitely.
+      var progressSteps = progressDefs[item.progression.progressionHash].steps;
+      // Total XP to get to specified level
+      function xpToReachLevel(level) {
+        if (level === 0) {
+          return 0;
+        }
+        var totalXPRequired = 0;
+        for (var step = 1; step <= level; step++) {
+          totalXPRequired += progressSteps[Math.min(step, progressSteps.length) - 1];
+        }
+
+        return totalXPRequired;
+      }
+
+      var possibleNodes = talentGridDef.nodes;
+
+      var featuredPerkNames = item.perks.map(function(perk) {
+        return perkDefs[perk.perkHash].displayName;
+      });
+
+      var gridNodes = item.nodes.map(function(node) {
+        var talentNodeGroup = possibleNodes[node.nodeHash];
+        var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+
+        var nodeName = talentNodeSelected.nodeStepName;
+
+        // Filter out some weird bogus nodes
+        if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
+          return undefined;
+        }
+
+        // Only one node in this column can be selected (scopes, etc)
+        var exclusiveInColumn = !!(talentNodeGroup.exlusiveWithNodes &&
+                                   talentNodeGroup.exlusiveWithNodes.length > 0);
+
+        // Unlocked is whether or not the material cost has been paid
+        // for the node
+        var unlocked = node.isActivated ||
+              talentNodeGroup.autoUnlocks ||
+              // If only one can be activated, the cost only needs to be
+              // paid once per row.
+              (exclusiveInColumn &&
+               _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
+                 return item.nodes[nodeIndex].isActivated;
+               }));
+
+        // Calculate relative XP for just this node
+        var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
+        var activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
+        var xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
+        var xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
+
+        // There's a lot more here, but we're taking just what we need
+        return {
+          name: nodeName,
+          description: talentNodeSelected.nodeStepDescription,
+          icon: talentNodeSelected.icon,
+          // XP put into this node
+          xp: xp,
+          // XP needed for this node to unlock
+          xpRequired: xpRequired,
+          // Position in the grid
+          column: talentNodeGroup.column,
+          row: talentNodeGroup.row,
+          // Is the node selected (lit up in the grid)
+          activated: node.isActivated,
+          // The item level at which this node can be unlocked
+          activatedAtGridLevel: activatedAtGridLevel,
+          // Only one node in this column can be selected (scopes, etc)
+          exclusiveInColumn: exclusiveInColumn,
+          // Whether there's enough XP in the item to buy the node
+          xpRequirementMet: activatedAtGridLevel <= totalLevel,
+          // Whether or not the material cost has been paid for the node
+          unlocked: unlocked,
+          // Some nodes don't show up in the grid, like purchased ascend nodes
+          hidden: node.hidden,
+
+          // Whether (and in which order) this perk should be
+          // "featured" on an abbreviated info panel, as in the
+          // game. 0 = not featured, positive numbers signify the
+          // order of the featured perks.
+          featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+
+          // This list of material requirements to unlock the
+          // item are a mystery. These hashes don't exist anywhere in
+          // the manifest database. Also, the activationRequirement
+          // object doesn't say how much of the material is
+          // needed. There's got to be some missing DB somewhere with
+          // this info.
+          //materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+
+          // These are useful for debugging or searching for new properties,
+          // but they don't need to be included in the result.
+          //talentNodeGroup: talentNodeGroup,
+          //talentNodeSelected: talentNodeSelected,
+          //itemNode: node
+        };
+      });
+      gridNodes = _.compact(gridNodes);
+
+      // This can be handy for visualization/debugging
+      //var columns = _.groupBy(gridNodes, 'column');
+
+      var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
+      var totalXPRequired = xpToReachLevel(maxLevelRequired);
+
+      var ascendNode = _.find(gridNodes, { name: 'Ascend' });
+
+      // Fix for stuff that has nothing in early columns
+      var minColumn = _.min(gridNodes, 'column').column;
+      if (minColumn > 0) {
+        gridNodes.forEach(function(node) { node.column -= minColumn; });
+      }
+
+      return {
+        nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
+        xpComplete: totalXPRequired <= totalXP,
+        totalXPRequired: totalXPRequired,
+        totalXP: Math.min(totalXPRequired, totalXP),
+        hasAscendNode: !!ascendNode,
+        ascended: !!(ascendNode && ascendNode.activated),
+        hasReforgeNode: _.any(gridNodes, { name: 'Reforge Ready' }),
+        infusable: _.any(gridNodes, { name: 'Infuse' })
+      };
+    }
+
+    function buildObjectives(item, objectiveDef, def) {
+      if (!item.objectives || !item.objectives.length) {
+        return undefined;
+      }
+
+      return item.objectives.map(function(objective) {
+        var def = objectiveDef[objective.objectiveHash];
+
+        return {
+          description: def.displayDescription,
+          progress: objective.progress,
+          completionValue: def.completionValue,
+          complete: objective.isComplete,
+          boolean: def.completionValue === 1
+        };
+      });
+    }
+
+    function buildStats(item, itemDef, statDef) {
+      if (!item.stats || !item.stats.length) {
+        return undefined;
+      }
+      return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
+        var def = statDef[stat.statHash];
+        var name = def.statName;
+        if (name === 'Aim assistance') {
+          name = 'Aim Assist';
+        }
+
+        // Only include these hidden stats, in this order
+        var secondarySort = ['Aim Assist', 'Equip Speed'];
+        var secondaryIndex = -1;
+
+        var sort = _.findIndex(item.stats, { statHash: stat.statHash });
+        var itemStat;
+        if (sort < 0) {
+          secondaryIndex = secondarySort.indexOf(name);
+          sort = 50 + secondaryIndex;
+        } else {
+          itemStat = item.stats[sort];
+          // Always at the end
+          if (name === 'Magazine' || name === 'Energy') {
+            sort = 100;
+          }
+        }
+
+        if (!itemStat && secondaryIndex < 0) {
+          return undefined;
+        }
+
+        var maximumValue = 100;
+        if (itemStat && itemStat.maximumValue) {
+          maximumValue = itemStat.maximumValue;
+        }
+
+        return {
+          name: name,
+          sort: sort,
+          value: itemStat ? itemStat.value : stat.value,
+          maximumValue: maximumValue,
+          bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
+        };
+      })), 'sort');
+    }
+
+    function getItems(owner, items) {
+      idTracker = {};
+      return $q.all([
+        dimItemDefinitions,
+        dimItemBucketDefinitions,
+        dimStatDefinitions,
+        dimObjectiveDefinitions,
+        dimSandboxPerkDefinitions,
+        dimTalentDefinitions,
+        dimYearsDefinitions,
+        dimProgressionDefinitions])
+        .then(function(args) {
+          var result = [];
+          _.each(items, function (item) {
+            var createdItem = processSingleItem.apply(undefined, args.concat(item));
+            if (createdItem !== null) {
+              createdItem.owner = owner;
+              result.push(createdItem);
+            }
+          });
           return result;
         });
-      return promise;
     }
 
     function getClass(type) {
@@ -718,21 +676,6 @@
           return 'female';
       }
       return 'unknown';
-    }
-
-    function getTalentPerks(item, talents) {
-      var talent = talents.data[item.talentGridHash];
-
-      if (talent) {
-        return _.chain(talent.nodes).map(function(node) {
-            return node.steps;
-          })
-          .flatten()
-          .pluck('nodeStepHash')
-          .value();
-      } else {
-        return [];
-      }
     }
 
     /* Not Implemented */
@@ -797,7 +740,8 @@
       // Used to find a "weaponClass" type to send back
       var typeObj = {
         general: '',
-        weaponClass: type.toLowerCase().replace(/\s/g, '')
+        weaponClass: type.toLowerCase().replace(/\s/g, ''),
+        weaponClassName: type
       };
 
       if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
@@ -820,7 +764,10 @@
         return 'ClassItem';
       if (["Gauntlet Engram"].indexOf(type) != -1)
         return 'Gauntlets';
-      if (["Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
+      if (type==='Mask') {
+        return 'Helmet';
+      }
+      if (["Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
         return (type.split(' ')[0] === 'Body') ? "Chest" : type.split(' ')[0];
       if (["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
         return 'Class';
@@ -878,8 +825,12 @@
         return 'Bounties';
       }
 
+      if (type.indexOf("Horn") != -1) {
+        return "Horn";
+      }
+
       if (type.indexOf("Quest") != -1) {
-        return 'Bounties';
+        return 'Quests';
       }
 
       if (type.indexOf("Relic") != -1) {
@@ -928,9 +879,9 @@
     function sortItem(type) {
       if (["Pulse Rifle", "Sword", "Sniper Rifle", "Shotgun", "Scout Rifle", "Sidearm", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
         return 'Weapons';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
+      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
         return 'Armor';
-      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
+      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Horn", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
         return 'General';
       if (["Daily Reward", "Package", "Armsday Order"]) {
         return 'Postmaster';
@@ -940,5 +891,66 @@
         return 'Postmaster';
       }
     }
+
+
+    //---- following code is from https://github.com/DestinyTrialsReport
+    function getAbilityCooldown(subclass, ability, tier) {
+      if (ability === 'STAT_INTELLECT') {
+        switch (subclass) {
+          case 2007186000: // Defender
+          case 4143670656: // Nightstalker
+          case 2455559914: // Striker
+          case 3658182170: // Sunsinger
+            return cooldownsSuperA[tier];
+          default:
+            return cooldownsSuperB[tier];
+        }
+      } else if (ability === 'STAT_DISCIPLINE') {
+        return cooldownsGrenade[tier];
+      } else if (ability === 'STAT_STRENGTH') {
+        switch (subclass) {
+          case 4143670656: // Nightstalker
+          case 1716862031: // Gunslinger
+            return cooldownsMelee[tier];
+          default:
+            return cooldownsGrenade[tier];
+        }
+      } else {
+        return '-:--';
+      }
+    }
+
+    function getStatsData(data) {
+      var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
+      var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
+      var ret = {};
+      for (var s = 0; s < stats.length; s++) {
+        var statHash = {};
+        switch(stats[s]) {
+          case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
+          case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
+          case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
+        }
+        statHash.value = data.stats[stats[s]].value;
+
+        if (statsWithTiers.indexOf(stats[s]) > -1) {
+          statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
+          statHash.tier = Math.floor(statHash.normalized / 60);
+          statHash.tiers = [];
+          statHash.remaining = statHash.value;
+          for (var t = 0; t < 5; t++) {
+            statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
+          }
+          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
+        } else {
+          statHash.percentage = +(100 * statHash.value / 10).toFixed();
+        }
+
+        ret[stats[s]] = statHash;
+      }
+      return ret;
+    }
+    // code above is from https://github.com/DestinyTrialsReport
   }
 })();

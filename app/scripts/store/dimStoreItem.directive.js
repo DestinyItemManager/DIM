@@ -6,9 +6,9 @@
   angular.module('dimApp')
     .directive('dimStoreItem', StoreItem);
 
-  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService'];
+  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
-  function StoreItem(dimStoreService, ngDialog, dimLoadoutService) {
+  function StoreItem(dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -21,10 +21,16 @@
       },
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
-        '  title="{{ vm.item.primStat.value + \' \' + vm.item.name }}" ',
-        '  drag="::vm.item.index" ng-class="vm.itemClassNames">',
-        '  <div ui-draggable="false" class="img" style="background-size: 44px 44px;" ng-click="vm.clicked(vm.item, $event)"></div>',
-        '  <div ui-draggable="false" ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
+        '  drag="::vm.item.index"',
+        '  class="item">',
+        '  <div class="item-elem" ng-class="{',
+        "    'search-hidden': !vm.item.visible,",
+        "    'complete': vm.item.complete",
+        '  }">',
+        '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
@@ -33,30 +39,27 @@
       var vm = scope.vm;
       var dialogResult = null;
 
-      // var watchers;
-      //
-      // scope.$on('suspend', function() {
-      //   watchers = scope.$$watchers;
-      //   scope.$$watchers = [];
-      // });
-      //
-      // scope.$on('resume', function() {
-      //   if (watchers)
-      //     scope.$$watchers = watchers;
-      //
-      //   // discard our copy of the watchers
-      //   watchers = void 0;
-      // });
+      var dragHelp = document.getElementById('drag-help');
 
-      $('<img/>').attr('src', 'http://www.bungie.net' + vm.item.icon).load(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + 'http://www.bungie.net' + vm.item.icon + ')';
-      }).error(function() {
-        $(this).remove();
-        element[0].querySelector('.img')
-          .style.backgroundImage = 'url(' + chrome.extension.getURL(vm.item.icon) + ')';
-      });
+      if (vm.item.maxStackSize > 1) {
+        element.on('dragstart', function(e) {
+          $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
+          if (vm.item.amount > 1) {
+            dragHelp.classList.remove('drag-help-hidden');
+          }
+        });
+        element.on('dragend', function() {
+          dragHelp.classList.add('drag-help-hidden');
+          delete $rootScope.dragItem;
+        });
+        element.on('drag', function(e) {
+          if (e.shiftKey) {
+            dragHelp.classList.add('drag-shift-activated');
+          } else {
+            dragHelp.classList.remove('drag-shift-activated');
+          }
+        });
+      }
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -67,7 +70,7 @@
           ngDialog.closeAll();
 
           if (!dimLoadoutService.dialogOpen) {
-            var bottom = ($(element).offset().top < 300) ? ' move-popup-bottom' : '';
+            var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
             var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
 
             dialogResult = ngDialog.open({
@@ -84,7 +87,7 @@
               dialogResult = null;
             });
           } else {
-            dimLoadoutService.addItemToLoadout(item);
+            dimLoadoutService.addItemToLoadout(item, e);
           }
         }
       };
@@ -95,50 +98,53 @@
         }
       };
 
-      scope.$watch(function() {
-        return vm.dragChannel + ((vm.item.primStat) ? vm.item.primStat.value : 0) + vm.item.name +
-          vm.showBadge + vm.badgeCount + vm.hideFilteredItems + vm.itemStat + vm.item.visible + vm.item.complete +
-          vm.maxStackSize + vm.item.owner + vm.item.type + vm.item.sort + vm.item.amount + vm.item.xpComplete;
-      }, function(newItem) {
-        processItem(vm, vm.item);
-      });
+      if (!vm.item.primStat && vm.item.objectives) {
+        scope.$watchGroup([
+          'vm.item.xpComplete',
+          'vm.itemStat',
+          'vm.item.complete'], function() {
+            processBounty(vm, vm.item);
+          });
+      } else if (vm.item.maxStackSize > 1) {
+        scope.$watchGroup([
+          'vm.item.amount'], function() {
+            processStackable(vm, vm.item);
+          });
+      } else {
+        scope.$watchGroup([
+          'vm.item.primStat.value',
+          'vm.itemStat',
+          'vm.item.sort'], function() {
+            processItem(vm, vm.item);
+          });
+      }
     }
   }
 
   function processSettings(vm, settings) {
-    if (_.has(settings, 'hideFilteredItems')) {
-      vm.hideFilteredItems = settings.hideFilteredItems;
-    }
-
     if (_.has(settings, 'itemStat')) {
       vm.itemStat = settings.itemStat;
     }
   }
 
+  function processBounty(vm, item) {
+    var showBountyPercentage = !item.complete && vm.itemStat;
+    vm.showBadge = showBountyPercentage;
+
+    if (showBountyPercentage) {
+      vm.badgeClassNames = { 'item-stat': true };
+      vm.badgeCount = item.xpComplete + '%';
+    }
+  }
+
+  function processStackable(vm, item) {
+    vm.showBadge = true;
+    vm.badgeClassNames = { 'item-stat': true };
+    vm.badgeCount = item.amount;
+  }
+
   function processItem(vm, item) {
-    switch (item.type) {
-      case 'Lost Items':
-      case 'Missions':
-      case 'Bounties':
-      case 'Special Orders':
-      case 'Messages':
-        {
-          vm.draggable = false;
-          break;
-        }
-      default:
-        vm.draggable = true;
-    }
-
-    vm.itemClassNames = {
-      'item': true,
-      'search-hidden': !item.visible,
-      'search-item-hidden': item.visible === false && vm.hideFilteredItems === true,
-      'complete': item.complete
-    }
-
     vm.badgeClassNames = {
-      'counter': false,
       'damage-type': false,
       'damage-solar': false,
       'damage-arc': false,
@@ -149,26 +155,17 @@
       'stat-damage-arc': false,
       'stat-damage-void': false,
       'stat-damage-kinetic': false
-    }
+    };
 
-    vm.dragChannel = (item.notransfer) ? item.owner + item.type : item.type;
-    vm.stackable = item.maxStackSize > 1;
-    vm.showBountyPercentage = ((item.type === 'Bounties') && (!item.complete) && (vm.itemStat));
-    vm.showStats = vm.itemStat && item.primStat && item.primStat.value;
-    vm.showDamageType = !vm.itemStat && (vm.item.sort === 'Weapons');
-    vm.showBadge = (vm.stackable || vm.showBountyPercentage || vm.showStats || vm.showDamageType);
+    var showStats = vm.itemStat && item.primStat && item.primStat.value;
+    var showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
+    vm.showBadge = (showStats || showDamageType);
 
-    if (vm.stackable) {
-      vm.badgeClassNames['counter'] = true;
-      vm.badgeCount = item.amount;
-    } else if (vm.showBountyPercentage) {
-      vm.badgeClassNames['counter'] = true;
-      vm.badgeCount = item.xpComplete + '%';
-    } else if (vm.showStats) {
+    if (showStats) {
       vm.badgeClassNames['item-stat'] = true;
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
-    } else if (vm.showDamageType) {
+    } else if (showDamageType) {
       vm.badgeClassNames['damage-' + item.dmg] = true;
       vm.badgeClassNames['damage-type'] = true;
       vm.badgeCount = '';
@@ -180,26 +177,30 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.hideFilteredItems = false;
     vm.itemStat = false;
-
-    processItem(vm, vm.item);
+    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
+    switch (vm.item.type) {
+    case 'Lost Items':
+    case 'Missions':
+    case 'Bounties':
+    case 'Quests':
+    case 'Special Orders':
+    case 'Messages':
+      {
+        vm.draggable = false;
+        break;
+      }
+    default:
+      vm.draggable = true;
+    }
 
     settings.getSettings()
       .then(function(settings) {
         processSettings(vm, settings);
-        //processItem(vm, vm.item);
       });
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       processSettings(vm, arg);
-      //processItem(vm, vm.item);
     });
-
-    vm.itemClicked = function clicked(item) {
-      $rootScope.$broadcast('dim-store-item-clicked', {
-        item: item
-      });
-    };
   }
 })();

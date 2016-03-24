@@ -1,16 +1,17 @@
 (function() {
   'use strict';
 
-  angular.module('dimApp').controller('dimAppCtrl', DimApp);
+  angular.module('dimApp')
+    .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
 
-  function DimApp(ngDialog, $rootScope, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
     var supportResult = null;
-    var filterResult  = null;
+    var filterResult = null;
 
     hotkeys.add({
       combo: ['f'],
@@ -47,7 +48,7 @@
     vm.showSetting = function(e) {
       e.stopPropagation();
 
-      if (!_.isNull(settingResult)) {
+      if(!_.isNull(settingResult)) {
         settingResult.close();
       } else {
         ngDialog.closeAll();
@@ -56,13 +57,16 @@
           template: 'views/setting.html',
           overlay: false,
           className: 'app-settings',
-          scope: $('body > div').scope()
+          scope: $('body > div')
+            .scope()
         });
-        $('body').addClass('app-settings');
+        $('body')
+          .addClass('app-settings');
 
         settingResult.closePromise.then(function() {
           settingResult = null;
-          $('body').removeClass('app-settings');
+          $('body')
+            .removeClass('app-settings');
         });
       }
     };
@@ -70,7 +74,7 @@
     vm.showAbout = function(e) {
       e.stopPropagation();
 
-      if (!_.isNull(aboutResult)) {
+      if(!_.isNull(aboutResult)) {
         aboutResult.close();
       } else {
         ngDialog.closeAll();
@@ -79,21 +83,26 @@
           template: 'views/about.html',
           overlay: false,
           className: 'about',
-          scope: $('body > div').scope()
+          scope: $('body > div')
+            .scope()
         });
-        $('body').addClass('about');
+        $('body')
+          .addClass('about');
 
         aboutResult.closePromise.then(function() {
           aboutResult = null;
-          $('body').removeClass('about');
+          $('body')
+            .removeClass('about');
         });
       }
     };
 
     vm.refresh = function refresh() {
       (function(activePlatform) {
-        if (!_.isNull(activePlatform)) {
-          $rootScope.$broadcast('dim-active-platform-updated', { platform: activePlatform });
+        if(!_.isNull(activePlatform)) {
+          $rootScope.$broadcast('dim-active-platform-updated', {
+            platform: activePlatform
+          });
         }
       })(dimPlatformService.getActive());
     };
@@ -101,7 +110,7 @@
     vm.showSupport = function(e) {
       e.stopPropagation();
 
-      if (!_.isNull(supportResult)) {
+      if(!_.isNull(supportResult)) {
         supportResult.close();
       } else {
         ngDialog.closeAll();
@@ -110,13 +119,16 @@
           template: 'views/support.html',
           overlay: false,
           className: 'support',
-          scope: $('body > div').scope()
+          scope: $('body > div')
+            .scope()
         });
-        $('body').addClass('support');
+        $('body')
+          .addClass('support');
 
         supportResult.closePromise.then(function() {
           supportResult = null;
-          $('body').removeClass('support');
+          $('body')
+            .removeClass('support');
         });
       }
     };
@@ -124,7 +136,7 @@
     vm.showFilters = function(e) {
       e.stopPropagation();
 
-      if (!_.isNull(filterResult)) {
+      if(!_.isNull(filterResult)) {
         filterResult.close();
       } else {
         ngDialog.closeAll();
@@ -133,56 +145,68 @@
           template: 'views/filters.html',
           overlay: false,
           className: 'filters',
-          scope: $('body > div').scope()
+          scope: $('body > div')
+            .scope()
         });
-        $('body').addClass('filters');
+        $('body')
+          .addClass('filters');
 
         setTimeout(function() {
-          var spans = $('#filter-view span').each(function() {
-            var item = $(this);
-            var text = item.text();
+          var spans = $('#filter-view span')
+            .each(function() {
+              var item = $(this);
+              var text = item.text();
 
-            item.click(function() {
-              addFilter(text);
+              item.click(function() {
+                addFilter(text);
+              });
             });
-          });
           //<span onclick="addFilter('is:arc')">
         }, 250);
 
         filterResult.closePromise.then(function() {
           filterResult = null;
-          $('body').removeClass('filters');
+          $('body')
+            .removeClass('filters');
         });
       }
     };
 
     vm.closeLoadoutPopup = function closeLoadoutPopup() {
-      if (!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
+      if(!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
         ngDialog.closeAll();
       }
     };
 
-    vm.startAutoRefreshTimer = function () {
+    // Don't refresh more than once a minute
+    var refresh = _.throttle(vm.refresh, 60 * 1000);
+
+    vm.startAutoRefreshTimer = function() {
       var secondsToWait = 360;
 
-      $rootScope.autoRefreshTimer = $interval(function () {
-       //Only Refresh If We're Not Already Doing Something
-       //And We're Not Inactive
-       if (!$rootScope.loadingTracker.active() && !$rootScope.isUserInactive()) {
-         vm.refresh();
-       }
+      $rootScope.autoRefreshTimer = $interval(function() {
+        //Only Refresh If We're Not Already Doing Something
+        //And We're Not Inactive
+        if(!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+          refresh();
+        }
       }, secondsToWait * 1000);
     };
 
     vm.startAutoRefreshTimer();
 
-    var refresh = _.debounce(vm.refresh, 300);
-
     $rootScope.$on('dim-settings-updated', function(event, arg) {
-      // if ((!_.has(arg, 'charCol')) && (!_.has(arg, 'vaultCol'))) {
+      if(_.has(arg, 'characterOrder')) {
         refresh();
-      // }
+      }
     });
+
+    // Refresh when the user comes back to the page
+    document.addEventListener("visibilitychange", function() {
+      if(!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+        refresh();
+      }
+    }, false);
   }
 })();
 
@@ -191,13 +215,13 @@ function addFilter(filter) {
   var input = $('input[name=filter]');
   var itemNameFilter = false;
 
-  if (filter === 'item name') {
+  if(filter === 'item name') {
     itemNameFilter = true;
     filter = prompt("Enter an item name:");
     filter = filter.trim();
   }
-  
-  if (filter.indexOf('light:') == 0) {
+
+  if(filter.indexOf('light:') == 0) {
     var lightFilterType = filter.substring(6);
     var light = prompt("Enter a light value:");
     if(light) {
@@ -206,7 +230,7 @@ function addFilter(filter) {
       return;
     }
     filter = 'light:';
-    switch (lightFilterType) {
+    switch(lightFilterType) {
       case 'value':
         filter += light;
         break;
@@ -231,10 +255,11 @@ function addFilter(filter) {
   var text = input.val();
 
 
-  if (itemNameFilter) {
+  if(itemNameFilter) {
     input.val(filter + ((text.length > 0) ? ' ' + text : ''));
-  } else if ((text + ' ').indexOf(filter + ' ') < 0) {
-    if (text.length > 0) {
+  } else if((text + ' ')
+    .indexOf(filter + ' ') < 0) {
+    if(text.length > 0) {
       input.val(text + ' ' + filter);
     } else {
       input.val(filter);

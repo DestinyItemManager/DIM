@@ -1,5 +1,6 @@
 <div ng-controller="dimSettingsCtrl" dim-click-anywhere-but-here="app.closeLoadoutPopup()">
   <h1>Settings</h1>
+  <div class="ngdialog-inner-content">
   <h2>Look and Feel</h2>
   <style>
     .settings td:nth-child(2) {
@@ -14,7 +15,7 @@
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
-          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('hideFilteredItems')"></input>
+          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')"></input>
         </td>
       </tr>
       <tr>
@@ -22,7 +23,7 @@
           <label for="details" title="Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.">Always Show Item Details</label>
         </td>
         <td>
-          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemDetails')"></input>
+          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-change="vm.save('itemDetails')"></input>
         </td>
       </tr>
       <tr>
@@ -30,7 +31,7 @@
           <label for="itemStat" title="Will display information in the lower-right of the item that is appropriate to the item such as attack, defense, and bounty status.">Display Primary Stat Values on Items</label>
         </td>
         <td>
-          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemStat')"></input>
+          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-change="vm.save('itemStat')"></input>
         </td>
       </tr>
       <tr>
@@ -39,10 +40,13 @@
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemSort')">Primary Stat</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
           <br>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('itemSort')">Rarity</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary" ng-change="vm.save('itemSort')">Rarity, then primary stat</label>
+          <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-change="vm.save('itemSort')">Rarity, then name</label>
         </td>
       </tr>
       <tr>
@@ -50,7 +54,7 @@
           <label for="charCol" title="Select the number of columns for character inventory.">Character Inventory Columns</label>
         </td>
         <td>
-          <select id="charCol" ng-model="vm.settings.charCol" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-options="option.id as option.name for option in vm.charColOptions" required ng-change="vm.save('charCol')"></select>
+          <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required ng-change="vm.save('charCol')"></select>
         </td>
       </tr>
       <tr>
@@ -58,7 +62,7 @@
           <label for="vaultCol" title="Select the number of columns for character inventory.">Vault Columns</label>
         </td>
         <td>
-          <select id="vaultCol" ng-model="vm.settings.vaultCol" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-options="option.id as option.name for option in vm.vaultColOptions" required ng-change="vm.save('vaultCol')"></select>
+          <select id="vaultCol" ng-model="vm.settings.vaultCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required ng-change="vm.save('vaultCol')"></select>
         </td>
       </tr>
       <tr>
@@ -75,4 +79,5 @@
       </tr>
     </table>
   </form>
+  </div>
 </div>

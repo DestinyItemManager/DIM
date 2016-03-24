@@ -4,16 +4,14 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
+  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
     var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
     var charactersPromise = null;
-
-    //var transferRateLimit = dimRateLimit.rateLimit(transfer, 3000);
 
     $rootScope.$on('dim-active-platform-updated', function(event, args) {
       tokenPromise = null;
@@ -27,7 +25,8 @@
       getCharacters: getCharacters,
       getStores: getStores,
       transfer: transfer,
-      equip: equip
+      equip: equip,
+      setLockState: setLockState
     };
 
     return service;
@@ -200,7 +199,7 @@
     }
 
     function processBnetMembershipRequest(response) {
-      if (_.size(response.data.Response) === '0') {
+      if (_.size(response.data.Response) === 0) {
         return $q.reject(new Error('The membership id was not available.'));
       }
 
@@ -220,7 +219,6 @@
       };
 
       var addTokenToData = assignResultAndForward.bind(null, data, 'token');
-      var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
       var getMembershipPB = getMembership.bind(null, platform);
 
       charactersPromise = getBungleToken()
@@ -387,9 +385,8 @@
 
     /************************************************************************************************************************************/
 
-    function transfer(item, store) {
+    function transfer(item, store, amount) {
       var platform = dimState.active;
-      var membershipType = platform.type;
       var data = {
         token: null,
         membershipType: null
@@ -407,7 +404,7 @@
           return store;
         })
         .then(function(store) {
-          return getTransferRequest(data.token, platform.type, item, store);
+          return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(function(request) {
           return $q(function(resolve, reject) {
@@ -439,15 +436,12 @@
           });
         })
         .then(networkError)
-        .then(throttleCheck)
-        .then(function(response) {
-          var a = response.status;
-        });
+        .then(throttleCheck);
 
       return promise;
     }
 
-    function getTransferRequest(token, membershipType, item, store) {
+    function getTransferRequest(token, membershipType, item, store, amount) {
       return {
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
@@ -457,12 +451,12 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,
-          stackSize: (_.has(item, 'moveAmount') && item.moveAmount > 0) ? item.moveAmount : item.amount,
-          transferToVault: (store.id === 'vault')
+          stackSize: amount || item.amount,
+          transferToVault: store.isVault
         },
         dataType: 'json',
         withCredentials: true
@@ -473,7 +467,6 @@
 
     function equip(item) {
       var platform = dimState.active;
-      var membershipType = platform.type;
       var data = {
         token: null,
         membershipType: null
@@ -522,10 +515,7 @@
           return a;
         })
         .then(networkError)
-        .then(throttleCheck)
-        .then(function(response) {
-          var a = response.status;
-        });
+        .then(throttleCheck);
 
       return promise;
     }
@@ -543,6 +533,84 @@
           characterId: item.owner,
           membershipType: membershipType,
           itemId: item.id
+        },
+        dataType: 'json',
+        withCredentials: true
+      };
+    }
+
+    /************************************************************************************************************************************/
+
+    function setLockState(item, store, lockState) {
+      var platform = dimState.active;
+      var data = {
+        token: null,
+        membershipType: null
+      };
+
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
+      var getMembershipPB = getMembership.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(addMembershipTypeToDataPB)
+        .then(function() {
+          return store;
+        })
+        .then(function(store) {
+          return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
+        })
+        .then(function(request) {
+          return $q(function(resolve, reject) {
+            var retries = 4;
+
+            function run() {
+              $http(request).then(function success(response) {
+                if (response.data.ErrorCode === 36) {
+                  retries = retries - 1;
+
+                  if (retries <= 0) {
+                    // debugger;
+                    reject(new Error(response.data.Message));
+                  } else {
+                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
+                  }
+                } else if (response.data.ErrorCode > 1) {
+                  reject(new Error(response.data.Message));
+                } else {
+                  resolve(response);
+                }
+              }, function failure(response) {
+                // debugger;
+                reject(new Error(response.data.Message));
+              });
+            }
+
+            run();
+          });
+        })
+        .then(networkError)
+        .then(throttleCheck);
+
+      return promise;
+    }
+
+    function getSetLockStateRequest(token, membershipType, item, store, lockState) {
+      return {
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/Destiny/SetLockState/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token,
+          'content-type': 'application/json; charset=UTF-8;'
+        },
+        data: {
+          characterId: store.isVault ? item.owner : store.id,
+          membershipType: membershipType,
+          itemId: item.id,
+          state: lockState
         },
         dataType: 'json',
         withCredentials: true

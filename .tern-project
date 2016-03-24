@@ -1,0 +1,15 @@
+{
+  "libs": [
+    "browser",
+    "jquery",
+    "underscore",
+    "angular"
+  ],
+  "loadEagerly": [
+    "app/scripts/**/*.js"
+  ],
+  "plugins": {
+    "angular": {},
+    "chrome-extension": {}
+  }
+}

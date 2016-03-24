@@ -5,13 +5,13 @@
   script.type = 'text/javascript';
   script.src = "https://apis.google.com/js/client.js?onload=initgapi";
   head.appendChild(script);
-});
+})();
 
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-60316581-1']);
 _gaq.push(['_trackPageview']);
-_gaq.push(['errorTracker._setAccount', 'UA-60316581-3']);
-_gaq.push(['errorTracker._trackPageview']);
+// _gaq.push(['errorTracker._setAccount', 'UA-60316581-3']);
+// _gaq.push(['errorTracker._trackPageview']);
 
 (function loadGA() {
   var ga = document.createElement('script');

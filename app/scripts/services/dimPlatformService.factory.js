@@ -107,6 +107,8 @@
         promise = SyncService.set({'platformType': platform.type});
       }
 
+      $rootScope.activePlatformUpdated = true;
+
       $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
     }
   }

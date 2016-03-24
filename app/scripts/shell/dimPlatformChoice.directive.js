@@ -22,9 +22,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', '$rootScope'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker', '$http'];
 
-  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, $rootScope) {
+  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker, $http) {
     var vm = this;
 
     vm.active = null;
@@ -36,17 +36,16 @@
     activate();
 
     function activate() {
-      $.get('https://www.bungie.net', '', function() {
-        setTimeout(function() {
-          var promise = dimPlatformService.getPlatforms();
+      var promise = $http.get('https://www.bungie.net', {
+          timeout: 5000
+        })
+        .then(function() {
+          return dimPlatformService.getPlatforms();
+        }, function() {
+          return dimPlatformService.getPlatforms();
+        });
 
-          $rootScope.loadingTracker.addPromise(promise);
-        }, 250);
-      });
-
-      // var promise = dimPlatformService.getPlatforms();
-      //
-      // $rootScope.loadingTracker.addPromise(promise);
+      loadingTracker.addPromise(promise);
     }
 
     $scope.$on('dim-platforms-updated', function(e, args) {

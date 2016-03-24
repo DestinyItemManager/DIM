@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$q', '$rootScope', 'uuid2', 'SyncService'];
+  SettingsService.$inject = ['$q', '$rootScope', 'SyncService'];
 
-  function SettingsService($q, $rootScope, uuid2, SyncService) {
+  function SettingsService($q, $rootScope, SyncService) {
     var settingState;
     var currentSettings = null;
 
@@ -57,7 +57,7 @@
             } else {
               currentSettings = _.clone(settingState);
 
-              saveSettings()
+              saveSettings();
             }
 
             resolve(currentSettings);
@@ -83,6 +83,7 @@
             // Found default
             settings[key] = settingState[key];
             saveSetting(key, settingState[key]);
+            return _.propertyOf(settings)(key);
           } else {
             return $q.reject("The key is not defined in the settings.");
           }

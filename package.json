@@ -1,10 +1,10 @@
 {
-  "name": "DIM",
-  "version": "0.0.1",
-  "description": "Destiny Item Manager - Chrome app",
+  "name": "dim",
+  "version": "3.4.1",
+  "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests\""
   },
   "repository": {
     "type": "git",
@@ -13,19 +13,24 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kyleshay/DIM/issues"
+    "url": "https://github.com/DestinyItemManager/DIM/issues"
   },
-  "homepage": "https://github.com/kyleshay/DIM",
-  "dependencies": {
+  "homepage": "https://github.com/DestinyItemManager/DIM",
+  "devDependencies": {
     "adm-zip": "^0.4.7",
+    "jshint": "^2.8.0",
     "mkdirp": "^0.5.1",
     "request": "^2.57.0",
     "request-promise": "^0.4.2",
     "sqlite3": "^3.0.8",
     "underscore": "^1.8.3",
-    "unzip": "^0.1.11"
-  },
-  "devDependencies": {
+    "unzip": "^0.1.11",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-compress": "^0.14.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-text-replace": "^0.4.0",
+    "grunt-webstore-upload": "^0.8.10",
     "uglify-js": "^2.4.23"
   }
 }
