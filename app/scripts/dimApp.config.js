@@ -78,7 +78,8 @@
           SyncService.init();
         }
 
-        chrome.storage.sync.get('2016.03.13-v3.4.0', function(data) {
+        SyncService.get().then(function(data) {
+          data = data['2016.03.13-v3.4.0'];
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
