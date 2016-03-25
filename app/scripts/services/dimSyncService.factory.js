@@ -7,7 +7,7 @@
   SyncService.$inject = ['$q', '$http'];
 
   function SyncService($q, $http) {
-    var cached, // cached is the data in memory,
+    var cached = [], // cached is the data in memory,
         fileId, // reference to the file in drive
         membershipId, // logged in bungie user id
         drive = { // drive api data
@@ -145,7 +145,7 @@
       console.log('saved to local storage.');
 
       // save to chrome sync
-      if(chrome.storage) {
+      if(chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.set(cached, function() {
           console.log('saved to chrome sync.', cached);
           if (chrome.runtime.lastError) {
@@ -170,7 +170,7 @@
     // get DIM saved data
     function get(force) {
       // if we already have it and we're not forcing a sync
-      if(cached && !force) {
+      if(!_.isEmpty(cached) && !force) {
         return $q.resolve(cached);
       }
 
@@ -201,7 +201,7 @@
           });
         });
       } // else get from chrome sync
-      else if(chrome.storage) {
+      else if(chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.get(null, function(data) {
           cached = data;
           deferred.resolve(cached);
