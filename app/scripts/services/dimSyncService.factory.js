@@ -145,7 +145,7 @@
       console.log('saved to local storage.');
 
       // save to chrome sync
-      if(chrome.storage.sync) {
+      if(chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.set(cached, function() {
           console.log('saved to chrome sync.', cached);
           if (chrome.runtime.lastError) {
@@ -201,7 +201,7 @@
           });
         });
       } // else get from chrome sync
-      else if(chrome.storage.sync) {
+      else if(chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.get(null, function(data) {
           cached = data;
           deferred.resolve(cached);
