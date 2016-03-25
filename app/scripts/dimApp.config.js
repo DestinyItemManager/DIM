@@ -77,12 +77,13 @@
         $window.initgapi = function() {
           SyncService.init();
         }
-
-        chrome.storage.sync.get('2016.03.13-v3.4.0', function(data) {
+        SyncService.get()
+        .then(function(serviceData) {
+          var data = (serviceData) ? serviceData[['2016.03.13-v3.4.0']] : null;          
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
-                type: 'info',
+                type: 'info',                
                 title: 'DIM v3.4.1 Released',
                 body: [
                   "<p>You've been asking about it since DIM was first released, and it's finally here: you can now move partial quantities of stacked items! Hold shift when dragging, hover over the drop point, or use the popup to choose how much to move. New \"take\" and \"split\" commands and the ability to add consumables to your loadouts rounds out the new functionality.</p>",
@@ -105,9 +106,8 @@
                 onHideCallback: function() {
                   if($('#20160304v332')
                     .is(':checked')) {
-                    chrome.storage.sync.set({
-                      "2016.03.13-v3.4.0": 1
-                    }, function(e) {});
+                    serviceData["2016.03.13-v3.4.0"] = 1;
+                    SyncService.set(serviceData);
                   }
                 }
               });
