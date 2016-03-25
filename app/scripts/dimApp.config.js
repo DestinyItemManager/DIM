@@ -77,9 +77,8 @@
         $window.initgapi = function() {
           SyncService.init();
         }
-        SyncService.get()
-        .then(function(serviceData) {
-          var data = (serviceData) ? serviceData[['2016.03.13-v3.4.0']] : null;          
+        SyncService.get().then(function(data) {
+          data = (data) ? data[['2016.03.13-v3.4.0']] : null;          
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
@@ -106,8 +105,8 @@
                 onHideCallback: function() {
                   if($('#20160304v332')
                     .is(':checked')) {
-                    serviceData["2016.03.13-v3.4.0"] = 1;
-                    SyncService.set(serviceData);
+                    data["2016.03.13-v3.4.0"] = 1;
+                    SyncService.set(data);
                   }
                 }
               });
