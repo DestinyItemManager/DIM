@@ -78,7 +78,7 @@
           SyncService.init();
         }
         SyncService.get().then(function(data) {
-          data = (data) ? data[['2016.03.13-v3.4.0']] : null;          
+          data = (data) ? data['2016.03.13-v3.4.0'] : null;          
           if(_.isNull(data) || _.isEmpty(data)) {
             $timeout(function() {
               toaster.pop({
