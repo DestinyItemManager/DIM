@@ -85,11 +85,11 @@
                 type: 'info',
                 title: 'DIM v3.4.1 Released',
                 body: [
-                  // "<p>You've been asking about it since DIM was first released, and it's finally here: you can now move partial quantities of stacked items! Hold shift when dragging, hover over the drop point, or use the popup to choose how much to move. New \"take\" and \"split\" commands and the ability to add consumables to your loadouts rounds out the new functionality.</p>",
-                  // '<p>On top of that, DIM has gotten faster! You should notice transfers, especially with loadouts, zipping along more smoothly now.</p>',
-                  // '<p>Our <a href="https://github.com/DestinyItemManager/DIM/blob/dev/CHANGELOG.md" target="_blank">changelog</a> is available if you would like to know more.',
-                  // '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.4.1',
-                  // '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><i<i class="fa fa-reddit fa-2x"></i></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>',
+                  "<p>You've been asking about it since DIM was first released, and it's finally here: you can now move partial quantities of stacked items! Hold shift when dragging, hover over the drop point, or use the popup to choose how much to move. New \"take\" and \"split\" commands and the ability to add consumables to your loadouts rounds out the new functionality.</p>",
+                  '<p>On top of that, DIM has gotten faster! You should notice transfers, especially with loadouts, zipping along more smoothly now.</p>',
+                  '<p>Our <a href="https://github.com/DestinyItemManager/DIM/blob/dev/CHANGELOG.md" target="_blank">changelog</a> is available if you would like to know more.',
+                  '<p>Visit us on Twitter and Reddit to learn more about these and other updates in v3.4.1',
+                  '<p>Follow us on: <a style="margin: 0 5px;" href="http://destinyitemmanager.reddit.com" target="_blank"><i<i class="fa fa-reddit fa-2x"></i></a> <a style="margin: 0 5px;" href="http://twitter.com/ThisIsDIM" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>',
                   '<p><input style="margin-top: 1px; vertical-align: middle;" id="20160304v332" type="checkbox"> <label for="20160304v332">Hide This Popup</label></p>'
                 ].join(''),
                 timeout: 0,
