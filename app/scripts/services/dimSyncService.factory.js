@@ -7,7 +7,7 @@
   SyncService.$inject = ['$q', '$http'];
 
   function SyncService($q, $http) {
-    var cached = [], // cached is the data in memory,
+    var cached, // cached is the data in memory,
         fileId, // reference to the file in drive
         membershipId, // logged in bungie user id
         drive = { // drive api data
@@ -130,10 +130,8 @@
 
       // use replace to override the data. normally we're doing a PATCH
       if(!PUT) {
-        // update our data
-        for(var i in value) {
-          cached[i] = value[i];
-        }
+        // update our data       
+          angular.extend(cached, value);        
       } else {
         cached = value;
       }
@@ -153,6 +151,14 @@
           }
         });
       }
+      // else if(chrome.storage && chrome.storage.local) {
+      //   chrome.storage.local.set(cached, function() {
+      //     console.log('saved to chrome local.', cached);
+      //     if (chrome.runtime.lastError) {
+      //       console.log('error with chrome local.')
+      //     }
+      //   });
+      // }
 
       // save to google drive
       if(fileId) {
@@ -170,7 +176,7 @@
     // get DIM saved data
     function get(force) {
       // if we already have it and we're not forcing a sync
-      if(!_.isEmpty(cached) && !force) {
+      if(cached && !force) {
         return $q.resolve(cached);
       }
 
@@ -205,9 +211,18 @@
         chrome.storage.sync.get(null, function(data) {
           cached = data;
           deferred.resolve(cached);
-          console.log('synced from chrome', cached);
+          console.log('synced from chrome sync', cached);
         });
-      } // otherwise, just use local storage
+      } //else get from chrome local
+      // else if(chrome.storage && chrome.storage.local) {
+      //   chrome.storage.local.get(null, function(data) {
+      //     cached = data;
+      //     deferred.resolve(cached);
+      //     console.log('loaded from chrome local', cached);
+      //   });
+      // } 
+
+      // otherwise, just use local storage
       else {
         console.log('using local storage')
         deferred.resolve(cached);
