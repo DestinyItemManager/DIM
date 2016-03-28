@@ -26,7 +26,8 @@
     "ngDialog": "~0.5.x",
     "underscore": "~1.8.x",
     "angularjs-slider": "~2.10.2",
-    "angular-aria": "~1.5.0"
+    "angular-aria": "~1.5.0",
+    "jquery-textcomplete": "~1.3.2"
   },
   "resolutions": {
     "angular": "1.4.x"

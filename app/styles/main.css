@@ -87,7 +87,7 @@ div[dim-search-filter] input {
   -webkit-appearance: none;
   border: 1px solid #999;
   border-radius: 3px;
-  padding: 2px 10px;
+  padding: 2px;
   margin: 0px 15px 0 10px;
   background-color: #fafafa;
 }
@@ -2013,7 +2013,7 @@ button.toast-close-button {
 .dropdown-menu {
   border: 1px solid #ddd;
   background-color: white;
-  transform: translate(-10px,-7px);
+  transform: translate(-11px,2px);
 }
 
 .dropdown-menu li {
