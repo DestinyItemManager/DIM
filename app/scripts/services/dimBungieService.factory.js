@@ -544,8 +544,10 @@
         .then(networkError)
         .then(throttleCheck)
         .then(function(response) {
+          var data = response.data.Response;
+          store.updateCharacterInfo(data.summary);
           return _.select(items, function(i) {
-            var item = _.find(response.data.Response.equipResults, {itemInstanceId: i.id});
+            var item = _.find(data.equipResults, {itemInstanceId: i.id});
             return item && item.equipStatus === 1;
           });
         });

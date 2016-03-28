@@ -187,7 +187,14 @@
     }
 
     function applyLoadout(store, loadout) {
-      var items = _.flatten(_.values(loadout.items));
+      var items = angular.copy(_.flatten(_.values(loadout.items)));
+      var totalItems = items.length;
+
+      // Remove stuff from the list that's already in the right state
+      items = _.filter(items, function(pseudoItem) {
+        var item = dimItemService.getItem(pseudoItem);
+        return !item || item.owner !== store.id || item.equipped !== pseudoItem.equipped;
+      });
 
       var _types = _.uniq(_.pluck(items, 'type'));
 
@@ -198,34 +205,102 @@
         };
       });
 
+      // We'll equip these all in one go!
+      var itemsToEquip = _.filter(items, 'equipped');
+      if (itemsToEquip.length > 1) {
+        // we'll use the equipItems function
+        itemsToEquip.forEach(function(i) { i.equipped = false; });
+      }
+
+      // Stuff that's equipped on another character. We can bulk-dequip these
+      var itemsToDequip = _.filter(items, function(pseudoItem) {
+        var item = dimItemService.getItem(pseudoItem);
+        return item.owner !== store.id && item.equipped;
+      });
+
       var scope = {
         failed: 0,
-        total: items.length
+        total: totalItems,
+        successfulItems: []
       };
-      return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
+
+      var promise = $q.when();
+
+      if (itemsToDequip.length > 1) {
+        var realItemsToDequip = itemsToDequip.map(function(i) {
+          return dimItemService.getItem(i);
+        });
+        var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function(dequipItems, owner) {
+          var equipItems = realItemsToDequip.map(function(i) {
+            return dimItemService.getSimilarItem(i, loadoutItemIds);
+          });
+          return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
+        });
+        promise = $q.all(dequips);
+      }
+
+      promise = promise
+        .then(function() {
+          return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
+        })
+        .then(function() {
+          if (itemsToEquip.length > 1) {
+            // Use the bulk equipAll API to equip all at once.
+            itemsToEquip = _.filter(itemsToEquip, function(i) {
+              return _.find(scope.successfulItems, { id: i.id });
+            });
+            var realItemsToEquip = itemsToEquip.map(function(i) {
+              return dimItemService.getItem(i);
+            });
+            return dimItemService.equipItems(store, realItemsToEquip);
+          } else {
+            return itemsToEquip;
+          }
+        })
+        .then(function(equippedItems) {
+          if (equippedItems.length < itemsToEquip.length) {
+            var failedItems = _.filter(itemsToEquip, function(i) {
+              return !_.find(equippedItems, { id: i.id });
+            });
+            _.difference(itemsToEquip, equippedItems).forEach(function(item) {
+              scope.failed++;
+              toaster.pop('error', 'Could not equip ' + item.name);
+            });
+          }
+        })
+        .then(function() {
+          // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
+          // is fixed on Bungie's end. When that happens, just remove this call.
+          if (scope.successfulItems.length > 0) {
+            return dimStoreService.updateCharacters();
+          }
+        })
+        .then(function() {
+          var value = 'success';
+          var message = 'Your loadout of ' + scope.total + ' items has been transfered.';
+
+          if (scope.failed > 0) {
+            if (scope.failed === scope.total) {
+              value = 'error';
+              message = 'None of the items in your loadout could be transferred.';
+            } else {
+              value = 'warning';
+              message = 'Your loadout has been partially transferred, but ' + scope.failed + ' of ' + scope.total + ' items had errors.';
+            }
+          }
+
+          toaster.pop(value, loadout.name, message);
+        });
+
+      loadingTracker.addPromise(promise);
+      return promise;
     }
 
     // Move one loadout item at a time. Called recursively to move items!
     function applyLoadoutItems(store, items, loadout, loadoutItemIds, scope) {
       if (items.length == 0) {
         // We're done!
-        return dimStoreService.updateCharacters()
-          .then(function() {
-            var value = 'success';
-            var message = 'Your loadout of ' + scope.total + ' items has been transfered.';
-
-            if (scope.failed > 0) {
-              if (scope.failed === scope.total) {
-                value = 'error';
-                message = 'None of the items in your loadout could be transferred.';
-              } else {
-                value = 'warning';
-                message = 'Your loadout has been partially transferred, but ' + scope.failed + ' of ' + scope.total + ' items had errors.';
-              }
-            }
-
-            toaster.pop(value, loadout.name, message);
-          });
+        return $q.when();
       }
 
       var promise = $q.when();
@@ -293,6 +368,9 @@
       }
 
       promise = promise
+        .then(function() {
+          scope.successfulItems.push(item);
+        })
         .catch(function(e) {
           scope.failed++;
           toaster.pop('error', item.name, e.message);
@@ -302,7 +380,6 @@
           return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
         });
 
-      loadingTracker.addPromise(promise);
       return promise;
     }
 
