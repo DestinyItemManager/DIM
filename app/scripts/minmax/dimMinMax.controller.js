@@ -50,6 +50,44 @@
       };
     }
 
+//    var slice = Array.prototype.slice;
+//    function combinations() {
+//      return _.reduce(slice.call(arguments, 1),function(ret,newarr){
+//        return _.reduce(ret,function(memo,oldi){
+//          return memo.concat(_.map(newarr,function(newi){
+//            return oldi.concat([newi]);
+//          }));
+//        },[]);
+//      },_.map(arguments[0],function(i){return [i];}));
+//    }
+//
+//    function getCombinations(items) {
+//      console.log(items.filter(function(item) { return item.bucket === 3448274439; }))
+//      // load the best items
+//      return combinations(
+//        items.filter(function(item) { return item.bucket === 3448274439; }),
+//        items.filter(function(item) { return item.bucket === 3551918588; }),
+//        items.filter(function(item) { return item.bucket === 14239492; }),
+//        items.filter(function(item) { return item.bucket === 20886954; }),
+//        items.filter(function(item) { return item.bucket === 1585787867; }),
+//        items.filter(function(item) { return item.bucket === 4023194814; }),
+//        items.filter(function(item) { return item.bucket === 434908299; })
+//      );
+//    }
+
+
+
+
+//    combinations: function(){
+//      return _.reduce(slice.call(arguments, 1),function(ret,newarr){
+//        return _.reduce(ret,function(memo,oldi){
+//          return memo.concat(_.map(newarr,function(newi){
+//            return oldi.concat([newi]);
+//          }));
+//        },[]);
+//      },_.map(arguments[0],function(i){return [i];}));
+//    }
+
     function getIterations(_class) {
       var iterations = [],
           exotics = 0,
@@ -136,6 +174,7 @@
       type: 'Helmets',
       showBlues: false,
       showExotics: true,
+      showYear1: false,
       combinations: null,
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
@@ -195,6 +234,7 @@
       },
       // get Items for infusion
       getItems: function() {
+//<<<<<<< Updated upstream
         var stores = dimStoreService.getStores();
         var allItems = [];
 
@@ -210,6 +250,39 @@
           });
 
           allItems = allItems.concat(items);
+//=======
+//        dimStoreService.getStores(false, true).then(function(stores) {
+//          var allItems = [];
+//
+//          // all stores
+//          _.each(stores, function(store, id, list) {
+//
+//            // all armor in store
+//            var items = _.filter(store.items, function(item) {
+//              return item.primStat &&
+//                item.primStat.statHash === 3897883278 && // has defence hash
+//                ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.tier === 'Exotic')) &&
+//                (vm.showYear1 && item.year > 1) &&
+//                item.stats
+//            });
+//
+//            allItems = allItems.concat(items);
+//          });
+//
+//
+////          console.time('derp')
+////          console.log(getCombinations(allItems.filter(function(item) { return item.classType === 2 || item.classType === 3; })).length);
+////          console.timeEnd('derp')
+//          buckets = initBuckets(allItems);
+//console.time('elapsed');
+//          var bestArmor = getBestArmor(buckets.titan);
+//
+//          vm.ranked = doRankArmor(buckets.titan, bestArmor);
+////          vm.combinations = getIterations(buckets.titan);
+//          vm.combinations = getIterations(bestArmor);
+//console.timeEnd('elapsed');
+//          console.log(vm.combinations.length)
+//>>>>>>> Stashed changes
         });
 
         buckets = initBuckets(allItems);

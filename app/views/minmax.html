@@ -28,7 +28,7 @@
   Min Strength: <input type='text' ng-model='minmax.filter.str' /></p>
 
   <p>Found {{results.length}} combinations:</p>
-  <p ng-repeat="combo in minmax.combinations | filter:minmax.filterFunction | orderBy:minmax.statOrder as results">
+  <p ng-repeat="combo in minmax.combinations | filter:minmax.filterFunction | orderBy:minmax.statOrder | limitTo: 10 as results">
     <span ng-repeat="item in combo.armor" dim-store-item item-data="item"></span>
     <span dim-stats stats="combo.stats"></span>
 <!--    <span ng-repeat="(k, stat) in combo.stats"></span>-->
