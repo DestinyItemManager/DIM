@@ -1,9 +1,34 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
   var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24298773);
-
+ 
   grunt.initConfig({
     pkg: pkg,
+
+   
+
+
+    sass: {
+      dist: {
+        files: {
+         'app/styles/main.css': 'app/scss/main.scss'
+        }
+      }
+    },
+
+     postcss: {
+ 
+      options: {
+         processors: [
+          require('autoprefixer')()   
+        ]
+      },
+      dist: {
+         src: 'app/styles/main.css',
+         dest: 'app/styles/main.css'
+      } 
+    },
+
 
     copy: {
       // Copy all files to a staging directory
@@ -92,6 +117,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-sass');
 
   grunt.registerTask('update_beta_manifest', function() {
     var manifest = grunt.file.readJSON('build/extension/manifest.json');
@@ -99,6 +127,8 @@ module.exports = function(grunt) {
     manifest.version = betaVersion;
     grunt.file.write('build/extension/manifest.json', JSON.stringify(manifest));
   });
+
+  grunt.registerTask('css', ['sass', 'postcss']);
 
   grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
