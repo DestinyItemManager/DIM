@@ -190,10 +190,13 @@
       var items = angular.copy(_.flatten(_.values(loadout.items)));
       var totalItems = items.length;
 
-      // Remove stuff from the list that's already in the right state
+      // Only select stuff that needs to change state
       items = _.filter(items, function(pseudoItem) {
         var item = dimItemService.getItem(pseudoItem);
-        return !item || item.owner !== store.id || item.equipped !== pseudoItem.equipped;
+        return !item ||
+          !item.equipment ||
+          item.owner !== store.id ||
+          item.equipped !== pseudoItem.equipped;
       });
 
       var _types = _.uniq(_.pluck(items, 'type'));
