@@ -5,9 +5,6 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: pkg,
 
-   
-
-
     sass: {
       dist: {
         files: {
@@ -28,6 +25,16 @@ module.exports = function(grunt) {
          dest: 'app/styles/main.css'
       } 
     },
+
+    watch: {
+      scripts: {
+        files: ['app/scss/*.scss'],
+        tasks: ['css'],
+        options: {
+         spawn: false,
+        },
+       },
+     },
 
 
     copy: {
@@ -120,6 +127,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('update_beta_manifest', function() {
     var manifest = grunt.file.readJSON('build/extension/manifest.json');
