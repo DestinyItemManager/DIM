@@ -88,7 +88,8 @@
 
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
-            } else {
+            } 
+            else {
               chrome.tabs.query({
                 'url': '*://*.bungie.net/*'
               }, function(tabs) {
@@ -101,7 +102,7 @@
               });
 
               reject(new Error('No bungled cookie found.'));
-            }
+            }            
           });
         })
         .catch(function(error) {
@@ -143,24 +144,27 @@
 
     function processBnetPlatformsRequest(response) {
       if (response.data.ErrorCode === 99) {
-        chrome.tabs.query({
-          'url': '*://*.bungie.net/*'
-        }, function(tabs) {
-          if (_.size(tabs) === 0) {
-            chrome.tabs.create({
-              url: 'http://bungie.net',
-              active: false
-            });
-          }
-        });
-
+        try {
+          //TODO: This is listed as supported on the firefox developer docs but throws a malformed URI error
+          chrome.tabs.query({
+            'url': '*://*.bungie.net/'
+          }, function(tabs) {
+            if (_.size(tabs) === 0) {
+              chrome.tabs.create({
+                url: 'https://www.bungie.net/',
+                active: false
+              });
+            }
+          })
+        } catch (err) {          
+          console.log(err);
+        }
         return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
       } else if (response.data.ErrorCode === 5) {
         return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
       } else if (response.data.ErrorCode > 1) {
         return $q.reject(new Error(response.data.Message));
       }
-
       return (response);
     }
 

@@ -7,7 +7,7 @@
   SyncService.$inject = ['$q', '$http'];
 
   function SyncService($q, $http) {
-    var cached, // cached is the data in memory,
+    var cached = {}, // cached is the data in memory,
         fileId, // reference to the file in drive
         membershipId, // logged in bungie user id
         drive = { // drive api data
