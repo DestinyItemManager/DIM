@@ -7,7 +7,7 @@
   SyncService.$inject = ['$q', '$http'];
 
   function SyncService($q, $http) {
-    var cached = {}, // cached is the data in memory,
+    var cached, // cached is the data in memory,
         fileId, // reference to the file in drive
         membershipId, // logged in bungie user id
         drive = { // drive api data
@@ -129,8 +129,7 @@
 //      }
 
       // use replace to override the data. normally we're doing a PATCH
-      if(!PUT) {
-        // update our data       
+      if(!PUT) {// update our data       
           angular.extend(cached, value);        
       } else {
         cached = value;

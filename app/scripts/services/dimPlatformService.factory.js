@@ -63,7 +63,7 @@
         var previousPlatformType = null;
 
         if(data){
-          previousPlatformType = null;
+          previousPlatformType = data.platformType;
         }   
 
         if (!_.isNull(previousPlatformType)) {
