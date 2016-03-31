@@ -20,6 +20,7 @@
         getItem: getItem,
         getItems: getItems,
         moveTo: moveTo,
+        equipItems: equipItems,
         makeRoomForItem: makeRoomForItem,
         setLockState: setLockState
       };
@@ -118,7 +119,7 @@
         return item;
       }
 
-      function getSimilarItem(item) {
+      function getSimilarItem(item, exclusions) {
         var stores = dimStoreService.getStores();
         var result = null;
         var source = _.find(stores, function(i) {
@@ -142,7 +143,7 @@
         return result;
       }
 
-      function searchForSimilarItem(item, store) {
+      function searchForSimilarItem(item, store, exclusions) {
         var sortType = {
           Legendary: 0,
           Rare: 1,
@@ -150,6 +151,8 @@
           Common: 3,
           Exotic: 5
         };
+
+        exclusions = exclusions || [];
 
         var result = _.chain(store.items)
           .filter(function(i) {
@@ -159,7 +162,9 @@
               // Compatible with this class
               (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
-              i.id !== item.id;
+              i.id !== item.id &&
+              // Not on the exclusion list
+              !_.any(exclusions, { id: i.id, hash: i.hash });
           })
           .sortBy(function(i) {
             return sortType[i.tier];
@@ -183,6 +188,16 @@
 
 
         return (result) ? result : null;
+      }
+
+      // Bulk equip items. Only use for multiple equips at once.
+      function equipItems(store, items) {
+        return dimBungieService.equipItems(store, items)
+          .then(function(equippedItems) {
+            return equippedItems.map(function(i) {
+              return updateItemModel(i, store, store, true);
+            });
+          });
       }
 
       function equipItem(item) {

@@ -30,6 +30,14 @@
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
         return this.capacityForItem(item) - count(this.items, { type: item.type });
+      },
+      updateCharacterInfo: function(characterInfo) {
+        this.level = characterInfo.characterLevel;
+        this.percentToNextLevel = characterInfo.percentToNextLevel;
+        this.powerLevel = characterInfo.characterBase.powerLevel;
+        this.background = characterInfo.backgroundPath;
+        this.icon = characterInfo.emblemPath;
+        this.stats = getStatsData(characterInfo.characterBase);
       }
     };
 
@@ -61,13 +69,7 @@
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
-
-            dStore.level = bStore.base.characterLevel;
-            dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-            dStore.powerLevel = bStore.base.characterBase.powerLevel;
-            dStore.background = bStore.base.backgroundPath;
-            dStore.icon = bStore.base.emblemPath;
-            dStore.stats = getStatsData(bStore.base.characterBase);
+            dStore.updateCharacterInfo(bStore.base);
           }
         });
         return _stores;
