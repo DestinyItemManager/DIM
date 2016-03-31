@@ -5,7 +5,6 @@
     'ui.router',
     'ngAnimate',
     'ngAria',
-    'ngCookies',
     'ngDialog',
     'ngMessages',
     'ang-drag-drop',

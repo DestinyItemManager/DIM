@@ -20,6 +20,7 @@
         getItem: getItem,
         getItems: getItems,
         moveTo: moveTo,
+        equipItems: equipItems,
         makeRoomForItem: makeRoomForItem,
         setLockState: setLockState
       };
@@ -118,34 +119,31 @@
         return item;
       }
 
-      function getSimilarItem(item) {
-        return $q.when(dimStoreService.getStores())
-          .then(function(stores) {
-            var result = null;
-            var source = _.find(stores, function(i) {
-              return i.id === item.owner;
-            });
-            var sortedStores = _.sortBy(stores, function(store) {
-              if (source.id === store.id) {
-                return 0;
-              } else if (store.isVault) {
-                return 1;
-              } else {
-                return 2;
-              }
-            });
+      function getSimilarItem(item, exclusions) {
+        var stores = dimStoreService.getStores();
+        var result = null;
+        var source = _.find(stores, function(i) {
+          return i.id === item.owner;
+        });
+        var sortedStores = _.sortBy(stores, function(store) {
+          if (source.id === store.id) {
+            return 0;
+          } else if (store.isVault) {
+            return 1;
+          } else {
+            return 2;
+          }
+        });
 
-            _.each(sortedStores, function(store) {
-              if (_.isNull(result)) {
-                result = searchForSimilarItem(item, store);
-              }
-            });
+        sortedStores.find(function(store) {
+          result = searchForSimilarItem(item, store);
+          return result !== null;
+        });
 
-            return result;
-          });
+        return result;
       }
 
-      function searchForSimilarItem(item, store) {
+      function searchForSimilarItem(item, store, exclusions) {
         var sortType = {
           Legendary: 0,
           Rare: 1,
@@ -153,6 +151,8 @@
           Common: 3,
           Exotic: 5
         };
+
+        exclusions = exclusions || [];
 
         var result = _.chain(store.items)
           .filter(function(i) {
@@ -162,7 +162,9 @@
               // Compatible with this class
               (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
-              i.id !== item.id;
+              i.id !== item.id &&
+              // Not on the exclusion list
+              !_.any(exclusions, { id: i.id, hash: i.hash });
           })
           .sortBy(function(i) {
             return sortType[i.tier];
@@ -188,6 +190,16 @@
         return (result) ? result : null;
       }
 
+      // Bulk equip items. Only use for multiple equips at once.
+      function equipItems(store, items) {
+        return dimBungieService.equipItems(store, items)
+          .then(function(equippedItems) {
+            return equippedItems.map(function(i) {
+              return updateItemModel(i, store, store, true);
+            });
+          });
+      }
+
       function equipItem(item) {
         return dimBungieService.equip(item)
           .then(function() {
@@ -196,11 +208,7 @@
           });
       }
 
-      function dequipItem(item, equipExotic) {
-        if (_.isUndefined(equipExotic)) {
-          equipExotic = false;
-        }
-
+      function dequipItem(item) {
         var scope = {
           source: null,
           target: null,
@@ -209,50 +217,32 @@
 
         var updateEquipped;
 
-        return getSimilarItem(item)
-          .then(function(similarItem) {
-            scope.similarItem = similarItem;
+        var similarItem = getSimilarItem(item);
+        scope.similarItem = similarItem;
+        scope.source = dimStoreService.getStore(item.owner);
+        scope.target = dimStoreService.getStore(scope.similarItem.owner);
 
-            // TODO: move something in from the vault to equip!
-            // TODO: do we need this exotic logic?
-            // could this be removed now, along with all refrences to `equipExotic` that are passed in?
-            if ((!equipExotic && similarItem && similarItem.tier === 'Exotic') || !similarItem) {
-              return $q.reject(new Error('There are no items to equip in the \'' + item.type + '\' slot.'));
-            }
+        var p = $q.when();
+        if (scope.source.id !== scope.target.id) {
+          var vault;
 
-            return dimStoreService.getStore(item.owner);
+          if (scope.similarItem.owner !== 'vault') {
+            vault = dimStoreService.getVault();
+            p = dimBungieService.transfer(scope.similarItem, vault)
+              .then(function() {
+                return updateItemModel(scope.similarItem, vault, scope.source, false);
+              });
+          }
+
+          return p.then(function() {
+            return dimBungieService.transfer(scope.similarItem, scope.source);
           })
-          .then(function(source) {
-            scope.source = source;
+            .then(function() {
+              return updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
+            });
+        }
 
-            return dimStoreService.getStore(scope.similarItem.owner);
-          })
-          .then(function(target) {
-            scope.target = target;
-
-            if (scope.source.id === scope.target.id) {
-              return null;
-            } else {
-              var p = $q.when();
-              var vault;
-
-              if (scope.similarItem.owner !== 'vault') {
-                vault = dimStoreService.getVault();
-                p = dimBungieService.transfer(scope.similarItem, vault)
-                  .then(function() {
-                    return updateItemModel(scope.similarItem, vault, scope.source, false);
-                  });
-              }
-
-              return p.then(function() {
-                  return dimBungieService.transfer(scope.similarItem, scope.source);
-                })
-                .then(function() {
-                  return updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
-                });
-            }
-          })
-          .then(function() {
+        return p.then(function() {
             return equipItem(scope.similarItem);
           })
           .then(function() {

@@ -1,6 +1,5 @@
 app/vendor/
 dist/
-styles/
 .settings/
 .idea/
 node_modules/
