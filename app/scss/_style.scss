@@ -40,10 +40,6 @@ div:focus, span:focus {
     line-height: 25px;
     text-align: center;
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
   }
 }
@@ -226,8 +222,6 @@ a {
 }
 
 .ngdialog {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   position: fixed;
   overflow: auto;
@@ -272,17 +266,6 @@ a {
 
 /* settings dialog */
 
-@-webkit-keyframes ngdialog-fadeout {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-
 @keyframes ngdialog-fadeout {
   0% {
     opacity: 1;
@@ -292,18 +275,6 @@ a {
     opacity: 0;
   }
 }
-
-
-@-webkit-keyframes ngdialog-fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
 
 @keyframes ngdialog-fadein {
   0% {
@@ -317,12 +288,8 @@ a {
 
 
 .ngdialog * {
-  -webkit-box-sizing: inherit;
-  -moz-box-sizing: inherit;
   box-sizing: inherit;
   &:before, &:after {
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
     box-sizing: inherit;
   }
 }
@@ -335,13 +302,11 @@ a {
   bottom: 0;
   left: 0;
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadein 0s;
   animation: ngdialog-fadein 0s;
 }
 
 .ngdialog.ngdialog-closing .ngdialog-overlay {
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadeout 0s;
   animation: ngdialog-fadeout 0s;
 }
 
@@ -450,7 +415,6 @@ h2, h3 {
 
 .ngdialog.ngdialog-closing .ngdialog-content {
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadeout 0s;
   animation: ngdialog-fadeout 0s;
 }
 
@@ -1569,7 +1533,7 @@ g {
     }
     ul {
       margin: 10px 50px 0 30px;
-      
+
     }
   }
   a {
@@ -1581,10 +1545,6 @@ g {
   margin: 0 auto;
   margin-top: 15px;
   display: inline-block;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -1779,7 +1739,6 @@ h2, h3, h4 {
   font-size: 20px;
   font-weight: bold;
   color: #ffffff;
-  -webkit-text-shadow: 0 1px 0 #ffffff;
   text-shadow: 0 1px 0 #ffffff;
   &:hover, &:focus {
     color: #000000;
@@ -1860,8 +1819,6 @@ button.toast-close-button {
     pointer-events: auto;
   }
   * {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
   > {
@@ -1869,19 +1826,13 @@ button.toast-close-button {
       margin: 0 0 6px;
       padding: 15px 15px 15px 50px;
       width: 300px;
-      -moz-border-radius: 3px 3px 3px 3px;
-      -webkit-border-radius: 3px 3px 3px 3px;
       border-radius: 3px 3px 3px 3px;
       background-position: 15px 15px;
       background-repeat: no-repeat;
-      -moz-box-shadow: 0 0 12px #999999;
-      -webkit-box-shadow: 0 0 12px #999999;
       box-shadow: 0 0 12px #999999;
       color: #ffffff;
     }
     :hover {
-      -moz-box-shadow: 0 0 12px #000000;
-      -webkit-box-shadow: 0 0 12px #000000;
       box-shadow: 0 0 12px #000000;
       cursor: pointer;
     }
@@ -1964,15 +1915,11 @@ button.toast-close-button {
 }
 
 /*
-    * AngularJS-Toaster
-    * Version 0.3
-   */
+ * AngularJS-Toaster
+ * Version 0.3
+ */
 
 :not(.no-enter)#toast-container > div.ng-enter, :not(.no-leave)#toast-container > div.ng-leave {
-  /*-webkit-transition: 1000ms linear none;
-      -moz-transition: 1000ms linear none;
-      -ms-transition: 1000ms linear none;
-      -o-transition: 1000ms linear none;*/
   transition: 10ms linear none;
 }
 
@@ -2321,78 +2268,4 @@ button.toast-close-button {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.crimson {
-  background-color: #6f0003;
-  #header {
-    background-color: #560001;
-    border-bottom: solid 1px #863031;
-  }
-  .title {
-    background-color: #560001;
-    border-top: solid 1px #460000;
-    border-bottom: solid 1px #863031;
-  }
-  .storage:first-child .title {
-    border-left: solid 1px #460000;
-  }
-  .move-popup {
-    background-color: #560001;
-  }
-  .character .ngdialog {
-    border: solid 1px #460000;
-  }
-  .loadout-list {
-    > .loadout-set {
-      background-color: #560001;
-      border-top: solid 1px #863031;
-      border-bottom: solid 1px #460000;
-    }
-    .loadout-set:hover {
-      background-color: #460000;
-      border-top: solid 1px #460000;
-    }
-  }
-  .loadout-new:hover, .loadout-options span:hover {
-    background-color: #460000;
-    border-top: solid 1px #460000;
-  }
-  .about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog {
-    background-color: rgba(10, 0, 0, 0.85);
-  }
-  .about.ngdialog .ngdialog-content, .app-settings.ngdialog .ngdialog-content, .filters.ngdialog .ngdialog-content, .support.ngdialog .ngdialog-content {
-    background-color: #6f0003;
-    border: solid 1px #863031;
-  }
-  .ngdialog-content {
-    h1 {
-      background-color: #560001;
-      border-bottom: solid 1px #863031;
-    }
-    dl {
-      background-color: #560001;
-    }
-    td {
-      border-color: #6f0003;
-    }
-    table {
-      background-color: #863031;
-      tr:nth-child(2n+1) {
-        background-color: #560001;
-      }
-    }
-  }
-  .sticky-header-background {
-    background-color: #6f0003;
-  }
-  .toast-info {
-    background-color: #06283C;
-    box-shadow: 0 1px 6px 0px #422;
-  }
-  .logo {
-    background-image: url("../crimsonlogo.png");
-    color: #FFFFFF;
-    text-shadow: 1px 1px #000;
-  }
 }
