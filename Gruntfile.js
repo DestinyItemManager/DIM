@@ -139,6 +139,7 @@ module.exports = function(grunt) {
     grunt.log.ok("New Beta version is " + betaVersion);
   });
 
+  // Builds the Beta extension and publishes
   grunt.registerTask('publish_beta', ['clean',
                                       'css',
                                       'copy:main',
@@ -148,4 +149,11 @@ module.exports = function(grunt) {
                                       'compress',
                                       'webstore_upload:beta',
                                       'log_beta_version']);
+
+  // Builds a release-able extension in build/dim-extension.zip
+  grunt.registerTask('build_extension', ['clean',
+                                      'css',
+                                      'copy:main',
+                                      'compress']);
+
 };
