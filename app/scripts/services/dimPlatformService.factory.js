@@ -57,13 +57,14 @@
 
     function getActivePlatform() {
       var promise = SyncService.get().then(function(data) {
-        var previousPlatformType = data.platformType;
-        if (_.isUndefined(previousPlatformType)) {
-          previousPlatformType = null;
-        }
 
         var previousPlatform = null;
         var active = null;
+        var previousPlatformType = null;
+
+        if(data){
+          previousPlatformType = data.platformType;
+        }   
 
         if (!_.isNull(previousPlatformType)) {
           previousPlatform = _.find(_platforms, function(platform) {
