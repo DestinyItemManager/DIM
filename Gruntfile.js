@@ -57,16 +57,16 @@ module.exports = function(grunt) {
         }
       },
 
-      postcss: { 
+      postcss: {
         options: {
-          processors: [ 
+          processors: [
             require('autoprefixer')()
           ]
         },
         dist: {
          src: 'app/styles/main.css',
          dest: 'app/styles/main.css'
-        } 
+        }
       },
 
       watch:{
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
           //required, we can use dir name and upload most recent zip file
           zip: "build/dim-extension.zip"
         }
-      }      
+      }
     }
   });
 
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  
+
 
   grunt.registerTask('update_beta_manifest', function() {
     var manifest = grunt.file.readJSON('build/extension/manifest.json');
@@ -140,6 +140,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('publish_beta', ['clean',
+                                      'css',
                                       'copy:main',
                                       'copy:beta_icons',
                                       'replace:beta_version',
