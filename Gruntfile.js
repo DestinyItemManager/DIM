@@ -49,6 +49,34 @@ module.exports = function(grunt) {
       }
     },
 
+    sass: {
+        dist: {
+          files: {
+            'app/styles/main.css': 'app/scss/main.scss'
+          }
+        }
+      },
+
+      postcss: { 
+        options: {
+          processors: [ 
+            require('autoprefixer')()
+          ]
+        },
+        dist: {
+         src: 'app/styles/main.css',
+         dest: 'app/styles/main.css'
+        } 
+      },
+
+      watch:{
+        scripts:{
+          files:['app/scss/*.scss'],
+          tasks:['css'],
+          options:{spawn:false}
+        }
+      },
+
     // See https://github.com/c301/grunt-webstore-upload
     webstore_upload: {
       "accounts": {
@@ -83,15 +111,22 @@ module.exports = function(grunt) {
           //required, we can use dir name and upload most recent zip file
           zip: "build/dim-extension.zip"
         }
-      }
+      }      
     }
   });
+
+   grunt.registerTask('css', ['sass', 'postcss']);
+
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  
 
   grunt.registerTask('update_beta_manifest', function() {
     var manifest = grunt.file.readJSON('build/extension/manifest.json');
