@@ -4,16 +4,14 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'rateLimiterQueue', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState, rateLimiterQueue, toaster) {
+  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
     var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
     var charactersPromise = null;
-
-    //var transferRateLimit = dimRateLimit.rateLimit(transfer, 3000);
 
     $rootScope.$on('dim-active-platform-updated', function(event, args) {
       tokenPromise = null;
@@ -28,6 +26,7 @@
       getStores: getStores,
       transfer: transfer,
       equip: equip,
+      equipItems: equipItems,
       setLockState: setLockState
     };
 
@@ -58,6 +57,47 @@
           });
         }
       });
+    }
+
+    function retryOnThrottled(request) {
+      var a = $q(function(resolve, reject) {
+        var retries = 4;
+
+        function run() {
+          $http(request).then(function success(response) {
+            if (response.data.ErrorCode === 36) {
+              retries = retries - 1;
+
+              if (retries <= 0) {
+                // debugger;
+                reject(new Error(response.data.Message));
+              } else {
+                $timeout(run, Math.pow(2, 4 - retries) * 1000);
+              }
+            } else if (response.data.ErrorCode > 1) {
+              reject(new Error(response.data.Message));
+            } else {
+              resolve(response);
+            }
+          }, function failure(response) {
+            // debugger;
+            reject(new Error(response.data.Message));
+          });
+        }
+
+        run();
+      });
+
+      return a;
+    }
+
+    function openBungieNetTab() {
+      if (_.size(tabs) === 0) {
+        chrome.tabs.create({
+          url: 'http://bungie.net',
+          active: false
+        });
+      }
     }
 
     /************************************************************************************************************************************/
@@ -91,18 +131,8 @@
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
             } else {
-              chrome.tabs.query({
-                'url': '*://*.bungie.net/*'
-              }, function(tabs) {
-                if (_.size(tabs) === 0) {
-                  chrome.tabs.create({
-                    url: 'http://bungie.net',
-                    active: false
-                  });
-                }
-              });
-
-              reject(new Error('No bungled cookie found.'));
+              openBungieNetTab();
+              reject(new Error('Please log into Bungie.net before using this extension.'));
             }
           });
         })
@@ -145,16 +175,7 @@
 
     function processBnetPlatformsRequest(response) {
       if (response.data.ErrorCode === 99) {
-        chrome.tabs.query({
-          'url': '*://*.bungie.net/*'
-        }, function(tabs) {
-          if (_.size(tabs) === 0) {
-            chrome.tabs.create({
-              url: 'http://bungie.net',
-              active: false
-            });
-          }
-        });
+        openBungieNetTab();
 
         return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
       } else if (response.data.ErrorCode === 5) {
@@ -387,7 +408,7 @@
 
     /************************************************************************************************************************************/
 
-    function transfer(item, store) {
+    function transfer(item, store, amount) {
       var platform = dimState.active;
       var data = {
         token: null,
@@ -406,44 +427,16 @@
           return store;
         })
         .then(function(store) {
-          return getTransferRequest(data.token, platform.type, item, store);
+          return getTransferRequest(data.token, platform.type, item, store, amount);
         })
-        .then(function(request) {
-          return $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
       return promise;
     }
 
-    function getTransferRequest(token, membershipType, item, store) {
+    function getTransferRequest(token, membershipType, item, store, amount) {
       return {
         method: 'POST',
         url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
@@ -453,12 +446,12 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           itemReferenceHash: item.hash,
-          stackSize: (_.has(item, 'moveAmount') && item.moveAmount > 0) ? item.moveAmount : item.amount,
-          transferToVault: (store.id === 'vault')
+          stackSize: amount || item.amount,
+          transferToVault: store.isVault
         },
         dataType: 'json',
         withCredentials: true
@@ -485,37 +478,7 @@
         .then(function() {
           return getEquipRequest(data.token, platform.type, item);
         })
-        .then(function(request) {
-          var a = $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-
-          return a;
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
@@ -543,6 +506,57 @@
 
     /************************************************************************************************************************************/
 
+    // Returns a list of items that were successfully equipped
+    function equipItems(store, items) {
+      var platform = dimState.active;
+      var data = {
+        token: null,
+        membershipType: null
+      };
+
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
+      var getMembershipPB = getMembership.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(addMembershipTypeToDataPB)
+        .then(function() {
+          return {
+            method: 'POST',
+            url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
+            headers: {
+              'X-API-Key': apiKey,
+              'x-csrf': data.token,
+              'content-type': 'application/json; charset=UTF-8;'
+            },
+            data: {
+              characterId: store.id,
+              membershipType: platform.type,
+              itemIds: _.pluck(items, 'id')
+            },
+            dataType: 'json',
+            withCredentials: true
+          };
+        })
+        .then(retryOnThrottled)
+        .then(networkError)
+        .then(throttleCheck)
+        .then(function(response) {
+          var data = response.data.Response;
+          store.updateCharacterInfo(data.summary);
+          return _.select(items, function(i) {
+            var item = _.find(data.equipResults, {itemInstanceId: i.id});
+            return item && item.equipStatus === 1;
+          });
+        });
+
+      return promise;
+    }
+
+    /************************************************************************************************************************************/
+
     function setLockState(item, store, lockState) {
       var platform = dimState.active;
       var data = {
@@ -564,35 +578,7 @@
         .then(function(store) {
           return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
         })
-        .then(function(request) {
-          return $q(function(resolve, reject) {
-            var retries = 4;
-
-            function run() {
-              $http(request).then(function success(response) {
-                if (response.data.ErrorCode === 36) {
-                  retries = retries - 1;
-
-                  if (retries <= 0) {
-                    // debugger;
-                    reject(new Error(response.data.Message));
-                  } else {
-                    $timeout(run, Math.pow(2, 4 - retries) * 1000);
-                  }
-                } else if (response.data.ErrorCode > 1) {
-                  reject(new Error(response.data.Message));
-                } else {
-                  resolve(response);
-                }
-              }, function failure(response) {
-                // debugger;
-                reject(new Error(response.data.Message));
-              });
-            }
-
-            run();
-          });
-        })
+        .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck);
 
@@ -609,7 +595,7 @@
           'content-type': 'application/json; charset=UTF-8;'
         },
         data: {
-          characterId: (store.id === 'vault') ? item.owner : store.id,
+          characterId: store.isVault ? item.owner : store.id,
           membershipType: membershipType,
           itemId: item.id,
           state: lockState

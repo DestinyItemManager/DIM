@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
-  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24276617);
+  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24298773);
 
   grunt.initConfig({
     pkg: pkg,
@@ -49,6 +49,34 @@ module.exports = function(grunt) {
       }
     },
 
+    sass: {
+        dist: {
+          files: {
+            'app/styles/main.css': 'app/scss/main.scss'
+          }
+        }
+      },
+
+      postcss: {
+        options: {
+          processors: [
+            require('autoprefixer')()
+          ]
+        },
+        dist: {
+         src: 'app/styles/main.css',
+         dest: 'app/styles/main.css'
+        }
+      },
+
+      watch:{
+        scripts:{
+          files:['app/scss/*.scss'],
+          tasks:['css'],
+          options:{spawn:false}
+        }
+      },
+
     // See https://github.com/c301/grunt-webstore-upload
     webstore_upload: {
       "accounts": {
@@ -87,11 +115,18 @@ module.exports = function(grunt) {
     }
   });
 
+   grunt.registerTask('css', ['sass', 'postcss']);
+
+
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+
 
   grunt.registerTask('update_beta_manifest', function() {
     var manifest = grunt.file.readJSON('build/extension/manifest.json');
@@ -104,7 +139,9 @@ module.exports = function(grunt) {
     grunt.log.ok("New Beta version is " + betaVersion);
   });
 
+  // Builds the Beta extension and publishes
   grunt.registerTask('publish_beta', ['clean',
+                                      'css',
                                       'copy:main',
                                       'copy:beta_icons',
                                       'replace:beta_version',
@@ -112,4 +149,11 @@ module.exports = function(grunt) {
                                       'compress',
                                       'webstore_upload:beta',
                                       'log_beta_version']);
+
+  // Builds a release-able extension in build/dim-extension.zip
+  grunt.registerTask('build_extension', ['clean',
+                                      'css',
+                                      'copy:main',
+                                      'compress']);
+
 };
