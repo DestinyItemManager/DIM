@@ -19,31 +19,20 @@
   "devDependencies": {
     "adm-zip": "^0.4.7",
     "autoprefixer": "^6.3.5",
-<<<<<<< HEAD
-    "cssnano": "^3.5.2",
-=======
->>>>>>> upstream/dev
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-compress": "^0.14.0",
     "grunt-contrib-copy": "^0.8.2",
-<<<<<<< HEAD
     "grunt-contrib-sass": "^1.0.0",
-=======
->>>>>>> upstream/dev
     "grunt-contrib-watch": "^1.0.0",
     "grunt-postcss": "^0.8.0",
     "grunt-sass": "^1.1.0",
     "grunt-text-replace": "^0.4.0",
     "grunt-webstore-upload": "^0.8.10",
     "jshint": "^2.8.0",
-<<<<<<< HEAD
-    "mkdirp": "^0.5.1",
-=======
     "load-grunt-tasks": "^3.4.1",
     "mkdirp": "^0.5.1",
     "node-sass": "^3.4.2",
->>>>>>> upstream/dev
     "request": "^2.57.0",
     "request-promise": "^0.4.2",
     "sqlite3": "^3.0.8",
