@@ -38,25 +38,23 @@
       return result;
     }
 
-    function networkError(response) {
-      if (response.status >= 200 && response.status < 400) {
-        return response;
-      } else {
+    function handleErrors(response) {
+      if (response.status < 200 || response.status >= 400) {
         return $q.reject(new Error('Network error: ' + response.status));
       }
-    }
 
-    function throttleCheck(response) {
-      return $q(function(resolve, reject) {
-        if (response.data.ErrorCode !== 36) {
-          return resolve(response);
-        } else {
-          return reject({
-            errorCode: 36,
-            message: 'Throttle limit exceeded.  Retry.'
-          });
-        }
-      });
+      var errorCode = response.data.ErrorCode;
+      if (errorCode === 36) {
+        return $q.reject(new Error('Bungie API throttling limit exceeded. Please wait a bit and then retry.'));
+      } else if (errorCode === 99) {
+        return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
+      } else if (errorCode === 5) {
+        return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
+      } else if (errorCode > 1) {
+        return $q.reject(new Error(response.data.Message));
+      }
+
+      return response;
     }
 
     function retryOnThrottled(request) {
@@ -137,9 +135,7 @@
       platformPromise = platformPromise || getBungleToken()
         .then(getBnetPlatformsRequest)
         .then($http)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors)
+        .then(handleErrors)
         .catch(function(e) {
           toaster.pop('error', '', e.message);
 
@@ -161,18 +157,6 @@
       };
     }
 
-    function handleBnetErrors(response) {
-      if (response.data.ErrorCode === 99) {
-        return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
-      } else if (response.data.ErrorCode === 5) {
-        return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
-      } else if (response.data.ErrorCode > 1) {
-        return $q.reject(new Error(response.data.Message));
-      }
-
-      return response;
-    }
-
     function rejectBnetPlatformsRequest(error) {
       return $q.reject(new Error('Message missing.'));
     }
@@ -183,9 +167,7 @@
       membershipPromise = membershipPromise || getBungleToken()
         .then(getBnetMembershipReqest.bind(null, platform))
         .then($http)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors)
+        .then(handleErrors)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
         .catch(function(error) {
           membershipPromise = null;
@@ -238,9 +220,7 @@
         .then(function(request) {
           return $http(request);
         })
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors)
+        .then(handleErrors)
         .then(processBnetCharactersRequest);
 
       return charactersPromise;
@@ -348,9 +328,7 @@
 
         return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
           .then($http)
-          .then(networkError)
-          .then(throttleCheck)
-          .then(handleBnetErrors)
+          .then(handleErrors)
           .then(processPB);
       });
 
@@ -363,9 +341,7 @@
 
       var promise = $q.when(getDestinyVaultRequest(token, platform))
         .then($http)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors)
+        .then(handleErrors)
         .then(processPB);
 
       promises.push(promise);
@@ -397,9 +373,7 @@
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors);
+        .then(handleErrors);
 
       return promise;
     }
@@ -447,9 +421,7 @@
           return getEquipRequest(data.token, platform.type, item);
         })
         .then(retryOnThrottled)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors);
+        .then(handleErrors);
 
       return promise;
     }
@@ -510,9 +482,7 @@
           };
         })
         .then(retryOnThrottled)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors)
+        .then(handleErrors)
         .then(function(response) {
           var data = response.data.Response;
           store.updateCharacterInfo(data.summary);
@@ -549,9 +519,7 @@
           return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
         })
         .then(retryOnThrottled)
-        .then(networkError)
-        .then(throttleCheck)
-        .then(handleBnetErrors);
+        .then(handleErrors);
 
       return promise;
     }
