@@ -54,9 +54,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue) {
     var vm = this;
 
     // TODO: cache this, instead?
@@ -106,7 +106,7 @@
     /**
      * Move the item to the specified store. Equip it if equip is true.
      */
-    vm.moveItemTo = function moveItemTo(store, equip) {
+    vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
@@ -128,9 +128,9 @@
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
-    };
+    });
 
-    vm.consolidate = function() {
+    vm.consolidate = dimActionQueue.wrap(function() {
       var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && !s.isVault; });
       var vault = dimStoreService.getVault();
 
@@ -165,9 +165,9 @@
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
-    };
+    });
 
-    vm.distribute = function() {
+    vm.distribute = dimActionQueue.wrap(function() {
       // Sort vault to the end
       var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id == 'vault' ? 2 : 1; });
 
@@ -242,7 +242,7 @@
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
-    };
+    });
 
     vm.stores = dimStoreService.getStores();
 
