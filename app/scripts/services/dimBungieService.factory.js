@@ -70,12 +70,10 @@
 
               if (retries <= 0) {
                 // debugger;
-                reject(new Error(response.data.Message));
+                resolve(response);
               } else {
                 $timeout(run, Math.pow(2, 4 - retries) * 1000);
               }
-            } else if (response.data.ErrorCode > 1) {
-              reject(new Error(response.data.Message));
             } else {
               resolve(response);
             }
@@ -89,13 +87,6 @@
       });
 
       return a;
-    }
-
-    function openBungieNetTab() {
-      chrome.tabs.create({
-        url: 'http://bungie.net',
-        active: false
-      });
     }
 
     /************************************************************************************************************************************/
@@ -129,8 +120,7 @@
             if (!_.isUndefined(cookie)) {
               resolve(cookie.value);
             } else {
-              openBungieNetTab();
-              reject(new Error('Please log into Bungie.net before using this extension.'));
+              reject(new Error('Please log into Bungie.net in order to use this extension.'));
             }
           });
         })
@@ -149,7 +139,7 @@
         .then($http)
         .then(networkError)
         .then(throttleCheck)
-        .then(processBnetPlatformsRequest)
+        .then(handleBnetErrors)
         .catch(function(e) {
           toaster.pop('error', '', e.message);
 
@@ -171,18 +161,16 @@
       };
     }
 
-    function processBnetPlatformsRequest(response) {
+    function handleBnetErrors(response) {
       if (response.data.ErrorCode === 99) {
-        openBungieNetTab();
-
-        return $q.reject(new Error('Please log into Bungie.net before using this extension.'));
+        return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
       } else if (response.data.ErrorCode === 5) {
         return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
       } else if (response.data.ErrorCode > 1) {
         return $q.reject(new Error(response.data.Message));
       }
 
-      return (response);
+      return response;
     }
 
     function rejectBnetPlatformsRequest(error) {
@@ -197,6 +185,7 @@
         .then($http)
         .then(networkError)
         .then(throttleCheck)
+        .then(handleBnetErrors)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
         .catch(function(error) {
           membershipPromise = null;
@@ -206,17 +195,15 @@
     }
 
     function getBnetMembershipReqest(platform, token) {
-      return $q.when((function() {
-        return {
-          method: 'GET',
-          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
-          headers: {
-            'X-API-Key': apiKey,
-            'x-csrf': token
-          },
-          withCredentials: true
-        };
-      })());
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
     }
 
     function processBnetMembershipRequest(response) {
@@ -253,50 +240,40 @@
         })
         .then(networkError)
         .then(throttleCheck)
-        .then(processBnetCharactersRequest, rejectBnetCharactersRequest);
+        .then(handleBnetErrors)
+        .then(processBnetCharactersRequest);
 
       return charactersPromise;
     }
 
     function getBnetCharactersRequest(token, platform, membershipId) {
-      return $q.when((function() {
-        return {
-          method: 'GET',
-          url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
-          headers: {
-            'X-API-Key': apiKey,
-            'x-csrf': token
-          },
-          withCredentials: true,
-          transformResponse: function(data, headers) {
-            return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
-          }
-        };
-      })());
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true,
+        transformResponse: function(data, headers) {
+          return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
+        }
+      };
     }
 
     function processBnetCharactersRequest(response) {
-      if (response.data.ErrorCode === 5) {
-        return $q.reject(new Error('Bungie.net is down for maintenance.'));
-      } else if (_.size(response.data.Response) === 0) {
+      if (_.size(response.data.Response) === 0) {
         return $q.reject(new Error('The membership id was not available.'));
       }
 
-      return $q.when((function() {
-        return _.map(response.data.Response.data.characters, function(character) {
-          var c = character;
-          c.inventory = response.data.Response.data.inventory;
+      return _.map(response.data.Response.data.characters, function(c) {
+        c.inventory = response.data.Response.data.inventory;
 
-          return {
-            'id': c.characterBase.characterId,
-            'base': c
-          };
-        });
-      })());
-    }
-
-    function rejectBnetCharactersRequest(response) {
-      $q.reject(new Error('The characters request failed.'));
+        return {
+          'id': c.characterBase.characterId,
+          'base': c
+        };
+      });
     }
 
     /************************************************************************************************************************************/
@@ -355,49 +332,41 @@
       };
     }
 
-    function processInventoryResponse(character, characters, response) {
+    function processInventoryResponse(character, response) {
       var payload = response.data.Response;
 
       payload.id = character.id;
       payload.character = character;
 
-      return $q.when(payload);
-    }
-
-    function rejectInventoryResponse(error) {
-      $q.reject(new Error('The store inventory was not available.'));
+      return payload;
     }
 
     function getDestinyInventories(token, platform, membershipId, characters) {
-      var promises = [];
-      var promise;
-      var processPB;
-
       // Guardians
-      _.each(characters, function(character) {
-        processPB = processInventoryResponse.bind(null, character, characters);
+      var promises = characters.map(function(character) {
+        var processPB = processInventoryResponse.bind(null, character);
 
-        promise = $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
+        return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
           .then($http)
           .then(networkError)
           .then(throttleCheck)
-          .then(processPB, rejectInventoryResponse);
-
-        promises.push(promise);
+          .then(handleBnetErrors)
+          .then(processPB);
       });
 
       // Vault
 
-      processPB = processInventoryResponse.bind(null, {
+      var processPB = processInventoryResponse.bind(null, {
         id: 'vault',
         base: null
-      }, characters);
+      });
 
-      promise = $q.when(getDestinyVaultRequest(token, platform))
+      var promise = $q.when(getDestinyVaultRequest(token, platform))
         .then($http)
         .then(networkError)
         .then(throttleCheck)
-        .then(processPB, rejectInventoryResponse);
+        .then(handleBnetErrors)
+        .then(processPB);
 
       promises.push(promise);
 
@@ -429,7 +398,8 @@
         })
         .then(retryOnThrottled)
         .then(networkError)
-        .then(throttleCheck);
+        .then(throttleCheck)
+        .then(handleBnetErrors);
 
       return promise;
     }
@@ -478,7 +448,8 @@
         })
         .then(retryOnThrottled)
         .then(networkError)
-        .then(throttleCheck);
+        .then(throttleCheck)
+        .then(handleBnetErrors);
 
       return promise;
     }
@@ -541,6 +512,7 @@
         .then(retryOnThrottled)
         .then(networkError)
         .then(throttleCheck)
+        .then(handleBnetErrors)
         .then(function(response) {
           var data = response.data.Response;
           store.updateCharacterInfo(data.summary);
@@ -578,7 +550,8 @@
         })
         .then(retryOnThrottled)
         .then(networkError)
-        .then(throttleCheck);
+        .then(throttleCheck)
+        .then(handleBnetErrors);
 
       return promise;
     }
