@@ -27,6 +27,10 @@ Generate CSS
 * `grunt css`
 * `grunt watch` (This will watch the scss files for any changes and generate a new style.css)
 
+Install dependencies:
+
+* `bower install`
+
 
 You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
 
