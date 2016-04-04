@@ -21,17 +21,11 @@
         <div class="content">
           <span class="header-right">
             <div dim-platform-choice class="header-right"></div>
-            <div dim-search-filter class="header-right"></div>
             <div class="header-right" id="actions">
-              <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data">
-                <i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i>
-              </span>
-              <span class="link" ng-click="app.showSetting($event)" title="Settings">
-                <i class="fa fa-cog"></i>
-              </span>
-              <span class="link" ng-click="app.showFilters($event)" title="Filters">
-                <i class="fa fa-filter"></i>
-              </span>
+              <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
+              <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
+              <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
+              <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
             </div>
           </span>
           <span class="logo">DIM</span>
