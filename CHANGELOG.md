@@ -5,6 +5,7 @@
 * Fixed a bug where DIM would refuse to equip an exotic when dequipping something else, even if the exotic was OK to equip.
 * When applying a loadout, DIM will now equip and dequip loadout items all at once, in order to speed up applying the loadout.
 * The search box has a new style.
+* Item moves and loadouts will now wait for each other, to prevent errors when they would collide. This means if you apply two loadouts, the second will wait for the first to complete before starting.
 
 # 3.4.1
 
