@@ -378,7 +378,7 @@
       loadingTracker.addPromise(promise);
 
       return promise;
-    };
+    });
 
     function resetData() {
       if (vm.store.isVault) {
