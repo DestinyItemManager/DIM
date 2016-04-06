@@ -191,6 +191,13 @@
         var items = angular.copy(_.flatten(_.values(loadout.items)));
         var totalItems = items.length;
 
+        var loadoutItemIds = items.map(function(i) {
+          return {
+            id: i.id,
+            hash: i.hash
+          };
+        });
+
         // Only select stuff that needs to change state
         items = _.filter(items, function(pseudoItem) {
           var item = dimItemService.getItem(pseudoItem);
@@ -198,15 +205,6 @@
             !item.equipment ||
             item.owner !== store.id ||
             item.equipped !== pseudoItem.equipped;
-        });
-
-        var _types = _.uniq(_.pluck(items, 'type'));
-
-        var loadoutItemIds = items.map(function(i) {
-          return {
-            id: i.id,
-            hash: i.hash
-          };
         });
 
         // We'll equip these all in one go!
@@ -354,19 +352,8 @@
         }
 
         if (item) {
-          var size = _.where(store.items, { type: item.type }).length;
-
-          // If full, make room.
-          if (size >= store.capacityForItem(item)) {
-            if (item.owner !== store.id) {
-              // Pass in the list of items that shouldn't be moved away
-              promise = dimItemService.makeRoomForItem(item, store, loadoutItemIds);
-            }
-          }
-
-          promise = promise.then(function() {
-            return dimItemService.moveTo(item, store, pseudoItem.equipped);
-          });
+          // Pass in the list of items that shouldn't be moved away
+          promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
         } else {
           promise = $.reject(new Error(item.name + " doesn't exist in your account."));
         }
