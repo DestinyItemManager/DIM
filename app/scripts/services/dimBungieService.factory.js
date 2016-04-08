@@ -25,7 +25,8 @@
       transfer: transfer,
       equip: equip,
       equipItems: equipItems,
-      setLockState: setLockState
+      setLockState: setLockState,
+      getXur: getXur
     };
 
     return service;
@@ -251,6 +252,30 @@
           'id': c.characterBase.characterId,
           'base': c
         };
+      });
+    }
+
+
+    /************************************************************************************************************************************/
+
+    function getXur() {
+      return $q.when({
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/Advisors/Xur/',
+        headers: {
+          'X-API-Key': apiKey
+        },
+        withCredentials: true,
+        transformResponse: function(data, headers) {
+          return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
+        }
+      })
+      .then(function(request) {
+        return $http(request);
+      })
+      .then(handleErrors)
+      .then(function(response) {
+        return response.data.Response.data;
       });
     }
 

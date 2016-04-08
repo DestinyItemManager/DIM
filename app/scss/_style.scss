@@ -6,9 +6,10 @@ div:focus, span:focus {
   Header Area
 **/
 
-.glimmer img, .legendaryMarks img {
+.currency img {
   vertical-align: text-bottom;
   height: 17px;
+  width: 17px;
 }
 
 .logo {
@@ -202,21 +203,25 @@ body > div, #header {
   }
 }
 
-.about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog, .move-amount-popup.ngdialog {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  font-size: 13px;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.about, .app-settings, .filters, .support, .move-amount-popup, .xur {
+  &.ngdialog {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-size: 13px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-body {
-  &.filters.ngdialog-open, &.support.ngdialog-open, &.app-settings.ngdialog-open, &.about.ngdialog-open {
-    overflow: hidden !important;
+    .ngdialog-content {
+      max-height: 70%;
+      max-width: 50%;
+      background-color: #222;
+      border: solid 1px #3e3e3e;
+      height: 100%;
+    }
   }
 }
 
@@ -235,14 +240,6 @@ a {
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-.about.ngdialog .ngdialog-content, .app-settings.ngdialog .ngdialog-content, .filters.ngdialog .ngdialog-content, .support.ngdialog .ngdialog-content {
-  max-height: 70%;
-  max-width: 50%;
-  background-color: #222;
-  border: solid 1px #3e3e3e;
-  height: 100%;
 }
 
 .ngdialog-content > div {
@@ -300,7 +297,7 @@ a {
 
 .ngdialog-overlay {
   position: fixed;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.85);
   top: 0;
   right: 0;
   bottom: 0;
@@ -332,34 +329,18 @@ a {
     padding: 0;
   }
   h1 {
-    margin-top: 20px;
-    margin-bottom: 15px;
-  }
-}
-
-h2, h3 {
-  margin-top: 20px;
-  margin-bottom: 15px;
-}
-
-.ngdialog-content {
-  h1 {
     margin-top: 0;
     margin-bottom: 0;
-    padding: 20px 25px;
+    padding: 15px 25px;
     background-color: #101010;
     border-bottom: solid 1px #3e3e3e;
+  }
+  h2 {
+    margin-top: 0;
   }
   > p {
     margin: 5px 0;
   }
-}
-
-.ngdialog-inner-content > p {
-  margin: 5px 0;
-}
-
-.ngdialog-content {
   dl {
     background-color: #2F2F2F;
     border-radius: 6px;
@@ -415,6 +396,15 @@ h2, h3 {
       height: 15px;
     }
   }
+}
+
+h2, h3 {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.ngdialog-inner-content > p {
+  margin: 5px 0;
 }
 
 .ngdialog.ngdialog-closing .ngdialog-content {
@@ -899,7 +889,7 @@ img {
     font-weight: 200;
     font-size: 14px;
   }
-  .legendaryMarks, .glimmer {
+  .currency {
     position: absolute;
     top: 5px;
     right: 10px;
@@ -1039,6 +1029,41 @@ img {
   cursor: pointer;
 }
 
+.xur {
+  .ngdialog-content {
+    height: fit-content !important;
+    max-height: 100% !important;
+  }
+  h2 {
+    margin: 0;
+  }
+  .items {
+    margin: .25em 0 .75em 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .xurItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .currency img {
+    height: 12px;
+    width: 12px;
+  }
+  .cost {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+  .notenough {
+    color: #CC5C58;
+  }
+}
+
 .move-popup {
   &.little {
     width: 85px;
@@ -1068,6 +1093,30 @@ img {
   .bounty-description {
     padding: 5px;
     display: inline-block;
+  }
+}
+
+.xur-move-popup {
+  position: fixed !important;
+  height: 0;
+  height: fit-content;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
+  .compare-items {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .more-item-details {
+    margin-top: 0;
+  }
+  .item {
+    opacity: 0.2;
+  }
+  .selected {
+    opacity: 1.0;
+  }
+  a {
+    outline: 0;
   }
 }
 
@@ -1257,12 +1306,16 @@ rzslider {
 }
 
 .item-description {
-  margin: 10px;
+  margin: 5px 10px;
   white-space: pre-wrap;
 }
 
 .item-stats {
   width: 100%;
+}
+
+.item-perks {
+  margin: 5px 10px;
 }
 
 .stat-box-row {

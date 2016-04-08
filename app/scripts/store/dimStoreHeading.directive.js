@@ -24,8 +24,8 @@
         '  <div class="race-gender" ng-if="::vm.isGuardian">{{:: vm.store.race }} {{:: vm.store.gender }}</div>',
         '  <div class="level" ng-if="::vm.isGuardian">Level {{ vm.store.level }}</div>',
         '  <div class="level powerLevel" ng-if="vm.isGuardian">{{ vm.store.powerLevel }}</div>',
-        '  <div class="glimmer" ng-if="::!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
-        '  <div class="legendaryMarks" ng-if="::!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
+        '  <div class="currency" ng-if="::!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
+        '  <div class="currency legendaryMarks" ng-if="::!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
         '  <div class="levelBar" ng-if="::vm.isGuardian">',
         '    <div class="barFill" ng-style="{width: vm.store.percentToNextLevel + \'%\'}"></div>',
         '  </div>',
@@ -83,7 +83,7 @@
           ngDialog.closeAll();
 
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closeLoadoutPopup()" dim-loadout-popup="vm.store"></div>',
+            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-loadout-popup="vm.store"></div>',
             plain: true,
             appendTo: 'div[loadout-id="' + vm.store.id + '"]',
             overlay: false,
@@ -98,11 +98,6 @@
         }
       };
 
-      vm.closeLoadoutPopup = function closeLoadoutPopup() {
-        if (!_.isNull(dialogResult)) {
-          dialogResult.close();
-        }
-      };
       element.addClass('character');
     }
   }

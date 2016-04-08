@@ -2,6 +2,7 @@
 
 * The Infusion Calculator has been removed, now that infusions are much more straightforward.
 * Pressing the "i" key on the keyboard will toggle showing item details in the item popup.
+* Add a menu item for when Xur is in town. This brings up a panel with Xur's wares, how much everything costs, how many strange coins you have, and lets you show the item details popup plus compare against any version of exotics you might already have to see if there's a better roll.
 
 # 3.5
 

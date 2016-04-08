@@ -66,7 +66,8 @@
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       setHeights: setHeightsAsync,
-      createItemIndex: createItemIndex
+      createItemIndex: createItemIndex,
+      processItems: getItems
     };
 
     $rootScope.$on('dim-settings-updated', function(setting) {

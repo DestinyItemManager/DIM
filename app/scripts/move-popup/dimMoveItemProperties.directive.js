@@ -12,7 +12,8 @@
       controller: MoveItemPropertiesCtrl,
       controllerAs: 'vm',
       scope: {
-        item: '=dimMoveItemProperties'
+        item: '=dimMoveItemProperties',
+        compareItem: '=dimCompareItem'
       },
       restrict: 'A',
       replace: true,
@@ -141,31 +142,39 @@
       }
     }
 
+    function compareItems(item) {
+      if (item && vm.item.stats) {
+        for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
+          var itemStats = item.stats && item.stats[key];
+          if (itemStats) {
+            var vmItemStats = vm.item.stats[key];
+            if (vmItemStats) {
+              vmItemStats.equippedStatsValue = itemStats.value;
+              vmItemStats.equippedStatsName = itemStats.name;
+              vmItemStats.comparable = vmItemStats.equippedStatsName === vmItemStats.name ||
+                (vmItemStats.name === 'Magazine' && vmItemStats.equippedStatsName === 'Energy') ||
+                (vmItemStats.name === 'Energy' && vmItemStats.equippedStatsName === 'Magazine');
+            }
+          }
+        }
+      }
+    }
+
     /*
      * Get the item stats and its stat name
      * of the equipped item for comparison
      */
     if (vm.item.equipment) {
-      $scope.$watch('$parent.$parent.vm.store.items', function(items) {
-        var item = _.find(items, function(item) {
-          return item.equipped && item.type === vm.item.type;
+      if (vm.compareItem) {
+        $scope.$watch('vm.compareItem', compareItems);
+      } else {
+        $scope.$watch('$parent.$parent.vm.store.items', function(items) {
+          var item = _.find(items, function(item) {
+            return item.equipped && item.type === vm.item.type;
+          });
+          compareItems(items);
         });
-        if (item && vm.item.stats) {
-          for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
-            var itemStats = item.stats && item.stats[key];
-            if (itemStats) {
-              var vmItemStats = vm.item.stats[key];
-              if (vmItemStats) {
-                vmItemStats.equippedStatsValue = itemStats.value;
-                vmItemStats.equippedStatsName = itemStats.name;
-                vmItemStats.comparable = vmItemStats.equippedStatsName === vmItemStats.name ||
-                  (vmItemStats.name === 'Magazine' && vmItemStats.equippedStatsName === 'Energy') ||
-                  (vmItemStats.name === 'Energy' && vmItemStats.equippedStatsName === 'Magazine');
-              }
-            }
-          }
-        }
-      });
+      }
     }
   }
 })();
