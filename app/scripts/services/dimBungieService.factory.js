@@ -11,13 +11,11 @@
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
-    var charactersPromise = null;
 
     $rootScope.$on('dim-active-platform-updated', function(event, args) {
       tokenPromise = null;
       platformPromise = null;
       membershipPromise = null;
-      charactersPromise = null;
     });
 
     var service = {
@@ -211,7 +209,7 @@
       var addTokenToData = assignResultAndForward.bind(null, data, 'token');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      charactersPromise = getBungleToken()
+      var charactersPromise = getBungleToken()
         .then(addTokenToData)
         .then(getMembershipPB)
         .then(function(membershipId) {
