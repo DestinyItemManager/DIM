@@ -9,6 +9,18 @@
   function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
+    var vaultSizes = {};
+    var bucketSizes = {};
+    dimItemBucketDefinitions.then(function(defs) {
+      _.each(defs, function(def, hash) {
+        if (def.enabled) {
+          bucketSizes[hash] = def.itemCount;
+        }
+      });
+      vaultSizes['Weapons'] = bucketSizes[4046403665];
+      vaultSizes['Armor'] = bucketSizes[3003523923];
+      vaultSizes['General'] = bucketSizes[138197802];
+    });
 
     // Cooldowns
     var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -25,7 +37,7 @@
       },
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
-        return (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
+        return bucketSizes[item.bucket] || (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
@@ -206,7 +218,7 @@
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
-                  return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
+                  return vaultSizes[item.sort];
                 },
                 spaceLeftForItem: function(item) {
                   return this.capacityForItem(item) - count(this.items, { sort: item.sort });
@@ -384,7 +396,7 @@
         notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
         id: item.itemInstanceId,
         equipped: item.isEquipped,
-        bucket: item.bucket,
+        bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         amount: item.stackSize,
