@@ -12,8 +12,7 @@
       controller: MoveItemPropertiesCtrl,
       controllerAs: 'vm',
       scope: {
-        item: '=dimMoveItemProperties',
-        infuse: '=dimInfuse'
+        item: '=dimMoveItemProperties'
       },
       restrict: 'A',
       replace: true,
@@ -56,7 +55,7 @@
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
-        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid"/>',
         '</div>',
         '<div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '  <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
