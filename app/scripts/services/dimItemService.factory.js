@@ -343,11 +343,11 @@
           // Pick whatever we have the most space for on some guardian.
           var bestType = _.max(dimCategory[item.sort], function(type) {
             var res = _.max(stores.map(function(s) {
-              if (s.id == store.id || !_.any(store.items, { type: type })) {
+              if (s.id === store.id) {
                 return 0;
-              } else {
-                return moveContext.spaceLeft(s, { type: type });
               }
+              var vaultItem = _.find(store.items, { type: type });
+              return vaultItem ? moveContext.spaceLeft(s, vaultItem) : 0;
             }));
             return res;
           });

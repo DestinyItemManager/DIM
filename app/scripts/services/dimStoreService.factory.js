@@ -37,10 +37,16 @@
       },
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
-        return bucketSizes[item.bucket] || (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
+        if (!item.bucket) {
+          throw new Error("item needs a 'bucket' field");
+        }
+        return bucketSizes[item.bucket];
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
+        if (!item.type) {
+          throw new Error("item needs a 'type' field");
+        }
         return this.capacityForItem(item) - count(this.items, { type: item.type });
       },
       updateCharacterInfo: function(characterInfo) {
@@ -218,9 +224,15 @@
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
+                  if (!item.sort) {
+                    throw new Error("item needs a 'sort' field");
+                  }
                   return vaultSizes[item.sort];
                 },
                 spaceLeftForItem: function(item) {
+                  if (!item.sort) {
+                    throw new Error("item needs a 'sort' field");
+                  }
                   return this.capacityForItem(item) - count(this.items, { sort: item.sort });
                 }
               });
