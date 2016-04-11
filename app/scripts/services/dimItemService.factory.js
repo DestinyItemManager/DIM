@@ -33,6 +33,11 @@
 
       // Returns the new or updated item (it may create a new item!)
       function updateItemModel(item, source, target, equip, amount) {
+        // Refresh all the items - they may have been reloaded!
+        source = dimStoreService.getStore(source.id);
+        target = dimStoreService.getStore(target.id);
+        item = getItem(item);
+
         // If we've moved to a new place
         if (source.id !== target.id) {
           // We handle moving stackable and nonstackable items almost exactly the same!
