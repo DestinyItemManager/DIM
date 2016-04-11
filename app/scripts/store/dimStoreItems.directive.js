@@ -320,7 +320,7 @@
           template: [
             '<div>',
             '  <h1>',
-            '    <dim-infuse-item item-data="vm.item"></dim-infuse-item>',
+            '    <dim-simple-item item-data="vm.item"></dim-simple-item>',
             '    How much {{vm.item.name}} to move?',
             '  </h1>',
             '  <div class="ngdialog-inner-content">',

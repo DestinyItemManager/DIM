@@ -74,7 +74,7 @@
               '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
               '    <div>Compare with what you already have:</div>',
               '    <div class="compare-items">',
-              '      <div ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" dim-infuse-item item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></div>',
+              '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
               '    </div>',
               '  </div>',
               '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',

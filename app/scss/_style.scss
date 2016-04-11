@@ -734,6 +734,7 @@ img {
   min-width: 10px;
   text-align: center;
   -webkit-user-select: none;
+  box-sizing: content-box;
 }
 
 .stat-damage-arc {
@@ -1620,7 +1621,7 @@ g {
   }
 }
 
-div[dim-loadout] {
+#loadout-drawer {
   left: 0;
   right: 0;
   position: fixed;
@@ -1630,6 +1631,10 @@ div[dim-loadout] {
   background: rgba(195, 188, 180, 0.9);
   color: #1a1e24;
   box-shadow: 0 -1px 30px 2px #000;
+}
+
+.loadout-item {
+  position: relative;
 }
 
 .loadout-content {
@@ -1646,14 +1651,11 @@ div[dim-loadout] {
     height: 16px;
     display: inline-block;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 2px;
+    left: 2px;
     background-image: url('../images/spartan.png');
     background-color: rgba(255, 0, 0, 0.6);
     background-size: 16px 16px;
-  }
-  .item {
-    margin-bottom: 2px;
   }
 }
 
@@ -1701,10 +1703,6 @@ div[dim-loadout] {
 
 div[class^="sort-"] {
   display: inline-block;
-}
-
-ialog-open {
-  overflow: auto;
 }
 
 .ngdialog {
@@ -1762,8 +1760,8 @@ h2, h3, h4 {
   height: 16px;
   display: inline-block;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 2px;
+  right: 2px;
   background-image: url('../images/close.png');
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, 0.6);
@@ -2157,9 +2155,11 @@ button.toast-close-button {
   margin-right: 20px;
 }
 
-.postmaster .unequipped, .sort-consumable .unequipped, .sort-material .unequipped, .sort-bounties .unequipped, .sort-quests .unequipped, .sort-missions .unequipped {
-  margin-left: 12px;
-  margin-right: 20px;
+.postmaster,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
+  .unequipped {
+    margin-left: 12px;
+    margin-right: 20px;
+  }
 }
 
 .vault .unequipped {
