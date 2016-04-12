@@ -31,6 +31,7 @@
           <span class="logo">DIM</span>
           <span class="link" ng-click="app.showAbout($event)">About</span>
           <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
+          <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>
       <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
@@ -44,6 +45,7 @@
 
     <!-- begin vendor scripts -->
     <script src="vendor/jquery/dist/jquery.min.js?v=3.5"></script>
+    <script src="scripts/jquery-ui.position.js?v=3.5"></script>
     <script src="vendor/angular/angular.min.js?v=3.5"></script>
     <script src="vendor/angular-ui-router/release/angular-ui-router.min.js?v=3.5"></script>
     <script src="vendor/angular-animate/angular-animate.min.js?v=3.5"></script>
@@ -78,6 +80,7 @@
     <script src="scripts/services/dimLoadoutService.factory.js?v=3.5"></script>
     <script src="scripts/services/dimSettingsService.factory.js?v=3.5"></script>
     <script src="scripts/services/dimStoreService.factory.js?v=3.5"></script>
+    <script src="scripts/services/dimXurService.factory.js?v=3.5"></script>
     <script src="scripts/services/dimItemService.factory.js?v=3.5"></script>
     <script src="scripts/loadout/dimLoadout.directive.js?v=3.5"></script>
     <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=3.5"></script>
@@ -91,13 +94,14 @@
     <script src="scripts/store/dimStoreItems.directive.js?v=3.5"></script>
     <script src="scripts/store/dimStoreItem.directive.js?v=3.5"></script>
     <script src="scripts/store/dimStoreHeading.directive.js?v=3.5"></script>
+    <script src="scripts/store/dimSimpleItem.directive.js?v=3.5"></script>
     <script src="scripts/move-popup/dimMoveAmount.directive.js?v=3.5"></script>
     <script src="scripts/move-popup/dimMovePopup.directive.js?v=3.5"></script>
     <script src="scripts/move-popup/dimTalentGrid.directive.js?v=3.5"></script>
     <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=3.5"></script>
     <script src="scripts/infuse/dimInfuse.util.js?v=3.5"></script>
-    <script src="scripts/infuse/dimInfuseItem.directive.js?v=3.5"></script>
     <script src="scripts/infuse/dimInfuse.controller.js?v=3.5"></script>
+    <script src="scripts/xur/dimXur.controller.js?v=3.5"></script>
     <!-- end app scripts -->
 
     <!--
