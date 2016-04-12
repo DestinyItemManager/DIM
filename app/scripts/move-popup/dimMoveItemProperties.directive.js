@@ -83,6 +83,10 @@
                               //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
     vm.locking = false;
 
+    $scope.$on('dim-toggle-item-details', function() {
+      vm.itemDetails = !vm.itemDetails;
+    });
+
     vm.setLockState = function setLockState(item) {
       if (vm.locking) {
         return;

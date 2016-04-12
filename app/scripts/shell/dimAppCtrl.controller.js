@@ -38,6 +38,13 @@
       }
     });
 
+    hotkeys.add({
+      combo: ['i'],
+      callback: function(event, hotkey) {
+        $rootScope.$broadcast('dim-toggle-item-details');
+      }
+    });
+
     vm.settings = {
       itemDetails: false,
       itemStat: false,
