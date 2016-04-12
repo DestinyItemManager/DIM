@@ -19,7 +19,7 @@
       replace: true,
       template: [
         '<div class="move-popup" alt="" title="">',
-        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
+        '  <div dim-move-item-properties="vm.item"></div>',
         '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
@@ -47,7 +47,6 @@
         '      ng-if="vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
         '      <span>Split</span>',
         '    </div>',
-        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -71,29 +70,6 @@
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
-
-    /*
-    * Open up the dialog for infusion by passing
-    * the selected item
-    */
-    vm.infuse = function infuse(item, e) {
-      if (item.sort === 'Postmaster') {
-        return;
-      }
-      e.stopPropagation();
-
-      // Close the move-popup
-      $scope.$parent.closeThisDialog();
-
-      // Open the infuse window
-      ngDialog.open({
-        template: 'views/infuse.html',
-        overlay: false,
-        className: 'app-settings',
-        data: item,
-        scope: $('#infuseDialog').scope()
-      });
-    };
 
     vm.characterInfo = function characterInfo(store) {
       if (store.isVault) {
