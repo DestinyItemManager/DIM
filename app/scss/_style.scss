@@ -1067,13 +1067,6 @@ img {
 }
 
 .move-popup {
-  &.little {
-    width: 85px;
-    left: -21px;
-    &:before {
-      left: 39px;
-    }
-  }
   background-color: #222;
   cursor: default;
   bottom: 50px;
