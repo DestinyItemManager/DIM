@@ -25,10 +25,10 @@ Install dependencies:
 
 Generate CSS
 * `grunt css`
-* `grunt watch` (This will watch the scss files for any changes and generate a new style.css)
+* `grunt dev-chrome` or `grunt dev-firefox` (This will watch the scss files for any changes and generate a new style.css)
 
 
-You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
+You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk)
 
 ##Bugs and feature requests
 

@@ -244,3 +244,4 @@ module.exports = function(grunt) {
   grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
   });
+}

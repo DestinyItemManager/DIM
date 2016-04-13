@@ -137,10 +137,13 @@
       //      }
 
       // use replace to override the data. normally we're doing a PATCH
-      if (!PUT) { // update our data  
-        if (cached) {
-          angular.extend(cached, value);
-        }
+      if (!PUT) { // update our data 
+       if(cached){ 
+        angular.extend(cached, value);
+       }
+       else{
+        cached = value;
+       }        
       } else {
         cached = value;
       }
@@ -148,7 +151,7 @@
       console.log('set', cached);
 
       // save to local storage
-      localStorage.setItem('DIM-' + membershipId, JSON.stringify(cached));
+      localStorage.setItem('DIM', JSON.stringify(cached));
       console.log('saved to local storage.');
 
       // save to chrome sync
@@ -195,7 +198,7 @@
       var deferred = $q.defer();
 
       // grab from localStorage first
-      cached = JSON.parse(localStorage.getItem('DIM-' + membershipId));
+      cached = JSON.parse(localStorage.getItem('DIM'));
 
       // if we have drive sync enabled, get from google drive
       if (fileId || (cached && cached.fileId)) {
@@ -236,7 +239,7 @@
 
       // otherwise, just use local storage
       else {
-        console.log('using local storage')
+        console.log('using local storage')       
         deferred.resolve(cached);
       }
 
