@@ -112,7 +112,9 @@
 
       var promise = $q.all(stores.map(function(store) {
         // First move everything into the vault
-        var item = _.findWhere(store.items, { hash: vm.item.hash });
+        var item = _.find(store.items, function(i) {
+          return i.hash === vm.item.hash && i.sort !== 'Postmaster';
+        });
         if (item) {
           var amount = store.amountOfItem(vm.item);
           return dimItemService.moveTo(item, vault, false, amount);
@@ -122,7 +124,9 @@
       // Then move from the vault to the character
       if (!vm.store.isVault) {
         promise = promise.then(function() {
-          var item = _.findWhere(vault.items, { hash: vm.item.hash });
+          var item = _.find(vault.items, function(i) {
+            return i.hash === vm.item.hash && i.sort !== 'Postmaster';
+          });
           if (item) {
             var amount = vault.amountOfItem(vm.item);
             return dimItemService.moveTo(item, vm.store, false, amount);
@@ -197,7 +201,9 @@
       // All moves to vault in parallel, then all moves to targets in parallel
       function applyMoves(moves) {
         return $q.all(moves.map(function(move) {
-          var item = _.findWhere(move.source.items, { hash: vm.item.hash });
+          var item = _.find(move.source.items, function(i) {
+            return i.hash === vm.item.hash;// && i.sort !== 'Postmaster';
+          });
           return dimItemService.moveTo(item, move.target, false, move.amount);
         }));
       };

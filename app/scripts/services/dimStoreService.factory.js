@@ -33,7 +33,9 @@
     var StoreProto = {
       // Get the total amount of this item in the store, across all stacks.
       amountOfItem: function(item) {
-        return sum(_.where(this.items, { hash: item.hash }), 'amount');
+        return sum(_.filter(this.items, function(i) {
+          return i.hash === item.hash && i.sort !== 'Postmaster';
+        }), 'amount');
       },
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {

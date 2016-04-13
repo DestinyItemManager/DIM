@@ -46,7 +46,8 @@
           var sourceItems = stackable ?
                 _.sortBy(_.select(source.items, function(i) {
                   return i.hash === item.hash &&
-                    i.id === item.id;
+                    i.id === item.id &&
+                    !i.notransfer;
                 }), 'amount') : [item];
           // Items to be incremented. There's really only ever at most one of these, but
           // it's easier to deal with as a list.
@@ -55,7 +56,8 @@
                   return i.hash === item.hash &&
                     i.id === item.id &&
                     // Don't consider full stacks as targets
-                    i.amount !== i.maxStackSize;
+                    i.amount !== i.maxStackSize &&
+                    !i.notransfer;
                 }), 'amount') : [];
           // moveAmount could be more than maxStackSize if there is more than one stack on a character!
           var moveAmount = amount || item.amount;
@@ -607,7 +609,7 @@
 
       function getItem(params, store) {
         var items = store ? store.items : getItems();
-        return _.findWhere(items, { id: params.id, hash: params.hash });
+        return _.findWhere(items, { id: params.id, hash: params.hash, notransfer: params.notransfer || false });
       }
 
       return service;
