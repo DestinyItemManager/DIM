@@ -8,14 +8,14 @@
 
   function SyncService($q, $http) {
     var cached, // cached is the data in memory,
-        fileId, // reference to the file in drive
-        membershipId, // logged in bungie user id
-        drive = { // drive api data
-          'client_id': '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
-          'scope': 'https://www.googleapis.com/auth/drive.appfolder',
-          'immediate': false
-        },
-        ready = $q.defer();
+      fileId, // reference to the file in drive
+      membershipId, // logged in bungie user id
+      drive = { // drive api data
+        'client_id': '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
+        'scope': 'https://www.googleapis.com/auth/drive.appfolder',
+        'immediate': false
+      },
+      ready = $q.defer();
 
     function init() {
       console.log('google api is ready.');
@@ -23,7 +23,7 @@
     }
 
     function revokeDrive() {
-      if(fileId || cached.fileId) {
+      if (fileId || cached.fileId) {
         console.log('revoking sync to drive.');
         fileId = undefined;
         remove('fileId');
@@ -33,7 +33,7 @@
     // load the file from google drive
     function getFileId(token) {
       // if we already have the fileId, just return.
-      if(fileId) {
+      if (fileId) {
         return $q.resolve();
       }
 
@@ -45,15 +45,15 @@
 
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
-          if(list.code === 401) {
+          if (list.code === 401) {
             alert('To re-authorize google drive, must restart your browser.')
             deferred.resolve();
             return;
           }
 
           // look for the saved file.
-          for(var i = list.items.length - 1; i > 0; i--) {
-            if(list.items[i].title === 'DIM-' + membershipId) {
+          for (var i = list.items.length - 1; i > 0; i--) {
+            if (list.items[i].title === 'DIM-' + membershipId) {
               fileId = list.items[i].id;
               get(true).then(function(data) {
                 set(data, true);
@@ -70,12 +70,16 @@
             'body': {
               'title': 'DIM-' + membershipId,
               'mimeType': 'application/json',
-              'parents': [{'id': 'appfolder'}]
+              'parents': [{
+                'id': 'appfolder'
+              }]
             }
           }).execute(function(file) {
-            console.log('created DIM-'+membershipId);
+            console.log('created DIM-' + membershipId);
             fileId = file.id;
-            set({'fileId': fileId});
+            set({
+              'fileId': fileId
+            });
             deferred.resolve()
           });
         });
@@ -89,13 +93,17 @@
       var deferred = $q.defer();
 
       // we're a chrome app so we do this
-      if(chrome.identity) {
-        chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-          if(chrome.runtime.lastError) {
+      if (chrome.identity) {
+        chrome.identity.getAuthToken({
+          'interactive': true
+        }, function(token) {
+          if (chrome.runtime.lastError) {
             revokeDrive();
             return;
           }
-          gapi.auth.setToken({'access_token': token});
+          gapi.auth.setToken({
+            'access_token': token
+          });
           getFileId().then(deferred.resolve);
         });
       } else { // otherwise we do the normal auth flow
@@ -104,7 +112,7 @@
           drive.immediate = result && !result.error;
 
           // resolve promise for errors
-          if(!result || result.error) {
+          if (!result || result.error) {
             deferred.reject(result);
             return;
           }
@@ -123,14 +131,16 @@
       // if value === cached, we don't need to save....
       // this is a very naive check.
       //----
-//      if(JSON.stringify(value) === JSON.stringify(cached)) {
-//        console.log('nothing changed.');
-//        return;
-//      }
+      //      if(JSON.stringify(value) === JSON.stringify(cached)) {
+      //        console.log('nothing changed.');
+      //        return;
+      //      }
 
       // use replace to override the data. normally we're doing a PATCH
-      if(!PUT) {// update our data       
-          angular.extend(cached, value);        
+      if (!PUT) { // update our data  
+        if (cached) {
+          angular.extend(cached, value);
+        }
       } else {
         cached = value;
       }
@@ -142,7 +152,7 @@
       console.log('saved to local storage.');
 
       // save to chrome sync
-      if(chrome.storage && chrome.storage.sync) {
+      if (chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.set(cached, function() {
           console.log('saved to chrome sync.', cached);
           if (chrome.runtime.lastError) {
@@ -160,11 +170,14 @@
       // }
 
       // save to google drive
-      if(fileId) {
+      if (fileId) {
         gapi.client.request({
           'path': '/upload/drive/v2/files/' + fileId,
           'method': 'PUT',
-          'params': {'uploadType': 'media', 'alt': 'json'},
+          'params': {
+            'uploadType': 'media',
+            'alt': 'json'
+          },
           'body': cached
         }).execute(function() {
           console.log('saved to google drive.');
@@ -175,7 +188,7 @@
     // get DIM saved data
     function get(force) {
       // if we already have it and we're not forcing a sync
-      if(cached && !force) {
+      if (cached && !force) {
         return $q.resolve(cached);
       }
 
@@ -185,7 +198,7 @@
       cached = JSON.parse(localStorage.getItem('DIM-' + membershipId));
 
       // if we have drive sync enabled, get from google drive
-      if(fileId || (cached && cached.fileId)) {
+      if (fileId || (cached && cached.fileId)) {
         fileId = fileId || cached.fileId;
 
         ready.promise.then(authorize).then(function() {
@@ -194,7 +207,7 @@
               'fileId': fileId,
               'alt': 'media'
             }).execute(function(resp) {
-              if(resp.code === 401) {
+              if (resp.code === 401) {
                 revokeDrive();
                 return;
               }
@@ -206,7 +219,7 @@
           });
         });
       } // else get from chrome sync
-      else if(chrome.storage && chrome.storage.sync) {
+      else if (chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.get(null, function(data) {
           cached = data;
           deferred.resolve(cached);
@@ -233,7 +246,7 @@
     // remove something from DIM by key
     function remove(key) {
       console.log('before', cached, cached[key])
-      // just delete that key, maybe someday save to an undo array?
+        // just delete that key, maybe someday save to an undo array?
       delete cached[key];
       console.log('after', cached, cached[key])
 
