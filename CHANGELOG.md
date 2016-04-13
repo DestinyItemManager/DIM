@@ -1,4 +1,4 @@
-# Next
+# 3.5.1
 
 * The Infusion Calculator has been removed, now that infusions are much more straightforward.
 * Pressing the "i" key on the keyboard will toggle showing item details in the item popup.
