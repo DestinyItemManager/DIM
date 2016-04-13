@@ -474,11 +474,10 @@
 
       var possibleNodes = talentGridDef.nodes;
 
-      var featuredPerkNames = item.perks.map(function(perk) {
-        var perkDef = perkDefs[perk.perkHash];
-
-        return (perkDef) ? perkDef.displayName : 'Unknown';
-      });
+      // var featuredPerkNames = item.perks.map(function(perk) {
+      //   var perkDef = perkDefs[perk.perkHash];
+      //   return perkDef ? perkDef.displayName : 'Unknown';
+      // });
 
       var gridNodes = item.nodes.map(function(node) {
         var talentNodeGroup = possibleNodes[node.nodeHash];
@@ -535,13 +534,13 @@
           // Whether or not the material cost has been paid for the node
           unlocked: unlocked,
           // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: node.hidden,
+          hidden: node.hidden
 
           // Whether (and in which order) this perk should be
           // "featured" on an abbreviated info panel, as in the
           // game. 0 = not featured, positive numbers signify the
           // order of the featured perks.
-          featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+          //featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
           // This list of material requirements to unlock the
           // item are a mystery. These hashes don't exist anywhere in
