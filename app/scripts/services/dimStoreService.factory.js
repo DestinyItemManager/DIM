@@ -724,6 +724,15 @@
     function getItemType(item, def, buckets) {
       var type = def.itemTypeName;
       var name = def.itemName;
+      // def.bucketTypeHash is where it goes
+      var normalBucket = buckets[def.bucketTypeHash];
+      // item.bucket is where it IS
+      var currentBucket = buckets[item.bucket];
+
+      // TODO: time to dig through this code
+      if (currentBucket.bucketName === 'Messages') {
+        return 'Messages';
+      }
 
       if (def.bucketTypeHash === 3621873013) {
         return null;
