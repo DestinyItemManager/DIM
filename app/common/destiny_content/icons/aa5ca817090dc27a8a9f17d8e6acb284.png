@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Bungie.net: 404 Page Not Found</title>
+    <link type="text/css" rel="stylesheet" href="/css/error.css" />
+    <style type="text/css">
+        
+        .container {
+            background: none repeat scroll 0 0 #C8D6E2;
+            padding-top: 48px;
+            text-align: center;
+            height: auto;
+            position: static;
+            width: auto;
+        }
+            .container img
+            {
+                width:960px;
+            }
+        
+        .footer {
+            position: static;
+            width: 100%;
+            padding-bottom:100px;
+        }
+
+    </style>
+</head>
+<body>
+	<header>
+		<nav class="Nav_Top">
+			<ul class="nav_top cf">
+				<li class="nav_logo h1">
+				<h1 class="dropTrigger">
+					<a class="ir logo" href="/">Destiny</a> 
+				</h1> 
+			</li>
+			</ul>
+		</nav>
+	</header>
+
+    <div class="container">
+        <img src="/img/theme/bungienet/img/404_3.jpg" width="960" height="770" />
+        <div class="footer">
+            <p>
+                This error has automatically been logged and we are aware of your plight.<br />
+                <br />
+                HTTP Client Error; 404 Page Not Found
+       
+            </p>
+        </div>
+    </div>
+</body>
+</html>
