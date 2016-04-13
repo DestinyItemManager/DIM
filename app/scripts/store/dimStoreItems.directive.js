@@ -82,9 +82,9 @@
   }
 
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
     var vm = this;
 
     // Detect when we're hovering a dragged item over a target
@@ -299,7 +299,7 @@
       }
     };
 
-    vm.moveDroppedItem = function(item, equip, $event) {
+    vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event) {
       var target = vm.store;
 
       if (item.notransfer && item.owner !== target.id) {
@@ -320,7 +320,7 @@
           template: [
             '<div>',
             '  <h1>',
-            '    <dim-infuse-item item-data="vm.item"></dim-infuse-item>',
+            '    <dim-simple-item item-data="vm.item"></dim-simple-item>',
             '    How much {{vm.item.name}} to move?',
             '  </h1>',
             '  <div class="ngdialog-inner-content">',
@@ -357,7 +357,7 @@
         });
       }
 
-      promise.then(function(moveAmount) {
+      promise = promise.then(function(moveAmount) {
         var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
         var reload = item.equipped || equip;
@@ -378,7 +378,7 @@
       loadingTracker.addPromise(promise);
 
       return promise;
-    };
+    });
 
     function resetData() {
       if (vm.store.isVault) {

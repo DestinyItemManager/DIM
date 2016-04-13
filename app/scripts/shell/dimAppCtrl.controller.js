@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -38,6 +38,13 @@
       }
     });
 
+    hotkeys.add({
+      combo: ['i'],
+      callback: function(event, hotkey) {
+        $rootScope.$broadcast('dim-toggle-item-details');
+      }
+    });
+
     vm.settings = {
       itemDetails: false,
       itemStat: false,
@@ -55,7 +62,6 @@
 
         settingResult = ngDialog.open({
           template: 'views/setting.html',
-          overlay: false,
           className: 'app-settings',
           scope: $('body > div')
             .scope()
@@ -81,7 +87,6 @@
 
         aboutResult = ngDialog.open({
           template: 'views/about.html',
-          overlay: false,
           className: 'about',
           scope: $('body > div')
             .scope()
@@ -103,9 +108,11 @@
           $rootScope.$broadcast('dim-active-platform-updated', {
             platform: activePlatform
           });
+          dimXurService.updateXur();
         }
       })(dimPlatformService.getActive());
     };
+    dimXurService.updateXur();
 
     vm.showSupport = function(e) {
       e.stopPropagation();
@@ -117,7 +124,6 @@
 
         supportResult = ngDialog.open({
           template: 'views/support.html',
-          overlay: false,
           className: 'support',
           scope: $('body > div')
             .scope()
@@ -143,7 +149,6 @@
 
         filterResult = ngDialog.open({
           template: 'views/filters.html',
-          overlay: false,
           className: 'filters',
           scope: $('body > div')
             .scope()
@@ -172,10 +177,16 @@
       }
     };
 
-    vm.closeLoadoutPopup = function closeLoadoutPopup() {
-      if(!_.isNull(aboutResult) || !_.isNull(settingResult) || !_.isNull(supportResult) || !_.isNull(filterResult)) {
+    vm.xur = dimXurService;
+    vm.showXur = function showXur(e) {
+      e.stopPropagation();
+
+      ngDialog.open({
+        template: 'views/xur.html',
+        className: 'xur'
+      }).closePromise.then(function() {
         ngDialog.closeAll();
-      }
+      });
     };
 
     // Don't refresh more than once a minute

@@ -44,13 +44,26 @@ module.exports = function(grunt) {
 
     compress: {
       // Zip up the extension
-      main: {
+      firefox: {
         options: {
-          archive: 'build/dim-extension.zip'
+          archive: 'build/firefox.zip'
         },
         files: [{
           expand: true,
-          cwd: 'build/extension/',
+          cwd: 'build/extension/firefox',
+          src: ['**'],
+          dest: '/',
+          filter: 'isFile'
+        }, ]
+      },
+      // Zip up the extension
+      chrome: {
+        options: {
+          archive: 'build/chrome.zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'build/extension/chrome',
           src: ['**'],
           dest: '/',
           filter: 'isFile'
@@ -109,7 +122,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['app/scss/*.scss'],
-        tasks: ['css']        
+        tasks: ['css']
       }
     },
 
@@ -200,12 +213,6 @@ module.exports = function(grunt) {
     grunt.file.write('build/extension/firefox/manifest.json', JSON.stringify(manifest));
   });
 
-  grunt.registerTask('publish_beta', ['clean', 'css', 
-    'publish_chrome_beta',
-    'publish_firefox_beta',    
-    'log_beta_version'
-  ]);
-
   grunt.registerTask('publish_chrome_beta', [
     'update_chrome_manifest',
     'copy:chrome',
@@ -219,10 +226,21 @@ module.exports = function(grunt) {
     'update_firefox_manifest',
     'copy:firefox',
     'copy:beta_icons_firefox',
-    'replace:beta_version_firefox'    
+    'replace:beta_version_firefox'
   ]);
 
-   grunt.registerTask('log_beta_version', function() {
+  // Builds a release-able extension in build/dim-extension.zip
+  grunt.registerTask('build_extension', ['clean',
+    'css',
+    'update_firefox_beta',
+    'copy:firefox',
+    'update_chrome_beta',
+    'copy:chrome',
+    'compress:firefox',
+    'compress:chrome',
+
+  ]);
+
+  grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
   });
-};

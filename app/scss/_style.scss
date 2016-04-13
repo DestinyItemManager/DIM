@@ -6,9 +6,10 @@ div:focus, span:focus {
   Header Area
 **/
 
-.glimmer img, .legendaryMarks img {
+.currency img {
   vertical-align: text-bottom;
   height: 17px;
+  width: 17px;
 }
 
 .logo {
@@ -40,10 +41,6 @@ div:focus, span:focus {
     line-height: 25px;
     text-align: center;
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
   }
 }
@@ -88,17 +85,21 @@ div:focus, span:focus {
   box-shadow: inset 0 0 10px 0px #B84;
 }
 
-div[dim-search-filter] input {
-  &:focus {
-    outline-width: 0;
-  }
+#filter-input {
   width: 250px;
-  -webkit-appearance: none;
-  border: 1px solid #999;
-  border-radius: 3px;
-  padding: 2px 10px;
-  margin: 0px 15px 0 10px;
-  background-color: #fafafa;
+  margin-left: -10px;
+  margin-bottom: 4px;
+  height: 22px;
+  background: rgb(46, 46, 46);
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+
+  &:hover, &:focus {
+    background: transparent;
+    outline: none;
+    border-bottom: 1px solid #E8A534;
+  }
 }
 
 dt {
@@ -202,21 +203,26 @@ body > div, #header {
   }
 }
 
-.about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog, .move-amount-popup.ngdialog {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  font-size: 13px;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.about, .app-settings, .filters, .support, .move-amount-popup, .xur {
+  &.ngdialog {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    z-index: 10000;
+    font-size: 13px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-body {
-  &.filters.ngdialog-open, &.support.ngdialog-open, &.app-settings.ngdialog-open, &.about.ngdialog-open {
-    overflow: hidden !important;
+    .ngdialog-content {
+      max-height: 70%;
+      max-width: 50%;
+      background-color: #222;
+      border: solid 1px #3e3e3e;
+      height: 100%;
+    }
   }
 }
 
@@ -226,25 +232,15 @@ a {
 }
 
 .ngdialog {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   position: fixed;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  z-index: 10000;
+  z-index: 2;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-.about.ngdialog .ngdialog-content, .app-settings.ngdialog .ngdialog-content, .filters.ngdialog .ngdialog-content, .support.ngdialog .ngdialog-content {
-  max-height: 70%;
-  max-width: 50%;
-  background-color: #222;
-  border: solid 1px #3e3e3e;
-  height: 100%;
 }
 
 .ngdialog-content > div {
@@ -272,17 +268,6 @@ a {
 
 /* settings dialog */
 
-@-webkit-keyframes ngdialog-fadeout {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-
 @keyframes ngdialog-fadeout {
   0% {
     opacity: 1;
@@ -292,18 +277,6 @@ a {
     opacity: 0;
   }
 }
-
-
-@-webkit-keyframes ngdialog-fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
 
 @keyframes ngdialog-fadein {
   0% {
@@ -317,31 +290,25 @@ a {
 
 
 .ngdialog * {
-  -webkit-box-sizing: inherit;
-  -moz-box-sizing: inherit;
   box-sizing: inherit;
   &:before, &:after {
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
     box-sizing: inherit;
   }
 }
 
 .ngdialog-overlay {
   position: fixed;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.85);
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadein 0s;
   animation: ngdialog-fadein 0s;
 }
 
 .ngdialog.ngdialog-closing .ngdialog-overlay {
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadeout 0s;
   animation: ngdialog-fadeout 0s;
 }
 
@@ -363,34 +330,18 @@ a {
     padding: 0;
   }
   h1 {
-    margin-top: 20px;
-    margin-bottom: 15px;
-  }
-}
-
-h2, h3 {
-  margin-top: 20px;
-  margin-bottom: 15px;
-}
-
-.ngdialog-content {
-  h1 {
     margin-top: 0;
     margin-bottom: 0;
-    padding: 20px 25px;
+    padding: 15px 25px;
     background-color: #101010;
     border-bottom: solid 1px #3e3e3e;
+  }
+  h2 {
+    margin-top: 0;
   }
   > p {
     margin: 5px 0;
   }
-}
-
-.ngdialog-inner-content > p {
-  margin: 5px 0;
-}
-
-.ngdialog-content {
   dl {
     background-color: #2F2F2F;
     border-radius: 6px;
@@ -448,9 +399,17 @@ h2, h3 {
   }
 }
 
+h2, h3 {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.ngdialog-inner-content > p {
+  margin: 5px 0;
+}
+
 .ngdialog.ngdialog-closing .ngdialog-content {
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadeout 0s;
   animation: ngdialog-fadeout 0s;
 }
 
@@ -776,6 +735,7 @@ img {
   min-width: 10px;
   text-align: center;
   -webkit-user-select: none;
+  box-sizing: content-box;
 }
 
 .stat-damage-arc {
@@ -931,7 +891,7 @@ img {
     font-weight: 200;
     font-size: 14px;
   }
-  .legendaryMarks, .glimmer {
+  .currency {
     position: absolute;
     top: 5px;
     right: 10px;
@@ -1071,14 +1031,42 @@ img {
   cursor: pointer;
 }
 
-.move-popup {
-  &.little {
-    width: 85px;
-    left: -21px;
-    &:before {
-      left: 39px;
+.xur {
+  .ngdialog-content {
+    height: fit-content !important;
+    max-height: 100% !important;
+  }
+  h2 {
+    margin: 0;
+  }
+  .items {
+    margin: .25em 0 .75em 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .xurItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0px;
+    &:last-child {
+      margin-right: 0;
     }
   }
+  .currency img {
+    height: 12px;
+    width: 12px;
+  }
+  .cost {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+  .notenough {
+    color: #CC5C58;
+  }
+}
+
+.move-popup {
   background-color: #222;
   cursor: default;
   bottom: 50px;
@@ -1100,6 +1088,31 @@ img {
   .bounty-description {
     padding: 5px;
     display: inline-block;
+  }
+}
+
+.ngdialog.xur-move-popup {
+  position: fixed;
+  height: 0;
+  z-index: 10000;
+  height: fit-content;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
+  .compare-items {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .more-item-details {
+    margin-top: 0;
+  }
+  .item {
+    opacity: 0.2;
+  }
+  .selected {
+    opacity: 1.0;
+  }
+  a {
+    outline: 0;
   }
 }
 
@@ -1289,12 +1302,16 @@ rzslider {
 }
 
 .item-description {
-  margin: 10px;
+  margin: 5px 10px;
   white-space: pre-wrap;
 }
 
 .item-stats {
   width: 100%;
+}
+
+.item-perks {
+  margin: 5px 10px;
 }
 
 .stat-box-row {
@@ -1536,55 +1553,10 @@ g {
   }
 }
 
-#faq-button {
-  display: inline-block;
-  background-color: #5b6e6c;
-  color: rgba(245, 245, 245, 0.6);
-  border-radius: 50%;
-  width: 14px;
-  height: 14px;
-  line-height: 14px !important;
-  cursor: pointer;
-  margin-left: 5px;
-  font-size: 10px !important;
-  &:hover {
-    background-color: #628e89;
-  }
-}
-
-#faq {
-  display: none;
-  position: fixed;
-  background: rgba(0, 0, 0, 0.86);
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 4;
-  cursor: pointer;
-  .content {
-    .title {
-      margin: 50px 50px 0;
-    }
-    ul {
-      margin: 10px 50px 0 30px;
-      
-    }
-  }
-  a {
-    color: #fff;
-  }
-}
-
 #content {
   margin: 0 auto;
   margin-top: 15px;
   display: inline-block;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -1603,7 +1575,7 @@ g {
   }
 }
 
-div[dim-loadout] {
+#loadout-drawer {
   left: 0;
   right: 0;
   position: fixed;
@@ -1613,6 +1585,10 @@ div[dim-loadout] {
   background: rgba(195, 188, 180, 0.9);
   color: #1a1e24;
   box-shadow: 0 -1px 30px 2px #000;
+}
+
+.loadout-item {
+  position: relative;
 }
 
 .loadout-content {
@@ -1629,14 +1605,11 @@ div[dim-loadout] {
     height: 16px;
     display: inline-block;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 2px;
+    left: 2px;
     background-image: url('../images/spartan.png');
     background-color: rgba(255, 0, 0, 0.6);
     background-size: 16px 16px;
-  }
-  .item {
-    margin-bottom: 2px;
   }
 }
 
@@ -1686,18 +1659,14 @@ div[class^="sort-"] {
   display: inline-block;
 }
 
-ialog-open {
-  overflow: auto;
-}
-
 .ngdialog {
   position: absolute;
   display: block;
   background-color: #222;
   top: 0;
   -webkit-overflow-scrolling: touch;
-  z-index: 10000;
-  width: 343px;
+  z-index: 3;
+  width: 295px;
   top: initial;
   left: initial;
   right: initial;
@@ -1745,8 +1714,8 @@ h2, h3, h4 {
   height: 16px;
   display: inline-block;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 2px;
+  right: 2px;
   background-image: url('../images/close.png');
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, 0.6);
@@ -1779,7 +1748,6 @@ h2, h3, h4 {
   font-size: 20px;
   font-weight: bold;
   color: #ffffff;
-  -webkit-text-shadow: 0 1px 0 #ffffff;
   text-shadow: 0 1px 0 #ffffff;
   &:hover, &:focus {
     color: #000000;
@@ -1860,8 +1828,6 @@ button.toast-close-button {
     pointer-events: auto;
   }
   * {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
   > {
@@ -1869,19 +1835,13 @@ button.toast-close-button {
       margin: 0 0 6px;
       padding: 15px 15px 15px 50px;
       width: 300px;
-      -moz-border-radius: 3px 3px 3px 3px;
-      -webkit-border-radius: 3px 3px 3px 3px;
       border-radius: 3px 3px 3px 3px;
       background-position: 15px 15px;
       background-repeat: no-repeat;
-      -moz-box-shadow: 0 0 12px #999999;
-      -webkit-box-shadow: 0 0 12px #999999;
       box-shadow: 0 0 12px #999999;
       color: #ffffff;
     }
     :hover {
-      -moz-box-shadow: 0 0 12px #000000;
-      -webkit-box-shadow: 0 0 12px #000000;
       box-shadow: 0 0 12px #000000;
       cursor: pointer;
     }
@@ -1964,15 +1924,11 @@ button.toast-close-button {
 }
 
 /*
-    * AngularJS-Toaster
-    * Version 0.3
-   */
+ * AngularJS-Toaster
+ * Version 0.3
+ */
 
 :not(.no-enter)#toast-container > div.ng-enter, :not(.no-leave)#toast-container > div.ng-leave {
-  /*-webkit-transition: 1000ms linear none;
-      -moz-transition: 1000ms linear none;
-      -ms-transition: 1000ms linear none;
-      -o-transition: 1000ms linear none;*/
   transition: 10ms linear none;
 }
 
@@ -2086,6 +2042,7 @@ button.toast-close-button {
   right: 0px;
   font-size: 1.5em;
   position: absolute;
+  cursor: pointer;
 }
 
 .move-popup .fa {
@@ -2152,9 +2109,11 @@ button.toast-close-button {
   margin-right: 20px;
 }
 
-.postmaster .unequipped, .sort-consumable .unequipped, .sort-material .unequipped, .sort-bounties .unequipped, .sort-quests .unequipped, .sort-missions .unequipped {
-  margin-left: 12px;
-  margin-right: 20px;
+.postmaster,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
+  .unequipped {
+    margin-left: 12px;
+    margin-right: 20px;
+  }
 }
 
 .vault .unequipped {
@@ -2294,7 +2253,7 @@ button.toast-close-button {
 .dropdown-menu {
   border: 1px solid #ddd;
   background-color: white;
-  transform: translate(-10px, -7px);
+  transform: translate(-11px, 5px);
   li {
     border-top: 1px solid #ddd;
     padding: 2px 5px;
@@ -2321,78 +2280,4 @@ button.toast-close-button {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.crimson {
-  background-color: #6f0003;
-  #header {
-    background-color: #560001;
-    border-bottom: solid 1px #863031;
-  }
-  .title {
-    background-color: #560001;
-    border-top: solid 1px #460000;
-    border-bottom: solid 1px #863031;
-  }
-  .storage:first-child .title {
-    border-left: solid 1px #460000;
-  }
-  .move-popup {
-    background-color: #560001;
-  }
-  .character .ngdialog {
-    border: solid 1px #460000;
-  }
-  .loadout-list {
-    > .loadout-set {
-      background-color: #560001;
-      border-top: solid 1px #863031;
-      border-bottom: solid 1px #460000;
-    }
-    .loadout-set:hover {
-      background-color: #460000;
-      border-top: solid 1px #460000;
-    }
-  }
-  .loadout-new:hover, .loadout-options span:hover {
-    background-color: #460000;
-    border-top: solid 1px #460000;
-  }
-  .about.ngdialog, .app-settings.ngdialog, .filters.ngdialog, .support.ngdialog {
-    background-color: rgba(10, 0, 0, 0.85);
-  }
-  .about.ngdialog .ngdialog-content, .app-settings.ngdialog .ngdialog-content, .filters.ngdialog .ngdialog-content, .support.ngdialog .ngdialog-content {
-    background-color: #6f0003;
-    border: solid 1px #863031;
-  }
-  .ngdialog-content {
-    h1 {
-      background-color: #560001;
-      border-bottom: solid 1px #863031;
-    }
-    dl {
-      background-color: #560001;
-    }
-    td {
-      border-color: #6f0003;
-    }
-    table {
-      background-color: #863031;
-      tr:nth-child(2n+1) {
-        background-color: #560001;
-      }
-    }
-  }
-  .sticky-header-background {
-    background-color: #6f0003;
-  }
-  .toast-info {
-    background-color: #06283C;
-    box-shadow: 0 1px 6px 0px #422;
-  }
-  .logo {
-    background-image: url("../crimsonlogo.png");
-    color: #FFFFFF;
-    text-shadow: 1px 1px #000;
-  }
 }

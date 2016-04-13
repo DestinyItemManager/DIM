@@ -8,7 +8,7 @@
   },
 
   "name": "Destiny Item Manager",
-  "version": "3.4.1",
+  "version": "3.5.1",
   "description": "Robust interface to manage gear, weapons, and items in Destiny.",
   "icons": {
     "16": "icon16.png",
