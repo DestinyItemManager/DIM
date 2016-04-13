@@ -68,6 +68,7 @@
 
         if (otherDialog) {
           otherDialog.close();
+          otherDialog = null;
         }
 
         if (dialogResult) {
