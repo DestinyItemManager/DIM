@@ -475,7 +475,9 @@
       var possibleNodes = talentGridDef.nodes;
 
       var featuredPerkNames = item.perks.map(function(perk) {
-        return perkDefs[perk.perkHash].displayName;
+        var perkDef = perkDefs[perk.perkHash];
+
+        return (perkDef) ? perkDef.displayName : 'Unknown';
       });
 
       var gridNodes = item.nodes.map(function(node) {
