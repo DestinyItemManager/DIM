@@ -38,6 +38,9 @@
     }
 
     function handleErrors(response) {
+      if (response.statue === 503) {
+        return $q.reject(new Error("Bungie.net is down."));
+      }
       if (response.status < 200 || response.status >= 400) {
         return $q.reject(new Error('Network error: ' + response.status));
       }
@@ -170,6 +173,7 @@
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
         .catch(function(error) {
           membershipPromise = null;
+          return $q.reject(error);
         });
 
       return membershipPromise;
@@ -233,10 +237,7 @@
           'X-API-Key': apiKey,
           'x-csrf': token
         },
-        withCredentials: true,
-        transformResponse: function(data, headers) {
-          return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
-        }
+        withCredentials: true
       };
     }
 
@@ -264,10 +265,6 @@
         url: 'https://www.bungie.net/Platform/Destiny/Advisors/Xur/',
         headers: {
           'X-API-Key': apiKey
-        },
-        withCredentials: true,
-        transformResponse: function(data, headers) {
-          return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
         }
       })
       .then(function(request) {
