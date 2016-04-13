@@ -1,3 +1,9 @@
+# Next
+
+* Fix a bug where item details popups would show above the header.
+* Fix showing Sterling Treasures in Messages.
+* Better error handling when Bungie.net is down.
+
 # 3.5.1
 
 * The Infusion Calculator has been removed, now that infusions are much more straightforward.
