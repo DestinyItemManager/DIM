@@ -4,6 +4,7 @@
 * Fix showing Sterling Treasures in Messages.
 * Better error handling when Bungie.net is down.
 * Fix a bug where having items in the postmaster would confuse moves of the same item elsewhere.
+* Fix a bug where item comparisons no longer worked.
 
 # 3.5.1
 

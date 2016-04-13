@@ -172,7 +172,7 @@
           var item = _.find(items, function(item) {
             return item.equipped && item.type === vm.item.type;
           });
-          compareItems(items);
+          compareItems(item);
         });
       }
     }
