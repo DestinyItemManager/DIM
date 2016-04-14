@@ -352,10 +352,10 @@
         };
 
         if (item.itemHash === 194424271) {
-          itemType = "Shader";
+          itemType = 'Armor Shader';
           itemDef.bucketTypeHash = 2973005342;
           itemDef.classType = 3;
-          itemDef.itemTypeName = 'Shader';
+          itemDef.itemTypeName = 'Armor Shader';
           itemDef.description = '';
           itemDef.itemName = 'Walkabout - Classified';
           itemDef.nonTransferrable = true;
