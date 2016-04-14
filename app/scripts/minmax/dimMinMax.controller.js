@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$q', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimWebWorker', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimWebWorker', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $q, loadingTracker, dimStoreService, dimItemService, ngDialog, dimWebWorker, dimLoadoutService) {
+  function dimMinMaxCtrl($scope, $state, $q, loadingTracker, dimStoreService, dimItemService, ngDialog, dimWebWorker, dimLoadoutService) {
     var vm = this, buckets = [];
 
 //    function getBestArmor(bucket) {
@@ -236,6 +236,12 @@
       getItems: function() {
 //<<<<<<< Updated upstream
         var stores = dimStoreService.getStores();
+
+        if(stores.length === 0) {
+          $state.go('inventory');
+          return;
+        }
+
         var allItems = [];
 
         // all stores
