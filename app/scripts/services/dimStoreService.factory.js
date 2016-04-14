@@ -631,7 +631,8 @@
                light < 290 ? {min: 62, max: 75}:
                light < 300 ? {min: 64, max: 77}:
                light < 310 ? {min: 66, max: 80}:
-               light < 320 ? {min: 70, max: 83}: {min: 74, max: 86};
+               light < 320 ? {min: 70, max: 83}:
+               light < 335 ? {min: 74, max: 86}: {min: 80, max: 90};
           break;
         case 'gauntlets':
           mm = light < 260 ? {min: 48, max: 57}:
@@ -639,7 +640,8 @@
                light < 290 ? {min: 56, max: 67}:
                light < 300 ? {min: 58, max: 69}:
                light < 310 ? {min: 62, max: 72}:
-               light < 320 ? {min: 62, max: 74}: {min: 66, max: 77};
+               light < 320 ? {min: 62, max: 74}:
+               light < 335 ? {min: 66, max: 77}: {min: 70, max: 80};
           break;
         case 'chest':
           mm = light < 260 ? {min: 70, max: 85}:
@@ -647,7 +649,8 @@
                light < 290 ? {min: 82, max: 99}:
                light < 300 ? {min: 84, max: 103}:
                light < 310 ? {min: 88, max: 106}:
-               light < 320 ? {min: 92, max: 110}: {min: 96, max: 114};
+               light < 320 ? {min: 92, max: 110}:
+               light < 320 ? {min: 96, max: 114}: {min: 102, max: 118};
           break;
         case 'leg':
           mm = light < 260 ? {min: 64, max: 79}:
@@ -655,7 +658,8 @@
                light < 290 ? {min: 74, max: 92}:
                light < 300 ? {min: 76, max: 96}:
                light < 310 ? {min: 80, max: 99}:
-               light < 320 ? {min: 84, max: 102}: {min: 88, max: 106};
+               light < 320 ? {min: 84, max: 102}:
+               light < 320 ? {min: 88, max: 106}: {min: 94, max: 110};
           break;
         case 'classitem':
         case 'ghost':
@@ -664,7 +668,8 @@
                light < 290 ? {min: 34, max: 42}:
                light < 300 ? {min: 34, max: 43}:
                light < 310 ? {min: 36, max: 45}:
-               light < 320 ? {min: 38, max: 46}: {min: 40, max: 48};
+               light < 320 ? {min: 38, max: 46}:
+               light < 320 ? {min: 40, max: 48}: {min: 40, max: 50};
           break;
         case 'artifact':
           mm = light < 260 ? {min: 40, max: 63}:
@@ -672,7 +677,8 @@
                light < 290 ? {min: 46, max: 73}:
                light < 300 ? {min: 48, max: 76}:
                light < 310 ? {min: 50, max: 78}:
-               light < 320 ? {min: 53, max: 81}: {min: 56, max: 84};
+               light < 320 ? {min: 53, max: 81}:
+               light < 320 ? {min: 56, max: 84}: {min: 60, max: 87};
           break;
         default:
           return;
@@ -698,29 +704,34 @@
         case 'helmets':
           return light < 291 ? 15 :
                  light < 307 ? 16 :
-                 light < 319 ? 17 : 18;
+                 light < 319 ? 17 :
+                 light < 334 ? 18 : 19;
         case 'gauntlets':
           return light < 287 ? 13 :
                  light < 305 ? 14 :
-                 light < 319 ? 15 : 16;
+                 light < 319 ? 15 :
+                 light < 334 ? 16 : 17;
         case 'chest':
         case 'chest armor':
           return light < 287 ? 20 :
                  light < 299 ? 21 :
                  light < 310 ? 22 :
-                 light < 319 ? 23 : 24;
+                 light < 319 ? 23 :
+                 light < 334 ? 24 : 25;
         case 'leg':
         case 'leg armor':
           return light < 284 ? 18 :
                  light < 298 ? 19 :
                  light < 309 ? 20 :
-                 light < 319 ? 21 : 22;
+                 light < 319 ? 21 :
+                 light < 334 ? 22 : 23;
         case 'classitem':
         case 'class items':
         case 'ghost':
         case 'ghosts':
           return light < 295 ? 8 :
-                 light < 319 ? 9 : 10;
+                 light < 319 ? 9 :
+                 light < 334 ? 10 : 11;
         case 'artifact':
         case 'artifacts':
           return light < 287 ? 34 :
@@ -728,7 +739,8 @@
                  light < 302 ? 36 :
                  light < 308 ? 37 :
                  light < 314 ? 38 :
-                 light < 319 ? 39 : 40;
+                 light < 319 ? 39 :
+                 light < 334 ? 40 : 41;
       }
       console.warn('item bonus not found');
       return 0;
