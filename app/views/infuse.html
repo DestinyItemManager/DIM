@@ -4,7 +4,7 @@
   <div class="infuseHeader">
 
     <div class="infuseSourceItemInfo">
-      <div class="infuseSourceItem" dim-infuse-item item-data="infuse.source"></div>
+      <div class="infuseSourceItem" dim-simple-item item-data="infuse.source"></div>
 
       <div class="infuseSourceDetailsRow">
         <div><strong>{{infuse.source.name}}</strong></div>
@@ -35,7 +35,7 @@
     <span ng-if="!infuse.view.length"><strong>No infusable items available.</strong></span>
     <span ng-if="infuse.view.length">Select items to infuse:</span>
     <div ng-repeat="value in infuse.infusable">
-      <div class="{{infuse.inView(value)}}" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
+      <div class="{{infuse.inView(value)}}" dim-simple-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
     </div>
   </div>
 
@@ -44,24 +44,17 @@
       <div class="infuseTargets">
         <div ng-repeat="value in infuse.targets">
           <div class="plusSeparator" ng-if="!$first">+</div>
-          <div class="infusedItem" dim-infuse-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
+          <div class="infusedItem" dim-simple-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
         </div>
       </div>
       <div class="result">
-        <p>
-          <span>Light level: {{infuse.infused}} <span class="green">(+{{infuse.difference}})</span></span>
-          <ul ng-show="infuse.statType=='Defense'">
-            <li>Intellect: {{infuse.stats[0].before}} <i class="fa fa-arrow-circle-right"></i> {{infuse.stats[0].after}}</li>
-            <li>Discipline: {{infuse.stats[1].before}} <i class="fa fa-arrow-circle-right"></i> {{infuse.stats[1].after}}</li>
-            <li>Strength: {{infuse.stats[2].before}} <i class="fa fa-arrow-circle-right"></i> {{infuse.stats[2].after}}</li>
-          </ul>
-        </p>
-        <p>
-          <span>using {{infuse.targets.length*3}} <span class="legendaryMarks"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
-          <span ng-if="infuse.exotic">+ {{infuse.targets.length}} <span class="legendaryMarks"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
-          <span>+ {{infuse.targets.length*250 | number}} <span class="glimmer"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
-          <span>+ {{infuse.targets.length*infuse.wildcardMaterialCost | number}} <span class="glimmer"><img alt="Materials" title="Materials"  dim-bungie-image-fallback="infuse.wildcardMaterialIcon"></span></span>
-        </p>
+        <span>Will bring the gear to</span>
+        <span class="bigValue">{{infuse.infused}}</span>
+        <span class="green">(+ {{infuse.difference}})</span>
+        <span>using {{infuse.targets.length*3}} <span class="currency"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
+        <span ng-if="infuse.exotic">+ {{infuse.targets.length}} <span class="legendaryMarks"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
+        <span>+ {{infuse.targets.length*250 | number}} <span class="currency"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
+        <span>+ {{infuse.targets.length*infuse.wildcardMaterialCost | number}} <span class="currency"><img alt="Materials" title="Materials"  dim-bungie-image-fallback="infuse.wildcardMaterialIcon"></span></span>
       </div>
       <button ng-if="infuse.getAllItems" ng-disabled="infuse.transferInProgress" ng-click="infuse.transferItems()">Transfer items</button>
     </div>

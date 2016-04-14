@@ -9,6 +9,18 @@
   function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
+    var vaultSizes = {};
+    var bucketSizes = {};
+    dimItemBucketDefinitions.then(function(defs) {
+      _.each(defs, function(def, hash) {
+        if (def.enabled) {
+          bucketSizes[hash] = def.itemCount;
+        }
+      });
+      vaultSizes['Weapons'] = bucketSizes[4046403665];
+      vaultSizes['Armor'] = bucketSizes[3003523923];
+      vaultSizes['General'] = bucketSizes[138197802];
+    });
 
     // Cooldowns
     var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -21,15 +33,31 @@
     var StoreProto = {
       // Get the total amount of this item in the store, across all stacks.
       amountOfItem: function(item) {
-        return sum(_.where(this.items, { hash: item.hash }), 'amount');
+        return sum(_.filter(this.items, function(i) {
+          return i.hash === item.hash && i.sort !== 'Postmaster';
+        }), 'amount');
       },
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
-        return (item.type == 'Material' || item.type == 'Consumable') ? 20 : 10;
+        if (!item.bucket) {
+          throw new Error("item needs a 'bucket' field");
+        }
+        return bucketSizes[item.bucket];
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
+        if (!item.type) {
+          throw new Error("item needs a 'type' field");
+        }
         return this.capacityForItem(item) - count(this.items, { type: item.type });
+      },
+      updateCharacterInfo: function(characterInfo) {
+        this.level = characterInfo.characterLevel;
+        this.percentToNextLevel = characterInfo.percentToNextLevel;
+        this.powerLevel = characterInfo.characterBase.powerLevel;
+        this.background = characterInfo.backgroundPath;
+        this.icon = characterInfo.emblemPath;
+        this.stats = getStatsData(characterInfo.characterBase);
       }
     };
 
@@ -42,7 +70,8 @@
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       setHeights: setHeightsAsync,
-      createItemIndex: createItemIndex
+      createItemIndex: createItemIndex,
+      processItems: getItems
     };
 
     $rootScope.$on('dim-settings-updated', function(setting) {
@@ -63,13 +92,7 @@
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
-
-            dStore.level = bStore.base.characterLevel;
-            dStore.percentToNextLevel = bStore.base.percentToNextLevel;
-            dStore.powerLevel = bStore.base.characterBase.powerLevel;
-            dStore.background = bStore.base.backgroundPath;
-            dStore.icon = bStore.base.emblemPath;
-            dStore.stats = getStatsData(bStore.base.characterBase);
+            dStore.updateCharacterInfo(bStore.base);
           }
         });
         return _stores;
@@ -196,6 +219,7 @@
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
+                name: 'vault',
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '',
                 items: [],
@@ -205,9 +229,15 @@
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
-                  return (item.sort == 'Weapons' || item.sort == 'Armor') ? 72 : 36;
+                  if (!item.sort) {
+                    throw new Error("item needs a 'sort' field");
+                  }
+                  return vaultSizes[item.sort];
                 },
                 spaceLeftForItem: function(item) {
+                  if (!item.sort) {
+                    throw new Error("item needs a 'sort' field");
+                  }
                   return this.capacityForItem(item) - count(this.items, { sort: item.sort });
                 }
               });
@@ -251,6 +281,7 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel,
                 isVault: false
               });
+              store.name = store.class;
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
@@ -385,7 +416,7 @@
         notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
         id: item.itemInstanceId,
         equipped: item.isEquipped,
-        bucket: item.bucket,
+        bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         amount: item.stackSize,
@@ -455,9 +486,10 @@
 
       var possibleNodes = talentGridDef.nodes;
 
-      var featuredPerkNames = item.perks.map(function(perk) {
-        return perkDefs[perk.perkHash].displayName;
-      });
+      // var featuredPerkNames = item.perks.map(function(perk) {
+      //   var perkDef = perkDefs[perk.perkHash];
+      //   return perkDef ? perkDef.displayName : 'Unknown';
+      // });
 
       var gridNodes = item.nodes.map(function(node) {
         var talentNodeGroup = possibleNodes[node.nodeHash];
@@ -515,13 +547,13 @@
           // Whether or not the material cost has been paid for the node
           unlocked: unlocked,
           // Some nodes don't show up in the grid, like purchased ascend nodes
-          hidden: node.hidden,
+          hidden: node.hidden
 
           // Whether (and in which order) this perk should be
           // "featured" on an abbreviated info panel, as in the
           // game. 0 = not featured, positive numbers signify the
           // order of the featured perks.
-          featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+          //featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
           // This list of material requirements to unlock the
           // item are a mystery. These hashes don't exist anywhere in
@@ -856,6 +888,15 @@
     function getItemType(item, def, buckets) {
       var type = def.itemTypeName;
       var name = def.itemName;
+      // def.bucketTypeHash is where it goes
+      var normalBucket = buckets[def.bucketTypeHash];
+      // item.bucket is where it IS
+      var currentBucket = buckets[item.bucket];
+
+      // TODO: time to dig through this code
+      if (currentBucket.bucketName === 'Messages') {
+        return 'Messages';
+      }
 
       if (def.bucketTypeHash === 3621873013) {
         return null;

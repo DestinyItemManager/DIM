@@ -14,11 +14,21 @@ DIM is an extension that runs within the Chrome Desktop Web Browser.
 
 ##Quick start
 
-Clone the repo: git clone https://github.com/DestinyItemManager/DIM.
+Clone the repo:
 
-Install dependencies: `bower install` (if you don't already have bower installed, install it with `npm install -g bower`)
+* `git clone https://github.com/DestinyItemManager/DIM.`
 
-You can run this locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
+Install dependencies:
+
+* `npm install`
+* `bower install` (if you don't already have bower installed, install it with `npm install -g bower`)
+
+Generate CSS
+* `grunt css`
+* `grunt watch` (This will watch the scss files for any changes and generate a new style.css)
+
+
+You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
 
 ##Bugs and feature requests
 

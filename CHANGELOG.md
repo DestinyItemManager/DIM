@@ -1,7 +1,26 @@
 # Next
 
+* Fix a bug where item details popups would show above the header.
+* Fix showing Sterling Treasures in Messages.
+* Better error handling when Bungie.net is down.
+* Fix a bug where having items in the postmaster would confuse moves of the same item elsewhere.
+* Fix a bug where item comparisons no longer worked.
+
+# 3.5.1
+
+* The Infusion Calculator has been removed, now that infusions are much more straightforward.
+* Pressing the "i" key on the keyboard will toggle showing item details in the item popup.
+* Add a menu item for when Xur is in town. This brings up a panel with Xur's wares, how much everything costs, how many strange coins you have, and lets you show the item details popup plus compare against any version of exotics you might already have to see if there's a better roll.
+
+# 3.5
+
 * DIM will now go to great lengths to make sure your transfer will succeed, even if your target's inventory is full, or the vault is full. It does this by moving stuff aside to make space, automatically.
 * Fixed a bug that would cause applying loadouts to fill up the vault and then fail.
+* Fixed a bug where DIM would refuse to equip an exotic when dequipping something else, even if the exotic was OK to equip.
+* When applying a loadout, DIM will now equip and dequip loadout items all at once, in order to speed up applying the loadout.
+* The search box has a new style.
+* Item moves and loadouts will now wait for each other, to prevent errors when they would collide. This means if you apply two loadouts, the second will wait for the first to complete before starting.
+* Item details are now toggled by clicking the "i" icon on the item popup, rather than just by hovering over it.
 
 # 3.4.1
 

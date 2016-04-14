@@ -169,7 +169,7 @@
 
     angular.extend(vm, {
       active: 'warlock',
-      normalize: 320,
+      normalize: 335,
       doNormalize: false,
       type: 'Helmets',
       showBlues: false,

@@ -13,7 +13,7 @@
       controllerAs: 'vm',
       scope: {
         item: '=dimMoveItemProperties',
-        infuse: '=dimInfuse'
+        compareItem: '=dimCompareItem'
       },
       restrict: 'A',
       replace: true,
@@ -28,7 +28,7 @@
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="::vm.item.weaponClassName" ng-bind="::vm.item.weaponClassName"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-mouseover="vm.itemDetails = true;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
+        '  <span class="pull-right move-popup-info-detail" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
         '<div class="item-xp-bar" ng-if="(vm.item.talentGrid || vm.item.xpComplete) && !vm.item.complete && vm.item.objectives.length !== 1">',
         '  <div ng-style="{ width: (vm.item.talentGrid ? (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) : vm.item.xpComplete) + \'%\' }"></div>',
@@ -60,7 +60,7 @@
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
-        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid"/>',
         '</div>',
         '<div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '  <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
@@ -87,6 +87,10 @@
     vm.showDescription = true;// || (vm.item.description.length &&
                               //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
     vm.locking = false;
+
+    $scope.$on('dim-toggle-item-details', function() {
+      vm.itemDetails = !vm.itemDetails;
+    });
 
     vm.setLockState = function setLockState(item) {
       if (vm.locking) {
@@ -142,31 +146,39 @@
       }
     }
 
+    function compareItems(item) {
+      if (item && vm.item.stats) {
+        for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
+          var itemStats = item.stats && item.stats[key];
+          if (itemStats) {
+            var vmItemStats = vm.item.stats[key];
+            if (vmItemStats) {
+              vmItemStats.equippedStatsValue = itemStats.value;
+              vmItemStats.equippedStatsName = itemStats.name;
+              vmItemStats.comparable = vmItemStats.equippedStatsName === vmItemStats.name ||
+                (vmItemStats.name === 'Magazine' && vmItemStats.equippedStatsName === 'Energy') ||
+                (vmItemStats.name === 'Energy' && vmItemStats.equippedStatsName === 'Magazine');
+            }
+          }
+        }
+      }
+    }
+
     /*
      * Get the item stats and its stat name
      * of the equipped item for comparison
      */
     if (vm.item.equipment) {
-      $scope.$watch('$parent.$parent.vm.store.items', function(items) {
-        var item = _.find(items, function(item) {
-          return item.equipped && item.type === vm.item.type;
+      if (vm.compareItem) {
+        $scope.$watch('vm.compareItem', compareItems);
+      } else {
+        $scope.$watch('$parent.$parent.vm.store.items', function(items) {
+          var item = _.find(items, function(item) {
+            return item.equipped && item.type === vm.item.type;
+          });
+          compareItems(item);
         });
-        if (item && vm.item.stats) {
-          for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
-            var itemStats = item.stats && item.stats[key];
-            if (itemStats) {
-              var vmItemStats = vm.item.stats[key];
-              if (vmItemStats) {
-                vmItemStats.equippedStatsValue = itemStats.value;
-                vmItemStats.equippedStatsName = itemStats.name;
-                vmItemStats.comparable = vmItemStats.equippedStatsName === vmItemStats.name ||
-                  (vmItemStats.name === 'Magazine' && vmItemStats.equippedStatsName === 'Energy') ||
-                  (vmItemStats.name === 'Energy' && vmItemStats.equippedStatsName === 'Magazine');
-              }
-            }
-          }
-        }
-      });
+      }
     }
   }
 })();
