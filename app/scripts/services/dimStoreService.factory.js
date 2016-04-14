@@ -745,7 +745,7 @@
       var currentBucket = buckets[item.bucket];
 
       // TODO: time to dig through this code
-      if (currentBucket.bucketName === 'Messages') {
+      if (currentBucket && currentBucket.bucketName === 'Messages') {
         return 'Messages';
       }
 

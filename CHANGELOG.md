@@ -1,4 +1,4 @@
-# Next
+# 3.5.2
 
 * Fix a bug where item details popups would show above the header.
 * Fix showing Sterling Treasures in Messages.
