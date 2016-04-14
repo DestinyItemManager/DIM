@@ -351,6 +351,18 @@
           icon: '/img/misc/missing_icon.png'
         };
 
+        if (item.itemHash === 194424271) {
+          itemType = "Shader";
+          itemDef.bucketTypeHash = 2973005342;
+          itemDef.classType = 3;
+          itemDef.itemTypeName = 'Shader';
+          itemDef.description = '';
+          itemDef.itemName = 'Walkabout - Classified';
+          itemDef.nonTransferrable = true;
+          itemDef.equipRequiredLevel = 0;
+
+        }
+
         // unidentified item.
         if(!itemDef.itemName) {
           console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
