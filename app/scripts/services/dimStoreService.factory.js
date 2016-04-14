@@ -360,7 +360,8 @@
           itemDef.itemName = 'Walkabout - Classified';
           itemDef.nonTransferrable = true;
           itemDef.equipRequiredLevel = 0;
-
+          itemDef.equipment = true;
+          item.isEquipment = true;
         }
 
         // unidentified item.
