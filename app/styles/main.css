@@ -719,7 +719,8 @@ img.void {
     position: relative !important;
     padding: 0 1em;
     width: 100%;
-    box-sizing: border-box;}
+    box-sizing: border-box;
+    height: 70px; }
   .character-box .emblem {
     position: absolute;
     top: 3px;
