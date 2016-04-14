@@ -19,44 +19,43 @@
       replace: true,
       template: [
         '<div class="move-popup" alt="" title="">',
-        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
+        '  <div dim-move-item-properties="vm.item"></div>',
         '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
-        '      <div class="move-button move-vault" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}">',
         '        <span>Vault</span>',
         '      </div>',
-        '      <div class="move-button move-store" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-store" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})"> ',
         '        <span>Store</span>',
         '      </div>',
-        '      <div class="move-button move-equip" ng-class="{ \'little\': item.notransfer }" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store, true)" ',
         '        data-type="equip" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
         '    </div>',
-        '    <div class="move-button move-consolidate" ng-class="{ \'little\': item.notransfer }" alt="Consolidate" title="Consolidate" ',
-        '      ng-if="vm.item.maxStackSize > 1" ng-click="vm.consolidate()">',
+        '    <div class="move-button move-consolidate" alt="Consolidate" title="Consolidate" ',
+        '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.consolidate()">',
         '      <span>Take</span>',
         '    </div>',
-        '    <div class="move-button move-distribute" ng-class="{ \'little\': item.notransfer }" alt="Distribute Evenly" title="Distribute Evenly" ',
-        '      ng-if="vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
+        '    <div class="move-button move-distribute" alt="Distribute Evenly" title="Distribute Evenly" ',
+        '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
         '      <span>Split</span>',
         '    </div>',
-        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
       ].join('')
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue) {
     var vm = this;
 
     // TODO: cache this, instead?
@@ -72,29 +71,6 @@
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    /*
-    * Open up the dialog for infusion by passing
-    * the selected item
-    */
-    vm.infuse = function infuse(item, e) {
-      if (item.sort === 'Postmaster') {
-        return;
-      }
-      e.stopPropagation();
-
-      // Close the move-popup
-      $scope.$parent.closeThisDialog();
-
-      // Open the infuse window
-      ngDialog.open({
-        template: 'views/infuse.html',
-        overlay: false,
-        className: 'app-settings',
-        data: item,
-        scope: $('#infuseDialog').scope()
-      });
-    };
-
     vm.characterInfo = function characterInfo(store) {
       if (store.isVault) {
         return 'Vault';
@@ -106,7 +82,7 @@
     /**
      * Move the item to the specified store. Equip it if equip is true.
      */
-    vm.moveItemTo = function moveItemTo(store, equip) {
+    vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
@@ -128,15 +104,17 @@
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
-    };
+    });
 
-    vm.consolidate = function() {
+    vm.consolidate = dimActionQueue.wrap(function() {
       var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && !s.isVault; });
       var vault = dimStoreService.getVault();
 
       var promise = $q.all(stores.map(function(store) {
         // First move everything into the vault
-        var item = _.findWhere(store.items, { hash: vm.item.hash });
+        var item = _.find(store.items, function(i) {
+          return i.hash === vm.item.hash && i.sort !== 'Postmaster';
+        });
         if (item) {
           var amount = store.amountOfItem(vm.item);
           return dimItemService.moveTo(item, vault, false, amount);
@@ -146,7 +124,9 @@
       // Then move from the vault to the character
       if (!vm.store.isVault) {
         promise = promise.then(function() {
-          var item = _.findWhere(vault.items, { hash: vm.item.hash });
+          var item = _.find(vault.items, function(i) {
+            return i.hash === vm.item.hash && i.sort !== 'Postmaster';
+          });
           if (item) {
             var amount = vault.amountOfItem(vm.item);
             return dimItemService.moveTo(item, vm.store, false, amount);
@@ -165,9 +145,9 @@
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
-    };
+    });
 
-    vm.distribute = function() {
+    vm.distribute = dimActionQueue.wrap(function() {
       // Sort vault to the end
       var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id == 'vault' ? 2 : 1; });
 
@@ -221,7 +201,9 @@
       // All moves to vault in parallel, then all moves to targets in parallel
       function applyMoves(moves) {
         return $q.all(moves.map(function(move) {
-          var item = _.findWhere(move.source.items, { hash: vm.item.hash });
+          var item = _.find(move.source.items, function(i) {
+            return i.hash === vm.item.hash;// && i.sort !== 'Postmaster';
+          });
           return dimItemService.moveTo(item, move.target, false, move.amount);
         }));
       };
@@ -242,7 +224,7 @@
       loadingTracker.addPromise(promise);
       $scope.$parent.closeThisDialog();
       return promise;
-    };
+    });
 
     vm.stores = dimStoreService.getStores();
 

@@ -19,12 +19,12 @@
 
     function getPlatforms() {
       var dataPromise = dimBungieService.getPlatforms()
-        .then(generatePlatfroms);
+        .then(generatePlatforms);
 
       return dataPromise;
     }
 
-    function generatePlatfroms(response) {
+    function generatePlatforms(response) {
       var bungieUser = response.data.Response;
 
       _platforms.splice(0);

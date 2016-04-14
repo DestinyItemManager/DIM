@@ -1,35 +1,73 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
   var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24298773);
+  var firefoxBrowserSupport = {
+    "gecko": {
+      "id": "firefox@destinyitemmanager.com",
+      "strict_min_version": "46.*"
+    }
+  };
 
   grunt.initConfig({
     pkg: pkg,
 
     copy: {
       // Copy all files to a staging directory
-      main: {
+      chrome: {
         cwd: 'app/',
         src: '**',
-        dest: 'build/extension/',
+        dest: 'build/extension/chrome',
         expand: true
       },
-      beta_icons: {
+
+      firefox: {
+        cwd: 'app/',
+        src: '**',
+        dest: 'build/extension/firefox',
+        expand: true
+      },
+
+      beta_icons_firefox: {
         cwd: 'beta-icons/',
         src: '**',
-        dest: 'build/extension/',
+        dest: 'build/extension/firefox/',
+        expand: true
+      },
+
+      beta_icons_chrome: {
+        cwd: 'beta-icons/',
+        src: '**',
+        dest: 'build/extension/chrome/',
         expand: true
       }
     },
 
     compress: {
       // Zip up the extension
-      main: {
+      firefox: {
         options: {
-          archive: 'build/dim-extension.zip'
+          archive: 'build/firefox.zip'
         },
-        files: [
-          { expand: true, cwd: 'build/extension/', src: ['**'], dest: '/', filter: 'isFile'},
-        ]
+        files: [{
+          expand: true,
+          cwd: 'build/extension/firefox',
+          src: ['**'],
+          dest: '/',
+          filter: 'isFile'
+        }, ]
+      },
+      // Zip up the extension
+      chrome: {
+        options: {
+          archive: 'build/chrome.zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'build/extension/chrome',
+          src: ['**'],
+          dest: '/',
+          filter: 'isFile'
+        }, ]
       }
     },
 
@@ -39,8 +77,16 @@ module.exports = function(grunt) {
     replace: {
       // Replace all instances of the current version number (from package.json)
       // with a beta version based on the current time.
-      beta_version: {
-        src: ['build/extension/*.{json,html,js}'],
+      beta_version_chrome: {
+        src: ['build/extension/chrome*.{json,html,js}'],
+        overwrite: true,
+        replacements: [{
+          from: pkg.version.toString(),
+          to: betaVersion
+        }]
+      },
+      beta_version_firefox: {
+        src: ['build/extension/firefox/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
@@ -50,32 +96,35 @@ module.exports = function(grunt) {
     },
 
     sass: {
-        dist: {
-          files: {
-            'app/styles/main.css': 'app/scss/main.scss'
-          }
+      options: {
+        sourceMap: true
+      },
+      dist: {
+        files: {
+          'app/styles/main.css': 'app/scss/main.scss'
         }
-      },
+      }
+    },
 
-      postcss: { 
-        options: {
-          processors: [ 
-            require('autoprefixer')()
-          ]
-        },
-        dist: {
-         src: 'app/styles/main.css',
-         dest: 'app/styles/main.css'
-        } 
+    postcss: {
+      options: {
+        map: true,
+        processors: [
+          require('autoprefixer')()
+        ]
       },
+      dist: {
+        src: 'app/styles/main.css',
+        dest: 'app/styles/main.css'
+      }
+    },
 
-      watch:{
-        scripts:{
-          files:['app/scss/*.scss'],
-          tasks:['css'],
-          options:{spawn:false}
-        }
-      },
+    watch: {
+      scripts: {
+        files: ['app/scss/*.scss'],
+        tasks: ['css']
+      }
+    },
 
     // See https://github.com/c301/grunt-webstore-upload
     webstore_upload: {
@@ -111,12 +160,9 @@ module.exports = function(grunt) {
           //required, we can use dir name and upload most recent zip file
           zip: "build/dim-extension.zip"
         }
-      }      
+      }
     }
   });
-
-   grunt.registerTask('css', ['sass', 'postcss']);
-
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -126,25 +172,76 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  
 
-  grunt.registerTask('update_beta_manifest', function() {
-    var manifest = grunt.file.readJSON('build/extension/manifest.json');
+  grunt.registerTask('css', ['sass', 'postcss']);
+
+  grunt.registerTask('dev-firefox', ['css',
+    'update_firefox_manifest',
+    'watch'
+  ]);
+
+  grunt.registerTask('dev-chrome', ['css',
+    'update_chrome_manifest',
+    'watch'
+  ]);
+
+  grunt.registerTask('update_chrome_manifest', function() {
+    var manifest = grunt.file.readJSON('app/manifest.json');
+    if (manifest.applications) {
+      delete manifest.applications;
+    }
+    grunt.file.write('app/manifest.json', JSON.stringify(manifest, null, '\t'));
+  });
+
+  grunt.registerTask('update_firefox_manifest', function() {
+    var manifest = grunt.file.readJSON('app/manifest.json');
+    manifest.applications = firefoxBrowserSupport;
+    grunt.file.write('app/manifest.json', JSON.stringify(manifest, null, '\t'));
+  });
+
+  grunt.registerTask('update_chrome_beta_manifest', function() {
+    var manifest = grunt.file.readJSON('build/extension/chrome/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
-    grunt.file.write('build/extension/manifest.json', JSON.stringify(manifest));
+    grunt.file.write('build/extension/chrome/manifest.json', JSON.stringify(manifest));
   });
+
+  grunt.registerTask('update_firefox_beta_manifest', function() {
+    var manifest = grunt.file.readJSON('build/extension/firefox/manifest.json');
+    manifest.name = manifest.name + " Beta";
+    manifest.version = betaVersion;
+    grunt.file.write('build/extension/firefox/manifest.json', JSON.stringify(manifest));
+  });
+
+  grunt.registerTask('publish_chrome_beta', [
+    'update_chrome_manifest',
+    'copy:chrome',
+    'copy:beta_icons_chrome',
+    'replace:beta_version_chrome',
+    'compress',
+    'webstore_upload:beta'
+  ]);
+
+  grunt.registerTask('publish_firefox_beta', [
+    'update_firefox_manifest',
+    'copy:firefox',
+    'copy:beta_icons_firefox',
+    'replace:beta_version_firefox'
+  ]);
+
+  // Builds a release-able extension in build/dim-extension.zip
+  grunt.registerTask('build_extension', ['clean',
+    'css',
+    'update_firefox_beta',
+    'copy:firefox',
+    'update_chrome_beta',
+    'copy:chrome',
+    'compress:firefox',
+    'compress:chrome',
+
+  ]);
 
   grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
   });
-
-  grunt.registerTask('publish_beta', ['clean',
-                                      'copy:main',
-                                      'copy:beta_icons',
-                                      'replace:beta_version',
-                                      'update_beta_manifest',
-                                      'compress',
-                                      'webstore_upload:beta',
-                                      'log_beta_version']);
-};
+}

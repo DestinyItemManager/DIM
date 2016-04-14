@@ -35,6 +35,8 @@
       ].join('')
     };
 
+    var otherDialog = null;
+
     function Link(scope, element, attrs) {
       var vm = scope.vm;
       var dialogResult = null;
@@ -64,11 +66,14 @@
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
 
-        if (!_.isNull(dialogResult)) {
+        if (otherDialog) {
+          otherDialog.close();
+          otherDialog = null;
+        }
+
+        if (dialogResult) {
           dialogResult.close();
         } else {
-          ngDialog.closeAll();
-
           if (!dimLoadoutService.dialogOpen) {
             var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
             var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
@@ -82,6 +87,7 @@
               showClose: false,
               scope: scope
             });
+            otherDialog = dialogResult;
 
             dialogResult.closePromise.then(function(data) {
               dialogResult = null;
