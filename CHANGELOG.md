@@ -1,3 +1,8 @@
+# 3.5.3
+
+* Fixed a bug that would prevent the loading of DIM if Spark of Light was in the postmaster.
+* Fixed a bug that prevented the Xur dialog from rendering.
+
 # 3.5.2
 
 * Fix a bug where item details popups would show above the header.
