@@ -136,7 +136,13 @@
 
       promise = promise.then(function() {
         dimStoreService.setHeights();
-        toaster.pop('success', 'Consolidated ' + vm.item.name, 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".");
+        var message;
+        if (vm.store.isVault) {
+          message = 'All ' + vm.item.name + ' is now in your Vault.';
+        } else {
+          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".";
+        }
+        toaster.pop('success', 'Consolidated ' + vm.item.name, message);
       })
       .catch(function(a) {
         toaster.pop('error', vm.item.name, a.message);
