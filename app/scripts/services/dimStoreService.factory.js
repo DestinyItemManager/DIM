@@ -444,18 +444,18 @@
       try {
         createdItem.stats = buildStats(item, itemDef, statDef);
       } catch(e) {
-        console.log("Error building stats for " + createdItem.name, item, itemDef);
+        console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
 
       } catch(e) {
-        console.log("Error building talent grid for " + createdItem.name, item, itemDef);
+        console.error("Error building talent grid for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
       } catch(e) {
-        console.log("Error building objectives for " + createdItem.name, item, itemDef);
+        console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
 
       // More objectives properties
