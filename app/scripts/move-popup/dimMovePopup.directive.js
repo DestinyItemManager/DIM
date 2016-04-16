@@ -138,7 +138,7 @@
         dimStoreService.setHeights();
         var message;
         if (vm.store.isVault) {
-          message = 'All ' + vm.item.name + ' is now in your Vault.';
+          message = 'All ' + vm.item.name + ' is now in your vault.';
         } else {
           message = 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".";
         }
