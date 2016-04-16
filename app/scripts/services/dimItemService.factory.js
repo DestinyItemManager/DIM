@@ -126,12 +126,8 @@
       }
 
       function getSimilarItem(item, exclusions) {
-        var stores = dimStoreService.getStores();
-        var result = null;
-        var source = _.find(stores, function(i) {
-          return i.id === item.owner;
-        });
-        var sortedStores = _.sortBy(stores, function(store) {
+        var source = dimStoreService.getStore(item.owner);
+        var sortedStores = _.sortBy(dimStoreService.getStores(), function(store) {
           if (source.id === store.id) {
             return 0;
           } else if (store.isVault) {
@@ -141,15 +137,16 @@
           }
         });
 
+        var result = null;
         sortedStores.find(function(store) {
-          result = searchForSimilarItem(item, store);
+          result = searchForSimilarItem(item, store, exclusions, source.level);
           return result !== null;
         });
 
         return result;
       }
 
-      function searchForSimilarItem(item, store, exclusions) {
+      function searchForSimilarItem(item, store, exclusions, level) {
         var sortType = {
           Legendary: 0,
           Rare: 1,
@@ -169,6 +166,8 @@
               (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
               i.id !== item.id &&
+              // Not too high-level
+              (!level || level >= i.equipRequiredLevel) &&
               // Not on the exclusion list
               !_.any(exclusions, { id: i.id, hash: i.hash });
           })
@@ -370,7 +369,7 @@
         });
 
         if (moveAsideCandidates.length === 0) {
-          return $q.reject(new Error("There's nothing we can move aside to make room for " + item.name));
+          throw new Error("There's nothing we can move aside to make room for " + item.name);
         }
 
         // For the vault, try to move the highest-value item to a character. For a

@@ -40,9 +40,9 @@
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
         if (!item.bucket) {
-          throw new Error("item needs a 'bucket' field");
+          console.error("item needs a 'bucket' field", item);
         }
-        return bucketSizes[item.bucket];
+        return bucketSizes[item.bucket] || 10;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
@@ -211,7 +211,7 @@
             var store;
             var items = [];
             if (!raw) {
-              return;
+              return undefined;
             }
 
             if (raw.id === 'vault') {

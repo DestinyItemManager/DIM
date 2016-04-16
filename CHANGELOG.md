@@ -1,3 +1,7 @@
+# Next
+
+* We won't try to equip an item that is too high-level for your character when dequipping items.
+
 # 3.5.3
 
 * Fixed a bug that would prevent the loading of DIM if Spark of Light was in the postmaster.
