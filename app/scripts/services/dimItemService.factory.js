@@ -608,7 +608,7 @@
 
       function getItem(params, store) {
         var items = store ? store.items : getItems();
-        return _.findWhere(items, { id: params.id, hash: params.hash, notransfer: params.notransfer || false });
+        return _.findWhere(items, _.pick(params, 'id', 'hash', 'notransfer'));
       }
 
       return service;

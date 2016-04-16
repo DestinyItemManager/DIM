@@ -1,6 +1,7 @@
 # Next
 
 * We won't try to equip an item that is too high-level for your character when dequipping items.
+* Fix a regression where subclasses wouldn't show up in Loadouts. They're still there, they just show up now!
 
 # 3.5.3
 
