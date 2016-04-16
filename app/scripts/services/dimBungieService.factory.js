@@ -177,30 +177,30 @@
         });
 
       return membershipPromise;
-    }
 
-    function getBnetMembershipReqest(platform, token) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function processBnetMembershipRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error('The membership id was not available.'));
+      function getBnetMembershipReqest(platform, token) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
       }
 
-      return $q.when(response.data.Response);
-    }
+      function processBnetMembershipRequest(response) {
+        if (_.size(response.data.Response) === 0) {
+          return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
+        }
 
-    function rejectBnetMembershipRequest(response) {
-      return $q.reject(new Error('The membership id request failed.'));
+        return $q.when(response.data.Response);
+      }
+
+      function rejectBnetMembershipRequest(response) {
+        return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
+      }
     }
 
     /************************************************************************************************************************************/
