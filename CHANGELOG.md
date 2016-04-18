@@ -2,6 +2,8 @@
 
 * We won't try to equip an item that is too high-level for your character when dequipping items.
 * Fix a regression where subclasses wouldn't show up in Loadouts. They're still there, they just show up now!
+* Fixed another bug that could prevent item popups from showing up.
+* The vault can now be up to 12 items wide.
 
 # 3.5.3
 
