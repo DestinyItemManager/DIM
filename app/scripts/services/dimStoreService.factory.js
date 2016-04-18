@@ -344,7 +344,7 @@
     function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
-      if (itemDef === undefined || itemDef.itemName === 'Classified') {
+      if (!itemDef || itemDef.itemName === 'Classified') {
         // maybe it is classified...
         itemDef = {
           classified: true,
@@ -365,28 +365,22 @@
         }
 
         // unidentified item.
-        if(!itemDef.itemName) {
+        if (!itemDef.itemName) {
           console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
           window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
         }
       }
 
-      if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
+      if (!itemDef.itemTypeName || !itemDef.itemName) {
         return null;
       }
 
       var itemType = getItemType(item, itemDef, itemBucketDef);
-
-      if (item.itemHash === 937555249) {
-        itemType = "Material";
-      }
-
-      var weaponClass = null, weaponClassName = null;
-
-
       if (!itemType) {
         return null;
       }
+
+      var weaponClass = null, weaponClassName = null;
 
       if (itemType.hasOwnProperty('general') && itemType.general !== '') {
         weaponClass = itemType.weaponClass;
@@ -395,8 +389,7 @@
       }
 
       var itemSort = sortItem(itemDef.itemTypeName);
-
-      if (_.isUndefined(itemSort)) {
+      if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
       }
 
@@ -417,11 +410,11 @@
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
-        tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
+        tier: itemDef.tierTypeName || 'Common',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+        notransfer: (itemSort === 'Postmaster' || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         bucket: itemDef.bucketTypeHash,
@@ -429,13 +422,10 @@
         complete: item.isGridComplete,
         amount: item.stackSize,
         primStat: item.primaryStat,
-        stats: buildStats(item, itemDef, statDef),
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
-        objectives: buildObjectives(item, objectiveDef, itemDef),
         maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
@@ -450,6 +440,23 @@
         classified: itemDef.classified
       };
       createdItem.index = createItemIndex(createdItem);
+
+      try {
+        createdItem.stats = buildStats(item, itemDef, statDef);
+      } catch(e) {
+        console.error("Error building stats for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
+
+      } catch(e) {
+        console.error("Error building talent grid for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
+      } catch(e) {
+        console.error("Error building objectives for " + createdItem.name, item, itemDef);
+      }
 
       // More objectives properties
       if (createdItem.objectives) {
@@ -619,11 +626,15 @@
     }
 
     function buildStats(item, itemDef, statDef) {
-      if (!item.stats || !item.stats.length) {
+      if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
       return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
         var def = statDef[stat.statHash];
+        if (!def) {
+          return undefined;
+        }
+
         var name = def.statName;
         if (name === 'Aim assistance') {
           name = 'Aim Assist';
@@ -679,7 +690,12 @@
         .then(function(args) {
           var result = [];
           _.each(items, function (item) {
-            var createdItem = processSingleItem.apply(undefined, args.concat(item));
+            var createdItem = null;
+            try {
+              createdItem = processSingleItem.apply(undefined, args.concat(item));
+            } catch(e) {
+              console.error("Error processing item", item, e);
+            }
             if (createdItem !== null) {
               createdItem.owner = owner;
               result.push(createdItem);
@@ -747,6 +763,11 @@
       // TODO: time to dig through this code
       if (currentBucket && currentBucket.bucketName === 'Messages') {
         return 'Messages';
+      }
+
+      // File "Mote of Light" under "Material"
+      if (item.itemHash === 937555249) {
+        return 'Material';
       }
 
       if (def.bucketTypeHash === 3621873013) {

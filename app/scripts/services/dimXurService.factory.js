@@ -23,7 +23,7 @@
         var xurPromise = xurTest ? xurTestData() : dimBungieService.getXur();
 
         return xurPromise.then(function(xurData) {
-          self.available = xurData && xurData.enabled;
+          self.available = xurData && xurData.enabled && xurData.saleItemCategories;
 
           if (self.available) {
             dimItemDefinitions.then(function(itemDefs) {
