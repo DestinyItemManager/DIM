@@ -364,6 +364,21 @@
           item.isEquipment = true;
         }
 
+        if (item.itemHash === 1963806104) {
+          itemType = 'Mystery Bag';
+          itemDef.bucketTypeHash = 1469714392;
+          itemDef.icon = "/common/destiny_content/icons/3651da8a8b0add3161e840c7104078ed.jpg";
+          itemDef.classType = 3;
+          itemDef.itemTypeName = itemType;
+          itemDef.description = "Contains 1 Guaranteed Item and up to 4 Possible Items. This item is nonreturnable.";
+          itemDef.itemName = "Sterling Treasure";
+          itemDef.maxStackSize = 99;
+          itemDef.nonTransferrable = true;
+          itemDef.equipRequiredLevel = 0;
+          itemDef.equipment = false;
+          item.isEquipment = false;
+        }
+
         // unidentified item.
         if (!itemDef.itemName) {
           console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
@@ -765,6 +780,10 @@
         return 'Messages';
       }
 
+      if (name == 'SRL Record Book') {
+        return 'Missions';
+      }
+
       // File "Mote of Light" under "Material"
       if (item.itemHash === 937555249) {
         return 'Material';
@@ -777,6 +796,14 @@
       if (def.bucketTypeHash === 2422292810) {
         if (item.location !== 4)
           return null;
+      }
+
+      if (type.indexOf('Mystery Bag') != -1) {
+        return 'Consumable';
+      }
+
+      if (type.indexOf('Junk') != -1) {
+        return 'Consumable';
       }
 
       if (def.bucketTypeHash === 375726501) {
@@ -933,6 +960,10 @@
         }
       }
 
+      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
+        return "Consumable";
+      }
+
       if (typeObj.general !== '') {
         return typeObj;
       }
@@ -941,7 +972,7 @@
         return "Messages";
       }
 
-      if (["Vehicle Upgrade"].indexOf(type) != -1) {
+      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
         return "Consumable";
       }
 
