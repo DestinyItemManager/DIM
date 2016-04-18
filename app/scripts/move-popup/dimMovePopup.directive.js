@@ -47,7 +47,7 @@
         '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
         '      <span>Split</span>',
         '    </div>',
-        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion calculator" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
+        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -88,7 +88,6 @@
       // Open the infuse window
       ngDialog.open({
         template: 'views/infuse.html',
-        overlay: false,
         className: 'app-settings',
         data: item,
         scope: $('#infuseDialog').scope()

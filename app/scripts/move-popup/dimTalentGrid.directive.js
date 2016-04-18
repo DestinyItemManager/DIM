@@ -62,7 +62,7 @@
     var vm = this;
     vm.nodeSize = 34;
     vm.nodePadding = 4;
-    vm.scaleFactor = 1.3;
+    vm.scaleFactor = 1.1;
     vm.totalNodeSize = vm.nodeSize + vm.nodePadding;
     if (vm.talentGrid) {
       vm.numColumns = _.max(vm.talentGrid.nodes, 'column').column + 1;
