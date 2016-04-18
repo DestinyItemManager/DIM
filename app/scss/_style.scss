@@ -619,6 +619,7 @@ img {
 }
 
 .equipped {
+  position: absolute;
   width: 52px;
   margin-right: 12px;
 }
@@ -2058,49 +2059,12 @@ button.toast-close-button {
   }
 }
 
-.dim-col-3 {
-  width: 240px;
-}
-
-.dim-col-4 {
-  width: 292px;
-  &.vault {
-    width: 208px;
-  }
-}
-
-.dim-col-5 {
-  width: 344px;
-  &.vault {
-    width: 262px;
-  }
-}
-
-.dim-col-6 {
-  width: 396px;
-  &.vault {
-    width: 314px;
-  }
-}
-
-.dim-col-7 {
-  width: 448px;
-  &.vault {
-    width: 366px;
-  }
-}
-
-.dim-col-8 {
-  width: 500px;
-  &.vault {
-    width: 418px;
-  }
-}
-
-.dim-col-9 {
-  width: 552px;
-  &.vault {
-    width: 470px;
+@for $i from 3 through 12 {
+  .dim-col-#{$i} {
+    width: 84px + ($i * 52px);
+    &.vault {
+      width: $i * 52px;
+    }
   }
 }
 
@@ -2119,10 +2083,6 @@ button.toast-close-button {
 .vault .unequipped {
   margin-left: 0;
   margin-right: 0;
-}
-
-.equipped {
-  position: absolute;
 }
 
 /* Infuse */

@@ -20,7 +20,10 @@
       { id: 6, name: '6' },
       { id: 7, name: '7' },
       { id: 8, name: '8' },
-      { id: 9, name: '9' }
+      { id: 9, name: '9' },
+      { id: 10, name: '10' },
+      { id: 11, name: '11' },
+      { id: 12, name: '12' }
     ];
 
     settings.getSetting()
@@ -28,7 +31,7 @@
         vm.settings = s;
       });
 
-    vm.save = function(key) {      
+    vm.save = function(key) {
       settings.saveSetting(key, vm.settings[key]);
     };
   }
