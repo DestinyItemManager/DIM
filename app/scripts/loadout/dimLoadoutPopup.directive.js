@@ -158,8 +158,8 @@
           (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) && // for our class
           i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
           _.contains(lightTypes, i.type) && // one of our selected types
-          !i.notransfer && // can be moved
-          i.tier === "Rare"; // Is it blue?
+          !i.notransfer // can be moved
+
       });
       var itemsByType = _.groupBy(applicableItems, 'type');
 
@@ -181,6 +181,27 @@
           // (but not as much as items owned by this character)
           value -= 0.05;
         }
+        if(item.tier == 'Rare')
+        {
+            value -= 1000;
+        }
+        if(item.tier == 'Common')
+        {
+            value += 10000;
+        }
+
+        if( item.talentGrid)
+        {
+            if(item.talentGrid.xpComplete == true)
+            {
+                value += 1000;
+            }
+            else{
+                value -= 1000.0 * item.talentGrid.totalXP/item.talentGrid.totalXPRequired;
+            }
+        }
+
+
         return value;
       };
 
