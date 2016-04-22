@@ -182,23 +182,27 @@
           // (but not as much as items owned by this character)
           value -= 0.05;
         }
+        // Prefer blue things, when you destruct a completed blue you get 2 motes.
         if(item.tier == 'Rare')
         {
             value += 1000;
         }
-        if(item.tier == 'Common')
+        // Prefer unlvled locked items.
+        if(item.locked)
         {
-            value -= 10000;
+            value += 1500;
         }
+
         // Prefer items based on exp left
         if(item.talentGrid)
         {
             // Avoid things that have their exp completed.
             if(item.talentGrid.xpComplete == true)
             {
-                value -= 10000;
+                value -= 1000000;
             }
             else{
+                // Give preference to items that are mostly lvled
                 value += 1000.0*item.talentGrid.totalXP/item.talentGrid.totalXPRequired;
                 // If it is already equiped, and has exp left then leave it equiped.
                 if(is_equiped)
@@ -207,7 +211,9 @@
                 }
             }
         }
-
+        else{ //There is no exp on this item to lvl, common/year 1 cloaks?
+            value -= 100000;
+        }
 
         return value;
       };
