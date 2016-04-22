@@ -32,6 +32,9 @@
         '    <div class="loadout-set">',
         '      <span class="button-name button-full" ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
         '    </div>',
+        '    <div class="loadout-set">',
+        '      <span class="button-name button-full" ng-click="vm.minBlueLoadout($event)"><i class="fa fa-star"></i> Min Blue Light</span>',
+        '    </div>',
         '    <div class="loadout-set" ng-if="vm.previousLoadout">',
         '      <span class="button-name button-full" ng-click="vm.applyLoadout(vm.previousLoadout, $event)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
         '    </div>',
@@ -132,6 +135,154 @@
       dimLoadoutService.previousLoadouts[vm.store.id] = vm.previousLoadout; // ugly hack
 
       dimLoadoutService.applyLoadout(vm.store, loadout);
+    };
+
+    // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
+    vm.minBlueLoadout = function minBlueLoadout($event) {
+      // These types contribute to light level
+      var lightTypes = ['Primary',
+                        'Special',
+                        'Heavy',
+                        'Helmet',
+                        'Gauntlets',
+                        'Chest',
+                        'Leg',
+                        'ClassItem',
+                        'Artifact',
+                        'Ghost'];
+
+      // TODO: this should be a method somewhere that gets all items equippable by a character
+      var applicableItems = _.select(dimItemService.getItems(), function(i) {
+        return i.equipment &&
+          i.primStat !== undefined && // has a primary stat (sanity check)
+          (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) && // for our class
+          i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
+          _.contains(lightTypes, i.type) && // one of our selected types
+          !i.notransfer // can be moved
+
+      });
+      var itemsByType = _.groupBy(applicableItems, 'type');
+
+      var bestItemFn = function(item) {
+        var value = 0; //item.primStat.value;
+        var is_equiped = false;
+        // Break ties when items have the same stats. Note that this should only
+        // add less than 0.25 total, since in the exotics special case there can be
+        // three items in consideration and you don't want to go over 1 total.
+        if (item.owner == vm.store.id) {
+          // Prefer items owned by this character
+          value -= 0.1;
+          if (item.equipped) {
+            // Prefer them even more if they're already equipped
+            value -= 0.1;
+            is_equiped = true;
+          }
+        } else if (item.owner == 'vault') {
+          // Prefer items in the vault over items owned by a different character
+          // (but not as much as items owned by this character)
+          value -= 0.05;
+        }
+        // Prefer blue things, when you destruct a completed blue you get 2 motes.
+        if(item.tier == 'Rare')
+        {
+            value += 1000;
+        }
+        // Prefer unlvled locked items.
+        if(item.locked)
+        {
+            value += 1500;
+        }
+
+        // Prefer items based on exp left
+        if(item.talentGrid)
+        {
+            // Avoid things that have their exp completed.
+            if(item.talentGrid.xpComplete == true)
+            {
+                value -= 1000000;
+            }
+            else{
+                // Give preference to items that are mostly lvled
+                value += 1000.0*item.talentGrid.totalXP/item.talentGrid.totalXPRequired;
+                // If it is already equiped, and has exp left then leave it equiped.
+                if(is_equiped)
+                {
+                    value += 100000000.0;
+                }
+            }
+        }
+        else{ //There is no exp on this item to lvl, common/year 1 cloaks?
+            value -= 100000;
+        }
+
+        return value;
+      };
+
+      var isExotic = function(item) {
+        return item.tier === dimItemTier.exotic;
+      };
+
+      // Pick the best item by primary stat
+      var items = {};
+      _.each(lightTypes, function(type) {
+        if (itemsByType.hasOwnProperty(type)) {
+          items[type] = _.max(itemsByType[type], bestItemFn);
+        }
+      });
+
+      // Solve for the case where our optimizer decided to equip two exotics
+      var exoticGroups = [ ['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg'] ];
+      _.each(exoticGroups, function(group) {
+        var itemsInGroup = _.pick(items, group);
+        var numExotics = _.select(_.values(itemsInGroup), isExotic).length;
+        if (numExotics > 1) {
+          var options = [];
+
+          // Generate an option where we use each exotic
+          _.each(itemsInGroup, function(item, type) {
+            if (isExotic(item)) {
+              var option = angular.copy(itemsInGroup);
+              var optionValid = true;
+              // Switch the other exotic items to the next best non-exotic
+              _.each(_.omit(itemsInGroup, type), function(otherItem, otherType) {
+                if (isExotic(otherItem)) {
+                  var nonExotics = _.reject(itemsByType[otherType], isExotic);
+                  if (_.isEmpty(nonExotics)) {
+                    // this option isn't usable because we couldn't swap this exotic for any non-exotic
+                    optionValid = false;
+                  } else {
+                    option[otherType] = _.max(nonExotics, bestItemFn);
+                  }
+                }
+              });
+
+              if (optionValid) {
+                options.push(option);
+              }
+            }
+          });
+
+          // Pick the option where the primary stats add up to the biggest number, again favoring equipped stuff
+          var bestOption = _.max(options, function(opt) { return sum(_.values(opt), bestItemFn); });
+          _.assign(items, bestOption);
+        }
+      });
+
+      // Copy the items and mark them "equipped" and put them in arrays, so they look like a loadout
+      var finalItems = {};
+      _.each(items, function(item, type) {
+        var itemCopy = angular.copy(item);
+        itemCopy.equipped = true;
+        finalItems[type.toLowerCase()] = [ itemCopy ];
+      });
+
+      var loadout = {
+        classType: -1,
+        name: 'Min Blue Light',
+        items: finalItems
+      };
+
+      vm.applyLoadout(loadout, $event);
     };
 
     // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
