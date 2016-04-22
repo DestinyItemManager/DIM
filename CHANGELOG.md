@@ -1,3 +1,7 @@
+# Next
+
+* Bring back the infusion dialog as an Infusion Fuel Finder. It doesn't do as much as it used to, but now it's optimized for quickly finding eligable infusion items.
+
 # 3.5.4
 
 * We won't try to equip an item that is too high-level for your character when dequipping items.
