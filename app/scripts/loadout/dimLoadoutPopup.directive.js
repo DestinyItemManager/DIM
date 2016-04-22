@@ -164,8 +164,8 @@
       var itemsByType = _.groupBy(applicableItems, 'type');
 
       var bestItemFn = function(item) {
-        var value = item.primStat.value;
-
+        var value = 0; //item.primStat.value;
+        var is_equiped = false;
         // Break ties when items have the same stats. Note that this should only
         // add less than 0.25 total, since in the exotics special case there can be
         // three items in consideration and you don't want to go over 1 total.
@@ -175,6 +175,7 @@
           if (item.equipped) {
             // Prefer them even more if they're already equipped
             value -= 0.1;
+            is_equiped = true;
           }
         } else if (item.owner == 'vault') {
           // Prefer items in the vault over items owned by a different character
@@ -183,21 +184,27 @@
         }
         if(item.tier == 'Rare')
         {
-            value -= 1000;
+            value += 1000;
         }
         if(item.tier == 'Common')
         {
-            value += 10000;
+            value -= 10000;
         }
-
-        if( item.talentGrid)
+        // Prefer items based on exp left
+        if(item.talentGrid)
         {
+            // Avoid things that have their exp completed.
             if(item.talentGrid.xpComplete == true)
             {
-                value += 1000;
+                value -= 10000;
             }
             else{
-                value -= 1000.0 * item.talentGrid.totalXP/item.talentGrid.totalXPRequired;
+                value += 1000.0*item.talentGrid.totalXP/item.talentGrid.totalXPRequired;
+                // If it is already equiped, and has exp left then leave it equiped.
+                if(is_equiped)
+                {
+                    value += 100000000.0;
+                }
             }
         }
 
@@ -213,7 +220,7 @@
       var items = {};
       _.each(lightTypes, function(type) {
         if (itemsByType.hasOwnProperty(type)) {
-          items[type] = _.min(itemsByType[type], bestItemFn);
+          items[type] = _.max(itemsByType[type], bestItemFn);
         }
       });
 
@@ -238,7 +245,7 @@
                     // this option isn't usable because we couldn't swap this exotic for any non-exotic
                     optionValid = false;
                   } else {
-                    option[otherType] = _.min(nonExotics, bestItemFn);
+                    option[otherType] = _.max(nonExotics, bestItemFn);
                   }
                 }
               });
@@ -250,7 +257,7 @@
           });
 
           // Pick the option where the primary stats add up to the biggest number, again favoring equipped stuff
-          var bestOption = _.min(options, function(opt) { return sum(_.values(opt), bestItemFn); });
+          var bestOption = _.max(options, function(opt) { return sum(_.values(opt), bestItemFn); });
           _.assign(items, bestOption);
         }
       });
