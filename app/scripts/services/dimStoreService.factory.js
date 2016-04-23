@@ -61,6 +61,24 @@
       }
     };
 
+    // Prototype for Item objects - add methods to this to add them to all
+    // items.
+    var ItemProto = {
+      // Can this item be equipped by the current store?
+      canBeEquippedBy: function(store) {
+        if (store.isVault) {
+          return false;
+        }
+        return this.equipment &&
+          // For the right class
+          (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+          // nothing we are too low-level to equip
+          this.equipRequiredLevel <= store.level &&
+          // can be moved or is already here
+          (!this.notransfer || this.owner === store.id);
+      }
+    };
+
     var service = {
       getStores: getStores,
       reloadStores: reloadStores,
@@ -421,7 +439,7 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      var createdItem = {
+      var createdItem = angular.extend(Object.create(ItemProto), {
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -453,7 +471,7 @@
         weaponClass: weaponClass || '',
         weaponClassName: weaponClassName,
         classified: itemDef.classified
-      };
+      });
       createdItem.index = createItemIndex(createdItem);
 
       try {

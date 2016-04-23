@@ -139,12 +139,8 @@
 
     // A dynamic loadout set up to level weapons and armor
     vm.itemLevelingLoadout = function minBlueLoadout($event) {
-      // TODO: this should be a method somewhere that gets all items equippable by a character
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
-        return i.equipment &&
-          (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) && // for our class
-          i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
-          !i.notransfer && // can be moved
+        return i.canBeEquippedBy(vm.store) &&
           i.talentGrid && !i.talentGrid.xpComplete; // Still need XP
       });
       var itemsByType = _.groupBy(applicableItems, 'type');
@@ -275,12 +271,9 @@
 
       // TODO: this should be a method somewhere that gets all items equippable by a character
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
-        return i.equipment &&
+        return i.canBeEquippedBy(vm.store) &&
           i.primStat !== undefined && // has a primary stat (sanity check)
-          (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) && // for our class
-          i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
-          _.contains(lightTypes, i.type) && // one of our selected types
-          !i.notransfer; // can be moved
+          _.contains(lightTypes, i.type); // one of our selected types
       });
       var itemsByType = _.groupBy(applicableItems, 'type');
 
