@@ -75,7 +75,8 @@
           // nothing we are too low-level to equip
           this.equipRequiredLevel <= store.level &&
           // can be moved or is already here
-          (!this.notransfer || this.owner === store.id);
+          (!this.notransfer || this.owner === store.id) &&
+          this.sort !== 'Postmaster';
       }
     };
 

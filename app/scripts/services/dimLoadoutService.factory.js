@@ -264,7 +264,7 @@
               var failedItems = _.filter(itemsToEquip, function(i) {
                 return !_.find(equippedItems, { id: i.id });
               });
-              _.difference(itemsToEquip, equippedItems).forEach(function(item) {
+              failedItems.forEach(function(item) {
                 scope.failed++;
                 toaster.pop('error', 'Could not equip ' + item.name);
               });
@@ -276,6 +276,7 @@
             if (scope.successfulItems.length > 0) {
               return dimStoreService.updateCharacters();
             }
+            return undefined;
           })
           .then(function() {
             var value = 'success';
