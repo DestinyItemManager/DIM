@@ -174,7 +174,7 @@
         }
 
         // Choose the item w/ the highest XP
-        value += 10 * (1 - (item.talentGrid.totalXP / item.talentGrid.totalXPRequired));
+        value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
 
         if (item.owner == vm.store.id) {
           // Prefer items owned by this character
