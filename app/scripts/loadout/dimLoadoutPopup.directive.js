@@ -35,6 +35,9 @@
         '    <div class="loadout-set">',
         '      <span class="button-name button-full" ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
         '    </div>',
+        '    <div class="loadout-set">',
+        '      <span class="button-name button-full" ng-click="vm.gatherEngramsLoadout($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
+        '    </div>',
         '    <div class="loadout-set" ng-if="vm.previousLoadout">',
         '      <span class="button-name button-full" ng-click="vm.applyLoadout(vm.previousLoadout, $event)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
         '    </div>',
@@ -44,9 +47,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster) {
     var vm = this;
     vm.previousLoadout = dimLoadoutService.previousLoadouts[vm.store.id];
 
@@ -138,7 +141,7 @@
     };
 
     // A dynamic loadout set up to level weapons and armor
-    vm.itemLevelingLoadout = function minBlueLoadout($event) {
+    vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.canBeEquippedBy(vm.store) &&
           i.talentGrid && !i.talentGrid.xpComplete; // Still need XP
@@ -236,6 +239,36 @@
       };
 
       var loadout = optimalLoadout(applicableItems, bestItemFn, 'Maximize Light');
+      vm.applyLoadout(loadout, $event);
+    };
+
+    // A dynamic loadout set up to level weapons and armor
+    vm.gatherEngramsLoadout = function gatherEngramsLoadout($event) {
+      var engrams = _.select(dimItemService.getItems(), function(i) {
+        return i.isEngram() && i.sort !== 'Postmaster';
+      });
+
+      if (engrams.length === 0) {
+        toaster.pop('warning', 'Gather Engrams', 'No engrams are available to transfer.');
+        return;
+      }
+
+      var itemsByType = _.mapObject(_.groupBy(engrams, 'type'), function(items, type) {
+        // No more than 9 engrams of a type
+        return _.first(items, 9);
+      });
+
+      // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
+      var finalItems = {};
+      _.each(itemsByType, function(items, type) {
+        finalItems[type.toLowerCase()] = items.map(angular.copy);
+      });
+
+      var loadout = {
+        classType: -1,
+        name: 'Gather Engrams',
+        items: finalItems
+      };
       vm.applyLoadout(loadout, $event);
     };
 

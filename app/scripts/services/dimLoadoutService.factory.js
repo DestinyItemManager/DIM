@@ -266,7 +266,7 @@
               });
               failedItems.forEach(function(item) {
                 scope.failed++;
-                toaster.pop('error', 'Could not equip ' + item.name);
+                toaster.pop('error', loadout.name, 'Could not equip ' + item.name);
               });
             }
           })

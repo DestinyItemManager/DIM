@@ -1540,6 +1540,15 @@ g {
   background-color: #151515;
   border-top: solid 1px #151515; }
 
+.loadout-list .button-name .fa {
+  width: 12px;
+  margin-right: 2px;
+  text-align: center; }
+
+.loadout-list img.fa {
+  -webkit-transform: translateY(1px);
+          transform: translateY(1px); }
+
 .loadout-set .button-edit {
   float: right;
   width: 20%;
