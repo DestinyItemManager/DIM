@@ -423,9 +423,6 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      var talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
-          stats = buildStats(item, itemDef, statDef, talentGrid, itemType);
-
       var createdItem = {
         hash: item.itemHash,
         type: itemType,
@@ -789,13 +786,14 @@
         return undefined;
       }
 
-      var armorNodes, activeArmorNode;
-      if(grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+      var armorNodes = [];
+      var activeArmorNode;
+      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
           return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
         });
-        if(armorNodes) {
-          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || {hash: 0};
+        if (armorNodes) {
+          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || { hash: 0 };
         }
       }
 
@@ -840,13 +838,13 @@
         var base = val;
         var bonus = 0;
 
-        if(item.primaryStat.statHash === 3897883278) {
-          if((name === 'Intellect' && _.find(armorNodes, {name: 'Increase Intellect'})) ||
-             (name === 'Discipline' && _.find(armorNodes, {name: 'Increase Discipline'})) ||
-             (name === 'Strength' && _.find(armorNodes, {name: 'Increase Strength'}))) {
+        if (item.primaryStat.statHash === 3897883278) {
+          if ((name === 'Intellect' && _.find(armorNodes, { name: 'Increase Intellect' })) ||
+             (name === 'Discipline' && _.find(armorNodes, { name: 'Increase Discipline' })) ||
+             (name === 'Strength' && _.find(armorNodes, { name: 'Increase Strength' }))) {
             bonus = getBonus(item.primaryStat.value, type);
 
-            if(activeArmorNode &&
+            if (activeArmorNode &&
                (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
                (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
                (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
