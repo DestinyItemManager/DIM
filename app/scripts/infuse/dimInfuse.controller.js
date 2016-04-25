@@ -15,7 +15,6 @@
       onlyBlues: false,
       target: null,
       infused: 0,
-      stats: [],
       exotic: false,
       infusable: [],
       transferInProgress: false,
@@ -24,7 +23,6 @@
         // Set the source and reset the targets
         vm.source = item;
         vm.infused = 0;
-        vm.stats = null;
         vm.target = null;
         vm.statType =
           vm.source.primStat.statHash === 3897883278 ? 'Defense' : // armor item
@@ -43,10 +41,6 @@
         }
         vm.target = item;
         vm.infused = vm.target.primStat.value;
-        // The new stats of the item
-        vm.stats = _.map(vm.source.stats, function(stat) {
-          return {before: stat.base, after: (stat.base * vm.infused / vm.source.primStat.value).toFixed(0)};
-        });
       },
 
       // get Items for infusion
