@@ -52,6 +52,10 @@
         return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
       } else if (errorCode === 5) {
         return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
+      } else if (errorCode === 1618 &&
+                 response.config.url.indexOf('/Account/') >= 0 &&
+                 response.config.url.indexOf('/Character/') < 0) {
+        return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode > 1) {
         return $q.reject(new Error(response.data.Message));
       }
@@ -167,7 +171,7 @@
 
     function getMembership(platform) {
       membershipPromise = membershipPromise || getBungleToken()
-        .then(getBnetMembershipReqest.bind(null, platform))
+        .then(getBnetMembershipReqest)
         .then($http)
         .then(handleErrors)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
@@ -177,30 +181,30 @@
         });
 
       return membershipPromise;
-    }
 
-    function getBnetMembershipReqest(platform, token) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function processBnetMembershipRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error('The membership id was not available.'));
+      function getBnetMembershipReqest(token) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
       }
 
-      return $q.when(response.data.Response);
-    }
+      function processBnetMembershipRequest(response) {
+        if (_.size(response.data.Response) === 0) {
+          return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
+        }
 
-    function rejectBnetMembershipRequest(response) {
-      return $q.reject(new Error('The membership id request failed.'));
+        return $q.when(response.data.Response);
+      }
+
+      function rejectBnetMembershipRequest(response) {
+        return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
+      }
     }
 
     /************************************************************************************************************************************/
@@ -220,9 +224,7 @@
         .then(function(membershipId) {
           return getBnetCharactersRequest(data.token, platform, membershipId);
         })
-        .then(function(request) {
-          return $http(request);
-        })
+        .then($http)
         .then(handleErrors)
         .then(processBnetCharactersRequest);
 

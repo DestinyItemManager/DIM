@@ -245,9 +245,6 @@
       if (_.has(settings, 'itemSort')) {
         vm.itemSort = settings.itemSort;
       }
-      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
-        dimStoreService.setHeights();
-      }
     });
   }
 })();

@@ -41,8 +41,8 @@
       .then(function(settings) {
         vm.hideFilteredItems = settings.hideFilteredItems;
         vm.condensed = settings.condensed;
-        vm.charCol = (settings.charCol > 2 && settings.charCol < 6) ? settings.charCol : 3;
-        vm.vaultCol = (settings.vaultCol > 3 && settings.vaultCol < 10) ? settings.vaultCol : 4;
+        vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
+        vm.vaultCol = Math.max(4, Math.min(settings.vaultCol, 12));
       });
 
     $scope.$on('dim-settings-updated', function(event, arg) {

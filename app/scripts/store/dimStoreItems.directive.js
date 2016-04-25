@@ -116,7 +116,7 @@
       }
     };
     vm.onDrop = function(id, $event, equip) {
-      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
+      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event, hovering);
       hovering = false;
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
@@ -299,7 +299,7 @@
       }
     };
 
-    vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event) {
+    vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
 
       if (item.notransfer && item.owner !== target.id) {

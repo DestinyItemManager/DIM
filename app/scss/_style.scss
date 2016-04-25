@@ -619,6 +619,7 @@ img {
 }
 
 .equipped {
+  position: absolute;
   width: 52px;
   margin-right: 12px;
 }
@@ -1666,7 +1667,7 @@ div[class^="sort-"] {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 3;
-  width: 295px;
+  width: 343px;
   top: initial;
   left: initial;
   right: initial;
@@ -2058,49 +2059,12 @@ button.toast-close-button {
   }
 }
 
-.dim-col-3 {
-  width: 240px;
-}
-
-.dim-col-4 {
-  width: 292px;
-  &.vault {
-    width: 208px;
-  }
-}
-
-.dim-col-5 {
-  width: 344px;
-  &.vault {
-    width: 262px;
-  }
-}
-
-.dim-col-6 {
-  width: 396px;
-  &.vault {
-    width: 314px;
-  }
-}
-
-.dim-col-7 {
-  width: 448px;
-  &.vault {
-    width: 366px;
-  }
-}
-
-.dim-col-8 {
-  width: 500px;
-  &.vault {
-    width: 418px;
-  }
-}
-
-.dim-col-9 {
-  width: 552px;
-  &.vault {
-    width: 470px;
+@for $i from 3 through 12 {
+  .dim-col-#{$i} {
+    width: 84px + ($i * 52px);
+    &.vault {
+      width: $i * 52px;
+    }
   }
 }
 
@@ -2121,15 +2085,7 @@ button.toast-close-button {
   margin-right: 0;
 }
 
-.equipped {
-  position: absolute;
-}
-
 /* Infuse */
-
-.clear {
-  clear: both;
-}
 
 .infuseSourceItemInfo {
   padding: 0px 0px 10px 25px;
@@ -2138,7 +2094,7 @@ button.toast-close-button {
 }
 
 .infuseControls {
-  padding: 0px 0px 10px 25px;
+  padding: 0px 25px 10px 25px;
   label {
     display: block;
   }
@@ -2157,14 +2113,18 @@ button.toast-close-button {
     padding-left: 0;
     padding-right: 0;
   }
-}
-
-.infuseHeader {
-  display: flex;
-  flex-direction: row;
-}
-
-.infuseDialog {
+  .locked {
+    position: absolute;
+  }
+  .gearsContainer {
+    width: 100%;
+    padding: 10px 25px;
+    overflow: hidden;
+  }
+  .bigValue {
+    font-size: 32px;
+    line-height: 1em;
+  }
   .infuseSourceItem {
     width: 48px;
     height: 48px;
@@ -2172,18 +2132,22 @@ button.toast-close-button {
   .infuseSourceDetailsRow {
     margin-left: 1rem;
   }
+  .results {
+    margin-bottom: 2px;
+  }
+}
+
+.infuseHeader {
+  display: flex;
+  flex-direction: row;
 }
 
 .infuseResults {
   flex: 1;
 }
 
-.infuseTargets {
-  overflow: auto;
-}
-
 .infuse-selected {
-  outline: 2px solid black;
+  outline: 2px solid black !important;
 }
 
 .bestInfusion label {
@@ -2212,17 +2176,6 @@ button.toast-close-button {
   color: green;
 }
 
-.infuseDialog {
-  .locked {
-    position: absolute;
-  }
-  .gearsContainer {
-    width: 100%;
-    padding: 10px 25px;
-    overflow: hidden;
-  }
-}
-
 .gearsContainer {
   .item {
     float: left;
@@ -2232,7 +2185,7 @@ button.toast-close-button {
   }
   .infusedItem {
     float: left;
-    margin: 5px;
+    margin: 3px 10px 3px 3px;
     width: 48px;
     height: 48px;
   }
@@ -2241,11 +2194,6 @@ button.toast-close-button {
     margin-top: 5px;
     font-size: 32px;
   }
-}
-
-.infuseDialog .bigValue {
-  font-size: 32px;
-  line-height: 1em;
 }
 
 /* Textcomplete */
