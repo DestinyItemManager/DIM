@@ -442,7 +442,6 @@
         complete: item.isGridComplete,
         amount: item.stackSize,
         primStat: item.primaryStat,
-        quality: getQualityRating(stats, item.primaryStat, itemType, itemDef.itemName),
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
@@ -463,20 +462,24 @@
       createdItem.index = createItemIndex(createdItem);
 
       try {
-        createdItem.stats = buildStats(item, itemDef, statDef);
-      } catch(e) {
-        console.error("Error building stats for " + createdItem.name, item, itemDef);
-      }
-      try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
-
       } catch(e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
+      } catch(e) {
+        console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
       } catch(e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.quality = getQualityRating(stats, item.primaryStat, itemType, itemDef.itemName);
+      } catch(e) {
+        console.error("Error building quality rateing for " + createdItem.name, item, itemDef);
       }
 
       // More objectives properties
@@ -651,7 +654,6 @@
       });
     }
 
-<<<<<<< HEAD
     function getQualityRating(stats, light, type, who) {
       if(!stats) {
         return null;
@@ -782,7 +784,7 @@
       return 0;
     }
 
-    function buildStats(item, itemDef, statDef) {
+    function buildStats(item, itemDef, statDef, grid, type) {
       if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
