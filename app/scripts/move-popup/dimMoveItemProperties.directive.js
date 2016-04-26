@@ -41,7 +41,7 @@
         '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
         '  </div>',
         '  <div ng-if="vm.item.quality !== null && vm.item.quality >= 0" class="stat-box-row">',
-        '    <span class="stat-box-text">Stat Quality</span>',
+        '    <span class="stat-box-text">Percent of Max</span>',
         '    <span class="stat-box-val">{{vm.item.quality}}%</span>',
         '  </div>',
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',

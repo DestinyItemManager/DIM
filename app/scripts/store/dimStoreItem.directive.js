@@ -29,7 +29,7 @@
         "    'complete': vm.item.complete",
         '  }">',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
-        '    <div ng-if="vm.showBadge && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
+        '    <div ng-if="vm.itemQuality && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'
@@ -66,8 +66,8 @@
 
 
       vm.getColor = function(value) {
-        value = value < 0 ? 0 : value;
-        return 'hsl(' + (value/100*120).toString(10) + ',90%,30%)';
+        value = value - 75 < 0 ? 0 : value - 75;
+        return 'hsl(' + (value/30*120).toString(10) + ',90%,50%)';
       };
 
       vm.clicked = function openPopup(item, e) {
@@ -132,6 +132,7 @@
         scope.$watchGroup([
           'vm.item.primStat.value',
           'vm.itemStat',
+          'vm.itemQuality',
           'vm.item.sort'], function() {
             processItem(vm, vm.item);
           });
@@ -142,6 +143,9 @@
   function processSettings(vm, settings) {
     if (_.has(settings, 'itemStat')) {
       vm.itemStat = settings.itemStat;
+    }
+    if (_.has(settings, 'itemQuality')) {
+      vm.itemQuality = settings.itemQuality;
     }
   }
 
@@ -197,6 +201,7 @@
     var vm = this;
 
     vm.itemStat = false;
+    vm.itemQuality = false;
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
     switch (vm.item.type) {
     case 'Lost Items':

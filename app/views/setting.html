@@ -34,6 +34,14 @@
       </tr>
       <tr>
         <td>
+          <label for="itemStat" title="Will display information in the upper-right of armor items.">Display Percentage of max stat roll on Items</label>
+        </td>
+        <td>
+          <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality" ng-change="vm.save('itemQuality')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="itemSort" title="Sort items by rarity or their primary stat value.">Sort Items by:</label>
         </td>
         <td>
