@@ -392,7 +392,6 @@
         return null;
       }
 
-      console.log('get item type', item, itemDef, itemBucketDef)
       var itemType = getItemType(item, itemDef, itemBucketDef);
       if (!itemType) {
         return null;
@@ -475,9 +474,9 @@
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
       try {
-        createdItem.quality = getQualityRating(stats, item.primaryStat, itemType, itemDef.itemName);
+        createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType, itemDef.itemName);
       } catch(e) {
-        console.error("Error building quality rateing for " + createdItem.name, item, itemDef);
+        console.error("Error building quality rating for " + createdItem.name, item, itemDef);
       }
 
       // More objectives properties
@@ -653,6 +652,7 @@
     }
 
     function getQualityRating(stats, light, type, who) {
+
       if(!stats) {
         return null;
       }
@@ -730,6 +730,8 @@
 //      }
 
         return Math.round(total/mm.max*100);
+
+      // better comparison...
 //      return Math.round(((total - mm.min) / (mm.max - mm.min))*100);
     }
 
