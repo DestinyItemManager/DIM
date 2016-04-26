@@ -29,6 +29,7 @@
         "    'complete': vm.item.complete",
         '  }">',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ng-if="vm.showBadge && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'
@@ -62,6 +63,12 @@
           }
         });
       }
+
+
+      vm.getColor = function(value) {
+        value = value < 0 ? 0 : value;
+        return 'hsl(' + (value/100*120).toString(10) + ',90%,30%)';
+      };
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -171,6 +178,7 @@
       vm.badgeClassNames['item-stat'] = true;
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
+      vm.quality = item.quality;
     } else if (showDamageType) {
       vm.badgeClassNames['damage-' + item.dmg] = true;
       vm.badgeClassNames['damage-type'] = true;

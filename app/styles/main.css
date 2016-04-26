@@ -625,6 +625,10 @@ img.void {
   -webkit-user-select: none;
   box-sizing: content-box; }
 
+.item-quality {
+  top: 0;
+  height: 14px; }
+
 .stat-damage-arc {
   background: #85c5ec;
   color: #fff;

@@ -364,6 +364,7 @@
         return null;
       }
 
+      console.log('get item type', item, itemDef, itemBucketDef)
       var itemType = getItemType(item, itemDef, itemBucketDef);
 
       if (item.itemHash === 937555249) {
@@ -693,7 +694,8 @@
 //        console.log(who, stats, light, mm)
 //      }
 
-      return Math.round(((total - mm.min) / (mm.max - mm.min))*100);
+        return Math.round(total/mm.max*100);
+//      return Math.round(((total - mm.min) / (mm.max - mm.min))*100);
     }
 
     // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
