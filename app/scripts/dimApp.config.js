@@ -77,11 +77,11 @@
           if(_.isNull(data) || _.isEmpty(data)) {
 
             $timeout(function() {
-              $http.get('views/changelog-toaster.html?v=v3.5.1')
+              $http.get('views/changelog-toaster.html?v=v3.5.4')
               .then(function(changelog) {
                 toaster.pop({
                   type: 'info',
-                  title: 'DIM v3.5.1 Released',
+                  title: 'DIM v3.5.4 Released',
                   body: changelog.data,
                   timeout: 0,
                   bodyOutputType: 'trustedHtml',

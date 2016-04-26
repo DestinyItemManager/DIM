@@ -522,6 +522,7 @@ img.void {
   clear: both; }
 
 .equipped {
+  position: absolute;
   width: 52px;
   margin-right: 12px; }
 
@@ -1543,7 +1544,7 @@ div[class^="sort-"] {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 3;
-  width: 295px;
+  width: 343px;
   top: initial;
   left: initial;
   right: initial;
@@ -1852,6 +1853,8 @@ button.toast-close-button {
 
 .dim-col-3 {
   width: 240px; }
+  .dim-col-3.vault {
+    width: 156px; }
 
 .dim-col-4 {
   width: 292px; }
@@ -1861,27 +1864,42 @@ button.toast-close-button {
 .dim-col-5 {
   width: 344px; }
   .dim-col-5.vault {
-    width: 262px; }
+    width: 260px; }
 
 .dim-col-6 {
   width: 396px; }
   .dim-col-6.vault {
-    width: 314px; }
+    width: 312px; }
 
 .dim-col-7 {
   width: 448px; }
   .dim-col-7.vault {
-    width: 366px; }
+    width: 364px; }
 
 .dim-col-8 {
   width: 500px; }
   .dim-col-8.vault {
-    width: 418px; }
+    width: 416px; }
 
 .dim-col-9 {
   width: 552px; }
   .dim-col-9.vault {
-    width: 470px; }
+    width: 468px; }
+
+.dim-col-10 {
+  width: 604px; }
+  .dim-col-10.vault {
+    width: 520px; }
+
+.dim-col-11 {
+  width: 656px; }
+  .dim-col-11.vault {
+    width: 572px; }
+
+.dim-col-12 {
+  width: 708px; }
+  .dim-col-12.vault {
+    width: 624px; }
 
 .unequipped {
   margin-left: 64px;
@@ -1895,13 +1913,7 @@ button.toast-close-button {
   margin-left: 0;
   margin-right: 0; }
 
-.equipped {
-  position: absolute; }
-
 /* Infuse */
-.clear {
-  clear: both; }
-
 .infuseSourceItemInfo {
   padding: 0px 0px 10px 25px;
   display: -webkit-box;
@@ -1915,7 +1927,7 @@ button.toast-close-button {
           flex-direction: row; }
 
 .infuseControls {
-  padding: 0px 0px 10px 25px; }
+  padding: 0px 25px 10px 25px; }
   .infuseControls label {
     display: block; }
 
@@ -1937,6 +1949,22 @@ button.toast-close-button {
   .infuseDialog .ngdialog-inner-content {
     padding-left: 0;
     padding-right: 0; }
+  .infuseDialog .locked {
+    position: absolute; }
+  .infuseDialog .gearsContainer {
+    width: 100%;
+    padding: 10px 25px;
+    overflow: hidden; }
+  .infuseDialog .bigValue {
+    font-size: 32px;
+    line-height: 1em; }
+  .infuseDialog .infuseSourceItem {
+    width: 48px;
+    height: 48px; }
+  .infuseDialog .infuseSourceDetailsRow {
+    margin-left: 1rem; }
+  .infuseDialog .results {
+    margin-bottom: 2px; }
 
 .infuseHeader {
   display: -webkit-box;
@@ -1949,24 +1977,14 @@ button.toast-close-button {
       -ms-flex-direction: row;
           flex-direction: row; }
 
-.infuseDialog .infuseSourceItem {
-  width: 48px;
-  height: 48px; }
-
-.infuseDialog .infuseSourceDetailsRow {
-  margin-left: 1rem; }
-
 .infuseResults {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1; }
 
-.infuseTargets {
-  overflow: auto; }
-
 .infuse-selected {
-  outline: 2px solid black; }
+  outline: 2px solid black !important; }
 
 .bestInfusion label {
   display: inline;
@@ -1989,14 +2007,6 @@ button.toast-close-button {
 .green {
   color: green; }
 
-.infuseDialog .locked {
-  position: absolute; }
-
-.infuseDialog .gearsContainer {
-  width: 100%;
-  padding: 10px 25px;
-  overflow: hidden; }
-
 .gearsContainer .item {
   float: left;
   margin: 3px 3px;
@@ -2005,7 +2015,7 @@ button.toast-close-button {
 
 .gearsContainer .infusedItem {
   float: left;
-  margin: 5px;
+  margin: 3px 10px 3px 3px;
   width: 48px;
   height: 48px; }
 
@@ -2013,10 +2023,6 @@ button.toast-close-button {
   float: left;
   margin-top: 5px;
   font-size: 32px; }
-
-.infuseDialog .bigValue {
-  font-size: 32px;
-  line-height: 1em; }
 
 /* Textcomplete */
 .dropdown-menu {

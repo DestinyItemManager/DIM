@@ -74,12 +74,17 @@
         e.stopPropagation();
 
         if (otherDialog) {
-          otherDialog.close();
+          if (ngDialog.isOpen(otherDialog.id)) {
+            otherDialog.close();
+          }
           otherDialog = null;
         }
 
         if (dialogResult) {
-          dialogResult.close();
+          if (ngDialog.isOpen(dialogResult.id)) {
+            dialogResult.close();
+            dialogResult = null;
+          }
         } else {
           if (!dimLoadoutService.dialogOpen) {
             var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
