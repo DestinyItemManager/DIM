@@ -32,6 +32,9 @@
         '    <div class="loadout-set">',
         '      <span class="button-name button-full" ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
         '    </div>',
+        '    <div class="loadout-set">',
+        '      <span class="button-name button-full" ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
+        '    </div>',
         '    <div class="loadout-set" ng-if="vm.previousLoadout">',
         '      <span class="button-name button-full" ng-click="vm.applyLoadout(vm.previousLoadout, $event)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
         '    </div>',
@@ -134,6 +137,63 @@
       dimLoadoutService.applyLoadout(vm.store, loadout);
     };
 
+    // A dynamic loadout set up to level weapons and armor
+    vm.itemLevelingLoadout = function minBlueLoadout($event) {
+      var applicableItems = _.select(dimItemService.getItems(), function(i) {
+        return i.canBeEquippedBy(vm.store) &&
+          i.talentGrid && !i.talentGrid.xpComplete; // Still need XP
+      });
+
+      var bestItemFn = function(item) {
+        // Leave equipped items alone if they need XP
+        if (item.equipped) {
+          return 1000;
+        }
+
+        var value = 0;
+        // Prefer locked items (they're stuff you want to use/keep)
+        // and apply different rules to them.
+        if (item.locked) {
+          value += 500;
+          value += [
+            'Common',
+            'Uncommon',
+            'Rare',
+            'Legendary',
+            'Exotic'
+          ].indexOf(item.tier) * 10;
+        } else {
+          // For unlocked, prefer blue items so when you destroy them you get more mats.
+          value += [
+            'Common',
+            'Uncommon',
+            'Exotic',
+            'Legendary',
+            'Rare'
+          ].indexOf(item.tier) * 10;
+        }
+
+        // Choose the item w/ the highest XP
+        value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
+
+        if (item.owner == vm.store.id) {
+          // Prefer items owned by this character
+          value += 0.5;
+        } else if (item.owner == 'vault') {
+          // Prefer items in the vault over items owned by a different character
+          // (but not as much as items owned by this character)
+          value += 0.05;
+        }
+
+        value += item.primStat ? item.primStat.value / 1000 : 0;
+
+        return value;
+      };
+
+      var loadout = optimalLoadout(applicableItems, bestItemFn, 'Item Leveling');
+      vm.applyLoadout(loadout, $event);
+    };
+
     // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
     vm.maxLightLoadout = function maxLightLoadout($event) {
       // These types contribute to light level
@@ -148,16 +208,11 @@
                         'Artifact',
                         'Ghost'];
 
-      // TODO: this should be a method somewhere that gets all items equippable by a character
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
-        return i.equipment &&
+        return i.canBeEquippedBy(vm.store) &&
           i.primStat !== undefined && // has a primary stat (sanity check)
-          (i.classTypeName === 'unknown' || i.classTypeName === vm.store.class) && // for our class
-          i.equipRequiredLevel <= vm.store.level && // nothing we are too low-level to equip
-          _.contains(lightTypes, i.type) && // one of our selected types
-          !i.notransfer; // can be moved
+          _.contains(lightTypes, i.type); // one of our selected types
       });
-      var itemsByType = _.groupBy(applicableItems, 'type');
 
       var bestItemFn = function(item) {
         var value = item.primStat.value;
@@ -180,16 +235,21 @@
         return value;
       };
 
+      var loadout = optimalLoadout(applicableItems, bestItemFn, 'Maximize Light');
+      vm.applyLoadout(loadout, $event);
+    };
+
+    // Generate an optimized loadout based on a filtered set of items and a value function
+    function optimalLoadout(applicableItems, bestItemFn, name) {
+      var itemsByType = _.groupBy(applicableItems, 'type');
+
       var isExotic = function(item) {
         return item.tier === dimItemTier.exotic;
       };
 
-      // Pick the best item by primary stat
-      var items = {};
-      _.each(lightTypes, function(type) {
-        if (itemsByType.hasOwnProperty(type)) {
-          items[type] = _.max(itemsByType[type], bestItemFn);
-        }
+      // Pick the best item
+      var items = _.mapObject(itemsByType, function(items, type) {
+        return _.max(items, bestItemFn);
       });
 
       // Solve for the case where our optimizer decided to equip two exotics
@@ -224,13 +284,13 @@
             }
           });
 
-          // Pick the option where the primary stats add up to the biggest number, again favoring equipped stuff
+          // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
           var bestOption = _.max(options, function(opt) { return sum(_.values(opt), bestItemFn); });
           _.assign(items, bestOption);
         }
       });
 
-      // Copy the items and mark them "equipped" and put them in arrays, so they look like a loadout
+      // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
       var finalItems = {};
       _.each(items, function(item, type) {
         var itemCopy = angular.copy(item);
@@ -238,13 +298,11 @@
         finalItems[type.toLowerCase()] = [ itemCopy ];
       });
 
-      var loadout = {
+      return {
         classType: -1,
-        name: 'Maximize Light',
+        name: name,
         items: finalItems
       };
-
-      vm.applyLoadout(loadout, $event);
-    };
+    }
   }
 })();

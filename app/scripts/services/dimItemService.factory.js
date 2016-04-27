@@ -126,9 +126,9 @@
       }
 
       function getSimilarItem(item, exclusions) {
-        var source = dimStoreService.getStore(item.owner);
+        var target = dimStoreService.getStore(item.owner);
         var sortedStores = _.sortBy(dimStoreService.getStores(), function(store) {
-          if (source.id === store.id) {
+          if (target.id === store.id) {
             return 0;
           } else if (store.isVault) {
             return 1;
@@ -139,35 +139,33 @@
 
         var result = null;
         sortedStores.find(function(store) {
-          result = searchForSimilarItem(item, store, exclusions, source.level);
+          result = searchForSimilarItem(item, store, exclusions, target);
           return result !== null;
         });
 
         return result;
       }
 
-      function searchForSimilarItem(item, store, exclusions, level) {
+      // Find an item in store like "item", excluding the exclusions, to be equipped
+      // on target.
+      function searchForSimilarItem(item, store, exclusions, target) {
         var sortType = {
           Legendary: 0,
           Rare: 1,
           Uncommon: 2,
           Common: 3,
-          Exotic: 5
+          Exotic: 4
         };
 
         exclusions = exclusions || [];
 
         var result = _.chain(store.items)
           .filter(function(i) {
-            return i.equipment &&
+            return i.canBeEquippedBy(target) &&
               i.type === item.type &&
               !i.equipped &&
-              // Compatible with this class
-              (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
               i.id !== item.id &&
-              // Not too high-level
-              (!level || level >= i.equipRequiredLevel) &&
               // Not on the exclusion list
               !_.any(exclusions, { id: i.id, hash: i.hash });
           })
@@ -192,7 +190,7 @@
         }
 
 
-        return (result) ? result : null;
+        return result || null;
       }
 
       // Bulk equip items. Only use for multiple equips at once.
