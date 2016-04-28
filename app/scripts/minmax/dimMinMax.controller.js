@@ -188,7 +188,9 @@
           item.normalStats = _.map(item.stats, function(stat) {
             return {
               statHash: stat.statHash,
-              base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0)
+              base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0),
+              scaled: stat.scaled,
+              split: stat.split,
             };
           });
           return item;

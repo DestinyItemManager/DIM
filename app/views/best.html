@@ -2,9 +2,9 @@
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
   <h1>Armor Comparison</h1>
 
-  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'>
-    <span ng-show='normal.doNormalize'>Estimate stats at light level <input style='width:35px;padding-left:5px;border:none' type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></span>
-  </p>
+<!--  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'>-->
+<!--    <span ng-show='normal.doNormalize'>Estimate stats at light level <input style='width:35px;padding-left:5px;border:none' type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></span>-->
+<!--  </p>-->
 <!--  <p>The stats displayed are the <b>base</b> stats for the item.</p>-->
 
 <!--  <span class="link" ng-click="help=!help">Click here for more information</span>-->
@@ -13,6 +13,7 @@
 <!--    <p>This page will help you determine what your best gear is.</p>-->
 <!--    <p>Tips:</p>-->
     <ul>
+      <li>Light level must be at least 285 for an accurate roll estimation.</li>
       <li>The perks/bonus that increase intellect/dis/str are NOT included, only the "base" stats are shown.</li>
       <li>The 'Percent of max' is percentage of a perfectly rolled item.</li>
       <li>The 'Percent of max' is constant as the item is infused to higher light levels.</li>
@@ -31,7 +32,9 @@
     <option value='titan'>Titan</option>
     <option value='hunter'>Hunter</option>
     <option value='warlock'>Warlock</option>
-  </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select> <span ng-show="normal.doNormalize">(+{{normal.getBonus(normal.normalize, normal.type)}} bonus excluded)</span></p>
+  </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
+<!--    <span ng-show="normal.doNormalize">(+{{normal.getBonus(normal.normalize, normal.type)}} bonus excluded)</span>-->
+  </p>
 
 <!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
 <!--    <h3 ng-bind="type"></h3>-->
@@ -39,19 +42,22 @@
       <div><small>Intellect</small></div>
       <div><small>Discipline</small></div>
       <div><small>Strength</small></div>
-      <div><small>Percent of max</small></div>
+      <div><small>Scaled Base/Max</small></div>
     </span>
     <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
-      <div style='display: inline-block; padding: 3px 0 0 3px'>
+      <div ng-if="item.primStat.value >= 285" style='display: inline-block; padding: 3px 0 0 3px'>
         <div style='display: inline-block'>
-          <div ng-repeat="stat in item.stats track by $index">
-            <small ng-bind="item.normalStats[$index].base"></small>
+          <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
+<!--            <small ng-bind="item.normalStats[$index].base"></small>-->
+            <small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small>
           </div>
         </div>
         <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
+<!--
         <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
           <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
         </div>
+-->
       </div>
     </span>
 <!--  </div>-->

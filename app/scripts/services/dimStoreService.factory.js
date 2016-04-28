@@ -652,125 +652,96 @@
     }
 
     function getQualityRating(stats, light, type, who) {
+      var maxLight = 335;
 
-      if(!stats) {
+      if(!stats || light.value < 285) {
         return null;
       }
 
-      type = type.toLowerCase();
-      light = light.value;
-      var mm = null;
-      switch(type) {
+      var split = 0, rate = 0;
+      switch(type.toLowerCase()) {
         case 'helmet':
-          mm = light < 260 ? {min: 54, max: 64}:
-               light < 280 ? {min: 58, max: 69}:
-               light < 290 ? {min: 62, max: 75}:
-               light < 300 ? {min: 64, max: 77}:
-               light < 310 ? {min: 66, max: 80}:
-               light < 320 ? {min: 70, max: 83}:
-               light < 335 ? {min: 74, max: 86}: {min: 80, max: 90};
+          rate = 1/6;
+          split = 46;
           break;
         case 'gauntlets':
-          mm = light < 260 ? {min: 48, max: 57}:
-               light < 280 ? {min: 52, max: 62}:
-               light < 290 ? {min: 56, max: 67}:
-               light < 300 ? {min: 58, max: 69}:
-               light < 310 ? {min: 62, max: 72}:
-               light < 320 ? {min: 62, max: 74}:
-               light < 335 ? {min: 66, max: 77}: {min: 70, max: 80};
+          rate = 1/6;
+          split = 41;
           break;
         case 'chest':
-          mm = light < 260 ? {min: 70, max: 85}:
-               light < 280 ? {min: 76, max: 92}:
-               light < 290 ? {min: 82, max: 99}:
-               light < 300 ? {min: 84, max: 103}:
-               light < 310 ? {min: 88, max: 106}:
-               light < 320 ? {min: 92, max: 110}:
-               light < 320 ? {min: 96, max: 114}: {min: 102, max: 118};
+          rate = 1/5;
+          split = 61;
           break;
         case 'leg':
-          mm = light < 260 ? {min: 64, max: 79}:
-               light < 280 ? {min: 68, max: 86}:
-               light < 290 ? {min: 74, max: 92}:
-               light < 300 ? {min: 76, max: 96}:
-               light < 310 ? {min: 80, max: 99}:
-               light < 320 ? {min: 84, max: 102}:
-               light < 320 ? {min: 88, max: 106}: {min: 94, max: 110};
+          rate = 1/5;
+          split = 56;
           break;
         case 'classitem':
         case 'ghost':
-          mm = light < 260 ? {min: 28, max: 36}:
-               light < 280 ? {min: 30, max: 39}:
-               light < 290 ? {min: 34, max: 42}:
-               light < 300 ? {min: 34, max: 43}:
-               light < 310 ? {min: 36, max: 45}:
-               light < 320 ? {min: 38, max: 46}:
-               light < 320 ? {min: 40, max: 48}: {min: 40, max: 50};
+          rate = 1/10;
+          split = 25;
           break;
         case 'artifact':
-          mm = light < 260 ? {min: 40, max: 63}:
-               light < 280 ? {min: 43, max: 68}:
-               light < 290 ? {min: 46, max: 73}:
-               light < 300 ? {min: 48, max: 76}:
-               light < 310 ? {min: 50, max: 78}:
-               light < 320 ? {min: 53, max: 81}:
-               light < 320 ? {min: 56, max: 84}: {min: 60, max: 87};
+          rate = 1/10;
+          split = 44.5;
           break;
         default:
           return;
       }
 
-      var total = 0;
+      var ret = {
+        total: 0,
+        max: split*2
+      };
+
       stats.forEach(function(stat) {
-        total += stat.base || 0;
+        // thanks to /u/iihavetoes for the rates + equation
+        var scaled = 0;
+        if(stat.base) {
+          scaled = Math.ceil(rate * (maxLight - light.value) + stat.base);
+        }
+        stat.scaled = scaled;
+        stat.split = split;
+        ret.total += scaled || 0;
       });
 
-//      if(total < mm.min) {
-//        console.log(who, stats, light, mm)
-//      }
-
-        return Math.round(total/mm.max*100);
-
-      // better comparison...
-//      return Math.round(((total - mm.min) / (mm.max - mm.min))*100);
+      return Math.round(ret.total / ret.max * 100);
     }
 
     // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
     function getBonus(light, type) {
-      type = type.toLowerCase();
-      switch(type) {
+      switch(type.toLowerCase()) {
         case 'helmet':
         case 'helmets':
           return light < 291 ? 15 :
                  light < 307 ? 16 :
                  light < 319 ? 17 :
-                 light < 334 ? 18 : 19;
+                 light < 332 ? 18 : 19;
         case 'gauntlets':
           return light < 287 ? 13 :
                  light < 305 ? 14 :
                  light < 319 ? 15 :
-                 light < 334 ? 16 : 17;
+                 light < 333 ? 16 : 17;
         case 'chest':
         case 'chest armor':
           return light < 287 ? 20 :
                  light < 299 ? 21 :
                  light < 310 ? 22 :
                  light < 319 ? 23 :
-                 light < 334 ? 24 : 25;
+                 light < 328 ? 24 : 25;
         case 'leg':
         case 'leg armor':
           return light < 284 ? 18 :
                  light < 298 ? 19 :
                  light < 309 ? 20 :
                  light < 319 ? 21 :
-                 light < 334 ? 22 : 23;
+                 light < 239 ? 22 : 23;
         case 'classitem':
         case 'class items':
         case 'ghost':
         case 'ghosts':
           return light < 295 ? 8 :
-                 light < 319 ? 9 :
-                 light < 334 ? 10 : 11;
+                 light < 319 ? 9 : 10;
         case 'artifact':
         case 'artifacts':
           return light < 287 ? 34 :
@@ -779,9 +750,10 @@
                  light < 308 ? 37 :
                  light < 314 ? 38 :
                  light < 319 ? 39 :
-                 light < 334 ? 40 : 41;
+                 light < 235 ? 40 :
+                 light < 230 ? 41 : 42;
       }
-      console.warn('item bonus not found');
+      console.warn('item bonus not found', type);
       return 0;
     }
 
