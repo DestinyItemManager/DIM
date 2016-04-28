@@ -226,8 +226,8 @@
       },
       getBonus: dimStoreService.getBonus,
       getColor: function(value) {
-        value = value < 0 ? 0 : value;
-        return 'hsl(' + (value/100*120).toString(10) + ',90%,30%)';
+        value = value - 75 < 0 ? 0 : value - 75;
+        return 'hsl(' + (value/30*120).toString(10) + ',90%,50%)';
       },
       getStore: function(id) {
         return dimStoreService.getStore(id);
