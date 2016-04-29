@@ -1,5 +1,5 @@
 language: node_js
-node_js: node
+node_js: "4"
 before_install: npm install -g grunt-cli && npm install -g bower
 install: npm install && bower install
 before_script: grunt publish_beta
