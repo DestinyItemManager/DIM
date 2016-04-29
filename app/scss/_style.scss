@@ -740,8 +740,8 @@ img {
 }
 
 .item-quality {
-  top: 0;
-  height: 14px;
+  left: 0;
+  text-align: left;
 }
 
 .stat-damage-arc {
@@ -1341,6 +1341,12 @@ rzslider {
     width: 10%;
     text-align: left;
     padding-left: 5px;
+  }
+  .stat-box-outer.show-quality {
+    width: 50%;
+  }
+  .stat-box-val.show-quality {
+    margin-left: -15px;
   }
   .higher-stats {
     color: #7DC878;
