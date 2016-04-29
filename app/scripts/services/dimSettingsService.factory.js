@@ -21,6 +21,7 @@
         hideFilteredItems: false,
         itemDetails: false,
         itemStat: false,
+        showElements: false,
         condensed: false,
         characterOrder: 'mostRecent',
         itemSort: 'primaryStat',

@@ -34,6 +34,14 @@
       </tr>
       <tr>
         <td>
+          <label for="showElements" title="Show elemental damage icons on weapons.">Show elemental damage icons on weapons</label>
+        </td>
+        <td>
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="itemSort" title="Sort items by rarity or their primary stat value.">Sort Items by:</label>
         </td>
         <td>
