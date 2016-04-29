@@ -49,7 +49,8 @@
         <div style='display: inline-block'>
           <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
 <!--            <small ng-bind="item.normalStats[$index].base"></small>-->
-            <small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small>
+            <small ng-if="item.normalStats[$index].scaled === 0">-</small>
+            <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
           </div>
         </div>
         <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>

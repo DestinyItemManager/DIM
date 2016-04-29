@@ -193,6 +193,10 @@
       vm.badgeClassNames['damage-type'] = true;
       vm.badgeCount = '';
     }
+
+    if(vm.itemQuality && vm.quality > 0) {
+      vm.badgeClassNames['item-stat-no-bg'] = true;
+    }
   }
 
   StoreItemCtrl.$inject = ['$rootScope', 'dimSettingsService', '$scope'];

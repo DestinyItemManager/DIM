@@ -726,6 +726,7 @@ img {
 }*/
 
 .item-stat {
+  opacity: .9;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -737,6 +738,9 @@ img {
   text-align: center;
   -webkit-user-select: none;
   box-sizing: content-box;
+}
+.item-stat-no-bg {
+  background-color: transparent;
 }
 
 .item-quality {

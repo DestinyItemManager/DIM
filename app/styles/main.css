@@ -614,6 +614,7 @@ img.void {
   box-shadow: 0 0 10px 2px #eee;
 }*/
 .item-stat {
+  opacity: .9;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -625,6 +626,9 @@ img.void {
   text-align: center;
   -webkit-user-select: none;
   box-sizing: content-box; }
+
+.item-stat-no-bg {
+  background-color: transparent; }
 
 .item-quality {
   left: 0;
