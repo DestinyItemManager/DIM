@@ -232,7 +232,7 @@
         if(value === 0) {
           return 'white';
         }
-        return 'hsl(' + (value/30*120).toString(10) + ',90%,50%)';
+        return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
       },
       getStore: function(id) {
         return dimStoreService.getStore(id);

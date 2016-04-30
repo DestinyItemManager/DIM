@@ -38,28 +38,29 @@
 
 <!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
 <!--    <h3 ng-bind="type"></h3>-->
-    <span style='display: inline-block; margin-right: 20px'>
+    <div style='float:left'>
       <div><small>Intellect</small></div>
       <div><small>Discipline</small></div>
       <div><small>Strength</small></div>
-      <div><small>Scaled Base/Max</small></div>
-    </span>
-    <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
-      <div ng-if="item.primStat.value >= 285" style='display: inline-block; padding: 3px 0 0 3px'>
-        <div style='display: inline-block'>
-          <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
-<!--            <small ng-bind="item.normalStats[$index].base"></small>-->
-            <small ng-if="item.normalStats[$index].scaled === 0">-</small>
-            <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
+    </div>
+    <div style='float:right;width:849px;margin-top:-4px;'>
+      <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
+        <div ng-if="item.primStat.value >= 285" style='display: inline-block; padding: 3px 0 0 3px'>
+          <div style='display:inline-block;margin-bottom:20px;'>
+            <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
+  <!--            <small ng-bind="item.normalStats[$index].base"></small>-->
+              <small ng-if="item.normalStats[$index].scaled === 0">-</small>
+              <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
+            </div>
           </div>
+          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
+  <!--
+          <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
+            <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
+          </div>
+  -->
         </div>
-        <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
-<!--
-        <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
-          <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
-        </div>
--->
-      </div>
-    </span>
+      </span>
+    </div>
 <!--  </div>-->
 </div>

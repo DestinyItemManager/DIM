@@ -67,7 +67,7 @@
 
       vm.getColor = function(value) {
         value = value - 75 < 0 ? 0 : value - 75;
-        return 'hsl(' + (value/30*120).toString(10) + ',90%,50%)';
+        return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
       };
 
       vm.clicked = function openPopup(item, e) {
