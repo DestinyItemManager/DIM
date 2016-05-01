@@ -2087,3 +2087,20 @@ button.toast-close-button {
     font-size: 11px; }
     .dropdown-menu a:hover {
       cursor: pointer; }
+
+/* Engram Farming */
+dim-engram-farming {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+#engram-farming {
+  position: fixed;
+  bottom: 1em;
+  background-color: blue;
+  z-index: 10000; }

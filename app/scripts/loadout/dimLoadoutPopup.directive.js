@@ -38,6 +38,9 @@
         '    <div class="loadout-set">',
         '      <span class="button-name button-full" ng-click="vm.gatherEngramsLoadout($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
         '    </div>',
+        '    <div class="loadout-set">',
+        '      <span class="button-name button-full" ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
+        '    </div>',
         '    <div class="loadout-set" ng-if="vm.previousLoadout">',
         '      <span class="button-name button-full" ng-click="vm.applyLoadout(vm.previousLoadout, $event)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
         '    </div>',
@@ -47,9 +50,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService) {
     var vm = this;
     vm.previousLoadout = dimLoadoutService.previousLoadouts[vm.store.id];
 
@@ -270,6 +273,11 @@
         items: finalItems
       };
       vm.applyLoadout(loadout, $event);
+    };
+
+    vm.startFarmingEngrams = function startFarmingEngrams($event) {
+      ngDialog.closeAll();
+      dimEngramFarmingService.start(vm.store);
     };
 
     // Generate an optimized loadout based on a filtered set of items and a value function

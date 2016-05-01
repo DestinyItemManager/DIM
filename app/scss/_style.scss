@@ -2277,3 +2277,17 @@ button.toast-close-button {
   padding: 0;
   margin: 0;
 }
+
+/* Engram Farming */
+
+dim-engram-farming {
+  display: flex;
+  justify-content: center;
+}
+
+#engram-farming {
+  position: fixed;
+  bottom: 1em;
+  background-color: blue;
+  z-index: 10000;
+}
