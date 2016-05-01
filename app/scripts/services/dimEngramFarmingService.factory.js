@@ -13,21 +13,6 @@
   function EngramFarmingService($rootScope, $q, dimBungieService, dimItemService, dimStoreService, $interval, toaster) {
     var intervalId;
     var cancelReloadListener;
-    function moveItemsToVault(items, incrementCounter) {
-      var vault = dimStoreService.getVault();
-      return $q.all(items.map(function(item) {
-        return dimItemService.moveTo(item, vault, false, item.amount)
-          .then(function() {
-            if (incrementCounter) {
-              self.engramsMoved++;
-            }
-          })
-          .catch(function(e) {
-            toaster.pop('error', item.name, e.message);
-          });
-      }));
-    }
-
     return {
       active: false,
       store: null,
@@ -35,6 +20,22 @@
       movingEngrams: false,
       makingRoom: false,
       // Move all engrams on the selected character to the vault.
+      moveItemsToVault: function(items, incrementCounter) {
+        var self = this;
+        var vault = dimStoreService.getVault();
+        return $q.all(items.map(function(item) {
+          return dimItemService.moveTo(item, vault, false, item.amount)
+            .then(function() {
+              if (incrementCounter) {
+                // TODO: whoops
+                self.engramsMoved++;
+              }
+            })
+            .catch(function(e) {
+              toaster.pop('error', item.name, e.message);
+            });
+        }));
+      },
       moveEngramsToVault: function() {
         var self = this;
         var store = dimStoreService.getStore(self.store.id);
@@ -48,7 +49,7 @@
         }
 
         self.movingEngrams = true;
-        return moveItemsToVault(engrams, true)
+        return self.moveItemsToVault(engrams, true)
           .finally(function() {
             self.movingEngrams = false;
           });
@@ -107,7 +108,7 @@
         }
 
         self.makingRoom = true;
-        return moveItemsToVault(itemsToMove, false)
+        return self.moveItemsToVault(itemsToMove, false)
           .finally(function() {
             self.makingRoom = false;
           });
