@@ -454,6 +454,7 @@
         bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
+        percentComplete: null,
         amount: item.stackSize,
         primStat: item.primaryStat,
         // "perks" are the two or so talent grid items that are "featured" for an
@@ -495,9 +496,11 @@
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.xpComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
-          return (objective.progress / objective.completionValue) / createdItem.objectives.length;
+        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
         }));
+      } else if (createdItem.talentGrid) {
+        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
       }
 
       return createdItem;

@@ -112,7 +112,7 @@
 
       if (!vm.item.primStat && vm.item.objectives) {
         scope.$watchGroup([
-          'vm.item.xpComplete',
+          'vm.item.percentComplete',
           'vm.itemStat',
           'vm.item.complete'], function() {
             processBounty(vm, vm.item);
@@ -145,7 +145,7 @@
 
     if (showBountyPercentage) {
       vm.badgeClassNames = { 'item-stat': true };
-      vm.badgeCount = item.xpComplete + '%';
+      vm.badgeCount = item.percentComplete + '%';
     }
   }
 
