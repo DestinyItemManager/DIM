@@ -6,15 +6,21 @@
 
   EngramFarmingService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimItemService', 'dimStoreService', '$interval', 'toaster'];
 
+  /**
+   * A service for "farming" engrams by moving them continuously off a character,
+   * so that they don't go to the Postmaster.
+   */
   function EngramFarmingService($rootScope, $q, dimBungieService, dimItemService, dimStoreService, $interval, toaster) {
     var intervalId;
-
-    function moveItemsToVault(items) {
+    var cancelReloadListener;
+    function moveItemsToVault(items, incrementCounter) {
       var vault = dimStoreService.getVault();
       return $q.all(items.map(function(item) {
         return dimItemService.moveTo(item, vault, false, item.amount)
           .then(function() {
-            self.engramsMoved++;
+            if (incrementCounter) {
+              self.engramsMoved++;
+            }
           })
           .catch(function(e) {
             toaster.pop('error', item.name, e.message);
@@ -42,7 +48,7 @@
         }
 
         self.movingEngrams = true;
-        return moveItemsToVault(engrams)
+        return moveItemsToVault(engrams, true)
           .finally(function() {
             self.movingEngrams = false;
           });
@@ -95,15 +101,16 @@
           }
         });
 
-        if (itemsToMove.length) {
-          self.makingRoom = true;
-          return moveItemsToVault(itemsToMove)
-            .finally(function() {
-              self.makingRoom = false;
-            });
-        } else {
+        if (itemsToMove.length === 0) {
+          console.log("nothing to move to make room");
           return $q.resolve();
         }
+
+        self.makingRoom = true;
+        return moveItemsToVault(itemsToMove, false)
+          .finally(function() {
+            self.makingRoom = false;
+          });
       },
       start: function(store) {
         if (!this.active) {
@@ -113,16 +120,26 @@
           this.movingEngrams = false;
           this.makingRoom = false;
           var self = this;
-          function farm() {
-            dimStoreService.reloadStores().then(function(stores) {
-              console.log("FARM");
 
-              return self.moveEngramsToVault().then(function() {
-                self.makeRoomForEngrams();
-              });
+          function farm() {
+            self.moveEngramsToVault().then(function() {
+              self.makeRoomForEngrams();
             });
           }
-          intervalId = $interval(farm, 60000);
+
+          // Whenever the store is reloaded, run the farming algo
+          // That way folks can reload manually too
+          cancelReloadListener = $rootScope.$on('dim-stores-updated', function() {
+            console.log("FARM");
+            // prevent some recursion...
+            if (self.active && !self.movingEngrams && !self.makingRoom) {
+              farm();
+            }
+          });
+          intervalId = $interval(function() {
+            // just start reloading stores more often
+            dimStoreService.reloadStores();
+          }, 60000);
           farm();
         }
       },
@@ -131,6 +148,7 @@
           console.log("STOP FARM");
           $interval.cancel(intervalId);
         }
+        cancelReloadListener();
         this.active = false;
       }
     };
