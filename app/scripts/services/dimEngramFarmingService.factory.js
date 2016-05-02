@@ -23,18 +23,21 @@
       moveItemsToVault: function(items, incrementCounter) {
         var self = this;
         var vault = dimStoreService.getVault();
-        return $q.all(items.map(function(item) {
-          return dimItemService.moveTo(item, vault, false, item.amount)
+        return _.reduce(items, function(promise, item) {
+          return promise
+            .then(function() {
+              return dimItemService.moveTo(item, vault, false, item.amount, items);
+            })
             .then(function() {
               if (incrementCounter) {
                 // TODO: whoops
                 self.engramsMoved++;
               }
-            })
-            .catch(function(e) {
-              toaster.pop('error', item.name, e.message);
             });
-        }));
+        }, $q.resolve())
+          .catch(function(e) {
+            toaster.pop('error', item.name, e.message);
+          });
       },
       moveEngramsToVault: function() {
         var self = this;
@@ -149,7 +152,9 @@
           console.log("STOP FARM");
           $interval.cancel(intervalId);
         }
-        cancelReloadListener();
+        if (cancelReloadListener) {
+          cancelReloadListener();
+        }
         this.active = false;
       }
     };
