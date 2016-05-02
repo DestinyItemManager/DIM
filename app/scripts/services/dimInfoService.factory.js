@@ -30,7 +30,7 @@
                 return false;
               },
               onHideCallback: function() {
-                if($('#help-' + id)
+                if($('#info-' + id)
                   .is(':checked')) {
                   var save = {};
                   save['info.' + id] = 1;
