@@ -31,17 +31,16 @@
                 var otherStores = _.select(dimStoreService.getStores(), function(store) {
                   return !store.isVault &&
                     store.id !== self.store.id &&
-                    store.spaceLeftForItem > 0;
+                    store.spaceLeftForItem(item) > 0;
                 });
                 if (otherStores.length) {
-                  return dimItemService.moveTo(item, store, false, item.amount, items);
+                  return dimItemService.moveTo(item, otherStores[0], false, item.amount, items);
                 }
               }
               return dimItemService.moveTo(item, vault, false, item.amount, items);
             })
             .then(function() {
               if (incrementCounter) {
-                // TODO: whoops
                 self.engramsMoved++;
               }
             })
