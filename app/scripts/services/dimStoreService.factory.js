@@ -675,6 +675,7 @@
 
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
+    // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
     function getQualityRating(stats, light, type, who) {
       var maxLight = 335;
 
@@ -721,7 +722,7 @@
       stats.forEach(function(stat) {
         var scaled = 0;
         if(stat.base) {
-          scaled = Math.ceil(rate * (maxLight - light.value) + stat.base);
+          scaled = Math.round(rate * (maxLight - light.value) + stat.base);
         }
         stat.scaled = scaled;
         stat.split = split;
