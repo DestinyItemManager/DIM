@@ -132,6 +132,7 @@
 
     vm.applyLoadout = function applyLoadout(loadout, $event) {
       ngDialog.closeAll();
+      dimEngramFarmingService.stop();
 
       if (loadout === vm.previousLoadout) {
         vm.previousLoadout = undefined;
