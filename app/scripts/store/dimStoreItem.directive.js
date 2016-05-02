@@ -30,6 +30,7 @@
         '  }">',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
         '    <div ng-if="vm.itemQuality && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
+        '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'
@@ -118,7 +119,7 @@
 
       if (!vm.item.primStat && vm.item.objectives) {
         scope.$watchGroup([
-          'vm.item.xpComplete',
+          'vm.item.percentComplete',
           'vm.itemStat',
           'vm.item.complete'], function() {
             processBounty(vm, vm.item);
@@ -155,7 +156,7 @@
 
     if (showBountyPercentage) {
       vm.badgeClassNames = { 'item-stat': true };
-      vm.badgeCount = item.xpComplete + '%';
+      vm.badgeCount = item.percentComplete + '%';
     }
   }
 

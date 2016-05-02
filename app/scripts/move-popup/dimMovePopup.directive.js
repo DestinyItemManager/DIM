@@ -20,7 +20,7 @@
       template: [
         '<div class="move-popup" alt="" title="">',
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
-        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+        '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',

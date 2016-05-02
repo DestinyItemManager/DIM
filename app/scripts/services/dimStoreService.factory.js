@@ -61,6 +61,25 @@
       }
     };
 
+    // Prototype for Item objects - add methods to this to add them to all
+    // items.
+    var ItemProto = {
+      // Can this item be equipped by the current store?
+      canBeEquippedBy: function(store) {
+        if (store.isVault) {
+          return false;
+        }
+        return this.equipment &&
+          // For the right class
+          (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+          // nothing we are too low-level to equip
+          this.equipRequiredLevel <= store.level &&
+          // can be moved or is already here
+          (!this.notransfer || this.owner === store.id) &&
+          this.sort !== 'Postmaster';
+      }
+    };
+
     var service = {
       getStores: getStores,
       reloadStores: reloadStores,
@@ -423,7 +442,7 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      var createdItem = {
+      var createdItem = angular.extend(Object.create(ItemProto), {
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -437,6 +456,7 @@
         bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
+        percentComplete: null,
         amount: item.stackSize,
         primStat: item.primaryStat,
         // "perks" are the two or so talent grid items that are "featured" for an
@@ -455,7 +475,7 @@
         weaponClass: weaponClass || '',
         weaponClassName: weaponClassName,
         classified: itemDef.classified
-      };
+      });
       createdItem.index = createItemIndex(createdItem);
 
       try {
@@ -482,9 +502,11 @@
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.xpComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
-          return (objective.progress / objective.completionValue) / createdItem.objectives.length;
+        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
         }));
+      } else if (createdItem.talentGrid) {
+        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
       }
 
 //      if(createdItem.hash === 2150667281) {

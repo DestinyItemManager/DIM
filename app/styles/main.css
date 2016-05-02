@@ -1,3 +1,6 @@
+/* Local Variables:     */
+/* css-indent-offset: 2 */
+/* End:                 */
 div:focus, span:focus {
   outline-width: 0; }
 
@@ -686,6 +689,23 @@ img.void {
     position: absolute;
     z-index: 2; }
 
+.element {
+  display: none; }
+  .show-elements .element {
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: 16px;
+    width: 16px; }
+
+.title-element {
+  height: 18px;
+  width: 18px;
+  -webkit-filter: invert(100%);
+          filter: invert(100%);
+  vertical-align: top; }
+
 .item-elem {
   background-color: #5c7183;
   cursor: pointer;
@@ -1170,12 +1190,11 @@ rzslider {
   color: #b184c5; }
 
 .item-name .lock-icon {
-  padding: 0 5px;
   top: 1px;
   cursor: pointer;
   font-size: .75em;
   float: left;
-  margin-right: 3px; }
+  margin-right: 1px; }
   .item-name .lock-icon .fa-lock, .item-name .lock-icon .fa-unlock {
     font-size: 1.3em; }
   .item-name .lock-icon.locking {
