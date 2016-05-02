@@ -212,48 +212,18 @@
       }
 
       function dequipItem(item) {
-        var scope = {
-          source: null,
-          target: null,
-          similarItem: null
-        };
-
-        var updateEquipped;
-
         var similarItem = getSimilarItem(item);
-        scope.similarItem = similarItem;
-        scope.source = dimStoreService.getStore(item.owner);
-        scope.target = dimStoreService.getStore(scope.similarItem.owner);
+        var source = dimStoreService.getStore(item.owner);
+        var target = dimStoreService.getStore(similarItem.owner);
 
         var p = $q.when();
-        if (scope.source.id !== scope.target.id) {
-          var vault;
-
-          if (scope.similarItem.owner !== 'vault') {
-            vault = dimStoreService.getVault();
-            p = dimBungieService.transfer(scope.similarItem, vault)
-              .then(function() {
-                return updateItemModel(scope.similarItem, vault, scope.source, false);
-              });
-          }
-
-          return p.then(function() {
-            return dimBungieService.transfer(scope.similarItem, scope.source);
-          })
-            .then(function() {
-              return updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
-            });
+        if (source.id !== target.id) {
+          p = moveTo(similarItem, source, true);
         }
 
         return p.then(function() {
-            return equipItem(scope.similarItem);
-          })
-          .then(function() {
-            return updateItemModel(scope.similarItem, scope.source, scope.source, true);
-          })
-          .catch(function(e) {
-            return $q.reject(e);
-          });
+          return equipItem(similarItem);
+        });
       }
 
       function moveToVault(item, amount) {
@@ -261,14 +231,10 @@
       }
 
       function moveToStore(item, store, equip, amount) {
-        var scope = {
-          source: dimStoreService.getStore(item.owner),
-          target: store
-        };
-
-        return dimBungieService.transfer(item, scope.target, amount)
+        return dimBungieService.transfer(item, store, amount)
           .then(function() {
-            var newItem = updateItemModel(item, scope.source, scope.target, false, amount);
+            var source = dimStoreService.getStore(item.owner);
+            var newItem = updateItemModel(item, source, store, false, amount);
             if ((newItem.owner !== 'vault') && equip) {
               return equipItem(newItem);
             } else {
