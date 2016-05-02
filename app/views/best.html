@@ -5,35 +5,22 @@
 <!--  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'>-->
 <!--    <span ng-show='normal.doNormalize'>Estimate stats at light level <input style='width:35px;padding-left:5px;border:none' type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></span>-->
 <!--  </p>-->
-<!--  <p>The stats displayed are the <b>base</b> stats for the item.</p>-->
 
-<!--  <span class="link" ng-click="help=!help">Click here for more information</span>-->
-
-<!--  <div ng-show="help">-->
-<!--    <p>This page will help you determine what your best gear is.</p>-->
-<!--    <p>Tips:</p>-->
-    <ul>
-      <li>Light level must be at least 280 for an accurate roll estimation.</li>
-      <li>Items here scale their stats to what they would be at light level 335.</li>
-      <li>The perks/bonus that increase int/dis/str are note included, only the base stats are shown.</li>
-      <li>Prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
-<!--
-      <li>Just because something has a low quality stat roll, does not be mean you should toss it.</li>
-      <li>At 310 light, it's possible to hit tier 11 with an average of greater than 87% gear.</li>
-      <li>At 320 light, it's possible to hit tier 11 with an average of greater than 59% gear.</li>
-      <li>Clicking on an item will show you its perks, the infusion calculator, and move commands.</li>
--->
-      <li>Pure roll items generally are worse than split rolls.</li>
-      <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
-    </ul>
-<!--  </div>-->
+  <ul>
+    <li>Light level must be at least 280 for an accurate roll estimation.</li>
+    <li>Stats on this page are scaled to what they would be at light level 335.</li>
+    <li>The perks/bonuses that increase int/dis/str are not included, only the base stats are shown.</li>
+    <li>Prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
+    <li>Split stat rolls are better than single stat rolled items.</li>
+    <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
+  </ul>
 
   <p>Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
     <option value='titan'>Titan</option>
     <option value='hunter'>Hunter</option>
     <option value='warlock'>Warlock</option>
   </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
-<!--    <span ng-show="normal.doNormalize">(+{{normal.getBonus(normal.normalize, normal.type)}} bonus excluded)</span>-->
+    <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
   </p>
 
 <!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
