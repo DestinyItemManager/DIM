@@ -13,11 +13,15 @@
       scope: {},
       template: [
         '<div id="engram-farming" ng-if="vm.service.active">',
-        'Sending {{vm.service.store.name}}\'s engrams to the vault...',
-        '<button ng-click="vm.stop($event)">Stop</button>',
-        '<div>{{vm.service.engramsMoved}} moved so far.</div>',
-        '<div ng-if="vm.service.movingEngrams">Moving engrams...</div>',
-        '<div ng-if="vm.service.makingRoom">Making room for engrams...</div>',
+        '  <div class="engram-icon">',
+        '    <div class="engram-count">{{vm.service.engramsMoved}}</div>',
+        '    <img class="engram" ng-class="{ active: (vm.service.movingEngrams || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>',
+        '  </div>',
+        '  <div class="engram-details">',
+        '    <h1>Sending {{vm.service.store.race}} {{vm.service.store.name}}\'s engrams to the vault</h1>',
+        '    <p>DIM will watch for engrams and move them to the vault. It\'ll also keep one space open per type to keep engrams from going to the Postmaster.</p>',
+        '  </div>',
+        '  <button ng-click="vm.stop($event)">Stop</button>',
         '</div>'
       ].join('')
     };

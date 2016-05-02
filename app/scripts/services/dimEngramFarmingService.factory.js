@@ -47,7 +47,6 @@
         });
 
         if (engrams.length === 0) {
-          console.log("Nothing to move away.");
           return $q.resolve();
         }
 
@@ -106,7 +105,6 @@
         });
 
         if (itemsToMove.length === 0) {
-          console.log("nothing to move to make room");
           return $q.resolve();
         }
 
@@ -134,7 +132,6 @@
           // Whenever the store is reloaded, run the farming algo
           // That way folks can reload manually too
           cancelReloadListener = $rootScope.$on('dim-stores-updated', function() {
-            console.log("FARM");
             // prevent some recursion...
             if (self.active && !self.movingEngrams && !self.makingRoom) {
               farm();
@@ -149,7 +146,6 @@
       },
       stop: function() {
         if (intervalId) {
-          console.log("STOP FARM");
           $interval.cancel(intervalId);
         }
         if (cancelReloadListener) {
