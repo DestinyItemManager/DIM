@@ -75,7 +75,6 @@
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
-            !i.notransfer &&
             i.sort !== 'Postmaster' &&
             _.contains(engramTypes, i.type);
         });
@@ -87,7 +86,7 @@
           // subtract 1 from capacity because we excluded the equipped item
           if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
             // We'll move the lowest-value item to the vault.
-            itemsToMove.push(_.min(items, function(i) {
+            itemsToMove.push(_.min(_.select(items, { notransfer: false}), function(i) {
               var value = {
                 Common: 0,
                 Uncommon: 1,
