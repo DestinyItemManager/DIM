@@ -651,6 +651,7 @@
       });
     }
 
+
     function getQualityRating(stats, light, type, who) {
       var maxLight = 335;
 
@@ -696,6 +697,7 @@
 
       stats.forEach(function(stat) {
         // thanks to /u/iihavetoes for the rates + equation
+        // thanks to dasilva333 (tower ghost for destiny) for the max stat values
         var scaled = 0;
         if(stat.base) {
           scaled = Math.ceil(rate * (maxLight - light.value) + stat.base);
