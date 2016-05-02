@@ -52,8 +52,8 @@
 
 
   angular.module('dimApp')
-    .run(['$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http',
-      function($rootScope, loadingTracker, $timeout, toaster, $http) {
+    .run(['$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'dimInfoService',
+      function($rootScope, loadingTracker, $timeout, toaster, $http, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
         //1 Hour
@@ -73,41 +73,10 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        chrome.storage.sync.get('20160411v35', function(data) {
-          if(_.isNull(data) || _.isEmpty(data)) {
-
-            $timeout(function() {
-              $http.get('views/changelog-toaster.html?v=v3.5.4')
-              .then(function(changelog) {
-                toaster.pop({
-                  type: 'info',
-                  title: 'DIM v3.5.4 Released',
-                  body: changelog.data,
-                  timeout: 0,
-                  bodyOutputType: 'trustedHtml',
-                  showCloseButton: true,
-                  clickHandler: function(a, b, c, d, e, f, g) {
-                    if(b) {
-                      return true;
-                    }
-
-                    return false;
-                  },
-                  onHideCallback: function() {
-                    if($('#20160411v35')
-                      .is(':checked')) {
-                      chrome.storage.sync.set({
-                        "20160411v35": 1
-                      }, function(e) {});
-                    }
-                  }
-                });
-
-              });
-            }, 3000);
-          }
+        dimInfoService.show('20160411v35', {
+          title: 'DIM v3.5.4 Released',
+          view: 'views/changelog-toaster.html?v=v3.5.4',
         });
-
       }
     ]);
 
