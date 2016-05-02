@@ -719,15 +719,22 @@
         max: split*2
       };
 
+      var pure = 0;
       stats.forEach(function(stat) {
         var scaled = 0;
         if(stat.base) {
-          scaled = Math.round(rate * (maxLight - light.value) + stat.base);
+          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
+          pure = scaled;
         }
         stat.scaled = scaled;
         stat.split = split;
         ret.total += scaled || 0;
       });
+      if(pure === ret.total) {
+        stats.forEach(function(stat) {
+          stat.scaled = Math.floor(stat.scaled/2);
+        });
+      }
 
       return Math.round(ret.total / ret.max * 100);
     }
