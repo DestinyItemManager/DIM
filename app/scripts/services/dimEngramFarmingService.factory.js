@@ -22,10 +22,21 @@
       // Move all engrams on the selected character to the vault.
       moveItemsToVault: function(items, incrementCounter) {
         var self = this;
-        var vault = dimStoreService.getVault();
         return _.reduce(items, function(promise, item) {
           return promise
             .then(function() {
+              var vault = dimStoreService.getVault();
+              if (vault.spaceLeftForItem(item) <= 1) {
+                // If we're down to one space, try putting it on other characters
+                var otherStores = _.select(dimStoreService.getStores(), function(store) {
+                  return !store.isVault &&
+                    store.id !== self.store.id &&
+                    store.spaceLeftForItem > 0;
+                });
+                if (otherStores.length) {
+                  return dimItemService.moveTo(item, store, false, item.amount, items);
+                }
+              }
               return dimItemService.moveTo(item, vault, false, item.amount, items);
             })
             .then(function() {
@@ -33,11 +44,11 @@
                 // TODO: whoops
                 self.engramsMoved++;
               }
+            })
+            .catch(function(e) {
+              toaster.pop('error', item.name, e.message);
             });
-        }, $q.resolve())
-          .catch(function(e) {
-            toaster.pop('error', item.name, e.message);
-          });
+        }, $q.resolve());
       },
       moveEngramsToVault: function() {
         var self = this;
