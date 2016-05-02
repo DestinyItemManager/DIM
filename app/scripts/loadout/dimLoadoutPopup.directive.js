@@ -264,7 +264,11 @@
       // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
       var finalItems = {};
       _.each(itemsByType, function(items, type) {
-        finalItems[type.toLowerCase()] = items.map(angular.copy);
+        if (items) {
+          finalItems[type.toLowerCase()] = items.map(function(i) {
+            return angular.copy(i);
+          });
+        }
       });
 
       var loadout = {
