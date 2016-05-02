@@ -8,17 +8,21 @@
 
   function InfoService(toaster) {
     return {
-      show: function(id, body, hide) {
-        hide = hide || '';
+      show: function(id, content) {
+        content = content || {};
+        content.title = content.title || '';
+        content.body = content.body || '';
+        content.hide = content.hide || '';
+
         chrome.storage.sync.get('info.' + id, function(data) {
           if(_.isNull(data) || _.isEmpty(data)) {
             toaster.pop({
               type: 'info',
-              title: 'Did you know?',
+              title: content.title,
               body: [
-                body,
+                content.body,
                 '<input style="margin-top: 1px; vertical-align: middle;" id="info-' + id + '" type="checkbox">',
-                '<label for="info-' + id + '">' + hide + '</label></p>'
+                '<label for="info-' + id + '">' + content.hide + '</label></p>'
               ].join(''),
               timeout: 0,
               bodyOutputType: 'trustedHtml',
