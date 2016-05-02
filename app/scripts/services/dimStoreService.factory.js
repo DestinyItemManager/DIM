@@ -687,11 +687,11 @@
       switch(type.toLowerCase()) {
         case 'helmet':
           rate = 1/6;
-          split = 48;
+          split = 46; // bungie reports 48, but i've only seen 46
           break;
         case 'gauntlets':
           rate = 1/6;
-          split = 43;
+          split = 41; // bungie reports 43, but i've only seen 41
           break;
         case 'chest':
           rate = 1/5;
