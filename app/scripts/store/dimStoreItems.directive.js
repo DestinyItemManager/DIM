@@ -13,9 +13,14 @@
     .filter('sortItems', function() {
       return function(items, sort) {
         items = _.sortBy(items || [], 'name');
-        if (sort === 'primaryStat' || sort === 'rarityThenPrimary') {
+        if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
           items = _.sortBy(items, function(item) {
             return (item.primStat) ? (-1 * item.primStat.value) : 1000;
+          });
+        }
+        if (sort === 'quality') {
+          items = _.sortBy(items, function(item) {
+            return item.quality ? -item.quality : 1000;
           });
         }
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {

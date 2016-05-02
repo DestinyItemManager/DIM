@@ -23,6 +23,7 @@
             <div dim-platform-choice class="header-right"></div>
             <div class="header-right" id="actions">
               <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
+              <span class="link" ng-disabled="loadingTracker.active()" ui-sref="best" title="MinMax"><i class="fa fa-bar-chart"></i></span>
               <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
               <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
               <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
@@ -94,12 +95,14 @@
     <script src="scripts/store/dimStoreItem.directive.js?v=3.5.4"></script>
     <script src="scripts/store/dimStoreHeading.directive.js?v=3.5.4"></script>
     <script src="scripts/store/dimSimpleItem.directive.js?v=3.5.4"></script>
+    <script src="scripts/store/dimStats.directive.js?v=3.5.4"></script>
     <script src="scripts/move-popup/dimMoveAmount.directive.js?v=3.5.4"></script>
     <script src="scripts/move-popup/dimMovePopup.directive.js?v=3.5.4"></script>
     <script src="scripts/move-popup/dimTalentGrid.directive.js?v=3.5.4"></script>
     <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=3.5.4"></script>
     <script src="scripts/infuse/dimInfuse.controller.js?v=3.5.4"></script>
     <script src="scripts/xur/dimXur.controller.js?v=3.5.4"></script>
+    <script src="scripts/minmax/dimMinMax.controller.js?v=3.5.4"></script>
     <!-- end app scripts -->
 
     <!--

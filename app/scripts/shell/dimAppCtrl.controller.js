@@ -48,6 +48,7 @@
     vm.settings = {
       itemDetails: false,
       itemStat: false,
+      itemQuality: false,
       condensedItems: false,
       characterOrder: 'mostRecent'
     };
