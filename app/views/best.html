@@ -13,7 +13,7 @@
 <!--    <p>This page will help you determine what your best gear is.</p>-->
 <!--    <p>Tips:</p>-->
     <ul>
-      <li>Light level must be at least 285 for an accurate roll estimation.</li>
+      <li>Light level must be at least 280 for an accurate roll estimation.</li>
       <li>Items here scale their stats to what they would be at light level 335.</li>
       <li>The perks/bonus that increase int/dis/str are note included, only the base stats are shown.</li>
       <li>Prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
@@ -44,7 +44,7 @@
     </div>
     <div style='float:right;width:849px;margin-top:-4px;'>
       <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
-        <div ng-if="item.primStat.value >= 285" style='display: inline-block; padding: 3px 0 0 3px'>
+        <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
           <div style='display:inline-block;margin-bottom:20px;'>
             <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
   <!--            <small ng-bind="item.normalStats[$index].base"></small>-->

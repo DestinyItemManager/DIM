@@ -651,11 +651,12 @@
       });
     }
 
-
+    // thanks to bungie armory for the max-base stats
+    // thanks to /u/iihavetoes for rates + equation
     function getQualityRating(stats, light, type, who) {
       var maxLight = 335;
 
-      if(!stats || light.value < 285) {
+      if(!stats || light.value < 280) {
         return null;
       }
 
@@ -663,11 +664,11 @@
       switch(type.toLowerCase()) {
         case 'helmet':
           rate = 1/6;
-          split = 46;
+          split = 48;
           break;
         case 'gauntlets':
           rate = 1/6;
-          split = 41;
+          split = 43;
           break;
         case 'chest':
           rate = 1/5;
@@ -684,7 +685,7 @@
           break;
         case 'artifact':
           rate = 1/10;
-          split = 44.5;
+          split = 45;
           break;
         default:
           return;
@@ -696,8 +697,6 @@
       };
 
       stats.forEach(function(stat) {
-        // thanks to /u/iihavetoes for the rates + equation
-        // thanks to dasilva333 (tower ghost for destiny) for the max stat values
         var scaled = 0;
         if(stat.base) {
           scaled = Math.ceil(rate * (maxLight - light.value) + stat.base);
@@ -710,7 +709,9 @@
       return Math.round(ret.total / ret.max * 100);
     }
 
-    // from https://github.com/CVSPPF/Destiny/blob/master/DestinyArmor.py#L14
+    // thanks to /u/iihavetoes for the bonuses at each level
+    // thanks to /u/tehdaw for the spreadsheet with bonuses
+    // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
     function getBonus(light, type) {
       switch(type.toLowerCase()) {
         case 'helmet':
