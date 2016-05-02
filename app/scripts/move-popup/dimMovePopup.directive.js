@@ -102,10 +102,46 @@
       }
     };
 
+    function showTip() {
+      chrome.storage.sync.get('help.movebox', function(data) {
+        if(_.isNull(data) || _.isEmpty(data)) {
+          toaster.pop({
+            type: 'info',
+            title: 'Did you know?',
+            body: [
+              '<p>Items can be dragged and dropped between different characters/vault columns.</p>',
+              '<p>Try it out next time!<p>',
+              '<input style="margin-top: 1px; vertical-align: middle;" id="help-movebox" type="checkbox">',
+              '<label for="help-movebox">Don\'t show this tip again</label></p>'
+            ].join(''),
+            timeout: 0,
+            bodyOutputType: 'trustedHtml',
+            showCloseButton: true,
+            clickHandler: function(a, b, c, d, e, f, g) {
+              if(b) {
+                return true;
+              }
+              return false;
+            },
+            onHideCallback: function() {
+              if($('#help-movebox')
+                .is(':checked')) {
+                chrome.storage.sync.set({
+                  "help.movebox": 1
+                }, function(e) {});
+              }
+            }
+          });
+        }
+      });
+    }
+
     /**
      * Move the item to the specified store. Equip it if equip is true.
      */
     vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
+      showTip();
+
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
