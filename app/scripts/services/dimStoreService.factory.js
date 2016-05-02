@@ -716,7 +716,7 @@
       switch(type.toLowerCase()) {
         case 'helmet':
         case 'helmets':
-          return light < 291 ? 15 :
+          return light < 292 ? 15 :
                  light < 307 ? 16 :
                  light < 319 ? 17 :
                  light < 332 ? 18 : 19;
@@ -728,7 +728,7 @@
         case 'chest':
         case 'chest armor':
           return light < 287 ? 20 :
-                 light < 299 ? 21 :
+                 light < 300 ? 21 :
                  light < 310 ? 22 :
                  light < 319 ? 23 :
                  light < 328 ? 24 : 25;
@@ -738,7 +738,7 @@
                  light < 298 ? 19 :
                  light < 309 ? 20 :
                  light < 319 ? 21 :
-                 light < 239 ? 22 : 23;
+                 light < 329 ? 22 : 23;
         case 'classitem':
         case 'class items':
         case 'ghost':
@@ -753,8 +753,8 @@
                  light < 308 ? 37 :
                  light < 314 ? 38 :
                  light < 319 ? 39 :
-                 light < 235 ? 40 :
-                 light < 230 ? 41 : 42;
+                 light < 325 ? 40 :
+                 light < 330 ? 41 : 42;
       }
       console.warn('item bonus not found', type);
       return 0;
