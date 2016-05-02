@@ -29,6 +29,7 @@
         "    'complete': vm.item.complete",
         '  }">',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ng-if="vm.itemQuality && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
@@ -63,6 +64,12 @@
           }
         });
       }
+
+
+      vm.getColor = function(value) {
+        value = value - 75 < 0 ? 0 : value - 75;
+        return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
+      };
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -126,6 +133,7 @@
         scope.$watchGroup([
           'vm.item.primStat.value',
           'vm.itemStat',
+          'vm.itemQuality',
           'vm.item.sort'], function() {
             processItem(vm, vm.item);
           });
@@ -136,6 +144,9 @@
   function processSettings(vm, settings) {
     if (_.has(settings, 'itemStat')) {
       vm.itemStat = settings.itemStat;
+    }
+    if (_.has(settings, 'itemQuality')) {
+      vm.itemQuality = settings.itemQuality;
     }
   }
 
@@ -177,10 +188,15 @@
       vm.badgeClassNames['item-stat'] = true;
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
+      vm.quality = item.quality;
     } else if (showDamageType) {
       vm.badgeClassNames['damage-' + item.dmg] = true;
       vm.badgeClassNames['damage-type'] = true;
       vm.badgeCount = '';
+    }
+
+    if(vm.itemQuality && vm.quality > 0) {
+      vm.badgeClassNames['item-stat-no-bg'] = true;
     }
   }
 
@@ -190,6 +206,7 @@
     var vm = this;
 
     vm.itemStat = false;
+    vm.itemQuality = false;
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
     switch (vm.item.type) {
     case 'Lost Items':

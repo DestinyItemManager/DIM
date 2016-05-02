@@ -44,7 +44,7 @@
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
         '    <div class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
-        '       <span class="stat-box-outer">',
+        '       <span class="stat-box-outer" ng-class="{ \'show-quality\': vm.itemQuality }">',
         '         <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
         '         <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
         '         <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" style="width: {{ 100 * (stat.equippedStatsValue - stat.value) / stat.maximumValue }}%"></span>',
@@ -53,8 +53,13 @@
 
         '         <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '       </span>',
-        '         <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
+        '       <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
+        '       <span ng-show="vm.itemQuality && stat.scaled > 0" class="stat-box-val" ng-class="{ \'show-quality\': vm.itemQuality && stat.scaled > 0  }" ng-show="{{ stat.bar }}" style="color: {{ vm.getColor(vm.getPercent(stat.scaled,stat.split)) }}">({{ vm.getPercent(stat.scaled,stat.split) }}%)</span>',
         '    </div>',
+        '  </div>',
+        '  <div ng-if="vm.item.quality !== null && vm.item.quality >= 0" class="stat-box-row">',
+        '    <span class="stat-box-text">Stats quality</span>',
+        '    <span class="stat-box-val" style="width:50%;color:{{ vm.getColor(vm.item.quality) }}">{{ vm.item.quality }}% of max possible roll</span>',
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
@@ -89,6 +94,15 @@
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
     });
+
+    vm.getPercent = function(top, bottom) {
+      return Math.round(top/bottom*100);
+    };
+
+    vm.getColor = function(value) {
+      value = value - 75 < 0 ? 0 : value - 75;
+      return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
+    };
 
     vm.setLockState = function setLockState(item) {
       if (vm.locking) {
@@ -129,6 +143,11 @@
     settings.getSetting('itemDetails')
       .then(function(show) {
         vm.itemDetails = vm.itemDetails || show;
+      });
+    vm.itemQuality = false;
+    settings.getSetting('itemQuality')
+      .then(function(show) {
+        vm.itemQuality = vm.itemQuality || show;
       });
 
     if (vm.item.primStat) {

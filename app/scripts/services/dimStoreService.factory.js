@@ -84,6 +84,8 @@
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
+      getStatsData: getStatsData,
+      getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       setHeights: setHeightsAsync,
@@ -477,20 +479,24 @@
       createdItem.index = createItemIndex(createdItem);
 
       try {
-        createdItem.stats = buildStats(item, itemDef, statDef);
-      } catch(e) {
-        console.error("Error building stats for " + createdItem.name, item, itemDef);
-      }
-      try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
-
       } catch(e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
+      } catch(e) {
+        console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
       } catch(e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType, itemDef.itemName);
+      } catch(e) {
+        console.error("Error building quality rating for " + createdItem.name, item, itemDef);
       }
 
       // More objectives properties
@@ -502,6 +508,10 @@
       } else if (createdItem.talentGrid) {
         createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
       }
+
+//      if(createdItem.hash === 2150667281) {
+//      console.log(createdItem)
+//      }
 
       return createdItem;
     }
@@ -573,6 +583,7 @@
         // There's a lot more here, but we're taking just what we need
         return {
           name: nodeName,
+          hash: talentNodeSelected.nodeStepHash,
           description: talentNodeSelected.nodeStepDescription,
           icon: talentNodeSelected.icon,
           // XP put into this node
@@ -662,10 +673,132 @@
       });
     }
 
-    function buildStats(item, itemDef, statDef) {
+    // thanks to bungie armory for the max-base stats
+    // thanks to /u/iihavetoes for rates + equation
+    // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    function getQualityRating(stats, light, type, who) {
+      var maxLight = 335;
+
+      if(!stats || light.value < 280) {
+        return null;
+      }
+
+      var split = 0, rate = 0;
+      switch(type.toLowerCase()) {
+        case 'helmet':
+          rate = 1/6;
+          split = 46; // bungie reports 48, but i've only seen 46
+          break;
+        case 'gauntlets':
+          rate = 1/6;
+          split = 41; // bungie reports 43, but i've only seen 41
+          break;
+        case 'chest':
+          rate = 1/5;
+          split = 61;
+          break;
+        case 'leg':
+          rate = 1/5;
+          split = 56;
+          break;
+        case 'classitem':
+        case 'ghost':
+          rate = 1/10;
+          split = 25;
+          break;
+        case 'artifact':
+          rate = 1/10;
+          split = 45;
+          break;
+        default:
+          return;
+      }
+
+      var ret = {
+        total: 0,
+        max: split*2
+      };
+
+      stats.forEach(function(stat) {
+        var scaled = 0;
+        if(stat.base) {
+          scaled = Math.round(rate * (maxLight - light.value) + stat.base);
+        }
+        stat.scaled = scaled;
+        stat.split = split;
+        ret.total += scaled || 0;
+      });
+
+      return Math.round(ret.total / ret.max * 100);
+    }
+
+    // thanks to /u/iihavetoes for the bonuses at each level
+    // thanks to /u/tehdaw for the spreadsheet with bonuses
+    // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
+    function getBonus(light, type) {
+      switch(type.toLowerCase()) {
+        case 'helmet':
+        case 'helmets':
+          return light < 292 ? 15 :
+                 light < 307 ? 16 :
+                 light < 319 ? 17 :
+                 light < 332 ? 18 : 19;
+        case 'gauntlets':
+          return light < 287 ? 13 :
+                 light < 305 ? 14 :
+                 light < 319 ? 15 :
+                 light < 333 ? 16 : 17;
+        case 'chest':
+        case 'chest armor':
+          return light < 287 ? 20 :
+                 light < 300 ? 21 :
+                 light < 310 ? 22 :
+                 light < 319 ? 23 :
+                 light < 328 ? 24 : 25;
+        case 'leg':
+        case 'leg armor':
+          return light < 284 ? 18 :
+                 light < 298 ? 19 :
+                 light < 309 ? 20 :
+                 light < 319 ? 21 :
+                 light < 329 ? 22 : 23;
+        case 'classitem':
+        case 'class items':
+        case 'ghost':
+        case 'ghosts':
+          return light < 295 ? 8 :
+                 light < 319 ? 9 : 10;
+        case 'artifact':
+        case 'artifacts':
+          return light < 287 ? 34 :
+                 light < 295 ? 35 :
+                 light < 302 ? 36 :
+                 light < 308 ? 37 :
+                 light < 314 ? 38 :
+                 light < 319 ? 39 :
+                 light < 325 ? 40 :
+                 light < 330 ? 41 : 42;
+      }
+      console.warn('item bonus not found', type);
+      return 0;
+    }
+
+    function buildStats(item, itemDef, statDef, grid, type) {
       if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
+
+      var armorNodes = [];
+      var activeArmorNode;
+      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+        armorNodes = _.filter(grid.nodes, function(node) {
+          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
+        });
+        if (armorNodes) {
+          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || { hash: 0 };
+        }
+      }
+
       return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
         var def = statDef[stat.statHash];
         if (!def) {
@@ -703,10 +836,32 @@
           maximumValue = itemStat.maximumValue;
         }
 
+        var val = itemStat ? itemStat.value : stat.value;
+        var base = val;
+        var bonus = 0;
+
+        if (item.primaryStat.statHash === 3897883278) {
+          if ((name === 'Intellect' && _.find(armorNodes, { name: 'Increase Intellect' })) ||
+             (name === 'Discipline' && _.find(armorNodes, { name: 'Increase Discipline' })) ||
+             (name === 'Strength' && _.find(armorNodes, { name: 'Increase Strength' }))) {
+            bonus = getBonus(item.primaryStat.value, type);
+
+            if (activeArmorNode &&
+               (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
+               (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
+               (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
+              base = Math.max(0, val - bonus);
+            }
+          }
+        }
+
         return {
+          base: base,
+          bonus: bonus,
+          statHash: stat.statHash,
           name: name,
           sort: sort,
-          value: itemStat ? itemStat.value : stat.value,
+          value: val,
           maximumValue: maximumValue,
           bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
         };
@@ -1059,6 +1214,9 @@
           case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
           case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
+        if(!data.stats[stats[s]]) {
+          continue;
+        }
         statHash.value = data.stats[stats[s]].value;
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {
@@ -1069,7 +1227,9 @@
           for (var t = 0; t < 5; t++) {
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
-          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          if(data.peerView) {
+            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          }
           statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
         } else {
           statHash.percentage = +(100 * statHash.value / 10).toFixed();

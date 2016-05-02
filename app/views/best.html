@@ -1,0 +1,53 @@
+<div ng-controller="dimMinMaxCtrl as normal" style="min-width:900px">
+  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
+  <h1>Armor Comparison</h1>
+
+<!--  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'>-->
+<!--    <span ng-show='normal.doNormalize'>Estimate stats at light level <input style='width:35px;padding-left:5px;border:none' type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></span>-->
+<!--  </p>-->
+
+  <ul>
+    <li>Light level must be at least 280 for an accurate roll estimation.</li>
+    <li>Stats on this page are scaled to what they would be at light level 335.</li>
+    <li>The perks/bonuses that increase int/dis/str are not included, only the base stats are shown.</li>
+    <li>Prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
+    <li>Split stat rolls are better than single stat rolled items.</li>
+    <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
+  </ul>
+
+  <p>Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
+    <option value='titan'>Titan</option>
+    <option value='hunter'>Hunter</option>
+    <option value='warlock'>Warlock</option>
+  </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
+    <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
+  </p>
+
+<!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
+<!--    <h3 ng-bind="type"></h3>-->
+    <div style='float:left'>
+      <div><small>Intellect</small></div>
+      <div><small>Discipline</small></div>
+      <div><small>Strength</small></div>
+    </div>
+    <div style='float:right;width:849px;margin-top:-4px;'>
+      <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
+        <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
+          <div style='display:inline-block;margin-bottom:20px;'>
+            <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
+  <!--            <small ng-bind="item.normalStats[$index].base"></small>-->
+              <small ng-if="item.normalStats[$index].scaled === 0">-</small>
+              <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
+            </div>
+          </div>
+          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
+  <!--
+          <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
+            <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
+          </div>
+  -->
+        </div>
+      </span>
+    </div>
+<!--  </div>-->
+</div>

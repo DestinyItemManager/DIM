@@ -74,8 +74,8 @@
         $rootScope.trackActivity();
 
         dimInfoService.show('20160411v35', {
-          title: 'DIM v3.5.4 Released',
-          view: 'views/changelog-toaster.html?v=v3.5.4',
+          title: 'DIM v3.5.5 Released',
+          view: 'views/changelog-toaster.html?v=v3.5.5',
         });
       }
     ]);
@@ -112,6 +112,9 @@
         .state('inventory', {
           url: "/inventory",
           templateUrl: "views/inventory.html"
+        }).state('best', {
+          url: "/best",
+          templateUrl: "views/best.html"
         });
     });
 })();
