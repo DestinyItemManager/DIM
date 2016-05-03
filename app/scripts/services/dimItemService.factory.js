@@ -470,10 +470,10 @@
 
       function canEquip(item, store) {
         return $q(function(resolve, reject) {
-          if (item.classTypeName === 'unknown' || item.classTypeName === store.class) {
+          if (item.canBeEquippedBy(store)) {
             resolve(true);
           } else {
-            reject(new Error("This can only be equipped on " + item.classTypeName + "s."));
+            reject(new Error("This can only be equipped on " + item.classTypeName + "s at or above level " + item.equipRequiredLevel + "."));
           }
         });
       }
