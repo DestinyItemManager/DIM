@@ -149,14 +149,6 @@
       // Find an item in store like "item", excluding the exclusions, to be equipped
       // on target.
       function searchForSimilarItem(item, store, exclusions, target) {
-        var sortType = {
-          Legendary: 0,
-          Rare: 1,
-          Uncommon: 2,
-          Common: 3,
-          Exotic: 4
-        };
-
         exclusions = exclusions || [];
 
         var result = _.chain(store.items)
@@ -169,10 +161,19 @@
               // Not on the exclusion list
               !_.any(exclusions, { id: i.id, hash: i.hash });
           })
-          .sortBy(function(i) {
-            return sortType[i.tier];
+          .max(function(i) {
+            var value = {
+              Legendary: 4,
+              Rare: 3,
+              Uncommon: 2,
+              Common: 1,
+              Exotic: 0
+            }[i.tier];
+            if (i.primStat) {
+              value += i.primStat.value / 1000.0;
+            }
+            return value;
           })
-          .first()
           .value();
 
         if (result && result.tier === dimItemTier.exotic) {
