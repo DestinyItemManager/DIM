@@ -7,6 +7,7 @@
 * Elder's Sigil won't go above 100% completion for the score portion anymore.
 * Added roll quality percentage indicator. You can now see how your intellect/discipline/strength stacks up against the maximum stat roll for your armor.
 * DIM is smarter about what items it chooses to move aside, or to equip in the place of a dequipped item.
+* Added a new "Gather Engrams" loadout that will pull all engrams to your character.
 
 # 3.5.4
 

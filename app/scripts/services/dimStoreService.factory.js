@@ -77,6 +77,9 @@
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
           this.sort !== 'Postmaster';
+      },
+      isEngram: function() {
+        return !this.equipment && this.name.toLowerCase().indexOf('engram') >= 0;
       }
     };
 
