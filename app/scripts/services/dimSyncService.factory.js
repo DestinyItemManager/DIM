@@ -31,7 +31,7 @@
     }
 
     // load the file from google drive
-    function getFileId(token) {
+    function getFileId() {
       // if we already have the fileId, just return.
       if (fileId) {
         return $q.resolve();
@@ -48,7 +48,7 @@
           if (list.code === 401) {
             alert('To re-authorize google drive, must restart your browser.')
             deferred.resolve();
-            return;
+            return deferred.promise;
           }
 
           // look for the saved file.
@@ -59,7 +59,7 @@
                 set(data, true);
                 deferred.resolve()
               });
-              return;
+              return deferred.promise;
             }
           }
 
@@ -137,13 +137,13 @@
       //      }
 
       // use replace to override the data. normally we're doing a PATCH
-      if (!PUT) { // update our data 
-       if(cached){ 
+      if (!PUT) { // update our data
+       if(cached){
         angular.extend(cached, value);
        }
        else{
         cached = value;
-       }        
+       }
       } else {
         cached = value;
       }
@@ -171,6 +171,8 @@
       //     }
       //   });
       // }
+
+      fileId = cached.fileId;
 
       // save to google drive
       if (fileId) {
@@ -210,11 +212,11 @@
               'fileId': fileId,
               'alt': 'media'
             }).execute(function(resp) {
-              if (resp.code === 401) {
+              if(resp.code === 401 || resp.code === 404) {
                 revokeDrive();
                 return;
               }
-              console.log('loaded from google drive.');
+              console.log('loaded from google drive.', resp);
               cached = resp;
               deferred.resolve(cached);
               return;
@@ -235,11 +237,11 @@
       //     deferred.resolve(cached);
       //     console.log('loaded from chrome local', cached);
       //   });
-      // } 
+      // }
 
       // otherwise, just use local storage
       else {
-        console.log('using local storage')       
+        console.log('using local storage')
         deferred.resolve(cached);
       }
 
@@ -255,7 +257,7 @@
 
       // sync to data storage
       set(cached, true);
-      console.log('removed key:', key, cached);
+      console.log('removed key:', key);
     }
 
     return {

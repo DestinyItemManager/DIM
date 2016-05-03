@@ -75,6 +75,9 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
+        $window.initgapi = function() {
+          SyncService.init();
+        }
         SyncService.get()
           .then(function(data) {
             if (data) {
