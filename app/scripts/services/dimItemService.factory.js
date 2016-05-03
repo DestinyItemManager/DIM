@@ -353,6 +353,10 @@
             Legendary: 3,
             Exotic: 4
           }[i.tier];
+          // Prefer things this character can use
+          if (!store.isVault && i.canBeEquippedBy(store)) {
+            value += 5;
+          }
           // And low-stat
           if (i.primStat) {
             value += i.primStat.value / 1000.0;
