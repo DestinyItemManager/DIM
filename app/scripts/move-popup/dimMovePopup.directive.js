@@ -19,8 +19,8 @@
       replace: true,
       template: [
         '<div class="move-popup" alt="" title="">',
-        '  <div dim-move-item-properties="vm.item"></div>',
-        '  <dim-move-amount ng-if="vm.item.amount > 1" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
+        '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
         '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
@@ -47,15 +47,16 @@
         '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
         '      <span>Split</span>',
         '    </div>',
+        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
         '  </div>',
         '</div>'
       ].join('')
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService) {
     var vm = this;
 
     // TODO: cache this, instead?
@@ -71,6 +72,28 @@
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    /*
+    * Open up the dialog for infusion by passing
+    * the selected item
+    */
+    vm.infuse = function infuse(item, e) {
+      if (item.sort === 'Postmaster') {
+        return;
+      }
+      e.stopPropagation();
+
+      // Close the move-popup
+      $scope.$parent.closeThisDialog();
+
+      // Open the infuse window
+      ngDialog.open({
+        template: 'views/infuse.html',
+        className: 'app-settings',
+        data: item,
+        scope: $('#infuseDialog').scope()
+      });
+    };
+
     vm.characterInfo = function characterInfo(store) {
       if (store.isVault) {
         return 'Vault';
@@ -83,6 +106,13 @@
      * Move the item to the specified store. Equip it if equip is true.
      */
     vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
+      dimInfoService.show('movebox', {
+        title: 'Did you know?',
+        body: ['<p>Items can be dragged and dropped between different characters/vault columns.</p>',
+               '<p>Try it out next time!<p>'].join(''),
+        hide: 'Don\'t show this tip again'
+      });
+
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
@@ -136,7 +166,13 @@
 
       promise = promise.then(function() {
         dimStoreService.setHeights();
-        toaster.pop('success', 'Consolidated ' + vm.item.name, 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".");
+        var message;
+        if (vm.store.isVault) {
+          message = 'All ' + vm.item.name + ' is now in your vault.';
+        } else {
+          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".";
+        }
+        toaster.pop('success', 'Consolidated ' + vm.item.name, message);
       })
       .catch(function(a) {
         toaster.pop('error', vm.item.name, a.message);

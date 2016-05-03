@@ -40,9 +40,9 @@
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
         if (!item.bucket) {
-          throw new Error("item needs a 'bucket' field");
+          console.error("item needs a 'bucket' field", item);
         }
-        return bucketSizes[item.bucket];
+        return bucketSizes[item.bucket] || 10;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
@@ -61,10 +61,34 @@
       }
     };
 
+    // Prototype for Item objects - add methods to this to add them to all
+    // items.
+    var ItemProto = {
+      // Can this item be equipped by the current store?
+      canBeEquippedBy: function(store) {
+        if (store.isVault) {
+          return false;
+        }
+        return this.equipment &&
+          // For the right class
+          (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+          // nothing we are too low-level to equip
+          this.equipRequiredLevel <= store.level &&
+          // can be moved or is already here
+          (!this.notransfer || this.owner === store.id) &&
+          this.sort !== 'Postmaster';
+      },
+      isEngram: function() {
+        return !this.equipment && this.name.toLowerCase().indexOf('engram') >= 0;
+      }
+    };
+
     var service = {
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
+      getStatsData: getStatsData,
+      getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       setHeights: setHeightsAsync,
@@ -211,7 +235,7 @@
             var store;
             var items = [];
             if (!raw) {
-              return;
+              return undefined;
             }
 
             if (raw.id === 'vault') {
@@ -344,36 +368,58 @@
     function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
-      if (itemDef === undefined || itemDef.itemName === 'Classified') {
+      if (!itemDef || itemDef.itemName === 'Classified') {
         // maybe it is classified...
         itemDef = {
           classified: true,
           icon: '/img/misc/missing_icon.png'
         };
 
+        if (item.itemHash === 194424271) {
+          itemType = 'Armor Shader';
+          itemDef.bucketTypeHash = 2973005342;
+          itemDef.classType = 3;
+          itemDef.itemTypeName = 'Armor Shader';
+          itemDef.description = '';
+          itemDef.itemName = 'Walkabout - Classified';
+          itemDef.nonTransferrable = true;
+          itemDef.equipRequiredLevel = 0;
+          itemDef.equipment = true;
+          item.isEquipment = true;
+        }
+
+        if (item.itemHash === 1963806104) {
+          itemType = 'Mystery Bag';
+          itemDef.bucketTypeHash = 1469714392;
+          itemDef.icon = "/common/destiny_content/icons/3651da8a8b0add3161e840c7104078ed.jpg";
+          itemDef.classType = 3;
+          itemDef.itemTypeName = itemType;
+          itemDef.description = "Contains 1 Guaranteed Item and up to 4 Possible Items. This item is nonreturnable.";
+          itemDef.itemName = "Sterling Treasure";
+          itemDef.maxStackSize = 99;
+          itemDef.nonTransferrable = true;
+          itemDef.equipRequiredLevel = 0;
+          itemDef.equipment = false;
+          item.isEquipment = false;
+        }
+
         // unidentified item.
-        if(!itemDef.itemName) {
+        if (!itemDef.itemName) {
           console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
           window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
         }
       }
 
-      if (_.isUndefined(itemDef.itemTypeName) || _.isUndefined(itemDef.itemName)) {
+      if (!itemDef.itemTypeName || !itemDef.itemName) {
         return null;
       }
 
       var itemType = getItemType(item, itemDef, itemBucketDef);
-
-      if (item.itemHash === 937555249) {
-        itemType = "Material";
-      }
-
-      var weaponClass = null, weaponClassName = null;
-
-
       if (!itemType) {
         return null;
       }
+
+      var weaponClass = null, weaponClassName = null;
 
       if (itemType.hasOwnProperty('general') && itemType.general !== '') {
         weaponClass = itemType.weaponClass;
@@ -382,8 +428,7 @@
       }
 
       var itemSort = sortItem(itemDef.itemTypeName);
-
-      if (_.isUndefined(itemSort)) {
+      if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
       }
 
@@ -400,29 +445,27 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      var createdItem = {
+      var createdItem = angular.extend(Object.create(ItemProto), {
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
-        tier: (!_.isUndefined(itemDef.tierTypeName) ? itemDef.tierTypeName : 'Common'),
+        tier: itemDef.tierTypeName || 'Common',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (itemSort !== 'Postmaster') ? itemDef.nonTransferrable : true,
+        notransfer: (itemSort === 'Postmaster' || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
+        percentComplete: null,
         amount: item.stackSize,
         primStat: item.primaryStat,
-        stats: buildStats(item, itemDef, statDef),
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
-        talentGrid: buildTalentGrid(item, talentDefs, progressDefs, perkDefs),
-        objectives: buildObjectives(item, objectiveDef, itemDef),
         maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
@@ -435,16 +478,43 @@
         weaponClass: weaponClass || '',
         weaponClassName: weaponClassName,
         classified: itemDef.classified
-      };
+      });
       createdItem.index = createItemIndex(createdItem);
+
+      try {
+        createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
+      } catch(e) {
+        console.error("Error building talent grid for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
+      } catch(e) {
+        console.error("Error building stats for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
+      } catch(e) {
+        console.error("Error building objectives for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType, itemDef.itemName);
+      } catch(e) {
+        console.error("Error building quality rating for " + createdItem.name, item, itemDef);
+      }
 
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.xpComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
-          return (objective.progress / objective.completionValue) / createdItem.objectives.length;
+        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
         }));
+      } else if (createdItem.talentGrid) {
+        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
       }
+
+//      if(createdItem.hash === 2150667281) {
+//      console.log(createdItem)
+//      }
 
       return createdItem;
     }
@@ -516,6 +586,7 @@
         // There's a lot more here, but we're taking just what we need
         return {
           name: nodeName,
+          hash: talentNodeSelected.nodeStepHash,
           description: talentNodeSelected.nodeStepDescription,
           icon: talentNodeSelected.icon,
           // XP put into this node
@@ -605,12 +676,145 @@
       });
     }
 
-    function buildStats(item, itemDef, statDef) {
-      if (!item.stats || !item.stats.length) {
+    // thanks to bungie armory for the max-base stats
+    // thanks to /u/iihavetoes for rates + equation
+    // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    function getQualityRating(stats, light, type, who) {
+      var maxLight = 335;
+
+      if(!stats || light.value < 280) {
+        return null;
+      }
+
+      var split = 0, rate = 0;
+      switch(type.toLowerCase()) {
+        case 'helmet':
+          rate = 1/6;
+          split = 46; // bungie reports 48, but i've only seen 46
+          break;
+        case 'gauntlets':
+          rate = 1/6;
+          split = 41; // bungie reports 43, but i've only seen 41
+          break;
+        case 'chest':
+          rate = 1/5;
+          split = 61;
+          break;
+        case 'leg':
+          rate = 1/5;
+          split = 56;
+          break;
+        case 'classitem':
+        case 'ghost':
+          rate = 1/10;
+          split = 25;
+          break;
+        case 'artifact':
+          rate = 1/10;
+          split = 45;
+          break;
+        default:
+          return;
+      }
+
+      var ret = {
+        total: 0,
+        max: split*2
+      };
+
+      var pure = 0;
+      stats.forEach(function(stat) {
+        var scaled = 0;
+        if(stat.base) {
+          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
+          pure = scaled;
+        }
+        stat.scaled = scaled;
+        stat.split = split;
+        ret.total += scaled || 0;
+      });
+      if(pure === ret.total) {
+        stats.forEach(function(stat) {
+          stat.scaled = Math.floor(stat.scaled/2);
+        });
+      }
+
+      return Math.round(ret.total / ret.max * 100);
+    }
+
+    // thanks to /u/iihavetoes for the bonuses at each level
+    // thanks to /u/tehdaw for the spreadsheet with bonuses
+    // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
+    function getBonus(light, type) {
+      switch(type.toLowerCase()) {
+        case 'helmet':
+        case 'helmets':
+          return light < 292 ? 15 :
+                 light < 307 ? 16 :
+                 light < 319 ? 17 :
+                 light < 332 ? 18 : 19;
+        case 'gauntlets':
+          return light < 287 ? 13 :
+                 light < 305 ? 14 :
+                 light < 319 ? 15 :
+                 light < 333 ? 16 : 17;
+        case 'chest':
+        case 'chest armor':
+          return light < 287 ? 20 :
+                 light < 300 ? 21 :
+                 light < 310 ? 22 :
+                 light < 319 ? 23 :
+                 light < 328 ? 24 : 25;
+        case 'leg':
+        case 'leg armor':
+          return light < 284 ? 18 :
+                 light < 298 ? 19 :
+                 light < 309 ? 20 :
+                 light < 319 ? 21 :
+                 light < 329 ? 22 : 23;
+        case 'classitem':
+        case 'class items':
+        case 'ghost':
+        case 'ghosts':
+          return light < 295 ? 8 :
+                 light < 319 ? 9 : 10;
+        case 'artifact':
+        case 'artifacts':
+          return light < 287 ? 34 :
+                 light < 295 ? 35 :
+                 light < 302 ? 36 :
+                 light < 308 ? 37 :
+                 light < 314 ? 38 :
+                 light < 319 ? 39 :
+                 light < 325 ? 40 :
+                 light < 330 ? 41 : 42;
+      }
+      console.warn('item bonus not found', type);
+      return 0;
+    }
+
+    function buildStats(item, itemDef, statDef, grid, type) {
+      if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
+
+      var armorNodes = [];
+      var activeArmorNode;
+      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+        armorNodes = _.filter(grid.nodes, function(node) {
+          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
+        });
+        if (armorNodes) {
+          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || { hash: 0 };
+        }
+      }
+
       return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
         var def = statDef[stat.statHash];
+        if (!def) {
+          return undefined;
+        }
+
         var name = def.statName;
         if (name === 'Aim assistance') {
           name = 'Aim Assist';
@@ -642,10 +846,32 @@
           maximumValue = itemStat.maximumValue;
         }
 
+        var val = itemStat ? itemStat.value : stat.value;
+        var base = val;
+        var bonus = 0;
+
+        if (item.primaryStat.statHash === 3897883278) {
+          if ((name === 'Intellect' && _.find(armorNodes, { name: 'Increase Intellect' })) ||
+             (name === 'Discipline' && _.find(armorNodes, { name: 'Increase Discipline' })) ||
+             (name === 'Strength' && _.find(armorNodes, { name: 'Increase Strength' }))) {
+            bonus = getBonus(item.primaryStat.value, type);
+
+            if (activeArmorNode &&
+               (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
+               (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
+               (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
+              base = Math.max(0, val - bonus);
+            }
+          }
+        }
+
         return {
+          base: base,
+          bonus: bonus,
+          statHash: stat.statHash,
           name: name,
           sort: sort,
-          value: itemStat ? itemStat.value : stat.value,
+          value: val,
           maximumValue: maximumValue,
           bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
         };
@@ -666,7 +892,12 @@
         .then(function(args) {
           var result = [];
           _.each(items, function (item) {
-            var createdItem = processSingleItem.apply(undefined, args.concat(item));
+            var createdItem = null;
+            try {
+              createdItem = processSingleItem.apply(undefined, args.concat(item));
+            } catch(e) {
+              console.error("Error processing item", item, e);
+            }
             if (createdItem !== null) {
               createdItem.owner = owner;
               result.push(createdItem);
@@ -732,8 +963,17 @@
       var currentBucket = buckets[item.bucket];
 
       // TODO: time to dig through this code
-      if (currentBucket.bucketName === 'Messages') {
+      if (currentBucket && currentBucket.bucketName === 'Messages') {
         return 'Messages';
+      }
+
+      if (name == 'SRL Record Book') {
+        return 'Missions';
+      }
+
+      // File "Mote of Light" under "Material"
+      if (item.itemHash === 937555249) {
+        return 'Material';
       }
 
       if (def.bucketTypeHash === 3621873013) {
@@ -743,6 +983,14 @@
       if (def.bucketTypeHash === 2422292810) {
         if (item.location !== 4)
           return null;
+      }
+
+      if (type.indexOf('Mystery Bag') != -1) {
+        return 'Consumable';
+      }
+
+      if (type.indexOf('Junk') != -1) {
+        return 'Consumable';
       }
 
       if (def.bucketTypeHash === 375726501) {
@@ -899,6 +1147,10 @@
         }
       }
 
+      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
+        return "Consumable";
+      }
+
       if (typeObj.general !== '') {
         return typeObj;
       }
@@ -907,7 +1159,7 @@
         return "Messages";
       }
 
-      if (["Vehicle Upgrade"].indexOf(type) != -1) {
+      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
         return "Consumable";
       }
 
@@ -972,6 +1224,9 @@
           case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
           case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
+        if(!data.stats[stats[s]]) {
+          continue;
+        }
         statHash.value = data.stats[stats[s]].value;
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {
@@ -982,7 +1237,9 @@
           for (var t = 0; t < 5; t++) {
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
-          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          if(data.peerView) {
+            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          }
           statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
         } else {
           statHash.percentage = +(100 * statHash.value / 10).toFixed();

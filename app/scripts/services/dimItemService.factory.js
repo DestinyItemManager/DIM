@@ -126,13 +126,9 @@
       }
 
       function getSimilarItem(item, exclusions) {
-        var stores = dimStoreService.getStores();
-        var result = null;
-        var source = _.find(stores, function(i) {
-          return i.id === item.owner;
-        });
-        var sortedStores = _.sortBy(stores, function(store) {
-          if (source.id === store.id) {
+        var target = dimStoreService.getStore(item.owner);
+        var sortedStores = _.sortBy(dimStoreService.getStores(), function(store) {
+          if (target.id === store.id) {
             return 0;
           } else if (store.isVault) {
             return 1;
@@ -141,41 +137,43 @@
           }
         });
 
+        var result = null;
         sortedStores.find(function(store) {
-          result = searchForSimilarItem(item, store);
+          result = searchForSimilarItem(item, store, exclusions, target);
           return result !== null;
         });
 
         return result;
       }
 
-      function searchForSimilarItem(item, store, exclusions) {
-        var sortType = {
-          Legendary: 0,
-          Rare: 1,
-          Uncommon: 2,
-          Common: 3,
-          Exotic: 5
-        };
-
+      // Find an item in store like "item", excluding the exclusions, to be equipped
+      // on target.
+      function searchForSimilarItem(item, store, exclusions, target) {
         exclusions = exclusions || [];
 
         var result = _.chain(store.items)
           .filter(function(i) {
-            return i.equipment &&
+            return i.canBeEquippedBy(target) &&
               i.type === item.type &&
               !i.equipped &&
-              // Compatible with this class
-              (i.classTypeName === 'unknown' || i.classTypeName === store.class) &&
               // Not the same item
               i.id !== item.id &&
               // Not on the exclusion list
               !_.any(exclusions, { id: i.id, hash: i.hash });
           })
-          .sortBy(function(i) {
-            return sortType[i.tier];
+          .max(function(i) {
+            var value = {
+              Legendary: 4,
+              Rare: 3,
+              Uncommon: 2,
+              Common: 1,
+              Exotic: 0
+            }[i.tier];
+            if (i.primStat) {
+              value += i.primStat.value / 1000.0;
+            }
+            return value;
           })
-          .first()
           .value();
 
         if (result && result.tier === dimItemTier.exotic) {
@@ -193,7 +191,7 @@
         }
 
 
-        return (result) ? result : null;
+        return result || null;
       }
 
       // Bulk equip items. Only use for multiple equips at once.
@@ -215,48 +213,18 @@
       }
 
       function dequipItem(item) {
-        var scope = {
-          source: null,
-          target: null,
-          similarItem: null
-        };
-
-        var updateEquipped;
-
         var similarItem = getSimilarItem(item);
-        scope.similarItem = similarItem;
-        scope.source = dimStoreService.getStore(item.owner);
-        scope.target = dimStoreService.getStore(scope.similarItem.owner);
+        var source = dimStoreService.getStore(item.owner);
+        var target = dimStoreService.getStore(similarItem.owner);
 
         var p = $q.when();
-        if (scope.source.id !== scope.target.id) {
-          var vault;
-
-          if (scope.similarItem.owner !== 'vault') {
-            vault = dimStoreService.getVault();
-            p = dimBungieService.transfer(scope.similarItem, vault)
-              .then(function() {
-                return updateItemModel(scope.similarItem, vault, scope.source, false);
-              });
-          }
-
-          return p.then(function() {
-            return dimBungieService.transfer(scope.similarItem, scope.source);
-          })
-            .then(function() {
-              return updateItemModel(scope.similarItem, (vault) ? vault : scope.target, scope.source, false);
-            });
+        if (source.id !== target.id) {
+          p = moveTo(similarItem, source, true);
         }
 
         return p.then(function() {
-            return equipItem(scope.similarItem);
-          })
-          .then(function() {
-            return updateItemModel(scope.similarItem, scope.source, scope.source, true);
-          })
-          .catch(function(e) {
-            return $q.reject(e);
-          });
+          return equipItem(similarItem);
+        });
       }
 
       function moveToVault(item, amount) {
@@ -264,14 +232,10 @@
       }
 
       function moveToStore(item, store, equip, amount) {
-        var scope = {
-          source: dimStoreService.getStore(item.owner),
-          target: store
-        };
-
-        return dimBungieService.transfer(item, scope.target, amount)
+        return dimBungieService.transfer(item, store, amount)
           .then(function() {
-            var newItem = updateItemModel(item, scope.source, scope.target, false, amount);
+            var source = dimStoreService.getStore(item.owner);
+            var newItem = updateItemModel(item, source, store, false, amount);
             if ((newItem.owner !== 'vault') && equip) {
               return equipItem(newItem);
             } else {
@@ -370,7 +334,7 @@
         });
 
         if (moveAsideCandidates.length === 0) {
-          return $q.reject(new Error("There's nothing we can move aside to make room for " + item.name));
+          throw new Error("There's nothing we can move aside to make room for " + item.name);
         }
 
         // For the vault, try to move the highest-value item to a character. For a
@@ -389,6 +353,10 @@
             Legendary: 3,
             Exotic: 4
           }[i.tier];
+          // Prefer things this character can use
+          if (!store.isVault && i.canBeEquippedBy(store)) {
+            value += 5;
+          }
           // And low-stat
           if (i.primStat) {
             value += i.primStat.value / 1000.0;
@@ -502,10 +470,10 @@
 
       function canEquip(item, store) {
         return $q(function(resolve, reject) {
-          if (item.classTypeName === 'unknown' || item.classTypeName === store.class) {
+          if (item.canBeEquippedBy(store)) {
             resolve(true);
           } else {
-            reject(new Error("This can only be equipped on " + item.classTypeName + "s."));
+            reject(new Error("This can only be equipped on " + item.classTypeName + "s at or above level " + item.equipRequiredLevel + "."));
           }
         });
       }
@@ -609,7 +577,7 @@
 
       function getItem(params, store) {
         var items = store ? store.items : getItems();
-        return _.findWhere(items, { id: params.id, hash: params.hash, notransfer: params.notransfer || false });
+        return _.findWhere(items, _.pick(params, 'id', 'hash', 'notransfer'));
       }
 
       return service;

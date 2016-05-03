@@ -14,7 +14,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="Search or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
+        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
       ].join('')
     };
   }
@@ -280,7 +280,7 @@
         return item.maxStackSize > 1;
       },
       'engram': function(predicate, item) {
-        return item.name.toLowerCase().indexOf('engram') >= 0 && !item.equipment;
+        return item.isEngram();
       },
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
@@ -306,6 +306,8 @@
             operand = element;
             predicate = predicate.substring(element.length);
             return false;
+          } else {
+            return true;
           }
         }, this);
 

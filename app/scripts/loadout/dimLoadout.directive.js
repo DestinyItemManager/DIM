@@ -11,10 +11,9 @@
       controllerAs: 'vm',
       bindToController: true,
       link: Link,
-      restrict: 'A',
       scope: {},
       template: [
-        '<div id="loadout-drawer" ng-class="vm.classList" ng-show="vm.show">',
+        '<div id="loadout-drawer" ng-class="vm.classList" ng-if="vm.show">',
         '  <div ng-messages="vm.form.name.$error" ng-if="vm.form.$submitted || vm.form.name.$touched">',
         '    <div ng-message="required">A name is required.</div>',
         '    <div ng-message="minlength">...</div>',
@@ -244,9 +243,6 @@
     $scope.$on('dim-settings-updated', function(event, settings) {
       if (_.has(settings, 'itemSort')) {
         vm.itemSort = settings.itemSort;
-      }
-      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
-        dimStoreService.setHeights();
       }
     });
   }

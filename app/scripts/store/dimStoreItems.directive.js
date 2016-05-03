@@ -13,9 +13,14 @@
     .filter('sortItems', function() {
       return function(items, sort) {
         items = _.sortBy(items || [], 'name');
-        if (sort === 'primaryStat' || sort === 'rarityThenPrimary') {
+        if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
           items = _.sortBy(items, function(item) {
             return (item.primStat) ? (-1 * item.primStat.value) : 1000;
+          });
+        }
+        if (sort === 'quality') {
+          items = _.sortBy(items, function(item) {
+            return item.quality ? -item.quality : 1000;
           });
         }
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {
@@ -116,7 +121,7 @@
       }
     };
     vm.onDrop = function(id, $event, equip) {
-      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event);
+      vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event, hovering);
       hovering = false;
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
@@ -299,7 +304,7 @@
       }
     };
 
-    vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event) {
+    vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
 
       if (item.notransfer && item.owner !== target.id) {

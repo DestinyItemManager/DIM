@@ -52,10 +52,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', 'SyncService', '$http',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, SyncService, $http) {
-
-
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
         //1 Hour
@@ -78,42 +76,10 @@
         $window.initgapi = function() {
           SyncService.init();
         }
-        SyncService.get()
-          .then(function(data) {
-            if (data) {
-              var toastViewedFlag = data['220160411v35'] || null;
-              if (_.isNull(toastViewedFlag)) {
-                $timeout(function() {
-                  $http.get('views/changelog-toaster.html?v=v3.5.1')
-                    .then(function(changelog) {
-                      toaster.pop({
-                        type: 'info',
-                        title: 'DIM v3.5.1 Released',
-                        body: changelog.data,
-                        timeout: 0,
-                        bodyOutputType: 'trustedHtml',
-                        showCloseButton: true,
-                        clickHandler: function(a, b, c, d, e, f, g) {
-                          if (b) {
-                            return true;
-                          }
-
-                          return false;
-                        },
-                        onHideCallback: function() {
-
-                          if ($('#20160411v35')
-                            .is(':checked')) {
-                            data['220160411v35'] = 1;
-                            SyncService.set(data);
-                          }
-                        }
-                      });
-                    }, 3000);
-                });
-              }
-            }
-          });
+        dimInfoService.show('20160411v35', {
+          title: 'DIM v3.5.5 Released',
+          view: 'views/changelog-toaster.html?v=v3.5.5',
+        });
       }
     ]);
 
@@ -149,6 +115,9 @@
         .state('inventory', {
           url: "/inventory",
           templateUrl: "views/inventory.html"
+        }).state('best', {
+          url: "/best",
+          templateUrl: "views/best.html"
         });
     });
 })();
