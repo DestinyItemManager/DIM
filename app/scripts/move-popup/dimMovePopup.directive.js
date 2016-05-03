@@ -54,9 +54,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService) {
     var vm = this;
 
     // TODO: cache this, instead?
@@ -106,6 +106,13 @@
      * Move the item to the specified store. Equip it if equip is true.
      */
     vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
+      dimInfoService.show('movebox', {
+        title: 'Did you know?',
+        body: ['<p>Items can be dragged and dropped between different characters/vault columns.</p>',
+               '<p>Try it out next time!<p>'].join(''),
+        hide: 'Don\'t show this tip again'
+      });
+
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
 
