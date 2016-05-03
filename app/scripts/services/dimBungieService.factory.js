@@ -83,7 +83,14 @@
             }
           }, function failure(response) {
             // debugger;
-            reject(new Error(response.data.Message));
+            if (response.data) {
+              reject(new Error(response.data.Message));
+            } else if (response.status === -1) {
+              reject(new Error("You may not be connected to the internet."));
+            } else {
+              console.error("Failed to make service call", response);
+              reject(new Error("Failed to make service call."));
+            }
           });
         }
 
@@ -143,7 +150,12 @@
         .then($http)
         .then(handleErrors)
         .catch(function(e) {
-          toaster.pop('error', '', e.message);
+          var message = e.message;
+          if (e.status === -1) {
+            message = 'You may not be connected to the internet.';
+          }
+
+          toaster.pop('error', 'Bungie.net Error', message);
 
           return $q.reject(e);
         });
@@ -161,10 +173,6 @@
         },
         withCredentials: true
       };
-    }
-
-    function rejectBnetPlatformsRequest(error) {
-      return $q.reject(new Error('Message missing.'));
     }
 
     /************************************************************************************************************************************/
@@ -203,6 +211,9 @@
       }
 
       function rejectBnetMembershipRequest(response) {
+        if (response.status === -1) {
+          return $q.reject(new Error('You may not be connected to the internet.'));
+        }
         return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
       }
     }
@@ -302,7 +313,7 @@
           return getDestinyInventories(data.token, platform, data.membershipId, data.characters);
         })
         .catch(function(e) {
-          toaster.pop('error', '', e.message);
+          toaster.pop('error', 'Bungie.net Error', e.message);
 
           return $q.reject(e);
         });
