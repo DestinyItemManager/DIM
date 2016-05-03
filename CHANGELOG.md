@@ -6,6 +6,7 @@
 * There's a new setting that will show elemental damage icons on your weapons. Elemental damage icons are now always shown in the title of the item popup.
 * Elder's Sigil won't go above 100% completion for the score portion anymore.
 * Added roll quality percentage indicator. You can now see how your intellect/discipline/strength stacks up against the maximum stat roll for your armor.
+* DIM is smarter about what items it chooses to move aside, or to equip in the place of a dequipped item.
 
 # 3.5.4
 
