@@ -419,14 +419,12 @@
       if (response && response.data && response.data.ErrorCode === 1648) {
         toaster.pop('warning', 'Item Uniqueness', [
           "You tried to move the '" + item.name + "'",
-          item.type,
+          item.type.toLowerCase(),
           "to",
           store.isVault ?
             'the vault' :
             'your ' + store.powerLevel + ' ' + store.race + ' ' + store.name,
-          "but that destination already has that",
-          item.type,
-          "and is only allowed one."
+          "but that destination already has that item and is only allowed one."
         ].join(' '));
         return $q.reject(new Error('move-canceled'));
       }
