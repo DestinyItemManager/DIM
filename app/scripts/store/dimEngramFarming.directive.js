@@ -27,9 +27,9 @@
     };
   }
 
-  EngramFarmingCtrl.$inject = ['dimEngramFarmingService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope'];
+  EngramFarmingCtrl.$inject = ['dimEngramFarmingService'];
 
-  function EngramFarmingCtrl(dimEngramFarmingService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope) {
+  function EngramFarmingCtrl(dimEngramFarmingService) {
     var vm = this;
     angular.extend(vm, {
       service: dimEngramFarmingService,
