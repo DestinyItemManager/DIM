@@ -228,7 +228,7 @@
       setHeight('.sub-section.sort-classitem');
       setHeight('.sub-section.sort-artifact');
       setHeight('.sub-section.sort-emblem');
-      setHeight('.sub-section.sort-armor');
+      setHeight('.sub-section.sort-shader');
       setHeight('.sub-section.sort-ghost');
       setHeight('.sub-section.sort-emote');
       setHeight('.sub-section.sort-ship');
