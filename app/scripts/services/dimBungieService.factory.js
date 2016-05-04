@@ -406,9 +406,31 @@
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
+        .then(function(response) {
+          return handleUniquenessViolation(response, item, store);
+        })
         .then(handleErrors);
 
       return promise;
+    }
+
+    //Handle "DestinyUniquenessViolation" (1648)
+    function handleUniquenessViolation(response, item, store) {
+      if (response && response.data && response.data.ErrorCode === 1648) {
+        toaster.pop('warning', 'Item Uniqueness', [
+          "You tried to move the '" + item.name + "'",
+          item.type,
+          "to",
+          store.isVault ?
+            'the vault' :
+            'your ' + store.powerLevel + ' ' + store.race + ' ' + store.name,
+          "but that destination already has that",
+          item.type,
+          "and is only allowed one."
+        ].join(' '));
+        return $q.reject(new Error('move-canceled'));
+      }
+      return response;
     }
 
     function getTransferRequest(token, membershipType, item, store, amount) {
