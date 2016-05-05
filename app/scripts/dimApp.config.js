@@ -73,9 +73,9 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        dimInfoService.show('20160411v35', {
-          title: 'DIM v3.5.5 Released',
-          view: 'views/changelog-toaster.html?v=v3.5.5',
+        dimInfoService.show('20160411v36', {
+          title: 'DIM v3.6.0 Released',
+          view: 'views/changelog-toaster.html?v=v3.6.0',
         });
       }
     ]);

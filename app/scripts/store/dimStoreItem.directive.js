@@ -198,12 +198,12 @@
     var showStats = vm.itemStat && item.primStat && item.primStat.value;
     var showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
     vm.showBadge = (showStats || showDamageType);
+    vm.quality = item.quality;
 
     if (showStats) {
       vm.badgeClassNames['item-stat'] = true;
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
-      vm.quality = item.quality;
     } else if (showDamageType) {
       vm.badgeClassNames['damage-' + item.dmg] = true;
       vm.badgeClassNames['damage-type'] = true;
