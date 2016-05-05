@@ -711,7 +711,7 @@
           break;
         case 'artifact':
           rate = 1/10;
-          split = 45;
+          split = 38;
           break;
         default:
           return;

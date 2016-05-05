@@ -76,7 +76,7 @@
             color = 60;
           } else if(value <= 99) {
             color = 120;
-          } else if(value === 100) {
+          } else if(value >= 100) {
             color = 190;
           } else {
             return 'white';
