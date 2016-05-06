@@ -73,18 +73,14 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-<<<<<<< HEAD
+
         $window.initgapi = function() {
           SyncService.init();
         }
-        dimInfoService.show('20160411v35', {
-          title: 'DIM v3.5.5 Released',
-          view: 'views/changelog-toaster.html?v=v3.5.5',
-=======
+
         dimInfoService.show('20160411v36', {
           title: 'DIM v3.6.0 Released',
           view: 'views/changelog-toaster.html?v=v3.6.0',
->>>>>>> d46b7b304c80de5e7e3e2bbb9b6f935c9eeebd99
         });
       }
     ]);
