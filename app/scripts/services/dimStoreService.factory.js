@@ -28,6 +28,43 @@
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
+    // A mapping from the bucket names to DIM categories
+    // Some buckets like vault and currencies have been ommitted
+    var bucketToType = {
+      "BUCKET_CHEST": "Chest",
+      "BUCKET_LEGS": "Leg",
+      "BUCKET_RECOVERY": "Lost Items",
+      "BUCKET_SHIP": "Ship",
+      "BUCKET_MISSION": "Missions",
+      "BUCKET_ARTIFACT": "Artifact",
+      "BUCKET_HEAVY_WEAPON": "Heavy",
+      "BUCKET_COMMERCIALIZATION": "Special Orders",
+      "BUCKET_CONSUMABLES": "Consumable",
+      "BUCKET_PRIMARY_WEAPON": "Primary",
+      "BUCKET_CLASS_ITEMS": "ClassItem",
+      "BUCKET_QUESTS": "Quests",
+      "BUCKET_VEHICLE": "Vehicle",
+      "BUCKET_BOUNTIES": "Bounties",
+      "BUCKET_SPECIAL_WEAPON": "Special",
+      "BUCKET_SHADER": "Shader",
+      "BUCKET_EMOTES": "Emote",
+      "BUCKET_MAIL": "Messages",
+      "BUCKET_BUILD": "Class",
+      "BUCKET_HEAD": "Helmet",
+      "BUCKET_ARMS": "Gauntlets",
+      "BUCKET_HORN": "Horn",
+      "BUCKET_MATERIALS": "Material",
+      "BUCKET_GHOST": "Ghost",
+      "BUCKET_EMBLEM": "Emblem"
+    };
+
+    var typeToSort = {};
+    _.each(dimCategory, function(types, category) {
+      types.forEach(function(type) {
+        typeToSort[type] = category;
+      });
+    });
+
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
@@ -191,7 +228,7 @@
       setHeight('.sub-section.sort-classitem');
       setHeight('.sub-section.sort-artifact');
       setHeight('.sub-section.sort-emblem');
-      setHeight('.sub-section.sort-armor');
+      setHeight('.sub-section.sort-shader');
       setHeight('.sub-section.sort-ghost');
       setHeight('.sub-section.sort-emote');
       setHeight('.sub-section.sort-ship');
@@ -205,6 +242,7 @@
       setHeight('.sub-section.sort-special-orders');
       setHeight('.sub-section.sort-lost-items');
       setHeight('.sub-section.sort-quests');
+      setHeight('.sub-section.sort-unknown');
       setHeight('.weapons');
       setHeight('.armor');
       setHeight('.general');
@@ -414,33 +452,40 @@
         return null;
       }
 
-      var itemType = getItemType(item, itemDef, itemBucketDef);
-      if (!itemType) {
-        return null;
+      // def.bucketTypeHash is where it goes
+      var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
+      // item.bucket is where it IS
+      var currentBucket = itemBucketDef[item.bucket];
+
+      var location;
+      if (currentBucket && bucketToType[currentBucket.bucketIdentifier]) {
+        location = bucketToType[currentBucket.bucketIdentifier];
+      }
+      var normalLocation;
+      if (normalBucket && bucketToType[normalBucket.bucketIdentifier]) {
+        normalLocation = bucketToType[normalBucket.bucketIdentifier];
       }
 
       var weaponClass = null, weaponClassName = null;
-
-      if (itemType.hasOwnProperty('general') && itemType.general !== '') {
-        weaponClass = itemType.weaponClass;
-        weaponClassName = itemType.weaponClassName;
-        itemType = itemType.general;
+      if (dimCategory['Weapons'].indexOf(normalLocation) >= 0) {
+        weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
+        weaponClassName = itemDef.itemTypeName;
       }
 
-      var itemSort = sortItem(itemDef.itemTypeName);
+      var itemType = location || normalLocation || 'Unknown';
+
+      var itemSort = typeToSort[itemType];
       if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
       }
 
-      if (item.location === 4) {
+      if (itemSort !== 'Postmaster' && item.location === 4) {
         itemSort = 'Postmaster';
-
-        if (itemType !== 'Messages')
-          if (itemType === 'Consumable') {
-            itemType = 'Special Orders';
-          } else {
-            itemType = 'Lost Items';
-          }
+        if (itemType === 'Consumable') {
+          itemType = 'Special Orders';
+        } else {
+          itemType = 'Lost Items';
+        }
       }
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
@@ -511,10 +556,6 @@
       } else if (createdItem.talentGrid) {
         createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
       }
-
-//      if(createdItem.hash === 2150667281) {
-//      console.log(createdItem)
-//      }
 
       return createdItem;
     }
@@ -940,251 +981,6 @@
       }
       return 'unknown';
     }
-
-    /* Not Implemented */
-    // Engram,
-    // Trials Reward,
-    // Currency,
-    // Material Exchange,
-    // Equipment,
-    // Invitation,
-    // Camera,
-    // Buff,
-    // Bribe,
-    // Incomplete Engrams,
-    // Corrupted Engrams,
-
-    function getItemType(item, def, buckets) {
-      var type = def.itemTypeName;
-      var name = def.itemName;
-      // def.bucketTypeHash is where it goes
-      var normalBucket = buckets[def.bucketTypeHash];
-      // item.bucket is where it IS
-      var currentBucket = buckets[item.bucket];
-
-      // TODO: time to dig through this code
-      if (currentBucket && currentBucket.bucketName === 'Messages') {
-        return 'Messages';
-      }
-
-      if (name == 'SRL Record Book') {
-        return 'Missions';
-      }
-
-      // File "Mote of Light" under "Material"
-      if (item.itemHash === 937555249) {
-        return 'Material';
-      }
-
-      if (def.bucketTypeHash === 3621873013) {
-        return null;
-      }
-
-      if (def.bucketTypeHash === 2422292810) {
-        if (item.location !== 4)
-          return null;
-      }
-
-      if (type.indexOf('Mystery Bag') != -1) {
-        return 'Consumable';
-      }
-
-      if (type.indexOf('Junk') != -1) {
-        return 'Consumable';
-      }
-
-      if (def.bucketTypeHash === 375726501) {
-        if (type.indexOf("Message ") != -1) {
-          return 'Messages';
-        }
-
-        if (type.indexOf("Package") != -1) {
-          return 'Messages';
-        }
-
-        if (["Public Event Completed"].indexOf(name) != -1) {
-          return "Messages";
-        }
-
-        return 'Missions';
-      }
-
-
-      if (_.isUndefined(type) || _.isUndefined(name)) {
-        return {
-          'general': 'General',
-          'weaponClass': 'General'
-        };
-      }
-
-      //if(type.indexOf("Engram") != -1 || name.indexOf("Marks") != -1) {
-      if (name.indexOf("Marks") != -1) {
-        return null;
-      }
-
-      if (type === 'Mission Reward') {
-        return null;
-      }
-
-      // Used to find a "weaponClass" type to send back
-      var typeObj = {
-        general: '',
-        weaponClass: type.toLowerCase().replace(/\s/g, ''),
-        weaponClassName: type
-      };
-
-      if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
-        typeObj.general = 'Primary';
-      if (["Sniper Rifle", "Shotgun", "Fusion Rifle", "Sidearm", "Special Weapon Engram"].indexOf(type) != -1) {
-        typeObj.general = 'Special';
-
-        // detect special case items that are actually primary weapons.
-        if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1) {
-          typeObj.general = 'Primary';
-        }
-
-        if (def.itemHash === 3012398149) {
-          typeObj.general = 'Heavy';
-        }
-      }
-      if (["Rocket Launcher", "Sword", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
-        typeObj.general = 'Heavy';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
-        return 'ClassItem';
-      if (["Gauntlet Engram"].indexOf(type) != -1)
-        return 'Gauntlets';
-      if (type==='Mask') {
-        return 'Helmet';
-      }
-      if (["Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
-        return (type.split(' ')[0] === 'Body') ? "Chest" : type.split(' ')[0];
-      if (["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
-        return 'Class';
-      if (["Restore Defaults"].indexOf(type) != -1)
-        return 'Armor';
-      if (["Currency"].indexOf(type) != -1) {
-        if (["Vanguard Marks", "Crucible Marks"].indexOf(name) != -1)
-          return '';
-        return 'Material';
-      }
-      if (["Commendation", "Trials of Osiris", "Faction Badge"].indexOf(type) != -1) {
-        if (name.indexOf("Redeemed") != -1) {
-          return null;
-        }
-
-        return 'Missions';
-      }
-
-      if (type.indexOf("Summoning Rune") != -1) {
-        return "Material";
-      }
-
-      if (type.indexOf("Emote") != -1) {
-        return "Emote";
-      }
-
-      if (type.indexOf("Artifact") != -1) {
-        return "Artifact";
-      }
-
-      if (type.indexOf(" Bounty") != -1) {
-        if (def.hasAction === true) {
-          return 'Bounties';
-        } else {
-          return null;
-        }
-      }
-
-      if (type.indexOf("Treasure Map") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Bounty Reward") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Queen's Orders") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Curio") != -1) {
-        return 'Bounties';
-      }
-      if (type.indexOf("Vex Technology") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Horn") != -1) {
-        return "Horn";
-      }
-
-      if (type.indexOf("Quest") != -1) {
-        return 'Quests';
-      }
-
-      if (type.indexOf("Relic") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Message ") != -1) {
-        return 'Messages';
-      }
-
-      if (type.indexOf("Package") != -1) {
-        return 'Messages';
-      }
-
-      if (type.indexOf("Armsday Order") != -1) {
-        switch (def.bucketTypeHash) {
-          case 2465295065:
-            return 'Special';
-          case 1498876634:
-            return 'Primary';
-          case 953998645:
-            return 'Heavy';
-          default:
-            return 'Special Orders';
-        }
-      }
-
-      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
-        return "Consumable";
-      }
-
-      if (typeObj.general !== '') {
-        return typeObj;
-      }
-
-      if (["Public Event Completed"].indexOf(name) != -1) {
-        return "Messages";
-      }
-
-      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
-        return "Consumable";
-      }
-
-      if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Ship Schematics"].indexOf(type) != -1)
-        return type.split(' ')[0];
-
-      return null;
-    }
-
-    function sortItem(type) {
-      if (["Pulse Rifle", "Sword", "Sniper Rifle", "Shotgun", "Scout Rifle", "Sidearm", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
-        return 'Weapons';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
-        return 'Armor';
-      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Horn", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
-        return 'General';
-      if (["Daily Reward", "Package", "Armsday Order"]) {
-        return 'Postmaster';
-      }
-
-      if (type.indexOf("Message ") != -1) {
-        return 'Postmaster';
-      }
-    }
-
 
     //---- following code is from https://github.com/DestinyTrialsReport
     function getAbilityCooldown(subclass, ability, tier) {
