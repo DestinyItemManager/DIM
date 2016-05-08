@@ -452,9 +452,9 @@
         return null;
       }
 
-      // def.bucketTypeHash is where it goes
+      // def.bucketTypeHash is where it goes normally
       var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
-      // item.bucket is where it IS
+      // item.bucket is where it IS right now
       var currentBucket = itemBucketDef[item.bucket];
 
       var location;
@@ -755,7 +755,7 @@
           split = 45;
           break;
         default:
-          return;
+          return null;
       }
 
       var ret = {
@@ -829,6 +829,9 @@
                  light < 319 ? 39 :
                  light < 325 ? 40 :
                  light < 330 ? 41 : 42;
+        case 'lost items':
+          // TODO: this can be improved when we separate an item's type from its location, but for now we don't know
+          return 0;
       }
       console.warn('item bonus not found', type);
       return 0;
