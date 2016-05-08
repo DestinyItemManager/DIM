@@ -693,7 +693,6 @@
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: !!ascendNode,
         ascended: !!(ascendNode && ascendNode.activated),
-        hasReforgeNode: _.any(gridNodes, { name: 'Reforge Ready' }),
         infusable: _.any(gridNodes, { name: 'Infuse' })
       };
     }
