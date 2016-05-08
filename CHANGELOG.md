@@ -1,3 +1,7 @@
+# Next
+
+* Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
+
 # 3.6.0
 
 * Bring back the infusion dialog as an Infusion Fuel Finder. It doesn't do as much as it used to, but now it's optimized for quickly finding eligable infusion items.
