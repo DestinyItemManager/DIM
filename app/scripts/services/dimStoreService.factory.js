@@ -117,6 +117,9 @@
       },
       isEngram: function() {
         return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
+      },
+      canBeInLoadout: function() {
+        return this.equipment || this.type === 'Material' || this.type === 'Consumable';
       }
     };
 

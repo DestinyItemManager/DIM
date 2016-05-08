@@ -17,34 +17,33 @@
       replace: true,
       template: [
         '<div class="loadout-popup-content">',
-        '  <div class="loadout-list"><div class="loadout-set">',
-        '    <span class="button-create" ng-click="vm.newLoadout($event)">+ Create Loadout</span>',
-        '    <span class="button-create-equipped" ng-click="vm.newLoadoutFromEquipped($event)">From Equipped</span>',
-        '  </div></div>',
-        '  <div class="loadout-list">',
-        '    <div ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
-        '      <span class="button-name" title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
-        '      <span class="button-delete" ng-click="vm.deleteLoadout(loadout, $event)"><i class="fa fa-trash-o"></i></span>',
-        '      <span class="button-edit" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
-        '    </div>',
-        '  </div>',
-        '  <div class="loadout-list">',
-        '    <div class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span class="button-name button-full" ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
-        '    </div>',
-        '    <div class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span class="button-name button-full" ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
-        '    </div>',
-        '    <div class="loadout-set">',
-        '      <span class="button-name button-full" ng-click="vm.gatherEngramsLoadout($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
-        '    </div>',
-        '    <div class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span class="button-name button-full" ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
-        '    </div>',
-        '    <div class="loadout-set" ng-if="vm.previousLoadout">',
-        '      <span class="button-name button-full" ng-click="vm.applyLoadout(vm.previousLoadout, $event)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
-        '    </div>',
-        '  </div>',
+        '  <ul class="loadout-list">',
+        '    <li class="loadout-set">',
+        '      <span ng-click="vm.newLoadout($event)">+ Create Loadout</span>',
+        '      <span ng-click="vm.newLoadoutFromEquipped($event)">From Equipped</span>',
+        '    </li>',
+        '    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
+        '      <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
+        '      <span ng-click="vm.deleteLoadout(loadout, $event)"><i class="fa fa-trash-o"></i></span>',
+        '      <span ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
+        '    </li>',
+        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
+        '    </li>',
+        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+        '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
+        '    </li>',
+        '    <li class="loadout-set">',
+        '      <span ng-click="vm.gatherEngramsLoadout($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
+        '    </li>',
+        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+        '      <span ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
+        '    </li>',
+        '    <li class="loadout-set" ng-if="vm.previousLoadout">',
+        '      <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
+        '      <span ng-click="vm.applyLoadout(vm.previousLoadout, $event)">All items</span>',
+        '    </li>',
+        '  </ul>',
         '</div>'
       ].join('')
     };
@@ -122,7 +121,9 @@
         name: name,
         items: _(items)
           .chain()
-          .select('equipped')
+          .select(function(item) {
+            return item.canBeInLoadout();
+          })
           .map(function (i) {
             return angular.copy(i);
           })
@@ -132,7 +133,7 @@
       };
     }
 
-    vm.applyLoadout = function applyLoadout(loadout, $event) {
+    vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
       ngDialog.closeAll();
       dimEngramFarmingService.stop();
 
@@ -143,6 +144,12 @@
           vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
         }
         dimLoadoutService.previousLoadouts[vm.store.id] = vm.previousLoadout; // ugly hack
+      }
+
+      if (filterToEquipped) {
+        loadout = _.mapObject(loadout, function(items) {
+          return _.select(items, 'equipped');
+        });
       }
 
       dimLoadoutService.applyLoadout(vm.store, loadout);
