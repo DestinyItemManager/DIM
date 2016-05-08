@@ -482,6 +482,12 @@
 
     // Returns a list of items that were successfully equipped
     function equipItems(store, items) {
+
+      // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
+      items = _.sortBy(items, function(i) {
+        return i.tier === 'Exotic' ? 1 : 0;
+      });
+
       var platform = dimState.active;
       var data = {
         token: null,
