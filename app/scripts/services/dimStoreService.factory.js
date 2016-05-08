@@ -86,7 +86,7 @@
         if (!item.type) {
           throw new Error("item needs a 'type' field");
         }
-        return this.capacityForItem(item) - count(this.items, { type: item.type });
+        return Math.max(0, this.capacityForItem(item) - count(this.items, { type: item.type }));
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
@@ -298,7 +298,7 @@
                   if (!item.sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return this.capacityForItem(item) - count(this.items, { sort: item.sort });
+                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: item.sort }));
                 }
               });
 
