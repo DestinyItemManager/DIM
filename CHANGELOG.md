@@ -1,6 +1,8 @@
 # Next
 
 * Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
+* Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.
+* Items in the Postmaster include their type in the move popup, so they're easier to distinguish.
 
 # 3.6.0
 

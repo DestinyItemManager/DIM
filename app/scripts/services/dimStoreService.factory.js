@@ -116,7 +116,7 @@
           this.sort !== 'Postmaster';
       },
       isEngram: function() {
-        return !this.equipment && this.name.toLowerCase().indexOf('engram') >= 0;
+        return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
       }
     };
 
@@ -466,10 +466,9 @@
         normalLocation = bucketToType[normalBucket.bucketIdentifier];
       }
 
-      var weaponClass = null, weaponClassName = null;
+      var weaponClass = null;
       if (dimCategory['Weapons'].indexOf(normalLocation) >= 0) {
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
-        weaponClassName = itemDef.itemTypeName;
       }
 
       var itemType = location || normalLocation || 'Unknown';
@@ -507,6 +506,7 @@
         percentComplete: null,
         amount: item.stackSize,
         primStat: item.primaryStat,
+        typeName: itemDef.itemTypeName,
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
