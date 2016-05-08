@@ -521,7 +521,6 @@
         lockable: item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
-        weaponClassName: weaponClassName,
         classified: itemDef.classified
       });
       createdItem.index = createItemIndex(createdItem);
