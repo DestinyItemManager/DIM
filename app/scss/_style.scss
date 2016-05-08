@@ -533,6 +533,11 @@ img {
 }
 
 .storage {
+  position: relative;
+  padding-right: 12px;
+  vertical-align: top;
+  display: inline-block;
+
   &:first-child .title {
     border-left: solid 1px #2b2b2b;
   }
@@ -550,12 +555,6 @@ img {
 
 .title .icon {
   width: 30px;
-}
-
-.storage {
-  padding-right: 12px;
-  vertical-align: top;
-  display: inline-block;
 }
 
 .col-3 .storage {
@@ -875,6 +874,7 @@ img {
 
 .character {
   margin-bottom: 10px;
+  height: 70px;
 }
 
 .character-box {
@@ -886,13 +886,6 @@ img {
   color: #f5f5f5;
   text-decoration: none;
   background-size: cover;
-  &.vault-box {
-    position: relative !important;
-    padding: 0 1em;
-    width: 100%;
-    box-sizing: border-box;
-    height: 70px;
-  }
   .emblem {
     position: absolute;
     top: 3px;
@@ -912,11 +905,6 @@ img {
   }
 }
 
-.vault-box .class {
-  font-size: 25px;
-  line-height: 38px;
-}
-
 .character-box {
   .race-gender {
     text-transform: uppercase;
@@ -934,15 +922,15 @@ img {
   }
   .currency {
     position: absolute;
-    top: 5px;
-    right: 10px;
+    top: 4px;
+    right: 40px;
     font-weight: 200;
     font-size: 14px;
   }
   .legendaryMarks {
     position: absolute;
-    top: 24px;
-    right: 10px;
+    top: 23px;
+    right: 40px;
   }
   .level.powerLevel {
     position: absolute;

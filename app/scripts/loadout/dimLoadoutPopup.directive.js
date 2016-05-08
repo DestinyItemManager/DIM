@@ -29,16 +29,16 @@
         '    </div>',
         '  </div>',
         '  <div class="loadout-list">',
-        '    <div class="loadout-set">',
+        '    <div class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span class="button-name button-full" ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
         '    </div>',
-        '    <div class="loadout-set">',
+        '    <div class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span class="button-name button-full" ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
         '    </div>',
         '    <div class="loadout-set">',
         '      <span class="button-name button-full" ng-click="vm.gatherEngramsLoadout($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
         '    </div>',
-        '    <div class="loadout-set">',
+        '    <div class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span class="button-name button-full" ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
         '    </div>',
         '    <div class="loadout-set" ng-if="vm.previousLoadout">',
@@ -60,7 +60,7 @@
       'warlock': 0,
       'titan': 1,
       'hunter': 2
-    }[vm.store.class] || 0;
+    }[vm.store.class] || -1;
 
     function initLoadouts() {
       dimLoadoutService.getLoadouts()
@@ -68,7 +68,7 @@
           vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
           vm.loadouts = _.filter(vm.loadouts, function(item) {
-            return ((item.classType === -1) || (item.classType === vm.classTypeId));
+            return vm.classTypeId === -1 || ((item.classType === -1) || (item.classType === vm.classTypeId));
           });
         });
     }
@@ -136,12 +136,14 @@
       ngDialog.closeAll();
       dimEngramFarmingService.stop();
 
-      if (loadout === vm.previousLoadout) {
-        vm.previousLoadout = undefined;
-      } else {
-        vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
+      if (!vm.store.isVault) {
+        if (loadout === vm.previousLoadout) {
+          vm.previousLoadout = undefined;
+        } else {
+          vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
+        }
+        dimLoadoutService.previousLoadouts[vm.store.id] = vm.previousLoadout; // ugly hack
       }
-      dimLoadoutService.previousLoadouts[vm.store.id] = vm.previousLoadout; // ugly hack
 
       dimLoadoutService.applyLoadout(vm.store, loadout);
     };

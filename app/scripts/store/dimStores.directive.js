@@ -22,7 +22,7 @@
         "    'hide-filtered': vm.hideFilteredItems,",
         "    'show-elements': vm.showElements",
         '  }">',
-        '  <div dim-store-heading store-data="store"></div>',
+        '  <div dim-store-heading class="character dim-col-{{vm.charCol}}" store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
       ].join('')

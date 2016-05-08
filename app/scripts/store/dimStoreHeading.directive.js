@@ -18,22 +18,21 @@
       },
       link: Link,
       template: [
-        '<div class="character-box" ng-class="::{ \'vault-box\': !vm.isGuardian }" ng-style="{ \'background-image\': \'url(http://bungie.net\' + vm.store.background + \')\' }">',
-        '  <div class="emblem" ng-if="::vm.isGuardian" ng-style="{ \'background-image\': \'url(http://bungie.net\' + vm.store.icon + \')\' }"></div>',
-        '  <div class="class">{{::vm.store.class}}</div>',
+        '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',
+        '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.store.icon + \')\' }"></div>',
+        '  <div class="class">{{:: vm.store.class || "Vault" }}</div>',
         '  <div class="race-gender" ng-if="::vm.isGuardian">{{:: vm.store.race }} {{:: vm.store.gender }}</div>',
         '  <div class="level" ng-if="::vm.isGuardian">Level {{ vm.store.level }}</div>',
         '  <div class="level powerLevel" ng-if="vm.isGuardian">{{ vm.store.powerLevel }}</div>',
         '  <div class="currency" ng-if="::!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
         '  <div class="currency legendaryMarks" ng-if="::!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
-        '  <div class="levelBar" ng-if="::vm.isGuardian">',
+        '  <div class="levelBar">',
         '    <div class="barFill" ng-style="{width: vm.store.percentToNextLevel + \'%\'}"></div>',
         '  </div>',
-        '  <div class="loadout-button" ng-if="::vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
+        '  <div class="loadout-button" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '</div>',
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
-        '<div dim-stats stats="vm.store.stats" ng-if="vm.isGuardian"></div>',
-        '</div>'
+        '<div dim-stats stats="vm.store.stats" ng-if="vm.isGuardian"></div>'
       ].join('')
     };
 
@@ -78,8 +77,6 @@
           });
         }
       };
-
-      element.addClass('character');
     }
   }
 
