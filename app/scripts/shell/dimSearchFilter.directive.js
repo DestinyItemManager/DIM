@@ -43,7 +43,8 @@
     'engram':       ['engram'],
     'weaponClass':  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
     'year':         ['year1', 'year2'],
-    'infusable':    ['infusable', 'infuse']
+    'infusable':    ['infusable', 'infuse'],
+    'stattype':     ['intellect', 'discipline', 'strength']
   };
 
   var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
@@ -275,6 +276,9 @@
         }
 
         return (item.classType == value);
+      },
+      'stattype': function(predicate, item) {
+        return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
       },
       'stackable': function(predicate, item) {
         return item.maxStackSize > 1;

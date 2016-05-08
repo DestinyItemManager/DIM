@@ -5,6 +5,7 @@
 * Items in the Postmaster include their type in the move popup, so they're easier to distinguish.
 * Sometimes equipping loadouts would fail to equip one of your exotics. No more!
 * Add an 'is:infusable' search filter.
+* Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
 
 # 3.6.0
 
