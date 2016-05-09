@@ -496,10 +496,12 @@
       } catch(e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
-      try {
-        createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType, itemDef.itemName);
-      } catch(e) {
-        console.error("Error building quality rating for " + createdItem.name, item, itemDef);
+      if(createdItem.talentGrid && createdItem.talentGrid.infusable) {
+        try {
+          createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
+        } catch(e) {
+          console.error("Error building quality rating for " + createdItem.name, item, itemDef);
+        }
       }
 
       // More objectives properties
@@ -679,7 +681,7 @@
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
-    function getQualityRating(stats, light, type, who) {
+    function getQualityRating(stats, light, type) {
       var maxLight = 335;
 
       if(!stats || light.value < 280) {
@@ -794,6 +796,7 @@
     }
 
     function buildStats(item, itemDef, statDef, grid, type) {
+
       if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
