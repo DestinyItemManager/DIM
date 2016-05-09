@@ -184,7 +184,13 @@
             'alt': 'json'
           },
           'body': cached
-        }).execute(function() {
+        }).execute(function(resp) {
+          console.log('saving..', resp);
+          if(resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
+            console.log('error saving. revoking drive.')
+            revokeDrive();
+            return;
+          }
           console.log('saved to google drive.');
         });
       }

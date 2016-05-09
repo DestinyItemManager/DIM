@@ -104,7 +104,9 @@
     };
 
     vm.deleteLoadout = function deleteLoadout(loadout, $event) {
-      dimLoadoutService.deleteLoadout(loadout);
+      if (confirm("Are you sure you want to delete '" + loadout.name + "'?")) {
+        dimLoadoutService.deleteLoadout(loadout);
+      }
     };
 
     vm.editLoadout = function editLoadout(loadout, $event) {

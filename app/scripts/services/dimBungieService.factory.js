@@ -417,9 +417,29 @@
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
+        .then(function(response) {
+          return handleUniquenessViolation(response, item, store);
+        })
         .then(handleErrors);
 
       return promise;
+    }
+
+    //Handle "DestinyUniquenessViolation" (1648)
+    function handleUniquenessViolation(response, item, store) {
+      if (response && response.data && response.data.ErrorCode === 1648) {
+        toaster.pop('warning', 'Item Uniqueness', [
+          "You tried to move the '" + item.name + "'",
+          item.type.toLowerCase(),
+          "to",
+          store.isVault ?
+            'the vault' :
+            'your ' + store.powerLevel + ' ' + store.race + ' ' + store.name,
+          "but that destination already has that item and is only allowed one."
+        ].join(' '));
+        return $q.reject(new Error('move-canceled'));
+      }
+      return response;
     }
 
     function getTransferRequest(token, membershipType, item, store, amount) {
@@ -493,6 +513,12 @@
 
     // Returns a list of items that were successfully equipped
     function equipItems(store, items) {
+
+      // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
+      items = _.sortBy(items, function(i) {
+        return i.tier === 'Exotic' ? 1 : 0;
+      });
+
       var platform = dimState.active;
       var data = {
         token: null,

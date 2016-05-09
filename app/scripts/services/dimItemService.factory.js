@@ -151,30 +151,33 @@
       function searchForSimilarItem(item, store, exclusions, target) {
         exclusions = exclusions || [];
 
-        var result = _.chain(store.items)
-          .filter(function(i) {
-            return i.canBeEquippedBy(target) &&
-              i.type === item.type &&
-              !i.equipped &&
-              // Not the same item
-              i.id !== item.id &&
-              // Not on the exclusion list
-              !_.any(exclusions, { id: i.id, hash: i.hash });
-          })
-          .max(function(i) {
-            var value = {
-              Legendary: 4,
-              Rare: 3,
-              Uncommon: 2,
-              Common: 1,
-              Exotic: 0
-            }[i.tier];
-            if (i.primStat) {
-              value += i.primStat.value / 1000.0;
-            }
-            return value;
-          })
-          .value();
+        var candidates = _.filter(store.items, function(i) {
+          return i.canBeEquippedBy(target) &&
+            i.type === item.type &&
+            !i.equipped &&
+            // Not the same item
+            i.id !== item.id &&
+            // Not on the exclusion list
+            !_.any(exclusions, { id: i.id, hash: i.hash });
+        });
+
+        if (!candidates.length) {
+          return null;
+        }
+
+        var result = _.max(candidates, function(i) {
+          var value = {
+            Legendary: 4,
+            Rare: 3,
+            Uncommon: 2,
+            Common: 1,
+            Exotic: 0
+          }[i.tier];
+          if (i.primStat) {
+            value += i.primStat.value / 1000.0;
+          }
+          return value;
+        });
 
         if (result && result.tier === dimItemTier.exotic) {
           var prefix = _.filter(store.items, function(i) {
@@ -189,7 +192,6 @@
             return null;
           }
         }
-
 
         return result || null;
       }
@@ -313,14 +315,13 @@
           // If it's the vault, we can get rid of anything in the same sort category.
           // Pick whatever we have the most space for on some guardian.
           var bestType = _.max(dimCategory[item.sort], function(type) {
-            var res = _.max(stores.map(function(s) {
+            return _.max(stores.map(function(s) {
               if (s.id === store.id) {
                 return 0;
               }
               var vaultItem = _.find(store.items, { type: type });
               return vaultItem ? moveContext.spaceLeft(s, vaultItem) : 0;
             }));
-            return res;
           });
 
           moveAsideCandidates = _.filter(store.items, { type: bestType });

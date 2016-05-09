@@ -1,5 +1,14 @@
 # Next
 
+* Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
+* Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.
+* Items in the Postmaster include their type in the move popup, so they're easier to distinguish.
+* Sometimes equipping loadouts would fail to equip one of your exotics. No more!
+* Add an 'is:infusable' search filter.
+* Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
+
+# 3.6.0
+
 * Bring back the infusion dialog as an Infusion Fuel Finder. It doesn't do as much as it used to, but now it's optimized for quickly finding eligable infusion items.
 * Fix a bug where hovering over a drop zone with a consumable/material stack and waiting for the message to turn green still wouldn't trigger the partial move dialog.
 * Added a new "Item Leveling" auto-loadout. This loadout finds items for you to dump XP into. It strongly favors locked items, and won't replace an incomplete item that you have equipped. Otherwise, it goes after items that already have the most XP (closest to completion), preferring exotics and legendaries if they are locked, and rares and legendaries if they're not locked (because you get more materials out of disassembling them that way).

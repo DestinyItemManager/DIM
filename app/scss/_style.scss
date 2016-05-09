@@ -166,7 +166,7 @@ body > div, #header {
 }
 
 .vault {
-  .sort-class, .section.postmaster, .sort-class, .section.progress {
+  .sort-class, .section.postmaster, .sort-class, .section.progress, .section.unknown .bucket-count {
     /*display: none;*/
     visibility: hidden;
   }
@@ -2029,32 +2029,6 @@ button.toast-close-button {
   margin-top: -2px;
 }
 
-/** Issue #116, make Mats and Consumables 4-column **/
-
-.col-3 .section {
-  &.general {
-    .sort-consumable .unequipped, .sort-material .unequipped {
-      width: 208px !important;
-    }
-  }
-  &.postmaster .unequipped {
-    width: 208px !important;
-  }
-}
-
-/** Issue #116, make Mats and Consumables 4-column **/
-
-.col-4 .section {
-  &.general {
-    .sort-consumable .unequipped, .sort-material .unequipped {
-      width: 260px !important;
-    }
-  }
-  &.postmaster .unequipped {
-    width: 260px !important;
-  }
-}
-
 .something-is-sticky {
   .sticky-header-background {
     left: 0;
@@ -2121,7 +2095,8 @@ button.toast-close-button {
   margin-right: 20px;
 }
 
-.postmaster,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
+
+.sort-lost-items, .sort-messages, .sort-special-orders,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
   .unequipped {
     margin-left: 12px;
     margin-right: 20px;

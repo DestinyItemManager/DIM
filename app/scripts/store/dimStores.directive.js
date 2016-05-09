@@ -14,13 +14,14 @@
       scope: {},
       template: [
         '<div ng-repeat="store in vm.stores track by store.id"',
-        '  ng-class="[\'storage\', \'dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}\', { ',
+        '  class="storage dim-col-{{(store.id === \'vault\') ? vm.vaultCol : vm.charCol}}"',
+        '  ng-class="{',
         '    condensed: vm.condensed,',
         "    guardian: !store.isVault,",
         "    vault: store.isVault,",
         "    'hide-filtered': vm.hideFilteredItems,",
         "    'show-elements': vm.showElements",
-        '  }]">',
+        '  }">',
         '  <div dim-store-heading store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
