@@ -730,11 +730,11 @@ img {
 }*/
 
 .item-stat {
-  opacity: .9;
+  opacity: .85;
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   right: 0;
-  font-size: 10px;
+  font-size: 9.5px;
   padding: 0 2px;
   background: #ddd;
   color: #000;
@@ -809,6 +809,14 @@ img {
     display: block;
     left: 16px;
     position: absolute;
+    z-index: 2;
+  }
+
+  .item-xp-bar-small {
+    position: absolute;
+    bottom: 0px;
+    height: 2px;
+    opacity: 1;
     z-index: 2;
   }
 }
