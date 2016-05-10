@@ -18,13 +18,13 @@
       ready = $q.defer();
 
     function init() {
-      console.log('google api is ready.');
+//      console.log('google api is ready.');
       return ready.resolve();
     }
 
     function revokeDrive() {
       if (fileId || cached.fileId) {
-        console.log('revoking sync to drive.');
+//        console.log('revoking sync to drive.');
         fileId = undefined;
         remove('fileId');
       }
@@ -40,7 +40,7 @@
       var deferred = $q.defer();
 
       // load the drive client.
-      console.log('running with', gapi.auth.getToken());
+//      console.log('running with', gapi.auth.getToken());
       gapi.client.load('drive', 'v2', function() {
 
         // grab all of the list files
@@ -75,7 +75,7 @@
               }]
             }
           }).execute(function(file) {
-            console.log('created DIM-' + membershipId);
+//            console.log('created DIM-' + membershipId);
             fileId = file.id;
             set({
               'fileId': fileId
@@ -148,18 +148,18 @@
         cached = value;
       }
 
-      console.log('set', cached);
+//      console.log('set', cached);
 
       // save to local storage
       localStorage.setItem('DIM', JSON.stringify(cached));
-      console.log('saved to local storage.');
+//      console.log('saved to local storage.');
 
       // save to chrome sync
       if (chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.set(cached, function() {
-          console.log('saved to chrome sync.', cached);
+//          console.log('saved to chrome sync.', cached);
           if (chrome.runtime.lastError) {
-            console.log('error with chrome sync.')
+//            console.log('error with chrome sync.')
           }
         });
       }
@@ -185,13 +185,13 @@
           },
           'body': cached
         }).execute(function(resp) {
-          console.log('saving..', resp);
+//          console.log('saving..', resp);
           if(resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
             console.log('error saving. revoking drive.')
             revokeDrive();
             return;
           }
-          console.log('saved to google drive.');
+//          console.log('saved to google drive.');
         });
       }
     }
@@ -222,7 +222,7 @@
                 revokeDrive();
                 return;
               }
-              console.log('loaded from google drive.', resp);
+//              console.log('loaded from google drive.', resp);
               cached = resp;
               deferred.resolve(cached);
               return;
@@ -234,7 +234,7 @@
         chrome.storage.sync.get(null, function(data) {
           cached = data;
           deferred.resolve(cached);
-          console.log('synced from chrome sync', cached);
+//          console.log('synced from chrome sync', cached);
         });
       } //else get from chrome local
       // else if(chrome.storage && chrome.storage.local) {
@@ -247,7 +247,7 @@
 
       // otherwise, just use local storage
       else {
-        console.log('using local storage')
+//        console.log('using local storage')
         deferred.resolve(cached);
       }
 
@@ -256,14 +256,14 @@
 
     // remove something from DIM by key
     function remove(key) {
-      console.log('before', cached, cached[key])
+//      console.log('before', cached, cached[key])
         // just delete that key, maybe someday save to an undo array?
       delete cached[key];
-      console.log('after', cached, cached[key])
+//      console.log('after', cached, cached[key])
 
       // sync to data storage
       set(cached, true);
-      console.log('removed key:', key);
+//      console.log('removed key:', key);
     }
 
     return {
