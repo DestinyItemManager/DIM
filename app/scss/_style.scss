@@ -1004,6 +1004,50 @@ img {
   }
 }
 
+.vault-capacity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 16px;
+  margin-top: 4px;
+  .vault-bucket {
+    flex: 1;
+    margin-right: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .vault-bucket-tag {
+    height: 16px;
+    width: 16px;
+    text-align: center;
+  }
+
+  .vault-fill-bar {
+    flex: 1;
+    height: 7px;
+    background-color: gray;
+    border-radius: 1px;
+    overflow: auto;
+    margin-left: 2px;
+  }
+  .fill-bar {
+    background-color: #FB9F28;
+    height: 100%;
+  }
+  .vault-full {
+    background-color: #cc3535;
+  }
+}
+
 .loadout-button {
   position: absolute;
   top: 0;
