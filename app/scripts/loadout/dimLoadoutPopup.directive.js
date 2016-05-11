@@ -53,7 +53,7 @@
 
   function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService) {
     var vm = this;
-    vm.previousLoadout = dimLoadoutService.previousLoadouts[vm.store.id];
+    vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
     vm.classTypeId = {
       'warlock': 0,
@@ -145,13 +145,17 @@
       ngDialog.closeAll();
       dimEngramFarmingService.stop();
 
+      if (!dimLoadoutService.previousLoadouts[vm.store.id]) {
+        dimLoadoutService.previousLoadouts[vm.store.id] = [];
+      }
+
       if (!vm.store.isVault) {
         if (loadout === vm.previousLoadout) {
-          vm.previousLoadout = undefined;
+          vm.previousLoadout = dimLoadoutService.previousLoadouts[vm.store.id].pop();
         } else {
           vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
+          dimLoadoutService.previousLoadouts[vm.store.id].push(vm.previousLoadout); // ugly hack
         }
-        dimLoadoutService.previousLoadouts[vm.store.id] = vm.previousLoadout; // ugly hack
       }
 
       if (filterToEquipped) {
