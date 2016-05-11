@@ -814,7 +814,8 @@ img {
 
   .item-xp-bar-small {
     position: absolute;
-    top: 0px;
+    top: 0;
+    left: 0;
     height: 2px;
     z-index: 2;
   }
