@@ -420,10 +420,8 @@
         toaster.pop('warning', 'Item Uniqueness', [
           "You tried to move the '" + item.name + "'",
           item.type.toLowerCase(),
-          "to",
-          store.isVault ?
-            'the vault' :
-            'your ' + store.powerLevel + ' ' + store.race + ' ' + store.name,
+          "to your",
+          store.name,
           "but that destination already has that item and is only allowed one."
         ].join(' '));
         return $q.reject(new Error('move-canceled'));

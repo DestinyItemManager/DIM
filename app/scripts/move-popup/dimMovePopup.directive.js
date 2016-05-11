@@ -170,7 +170,7 @@
         if (vm.store.isVault) {
           message = 'All ' + vm.item.name + ' is now in your vault.';
         } else {
-          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".";
+          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.name + ".";
         }
         toaster.pop('success', 'Consolidated ' + vm.item.name, message);
       })

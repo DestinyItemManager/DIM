@@ -20,7 +20,7 @@
       template: [
         '<div class="character-box" ng-class="::{ \'vault-box\': !vm.isGuardian }" ng-style="{ \'background-image\': \'url(http://bungie.net\' + vm.store.background + \')\' }">',
         '  <div class="emblem" ng-if="::vm.isGuardian" ng-style="{ \'background-image\': \'url(http://bungie.net\' + vm.store.icon + \')\' }"></div>',
-        '  <div class="class">{{:: vm.store.class || "Vault" }}</div>',
+        '  <div class="class">{{::vm.store.class}}</div>',
         '  <div class="race-gender" ng-if="::vm.isGuardian">{{:: vm.store.race }} {{:: vm.store.gender }}</div>',
         '  <div class="level" ng-if="::vm.isGuardian">Level {{ vm.store.level }}</div>',
         '  <div class="level powerLevel" ng-if="vm.isGuardian">{{ vm.store.powerLevel }}</div>',

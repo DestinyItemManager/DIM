@@ -280,6 +280,7 @@
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
                 name: 'vault',
+                class: 'vault',
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '',
                 items: [],
@@ -341,7 +342,7 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel,
                 isVault: false
               });
-              store.name = store.class;
+              store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {

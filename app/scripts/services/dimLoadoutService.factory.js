@@ -280,7 +280,7 @@
           })
           .then(function() {
             var value = 'success';
-            var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + [store.race, store.gender, store.class].join(' ') + '.';
+            var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + store.name + '.';
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {
