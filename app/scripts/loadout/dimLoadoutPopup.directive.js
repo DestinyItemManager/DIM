@@ -83,7 +83,7 @@
     vm.newLoadoutFromEquipped = function newLoadout($event) {
       ngDialog.closeAll();
 
-      var loadout = loadoutFromCurrentlyEquipped(vm.store.items, "");
+      var loadout = filterLoadoutToEquipped(loadoutFromCurrentlyEquipped(vm.store.items, ""));
       // We don't want to prepopulate the loadout with a bunch of cosmetic junk
       // like emblems and ships and horns.
       loadout.items = _.pick(loadout.items,
@@ -133,6 +133,14 @@
       };
     }
 
+    function filterLoadoutToEquipped(loadout) {
+      var filteredLoadout = angular.copy(loadout);
+      filteredLoadout.items = _.mapObject(filteredLoadout.items, function(items) {
+        return _.select(items, 'equipped');
+      });
+      return filteredLoadout;
+    }
+
     vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
       ngDialog.closeAll();
       dimEngramFarmingService.stop();
@@ -147,9 +155,7 @@
       }
 
       if (filterToEquipped) {
-        loadout = _.mapObject(loadout, function(items) {
-          return _.select(items, 'equipped');
-        });
+        loadout = filterLoadoutToEquipped(loadout);
       }
 
       dimLoadoutService.applyLoadout(vm.store, loadout);
