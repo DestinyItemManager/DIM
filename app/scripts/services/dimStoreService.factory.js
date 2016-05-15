@@ -11,6 +11,7 @@
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
+    var progressionDefs = {};
     dimItemBucketDefinitions.then(function(defs) {
       _.each(defs, function(def, hash) {
         if (def.enabled) {
@@ -20,6 +21,9 @@
       vaultSizes['Weapons'] = bucketSizes[4046403665];
       vaultSizes['Armor'] = bucketSizes[3003523923];
       vaultSizes['General'] = bucketSizes[138197802];
+    });
+    dimProgressionDefinitions.then(function(defs) {
+      progressionDefs = defs;
     });
 
     // Cooldowns
@@ -128,6 +132,7 @@
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
+      updateProgression: updateProgression,
       setHeights: setHeightsAsync,
       createItemIndex: createItemIndex,
       processItems: getItems
@@ -152,6 +157,24 @@
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
             dStore.updateCharacterInfo(bStore.base);
+          }
+        });
+        return _stores;
+      });
+    }
+
+    function updateProgression() {
+      return dimBungieService.getProgressions(dimPlatformService.getActive()).then(function(progressions) {
+        _.each(_stores, function(dStore) {
+          if (!dStore.isVault) {
+            var bStore = _.findWhere(progressions, { id: dStore.id }).progression;
+            bStore.progressions.forEach(function(prog) {
+              prog.icon = progressionDefs[prog.progressionHash].icon;
+              prog.identifier = progressionDefs[prog.progressionHash].name;
+              prog.color = progressionDefs[prog.progressionHash].color;
+              prog.scale = progressionDefs[prog.progressionHash].scale || 1;
+            });
+            dStore.progression = bStore;
           }
         });
         return _stores;
@@ -318,8 +341,6 @@
                 items = _.union(items, bucket.items);
               });
             } else {
-
-
               try {
                 glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;

@@ -22,6 +22,7 @@
       getPlatforms: getPlatforms,
       getCharacters: getCharacters,
       getStores: getStores,
+      getProgressions: getProgressions,
       transfer: transfer,
       equip: equip,
       equipItems: equipItems,
@@ -378,6 +379,68 @@
         .then(processPB);
 
       promises.push(promise);
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
+    function getProgressions(platform) {
+      var data = {
+        token: null,
+        membershipId: null
+      };
+
+      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
+      var addCharactersToData = assignResultAndForward.bind(null, data, 'characters');
+      var getMembershipPB = getMembership.bind(null, platform);
+      var getCharactersPB = getCharacters.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToData)
+        .then(getMembershipPB)
+        .then(addMembershipIdToData)
+        .then(getCharactersPB)
+        .then(addCharactersToData)
+        .then(function() {
+          return getDestinyProgression(data.token, platform, data.membershipId, data.characters);
+        })
+        .catch(function(e) {
+          toaster.pop('error', 'Bungie.net Error', e.message);
+
+          return $q.reject(e);
+        });
+
+      return promise;
+    }
+
+    function getGuardianProgressionRequest(token, platform, membershipId, character) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function processProgressionResponse(character, response) {
+      character.progression = response.data.Response.data;
+      return character;
+    }
+
+    function getDestinyProgression(token, platform, membershipId, characters) {
+      var promises = characters.map(function(character) {
+        var processPB = processProgressionResponse.bind(null, character);
+
+        return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
+          .then($http)
+          .then(handleErrors)
+          .then(processPB);
+      });
 
       return $q.all(promises);
     }
