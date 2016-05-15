@@ -81,7 +81,7 @@
         '      </div>',
         '    </div>',
         '    <div ng-if="::vm.store.id !== \'vault\'" class="title">',
-        '      <span>Progression</span>',
+        '      <span>Vendors</span>',
         '    </div>',
         '    <div class="sub-section sort-progression">',
         '      <div class="unequipped">',
