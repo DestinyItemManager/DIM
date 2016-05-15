@@ -26,8 +26,8 @@
         '  <div class="level powerLevel" ng-if="vm.isGuardian">{{ vm.store.powerLevel }}</div>',
         '  <div class="currency" ng-if="::!vm.isGuardian"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
         '  <div class="currency legendaryMarks" ng-if="::!vm.isGuardian"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
-        '  <div class="levelBar" ng-if="::vm.isGuardian">',
-        '    <div class="barFill" ng-style="{width: vm.store.percentToNextLevel + \'%\'}"></div>',
+        '  <div class="levelBar" ng-if="::vm.isGuardian" title="{{vm.xpTillMote}}">',
+        '    <div class="barFill" ng-style="vm.getLevelBar()"></div>',
         '  </div>',
         '  <div class="loadout-button" ng-if="::vm.isGuardian" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '</div>',
@@ -54,6 +54,18 @@
           }
         });
       });
+
+      vm.getLevelBar = function getLevelBar() {
+        if(vm.store.percentToNextLevel) {
+          return {width: vm.store.percentToNextLevel + '%'};
+        }
+        if(vm.store.progression && vm.store.progression.progressions) {
+          vm.xpTillMote = 'Prestige level: ' + vm.store.progression.progressions[4].level + '\n' +
+                          (25000-vm.store.progression.progressions[4].progressToNextLevel) + 'xp till 5 motes of light';
+          return {width: (vm.store.progression.progressions[4].progressToNextLevel)/250 + '%', "background-color": '#00aae1'};
+        }
+        return '';
+      };
 
       vm.openLoadoutPopup = function openLoadoutPopup(e) {
         e.stopPropagation();
