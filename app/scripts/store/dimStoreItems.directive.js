@@ -87,9 +87,9 @@
   }
 
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory', 'dimInfoService'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory, dimInfoService) {
     var vm = this;
 
     // Detect when we're hovering a dragged item over a target
@@ -226,7 +226,12 @@
       });
 
       if(_.where(vm.store.items, {type: 'Lost Items'}).length >= 20) {
-        toaster.pop('warning', 'Postmaster Limit', vm.store.name + ' has 20 items at the Postmaster. Any new engrams will overwrite the existing.');
+        dimInfoService.show('lostitems', {
+          type: 'warning',
+          title: 'Postmaster Limit',
+          body: vm.store.name + ' has 20 items at the Postmaster. Any new engrams will overwrite the existing.',
+          hide: 'Never show me this type of warning again.'
+        });
       }
     }
 
