@@ -224,6 +224,10 @@
       vm.data = _.groupBy(vm.store.items, function(item) {
         return item.type;
       });
+
+      if(_.where(vm.store.items, {type: 'Lost Items'}).length >= 20) {
+        toaster.pop('warning', 'Postmaster Limit', vm.store.name + ' has 20 items at the Postmaster. Any new engrams will overwrite the existing.');
+      }
     }
 
 
