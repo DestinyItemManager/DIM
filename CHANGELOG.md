@@ -8,6 +8,7 @@
 * Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
 * Add vendor progress
 * Add prestige level with xp bar under characters to replace normal xp bar after level 40.
+* XP Progress on bar items
 
 # 3.6.0
 
