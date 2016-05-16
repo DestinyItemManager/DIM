@@ -61,7 +61,7 @@
         }
         if(vm.store.progression && vm.store.progression.progressions) {
           vm.xpTillMote = 'Prestige level: ' + vm.store.progression.progressions[4].level + '\n' +
-                          (25000-vm.store.progression.progressions[4].progressToNextLevel) + 'xp till 5 motes of light';
+                          (25000-vm.store.progression.progressions[4].progressToNextLevel) + 'xp until 5 motes of light';
           return {width: (vm.store.progression.progressions[4].progressToNextLevel)/250 + '%', "background-color": '#00aae1'};
         }
         return '';
