@@ -225,7 +225,7 @@
         return item.type;
       });
 
-      if (_.count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
         dimInfoService.show('lostitems', {
           type: 'warning',
           title: 'Postmaster Limit',
