@@ -60,9 +60,10 @@
           return {width: vm.store.percentToNextLevel + '%'};
         }
         if(vm.store.progression && vm.store.progression.progressions) {
-          vm.xpTillMote = 'Prestige level: ' + vm.store.progression.progressions[4].level + '\n' +
-                          (25000-vm.store.progression.progressions[4].progressToNextLevel) + 'xp until 5 motes of light';
-          return {width: (vm.store.progression.progressions[4].progressToNextLevel)/250 + '%', "background-color": '#00aae1'};
+          var prestige = _.findWhere(vm.store.progression.progressions, {progressionHash: 2030054750});
+          vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
+                          (25000-prestige.progressToNextLevel) + 'xp until 5 motes of light';
+          return {width: (prestige.progressToNextLevel)/250 + '%', "background-color": '#00aae1'};
         }
         return '';
       };
