@@ -166,6 +166,7 @@ body > div, #header {
 }
 
 .vault {
+  flex: 1;
   .sort-class, .section.postmaster, .sort-class, .section.progress, .section.unknown .bucket-count {
     /*display: none;*/
     visibility: hidden;
@@ -1646,6 +1647,12 @@ g {
   }
 }
 
+#stores {
+  display: flex;
+  flex-direction: row;
+  margin: 0 2em;
+}
+
 #loadout-drawer {
   left: 0;
   right: 0;
@@ -2116,9 +2123,9 @@ button.toast-close-button {
 
 @for $i from 3 through 12 {
   .dim-col-#{$i} {
-    width: 84px + ($i * 52px);
+    max-width: 84px + ($i * 52px);
     &.vault {
-      width: $i * 52px;
+      max-width: $i * 52px;
     }
   }
 }

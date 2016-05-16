@@ -2,6 +2,7 @@
 
 * Add warning if the lost items section of the postmaster has 20 items.
 * Stat bars are more accurately sized.
+* It is no longer possible to choose column sizes that cause the vault to disappear.
 
 # 3.6.1
 
