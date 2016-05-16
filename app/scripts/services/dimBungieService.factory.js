@@ -22,7 +22,6 @@
       getPlatforms: getPlatforms,
       getCharacters: getCharacters,
       getStores: getStores,
-      getProgressions: getProgressions,
       transfer: transfer,
       equip: equip,
       equipItems: equipItems,
@@ -311,7 +310,12 @@
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
-          return getDestinyInventories(data.token, platform, data.membershipId, data.characters);
+          return $q.all([
+            getDestinyInventories(data.token, platform, data.membershipId, data.characters),
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+          ]).then(function(data) {
+            return $q.resolve(data[0]);
+          });
         })
         .catch(function(e) {
           toaster.pop('error', 'Bungie.net Error', e.message);
@@ -384,36 +388,6 @@
     }
 
     /************************************************************************************************************************************/
-
-    function getProgressions(platform) {
-      var data = {
-        token: null,
-        membershipId: null
-      };
-
-      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
-      var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
-      var addCharactersToData = assignResultAndForward.bind(null, data, 'characters');
-      var getMembershipPB = getMembership.bind(null, platform);
-      var getCharactersPB = getCharacters.bind(null, platform);
-
-      var promise = getBungleToken()
-        .then(addTokenToData)
-        .then(getMembershipPB)
-        .then(addMembershipIdToData)
-        .then(getCharactersPB)
-        .then(addCharactersToData)
-        .then(function() {
-          return getDestinyProgression(data.token, platform, data.membershipId, data.characters);
-        })
-        .catch(function(e) {
-          toaster.pop('error', 'Bungie.net Error', e.message);
-
-          return $q.reject(e);
-        });
-
-      return promise;
-    }
 
     function getGuardianProgressionRequest(token, platform, membershipId, character) {
       return {

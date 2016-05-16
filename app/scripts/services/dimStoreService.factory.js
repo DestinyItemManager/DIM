@@ -164,21 +164,17 @@
     }
 
     function updateProgression() {
-      return dimBungieService.getProgressions(dimPlatformService.getActive()).then(function(progressions) {
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
-            var bStore = _.findWhere(progressions, { id: dStore.id }).progression;
-            bStore.progressions.forEach(function(prog) {
+            dStore.progression.progressions.forEach(function(prog) {
               prog.icon = progressionDefs[prog.progressionHash].icon;
               prog.identifier = progressionDefs[prog.progressionHash].name;
               prog.color = progressionDefs[prog.progressionHash].color;
               prog.scale = progressionDefs[prog.progressionHash].scale || 1;
             });
-            dStore.progression = bStore;
           }
         });
         return _stores;
-      });
     }
 
     function getNextIndex() {
@@ -361,6 +357,7 @@
                 gender: getGender(raw.character.base.characterBase.genderType),
                 race: getRace(raw.character.base.characterBase.raceHash),
                 percentToNextLevel: raw.character.base.percentToNextLevel,
+                progression: raw.character.progression,
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
