@@ -120,51 +120,6 @@ body > div, #header {
   /*min-width: 1000px;*/
 }
 
-.button-name {
-  float: left;
-  width: 60%;
-  padding-left: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap !important;
-}
-
-.button-full {
-  width: 100%;
-}
-
-.button-create {
-  float: left;
-  width: 60%;
-  padding-left: 10px;
-  height: 35px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap !important;
-}
-
-.button-create-equipped {
-  text-align: center;
-  float: right;
-  width: 40%;
-}
-
-.button-delete, .button-edit {
-  text-align: center;
-}
-
-.loadout-set {
-  padding-left: 10px;
-}
-
-.loadout-list > .loadout-set {
-  padding-left: 0px;
-  overflow: hidden;
-  border-top: solid 1px #383838;
-  border-bottom: solid 1px #111;
-  background-color: #222;
-}
-
 .vault {
   flex: 1;
   .sort-class, .section.postmaster, .sort-class, .section.progress, .section.unknown .bucket-count {
@@ -1653,6 +1608,8 @@ g {
   margin: 0 2em;
 }
 
+/* Loadout editor */
+
 #loadout-drawer {
   left: 0;
   right: 0;
@@ -1699,44 +1656,59 @@ g {
   align-items: flex-start;
 }
 
-.loadout-list .loadout-set:hover, .loadout-new:hover, .loadout-options span:hover {
-  background-color: #151515;
-  border-top: solid 1px #151515;
-}
+/* Loadouts Dropdown */
 
 .loadout-list {
-  .button-name .fa {
-    width: 12px;
-    margin-right: 2px;
-    text-align: center;
-  }
-  img.fa {
-    transform: translateY(1px);
-  }
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .loadout-set {
-  .button-edit {
-    float: right;
-    width: 20%;
-    font-size: 1.2em;
+  display: flex;
+  flex-direction: row;
+  padding-left: 0px;
+  overflow: hidden;
+  border-top: solid 1px #383838;
+  border-bottom: solid 1px #111;
+  background-color: #222;
+
+  &:hover {
+    background-color: #151515;
+    border-top: solid 1px #151515;
   }
-  .button-delete {
-    float: right;
-    width: 20%;
-    font-size: 1.2em;
+
+  span:first-child {
+    flex: 1;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    .fa {
+      width: 12px;
+      margin-right: 2px;
+      text-align: center;
+    }
+    img.fa {
+      transform: translateY(1px);
+    }
+  }
+
+  span:not(:first-child) {
+    padding: 0 12px;
+    text-align: center;
+    color: #888;
+    .fa {
+      font-size: 1.2em;
+    }
     &:hover {
       background-color: #68a0b7;
       color: #222;
     }
   }
-  .button-edit:hover, .button-create-equipped:hover {
-    background-color: #68a0b7;
-    color: #222;
-  }
 }
 
-.loadout-new {
+.button-extra {
   text-align: center;
 }
 
