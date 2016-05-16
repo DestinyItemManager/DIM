@@ -207,6 +207,11 @@
             item.equipped !== pseudoItem.equipped;
         });
 
+        // vault can't equip
+        if (store.isVault) {
+          items.forEach(function(i) { i.equipped = false; });
+        }
+
         // We'll equip these all in one go!
         var itemsToEquip = _.filter(items, 'equipped');
         if (itemsToEquip.length > 1) {
