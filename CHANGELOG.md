@@ -6,6 +6,7 @@
 * Sometimes equipping loadouts would fail to equip one of your exotics. No more!
 * Add an 'is:infusable' search filter.
 * Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
+* XP Progress on bar items
 
 # 3.6.0
 
