@@ -11,6 +11,7 @@
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
+    var progressionDefs = {};
     dimItemBucketDefinitions.then(function(defs) {
       _.each(defs, function(def, hash) {
         if (def.enabled) {
@@ -20,6 +21,9 @@
       vaultSizes['Weapons'] = bucketSizes[4046403665];
       vaultSizes['Armor'] = bucketSizes[3003523923];
       vaultSizes['General'] = bucketSizes[138197802];
+    });
+    dimProgressionDefinitions.then(function(defs) {
+      progressionDefs = defs;
     });
 
     // Cooldowns
@@ -131,6 +135,7 @@
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
+      updateProgression: updateProgression,
       setHeights: setHeightsAsync,
       createItemIndex: createItemIndex,
       processItems: getItems
@@ -159,6 +164,20 @@
         });
         return _stores;
       });
+    }
+
+    function updateProgression() {
+        _.each(_stores, function(dStore) {
+          if (!dStore.isVault) {
+            dStore.progression.progressions.forEach(function(prog) {
+              prog.icon = progressionDefs[prog.progressionHash].icon;
+              prog.identifier = progressionDefs[prog.progressionHash].name;
+              prog.color = progressionDefs[prog.progressionHash].color;
+              prog.scale = progressionDefs[prog.progressionHash].scale || 1;
+            });
+          }
+        });
+        return _stores;
     }
 
     function getNextIndex() {
@@ -322,8 +341,6 @@
                 items = _.union(items, bucket.items);
               });
             } else {
-
-
               try {
                 glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
@@ -344,6 +361,7 @@
                 gender: getGender(raw.character.base.characterBase.genderType),
                 race: getRace(raw.character.base.characterBase.raceHash),
                 percentToNextLevel: raw.character.base.percentToNextLevel,
+                progression: raw.character.progression,
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
