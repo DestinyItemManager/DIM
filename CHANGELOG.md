@@ -1,4 +1,4 @@
-# Next
+# 3.6.1
 
 * Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
 * Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.
