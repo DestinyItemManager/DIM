@@ -321,7 +321,12 @@
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
-          return getDestinyInventories(data.token, platform, data.membershipId, data.characters);
+          return $q.all([
+            getDestinyInventories(data.token, platform, data.membershipId, data.characters),
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+          ]).then(function(data) {
+            return $q.resolve(data[0]);
+          });
         })
         .catch(function(e) {
           toaster.pop('error', 'Bungie.net Error', e.message);
@@ -395,6 +400,38 @@
 
     /************************************************************************************************************************************/
 
+    function getGuardianProgressionRequest(token, platform, membershipId, character) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function processProgressionResponse(character, response) {
+      character.progression = response.data.Response.data;
+      return character;
+    }
+
+    function getDestinyProgression(token, platform, membershipId, characters) {
+      var promises = characters.map(function(character) {
+        var processPB = processProgressionResponse.bind(null, character);
+
+        return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
+          .then($http)
+          .then(handleErrors)
+          .then(processPB);
+      });
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
     function transfer(item, store, amount) {
       var platform = dimState.active;
       var data = {
@@ -431,10 +468,8 @@
         toaster.pop('warning', 'Item Uniqueness', [
           "You tried to move the '" + item.name + "'",
           item.type.toLowerCase(),
-          "to",
-          store.isVault ?
-            'the vault' :
-            'your ' + store.powerLevel + ' ' + store.race + ' ' + store.name,
+          "to your",
+          store.name,
           "but that destination already has that item and is only allowed one."
         ].join(' '));
         return $q.reject(new Error('move-canceled'));

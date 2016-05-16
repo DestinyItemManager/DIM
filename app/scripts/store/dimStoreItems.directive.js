@@ -80,6 +80,22 @@
         '        </div>',
         '      </div>',
         '    </div>',
+        '    <div ng-if="::vm.store.id !== \'vault\'" class="title">',
+        '      <span>Vendors</span>',
+        '    </div>',
+        '    <div class="sub-section sort-progression">',
+        '      <div class="unequipped">',
+        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions track by $index" title="{{faction.identifier}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}">',
+        '          <svg width="48" height="48">',
+        '            <polygon stroke-dasharray="130" fill="{{faction.color}}" points="24,1 47,24 24,47 1,24"/>',
+        '            <image xlink:href="" ng-attr-xlink:href="{{faction.icon | bungieIcon}}" ng-attr-x="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" ng-attr-y="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" width="48" height="48" ng-attr-transform="scale({{faction.scale}})" />',
+        '            <polygon stroke-dasharray="130" fill-opacity="0" stroke="#FFF" stroke-opacity=".35" stroke-width="2" points="24,1 47,24 24,47 1,24"/>',
+        '            <polygon stroke-dasharray="130" style="stroke-dashoffset:{{130-(130*faction.progressToNextLevel/faction.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="2" points="24,1 47,24 24,47 1,24"/>',
+        '          </svg>',
+        '          <span class="item-stat" ng-bind="::faction.level"></span>',
+        '        </span>',
+        '      </div>',
+        '    </div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -87,9 +103,9 @@
   }
 
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory', 'dimInfoService'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory, dimInfoService) {
     var vm = this;
 
     // Detect when we're hovering a dragged item over a target
@@ -213,6 +229,8 @@
     });
 
     function resetData() {
+      dimStoreService.updateProgression();
+
       if (_.any(vm.store.items, {type: 'Unknown'})) {
         vm.categories['Unknown'] = ['Unknown'];
       }
@@ -224,8 +242,16 @@
       vm.data = _.groupBy(vm.store.items, function(item) {
         return item.type;
       });
-    }
 
+      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+        dimInfoService.show('lostitems', {
+          type: 'warning',
+          title: 'Postmaster Limit',
+          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+          hide: 'Never show me this type of warning again.'
+        });
+      }
+    }
 
     dimSettingsService.getSetting('itemSort').then(function(sort) {
       vm.itemSort = sort;

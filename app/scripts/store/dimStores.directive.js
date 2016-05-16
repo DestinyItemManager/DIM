@@ -22,7 +22,7 @@
         "    'hide-filtered': vm.hideFilteredItems,",
         "    'show-elements': vm.showElements",
         '  }">',
-        '  <div dim-store-heading store-data="store"></div>',
+        '  <div dim-store-heading class="character dim-col-{{vm.charCol}}" store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
         '</div>'
       ].join('')
@@ -46,6 +46,7 @@
         vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
         vm.vaultCol = Math.max(4, Math.min(settings.vaultCol, 12));
         vm.showElements = settings.showElements;
+        dimStoreService.setHeights();
       });
 
     $scope.$on('dim-settings-updated', function(event, arg) {
@@ -60,6 +61,7 @@
       } else if (_.has(arg, 'showElements')) {
         vm.showElements = arg.showElements;
       }
+      dimStoreService.setHeights();
     });
 
     $scope.$on('dim-stores-updated', function (e, stores) {

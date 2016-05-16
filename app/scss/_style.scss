@@ -120,52 +120,8 @@ body > div, #header {
   /*min-width: 1000px;*/
 }
 
-.button-name {
-  float: left;
-  width: 60%;
-  padding-left: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap !important;
-}
-
-.button-full {
-  width: 100%;
-}
-
-.button-create {
-  float: left;
-  width: 60%;
-  padding-left: 10px;
-  height: 35px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap !important;
-}
-
-.button-create-equipped {
-  text-align: center;
-  float: right;
-  width: 40%;
-}
-
-.button-delete, .button-edit {
-  text-align: center;
-}
-
-.loadout-set {
-  padding-left: 10px;
-}
-
-.loadout-list > .loadout-set {
-  padding-left: 0px;
-  overflow: hidden;
-  border-top: solid 1px #383838;
-  border-bottom: solid 1px #111;
-  background-color: #222;
-}
-
 .vault {
+  flex: 1;
   .sort-class, .section.postmaster, .sort-class, .section.progress, .section.unknown .bucket-count {
     /*display: none;*/
     visibility: hidden;
@@ -533,6 +489,11 @@ img {
 }
 
 .storage {
+  position: relative;
+  padding-right: 12px;
+  vertical-align: top;
+  display: inline-block;
+
   &:first-child .title {
     border-left: solid 1px #2b2b2b;
   }
@@ -550,12 +511,6 @@ img {
 
 .title .icon {
   width: 30px;
-}
-
-.storage {
-  padding-right: 12px;
-  vertical-align: top;
-  display: inline-block;
 }
 
 .col-3 .storage {
@@ -730,11 +685,11 @@ img {
 }*/
 
 .item-stat {
-  opacity: .9;
+  opacity: .85;
   position: absolute;
   bottom: 0;
   right: 0;
-  font-size: 10px;
+  font-size: 9.5px;
   padding: 0 2px;
   background: #ddd;
   color: #000;
@@ -811,6 +766,13 @@ img {
     position: absolute;
     z-index: 2;
   }
+
+  .item-xp-bar-small {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+  }
 }
 
 .element {
@@ -867,6 +829,7 @@ img {
 
 .character {
   margin-bottom: 10px;
+  height: 70px;
 }
 
 .character-box {
@@ -878,13 +841,6 @@ img {
   color: #f5f5f5;
   text-decoration: none;
   background-size: cover;
-  &.vault-box {
-    position: relative !important;
-    padding: 0 1em;
-    width: 100%;
-    box-sizing: border-box;
-    height: 70px;
-  }
   .emblem {
     position: absolute;
     top: 3px;
@@ -904,11 +860,6 @@ img {
   }
 }
 
-.vault-box .class {
-  font-size: 25px;
-  line-height: 38px;
-}
-
 .character-box {
   .race-gender {
     text-transform: uppercase;
@@ -926,15 +877,15 @@ img {
   }
   .currency {
     position: absolute;
-    top: 5px;
-    right: 10px;
+    top: 4px;
+    right: 40px;
     font-weight: 200;
     font-size: 14px;
   }
   .legendaryMarks {
     position: absolute;
-    top: 24px;
-    right: 10px;
+    top: 23px;
+    right: 40px;
   }
   .level.powerLevel {
     position: absolute;
@@ -1005,6 +956,50 @@ img {
       width: 16px;
       margin-right: 2px;
     }
+  }
+}
+
+.vault-capacity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 16px;
+  margin-top: 4px;
+  .vault-bucket {
+    flex: 1;
+    margin-right: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .vault-bucket-tag {
+    height: 16px;
+    width: 16px;
+    text-align: center;
+  }
+
+  .vault-fill-bar {
+    flex: 1;
+    height: 7px;
+    background-color: gray;
+    border-radius: 1px;
+    overflow: auto;
+    margin-left: 2px;
+  }
+  .fill-bar {
+    background-color: #FB9F28;
+    height: 100%;
+  }
+  .vault-full {
+    background-color: #cc3535;
   }
 }
 
@@ -1380,14 +1375,6 @@ rzslider {
   .lower-stats {
     color: #985C58;
   }
-  .stat-box-inner {
-    &.higher-stats {
-      background-color: #7DC878;
-    }
-    &.lower-stats {
-      background-color: #985C58;
-    }
-  }
   .stat-box-outer {
     display: block;
     height: 14px;
@@ -1405,11 +1392,12 @@ rzslider {
     background-color: #333;
     background-color: white;
     color: black;
-    padding-left: 5px;
     line-height: 20px;
-    border-right: solid 1px #000;
-    &:last-child {
-      border-right: none;
+    &.higher-stats {
+      background-color: #7DC878;
+    }
+    &.lower-stats {
+      background-color: #985C58;
     }
   }
   .stat-box-outer span:last-child {
@@ -1613,6 +1601,14 @@ g {
   }
 }
 
+#stores {
+  display: flex;
+  flex-direction: row;
+  margin: 0 2em;
+}
+
+/* Loadout editor */
+
 #loadout-drawer {
   left: 0;
   right: 0;
@@ -1659,44 +1655,59 @@ g {
   align-items: flex-start;
 }
 
-.loadout-list .loadout-set:hover, .loadout-new:hover, .loadout-options span:hover {
-  background-color: #151515;
-  border-top: solid 1px #151515;
-}
+/* Loadouts Dropdown */
 
 .loadout-list {
-  .button-name .fa {
-    width: 12px;
-    margin-right: 2px;
-    text-align: center;
-  }
-  img.fa {
-    transform: translateY(1px);
-  }
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .loadout-set {
-  .button-edit {
-    float: right;
-    width: 20%;
-    font-size: 1.2em;
+  display: flex;
+  flex-direction: row;
+  padding-left: 0px;
+  overflow: hidden;
+  border-top: solid 1px #383838;
+  border-bottom: solid 1px #111;
+  background-color: #222;
+
+  &:hover {
+    background-color: #151515;
+    border-top: solid 1px #151515;
   }
-  .button-delete {
-    float: right;
-    width: 20%;
-    font-size: 1.2em;
+
+  span:first-child {
+    flex: 1;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    .fa {
+      width: 12px;
+      margin-right: 2px;
+      text-align: center;
+    }
+    img.fa {
+      transform: translateY(1px);
+    }
+  }
+
+  span:not(:first-child) {
+    padding: 0 12px;
+    text-align: center;
+    color: #888;
+    .fa {
+      font-size: 1.2em;
+    }
     &:hover {
       background-color: #68a0b7;
       color: #222;
     }
   }
-  .button-edit:hover, .button-create-equipped:hover {
-    background-color: #68a0b7;
-    color: #222;
-  }
 }
 
-.loadout-new {
+.button-extra {
   text-align: center;
 }
 
@@ -2083,9 +2094,9 @@ button.toast-close-button {
 
 @for $i from 3 through 12 {
   .dim-col-#{$i} {
-    width: 84px + ($i * 52px);
+    max-width: 84px + ($i * 52px);
     &.vault {
-      width: $i * 52px;
+      max-width: $i * 52px;
     }
   }
 }
@@ -2096,11 +2107,15 @@ button.toast-close-button {
 }
 
 
-.sort-lost-items, .sort-messages, .sort-special-orders,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
+.sort-progression, .sort-lost-items, .sort-messages, .sort-special-orders,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
   .unequipped {
     margin-left: 12px;
     margin-right: 20px;
   }
+}
+
+.sort-progression {
+  min-height: 205px;
 }
 
 .vault .unequipped {
