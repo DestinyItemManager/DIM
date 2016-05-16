@@ -229,6 +229,8 @@
     });
 
     function resetData() {
+      dimStoreService.updateProgression();
+
       if (_.any(vm.store.items, {type: 'Unknown'})) {
         vm.categories['Unknown'] = ['Unknown'];
       }
@@ -241,8 +243,6 @@
         return item.type;
       });
     }
-
-    dimStoreService.updateProgression();
 
     dimSettingsService.getSetting('itemSort').then(function(sort) {
       vm.itemSort = sort;
