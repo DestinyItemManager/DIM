@@ -48,6 +48,7 @@ module.exports = function(grunt) {
         }]
       }
     },
+
     sass: {
         dist: {
           files: {
@@ -116,6 +117,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
+
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-compress');
@@ -125,9 +127,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  // Builds the Beta extension and publishes
-  grunt.registerTask('build', ['uglify',
-                               'concat']);
 
   grunt.registerTask('update_beta_manifest', function() {
     var manifest = grunt.file.readJSON('build/extension/manifest.json');
