@@ -115,7 +115,7 @@ module.exports = function(grunt) {
     }
   });
 
-   grunt.registerTask('css', ['sass', 'postcss']);
+  grunt.registerTask('css', ['sass', 'postcss']);
 
 
   grunt.loadNpmTasks('grunt-webstore-upload');
