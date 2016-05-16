@@ -103,9 +103,9 @@
   }
 
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory', 'dimInfoService'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory, dimInfoService) {
     var vm = this;
 
     // Detect when we're hovering a dragged item over a target
@@ -242,6 +242,15 @@
       vm.data = _.groupBy(vm.store.items, function(item) {
         return item.type;
       });
+
+      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+        dimInfoService.show('lostitems', {
+          type: 'warning',
+          title: 'Postmaster Limit',
+          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+          hide: 'Never show me this type of warning again.'
+        });
+      }
     }
 
     dimSettingsService.getSetting('itemSort').then(function(sort) {
