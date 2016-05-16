@@ -63,7 +63,7 @@
           var prestige = _.findWhere(vm.store.progression.progressions, {progressionHash: 2030054750});
           vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
                           (25000-prestige.progressToNextLevel) + 'xp until 5 motes of light';
-          return {width: (prestige.progressToNextLevel)/250 + '%', "background-color": '#00aae1'};
+          return {width: (prestige.progressToNextLevel)/250 + '%', "background-color": '#00aae1', opacity: .9};
         }
         return '';
       };
