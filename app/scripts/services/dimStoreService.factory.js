@@ -92,8 +92,8 @@
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel;
         this.powerLevel = characterInfo.characterBase.powerLevel;
-        this.background = characterInfo.backgroundPath;
-        this.icon = characterInfo.emblemPath;
+        this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
+        this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
       }
     };
