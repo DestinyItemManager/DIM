@@ -13,7 +13,7 @@
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
-          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')"></input>
+          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
         </td>
       </tr>
       <tr>
@@ -21,7 +21,7 @@
           <label for="details" title="Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.">Always Show Item Details</label>
         </td>
         <td>
-          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-change="vm.save('itemDetails')"></input>
+          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-change="vm.save('itemDetails')" />
         </td>
       </tr>
       <tr>
@@ -29,7 +29,23 @@
           <label for="itemStat" title="Will display information in the lower-right of the item that is appropriate to the item such as attack, defense, and bounty status.">Display Primary Stat Values on Items</label>
         </td>
         <td>
-          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-change="vm.save('itemStat')"></input>
+          <input type="checkbox" id="itemStat" ng-model="vm.settings.itemStat" ng-change="vm.save('itemStat')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="itemQuality" title="Will enable advanced min/max features on the move dialog and enable the armor comparison view.">Enable advanced stat quality comparison features</label>
+        </td>
+        <td>
+          <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality" ng-change="vm.save('itemQuality')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="showElements" title="Show elemental damage icons on weapons.">Show elemental damage icons on weapons</label>
+        </td>
+        <td>
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')"></input>
         </td>
       </tr>
       <tr>
@@ -45,6 +61,9 @@
           <br>
           <label>
             <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-change="vm.save('itemSort')">Rarity, then name</label>
+          <br>
+          <label ng-show="vm.settings.itemQuality">
+            <input type="radio" ng-model="vm.settings.itemSort" value="quality" ng-change="vm.save('itemSort')">Stat roll percent, then Prim Stat</label>
         </td>
       </tr>
       <tr>

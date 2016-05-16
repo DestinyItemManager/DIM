@@ -13,7 +13,8 @@
       controllerAs: 'vm',
       scope: {
         item: '=dimMoveItemProperties',
-        compareItem: '=dimCompareItem'
+        compareItem: '=dimCompareItem',
+        infuse: '=dimInfuse'
       },
       restrict: 'A',
       replace: true,
@@ -24,14 +25,15 @@
         '    <i class="fa fa-circle fa-stack-2x"></i>',
         '    <i class="fa fa-stack-1x fa-inverse" ng-class="{ \'fa-lock\': vm.item.locked, \'fa-unlock\': !vm.item.locked, locking: vm.locking }"></i>',
         '  </span>',
-        '  <span><a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
+        '  <span><img class="title-element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
+        '    <a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
-        '  <span ng-if="::vm.item.weaponClassName" ng-bind="::vm.item.weaponClassName"></span>',
-        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.xpComplete}}%</span>',
+        '  <span ng-if="::vm.item.sort == \'Weapons\' || vm.item.sort ==\'Postmaster\'" ng-bind="::vm.item.typeName"></span>',
+        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete}}%</span>',
         '  <span class="pull-right move-popup-info-detail" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
-        '<div class="item-xp-bar" ng-if="(vm.item.talentGrid || vm.item.xpComplete) && !vm.item.complete && vm.item.objectives.length !== 1">',
-        '  <div ng-style="{ width: (vm.item.talentGrid ? (100 * vm.item.talentGrid.totalXP / vm.item.talentGrid.totalXPRequired) : vm.item.xpComplete) + \'%\' }"></div>',
+        '<div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
+        '  <div ng-style="{ width: vm.item.percentComplete + \'%\' }"></div>',
         '</div>',
         '<div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
@@ -42,7 +44,7 @@
         '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
         '    <div class="stat-box-row">',
         '       <span class="stat-box-text"> {{ stat.name }} </span>',
-        '       <span class="stat-box-outer">',
+        '       <span class="stat-box-outer" ng-class="{ \'show-quality\': vm.itemQuality }">',
         '         <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
         '         <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
         '         <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" style="width: {{ 100 * (stat.equippedStatsValue - stat.value) / stat.maximumValue }}%"></span>',
@@ -51,12 +53,17 @@
 
         '         <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '       </span>',
-        '         <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
+        '       <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
+        '       <span ng-show="vm.itemQuality && stat.scaled > 0" class="stat-box-val" ng-class="{ \'show-quality\': vm.itemQuality && stat.scaled > 0  }" ng-show="{{ stat.bar }}" style="color: {{ vm.getColor(vm.getPercent(stat.scaled,stat.split)) }}">({{ vm.getPercent(stat.scaled,stat.split) }}%)</span>',
         '    </div>',
+        '  </div>',
+        '  <div ng-if="vm.item.quality !== null && vm.item.quality >= 0" class="stat-box-row">',
+        '    <span class="stat-box-text">Stats quality</span>',
+        '    <span class="stat-box-val" style="width:50%;color:{{ vm.getColor(vm.item.quality) }}">{{ vm.item.quality }}% of max possible roll</span>',
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
-        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid"/>',
+        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
         '</div>',
         '<div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '  <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
@@ -87,6 +94,30 @@
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
     });
+
+    vm.getPercent = function(top, bottom) {
+      return Math.round(top/bottom*100);
+    };
+
+    vm.getColor = function(value) {
+        var color = 0;
+        if(value <= 85) {
+          color = 0;
+        } else if(value <= 90) {
+          color = 20;
+        } else if(value <= 95) {
+          color = 60;
+        } else if(value <= 99) {
+          color = 120;
+        } else if(value >= 100) {
+          color = 190;
+        } else {
+          return 'white';
+        }
+        return 'hsl(' + color + ',85%,60%)';
+//      value = value - 75 < 0 ? 0 : value - 75;
+//      return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
+    };
 
     vm.setLockState = function setLockState(item) {
       if (vm.locking) {
@@ -127,6 +158,11 @@
     settings.getSetting('itemDetails')
       .then(function(show) {
         vm.itemDetails = vm.itemDetails || show;
+      });
+    vm.itemQuality = false;
+    settings.getSetting('itemQuality')
+      .then(function(show) {
+        vm.itemQuality = vm.itemQuality || show;
       });
 
     if (vm.item.primStat) {

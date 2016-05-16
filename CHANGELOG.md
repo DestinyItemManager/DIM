@@ -1,3 +1,24 @@
+# Next
+
+* Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
+* Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.
+* Items in the Postmaster include their type in the move popup, so they're easier to distinguish.
+* Sometimes equipping loadouts would fail to equip one of your exotics. No more!
+* Add an 'is:infusable' search filter.
+* Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
+* XP Progress on bar items
+
+# 3.6.0
+
+* Bring back the infusion dialog as an Infusion Fuel Finder. It doesn't do as much as it used to, but now it's optimized for quickly finding eligable infusion items.
+* Fix a bug where hovering over a drop zone with a consumable/material stack and waiting for the message to turn green still wouldn't trigger the partial move dialog.
+* Added a new "Item Leveling" auto-loadout. This loadout finds items for you to dump XP into. It strongly favors locked items, and won't replace an incomplete item that you have equipped. Otherwise, it goes after items that already have the most XP (closest to completion), preferring exotics and legendaries if they are locked, and rares and legendaries if they're not locked (because you get more materials out of disassembling them that way).
+* There's a new setting that will show elemental damage icons on your weapons. Elemental damage icons are now always shown in the title of the item popup.
+* Elder's Sigil won't go above 100% completion for the score portion anymore.
+* Added roll quality percentage indicator. You can now see how your intellect/discipline/strength stacks up against the maximum stat roll for your armor.
+* DIM is smarter about what items it chooses to move aside, or to equip in the place of a dequipped item.
+* Added a new "Gather Engrams" loadout that will pull all engrams to your character.
+
 # 3.5.4
 
 * We won't try to equip an item that is too high-level for your character when dequipping items.

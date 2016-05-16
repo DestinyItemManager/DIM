@@ -13,12 +13,14 @@
       bindToController: true,
       scope: {},
       template: [
-        '<div ng-repeat="store in vm.stores track by store.id" class="storage dim-col-{{ (store.id === \'vault\') ? vm.vaultCol : vm.charCol }}"',
-        '  ng-class="{ ',
+        '<div ng-repeat="store in vm.stores track by store.id"',
+        '  class="storage dim-col-{{(store.id === \'vault\') ? vm.vaultCol : vm.charCol}}"',
+        '  ng-class="{',
         '    condensed: vm.condensed,',
         "    guardian: !store.isVault,",
         "    vault: store.isVault,",
-        "    'hide-filtered': vm.hideFilteredItems",
+        "    'hide-filtered': vm.hideFilteredItems,",
+        "    'show-elements': vm.showElements",
         '  }">',
         '  <div dim-store-heading store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
@@ -43,6 +45,7 @@
         vm.condensed = settings.condensed;
         vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
         vm.vaultCol = Math.max(4, Math.min(settings.vaultCol, 12));
+        vm.showElements = settings.showElements;
       });
 
     $scope.$on('dim-settings-updated', function(event, arg) {
@@ -54,6 +57,8 @@
         vm.vaultCol = arg.vaultCol;
       } else if (_.has(arg, 'hideFilteredItems')) {
         vm.hideFilteredItems = arg.hideFilteredItems;
+      } else if (_.has(arg, 'showElements')) {
+        vm.showElements = arg.showElements;
       }
     });
 

@@ -28,7 +28,12 @@
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
+        '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
+        '      <div ng-style="{ width: vm.item.percentComplete + \'%\' }"></div>',
+        '    </div>',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div ng-if="vm.itemQuality && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
+        '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'
@@ -62,6 +67,27 @@
           }
         });
       }
+
+
+      vm.getColor = function(value) {
+          var color = 0;
+          if(value <= 85) {
+            color = 0;
+          } else if(value <= 90) {
+            color = 20;
+          } else if(value <= 95) {
+            color = 60;
+          } else if(value <= 99) {
+            color = 120;
+          } else if(value >= 100) {
+            color = 190;
+          } else {
+            return 'white';
+          }
+          return 'hsl(' + color + ',85%,60%)';
+//          value = value - 75 < 0 ? 0 : value - 75;
+//          return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
+      };
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -111,7 +137,7 @@
 
       if (!vm.item.primStat && vm.item.objectives) {
         scope.$watchGroup([
-          'vm.item.xpComplete',
+          'vm.item.percentComplete',
           'vm.itemStat',
           'vm.item.complete'], function() {
             processBounty(vm, vm.item);
@@ -125,6 +151,7 @@
         scope.$watchGroup([
           'vm.item.primStat.value',
           'vm.itemStat',
+          'vm.itemQuality',
           'vm.item.sort'], function() {
             processItem(vm, vm.item);
           });
@@ -136,6 +163,9 @@
     if (_.has(settings, 'itemStat')) {
       vm.itemStat = settings.itemStat;
     }
+    if (_.has(settings, 'itemQuality')) {
+      vm.itemQuality = settings.itemQuality;
+    }
   }
 
   function processBounty(vm, item) {
@@ -144,7 +174,7 @@
 
     if (showBountyPercentage) {
       vm.badgeClassNames = { 'item-stat': true };
-      vm.badgeCount = item.xpComplete + '%';
+      vm.badgeCount = item.percentComplete + '%';
     }
   }
 
@@ -171,6 +201,7 @@
     var showStats = vm.itemStat && item.primStat && item.primStat.value;
     var showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
     vm.showBadge = (showStats || showDamageType);
+    vm.quality = item.quality;
 
     if (showStats) {
       vm.badgeClassNames['item-stat'] = true;
@@ -181,6 +212,10 @@
       vm.badgeClassNames['damage-type'] = true;
       vm.badgeCount = '';
     }
+
+    if(vm.itemQuality && vm.quality > 0) {
+      vm.badgeClassNames['item-stat-no-bg'] = true;
+    }
   }
 
   StoreItemCtrl.$inject = ['$rootScope', 'dimSettingsService', '$scope'];
@@ -189,6 +224,7 @@
     var vm = this;
 
     vm.itemStat = false;
+    vm.itemQuality = false;
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
     switch (vm.item.type) {
     case 'Lost Items':

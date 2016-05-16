@@ -28,6 +28,43 @@
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
+    // A mapping from the bucket names to DIM categories
+    // Some buckets like vault and currencies have been ommitted
+    var bucketToType = {
+      "BUCKET_CHEST": "Chest",
+      "BUCKET_LEGS": "Leg",
+      "BUCKET_RECOVERY": "Lost Items",
+      "BUCKET_SHIP": "Ship",
+      "BUCKET_MISSION": "Missions",
+      "BUCKET_ARTIFACT": "Artifact",
+      "BUCKET_HEAVY_WEAPON": "Heavy",
+      "BUCKET_COMMERCIALIZATION": "Special Orders",
+      "BUCKET_CONSUMABLES": "Consumable",
+      "BUCKET_PRIMARY_WEAPON": "Primary",
+      "BUCKET_CLASS_ITEMS": "ClassItem",
+      "BUCKET_QUESTS": "Quests",
+      "BUCKET_VEHICLE": "Vehicle",
+      "BUCKET_BOUNTIES": "Bounties",
+      "BUCKET_SPECIAL_WEAPON": "Special",
+      "BUCKET_SHADER": "Shader",
+      "BUCKET_EMOTES": "Emote",
+      "BUCKET_MAIL": "Messages",
+      "BUCKET_BUILD": "Class",
+      "BUCKET_HEAD": "Helmet",
+      "BUCKET_ARMS": "Gauntlets",
+      "BUCKET_HORN": "Horn",
+      "BUCKET_MATERIALS": "Material",
+      "BUCKET_GHOST": "Ghost",
+      "BUCKET_EMBLEM": "Emblem"
+    };
+
+    var typeToSort = {};
+    _.each(dimCategory, function(types, category) {
+      types.forEach(function(type) {
+        typeToSort[type] = category;
+      });
+    });
+
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
@@ -49,7 +86,7 @@
         if (!item.type) {
           throw new Error("item needs a 'type' field");
         }
-        return this.capacityForItem(item) - count(this.items, { type: item.type });
+        return Math.max(0, this.capacityForItem(item) - count(this.items, { type: item.type }));
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
@@ -61,10 +98,34 @@
       }
     };
 
+    // Prototype for Item objects - add methods to this to add them to all
+    // items.
+    var ItemProto = {
+      // Can this item be equipped by the current store?
+      canBeEquippedBy: function(store) {
+        if (store.isVault) {
+          return false;
+        }
+        return this.equipment &&
+          // For the right class
+          (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+          // nothing we are too low-level to equip
+          this.equipRequiredLevel <= store.level &&
+          // can be moved or is already here
+          (!this.notransfer || this.owner === store.id) &&
+          this.sort !== 'Postmaster';
+      },
+      isEngram: function() {
+        return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
+      }
+    };
+
     var service = {
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
+      getStatsData: getStatsData,
+      getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       setHeights: setHeightsAsync,
@@ -167,7 +228,7 @@
       setHeight('.sub-section.sort-classitem');
       setHeight('.sub-section.sort-artifact');
       setHeight('.sub-section.sort-emblem');
-      setHeight('.sub-section.sort-armor');
+      setHeight('.sub-section.sort-shader');
       setHeight('.sub-section.sort-ghost');
       setHeight('.sub-section.sort-emote');
       setHeight('.sub-section.sort-ship');
@@ -181,6 +242,7 @@
       setHeight('.sub-section.sort-special-orders');
       setHeight('.sub-section.sort-lost-items');
       setHeight('.sub-section.sort-quests');
+      setHeight('.sub-section.sort-unknown');
       setHeight('.weapons');
       setHeight('.armor');
       setHeight('.general');
@@ -236,7 +298,7 @@
                   if (!item.sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return this.capacityForItem(item) - count(this.items, { sort: item.sort });
+                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: item.sort }));
                 }
               });
 
@@ -390,38 +452,44 @@
         return null;
       }
 
-      var itemType = getItemType(item, itemDef, itemBucketDef);
-      if (!itemType) {
-        return null;
+      // def.bucketTypeHash is where it goes normally
+      var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
+      // item.bucket is where it IS right now
+      var currentBucket = itemBucketDef[item.bucket];
+
+      var location;
+      if (currentBucket && bucketToType[currentBucket.bucketIdentifier]) {
+        location = bucketToType[currentBucket.bucketIdentifier];
+      }
+      var normalLocation;
+      if (normalBucket && bucketToType[normalBucket.bucketIdentifier]) {
+        normalLocation = bucketToType[normalBucket.bucketIdentifier];
       }
 
-      var weaponClass = null, weaponClassName = null;
-
-      if (itemType.hasOwnProperty('general') && itemType.general !== '') {
-        weaponClass = itemType.weaponClass;
-        weaponClassName = itemType.weaponClassName;
-        itemType = itemType.general;
+      var weaponClass = null;
+      if (dimCategory['Weapons'].indexOf(normalLocation) >= 0) {
+        weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
       }
 
-      var itemSort = sortItem(itemDef.itemTypeName);
+      var itemType = location || normalLocation || 'Unknown';
+
+      var itemSort = typeToSort[itemType];
       if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
       }
 
-      if (item.location === 4) {
+      if (itemSort !== 'Postmaster' && item.location === 4) {
         itemSort = 'Postmaster';
-
-        if (itemType !== 'Messages')
-          if (itemType === 'Consumable') {
-            itemType = 'Special Orders';
-          } else {
-            itemType = 'Lost Items';
-          }
+        if (itemType === 'Consumable') {
+          itemType = 'Special Orders';
+        } else {
+          itemType = 'Lost Items';
+        }
       }
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      var createdItem = {
+      var createdItem = angular.extend(Object.create(ItemProto), {
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -435,8 +503,10 @@
         bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
+        percentComplete: null,
         amount: item.stackSize,
         primStat: item.primaryStat,
+        typeName: itemDef.itemTypeName,
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
         //perks: item.perks,
@@ -451,34 +521,41 @@
         lockable: item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
-        weaponClassName: weaponClassName,
         classified: itemDef.classified
-      };
+      });
       createdItem.index = createItemIndex(createdItem);
 
       try {
-        createdItem.stats = buildStats(item, itemDef, statDef);
-      } catch(e) {
-        console.error("Error building stats for " + createdItem.name, item, itemDef);
-      }
-      try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
-
       } catch(e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef);
+      }
+      try {
+        createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
+      } catch(e) {
+        console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
       } catch(e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
+      if(createdItem.talentGrid && createdItem.talentGrid.infusable) {
+        try {
+          createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
+        } catch(e) {
+          console.error("Error building quality rating for " + createdItem.name, item, itemDef);
+        }
+      }
 
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.xpComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
-          return (objective.progress / objective.completionValue) / createdItem.objectives.length;
+        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
         }));
+      } else if (createdItem.talentGrid) {
+        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
       }
 
       return createdItem;
@@ -551,6 +628,7 @@
         // There's a lot more here, but we're taking just what we need
         return {
           name: nodeName,
+          hash: talentNodeSelected.nodeStepHash,
           description: talentNodeSelected.nodeStepDescription,
           icon: talentNodeSelected.icon,
           // XP put into this node
@@ -617,7 +695,6 @@
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: !!ascendNode,
         ascended: !!(ascendNode && ascendNode.activated),
-        hasReforgeNode: _.any(gridNodes, { name: 'Reforge Ready' }),
         infusable: _.any(gridNodes, { name: 'Infuse' })
       };
     }
@@ -640,10 +717,143 @@
       });
     }
 
-    function buildStats(item, itemDef, statDef) {
+    // thanks to bungie armory for the max-base stats
+    // thanks to /u/iihavetoes for rates + equation
+    // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    function getQualityRating(stats, light, type) {
+      var maxLight = 335;
+
+      if(!stats || light.value < 280) {
+        return null;
+      }
+
+      var split = 0, rate = 0;
+      switch(type.toLowerCase()) {
+        case 'helmet':
+          rate = 1/6;
+          split = 46; // bungie reports 48, but i've only seen 46
+          break;
+        case 'gauntlets':
+          rate = 1/6;
+          split = 41; // bungie reports 43, but i've only seen 41
+          break;
+        case 'chest':
+          rate = 1/5;
+          split = 61;
+          break;
+        case 'leg':
+          rate = 1/5;
+          split = 56;
+          break;
+        case 'classitem':
+        case 'ghost':
+          rate = 1/10;
+          split = 25;
+          break;
+        case 'artifact':
+          rate = 1/10;
+          split = 38;
+          break;
+        default:
+          return null;
+      }
+
+      var ret = {
+        total: 0,
+        max: split*2
+      };
+
+      var pure = 0;
+      stats.forEach(function(stat) {
+        var scaled = 0;
+        if(stat.base) {
+          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
+          pure = scaled;
+        }
+        stat.scaled = scaled;
+        stat.split = split;
+        ret.total += scaled || 0;
+      });
+      if(pure === ret.total) {
+        stats.forEach(function(stat) {
+          stat.scaled = Math.floor(stat.scaled/2);
+        });
+      }
+
+      return Math.round(ret.total / ret.max * 100);
+    }
+
+    // thanks to /u/iihavetoes for the bonuses at each level
+    // thanks to /u/tehdaw for the spreadsheet with bonuses
+    // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
+    function getBonus(light, type) {
+      switch(type.toLowerCase()) {
+        case 'helmet':
+        case 'helmets':
+          return light < 292 ? 15 :
+                 light < 307 ? 16 :
+                 light < 319 ? 17 :
+                 light < 332 ? 18 : 19;
+        case 'gauntlets':
+          return light < 287 ? 13 :
+                 light < 305 ? 14 :
+                 light < 319 ? 15 :
+                 light < 333 ? 16 : 17;
+        case 'chest':
+        case 'chest armor':
+          return light < 287 ? 20 :
+                 light < 300 ? 21 :
+                 light < 310 ? 22 :
+                 light < 319 ? 23 :
+                 light < 328 ? 24 : 25;
+        case 'leg':
+        case 'leg armor':
+          return light < 284 ? 18 :
+                 light < 298 ? 19 :
+                 light < 309 ? 20 :
+                 light < 319 ? 21 :
+                 light < 329 ? 22 : 23;
+        case 'classitem':
+        case 'class items':
+        case 'ghost':
+        case 'ghosts':
+          return light < 295 ? 8 :
+                 light < 319 ? 9 : 10;
+        case 'artifact':
+        case 'artifacts':
+          return light < 287 ? 34 :
+                 light < 295 ? 35 :
+                 light < 302 ? 36 :
+                 light < 308 ? 37 :
+                 light < 314 ? 38 :
+                 light < 319 ? 39 :
+                 light < 325 ? 40 :
+                 light < 330 ? 41 : 42;
+        case 'lost items':
+          // TODO: this can be improved when we separate an item's type from its location, but for now we don't know
+          return 0;
+      }
+      console.warn('item bonus not found', type);
+      return 0;
+    }
+
+    function buildStats(item, itemDef, statDef, grid, type) {
+
       if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
+
+      var armorNodes = [];
+      var activeArmorNode;
+      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+        armorNodes = _.filter(grid.nodes, function(node) {
+          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
+        });
+        if (armorNodes) {
+          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || { hash: 0 };
+        }
+      }
+
       return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
         var def = statDef[stat.statHash];
         if (!def) {
@@ -681,10 +891,32 @@
           maximumValue = itemStat.maximumValue;
         }
 
+        var val = itemStat ? itemStat.value : stat.value;
+        var base = val;
+        var bonus = 0;
+
+        if (item.primaryStat.statHash === 3897883278) {
+          if ((name === 'Intellect' && _.find(armorNodes, { name: 'Increase Intellect' })) ||
+             (name === 'Discipline' && _.find(armorNodes, { name: 'Increase Discipline' })) ||
+             (name === 'Strength' && _.find(armorNodes, { name: 'Increase Strength' }))) {
+            bonus = getBonus(item.primaryStat.value, type);
+
+            if (activeArmorNode &&
+               (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
+               (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
+               (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
+              base = Math.max(0, val - bonus);
+            }
+          }
+        }
+
         return {
+          base: base,
+          bonus: bonus,
+          statHash: stat.statHash,
           name: name,
           sort: sort,
-          value: itemStat ? itemStat.value : stat.value,
+          value: val,
           maximumValue: maximumValue,
           bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
         };
@@ -754,251 +986,6 @@
       return 'unknown';
     }
 
-    /* Not Implemented */
-    // Engram,
-    // Trials Reward,
-    // Currency,
-    // Material Exchange,
-    // Equipment,
-    // Invitation,
-    // Camera,
-    // Buff,
-    // Bribe,
-    // Incomplete Engrams,
-    // Corrupted Engrams,
-
-    function getItemType(item, def, buckets) {
-      var type = def.itemTypeName;
-      var name = def.itemName;
-      // def.bucketTypeHash is where it goes
-      var normalBucket = buckets[def.bucketTypeHash];
-      // item.bucket is where it IS
-      var currentBucket = buckets[item.bucket];
-
-      // TODO: time to dig through this code
-      if (currentBucket && currentBucket.bucketName === 'Messages') {
-        return 'Messages';
-      }
-
-      if (name == 'SRL Record Book') {
-        return 'Missions';
-      }
-
-      // File "Mote of Light" under "Material"
-      if (item.itemHash === 937555249) {
-        return 'Material';
-      }
-
-      if (def.bucketTypeHash === 3621873013) {
-        return null;
-      }
-
-      if (def.bucketTypeHash === 2422292810) {
-        if (item.location !== 4)
-          return null;
-      }
-
-      if (type.indexOf('Mystery Bag') != -1) {
-        return 'Consumable';
-      }
-
-      if (type.indexOf('Junk') != -1) {
-        return 'Consumable';
-      }
-
-      if (def.bucketTypeHash === 375726501) {
-        if (type.indexOf("Message ") != -1) {
-          return 'Messages';
-        }
-
-        if (type.indexOf("Package") != -1) {
-          return 'Messages';
-        }
-
-        if (["Public Event Completed"].indexOf(name) != -1) {
-          return "Messages";
-        }
-
-        return 'Missions';
-      }
-
-
-      if (_.isUndefined(type) || _.isUndefined(name)) {
-        return {
-          'general': 'General',
-          'weaponClass': 'General'
-        };
-      }
-
-      //if(type.indexOf("Engram") != -1 || name.indexOf("Marks") != -1) {
-      if (name.indexOf("Marks") != -1) {
-        return null;
-      }
-
-      if (type === 'Mission Reward') {
-        return null;
-      }
-
-      // Used to find a "weaponClass" type to send back
-      var typeObj = {
-        general: '',
-        weaponClass: type.toLowerCase().replace(/\s/g, ''),
-        weaponClassName: type
-      };
-
-      if (["Pulse Rifle", "Scout Rifle", "Hand Cannon", "Auto Rifle", "Primary Weapon Engram"].indexOf(type) != -1)
-        typeObj.general = 'Primary';
-      if (["Sniper Rifle", "Shotgun", "Fusion Rifle", "Sidearm", "Special Weapon Engram"].indexOf(type) != -1) {
-        typeObj.general = 'Special';
-
-        // detect special case items that are actually primary weapons.
-        if (["Vex Mythoclast", "Universal Remote", "No Land Beyond"].indexOf(name) != -1) {
-          typeObj.general = 'Primary';
-        }
-
-        if (def.itemHash === 3012398149) {
-          typeObj.general = 'Heavy';
-        }
-      }
-      if (["Rocket Launcher", "Sword", "Machine Gun", "Heavy Weapon Engram"].indexOf(type) != -1)
-        typeObj.general = 'Heavy';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Class Item Engram"].indexOf(type) != -1)
-        return 'ClassItem';
-      if (["Gauntlet Engram"].indexOf(type) != -1)
-        return 'Gauntlets';
-      if (type==='Mask') {
-        return 'Helmet';
-      }
-      if (["Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram"].indexOf(type) != -1)
-        return (type.split(' ')[0] === 'Body') ? "Chest" : type.split(' ')[0];
-      if (["Titan Subclass", "Hunter Subclass", "Warlock Subclass"].indexOf(type) != -1)
-        return 'Class';
-      if (["Restore Defaults"].indexOf(type) != -1)
-        return 'Armor';
-      if (["Currency"].indexOf(type) != -1) {
-        if (["Vanguard Marks", "Crucible Marks"].indexOf(name) != -1)
-          return '';
-        return 'Material';
-      }
-      if (["Commendation", "Trials of Osiris", "Faction Badge"].indexOf(type) != -1) {
-        if (name.indexOf("Redeemed") != -1) {
-          return null;
-        }
-
-        return 'Missions';
-      }
-
-      if (type.indexOf("Summoning Rune") != -1) {
-        return "Material";
-      }
-
-      if (type.indexOf("Emote") != -1) {
-        return "Emote";
-      }
-
-      if (type.indexOf("Artifact") != -1) {
-        return "Artifact";
-      }
-
-      if (type.indexOf(" Bounty") != -1) {
-        if (def.hasAction === true) {
-          return 'Bounties';
-        } else {
-          return null;
-        }
-      }
-
-      if (type.indexOf("Treasure Map") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Bounty Reward") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Queen's Orders") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Curio") != -1) {
-        return 'Bounties';
-      }
-      if (type.indexOf("Vex Technology") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Horn") != -1) {
-        return "Horn";
-      }
-
-      if (type.indexOf("Quest") != -1) {
-        return 'Quests';
-      }
-
-      if (type.indexOf("Relic") != -1) {
-        return 'Bounties';
-      }
-
-      if (type.indexOf("Message ") != -1) {
-        return 'Messages';
-      }
-
-      if (type.indexOf("Package") != -1) {
-        return 'Messages';
-      }
-
-      if (type.indexOf("Armsday Order") != -1) {
-        switch (def.bucketTypeHash) {
-          case 2465295065:
-            return 'Special';
-          case 1498876634:
-            return 'Primary';
-          case 953998645:
-            return 'Heavy';
-          default:
-            return 'Special Orders';
-        }
-      }
-
-      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
-        return "Consumable";
-      }
-
-      if (typeObj.general !== '') {
-        return typeObj;
-      }
-
-      if (["Public Event Completed"].indexOf(name) != -1) {
-        return "Messages";
-      }
-
-      if (["Vehicle Upgrade", 'Junk', 'Mystery Bag'].indexOf(type) != -1) {
-        return "Consumable";
-      }
-
-      if (["Armor Shader", "Emblem", "Ghost Shell", "Ship", "Vehicle", "Consumable", "Material", "Ship Schematics"].indexOf(type) != -1)
-        return type.split(' ')[0];
-
-      return null;
-    }
-
-    function sortItem(type) {
-      if (["Pulse Rifle", "Sword", "Sniper Rifle", "Shotgun", "Scout Rifle", "Sidearm", "Hand Cannon", "Fusion Rifle", "Rocket Launcher", "Auto Rifle", "Machine Gun", "Primary Weapon Engram", "Special Weapon Engram", "Heavy Weapon Engram"].indexOf(type) != -1)
-        return 'Weapons';
-      if (["Titan Mark", "Hunter Cloak", "Warlock Bond", "Helmet Engram", "Leg Armor Engram", "Body Armor Engram", "Gauntlet Engram", "Gauntlets", "Helmet", 'Mask', "Chest Armor", "Leg Armor", "Class Item Engram"].indexOf(type) != -1)
-        return 'Armor';
-      if (["Quest Step", "Warlock Artifact", "Hunter Artifact", "Titan Artifact", "Faction Badge", "Treasure Map", "Vex Technology", "Curio", "Relic", "Summoning Rune", "Queen's Orders", "Crucible Bounty", "Vanguard Bounty", "Vehicle Upgrade", "Emote", "Restore Defaults", "Titan Subclass", "Hunter Subclass", "Warlock Subclass", "Horn", "Armor Shader", "Emblem", "Ghost Shell", "Ship", "Ship Schematics", "Vehicle", "Consumable", "Material", "Currency"].indexOf(type) != -1)
-        return 'General';
-      if (["Daily Reward", "Package", "Armsday Order"]) {
-        return 'Postmaster';
-      }
-
-      if (type.indexOf("Message ") != -1) {
-        return 'Postmaster';
-      }
-    }
-
-
     //---- following code is from https://github.com/DestinyTrialsReport
     function getAbilityCooldown(subclass, ability, tier) {
       if (ability === 'STAT_INTELLECT') {
@@ -1037,6 +1024,9 @@
           case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
           case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
+        if(!data.stats[stats[s]]) {
+          continue;
+        }
         statHash.value = data.stats[stats[s]].value;
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {
@@ -1047,7 +1037,9 @@
           for (var t = 0; t < 5; t++) {
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
-          statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          if(data.peerView) {
+            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+          }
           statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
         } else {
           statHash.percentage = +(100 * statHash.value / 10).toFixed();

@@ -1,66 +1,49 @@
-<div class="infuseDialog" ng-controller="dimInfuseCtrl as infuse" dim-click-anywhere-but-here="infuse.closeDialog()">
-  <h1>Infusion Calculator</h1>
+<div class="infuseDialog" ng-controller="dimInfuseCtrl as vm" dim-click-anywhere-but-here="vm.closeDialog()">
+  <h1>Infusion Fuel Finder</h1>
   <div class="ngdialog-inner-content">
   <div class="infuseHeader">
 
     <div class="infuseSourceItemInfo">
-      <div class="infuseSourceItem" dim-simple-item item-data="infuse.source"></div>
+      <dim-simple-item class="infuseSourceItem" item-data="vm.source"></dim-simple-item>
 
       <div class="infuseSourceDetailsRow">
-        <div><strong>{{infuse.source.name}}</strong></div>
-        <div>{{infuse.source.type}}</div>
+        <div><strong>{{vm.source.name}}</strong></div>
+        <div>{{vm.source.type}}</div>
       </div>
 
       <div class="infuseSourceDetailsRow">
-        <div>{{infuse.statType}}</div>
-        <div class="bigValue">{{infuse.source.primStat.value}}</div>
+        <div>{{vm.statType}}</div>
+        <div class="bigValue">{{vm.source.primStat.value}}</div>
       </div>
     </div>
 
     <div class="infuseControls">
-      <label><input class="controls" type="checkbox" id="infuse-all" ng-model="infuse.getAllItems" ng-change="infuse.getItems()">Show infusable items across all characters and vault</label>
-      <label><input class="controls" type="checkbox" id="infuse-locked" ng-model="infuse.showLockedItems" ng-change="infuse.getItems()">Include 'locked' items</label>
-      <label><input class="controls" type="checkbox" id="infuse-blues" ng-model="infuse.onlyBlues" ng-change="infuse.getItems()">Limit to rare (blue) items</label>
-    </div>
-  </div>
-  <div class="bestInfusion infuseControls">
-    <label>
-      Infuse {{infuse.statType}} up to:
-      <select ng-options="path as path.light + (path.light == 'Manual' ? '' : (' (' + path.path.length + ')')) for path in infuse.paths" ng-model="infuse.selectedPath" ng-change="infuse.selectInfusionPath(true)"></select>
-    </label>
-    <small>Hold Shift and click to exclude items from infusion calculations.</small>
-  </div>
-
-  <div class="gearsContainer grey">
-    <span ng-if="!infuse.view.length"><strong>No infusable items available.</strong></span>
-    <span ng-if="infuse.view.length">Select items to infuse:</span>
-    <div ng-repeat="value in infuse.infusable">
-      <div class="{{infuse.inView(value)}}" dim-simple-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
+      <label><input class="controls" type="checkbox" id="infuse-all" ng-model="vm.getAllItems" ng-change="vm.getItems()">Show infusable items across all characters and vault</label>
+      <label><input class="controls" type="checkbox" id="infuse-locked" ng-model="vm.showLockedItems" ng-change="vm.getItems()">Include 'locked' items</label>
     </div>
   </div>
 
-  <div class="gearsContainer black infuseResults">
-    <div ng-show="infuse.infused != 0">
-      <div class="infuseTargets">
-        <div ng-repeat="value in infuse.targets">
-          <div class="plusSeparator" ng-if="!$first">+</div>
-          <div class="infusedItem" dim-simple-item item-data="value" ng-click="infuse.toggleItem($event, value)"></div>
-        </div>
-      </div>
+  <div class="gearsContainer grey infuseTargets">
+    <span ng-if="!vm.infusable.length"><strong>No infusable items available.</strong></span>
+    <span ng-if="vm.infusable.length">Select item to infuse with:</span>
+    <div ng-repeat="value in vm.infusable track by value.index">
+      <dim-simple-item ng-class="{ 'infuse-selected': value == vm.target }" item-data="value" ng-click="vm.selectItem(value, $event)"></dim-simple-item>
+    </div>
+  </div>
+
+  <div class="gearsContainer black">
+    <div ng-show="vm.infused != 0">
+      <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
       <div class="result">
         <span>Will bring the gear to</span>
-        <span class="bigValue">{{infuse.infused}}</span>
-        <span class="green">(+ {{infuse.difference}})</span>
-        <span>using {{infuse.targets.length*3}} <span class="currency"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
-        <span ng-if="infuse.exotic">+ {{infuse.targets.length}} <span class="legendaryMarks"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
-        <span>+ {{infuse.targets.length*250 | number}} <span class="currency"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
-        <span>+ {{infuse.targets.length*infuse.wildcardMaterialCost | number}} <span class="currency"><img alt="Materials" title="Materials"  dim-bungie-image-fallback="infuse.wildcardMaterialIcon"></span></span>
-
+        <span class="bigValue">{{vm.infused}}</span>
+        <span class="green">(+ {{vm.infused - vm.source.primStat.value}})</span>
+        <span>using 3 <span class="currency"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
+        <span ng-if="vm.exotic">+ 1 <span class="currency"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
+        <span>+ 250 <span class="currency"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
+        <span>+ {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="Materials" title="Materials"  dim-bungie-image-fallback="vm.wildcardMaterialIcon"></span></span>
       </div>
-      <button ng-if="infuse.getAllItems" ng-disabled="infuse.transferInProgress" ng-click="infuse.transferItems()">Transfer items</button>
+      <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()">Transfer items</button>
     </div>
-  </div>
-
-  <div class='gearsContainer'><small>This calculator uses the best known algorithm for infusing. If you find any discrepancies <a href='https://www.reddit.com/r/DestinyTheGame/comments/3o48e2/infusion_data_collection_request/' target='_blank'>let us know.</a> DIM can't actually perform infusions, it can just tell you what you'll get.</small></div>
   </div>
 </div>
