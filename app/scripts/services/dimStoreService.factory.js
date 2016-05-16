@@ -96,8 +96,8 @@
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel;
         this.powerLevel = characterInfo.characterBase.powerLevel;
-        this.background = characterInfo.backgroundPath;
-        this.icon = characterInfo.emblemPath;
+        this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
+        this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
       }
     };
@@ -301,7 +301,8 @@
                 name: 'vault',
                 class: 'vault',
                 lastPlayed: '2005-01-01T12:00:01Z',
-                icon: '',
+                icon: '/images/vault.png',
+                background: '/images/vault-background.png',
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
@@ -347,9 +348,9 @@
 
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: raw.character.base.emblemPath,
+                icon: 'http://bungie.net/' + raw.character.base.emblemPath,
                 lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                background: raw.character.base.backgroundPath,
+                background: 'http://bungie.net/' + raw.character.base.backgroundPath,
                 level: raw.character.base.characterLevel,
                 powerLevel: raw.character.base.characterBase.powerLevel,
                 stats: getStatsData(raw.character.base.characterBase),
