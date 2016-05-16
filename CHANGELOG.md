@@ -1,14 +1,19 @@
 # Next
 
+* Add warning if the lost items section of the postmaster has 20 items.
+* Stat bars are more accurately sized.
+* Add vendor progress
+* Add prestige level with xp bar under characters to replace normal xp bar after level 40.
+* Add warning if the lost items section of the postmaster has 20 items.
+
+# 3.6.1
+
 * Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
 * Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.
 * Items in the Postmaster include their type in the move popup, so they're easier to distinguish.
 * Sometimes equipping loadouts would fail to equip one of your exotics. No more!
 * Add an 'is:infusable' search filter.
 * Add 'is:intellect', 'is:discipline', 'is:strength' search filters for armor.
-* Add vendor progress
-* Add prestige level with xp bar under characters to replace normal xp bar after level 40.
-* Add warning if the lost items section of the postmaster has 20 items.
 * XP Progress on bar items
 
 # 3.6.0
