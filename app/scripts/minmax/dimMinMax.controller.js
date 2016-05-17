@@ -9,21 +9,89 @@
   function dimMinMaxCtrl($scope, $state, $q, loadingTracker, dimStoreService, dimItemService, ngDialog, dimLoadoutService) {
     var vm = this, buckets = [];
 
-//    function getBestArmor(bucket) {
-//      var armor = {};
-//      for(var i in bucket) {
-//        var best = [
-////          _.max(bucket[i], function(o){return  (_.findWhere(o.normalStats, {statHash: 144602215}) || {base: 0}).base;}), // best intellect
-////          _.max(bucket[i], function(o){return (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}).base;}), // best discipline
-////          _.max(bucket[i], function(o){return (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}).base;}), // best strength
-//          _.max(bucket[i], function(o){return  (_.findWhere(o.normalStats, {statHash: 144602215}) || {base: 0}).base + (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}).base;}), // best int + dis
-//          _.max(bucket[i], function(o){return  (_.findWhere(o.normalStats, {statHash: 144602215}) || {base: 0}).base + (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}).base;}), // best int + str
-//          _.max(bucket[i], function(o){return (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}).base + (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}).base;}) // best dis + str
-//        ];
-//        armor[i] = _.uniq(best);
-//      }
-//      return armor;
-//    }
+    function getBestArmor(bucket) {
+      var armor = {};
+      for(var armortype in bucket) {
+        var best = [
+        {item: _.max(bucket[armortype], function(o){var stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); return  stats.scaled + stats.bonus;}), bonus_type: 'int'}, // best int_w_bonus
+        {item: _.max(bucket[armortype], function(o){var stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'disc'}, // best dis_w_bonus
+        {item: _.max(bucket[armortype], function(o){var stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'str'}, // best str_w_bonus
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}); return int_stats.scaled + int_stats.bonus + disc_stats.scaled; }), bonus_type: 'int'}, // best int_w_bonus + dis
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}); return int_stats.scaled + int_stats.bonus + disc_stats.scaled; }), bonus_type: 'disc'}, // best int_w_bonus + dis
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}); return int_stats.scaled + disc_stats.scaled + disc_stats.bonus; }), bonus_type: 'disc'}, // best int + dis_w_bonus
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {base: 0}); return int_stats.scaled + disc_stats.scaled + disc_stats.bonus; }), bonus_type: 'int'}, // best int + dis_w_bonus
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return int_stats.scaled + int_stats.bonus + str_stats.scaled; }), bonus_type: 'int'}, // best int_w_bonus + str
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return int_stats.scaled + int_stats.bonus + str_stats.scaled; }), bonus_type: 'str'}, // best int_w_bonus + str
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return int_stats.scaled + str_stats.scaled + str_stats.bonus; }), bonus_type: 'str'}, // best int + str_w_bonus
+        {item: _.max(bucket[armortype], function(o){var int_stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return int_stats.scaled + str_stats.scaled + str_stats.bonus; }), bonus_type: 'int'}, // best int + str_w_bonus
+        {item: _.max(bucket[armortype], function(o){var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return disc_stats.scaled + disc_stats.bonus + str_stats.scaled; }), bonus_type: 'disc'}, // best dis_w_bonus + str
+        {item: _.max(bucket[armortype], function(o){var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return disc_stats.scaled + disc_stats.bonus + str_stats.scaled; }), bonus_type: 'str'}, // best dis_w_bonus + str
+        {item: _.max(bucket[armortype], function(o){var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return disc_stats.scaled + str_stats.scaled + str_stats.bonus; }), bonus_type: 'str'}, // best dis + str_w_bonus
+        {item: _.max(bucket[armortype], function(o){var disc_stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); var str_stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {base: 0}); return disc_stats.scaled + str_stats.scaled + str_stats.bonus; }), bonus_type: 'disc'}, // best dis + str_w_bonus
+        ];
+        armor[armortype] = _.uniq(best, 'item');
+      }
+      return armor;
+    }
+    
+    function validSet(gearset) {
+      var exoticCount = 0;
+      for(var index in gearset) {
+          var item = gearset[index].item;
+          if(item.tier === 'Exotic' && item.type != 'ClassItem') {
+              exoticCount += 1;
+          }
+      }
+      return exoticCount < 2;
+    }
+    
+    function getSetBuckets(bestArmor) {
+      var combs_all = combinations(bestArmor['helmet'],bestArmor['gauntlets'],bestArmor['chest'],bestArmor['leg'],bestArmor['classItem'],bestArmor['ghost'],bestArmor['artifact']);
+      var combs = _.filter(combs_all, validSet);
+      var get_val = function(stats, type, target_type) {
+        return stats.scaled + ((type == target_type)? stats.bonus : 0);
+      }
+      var set_map = []
+      _.each(combs, function(o) { 
+        var helm = o[0], gaunts = o[1], chest = o[2], legs = o[3], classItem = o[4], ghost = o[5], art = o[6];
+        o.int_val =  get_val(helm.item.normalStats[0], helm.bonus_type, 'int') + get_val(gaunts.item.normalStats[0], gaunts.bonus_type, 'int') + get_val(chest.item.normalStats[0], chest.bonus_type, 'int') +
+                get_val(legs.item.normalStats[0], legs.bonus_type, 'int') + get_val(classItem.item.normalStats[0], classItem.bonus_type, 'int') + get_val(ghost.item.normalStats[0], ghost.bonus_type, 'int') + get_val(art.item.normalStats[0], art.bonus_type, 'int');
+        
+        o.disc_val =  get_val(helm.item.normalStats[1], helm.bonus_type, 'disc') + get_val(gaunts.item.normalStats[1], gaunts.bonus_type, 'disc') + get_val(chest.item.normalStats[1], chest.bonus_type, 'disc') +
+                get_val(legs.item.normalStats[1], legs.bonus_type, 'disc') + get_val(classItem.item.normalStats[1], classItem.bonus_type, 'disc') + get_val(ghost.item.normalStats[1], ghost.bonus_type, 'disc') + get_val(art.item.normalStats[1], art.bonus_type, 'disc');
+        
+        o.str_val =  get_val(helm.item.normalStats[2], helm.bonus_type, 'str') + get_val(gaunts.item.normalStats[2], gaunts.bonus_type, 'str') + get_val(chest.item.normalStats[2], chest.bonus_type, 'str') +
+                get_val(legs.item.normalStats[2], legs.bonus_type, 'str') + get_val(classItem.item.normalStats[2], classItem.bonus_type, 'str') + get_val(ghost.item.normalStats[2], ghost.bonus_type, 'str') + get_val(art.item.normalStats[2], art.bonus_type, 'str');
+        
+        var int_level = Math.min(Math.floor(o.int_val/60), 5);
+        var disc_level = Math.min(Math.floor(o.disc_val/60), 5);
+        var str_level = Math.min(Math.floor(o.str_val/60), 5);
+        var roll_string = int_level.toString() + disc_level.toString() + str_level.toString();
+        if(roll_string in set_map) {
+            set_map[roll_string].push(o);
+        } else {
+            set_map[roll_string] = [o];
+        }
+      });
+      return set_map;
+      
+      // var highestInt = _.max(combs, function(o) { 
+        // var helm = o[0].item.normalStats[0], gaunts = o[1].item.normalStats[0], chest = o[2].item.normalStats[0], legs = o[3].item.normalStats[0], classItem = o[4].item.normalStats[0], ghost = o[5].item.normalStats[0], art = o[6].item.normalStats[0];
+        // return get_val(helm, helm.bonus_type, 'int') + get_val(gaunts, gaunts.bonus_type, 'int') + get_val(chest, chest.bonus_type, 'int') +
+                // get_val(legs, legs.bonus_type, 'int') + get_val(classItem, classItem.bonus_type, 'int') + get_val(ghost, ghost.bonus_type, 'int') + get_val(art, art.bonus_type, 'int');
+      // });
+      // var highestDisc = _.max(combs, function(o) { 
+        // var helm = o[0].item.normalStats[1], gaunts = o[1].item.normalStats[1], chest = o[2].item.normalStats[1], legs = o[3].item.normalStats[1], classItem = o[4].item.normalStats[1], ghost = o[5].item.normalStats[1], art = o[6].item.normalStats[1];
+        // return get_val(helm, helm.bonus_type, 'disc') + get_val(gaunts, gaunts.bonus_type, 'disc') + get_val(chest, chest.bonus_type, 'disc') +
+                // get_val(legs, legs.bonus_type, 'disc') + get_val(classItem, classItem.bonus_type, 'disc') + get_val(ghost, ghost.bonus_type, 'disc') + get_val(art, art.bonus_type, 'disc');
+      // });
+      // var highestStr = _.max(combs, function(o) { 
+        // var helm = o[0].item.normalStats[2], gaunts = o[1].item.normalStats[2], chest = o[2].item.normalStats[2], legs = o[3].item.normalStats[2], classItem = o[4].item.normalStats[2], ghost = o[5].item.normalStats[2], art = o[6].item.normalStats[2];
+        // return get_val(helm, helm.bonus_type, 'str') + get_val(gaunts, gaunts.bonus_type, 'str') + get_val(chest, chest.bonus_type, 'str') +
+                // get_val(legs, legs.bonus_type, 'str') + get_val(classItem, classItem.bonus_type, 'str') + get_val(ghost, ghost.bonus_type, 'str') + get_val(art, art.bonus_type, 'str');
+      // });
+      // return highestStr;
+    }
 //
 //    function doRankArmor(bucket, best) {
 //      var armor = {};
@@ -50,30 +118,30 @@
       };
     }
 
-//    var slice = Array.prototype.slice;
-//    function combinations() {
-//      return _.reduce(slice.call(arguments, 1),function(ret,newarr){
-//        return _.reduce(ret,function(memo,oldi){
-//          return memo.concat(_.map(newarr,function(newi){
-//            return oldi.concat([newi]);
-//          }));
-//        },[]);
-//      },_.map(arguments[0],function(i){return [i];}));
-//    }
-//
-//    function getCombinations(items) {
-//      console.log(items.filter(function(item) { return item.bucket === 3448274439; }))
-//      // load the best items
-//      return combinations(
-//        items.filter(function(item) { return item.bucket === 3448274439; }),
-//        items.filter(function(item) { return item.bucket === 3551918588; }),
-//        items.filter(function(item) { return item.bucket === 14239492; }),
-//        items.filter(function(item) { return item.bucket === 20886954; }),
-//        items.filter(function(item) { return item.bucket === 1585787867; }),
-//        items.filter(function(item) { return item.bucket === 4023194814; }),
-//        items.filter(function(item) { return item.bucket === 434908299; })
-//      );
-//    }
+    var slice = Array.prototype.slice;
+    function combinations() {
+      return _.reduce(slice.call(arguments, 1),function(ret,newarr){
+        return _.reduce(ret,function(memo,oldi){
+          return memo.concat(_.map(newarr,function(newi){
+            return oldi.concat([newi]);
+          }));
+        },[]);
+      },_.map(arguments[0],function(i){return [i];}));
+    }
+
+    //function getCombinations(items) {
+    //  //console.log(items.filter(function(item) { return item.bucket === 3448274439; }))
+    //  // load the best items
+    //  return combinations(
+    //    items.filter(function(item) { return item.bucket === 3448274439; }),
+    //    items.filter(function(item) { return item.bucket === 3551918588; }),
+    //    items.filter(function(item) { return item.bucket === 14239492; }),
+    //    items.filter(function(item) { return item.bucket === 20886954; }),
+    //    items.filter(function(item) { return item.bucket === 1585787867; }),
+    //    items.filter(function(item) { return item.bucket === 4023194814; }),
+    //    items.filter(function(item) { return item.bucket === 434908299; })
+    //  );
+    //}
 
 
 
@@ -81,7 +149,7 @@
 //    combinations: function(){
 //      return _.reduce(slice.call(arguments, 1),function(ret,newarr){
 //        return _.reduce(ret,function(memo,oldi){
-//          return memo.concat(_.map(newarr,function(newi){
+//         return memo.concat(_.map(newarr,function(newi){
 //            return oldi.concat([newi]);
 //          }));
 //        },[]);
@@ -169,6 +237,8 @@
 
     angular.extend(vm, {
       active: 'warlock',
+      activesets: '551',
+      highestsets: [],
       normalize: 335,
       doNormalize: false,
       type: 'Helmets',
@@ -190,6 +260,7 @@
               statHash: stat.statHash,
               base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0),
               scaled: stat.scaled,
+              bonus: stat.bonus,
               split: stat.split,
             };
           });
@@ -220,7 +291,17 @@
             return normalizeStats(item);
           }), true)
         };
-
+        
+        vm.bestarmor = getBestArmor(buckets[vm.active]);
+        vm.highestsets = getSetBuckets(vm.bestarmor);
+        // vm.highestint = 0;
+        // vm.highestdisc = 0;
+        // vm.higheststr = 0;
+        // _(vm.highestset).each(function(g) { 
+            // vm.highestint += (g.bonus_type == 'int')? g.item.normalStats[0].scaled + g.item.normalStats[0].bonus : g.item.normalStats[0].scaled;
+            // vm.highestdisc += (g.bonus_type == 'disc')? g.item.normalStats[1].scaled + g.item.normalStats[1].bonus : g.item.normalStats[1].scaled;
+            // vm.higheststr += (g.bonus_type == 'str')? g.item.normalStats[2].scaled + g.item.normalStats[2].bonus : g.item.normalStats[2].scaled;
+        // });
         vm.ranked = normalized;//doRankArmor(normalized, getBestArmor(normalized));
       },
       filterFunction: function(element) {
