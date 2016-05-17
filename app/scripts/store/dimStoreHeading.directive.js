@@ -26,7 +26,7 @@
         '  <div class="level powerLevel" ng-if="!vm.store.isVault">{{ vm.store.powerLevel }}</div>',
         '  <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
         '  <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
-        '  <div class="levelBar" ng-if="::!vm.store.isVault" title="{{vm.xpTillMote}}">',
+        '  <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" title="{{vm.xpTillMote}}">',
         '    <div class="barFill" ng-style="vm.getLevelBar()"></div>',
         '  </div>',
         '  <div class="loadout-button" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
@@ -78,14 +78,17 @@
     }
 
     vm.getLevelBar = function getLevelBar() {
-        if(vm.store.percentToNextLevel) {
-          return {width: vm.store.percentToNextLevel + '%'};
+        if (vm.store.percentToNextLevel) {
+          return { width: vm.store.percentToNextLevel + '%' };
         }
-        if(vm.store.progression && vm.store.progression.progressions) {
-          var prestige = _.findWhere(vm.store.progression.progressions, {progressionHash: 2030054750});
+        if (vm.store.progression && vm.store.progression.progressions) {
+          var prestige = _.findWhere(vm.store.progression.progressions, {
+            progressionHash: 2030054750
+          });
           vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
-                          (25000-prestige.progressToNextLevel) + 'xp until 5 motes of light';
-          return {width: (prestige.progressToNextLevel)/250 + '%', "background-color": '#00aae1', opacity: .9};
+            (25000 - prestige.progressToNextLevel) +
+            'xp until 5 motes of light';
+          return { width: (prestige.progressToNextLevel)/250 + '%' };
         }
         return '';
       };

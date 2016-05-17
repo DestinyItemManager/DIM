@@ -904,18 +904,24 @@ img {
 }
 
 .levelBar {
-  height: 5px;
+  height: 4px;
   background-color: rgba(245, 245, 245, 0.1);
   width: 100%;
   position: absolute;
   bottom: 0;
   left: 0;
+
 }
 
 .barFill {
   background-color: #5da469;
-  height: 5px;
   width: 0%;
+  height: 100%;
+
+  .moteProgress & {
+    background-color: #00aae1;
+    opacity: .6;
+  }
 }
 
 /* INT/DIS/STR bars below character tile */
@@ -1009,7 +1015,7 @@ img {
   right: 0;
   background-color: rgba(120, 120, 120, 0.7);
   width: 30px;
-  height: 45px;
+  height: 46px;
   color: rgba(200, 200, 200, 1);
   text-align: center;
   font-size: 15px;
