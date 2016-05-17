@@ -743,6 +743,7 @@
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
       var maxLight = 335;
 

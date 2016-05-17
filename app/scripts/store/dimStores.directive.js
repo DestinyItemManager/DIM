@@ -20,7 +20,7 @@
         "    guardian: !store.isVault,",
         "    vault: store.isVault,",
         "    'hide-filtered': vm.hideFilteredItems,",
-        "    'show-elements': vm.showElements",
+        "    'itemQuality': vm.itemQuality,",
         '  }">',
         '  <div dim-store-heading class="character dim-col-{{vm.charCol}}" store-data="store"></div>',
         '  <div dim-store-items store-data="store"></div>',
@@ -45,7 +45,7 @@
         vm.condensed = settings.condensed;
         vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
         vm.vaultCol = Math.max(4, Math.min(settings.vaultCol, 12));
-        vm.showElements = settings.showElements;
+        vm.itemQuality = settings.itemQuality;
         dimStoreService.setHeights();
       });
 
@@ -58,8 +58,8 @@
         vm.vaultCol = arg.vaultCol;
       } else if (_.has(arg, 'hideFilteredItems')) {
         vm.hideFilteredItems = arg.hideFilteredItems;
-      } else if (_.has(arg, 'showElements')) {
-        vm.showElements = arg.showElements;
+      } else if (_.has(arg, 'itemQuality')) {
+        vm.itemQuality = arg.itemQuality;
       }
       dimStoreService.setHeights();
     });

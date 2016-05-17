@@ -697,14 +697,35 @@ img {
   text-align: center;
   -webkit-user-select: none;
   box-sizing: content-box;
+  display: none;
+  &.item-stackable {
+    display: block;
+  }
 }
-.item-stat-no-bg {
+.itemQuality .item-stat-no-bg {
   background-color: transparent;
 }
 
 .item-quality {
   left: 0;
   text-align: left;
+  display: none;
+  .itemQuality & {
+    display: block;
+  }
+}
+
+.itemStat .item-stat {
+  &.item-bounty, &.item-equipment, &.item-faction {
+    display: block;
+  }
+}
+
+.damage-type {
+  display: none;
+  .showDamage & {
+    display: block;
+  }
 }
 
 .stat-damage-arc {

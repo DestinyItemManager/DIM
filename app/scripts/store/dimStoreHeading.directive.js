@@ -70,6 +70,7 @@
 
     vm.sortSize = {};
     if (vm.store.isVault) {
+      // TODO: do this by buckets
       $scope.$watchCollection('vm.store.items', function() {
         ['Weapons', 'Armor', 'General'].forEach(function(sort) {
           vm.sortSize[sort] = count(vm.store.items, {sort: sort});
