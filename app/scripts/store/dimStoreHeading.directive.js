@@ -86,9 +86,9 @@
             progressionHash: 2030054750
           });
           vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
-            (25000 - prestige.progressToNextLevel) +
+            (prestige.nextLevelAt - prestige.progressToNextLevel) +
             'xp until 5 motes of light';
-          return { width: (prestige.progressToNextLevel)/250 + '%' };
+          return { width: 100 * (prestige.progressToNextLevel / prestige.nextLevelAt) + '%' };
         }
         return '';
       };
