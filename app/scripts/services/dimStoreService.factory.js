@@ -170,10 +170,7 @@
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             dStore.progression.progressions.forEach(function(prog) {
-              prog.icon = progressionDefs[prog.progressionHash].icon;
-              prog.identifier = progressionDefs[prog.progressionHash].name;
-              prog.color = progressionDefs[prog.progressionHash].color;
-              prog.scale = progressionDefs[prog.progressionHash].scale || 1;
+              angular.extend(prog, progressionDefs[prog.progressionHash]);
             });
           }
         });
