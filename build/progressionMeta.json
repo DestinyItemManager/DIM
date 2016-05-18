@@ -7,8 +7,8 @@
   "3871980777": {"label":"New Monarchy", "color": "#862529", "scale": ".5", "order": 5},
   "2161005788": {"label":"Iron Banner", "color": "#4d310a", "scale": ".5", "order": 6},
   "174528503": {"label":"Crota's Bane", "color": "#9e9381", "scale": ".5", "order": 7},
-  "3641985238": {"label":"House of Judgment", "color": "#5AAC77", "scale": ".5", "order": 8},
-  "807090922": {"label":"Queen's Wrath", "color": "#2F1023", "scale": ".5", "order": 9},
+  "807090922": {"label":"Queen's Wrath", "color": "#2F1023", "scale": ".5", "order": 8},
+  "3641985238": {"label":"House of Judgment", "color": "#5AAC77", "scale": ".5", "order": 9},
   "2335631936": {"label":"Gunsmith", "color": "#717272", "scale": ".8", "order": 10},
   "2763619072": {"label":"SRL", "color": "#e92b38", "scale": ".5", "order": 11}
 }
