@@ -40,7 +40,7 @@
               <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
             </div>
           </div>
-          <div dim-simple-item item-data="item"></div>
+          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
   <!--
           <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
             <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
