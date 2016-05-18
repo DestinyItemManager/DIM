@@ -747,12 +747,12 @@
     function getQualityRating(stats, light, type) {
       var maxLight = 335;
 
-      if(!stats || light.value < 280) {
+      if (!stats || light.value < 280) {
         return null;
       }
 
       var split = 0, rate = 0;
-      switch(type.toLowerCase()) {
+      switch (type.toLowerCase()) {
         case 'helmet':
           rate = 1/6;
           split = 46; // bungie reports 48, but i've only seen 46
@@ -790,17 +790,19 @@
       var pure = 0;
       stats.forEach(function(stat) {
         var scaled = 0;
-        if(stat.base) {
+        if (stat.base) {
           scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
           pure = scaled;
         }
         stat.scaled = scaled;
         stat.split = split;
+        stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
         ret.total += scaled || 0;
       });
-      if(pure === ret.total) {
+      if (pure === ret.total) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled/2);
+          stat.scaled = Math.floor(stat.scaled / 2);
+          stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
         });
       }
 

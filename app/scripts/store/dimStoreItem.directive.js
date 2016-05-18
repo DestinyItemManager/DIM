@@ -4,7 +4,32 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreItem', StoreItem);
+    .directive('dimStoreItem', StoreItem)
+    // A filter that will heatmap-color a background according to a percentage
+    .filter('qualityColor', function() {
+      return function getColor(value, property) {
+        property = property || 'background-color';
+        var color = 0;
+        if (value <= 85) {
+          color = 0;
+        } else if (value <= 90) {
+          color = 20;
+        } else if (value <= 95) {
+          color = 60;
+        } else if (value <= 99) {
+          color = 120;
+        } else if (value >= 100) {
+          color = 190;
+        } else {
+          return 'white';
+        }
+        var result = {};
+        result[property] = 'hsl(' + color + ',85%,60%)';
+        return result;
+      };
+    });
+
+
 
   StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
@@ -32,7 +57,7 @@
         '      <div ng-style="{ width: vm.item.percentComplete + \'%\' }"></div>',
         '    </div>',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
-        '    <div ng-if="::(vm.item.sort == \'Armor\' || vm.item.type == \'Artifact\') && vm.item.quality" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.item.quality)}};">{{ vm.item.quality + "%" }}</div>',
+        '    <div ng-if="::(vm.item.sort == \'Armor\' || vm.item.type == \'Artifact\') && vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality | qualityColor">{{ vm.item.quality + "%" }}</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
@@ -68,27 +93,6 @@
           }
         });
       }
-
-
-      vm.getColor = function(value) {
-          var color = 0;
-          if(value <= 85) {
-            color = 0;
-          } else if(value <= 90) {
-            color = 20;
-          } else if(value <= 95) {
-            color = 60;
-          } else if(value <= 99) {
-            color = 120;
-          } else if(value >= 100) {
-            color = 190;
-          } else {
-            return 'white';
-          }
-          return 'hsl(' + color + ',85%,60%)';
-//          value = value - 75 < 0 ? 0 : value - 75;
-//          return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
-      };
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -136,6 +140,8 @@
         }
       };
 
+      vm.badgeClassNames = {};
+
       if (!vm.item.primStat && vm.item.objectives) {
         scope.$watchGroup([
           'vm.item.percentComplete',
@@ -148,12 +154,14 @@
             processStackable(vm, vm.item);
           });
       } else {
-        scope.$watchGroup([
-          'vm.item.primStat.value',
-          'vm.item.quality'], function() {
-            processItem(vm, vm.item);
-          });
+        scope.$watch('vm.item.primStat.value', function() {
+          processItem(vm, vm.item);
+        });
       }
+
+      scope.$watch('vm.item.quality', function() {
+        vm.badgeClassNames['item-stat-no-bg'] = (vm.item.quality > 0);
+      });
     }
   }
 
@@ -184,10 +192,6 @@
       vm.badgeClassNames['item-stat'] = true;
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
-    }
-
-    if (vm.item.quality > 0) {
-      vm.badgeClassNames['item-stat-no-bg'] = true;
     }
   }
 
