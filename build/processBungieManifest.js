@@ -230,9 +230,10 @@ function extractDB(dbFile) {
           var item = JSON.parse(row.json);
           items[item.progressionHash] = item;
           if(progressionMeta[item.progressionHash]) {
-            item.name = progressionMeta[item.progressionHash].name;
+            item.label = progressionMeta[item.progressionHash].label;
             item.color = progressionMeta[item.progressionHash].color;
             item.scale = progressionMeta[item.progressionHash].scale;
+            item.order = progressionMeta[item.progressionHash].order;
           }
           item.steps = item.steps.map(function(i) { return i.progressTotal; });
 
