@@ -30,19 +30,19 @@
       <div><small>Discipline</small></div>
       <div><small>Strength</small></div>
     </div>
-    <div style='float:right;width:849px;margin-top:-4px;'>
+    <div style='float:right;width:849px;margin-top:-4px;' class="itemQuality">
       <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
         <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
           <div style='display:inline-block;margin-bottom:20px;'>
-            <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
-  <!--            <small ng-bind="item.normalStats[$index].base"></small>-->
-              <small ng-if="item.normalStats[$index].scaled === 0">-</small>
-              <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
+            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
+  <!--            <small ng-bind="normalStat.base"></small>-->
+              <small ng-if="normalStat.scaled === 0">-</small>
+              <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
           <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
   <!--
-          <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
+       <div ng-style="item.quality | qualityColor" style="margin-right:2px;">
             <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
           </div>
   -->

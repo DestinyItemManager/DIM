@@ -191,6 +191,7 @@
               base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0),
               scaled: stat.scaled,
               split: stat.split,
+              qualityPercentage: stat.qualityPercentage
             };
           });
           return item;
@@ -227,28 +228,6 @@
         return element.stats.STAT_INTELLECT.tier >= vm.filter.int && element.stats.STAT_DISCIPLINE.tier >= vm.filter.dis && element.stats.STAT_STRENGTH.tier >= vm.filter.str;
       },
       getBonus: dimStoreService.getBonus,
-      getColor: function(value) {
-          var color = 0;
-          if(value <= 85) {
-            color = 0;
-          } else if(value <= 90) {
-            color = 20;
-          } else if(value <= 95) {
-            color = 60;
-          } else if(value <= 99) {
-            color = 120;
-          } else if(value >= 100) {
-            color = 190;
-          } else {
-            return 'white';
-          }
-          return 'hsl(' + color + ',85%,60%)';
-//        value = value - 75 < 0 ? 0 : value - 75;
-//        if(value === 0) {
-//          return 'white';
-//        }
-//        return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
-      },
       getStore: function(id) {
         return dimStoreService.getStore(id);
       },

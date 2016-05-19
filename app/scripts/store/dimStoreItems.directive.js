@@ -92,7 +92,7 @@
         '            <polygon fill-opacity="0" stroke="#666" stroke-width="2" points="24,1 47,24 24,47 1,24" stroke-linecap="square"/>',
         '            <polygon stroke-dasharray="130" ng-if="faction.progressToNextLevel > 0" style="stroke-dashoffset:{{130-(130*faction.progressToNextLevel/faction.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="2" points="24,1 47,24 24,47 1,24" stroke-linecap="square"/>',
         '          </svg>',
-        '          <span class="item-stat" ng-bind="::faction.level"></span>',
+        '          <span class="item-stat item-faction" ng-bind="faction.level"></span>',
         '        </span>',
         '      </div>',
         '    </div>',

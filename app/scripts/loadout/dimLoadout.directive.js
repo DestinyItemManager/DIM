@@ -13,7 +13,7 @@
       link: Link,
       scope: {},
       template: [
-        '<div id="loadout-drawer" ng-class="vm.classList" ng-if="vm.show">',
+        '<div id="loadout-drawer" ng-if="vm.show" class="loadout-create">',
         '  <div ng-messages="vm.form.name.$error" ng-if="vm.form.$submitted || vm.form.name.$touched">',
         '    <div ng-message="required">A name is required.</div>',
         '    <div ng-message="minlength">...</div>',
@@ -61,10 +61,6 @@
         label: 'Hunter',
         value: 2
       }];
-
-      vm.classList = {
-        'loadout-create': true
-      };
 
       scope.$on('dim-create-new-loadout', function(event, args) {
         vm.show = true;

@@ -37,29 +37,27 @@
         '</div>',
         '<div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
-        '<div class="item-details" ng-if="vm.itemDetails && vm.hasDetails">',
+        '<div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
-        '    <span class="stat-box-text" ng-bind="vm.classType"></span>',
+        '    <span class="stat-box-text stat-box-cell" ng-bind="vm.classType"></span>',
         '  </div>',
-        '  <div class="item-stats" ng-repeat="stat in vm.item.stats track by $index">',
-        '    <div class="stat-box-row">',
-        '       <span class="stat-box-text"> {{ stat.name }} </span>',
-        '       <span class="stat-box-outer" ng-class="{ \'show-quality\': vm.itemQuality }">',
-        '         <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
-        '         <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
-        '         <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" style="width: {{ 100 * (stat.equippedStatsValue - stat.value) / stat.maximumValue }}%"></span>',
-        '         <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ 100 * stat.equippedStatsValue / stat.maximumValue }}%"></span>',
-        '         <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" style="width: {{ 100 * (stat.value - stat.equippedStatsValue) / stat.maximumValue }}%"></span>',
-
-        '         <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
-        '       </span>',
-        '       <span class="stat-box-val" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}" class="lower-stats stat-box-val">{{ stat.value }}</span>',
-        '       <span ng-show="vm.itemQuality && stat.scaled > 0" class="stat-box-val" ng-class="{ \'show-quality\': vm.itemQuality && stat.scaled > 0  }" ng-show="{{ stat.bar }}" style="color: {{ vm.getColor(vm.getPercent(stat.scaled,stat.split)) }}">({{ vm.getPercent(stat.scaled,stat.split) }}%)</span>',
-        '    </div>',
+        '  <div class="stat-box-row" ng-repeat="stat in vm.item.stats track by $index">',
+        '     <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>',
+        '     <span class="stat-box-outer" ng-class="{ \'show-quality\': vm.itemQuality }">',
+        '       <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
+        '       <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ 100 * stat.value / stat.maximumValue }}%"></span>',
+        '       <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" style="width: {{ 100 * (stat.equippedStatsValue - stat.value) / stat.maximumValue }}%"></span>',
+        '       <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" style="width: {{ 100 * stat.equippedStatsValue / stat.maximumValue }}%"></span>',
+        '       <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" style="width: {{ 100 * (stat.value - stat.equippedStatsValue) / stat.maximumValue }}%"></span>',
+        '       <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
+        '     </span>',
+        '     <span class="stat-box-val stat-box-cell lower-stats" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
+        '       <span ng-show="vm.itemQuality && stat.qualityPercentage" ng-class="{ \'show-quality\': vm.itemQuality && stat.qualityPercentage }" ng-show="{{ stat.bar }}" ng-style="stat.qualityPercentage | qualityColor:\'color\'">({{ stat.qualityPercentage }}%)</span>',
+        '     </span>',
         '  </div>',
-        '  <div ng-if="vm.item.quality !== null && vm.item.quality >= 0" class="stat-box-row">',
-        '    <span class="stat-box-text">Stats quality</span>',
-        '    <span class="stat-box-val" style="width:50%;color:{{ vm.getColor(vm.item.quality) }}">{{ vm.item.quality }}% of max possible roll</span>',
+        '  <div class="stat-box-row" ng-if="vm.item.quality">',
+        '    <span class="stat-box-text stat-box-cell">Stats quality</span>',
+        '    <span class="stat-box-cell" ng-style="vm.item.quality | qualityColor:\'color\'">{{ vm.item.quality }}% of max possible roll</span>',
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
@@ -94,30 +92,6 @@
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
     });
-
-    vm.getPercent = function(top, bottom) {
-      return Math.round(top/bottom*100);
-    };
-
-    vm.getColor = function(value) {
-        var color = 0;
-        if(value <= 85) {
-          color = 0;
-        } else if(value <= 90) {
-          color = 20;
-        } else if(value <= 95) {
-          color = 60;
-        } else if(value <= 99) {
-          color = 120;
-        } else if(value >= 100) {
-          color = 190;
-        } else {
-          return 'white';
-        }
-        return 'hsl(' + color + ',85%,60%)';
-//      value = value - 75 < 0 ? 0 : value - 75;
-//      return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
-    };
 
     vm.setLockState = function setLockState(item) {
       if (vm.locking) {

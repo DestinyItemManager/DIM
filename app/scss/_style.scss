@@ -583,19 +583,6 @@ img {
   margin-right: 12px;
 }
 
-/*.guardian .unequipped {
-  width: 156px;
-}
-.guardian.condensed .unequipped {
-  width: 208px;
-}*/
-/*.vault .unequipped {
-  width: 208px;
-}
-.vault.condensed .unequipped {
-  width: 312px;
-}*/
-
 .unequipped.on-drag-enter, .equipped.on-drag-enter {
   box-shadow: 0 0 15px 2px rgba(170, 170, 170, 0.5);
   background-color: rgba(170, 170, 170, 0.5);
@@ -697,14 +684,35 @@ img {
   text-align: center;
   -webkit-user-select: none;
   box-sizing: content-box;
+  display: none;
+  &.item-stackable {
+    display: block;
+  }
 }
-.item-stat-no-bg {
+.itemQuality .item-stat-no-bg {
   background-color: transparent;
 }
 
 .item-quality {
   left: 0;
   text-align: left;
+  display: none;
+  .itemQuality & {
+    display: block;
+  }
+}
+
+.itemStat .item-stat {
+  &.item-bounty, &.item-equipment, &.item-faction {
+    display: block;
+  }
+}
+
+.damage-type {
+  display: none;
+  .showDamage & {
+    display: block;
+  }
 }
 
 .stat-damage-arc {
@@ -1339,41 +1347,36 @@ rzslider {
   white-space: pre-wrap;
 }
 
-.item-stats {
-  width: 100%;
-}
-
 .item-perks {
   margin: 5px 10px;
 }
 
-.stat-box-row {
-  overflow: hidden;
-  margin-bottom: 4px;
-}
+.stats {
+  width: 100%;
+  display: table;
+  border-spacing: 0 4px;
 
-.item-details {
-  .stat-box-text {
-    display: block;
-    float: left;
+  .stat-box-row {
+    overflow: hidden;
+    margin-bottom: 4px;
+    width: 100%;
+    display: table-row;
+  }
+  .stat-box-cell {
+    display: table-cell;
     line-height: 14px;
-    padding-right: 10px;
-    width: 30%;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .stat-box-text {
+    padding-right: 8px;
+    padding-left: 10px;
     text-align: right;
   }
   .stat-box-val {
-    display: block;
-    float: left;
-    line-height: 14px;
-    width: 10%;
     text-align: left;
+    padding-right: 10px;
     padding-left: 5px;
-  }
-  .stat-box-outer.show-quality {
-    width: 50%;
-  }
-  .stat-box-val.show-quality {
-    margin-left: -15px;
   }
   .higher-stats {
     color: #7DC878;
@@ -1382,19 +1385,17 @@ rzslider {
     color: #985C58;
   }
   .stat-box-outer {
-    display: block;
+    display: table-cell;
     height: 14px;
     line-height: 14px;
-    width: 60%;
-    float: left;
     background-color: #333;
+    width: 100%;
   }
   .stat-box-inner {
     display: block;
-    height: 14px;
-    line-height: 14px;
-    width: 60%;
+    height: 100%;
     float: left;
+    line-height: 14px;
     background-color: #333;
     background-color: white;
     color: black;
@@ -1408,9 +1409,6 @@ rzslider {
   }
   .stat-box-outer span:last-child {
     padding-left: 5px;
-  }
-  &.stat-box-row {
-    padding-bottom: 3px;
   }
 }
 

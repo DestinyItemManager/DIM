@@ -740,15 +740,16 @@
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
       var maxLight = 335;
 
-      if(!stats || light.value < 280) {
+      if (!stats || light.value < 280) {
         return null;
       }
 
       var split = 0, rate = 0;
-      switch(type.toLowerCase()) {
+      switch (type.toLowerCase()) {
         case 'helmet':
           rate = 1/6;
           split = 46; // bungie reports 48, but i've only seen 46
@@ -786,17 +787,19 @@
       var pure = 0;
       stats.forEach(function(stat) {
         var scaled = 0;
-        if(stat.base) {
+        if (stat.base) {
           scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
           pure = scaled;
         }
         stat.scaled = scaled;
         stat.split = split;
+        stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
         ret.total += scaled || 0;
       });
-      if(pure === ret.total) {
+      if (pure === ret.total) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled/2);
+          stat.scaled = Math.floor(stat.scaled / 2);
+          stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
         });
       }
 
