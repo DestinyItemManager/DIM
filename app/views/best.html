@@ -49,10 +49,13 @@
         </div>
       </span>
     </div>
-    <div style='clear:both;float:left'>
+    <div ng-show="normal.progress < 1" style='clear:both;'>
+        <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
+    </div>
+    <div ng-show="normal.progress >= 1" style='clear:both;float:left'>
         <p>Locked Items</p>
     </div>
-    <div style='float:right;width:849px;margin-bottom:20px;'>
+    <div ng-show="normal.progress >= 1" style='float:right;width:849px;margin-bottom:20px;'>
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.helmet" ui-on-drop="normal.onDrop($data, 'helmet')" drag-channel="Helmet" drop-channel="Helmet" drop-validate="normal.lockedItemsValid($data, 'helmet')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
@@ -110,7 +113,7 @@
             <p style="text-align:center">Artifact</p>
         </div>
     </div>
-    <div style='clear:both;'>
+    <div ng-show="normal.progress >= 1" style='clear:both;'>
     <p>Set Tiers (Int/Dis/Str):
       <select ng-model='normal.activesets' ng-options="val for val in normal.allSetTiers"></select>
       &nbsp; Order:
@@ -122,10 +125,11 @@
         <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
         <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
       </select>
+      &nbsp; <small>Displaying top 20 sets</small>
     </p>
     </div>
-    <div style='clear:both;'>
-        <div ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues">
+    <div ng-show="normal.progress >= 1" style='clear:both;'>
+        <div ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
             <div style='clear:both;float:left'>
               <div><small>Intellect</small>: <small>{{set.int_val}}</small></div>
               <div><small>Discipline</small>: <small>{{set.disc_val}}</small></div>
