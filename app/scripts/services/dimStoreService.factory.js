@@ -94,7 +94,7 @@
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
-        this.percentToNextLevel = characterInfo.percentToNextLevel;
+        this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
@@ -357,7 +357,7 @@
                 class: getClass(raw.character.base.characterBase.classType),
                 gender: getGender(raw.character.base.characterBase.genderType),
                 race: getRace(raw.character.base.characterBase.raceHash),
-                percentToNextLevel: raw.character.base.percentToNextLevel,
+                percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 isVault: false
               });
@@ -571,11 +571,11 @@
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+        createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
           return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
-        }));
+        });
       } else if (createdItem.talentGrid) {
-        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
+        createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
       }
 
       return createdItem;

@@ -54,10 +54,10 @@
         "    'complete': vm.item.complete",
         '  }">',
         '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete && !vm.item.complete">',
-        '      <div ng-style="{ width: vm.item.percentComplete + \'%\' }"></div>',
+        '      <div dim-percent-width="vm.item.percentComplete"></div>',
         '    </div>',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
-        '    <div ng-if="::(vm.item.sort == \'Armor\' || vm.item.type == \'Artifact\') && vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality | qualityColor">{{ vm.item.quality + "%" }}</div>',
+        '    <div ng-if="::(vm.item.sort == \'Armor\' || vm.item.type == \'Artifact\') && vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality | qualityColor">{{ vm.item.quality }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
@@ -171,7 +171,7 @@
 
     if (showBountyPercentage) {
       vm.badgeClassNames = { 'item-stat': true, 'item-bounty': true };
-      vm.badgeCount = item.percentComplete + '%';
+      vm.badgeCount = Math.floor(100.0 * item.percentComplete) + '%';
     }
   }
 
