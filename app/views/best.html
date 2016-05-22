@@ -145,7 +145,7 @@
                 <p style="text-align:center"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></p>
               </div>
             </span>
-            <!--<input type="button" value="Create Loadout" click="vm.newLoadout($event)"/>-->
+            <input style="margin-left:20px;" type="button" value="Create Loadout" ng-click="normal.newLoadout($index)"/>
             </div>
         <!--<div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
           <div style='display:inline-block;margin-bottom:20px;'>

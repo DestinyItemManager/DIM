@@ -205,7 +205,7 @@
           for(var type in vm.lockeditems) {
               var item = vm.lockeditems[type];
               if(item === null || type === dropped_type) { continue; }
-              if(item.tier === 'Exotic' && item.type != 'ClassItem') {
+              if(item.tier === 'Exotic' && item.type != 'classItem') {
                   exoticCount += 1;
               }
           }
@@ -225,6 +225,33 @@
           vm.lockeditems[removed_type] = null;
           var bestarmor = getBestArmor(buckets[vm.active], vm.lockeditems); 
           vm.highestsets = vm.getSetBucketsStep(vm.active, bestarmor);
+      },
+      active2ind: function(activeStr) {
+          if(activeStr.toLowerCase() === 'warlock') {
+              return 0;
+          } else if(activeStr.toLowerCase() === 'titan') {
+              return 1;
+          } else if(activeStr.toLowerCase() === 'hunter') {
+              return 2;
+          } else {
+              return -1;
+          }
+      },
+      newLoadout: function(index) {
+        ngDialog.closeAll();
+        var loadout = {};
+        loadout.items = _.pick(vm.highestsets[vm.activesets][index].armor, 'helmet', 'chest', 'gauntlets', 'leg', 'classItem', 'ghost', 'artifact');
+        loadout.items.helmet = [loadout.items.helmet.item];
+        loadout.items.chest = [loadout.items.chest.item];
+        loadout.items.gauntlets = [loadout.items.gauntlets.item];
+        loadout.items.leg = [loadout.items.leg.item];
+        loadout.items.classitem = [loadout.items.classItem.item];
+        loadout.items.ghost = [loadout.items.ghost.item];
+        loadout.items.artifact = [loadout.items.artifact.item];
+        loadout.classType = vm.active2ind(vm.active);
+        $scope.$broadcast('dim-edit-loadout', {
+          loadout: loadout
+        });
       },
       getSetBucketsStep: function(activeGaurdian, bestArmor) {
             var helms = bestArmor['helmet'];
