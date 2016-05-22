@@ -15,12 +15,12 @@
     dimBucketService.then(function(defs) {
       _.each(defs.byHash, function(def, hash) {
         if (def.enabled) {
-          bucketSizes[hash] = def.itemCount;
+          bucketSizes[hash] = def.capacity;
         }
       });
-      vaultSizes['Weapons'] = defs.Weapons.itemCount;
-      vaultSizes['Armor'] = defs.Armor.itemCount;
-      vaultSizes['General'] = defs.General.itemCount;
+      vaultSizes['Weapons'] = defs.Weapons.capacity;
+      vaultSizes['Armor'] = defs.Armor.capacity;
+      vaultSizes['General'] = defs.General.capacity;
     });
     dimProgressionDefinitions.then(function(defs) {
       progressionDefs = defs;
@@ -35,10 +35,11 @@
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
-      // Get the total amount of this item in the store, across all stacks.
+      // Get the total amount of this item in the store, across all stacks,
+      // excluding stuff in the postmaster.
       amountOfItem: function(item) {
         return sum(_.filter(this.items, function(i) {
-          return i.hash === item.hash && i.sort !== 'Postmaster';
+          return i.hash === item.hash && !i.location.inPostmaster;
         }), 'amount');
       },
       // How much of items like this item can fit in this store?
@@ -47,7 +48,7 @@
           console.error("item needs a 'bucket' field", item);
           return 10;
         }
-        return item.bucket.itemCount;
+        return item.bucket.capacity;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
@@ -69,7 +70,7 @@
     // Prototype for Item objects - add methods to this to add them to all
     // items.
     var ItemProto = {
-      // Can this item be equipped by the current store?
+      // Can this item be equipped by the given store?
       canBeEquippedBy: function(store) {
         if (store.isVault) {
           return false;
@@ -81,7 +82,7 @@
           this.equipRequiredLevel <= store.level &&
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
-          this.sort !== 'Postmaster';
+          !this.location.inPostmaster;
       },
       isEngram: function() {
         return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
@@ -476,39 +477,31 @@
       }
 
       var weaponClass = null;
-      if (dimCategory['Weapons'].indexOf(location) >= 0) {
+      if (normalBucket.inWeapons) {
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
       }
 
       if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
-        console.log(normalBucket, currentBucket);
       }
-
-      /*
-      if (itemSort !== 'Postmaster' && item.location === 4) {
-        itemSort = 'Postmaster';
-        if (itemType === 'Consumable') {
-          itemType = 'Special Orders';
-        } else {
-          itemType = 'Lost Items';
-        }
-      }
-       */
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       var createdItem = angular.extend(Object.create(ItemProto), {
+        // The bucket the item is currently in
         location: currentBucket,
+        // The bucket the item normally resides in (even though it may be in the vault/postmaster)
         bucket: normalBucket,
         hash: item.itemHash,
+        // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
+        // Equivalent to location.sort, the general section of the item's current location
         sort: itemSort,
         tier: itemDef.tierTypeName || 'Common',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (itemSort === 'Postmaster' || itemDef.nonTransferrable),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         //bucket: itemDef.bucketTypeHash,

@@ -70,7 +70,7 @@
         var self = this;
         var store = dimStoreService.getStore(self.store.id);
         var engrams = _.select(store.items, function(i) {
-          return i.isEngram() && i.sort !== 'Postmaster';
+          return i.isEngram() && !i.location.inPostmaster;
         });
 
         if (engrams.length === 0) {
@@ -102,7 +102,7 @@
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
-            i.sort !== 'Postmaster' &&
+            !i.location.inPostmaster &&
             _.contains(engramTypes, i.type);
         });
         var itemsByType = _.groupBy(applicableItems, 'type');
