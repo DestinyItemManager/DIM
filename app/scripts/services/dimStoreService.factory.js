@@ -4,23 +4,23 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
     var progressionDefs = {};
-    dimItemBucketDefinitions.then(function(defs) {
-      _.each(defs, function(def, hash) {
+    dimBucketService.then(function(defs) {
+      _.each(defs.byHash, function(def, hash) {
         if (def.enabled) {
           bucketSizes[hash] = def.itemCount;
         }
       });
-      vaultSizes['Weapons'] = bucketSizes[4046403665];
-      vaultSizes['Armor'] = bucketSizes[3003523923];
-      vaultSizes['General'] = bucketSizes[138197802];
+      vaultSizes['Weapons'] = defs.Weapons.itemCount;
+      vaultSizes['Armor'] = defs.Armor.itemCount;
+      vaultSizes['General'] = defs.General.itemCount;
     });
     dimProgressionDefinitions.then(function(defs) {
       progressionDefs = defs;
@@ -31,43 +31,6 @@
     var cooldownsSuperB  = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
-
-    // A mapping from the bucket names to DIM categories
-    // Some buckets like vault and currencies have been ommitted
-    var bucketToType = {
-      "BUCKET_CHEST": "Chest",
-      "BUCKET_LEGS": "Leg",
-      "BUCKET_RECOVERY": "Lost Items",
-      "BUCKET_SHIP": "Ship",
-      "BUCKET_MISSION": "Missions",
-      "BUCKET_ARTIFACT": "Artifact",
-      "BUCKET_HEAVY_WEAPON": "Heavy",
-      "BUCKET_COMMERCIALIZATION": "Special Orders",
-      "BUCKET_CONSUMABLES": "Consumable",
-      "BUCKET_PRIMARY_WEAPON": "Primary",
-      "BUCKET_CLASS_ITEMS": "ClassItem",
-      "BUCKET_QUESTS": "Quests",
-      "BUCKET_VEHICLE": "Vehicle",
-      "BUCKET_BOUNTIES": "Bounties",
-      "BUCKET_SPECIAL_WEAPON": "Special",
-      "BUCKET_SHADER": "Shader",
-      "BUCKET_EMOTES": "Emote",
-      "BUCKET_MAIL": "Messages",
-      "BUCKET_BUILD": "Class",
-      "BUCKET_HEAD": "Helmet",
-      "BUCKET_ARMS": "Gauntlets",
-      "BUCKET_HORN": "Horn",
-      "BUCKET_MATERIALS": "Material",
-      "BUCKET_GHOST": "Ghost",
-      "BUCKET_EMBLEM": "Emblem"
-    };
-
-    var typeToSort = {};
-    _.each(dimCategory, function(types, category) {
-      types.forEach(function(type) {
-        typeToSort[type] = category;
-      });
-    });
 
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
@@ -324,13 +287,6 @@
               });
 
               _.each(raw.data.buckets, function(bucket) {
-                if (bucket.bucketHash === 3003523923)
-                  store.bucketCounts.Armor = _.size(bucket.items);
-                if (bucket.bucketHash === 138197802)
-                  store.bucketCounts.General = _.size(bucket.items);
-                if (bucket.bucketHash === 4046403665)
-                  store.bucketCounts.Weapons = _.size(bucket.items);
-
                 _.each(bucket.items, function(item) {
                   item.bucket = bucket.bucketHash;
                 });
@@ -423,7 +379,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -472,30 +428,33 @@
         return null;
       }
 
+      var itemBucketDef = buckets.byHash;
+
       // def.bucketTypeHash is where it goes normally
       var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
       // item.bucket is where it IS right now
-      var currentBucket = itemBucketDef[item.bucket];
+      var currentBucket = itemBucketDef[item.bucket] || normalBucket;
 
       var location;
-      if (currentBucket && bucketToType[currentBucket.bucketIdentifier]) {
-        location = bucketToType[currentBucket.bucketIdentifier];
+      var itemSort;
+      if (currentBucket) {
+        location = currentBucket.type;
+        itemSort = currentBucket.sort;
       }
-      var normalLocation;
-      if (normalBucket && bucketToType[normalBucket.bucketIdentifier]) {
-        normalLocation = bucketToType[normalBucket.bucketIdentifier];
+      if (normalBucket) {
+        location = location || normalBucket.type;
+        itemSort = itemSort || normalBucket.sort;
       }
 
       var weaponClass = null;
-      if (dimCategory['Weapons'].indexOf(normalLocation) >= 0) {
+      if (dimCategory['Weapons'].indexOf(location) >= 0) {
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
       }
 
-      var itemType = location || normalLocation || 'Unknown';
-
-      var itemSort = typeToSort[itemType];
+      var itemType = location || 'Unknown';
       if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
+        console.log(normalBucket, currentBucket);
       }
 
       if (itemSort !== 'Postmaster' && item.location === 4) {
@@ -950,7 +909,7 @@
       idTracker = {};
       return $q.all([
         dimItemDefinitions,
-        dimItemBucketDefinitions,
+        dimBucketService,
         dimStatDefinitions,
         dimObjectiveDefinitions,
         dimSandboxPerkDefinitions,
