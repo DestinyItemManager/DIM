@@ -240,7 +240,7 @@
       }
 
       vm.data = _.groupBy(vm.store.items, function(item) {
-        return item.type;
+        return item.location.type;
       });
 
       if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {

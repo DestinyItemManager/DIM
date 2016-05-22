@@ -86,8 +86,8 @@
       },
 
       transferItems: function() {
-        if (vm.source.notransfer) {
-          toaster.pop('error', 'Transfer infusion material', vm.source.name + " can't be moved.");
+        if (vm.target.notransfer) {
+          toaster.pop('error', 'Transfer infusion material', vm.target.name + " can't be moved.");
           return $q.resolve();
         }
         var store = dimStoreService.getStore(vm.source.owner);
