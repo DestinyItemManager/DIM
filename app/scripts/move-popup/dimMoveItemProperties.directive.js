@@ -36,6 +36,7 @@
         '  <div dim-percent-width="vm.item.percentComplete"></div>',
         '</div>',
         '<div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
+        '<div class="item-description" ng-if="vm.item.kills">{{vm.item.kills}} kills ({{vm.item.precisionKills}} precision) with this character.</div>',
         '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '<div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
         '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
@@ -77,9 +78,9 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope', 'dimBungieService', 'dimPlatformService'];
 
-  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope) {
+  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimBungieService, dimPlatformService) {
     var vm = this;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
@@ -138,6 +139,14 @@
       .then(function(show) {
         vm.itemQuality = vm.itemQuality || show;
       });
+
+    dimBungieService.getWeaponHistory(dimPlatformService.getActive(), vm.item.owner).then(function (history) {
+      var weaponHistory = history[vm.item.hash];
+      if (weaponHistory) {
+        vm.item.kills = weaponHistory.uniqueWeaponKills.basic.value;
+        vm.item.precisionKills = weaponHistory.uniqueWeaponPrecisionKills.basic.value;
+      }
+    });
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();

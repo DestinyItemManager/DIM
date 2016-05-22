@@ -26,7 +26,8 @@
       equip: equip,
       equipItems: equipItems,
       setLockState: setLockState,
-      getXur: getXur
+      getXur: getXur,
+      getWeaponHistory: getWeaponHistory
     };
 
     return service;
@@ -287,6 +288,57 @@
       .then(function(response) {
         return response.data.Response.data;
       });
+    }
+
+
+    /************************************************************************************************************************************/
+
+    function getWeaponHistory(platform, characterId) {
+      var data = {
+        token: null,
+        membershipId: null
+      };
+
+      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
+      var getMembershipPB = getMembership.bind(null, platform);
+
+      var weaponHistoryPromise = getBungleToken()
+        .then(addTokenToData)
+        .then(getMembershipPB)
+        .then(function(membershipId) {
+          return getBnetWeaponHistoryRequest(data.token, platform, membershipId, characterId);
+        })
+        .then(function(request) {
+          return $http(request);
+        })
+        .then(handleErrors)
+        .then(processBnetWeaponHistoryRequest);
+
+      return weaponHistoryPromise;
+    }
+
+    function getBnetWeaponHistoryRequest(token, platform, membershipId, characterId) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/Stats/UniqueWeapons/' + platform.type + '/' + membershipId + '/' + characterId,
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true,
+        transformResponse: function(data, headers) {
+          return JSON.parse(data.replace(/:\s*NaN/i, ':0'));
+        }
+      };
+    }
+
+    function processBnetWeaponHistoryRequest(response) {
+      var result = response.data.Response.data.weapons;
+      var weapons = {};
+      result.forEach(function(weapon) {
+        weapons[weapon.referenceId] = weapon.values;
+      });
+      return weapons;
     }
 
     /************************************************************************************************************************************/
