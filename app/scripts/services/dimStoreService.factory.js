@@ -495,8 +495,6 @@
         hash: item.itemHash,
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        // Equivalent to location.sort, the general section of the item's current location
-        sort: itemSort,
         tier: itemDef.tierTypeName || 'Common',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015

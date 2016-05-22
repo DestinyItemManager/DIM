@@ -43,7 +43,7 @@
                   // If there's no room on other characters to move out of the vault,
                   // give up entirely.
                   if (!_.any(otherStores, function(store) {
-                    return _.any(dimCategory[item.sort], function(category) {
+                    return _.any(dimCategory[item.bucket.sort], function(category) {
                       return store.spaceLeftForItem({ type: category }) > 0;
                     });
                   })) {
