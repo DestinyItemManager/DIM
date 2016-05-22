@@ -95,9 +95,16 @@
         // TODO: category heirarchy
       };
       _.each(bucketDefs, function(def, hash) {
-        var bucket = def;
-        if (bucket.enabled) {
-          bucket.id = bucket.bucketIdentifier;
+        if (def.enabled) {
+          var bucket = {
+            id: def.bucketIdentifier,
+            description: def.bucketDescription,
+            name: def.bucketName,
+            hash: def.hash,
+            hasTransferDestination: def.hasTransferDestination,
+            capacity: def.itemCount
+          };
+
           bucket.type = bucketToType[bucket.id];
           if (bucket.type) {
             bucket.sort = typeToSort[bucket.type];
@@ -106,7 +113,10 @@
             buckets[bucket.sort] = bucket;
           }
 
-          buckets.byHash[hash] = bucket;
+          // Add an easy helper property like "inPostmaster"
+          bucket['in' + bucket.sort] = true;
+
+          buckets.byHash[bucket.hash] = bucket;
           buckets.byId[bucket.id] = bucket;
         }
       });

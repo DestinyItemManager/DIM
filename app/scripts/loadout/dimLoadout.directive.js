@@ -205,7 +205,7 @@
               .values()
               .flatten()
               .findWhere({
-                sort: item.sort,
+                sort: item.bucket.sort,
                 tier: dimItemTier.exotic,
                 equipped: true
               })
