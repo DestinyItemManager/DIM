@@ -182,7 +182,7 @@
         if (result && result.tier === dimItemTier.exotic) {
           var prefix = _.filter(store.items, function(i) {
             return i.equipped &&
-              i.sort === item.sort &&
+              i.bucket.sort === item.bucket.sort &&
               i.tier === dimItemTier.exotic;
           });
 
@@ -253,7 +253,7 @@
         var equippedExotics = _.filter(store.items, function(i) {
             return (i.equipped &&
                     i.type !== item.type &&
-                    i.sort === item.sort &&
+                    i.bucket.sort === item.bucket.sort &&
                     i.tier === 'Exotic');
           });
 
@@ -314,7 +314,7 @@
         if (store.isVault && !_.any(stores, function(s) { return moveContext.spaceLeft(s, item); })) {
           // If it's the vault, we can get rid of anything in the same sort category.
           // Pick whatever we have the most space for on some guardian.
-          var bestType = _.max(dimCategory[item.sort], function(type) {
+          var bestType = _.max(dimCategory[item.bucket.sort], function(type) {
             return _.max(stores.map(function(s) {
               if (s.id === store.id) {
                 return 0;
@@ -451,7 +451,7 @@
             var target = chooseMoveAsideTarget(source, moveAsideItem, moveContext);
 
             if (!target || (!target.isVault && target.spaceLeftForItem(moveAsideItem) <= 0)) {
-              return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
+              return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
             } else {
               // Make one move and start over!
               return moveTo(moveAsideItem, target, false, moveAsideItem.amount, excludes).then(function() {
