@@ -45,8 +45,9 @@
       capacityForItem: function(item) {
         if (!item.bucket) {
           console.error("item needs a 'bucket' field", item);
+          return 10;
         }
-        return bucketSizes[item.bucket] || 10;
+        return item.bucket.itemCount;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
@@ -273,16 +274,24 @@
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
-                  if (!item.sort) {
+                  var sort = item.sort;
+                  if (item.bucket) {
+                    sort = item.bucket.sort;
+                  }
+                  if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return vaultSizes[item.sort];
+                  return vaultSizes[sort];
                 },
                 spaceLeftForItem: function(item) {
-                  if (!item.sort) {
+                  var sort = item.sort;
+                  if (item.bucket) {
+                    sort = item.bucket.sort;
+                  }
+                  if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: item.sort }));
+                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: sort }));
                 }
               });
 
@@ -437,6 +446,7 @@
 
       var location;
       var itemSort;
+      var itemType = 'Unknown';
       if (currentBucket) {
         location = currentBucket.type;
         itemSort = currentBucket.sort;
@@ -444,6 +454,7 @@
       if (normalBucket) {
         location = location || normalBucket.type;
         itemSort = itemSort || normalBucket.sort;
+        itemType = normalBucket.type;
       }
 
       var weaponClass = null;
@@ -451,12 +462,12 @@
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
       }
 
-      var itemType = location || 'Unknown';
       if (!itemSort) {
         console.log(itemDef.itemTypeName + " does not have a sort property.");
         console.log(normalBucket, currentBucket);
       }
 
+      /*
       if (itemSort !== 'Postmaster' && item.location === 4) {
         itemSort = 'Postmaster';
         if (itemType === 'Consumable') {
@@ -465,10 +476,13 @@
           itemType = 'Lost Items';
         }
       }
+       */
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       var createdItem = angular.extend(Object.create(ItemProto), {
+        location: currentBucket,
+        bucket: normalBucket,
         hash: item.itemHash,
         type: itemType,
         sort: itemSort,
@@ -479,7 +493,7 @@
         notransfer: (itemSort === 'Postmaster' || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
-        bucket: itemDef.bucketTypeHash,
+        //bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         percentComplete: null,
@@ -811,9 +825,6 @@
                  light < 319 ? 39 :
                  light < 325 ? 40 :
                  light < 330 ? 41 : 42;
-        case 'lost items':
-          // TODO: this can be improved when we separate an item's type from its location, but for now we don't know
-          return 0;
       }
       console.warn('item bonus not found', type);
       return 0;

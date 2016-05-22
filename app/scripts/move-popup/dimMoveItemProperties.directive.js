@@ -29,7 +29,7 @@
         '    <a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
         '  <span ng-if="::vm.item.sort == \'Weapons\' || vm.item.sort ==\'Postmaster\'" ng-bind="::vm.item.typeName"></span>',
-        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete | percent}}</span>',
+        '  <span ng-if="(vm.item.type === \'Bounties\' || vm.item.type ===\'Quests\') && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete | percent}}</span>',
         '  <span class="pull-right move-popup-info-detail" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
         '<div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',

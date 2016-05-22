@@ -2,12 +2,50 @@
   'use strict';
 
   angular.module('dimApp')
-    .factory('dimBucketService', BucketService);
+    .factory('dimBucketService', BucketService)
+    // Categories (sorts) and the types within them
+    .value('dimCategory', {
+      Weapons: [
+        'Class',
+        'Primary',
+        'Special',
+        'Heavy',
+      ],
+      Armor: [
+        'Helmet',
+        'Gauntlets',
+        'Chest',
+        'Leg',
+        'ClassItem'
+      ],
+      General: [
+        'Artifact',
+        'Ghost',
+        'Consumable',
+        'Material',
+        'Emblem',
+        'Shader',
+        'Emote',
+        'Ship',
+        'Vehicle',
+        'Horn',
+      ],
+      Progress: [
+        'Bounties',
+        'Quests',
+        'Missions',
+      ],
+      Postmaster: [
+        'Lost Items',
+        'Special Orders',
+        'Messages'
+      ]
+    });
 
   BucketService.$inject = ['dimItemBucketDefinitions', 'dimCategory'];
 
   function BucketService(dimItemBucketDefinitions, dimCategory) {
-    // A mapping from the bucket names to DIM categories
+    // A mapping from the bucket names to DIM item types
     // Some buckets like vault and currencies have been ommitted
     var bucketToType = {
       "BUCKET_CHEST": "Chest",
@@ -53,22 +91,23 @@
     return dimItemBucketDefinitions.then(function(bucketDefs) {
       var buckets = {
         byHash: {},
-        byName: {}
+        byId: {}
         // TODO: category heirarchy
       };
       _.each(bucketDefs, function(def, hash) {
         var bucket = def;
         if (bucket.enabled) {
-          bucket.type = bucketToType[bucket.bucketIdentifier];
+          bucket.id = bucket.bucketIdentifier;
+          bucket.type = bucketToType[bucket.id];
           if (bucket.type) {
             bucket.sort = typeToSort[bucket.type];
-          } else if (vaultTypes[bucket.bucketIdentifier]) {
-            bucket.sort = vaultTypes[bucket.bucketIdentifier];
+          } else if (vaultTypes[bucket.id]) {
+            bucket.sort = vaultTypes[bucket.id];
             buckets[bucket.sort] = bucket;
           }
 
           buckets.byHash[hash] = bucket;
-          buckets.byName[bucket.bucketIdentifier] = bucket;
+          buckets.byId[bucket.id] = bucket;
         }
       });
       return buckets;
