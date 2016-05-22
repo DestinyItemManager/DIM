@@ -240,7 +240,8 @@
       }
 
       vm.data = _.groupBy(vm.store.items, function(item) {
-        return item.location.type;
+        // TODO: where's the vault??
+        return vm.store.isVault ? item.type : item.location.type;
       });
 
       if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
