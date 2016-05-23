@@ -1,4 +1,4 @@
-# Next
+# 3.6.1
 
 * Add warning if the lost items section of the postmaster has 20 items.
 * Stat bars are more accurately sized.
