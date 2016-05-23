@@ -203,7 +203,7 @@
       lockedItemsValid: function(dropped_id, dropped_type) {
           dropped_id = dropped_id.split('-')[1];
           var item = _.findWhere(buckets[vm.active][dropped_type], {id: dropped_id});
-          var exoticCount = ((item.tier === 'Exotic')? 1 : 0);
+          var exoticCount = ((item.tier === 'Exotic' && item.type != 'ClassItem')? 1 : 0);
           for(var type in vm.lockeditems) {
               var item = vm.lockeditems[type];
               if(item === null || type === dropped_type) { continue; }
@@ -292,6 +292,8 @@
                 return total;
             };
             
+            var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length) || 1;
+            
             function step(activeGaurdian, h, g, c, l, ci, gh, ar, processed_count) {
                 for(; h < helms.length; ++h) {
                 for(; g < gaunts.length; ++g) {
@@ -318,13 +320,13 @@
                     }
                     
                     processed_count++;
-                    if((processed_count%1000) == 0) {
+                    if((processed_count%5000) == 0) {
                         // If active gaurdian is changed then stop processing combinations
                         if(vm.active != activeGaurdian) {
                             return;
                         }
                         $scope.$apply(function () {
-                            vm.progress = processed_count/(helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
+                            vm.progress = processed_count/combos;
                         });
                         setTimeout(function() { step(activeGaurdian, h,g,c,l,ci,gh,ar,processed_count); },0);
                         return;
