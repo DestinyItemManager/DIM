@@ -181,6 +181,7 @@
       progress: 0,
       allSetTiers: [],
       highestsets: {},
+      topsets: [],
       lockeditems: { helmet: null, gauntlets: null, chest: null, leg: null, classItem: null, ghost: null, artifact: null },
       normalize: 335,
       doNormalize: false,
@@ -213,6 +214,21 @@
       },
       onOrderChange: function () {
         vm.setOrderValues = vm.setOrder.split(',')
+        vm.topsets = vm.highestsets[vm.activesets].sort(function (a,b) {
+            var orders = vm.setOrder.split(',');
+            orders[0] = orders[0].substring(1);
+            orders[1] = orders[1].substring(1);
+            orders[2] = orders[2].substring(1);
+            
+            if(a[orders[0]] < b[orders[0]]) { return 1; }
+            if(a[orders[0]] > b[orders[0]]) { return -1; }
+            if(a[orders[1]] < b[orders[1]]) { return 1; }
+            if(a[orders[1]] > b[orders[1]]) { return -1; }
+            if(a[orders[2]] < b[orders[2]]) { return 1; }
+            if(a[orders[2]] > b[orders[2]]) { return -1; }
+            
+            return 1;
+        }).slice(0,20);
       },
       onDrop: function(dropped_id, type) {
           dropped_id = dropped_id.split('-')[1];
@@ -240,7 +256,7 @@
       newLoadout: function(index) {
         ngDialog.closeAll();
         var loadout = {};
-        loadout.items = _.pick(vm.highestsets[vm.activesets][index].armor, 'helmet', 'chest', 'gauntlets', 'leg', 'classItem', 'ghost', 'artifact');
+        loadout.items = _.pick(vm.topsets[index].armor, 'helmet', 'chest', 'gauntlets', 'leg', 'classItem', 'ghost', 'artifact');
         loadout.items.helmet = [loadout.items.helmet.item];
         loadout.items.chest = [loadout.items.chest.item];
         loadout.items.gauntlets = [loadout.items.gauntlets.item];
@@ -317,6 +333,22 @@
                 $scope.$apply(function () {
                     vm.progress = processed_count/(helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
                 });
+                
+                vm.topsets = vm.highestsets[vm.activesets].sort(function (a,b) {
+                    var orders = vm.setOrder.split(',');
+                    orders[0] = orders[0].substring(1);
+                    orders[1] = orders[1].substring(1);
+                    orders[2] = orders[2].substring(1);
+                    
+                    if(a[orders[0]] < b[orders[0]]) { return 1; }
+                    if(a[orders[0]] > b[orders[0]]) { return -1; }
+                    if(a[orders[1]] < b[orders[1]]) { return 1; }
+                    if(a[orders[1]] > b[orders[1]]) { return -1; }
+                    if(a[orders[2]] < b[orders[2]]) { return 1; }
+                    if(a[orders[2]] > b[orders[2]]) { return -1; }
+                    
+                    return 1;
+                }).slice(0,20);
             }
             setTimeout(function() { step(activeGaurdian, 0,0,0,0,0,0,0,0); },0);
             return set_map;
