@@ -4,7 +4,32 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreItem', StoreItem);
+    .directive('dimStoreItem', StoreItem)
+    // A filter that will heatmap-color a background according to a percentage
+    .filter('qualityColor', function() {
+      return function getColor(value, property) {
+        property = property || 'background-color';
+        var color = 0;
+        if (value <= 85) {
+          color = 0;
+        } else if (value <= 90) {
+          color = 20;
+        } else if (value <= 95) {
+          color = 60;
+        } else if (value <= 99) {
+          color = 120;
+        } else if (value >= 100) {
+          color = 190;
+        } else {
+          return 'white';
+        }
+        var result = {};
+        result[property] = 'hsl(' + color + ',85%,60%)';
+        return result;
+      };
+    });
+
+
 
   StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
@@ -28,13 +53,14 @@
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
-        '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
-        '      <div ng-style="{ width: vm.item.percentComplete + \'%\' }"></div>',
+        '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete && !vm.item.complete">',
+        '      <div dim-percent-width="vm.item.percentComplete"></div>',
         '    </div>',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
-        '    <div ng-if="vm.itemQuality && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
+        '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality | qualityColor">{{ vm.item.quality }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -67,27 +93,6 @@
           }
         });
       }
-
-
-      vm.getColor = function(value) {
-          var color = 0;
-          if(value <= 85) {
-            color = 0;
-          } else if(value <= 90) {
-            color = 20;
-          } else if(value <= 95) {
-            color = 60;
-          } else if(value <= 99) {
-            color = 120;
-          } else if(value >= 100) {
-            color = 190;
-          } else {
-            return 'white';
-          }
-          return 'hsl(' + color + ',85%,60%)';
-//          value = value - 75 < 0 ? 0 : value - 75;
-//          return 'hsl(' + (value/30*120).toString(10) + ',55%,50%)';
-      };
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
@@ -135,10 +140,11 @@
         }
       };
 
+      vm.badgeClassNames = {};
+
       if (!vm.item.primStat && vm.item.objectives) {
         scope.$watchGroup([
           'vm.item.percentComplete',
-          'vm.itemStat',
           'vm.item.complete'], function() {
             processBounty(vm, vm.item);
           });
@@ -148,73 +154,45 @@
             processStackable(vm, vm.item);
           });
       } else {
-        scope.$watchGroup([
-          'vm.item.primStat.value',
-          'vm.itemStat',
-          'vm.itemQuality',
-          'vm.item.sort'], function() {
-            processItem(vm, vm.item);
-          });
+        scope.$watch('vm.item.primStat.value', function() {
+          processItem(vm, vm.item);
+        });
       }
-    }
-  }
 
-  function processSettings(vm, settings) {
-    if (_.has(settings, 'itemStat')) {
-      vm.itemStat = settings.itemStat;
-    }
-    if (_.has(settings, 'itemQuality')) {
-      vm.itemQuality = settings.itemQuality;
+      scope.$watch('vm.item.quality', function() {
+        vm.badgeClassNames['item-stat-no-bg'] = (vm.item.quality > 0);
+      });
     }
   }
 
   function processBounty(vm, item) {
-    var showBountyPercentage = !item.complete && vm.itemStat;
+    var showBountyPercentage = !item.complete;
     vm.showBadge = showBountyPercentage;
 
     if (showBountyPercentage) {
-      vm.badgeClassNames = { 'item-stat': true };
-      vm.badgeCount = item.percentComplete + '%';
+      vm.badgeClassNames = { 'item-stat': true, 'item-bounty': true };
+      vm.badgeCount = Math.floor(100.0 * item.percentComplete) + '%';
     }
   }
 
   function processStackable(vm, item) {
     vm.showBadge = true;
-    vm.badgeClassNames = { 'item-stat': true };
+    vm.badgeClassNames = { 'item-stat': true, 'item-stackable': true };
     vm.badgeCount = item.amount;
   }
 
   function processItem(vm, item) {
     vm.badgeClassNames = {
-      'damage-type': false,
-      'damage-solar': false,
-      'damage-arc': false,
-      'damage-void': false,
-      'damage-kinetic': false,
-      'item-stat': false,
-      'stat-damage-solar': false,
-      'stat-damage-arc': false,
-      'stat-damage-void': false,
-      'stat-damage-kinetic': false
+      'item-equipment': true
     };
 
-    var showStats = vm.itemStat && item.primStat && item.primStat.value;
-    var showDamageType = !vm.itemStat && vm.item.sort === 'Weapons';
-    vm.showBadge = (showStats || showDamageType);
-    vm.quality = item.quality;
+    vm.showBadge = item.primStat && item.primStat.value;
 
-    if (showStats) {
+    if (vm.showBadge) {
       vm.badgeClassNames['item-stat'] = true;
+
       vm.badgeClassNames['stat-damage-' + item.dmg] = true;
       vm.badgeCount = item.primStat.value;
-    } else if (showDamageType) {
-      vm.badgeClassNames['damage-' + item.dmg] = true;
-      vm.badgeClassNames['damage-type'] = true;
-      vm.badgeCount = '';
-    }
-
-    if(vm.itemQuality && vm.quality > 0) {
-      vm.badgeClassNames['item-stat-no-bg'] = true;
     }
   }
 
@@ -223,8 +201,6 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.itemStat = false;
-    vm.itemQuality = false;
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
     switch (vm.item.type) {
     case 'Lost Items':
@@ -240,14 +216,5 @@
     default:
       vm.draggable = true;
     }
-
-    settings.getSettings()
-      .then(function(settings) {
-        processSettings(vm, settings);
-      });
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      processSettings(vm, arg);
-    });
   }
 })();

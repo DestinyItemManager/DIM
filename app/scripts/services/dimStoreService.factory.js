@@ -11,6 +11,7 @@
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
+    var progressionDefs = {};
     dimItemBucketDefinitions.then(function(defs) {
       _.each(defs, function(def, hash) {
         if (def.enabled) {
@@ -20,6 +21,9 @@
       vaultSizes['Weapons'] = bucketSizes[4046403665];
       vaultSizes['Armor'] = bucketSizes[3003523923];
       vaultSizes['General'] = bucketSizes[138197802];
+    });
+    dimProgressionDefinitions.then(function(defs) {
+      progressionDefs = defs;
     });
 
     // Cooldowns
@@ -90,10 +94,10 @@
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
-        this.percentToNextLevel = characterInfo.percentToNextLevel;
+        this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
-        this.background = characterInfo.backgroundPath;
-        this.icon = characterInfo.emblemPath;
+        this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
+        this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
       }
     };
@@ -117,6 +121,9 @@
       },
       isEngram: function() {
         return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
+      },
+      canBeInLoadout: function() {
+        return this.equipment || this.type === 'Material' || this.type === 'Consumable';
       }
     };
 
@@ -128,6 +135,7 @@
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
+      updateProgression: updateProgression,
       setHeights: setHeightsAsync,
       createItemIndex: createItemIndex,
       processItems: getItems
@@ -156,6 +164,17 @@
         });
         return _stores;
       });
+    }
+
+    function updateProgression() {
+        _.each(_stores, function(dStore) {
+          if (!dStore.isVault) {
+            dStore.progression.progressions.forEach(function(prog) {
+              angular.extend(prog, progressionDefs[prog.progressionHash]);
+            });
+          }
+        });
+        return _stores;
     }
 
     function getNextIndex() {
@@ -280,8 +299,10 @@
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
                 name: 'vault',
+                class: 'vault',
                 lastPlayed: '2005-01-01T12:00:01Z',
-                icon: '',
+                icon: '/images/vault.png',
+                background: '/images/vault-background.png',
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
@@ -317,8 +338,6 @@
                 items = _.union(items, bucket.items);
               });
             } else {
-
-
               try {
                 glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
@@ -329,19 +348,20 @@
 
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: raw.character.base.emblemPath,
+                icon: 'http://bungie.net/' + raw.character.base.emblemPath,
                 lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                background: raw.character.base.backgroundPath,
+                background: 'http://bungie.net/' + raw.character.base.backgroundPath,
                 level: raw.character.base.characterLevel,
                 powerLevel: raw.character.base.characterBase.powerLevel,
                 stats: getStatsData(raw.character.base.characterBase),
                 class: getClass(raw.character.base.characterBase.classType),
                 gender: getGender(raw.character.base.characterBase.genderType),
                 race: getRace(raw.character.base.characterBase.raceHash),
-                percentToNextLevel: raw.character.base.percentToNextLevel,
+                percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
+                progression: raw.character.progression,
                 isVault: false
               });
-              store.name = store.class;
+              store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
@@ -551,11 +571,11 @@
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+        createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
           return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
-        }));
+        });
       } else if (createdItem.talentGrid) {
-        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
+        createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
       }
 
       return createdItem;
@@ -720,15 +740,16 @@
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
       var maxLight = 335;
 
-      if(!stats || light.value < 280) {
+      if (!stats || light.value < 280) {
         return null;
       }
 
       var split = 0, rate = 0;
-      switch(type.toLowerCase()) {
+      switch (type.toLowerCase()) {
         case 'helmet':
           rate = 1/6;
           split = 46; // bungie reports 48, but i've only seen 46
@@ -766,17 +787,19 @@
       var pure = 0;
       stats.forEach(function(stat) {
         var scaled = 0;
-        if(stat.base) {
+        if (stat.base) {
           scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
           pure = scaled;
         }
         stat.scaled = scaled;
         stat.split = split;
+        stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
         ret.total += scaled || 0;
       });
-      if(pure === ret.total) {
+      if (pure === ret.total) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled/2);
+          stat.scaled = Math.floor(stat.scaled / 2);
+          stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
         });
       }
 

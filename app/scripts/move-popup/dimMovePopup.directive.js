@@ -30,12 +30,12 @@
         '      </div>',
         '      <div class="move-button move-store" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
-        '        data-type="item" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})"> ',
+        '        data-type="item" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})"> ',
         '        <span>Store</span>',
         '      </div>',
         '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store, true)" ',
-        '        data-type="equip" data-character="{{::store.id}}" style="background-image: url(http://bungie.net{{::store.icon}})">',
+        '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
         '    </div>',
@@ -47,7 +47,7 @@
         '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
         '      <span>Split</span>',
         '    </div>',
-        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" style="background-image: url(\'/images/{{vm.item.sort}}.png\');"></div>',
+        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" ng-style="{ \'background-image\': \'url(/images/\' + vm.item.sort + \'.png)\' }"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -170,7 +170,7 @@
         if (vm.store.isVault) {
           message = 'All ' + vm.item.name + ' is now in your vault.';
         } else {
-          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.race + " " + vm.store.class + ".";
+          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.name + ".";
         }
         toaster.pop('success', 'Consolidated ' + vm.item.name, message);
       })
