@@ -32,11 +32,12 @@
             {item: _.max(bucket[armortype], function(o){var stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'str'}, // best str_w_bonus
             ];
             // Best needs to include a non-exotic if the max is an exotic item
-            best_non_exotic = [
-            {item: _.max(bucket[armortype], function(o){if (o.tier === 'Exotic') { return 0; } var stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); return  stats.scaled + stats.bonus;}), bonus_type: 'int'}, // best int_w_bonus
-            {item: _.max(bucket[armortype], function(o){if (o.tier === 'Exotic') { return 0; } var stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'disc'}, // best dis_w_bonus
-            {item: _.max(bucket[armortype], function(o){if (o.tier === 'Exotic') { return 0; } var stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'str'}, // best str_w_bonus
-            ];
+            best_non_exotic = [];
+            for(var i = 0; i < best.length; ++i) {
+                if(best[0].tier === 'Exotic') {
+                    best_non_exotic.push({item: _.max(bucket[armortype], function(o){if (o.tier === 'Exotic') { return 0; } var stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); return  stats.scaled + stats.bonus;}), bonus_type: 'int'});
+                }
+            }
             best = best.concat(best_non_exotic);
         }
         
@@ -206,29 +207,15 @@
           for(var type in vm.lockeditems) {
               var item = vm.lockeditems[type];
               if(item === null || type === dropped_type) { continue; }
-              if(item.tier === 'Exotic' && item.type != 'classItem') {
+              if(item.tier === 'Exotic' && item.type != 'ClassItem') {
                   exoticCount += 1;
               }
           }
           return exoticCount < 2;
       },
       onOrderChange: function () {
-        vm.setOrderValues = vm.setOrder.split(',')
-        vm.topsets = vm.highestsets[vm.activesets].sort(function (a,b) {
-            var orders = vm.setOrder.split(',');
-            orders[0] = orders[0].substring(1);
-            orders[1] = orders[1].substring(1);
-            orders[2] = orders[2].substring(1);
-            
-            if(a[orders[0]] < b[orders[0]]) { return 1; }
-            if(a[orders[0]] > b[orders[0]]) { return -1; }
-            if(a[orders[1]] < b[orders[1]]) { return 1; }
-            if(a[orders[1]] > b[orders[1]]) { return -1; }
-            if(a[orders[2]] < b[orders[2]]) { return 1; }
-            if(a[orders[2]] > b[orders[2]]) { return -1; }
-            
-            return 1;
-        }).slice(0,20);
+        vm.setOrderValues = vm.setOrder.split(',');
+        vm.topsets = vm.getTopSets(vm.highestsets[vm.activesets]);
       },
       onDrop: function(dropped_id, type) {
           dropped_id = dropped_id.split('-')[1];
@@ -268,6 +255,23 @@
         $scope.$broadcast('dim-edit-loadout', {
           loadout: loadout
         });
+      },
+      getTopSets: function(currsets) {
+          return currsets.sort(function (a,b) {
+                    var orders = vm.setOrder.split(',');   // e.g. int_val, disc_val, str_val
+                    orders[0] = orders[0].substring(1);  
+                    orders[1] = orders[1].substring(1);
+                    orders[2] = orders[2].substring(1);
+                    
+                    if(a[orders[0]] < b[orders[0]]) { return 1; }
+                    if(a[orders[0]] > b[orders[0]]) { return -1; }
+                    if(a[orders[1]] < b[orders[1]]) { return 1; }
+                    if(a[orders[1]] > b[orders[1]]) { return -1; }
+                    if(a[orders[2]] < b[orders[2]]) { return 1; }
+                    if(a[orders[2]] > b[orders[2]]) { return -1; }
+                    
+                    return 1;
+                }).slice(0,20);
       },
       getSetBucketsStep: function(activeGaurdian, bestArmor) {
             var helms = bestArmor['helmet'];
@@ -311,12 +315,10 @@
                         } else {
                             set_map[tiers_string] = [set];
                         }
-                        vm.allSetTiers = Object.keys(set_map).sort().reverse();
-                        vm.activesets = vm.allSetTiers[0];
                     }
                     
                     processed_count++;
-                    if((processed_count%200) == 0) {
+                    if((processed_count%1000) == 0) {
                         // If active gaurdian is changed then stop processing combinations
                         if(vm.active != activeGaurdian) {
                             return;
@@ -329,30 +331,20 @@
                     }
                 } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
                 
+                vm.allSetTiers = Object.keys(set_map).sort().reverse();
+                vm.activesets = vm.allSetTiers[0];
+                
                 // Finish progress
                 $scope.$apply(function () {
                     vm.progress = processed_count/(helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
                 });
-                
-                vm.topsets = vm.highestsets[vm.activesets].sort(function (a,b) {
-                    var orders = vm.setOrder.split(',');
-                    orders[0] = orders[0].substring(1);
-                    orders[1] = orders[1].substring(1);
-                    orders[2] = orders[2].substring(1);
-                    
-                    if(a[orders[0]] < b[orders[0]]) { return 1; }
-                    if(a[orders[0]] > b[orders[0]]) { return -1; }
-                    if(a[orders[1]] < b[orders[1]]) { return 1; }
-                    if(a[orders[1]] > b[orders[1]]) { return -1; }
-                    if(a[orders[2]] < b[orders[2]]) { return 1; }
-                    if(a[orders[2]] > b[orders[2]]) { return -1; }
-                    
-                    return 1;
-                }).slice(0,20);
+                console.timeEnd('test');
+                vm.topsets = vm.getTopSets(vm.highestsets[vm.activesets]);
             }
+            console.time('test');
             setTimeout(function() { step(activeGaurdian, 0,0,0,0,0,0,0,0); },0);
             return set_map;
-        },
+      },
       normalizeBuckets: function() {
         function normalizeStats(item, mod) {
           item.normalStats = _.map(item.stats, function(stat) {
