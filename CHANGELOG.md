@@ -1,4 +1,4 @@
-# 3.6.1
+# 3.6.2
 
 * Add warning if the lost items section of the postmaster has 20 items.
 * Stat bars are more accurately sized.
@@ -11,7 +11,7 @@
 * You can now undo multiple loadouts, going backwards in time.
 
 
-# 3.6.1
+# 3.6.2
 
 * Removed the "Only blues" option in the infusion fuel finder, because it wasn't necessary.
 * Engram searches and the engram loadout features won't mistake Candy Engrams for real engrams.

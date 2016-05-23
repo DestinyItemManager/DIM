@@ -83,8 +83,8 @@
         $rootScope.trackActivity();
 
         dimInfoService.show('20160411v36', {
-          title: 'DIM v3.6.1 Released',
-          view: 'views/changelog-toaster.html?v=v3.6.1',
+          title: 'DIM v3.6.2 Released',
+          view: 'views/changelog-toaster.html?v=v3.6.2',
         });
       }
     ]);
