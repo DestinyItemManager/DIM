@@ -1,12 +1,8 @@
 <div ng-controller="dimMinMaxCtrl as normal" style="min-width:900px">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
   <h1>Armor Comparison</h1>
-  
-  <dim-loadout></dim-loadout>
 
-<!--  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'>-->
-<!--    <span ng-show='normal.doNormalize'>Estimate stats at light level <input style='width:35px;padding-left:5px;border:none' type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></span>-->
-<!--  </p>-->
+  <dim-loadout></dim-loadout>
 
   <ul>
     <li>Light level must be at least 280 for an accurate roll estimation.</li>
@@ -17,16 +13,15 @@
     <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
   </ul>
 
-  <p>Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
-    <option value='titan'>Titan</option>
-    <option value='hunter'>Hunter</option>
-    <option value='warlock'>Warlock</option>
-  </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
+  <p>
+    Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
+      <option value='titan'>Titan</option>
+      <option value='hunter'>Hunter</option>
+      <option value='warlock'>Warlock</option>
+    </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
   </p>
 
-<!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
-<!--    <h3 ng-bind="type"></h3>-->
     <div style='float:left'>
       <div><small>Intellect</small></div>
       <div><small>Discipline</small></div>
@@ -37,17 +32,11 @@
         <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
           <div style='display:inline-block;margin-bottom:20px;'>
             <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
-  <!--            <small ng-bind="normalStat.base"></small>-->
               <small ng-if="normalStat.scaled === 0">-</small>
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
           <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
-  <!--
-       <div ng-style="item.quality | qualityColor" style="margin-right:2px;">
-            <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
-          </div>
-  -->
         </div>
       </span>
     </div>
@@ -57,7 +46,7 @@
     <div ng-show="normal.progress >= 1" style='clear:both;float:left'>
         <p>Locked Items</p>
     </div>
-    <div ng-show="normal.progress >= 1" style='float:right;width:849px;margin-bottom:20px;'>
+    <div ng-show="normal.progress >= 1" style='float:right;width:849px;margin-bottom:20px;' class="itemQuality">
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.helmet" ui-on-drop="normal.onDrop($data, 'helmet')" drag-channel="Helmet" drop-channel="Helmet" drop-validate="normal.lockedItemsValid($data, 'helmet')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
@@ -116,19 +105,19 @@
         </div>
     </div>
     <div ng-show="normal.progress >= 1" style='clear:both;'>
-    <p>Set Tiers (Int/Dis/Str):
-      <select ng-model='normal.activesets' ng-options="val for val in normal.allSetTiers"></select>
-      &nbsp; Order:
-      <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
-        <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
-        <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
-        <option value="-disc_val,-int_val,-str_val">Dis/Int/Str</option>
-        <option value="-disc_val,-str_val,-int_val">Dis/Str/Int</option>
-        <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
-        <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
-      </select>
-      &nbsp; <small>Displaying top 20 sets</small>
-    </p>
+      <p>Set Tiers (Int/Dis/Str):
+        <select ng-model='normal.activesets' ng-options="val for val in normal.allSetTiers"></select>
+        &nbsp; Order:
+        <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
+          <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
+          <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
+          <option value="-disc_val,-int_val,-str_val">Dis/Int/Str</option>
+          <option value="-disc_val,-str_val,-int_val">Dis/Str/Int</option>
+          <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
+          <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
+        </select>
+        &nbsp; <small>Displaying top 20 sets</small>
+      </p>
     </div>
     <div ng-show="normal.progress >= 1" style='clear:both;'>
         <div ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
@@ -138,78 +127,15 @@
               <div><small>Strength</small>: <small>{{set.str_val}}</small></div>
               <p><small>Bonus Type</small>: </p>
             </div>
-            <div style='float:right;width:849px;margin-left:5px;margin-bottom:20px;'>
-            <span ng-repeat="armorpiece in set.armor">
-              <div style="display:inline-block;margin-left:20px;">
-                <div dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></div>
-                <p style="text-align:center"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></p>
-              </div>
-            </span>
-            <input style="margin-left:20px;" type="button" value="Create Loadout" ng-click="normal.newLoadout($index)"/>
-            </div>
-        <!--<div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
-          <div style='display:inline-block;margin-bottom:20px;'>
-            <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
-              <small ng-if="item.normalStats[$index].scaled === 0">-</small>
-              <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
-            </div>
-          </div>
-          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
-  <!--
-          <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
-            <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
-          </div>
-  -->
-        </div>
-    </div>
-    <!--<div style='clear:both;float:left'>
-      <div><small>Intellect</small></div>
-      <div><small>Discipline</small></div>
-      <div><small>Strength</small></div>
-    </div>
-    <div style='float:right;width:849px;margin-top:-4px;'>
-    <span ng-repeat="item in normal.highestset">
-      <div style='margin-bottom:20px;'>
-        <div ng-if="item.item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
-          <div style='display:inline-block;margin-bottom:20px;'>
-            <div ng-repeat="stat in item.item.stats track by $index" style="color: {{normal.getColor(100*item.item.normalStats[$index].scaled/item.item.normalStats[$index].split)}}">
-              <small ng-if="item.item.normalStats[$index].scaled === 0">-</small>
-              <span ng-if="item.item.normalStats[$index].scaled > 0">
-                <span ng-if="(item.bonus_type == 'int' && $index == 0) || (item.bonus_type == 'disc' && $index == 1) || (item.bonus_type == 'str' && $index == 2)">
-                <small ng-bind="item.item.normalStats[$index].scaled + item.item.normalStats[$index].bonus"></small>
-                    /
-                <small ng-bind="item.item.normalStats[$index].split + item.item.normalStats[$index].bonus"></small>
-                </span>
-                <span ng-if="(item.bonus_type == 'int' && $index != 0) || (item.bonus_type == 'disc' && $index != 1) || (item.bonus_type == 'str' && $index != 2)">
-                <small ng-bind="item.item.normalStats[$index].scaled"></small>
-                    /
-                <small ng-bind="item.item.normalStats[$index].split"></small>
-                </span>
+            <div style='float:right;width:849px;margin-left:5px;margin-bottom:20px;' class="itemQuality">
+              <span ng-repeat="armorpiece in set.armor">
+                <div style="display:inline-block;margin-left:20px;">
+                  <div dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></div>
+                  <p style="text-align:center"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></p>
+                </div>
               </span>
+              <input style="margin-left:20px;" type="button" value="Create Loadout" ng-click="normal.newLoadout($index)"/>
             </div>
-          </div>
-          <div dim-store-item item-data="item.item" store-data="normal.getStore(item.item.owner)"></div>
         </div>
-      </div>
-    </span>
     </div>
-    <div style='clear:both;float:left'>
-      <div><small>Intellect</small> <small>{{normal.highestint}}</small></div>
-      <div><small>Discipline</small> <small>{{normal.highestdisc}}</small></div>
-      <div><small>Strength</small> <small>{{normal.higheststr}}</small></div>
-    </div>-->
-    <!--<div style='clear:both;width:849px;margin-top:-4px;'>
-    <span ng-repeat="armortype in ['helmet', 'gauntlets', 'chest', 'leg', 'classItem', 'artifact', 'ghost']">
-      <div style='margin-bottom:20px;'>
-      <span ng-repeat="item in normal.bestarmor[armortype]">
-        <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
-          <div style='display:inline-block;margin-bottom:20px;'>
-          </div>
-          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
-        </div>
-      </span>
-      </div>
-    </span>
-    </div>-->
-<!--  </div>-->
 </div>
