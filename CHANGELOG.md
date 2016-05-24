@@ -1,3 +1,7 @@
+# Next
+
+* Fix an issue where warlocks would see loadouts for all the other classes.
+
 # 3.6.2 & 3.6.3
 
 * Add warning if the lost items section of the postmaster has 20 items.
