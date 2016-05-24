@@ -31,11 +31,19 @@
             {item: _.max(bucket[armortype], function(o){var stats = (_.findWhere(o.normalStats, {statHash: 1735777505}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'disc'}, // best dis_w_bonus
             {item: _.max(bucket[armortype], function(o){var stats = (_.findWhere(o.normalStats, {statHash: 4244567218}) || {scaled: 0, bonus: 0}); return stats.scaled + stats.bonus;}), bonus_type: 'str'}, // best str_w_bonus
             ];
+
             // Best needs to include a non-exotic if the max is an exotic item
             best_non_exotic = [];
+            var stat_hashes = [144602215, 1735777505, 4244567218];
             for(var i = 0; i < best.length; ++i) {
-                if(best[0].tier === 'Exotic') {
-                    best_non_exotic.push({item: _.max(bucket[armortype], function(o){if (o.tier === 'Exotic') { return 0; } var stats = (_.findWhere(o.normalStats, {statHash: 144602215}) || {scaled: 0, bonus: 0}); return  stats.scaled + stats.bonus;}), bonus_type: 'int'});
+                if(best[i].item.tier === 'Exotic') {
+                    best_non_exotic.push({item: _.max(bucket[armortype], function(o) {
+                      if (o.tier === 'Exotic') {
+                        return 0;
+                      }
+                      var stats = (_.findWhere(o.normalStats, {statHash: stat_hashes[i]}) || {scaled: 0, bonus: 0});
+                      return stats.scaled + stats.bonus;
+                    }), bonus_type: ''});
                 }
             }
             best = best.concat(best_non_exotic);
