@@ -1,4 +1,4 @@
-# Next
+# 3.6.4
 
 * Fix an issue where warlocks would see loadouts for all the other classes.
 
