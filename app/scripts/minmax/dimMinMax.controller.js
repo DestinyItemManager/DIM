@@ -258,12 +258,26 @@
                     }
                 } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
-                vm.allSetTiers = Object.keys(set_map).sort().reverse();
-                vm.activesets = vm.allSetTiers[0];
+                var tiers = _.each(_.groupBy(Object.keys(set_map), function(set) {
+                    return _.reduce(set.split('/'), function(memo, num){ return memo + parseInt(num); }, 0);;
+                }), function(tier) {
+                    tier.sort().reverse();
+                });
+
+                vm.allSetTiers = [];
+                var tier_keys = Object.keys(tiers);
+                for (var t = tier_keys.length; t-- > 0; ) {
+                    vm.allSetTiers.push('- Tier ' + tier_keys[t] + ' -');
+                    _.each(tiers[tier_keys[t]], function(set) {
+                        vm.allSetTiers.push(set);
+                    });
+                }
+
+                vm.activesets = vm.allSetTiers[1];
 
                 // Finish progress
                 $scope.$apply(function () {
-                    vm.progress = processed_count/(helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
+                    vm.progress = processed_count/combos;
                 });
                 console.timeEnd('elapsed');
                 vm.topsets = vm.getTopSets(vm.highestsets[vm.activesets]);
