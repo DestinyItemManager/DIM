@@ -176,12 +176,21 @@
       });
 
       var bestItemFn = function(item) {
-        // Leave equipped items alone if they need XP
-        if (item.equipped) {
-          return 1000;
+        var value = 0;
+
+        if (item.owner == vm.store.id) {
+          // Prefer items owned by this character
+          value += 0.5;
+          // Leave equipped items alone if they need XP, and on the current character
+          if (item.equipped) {
+            return 1000;
+          }
+        } else if (item.owner == 'vault') {
+          // Prefer items in the vault over items owned by a different character
+          // (but not as much as items owned by this character)
+          value += 0.05;
         }
 
-        var value = 0;
         // Prefer locked items (they're stuff you want to use/keep)
         // and apply different rules to them.
         if (item.locked) {
@@ -206,15 +215,6 @@
 
         // Choose the item w/ the highest XP
         value += 10 * (item.talentGrid.totalXP / item.talentGrid.totalXPRequired);
-
-        if (item.owner == vm.store.id) {
-          // Prefer items owned by this character
-          value += 0.5;
-        } else if (item.owner == 'vault') {
-          // Prefer items in the vault over items owned by a different character
-          // (but not as much as items owned by this character)
-          value += 0.05;
-        }
 
         value += item.primStat ? item.primStat.value / 1000 : 0;
 
