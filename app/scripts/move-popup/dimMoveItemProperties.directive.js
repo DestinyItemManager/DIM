@@ -51,7 +51,7 @@
         '       <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>',
         '       <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '     </span>',
-        '     <span class="stat-box-val stat-box-cell lower-stats" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
+        '     <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
         '       <span ng-show="vm.itemQuality && stat.qualityPercentage" ng-class="{ \'show-quality\': vm.itemQuality && stat.qualityPercentage }" ng-show="{{ stat.bar }}" ng-style="stat.qualityPercentage | qualityColor:\'color\'">({{ stat.qualityPercentage }}%)</span>',
         '     </span>',
         '  </div>',
