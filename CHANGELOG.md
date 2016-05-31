@@ -1,5 +1,7 @@
 # Next
 
+ * Added new armor tier builder
+ * Fix for all numbers appearing red in comparison view
 
 # 3.6.4
 
