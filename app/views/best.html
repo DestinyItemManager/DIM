@@ -106,7 +106,7 @@
     </div>
     <div ng-show="normal.progress >= 1" style='clear:both;'>
       <p>Set Tiers (Int/Dis/Str):
-        <select ng-model='normal.activesets' ng-options="val for val in normal.allSetTiers"></select>
+        <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
         &nbsp; Order:
         <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
           <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
