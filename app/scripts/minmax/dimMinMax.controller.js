@@ -214,6 +214,9 @@
         });
       },
       getTopSets: function(currsets) {
+          if(!currsets || currsets.length === 0) {
+            return [];
+          }
           return currsets.sort(function (a,b) {
                     var orders = vm.setOrder.split(',');   // e.g. int_val, disc_val, str_val
                     orders[0] = orders[0].substring(1);
