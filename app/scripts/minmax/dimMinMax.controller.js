@@ -120,8 +120,8 @@
         chest: items.filter(function(item) { return item.type === 'Chest'; }),
         leg: items.filter(function(item) { return item.type === 'Leg'; }),
         classItem: items.filter(function(item) { return item.type === 'ClassItem'; }),
-        ghost: items.filter(function(item) { return item.type === 'Ghost'; }),
-        artifact: items.filter(function(item) { return item.type === 'Artifact'; })
+        artifact: items.filter(function(item) { return item.type === 'Artifact'; }),
+        ghost: items.filter(function(item) { return item.type === 'Ghost'; })
       };
     }
 
@@ -209,8 +209,10 @@
         loadout.items.ghost = [loadout.items.ghost.item];
         loadout.items.artifact = [loadout.items.artifact.item];
         loadout.classType = vm.active2ind(vm.active);
+
         $scope.$broadcast('dim-edit-loadout', {
-          loadout: loadout
+          loadout: loadout,
+          equipAll: true
         });
       },
       getTopSets: function(currsets) {
@@ -262,7 +264,7 @@
                 for(; ci < classItems.length; ++ci) {
                 for(; gh < ghosts.length; ++gh) {
                 for(; ar < artifacts.length; ++ar) {
-                    var armor = {helmet: helms[h], gauntlets: gaunts[g], chest: chests[c], leg: legs[l], classItem: classItems[ci], ghost: ghosts[gh], artifact: artifacts[ar]};
+                    var armor = {helmet: helms[h], gauntlets: gaunts[g], chest: chests[c], leg: legs[l], classItem: classItems[ci], artifact: artifacts[ar], ghost: ghosts[gh]};
                     if(validSet(armor)) {
                         var set = {armor: armor};
                         set.int_val = load_stats(set, 144602215, 'int');
@@ -353,10 +355,10 @@
           'Class Items': _.flatten(buckets[vm.active].classItem.map(function(item) {
             return normalizeStats(item);
           }), true),
-          'Ghosts': _.flatten(buckets[vm.active].ghost.map(function(item) {
+          'Artifacts': _.flatten(buckets[vm.active].artifact.map(function(item) {
             return normalizeStats(item);
           }), true),
-          'Artifacts': _.flatten(buckets[vm.active].artifact.map(function(item) {
+          'Ghosts': _.flatten(buckets[vm.active].ghost.map(function(item) {
             return normalizeStats(item);
           }), true)
         };
