@@ -40,10 +40,13 @@
         </div>
       </span>
     </div>
-    <div ng-show="normal.progress < 1" style='clear:both;'>
+    <div ng-show="!normal.highestsets" style='clear:both;'>
+        <p>Missing legendary or exotic pieces to build a full set!</p>
+    </div>
+    <div ng-show="normal.progress < 1 && normal.highestsets" style='clear:both;'>
         <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
     </div>
-    <div ng-show="normal.progress >= 1" style='clear:both;float:left'>
+    <div ng-show="normal.progress >= 1 && normal.highestsets" style='clear:both;float:left'>
         <p>Locked Items</p>
     </div>
     <div ng-show="normal.progress >= 1" style='float:right;width:849px;margin-bottom:20px;' class="itemQuality">
@@ -106,8 +109,7 @@
     </div>
     <div ng-show="normal.progress >= 1" style='clear:both;'>
       <p>Set Tiers (Int/Dis/Str):
-        <select ng-model='normal.activesets' ng-options="val for val in normal.allSetTiers"></select>
-        &nbsp; Order:
+        <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>&nbsp; Order:
         <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
           <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
           <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
