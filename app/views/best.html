@@ -40,10 +40,13 @@
         </div>
       </span>
     </div>
-    <div ng-show="normal.progress < 1" style='clear:both;'>
+    <div ng-show="!normal.highestsets" style='clear:both;'>
+        <p>Missing legendary or exotic pieces to build a full set!</p>
+    </div>
+    <div ng-show="normal.progress < 1 && normal.highestsets" style='clear:both;'>
         <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
     </div>
-    <div ng-show="normal.progress >= 1" style='clear:both;float:left'>
+    <div ng-show="normal.progress >= 1 && normal.highestsets" style='clear:both;float:left'>
         <p>Locked Items</p>
     </div>
     <div ng-show="normal.progress >= 1" style='float:right;width:849px;margin-bottom:20px;' class="itemQuality">
@@ -87,14 +90,6 @@
             </div>
             <p style="text-align:center">Class</p>
         </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.ghost" ui-on-drop="normal.onDrop($data, 'ghost')" drag-channel="Ghost" drop-channel="Ghost" drop-validate="normal.lockedItemsValid($data, 'ghost')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('ghost')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.ghost" store-data="normal.getStore(normal.lockeditems.ghost.owner)"></div>
-            </div>
-            <p style="text-align:center">Ghost</p>
-        </div>
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.artifact" ui-on-drop="normal.onDrop($data, 'artifact')" drag-channel="Artifact" drop-channel="Artifact" drop-validate="normal.lockedItemsValid($data, 'artifact')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
@@ -102,6 +97,14 @@
                 <div dim-store-item item-data="normal.lockeditems.artifact" store-data="normal.getStore(normal.lockeditems.artifact.owner)"></div>
             </div>
             <p style="text-align:center">Artifact</p>
+        </div>
+        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.ghost" ui-on-drop="normal.onDrop($data, 'ghost')" drag-channel="Ghost" drop-channel="Ghost" drop-validate="normal.lockedItemsValid($data, 'ghost')">
+            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
+            <div ng-switch-default>
+                <div ng-click="normal.onRemove('ghost')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div dim-store-item item-data="normal.lockeditems.ghost" store-data="normal.getStore(normal.lockeditems.ghost.owner)"></div>
+            </div>
+            <p style="text-align:center">Ghost</p>
         </div>
     </div>
     <div ng-show="normal.progress >= 1" style='clear:both;'>

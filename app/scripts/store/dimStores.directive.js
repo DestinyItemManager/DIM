@@ -28,9 +28,9 @@
     };
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'loadingTracker', '$q'];
+  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', '$q'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, loadingTracker, $q) {
+  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, $q) {
     var vm = this;
 
     vm.stores = null;
@@ -66,6 +66,8 @@
     if ($scope.$root.activePlatformUpdated) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
       $scope.$root.activePlatformUpdated = false;
+    } else if(!_.isNull(dimPlatformService.getActive())) {
+      loadingTracker.addPromise(dimStoreService.reloadStores());
     }
 
     $scope.$on('dim-active-platform-updated', function(e, args) {
