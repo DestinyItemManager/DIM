@@ -52,12 +52,12 @@
         '       <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '     </span>',
         '     <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '       <span ng-show="vm.itemQuality && stat.qualityPercentage" ng-class="{ \'show-quality\': vm.itemQuality && stat.qualityPercentage }" ng-show="{{ stat.bar }}" ng-style="stat.qualityPercentage | qualityColor:\'color\'">({{ stat.qualityPercentage }}%)</span>',
+        '       <span ng-show="vm.itemQuality && stat.qualityPercentage.min" ng-class="{ \'show-quality\': vm.itemQuality && stat.qualityPercentage.min }" ng-show="{{ stat.bar }}" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ vm.getStatRange(stat) }})</span>',
         '     </span>',
         '  </div>',
-        '  <div class="stat-box-row" ng-if="vm.item.quality">',
+        '  <div class="stat-box-row" ng-if="vm.item.quality && vm.item.quality.min">',
         '    <span class="stat-box-text stat-box-cell">Stats quality</span>',
-        '    <span class="stat-box-cell" ng-style="vm.item.quality | qualityColor:\'color\'">{{ vm.item.quality }}% of max possible roll</span>',
+        '    <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.getItemQualityRange() }} of max possible roll</span>',
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
@@ -150,6 +150,21 @@
         vm.light += ' Attack';
         vm.classes['is-' + vm.item.dmg] = true;
       }
+    }
+
+    vm.getStatRange = function(stat) {
+      if(!stat.qualityPercentage) {
+        return '';
+      }
+      return ((stat.qualityPercentage.min === stat.qualityPercentage.max || vm.item.primStat.value === 335) ?
+        stat.qualityPercentage.min :
+        (stat.qualityPercentage.min + "%-" +  stat.qualityPercentage.max)) + '%';
+    }
+
+    vm.getItemQualityRange = function() {
+      return ((vm.item.quality.min === vm.item.quality.max || vm.item.primStat.value === 335) ?
+        vm.item.quality.min :
+        (vm.item.quality.min + "%-" +  vm.item.quality.max)) + '%';
     }
 
     function compareItems(item) {

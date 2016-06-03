@@ -31,9 +31,9 @@
       <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
         <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
           <div style='display:inline-block;margin-bottom:20px;'>
-            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
-              <small ng-if="normalStat.scaled === 0">-</small>
-              <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
+            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage.min | qualityColor:'color'">
+              <small ng-if="normalStat.scaled.min === 0">-</small>
+              <span ng-if="normalStat.scaled.min > 0"><small ng-bind="normalStat.scaled.min"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
           <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>

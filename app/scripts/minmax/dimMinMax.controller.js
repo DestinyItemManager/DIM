@@ -244,7 +244,7 @@
                 var total = 0;
                 _.each(set.armor, function(armor) {
                     var stat = _.findWhere(armor.item.normalStats, {statHash: hash}) || {scaled: 0, bonus: 0};
-                    total += stat.scaled + (armor.bonus_type == target_type ? stat.bonus : 0);
+                    total += stat.scaled.min + (armor.bonus_type == target_type ? stat.bonus : 0);
                 });
                 return total;
             };
@@ -324,10 +324,10 @@
             return {
               statHash: stat.statHash,
               base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0),
-              scaled: stat.scaled,
+              scaled: stat.scaled.min,
               bonus: stat.bonus,
               split: stat.split,
-              qualityPercentage: stat.qualityPercentage
+              qualityPercentage: stat.qualityPercentage.min
             };
           });
           return item;

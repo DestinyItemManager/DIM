@@ -20,7 +20,7 @@
         }
         if (sort === 'quality') {
           items = _.sortBy(items, function(item) {
-            return item.quality ? -item.quality : 1000;
+            return item.quality && item.quality.min ? -item.quality.min : 1000;
           });
         }
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {
