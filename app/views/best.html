@@ -40,10 +40,13 @@
         </div>
       </span>
     </div>
-    <div ng-show="normal.progress < 1" style='clear:both;'>
+    <div ng-show="!normal.highestsets" style='clear:both;'>
+        <p>Missing legendary or exotic pieces to build a full set!</p>
+    </div>
+    <div ng-show="normal.progress < 1 && normal.highestsets" style='clear:both;'>
         <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
     </div>
-    <div ng-show="normal.progress >= 1" style='clear:both;float:left'>
+    <div ng-show="normal.progress >= 1 && normal.highestsets" style='clear:both;float:left'>
         <p>Locked Items</p>
     </div>
     <div ng-show="normal.progress >= 1" style='float:right;width:849px;margin-bottom:20px;' class="itemQuality">
