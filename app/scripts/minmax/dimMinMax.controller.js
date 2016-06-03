@@ -281,7 +281,7 @@
 
                 vm.allSetTiers = [];
                 var tier_keys = Object.keys(tiers);
-                for (var t = tier_keys.length; t-- > 0; ) {
+                for (var t = tier_keys.length; t-- > tier_keys.length - 3; ) {
                     vm.allSetTiers.push('- Tier ' + tier_keys[t] + ' -');
                     _.each(tiers[tier_keys[t]], function(set) {
                         vm.allSetTiers.push(set);
