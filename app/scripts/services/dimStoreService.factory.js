@@ -810,8 +810,8 @@
         stat.scaled = scaled;
         stat.split = split;
         stat.qualityPercentage = {
-          min: Math.min(100, Math.round(100 * stat.scaled.min / stat.split)),
-          max: Math.min(100, Math.round(100 * stat.scaled.max / stat.split))
+          min: Math.round(100 * stat.scaled.min / stat.split),
+          max: Math.round(100 * stat.scaled.max / stat.split)
         }
         ret.total.min += scaled.min || 0;
         ret.total.max += scaled.max || 0;
@@ -824,9 +824,18 @@
             max: Math.floor(stat.scaled.max / 2)
           };
           stat.qualityPercentage = {
-            min: Math.min(100, Math.round(100 * stat.scaled.min / stat.split)),
-            max: Math.min(100, Math.round(100 * stat.scaled.max / stat.split))
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
           }
+        });
+      }
+
+      if(type.toLowerCase() !== 'classitem') {
+        stats.forEach(function(stat) {
+          stat.qualityPercentage = {
+            min: Math.min(100, stat.qualityPercentage),
+            max: Math.min(100, stat.qualityPercentage)
+          };
         });
       }
 
