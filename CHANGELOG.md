@@ -1,11 +1,11 @@
-# 3.6.5
+# 3.7.0
 
  * Added new armor/loadout tier builder
  * Fix for all numbers appearing red in comparison view
  * Updated to latest stat estimation forumla
  * Use directive for percentage width
 
-# 3.6.5
+# 3.7.0
 
 * Fix an issue where warlocks would see loadouts for all the other classes.
 
