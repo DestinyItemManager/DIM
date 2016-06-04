@@ -20,7 +20,7 @@
         }
         if (sort === 'quality') {
           items = _.sortBy(items, function(item) {
-            return item.quality ? -item.quality : 1000;
+            return item.quality && item.quality.min ? -item.quality.min : 1000;
           });
         }
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {
@@ -85,7 +85,7 @@
         '    </div>',
         '    <div class="sub-section sort-progression">',
         '      <div class="unequipped">',
-        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}">',
+        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}\nLevel: {{faction.level}}">',
         '          <svg width="48" height="48">',
         '            <polygon stroke-dasharray="130" fill="{{faction.color}}" points="24,1 47,24 24,47 1,24"/>',
         '            <image xlink:href="" ng-attr-xlink:href="{{faction.icon | bungieIcon}}" ng-attr-x="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" ng-attr-y="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" width="48" height="48" ng-attr-transform="scale({{faction.scale}})" />',

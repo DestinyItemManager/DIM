@@ -57,7 +57,7 @@
         '      <div dim-percent-width="vm.item.percentComplete"></div>',
         '    </div>',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
-        '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality | qualityColor">{{ vm.item.quality }}%</div>',
+        '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
@@ -160,7 +160,7 @@
       }
 
       scope.$watch('vm.item.quality', function() {
-        vm.badgeClassNames['item-stat-no-bg'] = (vm.item.quality > 0);
+        vm.badgeClassNames['item-stat-no-bg'] = (vm.item.quality && vm.item.quality.min > 0);
       });
     }
   }

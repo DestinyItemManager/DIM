@@ -737,6 +737,25 @@
       });
     }
 
+    function fitValue(light) {
+      if (light > 300) {
+        return 0.2546 * light - 23.825;
+      } if (light > 200) {
+        return 0.1801 * light - 1.4612;
+      } else {
+        return -1;
+      }
+    }
+
+    function getScaledStat(base, light) {
+      var max = 335;
+
+      return {
+        min: Math.floor((base)*fitValue(max)/fitValue(light)),
+        max: Math.floor((base+1)*fitValue(max)/fitValue(light))
+      }
+    }
+
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
@@ -748,31 +767,25 @@
         return null;
       }
 
-      var split = 0, rate = 0;
+      var split = 0;
       switch (type.toLowerCase()) {
         case 'helmet':
-          rate = 1/6;
           split = 46; // bungie reports 48, but i've only seen 46
           break;
         case 'gauntlets':
-          rate = 1/6;
           split = 41; // bungie reports 43, but i've only seen 41
           break;
         case 'chest':
-          rate = 1/5;
           split = 61;
           break;
         case 'leg':
-          rate = 1/5;
           split = 56;
           break;
         case 'classitem':
         case 'ghost':
-          rate = 1/10;
           split = 25;
           break;
         case 'artifact':
-          rate = 1/10;
           split = 38;
           break;
         default:
@@ -780,7 +793,10 @@
       }
 
       var ret = {
-        total: 0,
+        total: {
+          min: 0,
+          max: 0
+        },
         max: split*2
       };
 
@@ -788,22 +804,36 @@
       stats.forEach(function(stat) {
         var scaled = 0;
         if (stat.base) {
-          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
-          pure = scaled;
+          scaled = getScaledStat(stat.base, light.value);
+          pure = scaled.min;
         }
         stat.scaled = scaled;
         stat.split = split;
-        stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
-        ret.total += scaled || 0;
+        stat.qualityPercentage = {
+          min: Math.min(100, Math.round(100 * stat.scaled.min / stat.split)),
+          max: Math.min(100, Math.round(100 * stat.scaled.max / stat.split))
+        }
+        ret.total.min += scaled.min || 0;
+        ret.total.max += scaled.max || 0;
       });
-      if (pure === ret.total) {
+
+      if (pure === ret.total.min) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled / 2);
-          stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
+          stat.scaled = {
+            min: Math.floor(stat.scaled.min / 2),
+            max: Math.floor(stat.scaled.max / 2)
+          };
+          stat.qualityPercentage = {
+            min: Math.min(100, Math.round(100 * stat.scaled.min / stat.split)),
+            max: Math.min(100, Math.round(100 * stat.scaled.max / stat.split))
+          }
         });
       }
 
-      return Math.round(ret.total / ret.max * 100);
+      return {
+        min: Math.round(ret.total.min / ret.max * 100),
+        max: Math.round(ret.total.max / ret.max * 100)
+      }
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level
