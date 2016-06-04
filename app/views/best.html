@@ -28,7 +28,7 @@
       <div><small>Strength</small></div>
     </div>
     <div style='float:right;width:849px;margin-top:-4px;' class="itemQuality">
-      <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
+      <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
         <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
           <div style='display:inline-block;margin-bottom:20px;'>
             <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
