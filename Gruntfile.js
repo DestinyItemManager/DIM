@@ -11,33 +11,41 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: pkg,
 
+    sync: {
+      chrome: {
+        files: [{
+          cwd: 'app/',
+          src: [
+            '**'            
+          ],
+          dest: 'dist/chrome',
+        }]
+      },   
+      firefox: {
+        files: [{
+          cwd: 'app/',
+          src: [
+            '**'              
+          ],
+          dest: 'dist/firefox',
+        }]
+      },
+    },    
+
     copy: {
       // Copy all files to a staging directory
-      chrome: {
-        cwd: 'app/',
-        src: '**',
-        dest: 'build/extension/chrome',
-        expand: true
-      },
-
-      firefox: {
-        cwd: 'app/',
-        src: '**',
-        dest: 'build/extension/firefox',
-        expand: true
-      },
-
+   
       beta_icons_firefox: {
         cwd: 'beta-icons/',
         src: '**',
-        dest: 'build/extension/firefox/',
+        dest: 'dist/firefox/',
         expand: true
       },
 
       beta_icons_chrome: {
         cwd: 'beta-icons/',
         src: '**',
-        dest: 'build/extension/chrome/',
+        dest: 'dist/chrome/',
         expand: true
       }
     },
@@ -50,7 +58,7 @@ module.exports = function(grunt) {
         },
         files: [{
           expand: true,
-          cwd: 'build/extension/firefox',
+          cwd: 'dist/firefox',
           src: ['**'],
           dest: '/',
           filter: 'isFile'
@@ -63,7 +71,7 @@ module.exports = function(grunt) {
         },
         files: [{
           expand: true,
-          cwd: 'build/extension/chrome',
+          cwd: 'dist/chrome',
           src: ['**'],
           dest: '/',
           filter: 'isFile'
@@ -72,13 +80,13 @@ module.exports = function(grunt) {
     },
 
     // Clean out generated extension files
-    clean: ["build/extension", "build/dim-extension.zip"],
+    clean: ["build/extension", "build/dim-extension.zip", 'dist'],
 
     replace: {
       // Replace all instances of the current version number (from package.json)
       // with a beta version based on the current time.
       beta_version_chrome: {
-        src: ['build/extension/chrome*.{json,html,js}'],
+        src: ['dist/chrome*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
@@ -86,7 +94,7 @@ module.exports = function(grunt) {
         }]
       },
       beta_version_firefox: {
-        src: ['build/extension/firefox/*.{json,html,js}'],
+        src: ['dist/firefox/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
@@ -120,9 +128,9 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      scripts: {
-        files: ['app/scss/*.scss'],
-        tasks: ['css']
+      app: {
+        files: ['app/**.*'],
+        tasks: ['sync']
       }
     },
 
@@ -172,72 +180,53 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-sync');
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
-  grunt.registerTask('dev-firefox', ['css',
-    'update_firefox_manifest',
-    'watch'
-  ]);
-
-  grunt.registerTask('dev-chrome', ['css',
-    'update_chrome_manifest',
-    'watch'
-  ]);
-
-  grunt.registerTask('update_chrome_manifest', function() {
-    var manifest = grunt.file.readJSON('app/manifest.json');
-    if (manifest.applications) {
-      delete manifest.applications;
-    }
-    grunt.file.write('app/manifest.json', JSON.stringify(manifest, null, '\t'));
-  });
-
+  grunt.registerTask('default', ['clean','css', 'sync', 'update_firefox_manifest','watch']); 
+  
+  
   grunt.registerTask('update_firefox_manifest', function() {
-    var manifest = grunt.file.readJSON('app/manifest.json');
+    var manifest = grunt.file.readJSON('dist/firefox/manifest.json');
     manifest.applications = firefoxBrowserSupport;
-    grunt.file.write('app/manifest.json', JSON.stringify(manifest, null, '\t'));
+    grunt.file.write('dist/firefox/manifest.json', JSON.stringify(manifest, null, '\t'));
   });
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
-    var manifest = grunt.file.readJSON('build/extension/chrome/manifest.json');
+    var manifest = grunt.file.readJSON('dist/chrome/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
-    grunt.file.write('build/extension/chrome/manifest.json', JSON.stringify(manifest));
+    grunt.file.write('dist/extension/chrome/manifest.json', JSON.stringify(manifest));
   });
 
   grunt.registerTask('update_firefox_beta_manifest', function() {
-    var manifest = grunt.file.readJSON('build/extension/firefox/manifest.json');
+    var manifest = grunt.file.readJSON('dist/extension/firefox/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
-    grunt.file.write('build/extension/firefox/manifest.json', JSON.stringify(manifest));
+    grunt.file.write('dist/extension/firefox/manifest.json', JSON.stringify(manifest));
   });
 
   grunt.registerTask('publish_chrome_beta', [
-    'update_chrome_manifest',
-    'copy:chrome',
+    'default',
     'copy:beta_icons_chrome',
     'replace:beta_version_chrome',
-    'compress',
+    'compress:chrome',
     'webstore_upload:beta'
   ]);
 
   grunt.registerTask('publish_firefox_beta', [
-    'update_firefox_manifest',
-    'copy:firefox',
+    'default',
     'copy:beta_icons_firefox',
-    'replace:beta_version_firefox'
+    'replace:beta_version_firefox',
+     'compress:firefox'
   ]);
 
   // Builds a release-able extension in build/dim-extension.zip
   grunt.registerTask('build_extension', ['clean',
-    'css',
-    'update_firefox_beta',
-    'copy:firefox',
-    'update_chrome_beta',
-    'copy:chrome',
-    'compress:firefox',
-    'compress:chrome',
+    'default',
+    'compress',
+    'compress',
 
   ]);
 
