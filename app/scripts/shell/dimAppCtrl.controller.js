@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -45,13 +45,19 @@
       }
     });
 
-    vm.settings = {
-      itemDetails: false,
-      itemStat: false,
-      itemQuality: false,
-      condensedItems: false,
-      characterOrder: 'mostRecent'
-    };
+    dimSettingsService.getSettings()
+      .then(function(settings) {
+        vm.showElements = settings.showElements;
+        vm.itemStat = settings.itemStat;
+      });
+
+    $rootScope.$on('dim-settings-updated', function(event, arg) {
+      if (_.has(arg, 'showElements')) {
+        vm.showElements = arg.showElements;
+      } else if (_.has(arg, 'itemStat')) {
+        vm.itemStat = arg.itemStat;
+      }
+    });
 
     vm.showSetting = function(e) {
       e.stopPropagation();

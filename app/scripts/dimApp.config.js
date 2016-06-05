@@ -85,9 +85,11 @@
         $window.initgapi = function() {
           SyncService.init();
         }
-        dimInfoService.show('20160411v36', {
-          title: 'DIM v3.6.0 Released',
-          view: 'views/changelog-toaster.html?v=v3.6.0',
+
+        console.log('DIM v3.7.1 - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+        dimInfoService.show('20160603v370', {
+          title: 'DIM v3.7.1 Released',
+          view: 'views/changelog-toaster.html?v=v3.7.1'
         });
       }
     ]);
@@ -106,7 +108,7 @@
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*((https?|chrome-extension):|data:image\/)/);
       }
     ])
-    .config(["rateLimiterConfigProvider", function(rateLimiterConfigProvider) {
+    .config(["ngHttpRateLimiterConfigProvider", function(rateLimiterConfigProvider) {
       // Bungie's API will start throttling an API if it's called more than once per second. It does this
       // by making responses take 2s to return, not by sending an error code or throttling response. Choosing
       // our throttling limit to be 1 request every 1100ms lets us achieve best throughput while accounting for
@@ -115,7 +117,7 @@
       rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1100);
     }])
     .config(["$httpProvider", function($httpProvider) {
-      $httpProvider.interceptors.push("rateLimiterInterceptor");
+      $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
     }])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise("/inventory");

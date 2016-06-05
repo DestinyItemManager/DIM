@@ -26,8 +26,8 @@
         '  <div class="level powerLevel" ng-if="!vm.store.isVault">{{ vm.store.powerLevel }}</div>',
         '  <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
         '  <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
-        '  <div class="levelBar" ng-if="::!vm.store.isVault" title="{{vm.xpTillMote}}">',
-        '    <div class="barFill" ng-style="vm.getLevelBar()"></div>',
+        '  <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" title="{{vm.xpTillMote}}">',
+        '    <div class="barFill" dim-percent-width="vm.levelBar"></div>',
         '  </div>',
         '  <div class="loadout-button" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '</div>',
@@ -37,7 +37,7 @@
         '  <div class="vault-bucket" title="{{sort}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.sortSize" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
         '    <div class="vault-bucket-tag">{{sort.substring(0,1)}}</div>',
         '    <div class="vault-fill-bar">',
-        '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" ng-style="{ width: 100 * (size / capacity) + \'%\' }"></div>',
+        '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',
         '    </div>',
         '  </div>',
         '</div>'
@@ -70,6 +70,7 @@
 
     vm.sortSize = {};
     if (vm.store.isVault) {
+      // TODO: do this by buckets
       $scope.$watchCollection('vm.store.items', function() {
         ['Weapons', 'Armor', 'General'].forEach(function(sort) {
           vm.sortSize[sort] = count(vm.store.items, {sort: sort});
@@ -77,18 +78,28 @@
       });
     }
 
-    vm.getLevelBar = function getLevelBar() {
-        if(vm.store.percentToNextLevel) {
-          return {width: vm.store.percentToNextLevel + '%'};
-        }
-        if(vm.store.progression && vm.store.progression.progressions) {
-          var prestige = _.findWhere(vm.store.progression.progressions, {progressionHash: 2030054750});
-          vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
-                          (25000-prestige.progressToNextLevel) + 'xp until 5 motes of light';
-          return {width: (prestige.progressToNextLevel)/250 + '%', "background-color": '#00aae1', opacity: .9};
-        }
-        return '';
-      };
+    function getLevelBar() {
+      if (vm.store.percentToNextLevel) {
+        return vm.store.percentToNextLevel;
+      }
+      if (vm.store.progression && vm.store.progression.progressions) {
+        var prestige = _.findWhere(vm.store.progression.progressions, {
+          progressionHash: 2030054750
+        });
+        vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
+          (prestige.nextLevelAt - prestige.progressToNextLevel) +
+          'xp until 5 motes of light';
+        return prestige.progressToNextLevel / prestige.nextLevelAt;
+      }
+      return 0;
+    }
+
+    $scope.$watch([
+      'store.percentToNextLevel',
+      'store.progression.progressions'
+    ], function() {
+      vm.levelBar = getLevelBar();
+    });
 
     vm.openLoadoutPopup = function openLoadoutPopup(e) {
       e.stopPropagation();

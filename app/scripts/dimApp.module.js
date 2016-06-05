@@ -12,6 +12,7 @@
     'toaster',
     'ajoslin.promise-tracker',
     'cfp.hotkeys',
-    'rzModule'
+    'rzModule',
+    'ngHttpRateLimiter'
   ]);
 })();
