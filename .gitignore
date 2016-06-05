@@ -9,7 +9,7 @@ build/img
 build/manifest
 build/api-manifest/*.json
 build/*.json
-build/manifest.zip
+build/*.zip
 *.DS_Store
 
 !do-not-delete.txt

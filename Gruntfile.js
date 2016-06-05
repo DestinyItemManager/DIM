@@ -184,7 +184,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
-  grunt.registerTask('default', ['clean','css', 'sync', 'update_firefox_manifest','watch']); 
+  grunt.registerTask('default', ['build','watch']); 
+
+  grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']); 
   
   
   grunt.registerTask('update_firefox_manifest', function() {
@@ -208,7 +210,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('publish_chrome_beta', [
-    'default',
+    'build',
     'copy:beta_icons_chrome',
     'replace:beta_version_chrome',
     'compress:chrome',
@@ -216,18 +218,16 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('publish_firefox_beta', [
-    'default',
+    'build',
     'copy:beta_icons_firefox',
     'replace:beta_version_firefox',
-     'compress:firefox'
+    'compress:firefox'
   ]);
 
   // Builds a release-able extension in build/dim-extension.zip
   grunt.registerTask('build_extension', ['clean',
-    'default',
+    'build',
     'compress',
-    'compress',
-
   ]);
 
   grunt.registerTask('log_beta_version', function() {
