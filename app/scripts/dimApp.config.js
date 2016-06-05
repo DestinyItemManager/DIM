@@ -19,10 +19,8 @@
       basic: 'Basic'
     })
     .value('dimCategory', {
-      Subclass: [
-        'Class'
-      ],
       Weapons: [
+        'Class',
         'Primary',
         'Special',
         'Heavy',
@@ -36,14 +34,25 @@
       ],
       General: [
         'Artifact',
-        'Emote',
-        'Emblem',
-        'Armor',
         'Ghost',
+        'Consumable',
+        'Material',
+        'Emblem',
+        'Shader',
+        'Emote',
         'Ship',
         'Vehicle',
-        'Consumable',
-        'Material'
+        'Horn',
+      ],
+      Progress: [
+        'Bounties',
+        'Quests',
+        'Missions',
+      ],
+      Postmaster: [
+        'Lost Items',
+        'Special Orders',
+        'Messages'
       ]
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
@@ -72,7 +81,6 @@
 
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
-
 
         $window.initgapi = function() {
           SyncService.init();

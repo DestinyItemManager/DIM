@@ -59,25 +59,41 @@
       template: [
         '<div>',
         '  <div class="items {{::vm.store.id }}" data-type="item" data-character="{{::vm.store.id }}">',
-        '    <div ng-repeat="key in ::vm.keys track by key" ng-init="value = vm.categories[key]" class="section" ng-class="::key.toLowerCase()">',
+        '    <div ng-repeat="(key, value) in ::vm.categories track by key" class="section" ng-class="::key.toLowerCase()">',
         '      <div class="title">',
         '        <span>{{ ::key }}</span>',
         '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{::vm.store.capacityForItem({sort:key})}}  </span>',
         '      </div>',
         '      <div ng-repeat="type in ::value track by type" class="sub-section"',
-        '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[vm.orderedTypes[type]] }]"',
+        '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[type] }]"',
         '           ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
         '           drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
-        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].equipped"',
+        '        <div class="equipped equippable"',
         '             ng-if="::vm.store.id !== \'vault\'"',
         '             ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
         '              drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '          <div ng-repeat="item in vm.data[type] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '        </div>',
-        '        <div ng-class="vm.styles[type.replace(\' \', \'-\')].unequipped" ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[vm.orderedTypes[type]] | equipped:false | sortItems:vm.itemSort track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
+        '        <div class="unequipped equippable" ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
+        '          <div ng-repeat="item in vm.data[type] | equipped:false | sortItems:vm.itemSort track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
         '          <div class="item-target"></div>',
         '        </div>',
+        '      </div>',
+        '    </div>',
+        '    <div ng-if="::vm.store.id !== \'vault\'" class="title">',
+        '      <span>Vendors</span>',
+        '    </div>',
+        '    <div class="sub-section sort-progression">',
+        '      <div class="unequipped">',
+        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions track by $index" title="{{faction.identifier}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}">',
+        '          <svg width="48" height="48">',
+        '            <polygon stroke-dasharray="130" fill="{{faction.color}}" points="24,1 47,24 24,47 1,24"/>',
+        '            <image xlink:href="" ng-attr-xlink:href="{{faction.icon | bungieIcon}}" ng-attr-x="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" ng-attr-y="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" width="48" height="48" ng-attr-transform="scale({{faction.scale}})" />',
+        '            <polygon stroke-dasharray="130" fill-opacity="0" stroke="#FFF" stroke-opacity=".35" stroke-width="2" points="24,1 47,24 24,47 1,24"/>',
+        '            <polygon stroke-dasharray="130" style="stroke-dashoffset:{{130-(130*faction.progressToNextLevel/faction.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="2" points="24,1 47,24 24,47 1,24"/>',
+        '          </svg>',
+        '          <span class="item-stat" ng-bind="::faction.level"></span>',
+        '        </span>',
         '      </div>',
         '    </div>',
         '  </div>',
@@ -87,9 +103,9 @@
   }
 
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue'];
+  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory', 'dimInfoService'];
 
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
+  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory, dimInfoService) {
     var vm = this;
 
     // Detect when we're hovering a dragged item over a target
@@ -127,182 +143,9 @@
       $timeout.cancel(dragTimer);
     };
 
-    var types = [ // Order of types in the rows.
-      'Class',
-      'Primary',
-      'Special',
-      'Heavy',
-      'Helmet',
-      'Gauntlets',
-      'Chest',
-      'Leg',
-      'ClassItem',
-      'Artifact',
-      'Ghost',
-      'Emblem',
-      'Armor',
-      'Ship',
-      'Vehicle',
-      'Horn',
-      'Emote',
-      'Consumable',
-      'Material',
-      'Missions',
-      'Bounties',
-      'Quests',
-      'Messages',
-      'Special Orders',
-      'Lost Items'
-    ];
-    vm.orderedTypes = {};
-
-    _.each(types, function(value, index) {
-      vm.orderedTypes[value] = index;
-    });
-
     vm.sortSize = _.countBy(vm.store.items, 'sort');
 
-    vm.categories = { // Grouping of the types in the rows.
-      Weapons: [
-        'Class',
-        'Primary',
-        'Special',
-        'Heavy',
-      ],
-      Armor: [
-        'Helmet',
-        'Gauntlets',
-        'Chest',
-        'Leg',
-        'ClassItem'
-      ],
-      General: [
-        'Artifact',
-        'Ghost',
-        'Consumable',
-        'Material',
-        'Emblem',
-        'Armor',
-        'Emote',
-        'Ship',
-        'Vehicle',
-        'Horn'],
-      Progress: [
-        'Bounties',
-        'Quests',
-        'Missions',
-      ],
-      Postmaster: [
-        'Messages',
-        'Special Orders',
-        'Lost Items'
-      ]
-    };
-
-    vm.keys = _.keys(vm.categories);
-
-    vm.styles = { // Styles of the types in the rows.
-      Class: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Primary: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Special: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Heavy: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Helmet: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Gauntlets: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Chest: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Leg: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      ClassItem: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Artifact: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Emblem: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Armor: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Emote: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Ghost: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Ship: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Vehicle: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Horn: {
-        equipped: 'equipped equippable',
-        unequipped: 'unequipped equippable',
-      },
-      Consumable: {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      Material: {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      Messages: {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      Bounties: {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      Quests: {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      Missions: {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      'Special-Orders': {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      },
-      'Lost-Items': {
-        equipped: '',
-        unequipped: 'unequipped equippable',
-      }
-    };
+    vm.categories = angular.copy(dimCategory); // Grouping of the types in the rows.
 
     vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
@@ -386,15 +229,29 @@
     });
 
     function resetData() {
+      dimStoreService.updateProgression();
+
+      if (_.any(vm.store.items, {type: 'Unknown'})) {
+        vm.categories['Unknown'] = ['Unknown'];
+      }
+
       if (vm.store.isVault) {
         vm.sortSize = _.countBy(vm.store.items, 'sort');
       }
 
       vm.data = _.groupBy(vm.store.items, function(item) {
-        return vm.orderedTypes[item.type];
+        return item.type;
       });
-    }
 
+      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+        dimInfoService.show('lostitems', {
+          type: 'warning',
+          title: 'Postmaster Limit',
+          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+          hide: 'Never show me this type of warning again.'
+        });
+      }
+    }
 
     dimSettingsService.getSetting('itemSort').then(function(sort) {
       vm.itemSort = sort;

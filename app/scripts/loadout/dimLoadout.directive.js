@@ -131,7 +131,7 @@
     };
 
     vm.add = function add(item, $event) {
-      if (item.equipment || item.type === 'Material' || item.type === 'Consumable') {
+      if (item.canBeInLoadout()) {
         var clone = angular.copy(item);
 
         var discriminator = clone.type.toLowerCase();

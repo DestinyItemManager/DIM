@@ -28,7 +28,7 @@
         '  <span><img class="title-element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
-        '  <span ng-if="::vm.item.weaponClassName" ng-bind="::vm.item.weaponClassName"></span>',
+        '  <span ng-if="::vm.item.sort == \'Weapons\' || vm.item.sort ==\'Postmaster\'" ng-bind="::vm.item.typeName"></span>',
         '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete}}%</span>',
         '  <span class="pull-right move-popup-info-detail" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
@@ -109,7 +109,7 @@
           color = 60;
         } else if(value <= 99) {
           color = 120;
-        } else if(value === 100) {
+        } else if(value >= 100) {
           color = 190;
         } else {
           return 'white';

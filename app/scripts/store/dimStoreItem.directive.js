@@ -28,6 +28,9 @@
         "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
+        '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
+        '      <div ng-style="{ width: vm.item.percentComplete + \'%\' }"></div>',
+        '    </div>',
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
         '    <div ng-if="vm.itemQuality && vm.quality > 0" class="item-stat item-quality" style="background-color: {{vm.getColor(vm.quality)}};">{{ vm.quality > 0 ? vm.quality + "%" : "" }}</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
@@ -76,7 +79,7 @@
             color = 60;
           } else if(value <= 99) {
             color = 120;
-          } else if(value === 100) {
+          } else if(value >= 100) {
             color = 190;
           } else {
             return 'white';

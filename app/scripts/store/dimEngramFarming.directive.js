@@ -18,7 +18,7 @@
         '    <img class="engram" ng-class="{ active: (vm.service.movingEngrams || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>',
         '  </div>',
         '  <div class="engram-details">',
-        '    <h1>Sending {{vm.service.store.race}} {{vm.service.store.name}}\'s engrams to the vault</h1>',
+        '    <h1>Sending {{vm.service.store.name}}\'s engrams to the vault</h1>',
         '    <p>DIM will watch for engrams and move them to the vault. It\'ll also keep one space open per type to keep engrams from going to the Postmaster.</p>',
         '  </div>',
         '  <button ng-click="vm.stop($event)">Stop</button>',
@@ -27,9 +27,9 @@
     };
   }
 
-  EngramFarmingCtrl.$inject = ['dimEngramFarmingService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope'];
+  EngramFarmingCtrl.$inject = ['dimEngramFarmingService'];
 
-  function EngramFarmingCtrl(dimEngramFarmingService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope) {
+  function EngramFarmingCtrl(dimEngramFarmingService) {
     var vm = this;
     angular.extend(vm, {
       service: dimEngramFarmingService,

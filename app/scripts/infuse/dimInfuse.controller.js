@@ -12,7 +12,6 @@
     angular.extend(vm, {
       getAllItems: true,
       showLockedItems: false,
-      onlyBlues: false,
       target: null,
       infused: 0,
       exotic: false,
@@ -62,8 +61,7 @@
             return item.primStat &&
               (!item.locked || vm.showLockedItems) &&
               item.type == vm.source.type &&
-              item.primStat.value > vm.source.primStat.value &&
-              (!vm.onlyBlues || item.tier === 'Rare');
+              item.primStat.value > vm.source.primStat.value;
           });
 
           allItems = allItems.concat(items);

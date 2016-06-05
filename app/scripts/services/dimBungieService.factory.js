@@ -321,7 +321,12 @@
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
-          return getDestinyInventories(data.token, platform, data.membershipId, data.characters);
+          return $q.all([
+            getDestinyInventories(data.token, platform, data.membershipId, data.characters),
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+          ]).then(function(data) {
+            return $q.resolve(data[0]);
+          });
         })
         .catch(function(e) {
           toaster.pop('error', 'Bungie.net Error', e.message);
@@ -395,6 +400,38 @@
 
     /************************************************************************************************************************************/
 
+    function getGuardianProgressionRequest(token, platform, membershipId, character) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function processProgressionResponse(character, response) {
+      character.progression = response.data.Response.data;
+      return character;
+    }
+
+    function getDestinyProgression(token, platform, membershipId, characters) {
+      var promises = characters.map(function(character) {
+        var processPB = processProgressionResponse.bind(null, character);
+
+        return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
+          .then($http)
+          .then(handleErrors)
+          .then(processPB);
+      });
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
     function transfer(item, store, amount) {
       var platform = dimState.active;
       var data = {
@@ -417,9 +454,27 @@
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
+        .then(function(response) {
+          return handleUniquenessViolation(response, item, store);
+        })
         .then(handleErrors);
 
       return promise;
+    }
+
+    //Handle "DestinyUniquenessViolation" (1648)
+    function handleUniquenessViolation(response, item, store) {
+      if (response && response.data && response.data.ErrorCode === 1648) {
+        toaster.pop('warning', 'Item Uniqueness', [
+          "You tried to move the '" + item.name + "'",
+          item.type.toLowerCase(),
+          "to your",
+          store.name,
+          "but that destination already has that item and is only allowed one."
+        ].join(' '));
+        return $q.reject(new Error('move-canceled'));
+      }
+      return response;
     }
 
     function getTransferRequest(token, membershipType, item, store, amount) {
@@ -493,6 +548,12 @@
 
     // Returns a list of items that were successfully equipped
     function equipItems(store, items) {
+
+      // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
+      items = _.sortBy(items, function(i) {
+        return i.tier === 'Exotic' ? 1 : 0;
+      });
+
       var platform = dimState.active;
       var data = {
         token: null,

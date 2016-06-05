@@ -42,7 +42,9 @@
     'stackable':    ['stackable'],
     'engram':       ['engram'],
     'weaponClass':  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
-    'year':         ['year1', 'year2']
+    'year':         ['year1', 'year2'],
+    'infusable':    ['infusable', 'infuse'],
+    'stattype':     ['intellect', 'discipline', 'strength']
   };
 
   var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
@@ -237,8 +239,7 @@
           !item.talentGrid.ascended;
       },
       'reforgeable': function(predicate, item) {
-        return item.talentGrid &&
-          item.talentGrid.hasReforgeNode;
+        return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
       },
       'unlocked': function(predicate, item) {
         return item.lockable &&
@@ -276,11 +277,17 @@
 
         return (item.classType == value);
       },
+      'stattype': function(predicate, item) {
+        return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
+      },
       'stackable': function(predicate, item) {
         return item.maxStackSize > 1;
       },
       'engram': function(predicate, item) {
         return item.isEngram();
+      },
+      'infusable': function(predicate, item) {
+        return item.talentGrid && item.talentGrid.infusable;
       },
       'weaponClass': function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;

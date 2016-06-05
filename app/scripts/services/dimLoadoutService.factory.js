@@ -209,6 +209,11 @@
             item.equipped !== pseudoItem.equipped;
         });
 
+        // vault can't equip
+        if (store.isVault) {
+          items.forEach(function(i) { i.equipped = false; });
+        }
+
         // We'll equip these all in one go!
         var itemsToEquip = _.filter(items, 'equipped');
         if (itemsToEquip.length > 1) {
@@ -282,7 +287,7 @@
           })
           .then(function() {
             var value = 'success';
-            var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + [store.race, store.gender, store.class].join(' ') + '.';
+            var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + store.name + '.';
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {

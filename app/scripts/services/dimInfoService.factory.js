@@ -10,16 +10,17 @@
     return {
       show: function(id, content) {
         content = content || {};
+        content.type = content.type || 'info';
         content.title = content.title || '';
         content.body = content.body || '';
         content.hide = content.hide || 'Hide This Popup';
 
         function showToaster(body, save) {
           toaster.pop({
-            type: 'info',
+            type: content.type,
             title: content.title,
             body: [
-              body,
+              '<p>' + body + '</p>',
               '<input style="margin-top: 1px; vertical-align: middle;" id="info-' + id + '" type="checkbox">',
               '<label for="info-' + id + '">' + content.hide + '</label></p>'
             ].join(''),
