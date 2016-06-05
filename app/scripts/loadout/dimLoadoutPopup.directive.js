@@ -59,7 +59,10 @@
       'warlock': 0,
       'titan': 1,
       'hunter': 2
-    }[vm.store.class] || -1;
+    }[vm.store.class];
+    if (vm.classTypeId === undefined) {
+      vm.classTypeId = -1;
+    }
 
     function initLoadouts() {
       dimLoadoutService.getLoadouts()

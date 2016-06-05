@@ -47,7 +47,7 @@
     angular.extend(vm, {
       itemCategories: dimXurService.itemCategories,
       categoryOrder: [
-         'Exotic Gear',
+        'Exotic Gear',
         'Curios',
         'Material Exchange'
       ],

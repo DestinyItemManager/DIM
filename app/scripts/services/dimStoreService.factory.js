@@ -94,7 +94,7 @@
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
-        this.percentToNextLevel = characterInfo.percentToNextLevel;
+        this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
@@ -170,10 +170,7 @@
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             dStore.progression.progressions.forEach(function(prog) {
-              prog.icon = progressionDefs[prog.progressionHash].icon;
-              prog.identifier = progressionDefs[prog.progressionHash].name;
-              prog.color = progressionDefs[prog.progressionHash].color;
-              prog.scale = progressionDefs[prog.progressionHash].scale || 1;
+              angular.extend(prog, progressionDefs[prog.progressionHash]);
             });
           }
         });
@@ -360,7 +357,7 @@
                 class: getClass(raw.character.base.characterBase.classType),
                 gender: getGender(raw.character.base.characterBase.genderType),
                 race: getRace(raw.character.base.characterBase.raceHash),
-                percentToNextLevel: raw.character.base.percentToNextLevel,
+                percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 isVault: false
               });
@@ -574,11 +571,11 @@
       // More objectives properties
       if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.percentComplete = Math.floor(100 * sum(createdItem.objectives, function(objective) {
+        createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
           return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
-        }));
+        });
       } else if (createdItem.talentGrid) {
-        createdItem.percentComplete = Math.floor(100 * Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired));
+        createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
       }
 
       return createdItem;
@@ -740,41 +737,55 @@
       });
     }
 
+    function fitValue(light) {
+      if (light > 300) {
+        return 0.2546 * light - 23.825;
+      } if (light > 200) {
+        return 0.1801 * light - 1.4612;
+      } else {
+        return -1;
+      }
+    }
+
+    function getScaledStat(base, light) {
+      var max = 335;
+
+      return {
+        min: Math.floor((base)*fitValue(max)/fitValue(light)),
+        max: Math.floor((base+1)*fitValue(max)/fitValue(light))
+      }
+    }
+
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
       var maxLight = 335;
 
-      if(!stats || light.value < 280) {
+      if (!stats || light.value < 280) {
         return null;
       }
 
-      var split = 0, rate = 0;
-      switch(type.toLowerCase()) {
+      var split = 0;
+      switch (type.toLowerCase()) {
         case 'helmet':
-          rate = 1/6;
           split = 46; // bungie reports 48, but i've only seen 46
           break;
         case 'gauntlets':
-          rate = 1/6;
           split = 41; // bungie reports 43, but i've only seen 41
           break;
         case 'chest':
-          rate = 1/5;
           split = 61;
           break;
         case 'leg':
-          rate = 1/5;
           split = 56;
           break;
         case 'classitem':
         case 'ghost':
-          rate = 1/10;
           split = 25;
           break;
         case 'artifact':
-          rate = 1/10;
           split = 38;
           break;
         default:
@@ -782,28 +793,56 @@
       }
 
       var ret = {
-        total: 0,
+        total: {
+          min: 0,
+          max: 0
+        },
         max: split*2
       };
 
       var pure = 0;
       stats.forEach(function(stat) {
         var scaled = 0;
-        if(stat.base) {
-          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
-          pure = scaled;
+        if (stat.base) {
+          scaled = getScaledStat(stat.base, light.value);
+          pure = scaled.min;
         }
         stat.scaled = scaled;
         stat.split = split;
-        ret.total += scaled || 0;
+        stat.qualityPercentage = {
+          min: Math.round(100 * stat.scaled.min / stat.split),
+          max: Math.round(100 * stat.scaled.max / stat.split)
+        }
+        ret.total.min += scaled.min || 0;
+        ret.total.max += scaled.max || 0;
       });
-      if(pure === ret.total) {
+
+      if (pure === ret.total.min) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled/2);
+          stat.scaled = {
+            min: Math.floor(stat.scaled.min / 2),
+            max: Math.floor(stat.scaled.max / 2)
+          };
+          stat.qualityPercentage = {
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
+          }
         });
       }
 
-      return Math.round(ret.total / ret.max * 100);
+      if(type.toLowerCase() !== 'classitem') {
+        stats.forEach(function(stat) {
+          stat.qualityPercentage = {
+            min: Math.min(100, stat.qualityPercentage),
+            max: Math.min(100, stat.qualityPercentage)
+          };
+        });
+      }
+
+      return {
+        min: Math.round(ret.total.min / ret.max * 100),
+        max: Math.round(ret.total.max / ret.max * 100)
+      }
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level

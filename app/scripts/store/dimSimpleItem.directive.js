@@ -13,11 +13,11 @@
         'item': '=itemData'
       },
       template: [
-        '<div title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" class="item">',
+        '<div title="{{ vm.item.primStat.value }} {{:: vm.item.name }}" alt="{{ vm.item.primStat.value }} {{:: vm.item.name }}" class="item">',
         '  <div class="item-elem" ng-class="{ complete: vm.item.complete }">',
-        '    <div class="img" dim-bungie-image-fallback="vm.item.icon">',
-        '      <div class="damage-type" ng-if="!vm.item.itemStat && vm.item.sort === \'Weapons\'" ng-class="\'damage-\' + vm.item.dmg"></div>',
-        '      <div class="item-stat" ng-if="vm.item.primStat.value || vm.item.maxStackSize > 1" ng-class="\'stat-damage-\' + vm.item.dmg">{{ vm.item.primStat.value || vm.item.amount }}</div>',
+        '    <div class="img" dim-bungie-image-fallback="::vm.item.icon">',
+        '      <div class="damage-type damage-{{::vm.item.dmg}}" ng-if="::vm.item.dmg"></div>',
+        '      <div class="item-stat item-equipment stat-damage-{{::vm.item.dmg}}" ng-if="vm.item.primStat.value || vm.item.maxStackSize > 1">{{ vm.item.primStat.value || vm.item.amount }}</div>',
         '    </div>',
         '  </div>',
         '</div>'
