@@ -84,7 +84,6 @@
                 item[0].equipped = true;
               }
             });
-            console.log('he', vm.loadout);
           }
         }
       });
