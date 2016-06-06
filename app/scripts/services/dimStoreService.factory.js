@@ -830,6 +830,12 @@
         });
       }
 
+
+      var quality = {
+        min: Math.round(ret.total.min / ret.max * 100),
+        max: Math.round(ret.total.max / ret.max * 100)
+      };
+
       if(type.toLowerCase() !== 'classitem') {
         stats.forEach(function(stat) {
           stat.qualityPercentage = {
@@ -837,12 +843,13 @@
             max: Math.min(100, stat.qualityPercentage)
           };
         });
+        quality = {
+          min: Math.min(100, quality.min),
+          max: Math.min(100, quality.max)
+        };
       }
 
-      return {
-        min: Math.round(ret.total.min / ret.max * 100),
-        max: Math.round(ret.total.max / ret.max * 100)
-      }
+      return quality;
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level
