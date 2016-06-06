@@ -1,3 +1,10 @@
+# Next
+
+ * Always show locked section in loadout builder
+ * Fix NaN issue in loadout builder
+ * Fix issues with 'create loadout' button in loadout builder
+ * Various Loadout builder bug fixes and performance updates
+
 # 3.7.1
 
  * Added new armor/loadout tier builder
