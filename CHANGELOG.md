@@ -1,8 +1,13 @@
-# 3.7.1 & 3.7.2
+# 3.7.2
 
  * Always show locked section in loadout builder
  * Fix NaN issue in loadout builder
  * Fix issues with 'create loadout' button in loadout builder
+ * For item lvling dont prefer unlvled equiped items on other characters
+ * Various Loadout builder bug fixes and performance updates
+
+# 3.7.1
+
  * Various Loadout builder bug fixes and performance updates
 
 # 3.7.0
