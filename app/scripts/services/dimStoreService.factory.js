@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   angular.module('dimApp')
@@ -472,6 +472,26 @@
         return null;
       }
 
+      // fix itemDef for defense items with missing nodes
+      if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
+        var defaultMinMax = _.find(itemDef.stats, function(stat) {
+          return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
+        });
+
+        if(defaultMinMax) {
+          [144602215, 1735777505, 4244567218].forEach(function(val) {
+            if(!itemDef.stats[val]) {
+              itemDef.stats[val] = {
+                maximum: defaultMinMax.maximum,
+                minimum: defaultMinMax.minimum,
+                statHash: val,
+                value: 0
+              }
+            }
+          });
+        }
+      }
+
       // def.bucketTypeHash is where it goes normally
       var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
       // item.bucket is where it IS right now
@@ -802,7 +822,10 @@
 
       var pure = 0;
       stats.forEach(function(stat) {
-        var scaled = 0;
+        var scaled = {
+          min: 0,
+          max: 0
+        };
         if (stat.base) {
           scaled = getScaledStat(stat.base, light.value);
           pure = scaled.min;
@@ -810,8 +833,8 @@
         stat.scaled = scaled;
         stat.split = split;
         stat.qualityPercentage = {
-          min: Math.min(100, Math.round(100 * stat.scaled.min / stat.split)),
-          max: Math.min(100, Math.round(100 * stat.scaled.max / stat.split))
+          min: Math.round(100 * stat.scaled.min / stat.split),
+          max: Math.round(100 * stat.scaled.max / stat.split)
         }
         ret.total.min += scaled.min || 0;
         ret.total.max += scaled.max || 0;
@@ -824,16 +847,32 @@
             max: Math.floor(stat.scaled.max / 2)
           };
           stat.qualityPercentage = {
-            min: Math.min(100, Math.round(100 * stat.scaled.min / stat.split)),
-            max: Math.min(100, Math.round(100 * stat.scaled.max / stat.split))
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
           }
         });
       }
 
-      return {
+
+      var quality = {
         min: Math.round(ret.total.min / ret.max * 100),
         max: Math.round(ret.total.max / ret.max * 100)
+      };
+
+      if(type.toLowerCase() !== 'artifact') {
+        stats.forEach(function(stat) {
+          stat.qualityPercentage = {
+            min: Math.min(100, stat.qualityPercentage.min),
+            max: Math.min(100, stat.qualityPercentage.max)
+          };
+        });
+        quality = {
+          min: Math.min(100, quality.min),
+          max: Math.min(100, quality.max)
+        };
       }
+
+      return quality;
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level

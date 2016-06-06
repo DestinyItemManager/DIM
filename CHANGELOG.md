@@ -1,11 +1,18 @@
-# 3.7.1
+# 3.7.1 & 3.7.2
+
+ * Always show locked section in loadout builder
+ * Fix NaN issue in loadout builder
+ * Fix issues with 'create loadout' button in loadout builder
+ * Various Loadout builder bug fixes and performance updates
+
+# 3.7.0
 
  * Added new armor/loadout tier builder
  * Fix for all numbers appearing red in comparison view
  * Updated to latest stat estimation forumla
  * Use directive for percentage width
 
-# 3.7.1
+# 3.6.5
 
 * Fix an issue where warlocks would see loadouts for all the other classes.
 
@@ -19,7 +26,6 @@
 * The Vault now has a character-style header, and can have loadouts applied to it. Full-ness of each vault is displayed below the vault header.
 * New option to restore all the items that were in your inventory before applying a loadout, rather than just the equipped ones.
 * You can now undo multiple loadouts, going backwards in time.
-
 
 # 3.6.1
 
