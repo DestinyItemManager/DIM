@@ -160,15 +160,24 @@
       },
       onDrop: function(dropped_id, type) {
           dropped_id = dropped_id.split('-')[1];
+          if(vm.lockeditems[type] && vm.lockeditems[type].id == dropped_id) {
+            return;
+          }
           var item = _.findWhere(buckets[vm.active][type], {id: dropped_id});
           vm.lockeditems[type] = item;
           var bestarmor = getBestArmor(buckets[vm.active], vm.lockeditems);
           vm.highestsets = vm.getSetBucketsStep(vm.active, bestarmor);
+          if(vm.progress < 1.0) {
+            vm.lockedchanged = true;
+          }
       },
       onRemove: function(removed_type) {
           vm.lockeditems[removed_type] = null;
           var bestarmor = getBestArmor(buckets[vm.active], vm.lockeditems);
           vm.highestsets = vm.getSetBucketsStep(vm.active, bestarmor);
+          if(vm.progress < 1.0) {
+            vm.lockedchanged = true;
+          }
       },
       active2ind: function(activeStr) {
           if(activeStr.toLowerCase() === 'warlock') {
@@ -253,7 +262,8 @@
                     processed_count++;
                     if((processed_count%5000) == 0) {
                         // If active gaurdian or page is changed then stop processing combinations
-                        if(vm.active !== activeGaurdian || $location.path() !== '/best') {
+                        if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
+                            vm.lockedchanged = false;
                             return;
                         }
                         vm.progress = processed_count/combos;
@@ -285,6 +295,7 @@
                 console.timeEnd('elapsed');
             }
             console.time('elapsed');
+            vm.lockedchanged = false;
             $timeout(step, 0, true, activeGaurdian, 0,0,0,0,0,0,0,0);
             return set_map;
       },
