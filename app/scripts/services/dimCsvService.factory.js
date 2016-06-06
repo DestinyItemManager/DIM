@@ -154,7 +154,8 @@
     }
 
     function downloadCsvFiles(stores){
-      
+      //perhaps we're loading
+      if (stores.length==0) return;
       var nameMap = {};
       var allItems = [];
       for (var cntr=0; cntr<stores.length; cntr++){
