@@ -1,6 +1,7 @@
 # 3.7.3
 
  * Fix rounding error that prevented some loadout sets from showing up.
+ * Added filter for quality rating, ex - quality:>90 or percentage:<=94
 
 # 3.7.2
 
