@@ -23,12 +23,11 @@ function processItemRow(icon, pRow, itemHash) {
     exists = true;
   }
 
-  var contains = true;
+  var contains = false;
 
   // if (itemHash) {
   //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
   // }
-
   if (contains) {
     if (!exists) {
       var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
