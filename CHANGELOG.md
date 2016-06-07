@@ -1,16 +1,26 @@
-# 3.7.1 & 3.7.2
+# 3.7.3
 
- * Always show locked section in loadout builder
- * Fix NaN issue in loadout builder
- * Fix issues with 'create loadout' button in loadout builder
- * Various Loadout builder bug fixes and performance updates
+ * Fix rounding error that prevented some loadout sets from showing up.
+ * Added filter for quality rating, ex - quality:>90 or percentage:<=94
+
+# 3.7.2
+
+ * Always show locked section in loadout builder.
+ * Fix NaN issue in loadout builder.
+ * Fix issues with 'create loadout' button in loadout builder.
+ * For item lvling dont prefer unlvled equiped items on other characters.
+ * Various Loadout builder bug fixes and performance updates.
+
+# 3.7.1
+
+ * Various Loadout builder bug fixes and performance updates.
 
 # 3.7.0
 
- * Added new armor/loadout tier builder
- * Fix for all numbers appearing red in comparison view
- * Updated to latest stat estimation forumla
- * Use directive for percentage width
+ * Added new armor/loadout tier builder.
+ * Fix for all numbers appearing red in comparison view.
+ * Updated to latest stat estimation forumla.
+ * Use directive for percentage width.
 
 # 3.6.5
 

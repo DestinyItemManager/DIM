@@ -82,10 +82,10 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        console.log('DIM v3.7.2 - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+        console.log('DIM v3.7.3 - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         dimInfoService.show('20160603v370', {
-          title: 'DIM v3.7.2 Released',
-          view: 'views/changelog-toaster.html?v=v3.7.2',
+          title: 'DIM v3.7.3 Released',
+          view: 'views/changelog-toaster.html?v=v3.7.3',
         });
       }
     ]);
