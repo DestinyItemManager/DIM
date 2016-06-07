@@ -771,8 +771,8 @@
       var max = 335;
 
       return {
-        min: Math.floor((base)*fitValue(max)/fitValue(light)),
-        max: Math.floor((base+1)*fitValue(max)/fitValue(light))
+        min: Math.floor((base)*(fitValue(max)/fitValue(light))),
+        max: Math.floor((base+1)*(fitValue(max)/fitValue(light)))
       }
     }
 
