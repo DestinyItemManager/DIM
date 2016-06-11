@@ -12,6 +12,7 @@
       scope: {
         'item': '=itemData'
       },
+      restrict: 'E',
       template: [
         '<div title="{{ vm.item.primStat.value }} {{:: vm.item.name }}" alt="{{ vm.item.primStat.value }} {{:: vm.item.name }}" class="item">',
         '  <div class="item-elem" ng-class="{ complete: vm.item.complete }">',

@@ -40,6 +40,7 @@
       controllerAs: 'vm',
       link: Link,
       replace: true,
+      restrict: 'E',
       scope: {
         'store': '=storeData',
         'item': '=itemData'

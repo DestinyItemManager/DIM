@@ -92,7 +92,7 @@
       var buckets = {
         byHash: {},
         byId: {}
-        // TODO: category heirarchy
+        // TODO: map in the category heirarchy
       };
       _.each(bucketDefs, function(def, hash) {
         if (def.enabled) {

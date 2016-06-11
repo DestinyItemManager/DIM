@@ -352,6 +352,25 @@
 
             return getItems(store.id, items).then(function(items) {
               store.items = items;
+
+              // by categories, then location-buckets
+              store.itemCategories = _.mapObject(_.groupBy(items, function(i) {
+                return i.location.sort;
+              }), function(items) {
+                return _.groupBy(items, function(i) {
+                  return i.location.id;
+                });
+              });
+
+              // by type-bucket
+              store.buckets = _.groupBy(items, function(i) {
+                return i.bucket.id;
+              });
+              // by buckets
+              // by categories, then buckets
+
+              // TODO: How to pass along bucket structure / order??
+
               return store;
             });
           }));
