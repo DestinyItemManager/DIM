@@ -292,7 +292,9 @@
                   if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: sort }));
+                  return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
+                    return i.bucket.sort == sort;
+                  }));
                 }
               });
 
@@ -445,26 +447,21 @@
       // item.bucket is where it IS right now
       var currentBucket = itemBucketDef[item.bucket] || normalBucket;
 
-      var location;
-      var itemSort;
-      var itemType = 'Unknown';
-      if (currentBucket) {
-        location = currentBucket.type;
-        itemSort = currentBucket.sort;
+      // We cheat a bit for items in the vault, since we treat the
+      // vault as a character. So put them in the bucket they would
+      // have been in if they'd been on a character.
+      if (currentBucket && currentBucket.id.startsWith('BUCKET_VAULT')) {
+        currentBucket = normalBucket;
       }
+
+      var itemType = 'Unknown';
       if (normalBucket) {
-        location = location || normalBucket.type;
-        itemSort = itemSort || normalBucket.sort;
         itemType = normalBucket.type;
       }
 
       var weaponClass = null;
       if (normalBucket.inWeapons) {
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
-      }
-
-      if (!itemSort) {
-        console.log(itemDef.itemTypeName + " does not have a sort property.");
       }
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
@@ -484,7 +481,6 @@
         notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
-        //bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         percentComplete: null,

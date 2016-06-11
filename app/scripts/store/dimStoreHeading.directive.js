@@ -73,7 +73,9 @@
       // TODO: do this by buckets
       $scope.$watchCollection('vm.store.items', function() {
         ['Weapons', 'Armor', 'General'].forEach(function(sort) {
-          vm.sortSize[sort] = count(vm.store.items, {sort: sort});
+          vm.sortSize[sort] = count(vm.store.items, function(i) {
+            return i.bucket.sort == sort;
+          });
         });
       });
     }
