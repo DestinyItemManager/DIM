@@ -350,15 +350,26 @@
               }
             }
 
-            return getItems(store.id, items).then(function(items) {
+            return $q.all([
+              getItems(store.id, items),
+              dimBucketService
+            ]).then(function(values) {
+              var items = values[0];
+              var buckets = values[1];
               store.items = items;
 
               // by categories, then location-buckets
+              /*
               store.itemCategories = _.mapObject(_.groupBy(items, function(i) {
                 return i.location.sort;
               }), function(items) {
                 return _.groupBy(items, function(i) {
                   return i.location.id;
+                });
+              });
+
+              dimCategory.forEach(function(category) {
+                category.forEach(function(type) {
                 });
               });
 
@@ -368,6 +379,8 @@
               });
               // by buckets
               // by categories, then buckets
+*/
+              // TODO: need to just include the actual bucket here.
 
               // TODO: How to pass along bucket structure / order??
 

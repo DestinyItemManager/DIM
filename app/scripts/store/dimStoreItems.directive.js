@@ -18,12 +18,12 @@
       template: [
         '<div>',
         '  <div class="items {{::vm.store.id }}" data-type="item" data-character="{{::vm.store.id }}">',
-        '    <div ng-repeat="(key, value) in ::vm.categories track by key" class="section" ng-class="::key.toLowerCase()">',
+        '    <div ng-repeat="(category, buckets) in ::vm.categories track by category" class="section" ng-class="::category | lowercase">',
         '      <div class="title">',
-        '        <span>{{ ::key }}</span>',
-        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{::vm.store.capacityForItem({sort:key})}}  </span>',
+        '        <span>{{ ::category }}</span>',
+        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[category] ? vm.sortSize[category] : 0 }}/{{::vm.store.capacityForItem({sort:category})}}  </span>',
         '      </div>',
-        '      <dim-store-bucket ng-repeat="type in ::value track by type" store-data="vm.store" bucket-items="vm.data[type]" bucket="vm.buckets[type]"></dim-store-bucket>',
+        '      <dim-store-bucket ng-repeat="bucket in ::buckets track by bucket.id" store-data="vm.store" bucket-items="vm.data[bucket.type]" bucket="bucket"></dim-store-bucket>',
         '    </div>',
         '    <div ng-if="::vm.store.id !== \'vault\'" class="title">',
         '      <span>Reputation</span>',
@@ -57,17 +57,21 @@
 
     function resetData() {
       dimBucketService.then(function(buckets) {
-        vm.buckets = buckets.byType;
-        vm.categories = dimCategory; // Grouping of the types in the rows.
+        vm.categories = buckets.byCategory; // Grouping of the types in the rows.
 
         dimStoreService.updateProgression();
 
         if (_.any(vm.store.items, {type: 'Unknown'})) {
-          vm.categories['Unknown'] = ['Unknown'];
+          vm.categories['Unknown'] = [{
+            type: 'Unknown',
+            id: 'BUCKET_UNKNOWN'
+          }];
         }
 
         if (vm.store.isVault) {
-          vm.sortSize = _.countBy(vm.store.items, 'sort');
+          vm.sortSize = _.countBy(vm.store.items, function(item) {
+            return item.location.sort;
+          });
         }
 
         vm.data = _.groupBy(vm.store.items, function(item) {

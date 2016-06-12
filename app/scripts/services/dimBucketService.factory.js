@@ -92,8 +92,8 @@
       var buckets = {
         byHash: {}, // numeric hash -> bucket
         byId: {}, // BUCKET_LEGS -> bucket
-        byType: {} // DIM types ("ClassItem, Special") -> bucket
-        // TODO: map in the category heirarchy
+        byType: {}, // DIM types ("ClassItem, Special") -> bucket
+        byCategory: {} // Mirrors the dimCategory heirarchy
       };
       _.each(bucketDefs, function(def, hash) {
         if (def.enabled) {
@@ -122,6 +122,13 @@
           buckets.byId[bucket.id] = bucket;
         }
       });
+
+      _.each(dimCategory, function(types, category) {
+        buckets.byCategory[category] = types.map(function(type) {
+          return buckets.byType[type];
+        });
+      });
+
       return buckets;
     });
   }
