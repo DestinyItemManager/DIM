@@ -4,23 +4,23 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
     var progressionDefs = {};
-    dimItemBucketDefinitions.then(function(defs) {
-      _.each(defs, function(def, hash) {
+    dimBucketService.then(function(defs) {
+      _.each(defs.byHash, function(def, hash) {
         if (def.enabled) {
-          bucketSizes[hash] = def.itemCount;
+          bucketSizes[hash] = def.capacity;
         }
       });
-      vaultSizes['Weapons'] = bucketSizes[4046403665];
-      vaultSizes['Armor'] = bucketSizes[3003523923];
-      vaultSizes['General'] = bucketSizes[138197802];
+      vaultSizes['Weapons'] = defs.Weapons.capacity;
+      vaultSizes['Armor'] = defs.Armor.capacity;
+      vaultSizes['General'] = defs.General.capacity;
     });
     dimProgressionDefinitions.then(function(defs) {
       progressionDefs = defs;
@@ -32,58 +32,23 @@
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
-    // A mapping from the bucket names to DIM categories
-    // Some buckets like vault and currencies have been ommitted
-    var bucketToType = {
-      "BUCKET_CHEST": "Chest",
-      "BUCKET_LEGS": "Leg",
-      "BUCKET_RECOVERY": "Lost Items",
-      "BUCKET_SHIP": "Ship",
-      "BUCKET_MISSION": "Missions",
-      "BUCKET_ARTIFACT": "Artifact",
-      "BUCKET_HEAVY_WEAPON": "Heavy",
-      "BUCKET_COMMERCIALIZATION": "Special Orders",
-      "BUCKET_CONSUMABLES": "Consumable",
-      "BUCKET_PRIMARY_WEAPON": "Primary",
-      "BUCKET_CLASS_ITEMS": "ClassItem",
-      "BUCKET_QUESTS": "Quests",
-      "BUCKET_VEHICLE": "Vehicle",
-      "BUCKET_BOUNTIES": "Bounties",
-      "BUCKET_SPECIAL_WEAPON": "Special",
-      "BUCKET_SHADER": "Shader",
-      "BUCKET_EMOTES": "Emote",
-      "BUCKET_MAIL": "Messages",
-      "BUCKET_BUILD": "Class",
-      "BUCKET_HEAD": "Helmet",
-      "BUCKET_ARMS": "Gauntlets",
-      "BUCKET_HORN": "Horn",
-      "BUCKET_MATERIALS": "Material",
-      "BUCKET_GHOST": "Ghost",
-      "BUCKET_EMBLEM": "Emblem"
-    };
-
-    var typeToSort = {};
-    _.each(dimCategory, function(types, category) {
-      types.forEach(function(type) {
-        typeToSort[type] = category;
-      });
-    });
-
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
-      // Get the total amount of this item in the store, across all stacks.
+      // Get the total amount of this item in the store, across all stacks,
+      // excluding stuff in the postmaster.
       amountOfItem: function(item) {
         return sum(_.filter(this.items, function(i) {
-          return i.hash === item.hash && i.sort !== 'Postmaster';
+          return i.hash === item.hash && !i.location.inPostmaster;
         }), 'amount');
       },
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
         if (!item.bucket) {
           console.error("item needs a 'bucket' field", item);
+          return 10;
         }
-        return bucketSizes[item.bucket] || 10;
+        return item.bucket.capacity;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
@@ -105,7 +70,7 @@
     // Prototype for Item objects - add methods to this to add them to all
     // items.
     var ItemProto = {
-      // Can this item be equipped by the current store?
+      // Can this item be equipped by the given store?
       canBeEquippedBy: function(store) {
         if (store.isVault) {
           return false;
@@ -117,7 +82,7 @@
           this.equipRequiredLevel <= store.level &&
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
-          this.sort !== 'Postmaster';
+          !this.location.inPostmaster;
       },
       isEngram: function() {
         return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
@@ -310,27 +275,30 @@
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
-                  if (!item.sort) {
+                  var sort = item.sort;
+                  if (item.bucket) {
+                    sort = item.bucket.sort;
+                  }
+                  if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return vaultSizes[item.sort];
+                  return vaultSizes[sort];
                 },
                 spaceLeftForItem: function(item) {
-                  if (!item.sort) {
+                  var sort = item.sort;
+                  if (item.bucket) {
+                    sort = item.bucket.sort;
+                  }
+                  if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: item.sort }));
+                  return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
+                    return i.bucket.sort == sort;
+                  }));
                 }
               });
 
               _.each(raw.data.buckets, function(bucket) {
-                if (bucket.bucketHash === 3003523923)
-                  store.bucketCounts.Armor = _.size(bucket.items);
-                if (bucket.bucketHash === 138197802)
-                  store.bucketCounts.General = _.size(bucket.items);
-                if (bucket.bucketHash === 4046403665)
-                  store.bucketCounts.Weapons = _.size(bucket.items);
-
                 _.each(bucket.items, function(item) {
                   item.bucket = bucket.bucketHash;
                 });
@@ -423,7 +391,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -486,61 +454,51 @@
                 minimum: defaultMinMax.minimum,
                 statHash: val,
                 value: 0
-              }
+              };
             }
           });
         }
       }
 
       // def.bucketTypeHash is where it goes normally
-      var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
+      var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
       // item.bucket is where it IS right now
-      var currentBucket = itemBucketDef[item.bucket];
+      var currentBucket = buckets.byHash[item.bucket] || normalBucket;
 
-      var location;
-      if (currentBucket && bucketToType[currentBucket.bucketIdentifier]) {
-        location = bucketToType[currentBucket.bucketIdentifier];
+      // We cheat a bit for items in the vault, since we treat the
+      // vault as a character. So put them in the bucket they would
+      // have been in if they'd been on a character.
+      if (currentBucket && currentBucket.id.startsWith('BUCKET_VAULT')) {
+        currentBucket = normalBucket;
       }
-      var normalLocation;
-      if (normalBucket && bucketToType[normalBucket.bucketIdentifier]) {
-        normalLocation = bucketToType[normalBucket.bucketIdentifier];
+
+      var itemType = 'Unknown';
+      if (normalBucket) {
+        itemType = normalBucket.type;
       }
 
       var weaponClass = null;
-      if (dimCategory['Weapons'].indexOf(normalLocation) >= 0) {
+      if (normalBucket.inWeapons) {
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
-      }
-
-      var itemType = location || normalLocation || 'Unknown';
-
-      var itemSort = typeToSort[itemType];
-      if (!itemSort) {
-        console.log(itemDef.itemTypeName + " does not have a sort property.");
-      }
-
-      if (itemSort !== 'Postmaster' && item.location === 4) {
-        itemSort = 'Postmaster';
-        if (itemType === 'Consumable') {
-          itemType = 'Special Orders';
-        } else {
-          itemType = 'Lost Items';
-        }
       }
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       var createdItem = angular.extend(Object.create(ItemProto), {
+        // The bucket the item is currently in
+        location: currentBucket,
+        // The bucket the item normally resides in (even though it may be in the vault/postmaster)
+        bucket: normalBucket,
         hash: item.itemHash,
+        // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        sort: itemSort,
         tier: itemDef.tierTypeName || 'Common',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (itemSort === 'Postmaster' || itemDef.nonTransferrable),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
-        bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         percentComplete: null,
@@ -921,9 +879,6 @@
                  light < 319 ? 39 :
                  light < 325 ? 40 :
                  light < 330 ? 41 : 42;
-        case 'lost items':
-          // TODO: this can be improved when we separate an item's type from its location, but for now we don't know
-          return 0;
       }
       console.warn('item bonus not found', type);
       return 0;
@@ -1019,7 +974,7 @@
       idTracker = {};
       return $q.all([
         dimItemDefinitions,
-        dimItemBucketDefinitions,
+        dimBucketService,
         dimStatDefinitions,
         dimObjectiveDefinitions,
         dimSandboxPerkDefinitions,

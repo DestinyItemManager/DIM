@@ -143,8 +143,6 @@
       $timeout.cancel(dragTimer);
     };
 
-    vm.sortSize = _.countBy(vm.store.items, 'sort');
-
     vm.categories = angular.copy(dimCategory); // Grouping of the types in the rows.
 
     vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
@@ -236,11 +234,13 @@
       }
 
       if (vm.store.isVault) {
-        vm.sortSize = _.countBy(vm.store.items, 'sort');
+        vm.sortSize = _.countBy(vm.store.items, function(i) {
+          return i.location.sort;
+        });
       }
 
       vm.data = _.groupBy(vm.store.items, function(item) {
-        return item.type;
+        return item.location.type;
       });
 
       if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {

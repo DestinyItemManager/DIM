@@ -1,6 +1,7 @@
 # Next
 
 * Removed the option to hide or show the primary stat of items - it's always shown now.
+* Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
 
 # 3.7.3
 
