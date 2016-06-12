@@ -44,7 +44,8 @@
     'weaponClass':  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
     'year':         ['year1', 'year2'],
     'infusable':    ['infusable', 'infuse'],
-    'stattype':     ['intellect', 'discipline', 'strength']
+    'stattype':     ['intellect', 'discipline', 'strength'],
+    'new':          ['new']
   };
 
   var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
@@ -394,6 +395,9 @@
         } else {
           return false;
         }
+      },
+      'new': function(predicate, item) {
+        return item.isNew;
       }
     };
   }
