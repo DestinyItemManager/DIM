@@ -78,6 +78,13 @@
           vm.show = true;
           dimLoadoutService.dialogOpen = true;
           vm.loadout = angular.copy(args.loadout);
+          if (args.equipAll) {
+            _.each(vm.loadout.items, function(item) {
+              if(item[0]) {
+                item[0].equipped = true;
+              }
+            });
+          }
         }
       });
 

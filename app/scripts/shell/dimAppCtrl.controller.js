@@ -48,14 +48,11 @@
     dimSettingsService.getSettings()
       .then(function(settings) {
         vm.showElements = settings.showElements;
-        vm.itemStat = settings.itemStat;
       });
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
       if (_.has(arg, 'showElements')) {
         vm.showElements = arg.showElements;
-      } else if (_.has(arg, 'itemStat')) {
-        vm.itemStat = arg.itemStat;
       }
     });
 

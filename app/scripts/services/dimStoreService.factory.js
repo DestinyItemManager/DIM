@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   angular.module('dimApp')
@@ -472,12 +472,30 @@
         return null;
       }
 
-      var itemBucketDef = buckets.byHash;
+      // fix itemDef for defense items with missing nodes
+      if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
+        var defaultMinMax = _.find(itemDef.stats, function(stat) {
+          return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
+        });
+
+        if(defaultMinMax) {
+          [144602215, 1735777505, 4244567218].forEach(function(val) {
+            if(!itemDef.stats[val]) {
+              itemDef.stats[val] = {
+                maximum: defaultMinMax.maximum,
+                minimum: defaultMinMax.minimum,
+                statHash: val,
+                value: 0
+              };
+            }
+          });
+        }
+      }
 
       // def.bucketTypeHash is where it goes normally
-      var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
+      var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
       // item.bucket is where it IS right now
-      var currentBucket = itemBucketDef[item.bucket] || normalBucket;
+      var currentBucket = buckets.byHash[item.bucket] || normalBucket;
 
       // We cheat a bit for items in the vault, since we treat the
       // vault as a character. So put them in the bucket they would
@@ -729,6 +747,25 @@
       });
     }
 
+    function fitValue(light) {
+      if (light > 300) {
+        return 0.2546 * light - 23.825;
+      } if (light > 200) {
+        return 0.1801 * light - 1.4612;
+      } else {
+        return -1;
+      }
+    }
+
+    function getScaledStat(base, light) {
+      var max = 335;
+
+      return {
+        min: Math.floor((base)*(fitValue(max)/fitValue(light))),
+        max: Math.floor((base+1)*(fitValue(max)/fitValue(light)))
+      }
+    }
+
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
@@ -740,31 +777,25 @@
         return null;
       }
 
-      var split = 0, rate = 0;
+      var split = 0;
       switch (type.toLowerCase()) {
         case 'helmet':
-          rate = 1/6;
           split = 46; // bungie reports 48, but i've only seen 46
           break;
         case 'gauntlets':
-          rate = 1/6;
           split = 41; // bungie reports 43, but i've only seen 41
           break;
         case 'chest':
-          rate = 1/5;
           split = 61;
           break;
         case 'leg':
-          rate = 1/5;
           split = 56;
           break;
         case 'classitem':
         case 'ghost':
-          rate = 1/10;
           split = 25;
           break;
         case 'artifact':
-          rate = 1/10;
           split = 38;
           break;
         default:
@@ -772,30 +803,66 @@
       }
 
       var ret = {
-        total: 0,
+        total: {
+          min: 0,
+          max: 0
+        },
         max: split*2
       };
 
       var pure = 0;
       stats.forEach(function(stat) {
-        var scaled = 0;
+        var scaled = {
+          min: 0,
+          max: 0
+        };
         if (stat.base) {
-          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
-          pure = scaled;
+          scaled = getScaledStat(stat.base, light.value);
+          pure = scaled.min;
         }
         stat.scaled = scaled;
         stat.split = split;
-        stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
-        ret.total += scaled || 0;
+        stat.qualityPercentage = {
+          min: Math.round(100 * stat.scaled.min / stat.split),
+          max: Math.round(100 * stat.scaled.max / stat.split)
+        }
+        ret.total.min += scaled.min || 0;
+        ret.total.max += scaled.max || 0;
       });
-      if (pure === ret.total) {
+
+      if (pure === ret.total.min) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled / 2);
-          stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
+          stat.scaled = {
+            min: Math.floor(stat.scaled.min / 2),
+            max: Math.floor(stat.scaled.max / 2)
+          };
+          stat.qualityPercentage = {
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
+          }
         });
       }
 
-      return Math.round(ret.total / ret.max * 100);
+
+      var quality = {
+        min: Math.round(ret.total.min / ret.max * 100),
+        max: Math.round(ret.total.max / ret.max * 100)
+      };
+
+      if(type.toLowerCase() !== 'artifact') {
+        stats.forEach(function(stat) {
+          stat.qualityPercentage = {
+            min: Math.min(100, stat.qualityPercentage.min),
+            max: Math.min(100, stat.qualityPercentage.max)
+          };
+        });
+        quality = {
+          min: Math.min(100, quality.min),
+          max: Math.min(100, quality.max)
+        };
+      }
+
+      return quality;
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level

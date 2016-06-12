@@ -20,7 +20,6 @@
       settingState = {
         hideFilteredItems: false,
         itemDetails: false,
-        itemStat: false,
         itemQuality: false,
         showElements: false,
         characterOrder: 'mostRecent',

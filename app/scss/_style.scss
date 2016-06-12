@@ -684,10 +684,6 @@ img {
   text-align: center;
   -webkit-user-select: none;
   box-sizing: content-box;
-  display: none;
-  &.item-stackable {
-    display: block;
-  }
 }
 .itemQuality .item-stat-no-bg {
   background-color: transparent;
@@ -698,19 +694,6 @@ img {
   text-align: left;
   display: none;
   .itemQuality & {
-    display: block;
-  }
-}
-
-.itemStat .item-stat {
-  &.item-bounty, &.item-equipment, &.item-faction {
-    display: block;
-  }
-}
-
-.damage-type {
-  display: none;
-  .showDamage & {
     display: block;
   }
 }
@@ -731,32 +714,6 @@ img {
   background: #b184c5;
   color: #fff;
   text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.damage-type {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-}
-
-.damage-arc {
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent #85c5ec transparent;
-}
-
-.damage-solar {
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent #f2721b transparent;
-}
-
-.damage-void {
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent #b184c5 transparent;
 }
 
 .item {
@@ -2113,7 +2070,7 @@ button.toast-close-button {
 
 .sort-progression, .sort-lost-items, .sort-messages, .sort-special-orders,  .sort-consumable, .sort-material, .sort-bounties, .sort-quests, .sort-missions {
   .unequipped {
-    margin-left: 12px;
+    margin-left: 0px;
     margin-right: 20px;
   }
 }

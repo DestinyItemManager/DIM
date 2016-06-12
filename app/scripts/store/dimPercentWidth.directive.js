@@ -18,7 +18,7 @@
           if (!val) {
             val = 0;
           }
-          element.width(percent(val));
+          element.css({ width: percent(val) });
         });
       }
     };

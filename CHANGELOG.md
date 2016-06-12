@@ -1,16 +1,47 @@
 # Next
 
+* Removed the option to hide or show the primary stat of items - it's always shown now.
+* Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
+
+# 3.7.3
+
+* Fix rounding error that prevented some loadout sets from showing up.
+* Added filter for quality rating, ex - quality:>90 or percentage:<=94
+
+# 3.7.2
+
+* Always show locked section in loadout builder.
+* Fix NaN issue in loadout builder.
+* Fix issues with 'create loadout' button in loadout builder.
+* For item lvling dont prefer unlvled equiped items on other characters.
+* Various Loadout builder bug fixes and performance updates.
+
+# 3.7.1
+
+* Various Loadout builder bug fixes and performance updates.
+
+# 3.7.0
+
+* Added new armor/loadout tier builder.
+* Fix for all numbers appearing red in comparison view.
+* Updated to latest stat estimation forumla.
+* Use directive for percentage width.
+
+# 3.6.5
+
+* Fix an issue where warlocks would see loadouts for all the other classes.
+
+# 3.6.2 & 3.6.3
+
 * Add warning if the lost items section of the postmaster has 20 items.
 * Stat bars are more accurately sized.
 * Add vendor progress
 * Add prestige level with xp bar under characters to replace normal xp bar after level 40.
-* Add warning if the lost items section of the postmaster has 20 items.
 * It is no longer possible to choose column sizes that cause the vault to disappear.
 * The Vault now has a character-style header, and can have loadouts applied to it. Full-ness of each vault is displayed below the vault header.
 * New option to restore all the items that were in your inventory before applying a loadout, rather than just the equipped ones.
 * You can now undo multiple loadouts, going backwards in time.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
-
 
 # 3.6.1
 

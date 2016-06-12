@@ -30,7 +30,7 @@
         '    </div>',
         '    <div class="sub-section sort-progression">',
         '      <div class="unequipped">',
-        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}">',
+        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}\nLevel: {{faction.level}}">',
         '          <svg width="48" height="48">',
         '            <polygon stroke-dasharray="130" fill="{{faction.color}}" points="24,1 47,24 24,47 1,24"/>',
         '            <image xlink:href="" ng-attr-xlink:href="{{faction.icon | bungieIcon}}" ng-attr-x="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" ng-attr-y="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" width="48" height="48" ng-attr-transform="scale({{faction.scale}})" />',
@@ -53,40 +53,31 @@
   function StoreItemsCtrl($scope, dimStoreService, dimCategory, dimInfoService, dimBucketService) {
     var vm = this;
 
-    vm.sortSize = _.countBy(vm.store.items, 'sort');
-
     function resetData() {
-      dimBucketService.then(function(buckets) {
-        vm.categories = buckets.byCategory; // Grouping of the types in the rows.
+      dimStoreService.updateProgression();
 
-        dimStoreService.updateProgression();
+      if (_.any(vm.store.items, {type: 'Unknown'})) {
+        vm.categories['Unknown'] = ['Unknown'];
+      }
 
-        if (_.any(vm.store.items, {type: 'Unknown'})) {
-          vm.categories['Unknown'] = [{
-            type: 'Unknown',
-            id: 'BUCKET_UNKNOWN'
-          }];
-        }
-
-        if (vm.store.isVault) {
-          vm.sortSize = _.countBy(vm.store.items, function(item) {
-            return item.location.sort;
-          });
-        }
-
-        vm.data = _.groupBy(vm.store.items, function(item) {
-          return item.location.type;
+      if (vm.store.isVault) {
+        vm.sortSize = _.countBy(vm.store.items, function(i) {
+          return i.location.sort;
         });
+      }
 
-        if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
-          dimInfoService.show('lostitems', {
-            type: 'warning',
-            title: 'Postmaster Limit',
-            body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
-            hide: 'Never show me this type of warning again.'
-          });
-        }
+      vm.data = _.groupBy(vm.store.items, function(item) {
+        return item.location.type;
       });
+
+      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+        dimInfoService.show('lostitems', {
+          type: 'warning',
+          title: 'Postmaster Limit',
+          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+          hide: 'Never show me this type of warning again.'
+        });
+      }
     }
 
     $scope.$watchCollection('vm.store.items', resetData);
