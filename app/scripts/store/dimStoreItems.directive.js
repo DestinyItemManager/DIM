@@ -54,30 +54,37 @@
     var vm = this;
 
     function resetData() {
-      dimStoreService.updateProgression();
+      dimBucketService.then(function(buckets) {
+        dimStoreService.updateProgression();
 
-      if (_.any(vm.store.items, {type: 'Unknown'})) {
-        vm.categories['Unknown'] = ['Unknown'];
-      }
+        vm.categories = buckets.byCategory;
 
-      if (vm.store.isVault) {
-        vm.sortSize = _.countBy(vm.store.items, function(i) {
-          return i.location.sort;
+        if (_.any(vm.store.items, {type: 'Unknown'})) {
+          vm.categories['Unknown'] = [{
+            id: 'BUCKET_UNKNOWN',
+            type: 'Unknown'
+          }];
+        }
+
+        if (vm.store.isVault) {
+          vm.sortSize = _.countBy(vm.store.items, function(i) {
+            return i.location.sort;
+          });
+        }
+
+        vm.data = _.groupBy(vm.store.items, function(item) {
+          return item.location.type;
         });
-      }
 
-      vm.data = _.groupBy(vm.store.items, function(item) {
-        return item.location.type;
+        if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+          dimInfoService.show('lostitems', {
+            type: 'warning',
+            title: 'Postmaster Limit',
+            body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+            hide: 'Never show me this type of warning again.'
+          });
+        }
       });
-
-      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
-        dimInfoService.show('lostitems', {
-          type: 'warning',
-          title: 'Postmaster Limit',
-          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
-          hide: 'Never show me this type of warning again.'
-        });
-      }
     }
 
     $scope.$watchCollection('vm.store.items', resetData);
