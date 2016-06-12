@@ -101,7 +101,6 @@
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
       updateProgression: updateProgression,
-      setHeights: setHeightsAsync,
       createItemIndex: createItemIndex,
       processItems: getItems
     };
@@ -144,92 +143,6 @@
 
     function getNextIndex() {
       return _index++;
-    }
-
-    function setHeightsAsync() {
-      setTimeout(setHeights, 0);
-    }
-
-    // Equalize the heights of the various rows of items.
-    // TODO: replace with flexbox
-    function setHeights() {
-      function outerHeight(el) {
-        //var height = el.offsetHeight;
-        var style = getComputedStyle(el);
-
-        var height = parseInt(style.height);
-        return height;
-      }
-
-      function outerWidth(el) {
-        var width = el.offsetWidth;
-        var style = getComputedStyle(el);
-
-        width += parseInt(style.marginLeft) + parseInt(style.marginRight);
-        return width;
-      }
-
-      var fn = function(memo, section) {
-        var childHeight = 0;
-
-        _.each(section.children, function(child) {
-          var t = outerHeight(child);
-          childHeight = (childHeight > t) ? childHeight : t;
-        });
-
-        if (childHeight > memo) {
-          memo = childHeight;
-        }
-
-        return memo;
-      };
-
-      var setHeight = function(query) {
-        var height = _.reduce(document.querySelectorAll(query), fn, 0);
-
-        var style = document.querySelectorAll('style[id=' + ((query.replace(/\./g, '')).replace(/\s/g, '')) + ']');
-
-        if (style.length > 0) {
-          style = style[0];
-        } else {
-          style = document.createElement('style');
-          style.type = 'text/css';
-          style.id = (query.replace(/\./g, '')).replace(/\s/g, '');
-          document.getElementsByTagName('head')[0].appendChild(style);
-        }
-
-        style.innerHTML = query + ' { min-height: ' + (height) + 'px; }';
-      };
-
-      setHeight('.sub-section.sort-class');
-      setHeight('.sub-section.sort-primary');
-      setHeight('.sub-section.sort-special');
-      setHeight('.sub-section.sort-heavy');
-      setHeight('.sub-section.sort-helmet');
-      setHeight('.sub-section.sort-chest');
-      setHeight('.sub-section.sort-gauntlets');
-      setHeight('.sub-section.sort-leg');
-      setHeight('.sub-section.sort-classitem');
-      setHeight('.sub-section.sort-artifact');
-      setHeight('.sub-section.sort-emblem');
-      setHeight('.sub-section.sort-shader');
-      setHeight('.sub-section.sort-ghost');
-      setHeight('.sub-section.sort-emote');
-      setHeight('.sub-section.sort-ship');
-      setHeight('.sub-section.sort-vehicle');
-      setHeight('.sub-section.sort-horn');
-      setHeight('.sub-section.sort-consumable');
-      setHeight('.sub-section.sort-material');
-      setHeight('.sub-section.sort-missions');
-      setHeight('.sub-section.sort-bounties');
-      setHeight('.sub-section.sort-messages');
-      setHeight('.sub-section.sort-special-orders');
-      setHeight('.sub-section.sort-lost-items');
-      setHeight('.sub-section.sort-quests');
-      setHeight('.sub-section.sort-unknown');
-      setHeight('.weapons');
-      setHeight('.armor');
-      setHeight('.general');
     }
 
     function sortStores(stores) {
@@ -372,17 +285,15 @@
                 category.forEach(function(type) {
                 });
               });
+               */
 
               // by type-bucket
               store.buckets = _.groupBy(items, function(i) {
-                return i.bucket.id;
+                return i.location.id;
               });
-              // by buckets
-              // by categories, then buckets
-*/
-              // TODO: need to just include the actual bucket here.
 
-              // TODO: How to pass along bucket structure / order??
+              // TODO: updateItemModel in itemService will need to change!
+              // or add a rebucket function??
 
               return store;
             });
@@ -397,7 +308,6 @@
           $rootScope.$broadcast('dim-stores-updated', {
             stores: stores
           });
-          setHeightsAsync();
 
           return stores;
         });

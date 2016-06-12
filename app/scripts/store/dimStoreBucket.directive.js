@@ -190,9 +190,7 @@
             return dimStoreService.updateCharacters();
           });
         }
-        return movePromise.then(function() {
-          dimStoreService.setHeights();
-        });
+        return movePromise;
       }).catch(function(e) {
         if (e.message !== 'move-canceled') {
           toaster.pop('error', item.name, e.message);
@@ -211,9 +209,6 @@
     $scope.$on('dim-settings-updated', function(event, settings) {
       if (_.has(settings, 'itemSort')) {
         vm.itemSort = settings.itemSort;
-      }
-      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
-        dimStoreService.setHeights();
       }
     });
   }

@@ -43,7 +43,6 @@
         vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
         vm.vaultCol = Math.max(4, Math.min(settings.vaultCol, 12));
         vm.itemQuality = settings.itemQuality;
-        dimStoreService.setHeights();
       });
 
     $scope.$on('dim-settings-updated', function(event, arg) {
@@ -56,7 +55,6 @@
       } else if (_.has(arg, 'itemQuality')) {
         vm.itemQuality = arg.itemQuality;
       }
-      dimStoreService.setHeights();
     });
 
     $scope.$on('dim-stores-updated', function (e, stores) {

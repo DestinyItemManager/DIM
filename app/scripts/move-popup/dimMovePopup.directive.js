@@ -121,9 +121,6 @@
       }
 
       promise = promise
-        .then(function() {
-          dimStoreService.setHeights();
-        })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
@@ -162,7 +159,6 @@
       }
 
       promise = promise.then(function() {
-        dimStoreService.setHeights();
         var message;
         if (vm.store.isVault) {
           message = 'All ' + vm.item.name + ' is now in your vault.';
@@ -247,7 +243,6 @@
             });
 
       promise = promise.then(function() {
-        dimStoreService.setHeights();
         toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' is now equally divided between characters.');
       })
       .catch(function(a) {

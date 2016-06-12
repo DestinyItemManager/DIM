@@ -178,12 +178,6 @@
           item.visible = (filters.length > 0) ? filterFn(item) : true;
         });
       });
-
-      dimSettingsService.getSetting('hideFilteredItems').then(function(hideFilteredItems) {
-        if (hideFilteredItems) {
-          dimStoreService.setHeights();
-        }
-      });
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
