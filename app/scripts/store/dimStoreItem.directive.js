@@ -60,7 +60,6 @@
         '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
-        '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
         '  </div>',
         '</div>'
       ].join('')
