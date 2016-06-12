@@ -4,10 +4,11 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'chromeStorage', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
+  function StoreService($rootScope, $q, chromeStorage, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
+    var _oldStores = [];
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
@@ -284,6 +285,10 @@
 
     // Returns a promise for a fresh view of the stores and their items.
     function reloadStores() {
+      _oldStores = angular.copy(_stores);
+      if(_.isEmpty(_stores)) {
+        clearNewItems();
+      }
       return dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
           var glimmer, marks;
@@ -564,6 +569,21 @@
         classified: itemDef.classified
       });
       createdItem.index = createItemIndex(createdItem);
+      
+      if(!_.isEmpty(_stores)) {
+        chromeStorage.get(createdItem.id).then(function(value) {
+            if(value) {
+                createdItem.isNew = true;
+            } else {
+                createdItem.isNew = isItemNew(createdItem.id);
+                if(createdItem.isNew) {
+                    chromeStorage.set(createdItem.id, true);
+                }
+            }
+        });
+      } else {
+        createdItem.isNew = false;
+      }
 
       try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
@@ -873,6 +893,30 @@
       }
 
       return quality;
+    }
+    
+    function isItemNew(new_id) {
+        var allItems = [];
+
+        // all stores
+        _.each(_oldStores, function(store, id) {
+
+          // all armor in store
+          var items = _.filter(store.items, function(item) {
+              return item.id == new_id;
+          });
+
+          allItems = allItems.concat(items);
+        });
+        
+        return allItems.length == 0;
+    }
+    
+    function clearNewItems() {
+        chromeStorage.get('platformType').then(function(platformType) {
+            chromeStorage.clearCache();
+            chromeStorage.set('platformType', platformType);
+        });
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level

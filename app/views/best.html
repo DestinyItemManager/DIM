@@ -12,6 +12,12 @@
     <li>Split stat rolls are better than single stat rolled items.</li>
     <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
   </ul>
+  <p>
+    Mode: <select ng-model='normal.mode' ng-change='normal.onModeChange()'>
+      <option value='fast'>Fast</option>
+      <option value='full'>Full</option>
+      </select>
+  </p>
 
   <p>
     Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
@@ -47,7 +53,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.helmet" ui-on-drop="normal.onDrop($data, 'helmet')" drag-channel="Helmet" drop-channel="Helmet" drop-validate="normal.lockedItemsValid($data, 'helmet')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('helmet')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('helmet')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.helmet" store-data="normal.getStore(normal.lockeditems.helmet.owner)"></div>
             </div>
             <p style="text-align:center">Helmet</p>
@@ -55,7 +61,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.gauntlets" ui-on-drop="normal.onDrop($data, 'gauntlets')" drag-channel="Gauntlets" drop-channel="Gauntlets" drop-validate="normal.lockedItemsValid($data, 'gauntlets')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('gauntlets')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('gauntlets')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.gauntlets" store-data="normal.getStore(normal.lockeditems.gauntlets.owner)"></div>
             </div>
             <p style="text-align:center">Arms</p>
@@ -63,7 +69,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.chest" ui-on-drop="normal.onDrop($data, 'chest')" drag-channel="Chest" drop-channel="Chest" drop-validate="normal.lockedItemsValid($data, 'chest')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('chest')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('chest')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.chest" store-data="normal.getStore(normal.lockeditems.chest.owner)"></div>
             </div>
             <p style="text-align:center">Chest</p>
@@ -71,7 +77,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.leg" ui-on-drop="normal.onDrop($data, 'leg')" drag-channel="Leg" drop-channel="Leg" drop-validate="normal.lockedItemsValid($data, 'leg')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('leg')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('leg')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.leg" store-data="normal.getStore(normal.lockeditems.leg.owner)"></div>
             </div>
             <p style="text-align:center">Legs</p>
@@ -79,7 +85,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.classItem" ui-on-drop="normal.onDrop($data, 'classItem')" drag-channel="ClassItem" drop-channel="ClassItem" drop-validate="normal.lockedItemsValid($data, 'classItem')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('classItem')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('classItem')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.classItem" store-data="normal.getStore(normal.lockeditems.classItem.owner)"></div>
             </div>
             <p style="text-align:center">Class</p>
@@ -87,7 +93,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.artifact" ui-on-drop="normal.onDrop($data, 'artifact')" drag-channel="Artifact" drop-channel="Artifact" drop-validate="normal.lockedItemsValid($data, 'artifact')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('artifact')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('artifact')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.artifact" store-data="normal.getStore(normal.lockeditems.artifact.owner)"></div>
             </div>
             <p style="text-align:center">Artifact</p>
@@ -95,7 +101,7 @@
         <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.ghost" ui-on-drop="normal.onDrop($data, 'ghost')" drag-channel="Ghost" drop-channel="Ghost" drop-validate="normal.lockedItemsValid($data, 'ghost')">
             <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
             <div ng-switch-default>
-                <div ng-click="normal.onRemove('ghost')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:2;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
+                <div ng-click="normal.onRemove('ghost')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
                 <div dim-store-item item-data="normal.lockeditems.ghost" store-data="normal.getStore(normal.lockeditems.ghost.owner)"></div>
             </div>
             <p style="text-align:center">Ghost</p>

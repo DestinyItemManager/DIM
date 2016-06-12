@@ -31,9 +31,9 @@
 
 
 
-  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
+  StoreItem.$inject = ['dimStoreService', 'chromeStorage', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
-  function StoreItem(dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
+  function StoreItem(dimStoreService, chromeStorage, ngDialog, dimLoadoutService, $rootScope) {
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -59,7 +59,22 @@
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
         '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
+        '    <svg ng-if="vm.item.isNew" width="44" height="44" version="1.1" xmlns="http://www.w3.org/2000/svg">',
+        '    <defs>',
+        '        <linearGradient id="Gradient1" gradientTransform="rotate(45, 0.5, 0.5)">',
+        '          <stop offset="0%" stop-color="white" stop-opacity="0"></stop>',
+        '          <stop offset="25%" stop-color="white" stop-opacity="0.3"></stop>',
+        '          <stop offset="50%" stop-color="white" stop-opacity="0.5"></stop>',
+        '          <stop offset="75%" stop-color="white" stop-opacity="0.3"></stop>',
+        '          <stop offset="100%" stop-color="white" stop-opacity="0"></stop>',
+        '          <animateTransform attributeName="gradientTransform" attributeType="XML" type="translate" values="-2;0;2;" repeatCount="indefinite" dur="5s"/>',
+        '          <animateTransform attributeName="gradientTransform" attributeType="XML" type="rotate" values="45;45;45" repeatCount="indefinite" dur="5s" additive="sum"/>',
+        '        </linearGradient>',
+        '    </defs>',
+        '    <rect id="rect1" x="0" y="0" width="44" height="44" fill="url(#Gradient1)"/>',
+        '    </svg>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
+        '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -95,6 +110,9 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
+        
+        chromeStorage.drop(item.id);
+        item.isNew = false;
 
         if (otherDialog) {
           if (ngDialog.isOpen(otherDialog.id)) {
