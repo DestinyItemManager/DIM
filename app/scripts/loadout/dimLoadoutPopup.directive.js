@@ -282,6 +282,10 @@
       }
 
       var itemsByType = _.mapObject(_.groupBy(engrams, 'type'), function(items, type) {
+        // Sort exotic engrams to the end so they don't crowd out other types
+        items = _.sortBy(items, function(i) {
+          return i.tier === 'Exotic' ? 1 : 0;
+        });
         // No more than 9 engrams of a type
         return _.first(items, 9);
       });
