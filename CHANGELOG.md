@@ -4,6 +4,7 @@
 * The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
 * Section headers don't repeat themselves anymore.
 * Returning from the min-max tool no longer greets you with a blank, item-less screen.
+* Fixed a bug where loadouts were not properly restricted to the platform they were created for.
 
 # 3.7.4
 
