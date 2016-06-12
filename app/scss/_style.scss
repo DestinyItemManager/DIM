@@ -1203,34 +1203,6 @@ rzslider {
   &.is-void {
     background-color: #b184c5;
   }
-  &.is-arc {
-    .fa-lock, .fa-unlock {
-      color: #85c5ec;
-    }
-  }
-  &.is-solar {
-    .fa-lock, .fa-unlock {
-      color: #f2721b;
-    }
-  }
-  &.is-void {
-    .fa-lock, .fa-unlock {
-      color: #b184c5;
-    }
-  }
-  .lock-icon {
-    top: 1px;
-    cursor: pointer;
-    font-size: .75em;
-    float: left;
-    margin-right: 1px;
-    .fa-lock, .fa-unlock {
-      font-size: 1.3em;
-    }
-    &.locking {
-      opacity: .5;
-    }
-  }
 }
 
 /**
