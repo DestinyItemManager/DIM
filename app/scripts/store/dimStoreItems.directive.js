@@ -48,39 +48,41 @@
   }
 
 
-  StoreItemsCtrl.$inject = ['$scope', 'dimStoreService', 'dimCategory'];
+  StoreItemsCtrl.$inject = ['$scope', 'dimStoreService', 'dimCategory', 'dimInfoService', 'dimBucketService'];
 
-  function StoreItemsCtrl($scope, dimStoreService, dimCategory, dimInfoService) {
+  function StoreItemsCtrl($scope, dimStoreService, dimCategory, dimInfoService, dimBucketService) {
     var vm = this;
 
     vm.sortSize = _.countBy(vm.store.items, 'sort');
 
-    vm.categories = angular.copy(dimCategory); // Grouping of the types in the rows.
-
     function resetData() {
-      dimStoreService.updateProgression();
+      dimBucketService.then(function(buckets) {
+        vm.buckets = buckets.byType;
+        vm.categories = dimCategory; // Grouping of the types in the rows.
 
-      if (_.any(vm.store.items, {type: 'Unknown'})) {
-        vm.categories['Unknown'] = ['Unknown'];
-      }
+        dimStoreService.updateProgression();
 
-      if (vm.store.isVault) {
-        vm.sortSize = _.countBy(vm.store.items, 'sort');
-      }
+        if (_.any(vm.store.items, {type: 'Unknown'})) {
+          vm.categories['Unknown'] = ['Unknown'];
+        }
 
-      vm.data = _.groupBy(vm.store.items, function(item) {
-        // TODO: where's the vault??
-        return vm.store.isVault ? item.type : item.location.type;
-      });
+        if (vm.store.isVault) {
+          vm.sortSize = _.countBy(vm.store.items, 'sort');
+        }
 
-      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
-        dimInfoService.show('lostitems', {
-          type: 'warning',
-          title: 'Postmaster Limit',
-          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
-          hide: 'Never show me this type of warning again.'
+        vm.data = _.groupBy(vm.store.items, function(item) {
+          return item.location.type;
         });
-      }
+
+        if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
+          dimInfoService.show('lostitems', {
+            type: 'warning',
+            title: 'Postmaster Limit',
+            body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+            hide: 'Never show me this type of warning again.'
+          });
+        }
+      });
     }
 
     $scope.$watchCollection('vm.store.items', resetData);

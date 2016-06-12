@@ -90,8 +90,9 @@
 
     return dimItemBucketDefinitions.then(function(bucketDefs) {
       var buckets = {
-        byHash: {},
-        byId: {}
+        byHash: {}, // numeric hash -> bucket
+        byId: {}, // BUCKET_LEGS -> bucket
+        byType: {} // DIM types ("ClassItem, Special") -> bucket
         // TODO: map in the category heirarchy
       };
       _.each(bucketDefs, function(def, hash) {
@@ -108,6 +109,7 @@
           bucket.type = bucketToType[bucket.id];
           if (bucket.type) {
             bucket.sort = typeToSort[bucket.type];
+            buckets.byType[bucket.type] = bucket;
           } else if (vaultTypes[bucket.id]) {
             bucket.sort = vaultTypes[bucket.id];
             buckets[bucket.sort] = bucket;

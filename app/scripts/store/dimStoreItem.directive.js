@@ -202,7 +202,7 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
+    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.id : vm.item.location.id;
     switch (vm.item.type) {
     case 'Lost Items':
     case 'Missions':
