@@ -695,9 +695,10 @@ img {
 }
 
 .title-element {
-  height: 18px;
-  width: 18px;
+  height: 1rem;
+  width: 1rem;
   filter: invert(100%);
+  margin-bottom: -2px;
   vertical-align: top;
 }
 
@@ -1404,6 +1405,7 @@ g {
 .move-popup {
   a {
     color: #000;
+    font-size: 1rem;
   }
   .move-button {
     background-size: cover;
@@ -1967,9 +1969,25 @@ button.toast-close-button {
   cursor: pointer;
 }
 
-.move-popup .fa {
-  vertical-align: top;
+.move-popup {
+  .fa {
+    vertical-align: top;
+  }
+
+  .fa.lockable {
+    font-size: 1rem;
+    text-align: center;
+    vertical-align: baseline;
+    width: 1rem;
+  }
+
+  .left-icon {
+    display: inline-block;
+    text-align: center;
+    width: 1rem;
+  }
 }
+
 
 .item-xp-bar {
   height: 4px;
