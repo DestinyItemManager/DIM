@@ -362,6 +362,8 @@
           return;
         }
 
+        var lastActive = '';
+        var lastActiveChar = '';
         var allItems = [];
 
         // all stores
@@ -375,10 +377,24 @@
               item.primStat.value >= 280 // only 280+ light items
               item.stats
           });
+          
+          if(store.class !== 'vault') {
+              if(lastActive === '') {
+                lastActive = store.lastPlayed;
+                lastActiveChar = store.class;
+              } else {
+                var d = new Date(store.lastPlayed);
+                if(d > new Date(lastActive)) {
+                    lastActive = store.lastPlayed;
+                    lastActiveChar = store.class;
+                }
+              }
+          }
 
           allItems = allItems.concat(items);
         });
 
+        vm.active = lastActiveChar.toLowerCase() || 'warlock';
         buckets = initBuckets(allItems);
         vm.normalizeBuckets();
       }
