@@ -16,6 +16,7 @@
       scope: {
         'store': '=storeData'
       },
+      restrict: 'E',
       link: Link,
       template: [
         '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',

@@ -121,7 +121,6 @@ body > div, #header {
 }
 
 .vault {
-  flex: 1;
   .sort-class, .section.postmaster, .sort-class, .section.progress, .section.unknown .bucket-count {
     /*display: none;*/
     visibility: hidden;
@@ -132,10 +131,11 @@ body > div, #header {
   opacity: .20;
 }
 
+/*
 .unequippable, .equippable {
-  /*position: absolute;*/
   min-height: 52px;
 }
+*/
 
 .modal-dialog {
   position: fixed;
@@ -475,7 +475,8 @@ img {
 }
 
 .title {
-  margin: 0 -12px 14px 0;
+  flex: 1;
+  //margin: 0 -12px 14px 0;
   padding: 0 16px;
   background-color: #353535;
   color: #FFF;
@@ -513,6 +514,7 @@ img {
   width: 30px;
 }
 
+/*
 .col-3 .storage {
   width: 240px;
 }
@@ -532,27 +534,21 @@ img {
 }
 
 .col-5 .vault.storage {}
+*/
 
+// TODO: remove storage
 .storage:last-child {
   padding-right: 0;
 }
 
-.items.vault {
-  background-color: rgba(245, 245, 245, 0.25);
-  padding: 0 12px 1px;
-  margin: 0 -12px;
-}
-
-.sub-section {
-  margin-bottom: 20px;
-  position: relative;
-}
-
+/*
 .equippable {
-  display: inline-block;
+  //display: inline-block;
   vertical-align: top;
 }
+*/
 
+/*
 .col-3 {
   .unequippable {
     width: 220px;
@@ -572,13 +568,9 @@ img {
 .col-5 {
   .unequippable, .vault .unequippable {}
 }
-
-.sub-section {
-  clear: both;
-}
-
+*/
 .equipped {
-  position: absolute;
+  //position: absolute;
   width: 52px;
   margin-right: 12px;
 }
@@ -599,6 +591,16 @@ img {
 }
 
 .sub-section {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+
+  > div {
+    white-space: normal;
+  }
+
   &.on-drag-enter .unequipped {
     box-shadow: 0 0 15px 2px rgba(170, 170, 170, 0.5);
     background-color: rgba(170, 170, 170, 0.5);
@@ -793,6 +795,7 @@ img {
 }
 
 .character {
+  flex: 1; // TODO: move to generic
   margin-bottom: 10px;
   height: 70px;
 }
@@ -1541,14 +1544,9 @@ g {
 }
 
 #content {
-  margin: 0 auto;
+  margin: 0 4em;
   margin-top: 15px;
-  display: inline-block;
   user-select: none;
-}
-
-.sub-section > div {
-  white-space: normal;
 }
 
 #header .content {
@@ -1562,10 +1560,23 @@ g {
   }
 }
 
-#stores {
+.stores {
+  display: block;
+  margin: 0 2em;
+}
+
+.store-row {
+  width: 100%;
   display: flex;
   flex-direction: row;
-  margin: 0 2em;
+}
+
+.store-cell {
+  &.expand-vault {
+    background-color: rgba(245, 245, 245, 0.25);
+    padding: 0 12px 1px;
+    margin-left: -12px;
+  }
 }
 
 /* Loadout editor */
@@ -2055,13 +2066,15 @@ button.toast-close-button {
 
 @for $i from 3 through 12 {
   .dim-col-#{$i} {
-    max-width: 84px + ($i * 52px);
-    &.vault {
-      max-width: $i * 52px;
+    width: 84px + ($i * 52px);
+    &.expand-vault {
+      width: auto;
+      flex: 1;
     }
   }
 }
 
+/*
 .unequipped {
   margin-left: 64px;
   margin-right: 20px;
@@ -2083,6 +2096,7 @@ button.toast-close-button {
   margin-left: 0;
   margin-right: 0;
 }
+*/
 
 /* Infuse */
 
