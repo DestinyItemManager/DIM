@@ -202,19 +202,6 @@
     var vm = this;
 
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.id : vm.item.location.id;
-    switch (vm.item.type) {
-    case 'Lost Items':
-    case 'Missions':
-    case 'Bounties':
-    case 'Quests':
-    case 'Special Orders':
-    case 'Messages':
-      {
-        vm.draggable = false;
-        break;
-      }
-    default:
-      vm.draggable = true;
-    }
+    vm.draggable = vm.item.location.hasTransferDestination;
   }
 })();

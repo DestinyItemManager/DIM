@@ -17,8 +17,6 @@
         'store': '=storeData'
       },
       template: [
-        '<div>',
-        '<dim-category-header category="Reputation"></dim-category-header>',
         '<div class="sub-section sort-progression">',
         '  <div class="unequipped">',
         '    <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}\nLevel: {{faction.level}}">',
@@ -32,14 +30,11 @@
         '    </span>',
         '  </div>',
         '</div>',
-        '</div>'
       ].join('')
     };
   }
 
-  StoreReputationCtrl.$inject = ['$scope', 'dimStoreService', 'dimCategory', 'dimInfoService', 'dimBucketService'];
-
-  function StoreReputationCtrl($scope, dimStoreService, dimCategory, dimInfoService, dimBucketService) {
+  function StoreReputationCtrl() {
     var vm = this;
   }
 })();

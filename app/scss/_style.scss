@@ -572,9 +572,24 @@ img {
 .equipped {
   //position: absolute;
   width: 52px;
-  margin-right: 12px;
+  //margin-right: 12px;
 }
 
+.unequipped {
+  margin-left: 12px;
+  margin-right: 20px;
+
+  // TODO: switch to just vault
+  .expand-vault & {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+/*
+.equipped + .unequipped {
+  margin-left: 0;
+}
+*/
 .unequipped.on-drag-enter, .equipped.on-drag-enter {
   box-shadow: 0 0 15px 2px rgba(170, 170, 170, 0.5);
   background-color: rgba(170, 170, 170, 0.5);
@@ -591,8 +606,8 @@ img {
 }
 
 .sub-section {
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-top: 14px;
+  margin-bottom: 6px;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -794,8 +809,11 @@ img {
   background: rgba(0, 0, 0, 0.5);
 }
 
+dim-store-heading {
+  display: block;
+}
+
 .character {
-  flex: 1; // TODO: move to generic
   margin-bottom: 10px;
   height: 70px;
 }
@@ -1569,13 +1587,21 @@ g {
   width: 100%;
   display: flex;
   flex-direction: row;
+
+  // Bit of a hack to make things line up
+  &.items:last-child .store-cell {
+    padding-bottom: 14px;
+  }
 }
 
 .store-cell {
+  margin-right: 12px;
+
   &.expand-vault {
     background-color: rgba(245, 245, 245, 0.25);
     padding: 0 12px 1px;
     margin-left: -12px;
+    margin-right: 0;
   }
 }
 

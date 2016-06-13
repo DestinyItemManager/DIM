@@ -65,6 +65,7 @@
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
       }
+      // TODO: add/remove function that updates buckets, keeps track of counts??
     };
 
     // Prototype for Item objects - add methods to this to add them to all
@@ -100,7 +101,6 @@
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
-      updateProgression: updateProgression,
       createItemIndex: createItemIndex,
       processItems: getItems
     };
@@ -128,17 +128,6 @@
         });
         return _stores;
       });
-    }
-
-    function updateProgression() {
-        _.each(_stores, function(dStore) {
-          if (!dStore.isVault) {
-            dStore.progression.progressions.forEach(function(prog) {
-              angular.extend(prog, progressionDefs[prog.progressionHash]);
-            });
-          }
-        });
-        return _stores;
     }
 
     function getNextIndex() {
@@ -243,6 +232,10 @@
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
+
+              store.progression.progressions.forEach(function(prog) {
+                angular.extend(prog, progressionDefs[prog.progressionHash]);
+              });
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
