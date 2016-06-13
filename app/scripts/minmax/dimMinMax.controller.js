@@ -378,7 +378,7 @@
               item.stats
           });
           
-          if (store.isVault) {
+          if (!store.isVault) {
               if (lastActive === '') {
                 lastActive = store.lastPlayed;
                 lastActiveChar = store.class;
