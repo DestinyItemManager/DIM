@@ -1493,8 +1493,11 @@ g {
     padding: 0 12px 1px;
     margin-left: -12px;
     margin-right: 0;
+    width: auto;
+    flex: 1;
   }
 }
+
 
 /* Loadout editor */
 
@@ -1977,14 +1980,10 @@ button.toast-close-button {
   }
 }
 
-@for $i from 3 through 12 {
+@for $i from 3 through 5 {
   .dim-col-#{$i} {
     .store-cell {
       width: 84px + ($i * 52px);
-      &.vault {
-        width: auto;
-        flex: 1;
-      }
     }
   }
 }

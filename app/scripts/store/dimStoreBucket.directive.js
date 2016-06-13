@@ -20,7 +20,7 @@
         }
         if (sort === 'quality') {
           items = _.sortBy(items, function(item) {
-            return item.quality ? -item.quality : 1000;
+            return item.quality && item.quality.min ? -item.quality.min : 1000;
           });
         }
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {
@@ -45,9 +45,7 @@
       };
     });
 
-  StoreBucket.$inject = ['dimStoreService', '$window'];
-
-  function StoreBucket(dimStoreService, $window) {
+  function StoreBucket() {
     return {
       controller: StoreBucketCtrl,
       controllerAs: 'vm',
