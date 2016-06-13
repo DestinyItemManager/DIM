@@ -15,9 +15,9 @@
       template: [
         // TODO: big loading indicator?
         // TODO: move width class up here!!
-        '<div ng-if="vm.stores" ng-class="{ \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }">',
+        '<div ng-if="vm.stores" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
         '  <div class="store-row">',
-        '    <div class="store-cell" ng-class="vm.widthClass" ng-repeat="store in vm.stores track by store.id">',
+        '    <div class="store-cell" ng-repeat="store in vm.stores track by store.id">',
         '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
         '    </div>',
         '  </div>',
@@ -28,7 +28,7 @@
         '      <span class="bucket-count">{{ 0 }}/{{::vm.vault.capacityForItem({sort:category})}}</span>',
         '    </div>',
         '    <div class="store-row items" ng-repeat="bucket in ::buckets track by bucket.id">',
-        '      <div class="store-cell" ng-class="[vm.widthClass, { \'expand-vault\': store.isVault }]" ng-repeat="store in vm.stores track by store.id">',
+        '      <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
         '        <dim-store-bucket store-data="store" bucket-items="store.buckets[bucket.id]" bucket="bucket"></dim-store-bucket>',
         '      </div>',
         '    </div>',
@@ -37,7 +37,7 @@
         '    <span>Reputation</span>',
         '  </div>',
         '  <div class="store-row items">',
-        '    <div class="store-cell" ng-class="[vm.widthClass, { \'expand-vault\': store.isVault }]" ng-repeat="store in vm.stores track by store.id">',
+        '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
         '      <dim-store-reputation store-data="store"></dim-store-reputation>',
         '    </div>',
         '  </div>',
@@ -51,10 +51,6 @@
   function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService) {
     var vm = this;
 
-    // TODO: char/vault col?
-
-    // TODO: precompute/update vault sizes, and keep a map for which "titles" go full width
-
     vm.stores = null;
     vm.vault = null;
     vm.buckets = null;
@@ -62,10 +58,6 @@
       vm.buckets = angular.copy(buckets);
     });
     vm.charCol = 3;
-
-    $scope.$watch('vm.charCol', function(charCol) {
-      vm.widthClass = 'dim-col-' + charCol;
-    });
 
     settings.getSettings()
       .then(function(settings) {
@@ -99,8 +91,8 @@
         }
       });
 
+      // TODO: precompute/update vault sizes, and keep a map for which "titles" go full width
       // TODO: update vault counts as they go?
-
       // TODO: replace this
       /*
       if (_.any(vm.store.items, {type: 'Unknown'})) {

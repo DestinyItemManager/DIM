@@ -1597,7 +1597,7 @@ g {
 .store-cell {
   margin-right: 12px;
 
-  &.expand-vault {
+  &.vault {
     background-color: rgba(245, 245, 245, 0.25);
     padding: 0 12px 1px;
     margin-left: -12px;
@@ -2092,10 +2092,12 @@ button.toast-close-button {
 
 @for $i from 3 through 12 {
   .dim-col-#{$i} {
-    width: 84px + ($i * 52px);
-    &.expand-vault {
-      width: auto;
-      flex: 1;
+    .store-cell {
+      width: 84px + ($i * 52px);
+      &.vault {
+        width: auto;
+        flex: 1;
+      }
     }
   }
 }

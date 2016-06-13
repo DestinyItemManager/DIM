@@ -400,6 +400,8 @@
       // item.bucket is where it IS right now
       var currentBucket = buckets.byHash[item.bucket] || normalBucket;
 
+      // TODO: if there's no normalBucket, use "unknown bucket", and set a flag on buckets
+
       // We cheat a bit for items in the vault, since we treat the
       // vault as a character. So put them in the bucket they would
       // have been in if they'd been on a character.
