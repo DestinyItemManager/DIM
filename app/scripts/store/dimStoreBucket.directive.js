@@ -86,7 +86,7 @@
   function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
     var vm = this;
 
-    vm.dropChannel = vm.bucket.id + ',' + vm.store.id + vm.bucket.id;
+    vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
 
     // Detect when we're hovering a dragged item over a target
     var dragTimer = null;

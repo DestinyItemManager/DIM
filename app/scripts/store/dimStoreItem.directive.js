@@ -201,7 +201,7 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.id : vm.item.location.id;
+    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
     vm.draggable = vm.item.location.hasTransferDestination;
   }
 })();

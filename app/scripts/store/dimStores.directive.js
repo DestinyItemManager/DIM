@@ -13,7 +13,7 @@
       bindToController: true,
       scope: {},
       template: [
-        '<div ng-if="vm.stores" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
+        '<div ng-if="vm.stores.length" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
         '  <div class="store-row">',
         '    <div class="store-cell" ng-repeat="store in vm.stores track by store.id">',
         '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
@@ -48,8 +48,8 @@
   function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService) {
     var vm = this;
 
-    vm.stores = null;
-    vm.vault = null;
+    vm.stores = dimStoreService.getStores();
+    vm.vault = dimStoreService.getVault();
     vm.buckets = null;
     dimBucketService.then(function(buckets) {
       vm.buckets = angular.copy(buckets);
