@@ -8,7 +8,7 @@
 
   function StoreService($rootScope, $q, chromeStorage, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
-    var _oldStores = [];
+    var _oldItems = {};
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
@@ -285,8 +285,8 @@
 
     // Returns a promise for a fresh view of the stores and their items.
     function reloadStores() {
-      _oldStores = angular.copy(_stores);
-      if(_.isEmpty(_stores)) {
+      _oldItems = buildItemMap(_stores);
+      if (_.isEmpty(_stores)) {
         clearNewItems();
       }
       return dimBungieService.getStores(dimPlatformService.getActive())
@@ -570,13 +570,13 @@
       });
       createdItem.index = createItemIndex(createdItem);
       
-      if(!_.isEmpty(_stores)) {
+      if (!_.isEmpty(_stores)) {
         chromeStorage.get(createdItem.id).then(function(value) {
-            if(value) {
+            if (value) {
                 createdItem.isNew = true;
             } else {
                 createdItem.isNew = isItemNew(createdItem.id);
-                if(createdItem.isNew) {
+                if (createdItem.isNew) {
                     chromeStorage.set(createdItem.id, true);
                 }
             }
@@ -895,21 +895,18 @@
       return quality;
     }
     
-    function isItemNew(new_id) {
-        var allItems = [];
-
-        // all stores
-        _.each(_oldStores, function(store, id) {
-
-          // all armor in store
-          var items = _.filter(store.items, function(item) {
-              return item.id == new_id;
+    function buildItemMap(stores) {
+        var item_map = {};
+        _.each(stores, function(store, id) {
+          var items = _.each(store.items, function(item) {
+              item_map[item.id] = true;
           });
-
-          allItems = allItems.concat(items);
         });
-        
-        return allItems.length == 0;
+        return item_map;
+    }
+    
+    function isItemNew(new_id) {
+        return _oldItems[new_id] !== true;
     }
     
     function clearNewItems() {
