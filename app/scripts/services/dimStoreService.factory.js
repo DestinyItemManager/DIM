@@ -4,23 +4,15 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimInfoService'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimInfoService) {
     var _stores = [];
     var _index = 0;
-    var vaultSizes = {};
-    var bucketSizes = {};
     var progressionDefs = {};
+    var buckets = {};
     dimBucketService.then(function(defs) {
-      _.each(defs.byHash, function(def, hash) {
-        if (def.enabled) {
-          bucketSizes[hash] = def.capacity;
-        }
-      });
-      vaultSizes['Weapons'] = defs.Weapons.capacity;
-      vaultSizes['Armor'] = defs.Armor.capacity;
-      vaultSizes['General'] = defs.General.capacity;
+      buckets = defs;
     });
     dimProgressionDefinitions.then(function(defs) {
       progressionDefs = defs;
@@ -64,8 +56,37 @@
         this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
+      },
+      // Remove an item from this store. Returns whether it actually removed anything.
+      removeItem: function(item) {
+        // Completely remove the source item
+        function match(i) { return item.index === i.index; }
+        var sourceIndex = _.findIndex(this.items, match);
+        if (sourceIndex >= 0) {
+          this.items.splice(sourceIndex, 1);
+
+          var bucketItems = this.buckets[item.location.id];
+          var bucketIndex = _.findIndex(bucketItems, match);
+          bucketItems.splice(bucketIndex, 1);
+
+          return true;
+        }
+        return false;
+      },
+      addItem: function(item) {
+        this.items.push(item);
+        var bucketItems = this.buckets[item.location.id];
+        bucketItems.push(item);
+        if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
+          dimInfoService.show('lostitems', {
+            type: 'warning',
+            title: 'Postmaster Limit',
+            body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
+            hide: 'Never show me this type of warning again.'
+          });
+        }
+        item.owner = this.id;
       }
-      // TODO: add/remove function that updates buckets, keeps track of counts??
     };
 
     // Prototype for Item objects - add methods to this to add them to all
@@ -173,7 +194,6 @@
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
-                bucketCounts: {},
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
@@ -184,7 +204,7 @@
                   if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return vaultSizes[sort];
+                  return buckets[sort].capacity;
                 },
                 spaceLeftForItem: function(item) {
                   var sort = item.sort;
@@ -197,6 +217,15 @@
                   return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
                     return i.bucket.sort == sort;
                   }));
+                },
+                removeItem: function(item) {
+                  var result = StoreProto.removeItem.call(this, item);
+                  this.vaultCounts[item.location.sort]--;
+                  return result;
+                },
+                addItem: function(item) {
+                  StoreProto.addItem.call(this, item);
+                  this.vaultCounts[item.location.sort]++;
                 }
               });
 
@@ -256,37 +285,25 @@
               }
             }
 
-            return $q.all([
-              getItems(store.id, items),
-              dimBucketService
-            ]).then(function(values) {
-              var items = values[0];
-              var buckets = values[1];
+            return getItems(store.id, items).then(function(items) {
               store.items = items;
-
-              // by categories, then location-buckets
-              /*
-              store.itemCategories = _.mapObject(_.groupBy(items, function(i) {
-                return i.location.sort;
-              }), function(items) {
-                return _.groupBy(items, function(i) {
-                  return i.location.id;
-                });
-              });
-
-              dimCategory.forEach(function(category) {
-                category.forEach(function(type) {
-                });
-              });
-               */
 
               // by type-bucket
               store.buckets = _.groupBy(items, function(i) {
                 return i.location.id;
               });
 
-              // TODO: updateItemModel in itemService will need to change!
-              // or add a rebucket function??
+              if (store.isVault) {
+                store.vaultCounts = {};
+                ['Weapons', 'Armor', 'General'].forEach(function(category) {
+                  store.vaultCounts[category] = 0;
+                  buckets.byCategory[category].forEach(function(bucket) {
+                    if (store.buckets[bucket.id]) {
+                      store.vaultCounts[category] += store.buckets[bucket.id].length;
+                    }
+                  });
+                });
+              }
 
               return store;
             });
@@ -397,22 +414,22 @@
 
       // def.bucketTypeHash is where it goes normally
       var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
+      if (!normalBucket) {
+        currentBucket = normalBucket = buckets.unknown;
+        buckets.setHasUnknown();
+      }
+
       // item.bucket is where it IS right now
       var currentBucket = buckets.byHash[item.bucket] || normalBucket;
-
-      // TODO: if there's no normalBucket, use "unknown bucket", and set a flag on buckets
 
       // We cheat a bit for items in the vault, since we treat the
       // vault as a character. So put them in the bucket they would
       // have been in if they'd been on a character.
-      if (currentBucket && currentBucket.id.startsWith('BUCKET_VAULT')) {
+      if (currentBucket.id.startsWith('BUCKET_VAULT')) {
         currentBucket = normalBucket;
       }
 
-      var itemType = 'Unknown';
-      if (normalBucket) {
-        itemType = normalBucket.type;
-      }
+      var itemType = normalBucket.type;
 
       var weaponClass = null;
       if (normalBucket.inWeapons) {
@@ -668,7 +685,7 @@
       return {
         min: Math.floor((base)*(fitValue(max)/fitValue(light))),
         max: Math.floor((base+1)*(fitValue(max)/fitValue(light)))
-      }
+      };
     }
 
     // thanks to bungie armory for the max-base stats
@@ -730,7 +747,7 @@
         stat.qualityPercentage = {
           min: Math.round(100 * stat.scaled.min / stat.split),
           max: Math.round(100 * stat.scaled.max / stat.split)
-        }
+        };
         ret.total.min += scaled.min || 0;
         ret.total.max += scaled.max || 0;
       });
@@ -744,7 +761,7 @@
           stat.qualityPercentage = {
             min: Math.round(100 * stat.scaled.min / stat.split),
             max: Math.round(100 * stat.scaled.max / stat.split)
-          }
+          };
         });
       }
 

@@ -35,7 +35,7 @@
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
         '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',
         '<div ng-if="vm.store.isVault" class="vault-capacity">',
-        '  <div class="vault-bucket" title="{{sort}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.sortSize" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
+        '  <div class="vault-bucket" title="{{sort}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
         '    <div class="vault-bucket-tag">{{sort.substring(0,1)}}</div>',
         '    <div class="vault-fill-bar">',
         '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',
@@ -68,18 +68,6 @@
   function StoreHeadingCtrl($scope, ngDialog) {
     var vm = this;
     var dialogResult = null;
-
-    vm.sortSize = {};
-    if (vm.store.isVault) {
-      // TODO: do this by buckets
-      $scope.$watchCollection('vm.store.items', function() {
-        ['Weapons', 'Armor', 'General'].forEach(function(sort) {
-          vm.sortSize[sort] = count(vm.store.items, function(i) {
-            return i.bucket.sort == sort;
-          });
-        });
-      });
-    }
 
     function getLevelBar() {
       if (vm.store.percentToNextLevel) {

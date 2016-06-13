@@ -13,8 +13,6 @@
       bindToController: true,
       scope: {},
       template: [
-        // TODO: big loading indicator?
-        // TODO: move width class up here!!
         '<div ng-if="vm.stores" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
         '  <div class="store-row">',
         '    <div class="store-cell" ng-repeat="store in vm.stores track by store.id">',
@@ -22,10 +20,9 @@
         '    </div>',
         '  </div>',
         '  <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
-        // TODO: some titles shouldn't expand to vault
         '    <div class="title">',
         '      <span>{{::category}}</span>',
-        '      <span class="bucket-count">{{ 0 }}/{{::vm.vault.capacityForItem({sort:category})}}</span>',
+        '      <span ng-if="vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
         '    </div>',
         '    <div class="store-row items" ng-repeat="bucket in ::buckets track by bucket.id">',
         '      <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
@@ -57,8 +54,8 @@
     dimBucketService.then(function(buckets) {
       vm.buckets = angular.copy(buckets);
     });
-    vm.charCol = 3;
 
+    vm.charCol = 3;
     settings.getSettings()
       .then(function(settings) {
         vm.hideFilteredItems = settings.hideFilteredItems;
@@ -79,29 +76,6 @@
     $scope.$on('dim-stores-updated', function (e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
-
-      vm.stores.forEach(function(store) {
-        if (store.buckets['BUCKET_RECOVERY'] && store.buckets['BUCKET_RECOVERY'].length >= 20) {
-          dimInfoService.show('lostitems', {
-            type: 'warning',
-            title: 'Postmaster Limit',
-            body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
-            hide: 'Never show me this type of warning again.'
-          });
-        }
-      });
-
-      // TODO: precompute/update vault sizes, and keep a map for which "titles" go full width
-      // TODO: update vault counts as they go?
-      // TODO: replace this
-      /*
-      if (_.any(vm.store.items, {type: 'Unknown'})) {
-        vm.categories['Unknown'] = [{
-          id: 'BUCKET_UNKNOWN',
-          type: 'Unknown'
-        }];
-      }
-       */
     });
 
     if ($scope.$root.activePlatformUpdated) {

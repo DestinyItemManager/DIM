@@ -93,7 +93,22 @@
         byHash: {}, // numeric hash -> bucket
         byId: {}, // BUCKET_LEGS -> bucket
         byType: {}, // DIM types ("ClassItem, Special") -> bucket
-        byCategory: {} // Mirrors the dimCategory heirarchy
+        byCategory: {}, // Mirrors the dimCategory heirarchy
+        unknown: {
+          id: 'BUCKET_UNKNOWN',
+          description: 'Unknown items. DIM needs a manifest update.',
+          name: 'Unknown',
+          hash: -1,
+          hasTransferDestination: false,
+          capacity: Math.MAX_SAFE_INTEGER,
+          sort: 'Unknown',
+          type: 'Unknown'
+        },
+        setHasUnknown: function() {
+          this.byCategory[this.unknown.sort] = [this.unknown];
+          this.byId[this.unknown.id] = this.unknown;
+          this.byType[this.unknown.type] = this.unknown;
+        }
       };
       _.each(bucketDefs, function(def, hash) {
         if (def.enabled) {

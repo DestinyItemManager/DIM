@@ -75,11 +75,7 @@
             var amountToRemove = Math.min(removeAmount, sourceItem.amount);
             if (amountToRemove === sourceItem.amount) {
               // Completely remove the source item
-              var sourceIndex = _.findIndex(source.items, function(i) {
-                return sourceItem.index === i.index;
-              });
-              if (sourceIndex >= 0) {
-                source.items.splice(sourceIndex, 1);
+              if (source.removeItem(sourceItem)) {
                 removedSourceItem = sourceItem.index === item.index;
               }
             } else {
@@ -102,8 +98,7 @@
               }
               removedSourceItem = false; // only move without cloning once
               targetItem.amount = 0; // We'll increment amount below
-              target.items.push(targetItem);
-              targetItem.owner = target.id;
+              target.addItem(targetItem);
             }
 
             var amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
@@ -114,10 +109,7 @@
         }
 
         if (equip) {
-          var equipped = _.findWhere(target.items, {
-            equipped: true,
-            type: item.type
-          });
+          var equipped = _.find(target.buckets[item.location.id], { equipped: true });
           equipped.equipped = false;
           item.equipped = true;
         }
@@ -153,7 +145,7 @@
 
         var candidates = _.filter(store.items, function(i) {
           return i.canBeEquippedBy(target) &&
-            i.type === item.type &&
+            i.location.id === item.location.id &&
             !i.equipped &&
             // Not the same item
             i.id !== item.id &&
@@ -252,8 +244,8 @@
 
         var equippedExotics = _.filter(store.items, function(i) {
             return (i.equipped &&
-                    i.type !== item.type &&
-                    i.bucket.sort === item.bucket.sort &&
+                    i.location.id !== item.location.id &&
+                    i.location.sort === item.location.sort &&
                     i.tier === 'Exotic');
           });
 
@@ -326,7 +318,9 @@
 
           moveAsideCandidates = _.filter(store.items, { type: bestType });
         } else {
-          moveAsideCandidates = _.filter(store.items, { type: item.type });
+          moveAsideCandidates = _.filter(store.items, function(i) {
+            return i.location.id === item.location.id;
+          });
         }
 
         // Don't move that which cannot be moved
