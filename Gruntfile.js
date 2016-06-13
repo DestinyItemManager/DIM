@@ -37,15 +37,27 @@ module.exports = function(grunt) {
     clean: ["build/extension", "build/dim-extension.zip"],
 
     replace: {
-      // Replace all instances of the current version number (from package.json)
+      // Replace all instances of $DIM_VERSION with the version number from package.json
+      main_version: {
+        src: ['build/extension/**/*.{json,html,js}'],
+        overwrite: true,
+        replacements: [{
+          from: '$DIM_VERSION',
+          to: pkg.version.toString()
+        }]
+      },
+      // Replace all instances of $DIM_VERSION or the current version number (from package.json)
       // with a beta version based on the current time.
       beta_version: {
         src: ['build/extension/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
+          from: '$DIM_VERSION',
+          to: betaVersion
+        },{
           from: pkg.version.toString(),
           to: betaVersion
-        }]
+        },]
       }
     },
 
@@ -154,6 +166,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build_extension', ['clean',
                                       'css',
                                       'copy:main',
+                                      'replace:main_version',
                                       'compress']);
 
 };

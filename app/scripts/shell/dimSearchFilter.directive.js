@@ -131,7 +131,8 @@
 
     vm.filter = function() {
       var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
-      var searchTerms = filterValue.split(" ");
+      filterValue = filterValue.replace(/\s+and\s+/, ' ');
+      var searchTerms = filterValue.split(/\s+/);
       var filter, predicate = '';
       var filterFn;
       var filters = [];
@@ -140,14 +141,14 @@
         filters.push({predicate: predicate, value: filter});
       }
 
-      _.each(searchTerms, function(term){
-        if(term.indexOf('is:') >=0) {
+      _.each(searchTerms, function(term) {
+        if (term.indexOf('is:') >=0) {
           filter = term.replace('is:', '');
-          if(_cachedFilters[filter]) {
+          if (_cachedFilters[filter]) {
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter);
           } else {
-            for(var key in filterTrans) {
+            for (var key in filterTrans) {
               if(filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filter)) {
                 predicate = key;
                 _cachedFilters[filter] = key;
@@ -156,10 +157,10 @@
               }
             }
           }
-        } else if(term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
+        } else if (term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
           filter = term.replace('light:', '').replace('level:', '');
           addPredicate("light", filter);
-        } else if(term.indexOf('quality:') >= 0 || term.indexOf('percentage:') >= 0) {
+        } else if (term.indexOf('quality:') >= 0 || term.indexOf('percentage:') >= 0) {
           filter = term.replace('quality:', '').replace('percentage:', '');
           addPredicate("quality", filter);
         } else if (!/^\s*$/.test(term)) {
@@ -168,7 +169,7 @@
       });
 
       filterFn = function(item) {
-        return _.all(filters, function(filter){
+        return _.all(filters, function(filter) {
           return filterFns[filter.predicate](filter.value, item);
         });
       };
