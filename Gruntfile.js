@@ -49,15 +49,15 @@ module.exports = function(grunt) {
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
       // with a beta version based on the current time.
       beta_version: {
-        src: ['build/extension/*.{json,html,js}'],
+        src: ['build/extension/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: '$DIM_VERSION',
           to: betaVersion
-        },{
+        }, {
           from: pkg.version.toString(),
           to: betaVersion
-        },]
+        }]
       }
     },
 
