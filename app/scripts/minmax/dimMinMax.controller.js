@@ -378,13 +378,12 @@
               item.stats
           });
           
-          if(store.class !== 'vault') {
-              if(lastActive === '') {
+          if (store.isVault) {
+              if (lastActive === '') {
                 lastActive = store.lastPlayed;
                 lastActiveChar = store.class;
               } else {
-                var d = new Date(store.lastPlayed);
-                if(d > new Date(lastActive)) {
+                if (new Date(store.lastPlayed) > new Date(lastActive)) {
                     lastActive = store.lastPlayed;
                     lastActiveChar = store.class;
                 }
