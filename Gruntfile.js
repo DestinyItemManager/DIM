@@ -52,10 +52,10 @@ module.exports = function(grunt) {
         src: ['build/extension/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
-          from: '$DIM_VERSION',
+          from: pkg.version.toString(),
           to: betaVersion
         }, {
-          from: pkg.version.toString(),
+          from: '$DIM_VERSION',
           to: betaVersion
         }]
       }
