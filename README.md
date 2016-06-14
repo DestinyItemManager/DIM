@@ -9,7 +9,7 @@ DIM will not be able to dismantle any of your items.
 
 To get started with DIM, download the extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager/apghicjnekejhfancbkahkhdckhdagna).
 
-To beta test new features in DIM, download the extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager-beta/mkiipknpfaacbjdagdeppdacpgpdjklc).
+To beta test new features in DIM, download the beta extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager-beta/mkiipknpfaacbjdagdeppdacpgpdjklc).
 
 ##Requirements
 DIM is an extension that runs within the Chrome Desktop Web Browser.
