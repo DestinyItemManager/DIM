@@ -47,7 +47,7 @@
         if (!item.type) {
           throw new Error("item needs a 'type' field");
         }
-        return Math.max(0, this.capacityForItem(item) - count(this.items, { type: item.type }));
+        return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
