@@ -54,6 +54,9 @@ module.exports = function(grunt) {
         replacements: [{
           from: '$DIM_VERSION',
           to: betaVersion
+        }, {
+          from: pkg.version.toString(),
+          to: betaVersion
         }]
       }
     },
