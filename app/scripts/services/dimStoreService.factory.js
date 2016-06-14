@@ -141,10 +141,13 @@
       processItems: getItems
     };
 
-    $rootScope.$on('dim-settings-updated', function(setting) {
+    $rootScope.$on('dim-settings-updated', function(event, setting) {
       if (_.has(setting, 'characterOrder')) {
         sortStores(_stores).then(function(stores) {
           _stores = stores;
+          $rootScope.$broadcast('dim-stores-updated', {
+            stores: stores
+          });
         });
       }
     });
