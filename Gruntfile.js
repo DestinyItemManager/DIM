@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         expand: true
       },
       beta_icons: {
-        cwd: 'beta-icons/',
+        cwd: 'icons/beta/',
         src: '**',
         dest: 'build/extension/',
         expand: true
