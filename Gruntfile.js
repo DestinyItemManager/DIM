@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
-  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24365210);
+  var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
 
   grunt.initConfig({
     pkg: pkg,
