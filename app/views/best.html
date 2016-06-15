@@ -18,6 +18,7 @@
       <option value='titan'>Titan</option>
       <option value='hunter'>Hunter</option>
       <option value='warlock'>Warlock</option>
+      <option value='all'>All</option>
     </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
   </p>
