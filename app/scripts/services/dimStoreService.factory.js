@@ -4,11 +4,12 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'chromeStorage', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'chromeStorage', 'dimInfoService', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
 
-  function StoreService($rootScope, $q, chromeStorage, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
+  function StoreService($rootScope, $q, chromeStorage, dimInfoService, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _oldItems = {};
+    var _newItems = [];
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
@@ -138,6 +139,7 @@
       updateCharacters: updateCharacters,
       updateProgression: updateProgression,
       setHeights: setHeightsAsync,
+      dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: getItems
     };
@@ -405,6 +407,21 @@
           setHeightsAsync();
 
           return stores;
+        })
+        .then(function(stores) {
+          var list_str = '';
+          for(var id in _newItems) {
+            var val = _newItems[id];
+            list_str += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
+          }
+          if (list_str) {
+            dimInfoService.show('newitemsbox', {
+              title: 'New items found',
+              body: ['<p>The following items are new:</p>',
+                     '<ul>' + list_str + '</ul>'].join('')
+            });
+          }
+          return stores;
         });
     }
 
@@ -428,7 +445,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
+    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, cachedNewItems, item) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -570,19 +587,17 @@
       });
       createdItem.index = createItemIndex(createdItem);
       
-      if (!_.isEmpty(_stores)) {
-        chromeStorage.get(createdItem.id).then(function(value) {
-            if (value) {
-                createdItem.isNew = true;
-            } else {
-                createdItem.isNew = isItemNew(createdItem.id);
-                if (createdItem.isNew) {
-                    chromeStorage.set(createdItem.id, true);
-                }
-            }
-        });
-      } else {
+      if (_.isEmpty(_stores)) {
         createdItem.isNew = false;
+      } else {
+        createdItem.isNew = (typeof cachedNewItems[createdItem.id] !== 'undefined')? true : false;
+        if(createdItem.isNew === false) {
+            createdItem.isNew = isItemNew(createdItem.id);
+            if (createdItem.isNew) {
+              _newItems[createdItem.id] = {name: createdItem.name, type: createdItem.type};
+              chromeStorage.set(createdItem.id, true);
+            }
+        }
       }
 
       try {
@@ -899,21 +914,43 @@
         var item_map = {};
         _.each(stores, function(store, id) {
           var items = _.each(store.items, function(item) {
-              item_map[item.id] = true;
+              item_map[item.id] = {name: item.name, type: item.type};
           });
         });
         return item_map;
     }
     
     function isItemNew(new_id) {
-        return _oldItems[new_id] !== true;
+        return typeof _oldItems[new_id] === 'undefined';
+    }
+    
+    function dropNewItem(item) {
+      delete _newItems[item.id];
+      chromeStorage.drop(item.id);
+      item.isNew = false;
+    }
+    
+    function getCachedNewItems() {
+      // A little tricky here. We have to use chrome.storage.local directly here because the wrapper library
+      // doesn't support a method to get all values in the cache.
+      var deferred = $q.defer();
+      chrome.storage.local.get(null, function(allVals) {
+        var filtered = [];
+        _.each(allVals, function( val, key ) {
+          if ( key != 'platformType' ) {
+            filtered.push(key);
+          }
+        });
+        deferred.resolve(filtered);
+      });
+      return deferred.promise;
     }
     
     function clearNewItems() {
-        chromeStorage.get('platformType').then(function(platformType) {
-            chromeStorage.clearCache();
-            chromeStorage.set('platformType', platformType);
-        });
+      chromeStorage.get('platformType').then(function(platformType) {
+        chromeStorage.clearCache();
+        chromeStorage.set('platformType', platformType);
+      });
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level
@@ -1066,7 +1103,8 @@
         dimSandboxPerkDefinitions,
         dimTalentDefinitions,
         dimYearsDefinitions,
-        dimProgressionDefinitions])
+        dimProgressionDefinitions,
+        getCachedNewItems()])
         .then(function(args) {
           var result = [];
           _.each(items, function (item) {

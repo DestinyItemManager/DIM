@@ -98,8 +98,7 @@
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
         
-        chromeStorage.drop(item.id);
-        item.isNew = false;
+        dimStoreService.dropNewItem(item);
 
         if (otherDialog) {
           if (ngDialog.isOpen(otherDialog.id)) {
