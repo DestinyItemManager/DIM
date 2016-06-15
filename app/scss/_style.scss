@@ -1316,7 +1316,6 @@ rzslider {
   .stat-box-row {
     overflow: hidden;
     margin-bottom: 4px;
-    width: 100%;
     display: table-row;
   }
   .stat-box-cell {
@@ -1363,9 +1362,6 @@ rzslider {
     &.lower-stats {
       background-color: #985C58;
     }
-  }
-  .stat-box-outer span:last-child {
-    padding-left: 5px;
   }
 }
 
