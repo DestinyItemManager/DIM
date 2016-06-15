@@ -202,6 +202,6 @@
     var vm = this;
 
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
-    vm.draggable = vm.item.location.hasTransferDestination;
+    vm.draggable = (vm.item.equipment || vm.item.location.hasTransferDestination) && !vm.item.location.inPostmaster;
   }
 })();
