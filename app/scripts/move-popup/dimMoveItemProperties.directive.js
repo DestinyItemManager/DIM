@@ -84,34 +84,10 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = [
-    '$sce',
-    '$q',
-    'dimStoreService',
-    'dimItemService',
-    'dimSettingsService',
-    'ngDialog',
-    '$scope',
-    '$rootScope'
-  ];
+  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope'];
 
-  function MoveItemPropertiesCtrl(
-    $sce,
-    $q,
-    storeService,
-    itemService,
-    settings,
-    ngDialog,
-    $scope,
-    $rootScope
-  ) {
+  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope) {
     var vm = this;
-
-    // Expose functions to the scope here (alphabetical)
-    $scope.asideHasLockOrElement = asideHasLockOrElement;
-    $scope.detailsVisible = detailsVisible;
-    $scope.itemHasNonKineticDamage = itemHasNonKineticDamage;
-    $scope.typeShowsCompletion = typeShowsCompletion;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
       vm.item.talentGrid ||
@@ -211,69 +187,6 @@
           compareItems(item);
         });
       }
-    }
-
-    /*
-     * Determins if the item has damange and it's non kinetic.
-     *
-     * @param {Object} item - A item from the destiny server
-     * @return {Boolean}
-     */
-    function itemHasNonKineticDamage(item) {
-      if (!item.dmg || item.dmg === 'kinetic') {
-        return false;
-      }
-      return true;
-    }
-
-    /*
-     * Check for a lockable or elemental property in an item.
-     *
-     * @param {Object} item - A item from the destiny server
-     * @return {Boolean}
-     */
-    function asideHasLockOrElement(item) {
-      if (item.lockable) {
-        return true;
-      }
-      if (item.dmg) {
-        return true;
-      }
-      return false;
-    }
-
-    /*
-     * Returns if the details are currently visible
-     *
-     * @return {Boolean}
-     */
-    function detailsVisible() {
-      if (!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified) {
-        return true;
-      }
-      return false;
-    }
-
-    /*
-     * Returns if the type should show completion.
-     *
-     * @param {string} type - The item type
-     * @return {Boolean}
-     */
-    function typeShowsCompletion(type) {
-      var typesShowingCompletion = [
-        'Bounties',
-        'Quests'
-      ];
-      var typesShowingCompletionLength = typesShowingCompletion.length;
-
-      for (var i = 0; i < typesShowingCompletionLength; i++) {
-        if (typesShowingCompletion[i] === type) {
-          return true;
-        }
-      }
-
-      return false;
     }
   }
 })();

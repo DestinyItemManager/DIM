@@ -2,28 +2,28 @@
   <div class="item-header" ng-class="vm.classes">
 
     <div>
-      <span ng-if="asideHasLockOrElement(vm.item)" class="item-header__aside">
+      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">
         <a ng-if="vm.item.lockable" href ng-click="vm.setLockState(vm.item)">
-          <i class="item-header__icon fa" ng-class="{
+          <i class="lock fa" ng-class="{
               'fa-lock': vm.item.locked,
               'fa-unlock-alt': !vm.item.locked,
               'is-locking': vm.locking
             }"></i>
         </a>
       </span>
-      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-header__title">
+      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-title">
         {{vm.title}}
       </a>
     </div>
 
     <div>
-      <span ng-if="asideHasLockOrElement(vm.item)" class="item-header__aside">
-        <img ng-if="itemHasNonKineticDamage(vm.item)" class="item-header__element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>
+      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">
+        <img ng-if="vm.item.dmg && vm.item.dmg !== 'kinetic'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>
       </span>
       {{ vm.light }} {{ vm.item.typeName }}
-      <span ng-if="typeShowsCompletion(vm.item.type)">({{ vm.item.percentComplete | percent }} Complete)</span>
-      <a ng-if="detailsVisible()" href ng-click="vm.itemDetails = !vm.itemDetails">
-        <i class="item-header__info fa" ng-class="{
+      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>
+      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.itemDetails = !vm.itemDetails">
+        <i class="info fa" ng-class="{
           'fa-times-circle': vm.itemDetails,
           'fa-info-circle': !vm.itemDetails
           }">

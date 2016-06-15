@@ -8,8 +8,8 @@
 $item-header-spacing: 5px;
 
 .item-header {
-  background-color: $white;
-  color: $black;
+  background-color: #fff;
+  color: #000;
   letter-spacing: 1px;
   overflow: hidden;
   padding: $item-header-spacing 28px $item-header-spacing $item-header-spacing;
@@ -18,39 +18,35 @@ $item-header-spacing: 5px;
   white-space: nowrap !important;
 
   a {
-    color: $black;
+    color: #000;
   }
-}
-
-.item-header__aside {
-  display: inline-block;
-  text-align: center;
-  width: 1rem;
-}
-
-.item-header__title {
-  font-size: 1rem;
-}
-
-.item-header__icon {
-  vertical-align: baseline;
-  font-size: 1rem;
-
-  .is-locking {
-    opacity: .5;
+  .item-title {
+    font-size: 1rem;
   }
-}
+  .icon {
+    display: inline-block;
+    text-align: center;
+    width: 1rem;
+  }
+  .lock {
+    vertical-align: baseline;
+    font-size: 1rem;
 
-.item-header__element {
-  filter: invert(100%);
-  height: 1rem;
-  vertical-align: top;
-  width: 1rem;
-}
-
-.item-header__info {
-  font-size: 1.5em;
-  position: absolute;
-  right: $item-header-spacing;
-  top: $item-header-spacing;
+    .is-locking {
+      opacity: .5;
+    }
+  }
+  .element {
+    display: inline-block;
+    filter: invert(100%);
+    height: 1rem;
+    vertical-align: top;
+    width: 1rem;
+  }
+  .info {
+    font-size: 1.5em;
+    position: absolute;
+    right: $item-header-spacing;
+    top: $item-header-spacing;
+  }
 }
