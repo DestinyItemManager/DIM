@@ -3,7 +3,7 @@
 
     <div>
       <span ng-if="asideHasLockOrElement(vm.item)" class="item-header__aside">
-        <a ng-if="vm.item.lockable" href="#" ng-click="vm.setLockState(vm.item)">
+        <a ng-if="vm.item.lockable" href ng-click="vm.setLockState(vm.item)">
           <i class="item-header__icon fa" ng-class="{
               'fa-lock': vm.item.locked,
               'fa-unlock-alt': !vm.item.locked,
@@ -22,7 +22,7 @@
       </span>
       {{ vm.light }} {{ vm.item.typeName }}
       <span ng-if="typeShowsCompletion(vm.item.type)">({{ vm.item.percentComplete | percent }} Complete)</span>
-      <a href="#" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="detailsVisible()">
+      <a ng-if="detailsVisible()" href ng-click="vm.itemDetails = !vm.itemDetails">
         <i class="item-header__info fa" ng-class="{
           'fa-times-circle': vm.itemDetails,
           'fa-info-circle': !vm.itemDetails
