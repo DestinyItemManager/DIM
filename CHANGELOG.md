@@ -2,6 +2,7 @@
 
 * Removed the option to hide or show the primary stat of items - it's always shown now.
 * Changing the character sort order now applies live, rather than requiring a refresh.
+* Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
 
 # 3.7.3
 

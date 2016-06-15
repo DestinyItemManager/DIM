@@ -1011,9 +1011,11 @@ img {
 }
 
 .ngdialog.loadout-popup {
+  position: absolute;
   display: block;
   width: 100%;
-  position: absolute;
+  max-height: 465px;
+  overflow: scroll;
   z-index: 2;
   top: 0;
   bottom: initial;
@@ -1021,12 +1023,8 @@ img {
   padding: 0;
   border: solid 1px #131313;
   border-top: none;
-  background-color: #5b6e6c;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
-  width: 100%;
-  position: absolute;
-  z-index: 2;
   cursor: pointer;
 }
 
