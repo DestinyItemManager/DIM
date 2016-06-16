@@ -418,7 +418,8 @@
             dimInfoService.show('newitemsbox', {
               title: 'New items found',
               body: ['<p>The following items are new:</p>',
-                     '<ul>' + list_str + '</ul>'].join('')
+                     '<ul>' + list_str + '</ul>'].join(''),
+              hide: 'Don\'t show me new item notifications'
             });
           }
           return stores;
@@ -935,10 +936,10 @@
       // doesn't support a method to get all values in the cache.
       var deferred = $q.defer();
       chrome.storage.local.get(null, function(allVals) {
-        var filtered = [];
+        var filtered = {};
         _.each(allVals, function( val, key ) {
           if ( key != 'platformType' ) {
-            filtered.push(key);
+            filtered[key] = true;
           }
         });
         deferred.resolve(filtered);
