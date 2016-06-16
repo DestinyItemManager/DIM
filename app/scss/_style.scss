@@ -482,6 +482,7 @@ img {
 }
 
 .unequipped {
+  flex: 1;
   margin-left: 12px;
   margin-right: 20px;
 
@@ -507,6 +508,7 @@ img {
 }
 
 .sub-section {
+  flex: 1;
   margin-top: 14px;
   margin-bottom: 6px;
   position: relative;
@@ -707,6 +709,7 @@ dim-store-heading {
 }
 
 .character {
+  flex: 1;
   margin-bottom: 10px;
   height: 70px;
 }
@@ -1471,7 +1474,8 @@ g {
 
 .stores {
   display: block;
-  margin: 0 2em;
+  // 90px margin to make room for the fixed header
+  margin: 90px 2em 0 2em;
 }
 
 .store-row {
@@ -1486,6 +1490,8 @@ g {
 }
 
 .store-cell {
+  flex-shrink: 0;
+  display: flex;
   margin-right: 12px;
 
   &.vault {
@@ -1496,6 +1502,12 @@ g {
     width: auto;
     flex: 1;
   }
+}
+
+.store-header {
+  position: fixed;
+  top: 64px;
+  z-index: 10;
 }
 
 
@@ -1928,28 +1940,18 @@ button.toast-close-button {
   margin-top: -2px;
 }
 
-.something-is-sticky {
-  .sticky-header-background {
-    left: 0;
-    right: 0;
-    top: 50px;
-    background-color: #434444;
-    height: 90px;
-    position: fixed;
-    z-index: 4;
+.sticky-header-background {
+  left: 0;
+  right: 0;
+  top: 50px;
+  background-color: #434444;
+  height: 90px;
+  position: fixed;
+  z-index: 4;
+
+  .something-is-sticky & {
     box-shadow: 0 1px 6px 0px #222;
   }
-  .character.scroll-to-fixed-fixed {
-    top: 65px !important;
-  }
-}
-
-.fixed-header {
-  left: auto !important;
-}
-
-.something-is-sticky .fixed-header-placeholder {
-  height: 71px !important;
 }
 
 .inline-stats {
@@ -1984,6 +1986,9 @@ button.toast-close-button {
   .dim-col-#{$i} {
     .store-cell {
       width: 84px + ($i * 52px);
+      &.vault {
+        min-width: 70px + ($i * 52px);
+      }
     }
   }
 }

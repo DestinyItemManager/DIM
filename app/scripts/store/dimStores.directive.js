@@ -12,9 +12,10 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {},
+      link: Link,
       template: [
         '<div ng-if="vm.stores.length" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
-        '  <div class="store-row">',
+        '  <div class="store-row store-header">',
         '    <div class="store-cell" ng-repeat="store in vm.stores track by store.id">',
         '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
         '    </div>',
@@ -41,6 +42,12 @@
         '</div>'
       ].join('')
     };
+
+    function Link(scope, element) {
+      $(document).on('scroll', function(e) {
+        $(document.body).toggleClass('something-is-sticky', document.body.scrollTop != 0);
+      });
+    }
   }
 
   StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService'];

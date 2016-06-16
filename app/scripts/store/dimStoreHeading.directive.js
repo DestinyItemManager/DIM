@@ -17,7 +17,6 @@
         'store': '=storeData'
       },
       restrict: 'E',
-      link: Link,
       template: [
         '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',
         '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.store.icon + \')\' }"></div>',
@@ -44,23 +43,6 @@
         '</div>'
       ].join('')
     };
-
-    function Link(scope, element) {
-      var vm = scope.vm;
-      $(document).ready(function() {
-        element.scrollToFixed({
-          marginTop: 61,
-          fixed: function() {
-            $(document.body).addClass('something-is-sticky');
-            $(this).addClass('fixed-header');
-          },
-          unfixed: function() {
-            $(document.body).removeClass('something-is-sticky');
-            $(this).removeClass('fixed-header');
-          }
-        });
-      });
-    }
   }
 
   StoreHeadingCtrl.$inject = ['$scope', 'ngDialog'];
