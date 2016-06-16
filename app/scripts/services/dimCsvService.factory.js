@@ -163,7 +163,7 @@
       downloadCsv("destinyWeapons", header + data);
     }
 
-    function downloadCsvFiles(stores) {
+    function downloadCsvFiles(stores, type) {
       //perhaps we're loading
       if (stores.length == 0) return;
       var nameMap = {};
@@ -177,29 +177,36 @@
           nameMap[store.id] = capitalizeFirstLetter(store.class) + "(" + store.powerLevel + ")";
         }
       });
-      var weapons = [];
-      var armor = [];
+      var items = [];
       allItems.forEach(function (item) {
         if ((item.primStat == null) || (item.name.indexOf("Engram") > 0) || (item.type == "Class")) {
           return;
         }
-        if (item.sort == "Weapons") {
-          weapons.push(item);
-        }
-        else if (item.sort == "Armor") {
-          armor.push(item);
-        }
-        else if (item.sort == "General") {
-          if (item.type == "Ghost") {
-            armor.push(item);
+        if (type == "Weapons") {
+          if (item.sort == "Weapons") {
+            items.push(item);
           }
-          else if (item.type == "Artifact") {
-            armor.push(item);
+        }
+        else if (type == "Armor") {
+          if (item.sort == "Armor") {
+            items.push(item);
+          }
+          else if (item.sort == "General") {
+            if (item.type == "Ghost") {
+              items.push(item);
+            }
+            else if (item.type == "Artifact") {
+              items.push(item);
+            }
           }
         }
       });
-      downloadWeapons(weapons, nameMap);
-      downloadArmor(armor, nameMap);
+      if (type == "Weapons") {
+        downloadWeapons(items, nameMap);
+      }
+      else {
+        downloadArmor(items, nameMap);
+      }
     }
 
     return {
