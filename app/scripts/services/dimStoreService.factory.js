@@ -9,7 +9,8 @@
   function StoreService($rootScope, $q, chromeStorage, dimInfoService, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
     var _stores = [];
     var _oldItems = {};
-    var _newItems = [];
+    var _currItems = {};
+    var _newItems = {};
     var _index = 0;
     var vaultSizes = {};
     var bucketSizes = {};
@@ -409,6 +410,9 @@
           return stores;
         })
         .then(function(stores) {
+          _currItems = buildItemMap(stores);
+          _newItems = clearStaleNewItems(_currItems,_newItems);
+          
           var list_str = '';
           for(var id in _newItems) {
             var val = _newItems[id];
@@ -912,13 +916,25 @@
     }
     
     function buildItemMap(stores) {
-        var item_map = {};
-        _.each(stores, function(store, id) {
-          var items = _.each(store.items, function(item) {
-              item_map[item.id] = {name: item.name, type: item.type};
-          });
+      var item_map = {};
+      _.each(stores, function(store, id) {
+        var items = _.each(store.items, function(item) {
+            item_map[item.id] = {name: item.name, type: item.type};
         });
-        return item_map;
+      });
+      return item_map;
+    }
+    
+    function clearStaleNewItems(currItems, newItems) {
+      var newItemsClean = {};
+      for(var newItem in newItems) {
+        if (typeof currItems[newItem] === 'undefined') {
+          chromeStorage.drop(newItem);
+        } else {
+          newItemsClean[newItem] = newItems[newItem];
+        }
+      }
+      return newItemsClean;
     }
     
     function isItemNew(new_id) {
