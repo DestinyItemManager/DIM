@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
-  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24365210);
+  var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
 
   grunt.initConfig({
     pkg: pkg,
@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         expand: true
       },
       beta_icons: {
-        cwd: 'beta-icons/',
+        cwd: 'icons/beta/',
         src: '**',
         dest: 'build/extension/',
         expand: true
@@ -37,13 +37,25 @@ module.exports = function(grunt) {
     clean: ["build/extension", "build/dim-extension.zip"],
 
     replace: {
-      // Replace all instances of the current version number (from package.json)
+      // Replace all instances of $DIM_VERSION with the version number from package.json
+      main_version: {
+        src: ['build/extension/**/*.{json,html,js}'],
+        overwrite: true,
+        replacements: [{
+          from: '$DIM_VERSION',
+          to: pkg.version.toString()
+        }]
+      },
+      // Replace all instances of $DIM_VERSION or the current version number (from package.json)
       // with a beta version based on the current time.
       beta_version: {
-        src: ['build/extension/*.{json,html,js}'],
+        src: ['build/extension/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
+          to: betaVersion
+        }, {
+          from: '$DIM_VERSION',
           to: betaVersion
         }]
       }
@@ -154,6 +166,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build_extension', ['clean',
                                       'css',
                                       'copy:main',
+                                      'replace:main_version',
                                       'compress']);
 
 };

@@ -141,10 +141,13 @@
       processItems: getItems
     };
 
-    $rootScope.$on('dim-settings-updated', function(setting) {
+    $rootScope.$on('dim-settings-updated', function(event, setting) {
       if (_.has(setting, 'characterOrder')) {
         sortStores(_stores).then(function(stores) {
           _stores = stores;
+          $rootScope.$broadcast('dim-stores-updated', {
+            stores: stores
+          });
         });
       }
     });
@@ -773,7 +776,7 @@
       return {
         min: Math.floor((base)*(fitValue(max)/fitValue(light))),
         max: Math.floor((base+1)*(fitValue(max)/fitValue(light)))
-      }
+      };
     }
 
     // thanks to bungie armory for the max-base stats
@@ -781,6 +784,16 @@
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
     // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
+      // For a quality property, return a range string (min-max percentage)
+      function getQualityRange(light, quality) {
+        if (!quality) {
+          return '';
+        }
+        return ((quality.min === quality.max || light === 335) ?
+                quality.min :
+                (quality.min + "%-" +  quality.max)) + '%';
+      }
+
       var maxLight = 335;
 
       if (!stats || light.value < 280) {
@@ -835,7 +848,7 @@
         stat.qualityPercentage = {
           min: Math.round(100 * stat.scaled.min / stat.split),
           max: Math.round(100 * stat.scaled.max / stat.split)
-        }
+        };
         ret.total.min += scaled.min || 0;
         ret.total.max += scaled.max || 0;
       });
@@ -849,10 +862,9 @@
           stat.qualityPercentage = {
             min: Math.round(100 * stat.scaled.min / stat.split),
             max: Math.round(100 * stat.scaled.max / stat.split)
-          }
+          };
         });
       }
-
 
       var quality = {
         min: Math.round(ret.total.min / ret.max * 100),
@@ -871,6 +883,11 @@
           max: Math.min(100, quality.max)
         };
       }
+
+      stats.forEach(function(stat) {
+        stat.qualityPercentage.range = getQualityRange(light, stat.qualityPercentage);
+      });
+      quality.range = getQualityRange(light, quality);
 
       return quality;
     }

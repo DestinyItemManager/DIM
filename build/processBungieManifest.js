@@ -23,7 +23,7 @@ function processItemRow(icon, pRow, itemHash) {
     exists = true;
   }
 
-  var contains = false;
+  var contains = true;
 
   // if (itemHash) {
   //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
