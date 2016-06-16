@@ -199,8 +199,12 @@
     // Don't refresh more than once a minute
     var refresh = _.throttle(vm.refresh, 60 * 1000);
     
-    vm.downloadCsvFiles = function(){
-      dimCsvService.downloadCsvFiles(dimStoreService.getStores());
+    vm.downloadWeaponCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
+    };
+
+    vm.downloadArmorCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
     };
 
     vm.startAutoRefreshTimer = function() {

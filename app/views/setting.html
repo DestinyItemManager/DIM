@@ -10,10 +10,21 @@
     <table>
       <tr>
         <td>
+          <label for="spreadsheetLinks" title="Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.">Download Spreadsheets</label>
+        </td>
+        <td>
+          <div id="spreadsheetLinks">
+            <button ng-click="app.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Weapons</button>
+            <button ng-click="app.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Armor</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
-          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
+          <input type="checkbox" id="condensedItems" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
         </td>
       </tr>
       <tr>
@@ -45,7 +56,7 @@
           <label for="showElements" title="Show elemental damage icons on weapons.">Show elemental damage icons on weapons</label>
         </td>
         <td>
-          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')"></input>
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')"/>
         </td>
       </tr>
       <tr>
@@ -54,7 +65,7 @@
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
+            <input type="radio" id="itemSort" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
           <br>
           <label>
             <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary" ng-change="vm.save('itemSort')">Rarity, then primary stat</label>
