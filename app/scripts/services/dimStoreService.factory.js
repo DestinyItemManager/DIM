@@ -424,7 +424,7 @@
               body: ['<p>The following items are new:</p>',
                      '<ul>' + list_str + '</ul>'].join(''),
               hide: 'Don\'t show me new item notifications'
-            });
+            }, 10000);
           }
           return stores;
         });
@@ -937,8 +937,9 @@
       return newItemsClean;
     }
     
-    function isItemNew(new_id) {
-        return typeof _oldItems[new_id] === 'undefined';
+    function isItemNew(newId) {
+        if(newId === '0') { return false; } // Don't worry about general items and consumables
+        return typeof _oldItems[newId] === 'undefined';
     }
     
     function dropNewItem(item) {
