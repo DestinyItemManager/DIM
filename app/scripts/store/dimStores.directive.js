@@ -46,6 +46,7 @@
     function Link(scope, element) {
       $(document).on('scroll', function(e) {
         $(document.body).toggleClass('something-is-sticky', document.body.scrollTop != 0);
+        $('.store-header').css('left', 'calc(4em - ' + document.body.scrollLeft + 'px)');
       });
     }
   }

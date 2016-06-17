@@ -1461,13 +1461,15 @@ g {
   user-select: none;
 }
 
-#header .content {
-  margin: 0 auto;
-  max-width: 1088px;
-  padding: 12px 0;
-  > {
-    .link, .header-right {
-      margin-top: 1px;
+#header {
+  min-width: 952px;
+  .content {
+    margin: 0 4em;
+    padding: 12px 0;
+    > {
+      .link, .header-right {
+        margin-top: 1px;
+      }
     }
   }
 }
@@ -1475,7 +1477,7 @@ g {
 .stores {
   display: block;
   // 90px margin to make room for the fixed header
-  margin: 90px 2em 0 2em;
+  margin-top: 90px;
 }
 
 .store-row {
