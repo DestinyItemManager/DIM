@@ -5,7 +5,7 @@
 * Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
 * Changing the character sort order now applies live, rather than requiring a refresh.
 * Use most recently logged in player to start with loadout builder.
-* Search queries will exlude the token `" and "` as some users were including that when chaining multiple filters.
+* Search queries will exclude the token `" and "` as some users were including that when chaining multiple filters.
 * Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
 * Consolidate beta icons to the icons folder.
 
