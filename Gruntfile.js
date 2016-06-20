@@ -83,7 +83,7 @@ module.exports = function(grunt) {
     replace: {
       // Replace all instances of $DIM_VERSION with the version number from package.json
       main_version: {
-        src: ['dist/chrome*.{json,html,js}'],
+        src: ['dist/chrome/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: '$DIM_VERSION',
@@ -93,24 +93,24 @@ module.exports = function(grunt) {
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
       // with a beta version based on the current time.
       beta_version_chrome: {
-        src: ['dist/chrome*.{json,html,js}'],
+        src: ['dist/chrome/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
-          from: pkg.version.toString(),
+          from: '$DIM_VERSION',
           to: betaVersion
         }, {
-          from: '$DIM_VERSION',
+          from: pkg.version.toString(),
           to: betaVersion
         }]
       },
       beta_version_firefox: {
-        src: ['dist/firefox/*.{json,html,js}'],
+        src: ['dist/firefox/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
-          from: pkg.version.toString(),
+          from: '$DIM_VERSION',
           to: betaVersion
         }, {
-          from: '$DIM_VERSION',
+          from: pkg.version.toString(),
           to: betaVersion
         }]
       }
