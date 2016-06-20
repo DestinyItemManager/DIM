@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
-  var betaVersion = pkg.version.toString() + "." + (Math.floor(Date.now() / 60000) - 24298773);
+  var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
   var firefoxBrowserSupport = {
     "gecko": {
       "id": "firefox@destinyitemmanager.com",
@@ -16,34 +16,32 @@ module.exports = function(grunt) {
         files: [{
           cwd: 'app/',
           src: [
-            '**'            
+            '**'
           ],
           dest: 'dist/chrome',
         }]
-      },   
+      },
       firefox: {
         files: [{
           cwd: 'app/',
           src: [
-            '**'              
+            '**'
           ],
           dest: 'dist/firefox',
         }]
       },
-    },    
+    },
 
     copy: {
       // Copy all files to a staging directory
-   
       beta_icons_firefox: {
-        cwd: 'beta-icons/',
+        cwd: 'icons/beta/',
         src: '**',
         dest: 'dist/firefox/',
         expand: true
       },
-
       beta_icons_chrome: {
-        cwd: 'beta-icons/',
+        cwd: 'icons/beta/',
         src: '**',
         dest: 'dist/chrome/',
         expand: true
@@ -83,13 +81,25 @@ module.exports = function(grunt) {
     clean: ["build/extension", "build/dim-extension.zip", 'dist'],
 
     replace: {
-      // Replace all instances of the current version number (from package.json)
+      // Replace all instances of $DIM_VERSION with the version number from package.json
+      main_version: {
+        src: ['dist/chrome*.{json,html,js}'],
+        overwrite: true,
+        replacements: [{
+          from: '$DIM_VERSION',
+          to: pkg.version.toString()
+        }]
+      },
+      // Replace all instances of $DIM_VERSION or the current version number (from package.json)
       // with a beta version based on the current time.
       beta_version_chrome: {
         src: ['dist/chrome*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
+          to: betaVersion
+        }, {
+          from: '$DIM_VERSION',
           to: betaVersion
         }]
       },
@@ -98,6 +108,9 @@ module.exports = function(grunt) {
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
+          to: betaVersion
+        }, {
+          from: '$DIM_VERSION',
           to: betaVersion
         }]
       }
@@ -184,11 +197,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
-  grunt.registerTask('default', ['build','watch']); 
+  grunt.registerTask('default', ['build','watch']);
 
-  grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']); 
-  
-  
+  grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']);
+
   grunt.registerTask('update_firefox_manifest', function() {
     var manifest = grunt.file.readJSON('dist/firefox/manifest.json');
     manifest.applications = firefoxBrowserSupport;
@@ -225,9 +237,10 @@ module.exports = function(grunt) {
   ]);
 
   // Builds a release-able extension in build/dim-extension.zip
-  grunt.registerTask('build_extension', ['clean',
+  grunt.registerTask('build_extension', [
     'build',
-    'compress',
+    'replace:main_version',
+    'compress:chrome'
   ]);
 
   grunt.registerTask('log_beta_version', function() {

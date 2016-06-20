@@ -86,10 +86,10 @@
           SyncService.init();
         }
 
-        console.log('DIM v3.7.1 - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        dimInfoService.show('20160603v370', {
-          title: 'DIM v3.7.1 Released',
-          view: 'views/changelog-toaster.html?v=v3.7.1'
+        console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+        dimInfoService.show('20160603v374', {
+          title: 'DIM v3.7.4 Released',
+          view: 'views/changelog-toaster.html?v=v3.7.4'
         });
       }
     ]);

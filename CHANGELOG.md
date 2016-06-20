@@ -1,11 +1,39 @@
+# 3.7.4
+
+* Removed the option to hide or show the primary stat of items - it's always shown now.
+* Add mode selection full/fast for users willing to wait for all best sets.
+* Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
+* Changing the character sort order now applies live, rather than requiring a refresh.
+* Use most recently logged in player to start with loadout builder.
+* Search queries will exlude the token `" and "` as some users were including that when chaining multiple filters.
+* Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
+* Consolidate beta icons to the icons folder.
+
+# 3.7.3
+
+* Fix rounding error that prevented some loadout sets from showing up.
+* Added filter for quality rating, ex - quality:>90 or percentage:<=94
+
+# 3.7.2
+
+* Always show locked section in loadout builder.
+* Fix NaN issue in loadout builder.
+* Fix issues with 'create loadout' button in loadout builder.
+* For item lvling dont prefer unlvled equiped items on other characters.
+* Various Loadout builder bug fixes and performance updates.
+
 # 3.7.1
 
- * Added new armor/loadout tier builder
- * Fix for all numbers appearing red in comparison view
- * Updated to latest stat estimation forumla
- * Use directive for percentage width
+* Various Loadout builder bug fixes and performance updates.
 
-# 3.7.1
+# 3.7.0
+
+* Added new armor/loadout tier builder.
+* Fix for all numbers appearing red in comparison view.
+* Updated to latest stat estimation forumla.
+* Use directive for percentage width.
+
+# 3.6.5
 
 * Fix an issue where warlocks would see loadouts for all the other classes.
 
@@ -19,7 +47,6 @@
 * The Vault now has a character-style header, and can have loadouts applied to it. Full-ness of each vault is displayed below the vault header.
 * New option to restore all the items that were in your inventory before applying a loadout, rather than just the equipped ones.
 * You can now undo multiple loadouts, going backwards in time.
-
 
 # 3.6.1
 

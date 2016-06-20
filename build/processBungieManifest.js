@@ -28,7 +28,6 @@ function processItemRow(icon, pRow, itemHash) {
   // if (itemHash) {
   //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
   // }
-
   if (contains) {
     if (!exists) {
       var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {

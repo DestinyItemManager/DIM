@@ -684,10 +684,6 @@ img {
   text-align: center;
   -webkit-user-select: none;
   box-sizing: content-box;
-  display: none;
-  &.item-stackable {
-    display: block;
-  }
 }
 .itemQuality .item-stat-no-bg {
   background-color: transparent;
@@ -698,19 +694,6 @@ img {
   text-align: left;
   display: none;
   .itemQuality & {
-    display: block;
-  }
-}
-
-.itemStat .item-stat {
-  &.item-bounty, &.item-equipment, &.item-faction {
-    display: block;
-  }
-}
-
-.damage-type {
-  display: none;
-  .showDamage & {
     display: block;
   }
 }
@@ -731,32 +714,6 @@ img {
   background: #b184c5;
   color: #fff;
   text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.damage-type {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-}
-
-.damage-arc {
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent #85c5ec transparent;
-}
-
-.damage-solar {
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent #f2721b transparent;
-}
-
-.damage-void {
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent #b184c5 transparent;
 }
 
 .item {
@@ -1054,9 +1011,11 @@ img {
 }
 
 .ngdialog.loadout-popup {
+  position: absolute;
   display: block;
   width: 100%;
-  position: absolute;
+  max-height: 465px;
+  overflow: scroll;
   z-index: 2;
   top: 0;
   bottom: initial;
@@ -1064,12 +1023,8 @@ img {
   padding: 0;
   border: solid 1px #131313;
   border-top: none;
-  background-color: #5b6e6c;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
-  width: 100%;
-  position: absolute;
-  z-index: 2;
   cursor: pointer;
 }
 
@@ -1359,7 +1314,6 @@ rzslider {
   .stat-box-row {
     overflow: hidden;
     margin-bottom: 4px;
-    width: 100%;
     display: table-row;
   }
   .stat-box-cell {
@@ -1406,9 +1360,6 @@ rzslider {
     &.lower-stats {
       background-color: #985C58;
     }
-  }
-  .stat-box-outer span:last-child {
-    padding-left: 5px;
   }
 }
 
