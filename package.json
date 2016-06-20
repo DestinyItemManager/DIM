@@ -29,6 +29,7 @@
     "grunt-sass": "^1.1.0",
     "grunt-text-replace": "^0.4.0",
     "grunt-webstore-upload": "^0.8.10",
+    "grunt-sync": "^0.5.2",
     "jpm": "^1.0.7",
     "jshint": "^2.8.0",
     "load-grunt-tasks": "^3.4.1",
@@ -40,8 +41,5 @@
     "uglify-js": "^2.4.23",
     "underscore": "^1.8.3",
     "unzip": "^0.1.11"
-  },
-  "dependencies": {
-    "grunt-sync": "^0.5.2"
   }
 }
