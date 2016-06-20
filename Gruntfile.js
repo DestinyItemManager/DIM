@@ -78,7 +78,7 @@ module.exports = function(grunt) {
     },
 
     // Clean out generated extension files
-    clean: ["build/extension", "build/dim-extension.zip", 'dist'],
+    clean: ['build', 'dist'],
 
     replace: {
       // Replace all instances of $DIM_VERSION with the version number from package.json
@@ -179,7 +179,7 @@ module.exports = function(grunt) {
           appID: "mkiipknpfaacbjdagdeppdacpgpdjklc",
           publish: true,
           //required, we can use dir name and upload most recent zip file
-          zip: "build/dim-extension.zip"
+          zip: "build/chrome.zip"
         }
       }
     }
@@ -236,7 +236,7 @@ module.exports = function(grunt) {
     'compress:firefox'
   ]);
 
-  // Builds a release-able extension in build/dim-extension.zip
+  // Builds a release-able extension in build/chrome.zip
   grunt.registerTask('build_extension', [
     'build',
     'replace:main_version',
