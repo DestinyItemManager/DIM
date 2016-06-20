@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       // Zip up the extension
       firefox: {
         options: {
-          archive: 'build/firefox.zip'
+          archive: 'dist/firefox.zip'
         },
         files: [{
           expand: true,
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
       // Zip up the extension
       chrome: {
         options: {
-          archive: 'build/chrome.zip'
+          archive: 'dist/chrome.zip'
         },
         files: [{
           expand: true,
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
     },
 
     // Clean out generated extension files
-    clean: ['build', 'dist'],
+    clean: ['dist'],
 
     replace: {
       // Replace all instances of $DIM_VERSION with the version number from package.json
@@ -179,7 +179,7 @@ module.exports = function(grunt) {
           appID: "mkiipknpfaacbjdagdeppdacpgpdjklc",
           publish: true,
           //required, we can use dir name and upload most recent zip file
-          zip: "build/chrome.zip"
+          zip: "dist/chrome.zip"
         }
       }
     }
@@ -236,7 +236,7 @@ module.exports = function(grunt) {
     'compress:firefox'
   ]);
 
-  // Builds a release-able extension in build/chrome.zip
+  // Builds a release-able extension in dist/chrome.zip
   grunt.registerTask('build_extension', [
     'build',
     'replace:main_version',
