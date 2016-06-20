@@ -397,6 +397,20 @@ body {
   }
 }
 
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(228, 228, 228, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4E4E4;
+  border-radius: 3px;
+}
+
 #system {
   outline: none;
   margin-top: 1px;
@@ -1015,7 +1029,7 @@ img {
   display: block;
   width: 100%;
   max-height: 465px;
-  overflow: scroll;
+  overflow: auto;
   z-index: 2;
   top: 0;
   bottom: initial;
