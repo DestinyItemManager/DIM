@@ -42,8 +42,8 @@
       replace: true,
       restrict: 'E',
       scope: {
-        'store': '=storeData',
-        'item': '=itemData'
+        store: '=storeData',
+        item: '=itemData'
       },
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',

@@ -11,9 +11,9 @@
     var currentSettings = null;
 
     return {
-      'getSetting': getSetting,
-      'getSettings': getSettings,
-      'saveSetting': saveSetting
+      getSetting: getSetting,
+      getSettings: getSettings,
+      saveSetting: saveSetting
     };
 
     function loadSettings() {

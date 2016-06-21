@@ -59,7 +59,7 @@
     vm.showSetting = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(settingResult)) {
+      if (!_.isNull(settingResult)) {
         settingResult.close();
       } else {
         ngDialog.closeAll();
@@ -84,7 +84,7 @@
     vm.showAbout = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(aboutResult)) {
+      if (!_.isNull(aboutResult)) {
         aboutResult.close();
       } else {
         ngDialog.closeAll();
@@ -108,7 +108,7 @@
 
     vm.refresh = function refresh() {
       (function(activePlatform) {
-        if(!_.isNull(activePlatform)) {
+        if (!_.isNull(activePlatform)) {
           $rootScope.$broadcast('dim-active-platform-updated', {
             platform: activePlatform
           });
@@ -121,7 +121,7 @@
     vm.showSupport = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(supportResult)) {
+      if (!_.isNull(supportResult)) {
         supportResult.close();
       } else {
         ngDialog.closeAll();
@@ -146,7 +146,7 @@
     vm.showFilters = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(filterResult)) {
+      if (!_.isNull(filterResult)) {
         filterResult.close();
       } else {
         ngDialog.closeAll();
@@ -202,7 +202,7 @@
       $rootScope.autoRefreshTimer = $interval(function() {
         //Only Refresh If We're Not Already Doing Something
         //And We're Not Inactive
-        if(!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+        if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
           refresh();
         }
       }, secondsToWait * 1000);
@@ -211,14 +211,14 @@
     vm.startAutoRefreshTimer();
 
     $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if(_.has(arg, 'characterOrder')) {
+      if (_.has(arg, 'characterOrder')) {
         refresh();
       }
     });
 
     // Refresh when the user comes back to the page
     document.addEventListener("visibilitychange", function() {
-      if(!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
         refresh();
       }
     }, false);
@@ -230,22 +230,22 @@ function addFilter(filter) {
   var input = $('input[name=filter]');
   var itemNameFilter = false;
 
-  if(filter === 'item name') {
+  if (filter === 'item name') {
     itemNameFilter = true;
     filter = prompt("Enter an item name:");
     filter = filter.trim();
   }
 
-  if(filter.indexOf('light:') == 0) {
+  if (filter.indexOf('light:') == 0) {
     var lightFilterType = filter.substring(6);
     var light = prompt("Enter a light value:");
-    if(light) {
+    if (light) {
       light = light.trim();
     } else {
       return;
     }
     filter = 'light:';
-    switch(lightFilterType) {
+    switch (lightFilterType) {
       case 'value':
         filter += light;
         break;
@@ -270,11 +270,11 @@ function addFilter(filter) {
   var text = input.val();
 
 
-  if(itemNameFilter) {
+  if (itemNameFilter) {
     input.val(filter + ((text.length > 0) ? ' ' + text : ''));
-  } else if((text + ' ')
+  } else if ((text + ' ')
     .indexOf(filter + ' ') < 0) {
-    if(text.length > 0) {
+    if (text.length > 0) {
       input.val(text + ' ' + filter);
     } else {
       input.val(filter);

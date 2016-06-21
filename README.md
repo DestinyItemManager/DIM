@@ -3,9 +3,9 @@ Destiny Item Manager (DIM) lets [Destiny](http://destinythegame.com/)  game play
 
 Loadouts give players the ability to define sets of items that they want on their Guardians. When a loadout is selected, DIM will move all of the items referenced by the Loadout to a Guardian. If the item was equipped by another guardian, the Loadouts feature will replace that item with a similar item, if possible, to allow the Loadout referenced item to be transfered. With a single click of a button, you can have a PVP, PVE, or Raid-ready guardian.
 
-DIM is based on the same services used by the Destiny Companion app to move and equip items. DIM will never ask for your credentials to [Bungie.net](http;//bungie.net).  Once logged into Bungie.net, DIM will be able to see your Guardians inventory and Vault.  Once you logout of Bungie, DIM will no longer have access to your Guardians or Vault.  
+DIM is based on the same services used by the Destiny Companion app to move and equip items. DIM will never ask for your credentials to [Bungie.net](http;//bungie.net).  Once logged into Bungie.net, DIM will be able to see your Guardians inventory and Vault.  Once you logout of Bungie, DIM will no longer have access to your Guardians or Vault.
 
-DIM will not be able to dismantle any of your items.  
+DIM will not be able to dismantle any of your items.
 
 To get started with DIM, download the extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager/apghicjnekejhfancbkahkhdckhdagna).
 
@@ -29,6 +29,8 @@ Generate CSS
 * `grunt css`
 * `grunt dev-chrome` or `grunt dev-firefox` (This will watch the scss files for any changes and generate a new style.css)
 
+Check code Style
+* `grunt jscs` will tell you if you're following the DIM code style (and automatically fix what it can).
 
 You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk)
 

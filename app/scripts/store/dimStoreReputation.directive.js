@@ -4,7 +4,7 @@
   var StoreReputation = {
     controllerAs: 'vm',
     bindings: {
-      'store': '<storeData'
+      store: '<storeData'
     },
     template: [
       '<div class="sub-section sort-progression">',

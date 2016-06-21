@@ -80,7 +80,7 @@
           vm.loadout = angular.copy(args.loadout);
           if (args.equipAll) {
             _.each(vm.loadout.items, function(item) {
-              if(item[0]) {
+              if (item[0]) {
                 item[0].equipped = true;
               }
             });
@@ -147,7 +147,7 @@
         var maxSlots = 10;
         if (item.type === 'Material') {
           maxSlots = 20;
-        } else if(item.type === 'Consumable') {
+        } else if (item.type === 'Consumable') {
           maxSlots = 19;
         }
 

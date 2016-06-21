@@ -47,7 +47,7 @@
 
         $window.initgapi = function() {
           SyncService.init();
-        }
+        };
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         dimInfoService.show('20160603v374', {

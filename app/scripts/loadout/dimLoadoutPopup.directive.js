@@ -56,9 +56,9 @@
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
     vm.classTypeId = {
-      'warlock': 0,
-      'titan': 1,
-      'hunter': 2
+      warlock: 0,
+      titan: 1,
+      hunter: 2
     }[vm.store.class];
     if (vm.classTypeId === undefined) {
       vm.classTypeId = -1;
@@ -127,7 +127,7 @@
           .select(function(item) {
             return item.canBeInLoadout();
           })
-          .map(function (i) {
+          .map(function(i) {
             return angular.copy(i);
           })
           .groupBy(function(i) {
@@ -327,7 +327,7 @@
       });
 
       // Solve for the case where our optimizer decided to equip two exotics
-      var exoticGroups = [ ['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg'] ];
+      var exoticGroups = [['Primary', 'Special', 'Heavy'], ['Helmet', 'Gauntlets', 'Chest', 'Leg']];
       _.each(exoticGroups, function(group) {
         var itemsInGroup = _.pick(items, group);
         var numExotics = _.select(_.values(itemsInGroup), isExotic).length;
@@ -369,7 +369,7 @@
       _.each(items, function(item, type) {
         var itemCopy = angular.copy(item);
         itemCopy.equipped = true;
-        finalItems[type.toLowerCase()] = [ itemCopy ];
+        finalItems[type.toLowerCase()] = [itemCopy];
       });
 
       return {

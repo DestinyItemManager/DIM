@@ -116,7 +116,7 @@
     function getBnetCookies() {
       return $q(function(resolve, reject) {
         chrome.cookies.getAll({
-          'domain': '.bungie.net'
+          domain: '.bungie.net'
         }, getAllCallback);
 
         function getAllCallback(cookies) {
@@ -274,8 +274,8 @@
         c.inventory = response.data.Response.data.inventory;
 
         return {
-          'id': c.characterBase.characterId,
-          'base': c
+          id: c.characterBase.characterId,
+          base: c
         };
       });
     }

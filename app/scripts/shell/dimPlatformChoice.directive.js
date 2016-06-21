@@ -1,6 +1,6 @@
 /*jshint -W027*/
 
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -57,7 +57,7 @@
         dimState.active = vm.active = null;
       } else {
         //if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
-          dimState.active = vm.active = args.platform;
+        dimState.active = vm.active = args.platform;
         //}
       }
     });

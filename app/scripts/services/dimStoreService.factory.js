@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -185,7 +185,8 @@
       }
       return dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
-          var glimmer, marks;
+          var glimmer;
+          var marks;
 
           return $q.all(rawStores.map(function(raw) {
             var store;
@@ -434,9 +435,9 @@
           return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
         });
 
-        if(defaultMinMax) {
+        if (defaultMinMax) {
           [144602215, 1735777505, 4244567218].forEach(function(val) {
-            if(!itemDef.stats[val]) {
+            if (!itemDef.stats[val]) {
               itemDef.stats[val] = {
                 maximum: defaultMinMax.maximum,
                 minimum: defaultMinMax.minimum,
@@ -527,23 +528,23 @@
 
       try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
-      } catch(e) {
+      } catch (e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
-      } catch(e) {
+      } catch (e) {
         console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
-      } catch(e) {
+      } catch (e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
-      if(createdItem.talentGrid && createdItem.talentGrid.infusable) {
+      if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
         try {
           createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
-        } catch(e) {
+        } catch (e) {
           console.error("Error building quality rating for " + createdItem.name, item, itemDef);
         }
       }
@@ -616,8 +617,8 @@
               // paid once per row.
               (exclusiveInColumn &&
                _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
-                 return item.nodes[nodeIndex].isActivated;
-               }));
+                return item.nodes[nodeIndex].isActivated;
+              }));
 
         // Calculate relative XP for just this node
         var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
@@ -731,8 +732,8 @@
       var max = 335;
 
       return {
-        min: Math.floor((base)*(fitValue(max)/fitValue(light))),
-        max: Math.floor((base+1)*(fitValue(max)/fitValue(light)))
+        min: Math.floor((base) * (fitValue(max) / fitValue(light))),
+        max: Math.floor((base + 1) * (fitValue(max) / fitValue(light)))
       };
     }
 
@@ -787,7 +788,7 @@
           min: 0,
           max: 0
         },
-        max: split*2
+        max: split * 2
       };
 
       var pure = 0;
@@ -828,7 +829,7 @@
         max: Math.round(ret.total.max / ret.max * 100)
       };
 
-      if(type.toLowerCase() !== 'artifact') {
+      if (type.toLowerCase() !== 'artifact') {
         stats.forEach(function(stat) {
           stat.qualityPercentage = {
             min: Math.min(100, stat.qualityPercentage.min),
@@ -900,7 +901,7 @@
     // thanks to /u/tehdaw for the spreadsheet with bonuses
     // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
     function getBonus(light, type) {
-      switch(type.toLowerCase()) {
+      switch (type.toLowerCase()) {
         case 'helmet':
         case 'helmets':
           return light < 292 ? 15 :
@@ -1047,11 +1048,11 @@
         getCachedNewItems()])
         .then(function(args) {
           var result = [];
-          _.each(items, function (item) {
+          _.each(items, function(item) {
             var createdItem = null;
             try {
               createdItem = processSingleItem.apply(undefined, args.concat(item));
-            } catch(e) {
+            } catch (e) {
               console.error("Error processing item", item, e);
             }
             if (createdItem !== null) {
@@ -1130,12 +1131,12 @@
       var ret = {};
       for (var s = 0; s < stats.length; s++) {
         var statHash = {};
-        switch(stats[s]) {
+        switch (stats[s]) {
           case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
           case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
           case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
-        if(!data.stats[stats[s]]) {
+        if (!data.stats[stats[s]]) {
           continue;
         }
         statHash.value = data.stats[stats[s]].value;
@@ -1148,7 +1149,7 @@
           for (var t = 0; t < 5; t++) {
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
-          if(data.peerView) {
+          if (data.peerView) {
             statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
           }
           statHash.percentage = +(100 * statHash.normalized / 300).toFixed();

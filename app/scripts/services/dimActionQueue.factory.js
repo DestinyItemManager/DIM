@@ -12,7 +12,7 @@
     return {
       // fn is either a blocking function or a function that returns a promise
       queueAction: function(fn) {
-        var promise = (_queue.length) ? _queue[_queue.length-1] : $q.when();
+        var promise = (_queue.length) ? _queue[_queue.length - 1] : $q.when();
         // Execute fn regardless of the result of the existing promise. We
         // don't use finally here because finally can't modify the return value.
         promise = promise.then(function() {

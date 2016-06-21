@@ -10,7 +10,7 @@
     return {
       replace: true,
       scope: {
-        'item': '=itemData'
+        item: '=itemData'
       },
       restrict: 'E',
       template: [

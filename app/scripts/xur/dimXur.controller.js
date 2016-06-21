@@ -29,11 +29,11 @@
     }
 
     countCurrencies();
-    $scope.$on('dim-stores-updated', function (e, stores) {
+    $scope.$on('dim-stores-updated', function(e, stores) {
       countCurrencies();
     });
 
-    $scope.$on('ngDialog.opened', function (event, $dialog) {
+    $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult) {
         $dialog.position({
           my: 'left top',

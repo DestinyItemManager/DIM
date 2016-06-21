@@ -30,13 +30,13 @@
             bodyOutputType: 'trustedHtml',
             showCloseButton: true,
             clickHandler: function(a, b, c, d, e, f, g) {
-              if(b) {
+              if (b) {
                 return true;
               }
               return false;
             },
             onHideCallback: function() {
-              if($('#info-' + id)
+              if ($('#info-' + id)
                 .is(':checked')) {
                 save['info.' + id] = 1;
                 SyncService.set(save);
@@ -46,10 +46,10 @@
         }
 
         SyncService.get().then(function(data) {
-          if(!data || data['info.' + id]) {
+          if (!data || data['info.' + id]) {
             return;
           }
-          if(content.view) {
+          if (content.view) {
             $http.get(content.view).then(function(changelog) {
               showToaster(changelog.data, data, timeout);
             });

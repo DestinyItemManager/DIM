@@ -81,7 +81,7 @@
       }
     });
 
-    $scope.$on('dim-stores-updated', function (e, stores) {
+    $scope.$on('dim-stores-updated', function(e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
     });
@@ -89,7 +89,7 @@
     if ($scope.$root.activePlatformUpdated) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
       $scope.$root.activePlatformUpdated = false;
-    } else if(!_.isNull(dimPlatformService.getActive())) {
+    } else if (!_.isNull(dimPlatformService.getActive())) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
     }
 

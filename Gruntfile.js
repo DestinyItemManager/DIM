@@ -173,8 +173,14 @@ module.exports = function(grunt) {
           zip: "dist/chrome.zip"
         }
       }
+    },
+
+    eslint: {
+      target: ["app/scripts/**/*.js"]
     }
   });
+
+
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -185,6 +191,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-sync');
+  grunt.loadNpmTasks("grunt-eslint");
 
   grunt.registerTask('css', ['sass', 'postcss']);
 

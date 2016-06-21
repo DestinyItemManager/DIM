@@ -5,7 +5,7 @@
     .directive('dimStoreBucket', StoreBucket)
     .filter('equipped', function() {
       return function(items, isEquipped) {
-        return _.select(items || [], function (item) {
+        return _.select(items || [], function(item) {
           return item.equipped === isEquipped;
         });
       };
@@ -38,7 +38,7 @@
               return 4;
             default:
               return 5;
-            }
+          }
           });
         }
         return items;
@@ -53,9 +53,9 @@
       replace: true,
       restrict: 'E',
       scope: {
-        'store': '=storeData',
-        'items': '=bucketItems',
-        'bucket': '=bucket'
+        store: '=storeData',
+        items: '=bucketItems',
+        bucket: '=bucket'
       },
       template: [
         '<div class="sub-section"',

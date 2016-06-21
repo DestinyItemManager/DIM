@@ -100,10 +100,10 @@
         // Include the source, since we wouldn't want it to get moved out of the way
         items[vm.source.type.toLowerCase()].push(vm.source);
 
-        items['material'] = [];
+        items.material = [];
         if (vm.bucket.sort === 'General') {
           // Mote of Light
-          items['material'].push({
+          items.material.push({
             id: '0',
             hash: 937555249,
             amount: 2,
@@ -111,7 +111,7 @@
           });
         } else if (vm.statType === 'Attack') {
           // Weapon Parts
-          items['material'].push({
+          items.material.push({
             id: '0',
             hash: 1898539128,
             amount: 10,
@@ -119,7 +119,7 @@
           });
         } else {
           // Armor Materials
-          items['material'].push({
+          items.material.push({
             id: '0',
             hash: 1542293174,
             amount: 10,
@@ -128,7 +128,7 @@
         }
         if (vm.exotic) {
           // Exotic shard
-          items['material'].push({
+          items.material.push({
             id: '0',
             hash: 452597397,
             amount: 1,

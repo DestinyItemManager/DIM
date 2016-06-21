@@ -26,7 +26,7 @@
 
     return {
       bind: 'A',
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         var elem = element[0];
 
         scope.$watch(attrs.dimBungieImageFallback, function(path) {

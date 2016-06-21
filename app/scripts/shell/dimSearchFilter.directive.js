@@ -24,28 +24,28 @@
    * values that will set the left-hand to the "match."
    */
   var filterTrans = {
-    'dmg':          ['arc', 'solar', 'void', 'kinetic'],
-    'type':         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
-    'tier':         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
-    'incomplete':   ['incomplete'],
-    'complete':     ['complete'],
-    'xpcomplete':   ['xpcomplete'],
-    'xpincomplete': ['xpincomplete', 'needsxp'],
-    'upgraded':     ['upgraded'],
-    'classType':    ['titan', 'hunter', 'warlock'],
-    'dupe':         ['dupe', 'duplicate'],
-    'unascended':   ['unascended', 'unassended', 'unasscended'],
-    'ascended':     ['ascended', 'assended', 'asscended'],
-    'reforgeable':  ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-    'locked':       ['locked'],
-    'unlocked':     ['unlocked'],
-    'stackable':    ['stackable'],
-    'engram':       ['engram'],
-    'weaponClass':  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
-    'year':         ['year1', 'year2'],
-    'infusable':    ['infusable', 'infuse'],
-    'stattype':     ['intellect', 'discipline', 'strength'],
-    'new':          ['new']
+    dmg:          ['arc', 'solar', 'void', 'kinetic'],
+    type:         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
+    tier:         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
+    incomplete:   ['incomplete'],
+    complete:     ['complete'],
+    xpcomplete:   ['xpcomplete'],
+    xpincomplete: ['xpincomplete', 'needsxp'],
+    upgraded:     ['upgraded'],
+    classType:    ['titan', 'hunter', 'warlock'],
+    dupe:         ['dupe', 'duplicate'],
+    unascended:   ['unascended', 'unassended', 'unasscended'],
+    ascended:     ['ascended', 'assended', 'asscended'],
+    reforgeable:  ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    locked:       ['locked'],
+    unlocked:     ['unlocked'],
+    stackable:    ['stackable'],
+    engram:       ['engram'],
+    weaponClass:  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
+    year:         ['year1', 'year2'],
+    infusable:    ['infusable', 'infuse'],
+    stattype:     ['intellect', 'discipline', 'strength'],
+    new:          ['new']
   };
 
   var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
@@ -61,13 +61,13 @@
       {
         words: keywords,
         match: /\b((li|le|qu|pe|is:)\w*)$/,
-        search: function (term, callback) {
-          callback($.map(this.words, function (word) {
+        search: function(term, callback) {
+          callback($.map(this.words, function(word) {
             return word.indexOf(term) === 0 ? word : null;
           }));
         },
         index: 1,
-        replace: function (word) {
+        replace: function(word) {
           return word.indexOf('is:') === 0 ? (word + ' ') : word;
         }
       }
@@ -84,7 +84,7 @@
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
     vm.search = {
-      'query': ""
+      query: ""
     };
 
     $scope.$on('dim-stores-updated', function(arg) {
@@ -111,21 +111,21 @@
       vm.clearFilter();
     });
 
-    vm.blurFilterInputIfEmpty = function () {
+    vm.blurFilterInputIfEmpty = function() {
       if (vm.search.query === "") {
         vm.blurFilterInput();
       }
     };
 
-    vm.focusFilterInput = function () {
+    vm.focusFilterInput = function() {
       $(filterInputSelector).focus();
     };
 
-    vm.blurFilterInput = function () {
+    vm.blurFilterInput = function() {
       $(filterInputSelector).blur();
     };
 
-    vm.clearFilter = function () {
+    vm.clearFilter = function() {
       vm.search.query = "";
       vm.filter();
     };
@@ -134,23 +134,24 @@
       var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
       filterValue = filterValue.replace(/\s+and\s+/, ' ');
       var searchTerms = filterValue.split(/\s+/);
-      var filter, predicate = '';
+      var filter;
+      var predicate = '';
       var filterFn;
       var filters = [];
 
-      function addPredicate(predicate, filter){
+      function addPredicate(predicate, filter) {
         filters.push({predicate: predicate, value: filter});
       }
 
       _.each(searchTerms, function(term) {
-        if (term.indexOf('is:') >=0) {
+        if (term.indexOf('is:') >= 0) {
           filter = term.replace('is:', '');
           if (_cachedFilters[filter]) {
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter);
           } else {
             for (var key in filterTrans) {
-              if(filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filter)) {
+              if (filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filter)) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter);
@@ -196,61 +197,61 @@
      * @return {Boolean} Returns true for a match, false for a non-match
      */
     var filterFns = {
-      'dmg': function(predicate, item) {
+      dmg: function(predicate, item) {
         return item.dmg === predicate;
       },
-      'type': function(predicate, item) {
+      type: function(predicate, item) {
         return item.type.toLowerCase() === predicate;
       },
-      'tier': function(predicate, item) {
+      tier: function(predicate, item) {
         return item.tier.toLowerCase() === predicate;
       },
       // Incomplete will show items that are not fully leveled.
-      'incomplete': function(predicate, item) {
+      incomplete: function(predicate, item) {
         return item.talentGrid &&
           !item.complete;
       },
       // Complete shows items that are fully leveled.
-      'complete': function(predicate, item) {
+      complete: function(predicate, item) {
         return item.complete;
       },
       // Upgraded will show items that have enough XP to unlock all
       // their nodes and only need the nodes to be purchased.
-      'upgraded': function(predicate, item) {
+      upgraded: function(predicate, item) {
         return item.talentGrid &&
           item.talentGrid.xpComplete &&
           !item.complete;
       },
-      'xpincomplete': function(predicate, item) {
+      xpincomplete: function(predicate, item) {
         return item.talentGrid &&
           !item.talentGrid.xpComplete;
       },
-      'xpcomplete': function(predicate, item) {
+      xpcomplete: function(predicate, item) {
         return item.talentGrid &&
           item.talentGrid.xpComplete;
       },
-      'ascended': function(predicate, item) {
+      ascended: function(predicate, item) {
         return item.talentGrid &&
           item.talentGrid.hasAscendNode &&
           item.talentGrid.ascended;
       },
-      'unascended': function(predicate, item) {
+      unascended: function(predicate, item) {
         return item.talentGrid &&
           item.talentGrid.hasAscendNode &&
           !item.talentGrid.ascended;
       },
-      'reforgeable': function(predicate, item) {
+      reforgeable: function(predicate, item) {
         return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
       },
-      'unlocked': function(predicate, item) {
+      unlocked: function(predicate, item) {
         return item.lockable &&
           !item.locked;
       },
-      'locked': function(predicate, item) {
+      locked: function(predicate, item) {
         return item.lockable &&
           item.locked;
       },
-      'dupe': function(predicate, item) {
+      dupe: function(predicate, item) {
         if (_duplicates === null) {
           _duplicates = _.chain(dimStoreService.getStores())
             .pluck('items')
@@ -261,7 +262,7 @@
 
         return _duplicates[item.hash] > 1;
       },
-      'classType': function(predicate, item) {
+      classType: function(predicate, item) {
         var value;
 
         switch (predicate) {
@@ -278,29 +279,29 @@
 
         return (item.classType == value);
       },
-      'stattype': function(predicate, item) {
+      stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
       },
-      'stackable': function(predicate, item) {
+      stackable: function(predicate, item) {
         return item.maxStackSize > 1;
       },
-      'engram': function(predicate, item) {
+      engram: function(predicate, item) {
         return item.isEngram();
       },
-      'infusable': function(predicate, item) {
+      infusable: function(predicate, item) {
         return item.talentGrid && item.talentGrid.infusable;
       },
-      'weaponClass': function(predicate, item) {
+      weaponClass: function(predicate, item) {
         return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
       },
-      'keyword': function(predicate, item) {
+      keyword: function(predicate, item) {
         return item.name.toLowerCase().indexOf(predicate) >= 0 ||
           // Search perks as well
           (item.talentGrid && _.any(item.talentGrid.nodes, function(node) {
             return node.name.toLowerCase().indexOf(predicate) >= 0;
           }));
       },
-      'light': function(predicate, item) {
+      light: function(predicate, item) {
         if (predicate.length === 0 || item.primStat === undefined) {
           return false;
         }
@@ -310,7 +311,7 @@
         var result = false;
 
         operands.forEach(function(element) {
-          if (predicate.substring(0,element.length) === element) {
+          if (predicate.substring(0, element.length) === element) {
             operand = element;
             predicate = predicate.substring(element.length);
             return false;
@@ -341,7 +342,7 @@
         }
         return result;
       },
-      'quality': function(predicate, item) {
+      quality: function(predicate, item) {
         if (predicate.length === 0 || item.quality === undefined || item.quality === null) {
           return false;
         }
@@ -351,7 +352,7 @@
         var result = false;
 
         operands.forEach(function(element) {
-          if (predicate.substring(0,element.length) === element) {
+          if (predicate.substring(0, element.length) === element) {
             operand = element;
             predicate = predicate.substring(element.length);
             return false;
@@ -382,7 +383,7 @@
         }
         return result;
       },
-      'year': function(predicate, item) {
+      year: function(predicate, item) {
         if (predicate === 'year1') {
           return item.year === 1;
         } else if (predicate === 'year2') {

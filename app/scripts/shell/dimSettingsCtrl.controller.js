@@ -25,7 +25,7 @@
 
     vm.showSync = function() {
       return SyncService.drive();
-    }
+    };
 
     vm.driveSync = function() {
       SyncService.authorize().then(function(data) {

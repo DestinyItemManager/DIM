@@ -14,7 +14,7 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        'store': '=storeData'
+        store: '=storeData'
       },
       restrict: 'E',
       template: [
@@ -75,27 +75,27 @@
     });
 
     vm.openLoadoutPopup = function openLoadoutPopup(e) {
-      e.stopPropagation();
+        e.stopPropagation();
 
-      if (!_.isNull(dialogResult)) {
-        dialogResult.close();
-      } else {
-        ngDialog.closeAll();
+        if (!_.isNull(dialogResult)) {
+          dialogResult.close();
+        } else {
+          ngDialog.closeAll();
 
-        dialogResult = ngDialog.open({
-          template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-loadout-popup="vm.store"></div>',
-          plain: true,
-          appendTo: 'div[loadout-id="' + vm.store.id + '"]',
-          overlay: false,
-          className: 'loadout-popup',
-          showClose: false,
-          scope: $scope
-        });
+          dialogResult = ngDialog.open({
+            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-loadout-popup="vm.store"></div>',
+            plain: true,
+            appendTo: 'div[loadout-id="' + vm.store.id + '"]',
+            overlay: false,
+            className: 'loadout-popup',
+            showClose: false,
+            scope: $scope
+          });
 
-        dialogResult.closePromise.then(function(data) {
-          dialogResult = null;
-        });
-      }
+          dialogResult.closePromise.then(function(data) {
+            dialogResult = null;
+          });
+        }
       };
   }
 })();
