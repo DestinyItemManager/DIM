@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreItems', StoreItems)
+    .directive('dimStoreBucket', StoreBucket)
     .filter('equipped', function() {
       return function(items, isEquipped) {
         return _.select(items || [], function (item) {
@@ -45,68 +45,45 @@
       };
     });
 
-  StoreItems.$inject = ['dimStoreService', '$window'];
-
-  function StoreItems(dimStoreService, $window) {
+  function StoreBucket() {
     return {
-      controller: StoreItemsCtrl,
+      controller: StoreBucketCtrl,
       controllerAs: 'vm',
       bindToController: true,
       replace: true,
+      restrict: 'E',
       scope: {
-        'store': '=storeData'
+        'store': '=storeData',
+        'items': '=bucketItems',
+        'bucket': '=bucket'
       },
       template: [
-        '<div>',
-        '  <div class="items {{::vm.store.id }}" data-type="item" data-character="{{::vm.store.id }}">',
-        '    <div ng-repeat="(key, value) in ::vm.categories track by key" class="section" ng-class="::key.toLowerCase()">',
-        '      <div class="title">',
-        '        <span>{{ ::key }}</span>',
-        '        <span class="bucket-count" ng-if="::vm.store.id === \'vault\'">{{ vm.sortSize[key] ? vm.sortSize[key] : 0 }}/{{::vm.store.capacityForItem({sort:key})}}  </span>',
-        '      </div>',
-        '      <div ng-repeat="type in ::value track by type" class="sub-section"',
-        '           ng-class="[\'sort-\' + type.replace(\' \', \'-\').toLowerCase(), { empty: !vm.data[type] }]"',
-        '           ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
-        '           drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
-        '        <div class="equipped equippable"',
-        '             ng-if="::vm.store.id !== \'vault\'"',
-        '             ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
-        '              drop-channel="{{:: type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[type] | equipped:true track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
-        '        </div>',
-        '        <div class="unequipped equippable" ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" drop-channel="{{ type + \',\' + vm.store.id + type }}">',
-        '          <div ng-repeat="item in vm.data[type] | equipped:false | sortItems:vm.itemSort track by item.index" dim-store-item store-data="vm.store" item-data="item"></div>',
-        '          <div class="item-target"></div>',
-        '        </div>',
-        '      </div>',
-        '    </div>',
-        '    <div ng-if="::vm.store.id !== \'vault\'" class="title">',
-        '      <span>Reputation</span>',
-        '    </div>',
-        '    <div class="sub-section sort-progression">',
-        '      <div class="unequipped">',
-        '        <span class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}\nLevel: {{faction.level}}">',
-        '          <svg width="48" height="48">',
-        '            <polygon stroke-dasharray="130" fill="{{faction.color}}" points="24,1 47,24 24,47 1,24"/>',
-        '            <image xlink:href="" ng-attr-xlink:href="{{faction.icon | bungieIcon}}" ng-attr-x="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" ng-attr-y="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" width="48" height="48" ng-attr-transform="scale({{faction.scale}})" />',
-        '            <polygon fill-opacity="0" stroke="#666" stroke-width="2" points="24,1 47,24 24,47 1,24" stroke-linecap="square"/>',
-        '            <polygon stroke-dasharray="130" ng-if="faction.progressToNextLevel > 0" style="stroke-dashoffset:{{130-(130*faction.progressToNextLevel/faction.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="2" points="24,1 47,24 24,47 1,24" stroke-linecap="square"/>',
-        '          </svg>',
-        '          <span class="item-stat item-faction" ng-bind="faction.level"></span>',
-        '        </span>',
-        '      </div>',
-        '    </div>',
+        '<div class="sub-section"',
+        '     ng-class="[\'sort-\' + vm.bucket.id, { empty: !vm.items.length }]"',
+        '     ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
+        '     drop-channel="{{::vm.dropChannel}}">',
+        '  <div class="equipped sub-bucket" ng-repeat="item in vm.items | equipped:true track by item.index"',
+        '       ng-if="!vm.store.isVault"',
+        '       ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
+        '       drop-channel="{{::vm.dropChannel}}">',
+        '    <dim-store-item store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
-        '</div>'
+        '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
+        '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
+        '      drop-channel="{{::vm.dropChannel}}">',
+        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
+        '  </div>',
+        '</div>',
       ].join('')
     };
   }
 
+  StoreBucketCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue'];
 
-  StoreItemsCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimCategory', 'dimInfoService'];
-
-  function StoreItemsCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimCategory, dimInfoService) {
+  function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
     var vm = this;
+
+    vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
 
     // Detect when we're hovering a dragged item over a target
     var dragTimer = null;
@@ -142,10 +119,6 @@
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
     };
-
-    vm.sortSize = _.countBy(vm.store.items, 'sort');
-
-    vm.categories = angular.copy(dimCategory); // Grouping of the types in the rows.
 
     vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
@@ -214,9 +187,7 @@
             return dimStoreService.updateCharacters();
           });
         }
-        return movePromise.then(function() {
-          dimStoreService.setHeights();
-        });
+        return movePromise;
       }).catch(function(e) {
         if (e.message !== 'move-canceled') {
           toaster.pop('error', item.name, e.message);
@@ -228,31 +199,6 @@
       return promise;
     });
 
-    function resetData() {
-      dimStoreService.updateProgression();
-
-      if (_.any(vm.store.items, {type: 'Unknown'})) {
-        vm.categories['Unknown'] = ['Unknown'];
-      }
-
-      if (vm.store.isVault) {
-        vm.sortSize = _.countBy(vm.store.items, 'sort');
-      }
-
-      vm.data = _.groupBy(vm.store.items, function(item) {
-        return item.type;
-      });
-
-      if (count(vm.store.items, {type: 'Lost Items'}) >= 20) {
-        dimInfoService.show('lostitems', {
-          type: 'warning',
-          title: 'Postmaster Limit',
-          body: 'There are 20 lost items at the Postmaster on your ' + vm.store.name + '. Any new items will overwrite the existing.',
-          hide: 'Never show me this type of warning again.'
-        });
-      }
-    }
-
     dimSettingsService.getSetting('itemSort').then(function(sort) {
       vm.itemSort = sort;
     });
@@ -261,11 +207,6 @@
       if (_.has(settings, 'itemSort')) {
         vm.itemSort = settings.itemSort;
       }
-      if (_.has(settings, 'charCol') || _.has(settings, 'vaultCol')) {
-        dimStoreService.setHeights();
-      }
     });
-
-    $scope.$watchCollection('vm.store.items', resetData);
   }
 })();

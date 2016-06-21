@@ -18,43 +18,6 @@
       uncommon: 'Uncommon',
       basic: 'Basic'
     })
-    .value('dimCategory', {
-      Weapons: [
-        'Class',
-        'Primary',
-        'Special',
-        'Heavy',
-      ],
-      Armor: [
-        'Helmet',
-        'Gauntlets',
-        'Chest',
-        'Leg',
-        'ClassItem'
-      ],
-      General: [
-        'Artifact',
-        'Ghost',
-        'Consumable',
-        'Material',
-        'Emblem',
-        'Shader',
-        'Emote',
-        'Ship',
-        'Vehicle',
-        'Horn',
-      ],
-      Progress: [
-        'Bounties',
-        'Quests',
-        'Missions',
-      ],
-      Postmaster: [
-        'Lost Items',
-        'Special Orders',
-        'Messages'
-      ]
-    })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
     }]);

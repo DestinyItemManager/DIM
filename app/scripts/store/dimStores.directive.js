@@ -12,55 +12,78 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {},
+      link: Link,
       template: [
-        '<div ng-repeat="store in vm.stores track by store.id"',
-        '  class="storage dim-col-{{(store.id === \'vault\') ? vm.vaultCol : vm.charCol}}"',
-        '  ng-class="{',
-        "    guardian: !store.isVault,",
-        "    vault: store.isVault,",
-        "    'hide-filtered': vm.hideFilteredItems,",
-        "    'itemQuality': vm.itemQuality,",
-        '  }">',
-        '  <div dim-store-heading class="character dim-col-{{vm.charCol}}" store-data="store"></div>',
-        '  <div dim-store-items store-data="store"></div>',
+        '<div ng-if="vm.stores.length" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
+        '  <div class="store-row store-header">',
+        '    <div class="store-cell" ng-repeat="store in vm.stores track by store.id">',
+        '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
+        '    </div>',
+        '  </div>',
+        '  <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
+        '    <div class="title">',
+        '      <span>{{::category}}</span>',
+        '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
+        '    </div>',
+        '    <div class="store-row items" ng-repeat="bucket in ::buckets track by bucket.id">',
+        '      <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
+        '        <dim-store-bucket ng-if="::!store.isVault || vm.vault.vaultCounts[category] !== undefined" store-data="store" bucket-items="store.buckets[bucket.id]" bucket="bucket"></dim-store-bucket>',
+        '      </div>',
+        '    </div>',
+        '  </div>',
+        '  <div class="title">',
+        '    <span>Reputation</span>',
+        '  </div>',
+        '  <div class="store-row items">',
+        '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
+        '      <dim-store-reputation store-data="store"></dim-store-reputation>',
+        '    </div>',
+        '  </div>',
         '</div>'
       ].join('')
     };
+
+    function Link(scope, element) {
+      $(document).on('scroll', function(e) {
+        $(document.body).toggleClass('something-is-sticky', document.body.scrollTop != 0);
+        $('.store-header').css('left', 'calc(4em - ' + document.body.scrollLeft + 'px)');
+      });
+    }
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', '$q'];
+  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, $q) {
+  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService) {
     var vm = this;
 
-    vm.stores = null;
-    vm.charCol = 3;
-    vm.vaultCol = 4;
+    vm.stores = dimStoreService.getStores();
+    vm.vault = dimStoreService.getVault();
+    vm.buckets = null;
+    dimBucketService.then(function(buckets) {
+      vm.buckets = angular.copy(buckets);
+    });
 
+    vm.charCol = 3;
     settings.getSettings()
       .then(function(settings) {
         vm.hideFilteredItems = settings.hideFilteredItems;
         vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
-        vm.vaultCol = Math.max(4, Math.min(settings.vaultCol, 12));
         vm.itemQuality = settings.itemQuality;
-        dimStoreService.setHeights();
       });
 
     $scope.$on('dim-settings-updated', function(event, arg) {
       if (_.has(arg, 'charCol')) {
         vm.charCol = arg.charCol;
-      } else if (_.has(arg, 'vaultCol')) {
-        vm.vaultCol = arg.vaultCol;
       } else if (_.has(arg, 'hideFilteredItems')) {
         vm.hideFilteredItems = arg.hideFilteredItems;
       } else if (_.has(arg, 'itemQuality')) {
         vm.itemQuality = arg.itemQuality;
       }
-      dimStoreService.setHeights();
     });
 
     $scope.$on('dim-stores-updated', function (e, stores) {
       vm.stores = stores.stores;
+      vm.vault = dimStoreService.getVault();
     });
 
     if ($scope.$root.activePlatformUpdated) {

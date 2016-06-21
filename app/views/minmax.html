@@ -29,7 +29,7 @@
 
   <p>Found {{results.length}} combinations:</p>
   <p ng-repeat="combo in minmax.combinations | filter:minmax.filterFunction | orderBy:minmax.statOrder | limitTo: 10 as results">
-    <span ng-repeat="item in combo.armor" dim-store-item item-data="item"></span>
+    <dim-store-item ng-repeat="item in combo.armor" item-data="item"></dim-store-item>
     <span dim-stats stats="combo.stats"></span>
 <!--    <span ng-repeat="(k, stat) in combo.stats"></span>-->
     <input type="button" value="Create Loadout" />
@@ -49,7 +49,7 @@
               <small>{{stat.value}}</small>
             </div>
           </div>
-          <div dim-store-item item-data="item"></div>
+          <dim-store-item item-data="item"></dim-store-item>
         </div>
       </span>
 
