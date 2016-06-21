@@ -8,14 +8,16 @@
 
   function InfoService(toaster, $http, SyncService) {
     return {
-      show: function(id, content, timeout = 0) {
+      show: function(id, content, timeout) {
+        timeout = timeout || 0;
         content = content || {};
         content.type = content.type || 'info';
         content.title = content.title || '';
         content.body = content.body || '';
         content.hide = content.hide || 'Hide This Popup';
 
-        function showToaster(body, save, timeout = 0) {
+        function showToaster(body, save, timeout) {
+          timeout = timeout || 0;
           toaster.pop({
             type: content.type,
             title: content.title,
