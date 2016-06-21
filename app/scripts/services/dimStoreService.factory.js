@@ -596,7 +596,7 @@
         createdItem.isNew = false;
       } else {
         createdItem.isNew = (typeof cachedNewItems[createdItem.id] !== 'undefined')? true : false;
-        if(createdItem.isNew === false) {
+        if (createdItem.isNew === false) {
             createdItem.isNew = isItemNew(createdItem.id);
             if (createdItem.isNew) {
               _newItems[createdItem.id] = {name: createdItem.name, type: createdItem.type};
