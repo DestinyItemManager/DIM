@@ -150,8 +150,8 @@
         Chest: items.filter(function(item) { return item.type === 'Chest'; }),
         Leg: items.filter(function(item) { return item.type === 'Leg'; }),
         ClassItem: items.filter(function(item) { return item.type === 'ClassItem'; }),
-        Artifact: items.filter(function(item) { return item.type === 'Artifact'; }),
-        Ghost: items.filter(function(item) { return item.type === 'Ghost'; })
+        Ghost: items.filter(function(item) { return item.type === 'Ghost'; }),        
+        Artifact: items.filter(function(item) { return item.type === 'Artifact'; })
       };
     }
 
@@ -170,7 +170,7 @@
       progress: 0,
       allSetTiers: [],
       highestsets: {},
-      lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Ghost: null, Artifact: null },
+      lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       normalize: 335,
       doNormalize: false,
       type: 'Helmets',
