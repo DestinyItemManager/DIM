@@ -385,6 +385,7 @@
       var result = {
         id: loadoutPrimitive.id,
         name: loadoutPrimitive.name,
+        platform: loadoutPrimitive.platform,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v3.0',
         items: {}

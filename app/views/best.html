@@ -1,5 +1,5 @@
-<div ng-controller="dimMinMaxCtrl as normal" style="min-width:900px">
-  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
+<div class="minmax" ng-controller="dimMinMaxCtrl as normal">
+  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <h1>Armor Comparison</h1>
 
   <dim-loadout></dim-loadout>
@@ -12,133 +12,99 @@
     <li>Split stat rolls are better than single stat rolled items.</li>
     <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
   </ul>
+  <p>
+    Mode: <select ng-model='normal.mode' ng-change='normal.onModeChange()'>
+      <option value='fast'>Fast</option>
+      <option value='full'>Full</option>
+      </select>
+      <small>Note: Fast mode tries to only look at your "best" gear. Full mode might show more options, but will take much longer to run.</small>
+  </p>
 
   <p>
     Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
-      <option value='titan'>Titan</option>
-      <option value='hunter'>Hunter</option>
-      <option value='warlock'>Warlock</option>
+    <option value='titan'>Titan</option>
+    <option value='hunter'>Hunter</option>
+    <option value='warlock'>Warlock</option>
     </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
   </p>
 
-    <div style='float:left'>
+  <div class="section">
+    <div class="labels">
       <div><small>Intellect</small></div>
       <div><small>Discipline</small></div>
       <div><small>Strength</small></div>
     </div>
-    <div style='float:right;width:849px;margin-top:-4px;' class="itemQuality">
-      <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
-        <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
-          <div style='display:inline-block;margin-bottom:20px;'>
+    <div class="itemQuality">
+      <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
+        <div class="item-container" ng-if="item.primStat.value >= 280">
+          <div class="item-stats">
             <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
               <small ng-if="normalStat.scaled === 0">-</small>
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
-          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
+          <dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></dim-store-item>
         </div>
-      </span>
+      </div>
     </div>
-    <div style='clear:both;float:left'>
-        <p>Locked Items</p>
+  </div>
+
+  <div class="section">
+    <div class="labels">
+      <p>Locked Items</p>
     </div>
-    <div style='float:right;width:849px;margin-bottom:20px;' class="itemQuality">
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.helmet" ui-on-drop="normal.onDrop($data, 'helmet')" drag-channel="Helmet" drop-channel="Helmet" drop-validate="normal.lockedItemsValid($data, 'helmet')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('helmet')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.helmet" store-data="normal.getStore(normal.lockeditems.helmet.owner)"></div>
-            </div>
-            <p style="text-align:center">Helmet</p>
+    <div class="itemQuality">
+      <div ng-repeat="(type, lockeditem) in normal.lockeditems">
+        <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
+          <div ng-switch-when="null" class="empty-item"></div>
+          <div ng-switch-default>
+            <div ng-click="normal.onRemove(type)" class="locked-item-remove"><span>&#10060;</span></div>
+            <dim-store-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-store-item>
+          </div>
+          <div class="label">{{type}}</div>
         </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.gauntlets" ui-on-drop="normal.onDrop($data, 'gauntlets')" drag-channel="Gauntlets" drop-channel="Gauntlets" drop-validate="normal.lockedItemsValid($data, 'gauntlets')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('gauntlets')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.gauntlets" store-data="normal.getStore(normal.lockeditems.gauntlets.owner)"></div>
-            </div>
-            <p style="text-align:center">Arms</p>
-        </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.chest" ui-on-drop="normal.onDrop($data, 'chest')" drag-channel="Chest" drop-channel="Chest" drop-validate="normal.lockedItemsValid($data, 'chest')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('chest')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.chest" store-data="normal.getStore(normal.lockeditems.chest.owner)"></div>
-            </div>
-            <p style="text-align:center">Chest</p>
-        </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.leg" ui-on-drop="normal.onDrop($data, 'leg')" drag-channel="Leg" drop-channel="Leg" drop-validate="normal.lockedItemsValid($data, 'leg')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('leg')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.leg" store-data="normal.getStore(normal.lockeditems.leg.owner)"></div>
-            </div>
-            <p style="text-align:center">Legs</p>
-        </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.classItem" ui-on-drop="normal.onDrop($data, 'classItem')" drag-channel="ClassItem" drop-channel="ClassItem" drop-validate="normal.lockedItemsValid($data, 'classItem')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('classItem')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.classItem" store-data="normal.getStore(normal.lockeditems.classItem.owner)"></div>
-            </div>
-            <p style="text-align:center">Class</p>
-        </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.artifact" ui-on-drop="normal.onDrop($data, 'artifact')" drag-channel="Artifact" drop-channel="Artifact" drop-validate="normal.lockedItemsValid($data, 'artifact')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('artifact')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.artifact" store-data="normal.getStore(normal.lockeditems.artifact.owner)"></div>
-            </div>
-            <p style="text-align:center">Artifact</p>
-        </div>
-        <div style="display:inline-block;margin-left:20px;position:relative;" ng-switch="normal.lockeditems.ghost" ui-on-drop="normal.onDrop($data, 'ghost')" drag-channel="Ghost" drop-channel="Ghost" drop-validate="normal.lockedItemsValid($data, 'ghost')">
-            <div ng-switch-when="null" style="background-color:#656565;width:48px;height:48px;border:2px solid #DDD;"></div>
-            <div ng-switch-default>
-                <div ng-click="normal.onRemove('ghost')" style="background-color:red;width:10px;height:10px;position:absolute;left:2px;top:2px;z-index:3;cursor:pointer;font-size:8px;text-align:center;line-height:10px;"><span>&#10060;</span></div>
-                <div dim-store-item item-data="normal.lockeditems.ghost" store-data="normal.getStore(normal.lockeditems.ghost.owner)"></div>
-            </div>
-            <p style="text-align:center">Ghost</p>
-        </div>
+      </div>
     </div>
-    <div ng-show="!normal.highestsets" style='clear:both;'>
-        <p>Missing legendary or exotic pieces to build a full set!</p>
+  </div>
+  <div ng-show="!normal.highestsets">
+    <p>Missing legendary or exotic pieces to build a full set!</p>
+  </div>
+  <div ng-show="normal.progress < 1 && normal.highestsets">
+    <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
+  </div>
+  <div ng-show="normal.progress >= 1">
+    <p>Set Tiers (Int/Dis/Str):
+      <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
+      &nbsp; Order:
+      <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
+        <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
+        <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
+        <option value="-disc_val,-int_val,-str_val">Dis/Int/Str</option>
+        <option value="-disc_val,-str_val,-int_val">Dis/Str/Int</option>
+        <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
+        <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
+      </select>
+      &nbsp; <small>Displaying top 20 sets</small>
+    </p>
+  </div>
+  <div ng-show="normal.progress >= 1">
+    <div class="section" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
+      <div class="labels">
+        <div><small>Intellect</small>: <small>{{set.int_val}}</small></div>
+        <div><small>Discipline</small>: <small>{{set.disc_val}}</small></div>
+        <div><small>Strength</small>: <small>{{set.str_val}}</small></div>
+        <div><small>Bonus Type</small>: </div>
+      </div>
+      <div class="itemQuality">
+        <span ng-repeat="armorpiece in set.armor">
+          <div class="set-item">
+            <dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
+            <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
+          </div>
+        </span>
+        <button ng-click="normal.newLoadout(set)">Create Loadout</button>
+      </div>
     </div>
-    <div ng-show="normal.progress < 1 && normal.highestsets" style='clear:both;'>
-        <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
-    </div>
-    <div ng-show="normal.progress >= 1" style='clear:both;'>
-      <p>Set Tiers (Int/Dis/Str):
-        <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
-        &nbsp; Order:
-        <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
-          <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
-          <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
-          <option value="-disc_val,-int_val,-str_val">Dis/Int/Str</option>
-          <option value="-disc_val,-str_val,-int_val">Dis/Str/Int</option>
-          <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
-          <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
-        </select>
-        &nbsp; <small>Displaying top 20 sets</small>
-      </p>
-    </div>
-    <div ng-show="normal.progress >= 1" style='clear:both;'>
-        <div ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
-            <div style='clear:both;float:left'>
-              <div><small>Intellect</small>: <small>{{set.int_val}}</small></div>
-              <div><small>Discipline</small>: <small>{{set.disc_val}}</small></div>
-              <div><small>Strength</small>: <small>{{set.str_val}}</small></div>
-              <p><small>Bonus Type</small>: </p>
-            </div>
-            <div style='float:right;width:849px;margin-left:5px;margin-bottom:20px;' class="itemQuality">
-              <span ng-repeat="armorpiece in set.armor">
-                <div style="display:inline-block;margin-left:20px;">
-                  <div dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></div>
-                  <p style="text-align:center"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></p>
-                </div>
-              </span>
-              <input style="margin-left:20px;" type="button" value="Create Loadout" ng-click="normal.newLoadout(set)"/>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>

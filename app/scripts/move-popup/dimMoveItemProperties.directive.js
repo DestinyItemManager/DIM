@@ -28,8 +28,8 @@
         '  <span><img class="title-element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
         '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
-        '  <span ng-if="::vm.item.sort == \'Weapons\' || vm.item.sort ==\'Postmaster\'" ng-bind="::vm.item.typeName"></span>',
-        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete | percent}}</span>',
+        '  <span ng-if="::vm.item.bucket.inWeapons || vm.item.location.inPostmaster" ng-bind="::vm.item.typeName"></span>',
+        '  <span ng-if="(vm.item.type === \'Bounties\' || vm.item.type ===\'Quests\') && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete | percent}}</span>',
         '  <span class="pull-right move-popup-info-detail" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
         '</div>',
         '<div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
@@ -43,7 +43,7 @@
         '  </div>',
         '  <div class="stat-box-row" ng-repeat="stat in vm.item.stats track by $index">',
         '     <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>',
-        '     <span class="stat-box-outer" ng-class="{ \'show-quality\': vm.itemQuality }">',
+        '     <span class="stat-box-outer">',
         '       <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>',
         '       <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>',
         '       <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>',
@@ -52,12 +52,12 @@
         '       <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '     </span>',
         '     <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '       <span ng-show="vm.itemQuality && stat.qualityPercentage.min" ng-class="{ \'show-quality\': vm.itemQuality && stat.qualityPercentage.min }" ng-show="{{ stat.bar }}" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ vm.getStatRange(stat) }})</span>',
+        '       <span ng-if="stat.bar && vm.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
         '     </span>',
         '  </div>',
         '  <div class="stat-box-row" ng-if="vm.item.quality && vm.item.quality.min">',
         '    <span class="stat-box-text stat-box-cell">Stats quality</span>',
-        '    <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.getItemQualityRange() }} of max possible roll</span>',
+        '    <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll</span>',
         '  </div>',
         '</div>',
         '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
@@ -150,21 +150,6 @@
         vm.light += ' Attack';
         vm.classes['is-' + vm.item.dmg] = true;
       }
-    }
-
-    vm.getStatRange = function(stat) {
-      if(!stat.qualityPercentage) {
-        return '';
-      }
-      return ((stat.qualityPercentage.min === stat.qualityPercentage.max || vm.item.primStat.value === 335) ?
-        stat.qualityPercentage.min :
-        (stat.qualityPercentage.min + "%-" +  stat.qualityPercentage.max)) + '%';
-    }
-
-    vm.getItemQualityRange = function() {
-      return ((vm.item.quality.min === vm.item.quality.max || vm.item.primStat.value === 335) ?
-        vm.item.quality.min :
-        (vm.item.quality.min + "%-" +  vm.item.quality.max)) + '%';
     }
 
     function compareItems(item) {

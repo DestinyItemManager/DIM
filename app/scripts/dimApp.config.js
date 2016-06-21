@@ -18,43 +18,6 @@
       uncommon: 'Uncommon',
       basic: 'Basic'
     })
-    .value('dimCategory', {
-      Weapons: [
-        'Class',
-        'Primary',
-        'Special',
-        'Heavy',
-      ],
-      Armor: [
-        'Helmet',
-        'Gauntlets',
-        'Chest',
-        'Leg',
-        'ClassItem'
-      ],
-      General: [
-        'Artifact',
-        'Ghost',
-        'Consumable',
-        'Material',
-        'Emblem',
-        'Shader',
-        'Emote',
-        'Ship',
-        'Vehicle',
-        'Horn',
-      ],
-      Progress: [
-        'Bounties',
-        'Quests',
-        'Missions',
-      ],
-      Postmaster: [
-        'Lost Items',
-        'Special Orders',
-        'Messages'
-      ]
-    })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
     }]);
@@ -82,10 +45,10 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        console.log('DIM v3.7.3 - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        dimInfoService.show('20160603v370', {
-          title: 'DIM v3.7.3 Released',
-          view: 'views/changelog-toaster.html?v=v3.7.3',
+        console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+        dimInfoService.show('20160603v374', {
+          title: 'DIM v3.7.4 Released',
+          view: 'views/changelog-toaster.html?v=v3.7.4',
         });
       }
     ]);

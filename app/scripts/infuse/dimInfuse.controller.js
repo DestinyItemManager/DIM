@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService'];
+  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService', 'toaster'];
 
-  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService) {
+  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster) {
     var vm = this;
 
     angular.extend(vm, {
@@ -27,11 +27,11 @@
           vm.source.primStat.statHash === 3897883278 ? 'Defense' : // armor item
           vm.source.primStat.statHash === 368428387 ?  'Attack' :  // weapon item
                                                        'Unknown'; // new item?
-        vm.wildcardMaterialIcon = item.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1' :
+        vm.wildcardMaterialIcon = item.bucket.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1' :
           vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3' : '972ae2c6ccbf59cde293a2ed50a57a93';
         vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
         // 2 motes, or 10 armor/weapon materials
-        vm.wildcardMaterialCost = item.sort === 'General' ? 2 : 10;
+        vm.wildcardMaterialCost = item.bucket.sort === 'General' ? 2 : 10;
       },
 
       selectItem: function(item, e) {
@@ -86,6 +86,10 @@
       },
 
       transferItems: function() {
+        if (vm.target.notransfer) {
+          toaster.pop('error', 'Transfer infusion material', vm.target.name + " can't be moved.");
+          return $q.resolve();
+        }
         var store = dimStoreService.getStore(vm.source.owner);
         var items = {};
         var key = vm.target.type.toLowerCase();
@@ -97,7 +101,7 @@
         items[vm.source.type.toLowerCase()].push(vm.source);
 
         items['material'] = [];
-        if (vm.sort === 'General') {
+        if (vm.bucket.sort === 'General') {
           // Mote of Light
           items['material'].push({
             id: '0',

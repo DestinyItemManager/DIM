@@ -1,7 +1,7 @@
 {
   "name": "dim",
   "description": "An item manager for Destiny.",
-  "version": "3.7.3",
+  "version": "3.7.4",
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "repository": {
     "type": "git",
@@ -10,7 +10,6 @@
   "dependencies": {
     "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git",
     "AngularJS-Toaster": "https://github.com/DestinyItemManager/AngularJS-Toaster.git#master",
-    "ScrollToFixed": "https://github.com/bigspotteddog/ScrollToFixed.git#~1.0.6",
     "angular": "~1.5.3",
     "angular-animate": "1.5.x",
     "angular-chrome-storage": "infomofo/angular-chrome-storage",

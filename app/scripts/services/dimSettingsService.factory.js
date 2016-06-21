@@ -24,8 +24,7 @@
         showElements: false,
         characterOrder: 'mostRecent',
         itemSort: 'primaryStat',
-        charCol: 3,
-        vaultCol: 4
+        charCol: 3
       };
 
       if (currentSettings !== null) {

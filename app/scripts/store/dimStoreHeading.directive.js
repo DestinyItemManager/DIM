@@ -16,7 +16,7 @@
       scope: {
         'store': '=storeData'
       },
-      link: Link,
+      restrict: 'E',
       template: [
         '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',
         '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.store.icon + \')\' }"></div>',
@@ -34,7 +34,7 @@
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
         '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',
         '<div ng-if="vm.store.isVault" class="vault-capacity">',
-        '  <div class="vault-bucket" title="{{sort}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.sortSize" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
+        '  <div class="vault-bucket" title="{{sort}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
         '    <div class="vault-bucket-tag">{{sort.substring(0,1)}}</div>',
         '    <div class="vault-fill-bar">',
         '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',
@@ -43,23 +43,6 @@
         '</div>'
       ].join('')
     };
-
-    function Link(scope, element) {
-      var vm = scope.vm;
-      $(document).ready(function() {
-        element.scrollToFixed({
-          marginTop: 61,
-          fixed: function() {
-            $(document.body).addClass('something-is-sticky');
-            $(this).addClass('fixed-header');
-          },
-          unfixed: function() {
-            $(document.body).removeClass('something-is-sticky');
-            $(this).removeClass('fixed-header');
-          }
-        });
-      });
-    }
   }
 
   StoreHeadingCtrl.$inject = ['$scope', 'ngDialog'];
@@ -67,16 +50,6 @@
   function StoreHeadingCtrl($scope, ngDialog) {
     var vm = this;
     var dialogResult = null;
-
-    vm.sortSize = {};
-    if (vm.store.isVault) {
-      // TODO: do this by buckets
-      $scope.$watchCollection('vm.store.items', function() {
-        ['Weapons', 'Armor', 'General'].forEach(function(sort) {
-          vm.sortSize[sort] = count(vm.store.items, {sort: sort});
-        });
-      });
-    }
 
     function getLevelBar() {
       if (vm.store.percentToNextLevel) {
