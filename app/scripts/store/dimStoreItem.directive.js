@@ -40,6 +40,7 @@
       controllerAs: 'vm',
       link: Link,
       replace: true,
+      restrict: 'E',
       scope: {
         'store': '=storeData',
         'item': '=itemData'
@@ -48,9 +49,11 @@
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
-        '  class="item">',
+        '  class="item"',
+        '  ng-class="{',
+        "    'search-hidden': !vm.item.visible",
+        '  }">',
         '  <div class="item-elem" ng-class="{',
-        "    'search-hidden': !vm.item.visible,",
         "    'complete': vm.item.complete",
         '  }">',
         '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete && !vm.item.complete">',
@@ -200,20 +203,7 @@
   function StoreItemCtrl($rootScope, settings, $scope) {
     var vm = this;
 
-    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.type : vm.item.type;
-    switch (vm.item.type) {
-    case 'Lost Items':
-    case 'Missions':
-    case 'Bounties':
-    case 'Quests':
-    case 'Special Orders':
-    case 'Messages':
-      {
-        vm.draggable = false;
-        break;
-      }
-    default:
-      vm.draggable = true;
-    }
+    vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
+    vm.draggable = (vm.item.equipment || vm.item.location.hasTransferDestination) && !vm.item.location.inPostmaster;
   }
 })();

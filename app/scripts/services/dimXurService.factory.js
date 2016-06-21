@@ -51,6 +51,9 @@
               });
             });
           }
+        }, function() {
+          self.available = false;
+          self.itemCategories = {};
         });
       }
     };

@@ -43,7 +43,7 @@
                   // If there's no room on other characters to move out of the vault,
                   // give up entirely.
                   if (!_.any(otherStores, function(store) {
-                    return _.any(dimCategory[item.sort], function(category) {
+                    return _.any(dimCategory[item.bucket.sort], function(category) {
                       return store.spaceLeftForItem({ type: category }) > 0;
                     });
                   })) {
@@ -70,7 +70,7 @@
         var self = this;
         var store = dimStoreService.getStore(self.store.id);
         var engrams = _.select(store.items, function(i) {
-          return i.isEngram() && i.sort !== 'Postmaster';
+          return i.isEngram() && !i.location.inPostmaster;
         });
 
         if (engrams.length === 0) {
@@ -102,7 +102,7 @@
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
-            i.sort !== 'Postmaster' &&
+            !i.location.inPostmaster &&
             _.contains(engramTypes, i.type);
         });
         var itemsByType = _.groupBy(applicableItems, 'type');

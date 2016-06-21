@@ -6,6 +6,7 @@
       white-space: nowrap;
     }
   </style>
+<!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
   <form class="settings">
     <table>
       <tr>
@@ -24,7 +25,7 @@
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
-          <input type="checkbox" id="condensedItems" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
+          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
         </td>
       </tr>
       <tr>
@@ -48,7 +49,7 @@
           <label for="showElements" title="Show elemental damage icons on weapons.">Show elemental damage icons on weapons</label>
         </td>
         <td>
-          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')"/>
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')" />
         </td>
       </tr>
       <tr>
@@ -57,7 +58,7 @@
         </td>
         <td>
           <label>
-            <input type="radio" id="itemSort" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
           <br>
           <label>
             <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary" ng-change="vm.save('itemSort')">Rarity, then primary stat</label>
@@ -75,14 +76,6 @@
         </td>
         <td>
           <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required ng-change="vm.save('charCol')"></select>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label for="vaultCol" title="Select the number of columns for character inventory.">Vault Columns</label>
-        </td>
-        <td>
-          <select id="vaultCol" ng-model="vm.settings.vaultCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required ng-change="vm.save('vaultCol')"></select>
         </td>
       </tr>
       <tr>

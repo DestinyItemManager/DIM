@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$q', '$rootScope'];
+  SettingsService.$inject = ['$q', '$rootScope', 'SyncService'];
 
-  function SettingsService($q, $rootScope) {
+  function SettingsService($q, $rootScope, SyncService) {
     var settingState;
     var currentSettings = null;
 
@@ -24,8 +24,7 @@
         showElements: false,
         characterOrder: 'mostRecent',
         itemSort: 'primaryStat',
-        charCol: 3,
-        vaultCol: 4
+        charCol: 3
       };
 
       if (currentSettings !== null) {
@@ -55,7 +54,7 @@
             resolve(currentSettings);
           }
 
-          chrome.storage.sync.get(null, processStorageSettings);
+          SyncService.get().then(processStorageSettings);
         });
       }
     }
@@ -87,37 +86,21 @@
           var kvp = {};
           kvp[key] = value;
 
-          return $q(function(resolve, reject) {
-            chrome.storage.sync.set(data, function(e) {
-              if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-              } else {
-                $rootScope.$apply(function() {
-                  $rootScope.$broadcast('dim-settings-updated', kvp);
-                });
-                resolve(true);
-              }
-            });
-          });
+          data["settings-v1.0"] = settings;
+
+          SyncService.set(data);
+          $rootScope.$broadcast('dim-settings-updated', kvp);
         });
     }
 
     function saveSettings() {
       return getSetting()
         .then(function(settings) {
-          var data = {
-            "settings-v1.0": settings
-          };
+          var data = {};
 
-          return $q(function(resolve, reject) {
-            chrome.storage.sync.set(data, function(e) {
-              if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-              } else {
-                resolve(true);
-              }
-            });
-          });
+          data["settings-v1.0"] = settings;
+
+          SyncService.set(data);
         });
     }
   }

@@ -273,7 +273,7 @@
     // A dynamic loadout set up to level weapons and armor
     vm.gatherEngramsLoadout = function gatherEngramsLoadout($event) {
       var engrams = _.select(dimItemService.getItems(), function(i) {
-        return i.isEngram() && i.sort !== 'Postmaster';
+        return i.isEngram() && !i.location.inPostmaster;
       });
 
       if (engrams.length === 0) {

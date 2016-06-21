@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimInfoService', InfoService);
 
-  InfoService.$inject = ['toaster', '$http'];
+  InfoService.$inject = ['toaster', '$http', 'SyncService'];
 
-  function InfoService(toaster, $http) {
+  function InfoService(toaster, $http, SyncService) {
     return {
       show: function(id, content) {
         content = content || {};
@@ -15,7 +15,7 @@
         content.body = content.body || '';
         content.hide = content.hide || 'Hide This Popup';
 
-        function showToaster(body) {
+        function showToaster(body, save) {
           toaster.pop({
             type: content.type,
             title: content.title,
@@ -36,26 +36,27 @@
             onHideCallback: function() {
               if($('#info-' + id)
                 .is(':checked')) {
-                var save = {};
                 save['info.' + id] = 1;
-                chrome.storage.sync.set(save, function(e) {});
+                SyncService.set(save);
               }
             }
           });
         }
 
-        chrome.storage.sync.get('info.' + id, function(data) {
-          if(_.isNull(data) || _.isEmpty(data)) {
-            if(content.view) {
-              $http.get(content.view).then(function(changelog) {
-                showToaster(changelog.data);
-              });
-            } else {
-              showToaster(content.body);
-            }
+        SyncService.get().then(function(data) {
+          if(!data || data['info.' + id]) {
+            return;
+          }
+          if(content.view) {
+            $http.get(content.view).then(function(changelog) {
+              showToaster(changelog.data, data);
+            });
+          } else {
+            showToaster(content.body, data);
           }
         });
       }
     };
   }
 })();
+

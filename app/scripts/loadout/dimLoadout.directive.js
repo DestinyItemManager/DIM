@@ -94,9 +94,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope','dimStoreService'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope, dimStoreService) {
     var vm = this;
 
     vm.types = _.chain(dimCategory)
@@ -212,7 +212,7 @@
               .values()
               .flatten()
               .findWhere({
-                sort: item.sort,
+                sort: item.bucket.sort,
                 tier: dimItemTier.exotic,
                 equipped: true
               })
