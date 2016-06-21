@@ -18,7 +18,7 @@ module.exports = function(grunt) {
           src: [
             '**'
           ],
-          dest: 'dist/chrome',
+          dest: 'dist/chrome'
         }]
       },
       firefox: {
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
           src: [
             '**'
           ],
-          dest: 'dist/firefox',
+          dest: 'dist/firefox'
         }]
       },
     },
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
     replace: {
       // Replace all instances of $DIM_VERSION with the version number from package.json
       main_version: {
-        src: ['dist/chrome/**/*.{json,html,js}'],
+        src: ['dist/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: '$DIM_VERSION',
@@ -92,19 +92,8 @@ module.exports = function(grunt) {
       },
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
       // with a beta version based on the current time.
-      beta_version_chrome: {
-        src: ['dist/chrome/**/*.{json,html,js}'],
-        overwrite: true,
-        replacements: [{
-          from: '$DIM_VERSION',
-          to: betaVersion
-        }, {
-          from: pkg.version.toString(),
-          to: betaVersion
-        }]
-      },
-      beta_version_firefox: {
-        src: ['dist/firefox/**/*.{json,html,js}'],
+      beta_version: {
+        src: ['dist/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
           from: '$DIM_VERSION',
@@ -226,7 +215,7 @@ module.exports = function(grunt) {
   grunt.registerTask('publish_chrome_beta', [
     'build',
     'copy:beta_icons_chrome',
-    'replace:beta_version_chrome',
+    'replace:beta_version',
     'compress:chrome',
     'webstore_upload:beta'
   ]);
@@ -234,7 +223,7 @@ module.exports = function(grunt) {
   grunt.registerTask('publish_firefox_beta', [
     'build',
     'copy:beta_icons_firefox',
-    'replace:beta_version_firefox',
+    'replace:beta_version',
     'compress:firefox'
   ]);
 

@@ -304,6 +304,13 @@
                 return i.location.id;
               });
 
+              // Fill in any missing buckets
+              _.values(buckets.byType).forEach(function(bucket) {
+                if (!store.buckets[bucket.id]) {
+                  store.buckets[bucket.id] = [];
+                }
+              });
+
               if (store.isVault) {
                 store.vaultCounts = {};
                 ['Weapons', 'Armor', 'General'].forEach(function(category) {
