@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimInfoService', 'chromeStorage'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimInfoService', 'SyncService'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimInfoService, chromeStorage) {
+  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimInfoService, SyncService) {
     var _stores = [];
     var _oldItems = {};
     var _currItems = {};
@@ -341,18 +341,17 @@
         })
         .then(function(stores) {
           _currItems = buildItemMap(stores);
-          _newItems = clearStaleNewItems(_currItems,_newItems);
+          _newItems = clearStaleNewItems(_currItems, _newItems);
+          SyncService.set({newItems: _.keys(_newItems)});
           
           var list_str = '';
-          for(var id in _newItems) {
-            var val = _newItems[id];
-            list_str += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
-          }
+          _.each(_newItems, function(val, id) {
+              list_str += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
+          });
           if (list_str) {
             dimInfoService.show('newitemsbox', {
               title: 'New items found',
-              body: ['<p>The following items are new:</p>',
-                     '<ul>' + list_str + '</ul>'].join(''),
+              body: '<p>The following items are new:</p><ul>' + list_str + '</ul>',
               hide: 'Don\'t show me new item notifications'
             }, 10000);
           }
@@ -517,12 +516,11 @@
       if (_.isEmpty(_stores)) {
         createdItem.isNew = false;
       } else {
-        createdItem.isNew = (typeof cachedNewItems[createdItem.id] !== 'undefined')? true : false;
+        createdItem.isNew = _.contains(cachedNewItems, createdItem.id);
         if (createdItem.isNew === false) {
             createdItem.isNew = isItemNew(createdItem.id);
             if (createdItem.isNew) {
               _newItems[createdItem.id] = {name: createdItem.name, type: createdItem.type};
-              chromeStorage.set(createdItem.id, true);
             }
         }
       }
@@ -852,59 +850,48 @@
     }
     
     function buildItemMap(stores) {
-      var item_map = {};
+      var itemMap = {};
       _.each(stores, function(store, id) {
         var items = _.each(store.items, function(item) {
-            item_map[item.id] = {name: item.name, type: item.type};
+            itemMap[item.id] = {name: item.name, type: item.type};
         });
       });
-      return item_map;
+      return itemMap;
     }
     
     function clearStaleNewItems(currItems, newItems) {
       var newItemsClean = {};
-      for(var newItem in newItems) {
-        if (typeof currItems[newItem] === 'undefined') {
-          chromeStorage.drop(newItem);
-        } else {
-          newItemsClean[newItem] = newItems[newItem];
-        }
-      }
+      _.each(newItems, function(val, id) {
+        newItemsClean[id] = val;
+      });
       return newItemsClean;
     }
     
     function isItemNew(newId) {
-        if(newId === '0') { return false; } // Don't worry about general items and consumables
-        return typeof _oldItems[newId] === 'undefined';
+      // Don't worry about general items and consumables
+        return newId !== '0' && !_oldItems[newId];
     }
     
     function dropNewItem(item) {
       delete _newItems[item.id];
-      chromeStorage.drop(item.id);
+      SyncService.set({newItems: _.keys(_newItems)});
       item.isNew = false;
     }
     
     function getCachedNewItems() {
-      // A little tricky here. We have to use chrome.storage.local directly here because the wrapper library
-      // doesn't support a method to get all values in the cache.
       var deferred = $q.defer();
-      chrome.storage.local.get(null, function(allVals) {
-        var filtered = {};
-        _.each(allVals, function( val, key ) {
-          if ( key != 'platformType' ) {
-            filtered[key] = true;
-          }
-        });
-        deferred.resolve(filtered);
+      SyncService.get().then(function processCachedNewItems(data) {
+        var newItems = {};
+        if (_.has(data, "newItems")) {
+          newItems = data["newItems"];
+        }
+        deferred.resolve(newItems);
       });
       return deferred.promise;
     }
     
     function clearNewItems() {
-      chromeStorage.get('platformType').then(function(platformType) {
-        chromeStorage.clearCache();
-        chromeStorage.set('platformType', platformType);
-      });
+      SyncService.set({newItems: {}});
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level

@@ -31,9 +31,9 @@
 
 
 
-  StoreItem.$inject = ['dimStoreService', 'chromeStorage', 'ngDialog', 'dimLoadoutService', '$rootScope'];
+  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
-  function StoreItem(dimStoreService, chromeStorage, ngDialog, dimLoadoutService, $rootScope) {
+  function StoreItem(dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -64,7 +64,6 @@
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <img ng-if="vm.item.isNew" class="new_overlay" src="/images/overlay.svg" height="44" width="44"/>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
-        '    <div ng-if="::vm.item.dmg" class="damage-type damage-{{::vm.item.dmg}}"></div>',
         '  </div>',
         '</div>'
       ].join('')
