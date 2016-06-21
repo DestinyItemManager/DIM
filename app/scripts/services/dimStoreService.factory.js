@@ -881,7 +881,7 @@
     function getCachedNewItems() {
       var deferred = $q.defer();
       SyncService.get().then(function processCachedNewItems(data) {
-        var newItems = {};
+        var newItems = [];
         if (_.has(data, "newItems")) {
           newItems = data["newItems"];
         }
@@ -891,7 +891,7 @@
     }
     
     function clearNewItems() {
-      SyncService.set({newItems: {}});
+      SyncService.set({newItems: []});
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level
