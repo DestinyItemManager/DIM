@@ -100,6 +100,17 @@
       return a;
     }
 
+
+    function openBungieNetTab(tabs) {
+      if (_.size(tabs) === 0) {
+        chrome.tabs.create({
+          url: 'http://bungie.net',
+          active: false
+        });
+      }
+    }
+
+
     /************************************************************************************************************************************/
 
     function getBnetCookies() {

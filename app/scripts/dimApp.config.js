@@ -24,8 +24,8 @@
 
 
   angular.module('dimApp')
-    .run(['$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'dimInfoService',
-      function($rootScope, loadingTracker, $timeout, toaster, $http, dimInfoService) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
         //1 Hour
@@ -35,7 +35,7 @@
           var currentTime = Date.now();
 
           //Has This User Been Inactive For More Than An Hour
-          return((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
+          return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
         };
 
         $rootScope.trackActivity = function() {
@@ -45,10 +45,14 @@
         //Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
+        $window.initgapi = function() {
+          SyncService.init();
+        }
+
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         dimInfoService.show('20160603v374', {
           title: 'DIM v3.7.4 Released',
-          view: 'views/changelog-toaster.html?v=v3.7.4',
+          view: 'views/changelog-toaster.html?v=v3.7.4'
         });
       }
     ]);
@@ -102,7 +106,7 @@ if (typeof window.onerror == "object") {
 
   window.onerror = function customErrorHandler(errorMessage, url, lineNumber, columnNumber, errorObject) {
     var exceptionDescription = errorMessage;
-    if(typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
+    if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
       exceptionDescription = errorObject.message;
     }
     //
@@ -116,7 +120,7 @@ if (typeof window.onerror == "object") {
     // ]);
 
     // If the previous "window.onerror" callback can be called, pass it the data:
-    if(typeof originalWindowErrorCallback === 'function') {
+    if (typeof originalWindowErrorCallback === 'function') {
       return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
     }
     // Otherwise, Let the default handler run:
