@@ -379,6 +379,20 @@ body {
   }
 }
 
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(228, 228, 228, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4E4E4;
+  border-radius: 3px;
+}
+
 #system {
   outline: none;
   margin-top: 1px;
@@ -927,9 +941,11 @@ dim-store-heading {
 }
 
 .ngdialog.loadout-popup {
+  position: absolute;
   display: block;
   width: 100%;
-  position: absolute;
+  max-height: 465px;
+  overflow: auto;
   z-index: 2;
   top: 0;
   bottom: initial;
@@ -937,12 +953,8 @@ dim-store-heading {
   padding: 0;
   border: solid 1px #131313;
   border-top: none;
-  background-color: #5b6e6c;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
-  width: 100%;
-  position: absolute;
-  z-index: 2;
   cursor: pointer;
 }
 
@@ -1231,7 +1243,6 @@ rzslider {
   .stat-box-row {
     overflow: hidden;
     margin-bottom: 4px;
-    width: 100%;
     display: table-row;
   }
   .stat-box-cell {
@@ -1278,9 +1289,6 @@ rzslider {
     &.lower-stats {
       background-color: #985C58;
     }
-  }
-  .stat-box-outer span:last-child {
-    padding-left: 5px;
   }
 }
 

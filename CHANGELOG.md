@@ -1,10 +1,20 @@
 # Next
 
-* Removed the option to hide or show the primary stat of items - it's always shown now.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
 * The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
 * Section headers don't repeat themselves anymore.
 * Returning from the min-max tool no longer greets you with a blank, item-less screen.
+
+# 3.7.4
+
+* Removed the option to hide or show the primary stat of items - it's always shown now.
+* Add mode selection full/fast for users willing to wait for all best sets.
+* Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
+* Changing the character sort order now applies live, rather than requiring a refresh.
+* Use most recently logged in player to start with loadout builder.
+* Search queries will exlude the token `" and "` as some users were including that when chaining multiple filters.
+* Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
+* Consolidate beta icons to the icons folder.
 
 # 3.7.3
 
