@@ -113,7 +113,6 @@
             data[l.id] = l;
           });
 
-          console.log('saving', data);
           SyncService.set(data);
 
           deferred.resolve(loadoutPrimitives);
