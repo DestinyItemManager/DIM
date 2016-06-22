@@ -204,16 +204,15 @@
         }
         var item = _.findWhere(buckets[vm.active][type], {id: dropped_id});
         vm.lockeditems[type] = item;
-        var bestarmor = getBestArmor(buckets[vm.active], vm.lockeditems);
-        vm.highestsets = vm.getSetBucketsStep(vm.active, bestarmor);
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
           vm.lockedchanged = true;
         }
       },
       onRemove: function(removed_type) {
         vm.lockeditems[removed_type] = null;
-        var bestarmor = getBestArmor(buckets[vm.active], vm.lockeditems);
-        vm.highestsets = vm.getSetBucketsStep(vm.active, bestarmor);
+
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
           vm.lockedchanged = true;
         }
@@ -236,7 +235,8 @@
           equipAll: true
         });
       },
-      getSetBucketsStep: function(activeGaurdian, bestArmor) {
+      getSetBucketsStep: function(activeGaurdian) {
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems);
         var helms = bestArmor['Helmet'] || [];
         var gaunts = bestArmor['Gauntlets'] || [];
         var chests = bestArmor['Chest'] || [];
@@ -362,7 +362,7 @@
       normalizeBuckets: function() {
         vm.ranked = buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
-        vm.highestsets = vm.getSetBucketsStep(vm.active, getBestArmor(buckets[vm.active], vm.lockeditems));
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       getBonus: dimStoreService.getBonus,
       getStore: dimStoreService.getStore,
