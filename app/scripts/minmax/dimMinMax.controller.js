@@ -117,12 +117,10 @@
     }
 
     function validSet(gearset) {
-      var exoticCount = 0;
-      exoticCount += ((gearset.Helmet.item.tier === 'Exotic')? 1 : 0);
-      exoticCount += ((gearset.Gauntlets.item.tier === 'Exotic')? 1 : 0);
-      exoticCount += ((gearset.Chest.item.tier === 'Exotic')? 1 : 0);
-      exoticCount += ((gearset.Leg.item.tier === 'Exotic')? 1 : 0);
-      return exoticCount < 2;
+      return ((gearset.Helmet.item.tier === 'Exotic') +
+      (gearset.Gauntlets.item.tier === 'Exotic') +
+      (gearset.Chest.item.tier === 'Exotic') +
+      (gearset.Leg.item.tier === 'Exotic')) < 2;
     }
 
     function getBuckets(items) {
@@ -264,16 +262,7 @@
           return null;
         }
 
-        var set_map = {}, stat;
-        var load_stats = function(set, hash, target_type) {
-          var total = 0;
-          _.each(set.armor, function(armor) {
-            var stat = armor.item.normalStats[hash];
-            total += stat.scaled + (armor.bonus_type == target_type ? stat.bonus : 0);
-          });
-          return total;
-        };
-
+        var set_map = {}, int, dis, str;
         var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length) || 1;
 
         function step(activeGaurdian, h, g, c, l, ci, gh, ar, processed_count) {
@@ -289,12 +278,19 @@
                           var set = {armor: armor, int_val: 0, disc_val: 0, str_val: 0};
 
                           _.each(set.armor, function(armor) {
-                            stat = armor.item.normalStats[144602215];
-                            set.int_val += stat.scaled + (armor.bonus_type == 'int' ? stat.bonus : 0);
-                            stat = armor.item.normalStats[1735777505];
-                            set.disc_val += stat.scaled + (armor.bonus_type == 'disc' ? stat.bonus : 0);
-                            stat = armor.item.normalStats[4244567218];
-                            set.str_val += stat.scaled + (armor.bonus_type == 'str' ? stat.bonus : 0);
+                            armor.bonus_type
+                            int = armor.item.normalStats[144602215];
+                            set.int_val += int.scaled;
+                            dis = armor.item.normalStats[1735777505];
+                            set.disc_val += dis.scaled;
+                            str = armor.item.normalStats[4244567218];
+                            set.str_val += str.scaled;
+
+                            switch(armor.bonus_type) {
+                              case 'int': set.int_val += int.bonus; break;
+                              case 'disc': set.disc_val += dis.bonus; break;
+                              case 'str': set.str_val += str.bonus; break;
+                            }
                           });
 
                           var int_level = Math.min(Math.floor(set.int_val/60), 5);
@@ -309,16 +305,16 @@
                         }
 
                         processed_count++;
-                        if((processed_count%5000) == 0) {
-                          // If active gaurdian or page is changed then stop processing combinations
-                          if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
-                            vm.lockedchanged = false;
-                            return;
-                          }
-                          vm.progress = processed_count/combos;
-                          $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
-                          return;
-                        }
+//                        if((processed_count%10000) == 0) {
+//                          // If active gaurdian or page is changed then stop processing combinations
+//                          if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
+//                            vm.lockedchanged = false;
+//                            return;
+//                          }
+//                          vm.progress = processed_count/combos;
+//                          $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
+//                          return;
+//                        }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
           var tiers = _.each(_.groupBy(Object.keys(set_map), function(set) {
@@ -345,14 +341,12 @@
         }
         console.time('elapsed');
         vm.lockedchanged = false;
-//        step(activeGaurdian, 0,0,0,0,0,0,0,0)
-        $timeout(step, 0, true, activeGaurdian, 0,0,0,0,0,0,0,0);
+        step(activeGaurdian, 0,0,0,0,0,0,0,0)
+//        $timeout(step, 0, true, activeGaurdian, 0,0,0,0,0,0,0,0);
         return set_map;
       },
       normalizeBuckets: function(resetLocked = false) {
         vm.ranked = buckets[vm.active];
-
-        console.log(vm.ranked)
 
         if(resetLocked) {
           vm.lockeditems.Helmet = vm.lockeditems.Gauntlets = vm.lockeditems.Chest = null;
