@@ -5,9 +5,8 @@
     .factory('dimLoadoutService', LoadoutService);
 
 
-  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService','dimActionQueue'];
+  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue'];
   function LoadoutService($q, $rootScope, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
-
     var _loadouts = [];
 
     return {
@@ -156,7 +155,7 @@
           }
 
           // Handle overwriting an old loadout
-          var existingLoadoutIndex = _.findIndex(loadouts, {id: loadout.id});
+          var existingLoadoutIndex = _.findIndex(loadouts, { id: loadout.id });
           if (existingLoadoutIndex > -1) {
             loadouts[existingLoadoutIndex] = loadout;
           } else {

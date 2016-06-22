@@ -9,7 +9,7 @@
         'Class',
         'Primary',
         'Special',
-        'Heavy',
+        'Heavy'
       ],
       Armor: [
         'Helmet',
@@ -28,12 +28,12 @@
         'Emote',
         'Ship',
         'Vehicle',
-        'Horn',
+        'Horn'
       ],
       Progress: [
         'Bounties',
         'Quests',
-        'Missions',
+        'Missions'
       ],
       Postmaster: [
         'Lost Items',

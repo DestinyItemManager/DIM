@@ -170,7 +170,7 @@
                 addFilter(text);
               });
             });
-          //<span onclick="addFilter('is:arc')">
+          // <span onclick="addFilter('is:arc')">
         }, 250);
 
         filterResult.closePromise.then(function() {
@@ -200,8 +200,8 @@
       var secondsToWait = 360;
 
       $rootScope.autoRefreshTimer = $interval(function() {
-        //Only Refresh If We're Not Already Doing Something
-        //And We're Not Inactive
+        // Only Refresh If We're Not Already Doing Something
+        // And We're Not Inactive
         if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
           refresh();
         }

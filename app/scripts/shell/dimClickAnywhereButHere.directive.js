@@ -11,7 +11,7 @@
         var handler = function(event) {
           if (!element[0].contains(event.target)) {
             scope.$apply(attr.dimClickAnywhereButHere);
-            //scope.callback(event);
+            // scope.callback(event);
           }
         };
 

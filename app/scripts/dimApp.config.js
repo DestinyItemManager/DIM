@@ -28,13 +28,13 @@
       function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
-        //1 Hour
+        // 1 Hour
         $rootScope.inactivityLength = 60 * 60 * 1000;
 
         $rootScope.isUserInactive = function() {
           var currentTime = Date.now();
 
-          //Has This User Been Inactive For More Than An Hour
+          // Has This User Been Inactive For More Than An Hour
           return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
         };
 
@@ -42,7 +42,7 @@
           $rootScope.lastActivity = Date.now();
         };
 
-        //Track Our Initial Activity of Starting the App
+        // Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
         $window.initgapi = function() {

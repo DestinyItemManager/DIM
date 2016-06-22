@@ -462,7 +462,7 @@
       return promise;
     }
 
-    //Handle "DestinyUniquenessViolation" (1648)
+    // Handle "DestinyUniquenessViolation" (1648)
     function handleUniquenessViolation(response, item, store) {
       if (response && response.data && response.data.ErrorCode === 1648) {
         toaster.pop('warning', 'Item Uniqueness', [
@@ -548,7 +548,6 @@
 
     // Returns a list of items that were successfully equipped
     function equipItems(store, items) {
-
       // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
       items = _.sortBy(items, function(i) {
         return i.tier === 'Exotic' ? 1 : 0;
@@ -592,7 +591,7 @@
           var data = response.data.Response;
           store.updateCharacterInfo(data.summary);
           return _.select(items, function(i) {
-            var item = _.find(data.equipResults, {itemInstanceId: i.id});
+            var item = _.find(data.equipResults, { itemInstanceId: i.id });
             return item && item.equipStatus === 1;
           });
         });

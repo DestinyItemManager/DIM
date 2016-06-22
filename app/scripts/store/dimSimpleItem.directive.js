@@ -34,5 +34,4 @@
     var vm = this;
     // nothing to do here...only needed for bindToController
   }
-
 })();

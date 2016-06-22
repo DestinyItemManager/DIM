@@ -19,7 +19,7 @@
       '      <span class="item-stat item-faction" ng-bind="faction.level"></span>',
       '    </span>',
       '  </div>',
-      '</div>',
+      '</div>'
     ].join('')
   };
 

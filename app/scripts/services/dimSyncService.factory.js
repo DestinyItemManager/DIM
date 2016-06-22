@@ -39,7 +39,6 @@
 
       // load the drive client.
       gapi.client.load('drive', 'v2', function() {
-
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
           if (list.code === 401) {
@@ -225,7 +224,7 @@
           cached = data;
           deferred.resolve(cached);
         });
-      } //else get from chrome local
+      } // else get from chrome local
       // else if(chrome.storage && chrome.storage.local) {
       //   chrome.storage.local.get(null, function(data) {
       //     cached = data;

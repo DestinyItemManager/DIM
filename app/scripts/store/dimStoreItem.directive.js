@@ -1,5 +1,3 @@
-/*jshint -W027*/
-
 (function() {
   'use strict';
 
@@ -151,13 +149,13 @@
         scope.$watchGroup([
           'vm.item.percentComplete',
           'vm.item.complete'], function() {
-            processBounty(vm, vm.item);
-          });
+          processBounty(vm, vm.item);
+        });
       } else if (vm.item.maxStackSize > 1) {
         scope.$watchGroup([
           'vm.item.amount'], function() {
-            processStackable(vm, vm.item);
-          });
+          processStackable(vm, vm.item);
+        });
       } else {
         scope.$watch('vm.item.primStat.value', function() {
           processItem(vm, vm.item);

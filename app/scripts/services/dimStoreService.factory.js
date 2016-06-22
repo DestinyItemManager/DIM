@@ -22,10 +22,10 @@
     });
 
     // Cooldowns
-    var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
-    var cooldownsSuperB  = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
+    var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
+    var cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
-    var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
+    var cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
@@ -498,7 +498,7 @@
         typeName: itemDef.itemTypeName,
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
-        //perks: item.perks,
+        // perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
         maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
@@ -617,8 +617,8 @@
               // paid once per row.
               (exclusiveInColumn &&
                _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
-                return item.nodes[nodeIndex].isActivated;
-              }));
+                 return item.nodes[nodeIndex].isActivated;
+               }));
 
         // Calculate relative XP for just this node
         var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
@@ -656,7 +656,7 @@
           // "featured" on an abbreviated info panel, as in the
           // game. 0 = not featured, positive numbers signify the
           // order of the featured perks.
-          //featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+          // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
           // This list of material requirements to unlock the
           // item are a mystery. These hashes don't exist anywhere in
@@ -664,19 +664,19 @@
           // object doesn't say how much of the material is
           // needed. There's got to be some missing DB somewhere with
           // this info.
-          //materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+          // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
 
           // These are useful for debugging or searching for new properties,
           // but they don't need to be included in the result.
-          //talentNodeGroup: talentNodeGroup,
-          //talentNodeSelected: talentNodeSelected,
-          //itemNode: node
+          // talentNodeGroup: talentNodeGroup,
+          // talentNodeSelected: talentNodeSelected,
+          // itemNode: node
         };
       });
       gridNodes = _.compact(gridNodes);
 
       // This can be handy for visualization/debugging
-      //var columns = _.groupBy(gridNodes, 'column');
+      // var columns = _.groupBy(gridNodes, 'column');
 
       var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
       var totalXPRequired = xpToReachLevel(maxLevelRequired);
@@ -749,7 +749,7 @@
         }
         return ((quality.min === quality.max || light === 335) ?
                 quality.min :
-                (quality.min + "%-" +  quality.max)) + '%';
+                (quality.min + "%-" + quality.max)) + '%';
       }
 
       var maxLight = 335;
@@ -949,7 +949,6 @@
     }
 
     function buildStats(item, itemDef, statDef, grid, type) {
-
       if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
@@ -958,10 +957,10 @@
       var activeArmorNode;
       if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
-          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
+          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); // [1034209669, 1263323987, 193091484]
         });
         if (armorNodes) {
-          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || { hash: 0 };
+          activeArmorNode = _.findWhere(armorNodes, { activated: true }) || { hash: 0 };
         }
       }
 
@@ -1098,7 +1097,7 @@
       return 'unknown';
     }
 
-    //---- following code is from https://github.com/DestinyTrialsReport
+    // following code is from https://github.com/DestinyTrialsReport
     function getAbilityCooldown(subclass, ability, tier) {
       if (ability === 'STAT_INTELLECT') {
         switch (subclass) {

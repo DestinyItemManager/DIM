@@ -235,7 +235,7 @@
           });
           return dimItemService.moveTo(item, move.target, false, move.amount);
         }));
-      };
+      }
 
       var promise = applyMoves(vaultMoves)
             .then(function() {

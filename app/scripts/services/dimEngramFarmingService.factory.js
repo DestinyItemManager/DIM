@@ -34,7 +34,7 @@
                   return !store.isVault && store.id !== self.store.id;
                 });
 
-                var otherStoresWithSpace =  _.select(otherStores, function(store) {
+                var otherStoresWithSpace = _.select(otherStores, function(store) {
                   return store.spaceLeftForItem(item) > 0;
                 });
                 if (otherStoresWithSpace.length) {
@@ -113,7 +113,7 @@
           // subtract 1 from capacity because we excluded the equipped item
           if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
             // We'll move the lowest-value item to the vault.
-            itemsToMove.push(_.min(_.select(items, { notransfer: false}), function(i) {
+            itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
                 Common: 0,
                 Uncommon: 1,

@@ -94,7 +94,7 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope','dimStoreService'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope', 'dimStoreService'];
 
   function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope, dimStoreService) {
     var vm = this;
@@ -142,7 +142,7 @@
 
         clone.amount = Math.min(clone.amount, $event.shiftKey ? 5 : 1);
 
-        var dupe = _.findWhere(typeInventory, {hash: clone.hash, id: clone.id});
+        var dupe = _.findWhere(typeInventory, { hash: clone.hash, id: clone.id });
 
         var maxSlots = 10;
         if (item.type === 'Material') {

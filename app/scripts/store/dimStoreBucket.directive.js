@@ -26,19 +26,19 @@
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {
           items = _.sortBy(items, function(item) {
             switch (item.tier) {
-            case 'Exotic':
-              return 0;
-            case 'Legendary':
-              return 1;
-            case 'Rare':
-              return 2;
-            case 'Uncommon':
-              return 3;
-            case 'Common':
-              return 4;
-            default:
-              return 5;
-          }
+              case 'Exotic':
+                return 0;
+              case 'Legendary':
+                return 1;
+              case 'Rare':
+                return 2;
+              case 'Uncommon':
+                return 3;
+              case 'Common':
+                return 4;
+              default:
+                return 5;
+            }
           });
         }
         return items;
@@ -73,7 +73,7 @@
         '      drop-channel="{{::vm.dropChannel}}">',
         '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
-        '</div>',
+        '</div>'
       ].join('')
     };
   }

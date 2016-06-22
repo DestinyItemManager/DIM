@@ -5,7 +5,7 @@
     .directive('dimTalentGrid', TalentGrid)
     .filter('talentGridNodes', function() {
       return function(nodes) {
-        return _.filter(nodes || [], {hidden: false});
+        return _.filter(nodes || [], { hidden: false });
       };
     }).filter('bungieIcon', function($sce) {
       return function(icon) {
@@ -50,7 +50,7 @@
         '    <image class="talent-node-img" xlink:href="" ng-attr-xlink:href="{{ node.icon | bungieIcon }}" x="20" y="20" height="96" width="96" transform="scale(0.25)"/>',
         '    <title>{{node.name}}\n{{node.description}}</title>',
         '  </g>',
-'</g>',
+        '</g>',
         '</svg>'
       ].join('')
     };

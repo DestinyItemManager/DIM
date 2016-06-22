@@ -57,7 +57,6 @@
 
     function getActivePlatform() {
       var promise = SyncService.get().then(function(data) {
-
         var previousPlatform = null;
         var active = null;
         var previousPlatformType = null;
@@ -105,7 +104,7 @@
       if (_.isNull(platform)) {
         promise = SyncService.remove('platformType');
       } else {
-        promise = SyncService.set({platformType: platform.type});
+        promise = SyncService.set({ platformType: platform.type });
       }
 
       $rootScope.activePlatformUpdated = true;

@@ -24,28 +24,28 @@
    * values that will set the left-hand to the "match."
    */
   var filterTrans = {
-    dmg:          ['arc', 'solar', 'void', 'kinetic'],
-    type:         ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
-    tier:         ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
-    incomplete:   ['incomplete'],
-    complete:     ['complete'],
-    xpcomplete:   ['xpcomplete'],
+    dmg: ['arc', 'solar', 'void', 'kinetic'],
+    type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
+    tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
+    incomplete: ['incomplete'],
+    complete: ['complete'],
+    xpcomplete: ['xpcomplete'],
     xpincomplete: ['xpincomplete', 'needsxp'],
-    upgraded:     ['upgraded'],
-    classType:    ['titan', 'hunter', 'warlock'],
-    dupe:         ['dupe', 'duplicate'],
-    unascended:   ['unascended', 'unassended', 'unasscended'],
-    ascended:     ['ascended', 'assended', 'asscended'],
-    reforgeable:  ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-    locked:       ['locked'],
-    unlocked:     ['unlocked'],
-    stackable:    ['stackable'],
-    engram:       ['engram'],
-    weaponClass:  ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
-    year:         ['year1', 'year2'],
-    infusable:    ['infusable', 'infuse'],
-    stattype:     ['intellect', 'discipline', 'strength'],
-    new:          ['new']
+    upgraded: ['upgraded'],
+    classType: ['titan', 'hunter', 'warlock'],
+    dupe: ['dupe', 'duplicate'],
+    unascended: ['unascended', 'unassended', 'unasscended'],
+    ascended: ['ascended', 'assended', 'asscended'],
+    reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    locked: ['locked'],
+    unlocked: ['unlocked'],
+    stackable: ['stackable'],
+    engram: ['engram'],
+    weaponClass: ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
+    year: ['year1', 'year2'],
+    infusable: ['infusable', 'infuse'],
+    stattype: ['intellect', 'discipline', 'strength'],
+    new: ['new']
   };
 
   var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
@@ -140,7 +140,7 @@
       var filters = [];
 
       function addPredicate(predicate, filter) {
-        filters.push({predicate: predicate, value: filter});
+        filters.push({ predicate: predicate, value: filter });
       }
 
       _.each(searchTerms, function(term) {
@@ -306,7 +306,7 @@
           return false;
         }
 
-        var operands = ['<=','>=','=','>','<'];
+        var operands = ['<=', '>=', '=', '>', '<'];
         var operand = 'none';
         var result = false;
 
@@ -347,7 +347,7 @@
           return false;
         }
 
-        var operands = ['<=','>=','=','>','<'];
+        var operands = ['<=', '>=', '=', '>', '<'];
         var operand = 'none';
         var result = false;
 
