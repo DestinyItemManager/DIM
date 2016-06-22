@@ -2,8 +2,34 @@
   width: 900px;
   margin: 0 auto;
 
-  .link i.fa {
-    padding-right: 5px;
+  .character-select {
+    cursor: pointer;
+    background-color: gray;
+    height: 100px;
+    width: 250px;
+    padding: 10px;
+    box-shadow: inset 0px 0px 1px black;
+    &:hover {
+      background-color: $orange;
+    }
+    &.selected {
+      box-shadow: none;
+      background-color: $orange;
+    }
+    input {
+      display: none;
+    }
+  }
+
+  .link {
+    color: white;
+    &:hover {
+      cursor: pointer;
+
+    }
+    i.fa {
+      padding-right: 5px;
+    }
   }
 
   .section {
