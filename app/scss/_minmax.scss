@@ -39,21 +39,17 @@
   }
 
   .itemQuality {
+    width: 100%;
     margin-bottom: 20px;
-    margin-left: 5px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     flex-wrap: wrap;
-
-    button {
-      margin-left: 20px;
-    }
   }
 
   .item-container {
     display: inline-block;
-    padding: 3px 0 0 3px;
+    padding-right: 3px;
     float: left;
     margin-left: 10px;
   }
@@ -65,14 +61,14 @@
 
   .locked-item {
     display:inline-block;
-    margin-left:20px;
+    margin-right:20px;
     position:relative;
     float: left;
 
     .empty-item {
       background-color:#656565;
-      width:48px;
-      height:48px;
+      width:44px;
+      height:44px;
       border:2px solid #DDD;
     }
   }
@@ -91,9 +87,24 @@
     line-height:10px;
   }
 
+  dim-stats {
+    display: inline-block;
+    float: left;
+    margin-bottom: 5px;
+    .stats {
+      width: 600px;
+    }
+  }
+  button {
+    margin-left: 15px;
+  }
   .set-item {
     display: inline-block;
-    margin-left: 20px;
+    margin-right: 6px;
+    .talent-grid.smaller {
+      max-width: 70px;
+      max-height: 48px;
+    }
   }
 }
 

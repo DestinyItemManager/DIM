@@ -812,7 +812,7 @@ dim-store-heading {
 
 /* INT/DIS/STR bars below character tile */
 
-.character .stats {
+.stats {
   width: 100%;
   opacity: .8;
   display: flex;
@@ -1225,7 +1225,7 @@ rzslider {
   margin: 5px 10px;
 }
 
-.stats {
+.stat-bars {
   width: 100%;
   display: table;
   border-spacing: 0 4px;

@@ -44,6 +44,17 @@
   function StatsCtrl($scope) {
     var vm = this;
 
+    _.each(vm.stats, function(stat) {
+      stat.normalized = stat.value > 300 ? 300 : stat.value;
+      stat.tier = Math.floor(stat.normalized / 60);
+      stat.tiers = [];
+      stat.remaining = stat.value;
+      for (var t = 0; t < 5; t++) {
+        stat.remaining -= stat.tiers[t] = stat.remaining > 60 ? 60 : stat.remaining;
+      }
+      stat.percentage = +(100 * stat.normalized / 300).toFixed();
+    });
+
     vm.formatTooltip = function(which) {
       var next = ' (' + vm.stats[which].value + '/300)',
           tier = vm.stats[which].tier,

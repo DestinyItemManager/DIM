@@ -17,23 +17,16 @@
   <dim-loadout></dim-loadout>
 
   <p>
-
 <!--
     <label ng-class="{selected: normal.type === bucket}" class='character-select' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
       <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
     </label>
 -->
-
     Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
   </p>
 
   <div class="section">
-    <div class="labels">
-      <div><small>Intellect</small></div>
-      <div><small>Discipline</small></div>
-      <div><small>Strength</small></div>
-    </div>
     <div class="itemQuality">
       <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
@@ -50,9 +43,7 @@
   </div>
 
   <div class="section">
-    <div class="labels">
-      <p>Locked Items</p>
-    </div>
+    <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear.</small></p>
     <div class="itemQuality">
       <div ng-repeat="(type, lockeditem) in normal.lockeditems">
         <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
@@ -73,8 +64,20 @@
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
   </div>
   <div ng-show="normal.progress >= 1">
-    <p>Set Tiers (Int/Dis/Str):
+    <p>Filter sets (Intellect/Discipline/Strength):
       <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
+      <span ng-click='help=!help'>Need help? Click here.</span>
+      <span><ul ng-show="help">
+        <li>Higher Tiers are better<ul>
+          <li>4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)</li>
+          <li>Intellect speeds up Super recharge time</li>
+          <li>Discipline speeds up Grenade recharge time</li>
+          <li>Strength speeds up Melee recharge time</li></ul>
+        </li>
+        <li>Try to find armor that has ammo increasing perks for weapon types that you use.</li>
+        <li>Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.</li>
+      </ul></span>
+<!--
       &nbsp; Order:
       <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
         <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
@@ -84,25 +87,20 @@
         <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
         <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
       </select>
-      &nbsp; <small>Displaying top 20 sets</small>
+-->
     </p>
   </div>
   <div ng-show="normal.progress >= 1">
     <div class="section" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
-      <div class="labels">
-        <div><small>Intellect</small>: <small>{{set.int_val}}</small></div>
-        <div><small>Discipline</small>: <small>{{set.disc_val}}</small></div>
-        <div><small>Strength</small>: <small>{{set.str_val}}</small></div>
-        <div><small>Bonus Type</small>: </div>
-      </div>
+      <div><dim-stats stats="set.stats"></dim-stats><button ng-click="normal.newLoadout(set)">Create Loadout</button></div>
       <div class="itemQuality">
         <span ng-repeat="armorpiece in set.armor">
           <div class="set-item">
             <dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
+            <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
             <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
           </div>
         </span>
-        <button ng-click="normal.newLoadout(set)">Create Loadout</button>
       </div>
     </div>
   </div>

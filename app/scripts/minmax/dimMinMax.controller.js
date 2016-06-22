@@ -218,17 +218,6 @@
           vm.lockedchanged = true;
         }
       },
-      active2ind: function(activeStr) {
-        if(activeStr.toLowerCase() === 'warlock') {
-          return 0;
-        } else if(activeStr.toLowerCase() === 'titan') {
-          return 1;
-        } else if(activeStr.toLowerCase() === 'hunter') {
-          return 2;
-        } else {
-          return -1;
-        }
-      },
       newLoadout: function(set) {
         ngDialog.closeAll();
         var loadout = { items: {} };
@@ -240,7 +229,7 @@
         loadout.items.classitem = [items.ClassItem.item];
         loadout.items.ghost = [items.Ghost.item];
         loadout.items.artifact = [items.Artifact.item];
-        loadout.classType = vm.active2ind(vm.active);
+        loadout.classType = ({'warlock': 0, 'titan': 1, 'hunter': 2})[vm.active];
 
         $scope.$broadcast('dim-edit-loadout', {
           loadout: loadout,
@@ -282,6 +271,20 @@
                             Artifact: artifacts[ar],
                             Ghost: ghosts[gh]
                           },
+                          stats: {
+                            STAT_INTELLECT: {
+                              value: 0,
+                              name: 'Intellect'
+                            },
+                            STAT_DISCIPLINE: {
+                              value: 0,
+                              name: 'Discipline'
+                            },
+                            STAT_STRENGTH: {
+                              value: 0,
+                              name: 'Strength'
+                            }
+                          },
                           int_val: 0,
                           disc_val: 0,
                           str_val: 0
@@ -289,22 +292,23 @@
                         if(validSet(set.armor)) {
                           _.each(set.armor, function(armor) {
                             int = armor.item.normalStats[144602215];
-                            set.int_val += int.scaled;
                             dis = armor.item.normalStats[1735777505];
-                            set.disc_val += dis.scaled;
                             str = armor.item.normalStats[4244567218];
-                            set.str_val += str.scaled;
+
+                            set.stats.STAT_INTELLECT.value += int.scaled;
+                            set.stats.STAT_DISCIPLINE.value += dis.scaled;
+                            set.stats.STAT_STRENGTH.value += str.scaled;
 
                             switch(armor.bonus_type) {
-                              case 'int': set.int_val += int.bonus; break;
-                              case 'disc': set.disc_val += dis.bonus; break;
-                              case 'str': set.str_val += str.bonus; break;
+                              case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
+                              case 'disc': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
+                              case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
                             }
                           });
 
-                          var int_level = Math.min(Math.floor(set.int_val/60), 5);
-                          var disc_level = Math.min(Math.floor(set.disc_val/60), 5);
-                          var str_level = Math.min(Math.floor(set.str_val/60), 5);
+                          var int_level = Math.min(Math.floor(set.stats.STAT_INTELLECT.value/60), 5);
+                          var disc_level = Math.min(Math.floor(set.stats.STAT_DISCIPLINE.value/60), 5);
+                          var str_level = Math.min(Math.floor(set.stats.STAT_STRENGTH.value/60), 5);
                           var tiers_string = int_level + '/' + disc_level + '/' + str_level;
                           if(set_map[tiers_string]) {
                             set_map[tiers_string].push(set);
@@ -354,23 +358,13 @@
         $timeout(step, 0, false, activeGaurdian, 0,0,0,0,0,0,0,0);
         return set_map;
       },
-      normalizeBuckets: function(resetLocked = false) {
+      normalizeBuckets: function() {
         vm.ranked = buckets[vm.active];
-
-        if(resetLocked) {
-          vm.lockeditems.Helmet = vm.lockeditems.Gauntlets = vm.lockeditems.Chest = null;
-          vm.lockeditems.Leg = vm.lockeditems.ClassItem = vm.lockeditems.Ghost = vm.lockeditems.Artifact = null;
-        }
-        var bestarmor = getBestArmor(buckets[vm.active], vm.lockeditems);
-        vm.highestsets = vm.getSetBucketsStep(vm.active, bestarmor);
-      },
-      filterFunction: function(element) {
-        return element.stats.STAT_INTELLECT.tier >= vm.filter.int && element.stats.STAT_DISCIPLINE.tier >= vm.filter.dis && element.stats.STAT_STRENGTH.tier >= vm.filter.str;
+        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.highestsets = vm.getSetBucketsStep(vm.active, getBestArmor(buckets[vm.active], vm.lockeditems));
       },
       getBonus: dimStoreService.getBonus,
-      getStore: function(id) {
-        return dimStoreService.getStore(id);
-      },
+      getStore: dimStoreService.getStore,
       // get Items for infusion
       getItems: function() {
         var stores = dimStoreService.getStores();
@@ -399,7 +393,7 @@
         });
 
         buckets = initBuckets(allItems);
-        console.log(buckets)
+
         vm.normalizeBuckets();
       }
     });
