@@ -50,8 +50,8 @@
         <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
           <div ng-switch-when="null" class="empty-item"></div>
           <div ng-switch-default>
-            <div ng-click="normal.onRemove(type)" class="locked-item-remove"><span>&#10060;</span></div>
             <dim-store-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-store-item>
+            <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>
           </div>
           <div class="label">{{type}}</div>
         </div>
@@ -92,16 +92,14 @@
     </p>
   </div>
   <div ng-show="normal.progress >= 1">
-    <div class="section" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
-      <div><dim-stats stats="set.stats"></dim-stats><button ng-click="normal.newLoadout(set)">Create Loadout</button></div>
+    <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
+      <div><dim-stats stats="set.stats"></dim-stats><span class='minmax-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
       <div class="itemQuality">
-        <span ng-repeat="armorpiece in set.armor">
-          <div class="set-item">
-            <dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
-            <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-            <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
-          </div>
-        </span>
+        <div  class="set-item" ng-repeat="armorpiece in set.armor">
+          <dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
+          <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
+          <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
+        </div>
       </div>
     </div>
   </div>

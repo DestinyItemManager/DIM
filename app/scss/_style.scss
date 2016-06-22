@@ -93,6 +93,7 @@ div:focus, span:focus {
   width: 250px;
   margin-left: -10px;
   margin-bottom: 4px;
+  padding-left: 10px;
   height: 22px;
   background: rgb(46, 46, 46);
   border: none;
@@ -1676,10 +1677,12 @@ h2, h3, h4 {
   position: absolute;
   top: 2px;
   right: 2px;
+  z-index: 2;
   background-image: url('../images/close.png');
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, 0.6);
   &:hover {
+    cursor: pointer;
     background-color: rgba(0, 0, 0, 0.6);
   }
 }
