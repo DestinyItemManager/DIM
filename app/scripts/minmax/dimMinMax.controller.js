@@ -350,6 +350,7 @@
 
           // Finish progress
           vm.progress = processed_count/combos;
+          console.log('processed', combos, 'combinations.');
           console.timeEnd('elapsed');
         }
         console.time('elapsed');

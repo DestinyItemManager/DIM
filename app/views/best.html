@@ -3,13 +3,13 @@
   <h1>Loadout builder</h1>
 
   <p>
-    <label ng-class="{selected: normal.active === 'warlock'}" class='character-select'>
+    <label ng-class="{selected: normal.active === 'warlock'}" class='minmax-button'>
       <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='warlock'>Warlock
     </label>
-    <label ng-class="{selected: normal.active === 'titan'}" class='character-select'>
+    <label ng-class="{selected: normal.active === 'titan'}" class='minmax-button'>
       <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='titan'>Titan
     </label>
-    <label ng-class="{selected: normal.active === 'hunter'}" class='character-select'>
+    <label ng-class="{selected: normal.active === 'hunter'}" class='minmax-button'>
       <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='hunter'>Hunter
     </label>
   </p>
@@ -17,16 +17,17 @@
   <dim-loadout></dim-loadout>
 
   <p>
+    <span class='minmax-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.active}} gear</span>
+  </p>
+  <div class="section" ng-show="showGear">
 <!--
-    <label ng-class="{selected: normal.type === bucket}" class='character-select' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
+    <label ng-class="{selected: normal.type === bucket}" class='minmax-button' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
       <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
     </label>
 -->
     Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
-  </p>
 
-  <div class="section">
     <div class="itemQuality">
       <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
@@ -66,8 +67,8 @@
   <div ng-show="normal.progress >= 1">
     <p>Filter sets (Intellect/Discipline/Strength):
       <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
-      <span ng-click='help=!help'>Need help? Click here.</span>
-      <span><ul ng-show="help">
+      <span class="minmax-button" ng-click='showHelp=!showHelp'>Need help? Click here.</span>
+      <span><ul ng-show="showHelp">
         <li>Higher Tiers are better<ul>
           <li>4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)</li>
           <li>Intellect speeds up Super recharge time</li>
