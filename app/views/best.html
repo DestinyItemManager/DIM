@@ -1,31 +1,30 @@
 <div class="minmax" ng-controller="dimMinMaxCtrl as normal">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
-  <h1>Armor Comparison</h1>
+  <h1>Loadout builder</h1>
+
+  <p>
+    <label ng-class="{selected: normal.active === 'warlock'}" class='character-select'>
+      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='warlock'>Warlock
+    </label>
+    <label ng-class="{selected: normal.active === 'titan'}" class='character-select'>
+      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='titan'>Titan
+    </label>
+    <label ng-class="{selected: normal.active === 'hunter'}" class='character-select'>
+      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='hunter'>Hunter
+    </label>
+  </p>
 
   <dim-loadout></dim-loadout>
 
-  <ul>
-    <li>Light level must be at least 280 for an accurate roll estimation.</li>
-    <li>Stats on this page are scaled to what they would be at light level 335.</li>
-    <li>The perks/bonuses that increase int/dis/str are not included, only the base stats are shown.</li>
-    <li>Prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
-    <li>Split stat rolls are better than single stat rolled items.</li>
-    <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
-  </ul>
   <p>
-    Mode: <select ng-model='normal.mode' ng-change='normal.onModeChange()'>
-      <option value='fast'>Fast</option>
-      <option value='full'>Full</option>
-      </select>
-      <small>Note: Fast mode tries to only look at your "best" gear. Full mode might show more options, but will take much longer to run.</small>
-  </p>
 
-  <p>
-    Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
-    <option value='titan'>Titan</option>
-    <option value='hunter'>Hunter</option>
-    <option value='warlock'>Warlock</option>
-    </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
+<!--
+    <label ng-class="{selected: normal.type === bucket}" class='character-select' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
+      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
+    </label>
+-->
+
+    Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
   </p>
 
