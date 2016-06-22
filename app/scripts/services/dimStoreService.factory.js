@@ -862,7 +862,9 @@
     function clearStaleNewItems(currItems, newItems) {
       var newItemsClean = {};
       _.each(newItems, function(val, id) {
-        newItemsClean[id] = val;
+        if (currItems[id]) {
+          newItemsClean[id] = val;
+        }
       });
       return newItemsClean;
     }
