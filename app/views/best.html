@@ -38,7 +38,7 @@
       <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
           <div class="item-stats">
-            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[$index]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
+            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
               <small ng-if="normalStat.scaled === 0">-</small>
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>

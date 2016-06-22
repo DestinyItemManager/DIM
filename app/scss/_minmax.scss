@@ -5,10 +5,9 @@
   .character-select {
     cursor: pointer;
     background-color: gray;
-    height: 100px;
-    width: 250px;
     padding: 10px;
     box-shadow: inset 0px 0px 1px black;
+    display: inline-block;
     &:hover {
       background-color: $orange;
     }
@@ -25,15 +24,10 @@
     color: white;
     &:hover {
       cursor: pointer;
-
     }
     i.fa {
       padding-right: 5px;
     }
-  }
-
-  .section {
-
   }
 
   .labels {

@@ -129,7 +129,7 @@
         _.each(item.stats, function(stat) {
           item.normalStats[stat.statHash] = {
             statHash: stat.statHash,
-            base: (stat.base*(vm.doNormalize ? vm.normalize : item.primStat.value)/item.primStat.value).toFixed(0),
+            base: stat.base,
             scaled: stat.scaled ? stat.scaled.min : 0,
             bonus: stat.bonus,
             split: stat.split,
@@ -167,7 +167,6 @@
       highestsets: {},
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       normalize: 335,
-      doNormalize: false,
       type: 'Helmet',
       showBlues: false,
       showExotics: true,
@@ -262,7 +261,7 @@
           return null;
         }
 
-        var set_map = {}, int, dis, str;
+        var set_map = {}, int, dis, str, set;
         var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length) || 1;
 
         function step(activeGaurdian, h, g, c, l, ci, gh, ar, processed_count) {
@@ -273,12 +272,22 @@
                   for(; ci < classItems.length; ++ci) {
                     for(; gh < ghosts.length; ++gh) {
                       for(; ar < artifacts.length; ++ar) {
-                        var armor = {Helmet: helms[h], Gauntlets: gaunts[g], Chest: chests[c], Leg: legs[l], ClassItem: classItems[ci], Artifact: artifacts[ar], Ghost: ghosts[gh]};
-                        if(validSet(armor)) {
-                          var set = {armor: armor, int_val: 0, disc_val: 0, str_val: 0};
-
+                        set = {
+                          armor: {
+                            Helmet: helms[h],
+                            Gauntlets: gaunts[g],
+                            Chest: chests[c],
+                            Leg: legs[l],
+                            ClassItem: classItems[ci],
+                            Artifact: artifacts[ar],
+                            Ghost: ghosts[gh]
+                          },
+                          int_val: 0,
+                          disc_val: 0,
+                          str_val: 0
+                        };
+                        if(validSet(set.armor)) {
                           _.each(set.armor, function(armor) {
-                            armor.bonus_type
                             int = armor.item.normalStats[144602215];
                             set.int_val += int.scaled;
                             dis = armor.item.normalStats[1735777505];
@@ -297,7 +306,7 @@
                           var disc_level = Math.min(Math.floor(set.disc_val/60), 5);
                           var str_level = Math.min(Math.floor(set.str_val/60), 5);
                           var tiers_string = int_level + '/' + disc_level + '/' + str_level;
-                          if(tiers_string in set_map) {
+                          if(set_map[tiers_string]) {
                             set_map[tiers_string].push(set);
                           } else {
                             set_map[tiers_string] = [set];
@@ -305,16 +314,16 @@
                         }
 
                         processed_count++;
-//                        if((processed_count%10000) == 0) {
-//                          // If active gaurdian or page is changed then stop processing combinations
-//                          if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
-//                            vm.lockedchanged = false;
-//                            return;
-//                          }
-//                          vm.progress = processed_count/combos;
-//                          $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
-//                          return;
-//                        }
+                        if(processed_count % 20000 === 0) {
+                          // If active gaurdian or page is changed then stop processing combinations
+                          if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
+                            vm.lockedchanged = false;
+                            return;
+                          }
+                          vm.progress = processed_count/combos;
+                          $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
+                          return;
+                        }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
           var tiers = _.each(_.groupBy(Object.keys(set_map), function(set) {
@@ -341,8 +350,8 @@
         }
         console.time('elapsed');
         vm.lockedchanged = false;
-        step(activeGaurdian, 0,0,0,0,0,0,0,0)
-//        $timeout(step, 0, true, activeGaurdian, 0,0,0,0,0,0,0,0);
+//        step(activeGaurdian, 0,0,0,0,0,0,0,0) // do 'instant'... but page freeze
+        $timeout(step, 0, false, activeGaurdian, 0,0,0,0,0,0,0,0);
         return set_map;
       },
       normalizeBuckets: function(resetLocked = false) {
