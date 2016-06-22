@@ -6,6 +6,7 @@
 * Returning from the min-max tool no longer greets you with a blank, item-less screen.
 * Fixed a bug where loadouts were not properly restricted to the platform they were created for.
 * Xur's menu item will properly disappear when he leaves for the week.
+* New items are marked with a "shiny" animation, and there are notifications when new items appear.
 
 # 3.7.4
 
