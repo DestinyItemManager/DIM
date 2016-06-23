@@ -198,7 +198,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
-  grunt.registerTask('default', ['build','watch']);
+  grunt.registerTask('default', ['eslint', 'build', 'watch']);
 
   grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']);
 
