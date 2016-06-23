@@ -4,13 +4,13 @@
 
   <p>
     <label ng-class="{selected: normal.active === 'warlock'}" class='minmax-button'>
-      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='warlock'>Warlock
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='warlock'>Warlock
     </label>
     <label ng-class="{selected: normal.active === 'titan'}" class='minmax-button'>
-      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='titan'>Titan
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='titan'>Titan
     </label>
     <label ng-class="{selected: normal.active === 'hunter'}" class='minmax-button'>
-      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.active' value='hunter'>Hunter
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='hunter'>Hunter
     </label>
   </p>
 
@@ -22,7 +22,7 @@
   <div class="section" ng-show="showGear">
 <!--
     <label ng-class="{selected: normal.type === bucket}" class='minmax-button' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
-      <input ng-change="normal.normalizeBuckets()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
     </label>
 -->
     Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>

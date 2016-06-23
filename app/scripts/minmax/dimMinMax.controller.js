@@ -199,9 +199,14 @@
         }
         return exoticCount < 2;
       },
+      onCharacterChange: function() {
+        vm.ranked = buckets[vm.active];
+        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
+      },
       onModeChange: function () {
         if(vm.progress <= 1) {
-          vm.normalizeBuckets(false);
+          vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
         }
       },
       onOrderChange: function () {
@@ -378,11 +383,6 @@
         }
         return set_map;
       },
-      normalizeBuckets: function() {
-        vm.ranked = buckets[vm.active];
-        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
-        vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
-      },
       getBonus: dimStoreService.getBonus,
       getStore: dimStoreService.getStore,
       // get Items for infusion
@@ -414,7 +414,7 @@
 
         buckets = initBuckets(allItems);
 
-        vm.normalizeBuckets();
+        vm.onCharacterChange();
       }
     });
 
