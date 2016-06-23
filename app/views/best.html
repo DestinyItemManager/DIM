@@ -66,7 +66,9 @@
       <option value='fast'>Fast</option>
       <option value='full'>Full</option>
     </select>
-    <small>Fast most will only look at your best gear. Full mode will process more of your gear (and yeild more results), but will take longer.</small>
+    <small>
+      <span ng-show="normal.mode === 'fast'">Fast mode only looks at your best gear</span>
+      <span ng-show="normal.mode === 'full'">Full mode looks at more gear, but takes longer.</span></small>
   </p>
   <div ng-show="normal.progress < 1 && normal.highestsets">
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
