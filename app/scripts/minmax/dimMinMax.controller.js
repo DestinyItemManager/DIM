@@ -333,8 +333,8 @@
                         }
 
                         processed_count++;
-                        if(vm.mode) {
-                          if(processed_count % 20000 === 0) {
+//                        if(vm.mode) {
+                          if(processed_count % 50000 === 0) {
                             // If active gaurdian or page is changed then stop processing combinations
                             if(vm.active !== activeGaurdian ||  vm.lockedchanged || $location.path() !== '/best') {
                               vm.lockedchanged = false;
@@ -344,7 +344,7 @@
                             $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
                             return;
                           }
-                        }
+//                        }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
           var tiers = _.each(_.groupBy(Object.keys(set_map), function(set) {
@@ -369,18 +369,18 @@
           vm.progress = processed_count/combos;
           console.log('processed', combos, 'combinations.');
           console.timeEnd('elapsed');
-          if(vm.mode) {
-            $scope.$apply();
-          }
+//          if(vm.mode) {
+//            $scope.$apply();
+//          }
         }
         console.time('elapsed');
         vm.lockedchanged = false;
-        if(vm.mode) {
-          $timeout(step, 0, false, activeGaurdian, 0,0,0,0,0,0,0,0);
-        } else {
-          // do 'instant'... but page freeze
-          step(activeGaurdian, 0,0,0,0,0,0,0,0);
-        }
+//        if(vm.mode) {
+          $timeout(step, 0, true, activeGaurdian, 0,0,0,0,0,0,0,0);
+//        } else {
+//          // do 'instant'... but page freeze
+//          step(activeGaurdian, 0,0,0,0,0,0,0,0);
+//        }
         return set_map;
       },
       getBonus: dimStoreService.getBonus,
