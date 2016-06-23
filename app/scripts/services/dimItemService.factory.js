@@ -246,7 +246,7 @@
             return (i.equipped &&
                     i.location.id !== item.location.id &&
                     i.location.sort === item.location.sort &&
-                    i.tier === 'Exotic');
+                    i.isExotic);
           });
 
         // Fix for "The Life Exotic" Perk on Exotic Items
@@ -482,7 +482,7 @@
           promises.push(canEquip(item, store));
         }
 
-        if ((item.tier === 'Exotic') && equip) {
+        if ((item.isExotic) && equip) {
           promises.push(canEquipExotic(item, store));
         }
 

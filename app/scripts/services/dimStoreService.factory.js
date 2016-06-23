@@ -343,7 +343,7 @@
           _currItems = buildItemMap(stores);
           _newItems = clearStaleNewItems(_currItems, _newItems);
           SyncService.set({newItems: _.keys(_newItems)});
-          
+
           var list_str = '';
           _.each(_newItems, function(val, id) {
               list_str += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
@@ -483,6 +483,7 @@
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
         tier: itemDef.tierTypeName || 'Common',
+        isExotic: itemDef.tierTypeName === 'Exotic',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -511,8 +512,9 @@
         weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
+
       createdItem.index = createItemIndex(createdItem);
-      
+
       if (_.isEmpty(_stores)) {
         createdItem.isNew = false;
       } else {
@@ -848,7 +850,7 @@
 
       return quality;
     }
-    
+
     function buildItemMap(stores) {
       var itemMap = {};
       _.each(stores, function(store, id) {
@@ -858,7 +860,7 @@
       });
       return itemMap;
     }
-    
+
     function clearStaleNewItems(currItems, newItems) {
       var newItemsClean = {};
       _.each(newItems, function(val, id) {
@@ -868,18 +870,18 @@
       });
       return newItemsClean;
     }
-    
+
     function isItemNew(newId) {
       // Don't worry about general items and consumables
         return newId !== '0' && !_oldItems[newId];
     }
-    
+
     function dropNewItem(item) {
       delete _newItems[item.id];
       SyncService.set({newItems: _.keys(_newItems)});
       item.isNew = false;
     }
-    
+
     function getCachedNewItems() {
       var deferred = $q.defer();
       SyncService.get().then(function processCachedNewItems(data) {
@@ -891,7 +893,7 @@
       });
       return deferred.promise;
     }
-    
+
     function clearNewItems() {
       SyncService.set({newItems: []});
     }
