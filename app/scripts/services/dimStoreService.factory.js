@@ -339,16 +339,16 @@
         .then(function(stores) {
           _currItems = buildItemMap(stores);
           _newItems = clearStaleNewItems(_currItems, _newItems);
-          SyncService.set({newItems: _.keys(_newItems)});
+          SyncService.set({ newItems: _.keys(_newItems) });
 
-          var list_str = '';
-          _.each(_newItems, function(val, id) {
-              list_str += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
+          var listStr = '';
+          _.each(_newItems, function(val) {
+            listStr += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
           });
-          if (list_str) {
+          if (listStr) {
             dimInfoService.show('newitemsbox', {
               title: 'New items found',
-              body: '<p>The following items are new:</p><ul>' + list_str + '</ul>',
+              body: '<p>The following items are new:</p><ul>' + listStr + '</ul>',
               hide: 'Don\'t show me new item notifications'
             }, 10000);
           }
@@ -513,10 +513,10 @@
       } else {
         createdItem.isNew = _.contains(cachedNewItems, createdItem.id);
         if (createdItem.isNew === false) {
-            createdItem.isNew = isItemNew(createdItem.id);
-            if (createdItem.isNew) {
-              _newItems[createdItem.id] = {name: createdItem.name, type: createdItem.type};
-            }
+          createdItem.isNew = isItemNew(createdItem.id);
+          if (createdItem.isNew) {
+            _newItems[createdItem.id] = { name: createdItem.name, type: createdItem.type };
+          }
         }
       }
 
@@ -844,9 +844,9 @@
 
     function buildItemMap(stores) {
       var itemMap = {};
-      _.each(stores, function(store, id) {
-        var items = _.each(store.items, function(item) {
-            itemMap[item.id] = {name: item.name, type: item.type};
+      _.each(stores, function(store) {
+        _.each(store.items, function(item) {
+          itemMap[item.id] = { name: item.name, type: item.type };
         });
       });
       return itemMap;
@@ -864,29 +864,23 @@
 
     function isItemNew(newId) {
       // Don't worry about general items and consumables
-        return newId !== '0' && !_oldItems[newId];
+      return newId !== '0' && !_oldItems[newId];
     }
 
     function dropNewItem(item) {
       delete _newItems[item.id];
-      SyncService.set({newItems: _.keys(_newItems)});
+      SyncService.set({ newItems: _.keys(_newItems) });
       item.isNew = false;
     }
 
     function getCachedNewItems() {
-      var deferred = $q.defer();
-      SyncService.get().then(function processCachedNewItems(data) {
-        var newItems = [];
-        if (_.has(data, "newItems")) {
-          newItems = data["newItems"];
-        }
-        deferred.resolve(newItems);
+      return SyncService.get().then(function processCachedNewItems(data) {
+        return data.newItems || [];
       });
-      return deferred.promise;
     }
 
     function clearNewItems() {
-      SyncService.set({newItems: []});
+      SyncService.set({ newItems: [] });
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level

@@ -396,7 +396,7 @@
           return false;
         }
       },
-      'new': function(predicate, item) {
+      new: function(predicate, item) {
         return item.isNew;
       }
     };

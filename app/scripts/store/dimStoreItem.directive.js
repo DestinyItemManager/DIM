@@ -97,7 +97,7 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
-        
+
         dimStoreService.dropNewItem(item);
 
         if (otherDialog) {
