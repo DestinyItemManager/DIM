@@ -17,6 +17,16 @@ $item-header-spacing: 5px;
   text-overflow: ellipsis;
   white-space: nowrap !important;
 
+  &.is-arc {
+    background-color: #85c5ec;
+  }
+  &.is-solar {
+    background-color: #f2721b;
+  }
+  &.is-void {
+    background-color: #b184c5;
+  }
+
   a {
     color: #000;
   }
