@@ -7,7 +7,8 @@
   dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService'];
 
   function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog, dimLoadoutService) {
-    var vm = this, buckets = [];
+    var vm = this,
+        buckets = [];
 
     function getBonusType(armorpiece) {
       return '' +
@@ -16,6 +17,7 @@
         (armorpiece.normalStats[4244567218].bonus > 0? 'str' : '');
     }
 
+    // for specifc armor (Helmet), look at stats (int/dis), return best one.
     function getBestItem(armor, stats, type, nonExotic) {
       return {
         item: _.max(armor, function(o) {
@@ -35,54 +37,41 @@
     }
 
     function getBestArmor(bucket, locked) {
-      var armor = {};
-      var best = [], best_non_exotic = [];
+      var stat_hashes = [
+            {stats: [144602215, 1735777505], type: 'intdisc'},
+            {stats: [144602215, 4244567218], type: 'intstr'},
+            {stats: [1735777505, 4244567218], type: 'discstr'},
+            {stats: [144602215], type: 'int'},
+            {stats: [1735777505], type: 'disc'},
+            {stats: [4244567218], type: 'str'},
+          ],
+          armor = {},
+          best = [],
+          best_non_exotic = [],
+          curbest,
+          best_combs;
       for (var armortype in bucket) {
         if(locked[armortype] !== null) {
           best = [{item: locked[armortype], bonus_type: getBonusType(locked[armortype])}];
         } else {
-          best = [
-            getBestItem(bucket[armortype], [144602215, 1735777505], 'intdisc'), // best int + bonus + dis
-            getBestItem(bucket[armortype], [144602215, 4244567218], 'intstr'), // best int + bonus + str
-            getBestItem(bucket[armortype], [1735777505, 4244567218], 'discstr'), // best dis + bonus + str
-          ];
-          if(vm.mode) {
-            best = best.concat([
-              getBestItem(bucket[armortype], [144602215], 'int'), // best int + bonus
-              getBestItem(bucket[armortype], [1735777505], 'disc'), // best int + bonus
-              getBestItem(bucket[armortype], [4244567218], 'str'), // best int + bonus
-            ]);
-          }
-
-          if(armortype !== 'ClassItem') {
-            // Best needs to include a non-exotic if the max is an exotic item
-            best_non_exotic = [];
-            var i = 0;
-            if(best[i++].item.isExotic) {
-                best_non_exotic.push(getBestItem(bucket[armortype], [144602215, 1735777505], ''));
+          best = [];
+          stat_hashes.forEach(function(hash, index) {
+            if(!vm.mode && index > 2) {
+              return;
             }
-            if(best[i++].item.isExotic) {
-                best_non_exotic.push(getBestItem(bucket[armortype], [144602215, 4244567218], ''));
+            curbest = getBestItem(bucket[armortype], hash.stats, hash.type);
+            best.push(curbest);
+            // add the best -> if best is exotic -> get best legendary
+            if(curbest.item.isExotic && armortype !== 'ClassItem') {
+              best.push(getBestItem(bucket[armortype], hash.stats, hash.type));
             }
-            if(best[i++].item.isExotic) {
-                best_non_exotic.push(getBestItem(bucket[armortype], [1735777505, 4244567218], ''));
-            }
-            if(vm.mode) {
-              var stat_hashes = [144602215, 1735777505, 4244567218];
-              for(; i < 6; ++i) {
-                if(best[i].item.isExotic) {
-                  best_non_exotic.push(getBestItem(bucket[armortype], [stat_hashes[i-3]], ''));
-                }
-              }
-            }
-            best = best.concat(best_non_exotic);
-          }
+          });
         }
 
-        var unique_objs = _.uniq(best, false, function(o) { return o.item.index; });
-        var best_combs = [];
-
-        _.each(unique_objs, function(obj) {
+        best_combs = [];
+        _.each(_.uniq(best, false, function(o) {
+          return o.item.index;
+        }), function(obj) {
           obj.bonus_type = getBonusType(obj.item);
           if(obj.bonus_type.indexOf('int') > -1) {
             best_combs.push({item: obj.item, bonus_type: 'int'});
@@ -106,47 +95,6 @@
         gearset.Chest.item.isExotic +
         gearset.Leg.item.isExotic
       ) < 2;
-    }
-
-    function getBuckets(items) {
-      function normalizeStats(item) {
-        item.normalStats = {};
-        _.each(item.stats, function(stat) {
-          item.normalStats[stat.statHash] = {
-            statHash: stat.statHash,
-            base: stat.base,
-            scaled: stat.scaled ? stat.scaled.min : 0,
-            bonus: stat.bonus,
-            split: stat.split,
-            qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0
-          };
-        });
-        return item;
-      }
-
-      // load the best items
-      return {
-        Helmet: items.filter(function(item) { return item.type === 'Helmet'; }).map(normalizeStats),
-        Gauntlets: items.filter(function(item) { return item.type === 'Gauntlets'; }).map(normalizeStats),
-        Chest: items.filter(function(item) { return item.type === 'Chest'; }).map(normalizeStats),
-        Leg: items.filter(function(item) { return item.type === 'Leg'; }).map(normalizeStats),
-        ClassItem: items.filter(function(item) { return item.type === 'ClassItem'; }).map(normalizeStats),
-        Ghost: items.filter(function(item) { return item.type === 'Ghost'; }).map(normalizeStats),
-        Artifact: items.filter(function(item) { return item.type === 'Artifact'; }).map(normalizeStats)
-      };
-    }
-
-    function initBuckets(items) {
-      function loadBucket(classType) {
-        return getBuckets(items.filter(function(item) {
-          return item.classType === classType || item.classType === 3;
-        }));
-      }
-      return {
-        titan: loadBucket(0),
-        hunter: loadBucket(1),
-        warlock: loadBucket(2)
-      };
     }
 
     angular.extend(vm, {
@@ -188,9 +136,7 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onModeChange: function () {
-        if(vm.progress <= 1) {
-          vm.highestsets = vm.getSetBucketsStep(vm.active);
-        }
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function () {
         vm.setOrderValues = vm.setOrder.split(',');
@@ -316,18 +262,16 @@
                         }
 
                         processed_count++;
-//                        if(vm.mode) {
-                          if(processed_count % 50000 === 0) {
+                        if(processed_count % 50000 === 0) { // do this so the page doesn't lock up
+                          if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
                             // If active gaurdian or page is changed then stop processing combinations
-                            if(vm.active !== activeGaurdian ||  vm.lockedchanged || $location.path() !== '/best') {
-                              vm.lockedchanged = false;
-                              return;
-                            }
-                            vm.progress = processed_count/combos;
-                            $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
+                            vm.lockedchanged = false;
                             return;
                           }
-//                        }
+                          vm.progress = processed_count/combos;
+                          $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
+                          return;
+                        }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
           var tiers = _.each(_.groupBy(Object.keys(set_map), function(set) {
@@ -373,14 +317,11 @@
         var allItems = [];
         vm.active = _.sortBy(stores, 'lastPlayed').reverse()[0].class.toLowerCase() || 'warlock';
 
-        // all stores
         _.each(stores, function(store, id) {
-
-          // all armor in store
           var items = _.filter(store.items, function(item) {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defence hash
-              ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) &&
+              ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
               item.primStat.value >= 280 && // only 280+ light items
               item.stats;
           });
@@ -388,12 +329,65 @@
           allItems = allItems.concat(items);
         });
 
-        buckets = initBuckets(allItems);
+        function normalizeStats(item) {
+          item.normalStats = {};
+          _.each(item.stats, function(stat) {
+            item.normalStats[stat.statHash] = {
+              statHash: stat.statHash,
+              base: stat.base,
+              scaled: stat.scaled ? stat.scaled.min : 0,
+              bonus: stat.bonus,
+              split: stat.split,
+              qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0
+            };
+          });
+          return item;
+        }
 
-        vm.onCharacterChange();
+        function getBuckets(items) {
+          // put items into buckets and create normalize stats property
+          return {
+            Helmet: items.filter(function(item) {
+                return item.type === 'Helmet';
+              }).map(normalizeStats),
+            Gauntlets: items.filter(function(item) {
+                return item.type === 'Gauntlets';
+              }).map(normalizeStats),
+            Chest: items.filter(function(item) {
+                return item.type === 'Chest';
+              }).map(normalizeStats),
+            Leg: items.filter(function(item) {
+                return item.type === 'Leg';
+              }).map(normalizeStats),
+            ClassItem: items.filter(function(item) {
+                return item.type === 'ClassItem';
+              }).map(normalizeStats),
+            Ghost: items.filter(function(item) {
+                return item.type === 'Ghost';
+              }).map(normalizeStats),
+            Artifact: items.filter(function(item) {
+                return item.type === 'Artifact';
+              }).map(normalizeStats)
+          };
+        }
+
+        function initBuckets() {
+          function loadBucket(classType) {
+            return getBuckets(allItems.filter(function(item) {
+              return item.classType === classType || item.classType === 3;
+            }));
+          }
+          buckets = {
+            titan: loadBucket(0),
+            hunter: loadBucket(1),
+            warlock: loadBucket(2)
+          };
+        }
+
+        initBuckets();
+        vm.onCharacterChange(); // start processing
       }
     });
-
     vm.getItems();
   }
 })();
