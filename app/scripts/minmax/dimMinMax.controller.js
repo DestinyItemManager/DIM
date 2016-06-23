@@ -18,7 +18,6 @@
     }
 
     function getBestArmor(bucket, locked) {
-      var type = 'scaled'
       var armor = {};
       var best = [], best_non_exotic = [];
       for (var armortype in bucket) {
@@ -29,33 +28,33 @@
             {item: _.max(bucket[armortype], function(o){
               var int_stats = o.normalStats[144602215];
               var disc_stats = o.normalStats[1735777505];
-              return int_stats[type] + int_stats.bonus + disc_stats[type];
+              return int_stats[vm.scale_type] + int_stats.bonus + disc_stats[vm.scale_type];
             }), bonus_type: 'intdisc'
             }, // best int + bonus + dis
             {item: _.max(bucket[armortype], function(o){
               var int_stats = o.normalStats[144602215];
               var str_stats = o.normalStats[4244567218];
-              return int_stats[type] + int_stats.bonus + str_stats[type];
+              return int_stats[vm.scale_type] + int_stats.bonus + str_stats[vm.scale_type];
             }), bonus_type: 'intstr'
             }, // best int + bonus + str
             {item: _.max(bucket[armortype], function(o){
               var disc_stats = o.normalStats[1735777505];
               var str_stats = o.normalStats[1735777505];
-              return disc_stats[type] + str_stats[type] + str_stats.bonus;
+              return disc_stats[vm.scale_type] + str_stats[vm.scale_type] + str_stats.bonus;
             }), bonus_type: 'discstr'
             }, // best dis + bonus + str
           ];
-          if(vm.mode === 'full') {
+          if(vm.mode) {
             best = best.concat([
               {item: _.max(bucket[armortype], function(o){
                 var stats = o.normalStats[144602215];
-                return  stats[type] + stats.bonus;}), bonus_type: 'int'}, // best int_w_bonus
+                return  stats[vm.scale_type] + stats.bonus;}), bonus_type: 'int'}, // best int_w_bonus
               {item: _.max(bucket[armortype], function(o){
                 var stats = o.normalStats[1735777505];
-                return stats[type] + stats.bonus;}), bonus_type: 'disc'}, // best dis_w_bonus
+                return stats[vm.scale_type] + stats.bonus;}), bonus_type: 'disc'}, // best dis_w_bonus
               {item: _.max(bucket[armortype], function(o){
                 var stats = o.normalStats[4244567218];
-                return stats[type] + stats.bonus;}), bonus_type: 'str'}, // best str_w_bonus
+                return stats[vm.scale_type] + stats.bonus;}), bonus_type: 'str'}, // best str_w_bonus
             ]);
           }
 
@@ -68,36 +67,36 @@
                   if (o.tier === 'Exotic') { return 0; }
                   var int_stats = o.normalStats[144602215];
                   var disc_stats = o.normalStats[1735777505];
-                  return int_stats[type] + int_stats.bonus + disc_stats[type]; }), bonus_type: ''});
+                  return int_stats[vm.scale_type] + int_stats.bonus + disc_stats[vm.scale_type]; }), bonus_type: ''});
             }
             if(best[i++].item.tier === 'Exotic') {
                 best_non_exotic.push({item: _.max(bucket[armortype], function(o){
                   if (o.tier === 'Exotic') { return 0; }
                   var int_stats = o.normalStats[144602215];
                   var str_stats = o.normalStats[4244567218];
-                  return int_stats[type] + int_stats.bonus + str_stats[type]; }), bonus_type: ''});
+                  return int_stats[vm.scale_type] + int_stats.bonus + str_stats[vm.scale_type]; }), bonus_type: ''});
             }
             if(best[i++].item.tier === 'Exotic') {
                 best_non_exotic.push({item: _.max(bucket[armortype], function(o){
                   if (o.tier === 'Exotic') { return 0; }
                   var disc_stats = o.normalStats[1735777505];
                   var str_stats = o.normalStats[4244567218];
-                  return disc_stats[type] + disc_stats.bonus + str_stats[type]; }), bonus_type: ''});
+                  return disc_stats[vm.scale_type] + disc_stats.bonus + str_stats[vm.scale_type]; }), bonus_type: ''});
             }
-            if(vm.mode === 'full') {
+            if(vm.mode) {
               var stat_hashes = [144602215, 1735777505, 4244567218];
               for(; i < 6; ++i) {
-                  if(best[i].item.tier === 'Exotic') {
-                      var hash = stat_hashes[i-3];
-                      best_non_exotic.push({
-                        item: _.max(bucket[armortype], function(o){
-                          if (o.tier === 'Exotic') { return 0; }
-                          var stats = o.normalStats[hash];
-                          return stats[type] + stats.bonus;
-                        }),
-                        bonus_type: ''
-                      });
-                  }
+                if(best[i].item.tier === 'Exotic') {
+                  var hash = stat_hashes[i-3];
+                  best_non_exotic.push({
+                    item: _.max(bucket[armortype], function(o){
+                      if (o.tier === 'Exotic') { return 0; }
+                      var stats = o.normalStats[hash];
+                      return stats[vm.scale_type] + stats.bonus;
+                    }),
+                    bonus_type: ''
+                  });
+                }
               }
             }
             best = best.concat(best_non_exotic);
@@ -172,7 +171,8 @@
       active: 'warlock',
       activesets: '5/5/1',
       progress: 0,
-      mode: 'fast',
+      mode: false,
+      scale_type: 'scaled',
       allSetTiers: [],
       highestsets: {},
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
@@ -310,9 +310,9 @@
                             dis = armor.item.normalStats[1735777505];
                             str = armor.item.normalStats[4244567218];
 
-                            set.stats.STAT_INTELLECT.value += int.scaled;
-                            set.stats.STAT_DISCIPLINE.value += dis.scaled;
-                            set.stats.STAT_STRENGTH.value += str.scaled;
+                            set.stats.STAT_INTELLECT.value += int[vm.scale_type];
+                            set.stats.STAT_DISCIPLINE.value += dis[vm.scale_type];
+                            set.stats.STAT_STRENGTH.value += str[vm.scale_type];
 
                             switch(armor.bonus_type) {
                               case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
@@ -333,7 +333,7 @@
                         }
 
                         processed_count++;
-                        if(vm.mode === 'full') {
+                        if(vm.mode) {
                           if(processed_count % 20000 === 0) {
                             // If active gaurdian or page is changed then stop processing combinations
                             if(vm.active !== activeGaurdian || vm.mode !== mode ||  vm.lockedchanged || $location.path() !== '/best') {
@@ -369,13 +369,13 @@
           vm.progress = processed_count/combos;
           console.log('processed', combos, 'combinations.');
           console.timeEnd('elapsed');
-          if(vm.mode === 'full') {
+          if(vm.mode) {
             $scope.$apply();
           }
         }
         console.time('elapsed');
         vm.lockedchanged = false;
-        if(vm.mode === 'full') {
+        if(vm.mode) {
           $timeout(step, 0, false, activeGaurdian, mode, 0,0,0,0,0,0,0,0);
         } else {
           // do 'instant'... but page freeze
