@@ -343,7 +343,7 @@
           _currItems = buildItemMap(stores);
           _newItems = clearStaleNewItems(_currItems, _newItems);
           SyncService.set({newItems: _.keys(_newItems)});
-          
+
           var list_str = '';
           _.each(_newItems, function(val, id) {
               list_str += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
@@ -506,13 +506,16 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: item.lockable,
+        lockable: (itemDef.maxStackSize === 1 && ['Class', 'Consumable'].indexOf(itemType) === -1 && !itemDef.nonTransferrable) || item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
+      if(createdItem.hash === 2000957249 || createdItem.hash === 3441463739)
+      console.log(createdItem)
+
       createdItem.index = createItemIndex(createdItem);
-      
+
       if (_.isEmpty(_stores)) {
         createdItem.isNew = false;
       } else {
@@ -848,7 +851,7 @@
 
       return quality;
     }
-    
+
     function buildItemMap(stores) {
       var itemMap = {};
       _.each(stores, function(store, id) {
@@ -858,7 +861,7 @@
       });
       return itemMap;
     }
-    
+
     function clearStaleNewItems(currItems, newItems) {
       var newItemsClean = {};
       _.each(newItems, function(val, id) {
@@ -868,18 +871,18 @@
       });
       return newItemsClean;
     }
-    
+
     function isItemNew(newId) {
       // Don't worry about general items and consumables
         return newId !== '0' && !_oldItems[newId];
     }
-    
+
     function dropNewItem(item) {
       delete _newItems[item.id];
       SyncService.set({newItems: _.keys(_newItems)});
       item.isNew = false;
     }
-    
+
     function getCachedNewItems() {
       var deferred = $q.defer();
       SyncService.get().then(function processCachedNewItems(data) {
@@ -891,7 +894,7 @@
       });
       return deferred.promise;
     }
-    
+
     function clearNewItems() {
       SyncService.set({newItems: []});
     }
