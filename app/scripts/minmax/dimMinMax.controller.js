@@ -202,11 +202,11 @@
       onCharacterChange: function() {
         vm.ranked = buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
-        vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onModeChange: function () {
         if(vm.progress <= 1) {
-          vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
+          vm.highestsets = vm.getSetBucketsStep(vm.active);
         }
       },
       onOrderChange: function () {
@@ -219,7 +219,7 @@
         }
         var item = _.findWhere(buckets[vm.active][type], {id: dropped_id});
         vm.lockeditems[type] = item;
-        vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
           vm.lockedchanged = true;
         }
@@ -227,7 +227,7 @@
       onRemove: function(removed_type) {
         vm.lockeditems[removed_type] = null;
 
-        vm.highestsets = vm.getSetBucketsStep(vm.active, vm.mode);
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
           vm.lockedchanged = true;
         }
@@ -250,7 +250,7 @@
           equipAll: true
         });
       },
-      getSetBucketsStep: function(activeGaurdian, mode) {
+      getSetBucketsStep: function(activeGaurdian) {
         var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems);
         var helms = bestArmor['Helmet'] || [];
         var gaunts = bestArmor['Gauntlets'] || [];
@@ -268,7 +268,7 @@
         var set_map = {}, int, dis, str, set;
         var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length) || 1;
 
-        function step(activeGaurdian, mode, h, g, c, l, ci, gh, ar, processed_count) {
+        function step(activeGaurdian, h, g, c, l, ci, gh, ar, processed_count) {
           for(; h < helms.length; ++h) {
             for(; g < gaunts.length; ++g) {
               for(; c < chests.length; ++c) {
@@ -336,12 +336,12 @@
                         if(vm.mode) {
                           if(processed_count % 20000 === 0) {
                             // If active gaurdian or page is changed then stop processing combinations
-                            if(vm.active !== activeGaurdian || vm.mode !== mode ||  vm.lockedchanged || $location.path() !== '/best') {
+                            if(vm.active !== activeGaurdian ||  vm.lockedchanged || $location.path() !== '/best') {
                               vm.lockedchanged = false;
                               return;
                             }
                             vm.progress = processed_count/combos;
-                            $timeout(step, 0, true, activeGaurdian, mode, h,g,c,l,ci,gh,ar,processed_count);
+                            $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
                             return;
                           }
                         }
@@ -376,10 +376,10 @@
         console.time('elapsed');
         vm.lockedchanged = false;
         if(vm.mode) {
-          $timeout(step, 0, false, activeGaurdian, mode, 0,0,0,0,0,0,0,0);
+          $timeout(step, 0, false, activeGaurdian, 0,0,0,0,0,0,0,0);
         } else {
           // do 'instant'... but page freeze
-          step(activeGaurdian, mode, 0,0,0,0,0,0,0,0);
+          step(activeGaurdian, 0,0,0,0,0,0,0,0);
         }
         return set_map;
       },
