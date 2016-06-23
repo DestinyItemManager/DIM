@@ -67,8 +67,8 @@
       {{ normal.mode ? 'Full' : 'Fast' }} Processing mode
     </label>
     <small>-
-      <span ng-hide="normal.mode">Fast mode only looks at your best gear</span>
-      <span ng-show="normal.mode">Full mode looks at more gear, but takes longer.</span></small>
+      <span ng-hide="normal.mode">Only looks at your best gear</span>
+      <span ng-show="normal.mode">Looks at more gear, but takes longer.</span></small>
   </p>
   <p>
     <label>
@@ -76,8 +76,8 @@
       {{ normal.scale_type === 'scaled' ? 'Scaled' : 'Normal' }} Light mode
     </label>
     <small>-
-      <span ng-show="normal.scale_type === 'scaled'">Scaled mode will calculate loadouts as if all items were light level 335.</span>
-      <span ng-show="normal.scale_type === 'base'">Normal mode will calculate loadouts at current light levels.</span></small>
+      <span ng-show="normal.scale_type === 'scaled'">Calculates loadouts as if all items were light level 335.</span>
+      <span ng-show="normal.scale_type === 'base'">Calculates loadouts at current light levels.</span></small>
   </p>
   <div ng-show="normal.progress < 1 && normal.highestsets">
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
