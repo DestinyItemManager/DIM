@@ -47,9 +47,9 @@
     <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear.</small></p>
     <div class="itemQuality">
       <div ng-repeat="(type, lockeditem) in normal.lockeditems">
-        <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
-          <div ng-switch-when="null" class="empty-item"></div>
-          <div ng-switch-default>
+        <div class="locked-item" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
+          <div ng-if="!lockeditem" class="empty-item"></div>
+          <div ng-if="lockeditem">
             <dim-store-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-store-item>
             <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>
           </div>
@@ -61,6 +61,13 @@
   <div ng-show="!normal.highestsets">
     <p>Missing legendary or exotic pieces to build a full set!</p>
   </div>
+  <p>
+    Processing mode: <select ng-model='normal.mode' ng-change='normal.onModeChange()'>
+      <option value='fast'>Fast</option>
+      <option value='full'>Full</option>
+    </select>
+    <small>Fast most will only look at your best gear. Full mode will process more of your gear (and yeild more results), but will take longer.</small>
+  </p>
   <div ng-show="normal.progress < 1 && normal.highestsets">
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
   </div>
@@ -92,7 +99,7 @@
     </p>
   </div>
   <div ng-show="normal.progress >= 1">
-    <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:20">
+    <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">
       <div><dim-stats stats="set.stats"></dim-stats><span class='minmax-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
       <div class="itemQuality">
         <div  class="set-item" ng-repeat="armorpiece in set.armor">

@@ -36,6 +36,7 @@
   }
   .label {
     text-align: center;
+    font-size: 10px;
   }
 
   .itemQuality {
@@ -65,6 +66,7 @@
     float: left;
 
     .empty-item {
+      display: inline-block;
       background-color:#656565;
       width:44px;
       height:44px;
@@ -87,7 +89,7 @@
     display: inline-block;
     margin-right: 7px;
     .talent-grid.smaller {
-      max-width: 70px;
+      max-width: 71px;
       max-height: 48px;
     }
   }
