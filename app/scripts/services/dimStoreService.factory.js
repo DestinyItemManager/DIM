@@ -511,8 +511,6 @@
         weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
-      if(createdItem.hash === 2000957249 || createdItem.hash === 3441463739)
-      console.log(createdItem)
 
       createdItem.index = createItemIndex(createdItem);
 
