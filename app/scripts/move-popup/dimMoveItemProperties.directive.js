@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimMoveItemProperties', MoveItemProperties);
 
-  MoveItemProperties.$inject = ['$sce'];
-
-  function MoveItemProperties($sce) {
+  function MoveItemProperties() {
     return {
       bindToController: true,
       controller: MoveItemPropertiesCtrl,

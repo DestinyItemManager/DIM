@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimMovePopup', MovePopup);
 
-  MovePopup.$inject = ['ngDialog'];
-
-  function MovePopup(ngDialog) {
+  function MovePopup() {
     return {
       controller: MovePopupController,
       controllerAs: 'vm',
@@ -143,6 +141,7 @@
           var amount = store.amountOfItem(vm.item);
           return dimItemService.moveTo(item, vault, false, amount);
         }
+        return undefined;
       }));
 
       // Then move from the vault to the character
@@ -155,6 +154,7 @@
             var amount = vault.amountOfItem(vm.item);
             return dimItemService.moveTo(item, vm.store, false, amount);
           }
+          return undefined;
         });
       }
 
@@ -178,7 +178,7 @@
 
     vm.distribute = dimActionQueue.wrap(function() {
       // Sort vault to the end
-      var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id == 'vault' ? 2 : 1; });
+      var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id === 'vault' ? 2 : 1; });
 
       var total = 0;
       var amounts = stores.map(function(store) {
@@ -281,16 +281,12 @@
         return false;
       }
 
-      if (!item.notransfer) {
-        if (itemStore.id !== buttonStore.id) {
-          return true;
-        } else if (item.equipped) {
-          return true;
-        }
-      } else {
+      if (item.notransfer) {
         if (item.equipped && itemStore.id === buttonStore.id) {
           return true;
         }
+      } else if (itemStore.id !== buttonStore.id || item.equipped) {
+        return true;
       }
 
       return false;

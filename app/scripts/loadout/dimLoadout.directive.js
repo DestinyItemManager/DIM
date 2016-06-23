@@ -45,7 +45,7 @@
       ].join('')
     };
 
-    function Link(scope, element, attrs) {
+    function Link(scope) {
       var vm = scope.vm;
 
       vm.classTypeValues = [{
@@ -62,12 +62,12 @@
         value: 2
       }];
 
-      scope.$on('dim-create-new-loadout', function(event, args) {
+      scope.$on('dim-create-new-loadout', function() {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
       });
 
-      scope.$on('dim-delete-loadout', function(event, args) {
+      scope.$on('dim-delete-loadout', function() {
         vm.show = false;
         dimLoadoutService.dialogOpen = false;
         vm.loadout = angular.copy(vm.defaults);
@@ -94,9 +94,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope', 'dimStoreService'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService', '$scope'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope, dimStoreService) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService, $scope) {
     var vm = this;
 
     vm.types = _.chain(dimCategory)
@@ -182,7 +182,7 @@
       var typeInventory = vm.loadout.items[discriminator] = (vm.loadout.items[discriminator] || []);
 
       var index = _.findIndex(typeInventory, function(i) {
-        return i.hash == item.hash && i.id === item.id;
+        return i.hash === item.hash && i.id === item.id;
       });
 
       if (index >= 0) {
@@ -200,8 +200,6 @@
 
     vm.equip = function equip(item) {
       if (item.equipment) {
-        var equipped = vm.loadout.equipped;
-
         if ((item.type === 'Class') && (!item.equipped)) {
           item.equipped = true;
         } else if (item.equipped) {

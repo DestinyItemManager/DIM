@@ -110,7 +110,7 @@
           this.byType[this.unknown.type] = this.unknown;
         }
       };
-      _.each(bucketDefs, function(def, hash) {
+      _.each(bucketDefs, function(def) {
         if (def.enabled) {
           var bucket = {
             id: def.bucketIdentifier,

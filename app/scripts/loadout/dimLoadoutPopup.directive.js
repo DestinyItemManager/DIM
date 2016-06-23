@@ -49,9 +49,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService', '$window'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService, $window) {
     var vm = this;
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -78,7 +78,7 @@
     $rootScope.$on('dim-delete-loadout', initLoadouts);
     initLoadouts();
 
-    vm.newLoadout = function newLoadout($event) {
+    vm.newLoadout = function newLoadout() {
       ngDialog.closeAll();
       $rootScope.$broadcast('dim-create-new-loadout', { });
     };
@@ -105,13 +105,13 @@
       vm.editLoadout(loadout, $event);
     };
 
-    vm.deleteLoadout = function deleteLoadout(loadout, $event) {
-      if (confirm("Are you sure you want to delete '" + loadout.name + "'?")) {
+    vm.deleteLoadout = function deleteLoadout(loadout) {
+      if ($window.confirm("Are you sure you want to delete '" + loadout.name + "'?")) {
         dimLoadoutService.deleteLoadout(loadout);
       }
     };
 
-    vm.editLoadout = function editLoadout(loadout, $event) {
+    vm.editLoadout = function editLoadout(loadout) {
       ngDialog.closeAll();
       $rootScope.$broadcast('dim-edit-loadout', {
         loadout: loadout
@@ -132,7 +132,8 @@
           })
           .groupBy(function(i) {
             return i.type.toLowerCase();
-          }).value()
+          })
+          .value()
       };
     }
 
@@ -178,14 +179,14 @@
       var bestItemFn = function(item) {
         var value = 0;
 
-        if (item.owner == vm.store.id) {
+        if (item.owner === vm.store.id) {
           // Prefer items owned by this character
           value += 0.5;
           // Leave equipped items alone if they need XP, and on the current character
           if (item.equipped) {
             return 1000;
           }
-        } else if (item.owner == 'vault') {
+        } else if (item.owner === 'vault') {
           // Prefer items in the vault over items owned by a different character
           // (but not as much as items owned by this character)
           value += 0.05;
@@ -251,14 +252,14 @@
         // Break ties when items have the same stats. Note that this should only
         // add less than 0.25 total, since in the exotics special case there can be
         // three items in consideration and you don't want to go over 1 total.
-        if (item.owner == vm.store.id) {
+        if (item.owner === vm.store.id) {
           // Prefer items owned by this character
           value += 0.1;
           if (item.equipped) {
             // Prefer them even more if they're already equipped
             value += 0.1;
           }
-        } else if (item.owner == 'vault') {
+        } else if (item.owner === 'vault') {
           // Prefer items in the vault over items owned by a different character
           // (but not as much as items owned by this character)
           value += 0.05;
@@ -281,7 +282,7 @@
         return;
       }
 
-      var itemsByType = _.mapObject(_.groupBy(engrams, 'type'), function(items, type) {
+      var itemsByType = _.mapObject(_.groupBy(engrams, 'type'), function(items) {
         // Sort exotic engrams to the end so they don't crowd out other types
         items = _.sortBy(items, function(i) {
           return i.tier === 'Exotic' ? 1 : 0;
@@ -308,7 +309,7 @@
       vm.applyLoadout(loadout, $event);
     };
 
-    vm.startFarmingEngrams = function startFarmingEngrams($event) {
+    vm.startFarmingEngrams = function startFarmingEngrams() {
       ngDialog.closeAll();
       dimEngramFarmingService.start(vm.store);
     };
@@ -322,7 +323,7 @@
       };
 
       // Pick the best item
-      var items = _.mapObject(itemsByType, function(items, type) {
+      var items = _.mapObject(itemsByType, function(items) {
         return _.max(items, bestItemFn);
       });
 

@@ -109,7 +109,7 @@
 
         // If any category is full, we'll move one aside
         var itemsToMove = [];
-        _.each(itemsByType, function(items, type) {
+        _.each(itemsByType, function(items) {
           // subtract 1 from capacity because we excluded the equipped item
           if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
             // We'll move the lowest-value item to the vault.
@@ -141,19 +141,19 @@
           });
       },
       start: function(store) {
+        var self = this;
+        function farm() {
+          self.moveEngramsToVault().then(function() {
+            self.makeRoomForEngrams();
+          });
+        }
+
         if (!this.active) {
           this.active = true;
           this.store = store;
           this.engramsMoved = 0;
           this.movingEngrams = false;
           this.makingRoom = false;
-          var self = this;
-
-          function farm() {
-            self.moveEngramsToVault().then(function() {
-              self.makeRoomForEngrams();
-            });
-          }
 
           // Whenever the store is reloaded, run the farming algo
           // That way folks can reload manually too

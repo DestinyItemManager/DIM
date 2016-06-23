@@ -7,11 +7,13 @@
       return function(nodes) {
         return _.filter(nodes || [], { hidden: false });
       };
-    }).filter('bungieIcon', function($sce) {
+    })
+    .filter('bungieIcon', function($sce) {
       return function(icon) {
         return $sce.trustAsResourceUrl(chrome.extension.getURL(icon));
       };
-    }).directive('svgBindViewbox', function() {
+    })
+    .directive('svgBindViewbox', function() {
       return {
         link: function(scope, element, attrs) {
           /*
@@ -28,10 +30,6 @@
 
 
   function TalentGrid() {
-    var nodeSize = 32;
-    var nodePadding = 8;
-    var totalNodeSize = nodeSize + nodePadding;
-
     return {
       bindToController: true,
       controller: TalentGridCtrl,
@@ -56,9 +54,9 @@
     };
   }
 
-  TalentGridCtrl.$inject = ['$scope'];
+  TalentGridCtrl.$inject = [];
 
-  function TalentGridCtrl($scope) {
+  function TalentGridCtrl() {
     var vm = this;
     vm.nodeSize = 34;
     vm.nodePadding = 4;

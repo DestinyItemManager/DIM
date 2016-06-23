@@ -43,16 +43,16 @@
         // We handle moving stackable and nonstackable items almost exactly the same!
         var stackable = item.maxStackSize > 1;
         // Items to be decremented
-        var sourceItems = stackable ?
-              _.sortBy(_.select(source.items, function(i) {
+        var sourceItems = stackable
+              ? _.sortBy(_.select(source.items, function(i) {
                 return i.hash === item.hash &&
                   i.id === item.id &&
                   !i.notransfer;
               }), 'amount') : [item];
         // Items to be incremented. There's really only ever at most one of these, but
         // it's easier to deal with as a list.
-        var targetItems = stackable ?
-              _.sortBy(_.select(target.items, function(i) {
+        var targetItems = stackable
+              ? _.sortBy(_.select(target.items, function(i) {
                 return i.hash === item.hash &&
                   i.id === item.id &&
                   // Don't consider full stacks as targets
@@ -264,10 +264,10 @@
           deferred.resolve(true);
         } else {
           dequipItem(equippedExotic)
-            .then(function(result) {
+            .then(function() {
               deferred.resolve(true);
             })
-            .catch(function(err) {
+            .catch(function() {
               deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
             });
         }
@@ -276,11 +276,11 @@
         if (hasLifeExotic(item)) {
           var exoticItemWithPerk = _.find(equippedExotics, hasLifeExotic(item));
           dequipItem(exoticItemWithPerk)
-            .then(function(result) {
+            .then(function() {
               deferred.resolve(true);
             })
-            .catch(function(err) {
-              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
+            .catch(function() {
+              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItemWithPerk.type + ' slot cannot be unequipped.'));
             });
         } else {
           var equippedExoticWithoutPerk = _.find(equippedExotics, function(item) {
@@ -288,11 +288,11 @@
           });
 
           dequipItem(equippedExoticWithoutPerk)
-            .then(function(result) {
+            .then(function() {
               deferred.resolve(true);
             })
-            .catch(function(err) {
-              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
+            .catch(function() {
+              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExoticWithoutPerk.type + ' slot cannot be unequipped.'));
             });
         }
       }
@@ -422,44 +422,44 @@
 
       if (!_.any(movesNeeded)) {
         return $q.resolve(true);
-      } else {
-        if (store.isVault || triedFallback) {
-          // Move aside one of the items that's in the way
-          var moveContext = {
-            reservations: storeReservations,
-            originalItemType: item.type,
-            excludes: excludes || [],
-            spaceLeft: function(s, i) {
-              var left = s.spaceLeftForItem(i);
-              if (i.type === this.originalItemType) {
-                left = left - this.reservations[s.id];
-              }
-              return Math.max(0, left);
+      } else if (store.isVault || triedFallback) {
+        // Move aside one of the items that's in the way
+        var moveContext = {
+          reservations: storeReservations,
+          originalItemType: item.type,
+          excludes: excludes || [],
+          spaceLeft: function(s, i) {
+            var left = s.spaceLeftForItem(i);
+            if (i.type === this.originalItemType) {
+              left = left - this.reservations[s.id];
             }
-          };
-
-          // Move starting from the vault (which is always last)
-          var move = _.pairs(movesNeeded).reverse().find(function(p) { return p[1] > 0; });
-          var source = dimStoreService.getStore(move[0]);
-          var moveAsideItem = chooseMoveAsideItem(source, item, moveContext);
-          var target = chooseMoveAsideTarget(source, moveAsideItem, moveContext);
-
-          if (!target || (!target.isVault && target.spaceLeftForItem(moveAsideItem) <= 0)) {
-            return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
-          } else {
-            // Make one move and start over!
-            return moveTo(moveAsideItem, target, false, moveAsideItem.amount, excludes).then(function() {
-              return canMoveToStore(item, store, triedFallback, excludes);
-            });
+            return Math.max(0, left);
           }
+        };
+
+        // Move starting from the vault (which is always last)
+        var move = _.pairs(movesNeeded)
+              .reverse()
+              .find(function(p) { return p[1] > 0; });
+        var source = dimStoreService.getStore(move[0]);
+        var moveAsideItem = chooseMoveAsideItem(source, item, moveContext);
+        var target = chooseMoveAsideTarget(source, moveAsideItem, moveContext);
+
+        if (!target || (!target.isVault && target.spaceLeftForItem(moveAsideItem) <= 0)) {
+          return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
         } else {
-          // Refresh the stores to see if anything has changed
-          var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
-          return reloadPromise.then(function(stores) {
-            store = _.find(stores, { id: store.id });
-            return canMoveToStore(item, store, true, excludes);
+          // Make one move and start over!
+          return moveTo(moveAsideItem, target, false, moveAsideItem.amount, excludes).then(function() {
+            return canMoveToStore(item, store, triedFallback, excludes);
           });
         }
+      } else {
+        // Refresh the stores to see if anything has changed
+        var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
+        return reloadPromise.then(function(stores) {
+          store = _.find(stores, { id: store.id });
+          return canMoveToStore(item, store, true, excludes);
+        });
       }
     }
 
@@ -501,15 +501,15 @@
       };
 
       var movePlan = isValidTransfer(equip, target, item, excludes)
-            .then(function(targetStore) {
+            .then(function() {
               // Replace the target store - isValidTransfer may have replaced it
               data.target = dimStoreService.getStore(target.id);
             })
-            .then(function(a) {
+            .then(function() {
               var promise = $q.when(item);
 
               if (!data.isVault.source && !data.isVault.target) { // Guardian to Guardian
-                if (data.source.id != data.target.id) { // Different Guardian
+                if (data.source.id !== data.target.id) { // Different Guardian
                   if (item.equipped) {
                     promise = promise.then(function() {
                       return dequipItem(item);
@@ -527,10 +527,10 @@
 
                 if (equip) {
                   promise = promise.then(function() {
-                    if (!item.equipped) {
-                      return equipItem(item);
-                    } else {
+                    if (item.equipped) {
                       return $q.when(item);
+                    } else {
+                      return equipItem(item);
                     }
                   });
                 } else if (!equip) {
@@ -574,7 +574,5 @@
       var items = store ? store.items : getItems();
       return _.findWhere(items, _.pick(params, 'id', 'hash', 'notransfer'));
     }
-
-    return service;
   }
 })();

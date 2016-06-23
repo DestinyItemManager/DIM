@@ -12,7 +12,7 @@
     var platformPromise = null;
     var membershipPromise = null;
 
-    $rootScope.$on('dim-active-platform-updated', function(event, args) {
+    $rootScope.$on('dim-active-platform-updated', function() {
       tokenPromise = null;
       platformPromise = null;
       membershipPromise = null;
@@ -101,6 +101,7 @@
     }
 
 
+    /*
     function openBungieNetTab(tabs) {
       if (_.size(tabs) === 0) {
         chrome.tabs.create({
@@ -109,7 +110,7 @@
         });
       }
     }
-
+    */
 
     /************************************************************************************************************************************/
 
@@ -139,14 +140,14 @@
               return cookie.name === 'bungled';
             });
 
-            if (!_.isUndefined(cookie)) {
+            if (cookie) {
               resolve(cookie.value);
             } else {
               reject(new Error('Please log into Bungie.net in order to use this extension.'));
             }
           });
         })
-        .catch(function(error) {
+        .catch(function() {
           tokenPromise = null;
         });
 
@@ -256,7 +257,7 @@
     function getBnetCharactersRequest(token, platform, membershipId) {
       return {
         method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
+        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token

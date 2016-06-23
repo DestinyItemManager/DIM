@@ -95,35 +95,3 @@
         });
     });
 })();
-
-if (typeof window.onerror == "object") {
-  window.onerror = function(err, url, line) {};
-}
-
-(function(window) {
-  // Retain a reference to the previous global error handler, in case it has been set:
-  var originalWindowErrorCallback = window.onerror;
-
-  window.onerror = function customErrorHandler(errorMessage, url, lineNumber, columnNumber, errorObject) {
-    var exceptionDescription = errorMessage;
-    if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
-      exceptionDescription = errorObject.message;
-    }
-    //
-    // _gaq.push([
-    //   'errorTracker._trackEvent',
-    //   'DIM - Chrome Extension - v3.3',
-    //   exceptionDescription,
-    //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
-    //   0,
-    //   true
-    // ]);
-
-    // If the previous "window.onerror" callback can be called, pass it the data:
-    if (typeof originalWindowErrorCallback === 'function') {
-      return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
-    }
-    // Otherwise, Let the default handler run:
-    return false;
-  };
-})(window);

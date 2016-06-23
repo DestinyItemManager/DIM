@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('SyncService', SyncService);
 
-  SyncService.$inject = ['$q', '$http'];
+  SyncService.$inject = ['$q', '$window'];
 
-  function SyncService($q, $http) {
+  function SyncService($q, $window) {
     var cached; // cached is the data in memory,
     var fileId; // reference to the file in drive
     var membershipId; // logged in bungie user id
@@ -42,7 +42,7 @@
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
           if (list.code === 401) {
-            alert('To re-authorize google drive, must restart your browser.');
+            $window.alert('To re-authorize google drive, must restart your browser.');
             deferred.resolve();
             return deferred.promise;
           }
@@ -134,12 +134,10 @@
       //      }
 
       // use replace to override the data. normally we're doing a PATCH
-      if (!PUT) { // update our data
-        if (cached) {
-          angular.extend(cached, value);
-        } else {
-          cached = value;
-        }
+      if (PUT) { // update our data
+        cached = value;
+      } else if (cached) {
+        angular.extend(cached, value);
       } else {
         cached = value;
       }

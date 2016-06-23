@@ -174,12 +174,11 @@
     }
 
     function hydrate(loadout) {
-      var result;
       var hydration = {
         'v1.0': hydratev1d0,
         'v2.0': hydratev2d0,
         'v3.0': hydratev3d0,
-        'default': hydratev3d0
+        default: hydratev3d0
       };
 
       // v1.0 did not have a 'version' property so if it fails, we'll assume.
@@ -307,7 +306,7 @@
 
     // Move one loadout item at a time. Called recursively to move items!
     function applyLoadoutItems(store, items, loadout, loadoutItemIds, scope) {
-      if (items.length == 0) {
+      if (items.length === 0) {
         // We're done!
         return $q.when();
       }
@@ -321,7 +320,7 @@
         var amountNeeded = pseudoItem.amount - store.amountOfItem(pseudoItem);
         if (amountNeeded > 0) {
           var otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
-            return store.id == otherStore.id;
+            return store.id === otherStore.id;
           });
           var storesByAmount = _.sortBy(otherStores.map(function(store) {
             return {

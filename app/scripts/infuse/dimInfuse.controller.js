@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService', 'toaster'];
+  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService', 'toaster', '$q'];
 
-  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster) {
+  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster, $q) {
     var vm = this;
 
     angular.extend(vm, {
@@ -24,11 +24,12 @@
         vm.infused = 0;
         vm.target = null;
         vm.statType =
-          vm.source.primStat.statHash === 3897883278 ? 'Defense' : // armor item
-          vm.source.primStat.statHash === 368428387 ? 'Attack' :  // weapon item
-                                                       'Unknown'; // new item?
-        vm.wildcardMaterialIcon = item.bucket.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1' :
-          vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3' : '972ae2c6ccbf59cde293a2ed50a57a93';
+          vm.source.primStat.statHash === 3897883278 ? 'Defense' // armor item
+          : vm.source.primStat.statHash === 368428387 ? 'Attack' // weapon item
+          : 'Unknown'; // new item?
+        vm.wildcardMaterialIcon = item.bucket.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1'
+          : vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3'
+          : '972ae2c6ccbf59cde293a2ed50a57a93';
         vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
         // 2 motes, or 10 armor/weapon materials
         vm.wildcardMaterialCost = item.bucket.sort === 'General' ? 2 : 10;
@@ -55,12 +56,12 @@
         }
 
         // all stores
-        _.each(stores, function(store, id, list) {
+        stores.forEach(function(store) {
           // all items in store
           var items = _.filter(store.items, function(item) {
             return item.primStat &&
               (!item.locked || vm.showLockedItems) &&
-              item.type == vm.source.type &&
+              item.type === vm.source.type &&
               item.primStat.value > vm.source.primStat.value;
           });
 

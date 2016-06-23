@@ -2,12 +2,12 @@
   angular.module('dimApp')
     .directive('dimClickAnywhereButHere', ClickAnywhereButHere);
 
-  ClickAnywhereButHere.$inject = ['$document', '$parse'];
+  ClickAnywhereButHere.$inject = ['$document'];
 
-  function ClickAnywhereButHere($document, $parse) {
+  function ClickAnywhereButHere($document) {
     return {
       restrict: 'A',
-      link: function(scope, element, attr, ctrl) {
+      link: function(scope, element, attr) {
         var handler = function(event) {
           if (!element[0].contains(event.target)) {
             scope.$apply(attr.dimClickAnywhereButHere);

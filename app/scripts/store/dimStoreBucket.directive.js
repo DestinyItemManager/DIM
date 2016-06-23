@@ -26,18 +26,18 @@
         if (sort === 'rarity' || sort === 'rarityThenPrimary') {
           items = _.sortBy(items, function(item) {
             switch (item.tier) {
-              case 'Exotic':
-                return 0;
-              case 'Legendary':
-                return 1;
-              case 'Rare':
-                return 2;
-              case 'Uncommon':
-                return 3;
-              case 'Common':
-                return 4;
-              default:
-                return 5;
+            case 'Exotic':
+              return 0;
+            case 'Legendary':
+              return 1;
+            case 'Rare':
+              return 2;
+            case 'Uncommon':
+              return 3;
+            case 'Common':
+              return 4;
+            default:
+              return 5;
             }
           });
         }
@@ -90,7 +90,7 @@
     var hovering = false;
     var dragHelp = document.getElementById('drag-help');
     var entered = 0;
-    vm.onDragEnter = function($event) {
+    vm.onDragEnter = function() {
       if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
         entered = entered + 1;
         if (entered === 1) {
@@ -103,7 +103,7 @@
         }
       }
     };
-    vm.onDragLeave = function($event) {
+    vm.onDragLeave = function() {
       if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
         entered = entered - 1;
         if (entered === 0) {
@@ -128,7 +128,7 @@
       }
 
       if (item.owner === vm.store.id) {
-        if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
+        if ((item.equipped && equip) || (!item.equipped && !equip)) {
           return $q.resolve(item);
         }
       }

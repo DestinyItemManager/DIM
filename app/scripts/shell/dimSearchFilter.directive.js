@@ -56,7 +56,7 @@
                 "quality:<", "quality:>", "quality:<=", "quality:>=",
                 "percentage:<", "percentage:>", "percentage:<=", "percentage:>=");
 
-  function Link(scope, element, attrs) {
+  function Link(scope, element) {
     element.find('input').textcomplete([
       {
         words: keywords,
@@ -76,9 +76,9 @@
     });
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', '$interval', 'dimSettingsService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, $interval, dimSettingsService) {
+  function SearchFilterCtrl($scope, dimStoreService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -87,27 +87,27 @@
       query: ""
     };
 
-    $scope.$on('dim-stores-updated', function(arg) {
+    $scope.$on('dim-stores-updated', function() {
       _duplicates = null;
       vm.filter();
     });
 
     // Something has changed that could invalidate filters
-    $scope.$on('dim-filter-invalidate', function(arg) {
+    $scope.$on('dim-filter-invalidate', function() {
       _duplicates = null;
       vm.filter();
     });
 
-    $scope.$on('dim-focus-filter-input', function(arg) {
+    $scope.$on('dim-focus-filter-input', function() {
       vm.focusFilterInput();
     });
 
-    $scope.$on('dim-escape-filter-input', function(arg) {
+    $scope.$on('dim-escape-filter-input', function() {
       vm.blurFilterInputIfEmpty();
       vm.clearFilter();
     });
 
-    $scope.$on('dim-clear-filter-input', function(arg) {
+    $scope.$on('dim-clear-filter-input', function() {
       vm.clearFilter();
     });
 
@@ -151,7 +151,7 @@
             addPredicate(predicate, filter);
           } else {
             for (var key in filterTrans) {
-              if (filterTrans.hasOwnProperty(key) && !!~filterTrans[key].indexOf(filter)) {
+              if (filterTrans.hasOwnProperty(key) && filterTrans[key].indexOf(filter) > -1) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter);
@@ -266,18 +266,18 @@
         var value;
 
         switch (predicate) {
-          case 'titan':
-            value = 0;
-            break;
-          case 'hunter':
-            value = 1;
-            break;
-          case 'warlock':
-            value = 2;
-            break;
+        case 'titan':
+          value = 0;
+          break;
+        case 'hunter':
+          value = 1;
+          break;
+        case 'warlock':
+          value = 2;
+          break;
         }
 
-        return (item.classType == value);
+        return (item.classType === value);
       },
       stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
@@ -292,7 +292,7 @@
         return item.talentGrid && item.talentGrid.infusable;
       },
       weaponClass: function(predicate, item) {
-        return predicate.toLowerCase().replace(/\s/g, '') == item.weaponClass;
+        return predicate.toLowerCase().replace(/\s/g, '') === item.weaponClass;
       },
       keyword: function(predicate, item) {
         return item.name.toLowerCase().indexOf(predicate) >= 0 ||
@@ -320,25 +320,27 @@
           }
         }, this);
 
+        predicate = parseInt(predicate, 10);
+
         switch (operand) {
-          case 'none':
-            result = (item.primStat.value == predicate);
-            break;
-          case '=':
-            result = (item.primStat.value == predicate);
-            break;
-          case '<':
-            result = (item.primStat.value < predicate);
-            break;
-          case '<=':
-            result = (item.primStat.value <= predicate);
-            break;
-          case '>':
-            result = (item.primStat.value > predicate);
-            break;
-          case '>=':
-            result = (item.primStat.value >= predicate);
-            break;
+        case 'none':
+          result = (item.primStat.value === predicate);
+          break;
+        case '=':
+          result = (item.primStat.value === predicate);
+          break;
+        case '<':
+          result = (item.primStat.value < predicate);
+          break;
+        case '<=':
+          result = (item.primStat.value <= predicate);
+          break;
+        case '>':
+          result = (item.primStat.value > predicate);
+          break;
+        case '>=':
+          result = (item.primStat.value >= predicate);
+          break;
         }
         return result;
       },
@@ -361,25 +363,27 @@
           }
         }, this);
 
+        predicate = parseInt(predicate, 10);
+
         switch (operand) {
-          case 'none':
-            result = (item.quality.min == predicate);
-            break;
-          case '=':
-            result = (item.quality.min == predicate);
-            break;
-          case '<':
-            result = (item.quality.min < predicate);
-            break;
-          case '<=':
-            result = (item.quality.min <= predicate);
-            break;
-          case '>':
-            result = (item.quality.min > predicate);
-            break;
-          case '>=':
-            result = (item.quality.min >= predicate);
-            break;
+        case 'none':
+          result = (item.quality.min === predicate);
+          break;
+        case '=':
+          result = (item.quality.min === predicate);
+          break;
+        case '<':
+          result = (item.quality.min < predicate);
+          break;
+        case '<=':
+          result = (item.quality.min <= predicate);
+          break;
+        case '>':
+          result = (item.quality.min > predicate);
+          break;
+        case '>=':
+          result = (item.quality.min >= predicate);
+          break;
         }
         return result;
       },

@@ -29,7 +29,7 @@
             timeout: timeout,
             bodyOutputType: 'trustedHtml',
             showCloseButton: true,
-            clickHandler: function(a, b, c, d, e, f, g) {
+            clickHandler: function(a, b) {
               if (b) {
                 return true;
               }

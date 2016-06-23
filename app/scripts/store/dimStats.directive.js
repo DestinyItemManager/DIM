@@ -39,9 +39,9 @@
     };
   }
 
-  StatsCtrl.$inject = ['$scope'];
+  StatsCtrl.$inject = [];
 
-  function StatsCtrl($scope) {
+  function StatsCtrl() {
     var vm = this;
 
     vm.formatTooltip = function(which) {
