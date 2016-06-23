@@ -8,13 +8,13 @@
 
   function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog, dimLoadoutService) {
     var vm = this,
-        buckets = [];
+      buckets = [];
 
     function getBonusType(armorpiece) {
       return '' +
-        (armorpiece.normalStats[144602215].bonus > 0? 'int ' : '') +
-        (armorpiece.normalStats[1735777505].bonus > 0? 'disc ' : '') +
-        (armorpiece.normalStats[4244567218].bonus > 0? 'str' : '');
+        (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
+        (armorpiece.normalStats[1735777505].bonus > 0 ? 'disc ' : '') +
+        (armorpiece.normalStats[4244567218].bonus > 0 ? 'str' : '');
     }
 
     // for specifc armor (Helmet), look at stats (int/dis), return best one.
@@ -25,7 +25,7 @@
             return 0;
           }
           var bonus = 0,
-              total = 0;
+            total = 0;
           stats.forEach(function(stat) {
             total += o.normalStats[stat][vm.scale_type];
             bonus = o.normalStats[stat].bonus;
@@ -38,19 +38,20 @@
 
     function getBestArmor(bucket, locked) {
       var stat_hashes = [
-            {stats: [144602215, 1735777505], type: 'intdisc'},
-            {stats: [144602215, 4244567218], type: 'intstr'},
-            {stats: [1735777505, 4244567218], type: 'discstr'},
-            {stats: [144602215], type: 'int'},
-            {stats: [1735777505], type: 'disc'},
-            {stats: [4244567218], type: 'str'},
-          ],
-          armor = {},
-          best = [],
-          best_non_exotic = [],
-          curbest,
-          best_combs;
-      for (var armortype in bucket) {
+          {stats: [144602215, 1735777505], type: 'intdisc'},
+          {stats: [144602215, 4244567218], type: 'intstr'},
+          {stats: [1735777505, 4244567218], type: 'discstr'},
+          {stats: [144602215], type: 'int'},
+          {stats: [1735777505], type: 'disc'},
+          {stats: [4244567218], type: 'str'}
+        ],
+        armor = {},
+        best = [],
+        best_non_exotic = [],
+        curbest,
+        best_combs,
+        armortype;
+      for (armortype in bucket) {
         if(locked[armortype] !== null) {
           best = [{item: locked[armortype], bonus_type: getBonusType(locked[armortype])}];
         } else {
@@ -106,22 +107,20 @@
       allSetTiers: [],
       highestsets: {},
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
-      normalize: 335,
       type: 'Helmet',
       showBlues: false,
       showExotics: true,
       showYear1: false,
-      combinations: null,
       setOrder: '-str_val,-disc_val,-int_val',
       setOrderValues: ['-str_val', '-disc_val', '-int_val'],
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
       lockedItemsValid: function(dropped_id, dropped_type) {
         dropped_id = dropped_id.split('-')[1];
-        var item = _.findWhere(buckets[vm.active][dropped_type], {id: dropped_id});
-        var exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
+        var item = _.findWhere(buckets[vm.active][dropped_type], {id: dropped_id}),
+          exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         _.each(vm.lockeditems, function(lockeditem) {
-          if(lockeditem === null || type === dropped_type) {
+          if(lockeditem === null || lockeditem.type === dropped_type) {
             return;
           }
           if(lockeditem.isExotic && lockeditem.type !== 'ClassItem') {
@@ -181,22 +180,20 @@
       },
       getSetBucketsStep: function(activeGaurdian) {
         var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems),
-            helms = bestArmor['Helmet'] || [],
-            gaunts = bestArmor['Gauntlets'] || [],
-            chests = bestArmor['Chest'] || [],
-            legs = bestArmor['Leg'] || [],
-            classItems = bestArmor['ClassItem'] || [],
-            ghosts = bestArmor['Ghost'] || [],
-            artifacts = bestArmor['Artifact'] || [];
+          helms = bestArmor.Helmet || [],
+          gaunts = bestArmor.Gauntlets || [],
+          chests = bestArmor.Chest || [],
+          legs = bestArmor.Leg || [],
+          classItems = bestArmor.ClassItem || [],
+          ghosts = bestArmor.Ghost || [],
+          artifacts = bestArmor.Artifact || [],
+          set_map = {},
+          int, dis, str, set,
+          combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
 
-        if(helms.length === 0 || gaunts.length === 0 || chests.length === 0 ||
-           legs.length === 0 || classItems.length === 0 || ghosts.length === 0 || artifacts.length === 0) {
+        if(combos === 0) {
           return null;
         }
-
-        var set_map = {},
-            int, dis, str, set,
-            combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length) || 1;
 
         function step(activeGaurdian, h, g, c, l, ci, gh, ar, processed_count) {
           for(; h < helms.length; ++h) {
@@ -320,7 +317,7 @@
         _.each(stores, function(store, id) {
           var items = _.filter(store.items, function(item) {
             return item.primStat &&
-              item.primStat.statHash === 3897883278 && // has defence hash
+              item.primStat.statHash === 3897883278 && // has defense hash
               ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
               item.primStat.value >= 280 && // only 280+ light items
               item.stats;
