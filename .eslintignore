@@ -1,0 +1,9 @@
+app/scripts/jquery-ui.position.js
+app/scripts/toaster.js
+app/scripts/minmax/dimMinMax.controller.js
+app/vendor/
+build/
+dist/
+Gruntfile.js
+karma.conf.js
+
