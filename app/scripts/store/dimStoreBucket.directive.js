@@ -71,7 +71,7 @@
         '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
         '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
         '      drop-channel="{{::vm.dropChannel}}">',
-        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
+        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
         '</div>'
       ].join('')
@@ -82,6 +82,8 @@
 
   function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
     var vm = this;
+
+    vm.settings = dimSettingsService;
 
     vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
 
@@ -197,16 +199,6 @@
       loadingTracker.addPromise(promise);
 
       return promise;
-    });
-
-    dimSettingsService.getSetting('itemSort').then(function(sort) {
-      vm.itemSort = sort;
-    });
-
-    $scope.$on('dim-settings-updated', function(event, settings) {
-      if (_.has(settings, 'itemSort')) {
-        vm.itemSort = settings.itemSort;
-      }
     });
   }
 })();

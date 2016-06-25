@@ -3,10 +3,10 @@
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope', '$rootScope', 'SyncService'];
+  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService'];
 
-  function SettingsController(settings, $scope, $rootScope, SyncService) {
-    var vm = $scope.vm = {};
+  function SettingsController(settings, $scope, SyncService) {
+    var vm = this;
 
     vm.charColOptions = [
       { id: 3, name: '3' },
@@ -14,13 +14,10 @@
       { id: 5, name: '5' }
     ];
 
-    settings.getSetting()
-      .then(function(s) {
-        vm.settings = s;
-      });
+    vm.settings = settings;
 
-    vm.save = function(key) {
-      settings.saveSetting(key, vm.settings[key]);
+    vm.save = function() {
+      settings.save();
     };
 
     vm.showSync = function() {
@@ -28,10 +25,7 @@
     };
 
     vm.driveSync = function() {
-      SyncService.authorize().then(function() {
-        // TODO: still requires a hard refresh... why does this not work?
-        $rootScope.$broadcast('dim-settings-updated');
-      });
+      SyncService.authorize();
     };
   }
 })();

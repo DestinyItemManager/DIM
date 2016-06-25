@@ -211,6 +211,10 @@ a {
 
 /* settings dialog */
 
+.settings td:nth-child(2) {
+  white-space: nowrap;
+}
+
 @keyframes ngdialog-fadeout {
   0% {
     opacity: 1;

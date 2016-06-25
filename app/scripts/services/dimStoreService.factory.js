@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimInfoService', 'SyncService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimInfoService', 'SyncService'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimInfoService, SyncService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimInfoService, SyncService) {
     var _stores = [];
     var _oldItems = {};
     var _currItems = {};
@@ -130,17 +130,6 @@
       processItems: getItems
     };
 
-    $rootScope.$on('dim-settings-updated', function(event, setting) {
-      if (_.has(setting, 'characterOrder')) {
-        sortStores(_stores).then(function(stores) {
-          _stores = stores;
-          $rootScope.$broadcast('dim-stores-updated', {
-            stores: stores
-          });
-        });
-      }
-    });
-
     return service;
 
     // Update the high level character information for all the stores
@@ -156,17 +145,6 @@
         });
         return _stores;
       });
-    }
-
-    function sortStores(stores) {
-      return settings.getSetting('characterOrder')
-        .then(function(characterOrder) {
-          if (characterOrder === 'mostRecent') {
-            return _.sortBy(stores, 'lastPlayed').reverse();
-          } else {
-            return _.sortBy(stores, 'id');
-          }
-        });
     }
 
     function getStores() {
@@ -323,9 +301,6 @@
               return store;
             });
           }));
-        })
-        .then(function(stores) {
-          return sortStores(stores);
         })
         .then(function(stores) {
           _stores = stores;

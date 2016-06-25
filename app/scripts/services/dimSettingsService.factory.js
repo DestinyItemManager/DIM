@@ -4,104 +4,59 @@
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$q', '$rootScope', 'SyncService'];
+  SettingsService.$inject = ['$rootScope', 'SyncService'];
 
-  function SettingsService($q, $rootScope, SyncService) {
-    var settingState;
-    var currentSettings = null;
+  /**
+   * The settings service provides a settings object which contains
+   * all DIM settings as properties. To observe changes in settings,
+   * add a $watch on one or more of the settings, or just use it in a
+   * template (where watches are automatic!). To save settings, call
+   * "save()" on the settings object.
+   *
+   * Settings will start out with default values and asynchronously
+   * load in the user's actual settings, so it is a good sidea to
+   * always watch the settings you are using.
+   */
+  function SettingsService($rootScope, SyncService) {
+    var _loaded = false;
+    var settings = {
+      // Hide items that don't match the current search
+      hideFilteredItems: false,
+      // Show full details in item popup
+      itemDetails: false,
+      // Show item quality percentages
+      itemQuality: false,
+      // Show elemental damage icons
+      showElements: false,
+      // Sort characters (mostRecent, fixed)
+      characterOrder: 'mostRecent',
+      // Sort items in buckets (primaryStat, rarityThenPrimary,
+      // rarity, quality)
+      itemSort: 'primaryStat',
+      // How many columns to display character buckets
+      charCol: 3,
 
-    return {
-      getSetting: getSetting,
-      getSettings: getSettings,
-      saveSetting: saveSetting
-    };
-
-    function loadSettings() {
-      settingState = {
-        hideFilteredItems: false,
-        itemDetails: false,
-        itemQuality: false,
-        showElements: false,
-        characterOrder: 'mostRecent',
-        itemSort: 'primaryStat',
-        charCol: 3
-      };
-
-      if (currentSettings) {
-        return $q.when(currentSettings);
-      } else {
-        return $q(function(resolve) {
-          function processStorageSettings(data) {
-            if (_.has(data, "settings-v1.0")) {
-              currentSettings = data["settings-v1.0"];
-
-              var currentKeys = _.keys(currentSettings);
-              var defaultKeys = _.keys(settingState);
-              var diff = _.difference(defaultKeys, currentKeys);
-
-              diff.forEach(function(key) {
-                currentSettings[key] = settingState[key];
-              });
-
-              if (diff.length > 0) {
-                saveSettings();
-              }
-            } else {
-              currentSettings = angular.copy(settingState);
-              saveSettings();
-            }
-
-            resolve(currentSettings);
-          }
-
-          SyncService.get().then(processStorageSettings);
+      save: function() {
+        if (!_loaded) {
+          throw new Error("Settings haven't loaded - they can't be saved.");
+        }
+        $rootScope.$evalAsync(function() {
+          SyncService.set({
+            'settings-v1.0': _.omit(settings, 'save')
+          });
         });
       }
-    }
+    };
 
-    function getSettings() {
-      return loadSettings();
-    }
+    // Load settings async
+    SyncService.get().then(function(data) {
+      var savedSettings = data['settings-v1.0'] || {};
+      _loaded = true;
+      $rootScope.$evalAsync(function() {
+        angular.extend(settings, savedSettings);
+      });
+    });
 
-    function getSetting(key) {
-      return loadSettings()
-        .then(function(settings) {
-          if (!key) {
-            return settings;
-          } else if (_.has(settings, key)) {
-            return settings[key];
-          } else {
-            return $q.reject("The key is not defined in the settings.");
-          }
-        });
-    }
-
-    function saveSetting(key, value) {
-      return getSetting()
-        .then(function(settings) {
-          settings[key] = value;
-          var data = {
-            "settings-v1.0": settings
-          };
-          var kvp = {};
-          kvp[key] = value;
-
-          data["settings-v1.0"] = settings;
-
-          SyncService.set(data);
-          $rootScope.$broadcast('dim-settings-updated', kvp);
-        });
-    }
-
-    function saveSettings() {
-      return getSetting()
-        .then(function(settings) {
-          var data = {};
-
-          data["settings-v1.0"] = settings;
-
-          SyncService.set(data);
-        });
-    }
+    return settings;
   }
 })();
