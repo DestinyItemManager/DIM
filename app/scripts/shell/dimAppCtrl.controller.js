@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimSettingsService'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimSettingsService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -179,6 +179,18 @@
             .removeClass('filters');
         });
       }
+    };
+    
+    vm.vendor = dimVendorService;
+    vm.showVendors = function showVendors(e) {
+      e.stopPropagation();
+
+      ngDialog.open({
+        template: 'views/vendors.html',
+        className: 'vendors'
+      }).closePromise.then(function() {
+        ngDialog.closeAll();
+      });
     };
 
     vm.xur = dimXurService;

@@ -26,7 +26,8 @@
       equip: equip,
       equipItems: equipItems,
       setLockState: setLockState,
-      getXur: getXur
+      getXur: getXur,
+      getVendors: getVendors
     };
 
     return service;
@@ -38,7 +39,7 @@
     }
 
     function handleErrors(response) {
-      if (response.statue === 503) {
+      if (response.status === 503) {
         return $q.reject(new Error("Bungie.net is down."));
       }
       if (response.status < 200 || response.status >= 400) {
@@ -299,6 +300,64 @@
         return response.data.Response.data;
       });
     }
+    
+    function getVendors(platform) {
+      var data = {
+        token: null,
+        membershipId: null
+      };
+
+      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
+      var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
+      var addCharactersToData = assignResultAndForward.bind(null, data, 'characters');
+      var getMembershipPB = getMembership.bind(null, platform);
+      var getCharactersPB = getCharacters.bind(null, platform);
+
+      var promise = getBungleToken()
+        .then(addTokenToData)
+        .then(getMembershipPB)
+        .then(addMembershipIdToData)
+        .then(getCharactersPB)
+        .then(addCharactersToData)
+        .then(function() {
+          // Titan van, Hunter van, Warlock van, Van quart, Dead orb, Future war, New mon, Cruc hand, Cruc quart, Speaker, Variks, Exotic Blue, Variks
+          var vendorHashes = ['1990950', '3003633346', '1575820975', '2668878854', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '3658200622', '2680694281', '1998812735', '3902439767'];
+          var promises = [];
+          _.each(vendorHashes, function(vendorHash) {
+            _.each(data.characters, function(character) {
+              promises.push(getVendor(data.token, platform, data.membershipId, character, vendorHash));
+            });
+          });
+          return $q.all(promises).then(function(data) {
+            return $q.resolve(data);
+          });
+        })
+        .catch(function(e) {
+          toaster.pop('error', 'Bungie.net Error', e.message);
+
+          return $q.reject(e);
+        });
+
+      return promise;
+    }
+    
+    function getVendor(token, platform, membershipId, character, vendorId) {
+      return $q.when({
+        method: 'GET',
+        url: 'https://www.bungie.net/platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/?lc=en&fmt=true&lcin=true&definitions=true',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        }
+      })
+      .then(function(request) {
+        return $http(request);
+      })
+      .then(handleErrors)
+      .then(function(response) {
+        return response.data.Response.data;
+      });
+    }
 
     /************************************************************************************************************************************/
 
@@ -323,7 +382,7 @@
         .then(function() {
           return $q.all([
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
           ]).then(function(data) {
             return $q.resolve(data[0]);
           });
