@@ -4,18 +4,18 @@
   angular.module('dimApp')
     .factory('SyncService', SyncService);
 
-  SyncService.$inject = ['$q', '$http'];
+  SyncService.$inject = ['$q', '$window'];
 
-  function SyncService($q, $http) {
-    var cached, // cached is the data in memory,
-      fileId, // reference to the file in drive
-      membershipId, // logged in bungie user id
-      drive = { // drive api data
-        'client_id': '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
-        'scope': 'https://www.googleapis.com/auth/drive.appfolder',
-        'immediate': false
-      },
-      ready = $q.defer();
+  function SyncService($q, $window) {
+    var cached; // cached is the data in memory,
+    var fileId; // reference to the file in drive
+    var membershipId; // logged in bungie user id
+    var drive = { // drive api data
+      client_id: '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
+      scope: 'https://www.googleapis.com/auth/drive.appfolder',
+      immediate: false
+    };
+    var ready = $q.defer();
 
     function init() {
       return ready.resolve();
@@ -39,11 +39,10 @@
 
       // load the drive client.
       gapi.client.load('drive', 'v2', function() {
-
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
           if (list.code === 401) {
-            alert('To re-authorize google drive, must restart your browser.');
+            $window.alert('To re-authorize google drive, must restart your browser.');
             deferred.resolve();
             return deferred.promise;
           }
@@ -62,13 +61,13 @@
 
           // couldn't find the file, lets create a new one.
           gapi.client.request({
-            'path': '/drive/v2/files',
-            'method': 'POST',
-            'body': {
-              'title': 'DIM-' + membershipId,
-              'mimeType': 'application/json',
-              'parents': [{
-                'id': 'appfolder'
+            path: '/drive/v2/files',
+            method: 'POST',
+            body: {
+              title: 'DIM-' + membershipId,
+              mimeType: 'application/json',
+              parents: [{
+                id: 'appfolder'
               }]
             }
           }).execute(function(file) {
@@ -93,14 +92,14 @@
       // we're a chrome app so we do this
       if (chrome.identity) {
         chrome.identity.getAuthToken({
-          'interactive': true
+          interactive: true
         }, function(token) {
           if (chrome.runtime.lastError) {
             revokeDrive();
             return;
           }
           gapi.auth.setToken({
-            'access_token': token
+            access_token: token
           });
           getFileId().then(deferred.resolve);
         });
@@ -135,13 +134,10 @@
       //      }
 
       // use replace to override the data. normally we're doing a PATCH
-      if (!PUT) { // update our data
-       if(cached){
-        angular.extend(cached, value);
-       }
-       else{
+      if (PUT) { // update our data
         cached = value;
-       }
+      } else if (cached) {
+        angular.extend(cached, value);
       } else {
         cached = value;
       }
@@ -153,7 +149,7 @@
       if (chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.set(cached, function() {
           if (chrome.runtime.lastError) {
-//            console.log('error with chrome sync.')
+            //            console.log('error with chrome sync.')
           }
         });
       }
@@ -179,7 +175,7 @@
           },
           body: cached
         }).execute(function(resp) {
-          if(resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
+          if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
             console.log('error saving. revoking drive.');
             revokeDrive();
             return;
@@ -210,7 +206,7 @@
               fileId: fileId,
               alt: 'media'
             }).execute(function(resp) {
-              if(resp.code === 401 || resp.code === 404) {
+              if (resp.code === 401 || resp.code === 404) {
                 revokeDrive();
                 return;
               }
@@ -226,7 +222,7 @@
           cached = data;
           deferred.resolve(cached);
         });
-      } //else get from chrome local
+      } // else get from chrome local
       // else if(chrome.storage && chrome.storage.local) {
       //   chrome.storage.local.get(null, function(data) {
       //     cached = data;

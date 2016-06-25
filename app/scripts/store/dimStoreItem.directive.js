@@ -1,5 +1,3 @@
-/*jshint -W027*/
-
 (function() {
   'use strict';
 
@@ -34,6 +32,8 @@
   StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
   function StoreItem(dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
+    var otherDialog = null;
+
     return {
       bindToController: true,
       controller: StoreItemCtrl,
@@ -42,8 +42,8 @@
       replace: true,
       restrict: 'E',
       scope: {
-        'store': '=storeData',
-        'item': '=itemData'
+        store: '=storeData',
+        item: '=itemData'
       },
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
@@ -69,9 +69,7 @@
       ].join('')
     };
 
-    var otherDialog = null;
-
-    function Link(scope, element, attrs) {
+    function Link(scope, element) {
       var vm = scope.vm;
       var dialogResult = null;
 
@@ -99,7 +97,7 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
-        
+
         dimStoreService.dropNewItem(item);
 
         if (otherDialog) {
@@ -114,28 +112,26 @@
             dialogResult.close();
             dialogResult = null;
           }
+        } else if (dimLoadoutService.dialogOpen) {
+          dimLoadoutService.addItemToLoadout(item, e);
         } else {
-          if (!dimLoadoutService.dialogOpen) {
-            var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
-            var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
+          var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
+          var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
 
-            dialogResult = ngDialog.open({
-              template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
-              plain: true,
-              appendTo: 'div[id="' + item.index + '"]',
-              overlay: false,
-              className: 'move-popup' + right + bottom,
-              showClose: false,
-              scope: scope
-            });
-            otherDialog = dialogResult;
+          dialogResult = ngDialog.open({
+            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+            plain: true,
+            appendTo: 'div[id="' + item.index + '"]',
+            overlay: false,
+            className: 'move-popup' + right + bottom,
+            showClose: false,
+            scope: scope
+          });
+          otherDialog = dialogResult;
 
-            dialogResult.closePromise.then(function(data) {
-              dialogResult = null;
-            });
-          } else {
-            dimLoadoutService.addItemToLoadout(item, e);
-          }
+          dialogResult.closePromise.then(function() {
+            dialogResult = null;
+          });
         }
       };
 
@@ -151,13 +147,13 @@
         scope.$watchGroup([
           'vm.item.percentComplete',
           'vm.item.complete'], function() {
-            processBounty(vm, vm.item);
-          });
+          processBounty(vm, vm.item);
+        });
       } else if (vm.item.maxStackSize > 1) {
         scope.$watchGroup([
           'vm.item.amount'], function() {
-            processStackable(vm, vm.item);
-          });
+          processStackable(vm, vm.item);
+        });
       } else {
         scope.$watch('vm.item.primStat.value', function() {
           processItem(vm, vm.item);
@@ -201,9 +197,9 @@
     }
   }
 
-  StoreItemCtrl.$inject = ['$rootScope', 'dimSettingsService', '$scope'];
+  StoreItemCtrl.$inject = [];
 
-  function StoreItemCtrl($rootScope, settings, $scope) {
+  function StoreItemCtrl() {
     var vm = this;
 
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;

@@ -5,7 +5,7 @@
     .directive('dimStoreBucket', StoreBucket)
     .filter('equipped', function() {
       return function(items, isEquipped) {
-        return _.select(items || [], function (item) {
+        return _.select(items || [], function(item) {
           return item.equipped === isEquipped;
         });
       };
@@ -53,9 +53,9 @@
       replace: true,
       restrict: 'E',
       scope: {
-        'store': '=storeData',
-        'items': '=bucketItems',
-        'bucket': '=bucket'
+        store: '=storeData',
+        items: '=bucketItems',
+        bucket: '=bucket'
       },
       template: [
         '<div class="sub-section"',
@@ -73,7 +73,7 @@
         '      drop-channel="{{::vm.dropChannel}}">',
         '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
-        '</div>',
+        '</div>'
       ].join('')
     };
   }
@@ -90,7 +90,7 @@
     var hovering = false;
     var dragHelp = document.getElementById('drag-help');
     var entered = 0;
-    vm.onDragEnter = function($event) {
+    vm.onDragEnter = function() {
       if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
         entered = entered + 1;
         if (entered === 1) {
@@ -103,7 +103,7 @@
         }
       }
     };
-    vm.onDragLeave = function($event) {
+    vm.onDragLeave = function() {
       if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
         entered = entered - 1;
         if (entered === 0) {
@@ -128,7 +128,7 @@
       }
 
       if (item.owner === vm.store.id) {
-        if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
+        if ((item.equipped && equip) || (!item.equipped && !equip)) {
           return $q.resolve(item);
         }
       }

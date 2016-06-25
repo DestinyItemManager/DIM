@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimStores', Stores);
 
-  Stores.$inject = ['ngDialog'];
-
-  function Stores(ngDialog) {
+  function Stores() {
     return {
       controller: StoresCtrl,
       controllerAs: 'vm',
@@ -43,9 +41,9 @@
       ].join('')
     };
 
-    function Link(scope, element) {
+    function Link() {
       $(document).on('scroll', function(e) {
-        $(document.body).toggleClass('something-is-sticky', document.body.scrollTop != 0);
+        $(document.body).toggleClass('something-is-sticky', document.body.scrollTop !== 0);
         $('.store-header').css('left', 'calc(4em - ' + document.body.scrollLeft + 'px)');
       });
     }
@@ -81,7 +79,7 @@
       }
     });
 
-    $scope.$on('dim-stores-updated', function (e, stores) {
+    $scope.$on('dim-stores-updated', function(e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
     });
@@ -89,11 +87,11 @@
     if ($scope.$root.activePlatformUpdated) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
       $scope.$root.activePlatformUpdated = false;
-    } else if(!_.isNull(dimPlatformService.getActive())) {
+    } else if (!_.isNull(dimPlatformService.getActive())) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
     }
 
-    $scope.$on('dim-active-platform-updated', function(e, args) {
+    $scope.$on('dim-active-platform-updated', function(e) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
     });
   }
