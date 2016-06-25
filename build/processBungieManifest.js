@@ -246,6 +246,35 @@ function extractDB(dbFile) {
       var defs = fs.createWriteStream('api-manifest/progression.json');
       defs.write(JSON.stringify(items));
   });
+  
+  db.all('select * from DestinVendorDefinition', function(err, rows) {
+      if (err) {
+          throw err;
+      }
+
+      items = {};
+
+      rows.forEach(function(row) {
+          var item = JSON.parse(row.json);
+          items[item.progressionHash] = item;
+          if(progressionMeta[item.progressionHash]) {
+            item.label = progressionMeta[item.progressionHash].label;
+            item.color = progressionMeta[item.progressionHash].color;
+            item.scale = progressionMeta[item.progressionHash].scale;
+            item.order = progressionMeta[item.progressionHash].order;
+          }
+          item.steps = item.steps.map(function(i) { return i.progressTotal; });
+
+          delete item.progressionHash;
+          delete item.hash;
+      });
+
+      var pRow = processItemRows(items, 'icon');
+      pRow.next();
+
+      var defs = fs.createWriteStream('api-manifest/progression.json');
+      defs.write(JSON.stringify(items));
+  });
 
   console.log("done.");
 }
