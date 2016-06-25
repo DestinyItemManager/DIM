@@ -8,6 +8,7 @@
 * Fixed a bug where loadouts were not properly restricted to the platform they were created for.
 * Xur's menu item will properly disappear when he leaves for the week.
 * New items are marked with a "shiny" animation, and there are notifications when new items appear.
+* The loadout menu may expand to fill the height of the window, but no more.
 
 # 3.7.4
 

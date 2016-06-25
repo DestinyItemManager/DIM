@@ -934,7 +934,7 @@ dim-store-heading {
   position: absolute;
   display: block;
   width: 100%;
-  max-height: 465px;
+  max-height: calc(100vh - 121px);
   overflow: auto;
   z-index: 2;
   top: 0;
