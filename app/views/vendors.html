@@ -1,0 +1,16 @@
+<div class="vendorDialog" ng-controller="dimVendorCtrl as vm">
+  <h1 class="orange">Xûr is Here</h1>
+  <div class="ngdialog-inner-content">
+    <div ng-repeat="category in vm.categoryOrder">
+      <h2 ng-bind="category"></h2>
+      <div class="items">
+        <div class="xurItem" ng-repeat="saleItem in vm.itemCategories[category] track by saleItem.item.index">
+          <dim-simple-item id="xur-{{::saleItem.item.index}}" item-data="saleItem.item" ng-click="vm.itemClicked(saleItem.item, $event)"></dim-simple-item>
+          <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.currency.itemHash] < saleItem.cost)}">
+            {{::saleItem.cost}}/{{vm.totalCoins[saleItem.currency.itemHash]}}
+            <span class="currency"><img dim-bungie-image-fallback="::saleItem.currency.icon" title="{{::saleItem.currency.name}}"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -247,7 +247,7 @@ function extractDB(dbFile) {
       defs.write(JSON.stringify(items));
   });
   
-  db.all('select * from DestinVendorDefinition', function(err, rows) {
+  db.all('select * from DestinyVendorDefinition', function(err, rows) {
       if (err) {
           throw err;
       }
@@ -256,23 +256,16 @@ function extractDB(dbFile) {
 
       rows.forEach(function(row) {
           var item = JSON.parse(row.json);
-          items[item.progressionHash] = item;
-          if(progressionMeta[item.progressionHash]) {
-            item.label = progressionMeta[item.progressionHash].label;
-            item.color = progressionMeta[item.progressionHash].color;
-            item.scale = progressionMeta[item.progressionHash].scale;
-            item.order = progressionMeta[item.progressionHash].order;
-          }
-          item.steps = item.steps.map(function(i) { return i.progressTotal; });
+          items[item.summary.vendorHash] = item.summary;
 
-          delete item.progressionHash;
+          delete item.summary.vendorHash;
           delete item.hash;
       });
 
-      var pRow = processItemRows(items, 'icon');
+      var pRow = processItemRows(items, 'vendorIcon');
       pRow.next();
-
-      var defs = fs.createWriteStream('api-manifest/progression.json');
+      //console.log(JSON.stringify(items));
+      var defs = fs.createWriteStream('api-manifest/vendor.json');
       defs.write(JSON.stringify(items));
   });
 
@@ -282,6 +275,7 @@ function extractDB(dbFile) {
 mkdirp('api-manifest', function(err) { });
 mkdirp('img/misc', function(err) { });
 mkdirp('img/destiny_content/items', function(err) { });
+mkdirp('img/destiny_content/progression', function(err) { });
 mkdirp('common/destiny_content/icons', function(err) { });
 
 request({
