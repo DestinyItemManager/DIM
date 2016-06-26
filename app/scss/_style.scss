@@ -682,18 +682,6 @@ img {
   }
 }
 
-.element {
-  display: none;
-  .show-elements & {
-    display: block;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    height: 16px;
-    width: 16px;
-  }
-}
-
 .item-elem {
   background-color: #5c7183;
   cursor: pointer;
@@ -704,6 +692,17 @@ img {
       height: 44px;
       background-size: cover;
       display: block;
+    }
+  }
+  .element {
+    display: none;
+    .show-elements & {
+      display: block;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      height: 16px;
+      width: 16px;
     }
   }
 }
