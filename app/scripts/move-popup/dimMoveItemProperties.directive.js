@@ -36,7 +36,7 @@
         '      {{ vm.light }} {{ vm.item.typeName }}',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
         '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.itemDetails = !vm.itemDetails">',
-        '        <i class="info fa" ng-class="{ \'fa-times-circle\': vm.itemDetails, \'fa-info-circle\': !vm.itemDetails }">',
+        '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
         '        </i>',
         '      </a>',
         '    </div>',
