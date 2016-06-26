@@ -42,7 +42,7 @@ $item-header-spacing: 5px;
     vertical-align: baseline;
     font-size: 1rem;
 
-    .is-locking {
+    &.is-locking {
       opacity: .5;
     }
   }
