@@ -2,6 +2,11 @@
 /* css-indent-offset: 2 */
 /* End:                 */
 
+:root {
+  --item-size: 44px;
+}
+
+
 div:focus, span:focus {
   outline-width: 0;
 }
@@ -581,7 +586,7 @@ img {
 }
 
 .sub-bucket {
-  background-size: 44px;
+  background-size: var(--item-size);
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
@@ -707,8 +712,8 @@ img {
   border: 2px solid #DDD;
   > {
     .img, img {
-      width: 44px;
-      height: 44px;
+      width: var(--item-size);
+      height: var(--item-size);
       background-size: cover;
       display: block;
     }
@@ -747,7 +752,7 @@ dim-store-heading {
 .character-box {
   position: relative;
   height: 50px;
-  padding: 0 30px 0 44px;
+  padding: 0 30px 0 var(--item-size);
   /* background: rgba(30, 36, 43, .5); */
   text-shadow: 1px 1px 1px #000000;
   color: #f5f5f5;
@@ -1383,8 +1388,8 @@ rzslider {
   display: inline-block;
   border-radius: 50%;
   margin: 4px;
-  width: 44px;
-  height: 44px;
+  width: var(--item-size);
+  height: var(--item-size);
   background-color: rgba(255, 255, 255, 0.1);
   position: relative;
   height: 100%;
@@ -2012,9 +2017,9 @@ button.toast-close-button {
 @for $i from 3 through 5 {
   .dim-col-#{$i} {
     .store-cell {
-      width: 84px + ($i * 52px);
+      width: calc(84px + (#{$i} * (var(--item-size) + 8px)));
       &.vault {
-        min-width: 70px + ($i * 52px);
+        min-width: calc(70px + (#{$i} * (var(--item-size) + 8px)));
       }
     }
   }
