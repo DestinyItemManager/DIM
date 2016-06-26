@@ -5,6 +5,28 @@
 div:focus, span:focus {
   outline-width: 0;
 }
+// OVERLAY /////////////////
+@keyframes new_overlay { /* CSS3 */
+	0%   { transform: translate(-44px, -44px) scale(2)}
+	100% { transform: translate(44px, 44px) scale(2)}
+}
+@-moz-keyframes new_overlay { /* Firefox */
+	0%   { transform: translate(-44px, -44px) scale(2)}
+	100% { transform: translate(44px, 44px) scale(2)}
+}
+@-webkit-keyframes new_overlay { /* Webkit */
+	0%   { transform: translate(-44px, -44px) scale(2)}
+	100% { transform: translate(44px, 44px) scale(2)}
+}
+.new_overlay {
+	animation:         new_overlay 5s infinite; /* CSS3 */
+	-moz-animation:    new_overlay 5s infinite; /* Firefox */
+	-webkit-animation: new_overlay 5s infinite; /* Webkit */
+}
+.new_overlay_overflow {
+  overflow: hidden;
+}
+////////////////////////
 
 /**
   Header Area
