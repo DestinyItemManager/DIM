@@ -352,15 +352,6 @@ a {
     font-size: 13px;
     padding: 6px 9px;
     vertical-align: top;
-    span {
-      margin: 2px 4px;
-      color: #eee;
-      display: block;
-      &:hover {
-        color: #68a0b7;
-        cursor: pointer;
-      }
-    }
   }
   input {
     &[type="checkbox"], &[type="radio"] {
@@ -368,6 +359,16 @@ a {
       width: 15px;
       height: 15px;
     }
+  }
+}
+
+.filter-view td span {
+  margin: 2px 4px;
+  color: #eee;
+  display: block;
+  &:hover {
+    color: #68a0b7;
+    cursor: pointer;
   }
 }
 
@@ -523,7 +524,7 @@ img {
 }
 
 .equipped {
-  width: 52px;
+  width: calc(var(--item-size) + 8px);
 }
 
 .unequipped {
@@ -2017,9 +2018,9 @@ button.toast-close-button {
 @for $i from 3 through 5 {
   .dim-col-#{$i} {
     .store-cell {
-      width: calc(84px + (#{$i} * (var(--item-size) + 8px)));
+      width: calc(40px + var(--item-size) + (#{$i} * (var(--item-size) + 8px)));
       &.vault {
-        min-width: calc(70px + (#{$i} * (var(--item-size) + 8px)));
+        min-width: calc(26px + var(--item-size) + (#{$i} * (var(--item-size) + 8px)));
       }
     }
   }
