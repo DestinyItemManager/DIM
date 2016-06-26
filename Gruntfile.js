@@ -29,7 +29,7 @@ module.exports = function(grunt) {
           ],
           dest: 'dist/firefox'
         }]
-      },
+      }
     },
 
     copy: {
@@ -132,7 +132,7 @@ module.exports = function(grunt) {
     watch: {
       app: {
         files: ['app/**.*'],
-        tasks: ['sync']
+        tasks: ['sync', 'css']
       }
     },
 
