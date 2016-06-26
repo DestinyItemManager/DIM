@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimMoveItemProperties', MoveItemProperties);
 
-  MoveItemProperties.$inject = ['$sce'];
-
-  function MoveItemProperties($sce) {
+  function MoveItemProperties() {
     return {
       bindToController: true,
       controller: MoveItemPropertiesCtrl,
@@ -86,7 +84,7 @@
       vm.item.talentGrid ||
       vm.item.objectives;
     vm.showDescription = true;// || (vm.item.description.length &&
-                              //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
+    //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
     vm.locking = false;
 
     $scope.$on('dim-toggle-item-details', function() {

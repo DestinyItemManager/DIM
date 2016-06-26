@@ -7,11 +7,9 @@
   head.appendChild(script);
 })();
 
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-60316581-1']);
-_gaq.push(['_trackPageview']);
-// _gaq.push(['errorTracker._setAccount', 'UA-60316581-3']);
-// _gaq.push(['errorTracker._trackPageview']);
+window._gaq = window._gaq || [];
+window._gaq.push(['_setAccount', 'UA-60316581-1']);
+window._gaq.push(['_trackPageview']);
 
 (function loadGA() {
   var ga = document.createElement('script');

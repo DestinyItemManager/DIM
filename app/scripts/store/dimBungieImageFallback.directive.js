@@ -13,20 +13,22 @@
     // or the local (slower) extension hosted image. Memoized so once we know
     // we don't try again.
     var loadImage = _.memoize(function(path) {
-      return $q(function(resolve, reject) {
-        $('<img/>').attr('src', 'http://www.bungie.net' + path).load(function() {
-          $(this).remove();
-          resolve('http://www.bungie.net' + path);
-        }).error(function() {
-          $(this).remove();
-          resolve(chrome.extension.getURL(path));
-        });
+      return $q(function(resolve) {
+        $('<img/>').attr('src', 'http://www.bungie.net' + path)
+          .load(function() {
+            $(this).remove();
+            resolve('http://www.bungie.net' + path);
+          })
+          .error(function() {
+            $(this).remove();
+            resolve(chrome.extension.getURL(path));
+          });
       });
     });
 
     return {
       bind: 'A',
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         var elem = element[0];
 
         scope.$watch(attrs.dimBungieImageFallback, function(path) {

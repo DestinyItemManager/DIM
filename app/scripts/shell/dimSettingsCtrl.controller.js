@@ -25,10 +25,10 @@
 
     vm.showSync = function() {
       return SyncService.drive();
-    }
+    };
 
     vm.driveSync = function() {
-      SyncService.authorize().then(function(data) {
+      SyncService.authorize().then(function() {
         // TODO: still requires a hard refresh... why does this not work?
         $rootScope.$broadcast('dim-settings-updated');
       });

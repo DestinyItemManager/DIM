@@ -28,13 +28,13 @@
       function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
-        //1 Hour
+        // 1 Hour
         $rootScope.inactivityLength = 60 * 60 * 1000;
 
         $rootScope.isUserInactive = function() {
           var currentTime = Date.now();
 
-          //Has This User Been Inactive For More Than An Hour
+          // Has This User Been Inactive For More Than An Hour
           return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
         };
 
@@ -42,12 +42,12 @@
           $rootScope.lastActivity = Date.now();
         };
 
-        //Track Our Initial Activity of Starting the App
+        // Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
         $window.initgapi = function() {
           SyncService.init();
-        }
+        };
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         dimInfoService.show('20160603v374', {
@@ -95,35 +95,3 @@
         });
     });
 })();
-
-if (typeof window.onerror == "object") {
-  window.onerror = function(err, url, line) {};
-}
-
-(function(window) {
-  // Retain a reference to the previous global error handler, in case it has been set:
-  var originalWindowErrorCallback = window.onerror;
-
-  window.onerror = function customErrorHandler(errorMessage, url, lineNumber, columnNumber, errorObject) {
-    var exceptionDescription = errorMessage;
-    if (typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
-      exceptionDescription = errorObject.message;
-    }
-    //
-    // _gaq.push([
-    //   'errorTracker._trackEvent',
-    //   'DIM - Chrome Extension - v3.3',
-    //   exceptionDescription,
-    //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
-    //   0,
-    //   true
-    // ]);
-
-    // If the previous "window.onerror" callback can be called, pass it the data:
-    if (typeof originalWindowErrorCallback === 'function') {
-      return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
-    }
-    // Otherwise, Let the default handler run:
-    return false;
-  };
-})(window);

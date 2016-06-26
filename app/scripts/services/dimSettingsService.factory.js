@@ -11,9 +11,9 @@
     var currentSettings = null;
 
     return {
-      'getSetting': getSetting,
-      'getSettings': getSettings,
-      'saveSetting': saveSetting
+      getSetting: getSetting,
+      getSettings: getSettings,
+      saveSetting: saveSetting
     };
 
     function loadSettings() {
@@ -27,10 +27,10 @@
         charCol: 3
       };
 
-      if (currentSettings !== null) {
+      if (currentSettings) {
         return $q.when(currentSettings);
       } else {
-        return $q(function(resolve, reject) {
+        return $q(function(resolve) {
           function processStorageSettings(data) {
             if (_.has(data, "settings-v1.0")) {
               currentSettings = data["settings-v1.0"];
