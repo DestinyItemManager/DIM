@@ -62,7 +62,9 @@
         '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
         '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
-        '    <img ng-if="vm.item.isNew" class="new_overlay" src="/images/overlay.svg" height="44" width="44"/>',
+        '    <div ng-if="vm.item.isNew" class="new_overlay_overflow">',
+        '      <img class="new_overlay" src="/images/overlay.svg" height="44" width="44"/>',
+        '    </div>',
         '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
         '  </div>',
         '</div>'

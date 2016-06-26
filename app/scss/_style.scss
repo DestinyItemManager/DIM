@@ -7,6 +7,25 @@ div:focus, span:focus {
 }
 
 /**
+  New Item overlay area
+**/
+
+@keyframes new_overlay {
+  0%   { transform: translate(-44px, -44px) scale(2)}
+  100% { transform: translate(44px, 44px) scale(2)}
+}
+
+.new_overlay {
+  animation:         new_overlay 5s infinite;
+}
+
+.new_overlay_overflow {
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+}
+
+/**
   Header Area
 **/
 
