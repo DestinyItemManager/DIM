@@ -130,9 +130,14 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      app: {
-        files: ['app/**.*'],
-        tasks: ['sync', 'css']
+      sass: {
+        files:['app/scss/*.scss'],
+        tasks:['css'],
+        options: { spawn: false }
+      },
+      dist: {
+        files: ['app/**/*.{js,html}'],
+        tasks: ['sync']
       }
     },
 
