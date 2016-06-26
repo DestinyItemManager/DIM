@@ -501,11 +501,12 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: item.lockable,
+        lockable: (itemDef.maxStackSize === 1 && ['Class', 'Consumable'].indexOf(itemType) === -1 && !itemDef.nonTransferrable) || item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
+
       createdItem.index = createItemIndex(createdItem);
 
       if (_.isEmpty(_stores)) {
