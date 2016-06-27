@@ -1,6 +1,7 @@
 (function() {
   'use strict';
 
+
   angular.module('dimApp')
     .directive('dimTalentGrid', TalentGrid)
     .filter('talentGridNodes', function() {

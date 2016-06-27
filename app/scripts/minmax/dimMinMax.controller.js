@@ -129,6 +129,7 @@
         });
         return exoticCount < 2;
       },
+
       onCharacterChange: function() {
         vm.ranked = buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
@@ -190,7 +191,6 @@
           set_map = {},
           int, dis, str, set,
           combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
-
         if(combos === 0) {
           return null;
         }

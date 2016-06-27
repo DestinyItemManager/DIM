@@ -31,6 +31,7 @@
         });
     }
 
+
     // Returns the new or updated item (it may create a new item!)
     function updateItemModel(item, source, target, equip, amount) {
       // Refresh all the items - they may have been reloaded!
@@ -41,7 +42,8 @@
       // If we've moved to a new place
       if (source.id !== target.id) {
         // We handle moving stackable and nonstackable items almost exactly the same!
-        var stackable = item.maxStackSize > 1;
+        var stackable = item.maxStackSize >
+            1;
         // Items to be decremented
         var sourceItems = stackable
               ? _.sortBy(_.select(source.items, function(i) {

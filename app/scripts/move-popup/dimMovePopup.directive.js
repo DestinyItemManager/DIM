@@ -32,7 +32,7 @@
         '        <span>Store</span>',
         '      </div>',
         '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
+        '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
         '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
