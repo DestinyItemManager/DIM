@@ -7,7 +7,7 @@
   XurService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimItemDefinitions', 'dimStoreService', '$http'];
 
   function XurService($rootScope, $q, dimBungieService, dimItemDefinitions, dimStoreService, $http) {
-    var xurTest = true; // set this to true when you want to test but Xur's not around
+    var xurTest = false; // set this to true when you want to test but Xur's not around
     function xurTestData() {
       return $http.get('scripts/xur/xur.json')
         .then(function(json) {

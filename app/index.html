@@ -32,7 +32,7 @@
           <span class="logo" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)">About</span>
           <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
-          <span class="link" ng-click="app.showVendors($event)">Vendors</span>
+          <span class="link" ng-disabled="loadingTracker.active()" ng-click="app.showVendors($event)">Vendors</span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>

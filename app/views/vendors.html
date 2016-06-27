@@ -1,24 +1,27 @@
 <div class="vendorDialog" ng-controller="dimVendorCtrl as vm">
   <h1 class="orange">Vendors</h1>
   <div class="ngdialog-inner-content">
-    <div ng-repeat="vendor in vm.vendors">
+    <div class="vendorBlock" ng-repeat="vendor in vm.vendors">
       <div class="vendorHeader">
         <img class="vendorIcon" src="{{vendor.vendorIcon}}" />
         <h2 ng-bind="vendor.vendorName"></h2>
       </div>
-      <div class="characterType" ng-repeat="(character, itemTypes) in vendor.items">
-          <h3 ng-bind="character">{{character}}</h3>
-          <div class="items">
-            <div class="itemType" ng-repeat="itemType in itemTypes">
-                <div class="vendorItem" ng-repeat="saleItem in itemType">
-                  <dim-simple-item class="itemQuality" id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
-                  <!--<div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.currency.itemHash] < saleItem.cost)}">
-                    {{::saleItem.cost}}/{{vm.totalCoins[saleItem.currency.itemHash]}}
-                    <span class="currency"><img dim-bungie-image-fallback="::saleItem.currency.icon" title="{{::saleItem.currency.name}}"></span>
-                </div>-->
+      <div class="vendorRow">
+        <div class="characterType" ng-repeat="(character, itemTypes) in vendor.items">
+            <h3 ng-bind="character">{{character}}</h3>
+            <div class="items">
+              <div class="itemType" ng-repeat="(itemType, saleItems) in itemTypes">
+                  <!--<strong>{{itemType}}</strong>-->
+                  <div class="vendorItem" ng-repeat="saleItem in saleItems">
+                    <dim-simple-item class="itemQuality" id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
+                    <!--<div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.currency.itemHash] < saleItem.cost)}">
+                      {{::saleItem.cost}}/{{vm.totalCoins[saleItem.currency.itemHash]}}
+                      <span class="currency"><img dim-bungie-image-fallback="::saleItem.currency.icon" title="{{::saleItem.currency.name}}"></span>
+                  </div>-->
+                  </div>
                 </div>
-              </div>
-          </div>
+            </div>
+        </div>
       </div>
     </div>
   </div>
