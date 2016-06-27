@@ -7,6 +7,7 @@
   VendorService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimVendorDefinitions', 'dimStoreService', '$http'];
 
   function VendorService($rootScope, $q, dimBungieService, dimPlatformService, dimVendorDefinitions, dimStoreService, $http) {
+    
     function getBuckets(items) {
       // load the best items
       return {
@@ -22,16 +23,15 @@
 
     function initBuckets(items) {
       return {
-        titan: getBuckets(items.filter(function(item) { return item.classType === 0 || item.classType === 3; })),
-        hunter: getBuckets(items.filter(function(item) { return item.classType === 1 || item.classType === 3; })),
-        warlock: getBuckets(items.filter(function(item) { return item.classType === 2 || item.classType === 3; }))
+        Titan: getBuckets(items.filter(function(item) { return item.classType === 0 || item.classType === 3; })),
+        Hunter: getBuckets(items.filter(function(item) { return item.classType === 1 || item.classType === 3; })),
+        Warlock: getBuckets(items.filter(function(item) { return item.classType === 2 || item.classType === 3; }))
       };
     }
     
     return {
-      itemCategories: {},
-      items: {},
-      getVendorItems: function() {
+      vendorItems: {},
+      updateVendorItems: function() {
         var self = this;
 
         return dimBungieService.getVendors(dimPlatformService.getActive())
@@ -63,7 +63,12 @@
           .then(function(vendorsWithItems) {
             var grouped = _.groupBy(vendorsWithItems, 'vendorHash');
             var mergedVendors = _.map(_.keys(grouped), function(key) {
-              var combinedItems = _.uniq(_.flatten(_.pluck(grouped[key], 'items')), function(item) { return item.itemHash; });
+              var combinedItems = _.filter(_.uniq(_.flatten(_.pluck(grouped[key], 'items')), function(item) { return item.itemHash; }), function(item) {
+                return item.primaryStat &&
+                  item.primaryStat.statHash === 3897883278 && // has defence hash
+                  item.primaryStat.value >= 280 && // only 280+ light items
+                  item.stats;
+              });
               return {vendorHash: key, vendorName: grouped[key][0].vendorName, vendorIcon: grouped[key][0].vendorIcon, items:combinedItems};
             });
             var promises = [];
@@ -82,7 +87,7 @@
             _.each(vendorsWithProcessedItems, function(vendorWithProcessedItems) {
               vendorWithProcessedItems.items = initBuckets(vendorWithProcessedItems.items);
             });
-            return vendorsWithProcessedItems;
+            self.vendorItems = vendorsWithProcessedItems;
           });
       }
     };

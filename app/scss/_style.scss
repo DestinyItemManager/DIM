@@ -146,7 +146,7 @@ dd {
   }
 }
 
-.about, .app-settings, .filters, .support, .move-amount-popup, .xur {
+.about, .app-settings, .filters, .support, .move-amount-popup, .xur, .vendor {
   &.ngdialog {
     position: fixed;
     width: 100%;
@@ -948,6 +948,56 @@ dim-store-heading {
   cursor: pointer;
 }
 
+.vendor {
+  .ngdialog-content {
+    overflow-y: scroll;
+    height: fit-content !important;
+    max-height: 100% !important;
+  }
+  h2 {
+    margin: 0;
+  }
+  h3 {
+    margin: 0;
+  }
+  .vendorIcon {
+    width: 31px;
+    height: 31px;
+  }
+  .vendorHeader {
+    display: flex;
+    align-items: center;
+  }
+  .vendorHeader h2 {
+    padding-left: 5px;
+  }
+  .items {
+    margin: .25em 0 .75em 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .vendorItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 0px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .currency img {
+    height: 12px;
+    width: 12px;
+  }
+  .cost {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+  .notenough {
+    color: #CC5C58;
+  }
+}
+
 .xur {
   .ngdialog-content {
     height: fit-content !important;
@@ -1008,7 +1058,7 @@ dim-store-heading {
   }
 }
 
-.ngdialog.xur-move-popup {
+.ngdialog.xur-move-popup, .ngdialog.vendor-move-popup {
   position: fixed;
   height: 0;
   z-index: 10000;

@@ -55,6 +55,10 @@
         vm.showElements = arg.showElements;
       }
     });
+    
+    $rootScope.$on('dim-active-platform-updated', function(e, args) {
+      loadingTracker.addPromise(dimVendorService.updateVendorItems(args.platform.type));
+    });
 
     vm.showSetting = function(e) {
       e.stopPropagation();
@@ -187,7 +191,7 @@
 
       ngDialog.open({
         template: 'views/vendors.html',
-        className: 'vendors'
+        className: 'vendor'
       }).closePromise.then(function() {
         ngDialog.closeAll();
       });
