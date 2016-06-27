@@ -74,7 +74,7 @@
           return o.item.index;
         }), function(obj) {
           obj.bonus_type = getBonusType(obj.item);
-          if(obj.bonus_type.indexOf('int') > -1) {
+          if (obj.bonus_type.indexOf('int') > -1) {
             best_combs.push({item: obj.item, bonus_type: 'int'});
           }
           if (obj.bonus_type.indexOf('disc') > -1) {
@@ -137,7 +137,7 @@
       onModeChange: function () {
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
-      onOrderChange: function () {
+      onOrderChange: function() {
         vm.setOrderValues = vm.setOrder.split(',');
       },
       onDrop: function(dropped_id, type) {
@@ -281,7 +281,7 @@
 
           vm.allSetTiers = [];
           var tier_keys = Object.keys(tiers);
-          for (var t = tier_keys.length; t-- > tier_keys.length - 3; ) {
+          for (var t = tier_keys.length; t-- > tier_keys.length - 3;) {
             vm.allSetTiers.push('- Tier ' + tier_keys[t] + ' -');
             _.each(tiers[tier_keys[t]], function(set) {
               vm.allSetTiers.push(set);
@@ -306,7 +306,7 @@
       getItems: function() {
         var stores = dimStoreService.getStores();
 
-        if(stores.length === 0) {
+        if (stores.length === 0) {
           $state.go('inventory');
           return;
         }

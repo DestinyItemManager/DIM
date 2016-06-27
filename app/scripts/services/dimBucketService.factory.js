@@ -9,7 +9,7 @@
         'Class',
         'Primary',
         'Special',
-        'Heavy',
+        'Heavy'
       ],
       Armor: [
         'Helmet',
@@ -28,12 +28,12 @@
         'Emote',
         'Ship',
         'Vehicle',
-        'Horn',
+        'Horn'
       ],
       Progress: [
         'Bounties',
         'Quests',
-        'Missions',
+        'Missions'
       ],
       Postmaster: [
         'Lost Items',
@@ -48,37 +48,37 @@
     // A mapping from the bucket names to DIM item types
     // Some buckets like vault and currencies have been ommitted
     var bucketToType = {
-      "BUCKET_CHEST": "Chest",
-      "BUCKET_LEGS": "Leg",
-      "BUCKET_RECOVERY": "Lost Items",
-      "BUCKET_SHIP": "Ship",
-      "BUCKET_MISSION": "Missions",
-      "BUCKET_ARTIFACT": "Artifact",
-      "BUCKET_HEAVY_WEAPON": "Heavy",
-      "BUCKET_COMMERCIALIZATION": "Special Orders",
-      "BUCKET_CONSUMABLES": "Consumable",
-      "BUCKET_PRIMARY_WEAPON": "Primary",
-      "BUCKET_CLASS_ITEMS": "ClassItem",
-      "BUCKET_QUESTS": "Quests",
-      "BUCKET_VEHICLE": "Vehicle",
-      "BUCKET_BOUNTIES": "Bounties",
-      "BUCKET_SPECIAL_WEAPON": "Special",
-      "BUCKET_SHADER": "Shader",
-      "BUCKET_EMOTES": "Emote",
-      "BUCKET_MAIL": "Messages",
-      "BUCKET_BUILD": "Class",
-      "BUCKET_HEAD": "Helmet",
-      "BUCKET_ARMS": "Gauntlets",
-      "BUCKET_HORN": "Horn",
-      "BUCKET_MATERIALS": "Material",
-      "BUCKET_GHOST": "Ghost",
-      "BUCKET_EMBLEM": "Emblem"
+      BUCKET_CHEST: "Chest",
+      BUCKET_LEGS: "Leg",
+      BUCKET_RECOVERY: "Lost Items",
+      BUCKET_SHIP: "Ship",
+      BUCKET_MISSION: "Missions",
+      BUCKET_ARTIFACT: "Artifact",
+      BUCKET_HEAVY_WEAPON: "Heavy",
+      BUCKET_COMMERCIALIZATION: "Special Orders",
+      BUCKET_CONSUMABLES: "Consumable",
+      BUCKET_PRIMARY_WEAPON: "Primary",
+      BUCKET_CLASS_ITEMS: "ClassItem",
+      BUCKET_QUESTS: "Quests",
+      BUCKET_VEHICLE: "Vehicle",
+      BUCKET_BOUNTIES: "Bounties",
+      BUCKET_SPECIAL_WEAPON: "Special",
+      BUCKET_SHADER: "Shader",
+      BUCKET_EMOTES: "Emote",
+      BUCKET_MAIL: "Messages",
+      BUCKET_BUILD: "Class",
+      BUCKET_HEAD: "Helmet",
+      BUCKET_ARMS: "Gauntlets",
+      BUCKET_HORN: "Horn",
+      BUCKET_MATERIALS: "Material",
+      BUCKET_GHOST: "Ghost",
+      BUCKET_EMBLEM: "Emblem"
     };
 
     var vaultTypes = {
-      "BUCKET_VAULT_ARMOR": 'Armor',
-      "BUCKET_VAULT_WEAPONS": 'Weapons',
-      "BUCKET_VAULT_ITEMS": 'General'
+      BUCKET_VAULT_ARMOR: 'Armor',
+      BUCKET_VAULT_WEAPONS: 'Weapons',
+      BUCKET_VAULT_ITEMS: 'General'
     };
 
     var typeToSort = {};
@@ -110,7 +110,7 @@
           this.byType[this.unknown.type] = this.unknown;
         }
       };
-      _.each(bucketDefs, function(def, hash) {
+      _.each(bucketDefs, function(def) {
         if (def.enabled) {
           var bucket = {
             id: def.bucketIdentifier,

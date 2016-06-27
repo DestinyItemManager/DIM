@@ -12,7 +12,7 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        stats: '=',
+        stats: '='
       },
       template: [
         '<div class="stats">',
@@ -39,9 +39,9 @@
     };
   }
 
-  StatsCtrl.$inject = ['$scope'];
+  StatsCtrl.$inject = [];
 
-  function StatsCtrl($scope) {
+  function StatsCtrl() {
     var vm = this;
 
     _.each(vm.stats, function(stat) {
@@ -56,13 +56,13 @@
     });
 
     vm.formatTooltip = function(which) {
-      var next = ' (' + vm.stats[which].value + '/300)',
-          tier = vm.stats[which].tier,
-          cooldown = vm.stats[which].cooldown || '';
-      if(tier !== 5) {
-        next = ' (' + (vm.stats[which].value%60) + '/60 for T' + (tier+1) + ')';
+      var next = ' (' + vm.stats[which].value + '/300)';
+      var tier = vm.stats[which].tier;
+      var cooldown = vm.stats[which].cooldown || '';
+      if (tier !== 5) {
+        next = ' (' + (vm.stats[which].value % 60) + '/60 for T' + (tier + 1) + ')';
       }
-      if(cooldown) {
+      if (cooldown) {
         cooldown = '\n' + vm.stats[which].effect + ' cooldown: ' + cooldown;
       }
       return 'T' + tier + ' ' + vm.stats[which].name + next + cooldown;

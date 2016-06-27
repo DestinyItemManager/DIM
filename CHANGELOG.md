@@ -3,9 +3,11 @@
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
 * The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
 * Section headers don't repeat themselves anymore.
+* Drop zones for items are larger.
 * Returning from the min-max tool no longer greets you with a blank, item-less screen.
 * Fixed a bug where loadouts were not properly restricted to the platform they were created for.
 * Xur's menu item will properly disappear when he leaves for the week.
+* New items are marked with a "shiny" animation, and there are notifications when new items appear.
 
 # 3.7.4
 

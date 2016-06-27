@@ -9,19 +9,21 @@
           return !node.hidden && (perks ? node.column !== 0 : true)
         });
       };
-    }).filter('bungieIcon', function ($sce) {
+    })
+    .filter('bungieIcon', function($sce) {
       return function(icon) {
         return $sce.trustAsResourceUrl(chrome.extension.getURL(icon));
       };
-    }).directive('svgBindViewbox', function () {
+    })
+    .directive('svgBindViewbox', function() {
       return {
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
           /*
            inserts the evaluated value of the "svg-bind-viewbox" attribute
            into the "viewBox" attribute, making sure to capitalize the "B",
            as this SVG attribute name is case-sensitive.
            */
-          attrs.$observe('svgBindViewbox', function (value) {
+          attrs.$observe('svgBindViewbox', function(value) {
             element.get(0).setAttribute('viewBox', value);
           });
         }
@@ -30,10 +32,6 @@
 
 
   function TalentGrid() {
-    var nodeSize = 32;
-    var nodePadding = 8;
-    var totalNodeSize = nodeSize + nodePadding;
-
     return {
       bindToController: true,
       controller: TalentGridCtrl,
@@ -53,15 +51,15 @@
         '    <image class="talent-node-img" xlink:href="" ng-attr-xlink:href="{{ node.icon | bungieIcon }}" x="20" y="20" height="96" width="96" transform="scale(0.25)"/>',
         '    <title>{{node.name}}\n{{node.description}}</title>',
         '  </g>',
-'</g>',
+        '</g>',
         '</svg>'
       ].join('')
     };
   }
 
-  TalentGridCtrl.$inject = ['$scope'];
+  TalentGridCtrl.$inject = [];
 
-  function TalentGridCtrl($scope) {
+  function TalentGridCtrl() {
     var vm = this;
     vm.nodeSize = 34;
     vm.nodePadding = 4;

@@ -1,20 +1,16 @@
-/*jshint -W027*/
-
 (function() {
   'use strict';
 
   angular.module('dimApp')
     .directive('dimStoreHeading', StoreHeading);
 
-  StoreHeading.$inject = ['ngDialog'];
-
-  function StoreHeading(ngDialog) {
+  function StoreHeading() {
     return {
       controller: StoreHeadingCtrl,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        'store': '=storeData'
+        store: '=storeData'
       },
       restrict: 'E',
       template: [
@@ -77,9 +73,7 @@
     vm.openLoadoutPopup = function openLoadoutPopup(e) {
       e.stopPropagation();
 
-      if (!_.isNull(dialogResult)) {
-        dialogResult.close();
-      } else {
+      if (dialogResult === null) {
         ngDialog.closeAll();
 
         dialogResult = ngDialog.open({
@@ -92,10 +86,12 @@
           scope: $scope
         });
 
-        dialogResult.closePromise.then(function(data) {
+        dialogResult.closePromise.then(function() {
           dialogResult = null;
         });
+      } else {
+        dialogResult.close();
       }
-      };
+    };
   }
 })();
