@@ -52,7 +52,7 @@
       for (var t = 0; t < 5; t++) {
         stat.remaining -= stat.tiers[t] = stat.remaining > 60 ? 60 : stat.remaining;
       }
-      stat.percentage = +(100 * stat.normalized / 300).toFixed();
+      stat.percentage = (100 * stat.normalized / 300).toFixed();
     });
 
     vm.formatTooltip = function(which) {

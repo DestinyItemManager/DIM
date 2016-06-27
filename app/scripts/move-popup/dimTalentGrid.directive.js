@@ -6,7 +6,7 @@
     .filter('talentGridNodes', function() {
       return function(nodes, perks) {
         return _.filter(nodes || [], function(node) {
-          return !node.hidden && (perks ? node.column !== 0 : true)
+          return !node.hidden && (perks ? node.column !== 0 : true);
         });
       };
     })
