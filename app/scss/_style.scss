@@ -1435,7 +1435,7 @@ g {
     height: 37px;
     text-align: center;
     line-height: 10px;
-    margin: 6px;
+    margin: 6px 2px;
     cursor: pointer;
     &:focus {
       outline-width: 5px;
@@ -1647,7 +1647,7 @@ g {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 3;
-  width: 343px;
+  width: 327px;
   top: initial;
   left: initial;
   right: initial;
@@ -1684,6 +1684,7 @@ h2, h3, h4 {
 .locations {
   display: flex;
   flex-direction: row;
+  margin: 0 4px;
 }
 
 .ng-hide {
