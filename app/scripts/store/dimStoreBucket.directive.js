@@ -7,7 +7,7 @@
       return function(items, isEquipped) {
         return _.select(items || [], function(item) {
           return item.equipped === isEquipped;
-        });
+        })
       };
     })
     .filter('sortItems', function() {
