@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService', '$window'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -191,6 +191,14 @@
       }).closePromise.then(function() {
         ngDialog.closeAll();
       });
+    };
+
+    vm.downloadWeaponCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
+    };
+
+    vm.downloadArmorCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
     };
 
     // Don't refresh more than once a minute
