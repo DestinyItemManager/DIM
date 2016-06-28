@@ -8,6 +8,10 @@
   function SettingsController(settings, $scope, SyncService) {
     var vm = this;
 
+    $scope.$watchCollection('vm.settings', function() {
+      settings.save();
+    });
+
     vm.charColOptions = [
       { id: 3, name: '3' },
       { id: 4, name: '4' },
@@ -15,10 +19,6 @@
     ];
 
     vm.settings = settings;
-
-    vm.save = function() {
-      settings.save();
-    };
 
     vm.showSync = function() {
       return SyncService.drive();
