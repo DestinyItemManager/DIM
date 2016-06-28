@@ -232,7 +232,8 @@ module.exports = function(grunt) {
     'copy:beta_icons_chrome',
     'replace:beta_version',
     'compress:chrome',
-    'webstore_upload:beta'
+    'webstore_upload:beta',
+    'log_beta_version'
   ]);
 
   grunt.registerTask('publish_firefox_beta', [
