@@ -837,9 +837,9 @@
       }
 
       stats.forEach(function(stat) {
-        stat.qualityPercentage.range = getQualityRange(light, stat.qualityPercentage);
+        stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
       });
-      quality.range = getQualityRange(light, quality);
+      quality.range = getQualityRange(light.value, quality);
 
       return quality;
     }
