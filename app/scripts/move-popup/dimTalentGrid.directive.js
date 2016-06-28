@@ -68,10 +68,12 @@
     vm.totalNodeSize = vm.nodeSize + vm.nodePadding;
 
     vm.hiddenColumns = 0;
-    if(vm.perksOnly) {
-      vm.hiddenColumns = 1;
-      if(_.find(vm.talentGrid.nodes, {hash: 2133116599})) {
-        vm.hiddenColumns = 2;
+    if (vm.perksOnly) {
+      if (_.find(vm.talentGrid.nodes, { hash: 1270552711 })) {
+        vm.hiddenColumns += 1;
+      }
+      if (_.find(vm.talentGrid.nodes, { hash: 2133116599 })) {
+        vm.hiddenColumns += 1;
       }
     }
 
