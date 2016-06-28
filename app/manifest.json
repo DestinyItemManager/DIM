@@ -18,7 +18,8 @@
     "storage",
     "*://*.bungie.net/*",
     "cookies",
-    "identity"
+    "identity",
+    "unlimitedStorage"
   ],
   "oauth2": {
     "client_id": "22022180893-klqc2vd3ubp8ap5kmsk3j4ad67i8kmcm.apps.googleusercontent.com",
@@ -33,7 +34,7 @@
     }
   },
   "options_page": "index.html",
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://apis.google.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://apis.google.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false
 }

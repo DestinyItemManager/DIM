@@ -26,7 +26,11 @@
     });
 
 
-    dimManifestService.getManifest();
+    dimManifestService.getManifest().then(function(db) {
+      console.log(db);
+      console.log(db.exec("SELECT * FROM DestinyInventoryItemDefinition where id = -2146969240"));
+      console.timeEnd('manifest');
+    });
 
     hotkeys.add({
       combo: ['f'],

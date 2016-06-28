@@ -18,7 +18,12 @@
     "chrome": true,
     "sum": true,
     "count": true,
-    "gapi": true
+    "gapi": true,
+    "base64js": true,
+    "SQL": true,
+    "zip": true,
+    "Uint8Array": true,
+    "DataView": true
   },
   "rules": {
     "array-callback-return": "error",
