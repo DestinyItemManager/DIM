@@ -50,7 +50,7 @@
         '       <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '     </span>',
         '     <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '       <span ng-if="stat.bar && vm.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
+        '       <span ng-if="stat.bar && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
         '     </span>',
         '  </div>',
         '  <div class="stat-box-row" ng-if="vm.item.quality && vm.item.quality.min">',
@@ -87,6 +87,7 @@
     //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
     vm.locking = false;
 
+    // The 'i' keyboard shortcut toggles full details
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
     });
@@ -127,15 +128,10 @@
     vm.classType = '';
     vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
     vm.itemDetails = vm.showDetailsByDefault;
-    settings.getSetting('itemDetails')
-      .then(function(show) {
-        vm.itemDetails = vm.itemDetails || show;
-      });
-    vm.itemQuality = false;
-    settings.getSetting('itemQuality')
-      .then(function(show) {
-        vm.itemQuality = vm.itemQuality || show;
-      });
+    vm.settings = settings;
+    $scope.$watch('vm.settings.itemDetails', function(show) {
+      vm.itemDetails = vm.itemDetails || show;
+    });
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();

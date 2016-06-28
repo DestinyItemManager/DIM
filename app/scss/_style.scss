@@ -230,6 +230,11 @@ a {
 
 /* settings dialog */
 
+.settings td:nth-child(2) {
+  white-space: nowrap;
+  min-width: 20em;
+}
+
 @keyframes ngdialog-fadeout {
   0% {
     opacity: 1;

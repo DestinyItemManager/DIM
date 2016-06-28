@@ -13,6 +13,8 @@
     var supportResult = null;
     var filterResult = null;
 
+    vm.settings = dimSettingsService;
+
     hotkeys.add({
       combo: ['f'],
       callback: function(event) {
@@ -42,17 +44,6 @@
       combo: ['i'],
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
-      }
-    });
-
-    dimSettingsService.getSettings()
-      .then(function(settings) {
-        vm.showElements = settings.showElements;
-      });
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'showElements')) {
-        vm.showElements = arg.showElements;
       }
     });
 
@@ -217,12 +208,6 @@
     };
 
     vm.startAutoRefreshTimer();
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'characterOrder')) {
-        refresh();
-      }
-    });
 
     // Refresh when the user comes back to the page
     document.addEventListener("visibilitychange", function() {

@@ -1,11 +1,6 @@
-<div ng-controller="dimSettingsCtrl">
+<div ng-controller="dimSettingsCtrl as vm">
   <h1>Settings</h1>
   <div class="ngdialog-inner-content">
-  <style>
-    .settings td:nth-child(2) {
-      white-space: nowrap;
-    }
-  </style>
 <!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
   <form class="settings">
     <table>
@@ -26,7 +21,7 @@
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>
-          <input type="checkbox" ng-model="vm.settings.hideFilteredItems" ng-change="vm.save('hideFilteredItems')" />
+          <input type="checkbox" ng-model="vm.settings.hideFilteredItems"/>
         </td>
       </tr>
       <tr>
@@ -34,7 +29,7 @@
           <label for="details" title="Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.">Always Show Item Details</label>
         </td>
         <td>
-          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails" ng-change="vm.save('itemDetails')" />
+          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails"/>
         </td>
       </tr>
       <tr>
@@ -42,7 +37,7 @@
           <label for="itemQuality" title="Will enable advanced min/max features on the move dialog and enable the armor comparison view.">Enable advanced stat quality comparison features</label>
         </td>
         <td>
-          <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality" ng-change="vm.save('itemQuality')" />
+          <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality"/>
         </td>
       </tr>
       <tr>
@@ -50,7 +45,7 @@
           <label for="showElements" title="Show elemental damage icons on weapons.">Show elemental damage icons on weapons</label>
         </td>
         <td>
-          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements" ng-change="vm.save('showElements')" />
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/>
         </td>
       </tr>
       <tr>
@@ -59,16 +54,16 @@
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat" ng-change="vm.save('itemSort')">Primary stat</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat">Primary stat</label>
           <br>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary" ng-change="vm.save('itemSort')">Rarity, then primary stat</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary">Rarity, then primary stat</label>
           <br>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="rarity" ng-change="vm.save('itemSort')">Rarity, then name</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarity">Rarity, then name</label>
           <br>
           <label ng-show="vm.settings.itemQuality">
-            <input type="radio" ng-model="vm.settings.itemSort" value="quality" ng-change="vm.save('itemSort')">Stat roll percent, then Prim Stat</label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="quality">Stat roll percent, then Prim Stat</label>
         </td>
       </tr>
       <tr>
@@ -76,7 +71,7 @@
           <label for="charCol" title="Select the number of columns for character inventory.">Character Inventory Columns</label>
         </td>
         <td>
-          <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required ng-change="vm.save('charCol')"></select>
+          <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
         </td>
       </tr>
       <tr>
@@ -85,10 +80,10 @@
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('characterOrder')">By Most Recent Character</label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent" ng-model-options="{ updateOn: 'default blur' }">By Most Recent Character</label>
           <br>
           <label>
-            <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }" ng-change="vm.save('characterOrder')">Fixed</label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }">Fixed</label>
         </td>
       </tr>
     </table>
