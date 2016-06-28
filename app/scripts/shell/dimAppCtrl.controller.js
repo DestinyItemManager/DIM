@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state', 'dimManifestService'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope, $state) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope, $state, dimManifestService) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -25,6 +25,8 @@
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
+
+    dimManifestService.getManifest();
 
     hotkeys.add({
       combo: ['f'],
