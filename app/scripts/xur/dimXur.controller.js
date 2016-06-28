@@ -33,17 +33,6 @@
       countCurrencies();
     });
 
-    $scope.$on('ngDialog.opened', function(event, $dialog) {
-      if (dialogResult) {
-        $dialog.position({
-          my: 'left top',
-          at: 'left bottom+4',
-          of: detailItemElement,
-          collision: 'flip'
-        });
-      }
-    });
-
     angular.extend(vm, {
       itemCategories: dimXurService.itemCategories,
       categoryOrder: [
