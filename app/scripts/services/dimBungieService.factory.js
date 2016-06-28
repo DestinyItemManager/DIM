@@ -49,6 +49,7 @@
       if (errorCode === 36) {
         return $q.reject(new Error('Bungie API throttling limit exceeded. Please wait a bit and then retry.'));
       } else if (errorCode === 99) {
+        openBungieNetTab();
         return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
       } else if (errorCode === 5) {
         return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
@@ -100,18 +101,12 @@
       return a;
     }
 
-
-    /*
-    function openBungieNetTab(tabs) {
-      if (_.size(tabs) === 0) {
-        chrome.tabs.create({
-          url: 'http://bungie.net',
-          active: false
-        });
-      }
+    function openBungieNetTab() {
+      chrome.tabs.create({
+        url: 'http://bungie.net',
+        active: true
+      });
     }
-    */
-
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
@@ -143,6 +138,7 @@
             if (cookie) {
               resolve(cookie.value);
             } else {
+              openBungieNetTab();
               reject(new Error('Please log into Bungie.net in order to use this extension.'));
             }
           });
