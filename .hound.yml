@@ -1,3 +1,5 @@
+scss:
+  enabled: false
 javascript:
   enabled: false
 eslint:
