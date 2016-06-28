@@ -32,7 +32,9 @@ Generate CSS
 Check code Style
 * `grunt eslint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk)
+You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk).
+
+Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/dev/CONTRIBUTING.md) for more tips.
 
 ##Bugs and feature requests
 
