@@ -39,12 +39,13 @@
     }
     
     return {
-      vendorItems: {},
+      vendorItems: [],
       updateVendorItems: function() {
         var self = this;
 
         return dimBungieService.getVendors(dimPlatformService.getActive())
           .then(function(vendors) {
+            // Get vendor metadata
             return dimVendorDefinitions.then(function(vendorDefs) {
               _.each(vendors, function(vendor) {
                 vendor.vendorName = vendorDefs[vendor.vendorHash].vendorName;
@@ -54,19 +55,20 @@
             });
           })
           .then(function(vendors) {
+            // Add items that are buyable to vendors
             var vendorsWithItems =  [];
             _.each(vendors, function(vendor) {
               if (vendor.enabled) {
                 var items = [];
                 _.each(vendor.saleItemCategories, function(categoryData) {
                   var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
-                  _.each(filteredSaleItems, function(saleItem) {
-                    items.push(saleItem);
-                  });
+                  items.push.apply(items, filteredSaleItems);
                 });
                 vendorsWithItems.push({vendorHash: vendor.vendorHash, vendorName: vendor.vendorName, vendorIcon: vendor.vendorIcon, items: items});
               }
             });
+            
+            // Get the costs and currency types of the items
             return dimItemDefinitions.then(function(itemDefs) {
               _.each(vendorsWithItems, function(vendorWithItems) {
                 var rawItems = _.pluck(vendorWithItems.items, 'item');
@@ -81,6 +83,8 @@
             });
           })
           .then(function(vendorsWithItems) {
+            // Up to this point we have a vendor for each character on the account
+            // Let's combine the items today by vendorHash and filter out weapons and < 280 light gear
             var grouped = _.groupBy(vendorsWithItems, 'vendorHash');
             var mergedVendors = _.map(_.keys(grouped), function(key) {
               var combinedItems = _.filter(_.uniq(_.flatten(_.pluck(grouped[key], 'items')), function(item) { return item.itemHash; }), function(item) {
@@ -89,8 +93,11 @@
                   item.primaryStat.value >= 280 && // only 280+ light items
                   item.stats;
               });
+              // Merge the costs of the items here too
               return {vendorHash: key, vendorName: grouped[key][0].vendorName, vendorIcon: grouped[key][0].vendorIcon, costs: _.reduce(_.pluck(grouped[key], 'costs'), mergeMaps, {}), items:combinedItems };
             });
+            
+            // Now get the actual items from dimStoreService and add the costs/currency to the items
             var promises = [];
             _.each(mergedVendors, function(vendorWithItems) {
               promises.push(dimStoreService.processItems(null, vendorWithItems.items)
@@ -106,7 +113,7 @@
             return $q.all(promises);
           })
           .then(function(vendorsWithProcessedItems) {
-            // Now lets split the items up by class and armor type
+            // Now lets split the items in each vendor up by class and armor type
             _.each(vendorsWithProcessedItems, function(vendorWithProcessedItems) {
               vendorWithProcessedItems.items = initBuckets(vendorWithProcessedItems.items);
             });
