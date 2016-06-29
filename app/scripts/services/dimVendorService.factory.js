@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimVendorService', VendorService);
 
-  VendorService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimVendorDefinitions', 'dimStoreService', '$http'];
+  VendorService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimItemDefinitions', 'dimPlatformService', 'dimVendorDefinitions', 'dimStoreService', '$http'];
 
-  function VendorService($rootScope, $q, dimBungieService, dimPlatformService, dimVendorDefinitions, dimStoreService, $http) {
+  function VendorService($rootScope, $q, dimBungieService, dimItemDefinitions, dimPlatformService, dimVendorDefinitions, dimStoreService, $http) {
     
     function getBuckets(items) {
       // load the best items
@@ -29,6 +29,15 @@
       };
     }
     
+    function mergeMaps(o, map) { 
+      _.each(map, function(val, key) { 
+        if (!o[key]) { 
+          o[key] = map[key]; 
+        } 
+      }); 
+      return o; 
+    }
+    
     return {
       vendorItems: {},
       updateVendorItems: function() {
@@ -39,7 +48,7 @@
             return dimVendorDefinitions.then(function(vendorDefs) {
               _.each(vendors, function(vendor) {
                 vendor.vendorName = vendorDefs[vendor.vendorHash].vendorName;
-                vendor.vendorIcon = vendorDefs[vendor.vendorHash].vendorIcon;
+                vendor.vendorIcon = vendorDefs[vendor.vendorHash].factionIcon || vendorDefs[vendor.vendorHash].vendorIcon;
               });
               return vendors;
             });
@@ -52,13 +61,24 @@
                 _.each(vendor.saleItemCategories, function(categoryData) {
                   var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
                   _.each(filteredSaleItems, function(saleItem) {
-                    items.push(saleItem.item);
+                    items.push(saleItem);
                   });
                 });
                 vendorsWithItems.push({vendorHash: vendor.vendorHash, vendorName: vendor.vendorName, vendorIcon: vendor.vendorIcon, items: items});
               }
             });
-            return vendorsWithItems;
+            return dimItemDefinitions.then(function(itemDefs) {
+              _.each(vendorsWithItems, function(vendorWithItems) {
+                var rawItems = _.pluck(vendorWithItems.items, 'item');
+                var costs = _.reduce(vendorWithItems.items, function(o, saleItem) { 
+                  o[saleItem.item.itemHash] = {cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')};
+                  return o;
+                }, {});
+                vendorWithItems.items = rawItems;
+                vendorWithItems.costs = costs;
+              });
+              return vendorsWithItems;
+            });
           })
           .then(function(vendorsWithItems) {
             var grouped = _.groupBy(vendorsWithItems, 'vendorHash');
@@ -69,12 +89,15 @@
                   item.primaryStat.value >= 280 && // only 280+ light items
                   item.stats;
               });
-              return {vendorHash: key, vendorName: grouped[key][0].vendorName, vendorIcon: grouped[key][0].vendorIcon, items:combinedItems};
+              return {vendorHash: key, vendorName: grouped[key][0].vendorName, vendorIcon: grouped[key][0].vendorIcon, costs: _.reduce(_.pluck(grouped[key], 'costs'), mergeMaps, {}), items:combinedItems };
             });
             var promises = [];
             _.each(mergedVendors, function(vendorWithItems) {
               promises.push(dimStoreService.processItems(null, vendorWithItems.items)
                 .then(function (processedItems) {
+                  _.each(processedItems, function(processedItem) {
+                    processedItem.cost = vendorWithItems.costs[processedItem.hash];
+                  });
                   vendorWithItems.items = processedItems;
                   return vendorWithItems;
                 })

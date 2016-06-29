@@ -13,6 +13,47 @@
     var detailItem = null;
     var detailItemElement = null;
     
+    vm.vendors = dimVendorService.vendorItems;
+    
+    function mergeMaps(o, map) { 
+      _.each(map, function(val, key) { 
+        if (!o[key]) { 
+          o[key] = map[key]; 
+        } 
+      }); 
+      return o; 
+    }
+    
+    function countCurrencies() {
+      var currencies = _.chain(vm.vendors)
+            .values().pluck('costs')
+            .unique()
+            .reduce(mergeMaps)
+            .values()
+            .pluck('currency')
+            .pluck('itemHash')
+            .unique()
+            .value()
+      vm.totalCoins = {};
+      currencies.forEach(function(currencyHash) {
+        // Legendary marks are a special case
+        if (currencyHash === 2534352370) {
+          vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
+            return store.legendaryMarks || 0;
+          });
+        } else {
+          vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
+            return store.amountOfItem({ hash: currencyHash });
+          });
+        }
+      });
+    }
+
+    countCurrencies();
+    $scope.$on('dim-stores-updated', function (e, stores) {
+      countCurrencies();
+    });
+    
     $scope.$on('ngDialog.opened', function (event, $dialog) {
       if (dialogResult) {
         $dialog.position({
@@ -24,13 +65,9 @@
       }
     });
     
-    vm.vendors = dimVendorService.vendorItems;
-    // dimVendorService.getVendorItems().then(function(val) {
-      // vm.vendors = val;
-      // console.log(val);
-    // });
-    
     angular.extend(vm, {
+      active: 'Warlock',
+      activeVendor: '0',
       itemClicked: function(item, e) {
         e.stopPropagation();
         if (dialogResult) {

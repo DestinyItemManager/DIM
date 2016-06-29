@@ -262,9 +262,8 @@ function extractDB(dbFile) {
           delete item.hash;
       });
 
-      var pRow = processItemRows(items, 'vendorIcon');
+      var pRow = processItemRows(items, 'factionIcon');
       pRow.next();
-      //console.log(JSON.stringify(items));
       var defs = fs.createWriteStream('api-manifest/vendor.json');
       defs.write(JSON.stringify(items));
   });
@@ -276,6 +275,7 @@ mkdirp('api-manifest', function(err) { });
 mkdirp('img/misc', function(err) { });
 mkdirp('img/destiny_content/items', function(err) { });
 mkdirp('img/destiny_content/progression', function(err) { });
+mkdirp('img/destiny_content/vendor', function(err) { });
 mkdirp('common/destiny_content/icons', function(err) { });
 
 request({
