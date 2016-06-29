@@ -163,7 +163,7 @@
             message = 'You may not be connected to the internet.';
           }
 
-          toaster.pop('error', 'Bungie.net Error', message);
+          toaster.pop('error', 'Bungie.net Error', message, 0);
 
           return $q.reject(e);
         });

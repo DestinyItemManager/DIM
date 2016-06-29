@@ -19,7 +19,6 @@
 * When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
 * DIM is generally just a little bit snappier, especially when scrolling.
 * Show sync warning message if user is not signed into Google Chrome.
-* The loadout menu may expand to fill the height of the window, but no more.
 * Clicking the icon to open DIM will now switch to an active DIM tab if it's already running.
 * Bungie.net will open in a new tab as a convenience for expired cookies.
 
