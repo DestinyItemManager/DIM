@@ -9,6 +9,7 @@
 * Xur's menu item will properly disappear when he leaves for the week.
 * New items are marked with a "shiny" animation, and there are notifications when new items appear.
 * The loadout menu may expand to fill the height of the window, but no more.
+* Show sync warning message if user is not signed into Google Chrome.
 
 # 3.7.4
 
