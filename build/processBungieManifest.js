@@ -264,6 +264,10 @@ function extractDB(dbFile) {
 
       var pRow = processItemRows(items, 'factionIcon');
       pRow.next();
+      
+       var pRowVend = processItemRows(items, 'vendorIcon');
+      pRowVend.next();
+      
       var defs = fs.createWriteStream('api-manifest/vendor.json');
       defs.write(JSON.stringify(items));
   });

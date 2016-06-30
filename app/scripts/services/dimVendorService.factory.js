@@ -17,7 +17,6 @@
         Leg: items.filter(function(item) { return item.type === 'Leg'; }),
         ClassItem: items.filter(function(item) { return item.type === 'ClassItem'; }),
         Ghost: items.filter(function(item) { return item.type === 'Ghost'; }),        
-        Artifact: items.filter(function(item) { return item.type === 'Artifact'; })
       };
     }
 

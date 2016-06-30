@@ -957,7 +957,8 @@ dim-store-heading {
     display: flex;
     flex-direction: column;
     flex-wrap:wrap;
-    max-width:1000px;
+    width:500px;
+    background-color: #434444;
   }
   .vendor-button {
     cursor: pointer;
@@ -985,40 +986,8 @@ dim-store-heading {
   .selectionPanel p {
     display:inline-block;
   }
-  .vendorBlock {
-    margin-bottom:10px;
-  }
-  .vendorRow {
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    justify-content: center;
-  }
-  .itemType {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .characterType {
-    margin-left:5px;
-    max-width:300px;
-  }
-  .vendorIcon {
-    width: 31px;
-    height: 31px;
-    margin-left:10px;
-  }
-  .vendorHeader {
-    display: flex;
-    align-items: center;
-    padding-bottom: 10px;
-    justify-content: center;
-  }
-  .items {
-    margin: .25em 0 .75em 0;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+  .selectionPanel {
+    text-align: center;
   }
   .vendorContainer {
     display: flex;
@@ -1026,12 +995,46 @@ dim-store-heading {
     flex-wrap:wrap;
     justify-content: center;
   }
+  .vendorBlock {
+    width: 500px
+  }
+  .vendorHeader {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    justify-content: center;
+  }
+  .vendorRow {
+    display:flex;
+    flex-direction: column;
+    flex-wrap:wrap;
+    justify-content: center;
+  }
+  .sub-bucket {
+    background-size: 44px;
+    background-position: 2 2;
+    background-image: url("../images/bg_inventory_bucket_single_crop.png");
+    background-repeat: no-repeat; 
+  }
+  .unequipped {
+    margin-bottom: 5px;
+  }
+  .itemType {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .vendorIcon {
+    width: 31px;
+    height: 31px;
+    margin-left:10px;
+  }
   .vendorItem {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 3px;
     margin-bottom: 5px;
     &:last-child {
-      margin-right: 0;
+      margin-right: 10px;
     }
   }
   .currency img {

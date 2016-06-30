@@ -24,17 +24,21 @@
         <img class="vendorIcon" ng-src="{{vm.vendors[vm.activeVendor].vendorIcon}}" />
       </div>
       <div class="vendorRow">
-              <div>
-              <div class="itemType" ng-repeat="(itemType, saleItems) in vm.vendors[vm.activeVendor].items[vm.active]">
-                  <div class="vendorItem" ng-repeat="saleItem in saleItems">
-                    <dim-simple-item class="itemQuality" id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
-                    <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
-                      {{::saleItem.cost.cost}}/{{vm.totalCoins[saleItem.cost.currency.itemHash]}}
-                      <span class="currency"><img dim-bungie-image-fallback="::saleItem.cost.currency.icon" title="{{::saleItem.cost.currency.name}}"></span>
-                    </div>
-                  </div>
+        <div ng-repeat="(itemType, saleItems) in vm.vendors[vm.activeVendor].items[vm.active]">
+          <h3>{{itemType}}</h3>
+          <div class="itemType">
+            <div ng-if="saleItems.length > 0" class="vendorItem" ng-repeat="saleItem in saleItems">
+              <dim-simple-item class="itemQuality" id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
+              <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
+                {{::saleItem.cost.cost}}/{{vm.totalCoins[saleItem.cost.currency.itemHash]}}
+                <span class="currency"><img dim-bungie-image-fallback="::saleItem.cost.currency.icon" title="{{::saleItem.cost.currency.name}}"></span>
               </div>
-              </div>
+            </div>
+          </div>
+          <div ng-if="saleItems.length === 0" style="height:72px;margin-left:0;" class="unequipped sub-bucket">
+            <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>
+          </div>
+        </div>
       </div>
     </div>
     </div>
