@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles/main.css">
   </head>
 
-  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.showElements }">
+  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements }">
     <div class="ng-cloak" ng-click="trackActivity()">
       <div id="header">
         <div class="content">
@@ -84,6 +84,7 @@
     <script src="scripts/services/dimStoreService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimXurService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimVendorService.factory.js?v=$DIM_VERSION"></script>
+    <script src="scripts/services/dimCsvService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimItemService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimEngramFarmingService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimSyncService.factory.js?v=$DIM_VERSION"></script>

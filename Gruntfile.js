@@ -29,7 +29,7 @@ module.exports = function(grunt) {
           ],
           dest: 'dist/firefox'
         }]
-      },
+      }
     },
 
     copy: {
@@ -96,10 +96,10 @@ module.exports = function(grunt) {
         src: ['dist/**/*.{json,html,js}'],
         overwrite: true,
         replacements: [{
-          from: '$DIM_VERSION',
+          from: pkg.version.toString(),
           to: betaVersion
         }, {
-          from: pkg.version.toString(),
+          from: '$DIM_VERSION',
           to: betaVersion
         }]
       }
@@ -130,8 +130,13 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      app: {
-        files: ['app/**.*'],
+      sass: {
+        files:['app/scss/*.scss'],
+        tasks:['css'],
+        options: { spawn: false }
+      },
+      dist: {
+        files: ['app/**/*.{js,html}'],
         tasks: ['sync']
       }
     },
@@ -173,8 +178,17 @@ module.exports = function(grunt) {
           zip: "dist/chrome.zip"
         }
       }
+    },
+
+    eslint: {
+      target: ["app/scripts/**/*.js"],
+      options: {
+        fix: true
+      }
     }
   });
+
+
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -185,10 +199,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-sync');
+  grunt.loadNpmTasks("grunt-eslint");
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
-  grunt.registerTask('default', ['build','watch']);
+  grunt.registerTask('default', ['eslint', 'build', 'watch']);
 
   grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']);
 
@@ -217,7 +232,8 @@ module.exports = function(grunt) {
     'copy:beta_icons_chrome',
     'replace:beta_version',
     'compress:chrome',
-    'webstore_upload:beta'
+    'webstore_upload:beta',
+    'log_beta_version'
   ]);
 
   grunt.registerTask('publish_firefox_beta', [

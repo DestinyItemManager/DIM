@@ -5,7 +5,7 @@
     .directive('dimStoreBucket', StoreBucket)
     .filter('equipped', function() {
       return function(items, isEquipped) {
-        return _.select(items || [], function (item) {
+        return _.select(items || [], function(item) {
           return item.equipped === isEquipped;
         });
       };
@@ -53,9 +53,9 @@
       replace: true,
       restrict: 'E',
       scope: {
-        'store': '=storeData',
-        'items': '=bucketItems',
-        'bucket': '=bucket'
+        store: '=storeData',
+        items: '=bucketItems',
+        bucket: '=bucket'
       },
       template: [
         '<div class="sub-section"',
@@ -71,9 +71,9 @@
         '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
         '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
         '      drop-channel="{{::vm.dropChannel}}">',
-        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
+        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
-        '</div>',
+        '</div>'
       ].join('')
     };
   }
@@ -83,6 +83,8 @@
   function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
     var vm = this;
 
+    vm.settings = dimSettingsService;
+
     vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
 
     // Detect when we're hovering a dragged item over a target
@@ -90,7 +92,7 @@
     var hovering = false;
     var dragHelp = document.getElementById('drag-help');
     var entered = 0;
-    vm.onDragEnter = function($event) {
+    vm.onDragEnter = function() {
       if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
         entered = entered + 1;
         if (entered === 1) {
@@ -103,7 +105,7 @@
         }
       }
     };
-    vm.onDragLeave = function($event) {
+    vm.onDragLeave = function() {
       if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
         entered = entered - 1;
         if (entered === 0) {
@@ -128,7 +130,7 @@
       }
 
       if (item.owner === vm.store.id) {
-        if ((item.equipped && equip) || (!item.equipped) && (!equip)) {
+        if ((item.equipped && equip) || (!item.equipped && !equip)) {
           return $q.resolve(item);
         }
       }
@@ -197,16 +199,6 @@
       loadingTracker.addPromise(promise);
 
       return promise;
-    });
-
-    dimSettingsService.getSetting('itemSort').then(function(sort) {
-      vm.itemSort = sort;
-    });
-
-    $scope.$on('dim-settings-updated', function(event, settings) {
-      if (_.has(settings, 'itemSort')) {
-        vm.itemSort = settings.itemSort;
-      }
     });
   }
 })();

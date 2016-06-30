@@ -1,6 +1,4 @@
-/*jshint -W027*/
-
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -37,8 +35,8 @@
 
     function activate() {
       var promise = $http.get('https://www.bungie.net', {
-          timeout: 5000
-        })
+        timeout: 5000
+      })
         .then(function() {
           return dimPlatformService.getPlatforms();
         }, function() {
@@ -56,9 +54,9 @@
       if (_.isNull(args.platform)) {
         dimState.active = vm.active = null;
       } else {
-        //if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
-          dimState.active = vm.active = args.platform;
-        //}
+        // if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
+        dimState.active = vm.active = args.platform;
+        // }
       }
     });
   }

@@ -4,13 +4,11 @@
   angular.module('dimApp')
     .directive('dimSimpleItem', dimItem);
 
-  dimItem.$inject = ['dimStoreService', 'dimItemService'];
-
-  function dimItem(dimStoreService, dimItemService) {
+  function dimItem() {
     return {
       replace: true,
       scope: {
-        'item': '=itemData'
+        item: '=itemData'
       },
       restrict: 'E',
       template: [
@@ -33,8 +31,6 @@
   dimItemSimpleCtrl.$inject = [];
 
   function dimItemSimpleCtrl() {
-    var vm = this;
     // nothing to do here...only needed for bindToController
   }
-
 })();

@@ -12,7 +12,7 @@
     var platformPromise = null;
     var membershipPromise = null;
 
-    $rootScope.$on('dim-active-platform-updated', function(event, args) {
+    $rootScope.$on('dim-active-platform-updated', function() {
       tokenPromise = null;
       platformPromise = null;
       membershipPromise = null;
@@ -102,6 +102,7 @@
     }
 
 
+    /*
     function openBungieNetTab(tabs) {
       if (_.size(tabs) === 0) {
         chrome.tabs.create({
@@ -110,14 +111,14 @@
         });
       }
     }
-
+    */
 
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
       return $q(function(resolve, reject) {
         chrome.cookies.getAll({
-          'domain': '.bungie.net'
+          domain: '.bungie.net'
         }, getAllCallback);
 
         function getAllCallback(cookies) {
@@ -140,14 +141,14 @@
               return cookie.name === 'bungled';
             });
 
-            if (!_.isUndefined(cookie)) {
+            if (cookie) {
               resolve(cookie.value);
             } else {
               reject(new Error('Please log into Bungie.net in order to use this extension.'));
             }
           });
         })
-        .catch(function(error) {
+        .catch(function() {
           tokenPromise = null;
         });
 
@@ -257,7 +258,7 @@
     function getBnetCharactersRequest(token, platform, membershipId) {
       return {
         method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
+        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token
@@ -275,8 +276,8 @@
         c.inventory = response.data.Response.data.inventory;
 
         return {
-          'id': c.characterBase.characterId,
-          'base': c
+          id: c.characterBase.characterId,
+          base: c
         };
       });
     }
@@ -521,7 +522,7 @@
       return promise;
     }
 
-    //Handle "DestinyUniquenessViolation" (1648)
+    // Handle "DestinyUniquenessViolation" (1648)
     function handleUniquenessViolation(response, item, store) {
       if (response && response.data && response.data.ErrorCode === 1648) {
         toaster.pop('warning', 'Item Uniqueness', [
@@ -607,7 +608,6 @@
 
     // Returns a list of items that were successfully equipped
     function equipItems(store, items) {
-
       // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
       items = _.sortBy(items, function(i) {
         return i.tier === 'Exotic' ? 1 : 0;
@@ -651,7 +651,7 @@
           var data = response.data.Response;
           store.updateCharacterInfo(data.summary);
           return _.select(items, function(i) {
-            var item = _.find(data.equipResults, {itemInstanceId: i.id});
+            var item = _.find(data.equipResults, { itemInstanceId: i.id });
             return item && item.equipStatus === 1;
           });
         });

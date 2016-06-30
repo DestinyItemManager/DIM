@@ -13,7 +13,7 @@
   function PercentWidth() {
     return {
       bind: 'A',
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         scope.$watch(attrs.dimPercentWidth, function(val) {
           if (!val) {
             val = 0;

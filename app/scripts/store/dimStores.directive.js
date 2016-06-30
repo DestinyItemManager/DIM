@@ -2,11 +2,18 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStores', Stores);
+    .directive('dimStores', Stores)
+    .filter('sortStores', function() {
+      return function sortStores(stores, order) {
+        if (order === 'mostRecent') {
+          return _.sortBy(stores, 'lastPlayed').reverse();
+        } else {
+          return _.sortBy(stores, 'id');
+        }
+      };
+    });
 
-  Stores.$inject = ['ngDialog'];
-
-  function Stores(ngDialog) {
+  function Stores() {
     return {
       controller: StoresCtrl,
       controllerAs: 'vm',
@@ -14,9 +21,9 @@
       scope: {},
       link: Link,
       template: [
-        '<div ng-if="vm.stores.length" ng-class="[\'dim-col-\' + vm.charCol, { \'hide-filtered\': vm.hideFilteredItems, itemQuality: vm.itemQuality }]">',
+        '<div ng-if="vm.stores.length" ng-class="[\'dim-col-\' + vm.settings.charCol, { \'hide-filtered\': vm.settings.hideFilteredItems, itemQuality: vm.settings.itemQuality }]">',
         '  <div class="store-row store-header">',
-        '    <div class="store-cell" ng-repeat="store in vm.stores track by store.id">',
+        '    <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
         '    </div>',
         '  </div>',
@@ -26,7 +33,7 @@
         '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
         '    </div>',
         '    <div class="store-row items" ng-repeat="bucket in ::buckets track by bucket.id">',
-        '      <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
+        '      <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '        <dim-store-bucket ng-if="::!store.isVault || vm.vault.vaultCounts[category] !== undefined" store-data="store" bucket-items="store.buckets[bucket.id]" bucket="bucket"></dim-store-bucket>',
         '      </div>',
         '    </div>',
@@ -35,7 +42,7 @@
         '    <span>Reputation</span>',
         '  </div>',
         '  <div class="store-row items">',
-        '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores track by store.id">',
+        '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <dim-store-reputation store-data="store"></dim-store-reputation>',
         '    </div>',
         '  </div>',
@@ -43,9 +50,9 @@
       ].join('')
     };
 
-    function Link(scope, element) {
+    function Link() {
       $(document).on('scroll', function(e) {
-        $(document.body).toggleClass('something-is-sticky', document.body.scrollTop != 0);
+        $(document.body).toggleClass('something-is-sticky', document.body.scrollTop !== 0);
         $('.store-header').css('left', 'calc(4em - ' + document.body.scrollLeft + 'px)');
       });
     }
@@ -56,6 +63,7 @@
   function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService) {
     var vm = this;
 
+    vm.settings = settings;
     vm.stores = dimStoreService.getStores();
     vm.vault = dimStoreService.getVault();
     vm.buckets = null;
@@ -63,25 +71,7 @@
       vm.buckets = angular.copy(buckets);
     });
 
-    vm.charCol = 3;
-    settings.getSettings()
-      .then(function(settings) {
-        vm.hideFilteredItems = settings.hideFilteredItems;
-        vm.charCol = Math.max(3, Math.min(settings.charCol, 5));
-        vm.itemQuality = settings.itemQuality;
-      });
-
-    $scope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'charCol')) {
-        vm.charCol = arg.charCol;
-      } else if (_.has(arg, 'hideFilteredItems')) {
-        vm.hideFilteredItems = arg.hideFilteredItems;
-      } else if (_.has(arg, 'itemQuality')) {
-        vm.itemQuality = arg.itemQuality;
-      }
-    });
-
-    $scope.$on('dim-stores-updated', function (e, stores) {
+    $scope.$on('dim-stores-updated', function(e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
     });
@@ -89,11 +79,11 @@
     if ($scope.$root.activePlatformUpdated) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
       $scope.$root.activePlatformUpdated = false;
-    } else if(!_.isNull(dimPlatformService.getActive())) {
+    } else if (!_.isNull(dimPlatformService.getActive())) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
     }
 
-    $scope.$on('dim-active-platform-updated', function(e, args) {
+    $scope.$on('dim-active-platform-updated', function(e) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
     });
   }

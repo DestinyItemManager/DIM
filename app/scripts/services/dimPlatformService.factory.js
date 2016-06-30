@@ -57,14 +57,13 @@
 
     function getActivePlatform() {
       var promise = SyncService.get().then(function(data) {
-
         var previousPlatform = null;
         var active = null;
         var previousPlatformType = null;
 
-        if(data){
+        if (data) {
           previousPlatformType = data.platformType;
-        }   
+        }
 
         if (!_.isNull(previousPlatformType)) {
           previousPlatform = _.find(_platforms, function(platform) {
@@ -73,16 +72,12 @@
         }
 
         if (_.size(_platforms) > 0) {
-          if (_.isNull(_active)) {
+          if (active === null) {
             active = previousPlatform || _platforms[0];
+          } else if (_.find(_platforms, { id: _active.id })) {
+            active = _active;
           } else {
-            if (!_.find(_platforms, function(platform) {
-              return (platform.id === _active.id);
-            })) {
-              active = _platforms[0];
-            } else {
-              active = _active;
-            }
+            active = _platforms[0];
           }
         } else {
           active = null;
@@ -102,15 +97,16 @@
       _active = platform;
       var promise;
 
-      if (_.isNull(platform)) {
+      if (platform === null) {
         promise = SyncService.remove('platformType');
       } else {
-        promise = SyncService.set({'platformType': platform.type});
+        promise = SyncService.set({ platformType: platform.type });
       }
 
       $rootScope.activePlatformUpdated = true;
 
       $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
+      return promise;
     }
   }
 })();
