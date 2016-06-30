@@ -8,8 +8,16 @@
 * Fixed a bug where loadouts were not properly restricted to the platform they were created for.
 * Xur's menu item will properly disappear when he leaves for the week.
 * New items are marked with a "shiny" animation, and there are notifications when new items appear.
-* The loadout menu may expand to fill the height of the window, but no more.
+* The loadout menu may expand to fill the height of the window, but no more. The scrollbar looks nicer too.
 * Items can now be made larger (or smaller) in settings. Pick the perfect size for your screen!
+* The item info popup has a new header design. Let us know what you think!
+* Changing settings is faster.
+* You can now download your weapon and armor data as spreadsheets for the true data nerds among us.
+* The settings dialog is less spacious.
+* Engrams and items in the postmaster can now be locked (and unlocked).
+* The buttons on the move item popup are now grouped together by character.
+* When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
+* DIM is generally just a little bit snappier, especially when scrolling.
 * Show current vendor items being sold in a popup
 
 # 3.7.4

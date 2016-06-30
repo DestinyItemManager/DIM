@@ -1451,22 +1451,6 @@ rzslider {
   }
 }
 
-.infuse-perk {
-  display: inline-block;
-  border-radius: 50%;
-  margin: 4px;
-  width: var(--item-size);
-  height: var(--item-size);
-  background-color: rgba(255, 255, 255, 0.1);
-  position: relative;
-  height: 100%;
-  width: 100%;
-  background-size: 80%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #4887ba;
-}
-
 .talent-grid {
   max-width: 100%;
   height: auto;
@@ -1501,44 +1485,6 @@ rzslider {
 g {
   outline-width: 0;
 }
-
-.move-popup {
-  a {
-    color: #000;
-    font-size: 1rem;
-  }
-  .move-button {
-    background-size: cover;
-    width: 37px;
-    height: 37px;
-    text-align: center;
-    line-height: 10px;
-    margin: 6px 2px;
-    cursor: pointer;
-    &:focus {
-      outline-width: 5px;
-    }
-  }
-  .infuse-perk {
-    width: 37px;
-    height: 37px;
-    margin: 6px;
-    cursor: pointer;
-  }
-}
-
-.move-button {
-  &.move-vault {
-    background-image: url(/images/vault.png);
-  }
-  &.move-distribute {
-    background-image: url(/images/arrows-out.png);
-  }
-  &.move-consolidate {
-    background-image: url(/images/arrows-in.png);
-  }
-}
-
 
 #content {
   margin: 0 4em;
@@ -1713,7 +1659,6 @@ g {
   top: 0;
   -webkit-overflow-scrolling: touch;
   z-index: 3;
-  width: 327px;
   top: initial;
   left: initial;
   right: initial;
@@ -1737,14 +1682,6 @@ h2, h3, h4 {
 
 .on-dragging .ngdialog {
   display: none;
-}
-
-
-
-.locations {
-  display: flex;
-  flex-direction: row;
-  margin: 0 4px;
 }
 
 .ng-hide {
