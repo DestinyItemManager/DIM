@@ -688,25 +688,6 @@ img {
   }
 }
 
-.element {
-  display: none;
-  .show-elements & {
-    display: block;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    height: 16px;
-    width: 16px;
-  }
-}
-
-.title-element {
-  height: 18px;
-  width: 18px;
-  filter: invert(100%);
-  vertical-align: top;
-}
-
 .item-elem {
   background-color: #5c7183;
   cursor: pointer;
@@ -717,6 +698,17 @@ img {
       height: var(--item-size);
       background-size: cover;
       display: block;
+    }
+  }
+  .element {
+    display: none;
+    .show-elements & {
+      display: block;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      height: 16px;
+      width: 16px;
     }
   }
 }
@@ -1015,31 +1007,6 @@ dim-store-heading {
   }
 }
 
-.move-popup {
-  background-color: #222;
-  cursor: default;
-  bottom: 50px;
-  min-height: 77px;
-  .interaction {
-    display: flex;
-    flex-direction: row;
-  }
-  .item-name {
-    background-color: #fff;
-    color: #000;
-    padding: 5px 28px 5px 5px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    overflow: hidden;
-    white-space: nowrap !important;
-  }
-  .bounty-description {
-    padding: 5px;
-    display: inline-block;
-  }
-}
-
 .ngdialog.xur-move-popup {
   position: fixed;
   height: 0;
@@ -1209,34 +1176,6 @@ rzslider {
   }
   &.is-void {
     background-color: #b184c5;
-  }
-  &.is-arc {
-    .fa-lock, .fa-unlock {
-      color: #85c5ec;
-    }
-  }
-  &.is-solar {
-    .fa-lock, .fa-unlock {
-      color: #f2721b;
-    }
-  }
-  &.is-void {
-    .fa-lock, .fa-unlock {
-      color: #b184c5;
-    }
-  }
-  .lock-icon {
-    top: 1px;
-    cursor: pointer;
-    font-size: .75em;
-    float: left;
-    margin-right: 1px;
-    .fa-lock, .fa-unlock {
-      font-size: 1.3em;
-    }
-    &.locking {
-      opacity: .5;
-    }
   }
 }
 
@@ -1439,6 +1378,7 @@ g {
 .move-popup {
   a {
     color: #000;
+    font-size: 1rem;
   }
   .move-button {
     background-size: cover;
@@ -1472,18 +1412,6 @@ g {
   }
 }
 
-.move-popup .move-button span {
-  text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.4);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
-}
 
 #content {
   margin: 0 4em;
@@ -1684,13 +1612,7 @@ h2, h3, h4 {
   display: none;
 }
 
-.move-popup-right {
-  right: 0;
-}
 
-.move-popup-bottom {
-  top: 50px;
-}
 
 .locations {
   display: flex;
@@ -1991,19 +1913,6 @@ button.toast-close-button {
   display: inline-block;
   white-space: nowrap;
   margin-right: 15px;
-}
-
-.move-popup-info-detail {
-  padding: 0px 5px;
-  top: 6px;
-  right: 0px;
-  font-size: 1.5em;
-  position: absolute;
-  cursor: pointer;
-}
-
-.move-popup .fa {
-  vertical-align: top;
 }
 
 .item-xp-bar {
