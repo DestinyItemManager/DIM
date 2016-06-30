@@ -301,7 +301,7 @@
         return response.data.Response.data;
       });
     }
-    
+
     function getVendors(platform) {
       var data = {
         token: null,
@@ -341,7 +341,7 @@
 
       return promise;
     }
-    
+
     function getVendor(token, platform, membershipId, character, vendorId) {
       return $q.when({
         method: 'GET',
@@ -383,7 +383,7 @@
         .then(function() {
           return $q.all([
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
           ]).then(function(data) {
             return $q.resolve(data[0]);
           });

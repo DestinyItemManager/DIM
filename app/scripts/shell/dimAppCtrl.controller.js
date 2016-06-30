@@ -49,7 +49,7 @@
         $rootScope.$broadcast('dim-toggle-item-details');
       }
     });
-    
+
     $rootScope.$on('dim-active-platform-updated', function(e, args) {
       loadingTracker.addPromise(dimVendorService.updateVendorItems(args.platform.type));
     });
@@ -178,7 +178,7 @@
         filterResult.close();
       }
     };
-    
+
     vm.vendor = dimVendorService;
     vm.showVendors = function showVendors(e) {
       e.stopPropagation();

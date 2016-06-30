@@ -4,36 +4,36 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$q', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService', '$timeout'];
+  dimVendorCtrl.$inject = ['$scope', '$q', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService'];
 
-  function dimVendorCtrl($scope, $q, loadingTracker, dimVendorService, ngDialog, dimStoreService, $timeout) {
+  function dimVendorCtrl($scope, $q, loadingTracker, dimVendorService, ngDialog, dimStoreService) {
     var vm = this;
-    var vendors = [];
     var dialogResult = null;
     var detailItem = null;
     var detailItemElement = null;
-    
+
     vm.vendors = dimVendorService.vendorItems;
-    
-    function mergeMaps(o, map) { 
-      _.each(map, function(val, key) { 
-        if (!o[key]) { 
-          o[key] = map[key]; 
-        } 
-      }); 
-      return o; 
+
+    function mergeMaps(o, map) {
+      _.each(map, function(val, key) {
+        if (!o[key]) {
+          o[key] = map[key];
+        }
+      });
+      return o;
     }
-    
+
     function countCurrencies() {
       var currencies = _.chain(vm.vendors)
-            .values().pluck('costs')
+            .values()
+            .pluck('costs')
             .unique()
             .reduce(mergeMaps)
             .values()
             .pluck('currency')
             .pluck('itemHash')
             .unique()
-            .value()
+            .value();
       vm.totalCoins = {};
       currencies.forEach(function(currencyHash) {
         // Legendary marks are a special case
@@ -50,11 +50,11 @@
     }
 
     countCurrencies();
-    $scope.$on('dim-stores-updated', function (e, stores) {
+    $scope.$on('dim-stores-updated', function() {
       countCurrencies();
     });
-    
-    $scope.$on('ngDialog.opened', function (event, $dialog) {
+
+    $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult) {
         $dialog.position({
           my: 'left top',
@@ -64,7 +64,7 @@
         });
       }
     });
-    
+
     angular.extend(vm, {
       active: 'Warlock',
       activeVendor: '0',
@@ -103,7 +103,7 @@
             scope: angular.extend($scope.$new(true), {
             }),
             controllerAs: 'vm',
-            controller: ['$scope', function($scope) {
+            controller: ['$scope', function() {
               var vm = this;
               angular.extend(vm, {
                 item: item,
@@ -116,7 +116,7 @@
               });
             }]
           });
-        } else {
+        } else if (detailItem === item) {
           detailItem = null;
           dialogResult = null;
           detailItemElement = null;
@@ -129,6 +129,5 @@
         $scope.closeThisDialog();
       }
     });
-
   }
 })();
