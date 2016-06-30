@@ -248,39 +248,39 @@ function extractDB(dbFile) {
   });
   
   db.all('select * from DestinyVendorDefinition', function(err, rows) {
-      if (err) {
-          throw err;
-      }
+    if (err) {
+      throw err;
+    }
 
-      items = {};
+    items = {};
 
-      rows.forEach(function(row) {
-          var item = JSON.parse(row.json);
-          items[item.summary.vendorHash] = item.summary;
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      items[item.summary.vendorHash] = item.summary;
 
-          delete item.summary.vendorHash;
-          delete item.hash;
-      });
+      delete item.summary.vendorHash;
+      delete item.hash;
+    });
 
-      var pRow = processItemRows(items, 'factionIcon');
-      pRow.next();
-      
-       var pRowVend = processItemRows(items, 'vendorIcon');
-      pRowVend.next();
-      
-      var defs = fs.createWriteStream('api-manifest/vendor.json');
-      defs.write(JSON.stringify(items));
+    var pRow = processItemRows(items, 'factionIcon');
+    pRow.next();
+
+    var pRowVend = processItemRows(items, 'vendorIcon');
+    pRowVend.next();
+
+    var defs = fs.createWriteStream('api-manifest/vendor.json');
+    defs.write(JSON.stringify(items));
   });
 
   console.log("done.");
 }
 
-mkdirp('api-manifest', function(err) { });
-mkdirp('img/misc', function(err) { });
-mkdirp('img/destiny_content/items', function(err) { });
-mkdirp('img/destiny_content/progression', function(err) { });
-mkdirp('img/destiny_content/vendor', function(err) { });
-mkdirp('common/destiny_content/icons', function(err) { });
+mkdirp('api-manifest', function() { });
+mkdirp('img/misc', function() { });
+mkdirp('img/destiny_content/items', function() { });
+mkdirp('img/destiny_content/progression', function() { });
+mkdirp('img/destiny_content/vendor', function() { });
+mkdirp('common/destiny_content/icons', function() { });
 
 request({
     headers: {
