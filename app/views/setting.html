@@ -79,7 +79,7 @@
           <label for="itemSize" title="How big should items be?">Item Size</label>
         </td>
         <td>
-          <input ng-model="vm.settings.itemSize" type="range" min="44" max="66" ng-change="vm.save()" />
+          <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" ng-change="vm.save()" /> <button ng-click="vm.settings.itemSize = 44">Reset to Default</button>
         </td>
       </tr>
       <tr>
