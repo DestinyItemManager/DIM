@@ -35,6 +35,8 @@
       itemSort: 'primaryStat',
       // How many columns to display character buckets
       charCol: 3,
+      // How big in pixels to draw items
+      itemSize: 44,
 
       save: function() {
         if (!_loaded) {

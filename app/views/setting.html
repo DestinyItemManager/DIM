@@ -76,6 +76,14 @@
       </tr>
       <tr>
         <td>
+          <label for="itemSize" title="How big should items be?">Item Size</label>
+        </td>
+        <td>
+          <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" ng-change="vm.save()" /> <button ng-click="vm.settings.itemSize = 44">Reset to Default</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label title="Characters can be ordered by last login or based on their creation date.">Character Order</label>
         </td>
         <td>

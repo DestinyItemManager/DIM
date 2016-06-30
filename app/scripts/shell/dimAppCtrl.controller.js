@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window', '$scope'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window, $scope) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -14,6 +14,9 @@
     var filterResult = null;
 
     vm.settings = dimSettingsService;
+    $scope.$watch('app.settings.itemSize', function(size) {
+      document.querySelector('html').style.setProperty("--item-size", size + 'px');
+    });
 
     hotkeys.add({
       combo: ['f'],
