@@ -246,7 +246,7 @@ function extractDB(dbFile) {
       var defs = fs.createWriteStream('api-manifest/progression.json');
       defs.write(JSON.stringify(items));
   });
-  
+
   db.all('select * from DestinyVendorDefinition', function(err, rows) {
     if (err) {
       throw err;
