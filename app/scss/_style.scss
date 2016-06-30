@@ -1977,8 +1977,8 @@ button.toast-close-button {
     line-height: 1em;
   }
   .infuseSourceItem {
-    width: 48px;
-    height: 48px;
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
   }
   .infuseSourceDetailsRow {
     margin-left: 1rem;
@@ -2031,14 +2031,14 @@ button.toast-close-button {
   .item {
     float: left;
     margin: 3px 3px;
-    width: 48px;
-    height: 48px;
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
   }
   .infusedItem {
     float: left;
     margin: 3px 10px 3px 3px;
-    width: 48px;
-    height: 48px;
+    width: calc(var(--item-size) + 4px);
+    height: calc(var(--item-size) + 4px);
   }
   .plusSeparator {
     float: left;
