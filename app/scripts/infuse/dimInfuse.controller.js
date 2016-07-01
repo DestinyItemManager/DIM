@@ -101,7 +101,7 @@
         items[vm.source.type.toLowerCase()].push(vm.source);
 
         items.material = [];
-        if (vm.bucket.sort === 'General') {
+        if (vm.target.bucket.sort === 'General') {
           // Mote of Light
           items.material.push({
             id: '0',
