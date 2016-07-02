@@ -19,7 +19,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
+        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }
@@ -93,6 +93,10 @@
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
     vm.search = dimSearchService;
+
+    $scope.$watch('vm.search.query', function() {
+      vm.filter();
+    });
 
     $scope.$on('dim-stores-updated', function() {
       _duplicates = null;

@@ -118,6 +118,7 @@
       ngDialog.open({
         template: 'views/infuse.html',
         className: 'app-settings',
+        appendClassName: 'modal-dialog',
         data: item,
         scope: $('#infuseDialog').scope()
       });
