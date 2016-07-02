@@ -349,7 +349,7 @@
         $timeout(step, 0, true, activeGaurdian, mode, 0, 0, 0, 0, 0, 0, 0, 0);
         return set_map;
       },
-      normalizeBuckets: function(resetLocked = false) {
+      normalizeBuckets: function(resetLocked) {
         function normalizeStats(item, mod) {
           item.normalStats = _.map(item.stats, function(stat) {
             return {
