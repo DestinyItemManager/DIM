@@ -55,20 +55,20 @@
           view: 'views/changelog-toaster.html?v=v3.7.4'
         });
 
-        if(chrome && chrome.identity) {
+        if (chrome && chrome.identity) {
           chrome.identity.getAccounts(function(account) {
-            if(!account || !account.length) {
+            if (!account || !account.length) {
               dimInfoService.show('chromesync', {
                 title: 'Profile is not syncing.',
                 type: 'warning',
                 body: [
                   '<p>Unless you sign into Google Chrome, your settings and loadouts will not be saved between all of your devices.</p>',
-                       '<p><a href="https://www.google.com/chrome/browser/signin.html" target="_blank">Click here for more information.</a></p>'
+                  '<p><a href="https://www.google.com/chrome/browser/signin.html" target="_blank">Click here for more information.</a></p>'
                 ].join(''),
                 hide: 'Do not show this message again.'
               });
             }
-            if(chrome.runtime.lastError) {
+            if (chrome.runtime.lastError) {
               console.warn(chrome.runtime.lastError.message, 'DIM profile will not sync with other devices.');
             }
           });
