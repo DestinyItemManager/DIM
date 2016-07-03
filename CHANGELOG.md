@@ -18,6 +18,7 @@
 * The buttons on the move item popup are now grouped together by character.
 * When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
 * DIM is generally just a little bit snappier, especially when scrolling.
+* Show sync warning message if user is not signed into Google Chrome.
 
 # 3.7.4
 
