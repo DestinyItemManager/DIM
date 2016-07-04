@@ -5,7 +5,12 @@
   },
   "extends": "eslint:recommended",
   "root": true,
-  "ecmaVersion": 5,
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
   "globals": {
     "angular": true,
     "$": true,
@@ -82,6 +87,24 @@
     "space-in-parens": "error",
     "space-infix-ops": "error",
     "space-unary-ops": "error",
-    "spaced-comment": ["error", "always", { "exceptions": ["-", "*"] }]
+    "spaced-comment": ["error", "always", { "exceptions": ["-", "*"] }],
+    "arrow-parens": "error",
+    "arrow-spacing": "error",
+    "constructor-super": "error",
+    "generator-star-spacing": "error",
+    "no-class-assign": "error",
+    "no-confusing-arrow": "error",
+    "no-const-assign": "error",
+    "no-dupe-class-members": "error",
+    "no-new-symbol": "error",
+    "no-useless-computed-key": "error",
+    "no-useless-constructor": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+    "require-yield": "error",
+    "rest-spread-spacing": "error",
+    "template-curly-spacing": "error",
+    "yield-star-spacing": "error"
   }
 }
