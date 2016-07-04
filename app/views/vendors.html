@@ -3,40 +3,51 @@
   <div class="ngdialog-inner-content">
     <div class="selectionPanel">
       <p>
-        <label ng-class="{selected: vm.active === 'Warlock'}" class='vendor-button'>
-          <input type='radio' ng-model='vm.active' value='Warlock'>Warlock
+        <label ng-class="{selected: vm.activeVendor === 'vanguard'}" class='vendor-button'>
+          <input type='radio' ng-model='vm.activeVendor' value='vanguard'>Vanguard
         </label>
-        <label ng-class="{selected: vm.active === 'Titan'}" class='vendor-button'>
-          <input type='radio' ng-model='vm.active' value='Titan'>Titan
+        <label ng-class="{selected: vm.activeVendor === 'factions'}" class='vendor-button'>
+          <input type='radio' ng-model='vm.activeVendor' value='factions'>Factions
         </label>
-        <label ng-class="{selected: vm.active === 'Hunter'}" class='vendor-button'>
-          <input type='radio' ng-model='vm.active' value='Hunter'>Hunter
+        <label ng-class="{selected: vm.activeVendor === 'misc'}" class='vendor-button'>
+          <input type='radio' ng-model='vm.activeVendor' value='misc'>Misc
+        </label>
+        <label ng-class="{selected: vm.activeVendor === 'crucible'}" class='vendor-button'>
+          <input type='radio' ng-model='vm.activeVendor' value='crucible'>Crucible
+        </label>
+        <label ng-class="{selected: vm.activeVendor === 'exotics'}" class='vendor-button'>
+          <input type='radio' ng-model='vm.activeVendor' value='exotics'>Exotics
+        </label>
+        <label ng-if="vm.vendors.banner.Banner" ng-class="{selected: vm.activeVendor === 'banner'}" class='vendor-button'>
+          <input type='radio' ng-model='vm.activeVendor' value='banner'>Iron Banner
         </label>
       </p>
-      <p>
-        <select ng-model='vm.activeVendor' ng-options="idx as obj.vendorName for (idx, obj) in vm.vendors"></select>
-      </p>
+      <!--<p>
+        <select ng-model='vm.activeVendor' ng-options="idx as idx for (idx, obj) in vm.vendors"></select>
+      </p>-->
     </div>
     <div class="vendorContainer">
-    <div class="vendorBlock">
+    <div class="vendorBlock" ng-repeat="(vendorType, vendor) in vm.vendors[vm.activeVendor]">
       <div class="vendorHeader">
-        <h2 ng-bind="vm.vendors[vm.activeVendor].vendorName"></h2>
-        <img class="vendorIcon" ng-src="{{vm.vendors[vm.activeVendor].vendorIcon}}" />
+        <h3>{{vendor.vendorName}}</h3>
+        <img class="vendorIcon" ng-src="{{vendor.vendorIcon}}" />
       </div>
       <div class="vendorRow">
-        <div ng-repeat="(itemType, saleItems) in vm.vendors[vm.activeVendor].items[vm.active]">
-          <h3>{{itemType}}</h3>
-          <div class="itemType">
-            <div ng-if="saleItems.length > 0" class="vendorItem" ng-repeat="saleItem in saleItems">
-              <dim-simple-item class="itemQuality" id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
-              <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
-                {{::saleItem.cost.cost}}/{{vm.totalCoins[saleItem.cost.currency.itemHash]}}
-                <span class="currency"><img dim-bungie-image-fallback="::saleItem.cost.currency.icon" title="{{::saleItem.cost.currency.name}}"></span>
+        <div ng-repeat="(classType, armorTypes) in vendor.items">
+          <h3>{{classType}}</h3>
+          <div ng-repeat="(itemType, saleItems) in armorTypes">
+            <div class="itemType">
+              <div ng-if="saleItems.length > 0" class="vendorItem" ng-repeat="saleItem in saleItems">
+                <dim-simple-item class="itemQuality" id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
+                  {{::saleItem.cost.cost}}/{{vm.totalCoins[saleItem.cost.currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::saleItem.cost.currency.icon" title="{{::saleItem.cost.currency.name}}"></span>
+                </div>
               </div>
             </div>
-          </div>
-          <div ng-if="saleItems.length === 0" style="height:72px;margin-left:0;" class="unequipped sub-bucket">
-            <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>
+            <!--<div ng-if="saleItems.length === 0" style="height:72px;margin-left:0;" class="unequipped sub-bucket">
+              <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>
+            </div>-->
           </div>
         </div>
       </div>

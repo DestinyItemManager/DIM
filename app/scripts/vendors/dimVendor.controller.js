@@ -26,8 +26,8 @@
     function countCurrencies() {
       var currencies = _.chain(vm.vendors)
             .values()
-            .pluck('costs')
-            .unique()
+            .reduce(function(o, val) { o.push(_.values(val)); return o; }, [])
+            .flatten().pluck('costs')
             .reduce(mergeMaps)
             .values()
             .pluck('currency')
@@ -67,7 +67,7 @@
 
     angular.extend(vm, {
       active: 'Warlock',
-      activeVendor: '0',
+      activeVendor: 'vanguard',
       itemClicked: function(item, e) {
         e.stopPropagation();
         if (dialogResult) {

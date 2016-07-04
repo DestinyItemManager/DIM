@@ -8,7 +8,6 @@
 
   function VendorService($rootScope, $q, dimBungieService, dimItemDefinitions, dimPlatformService, dimVendorDefinitions, dimStoreService) {
     function getBuckets(items) {
-      // load the best items
       return {
         Helmet: items.filter(function(item) { return item.type === 'Helmet'; }),
         Gauntlets: items.filter(function(item) { return item.type === 'Gauntlets'; }),
@@ -26,6 +25,78 @@
         Warlock: getBuckets(items.filter(function(item) { return item.classType === 2 || item.classType === 3; }))
       };
     }
+    
+    function initVanguardBuckets(vendors) {
+      var titan = _.findWhere(vendors, {vendorHash: '1990950'});
+      var hunter = _.findWhere(vendors, {vendorHash: '3003633346'});
+      var warlock = _.findWhere(vendors, {vendorHash: '1575820975'});
+      titan.items = {Titan: getBuckets(titan.items.filter(function(item) { return item.classType === 0 || item.classType === 3; }))};
+      hunter.items = {Hunter: getBuckets(hunter.items.filter(function(item) { return item.classType === 1 || item.classType === 3; }))};
+      warlock.items = {Warlock: getBuckets(warlock.items.filter(function(item) { return item.classType === 2 || item.classType === 3; }))};
+      
+      return {
+        Titan: titan,
+        Hunter: hunter,
+        Warlock: warlock
+      };
+    }
+    
+    function initFactionBuckets(vendors) {
+      var deadorbit = _.findWhere(vendors, {vendorHash: '3611686524'});
+      var futurewar = _.findWhere(vendors, {vendorHash: '1821699360'});
+      var newmon = _.findWhere(vendors, {vendorHash: '1808244981'});
+      deadorbit.items = initBuckets(deadorbit.items);
+      futurewar.items = initBuckets(futurewar.items);
+      newmon.items = initBuckets(newmon.items);
+
+      return {
+        DeadOrbit: deadorbit,
+        FutureWarCult: futurewar,
+        NewMonarchy: newmon
+      };
+    }
+    
+    function initMiscBuckets(vendors) {
+      var eris = _.findWhere(vendors, {vendorHash: '174528503'});
+      var speaker = _.findWhere(vendors, {vendorHash: '2680694281'});
+      var variks = _.findWhere(vendors, {vendorHash: '1998812735'});
+      eris.items = initBuckets(eris.items);
+      speaker.items = initBuckets(speaker.items);
+      variks.items = initBuckets(variks.items);
+
+      return {
+        Eris: eris,
+        Speaker: speaker,
+        Variks: variks
+      };
+    }
+    
+    function initBanner(vendors) {
+      var banner = _.findWhere(vendors, {vendorHash: '242140165'});
+      banner.items = initBuckets(banner.items);
+
+      return {
+        Banner: banner
+      };
+    }
+    
+    function initCrucible(vendors) {
+     var cruc = _.findWhere(vendors, {vendorHash: '3746647075'});
+     cruc.items = initBuckets(cruc.items);
+     
+     return {
+        Crucible: cruc
+      };
+    }
+    
+    function initExotics(vendors) {
+      var exotics = _.findWhere(vendors, {vendorHash: '3902439767'});
+      exotics.items = initBuckets(exotics.items);
+
+      return {
+        Exotics: exotics
+      };
+    }
 
     function mergeMaps(o, map) {
       _.each(map, function(val, key) {
@@ -38,6 +109,12 @@
 
     return {
       vendorItems: [],
+      vanguardHashes: ['1990950', '3003633346', '1575820975'], // Titan, Hunter, Warlock
+      factionHashes: ['3611686524', '1821699360', '1808244981'], // Dead orbit, Future war, New mon
+      miscHashes: ['174528503', '2680694281', '1998812735'], // Eris, Speaker, Variks
+      crucibleHash: '3746647075',
+      bannerHash: '242140165',
+      exoticsHash: '3902439767',
       updateVendorItems: function() {
         var self = this;
 
@@ -111,11 +188,18 @@
             return $q.all(promises);
           })
           .then(function(vendorsWithProcessedItems) {
-            // Now lets split the items in each vendor up by class and armor type
-            _.each(vendorsWithProcessedItems, function(vendorWithProcessedItems) {
-              vendorWithProcessedItems.items = initBuckets(vendorWithProcessedItems.items);
-            });
-            self.vendorItems = vendorsWithProcessedItems;
+            self.vendorItems.vanguard = initVanguardBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.vanguardHashes,vendor.vendorHash); }));
+            self.vendorItems.factions = initFactionBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.factionHashes,vendor.vendorHash); }));
+            self.vendorItems.misc = initMiscBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.miscHashes,vendor.vendorHash); }));
+            self.vendorItems.crucible = initCrucible(_.filter(vendorsWithProcessedItems, function(vendor) { return self.crucibleHash === vendor.vendorHash }));
+            self.vendorItems.banner = initBanner(_.filter(vendorsWithProcessedItems, function(vendor) { return self.bannerHash === vendor.vendorHash; }));
+            self.vendorItems.exotics = initExotics(_.filter(vendorsWithProcessedItems, function(vendor) { return self.exoticsHash === vendor.vendorHash; }));
+            //self.vendorItems = vendorsWithProcessedItems;
+            // // Now lets split the items in each vendor up by class and armor type
+            // _.each(vendorsWithProcessedItems, function(vendorWithProcessedItems) {
+              // vendorWithProcessedItems.items = initBuckets(vendorWithProcessedItems.items);
+            // });
+            // self.vendorItems = vendorsWithProcessedItems;
           });
       }
     };

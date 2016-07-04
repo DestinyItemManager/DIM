@@ -975,13 +975,12 @@ dim-store-heading {
   .ngdialog-content {
     height: fit-content !important;
     max-height: 100% !important;
+    width: 50% !important;
   }
   .ngdialog-inner-content {
     overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    flex-wrap:wrap;
-    width:500px;
+    width: 100%;
+    height: 75vh;
     background-color: #434444;
   }
   .vendor-button {
@@ -1020,7 +1019,7 @@ dim-store-heading {
     justify-content: center;
   }
   .vendorBlock {
-    width: 500px
+    margin-right: 20px;
   }
   .vendorHeader {
     display: flex;
@@ -1030,7 +1029,7 @@ dim-store-heading {
   }
   .vendorRow {
     display:flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap:wrap;
     justify-content: center;
   }
