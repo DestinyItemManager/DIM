@@ -21,6 +21,7 @@
 * Clicking the icon to open DIM will now switch to an active DIM tab if it's already running.
 * Bungie.net will open in a new tab as a convenience for expired cookies.
 * Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
+* Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
 
 # 3.7.4
 
