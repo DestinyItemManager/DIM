@@ -46,7 +46,7 @@
         item: '=itemData'
       },
       template: [
-        '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
+        '<div ui-draggable="{{ ::vm.draggable }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
         '  class="item"',
@@ -97,6 +97,17 @@
         });
       }
 
+      scope.$on('ngDialog.opened', function(event, $dialog) {
+        if (dialogResult && $dialog[0].id === dialogResult.id) {
+          $dialog.position({
+            my: 'left top',
+            at: 'left bottom+2',
+            of: element,
+            collision: 'flip'
+          });
+        }
+      });
+
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
 
@@ -117,17 +128,17 @@
         } else if (dimLoadoutService.dialogOpen) {
           dimLoadoutService.addItemToLoadout(item, e);
         } else {
-          var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
-          var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
-
           dialogResult = ngDialog.open({
             template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
             plain: true,
-            appendTo: 'div[id="' + item.index + '"]',
             overlay: false,
-            className: 'move-popup' + right + bottom,
+            className: 'move-popup-dialog',
             showClose: false,
-            scope: scope
+            scope: scope,
+            // Setting these focus options prevents the page from
+            // jumping as dialogs are shown/hidden
+            trapFocus: false,
+            preserveFocus: false
           });
           otherDialog = dialogResult;
 

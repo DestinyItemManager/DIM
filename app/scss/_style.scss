@@ -208,7 +208,8 @@ a {
 .ngdialog-content > div {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: fit-content;
+  max-height: 100%;
 }
 
 .ngdialog-inner-content {
@@ -297,6 +298,7 @@ a {
     padding: 0;
   }
   h1 {
+    flex-shrink: 0;
     margin-top: 0;
     margin-bottom: 0;
     padding: 15px 25px;
@@ -388,10 +390,7 @@ h2, h3 {
 }
 
 body {
-  &.ngdialog-open {
-    overflow: auto;
-  }
-  overflow-y: scroll;
+  overflow-y: auto;
   min-width: 410px;
   margin: 0 auto;
   padding-top: 40px;
