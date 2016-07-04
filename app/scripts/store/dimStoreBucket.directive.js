@@ -12,6 +12,11 @@
     })
     .filter('sortItems', function() {
       return function(items, sort) {
+        // Don't resort postmaster items - that way people can see
+        // what'll get bumped when it's full.
+        if (items.length && items[0].location.inPostmaster) {
+          return items;
+        }
         items = _.sortBy(items || [], 'name');
         if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
           items = _.sortBy(items, function(item) {
