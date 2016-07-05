@@ -22,6 +22,7 @@
 * Bungie.net will open in a new tab as a convenience for expired cookies.
 * Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
 * Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
+* You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
 
 # 3.7.4
 

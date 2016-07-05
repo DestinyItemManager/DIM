@@ -7,6 +7,14 @@
       return function sortStores(stores, order) {
         if (order === 'mostRecent') {
           return _.sortBy(stores, 'lastPlayed').reverse();
+        } else if (order === 'mostRecentReverse') {
+          return _.sortBy(stores, function(store) {
+            if (store.isVault) {
+              return Infinity;
+            } else {
+              return store.lastPlayed;
+            }
+          });
         } else {
           return _.sortBy(stores, 'id');
         }
