@@ -1003,57 +1003,6 @@ dim-store-heading {
   }
 }
 
-<<<<<<< HEAD
-.move-popup {
-  background-color: #222;
-  cursor: default;
-  bottom: 50px;
-  min-height: 77px;
-  .interaction {
-    display: flex;
-    flex-direction: row;
-  }
-  .item-name {
-    background-color: white;
-    color: #000;
-    padding: 5px 28px 5px 5px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    overflow: hidden;
-    white-space: nowrap !important;
-  }
-  .bounty-description {
-    padding: 5px;
-    display: inline-block;
-  }
-}
-
-.ngdialog.xur-move-popup {
-  position: fixed;
-  height: 0;
-  z-index: 10000;
-  height: fit-content;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
-  .compare-items {
-    margin-top: 0;
-    display: flex;
-    flex-direction: row;
-  }
-  .more-item-details {
-    margin-top: 0;
-  }
-  .item {
-    opacity: 0.2;
-  }
-  .selected {
-    opacity: 1.0;
-  }
-  a {
-    outline: 0;
-  }
-}
-
 .move-amount {
   display: flex;
   flex-direction: row;
@@ -1185,47 +1134,6 @@ rzslider {
     }
     &.rz-limit {
       color: #55637d;
-    }
-  }
-}
-
-.item-name {
-  &.is-arc {
-    background-color: $arc;
-  }
-  &.is-solar {
-    background-color: $solar;
-  }
-  &.is-void {
-    background-color: $void;
-  }
-<<<<<<< HEAD
-  &.is-arc {
-    .fa-lock, .fa-unlock {
-      color: $arc;
-    }
-  }
-  &.is-solar {
-    .fa-lock, .fa-unlock {
-      color: $solar;
-    }
-  }
-  &.is-void {
-    .fa-lock, .fa-unlock {
-      color: $void;
-    }
-  }
-  .lock-icon {
-    top: 1px;
-    cursor: pointer;
-    font-size: .75em;
-    float: left;
-    margin-right: 1px;
-    .fa-lock, .fa-unlock {
-      font-size: 1.3em;
-    }
-    &.locking {
-      opacity: .5;
     }
   }
 }
