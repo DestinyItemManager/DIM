@@ -86,14 +86,6 @@ div:focus, span:focus {
   }
 }
 
-#header .content .link {
-  color: white;
-  &:hover {
-    color: $orange;
-    cursor: pointer;
-  }
-}
-
 .pull-right {
   float: right;
   text-align: right;
@@ -119,7 +111,6 @@ div:focus, span:focus {
   width: 250px;
   margin-left: -10px;
   margin-bottom: 4px;
-  padding-left: 10px;
   height: 22px;
   background: rgb(46, 46, 46);
   border: none;
@@ -423,7 +414,7 @@ body {
   }
 
   ::-webkit-scrollbar-thumb {
-    background: $orange;
+    background: #E4E4E4;
     border-radius: 3px;
   }
 }
@@ -830,9 +821,8 @@ dim-store-heading {
   }
 }
 
-/* INT/DIS/STR bars below character tile */
-
-.stats {
+/* INT/DIS/STR bars */
+.stat-bars {
   width: 100%;
   opacity: .8;
   display: flex;
@@ -1155,7 +1145,7 @@ rzslider {
   margin: 5px 10px;
 }
 
-.stat-bars {
+.stats {
   width: 100%;
   display: table;
   border-spacing: 0 4px;
@@ -1527,12 +1517,10 @@ h2, h3, h4 {
   position: absolute;
   top: 2px;
   right: 2px;
-  z-index: 2;
   background-image: url('../images/close.png');
   background-size: 16px 16px;
   background-color: rgba(100, 100, 100, 0.6);
   &:hover {
-    cursor: pointer;
     background-color: rgba(0, 0, 0, 0.6);
   }
 }
@@ -2057,4 +2045,3 @@ button.toast-close-button {
     transform: translateY(0rem);
   }
 }
-

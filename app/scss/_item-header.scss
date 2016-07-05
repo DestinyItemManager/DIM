@@ -18,13 +18,13 @@ $item-header-spacing: 5px;
   white-space: nowrap !important;
 
   &.is-arc {
-    background-color: #85c5ec;
+    background-color: $arc;
   }
   &.is-solar {
-    background-color: #f2721b;
+    background-color: $solar;
   }
   &.is-void {
-    background-color: #b184c5;
+    background-color: $void;
   }
 
   a {

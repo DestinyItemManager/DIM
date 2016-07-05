@@ -15,7 +15,7 @@
         stats: '='
       },
       template: [
-        '<div class="stats">',
+        '<div class="stat-bars">',
         '  <div class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">',
         '    <img src="images/intellect.png">',
         '    <div class="bar" ng-repeat="n in vm.stats.STAT_INTELLECT.tiers track by $index">',
