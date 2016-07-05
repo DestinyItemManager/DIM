@@ -54,6 +54,28 @@
           title: 'DIM v3.7.4 Released',
           view: 'views/changelog-toaster.html?v=v3.7.4'
         });
+
+        if (chrome && chrome.identity) {
+          chrome.identity.getAuthToken(function(account) {
+            if (!account) {
+              dimInfoService.show('chromesync', {
+                title: 'Profile is not syncing.',
+                type: 'warning',
+                body: [
+                  '<p>Unless you sign into Google Chrome, your settings and loadouts will not be saved between all of your devices.</p>',
+                  '<p><a href="https://www.google.com/chrome/browser/signin.html" target="_blank">Click here for more information.</a></p>'
+                ].join(''),
+                hide: 'Do not show this message again.',
+                func: function() {
+                  chrome.identity.getAuthToken({ interactive: true });
+                }
+              });
+            }
+            if (chrome.runtime.lastError) {
+              console.warn(chrome.runtime.lastError.message, 'DIM profile will not sync with other devices.');
+            }
+          });
+        }
       }
     ]);
 
