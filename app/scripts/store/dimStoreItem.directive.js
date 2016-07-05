@@ -46,7 +46,7 @@
         item: '=itemData'
       },
       template: [
-        '<div ui-draggable="{{ ::vm.draggable }}" drag-channel="{{ ::vm.dragChannel }}" ',
+        '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
         '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
         '  drag="::vm.item.index"',
         '  class="item"',
