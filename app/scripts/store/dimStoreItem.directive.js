@@ -99,12 +99,18 @@
 
       scope.$on('ngDialog.opened', function(event, $dialog) {
         if (dialogResult && $dialog[0].id === dialogResult.id) {
-          $dialog.position({
-            my: 'left top',
-            at: 'left bottom+2',
-            of: element,
-            collision: 'flip'
-          });
+          $dialog.hide();
+          setTimeout(function() {
+            $dialog
+              .position({
+                my: 'left bottom',
+                at: 'left top-2',
+                of: element,
+                collision: 'flip flip',
+                within: '.stores'
+              })
+              .show();
+          }, 0);
         }
       });
 
