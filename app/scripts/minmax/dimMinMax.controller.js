@@ -282,10 +282,12 @@
           vm.allSetTiers = [];
           var tier_keys = Object.keys(tiers);
           for (var t = tier_keys.length; t-- > tier_keys.length - 3;) {
-            vm.allSetTiers.push('- Tier ' + tier_keys[t] + ' -');
-            _.each(tiers[tier_keys[t]], function(set) {
-              vm.allSetTiers.push(set);
-            });
+            if(tier_keys[t]) {
+              vm.allSetTiers.push('- Tier ' + tier_keys[t] + ' -');
+              _.each(tiers[tier_keys[t]], function(set) {
+                vm.allSetTiers.push(set);
+              });
+            }
           }
 
           vm.activesets = vm.allSetTiers[1];
