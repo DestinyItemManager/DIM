@@ -18,7 +18,10 @@
 * The buttons on the move item popup are now grouped together by character.
 * When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
 * DIM is generally just a little bit snappier, especially when scrolling.
-* Show sync warning message if user is not signed into Google Chrome.
+* Clicking the icon to open DIM will now switch to an active DIM tab if it's already running.
+* Bungie.net will open in a new tab as a convenience for expired cookies.
+* Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
+* Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
 
 # 3.7.4
 

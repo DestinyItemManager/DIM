@@ -13,8 +13,8 @@
       getAllItems: true,
       showLockedItems: false,
       target: null,
-      infused: 0,
       exotic: false,
+      infused: 0,
       infusable: [],
       transferInProgress: false,
 
@@ -23,6 +23,7 @@
         vm.source = item;
         vm.infused = 0;
         vm.target = null;
+        vm.exotic = item.tier === 'Exotic';
         vm.statType =
           vm.source.primStat.statHash === 3897883278 ? 'Defense' // armor item
           : vm.source.primStat.statHash === 368428387 ? 'Attack' // weapon item
