@@ -4,14 +4,19 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window, $scope, $state) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
     var supportResult = null;
     var filterResult = null;
+
+    vm.settings = dimSettingsService;
+    $scope.$watch('app.settings.itemSize', function(size) {
+      document.querySelector('html').style.setProperty("--item-size", size + 'px');
+    });
 
     hotkeys.add({
       combo: ['f'],
@@ -45,17 +50,6 @@
       }
     });
 
-    dimSettingsService.getSettings()
-      .then(function(settings) {
-        vm.showElements = settings.showElements;
-      });
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'showElements')) {
-        vm.showElements = arg.showElements;
-      }
-    });
-
     vm.showSetting = function(e) {
       e.stopPropagation();
 
@@ -79,6 +73,10 @@
             .removeClass('app-settings');
         });
       }
+    };
+
+    vm.toggleMinMax = function(e) {
+      $state.go($state.is('best') ? 'inventory' : 'best');
     };
 
     vm.showAbout = function(e) {
@@ -217,12 +215,6 @@
     };
 
     vm.startAutoRefreshTimer();
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'characterOrder')) {
-        refresh();
-      }
-    });
 
     // Refresh when the user comes back to the page
     document.addEventListener("visibilitychange", function() {

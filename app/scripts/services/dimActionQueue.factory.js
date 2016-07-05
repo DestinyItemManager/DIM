@@ -23,6 +23,7 @@
           _queue.shift();
         });
         _queue.push(promise);
+        return promise;
       },
 
       // Wrap a function to produce a function that will be queued
