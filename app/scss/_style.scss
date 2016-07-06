@@ -51,12 +51,12 @@ div:focus, span:focus {
   color: #999;
   font-size: 16px !important;
   font-weight: bold;
-  color: #E8A534 !important;
+  color: $orange !important;
 }
 
 #header {
   #user {
-    color: #fff;
+    color: white;
   }
   .fa {
     font-size: 15px;
@@ -80,17 +80,9 @@ div:focus, span:focus {
   .fa {
     font-size: 20px;
     &:hover {
-      color: #E8A534;
+      color: $orange;
       cursor: pointer;
     }
-  }
-}
-
-#header .content .link {
-  color: white;
-  &:hover {
-    color: #E8A534;
-    cursor: pointer;
   }
 }
 
@@ -128,7 +120,7 @@ div:focus, span:focus {
   &:hover, &:focus {
     background: transparent;
     outline: none;
-    border-bottom: 1px solid #E8A534;
+    border-bottom: 1px solid $orange;
   }
 }
 
@@ -156,7 +148,7 @@ dd {
   top: 0;
   top: 25%;
   left: 25%;
-  color: #fff;
+  color: white;
   padding: 20px;
   font-size: 13px;
   border: 1px solid #333;
@@ -177,7 +169,7 @@ dd {
     position: fixed;
     width: 100%;
     height: 100%;
-    color: #fff;
+    color: white;
     z-index: 10000;
     font-size: 13px;
     background: transparent;
@@ -231,7 +223,7 @@ a {
   right: 20px;
   font-size: 20px;
   &:hover {
-    color: #f59e1f;
+    color: $orange;
   }
 }
 
@@ -292,7 +284,7 @@ a {
   position: relative;
   z-index: 100;
   .orange {
-    color: #f59e1f;
+    color: $orange;
   }
   > div > {
     h1, h2, h3, p, table, dl {
@@ -328,7 +320,7 @@ a {
     font-weight: 400;
     font-size: 1.1em;
     margin-top: 10px;
-    color: #f59e1f;
+    color: $orange;
   }
   dd {
     margin: 10px 10px 15px 10px;
@@ -403,7 +395,7 @@ body {
   margin: 0 auto;
   padding-top: 40px;
   background-color: #434444;
-  color: #fff;
+  color: white;
   font-family: 'Open Sans', sans-serif;
   font-size:12px;
   > div:first-child {
@@ -483,13 +475,13 @@ img {
     background-color: black;
   }
   &.arc {
-    background-color: #85c5ec;
+    background-color: $arc;
   }
   &.solar {
-    background-color: #f2721b;
+    background-color: $solar;
   }
   &.void {
-    background-color: #b184c5;
+    background-color: $void;
   }
 }
 
@@ -501,7 +493,7 @@ img {
   flex: 1;
   padding: 0 16px;
   background-color: #353535;
-  color: #FFF;
+  color: white;
   line-height: 40px;
   height: 40px;
   text-transform: uppercase;
@@ -642,20 +634,20 @@ img {
 }
 
 .stat-damage-arc {
-  background: #85c5ec;
-  color: #fff;
+  background: $arc;
+  color: white;
   text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
 }
 
 .stat-damage-solar {
-  background: #f2721b;
-  color: #fff;
+  background: $solar;
+  color: white;
   text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
 }
 
 .stat-damage-void {
-  background: #b184c5;
-  color: #fff;
+  background: $void;
+  color: white;
   text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
 }
 
@@ -829,9 +821,8 @@ dim-store-heading {
   }
 }
 
-/* INT/DIS/STR bars below character tile */
-
-.character .stats {
+/* INT/DIS/STR bars */
+.stat-bars {
   width: 100%;
   opacity: .8;
   display: flex;
@@ -1134,18 +1125,6 @@ rzslider {
     &.rz-limit {
       color: #55637d;
     }
-  }
-}
-
-.item-name {
-  &.is-arc {
-    background-color: #85c5ec;
-  }
-  &.is-solar {
-    background-color: #f2721b;
-  }
-  &.is-void {
-    background-color: #b184c5;
   }
 }
 
@@ -1554,7 +1533,7 @@ h2, h3, h4 {
   -ms-word-wrap: break-word;
   word-wrap: break-word;
   a, label {
-    color: #ffffff;
+    color: white;
   }
   a:hover {
     color: #cccccc;
@@ -1569,8 +1548,8 @@ h2, h3, h4 {
   float: right;
   font-size: 20px;
   font-weight: bold;
-  color: #ffffff;
-  text-shadow: 0 1px 0 #ffffff;
+  color: white;
+  text-shadow: 0 1px 0 white;
   &:hover, &:focus {
     color: #000000;
     text-decoration: none;
@@ -1661,7 +1640,7 @@ button.toast-close-button {
       background-position: 15px 15px;
       background-repeat: no-repeat;
       box-shadow: 0 0 12px #999999;
-      color: #ffffff;
+      color: white;
     }
     :hover {
       box-shadow: 0 0 12px #000000;
@@ -2066,5 +2045,3 @@ button.toast-close-button {
     transform: translateY(0rem);
   }
 }
-
-@import 'minmax';

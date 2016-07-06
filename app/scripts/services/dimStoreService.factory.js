@@ -453,6 +453,7 @@
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
         tier: itemDef.tierTypeName || 'Common',
+        isExotic: itemDef.tierTypeName === 'Exotic',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -811,9 +812,9 @@
       }
 
       stats.forEach(function(stat) {
-        stat.qualityPercentage.range = getQualityRange(light, stat.qualityPercentage);
+        stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
       });
-      quality.range = getQualityRange(light, quality);
+      quality.range = getQualityRange(light.value, quality);
 
       return quality;
     }
