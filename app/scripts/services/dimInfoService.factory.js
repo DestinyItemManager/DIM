@@ -15,6 +15,7 @@
         content.title = content.title || '';
         content.body = content.body || '';
         content.hide = content.hide || 'Hide This Popup';
+        content.func = content.func || function() {};
 
         function showToaster(body, save, timeout) {
           timeout = timeout || 0;
@@ -56,6 +57,7 @@
           } else {
             showToaster(content.body, data, timeout);
           }
+          content.func();
         });
       }
     };
