@@ -1018,7 +1018,7 @@
           _.each(items, function(item) {
             var createdItem = null;
             try {
-              createdItem = processSingleItem.apply(undefined, args.concat(item));
+              createdItem = processSingleItem(...args, item);
             } catch (e) {
               console.error("Error processing item", item, e);
             }
