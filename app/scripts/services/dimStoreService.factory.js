@@ -477,11 +477,15 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: (itemDef.maxStackSize === 1 && ['Class', 'Consumable'].indexOf(itemType) === -1 && !itemDef.nonTransferrable && currentBucket.sort !== 'Armor') || item.lockable,
+        lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
+
+      if(createdItem.hash === 2222692418) {
+        console.log(createdItem)
+      }
 
       createdItem.index = createItemIndex(createdItem);
 
