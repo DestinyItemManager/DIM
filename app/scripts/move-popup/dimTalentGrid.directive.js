@@ -58,9 +58,9 @@
     };
   }
 
-  TalentGridCtrl.$inject = ['$window'];
+  TalentGridCtrl.$inject = ['$window', 'ngDialog'];
 
-  function TalentGridCtrl($window) {
+  function TalentGridCtrl($window, ngDialog) {
     var vm = this;
     vm.nodeSize = 34;
     vm.nodePadding = 4;
@@ -82,11 +82,18 @@
       vm.numRows = vm.perksOnly ? 2 : (_.max(vm.talentGrid.nodes, 'row').row + 1);
     }
 
-    vm.onScopeClick = function(node) {      
+    vm.onScopeClick = function(node) {
       if (node.column == 1) {
-        $window.open(`http://destinyscopes.com/#${node.name.toLowerCase().replace(' ', '-')}`, '_blank');
+        ngDialog.open({
+          template: 'views/scopes.html',
+          className: 'scopes-dialog',
+          controllerAs: 'dialog',
+          controller: function ($scope) {
+            var vm = this;
+            vm.hash = node.hash;
+          }
+        });
       }
-    }
-    
+    };
   }
 })();
