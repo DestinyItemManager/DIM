@@ -477,7 +477,7 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: (itemDef.maxStackSize === 1 && ['Class', 'Consumable'].indexOf(itemType) === -1 && !itemDef.nonTransferrable) || item.lockable,
+        lockable: (itemDef.maxStackSize === 1 && ['Class', 'Consumable'].indexOf(itemType) === -1 && !itemDef.nonTransferrable && currentBucket.sort !== 'Armor') || item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
