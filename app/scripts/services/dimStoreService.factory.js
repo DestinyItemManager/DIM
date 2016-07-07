@@ -483,10 +483,6 @@
         classified: itemDef.classified
       });
 
-      if(createdItem.hash === 2222692418) {
-        console.log(createdItem)
-      }
-
       createdItem.index = createItemIndex(createdItem);
 
       if (_.isEmpty(_stores)) {
