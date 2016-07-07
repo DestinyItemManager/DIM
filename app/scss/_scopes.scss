@@ -11,8 +11,9 @@
 
 .scopeInfo {
   position: absolute;
-  left: 200px;
-  top: 75px;
+  left: 350px;
+  top: 60px;
+  z-index: 10;
 }
 
 .scopeData {
@@ -21,4 +22,12 @@
 
 .scopeData li span {
   font-weight: bold;
+}
+
+.mainScope .thumb img {
+  position: absolute;
+  left: 100px;
+  top: 65px;
+  width: 20%;
+  height: 20%;
 }

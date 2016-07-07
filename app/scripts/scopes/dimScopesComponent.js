@@ -34,16 +34,21 @@
       template: `
         <div class="mainScope">
           <div class="scopeInfo">
+
             <ul class="scopeData">
               <li>Type: <span>{{$ctrl.scopes.Type}}</span></li>
               <li>Name: <span>{{$ctrl.scopes.Name}}</span></li>
-              <li ng-if="$ctrl.scopes.Stats.Stability">Stability: <span>{{$ctrl.scopes.Stats.Stability}}</span></li>
-              <li ng-if="$ctrl.scopes.Stats.Reload">Reload: <span>{{$ctrl.scopes.Stats.Reload}}</span></li>
-              <li ng-if="$ctrl.scopes.Stats.Handling">Handling: <span>{{$ctrl.scopes.Stats.Handling}}</span></li>
-              <li ng-if="$ctrl.scopes['Aim Assist']">Aim Assist: <span>{{$ctrl.scopes['Aim Assist']}}</span></li>
+              <li ng-repeat="stat in $ctrl.scopes.Stats">{{stat[0]}}: <span>{{stat[1]}}</span></li>
             </ul>
+
           </div>
+            
+          <div class="thumb">
+            <img ng-src="{{$ctrl.scopes.Image[0] | remoteImg}}" />
+          </div>
+
           <img ng-src="{{$ctrl.scopes.Image[1] | remoteImg}}" />
+
         </div>
       `,
       controller: scopesController,
