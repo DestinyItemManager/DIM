@@ -1,0 +1,24 @@
+.scopes-dialog {
+  width: 100%;
+  height: 85%;
+}
+
+.mainScope {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scopeInfo {
+  position: absolute;
+  left: 200px;
+  top: 75px;
+}
+
+.scopeData {
+  list-style-type: none;
+}
+
+.scopeData li span {
+  font-weight: bold;
+}
