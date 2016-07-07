@@ -27,6 +27,8 @@
     }
     
     function initVanguardBuckets(vendors) {
+      if (!vendors || !vendors.length) return;
+      
       var titan = _.findWhere(vendors, {vendorHash: '1990950'});
       var hunter = _.findWhere(vendors, {vendorHash: '3003633346'});
       var warlock = _.findWhere(vendors, {vendorHash: '1575820975'});
@@ -42,6 +44,8 @@
     }
     
     function initFactionBuckets(vendors) {
+      if (!vendors || !vendors.length) return;
+      
       var deadorbit = _.findWhere(vendors, {vendorHash: '3611686524'});
       var futurewar = _.findWhere(vendors, {vendorHash: '1821699360'});
       var newmon = _.findWhere(vendors, {vendorHash: '1808244981'});
@@ -57,6 +61,8 @@
     }
     
     function initMiscBuckets(vendors) {
+      if (!vendors || !vendors.length) return;
+      
       var eris = _.findWhere(vendors, {vendorHash: '174528503'});
       var speaker = _.findWhere(vendors, {vendorHash: '2680694281'});
       var variks = _.findWhere(vendors, {vendorHash: '1998812735'});
@@ -72,6 +78,8 @@
     }
     
     function initBanner(vendors) {
+      if (!vendors || !vendors.length) return;
+      
       var banner = _.findWhere(vendors, {vendorHash: '242140165'});
       banner.items = initBuckets(banner.items);
 
@@ -81,6 +89,8 @@
     }
     
     function initCrucible(vendors) {
+     if (!vendors || !vendors.length) return;
+     
      var cruc = _.findWhere(vendors, {vendorHash: '3746647075'});
      cruc.items = initBuckets(cruc.items);
      

@@ -321,8 +321,8 @@
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
-          // Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue, Iron Banner
-          var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767', '242140165'];
+          // Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue
+          var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767'];
           var promises = [];
           _.each(vendorHashes, function(vendorHash) {
             _.each(data.characters, function(character) {
@@ -330,7 +330,15 @@
             });
           });
           return $q.all(promises).then(function(data) {
-            return $q.resolve(data);
+            // Get banner if it's up
+            var bannerPromises = [];
+            _.each(data.characters, function(character) {
+              bannerPromises.push(getVendor(data.token, platform, data.membershipId, character, '242140165'));
+            });
+            return $q.all(bannerPromises).then(function(bannerData) {
+              return $q.resolve(data.concat(bannerData));
+            });
+            //return $q.resolve(data);
           });
         })
         .catch(function(e) {
