@@ -9,6 +9,7 @@ var unzip = require('unzip');
 var mkdirp = require('mkdirp');
 
 var itemHashesJSON = require('./itemHashes.json');
+var progressionMeta = require('./progressionMeta.json');
 
 var db;
 var dbFile;
@@ -27,7 +28,6 @@ function processItemRow(icon, pRow, itemHash) {
   // if (itemHash) {
   //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
   // }
-
   if (contains) {
     if (!exists) {
       var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
@@ -228,12 +228,20 @@ function extractDB(dbFile) {
       rows.forEach(function(row) {
           var item = JSON.parse(row.json);
           items[item.progressionHash] = item;
+          if(progressionMeta[item.progressionHash]) {
+            item.label = progressionMeta[item.progressionHash].label;
+            item.color = progressionMeta[item.progressionHash].color;
+            item.scale = progressionMeta[item.progressionHash].scale;
+            item.order = progressionMeta[item.progressionHash].order;
+          }
+          item.steps = item.steps.map(function(i) { return i.progressTotal; });
+
           delete item.progressionHash;
           delete item.hash;
-          delete item.icon;
-          delete item.name;
-          item.steps = item.steps.map(function(i) { return i.progressTotal; });
       });
+
+      var pRow = processItemRows(items, 'icon');
+      pRow.next();
 
       var defs = fs.createWriteStream('api-manifest/progression.json');
       defs.write(JSON.stringify(items));

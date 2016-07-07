@@ -9,12 +9,15 @@ build/img
 build/manifest
 build/api-manifest/*.json
 build/*.json
-build/manifest.zip
+build/*.zip
 *.DS_Store
 
 !do-not-delete.txt
 !build/itemHashes.json
+!build/progressionMeta.json
 !build/img/misc/missing_icon.png
 
 build/extension
 build/dim-extension.zip
+
+.brackets.json

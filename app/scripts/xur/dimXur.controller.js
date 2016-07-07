@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimXurCtrl', dimXurCtrl);
 
-  dimXurCtrl.$inject = ['$scope', 'dimXurService', 'ngDialog', 'dimStoreService', '$timeout'];
+  dimXurCtrl.$inject = ['$scope', 'dimXurService', 'ngDialog', 'dimStoreService'];
 
-  function dimXurCtrl($scope, dimXurService, ngDialog, dimStoreService, $timeout) {
+  function dimXurCtrl($scope, dimXurService, ngDialog, dimStoreService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
@@ -29,11 +29,11 @@
     }
 
     countCurrencies();
-    $scope.$on('dim-stores-updated', function (e, stores) {
+    $scope.$on('dim-stores-updated', function() {
       countCurrencies();
     });
 
-    $scope.$on('ngDialog.opened', function (event, $dialog) {
+    $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult) {
         $dialog.position({
           my: 'left top',
@@ -47,7 +47,7 @@
     angular.extend(vm, {
       itemCategories: dimXurService.itemCategories,
       categoryOrder: [
-         'Exotic Gear',
+        'Exotic Gear',
         'Curios',
         'Material Exchange'
       ],
@@ -57,7 +57,11 @@
           dialogResult.close();
         }
 
-        if (detailItem !== item) {
+        if (detailItem === item) {
+          detailItem = null;
+          dialogResult = null;
+          detailItemElement = null;
+        } else {
           detailItem = item;
           detailItemElement = angular.element(e.currentTarget);
 
@@ -86,7 +90,7 @@
             scope: angular.extend($scope.$new(true), {
             }),
             controllerAs: 'vm',
-            controller: ['$scope', function($scope) {
+            controller: [function() {
               var vm = this;
               angular.extend(vm, {
                 item: item,
@@ -99,10 +103,6 @@
               });
             }]
           });
-        } else {
-          detailItem = null;
-          dialogResult = null;
-          detailItemElement = null;
         }
       },
       close: function() {

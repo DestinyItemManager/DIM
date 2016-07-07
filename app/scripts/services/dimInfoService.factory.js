@@ -4,57 +4,63 @@
   angular.module('dimApp')
     .factory('dimInfoService', InfoService);
 
-  InfoService.$inject = ['toaster', '$http'];
+  InfoService.$inject = ['toaster', '$http', 'SyncService'];
 
-  function InfoService(toaster, $http) {
+  function InfoService(toaster, $http, SyncService) {
     return {
-      show: function(id, content) {
+      show: function(id, content, timeout) {
+        timeout = timeout || 0;
         content = content || {};
+        content.type = content.type || 'info';
         content.title = content.title || '';
         content.body = content.body || '';
         content.hide = content.hide || 'Hide This Popup';
+        content.func = content.func || function() {};
 
-        function showToaster(body) {
+        function showToaster(body, save, timeout) {
+          timeout = timeout || 0;
           toaster.pop({
-            type: 'info',
+            type: content.type,
             title: content.title,
             body: [
-              body,
+              '<p>' + body + '</p>',
               '<input style="margin-top: 1px; vertical-align: middle;" id="info-' + id + '" type="checkbox">',
               '<label for="info-' + id + '">' + content.hide + '</label></p>'
             ].join(''),
-            timeout: 0,
+            timeout: timeout,
             bodyOutputType: 'trustedHtml',
             showCloseButton: true,
-            clickHandler: function(a, b, c, d, e, f, g) {
-              if(b) {
+            clickHandler: function(a, b) {
+              if (b) {
                 return true;
               }
               return false;
             },
             onHideCallback: function() {
-              if($('#info-' + id)
+              if ($('#info-' + id)
                 .is(':checked')) {
-                var save = {};
                 save['info.' + id] = 1;
-                chrome.storage.sync.set(save, function(e) {});
+                SyncService.set(save);
               }
             }
           });
         }
 
-        chrome.storage.sync.get('info.' + id, function(data) {
-          if(_.isNull(data) || _.isEmpty(data)) {
-            if(content.view) {
-              $http.get(content.view).then(function(changelog) {
-                showToaster(changelog.data);
-              });
-            } else {
-              showToaster(content.body);
-            }
+        SyncService.get().then(function(data) {
+          if (!data || data['info.' + id]) {
+            return;
           }
+          if (content.view) {
+            $http.get(content.view).then(function(changelog) {
+              showToaster(changelog.data, data, timeout);
+            });
+          } else {
+            showToaster(content.body, data, timeout);
+          }
+          content.func();
         });
       }
     };
   }
 })();
+

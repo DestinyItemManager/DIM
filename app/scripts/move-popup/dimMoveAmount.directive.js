@@ -27,8 +27,8 @@
         '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.increment()">&#9654;</span>',
         '</div>'
       ].join(''),
-      link: function (scope, element, attrs) {
-        $timeout(function () {
+      link: function(scope, element) {
+        $timeout(function() {
           scope.$broadcast('rzSliderForceRender');
           var input = element.find('input');
           input.focus();

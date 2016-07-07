@@ -34,7 +34,7 @@
                   return !store.isVault && store.id !== self.store.id;
                 });
 
-                var otherStoresWithSpace =  _.select(otherStores, function(store) {
+                var otherStoresWithSpace = _.select(otherStores, function(store) {
                   return store.spaceLeftForItem(item) > 0;
                 });
                 if (otherStoresWithSpace.length) {
@@ -43,7 +43,7 @@
                   // If there's no room on other characters to move out of the vault,
                   // give up entirely.
                   if (!_.any(otherStores, function(store) {
-                    return _.any(dimCategory[item.sort], function(category) {
+                    return _.any(dimCategory[item.bucket.sort], function(category) {
                       return store.spaceLeftForItem({ type: category }) > 0;
                     });
                   })) {
@@ -70,7 +70,7 @@
         var self = this;
         var store = dimStoreService.getStore(self.store.id);
         var engrams = _.select(store.items, function(i) {
-          return i.isEngram() && i.sort !== 'Postmaster';
+          return i.isEngram() && !i.location.inPostmaster;
         });
 
         if (engrams.length === 0) {
@@ -102,18 +102,18 @@
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
-            i.sort !== 'Postmaster' &&
+            !i.location.inPostmaster &&
             _.contains(engramTypes, i.type);
         });
         var itemsByType = _.groupBy(applicableItems, 'type');
 
         // If any category is full, we'll move one aside
         var itemsToMove = [];
-        _.each(itemsByType, function(items, type) {
+        _.each(itemsByType, function(items) {
           // subtract 1 from capacity because we excluded the equipped item
           if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
             // We'll move the lowest-value item to the vault.
-            itemsToMove.push(_.min(_.select(items, { notransfer: false}), function(i) {
+            itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
                 Common: 0,
                 Uncommon: 1,
@@ -141,19 +141,19 @@
           });
       },
       start: function(store) {
+        var self = this;
+        function farm() {
+          self.moveEngramsToVault().then(function() {
+            self.makeRoomForEngrams();
+          });
+        }
+
         if (!this.active) {
           this.active = true;
           this.store = store;
           this.engramsMoved = 0;
           this.movingEngrams = false;
           this.makingRoom = false;
-          var self = this;
-
-          function farm() {
-            self.moveEngramsToVault().then(function() {
-              self.makeRoomForEngrams();
-            });
-          }
 
           // Whenever the store is reloaded, run the farming algo
           // That way folks can reload manually too

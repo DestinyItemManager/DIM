@@ -1,53 +1,136 @@
-<div ng-controller="dimMinMaxCtrl as normal" style="min-width:900px">
-  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left' style='padding-right:5px;'></i>Back to DIM</a>
-  <h1>Armor Comparison</h1>
+<div class="minmax" ng-controller="dimMinMaxCtrl as normal">
+  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
+  <h1>Loadout builder</h1>
 
-<!--  <p>Estimate item stats at higher light levels <input type='checkbox' ng-model='normal.doNormalize' ng-change='normal.normalizeBuckets()'>-->
-<!--    <span ng-show='normal.doNormalize'>Estimate stats at light level <input style='width:35px;padding-left:5px;border:none' type='number' ng-model='normal.normalize' placeholder='320' ng-change='normal.normalizeBuckets()' /></span>-->
-<!--  </p>-->
-
-  <ul>
-    <li>Light level must be at least 280 for an accurate roll estimation.</li>
-    <li>Stats on this page are scaled to what they would be at light level 335.</li>
-    <li>The perks/bonuses that increase int/dis/str are not included, only the base stats are shown.</li>
-    <li>Prioritize the perks on an item before its stat distibution, and then compare the stat roll.</li>
-    <li>Split stat rolls are better than single stat rolled items.</li>
-    <li>Artifacts are compared equally, but you may see some strange visual results (over 100%).</li>
-  </ul>
-
-  <p>Class: <select ng-model='normal.active' ng-change='normal.normalizeBuckets()'>
-    <option value='titan'>Titan</option>
-    <option value='hunter'>Hunter</option>
-    <option value='warlock'>Warlock</option>
-  </select> &nbsp; Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
-    <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
+  <p>
+    <label ng-class="{selected: normal.active === 'warlock'}" class='dim-button'>
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='warlock'>Warlock
+    </label>
+    <label ng-class="{selected: normal.active === 'titan'}" class='dim-button'>
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='titan'>Titan
+    </label>
+    <label ng-class="{selected: normal.active === 'hunter'}" class='dim-button'>
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='hunter'>Hunter
+    </label>
   </p>
 
-<!--  <div ng-repeat="(type, items) in normal.ranked[normal.type]">-->
-<!--    <h3 ng-bind="type"></h3>-->
-    <div style='float:left'>
-      <div><small>Intellect</small></div>
-      <div><small>Discipline</small></div>
-      <div><small>Strength</small></div>
-    </div>
-    <div style='float:right;width:849px;margin-top:-4px;'>
-      <span ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality'">
-        <div ng-if="item.primStat.value >= 280" style='display: inline-block; padding: 3px 0 0 3px'>
-          <div style='display:inline-block;margin-bottom:20px;'>
-            <div ng-repeat="stat in item.stats track by $index" style="color: {{normal.getColor(100*item.normalStats[$index].scaled/item.normalStats[$index].split)}}">
-  <!--            <small ng-bind="item.normalStats[$index].base"></small>-->
-              <small ng-if="item.normalStats[$index].scaled === 0">-</small>
-              <span ng-if="item.normalStats[$index].scaled > 0"><small ng-bind="item.normalStats[$index].scaled"></small>/<small ng-bind="item.normalStats[$index].split"></small></span>
+  <dim-loadout></dim-loadout>
+
+  <p>
+    <span class='dim-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.active}} gear</span>
+  </p>
+  <div class="section" ng-show="showGear">
+<!--
+    <label ng-class="{selected: normal.type === bucket}" class='dim-button' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
+    </label>
+-->
+    Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
+    <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
+
+    <div class="itemQuality">
+      <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
+        <div class="item-container" ng-if="item.primStat.value >= 280">
+          <div class="item-stats">
+            <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
+              <small ng-if="normalStat.scaled === 0">-</small>
+              <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
-          <div dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></div>
-  <!--
-          <div style="background-color: {{normal.getColor(item.quality)}};margin-right:2px;">
-            <small style="display:block;margin-left:5px;color:black;" ng-bind="item.quality < 0 || item.quality > 100 ? '&nbsp;' : item.quality + '%'"></small>
-          </div>
-  -->
+          <dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></dim-store-item>
         </div>
-      </span>
+      </div>
     </div>
-<!--  </div>-->
+  </div>
+
+  <div class="section">
+    <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear.</small></p>
+    <div class="itemQuality">
+      <div ng-repeat="(type, lockeditem) in normal.lockeditems">
+        <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
+          <div ng-switch-when="null" class="empty-item"></div>
+          <div ng-switch-default>
+            <dim-store-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-store-item>
+            <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>
+          </div>
+          <div class="label">{{type}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>
+  </p>
+  <div ng-show="!normal.highestsets">
+    <p>Missing legendary or exotic pieces to build a full set!</p>
+  </div>
+  <div ng-show="normal.progress < 1 && normal.highestsets">
+    <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
+  </div>
+  <div ng-show="normal.progress >= 1">
+    <p>Filter sets (Intellect/Discipline/Strength):
+      <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
+      <span class="dim-button" ng-click='showAdvanced=!showAdvanced;showHelp=false'>Advanced Options</span>
+      <span class="dim-button" ng-click='showHelp=!showHelp;showAdvanced=false'>Need help?</span>
+      <span><div ng-show="showAdvanced">
+        <p>
+          <label>
+            <select ng-model="normal.mode" ng-change="normal.onModeChange()" ng-options="(item ? 'Full' : 'Fast') for item in [false, true]">
+            </select>
+            Processing mode
+          </label>
+          <small>-
+            <span ng-hide="normal.mode">Only looks at your best gear</span>
+            <span ng-show="normal.mode">Looks at more gear, but takes longer.</span></small>
+        </p>
+        <p>
+          <label>
+            <select ng-model="normal.scale_type" ng-change="normal.onModeChange()">
+              <option value="scaled">Scaled</option>
+              <option value="base">Current</option>
+            </select>
+            Light mode
+          </label>
+          <small>-
+            <span ng-show="normal.scale_type === 'scaled'">Calculates loadouts as if all items were 335 defense.</span>
+            <span ng-show="normal.scale_type === 'base'">Calculates loadouts at current defense levels.</span></small>
+        </p>
+      </div></span>
+      <span><ul ng-show="showHelp">
+        <li>Higher Tiers are better
+          <ul>
+            <li>4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)</li>
+            <li>Intellect speeds up Super recharge time</li>
+            <li>Discipline speeds up Grenade recharge time</li>
+            <li>Strength speeds up Melee recharge time</li>
+          </ul>
+        </li>
+        <li>Try to find armor that has ammo increasing perks for weapon types that you use.</li>
+        <li>Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.</li>
+        <li>As an items defense level increases, the stats on that item (int/dis/str) also increase.</li>
+      </ul></span>
+<!--
+      &nbsp; Order:
+      <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
+        <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
+        <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
+        <option value="-disc_val,-int_val,-str_val">Dis/Int/Str</option>
+        <option value="-disc_val,-str_val,-int_val">Dis/Str/Int</option>
+        <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
+        <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
+      </select>
+-->
+    </p>
+  </div>
+  <div ng-show="normal.progress >= 1">
+    <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">
+      <div><dim-stats stats="set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
+      <div class="itemQuality">
+        <div  class="set-item" ng-repeat="armorpiece in set.armor">
+          <dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
+          <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
+          <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
