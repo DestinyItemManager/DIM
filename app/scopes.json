@@ -1,0 +1,1639 @@
+[
+  {
+    "Type": "Iron Sights",
+    "Name": "QuickDraw IS",
+    "Manufacturer": "Classic",
+    "Description": "Agile sight. Lightning fast handling.",
+    "Icon": "resources/images/scope-icons/iron-sites.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/quickdraw-is.jpg",
+      "resources/images/scope-images/quickdraw-is-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Reload",
+        15
+      ],
+      [
+        "Handling",
+        15
+      ]
+    ],
+    "Hash": 1987488058
+  },
+  {
+    "Type": "Iron Sights",
+    "Name": "TrueSight IS",
+    "Manufacturer": "Classic",
+    "Description": "Flexible sight. Light, with good recoil control. Strong target aquisition.",
+    "Icon": "resources/images/scope-icons/iron-sites.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/truesight-is.jpeg",
+      "resources/images/scope-images/truesight-is-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Stability",
+        5
+      ],
+      [
+        "Reload",
+        8
+      ],
+      [
+        "Handling",
+        8
+      ],
+      [
+        "Aim Assist",
+        5
+      ]
+    ],
+    "Hash": 2127742624
+  },
+  {
+    "Type": "Iron Sights",
+    "Name": "Fastdraw IS",
+    "Manufacturer": "Classic",
+    "Description": "Standard sight. A lightweight design, good for recoil control.",
+    "Icon": "resources/images/scope-icons/iron-sites.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/fastdraw-is.jpg",
+      "resources/images/scope-images/fastdraw-is-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Stability",
+        4
+      ],
+      [
+        "Reload",
+        10
+      ],
+      [
+        "Handling",
+        10
+      ]
+    ]
+  },
+  {
+    "Type": "Iron Sights",
+    "Name": "SteadyHand IS",
+    "Manufacturer": "Classic",
+    "Description": "Stable sight. Optimized for excellent recoil control.",
+    "Icon": "resources/images/scope-icons/iron-sites.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/steadyhand-is.jpeg",
+      "resources/images/scope-images/steadyhand-is-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Stability",
+        6
+      ],
+      [
+        "Reload",
+        8
+      ],
+      [
+        "Handling",
+        8
+      ]
+    ],
+    "Hash": 3024268258
+  },
+  {
+    "Type": "Iron Sights",
+    "Name": "Sureshot IS",
+    "Manufacturer": "Classic",
+    "Description": "Snapshot sight. Excellent handling. Superb target aquisition.",
+    "Icon": "resources/images/scope-icons/iron-sites.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/sureshot-is.jpg",
+      "resources/images/scope-images/sureshot-is-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Stability",
+        2
+      ],
+      [
+        "Reload",
+        12
+      ],
+      [
+        "Handling",
+        12
+      ],
+      [
+        "Aim Assist",
+        5
+      ]
+    ]
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SLO-12",
+    "Manufacturer": "Suros",
+    "Description": "SUROS projection sight. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/suros-slo-12.jpg",
+      "resources/images/scope-images/suros-slo-12-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1382212563
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SLO-19",
+    "Manufacturer": "Suros",
+    "Description": "SUROS irons with projection sight. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/suros-slo-19.jpg",
+      "resources/images/scope-images/suros-slo-19-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2957484368
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SPO-26",
+    "Manufacturer": "Suros",
+    "Description": "SUROS lightweight red dot sights. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": "+ .2x",
+    "Image": [
+      "resources/images/scope-images/suros-spo-26.jpeg",
+      "resources/images/scope-images/suros-spo-26-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 1445276424
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SPO-28",
+    "Manufacturer": "Suros",
+    "Description": "SUROS holo sights. Improved target acquisition.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/suros-spo-28.jpg",
+      "resources/images/scope-images/suros-spo-28-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        5
+      ]
+    ],
+    "Hash": 169883190
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SRO-37",
+    "Manufacturer": "Suros",
+    "Description": "SUROS ranged combat scope. Improves range.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": "+ .5x",
+    "Image": [
+      "resources/images/scope-images/suros-sro-37.jpg",
+      "resources/images/scope-images/suros-sro-37-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 3986909762
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SRO-41",
+    "Manufacturer": "Suros",
+    "Description": "SUROS threat evaluation. Highlights enemy Guardians who have charged Supers, and powerful Minions of Darkness.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": "+ .5x",
+    "Image": [
+      "resources/images/scope-images/suros-sro-41.jpeg",
+      "resources/images/scope-images/suros-sro-41-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 2502465203
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SPO-57",
+    "Manufacturer": "Suros",
+    "Description": "SUROS threat evaluation. Highlights enemy targets.",
+    "Icon": "resources/images/scope-icons/suros.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/suros-spo-51.jpeg",
+      "resources/images/scope-images/suros-spo-51-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 1734554166
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SD Thermal",
+    "Manufacturer": "Hakke",
+    "Description": "Häkke thermal imaging scope. Highlights all enemy targets.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/sd-thermal.jpg",
+      "resources/images/scope-images/sd-thermal-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 385634121
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "LB Assault",
+    "Manufacturer": "Hakke",
+    "Description": "Medium-range assault scope. Improved optics and range.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": "+ .5x",
+    "Image": [
+      "resources/images/scope-images/hakke-lb-assault.jpg",
+      "resources/images/scope-images/hakke-lb-assault-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1919385086
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "SC Holo",
+    "Manufacturer": "Hakke",
+    "Description": "Häkke holo sights. Improved target acquisition.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/sc-holo.jpg",
+      "resources/images/scope-images/sc-holo-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        5
+      ]
+    ],
+    "Hash": 3044181713
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "GA Post",
+    "Manufacturer": "Hakke",
+    "Description": "Agile post sights. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/ga-post.jpg",
+      "resources/images/scope-images/ga-post-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 148132307
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "GB Iron",
+    "Manufacturer": "Hakke",
+    "Description": "Häkke iron sights. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/gb-iron.jpg",
+      "resources/images/scope-images/gb-iron-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 62342138
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "LD Watchdog",
+    "Manufacturer": "Hakke",
+    "Description": "Häkke threat evaluation tech. Highlights dangerous enemies and Guardians with charged Supers.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": "+ .5x",
+    "Image": [
+      "resources/images/scope-images/hakke-ld-watchdog.jpg",
+      "resources/images/scope-images/hakke-ld-watchdog.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1795467064
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "LC Ranged",
+    "Manufacturer": "Hakke",
+    "Description": "Häkke marksman scope. Improved optics and range.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/lc-ranged.jpg",
+      "resources/images/scope-images/lc-ranged-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 882930025
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Candle IS2",
+    "Manufacturer": "Omolon",
+    "Description": "Minimal iron sights. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/omolon-candle-is2.jpeg",
+      "resources/images/scope-images/omolon-candle-is2-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 2910350468
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Spark IS2",
+    "Manufacturer": "Omolon",
+    "Description": "Omolon holo sights. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/omolon-spark.jpeg",
+      "resources/images/scope-images/omolon-spark-ads.jpeg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Torch HS2",
+    "Manufacturer": "Omolon",
+    "Description": "Omolon close quarters combat sights. CQ optics, improved target acquisition.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "+ .2x",
+    "Image": [
+      "resources/images/scope-images/omolon-torch.jpeg",
+      "resources/images/scope-images/omolon-torch-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        5
+      ]
+    ],
+    "Hash": 116142342
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Flash HS4",
+    "Manufacturer": "Omolon",
+    "Description": "Omolon imaging technology. Highlights enemy targets.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/omolon-flash-hs4.jpg",
+      "resources/images/scope-images/omolon-flash-hs4-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 728329578
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Signal MS5",
+    "Manufacturer": "Omolon",
+    "Description": "Omolon imaging technology. Highlights long-distance enemy targets at optimal combat range.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "+ .5x",
+    "Image": [
+      "resources/images/scope-images/omolon-signal.jpeg",
+      "resources/images/scope-images/omolon-signal-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 3766810936
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Impulse MS2",
+    "Manufacturer": "Omolon",
+    "Description": "Ranged combat scope. Improved optics and range.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "+ .5x",
+    "Image": [
+      "resources/images/scope-images/impulse-ms2.jpg",
+      "resources/images/scope-images/impulse-ms2-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2433187730
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-OES",
+    "Manufacturer": "Classic",
+    "Description": "Agile sight. For smooth engagement in close quarters.",
+    "Icon": "resources/images/scope-icons/red-dot.png",
+    "Zoom": "+ .2x",
+    "Image": [
+      "resources/images/scope-images/red-dot-oes.jpeg",
+      "resources/images/scope-images/red-dot-oes-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        2
+      ],
+      [
+        "Stability",
+        12
+      ]
+    ],
+    "Hash": 3975020101
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-ORS",
+    "Manufacturer": "Classic",
+    "Description": "Accurized sight. For precise fire.",
+    "Icon": "resources/images/scope-icons/red-dot.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/red-dot-ors.jpeg",
+      "resources/images/scope-images/red-dot-ors-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        6
+      ],
+      [
+        "Stability",
+        9
+      ]
+    ],
+    "Hash": 3842144658
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-OAS",
+    "Manufacturer": "Classic",
+    "Description": "Snapshot sight. Enhanced target acquisition.",
+    "Icon": "resources/images/scope-icons/red-dot.png",
+    "Zoom": "+ .2",
+    "Image": [
+      "resources/images/scope-images/red-dot-oas.jpg",
+      "resources/images/scope-images/red-dot-oas-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Stability",
+        14
+      ],
+      [
+        "Aim Assist",
+        5
+      ]
+    ],
+    "Hash": 2889679361
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-ORS1",
+    "Manufacturer": "Classic",
+    "Description": "Precision sight. Highest zoom in class. Enhanced range.",
+    "Icon": "resources/images/scope-icons/red-dot.png",
+    "Zoom": "+ .6",
+    "Image": [
+      "resources/images/scope-images/red-dot-ors1.jpg",
+      "resources/images/scope-images/red-dot-ors1-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        8
+      ],
+      [
+        "Stability",
+        6
+      ]
+    ],
+    "Hash": 1094816219
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-ORES",
+    "Manufacturer": "Classic",
+    "Description": "Flexible sight. Enhances handling, range, and recoil control.",
+    "Icon": "resources/images/scope-icons/red-dot.png",
+    "Zoom": "+ .3",
+    "Image": [
+      "resources/images/scope-images/red-dot-ores.jpg",
+      "resources/images/scope-images/red-dot-ores-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        6
+      ],
+      [
+        "Stability",
+        9
+      ],
+      [
+        "Reload",
+        4
+      ],
+      [
+        "Handling",
+        4
+      ]
+    ],
+    "Hash": 4017426047
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-ORA",
+    "Manufacturer": "Classic",
+    "Description": "Slightly improved optics, improved handling",
+    "Icon": "resources/images/scope-icons/red-dot-alt.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/red-dot-ora.jpeg",
+      "resources/images/scope-images/red-dot-ora-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 4179962704
+  },
+  {
+    "Type": "Red Dot Sights",
+    "Name": "Red Dot-ORA2",
+    "Manufacturer": "Classic",
+    "Description": "Slightly improved optics, improved handling.",
+    "Icon": "resources/images/scope-icons/red-dot-alt.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/red-dot-ora2.jpeg",
+      "resources/images/scope-images/red-dot-ora2-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 3383721778
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "OEG",
+    "Manufacturer": "Classic",
+    "Description": "Slightly improved optics, improved handling.",
+    "Icon": "resources/images/scope-icons/reflex.png",
+    "Zoom": "+ .4x",
+    "Image": [
+      "resources/images/scope-images/oeg.jpeg",
+      "resources/images/scope-images/oeg-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 1759800752
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "OEG Riflescope",
+    "Manufacturer": "Classic",
+    "Description": "Improved optics, improved range.",
+    "Icon": "resources/images/scope-icons/oeg-riflescope.png",
+    "Zoom": "+ .6x",
+    "Image": [
+      "resources/images/scope-images/ora-riflescope.jpeg",
+      "resources/images/scope-images/ora-riflescope-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 3279824990
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Reflex",
+    "Manufacturer": "Classic",
+    "Description": "Slightly improved optics, improved aim assist.",
+    "Icon": "resources/images/scope-icons/reflex.png",
+    "Zoom": "+ .3x",
+    "Image": [
+      "resources/images/scope-images/reflex.jpeg",
+      "resources/images/scope-images/reflex-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 2546741293
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "MD-Reflex",
+    "Manufacturer": "Classic",
+    "Description": "Significantly improved handling.",
+    "Icon": "resources/images/scope-icons/md-reflex.png",
+    "Zoom": 0,
+    "Image": [
+      "resources/images/scope-images/md-reflex.jpeg",
+      "resources/images/scope-images/md-reflex-ads.jpeg"
+    ],
+    "Stats": [],
+    "Hash": 185449329
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Ranged Lens RLR5",
+    "Manufacturer": "Classic",
+    "Description": "Precision scope. Superb effective range. Heavy, with poor recoil control.",
+    "Icon": "resources/images/scope-icons/ranged-scope.png",
+    "Zoom": "+ .8x",
+    "Image": [
+      "resources/images/scope-images/ranged-lense-rlr5.jpeg",
+      "resources/images/scope-images/ranged-lense-rlr5-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        15
+      ],
+      [
+        "Stability",
+        -2
+      ],
+      [
+        "Reload",
+        -3
+      ],
+      [
+        "Handling",
+        -10
+      ]
+    ],
+    "Hash": 1013303099
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Ranged Lens RLS3",
+    "Manufacturer": "Classic",
+    "Description": "Mid-range scope. Good effective range and recoil control. Heavy and slow.",
+    "Icon": "resources/images/scope-icons/ranged-scope.png",
+    "Zoom": "+ .6x",
+    "Image": [
+      "resources/images/scope-images/ranged-lense-rls3.jpeg",
+      "resources/images/scope-images/ranged-lense-rls3-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        8
+      ],
+      [
+        "Stability",
+        3
+      ],
+      [
+        "Reload",
+        -2
+      ],
+      [
+        "Handling",
+        -7
+      ]
+    ],
+    "Hash": 221290636
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Focus Lens FLS2",
+    "Manufacturer": "Classic",
+    "Description": "Agile scope. Modest zoom. Light and snappy.",
+    "Icon": "resources/images/scope-icons/ranged-scope.png",
+    "Zoom": "+ .4x",
+    "Image": [
+      "resources/images/scope-images/focus-lense-fls2.jpg",
+      "resources/images/scope-images/focus-lense-fls2-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        8
+      ],
+      [
+        "Stability",
+        2
+      ]
+    ],
+    "Hash": 4020792686
+  },
+  {
+    "Type": "Ranged Sights",
+    "Name": "Focus Lens FLA5",
+    "Manufacturer": "Classic",
+    "Description": "Agile scope. Modest zoom. Light and snappy.",
+    "Icon": "resources/images/scope-icons/ranged-scope.png",
+    "Zoom": "+ .6x",
+    "Image": [
+      "resources/images/scope-images/focus-lense-fla5.jpg",
+      "resources/images/scope-images/focus-lense-fla5-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Range",
+        10
+      ]
+    ],
+    "Hash": 1410981459
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Shortgaze SLH10",
+    "Manufacturer": "Classic",
+    "Description": "Slightly improved optics, better handling",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "4.9x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/shortgaze-slh10.jpg",
+      "resources/images/scope-images/shortgaze-slh10-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        0
+      ]
+    ]
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Longview SLR20",
+    "Manufacturer": "Classic",
+    "Description": "Long-range scope. Excellent target acquisition. Improves weapon range.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "7x",
+    "Image": [
+      "resources/images/scope-images/longview-slr20.jpg",
+      "resources/images/scope-images/longview-slr20-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        7
+      ]
+    ]
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Longview SLR10",
+    "Manufacturer": "Classic",
+    "Description": "Low-zoom scope. Improved range and handling.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "5.2x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/longview-slr10.jpeg",
+      "resources/images/scope-images/longview-slr10-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        3
+      ]
+    ]
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Ambush SLH25",
+    "Manufacturer": "Classic",
+    "Description": "Agile, snappy scope. Handles beautifully. Rewards a skilled hand.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "4.9x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/ambush-slh25.jpg",
+      "resources/images/scope-images/ambush-slh25-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        -25
+      ]
+    ],
+    "Hash": 3845139909
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "ViewTac SLH20",
+    "Manufacturer": "Classic",
+    "Description": "Improved optics, significantly improved handling.",
+    "Icon": "resources/images/scope-icons/sniper-ttk.png",
+    "Zoom": "4.9x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/viewtac-slh20.jpg",
+      "resources/images/scope-images/viewtac-slh20-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        0
+      ]
+    ],
+    "Hash": 2264487579
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "EagleEye SLR20",
+    "Manufacturer": "Classic",
+    "Description": "Longest-range scope. Heavy optics for pinpoint sniping.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "9x",
+    "Image": [
+      "resources/images/scope-images/eagleeye-slr20.jpg",
+      "resources/images/scope-images/eagleeye-slr20-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        5
+      ]
+    ],
+    "Hash": 676486441
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "SightSys SLS20",
+    "Manufacturer": "Classic",
+    "Description": "Very long distance scope. Superb target acquisition and recoil control.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "8x",
+    "Image": [
+      "resources/images/scope-images/sightsys-sls20.jpeg",
+      "resources/images/scope-images/sightsys-sls20-ads.jpeg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        7
+      ]
+    ],
+    "Hash": 1704549627
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Hawkeye SLR15",
+    "Manufacturer": "Classic",
+    "Description": "Mid-zoom precision scope. Increased range and target acquisition. Heavy.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "6x",
+    "Image": [
+      "resources/images/scope-images/hawkeye-slr15-ads.jpg",
+      "resources/images/scope-images/hawkeye-slr15-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        3
+      ]
+    ],
+    "Hash": 485642272
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "WildHawk SLS20",
+    "Manufacturer": "Classic",
+    "Description": "Improved optics, decreased handling, improved range, slightly decreased stability.",
+    "Icon": "resources/images/scope-icons/sniper-wildhawk.png",
+    "Zoom": "5.5x",
+    "Image": [
+      "resources/images/scope-images/wildhawk-sls20.jpg",
+      "resources/images/scope-images/wildhawk-sls20-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        0
+      ]
+    ],
+    "Hash": 613099648
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "TacSys SLS15",
+    "Manufacturer": "Classic",
+    "Description": "Mid-zoom scope. Useful for unpredictable situations.",
+    "Icon": "resources/images/scope-icons/sniper.png",
+    "Zoom": "6x",
+    "Image": [
+      "resources/images/scope-images/tacsys-sls15.jpg",
+      "resources/images/scope-images/tacsys-sls15-ads.jpg"
+    ],
+    "Stats": [
+      [
+        "Aim Assist",
+        0
+      ]
+    ],
+    "Hash": 1963701234
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "ATA Scout",
+    "Manufacturer": "Hakke",
+    "Description": "Light, low-zoom sniper scope. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": "5.1x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/hakke-ata-scout.jpg",
+      "resources/images/scope-images/hakke-ata-scout-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2944641799
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "ATB Long Range",
+    "Manufacturer": "Hakke",
+    "Description": "Long-distance scope. Increased range, slower handling.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": "5.65x",
+    "Image": [
+      "resources/images/scope-images/hakke-atb-long-range.jpg",
+      "resources/images/scope-images/hakke-atb-long-range-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 4232700495
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "ATD Raptor",
+    "Manufacturer": "Hakke",
+    "Description": "Standard sniper zoom. Highlights enemies with low health.",
+    "Icon": "resources/images/scope-icons/hakke.png",
+    "Zoom": "5.15x",
+    "Image": [
+      "resources/images/scope-images/hakke-raptor.jpg",
+      "resources/images/scope-images/hakke-raptor-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2876777206
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Aquila SS4",
+    "Manufacturer": "Omolon",
+    "Description": "Omolon imaging technology. Highlights long-distance enemy targets at optimal combat range.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "5.5x",
+    "Image": [
+      "resources/images/scope-images/aquila-ss4.jpg",
+      "resources/images/scope-images/aquila-ss4-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1968377008
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Faucon SS1",
+    "Manufacturer": "Omolon",
+    "Description": "Ultra-light holo sniper sights. Low zoom, improves weapon handling.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "4.9x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/omolon-faucon-ss1.jpg",
+      "resources/images/scope-images/omolon-faucon-ss1-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1250810836
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Yepaki SS2",
+    "Manufacturer": "Omolon",
+    "Description": "Standard zoom, lightweight sniper sight. Improves weapon handling.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "5.2x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/yepaki-ss2.jpg",
+      "resources/images/scope-images/yepaki-ss2-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 3342105896
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Condor SS2",
+    "Manufacturer": "Omolon",
+    "Description": "Ranged zoom lens. Improves range.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "5.2x",
+    "Image": [
+      "resources/images/scope-images/condor-ss2.jpg",
+      "resources/images/scope-images/condor-ss2-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2918307660
+  },
+  {
+    "Type": "Sniper Scopes",
+    "Name": "Corvo SS2",
+    "Manufacturer": "Omolon",
+    "Description": "Omolon's longest-range distance scope. Improves range.",
+    "Icon": "resources/images/scope-icons/omolon.png",
+    "Zoom": "5.5x",
+    "Image": [
+      "resources/images/scope-images/corvo-ss2.jpg",
+      "resources/images/scope-images/corvo-ss2-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 766000848
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Defiance of Yasmin",
+    "Manufacturer": "Raid Weapon",
+    "Description": "\"Shields up! Protect the Queen! Brace for impact! Save the Queen\" —Paladin Yasmin Eld",
+    "Icon": "resources/images/exotic-icons/yasmin.jpg",
+    "Zoom": "5x",
+    "Notes": "Changed in 2.3.0",
+    "Image": [
+      "resources/images/scope-images/soon.jpg",
+      "resources/images/scope-images/soon.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Fabian Strategy",
+    "Manufacturer": "Hakke",
+    "Description": "Wait for enemy to make a mistake. Die. Stand by for Ghost Resurrection. Repeat as necessary.",
+    "Icon": "resources/images/exotic-icons/fabian-strategy.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/fabian-strategy.jpg",
+      "resources/images/scope-images/fabian-strategy-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Suros Regime",
+    "Manufacturer": "Suros",
+    "Description": "Nostalgia as a weapon of war. Style as a hallmark of victory.",
+    "Icon": "resources/images/exotic-icons/suros-regime.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/suros-regime.jpg",
+      "resources/images/scope-images/suros-regime-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Monte Carlo",
+    "Manufacturer": "Exotic",
+    "Description": "There will always be paths to tread and methods to try. Roll with it.",
+    "Icon": "resources/images/exotic-icons/monte-carlo.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/monte-carlo.jpg",
+      "resources/images/scope-images/monte-carlo-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Hard Light",
+    "Manufacturer": "Exotic",
+    "Description": "Ionized polymer synballistic attack platform. The system's lethality is dynamically robust across tactical spaces.",
+    "Icon": "resources/images/exotic-icons/hard-light.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/hard-light.jpg",
+      "resources/images/scope-images/hard-light-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Zhalo Supercell",
+    "Manufacturer": "Exotic",
+    "Description": "An upcycled torrent of righteous thunder.",
+    "Icon": "resources/images/exotic-icons/zhalo-supercell.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/zhalo-supercell.jpg",
+      "resources/images/scope-images/zhalo-supercell-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 3165303898
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Necrochasm",
+    "Manufacturer": "Exotic",
+    "Description": "Eternity is very close. Can you feel yourself slipping?",
+    "Icon": "resources/images/exotic-icons/necrochasm.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/necrochasm.jpg",
+      "resources/images/scope-images/necrochasm-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Bad Juju",
+    "Manufacturer": "Exotic",
+    "Description": "\"If you believe your weapon wants to end all existence, then so it will.\" - Toland the Shattered",
+    "Icon": "resources/images/exotic-icons/bad-juju.jpg",
+    "Zoom": "1.7x",
+    "Image": [
+      "resources/images/scope-images/bad-juju.jpg",
+      "resources/images/scope-images/bad-juju-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Red Death",
+    "Manufacturer": "Exotic",
+    "Description": "Vanguard policy urges Guardians to destroy this weapon on sight.",
+    "Icon": "resources/images/exotic-icons/red-death.jpg",
+    "Zoom": "1.7x",
+    "Image": [
+      "resources/images/scope-images/red-death.jpg",
+      "resources/images/scope-images/red-death-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 293395626
+  },
+  {
+    "Type": "Exotic",
+    "Name": "No Time To Explain",
+    "Manufacturer": "Exotic",
+    "Description": "A single word is etched onto the inside of the weapon's casing: \"Soon.\"",
+    "Icon": "resources/images/exotic-icons/no-time-to-explain.jpg",
+    "Zoom": "1.7x",
+    "Image": [
+      "resources/images/scope-images/no-time-to-explain.jpg",
+      "resources/images/scope-images/no-time-to-explain-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "MIDA Multi-tool",
+    "Manufacturer": "Exotic",
+    "Description": "Select application: Ballistic engagement. Entrenching tool. Avionics trawl. Troll smasher. Stellar sextant. List continues.",
+    "Icon": "resources/images/exotic-icons/mida-multi-tool.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/mida-multi-tool.jpg",
+      "resources/images/scope-images/mida-multi-tool-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "The Jade Rabbit",
+    "Manufacturer": "Exotic",
+    "Description": "\"What kind of harebrained scheme have you got in mind this time?\"",
+    "Icon": "resources/images/exotic-icons/the-jade-rabbit.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/jade-rabbit.jpg",
+      "resources/images/scope-images/jade-rabbit-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Boolean Gemini",
+    "Manufacturer": "Exotic",
+    "Description": "Fight your way!",
+    "Icon": "resources/images/exotic-icons/boolean-gemini.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/boolean-gemini.jpg",
+      "resources/images/scope-images/boolean-gemini-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Touch of Malice",
+    "Manufacturer": "Exotic",
+    "Description": "\"Let them feel every lash, every curse, every touch of malice that they first dealt to me.\" —Eris Morn",
+    "Icon": "resources/images/exotic-icons/touch-of-malice.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/touch-of-malice.jpg",
+      "resources/images/scope-images/touch-of-malice-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2710921350
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Tlaloc",
+    "Manufacturer": "Exotic",
+    "Description": "Release the storm. Hold nothing back.",
+    "Icon": "resources/images/exotic-icons/tlaloc.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/tlaloc.jpg",
+      "resources/images/scope-images/tlaloc-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Thorn",
+    "Manufacturer": "Exotic",
+    "Description": "\"To rend one's enemies is to see them not as equals, but objects—hollow of spirit and meaning.\" - 13th Understanding, 7th Book of Sorrow",
+    "Icon": "resources/images/exotic-icons/thorn.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/thorn.jpg",
+      "resources/images/scope-images/thorn-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "The Last Word",
+    "Manufacturer": "Exotic",
+    "Description": "\"Yours... not mine.\" - Renegade Hunter Shin Malphur to Dredgen Yor",
+    "Icon": "resources/images/exotic-icons/the-last-word.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/the-last-word.jpg",
+      "resources/images/scope-images/the-last-word-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Hawkmoon",
+    "Manufacturer": "Exotic",
+    "Description": "Stalk thy prey and let loose thy talons upon the Darkness.",
+    "Icon": "resources/images/exotic-icons/hawkmoon.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/hawkmoon.jpg",
+      "resources/images/scope-images/hawkmoon-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Ace of Spades",
+    "Manufacturer": "Exotic",
+    "Description": "Don't play your hand unless you're sure you have that ace in the hole.",
+    "Icon": "resources/images/exotic-icons/ace-of-spades.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/soon.jpg",
+      "resources/images/scope-images/soon.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "The First Curse",
+    "Manufacturer": "Exotic",
+    "Description": "\"...is when death becomes an afterthought.\"",
+    "Icon": "resources/images/exotic-icons/the-first-curse.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/the-first-curse.jpg",
+      "resources/images/scope-images/the-first-curse-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 3628654356
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Vex Mythoclast",
+    "Manufacturer": "Exotic",
+    "Description": "...a causal loop within the weapon's mechanism, suggesting that the firing process somehow binds space and time into...",
+    "Icon": "resources/images/exotic-icons/vex-mythoclast.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/vex-mythoclast.jpg",
+      "resources/images/scope-images/vex-mythoclast-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "No Land Beyond",
+    "Manufacturer": "Exotic",
+    "Description": "Every hit blazes the path to our reclamation",
+    "Icon": "resources/images/exotic-icons/no-land-beyond.jpg",
+    "Zoom": "4x",
+    "Image": [
+      "resources/images/scope-images/no-land-beyond.jpg",
+      "resources/images/scope-images/no-land-beyond-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Universal Remote",
+    "Manufacturer": "Exotic",
+    "Description": "To the untrained eye this beast is a junker. To the trained eye, however, this junker... is a beast.",
+    "Icon": "resources/images/exotic-icons/universal-remote.jpg",
+    "Zoom": "1.2x",
+    "Image": [
+      "resources/images/scope-images/universal-remote.jpg",
+      "resources/images/scope-images/universal-remote-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2464979084
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Icebreaker",
+    "Manufacturer": "Exotic",
+    "Description": "Please replace these components if use causes fatal damage: HEAT SINK. MAGAZINE. OPERATOR",
+    "Icon": "resources/images/exotic-icons/icebreaker.jpg",
+    "Zoom": "6x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/icebreaker.jpg",
+      "resources/images/scope-images/icebreaker-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Black Spindle",
+    "Manufacturer": "Exotic",
+    "Description": "\"Your only existence shall be that which I weave for you out of sorrow and woe.\"",
+    "Icon": "resources/images/exotic-icons/black-spindle.jpg",
+    "Zoom": "5x",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/black-spindle.jpg",
+      "resources/images/scope-images/black-spindle-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Hereafter",
+    "Manufacturer": "Exotic",
+    "Description": "\"Huddled at the mountain's base, we had no choice but to beat our ploughshares into swords once more.\"",
+    "Icon": "resources/images/exotic-icons/hereafter.jpg",
+    "Zoom": "5x, 12.5x while kneeling",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/hereafter.jpg",
+      "resources/images/scope-images/hereafter-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Patience and Time",
+    "Manufacturer": "Exotic",
+    "Description": "If you've got it, they'll never see it coming.",
+    "Icon": "resources/images/exotic-icons/patience-and-time.jpg",
+    "Zoom": "7x, 6.5x with Custom Optics",
+    "Notes": "Changed in 2.2.0",
+    "Image": [
+      "resources/images/scope-images/patience-and-time.jpg",
+      "resources/images/scope-images/patience-and-time-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1963514514
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Zen Meteor",
+    "Manufacturer": "Exotic",
+    "Description": "Complete awareness, complete focus. A mind sharpened by diligence to a single deadly point.",
+    "Icon": "resources/images/exotic-icons/zen-meteor.jpg",
+    "Zoom": "5x",
+    "Image": [
+      "resources/images/scope-images/zen-meteor.jpg",
+      "resources/images/scope-images/zen-meteor-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Pocket Infinity",
+    "Manufacturer": "Exotic",
+    "Description": "You cannot shake the feeling that this is less a weapon than a doorway.",
+    "Icon": "resources/images/exotic-icons/pocket-infinity.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/pocket-infinity.jpg",
+      "resources/images/scope-images/pocket-infinity-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 4174046593
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Plan C",
+    "Manufacturer": "Exotic",
+    "Description": "Good fighters have contingency plans. Great fighters don't need them.",
+    "Icon": "resources/images/exotic-icons/plan-c.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/plan-c.jpg",
+      "resources/images/scope-images/plan-c-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 35631069
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Telesto",
+    "Manufacturer": "Exotic",
+    "Description": "Vestiges of the Queen's Harbingers yet linger among Saturn's moons.",
+    "Icon": "resources/images/exotic-icons/telesto.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/telesto.jpg",
+      "resources/images/scope-images/telesto-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Queenbreaker's Bow (Marksman Scope)",
+    "Manufacturer": "Exotic",
+    "Description": "Despite the Breakers' treachery, Her Majesty still stands.",
+    "Icon": "resources/images/exotic-icons/queenbreakers-bow.jpg",
+    "Zoom": "4x",
+    "Image": [
+      "resources/images/scope-images/queenbreakers-bow.jpg",
+      "resources/images/scope-images/queenbreakers-bow-marksman.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Queenbreaker's Bow (Combat Scope)",
+    "Manufacturer": "Exotic",
+    "Description": "Despite the Breakers' treachery, Her Majesty still stands.",
+    "Icon": "resources/images/exotic-icons/queenbreakers-bow.jpg",
+    "Zoom": "2.5x",
+    "Image": [
+      "resources/images/scope-images/queenbreakers-bow.jpg",
+      "resources/images/scope-images/queenbreakers-bow-combat.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Invective",
+    "Manufacturer": "Exotic",
+    "Description": "\"I tried to talk them down. They made a grab for my Ghost. After that it was a short conversation.\" - Ikora Rey",
+    "Icon": "resources/images/exotic-icons/invective.jpg",
+    "Zoom": "1.2x",
+    "Image": [
+      "resources/images/scope-images/invective.jpg",
+      "resources/images/scope-images/invective-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2712375812
+  },
+  {
+    "Type": "Exotic",
+    "Name": "The Fourth Horseman",
+    "Manufacturer": "Exotic",
+    "Description": "It's not a holdout weapon, it's a pathfinder.",
+    "Icon": "resources/images/exotic-icons/the-fourth-horseman.jpg",
+    "Zoom": "1.2x",
+    "Image": [
+      "resources/images/scope-images/the-fourth-horseman.jpg",
+      "resources/images/scope-images/the-fourth-horseman-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Lord of Wolves",
+    "Manufacturer": "Exotic",
+    "Description": "\"By this right alone do I rule.\"",
+    "Icon": "resources/images/exotic-icons/lord-of-wolves.jpg",
+    "Zoom": "1.2x",
+    "Image": [
+      "resources/images/scope-images/lord-of-wolves.jpg",
+      "resources/images/scope-images/lord-of-wolves-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "The Chaperone",
+    "Manufacturer": "Exotic",
+    "Description": "\"My mother had a shotgun we called the Chaperone. Kept us alive out there, before we got to the City.\" —Amanda Holliday",
+    "Icon": "resources/images/exotic-icons/the-chaperone.jpg",
+    "Zoom": "1.2x",
+    "Image": [
+      "resources/images/scope-images/the-chaperone.jpg",
+      "resources/images/scope-images/the-chaperone-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 291530285
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Dreg's Promise",
+    "Manufacturer": "Exotic",
+    "Description": "\"I am a marvel with ten thousand arms.\"",
+    "Icon": "resources/images/exotic-icons/dregs-promise.jpg",
+    "Zoom": "1.2x",
+    "Image": [
+      "resources/images/scope-images/dregs-promise.jpg",
+      "resources/images/scope-images/dregs-promise-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Truth",
+    "Manufacturer": "Exotic",
+    "Description": "\"...is where you seek it.\" —Lomar",
+    "Icon": "resources/images/exotic-icons/truth.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/truth.jpg",
+      "resources/images/scope-images/truth-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Gjallarhorn",
+    "Manufacturer": "Exotic",
+    "Description": "\"If there is beauty in destruction, why not also in its delivery?\" - Feizel Crux",
+    "Icon": "resources/images/exotic-icons/gjallarhorn.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/gjallarhorn.jpg",
+      "resources/images/scope-images/gjallarhorn-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Dragon's Breath",
+    "Manufacturer": "Exotic",
+    "Description": "Burn the world. Burn it all.",
+    "Icon": "resources/images/exotic-icons/dragons-breath.jpg",
+    "Zoom": "2x",
+    "Image": [
+      "resources/images/scope-images/dragons-breath.jpg",
+      "resources/images/scope-images/dragons-breath-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Thunderlord",
+    "Manufacturer": "Exotic",
+    "Description": "\"They rest quiet on fields afar…for this is no ending, but the eye.\"",
+    "Icon": "resources/images/exotic-icons/thunderlord.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/thunderlord.jpg",
+      "resources/images/scope-images/thunderlord-ads.jpg"
+    ],
+    "Stats": []
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Super Good Advice",
+    "Manufacturer": "Exotic",
+    "Description": "This weapon is full of it.",
+    "Icon": "resources/images/exotic-icons/super-good-advice.jpg",
+    "Zoom": "1.5x",
+    "Image": [
+      "resources/images/scope-images/super-good-advice.jpg",
+      "resources/images/scope-images/super-good-advice-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 2462128859
+  },
+  {
+    "Type": "Exotic",
+    "Name": "Sleeper Simulant",
+    "Manufacturer": "Exotic",
+    "Description": "Subroutine IKELOS: Status=complete. MIDNIGHT EXIGENT: Status=still in progress.",
+    "Icon": "resources/images/exotic-icons/sleeper-simulant.jpg",
+    "Zoom": "1.7x",
+    "Image": [
+      "resources/images/scope-images/sleeper-simulant.jpg",
+      "resources/images/scope-images/sleeper-simulant-ads.jpg"
+    ],
+    "Stats": [],
+    "Hash": 1764647936
+  }
+]

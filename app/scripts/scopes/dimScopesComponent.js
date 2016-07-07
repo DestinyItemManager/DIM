@@ -5,9 +5,11 @@ function scopesController($http) {
 
   vm.$onInit = function() {
     $http
-      .get(`http://localhost:8080/${vm.hash}`)
-      .then(function(res) {
-        vm.scopes = res.data[0];
+      .get('scopes.json')
+      .then(function(res) {        
+        // search for scope with vm.hash
+        vm.scopes = _.where(res.data, { Hash: vm.hash })[0]; 
+        // better to catch if not is found...
       });
   }
 
@@ -18,8 +20,10 @@ scopesController.$inject = ['$http'];
 angular
   .module('dimApp')
   .filter('remoteImg', function() {
-    return function(input) {
-      return `http://www.destinyscopes.com/${input}`;
+    return function(src) {
+      if (src) {
+        return `http://www.destinyscopes.com/${src}`;
+      }      
     }
   });
 
