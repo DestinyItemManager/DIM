@@ -525,19 +525,8 @@ img {
   }
 }
 
-.unequipped.on-drag-enter, .equipped.on-drag-enter {
-  box-shadow: 0 0 15px 2px rgba(170, 170, 170, 0.5);
-  background-color: rgba(170, 170, 170, 0.5);
-}
-
-.unequipped.on-drag-hover {
-  box-shadow: 0 0 15px 2px rgba(200, 200, 200, 0.7) !important;
-  background-color: rgba(200, 200, 200, 0.7) !important;
-}
-
-.equipped.on-drag-hover {
-  box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.7) !important;
-  background-color: rgba(255, 255, 255, 0.7) !important;
+.on-drag-enter > div, .on-drag-hover > div {
+  background-color: rgba(200, 200, 200, 0.2);
 }
 
 .sub-section {
@@ -551,26 +540,6 @@ img {
   > div {
     white-space: normal;
   }
-
-  &.on-drag-enter .unequipped {
-    box-shadow: 0 0 15px 2px rgba(170, 170, 170, 0.5);
-    background-color: rgba(170, 170, 170, 0.5);
-  }
-  &.on-drag-hover .unequipped {
-    box-shadow: 0 0 15px 2px rgba(200, 200, 200, 0.7);
-    background-color: rgba(200, 200, 200, 0.7);
-  }
-}
-
-.vault .unequipped {
-  &.on-drag-enter {
-    box-shadow: 0 0 15px 2px rgba(210, 210, 210, 0.5);
-    background-color: rgba(210, 210, 210, 0.5);
-  }
-  &.on-drag-hover {
-    box-shadow: 0 0 15px 2px rgba(240, 240, 240, 0.7);
-    background-color: rgba(240, 240, 240, 0.7);
-  }
 }
 
 .sub-bucket {
@@ -578,6 +547,9 @@ img {
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
+  &.on-drag-hover {
+    box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
+  }
 }
 
 #drag-help {
