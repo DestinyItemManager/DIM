@@ -83,12 +83,13 @@
     }
 
     vm.onScopeClick = function(node) {
-      if (node.column == 1) {
+      // Add a better check if is a scope node
+      if (node.column === 1) {
         ngDialog.open({
           template: 'views/scopes.html',
           className: 'scopes-dialog',
           controllerAs: 'dialog',
-          controller: function ($scope) {
+          controller: function() {
             var vm = this;
             vm.hash = node.hash;
           }
