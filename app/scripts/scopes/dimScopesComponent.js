@@ -5,7 +5,7 @@ function scopesController($http) {
 
   vm.$onInit = function() {
     $http
-      .get('scopes.json')
+      .get('scripts/api-manifest/scopes.json')
       .then(function(res) {        
         // search for scope with vm.hash
         vm.scopes = _.where(res.data, { Hash: vm.hash })[0]; 
