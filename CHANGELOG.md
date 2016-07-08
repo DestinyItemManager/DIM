@@ -1,3 +1,7 @@
+# Next
+
+* Fixed wobbly refresh icon.
+
 # 3.8.0
 
 * Loadout builder redesign and major performance enchancements.
