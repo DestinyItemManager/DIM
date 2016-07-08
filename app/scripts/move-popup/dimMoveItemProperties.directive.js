@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimMoveItemProperties', MoveItemProperties);
 
-  MoveItemProperties.$inject = ['$sce'];
-
-  function MoveItemProperties($sce) {
+  function MoveItemProperties() {
     return {
       bindToController: true,
       controller: MoveItemPropertiesCtrl,
@@ -20,57 +18,69 @@
       replace: true,
       template: [
         '<div>',
-        '<div ng-class="vm.classes">',
-        '  <span ng-if="vm.item.lockable" class="fa-stack lock-icon" ng-class="{ locking: vm.locking }" ng-click="vm.setLockState(vm.item);">',
-        '    <i class="fa fa-circle fa-stack-2x"></i>',
-        '    <i class="fa fa-stack-1x fa-inverse" ng-class="{ \'fa-lock\': vm.item.locked, \'fa-unlock\': !vm.item.locked, locking: vm.locking }"></i>',
-        '  </span>',
-        '  <span><img class="title-element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
-        '    <a target="_new" href="http://db.destinytracker.com/inventory/item/{{vm.item.hash}}">{{vm.title}}</a></span>',
-        '  <span ng-if="vm.light" ng-bind="vm.light"></span>',
-        '  <span ng-if="::vm.item.sort == \'Weapons\' || vm.item.sort ==\'Postmaster\'" ng-bind="::vm.item.typeName"></span>',
-        '  <span ng-if="vm.item.type === \'Bounties\' && !vm.item.complete" class="bounty-progress"> | {{vm.item.percentComplete | percent}}</span>',
-        '  <span class="pull-right move-popup-info-detail" ng-click="vm.itemDetails = !vm.itemDetails;" ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified"><span class="fa fa-info-circle"></span></span>',
-        '</div>',
-        '<div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
-        '  <div dim-percent-width="vm.item.percentComplete"></div>',
-        '</div>',
-        '<div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
-        '<div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
-        '<div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
-        '  <div ng-if="vm.classType && vm.classType !==\'Unknown\'" class="stat-box-row">',
-        '    <span class="stat-box-text stat-box-cell" ng-bind="vm.classType"></span>',
+        '  <div class="item-header" ng-class="vm.classes">',
+        '    <div>',
+        '      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">',
+        '        <a ng-if="vm.item.lockable" href ng-click="vm.setLockState(vm.item)">',
+        '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
+        '        </a>',
+        '      </span>',
+        '      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-title">',
+        '        {{vm.title}}',
+        '      </a>',
+        '    </div>',
+        '    <div>',
+        '      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">',
+        '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
+        '      </span>',
+        '      {{ vm.light }} {{ vm.item.typeName }}',
+        '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
+        '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.itemDetails = !vm.itemDetails">',
+        '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
+        '        </i>',
+        '      </a>',
+        '    </div>',
         '  </div>',
-        '  <div class="stat-box-row" ng-repeat="stat in vm.item.stats track by $index">',
-        '     <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>',
-        '     <span class="stat-box-outer" ng-class="{ \'show-quality\': vm.itemQuality }">',
-        '       <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>',
-        '       <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>',
-        '       <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>',
-        '       <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.equippedStatsValue / stat.maximumValue"></span>',
-        '       <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>',
-        '       <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
-        '     </span>',
-        '     <span class="stat-box-val stat-box-cell lower-stats" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '       <span ng-show="vm.itemQuality && stat.qualityPercentage" ng-class="{ \'show-quality\': vm.itemQuality && stat.qualityPercentage }" ng-show="{{ stat.bar }}" ng-style="stat.qualityPercentage | qualityColor:\'color\'">({{ stat.qualityPercentage }}%)</span>',
-        '     </span>',
+        '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
+        '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
-        '  <div class="stat-box-row" ng-if="vm.item.quality">',
-        '    <span class="stat-box-text stat-box-cell">Stats quality</span>',
-        '    <span class="stat-box-cell" ng-style="vm.item.quality | qualityColor:\'color\'">{{ vm.item.quality }}% of max possible roll</span>',
+        '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
+        '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
+        '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
+        '    <div ng-if="vm.classType && vm.classType !== \'Unknown\'" class="stat-box-row">',
+        '      <span class="stat-box-text stat-box-cell" ng-bind="vm.classType"></span>',
+        '    </div>',
+        '    <div class="stat-box-row" ng-repeat="stat in vm.item.stats track by $index">',
+        '      <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>',
+        '      <span class="stat-box-outer">',
+        '        <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>',
+        '        <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>',
+        '        <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>',
+        '        <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.equippedStatsValue / stat.maximumValue"></span>',
+        '        <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>',
+        '        <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
+        '      </span>',
+        '      <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
+        '        <span ng-if="stat.bar && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
+        '      </span>',
+        '    </div>',
+        '    <div class="stat-box-row" ng-if="vm.item.quality && vm.item.quality.min">',
+        '      <span class="stat-box-text stat-box-cell">Stats quality</span>',
+        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll</span>',
+        '    </div>',
         '  </div>',
-        '</div>',
-        '<div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
-        '  <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
-        '</div>',
-        '<div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
-        '  <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
-        '     <div class="objective-checkbox"><div></div></div>',
-        '     <div class="objective-progress">',
-        '       <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-        '       <div class="objective-description">{{ objective.description || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
-        '       <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
-        '     </div>',
+        '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
+        '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '  </div>',
+        '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
+        '    <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
+        '      <div class="objective-checkbox"><div></div></div>',
+        '      <div class="objective-progress">',
+        '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
+        '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
+        '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
+        '      </div>',
+        '    </div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -86,9 +96,10 @@
       vm.item.talentGrid ||
       vm.item.objectives;
     vm.showDescription = true;// || (vm.item.description.length &&
-                              //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
+    //    (!vm.item.equipment || (vm.item.objectives && vm.item.objectives.length)));
     vm.locking = false;
 
+    // The 'i' keyboard shortcut toggles full details
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
     });
@@ -118,7 +129,6 @@
     };
 
     vm.classes = {
-      'item-name': true,
       'is-arc': false,
       'is-solar': false,
       'is-void': false
@@ -129,15 +139,10 @@
     vm.classType = '';
     vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
     vm.itemDetails = vm.showDetailsByDefault;
-    settings.getSetting('itemDetails')
-      .then(function(show) {
-        vm.itemDetails = vm.itemDetails || show;
-      });
-    vm.itemQuality = false;
-    settings.getSetting('itemQuality')
-      .then(function(show) {
-        vm.itemQuality = vm.itemQuality || show;
-      });
+    vm.settings = settings;
+    $scope.$watch('vm.settings.itemDetails', function(show) {
+      vm.itemDetails = vm.itemDetails || show;
+    });
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();

@@ -3,9 +3,7 @@
 
   angular.module('dimApp').directive('dimEngramFarming', EngramFarming);
 
-  EngramFarming.$inject = ['dimEngramFarmingService'];
-
-  function EngramFarming(dimEngramFarmingService) {
+  function EngramFarming() {
     return {
       controller: EngramFarmingCtrl,
       controllerAs: 'vm',

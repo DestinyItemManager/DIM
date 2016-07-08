@@ -18,74 +18,64 @@
       uncommon: 'Uncommon',
       basic: 'Basic'
     })
-    .value('dimCategory', {
-      Weapons: [
-        'Class',
-        'Primary',
-        'Special',
-        'Heavy',
-      ],
-      Armor: [
-        'Helmet',
-        'Gauntlets',
-        'Chest',
-        'Leg',
-        'ClassItem'
-      ],
-      General: [
-        'Artifact',
-        'Ghost',
-        'Consumable',
-        'Material',
-        'Emblem',
-        'Shader',
-        'Emote',
-        'Ship',
-        'Vehicle',
-        'Horn',
-      ],
-      Progress: [
-        'Bounties',
-        'Quests',
-        'Missions',
-      ],
-      Postmaster: [
-        'Lost Items',
-        'Special Orders',
-        'Messages'
-      ]
-    })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
     }]);
 
 
   angular.module('dimApp')
-    .run(['$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'dimInfoService',
-      function($rootScope, loadingTracker, $timeout, toaster, $http, dimInfoService) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
-        //1 Hour
+        // 1 Hour
         $rootScope.inactivityLength = 60 * 60 * 1000;
 
         $rootScope.isUserInactive = function() {
           var currentTime = Date.now();
 
-          //Has This User Been Inactive For More Than An Hour
-          return((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
+          // Has This User Been Inactive For More Than An Hour
+          return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
         };
 
         $rootScope.trackActivity = function() {
           $rootScope.lastActivity = Date.now();
         };
 
-        //Track Our Initial Activity of Starting the App
+        // Track Our Initial Activity of Starting the App
         $rootScope.trackActivity();
 
-        dimInfoService.show('20160523v36', {
-          title: 'DIM v3.6.4 Released',
-          view: 'views/changelog-toaster.html?v=v3.6.4',
+        $window.initgapi = function() {
+          SyncService.init();
+        };
+
+        console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+        dimInfoService.show('20160707v380', {
+          title: 'DIM v3.8.1 Released',
+          view: 'views/changelog-toaster.html?v=v3.8.1'
         });
+
+//        if (chrome && chrome.identity) {
+//          chrome.identity.getAuthToken(function(account) {
+//            if (!account) {
+//              dimInfoService.show('chromesync', {
+//                title: 'Profile is not syncing.',
+//                type: 'warning',
+//                body: [
+//                  '<p>Unless you sign into Google Chrome, your settings and loadouts will not be saved between all of your devices.</p>',
+//                  '<p><a href="https://www.google.com/chrome/browser/signin.html" target="_blank">Click here for more information.</a></p>'
+//                ].join(''),
+//                hide: 'Do not show this message again.',
+//                func: function() {
+//                  chrome.identity.getAuthToken({ interactive: true });
+//                }
+//              });
+//            }
+//            if (chrome.runtime.lastError) {
+//              console.warn(chrome.runtime.lastError.message, 'DIM profile will not sync with other devices.');
+//            }
+//          });
+//        }
       }
     ]);
 
@@ -127,35 +117,3 @@
         });
     });
 })();
-
-if (typeof window.onerror == "object") {
-  window.onerror = function(err, url, line) {};
-}
-
-(function(window) {
-  // Retain a reference to the previous global error handler, in case it has been set:
-  var originalWindowErrorCallback = window.onerror;
-
-  window.onerror = function customErrorHandler(errorMessage, url, lineNumber, columnNumber, errorObject) {
-    var exceptionDescription = errorMessage;
-    if(typeof errorObject !== 'undefined' && typeof errorObject.message !== 'undefined') {
-      exceptionDescription = errorObject.message;
-    }
-    //
-    // _gaq.push([
-    //   'errorTracker._trackEvent',
-    //   'DIM - Chrome Extension - v3.3',
-    //   exceptionDescription,
-    //   ' @ ' + url + ':' + lineNumber + ':' + columnNumber,
-    //   0,
-    //   true
-    // ]);
-
-    // If the previous "window.onerror" callback can be called, pass it the data:
-    if(typeof originalWindowErrorCallback === 'function') {
-      return originalWindowErrorCallback(errorMessage, url, lineNumber, columnNumber, errorObject);
-    }
-    // Otherwise, Let the default handler run:
-    return false;
-  };
-})(window);

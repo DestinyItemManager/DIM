@@ -3,9 +3,9 @@
 
   angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
-  PlatformService.$inject = ['$rootScope', '$q', 'dimBungieService', 'chromeStorage'];
+  PlatformService.$inject = ['$rootScope', '$q', 'dimBungieService', 'SyncService'];
 
-  function PlatformService($rootScope, $q, dimBungieService, chromeStorage) {
+  function PlatformService($rootScope, $q, dimBungieService, SyncService) {
     var _platforms = [];
     var _active = null;
 
@@ -56,13 +56,14 @@
     }
 
     function getActivePlatform() {
-      var promise = chromeStorage.get('platformType').then(function(previousPlatformType) {
-        if (_.isUndefined(previousPlatformType)) {
-          previousPlatformType = null;
-        }
-
+      var promise = SyncService.get().then(function(data) {
         var previousPlatform = null;
         var active = null;
+        var previousPlatformType = null;
+
+        if (data) {
+          previousPlatformType = data.platformType;
+        }
 
         if (!_.isNull(previousPlatformType)) {
           previousPlatform = _.find(_platforms, function(platform) {
@@ -71,16 +72,12 @@
         }
 
         if (_.size(_platforms) > 0) {
-          if (_.isNull(_active)) {
+          if (active === null) {
             active = previousPlatform || _platforms[0];
+          } else if (_.find(_platforms, { id: _active.id })) {
+            active = _active;
           } else {
-            if (!_.find(_platforms, function(platform) {
-              return (platform.id === _active.id);
-            })) {
-              active = _platforms[0];
-            } else {
-              active = _active;
-            }
+            active = _platforms[0];
           }
         } else {
           active = null;
@@ -100,15 +97,16 @@
       _active = platform;
       var promise;
 
-      if (_.isNull(platform)) {
-        promise = chromeStorage.drop('platformType');
+      if (platform === null) {
+        promise = SyncService.remove('platformType');
       } else {
-        promise = chromeStorage.set('platformType', platform.type);
+        promise = SyncService.set({ platformType: platform.type });
       }
 
       $rootScope.activePlatformUpdated = true;
 
       $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
+      return promise;
     }
   }
 })();

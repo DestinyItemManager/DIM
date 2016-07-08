@@ -4,93 +4,55 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimSettingsService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimItemBucketDefinitions', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService'];
 
-  function StoreService($rootScope, $q, dimBungieService, settings, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimItemBucketDefinitions, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService) {
     var _stores = [];
-    var _index = 0;
-    var vaultSizes = {};
-    var bucketSizes = {};
+    var _oldItems = {};
+    var _currItems = {};
+    var _newItems = {};
     var progressionDefs = {};
-    dimItemBucketDefinitions.then(function(defs) {
-      _.each(defs, function(def, hash) {
-        if (def.enabled) {
-          bucketSizes[hash] = def.itemCount;
-        }
-      });
-      vaultSizes['Weapons'] = bucketSizes[4046403665];
-      vaultSizes['Armor'] = bucketSizes[3003523923];
-      vaultSizes['General'] = bucketSizes[138197802];
+    let recordsDefs = {};
+    var buckets = {};
+    var idTracker = {};
+    dimBucketService.then(function(defs) {
+      buckets = defs;
     });
     dimProgressionDefinitions.then(function(defs) {
       progressionDefs = defs;
     });
+    dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
 
     // Cooldowns
-    var cooldownsSuperA  = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
-    var cooldownsSuperB  = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
+    var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
+    var cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
-    var cooldownsMelee   = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
-
-    // A mapping from the bucket names to DIM categories
-    // Some buckets like vault and currencies have been ommitted
-    var bucketToType = {
-      "BUCKET_CHEST": "Chest",
-      "BUCKET_LEGS": "Leg",
-      "BUCKET_RECOVERY": "Lost Items",
-      "BUCKET_SHIP": "Ship",
-      "BUCKET_MISSION": "Missions",
-      "BUCKET_ARTIFACT": "Artifact",
-      "BUCKET_HEAVY_WEAPON": "Heavy",
-      "BUCKET_COMMERCIALIZATION": "Special Orders",
-      "BUCKET_CONSUMABLES": "Consumable",
-      "BUCKET_PRIMARY_WEAPON": "Primary",
-      "BUCKET_CLASS_ITEMS": "ClassItem",
-      "BUCKET_QUESTS": "Quests",
-      "BUCKET_VEHICLE": "Vehicle",
-      "BUCKET_BOUNTIES": "Bounties",
-      "BUCKET_SPECIAL_WEAPON": "Special",
-      "BUCKET_SHADER": "Shader",
-      "BUCKET_EMOTES": "Emote",
-      "BUCKET_MAIL": "Messages",
-      "BUCKET_BUILD": "Class",
-      "BUCKET_HEAD": "Helmet",
-      "BUCKET_ARMS": "Gauntlets",
-      "BUCKET_HORN": "Horn",
-      "BUCKET_MATERIALS": "Material",
-      "BUCKET_GHOST": "Ghost",
-      "BUCKET_EMBLEM": "Emblem"
-    };
-
-    var typeToSort = {};
-    _.each(dimCategory, function(types, category) {
-      types.forEach(function(type) {
-        typeToSort[type] = category;
-      });
-    });
+    var cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
-      // Get the total amount of this item in the store, across all stacks.
+      // Get the total amount of this item in the store, across all stacks,
+      // excluding stuff in the postmaster.
       amountOfItem: function(item) {
         return sum(_.filter(this.items, function(i) {
-          return i.hash === item.hash && i.sort !== 'Postmaster';
+          return i.hash === item.hash && !i.location.inPostmaster;
         }), 'amount');
       },
       // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
         if (!item.bucket) {
           console.error("item needs a 'bucket' field", item);
+          return 10;
         }
-        return bucketSizes[item.bucket] || 10;
+        return item.bucket.capacity;
       },
       // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
         if (!item.type) {
           throw new Error("item needs a 'type' field");
         }
-        return Math.max(0, this.capacityForItem(item) - count(this.items, { type: item.type }));
+        return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
       updateCharacterInfo: function(characterInfo) {
         this.level = characterInfo.characterLevel;
@@ -99,13 +61,43 @@
         this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
+      },
+      // Remove an item from this store. Returns whether it actually removed anything.
+      removeItem: function(item) {
+        // Completely remove the source item
+        function match(i) { return item.index === i.index; }
+        var sourceIndex = _.findIndex(this.items, match);
+        if (sourceIndex >= 0) {
+          this.items.splice(sourceIndex, 1);
+
+          var bucketItems = this.buckets[item.location.id];
+          var bucketIndex = _.findIndex(bucketItems, match);
+          bucketItems.splice(bucketIndex, 1);
+
+          return true;
+        }
+        return false;
+      },
+      addItem: function(item) {
+        this.items.push(item);
+        var bucketItems = this.buckets[item.location.id];
+        bucketItems.push(item);
+        if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
+          dimInfoService.show('lostitems', {
+            type: 'warning',
+            title: 'Postmaster Limit',
+            body: 'There are 20 lost items at the Postmaster on your ' + this.name + '. Any new items will overwrite the existing.',
+            hide: 'Never show me this type of warning again.'
+          });
+        }
+        item.owner = this.id;
       }
     };
 
     // Prototype for Item objects - add methods to this to add them to all
     // items.
     var ItemProto = {
-      // Can this item be equipped by the current store?
+      // Can this item be equipped by the given store?
       canBeEquippedBy: function(store) {
         if (store.isVault) {
           return false;
@@ -117,7 +109,7 @@
           this.equipRequiredLevel <= store.level &&
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
-          this.sort !== 'Postmaster';
+          !this.location.inPostmaster;
       },
       isEngram: function() {
         return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
@@ -135,19 +127,10 @@
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
-      updateProgression: updateProgression,
-      setHeights: setHeightsAsync,
+      dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: getItems
     };
-
-    $rootScope.$on('dim-settings-updated', function(setting) {
-      if (_.has(setting, 'characterOrder')) {
-        sortStores(_stores).then(function(stores) {
-          _stores = stores;
-        });
-      }
-    });
 
     return service;
 
@@ -166,127 +149,20 @@
       });
     }
 
-    function updateProgression() {
-        _.each(_stores, function(dStore) {
-          if (!dStore.isVault) {
-            dStore.progression.progressions.forEach(function(prog) {
-              angular.extend(prog, progressionDefs[prog.progressionHash]);
-            });
-          }
-        });
-        return _stores;
-    }
-
-    function getNextIndex() {
-      return _index++;
-    }
-
-    function setHeightsAsync() {
-      setTimeout(setHeights, 0);
-    }
-
-    // Equalize the heights of the various rows of items.
-    // TODO: replace with flexbox
-    function setHeights() {
-      function outerHeight(el) {
-        //var height = el.offsetHeight;
-        var style = getComputedStyle(el);
-
-        var height = parseInt(style.height);
-        return height;
-      }
-
-      function outerWidth(el) {
-        var width = el.offsetWidth;
-        var style = getComputedStyle(el);
-
-        width += parseInt(style.marginLeft) + parseInt(style.marginRight);
-        return width;
-      }
-
-      var fn = function(memo, section) {
-        var childHeight = 0;
-
-        _.each(section.children, function(child) {
-          var t = outerHeight(child);
-          childHeight = (childHeight > t) ? childHeight : t;
-        });
-
-        if (childHeight > memo) {
-          memo = childHeight;
-        }
-
-        return memo;
-      };
-
-      var setHeight = function(query) {
-        var height = _.reduce(document.querySelectorAll(query), fn, 0);
-
-        var style = document.querySelectorAll('style[id=' + ((query.replace(/\./g, '')).replace(/\s/g, '')) + ']');
-
-        if (style.length > 0) {
-          style = style[0];
-        } else {
-          style = document.createElement('style');
-          style.type = 'text/css';
-          style.id = (query.replace(/\./g, '')).replace(/\s/g, '');
-          document.getElementsByTagName('head')[0].appendChild(style);
-        }
-
-        style.innerHTML = query + ' { min-height: ' + (height) + 'px; }';
-      };
-
-      setHeight('.sub-section.sort-class');
-      setHeight('.sub-section.sort-primary');
-      setHeight('.sub-section.sort-special');
-      setHeight('.sub-section.sort-heavy');
-      setHeight('.sub-section.sort-helmet');
-      setHeight('.sub-section.sort-chest');
-      setHeight('.sub-section.sort-gauntlets');
-      setHeight('.sub-section.sort-leg');
-      setHeight('.sub-section.sort-classitem');
-      setHeight('.sub-section.sort-artifact');
-      setHeight('.sub-section.sort-emblem');
-      setHeight('.sub-section.sort-shader');
-      setHeight('.sub-section.sort-ghost');
-      setHeight('.sub-section.sort-emote');
-      setHeight('.sub-section.sort-ship');
-      setHeight('.sub-section.sort-vehicle');
-      setHeight('.sub-section.sort-horn');
-      setHeight('.sub-section.sort-consumable');
-      setHeight('.sub-section.sort-material');
-      setHeight('.sub-section.sort-missions');
-      setHeight('.sub-section.sort-bounties');
-      setHeight('.sub-section.sort-messages');
-      setHeight('.sub-section.sort-special-orders');
-      setHeight('.sub-section.sort-lost-items');
-      setHeight('.sub-section.sort-quests');
-      setHeight('.sub-section.sort-unknown');
-      setHeight('.weapons');
-      setHeight('.armor');
-      setHeight('.general');
-    }
-
-    function sortStores(stores) {
-      return settings.getSetting('characterOrder')
-        .then(function(characterOrder) {
-          if (characterOrder === 'mostRecent') {
-            return _.sortBy(stores, 'lastPlayed').reverse();
-          } else {
-            return _.sortBy(stores, 'id');
-          }
-        });
-    }
-
     function getStores() {
       return _stores;
     }
 
     // Returns a promise for a fresh view of the stores and their items.
     function reloadStores() {
+      _oldItems = buildItemMap(_stores);
+      if (_.isEmpty(_stores)) {
+        clearNewItems();
+      }
       return dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
-          var glimmer, marks;
+          var glimmer;
+          var marks;
 
           return $q.all(rawStores.map(function(raw) {
             var store;
@@ -306,31 +182,42 @@
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
-                bucketCounts: {},
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
-                  if (!item.sort) {
+                  var sort = item.sort;
+                  if (item.bucket) {
+                    sort = item.bucket.sort;
+                  }
+                  if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return vaultSizes[item.sort];
+                  return buckets[sort].capacity;
                 },
                 spaceLeftForItem: function(item) {
-                  if (!item.sort) {
+                  var sort = item.sort;
+                  if (item.bucket) {
+                    sort = item.bucket.sort;
+                  }
+                  if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, { sort: item.sort }));
+                  return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
+                    return i.bucket.sort === sort;
+                  }));
+                },
+                removeItem: function(item) {
+                  var result = StoreProto.removeItem.call(this, item);
+                  this.vaultCounts[item.location.sort]--;
+                  return result;
+                },
+                addItem: function(item) {
+                  StoreProto.addItem.call(this, item);
+                  this.vaultCounts[item.location.sort]++;
                 }
               });
 
               _.each(raw.data.buckets, function(bucket) {
-                if (bucket.bucketHash === 3003523923)
-                  store.bucketCounts.Armor = _.size(bucket.items);
-                if (bucket.bucketHash === 138197802)
-                  store.bucketCounts.General = _.size(bucket.items);
-                if (bucket.bucketHash === 4046403665)
-                  store.bucketCounts.Weapons = _.size(bucket.items);
-
                 _.each(bucket.items, function(item) {
                   item.bucket = bucket.bucketHash;
                 });
@@ -359,9 +246,14 @@
                 race: getRace(raw.character.base.characterBase.raceHash),
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
+                advisors: raw.character.advisors,
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
+
+              store.progression.progressions.forEach(function(prog) {
+                angular.extend(prog, progressionDefs[prog.progressionHash]);
+              });
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
@@ -382,14 +274,36 @@
               }
             }
 
-            return getItems(store.id, items).then(function(items) {
+            return getItems(store, items).then(function(items) {
               store.items = items;
+
+              // by type-bucket
+              store.buckets = _.groupBy(items, function(i) {
+                return i.location.id;
+              });
+
+              // Fill in any missing buckets
+              _.values(buckets.byType).forEach(function(bucket) {
+                if (!store.buckets[bucket.id]) {
+                  store.buckets[bucket.id] = [];
+                }
+              });
+
+              if (store.isVault) {
+                store.vaultCounts = {};
+                ['Weapons', 'Armor', 'General'].forEach(function(category) {
+                  store.vaultCounts[category] = 0;
+                  buckets.byCategory[category].forEach(function(bucket) {
+                    if (store.buckets[bucket.id]) {
+                      store.vaultCounts[category] += store.buckets[bucket.id].length;
+                    }
+                  });
+                });
+              }
+
               return store;
             });
           }));
-        })
-        .then(function(stores) {
-          return sortStores(stores);
         })
         .then(function(stores) {
           _stores = stores;
@@ -397,8 +311,25 @@
           $rootScope.$broadcast('dim-stores-updated', {
             stores: stores
           });
-          setHeightsAsync();
 
+          return stores;
+        })
+        .then(function(stores) {
+          _currItems = buildItemMap(stores);
+          _newItems = clearStaleNewItems(_currItems, _newItems);
+          SyncService.set({ newItems: _.keys(_newItems) });
+
+          var listStr = '';
+          _.each(_newItems, function(val) {
+            listStr += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
+          });
+          if (listStr) {
+            dimInfoService.show('newitemsbox', {
+              title: 'New items found',
+              body: '<p>The following items are new:</p><ul>' + listStr + '</ul>',
+              hide: 'Don\'t show me new item notifications'
+            }, 10000);
+          }
           return stores;
         });
     }
@@ -406,8 +337,6 @@
     function getStore(id) {
       return _.find(_stores, { id: id });
     }
-
-    var idTracker = {};
 
     // Set an ID for the item that should be unique across all items
     function createItemIndex(item) {
@@ -423,7 +352,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, itemBucketDef, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, item) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, cachedNewItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -472,55 +401,68 @@
         return null;
       }
 
-      // def.bucketTypeHash is where it goes normally
-      var normalBucket = itemBucketDef[itemDef.bucketTypeHash];
-      // item.bucket is where it IS right now
-      var currentBucket = itemBucketDef[item.bucket];
+      // fix itemDef for defense items with missing nodes
+      if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
+        var defaultMinMax = _.find(itemDef.stats, function(stat) {
+          return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
+        });
 
-      var location;
-      if (currentBucket && bucketToType[currentBucket.bucketIdentifier]) {
-        location = bucketToType[currentBucket.bucketIdentifier];
+        if (defaultMinMax) {
+          [144602215, 1735777505, 4244567218].forEach(function(val) {
+            if (!itemDef.stats[val]) {
+              itemDef.stats[val] = {
+                maximum: defaultMinMax.maximum,
+                minimum: defaultMinMax.minimum,
+                statHash: val,
+                value: 0
+              };
+            }
+          });
+        }
       }
-      var normalLocation;
-      if (normalBucket && bucketToType[normalBucket.bucketIdentifier]) {
-        normalLocation = bucketToType[normalBucket.bucketIdentifier];
+
+      // def.bucketTypeHash is where it goes normally
+      var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
+      if (!normalBucket) {
+        currentBucket = normalBucket = buckets.unknown;
+        buckets.setHasUnknown();
       }
+
+      // item.bucket is where it IS right now
+      var currentBucket = buckets.byHash[item.bucket] || normalBucket;
+
+      // We cheat a bit for items in the vault, since we treat the
+      // vault as a character. So put them in the bucket they would
+      // have been in if they'd been on a character.
+      if (currentBucket.id.startsWith('BUCKET_VAULT')) {
+        currentBucket = normalBucket;
+      }
+
+      var itemType = normalBucket.type;
 
       var weaponClass = null;
-      if (dimCategory['Weapons'].indexOf(normalLocation) >= 0) {
+      if (normalBucket.inWeapons) {
         weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
-      }
-
-      var itemType = location || normalLocation || 'Unknown';
-
-      var itemSort = typeToSort[itemType];
-      if (!itemSort) {
-        console.log(itemDef.itemTypeName + " does not have a sort property.");
-      }
-
-      if (itemSort !== 'Postmaster' && item.location === 4) {
-        itemSort = 'Postmaster';
-        if (itemType === 'Consumable') {
-          itemType = 'Special Orders';
-        } else {
-          itemType = 'Lost Items';
-        }
       }
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       var createdItem = angular.extend(Object.create(ItemProto), {
+        // The bucket the item is currently in
+        location: currentBucket,
+        // The bucket the item normally resides in (even though it may be in the vault/postmaster)
+        bucket: normalBucket,
         hash: item.itemHash,
+        // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        sort: itemSort,
         tier: itemDef.tierTypeName || 'Common',
+        isExotic: itemDef.tierTypeName === 'Exotic',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (itemSort === 'Postmaster' || itemDef.nonTransferrable),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
-        bucket: itemDef.bucketTypeHash,
         equipment: item.isEquipment,
         complete: item.isGridComplete,
         percentComplete: null,
@@ -529,7 +471,7 @@
         typeName: itemDef.itemTypeName,
         // "perks" are the two or so talent grid items that are "featured" for an
         // item in its popup in the game. We don't currently use these.
-        //perks: item.perks,
+        // perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
         maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
@@ -538,38 +480,77 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: item.lockable,
+        lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
+
       createdItem.index = createItemIndex(createdItem);
 
+      if (_.isEmpty(_stores)) {
+        createdItem.isNew = false;
+      } else {
+        createdItem.isNew = _.contains(cachedNewItems, createdItem.id);
+        if (createdItem.isNew === false) {
+          createdItem.isNew = isItemNew(createdItem.id);
+          if (createdItem.isNew) {
+            _newItems[createdItem.id] = { name: createdItem.name, type: createdItem.type };
+          }
+        }
+      }
+
       try {
-        createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs, perkDefs);
-      } catch(e) {
+        createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs);
+      } catch (e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef);
       }
       try {
         createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
-      } catch(e) {
+      } catch (e) {
         console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
-        createdItem.objectives = buildObjectives(item, objectiveDef, itemDef);
-      } catch(e) {
+        createdItem.objectives = buildObjectives(item.objectives, objectiveDef);
+      } catch (e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
-      if(createdItem.talentGrid && createdItem.talentGrid.infusable) {
+      if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
         try {
           createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
-        } catch(e) {
+        } catch (e) {
           console.error("Error building quality rating for " + createdItem.name, item, itemDef);
         }
       }
 
       // More objectives properties
-      if (createdItem.objectives) {
+      if (itemDef.recordBookHash && itemDef.recordBookHash > 0) {
+        try {
+          const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
+
+          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(recordsDefs[record.recordHash], record));
+
+          createdItem.objectives = buildRecords(recordBook, objectiveDef);
+
+          if (recordBook.progression) {
+            recordBook.progression = angular.extend(recordBook.progression, progressDefs[recordBook.progression.progressionHash]);
+            createdItem.progress = recordBook.progression;
+            createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step, 0);
+          } else {
+            createdItem.percentComplete = _.countBy(createdItem.objectives, function(task) {
+              return task.complete;
+            }).true / createdItem.objectives.length;
+          }
+
+          createdItem.complete = _.chain(recordBook.records)
+            .pluck('objectives')
+            .flatten()
+            .all('isComplete')
+            .value();
+        } catch (e) {
+          console.error("Error building record book for " + createdItem.name, item, itemDef);
+        }
+      } else if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
         createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
           return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
@@ -581,7 +562,7 @@
       return createdItem;
     }
 
-    function buildTalentGrid(item, talentDefs, progressDefs, perkDefs) {
+    function buildTalentGrid(item, talentDefs, progressDefs) {
       var talentGridDef = talentDefs[item.talentGridHash];
       if (!item.progression || !talentGridDef) {
         return undefined;
@@ -625,8 +606,8 @@
         }
 
         // Only one node in this column can be selected (scopes, etc)
-        var exclusiveInColumn = !!(talentNodeGroup.exlusiveWithNodes &&
-                                   talentNodeGroup.exlusiveWithNodes.length > 0);
+        var exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes &&
+                                 talentNodeGroup.exlusiveWithNodes.length > 0);
 
         // Unlocked is whether or not the material cost has been paid
         // for the node
@@ -675,7 +656,7 @@
           // "featured" on an abbreviated info panel, as in the
           // game. 0 = not featured, positive numbers signify the
           // order of the featured perks.
-          //featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+          // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
           // This list of material requirements to unlock the
           // item are a mystery. These hashes don't exist anywhere in
@@ -683,19 +664,19 @@
           // object doesn't say how much of the material is
           // needed. There's got to be some missing DB somewhere with
           // this info.
-          //materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+          // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
 
           // These are useful for debugging or searching for new properties,
           // but they don't need to be included in the result.
-          //talentNodeGroup: talentNodeGroup,
-          //talentNodeSelected: talentNodeSelected,
-          //itemNode: node
+          // talentNodeGroup: talentNodeGroup,
+          // talentNodeSelected: talentNodeSelected,
+          // itemNode: node
         };
       });
       gridNodes = _.compact(gridNodes);
 
       // This can be handy for visualization/debugging
-      //var columns = _.groupBy(gridNodes, 'column');
+      // var columns = _.groupBy(gridNodes, 'column');
 
       var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
       var totalXPRequired = xpToReachLevel(maxLevelRequired);
@@ -709,26 +690,50 @@
       }
 
       return {
-        nodes: _.sortBy(gridNodes, function(node) { return node.column + 0.1 * node.row; }),
+        nodes: _.sortBy(gridNodes, function(node) { return node.column + (0.1 * node.row); }),
         xpComplete: totalXPRequired <= totalXP,
         totalXPRequired: totalXPRequired,
         totalXP: Math.min(totalXPRequired, totalXP),
-        hasAscendNode: !!ascendNode,
-        ascended: !!(ascendNode && ascendNode.activated),
+        hasAscendNode: Boolean(ascendNode),
+        ascended: Boolean(ascendNode && ascendNode.activated),
         infusable: _.any(gridNodes, { name: 'Infuse' })
       };
     }
 
-    function buildObjectives(item, objectiveDef, def) {
-      if (!item.objectives || !item.objectives.length) {
+    function buildRecords(recordBook, objectiveDef) {
+      if (!recordBook.records || !recordBook.records.length) {
         return undefined;
       }
 
-      return item.objectives.map(function(objective) {
+      let processRecord = (recordBook, record) => {
+        var def = objectiveDef[record.objectives[0].objectiveHash];
+
+        return {
+          description: record.description,
+          displayName: record.displayName,
+          progress: record.objectives[0].progress,
+          completionValue: def.completionValue,
+          complete: record.objectives[0].isComplete,
+          boolean: def.completionValue === 1
+        };
+      };
+
+      processRecord = processRecord.bind(this, recordBook);
+
+      return _.map(recordBook.records, processRecord);
+    }
+
+    function buildObjectives(objectives, objectiveDef) {
+      if (!objectives || !objectives.length) {
+        return undefined;
+      }
+
+      return objectives.map(function(objective) {
         var def = objectiveDef[objective.objectiveHash];
 
         return {
-          description: def.displayDescription,
+          description: '',
+          displayName: def.displayDescription,
           progress: objective.progress,
           completionValue: def.completionValue,
           complete: objective.isComplete,
@@ -737,59 +742,86 @@
       });
     }
 
+    function fitValue(light) {
+      if (light > 300) {
+        return (0.2546 * light) - 23.825;
+      } if (light > 200) {
+        return (0.1801 * light) - 1.4612;
+      } else {
+        return -1;
+      }
+    }
+
+    function getScaledStat(base, light) {
+      var max = 335;
+
+      return {
+        min: Math.floor((base) * (fitValue(max) / fitValue(light))),
+        max: Math.floor((base + 1) * (fitValue(max) / fitValue(light)))
+      };
+    }
+
     // thanks to bungie armory for the max-base stats
     // thanks to /u/iihavetoes for rates + equation
     // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
     // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
-      var maxLight = 335;
+      // For a quality property, return a range string (min-max percentage)
+      function getQualityRange(light, quality) {
+        if (!quality) {
+          return '';
+        }
+        return ((quality.min === quality.max || light === 335)
+                ? quality.min
+                : (quality.min + "%-" + quality.max)) + '%';
+      }
 
       if (!stats || light.value < 280) {
         return null;
       }
 
-      var split = 0, rate = 0;
+      var split = 0;
       switch (type.toLowerCase()) {
-        case 'helmet':
-          rate = 1/6;
-          split = 46; // bungie reports 48, but i've only seen 46
-          break;
-        case 'gauntlets':
-          rate = 1/6;
-          split = 41; // bungie reports 43, but i've only seen 41
-          break;
-        case 'chest':
-          rate = 1/5;
-          split = 61;
-          break;
-        case 'leg':
-          rate = 1/5;
-          split = 56;
-          break;
-        case 'classitem':
-        case 'ghost':
-          rate = 1/10;
-          split = 25;
-          break;
-        case 'artifact':
-          rate = 1/10;
-          split = 38;
-          break;
-        default:
-          return null;
+      case 'helmet':
+        split = 46; // bungie reports 48, but i've only seen 46
+        break;
+      case 'gauntlets':
+        split = 41; // bungie reports 43, but i've only seen 41
+        break;
+      case 'chest':
+        split = 61;
+        break;
+      case 'leg':
+        split = 56;
+        break;
+      case 'classitem':
+      case 'ghost':
+        split = 25;
+        break;
+      case 'artifact':
+        split = 38;
+        break;
+      default:
+        return null;
       }
 
       var ret = {
-        total: 0,
-        max: split*2
+        total: {
+          min: 0,
+          max: 0
+        },
+        max: split * 2
       };
 
       var pure = 0;
       stats.forEach(function(stat) {
-        var scaled = 0;
+        var scaled = {
+          min: 0,
+          max: 0
+        };
         if (stat.base) {
-          scaled = Math.floor(rate * (maxLight - light.value) + stat.base);
-          pure = scaled;
+          scaled = getScaledStat(stat.base, light.value);
+          pure = scaled.min;
         }
         stat.scaled = scaled;
         stat.split = split;
@@ -797,77 +829,155 @@
         // if stat is dis and artifact
         if(stat.statHash === 1735777505 && type.toLowerCase() === 'artifact') {
           stat.split += 13;
-          ret.max += 13;
+          ret.total.max += 13;
         }
-        stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
-        ret.total += scaled || 0;
+
+        stat.qualityPercentage = {
+          min: Math.round(100 * stat.scaled.min / stat.split),
+          max: Math.round(100 * stat.scaled.max / stat.split)
+        };
+        ret.total.min += scaled.min || 0;
+        ret.total.max += scaled.max || 0;
       });
-      if (pure === ret.total) {
+
+      if (pure === ret.total.min) {
         stats.forEach(function(stat) {
-          stat.scaled = Math.floor(stat.scaled / 2);
-          stat.qualityPercentage = Math.round(100 * stat.scaled / stat.split);
+          stat.scaled = {
+            min: Math.floor(stat.scaled.min / 2),
+            max: Math.floor(stat.scaled.max / 2)
+          };
+          stat.qualityPercentage = {
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
+          };
         });
       }
 
-      return Math.round(ret.total / ret.max * 100);
+      var quality = {
+        min: Math.round(ret.total.min / ret.max * 100),
+        max: Math.round(ret.total.max / ret.max * 100)
+      };
+
+      if (type.toLowerCase() !== 'artifact') {
+        stats.forEach(function(stat) {
+          stat.qualityPercentage = {
+            min: Math.min(100, stat.qualityPercentage.min),
+            max: Math.min(100, stat.qualityPercentage.max)
+          };
+        });
+        quality = {
+          min: Math.min(100, quality.min),
+          max: Math.min(100, quality.max)
+        };
+      }
+
+      stats.forEach(function(stat) {
+        stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
+      });
+      quality.range = getQualityRange(light.value, quality);
+
+      return quality;
+    }
+
+    function buildItemMap(stores) {
+      var itemMap = {};
+      _.each(stores, function(store) {
+        _.each(store.items, function(item) {
+          itemMap[item.id] = { name: item.name, type: item.type };
+        });
+      });
+      return itemMap;
+    }
+
+    function clearStaleNewItems(currItems, newItems) {
+      var newItemsClean = {};
+      _.each(newItems, function(val, id) {
+        if (currItems[id]) {
+          newItemsClean[id] = val;
+        }
+      });
+      return newItemsClean;
+    }
+
+    function isItemNew(newId) {
+      // Don't worry about general items and consumables
+      return newId !== '0' && !_oldItems[newId];
+    }
+
+    function dropNewItem(item) {
+      delete _newItems[item.id];
+      SyncService.set({ newItems: _.keys(_newItems) });
+      item.isNew = false;
+    }
+
+    function getCachedNewItems() {
+      return SyncService.get().then(function processCachedNewItems(data) {
+        return data.newItems || [];
+      });
+    }
+
+    function clearNewItems() {
+      SyncService.set({ newItems: [] });
     }
 
     // thanks to /u/iihavetoes for the bonuses at each level
     // thanks to /u/tehdaw for the spreadsheet with bonuses
     // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
     function getBonus(light, type) {
-      switch(type.toLowerCase()) {
-        case 'helmet':
-        case 'helmets':
-          return light < 292 ? 15 :
-                 light < 307 ? 16 :
-                 light < 319 ? 17 :
-                 light < 332 ? 18 : 19;
-        case 'gauntlets':
-          return light < 287 ? 13 :
-                 light < 305 ? 14 :
-                 light < 319 ? 15 :
-                 light < 333 ? 16 : 17;
-        case 'chest':
-        case 'chest armor':
-          return light < 287 ? 20 :
-                 light < 300 ? 21 :
-                 light < 310 ? 22 :
-                 light < 319 ? 23 :
-                 light < 328 ? 24 : 25;
-        case 'leg':
-        case 'leg armor':
-          return light < 284 ? 18 :
-                 light < 298 ? 19 :
-                 light < 309 ? 20 :
-                 light < 319 ? 21 :
-                 light < 329 ? 22 : 23;
-        case 'classitem':
-        case 'class items':
-        case 'ghost':
-        case 'ghosts':
-          return light < 295 ? 8 :
-                 light < 319 ? 9 : 10;
-        case 'artifact':
-        case 'artifacts':
-          return light < 287 ? 34 :
-                 light < 295 ? 35 :
-                 light < 302 ? 36 :
-                 light < 308 ? 37 :
-                 light < 314 ? 38 :
-                 light < 319 ? 39 :
-                 light < 325 ? 40 :
-                 light < 330 ? 41 : 42;
-        case 'lost items':
-          // TODO: this can be improved when we separate an item's type from its location, but for now we don't know
-          return 0;
+      switch (type.toLowerCase()) {
+      case 'helmet':
+      case 'helmets':
+        return light < 292 ? 15
+          : light < 307 ? 16
+          : light < 319 ? 17
+          : light < 332 ? 18
+          : 19;
+      case 'gauntlets':
+        return light < 287 ? 13
+          : light < 305 ? 14
+          : light < 319 ? 15
+          : light < 333 ? 16
+          : 17;
+      case 'chest':
+      case 'chest armor':
+        return light < 287 ? 20
+          : light < 300 ? 21
+          : light < 310 ? 22
+          : light < 319 ? 23
+          : light < 328 ? 24
+          : 25;
+      case 'leg':
+      case 'leg armor':
+        return light < 284 ? 18
+          : light < 298 ? 19
+          : light < 309 ? 20
+          : light < 319 ? 21
+          : light < 329 ? 22
+          : 23;
+      case 'classitem':
+      case 'class items':
+      case 'ghost':
+      case 'ghosts':
+        return light < 295 ? 8
+          : light < 319 ? 9
+          : 10;
+      case 'artifact':
+      case 'artifacts':
+        return light < 287 ? 34
+          : light < 295 ? 35
+          : light < 302 ? 36
+          : light < 308 ? 37
+          : light < 314 ? 38
+          : light < 319 ? 39
+          : light < 325 ? 40
+          : light < 330 ? 41
+          : 42;
       }
       console.warn('item bonus not found', type);
       return 0;
     }
 
     function buildStats(item, itemDef, statDef, grid, type) {
-
       if (!item.stats || !item.stats.length || !itemDef.stats) {
         return undefined;
       }
@@ -876,10 +986,10 @@
       var activeArmorNode;
       if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
-          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); //[1034209669, 1263323987, 193091484]
+          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); // [1034209669, 1263323987, 193091484]
         });
         if (armorNodes) {
-          activeArmorNode = _.findWhere(armorNodes, {activated: true}) || { hash: 0 };
+          activeArmorNode = _.findWhere(armorNodes, { activated: true }) || { hash: 0 };
         }
       }
 
@@ -931,9 +1041,9 @@
             bonus = getBonus(item.primaryStat.value, type);
 
             if (activeArmorNode &&
-               (name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
-               (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
-               (name === 'Strength' && activeArmorNode.name === 'Increase Strength')) {
+                ((name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
+                 (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
+                 (name === 'Strength' && activeArmorNode.name === 'Increase Strength'))) {
               base = Math.max(0, val - bonus);
             }
           }
@@ -956,24 +1066,25 @@
       idTracker = {};
       return $q.all([
         dimItemDefinitions,
-        dimItemBucketDefinitions,
+        dimBucketService,
         dimStatDefinitions,
         dimObjectiveDefinitions,
         dimSandboxPerkDefinitions,
         dimTalentDefinitions,
         dimYearsDefinitions,
-        dimProgressionDefinitions])
+        dimProgressionDefinitions,
+        getCachedNewItems()])
         .then(function(args) {
           var result = [];
-          _.each(items, function (item) {
+          _.each(items, function(item) {
             var createdItem = null;
             try {
-              createdItem = processSingleItem.apply(undefined, args.concat(item));
-            } catch(e) {
+              createdItem = processSingleItem(...args, item, owner);
+            } catch (e) {
               console.error("Error processing item", item, e);
             }
             if (createdItem !== null) {
-              createdItem.owner = owner;
+              createdItem.owner = owner.id;
               result.push(createdItem);
             }
           });
@@ -983,59 +1094,59 @@
 
     function getClass(type) {
       switch (type) {
-        case 0:
-          return 'titan';
-        case 1:
-          return 'hunter';
-        case 2:
-          return 'warlock';
+      case 0:
+        return 'titan';
+      case 1:
+        return 'hunter';
+      case 2:
+        return 'warlock';
       }
       return 'unknown';
     }
 
     function getRace(hash) {
       switch (hash) {
-        case 3887404748:
-          return 'human';
-        case 898834093:
-          return 'exo';
-        case 2803282938:
-          return 'awoken';
+      case 3887404748:
+        return 'human';
+      case 898834093:
+        return 'exo';
+      case 2803282938:
+        return 'awoken';
       }
       return 'unknown';
     }
 
     function getGender(type) {
       switch (type) {
-        case 0:
-          return 'male';
-        case 1:
-          return 'female';
+      case 0:
+        return 'male';
+      case 1:
+        return 'female';
       }
       return 'unknown';
     }
 
-    //---- following code is from https://github.com/DestinyTrialsReport
+    // following code is from https://github.com/DestinyTrialsReport
     function getAbilityCooldown(subclass, ability, tier) {
       if (ability === 'STAT_INTELLECT') {
         switch (subclass) {
-          case 2007186000: // Defender
-          case 4143670656: // Nightstalker
-          case 2455559914: // Striker
-          case 3658182170: // Sunsinger
-            return cooldownsSuperA[tier];
-          default:
-            return cooldownsSuperB[tier];
+        case 2007186000: // Defender
+        case 4143670656: // Nightstalker
+        case 2455559914: // Striker
+        case 3658182170: // Sunsinger
+          return cooldownsSuperA[tier];
+        default:
+          return cooldownsSuperB[tier];
         }
       } else if (ability === 'STAT_DISCIPLINE') {
         return cooldownsGrenade[tier];
       } else if (ability === 'STAT_STRENGTH') {
         switch (subclass) {
-          case 4143670656: // Nightstalker
-          case 1716862031: // Gunslinger
-            return cooldownsMelee[tier];
-          default:
-            return cooldownsGrenade[tier];
+        case 4143670656: // Nightstalker
+        case 1716862031: // Gunslinger
+          return cooldownsMelee[tier];
+        default:
+          return cooldownsGrenade[tier];
         }
       } else {
         return '-:--';
@@ -1048,12 +1159,12 @@
       var ret = {};
       for (var s = 0; s < stats.length; s++) {
         var statHash = {};
-        switch(stats[s]) {
-          case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
-          case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
-          case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
+        switch (stats[s]) {
+        case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
+        case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
+        case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
-        if(!data.stats[stats[s]]) {
+        if (!data.stats[stats[s]]) {
           continue;
         }
         statHash.value = data.stats[stats[s]].value;
@@ -1066,12 +1177,12 @@
           for (var t = 0; t < 5; t++) {
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
-          if(data.peerView) {
+          if (data.peerView) {
             statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
           }
-          statHash.percentage = +(100 * statHash.normalized / 300).toFixed();
+          statHash.percentage = Number(100 * statHash.normalized / 300).toFixed();
         } else {
-          statHash.percentage = +(100 * statHash.value / 10).toFixed();
+          statHash.percentage = Number(100 * statHash.value / 10).toFixed();
         }
 
         ret[stats[s]] = statHash;

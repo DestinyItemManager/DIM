@@ -1,0 +1,76 @@
+.minmax {
+  width: 900px;
+  margin: 0 auto;
+
+  .fa-arrow-circle-left {
+    padding-right: 5px;
+  }
+
+  .labels {
+    float: left;
+    clear: both;
+  }
+  .label {
+    text-align: center;
+    font-size: 10px;
+  }
+
+  .itemQuality {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    .item {
+      margin: 0;
+    }
+  }
+
+  .item-container {
+    margin: 20px 17px 0px 0;
+  }
+
+  .item-stats {
+    display:inline-block;
+  }
+
+  .locked-item {
+    display:inline-block;
+    margin-right:20px;
+    position:relative;
+    float: left;
+
+    .empty-item {
+      display: inline-block;
+      background-color:#656565;
+      width: var(--item-size);
+      height: var(--item-size);
+      border:2px solid #DDD;
+    }
+  }
+
+  dim-stats {
+    display: inline-block;
+    margin-bottom: 7px;
+    margin-left: 22px;
+    .stat-bars {
+      width: 375px;
+    }
+  }
+  .loadout .dim-button {
+    float: left;
+  }
+  .set-item {
+    display: inline-block;
+    margin-right: 7px;
+    .talent-grid.smaller {
+      width: 71px;
+      max-height: 48px;
+    }
+  }
+  .set-item:last-child {
+    margin-right: 0;
+  }
+}
+

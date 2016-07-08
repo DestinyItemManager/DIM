@@ -1,7 +1,74 @@
-# Next
+# 3.8.1
 
+* Added steps to Moments of Triumph popup (and other record books.)
+* Fixed wobbly refresh icon.
+* Fixed single item stat percentages.
+* Fixed armor export script.
+* Possible fix for loadout builder.
 
-# 3.6.4
+# 3.8.0
+
+* Loadout builder redesign and major performance enchancements.
+* Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
+* The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
+* Section headers don't repeat themselves anymore.
+* Drop zones for items are larger.
+* Returning from the min-max tool no longer greets you with a blank, item-less screen.
+* Fixed a bug where loadouts were not properly restricted to the platform they were created for.
+* Xur's menu item will properly disappear when he leaves for the week.
+* New items are marked with a "shiny" animation, and there are notifications when new items appear.
+* The loadout menu may expand to fill the height of the window, but no more. The scrollbar looks nicer too.
+* Items can now be made larger (or smaller) in settings. Pick the perfect size for your screen!
+* The item info popup has a new header design. Let us know what you think!
+* Changing settings is faster.
+* You can now download your weapon and armor data as spreadsheets for the true data nerds among us.
+* The settings dialog is less spacious.
+* Engrams and items in the postmaster can now be locked (and unlocked).
+* The buttons on the move item popup are now grouped together by character.
+* When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
+* DIM is generally just a little bit snappier, especially when scrolling.
+* Clicking the icon to open DIM will now switch to an active DIM tab if it's already running.
+* Bungie.net will open in a new tab as a convenience for expired cookies.
+* Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
+* Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
+* You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
+
+# 3.7.4
+
+* Removed the option to hide or show the primary stat of items - it's always shown now.
+* Add mode selection full/fast for users willing to wait for all best sets.
+* Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
+* Changing the character sort order now applies live, rather than requiring a refresh.
+* Use most recently logged in player to start with loadout builder.
+* Search queries will exclude the token `" and "` as some users were including that when chaining multiple filters.
+* Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
+* Consolidate beta icons to the icons folder.
+
+# 3.7.3
+
+* Fix rounding error that prevented some loadout sets from showing up.
+* Added filter for quality rating, ex - quality:>90 or percentage:<=94
+
+# 3.7.2
+
+* Always show locked section in loadout builder.
+* Fix NaN issue in loadout builder.
+* Fix issues with 'create loadout' button in loadout builder.
+* For item lvling dont prefer unlvled equiped items on other characters.
+* Various Loadout builder bug fixes and performance updates.
+
+# 3.7.1
+
+* Various Loadout builder bug fixes and performance updates.
+
+# 3.7.0
+
+* Added new armor/loadout tier builder.
+* Fix for all numbers appearing red in comparison view.
+* Updated to latest stat estimation forumla.
+* Use directive for percentage width.
+
+# 3.6.5
 
 * Fix an issue where warlocks would see loadouts for all the other classes.
 
@@ -15,7 +82,6 @@
 * The Vault now has a character-style header, and can have loadouts applied to it. Full-ness of each vault is displayed below the vault header.
 * New option to restore all the items that were in your inventory before applying a loadout, rather than just the equipped ones.
 * You can now undo multiple loadouts, going backwards in time.
-
 
 # 3.6.1
 

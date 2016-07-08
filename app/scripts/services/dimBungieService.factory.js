@@ -12,7 +12,7 @@
     var platformPromise = null;
     var membershipPromise = null;
 
-    $rootScope.$on('dim-active-platform-updated', function(event, args) {
+    $rootScope.$on('dim-active-platform-updated', function() {
       tokenPromise = null;
       platformPromise = null;
       membershipPromise = null;
@@ -49,6 +49,7 @@
       if (errorCode === 36) {
         return $q.reject(new Error('Bungie API throttling limit exceeded. Please wait a bit and then retry.'));
       } else if (errorCode === 99) {
+        openBungieNetTab();
         return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
       } else if (errorCode === 5) {
         return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
@@ -100,12 +101,18 @@
       return a;
     }
 
+    function openBungieNetTab() {
+      chrome.tabs.create({
+        url: 'http://bungie.net',
+        active: true
+      });
+    }
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
       return $q(function(resolve, reject) {
         chrome.cookies.getAll({
-          'domain': '.bungie.net'
+          domain: '.bungie.net'
         }, getAllCallback);
 
         function getAllCallback(cookies) {
@@ -128,14 +135,15 @@
               return cookie.name === 'bungled';
             });
 
-            if (!_.isUndefined(cookie)) {
+            if (cookie) {
               resolve(cookie.value);
             } else {
+              openBungieNetTab();
               reject(new Error('Please log into Bungie.net in order to use this extension.'));
             }
           });
         })
-        .catch(function(error) {
+        .catch(function() {
           tokenPromise = null;
         });
 
@@ -155,7 +163,7 @@
             message = 'You may not be connected to the internet.';
           }
 
-          toaster.pop('error', 'Bungie.net Error', message);
+          toaster.pop('error', 'Bungie.net Error', message, 0);
 
           return $q.reject(e);
         });
@@ -245,7 +253,7 @@
     function getBnetCharactersRequest(token, platform, membershipId) {
       return {
         method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type == 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
+        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token
@@ -263,8 +271,8 @@
         c.inventory = response.data.Response.data.inventory;
 
         return {
-          'id': c.characterBase.characterId,
-          'base': c
+          id: c.characterBase.characterId,
+          base: c
         };
       });
     }
@@ -312,7 +320,8 @@
         .then(function() {
           return $q.all([
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
+            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
           ]).then(function(data) {
             return $q.resolve(data[0]);
           });
@@ -421,6 +430,38 @@
 
     /************************************************************************************************************************************/
 
+    function getCharacterAdvisorsRequest(token, platform, membershipId, character) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function processAdvisorsResponse(character, response) {
+      character.advisors = response.data.Response.data;
+      return character;
+    }
+
+    function getDestinyAdvisors(token, platform, membershipId, characters) {
+      var promises = characters.map(function(character) {
+        var processPB = processAdvisorsResponse.bind(null, character);
+
+        return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
+          .then($http)
+          .then(handleErrors)
+          .then(processPB);
+      });
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
     function transfer(item, store, amount) {
       var platform = dimState.active;
       var data = {
@@ -451,7 +492,7 @@
       return promise;
     }
 
-    //Handle "DestinyUniquenessViolation" (1648)
+    // Handle "DestinyUniquenessViolation" (1648)
     function handleUniquenessViolation(response, item, store) {
       if (response && response.data && response.data.ErrorCode === 1648) {
         toaster.pop('warning', 'Item Uniqueness', [
@@ -537,10 +578,9 @@
 
     // Returns a list of items that were successfully equipped
     function equipItems(store, items) {
-
       // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
       items = _.sortBy(items, function(i) {
-        return i.tier === 'Exotic' ? 1 : 0;
+        return i.isExotic ? 1 : 0;
       });
 
       var platform = dimState.active;
@@ -581,7 +621,7 @@
           var data = response.data.Response;
           store.updateCharacterInfo(data.summary);
           return _.select(items, function(i) {
-            var item = _.find(data.equipResults, {itemInstanceId: i.id});
+            var item = _.find(data.equipResults, { itemInstanceId: i.id });
             return item && item.equipStatus === 1;
           });
         });

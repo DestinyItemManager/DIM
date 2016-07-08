@@ -13,16 +13,17 @@
     Stat: 'stats',
     Talent: 'talent',
     Years: 'year1',
-    Progression: 'progression'
+    Progression: 'progression',
+    Records: 'records'
   };
 
   var mod = angular.module('dimApp');
   _.each(definitions, function(file, name) {
     var factory = function($http) {
-      //console.time("loading " + name);
-      return $http.get('scripts/api-manifest/' + file + '.json?v=3.6.4')
+      // console.time("loading " + name);
+      return $http.get('scripts/api-manifest/' + file + '.json?v=$DIM_VERSION')
         .then(function(json) {
-          //console.timeEnd("loading " + name);
+          // console.timeEnd("loading " + name);
           return json.data;
         })
         .catch(function(e) {

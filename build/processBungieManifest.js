@@ -28,7 +28,6 @@ function processItemRow(icon, pRow, itemHash) {
   // if (itemHash) {
   //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
   // }
-
   if (contains) {
     if (!exists) {
       var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
@@ -136,6 +135,23 @@ function extractDB(dbFile) {
     });
 
     var defs = fs.createWriteStream('api-manifest/stats.json');
+    defs.write(JSON.stringify(items));
+  });
+
+  // get Record Book for progress tracking
+  db.all('select * from DestinyRecordDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      items[item.hash] = item;
+    });
+
+    var defs = fs.createWriteStream('api-manifest/records.json');
     defs.write(JSON.stringify(items));
   });
 
@@ -254,6 +270,7 @@ function extractDB(dbFile) {
 mkdirp('api-manifest', function(err) { });
 mkdirp('img/misc', function(err) { });
 mkdirp('img/destiny_content/items', function(err) { });
+mkdirp('img/destiny_content/progression', function(err) { });
 mkdirp('common/destiny_content/icons', function(err) { });
 
 request({
