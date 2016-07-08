@@ -1,5 +1,6 @@
 # Next
 * Artifacts are scaled differently now and will not report over 100%
+* Update filter list to include quality/percentage filters
 
 # 3.8.1
 
