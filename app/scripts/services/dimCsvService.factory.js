@@ -66,7 +66,7 @@
         data += item.equipped + ", ";
         data += item.quality ? item.quality.max + ", " : "0, ";
         var stats = {};
-        if(item.stats) {
+        if (item.stats) {
           item.stats.forEach(function(stat) {
             var pct = 0;
             if (stat.scaled && stat.scaled.min) {

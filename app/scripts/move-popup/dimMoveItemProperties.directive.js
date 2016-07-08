@@ -77,7 +77,7 @@
         '      <div class="objective-checkbox"><div></div></div>',
         '      <div class="objective-progress">',
         '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-        '        <div class="objective-description">{{ objective.description || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
+        '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
         '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
         '      </div>',
         '    </div>',

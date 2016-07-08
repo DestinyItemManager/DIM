@@ -52,7 +52,7 @@
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         dimInfoService.show('20160707v380', {
           title: 'DIM v3.8.0 Released',
-          view: 'views/changelog-toaster.html?v=v3.8.0',
+          view: 'views/changelog-toaster.html?v=v3.8.0'
         });
 
 //        if (chrome && chrome.identity) {
