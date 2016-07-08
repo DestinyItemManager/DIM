@@ -529,10 +529,18 @@
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
           recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(recordsDefs[record.recordHash], record));
+
           createdItem.objectives = buildRecords(recordBook, objectiveDef);
-          createdItem.percentComplete = _.countBy(createdItem.objectives, function(task) {
-            return task.complete;
-          }).true / createdItem.objectives.length;
+
+          if (recordBook.progression) {
+            recordBook.progression = angular.extend(recordBook.progression, progressDefs[recordBook.progression.progressionHash]);
+            createdItem.progress = recordBook.progression;
+            createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step, 0);
+          } else {
+            createdItem.percentComplete = _.countBy(createdItem.objectives, function(task) {
+              return task.complete;
+            }).true / createdItem.objectives.length;
+          }
 
           createdItem.complete = _.chain(recordBook.records)
             .pluck('objectives')
