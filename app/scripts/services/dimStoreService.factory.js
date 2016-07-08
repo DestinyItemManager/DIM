@@ -4,14 +4,15 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimInfoService', 'SyncService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimInfoService, SyncService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService) {
     var _stores = [];
     var _oldItems = {};
     var _currItems = {};
     var _newItems = {};
     var progressionDefs = {};
+    var recordsDefs = {};
     var buckets = {};
     var idTracker = {};
     dimBucketService.then(function(defs) {
@@ -20,6 +21,7 @@
     dimProgressionDefinitions.then(function(defs) {
       progressionDefs = defs;
     });
+    dimRecordsDefinitions.then(defs => { recordsDefs = defs; });
 
     // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -244,6 +246,7 @@
                 race: getRace(raw.character.base.characterBase.raceHash),
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
+                advisors: raw.character.advisors,
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
@@ -271,7 +274,7 @@
               }
             }
 
-            return getItems(store.id, items).then(function(items) {
+            return getItems(store, items).then(function(items) {
               store.items = items;
 
               // by type-bucket
@@ -349,7 +352,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, cachedNewItems, item) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, cachedNewItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -508,7 +511,7 @@
         console.error("Error building stats for " + createdItem.name, item, itemDef);
       }
       try {
-        createdItem.objectives = buildObjectives(item, objectiveDef);
+        createdItem.objectives = buildObjectives(item.objectives, objectiveDef);
       } catch (e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef);
       }
@@ -521,7 +524,25 @@
       }
 
       // More objectives properties
-      if (createdItem.objectives) {
+      if (itemDef.recordBookHash && itemDef.recordBookHash > 0) {
+        try {
+          let recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
+
+          recordBook.records = _.map(_.values(recordBook.records), record => _.extend(recordsDefs[record.recordHash], record));
+          recordBook.progression = angular.extend(recordBook.progression, progressDefs[recordBook.progression.progressionHash]);
+
+          createdItem.progress = recordBook.progression;
+          createdItem.objectives = buildRecords(recordBook, objectiveDef);
+          createdItem.complete = _.chain(recordBook.records)
+            .pluck('objectives')
+            .flatten()
+            .all('isComplete')
+            .value();
+          createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step, 0);
+        } catch (e) {
+
+        }
+      } else if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
         createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
           return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
@@ -671,16 +692,42 @@
       };
     }
 
-    function buildObjectives(item, objectiveDef) {
-      if (!item.objectives || !item.objectives.length) {
+    function buildRecords(recordBook, objectiveDef) {
+      let self = this;
+      if (!recordBook.records || !recordBook.records.length) {
         return undefined;
       }
 
-      return item.objectives.map(function(objective) {
+      let processRecord = (recordBook, record) => {
+
+        var def = objectiveDef[record.objectives[0].objectiveHash];
+
+        return {
+          description: record.description,
+          displayName: record.displayName,
+          progress: record.objectives[0].progress,
+          completionValue: def.completionValue,
+          complete: record.objectives[0].isComplete,
+          boolean: def.completionValue === 1
+        };
+      }
+
+      processRecord = processRecord.bind(this, recordBook);
+
+      return _.map(recordBook.records, processRecord);
+    }
+
+    function buildObjectives(objectives, objectiveDef) {
+      if (!objectives || !objectives.length) {
+        return undefined;
+      }
+
+      return objectives.map(function(objective) {
         var def = objectiveDef[objective.objectiveHash];
 
         return {
-          description: def.displayDescription,
+          description: '',
+          displayName: def.displayDescription,
           progress: objective.progress,
           completionValue: def.completionValue,
           complete: objective.isComplete,
@@ -1013,18 +1060,19 @@
         dimTalentDefinitions,
         dimYearsDefinitions,
         dimProgressionDefinitions,
+        dimRecordsDefinitions,
         getCachedNewItems()])
         .then(function(args) {
           var result = [];
           _.each(items, function(item) {
             var createdItem = null;
             try {
-              createdItem = processSingleItem(...args, item);
+              createdItem = processSingleItem(...args, item, owner);
             } catch (e) {
               console.error("Error processing item", item, e);
             }
             if (createdItem !== null) {
-              createdItem.owner = owner;
+              createdItem.owner = owner.id;
               result.push(createdItem);
             }
           });
