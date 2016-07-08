@@ -1,4 +1,4 @@
-# Next
+# 3.8.0
 
 * Loadout builder redesign and major performance enchancements.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
@@ -32,7 +32,7 @@
 * Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
 * Changing the character sort order now applies live, rather than requiring a refresh.
 * Use most recently logged in player to start with loadout builder.
-* Search queries will exlude the token `" and "` as some users were including that when chaining multiple filters.
+* Search queries will exclude the token `" and "` as some users were including that when chaining multiple filters.
 * Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
 * Consolidate beta icons to the icons folder.
 

@@ -50,9 +50,9 @@
         };
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        dimInfoService.show('20160603v374', {
-          title: 'DIM v3.7.4 Released',
-          view: 'views/changelog-toaster.html?v=v3.7.4'
+        dimInfoService.show('20160707v380', {
+          title: 'DIM v3.8.0 Released',
+          view: 'views/changelog-toaster.html?v=v3.8.0',
         });
 
 //        if (chrome && chrome.identity) {
