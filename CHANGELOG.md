@@ -1,3 +1,6 @@
+# Next
+* Update filter list to include quality/percentage filters
+
 # 3.8.1
 
 * Added steps to Moments of Triumph popup (and other record books.)

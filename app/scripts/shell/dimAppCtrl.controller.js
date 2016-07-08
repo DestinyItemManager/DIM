@@ -233,15 +233,16 @@
         filter = filter.trim();
       }
 
-      if (filter.indexOf('light:') === 0) {
-        var lightFilterType = filter.substring(6);
-        var light = $window.prompt("Enter a light value:");
+      if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0) {
+        var type = filter.split(':');
+        var lightFilterType = type[1];
+        var light = $window.prompt("Enter a " + type[0] + " value:");
         if (light) {
           light = light.trim();
         } else {
           return;
         }
-        filter = 'light:';
+        filter = type[0] + ':';
         switch (lightFilterType) {
         case 'value':
           filter += light;
