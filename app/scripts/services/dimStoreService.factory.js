@@ -827,7 +827,7 @@
         stat.split = split;
 
         // if stat is dis and artifact
-        if(stat.statHash === 1735777505 && type.toLowerCase() === 'artifact') {
+        if (stat.statHash === 1735777505 && type.toLowerCase() === 'artifact') {
           stat.split += 13;
           ret.total.max += 13;
         }
