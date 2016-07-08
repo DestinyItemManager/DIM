@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope, $state) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -77,6 +77,10 @@
             .removeClass('app-settings');
         });
       }
+    };
+
+    vm.toggleMinMax = function(e) {
+      $state.go($state.is('best') ? 'inventory' : 'best');
     };
 
     vm.showAbout = function(e) {

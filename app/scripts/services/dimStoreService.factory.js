@@ -453,6 +453,7 @@
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
         tier: itemDef.tierTypeName || 'Common',
+        isExotic: itemDef.tierTypeName === 'Exotic',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -476,7 +477,7 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: (itemDef.maxStackSize === 1 && ['Class', 'Consumable'].indexOf(itemType) === -1 && !itemDef.nonTransferrable) || item.lockable,
+        lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
@@ -811,9 +812,9 @@
       }
 
       stats.forEach(function(stat) {
-        stat.qualityPercentage.range = getQualityRange(light, stat.qualityPercentage);
+        stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
       });
-      quality.range = getQualityRange(light, quality);
+      quality.range = getQualityRange(light.value, quality);
 
       return quality;
     }
@@ -1018,7 +1019,7 @@
           _.each(items, function(item) {
             var createdItem = null;
             try {
-              createdItem = processSingleItem.apply(undefined, args.concat(item));
+              createdItem = processSingleItem(...args, item);
             } catch (e) {
               console.error("Error processing item", item, e);
             }

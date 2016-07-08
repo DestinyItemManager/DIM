@@ -7,6 +7,15 @@
     <title>DIM</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
+    <link href='https://bungie.net' rel='preconnect'>
+    <link href='https://apis.google.com' rel='preconnect'>
+    <link href='https://ssl.google-analytics.com' rel='preconnect'>
+    <link href='https://www.google-analytics.com' rel='preconnect'>
+    <link href='https://accounts.google.com' rel='preconnect'>
+    <link href='https://ssl.gstatic.com' rel='preconnect'>
+
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -23,13 +32,13 @@
             <div dim-platform-choice class="header-right"></div>
             <div class="header-right" id="actions">
               <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-              <span class="link" ng-disabled="loadingTracker.active()" ui-sref="best" title="MinMax"><i class="fa fa-bar-chart"></i></span>
+              <span class="link" ng-disabled="loadingTracker.active()" ng-click="app.toggleMinMax($event)" title="Loadout Builder"><i class="fa fa-bar-chart"></i></span>
               <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
               <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
               <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
             </div>
           </span>
-          <span class="logo" title="v$DIM_VERSION">DIM</span>
+          <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)">About</span>
           <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
           <span class="link" ng-disabled="loadingTracker.active()" ng-click="app.showVendors($event)">Vendors</span>

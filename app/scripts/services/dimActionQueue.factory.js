@@ -23,16 +23,15 @@
           _queue.shift();
         });
         _queue.push(promise);
+        return promise;
       },
 
       // Wrap a function to produce a function that will be queued
       wrap: function(fn, context) {
         var self = this;
-        return function() {
-          var args = arguments;
+        return function(...args) {
           return self.queueAction(function() {
-            var res = fn.apply(context, args);
-            return res;
+            return fn.apply(context, args);
           });
         };
       }

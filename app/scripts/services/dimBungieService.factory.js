@@ -50,6 +50,7 @@
       if (errorCode === 36) {
         return $q.reject(new Error('Bungie API throttling limit exceeded. Please wait a bit and then retry.'));
       } else if (errorCode === 99) {
+        openBungieNetTab();
         return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
       } else if (errorCode === 5) {
         return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
@@ -101,18 +102,12 @@
       return a;
     }
 
-
-    /*
-    function openBungieNetTab(tabs) {
-      if (_.size(tabs) === 0) {
-        chrome.tabs.create({
-          url: 'http://bungie.net',
-          active: false
-        });
-      }
+    function openBungieNetTab() {
+      chrome.tabs.create({
+        url: 'http://bungie.net',
+        active: true
+      });
     }
-    */
-
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
@@ -144,6 +139,7 @@
             if (cookie) {
               resolve(cookie.value);
             } else {
+              openBungieNetTab();
               reject(new Error('Please log into Bungie.net in order to use this extension.'));
             }
           });
@@ -168,7 +164,7 @@
             message = 'You may not be connected to the internet.';
           }
 
-          toaster.pop('error', 'Bungie.net Error', message);
+          toaster.pop('error', 'Bungie.net Error', message, 0);
 
           return $q.reject(e);
         });
@@ -618,7 +614,7 @@
     function equipItems(store, items) {
       // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
       items = _.sortBy(items, function(i) {
-        return i.tier === 'Exotic' ? 1 : 0;
+        return i.isExotic ? 1 : 0;
       });
 
       var platform = dimState.active;

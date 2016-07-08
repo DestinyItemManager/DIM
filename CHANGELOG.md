@@ -1,5 +1,6 @@
 # Next
 
+* Loadout builder redesign and major performance enchancements.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
 * The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
 * Section headers don't repeat themselves anymore.
@@ -19,6 +20,11 @@
 * When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
 * DIM is generally just a little bit snappier, especially when scrolling.
 * Show current vendor items being sold in a popup
+* Clicking the icon to open DIM will now switch to an active DIM tab if it's already running.
+* Bungie.net will open in a new tab as a convenience for expired cookies.
+* Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
+* Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
+* You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
 
 # 3.7.4
 

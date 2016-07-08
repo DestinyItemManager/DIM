@@ -7,6 +7,14 @@
       return function sortStores(stores, order) {
         if (order === 'mostRecent') {
           return _.sortBy(stores, 'lastPlayed').reverse();
+        } else if (order === 'mostRecentReverse') {
+          return _.sortBy(stores, function(store) {
+            if (store.isVault) {
+              return Infinity;
+            } else {
+              return store.lastPlayed;
+            }
+          });
         } else {
           return _.sortBy(stores, 'id');
         }
@@ -50,10 +58,15 @@
       ].join('')
     };
 
-    function Link() {
-      $(document).on('scroll', function(e) {
+    function Link($scope) {
+      function stickyHeader(e) {
         $(document.body).toggleClass('something-is-sticky', document.body.scrollTop !== 0);
         $('.store-header').css('left', 'calc(4em - ' + document.body.scrollLeft + 'px)');
+      }
+
+      $(document).on('scroll', stickyHeader);
+      $scope.$on('$destroy', function() {
+        $(document).off('scroll', stickyHeader);
       });
     }
   }

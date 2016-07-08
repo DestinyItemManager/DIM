@@ -186,7 +186,7 @@
     }
 
     function applyLoadout(store, loadout) {
-      dimActionQueue.queueAction(function() {
+      return dimActionQueue.queueAction(function() {
         var items = angular.copy(_.flatten(_.values(loadout.items)));
         var totalItems = items.length;
 
