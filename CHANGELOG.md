@@ -1,4 +1,4 @@
-# Next
+# 3.8.0
 
 * Loadout builder redesign and major performance enchancements.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
