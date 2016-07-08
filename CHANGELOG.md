@@ -1,5 +1,6 @@
 # Next
 * Update filter list to include quality/percentage filters
+* Add year column to CSV export scripts
 
 # 3.8.1
 
