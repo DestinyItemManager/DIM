@@ -1,3 +1,6 @@
+# Next
+* Artifacts are scaled differently now and will not report over 100%
+
 # 3.8.1
 
 * Added steps to Moments of Triumph popup (and other record books.)
