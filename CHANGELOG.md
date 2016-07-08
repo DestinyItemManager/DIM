@@ -1,6 +1,7 @@
 # Next
 
 * Fixed wobbly refresh icon.
+* Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
 
 # 3.8.0
 
