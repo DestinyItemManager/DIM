@@ -1,5 +1,6 @@
 # Next
 
+* Fixed wobbly refresh icon.
 
 # 3.8.0
 
