@@ -1,6 +1,10 @@
-# Next
+# 3.8.1
 
+* Added steps to Moments of Triumph popup (and other record books.)
 * Fixed wobbly refresh icon.
+* Fixed single item stat percentages.
+* Fixed armor export script.
+* Possible fix for loadout builder.
 
 # 3.8.0
 
