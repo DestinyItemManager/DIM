@@ -12,7 +12,8 @@
       scope: {
         item: '=dimMoveItemProperties',
         compareItem: '=dimCompareItem',
-        infuse: '=dimInfuse'
+        infuse: '=dimInfuse',
+        changeDetails: '&'
       },
       restrict: 'A',
       replace: true,
@@ -35,7 +36,7 @@
         '      </span>',
         '      {{ vm.light }} {{ vm.item.typeName }}',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
-        '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.itemDetails = !vm.itemDetails">',
+        '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
         '        </i>',
         '      </a>',
@@ -102,6 +103,7 @@
     // The 'i' keyboard shortcut toggles full details
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
+      vm.changeDetails();
     });
 
     vm.setLockState = function setLockState(item) {

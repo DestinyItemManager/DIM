@@ -97,23 +97,6 @@
         });
       }
 
-      scope.$on('ngDialog.opened', function(event, $dialog) {
-        if (dialogResult && $dialog[0].id === dialogResult.id) {
-          $dialog.hide();
-          setTimeout(function() {
-            $dialog
-              .position({
-                my: 'left bottom',
-                at: 'left top-2',
-                of: element,
-                collision: 'flip flip',
-                within: '.stores'
-              })
-              .show();
-          }, 0);
-        }
-      });
-
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
 
@@ -135,11 +118,12 @@
           dimLoadoutService.addItemToLoadout(item, e);
         } else {
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
             plain: true,
             overlay: false,
             className: 'move-popup-dialog',
             showClose: false,
+            data: element,
             scope: scope,
             // Setting these focus options prevents the page from
             // jumping as dialogs are shown/hidden
@@ -151,12 +135,6 @@
           dialogResult.closePromise.then(function() {
             dialogResult = null;
           });
-        }
-      };
-
-      vm.closePopup = function closePopup() {
-        if (!_.isNull(dialogResult)) {
-          dialogResult.close();
         }
       };
 

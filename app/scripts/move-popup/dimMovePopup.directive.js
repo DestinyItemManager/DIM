@@ -17,7 +17,7 @@
       replace: true,
       template: [
         '<div class="move-popup" alt="" title="">',
-        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
+        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></div>',
         '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
@@ -54,10 +54,41 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService', '$timeout'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService, $timeout) {
     var vm = this;
+
+    var shown = false;
+
+    // Capture the dialog element
+    var dialog = null;
+    $scope.$on('ngDialog.opened', function(event, $dialog) {
+      dialog = $dialog;
+      vm.reposition();
+    });
+
+    // Reposition the popup as it is shown or if its size changes
+    vm.reposition = function() {
+      var element = $scope.$parent.ngDialogData;
+      if (element) {
+        if (!shown) {
+          dialog.hide();
+        }
+        shown = true;
+        $timeout(function() {
+          dialog
+            .position({
+              my: 'left bottom',
+              at: 'left top-2',
+              of: element,
+              collision: 'flip flip',
+              within: '.stores'
+            })
+            .show();
+        });
+      }
+    };
 
     // TODO: cache this, instead?
     $scope.$watch('vm.item', function() {
