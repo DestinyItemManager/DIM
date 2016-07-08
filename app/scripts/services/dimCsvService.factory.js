@@ -66,16 +66,18 @@
         data += item.equipped + ", ";
         data += item.quality ? item.quality.max + ", " : "0, ";
         var stats = {};
-        item.stats.forEach(function(stat) {
-          var pct = 0;
-          if (stat.scaled && stat.scaled.min) {
-            pct = Math.round(100 * stat.scaled.min / stat.split);
-          }
-          stats[stat.name] = {
-            value: stat.value,
-            pct: pct
-          };
-        });
+        if(item.stats) {
+          item.stats.forEach(function(stat) {
+            var pct = 0;
+            if (stat.scaled && stat.scaled.min) {
+              pct = Math.round(100 * stat.scaled.min / stat.split);
+            }
+            stats[stat.name] = {
+              value: stat.value,
+              pct: pct
+            };
+          });
+        }
         data += stats.Intellect ? stats.Intellect.pct + ", " : "0, ";
         data += stats.Discipline ? stats.Discipline.pct + ", " : "0, ";
         data += stats.Strength ? stats.Strength.pct + ", " : "0, ";
