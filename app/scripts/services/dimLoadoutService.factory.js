@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimLoadoutService', LoadoutService);
 
-  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'dimActionQueue'];
 
-  function LoadoutService($q, $rootScope, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, dimActionQueue) {
+  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue'];
+  function LoadoutService($q, $rootScope, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
     var _loadouts = [];
 
     return {
@@ -59,7 +59,7 @@
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        chrome.storage.sync.get(null, function(data) {
+        SyncService.get().then(function(data) {
           if (_.has(data, 'loadouts-v3.0')) {
             processLoadout(data, 'v3.0');
           } else if (_.has(data, 'loadouts-v2.0')) {
@@ -112,9 +112,9 @@
             data[l.id] = l;
           });
 
-          chrome.storage.sync.set(data, function(e) {
-            deferred.resolve(loadoutPrimitives);
-          });
+          SyncService.set(data);
+
+          deferred.resolve(loadoutPrimitives);
 
           return deferred.promise;
         });
@@ -131,7 +131,7 @@
             loadouts.splice(index, 1);
           }
 
-          chrome.storage.sync.remove(loadout.id.toString(), function() {});
+          SyncService.remove(loadout.id.toString());
 
           return (loadouts);
         })
@@ -155,7 +155,7 @@
           }
 
           // Handle overwriting an old loadout
-          var existingLoadoutIndex = _.findIndex(loadouts, {id: loadout.id});
+          var existingLoadoutIndex = _.findIndex(loadouts, { id: loadout.id });
           if (existingLoadoutIndex > -1) {
             loadouts[existingLoadoutIndex] = loadout;
           } else {
@@ -174,12 +174,11 @@
     }
 
     function hydrate(loadout) {
-      var result;
       var hydration = {
         'v1.0': hydratev1d0,
         'v2.0': hydratev2d0,
         'v3.0': hydratev3d0,
-        'default': hydratev3d0
+        default: hydratev3d0
       };
 
       // v1.0 did not have a 'version' property so if it fails, we'll assume.
@@ -187,7 +186,7 @@
     }
 
     function applyLoadout(store, loadout) {
-      dimActionQueue.queueAction(function() {
+      return dimActionQueue.queueAction(function() {
         var items = angular.copy(_.flatten(_.values(loadout.items)));
         var totalItems = items.length;
 
@@ -307,7 +306,7 @@
 
     // Move one loadout item at a time. Called recursively to move items!
     function applyLoadoutItems(store, items, loadout, loadoutItemIds, scope) {
-      if (items.length == 0) {
+      if (items.length === 0) {
         // We're done!
         return $q.when();
       }
@@ -321,7 +320,7 @@
         var amountNeeded = pseudoItem.amount - store.amountOfItem(pseudoItem);
         if (amountNeeded > 0) {
           var otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
-            return store.id == otherStore.id;
+            return store.id === otherStore.id;
           });
           var storesByAmount = _.sortBy(otherStores.map(function(store) {
             return {
@@ -385,6 +384,7 @@
       var result = {
         id: loadoutPrimitive.id,
         name: loadoutPrimitive.name,
+        platform: loadoutPrimitive.platform,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v3.0',
         items: {}

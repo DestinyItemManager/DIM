@@ -253,6 +253,7 @@ function extractDB(dbFile) {
 mkdirp('api-manifest', function(err) { });
 mkdirp('img/misc', function(err) { });
 mkdirp('img/destiny_content/items', function(err) { });
+mkdirp('img/destiny_content/progression', function(err) { });
 mkdirp('common/destiny_content/icons', function(err) { });
 
 request({

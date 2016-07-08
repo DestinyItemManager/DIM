@@ -42,7 +42,7 @@
               });
               return dimStoreService.processItems(null, rawItems).then(function(items) {
                 var itemsByHash = _.indexBy(items, 'hash');
-                _.each(self.itemCategories, function(saleItems, category) {
+                _.each(self.itemCategories, function(saleItems) {
                   saleItems.forEach(function(saleItem) {
                     saleItem.item = itemsByHash[saleItem.itemHash];
                     delete saleItem.itemHash;
@@ -51,6 +51,9 @@
               });
             });
           }
+        }, function() {
+          self.available = false;
+          self.itemCategories = {};
         });
       }
     };

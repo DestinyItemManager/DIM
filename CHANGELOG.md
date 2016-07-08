@@ -1,3 +1,30 @@
+# Next
+
+* Loadout builder redesign and major performance enchancements.
+* Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
+* The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
+* Section headers don't repeat themselves anymore.
+* Drop zones for items are larger.
+* Returning from the min-max tool no longer greets you with a blank, item-less screen.
+* Fixed a bug where loadouts were not properly restricted to the platform they were created for.
+* Xur's menu item will properly disappear when he leaves for the week.
+* New items are marked with a "shiny" animation, and there are notifications when new items appear.
+* The loadout menu may expand to fill the height of the window, but no more. The scrollbar looks nicer too.
+* Items can now be made larger (or smaller) in settings. Pick the perfect size for your screen!
+* The item info popup has a new header design. Let us know what you think!
+* Changing settings is faster.
+* You can now download your weapon and armor data as spreadsheets for the true data nerds among us.
+* The settings dialog is less spacious.
+* Engrams and items in the postmaster can now be locked (and unlocked).
+* The buttons on the move item popup are now grouped together by character.
+* When the "Hide Unfiltered Items while Filtering" option is on, things look a lot nicer than they did.
+* DIM is generally just a little bit snappier, especially when scrolling.
+* Clicking the icon to open DIM will now switch to an active DIM tab if it's already running.
+* Bungie.net will open in a new tab as a convenience for expired cookies.
+* Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
+* Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
+* You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
+
 # 3.7.4
 
 * Removed the option to hide or show the primary stat of items - it's always shown now.

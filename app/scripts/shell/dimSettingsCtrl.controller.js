@@ -3,10 +3,14 @@
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope'];
+  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService'];
 
-  function SettingsController(settings, $scope) {
-    var vm = $scope.vm = {};
+  function SettingsController(settings, $scope, SyncService) {
+    var vm = this;
+
+    $scope.$watchCollection('vm.settings', function() {
+      settings.save();
+    });
 
     vm.charColOptions = [
       { id: 3, name: '3' },
@@ -14,25 +18,14 @@
       { id: 5, name: '5' }
     ];
 
-    vm.vaultColOptions = [
-      { id: 4, name: '4' },
-      { id: 5, name: '5' },
-      { id: 6, name: '6' },
-      { id: 7, name: '7' },
-      { id: 8, name: '8' },
-      { id: 9, name: '9' },
-      { id: 10, name: '10' },
-      { id: 11, name: '11' },
-      { id: 12, name: '12' }
-    ];
+    vm.settings = settings;
 
-    settings.getSetting()
-      .then(function(s) {
-        vm.settings = s;
-      });
+    vm.showSync = function() {
+      return SyncService.drive();
+    };
 
-    vm.save = function(key) {
-      settings.saveSetting(key, vm.settings[key]);
+    vm.driveSync = function() {
+      SyncService.authorize();
     };
   }
 })();

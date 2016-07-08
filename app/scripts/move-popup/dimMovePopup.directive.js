@@ -4,9 +4,7 @@
   angular.module('dimApp')
     .directive('dimMovePopup', MovePopup);
 
-  MovePopup.$inject = ['ngDialog'];
-
-  function MovePopup(ngDialog) {
+  function MovePopup() {
     return {
       controller: MovePopupController,
       controllerAs: 'vm',
@@ -22,7 +20,7 @@
         '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse"></div>',
         '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
-        '    <div class="locations" ng-repeat="store in vm.stores track by store.id">',
+        '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
         '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}">',
@@ -34,7 +32,7 @@
         '        <span>Store</span>',
         '      </div>',
         '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.canShowEquip(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store, true)" ',
+        '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
         '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
@@ -47,7 +45,9 @@
         '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
         '      <span>Split</span>',
         '    </div>',
-        '  <div class="infuse-perk" ng-if="vm.item.talentGrid.infusable && vm.item.sort !== \'Postmaster\'" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" ng-style="{ \'background-image\': \'url(/images/\' + vm.item.sort + \'.png)\' }"></div>',
+        '  <div class="locations">',
+        '    <div class="move-button infuse-perk" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" ng-style="{ \'background-image\': \'url(/images/\' + vm.item.bucket.sort + \'.png)\' }"></div>',
+        '  </div>',
         '  </div>',
         '</div>'
       ].join('')
@@ -77,9 +77,6 @@
     * the selected item
     */
     vm.infuse = function infuse(item, e) {
-      if (item.sort === 'Postmaster') {
-        return;
-      }
       e.stopPropagation();
 
       // Close the move-popup
@@ -124,9 +121,6 @@
       }
 
       promise = promise
-        .then(function() {
-          dimStoreService.setHeights();
-        })
         .catch(function(a) {
           toaster.pop('error', vm.item.name, a.message);
         });
@@ -143,29 +137,30 @@
       var promise = $q.all(stores.map(function(store) {
         // First move everything into the vault
         var item = _.find(store.items, function(i) {
-          return i.hash === vm.item.hash && i.sort !== 'Postmaster';
+          return i.hash === vm.item.hash && !i.location.inPostmaster;
         });
         if (item) {
           var amount = store.amountOfItem(vm.item);
           return dimItemService.moveTo(item, vault, false, amount);
         }
+        return undefined;
       }));
 
       // Then move from the vault to the character
       if (!vm.store.isVault) {
         promise = promise.then(function() {
           var item = _.find(vault.items, function(i) {
-            return i.hash === vm.item.hash && i.sort !== 'Postmaster';
+            return i.hash === vm.item.hash && i.location.inPostmaster;
           });
           if (item) {
             var amount = vault.amountOfItem(vm.item);
             return dimItemService.moveTo(item, vm.store, false, amount);
           }
+          return undefined;
         });
       }
 
       promise = promise.then(function() {
-        dimStoreService.setHeights();
         var message;
         if (vm.store.isVault) {
           message = 'All ' + vm.item.name + ' is now in your vault.';
@@ -185,7 +180,7 @@
 
     vm.distribute = dimActionQueue.wrap(function() {
       // Sort vault to the end
-      var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id == 'vault' ? 2 : 1; });
+      var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id === 'vault' ? 2 : 1; });
 
       var total = 0;
       var amounts = stores.map(function(store) {
@@ -238,11 +233,11 @@
       function applyMoves(moves) {
         return $q.all(moves.map(function(move) {
           var item = _.find(move.source.items, function(i) {
-            return i.hash === vm.item.hash;// && i.sort !== 'Postmaster';
+            return i.hash === vm.item.hash;
           });
           return dimItemService.moveTo(item, move.target, false, move.amount);
         }));
-      };
+      }
 
       var promise = applyMoves(vaultMoves)
             .then(function() {
@@ -250,7 +245,6 @@
             });
 
       promise = promise.then(function() {
-        dimStoreService.setHeights();
         toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' is now equally divided between characters.');
       })
       .catch(function(a) {
@@ -289,36 +283,12 @@
         return false;
       }
 
-      if (!item.notransfer) {
-        if (itemStore.id !== buttonStore.id) {
-          return true;
-        } else if (item.equipped) {
-          return true;
-        }
-      } else {
+      if (item.notransfer) {
         if (item.equipped && itemStore.id === buttonStore.id) {
           return true;
         }
-      }
-
-      return false;
-    };
-
-    vm.canShowEquip = function canShowButton(item, itemStore, buttonStore) {
-      if (buttonStore.isVault || !item.equipment) {
-        return false;
-      }
-
-      if (!item.notransfer) {
-        if ((itemStore.id !== buttonStore.id) && (item.sort !== 'Postmaster')) {
-          return true;
-        } else if ((!item.equipped) && (item.sort !== 'Postmaster')) {
-          return true;
-        }
-      } else {
-        if ((!item.equipped) && (itemStore.id === buttonStore.id) && (item.sort !== 'Postmaster')) {
-          return true;
-        }
+      } else if (itemStore.id !== buttonStore.id || item.equipped) {
+        return true;
       }
 
       return false;

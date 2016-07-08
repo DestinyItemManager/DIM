@@ -4,18 +4,23 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window, $scope, $state) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
     var supportResult = null;
     var filterResult = null;
 
+    vm.settings = dimSettingsService;
+    $scope.$watch('app.settings.itemSize', function(size) {
+      document.querySelector('html').style.setProperty("--item-size", size + 'px');
+    });
+
     hotkeys.add({
       combo: ['f'],
-      callback: function(event, hotkey) {
+      callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
         event.preventDefault();
@@ -26,40 +31,29 @@
     hotkeys.add({
       combo: ['esc'],
       allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-      callback: function(event, hotkey) {
+      callback: function() {
         $rootScope.$broadcast('dim-escape-filter-input');
       }
     });
 
     hotkeys.add({
       combo: ['r'],
-      callback: function(event, hotkey) {
+      callback: function() {
         vm.refresh();
       }
     });
 
     hotkeys.add({
       combo: ['i'],
-      callback: function(event, hotkey) {
+      callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
-      }
-    });
-
-    dimSettingsService.getSettings()
-      .then(function(settings) {
-        vm.showElements = settings.showElements;
-      });
-
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if (_.has(arg, 'showElements')) {
-        vm.showElements = arg.showElements;
       }
     });
 
     vm.showSetting = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(settingResult)) {
+      if (settingResult) {
         settingResult.close();
       } else {
         ngDialog.closeAll();
@@ -81,10 +75,14 @@
       }
     };
 
+    vm.toggleMinMax = function(e) {
+      $state.go($state.is('best') ? 'inventory' : 'best');
+    };
+
     vm.showAbout = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(aboutResult)) {
+      if (aboutResult) {
         aboutResult.close();
       } else {
         ngDialog.closeAll();
@@ -108,7 +106,7 @@
 
     vm.refresh = function refresh() {
       (function(activePlatform) {
-        if(!_.isNull(activePlatform)) {
+        if (!_.isNull(activePlatform)) {
           $rootScope.$broadcast('dim-active-platform-updated', {
             platform: activePlatform
           });
@@ -121,7 +119,7 @@
     vm.showSupport = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(supportResult)) {
+      if (supportResult) {
         supportResult.close();
       } else {
         ngDialog.closeAll();
@@ -146,9 +144,7 @@
     vm.showFilters = function(e) {
       e.stopPropagation();
 
-      if(!_.isNull(filterResult)) {
-        filterResult.close();
-      } else {
+      if (filterResult === null) {
         ngDialog.closeAll();
 
         filterResult = ngDialog.open({
@@ -161,7 +157,7 @@
           .addClass('filters');
 
         setTimeout(function() {
-          var spans = $('#filter-view span')
+          $('#filter-view span')
             .each(function() {
               var item = $(this);
               var text = item.text();
@@ -170,7 +166,7 @@
                 addFilter(text);
               });
             });
-          //<span onclick="addFilter('is:arc')">
+          // <span onclick="addFilter('is:arc')">
         }, 250);
 
         filterResult.closePromise.then(function() {
@@ -178,6 +174,8 @@
           $('body')
             .removeClass('filters');
         });
+      } else {
+        filterResult.close();
       }
     };
 
@@ -193,6 +191,14 @@
       });
     };
 
+    vm.downloadWeaponCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
+    };
+
+    vm.downloadArmorCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
+    };
+
     // Don't refresh more than once a minute
     var refresh = _.throttle(vm.refresh, 60 * 1000);
 
@@ -200,9 +206,9 @@
       var secondsToWait = 360;
 
       $rootScope.autoRefreshTimer = $interval(function() {
-        //Only Refresh If We're Not Already Doing Something
-        //And We're Not Inactive
-        if(!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+        // Only Refresh If We're Not Already Doing Something
+        // And We're Not Inactive
+        if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
           refresh();
         }
       }, secondsToWait * 1000);
@@ -210,76 +216,69 @@
 
     vm.startAutoRefreshTimer();
 
-    $rootScope.$on('dim-settings-updated', function(event, arg) {
-      if(_.has(arg, 'characterOrder')) {
-        refresh();
-      }
-    });
-
     // Refresh when the user comes back to the page
     document.addEventListener("visibilitychange", function() {
-      if(!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState == 'visible') {
+      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
         refresh();
       }
     }, false);
+
+    function addFilter(filter) {
+      var input = $('input[name=filter]');
+      var itemNameFilter = false;
+
+      if (filter === 'item name') {
+        itemNameFilter = true;
+        filter = $window.prompt("Enter an item name:");
+        filter = filter.trim();
+      }
+
+      if (filter.indexOf('light:') === 0) {
+        var lightFilterType = filter.substring(6);
+        var light = $window.prompt("Enter a light value:");
+        if (light) {
+          light = light.trim();
+        } else {
+          return;
+        }
+        filter = 'light:';
+        switch (lightFilterType) {
+        case 'value':
+          filter += light;
+          break;
+        case '>value':
+          filter += '>' + light;
+          break;
+        case '>=value':
+          filter += '>=' + light;
+          break;
+        case '<value':
+          filter += '<' + light;
+          break;
+        case '<=value':
+          filter += '<=' + light;
+          break;
+        default:
+          filter = '';
+          break;
+        }
+      }
+
+      var text = input.val();
+
+
+      if (itemNameFilter) {
+        input.val(filter + ((text.length > 0) ? ' ' + text : ''));
+      } else if ((text + ' ')
+                 .indexOf(filter + ' ') < 0) {
+        if (text.length > 0) {
+          input.val(text + ' ' + filter);
+        } else {
+          input.val(filter);
+        }
+      }
+
+      input.change();
+    }
   }
 })();
-
-
-function addFilter(filter) {
-  var input = $('input[name=filter]');
-  var itemNameFilter = false;
-
-  if(filter === 'item name') {
-    itemNameFilter = true;
-    filter = prompt("Enter an item name:");
-    filter = filter.trim();
-  }
-
-  if(filter.indexOf('light:') == 0) {
-    var lightFilterType = filter.substring(6);
-    var light = prompt("Enter a light value:");
-    if(light) {
-      light = light.trim();
-    } else {
-      return;
-    }
-    filter = 'light:';
-    switch(lightFilterType) {
-      case 'value':
-        filter += light;
-        break;
-      case '>value':
-        filter += '>' + light;
-        break;
-      case '>=value':
-        filter += '>=' + light;
-        break;
-      case '<value':
-        filter += '<' + light;
-        break;
-      case '<=value':
-        filter += '<=' + light;
-        break;
-      default:
-        filter = '';
-        break;
-    }
-  }
-
-  var text = input.val();
-
-
-  if(itemNameFilter) {
-    input.val(filter + ((text.length > 0) ? ' ' + text : ''));
-  } else if((text + ' ')
-    .indexOf(filter + ' ') < 0) {
-    if(text.length > 0) {
-      input.val(text + ' ' + filter);
-    } else {
-      input.val(filter);
-    }
-  }
-
-  input.change();
-}
