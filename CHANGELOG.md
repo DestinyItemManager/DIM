@@ -1,8 +1,10 @@
+# Next
+* Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
+
 # 3.8.1
 
 * Added steps to Moments of Triumph popup (and other record books.)
 * Fixed wobbly refresh icon.
-* Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
 * Fixed single item stat percentages.
 * Fixed armor export script.
 * Possible fix for loadout builder.
