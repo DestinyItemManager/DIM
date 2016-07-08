@@ -40,7 +40,7 @@
                 });
                 self.itemCategories[categoryData.categoryTitle] = wares;
               });
-              return dimStoreService.processItems(null, rawItems).then(function(items) {
+              return dimStoreService.processItems({ id: null }, rawItems).then(function(items) {
                 var itemsByHash = _.indexBy(items, 'hash');
                 _.each(self.itemCategories, function(saleItems) {
                   saleItems.forEach(function(saleItem) {

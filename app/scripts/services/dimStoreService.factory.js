@@ -1055,7 +1055,7 @@
       })), 'sort');
     }
 
-    function getItems(owner, items) {
+    function getItems(owner, items) {      
       idTracker = {};
       return $q.all([
         dimItemDefinitions,
