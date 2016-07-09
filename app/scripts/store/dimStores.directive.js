@@ -29,7 +29,7 @@
       scope: {},
       link: Link,
       template: [
-        '<div ng-if="vm.stores.length" ng-class="{ \'hide-filtered\': vm.settings.hideFilteredItems, itemQuality: vm.settings.itemQuality }">',
+        '<div ng-if="vm.stores.length" ng-class="{ \'hide-filtered\': vm.settings.hideFilteredItems }">',
         '  <div class="store-row store-header">',
         '    <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
