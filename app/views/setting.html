@@ -89,7 +89,10 @@
         <td>
           <label>
             <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent" ng-model-options="{ updateOn: 'default blur' }">By Most Recent Character</label>
-          <br>
+            <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecentReverse" ng-model-options="{ updateOn: 'default blur' }">By Most Recent Character (Reversed)</label>
+            <br>
           <label>
             <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }">Fixed (By Character Age)</label>
         </td>

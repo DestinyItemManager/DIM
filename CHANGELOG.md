@@ -1,5 +1,18 @@
 # Next
+* Update filter list to include quality/percentage filters
+* Add year column to CSV export scripts
 
+# 3.8.1
+
+* Added steps to Moments of Triumph popup (and other record books.)
+* Fixed wobbly refresh icon.
+* Fixed single item stat percentages.
+* Fixed armor export script.
+* Possible fix for loadout builder.
+
+# 3.8.0
+
+* Loadout builder redesign and major performance enchancements.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
 * The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
 * Section headers don't repeat themselves anymore.
@@ -23,6 +36,7 @@
 * Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
 * Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
 * When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
+* You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
 
 # 3.7.4
 
@@ -31,7 +45,7 @@
 * Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
 * Changing the character sort order now applies live, rather than requiring a refresh.
 * Use most recently logged in player to start with loadout builder.
-* Search queries will exlude the token `" and "` as some users were including that when chaining multiple filters.
+* Search queries will exclude the token `" and "` as some users were including that when chaining multiple filters.
 * Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
 * Consolidate beta icons to the icons folder.
 

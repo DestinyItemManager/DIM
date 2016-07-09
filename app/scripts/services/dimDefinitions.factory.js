@@ -13,7 +13,8 @@
     Stat: 'stats',
     Talent: 'talent',
     Years: 'year1',
-    Progression: 'progression'
+    Progression: 'progression',
+    Records: 'records'
   };
 
   var mod = angular.module('dimApp');

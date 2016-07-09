@@ -28,7 +28,7 @@
       itemQuality: false,
       // Show elemental damage icons
       showElements: false,
-      // Sort characters (mostRecent, fixed)
+      // Sort characters (mostRecent, mostRecentReverse, fixed)
       characterOrder: 'mostRecent',
       // Sort items in buckets (primaryStat, rarityThenPrimary,
       // rarity, quality)

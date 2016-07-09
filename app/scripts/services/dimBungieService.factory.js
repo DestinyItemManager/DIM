@@ -320,7 +320,8 @@
         .then(function() {
           return $q.all([
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
+            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
           ]).then(function(data) {
             return $q.resolve(data[0]);
           });
@@ -419,6 +420,38 @@
         var processPB = processProgressionResponse.bind(null, character);
 
         return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
+          .then($http)
+          .then(handleErrors)
+          .then(processPB);
+      });
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
+    function getCharacterAdvisorsRequest(token, platform, membershipId, character) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function processAdvisorsResponse(character, response) {
+      character.advisors = response.data.Response.data;
+      return character;
+    }
+
+    function getDestinyAdvisors(token, platform, membershipId, characters) {
+      var promises = characters.map(function(character) {
+        var processPB = processAdvisorsResponse.bind(null, character);
+
+        return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
           .then($http)
           .then(handleErrors)
           .then(processPB);
@@ -547,7 +580,7 @@
     function equipItems(store, items) {
       // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
       items = _.sortBy(items, function(i) {
-        return i.tier === 'Exotic' ? 1 : 0;
+        return i.isExotic ? 1 : 0;
       });
 
       var platform = dimState.active;

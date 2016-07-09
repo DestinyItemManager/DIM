@@ -15,7 +15,7 @@
         stats: '='
       },
       template: [
-        '<div class="stats">',
+        '<div class="stat-bars">',
         '  <div class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">',
         '    <img src="images/intellect.png">',
         '    <div class="bar" ng-repeat="n in vm.stats.STAT_INTELLECT.tiers track by $index">',
@@ -43,6 +43,17 @@
 
   function StatsCtrl() {
     var vm = this;
+
+    _.each(vm.stats, function(stat) {
+      stat.normalized = stat.value > 300 ? 300 : stat.value;
+      stat.tier = Math.floor(stat.normalized / 60);
+      stat.tiers = [];
+      stat.remaining = stat.value;
+      for (var t = 0; t < 5; t++) {
+        stat.remaining -= stat.tiers[t] = stat.remaining > 60 ? 60 : stat.remaining;
+      }
+      stat.percentage = (100 * stat.normalized / 300).toFixed();
+    });
 
     vm.formatTooltip = function(which) {
       var next = ' (' + vm.stats[which].value + '/300)';
