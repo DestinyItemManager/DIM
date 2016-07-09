@@ -29,7 +29,7 @@
       scope: {},
       link: Link,
       template: [
-        '<div ng-if="vm.stores.length" ng-class="[\'dim-col-\' + vm.settings.charCol, { \'hide-filtered\': vm.settings.hideFilteredItems, itemQuality: vm.settings.itemQuality }]">',
+        '<div ng-if="vm.stores.length" ng-class="{ \'hide-filtered\': vm.settings.hideFilteredItems, itemQuality: vm.settings.itemQuality }">',
         '  <div class="store-row store-header">',
         '    <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <dim-store-heading class="character" store-data="store"></dim-store-heading>',
@@ -61,10 +61,10 @@
     function Link($scope) {
       function stickyHeader(e) {
         $(document.body).toggleClass('something-is-sticky', document.body.scrollTop !== 0);
-        $('.store-header').css('left', 'calc(4em - ' + document.body.scrollLeft + 'px)');
       }
 
       $(document).on('scroll', stickyHeader);
+
       $scope.$on('$destroy', function() {
         $(document).off('scroll', stickyHeader);
       });

@@ -4,6 +4,8 @@
 
 :root {
   --item-size: 44px;
+  --character-columns: 3;
+  --vault-max-columns: 999;
 }
 
 
@@ -1283,16 +1285,22 @@ g {
 }
 
 #content {
-  margin: 0 4em;
+  margin: 15px auto;
+  padding: 0 2em;
   margin-top: 15px;
   user-select: none;
 }
 
+.content {
+  // This assumes 3 characters
+  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * 3 + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * 3 + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+}
+
 #header {
-  min-width: 952px;
   .content {
-    margin: 0 4em;
-    padding: 12px 0;
+    margin: 0 auto;
+    padding: 12px 2em;
     > {
       .link, .header-right {
         margin-top: 1px;
@@ -1322,8 +1330,10 @@ g {
   flex-shrink: 0;
   display: flex;
   margin-right: 12px;
+  width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
 
   &.vault {
+    max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
     background-color: rgba(245, 245, 245, 0.25);
     padding: 0 12px 1px;
     margin-left: -12px;
@@ -1783,18 +1793,6 @@ button.toast-close-button {
     background-color: #5EA16A;
   }
 }
-
-@for $i from 3 through 5 {
-  .dim-col-#{$i} {
-    .store-cell {
-      width: calc(40px + var(--item-size) + (#{$i} * (var(--item-size) + 8px)));
-      &.vault {
-        min-width: calc(26px + var(--item-size) + (#{$i} * (var(--item-size) + 8px)));
-      }
-    }
-  }
-}
-
 
 /* Infuse */
 
