@@ -2,6 +2,7 @@
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
 * When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
+* The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
 
 # 3.8.1
 
