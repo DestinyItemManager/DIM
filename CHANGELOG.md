@@ -1,12 +1,12 @@
 # Next
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
+* The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
 
 # 3.8.1
 
 * Added steps to Moments of Triumph popup (and other record books.)
 * Fixed wobbly refresh icon.
-* The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
 * Fixed single item stat percentages.
 * Fixed armor export script.
 * Possible fix for loadout builder.
