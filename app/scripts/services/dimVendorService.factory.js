@@ -185,7 +185,7 @@
             // Now get the actual items from dimStoreService and add the costs/currency to the items
             var promises = [];
             _.each(mergedVendors, function(vendorWithItems) {
-              promises.push(dimStoreService.processItems(null, vendorWithItems.items)
+              promises.push(dimStoreService.processItems({ id: null }, vendorWithItems.items)
                 .then(function(processedItems) {
                   _.each(processedItems, function(processedItem) {
                     processedItem.cost = vendorWithItems.costs[processedItem.hash];
