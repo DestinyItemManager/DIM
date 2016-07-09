@@ -132,6 +132,10 @@
       processItems: processItems
     };
 
+    $rootScope.$on('dim-active-platform-updated', function() {
+      _stores = [];
+    });
+
     return service;
 
     // Update the high level character information for all the stores
