@@ -1,6 +1,7 @@
 # Next
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
+* The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
 
 # 3.8.1
 
