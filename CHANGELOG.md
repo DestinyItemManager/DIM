@@ -1,6 +1,7 @@
 # Next
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
+* When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
 
 # 3.8.1
 
@@ -35,7 +36,6 @@
 * Bungie.net will open in a new tab as a convenience for expired cookies.
 * Items in the Postmaster are sorted by the order you got them, so you know what'll get bumped when your postmaster is full.
 * Clicking the loadout builder button again, or the DIM logo, will take you back to the main screen.
-* When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
 * You may now order your characters by the reverse of the most recent, so the most recent character is next to the vault.
 
 # 3.7.4
