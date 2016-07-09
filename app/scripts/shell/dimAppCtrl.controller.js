@@ -17,6 +17,14 @@
     $scope.$watch('app.settings.itemSize', function(size) {
       document.querySelector('html').style.setProperty("--item-size", size + 'px');
     });
+    $scope.$watch('app.settings.charCol', function(cols) {
+      document.querySelector('html').style.setProperty("--character-columns", cols);
+    });
+
+    $scope.$watch('app.settings.vaultMaxCol', function(cols) {
+      document.querySelector('html').style.setProperty("--vault-max-columns", cols);
+    });
+
 
     hotkeys.add({
       combo: ['f'],
@@ -249,15 +257,16 @@
         filter = filter.trim();
       }
 
-      if (filter.indexOf('light:') === 0) {
-        var lightFilterType = filter.substring(6);
-        var light = $window.prompt("Enter a light value:");
+      if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0) {
+        var type = filter.split(':');
+        var lightFilterType = type[1];
+        var light = $window.prompt("Enter a " + type[0] + " value:");
         if (light) {
           light = light.trim();
         } else {
           return;
         }
-        filter = 'light:';
+        filter = type[0] + ':';
         switch (lightFilterType) {
         case 'value':
           filter += light;

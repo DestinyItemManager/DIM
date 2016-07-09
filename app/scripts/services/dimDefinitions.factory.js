@@ -15,6 +15,7 @@
     Years: 'year1',
     Progression: 'progression',
     Vendor: 'vendor'
+    Records: 'records'
   };
 
   var mod = angular.module('dimApp');

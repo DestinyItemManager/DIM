@@ -21,10 +21,10 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="stylesheet" href="vendor/components-font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/main.css?v=$DIM_VERSION">
   </head>
 
-  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements }">
+  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.settings.itemQuality }">
     <div class="ng-cloak" ng-click="trackActivity()">
       <div id="header">
         <div class="content">
@@ -49,7 +49,7 @@
       <div class="about modal-dialog" ng-show="app.about"></div>
       <div class="donate modal-dialog" ng-show="app.donate"></div>
       <div class="filters modal-dialog" ng-show="app.filters"></div>
-      <div id="content" ui-view></div>
+      <div id="content" class="content" ui-view></div>
     </div>
 
     <script src="scripts/google.js?v=$DIM_VERSION"></script>

@@ -138,6 +138,23 @@ function extractDB(dbFile) {
     defs.write(JSON.stringify(items));
   });
 
+  // get Record Book for progress tracking
+  db.all('select * from DestinyRecordDefinition', function(err, rows) {
+    if (err) {
+      throw err;
+    }
+
+    items = {};
+
+    rows.forEach(function(row) {
+      var item = JSON.parse(row.json);
+      items[item.hash] = item;
+    });
+
+    var defs = fs.createWriteStream('api-manifest/records.json');
+    defs.write(JSON.stringify(items));
+  });
+
   // Get objectives for progress tracking JFLAY2015
   db.all('select * from DestinyObjectiveDefinition', function(err, rows) {
     if (err) {
@@ -275,12 +292,12 @@ function extractDB(dbFile) {
   console.log("done.");
 }
 
-mkdirp('api-manifest', function() { });
-mkdirp('img/misc', function() { });
-mkdirp('img/destiny_content/items', function() { });
-mkdirp('img/destiny_content/progression', function() { });
+mkdirp('api-manifest', function(err) { });
+mkdirp('img/misc', function(err) { });
+mkdirp('img/destiny_content/items', function(err) { });
+mkdirp('img/destiny_content/progression', function(err) { });
 mkdirp('img/destiny_content/vendor', function() { });
-mkdirp('common/destiny_content/icons', function() { });
+mkdirp('common/destiny_content/icons', function(err) { });
 
 request({
     headers: {
