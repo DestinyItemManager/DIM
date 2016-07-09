@@ -16,12 +16,13 @@ div:focus, span:focus {
 **/
 
 @keyframes new_overlay {
-  0%   { transform: translate(calc(-1*var(--item-size)), calc(-1*var(--item-size))) scale(2)}
-  100% { transform: translate(var(--item-size), var(--item-size)) scale(2)}
+  0%   { transform: translate(calc(-1.5*var(--item-size)), calc(-1.5*var(--item-size))) scale(2)}
+  100% { transform: translate(calc(1.5*var(--item-size)), calc(1.5*var(--item-size))) scale(2)}
 }
 
 .new_overlay {
-  animation: new_overlay 5s infinite;
+  will-change: transform;
+  animation: new_overlay 4s linear infinite;
   width: var(--item-size);
   height: var(--item-size);
   pointer-events: none;
