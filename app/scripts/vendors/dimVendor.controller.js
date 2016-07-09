@@ -13,6 +13,7 @@
     var detailItemElement = null;
 
     vm.vendors = dimVendorService.vendorItems;
+    vm.activeVendors = _.keys(vm.vendors);
 
     function mergeMaps(o, map) {
       _.each(map, function(val, key) {

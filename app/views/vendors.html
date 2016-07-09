@@ -26,8 +26,8 @@
         <select ng-model='vm.activeVendor' ng-options="idx as idx for (idx, obj) in vm.vendors"></select>
       </p>-->
     </div>
-    <div class="vendorContainer">
-    <div class="vendorBlock" ng-repeat="(vendorType, vendor) in vm.vendors[vm.activeVendor]">
+    <div class="vendorContainer" ng-repeat="activeVendor in vm.activeVendors">
+    <div class="vendorBlock" ng-repeat="(vendorType, vendor) in vm.vendors[activeVendor]">
       <div class="vendorHeader">
         <h3>{{vendor.vendorName}}</h3>
         <img class="vendorIcon" ng-src="{{vendor.vendorIcon}}" />

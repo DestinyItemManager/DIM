@@ -114,6 +114,10 @@
         }).state('best', {
           url: "/best",
           templateUrl: "views/best.html"
+        })
+        .state('vendors', {
+          url: "/vendors",
+          templateUrl: "views/vendors.html"
         });
     });
 })();
