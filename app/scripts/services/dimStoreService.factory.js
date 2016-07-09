@@ -131,6 +131,10 @@
       createItemIndex: createItemIndex,
       processItems: processItems
     };
+    
+    $rootScope.$on('dim-active-platform-updated', function(e, args) {
+      _stores = [];
+    });
 
     return service;
 
