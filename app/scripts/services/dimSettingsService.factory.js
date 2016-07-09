@@ -26,7 +26,7 @@
       itemDetails: false,
       // Show item quality percentages
       itemQuality: false,
-      // Show new item overlay on new items
+      // Show animation of new item overlay on new items
       showNewAnimation: true,
       // Show elemental damage icons
       showElements: false,

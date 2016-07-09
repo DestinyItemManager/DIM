@@ -17,6 +17,11 @@
     $scope.$watch('app.settings.itemSize', function(size) {
       document.querySelector('html').style.setProperty("--item-size", size + 'px');
     });
+    
+    $scope.$watch('app.settings.showNewAnimation', function(showAnimation) {
+      var animation = showAnimation? 'new_overlay 5s infinite' : 'initial';
+      document.querySelector('html').style.setProperty("--overlay-animation", animation);
+    });
 
     hotkeys.add({
       combo: ['f'],
