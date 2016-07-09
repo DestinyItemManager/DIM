@@ -131,8 +131,8 @@
       createItemIndex: createItemIndex,
       processItems: processItems
     };
-    
-    $rootScope.$on('dim-active-platform-updated', function(e, args) {
+
+    $rootScope.$on('dim-active-platform-updated', function() {
       _stores = [];
     });
 
