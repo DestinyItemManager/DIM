@@ -17,6 +17,14 @@
     $scope.$watch('app.settings.itemSize', function(size) {
       document.querySelector('html').style.setProperty("--item-size", size + 'px');
     });
+    $scope.$watch('app.settings.charCol', function(cols) {
+      document.querySelector('html').style.setProperty("--character-columns", cols);
+    });
+
+    $scope.$watch('app.settings.vaultMaxCol', function(cols) {
+      document.querySelector('html').style.setProperty("--vault-max-columns", cols);
+    });
+
 
     hotkeys.add({
       combo: ['f'],

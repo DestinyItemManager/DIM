@@ -4,6 +4,7 @@
 * The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
 * Dialogs should be sized better now.
 * Fix character order in move popup buttons.
+* Restored the ability to set a maximum vault size. "Auto" (full width) is still an option, and is the default.
 
 # 3.8.1
 
