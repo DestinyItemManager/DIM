@@ -334,7 +334,6 @@
             return $q.all(bannerPromises).then(function(bannerData) {
               return $q.resolve(data.concat(bannerData));
             });
-            //return $q.resolve(data);
           });
         })
         .catch(function(e) {
