@@ -3,6 +3,7 @@
 * Add year column to CSV export scripts
 * The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
 * Dialogs should be sized better now.
+* Fix character order in move popup buttons.
 
 # 3.8.1
 

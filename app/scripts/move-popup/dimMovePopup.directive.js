@@ -54,10 +54,11 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService', '$timeout'];
+  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService', '$timeout', 'dimSettingsService'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService, $timeout) {
+  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService, $timeout, dimSettingsService) {
     var vm = this;
+    vm.settings = dimSettingsService;
 
     var shown = false;
 
