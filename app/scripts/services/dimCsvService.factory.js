@@ -44,7 +44,7 @@
     }
 
     function downloadArmor(items, nameMap) {
-      var header = "Name, Tier, Type, Equippable, Light, Owner, % Leveled, Locked, Equipped, " +
+      var header = "Name, Tier, Type, Equippable, Light, Owner, % Leveled, Locked, Equipped, Year, " +
         "% Quality, % IntQ, % DiscQ, % StrQ, Int, Disc, Str, Perks\n";
       var data = "";
       items.forEach(function(item) {
@@ -65,6 +65,7 @@
         data += item.locked + ", ";
         data += item.equipped + ", ";
         data += item.quality ? item.quality.max + ", " : "0, ";
+        data += item.year + ", ";
         var stats = {};
         if (item.stats) {
           item.stats.forEach(function(stat) {
@@ -94,7 +95,7 @@
     }
 
     function downloadWeapons(guns, nameMap) {
-      var header = "Name, Tier, Type, Light, Dmg, Owner, % Leveled, Locked, Equipped, " +
+      var header = "Name, Tier, Type, Light, Dmg, Owner, % Leveled, Locked, Equipped, Year," +
         "AA, Impact, Range, Stability, ROF, Reload, Mag, Equip, " +
         "Nodes\n";
       var data = "";
@@ -113,6 +114,7 @@
         data += (gun.percentComplete * 100).toFixed(0) + ", ";
         data += gun.locked + ", ";
         data += gun.equipped + ", ";
+        data += gun.year + ", ";
         var stats = {
           aa: 0,
           impact: 0,

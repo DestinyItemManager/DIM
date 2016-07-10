@@ -76,6 +76,14 @@
       </tr>
       <tr>
         <td>
+          <label for="charCol" title="Select the maximum number of columns for vault.">Vault Maximum Inventory Columns</label>
+        </td>
+        <td>
+          <select id="charCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="itemSize" title="How big should items be?">Item Size</label>
         </td>
         <td>

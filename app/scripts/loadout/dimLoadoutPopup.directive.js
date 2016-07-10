@@ -27,6 +27,9 @@
         '      <span ng-click="vm.deleteLoadout(loadout, $event)"><i class="fa fa-trash-o"></i></span>',
         '      <span ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </li>',
+        '    <li class="loadout-set" ng-if="vm.search.query">',
+        '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> Search: "{{vm.search.query}}"</span>',
+        '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
         '    </li>',
@@ -49,9 +52,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService', '$window'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService, $window) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService, $window, dimSearchService) {
     var vm = this;
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -63,6 +66,8 @@
     if (vm.classTypeId === undefined) {
       vm.classTypeId = -1;
     }
+
+    vm.search = dimSearchService;
 
     function initLoadouts() {
       dimLoadoutService.getLoadouts()
@@ -304,6 +309,36 @@
       var loadout = {
         classType: -1,
         name: 'Gather Engrams',
+        items: finalItems
+      };
+      vm.applyLoadout(loadout, $event);
+    };
+
+    // Move items matching the current search. Max 9 per type.
+    vm.searchLoadout = function searchLoadout($event) {
+      var items = _.select(dimItemService.getItems(), function(i) {
+        return i.visible && !i.location.inPostmaster;
+      });
+
+      var itemsByType = _.mapObject(_.groupBy(items, 'type'), function(items) {
+        return _.first(items, 9);
+      });
+
+      // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
+      var finalItems = {};
+      _.each(itemsByType, function(items, type) {
+        if (items) {
+          finalItems[type.toLowerCase()] = items.map(function(i) {
+            var copy = angular.copy(i);
+            copy.equipped = false;
+            return copy;
+          });
+        }
+      });
+
+      var loadout = {
+        classType: -1,
+        name: 'Filtered Items',
         items: finalItems
       };
       vm.applyLoadout(loadout, $event);
