@@ -7,6 +7,7 @@
 * Fix character order in move popup buttons.
 * Restored the ability to set a maximum vault size. "Auto" (full width) is still an option, and is the default.
 * Armor quality is shown in Xur, loadouts, and the infusion dialog if advanced stats is turned on.
+* "Take" stackables works again.
 
 # 3.8.1
 
