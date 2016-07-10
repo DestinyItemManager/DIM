@@ -49,6 +49,15 @@
           SyncService.init();
         };
 
+        var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
+        if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 50) {
+          dimInfoService.show('old-chrome', {
+            title: 'Please Upgrade Chrome',
+            view: 'views/upgrade-chrome.html?v=$DIM_VERSION',
+            type: 'error'
+          }, 0);
+        }
+
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         dimInfoService.show('20160707v380', {
           title: 'DIM v3.8.2 Released',
