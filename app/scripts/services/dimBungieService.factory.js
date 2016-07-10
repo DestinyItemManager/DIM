@@ -632,10 +632,9 @@
     /************************************************************************************************************************************/
 
     function setItemState(item, store, lockState, type) {
-      switch(type) {
-        case 'lock': type = 'SetLockState'; break;
-        case 'track': type = 'SetQuestTrackedState'; break;
-        default: return;
+      switch (type) {
+      case 'lock': type = 'SetLockState'; break;
+      case 'track': type = 'SetQuestTrackedState'; break;
       }
 
       var platform = dimState.active;
