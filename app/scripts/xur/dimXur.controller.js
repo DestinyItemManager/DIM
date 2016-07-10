@@ -37,7 +37,7 @@
       if (dialogResult) {
         $dialog.position({
           my: 'left top',
-          at: 'left bottom+4',
+          at: 'left bottom+2',
           of: detailItemElement,
           collision: 'flip'
         });

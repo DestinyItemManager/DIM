@@ -4,12 +4,17 @@
 // The popup displaying info and actions for an single item.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+.move-popup-dialog {
+  height: fit-content;
+}
+
 .move-popup {
   background-color: #222;
   cursor: default;
-  bottom: 50px;
   min-height: 77px;
   width: 320px;
+  height: fit-content;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
 
   .interaction {
     display: flex;
@@ -79,7 +84,7 @@
     background-image: url(/images/arrows-in.png);
   }
 }
-
+/*
 .move-popup-right {
   right: 0;
 }
@@ -87,13 +92,12 @@
 .move-popup-bottom {
   top: 50px;
 }
+*/
 
 .ngdialog.xur-move-popup {
   position: fixed;
-  height: 0;
   z-index: 10000;
-  height: fit-content;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
+
   .compare-items {
     margin-top: 0;
     display: flex;

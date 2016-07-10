@@ -12,11 +12,9 @@
       settings.save();
     });
 
-    vm.charColOptions = [
-      { id: 3, name: '3' },
-      { id: 4, name: '4' },
-      { id: 5, name: '5' }
-    ];
+    vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: num }));
+    vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: num }));
+    vm.vaultColOptions.unshift({ id: 999, name: 'Auto' });
 
     vm.settings = settings;
 
