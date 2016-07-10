@@ -64,8 +64,8 @@
         data += (item.percentComplete * 100).toFixed(0) + ", ";
         data += item.locked + ", ";
         data += item.equipped + ", ";
-        data += item.quality ? item.quality.max + ", " : "0, ";
         data += item.year + ", ";
+        data += item.quality ? item.quality.max + ", " : "0, ";
         var stats = {};
         if (item.stats) {
           item.stats.forEach(function(stat) {
