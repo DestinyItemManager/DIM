@@ -1,3 +1,7 @@
+# Next
+
+* Fix move popup not closing when drag-moving an item.
+
 # 3.8.2
 
 * Update filter list to include quality/percentage filters

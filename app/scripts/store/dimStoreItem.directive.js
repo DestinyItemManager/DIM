@@ -138,6 +138,12 @@
         }
       };
 
+      scope.$on('$destroy', function() {
+        if (dialogResult) {
+          dialogResult.close();
+        }
+      });
+
       vm.badgeClassNames = {};
 
       if (!vm.item.primStat && vm.item.objectives) {
