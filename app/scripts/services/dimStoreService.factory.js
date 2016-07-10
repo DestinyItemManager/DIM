@@ -829,6 +829,13 @@
         }
         stat.scaled = scaled;
         stat.split = split;
+
+        // if stat is dis and artifact
+        if (stat.statHash === 1735777505 && type.toLowerCase() === 'artifact') {
+          stat.split += 13;
+          ret.total.max += 13;
+        }
+
         stat.qualityPercentage = {
           min: Math.round(100 * stat.scaled.min / stat.split),
           max: Math.round(100 * stat.scaled.max / stat.split)

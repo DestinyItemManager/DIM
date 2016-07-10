@@ -1,4 +1,5 @@
 # Next
+* Artifacts are scaled differently now and will not report over 100%
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
 * When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
