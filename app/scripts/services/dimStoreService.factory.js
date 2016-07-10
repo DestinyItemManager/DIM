@@ -129,8 +129,12 @@
       updateCharacters: updateCharacters,
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
-      processItems: getItems
+      processItems: processItems
     };
+
+    $rootScope.$on('dim-active-platform-updated', function() {
+      _stores = [];
+    });
 
     return service;
 
@@ -274,7 +278,7 @@
               }
             }
 
-            return getItems(store, items).then(function(items) {
+            return processItems(store, items).then(function(items) {
               store.items = items;
 
               // by type-bucket
@@ -1055,7 +1059,7 @@
       })), 'sort');
     }
 
-    function getItems(owner, items) {
+    function processItems(owner, items) {
       idTracker = {};
       return $q.all([
         dimItemDefinitions,

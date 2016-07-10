@@ -117,29 +117,24 @@
         } else if (dimLoadoutService.dialogOpen) {
           dimLoadoutService.addItemToLoadout(item, e);
         } else {
-          var bottom = ($(element).offset().top < 400) ? ' move-popup-bottom' : '';
-          var right = ((($('body').width() - $(element).offset().left - 320) < 0) ? ' move-popup-right' : '');
-
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="vm.closePopup()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
             plain: true,
-            appendTo: 'div[id="' + item.index + '"]',
             overlay: false,
-            className: 'move-popup' + right + bottom,
+            className: 'move-popup-dialog',
             showClose: false,
-            scope: scope
+            data: element,
+            scope: scope,
+            // Setting these focus options prevents the page from
+            // jumping as dialogs are shown/hidden
+            trapFocus: false,
+            preserveFocus: false
           });
           otherDialog = dialogResult;
 
           dialogResult.closePromise.then(function() {
             dialogResult = null;
           });
-        }
-      };
-
-      vm.closePopup = function closePopup() {
-        if (!_.isNull(dialogResult)) {
-          dialogResult.close();
         }
       };
 
