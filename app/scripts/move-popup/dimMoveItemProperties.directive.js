@@ -123,9 +123,20 @@
 
       vm.locking = true;
 
-      itemService.setItemState(item, store, !item.locked, type)
+      var state = false;
+      if(type === 'lock') {
+        state = !item.locked;
+      } else if(type === 'track') {
+        state = !item.tracked;
+      }
+
+      itemService.setItemState(item, store, state, type)
         .then(function(lockState) {
-          item.locked = lockState;
+          if(type === 'lock') {
+            item.locked = lockState;
+          } else if(type === 'track') {
+            item.tracked = lockState;
+          }
           $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(function() {
