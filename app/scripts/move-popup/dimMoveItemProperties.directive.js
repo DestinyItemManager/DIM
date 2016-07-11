@@ -21,9 +21,12 @@
         '<div>',
         '  <div class="item-header" ng-class="vm.classes">',
         '    <div>',
-        '      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">',
-        '        <a ng-if="vm.item.lockable" href ng-click="vm.setLockState(vm.item)">',
+        '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
+        '        <a ng-if="vm.item.lockable" href ng-click="vm.setItemState(vm.item, \'lock\')" title="{{!vm.item.locked ? \'Lock\':\'Unlock\'}} {{::vm.item.typeName}}">',
         '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
+        '        </a>',
+        '        <a ng-if="vm.item.trackable" href ng-click="vm.setItemState(vm.item, \'track\')" title="{{!vm.item.tracked ? \'Track\':\'Untrack\'}} {{::vm.item.typeName}}">',
+        '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
         '        </a>',
         '      </span>',
         '      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-title">',
@@ -31,7 +34,7 @@
         '      </a>',
         '    </div>',
         '    <div>',
-        '      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">',
+        '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
         '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
         '      </span>',
         '      {{ vm.light }} {{ vm.item.typeName }}',
@@ -106,7 +109,7 @@
       vm.changeDetails();
     });
 
-    vm.setLockState = function setLockState(item) {
+    vm.setItemState = function setItemState(item, type) {
       if (vm.locking) {
         return;
       }
@@ -120,9 +123,20 @@
 
       vm.locking = true;
 
-      itemService.setLockState(item, store, !item.locked)
+      var state = false;
+      if (type === 'lock') {
+        state = !item.locked;
+      } else if (type === 'track') {
+        state = !item.tracked;
+      }
+
+      itemService.setItemState(item, store, state, type)
         .then(function(lockState) {
-          item.locked = lockState;
+          if (type === 'lock') {
+            item.locked = lockState;
+          } else if (type === 'track') {
+            item.tracked = lockState;
+          }
           $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(function() {

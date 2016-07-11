@@ -25,7 +25,7 @@
       transfer: transfer,
       equip: equip,
       equipItems: equipItems,
-      setLockState: setLockState,
+      setItemState: setItemState,
       getXur: getXur
     };
 
@@ -631,7 +631,12 @@
 
     /************************************************************************************************************************************/
 
-    function setLockState(item, store, lockState) {
+    function setItemState(item, store, lockState, type) {
+      switch (type) {
+      case 'lock': type = 'SetLockState'; break;
+      case 'track': type = 'SetQuestTrackedState'; break;
+      }
+
       var platform = dimState.active;
       var data = {
         token: null,
@@ -650,7 +655,7 @@
           return store;
         })
         .then(function(store) {
-          return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
+          return getSetItemStateRequest(data.token, platform.type, item, store, lockState, type);
         })
         .then(retryOnThrottled)
         .then(handleErrors);
@@ -658,10 +663,10 @@
       return promise;
     }
 
-    function getSetLockStateRequest(token, membershipType, item, store, lockState) {
+    function getSetItemStateRequest(token, membershipType, item, store, lockState, type) {
       return {
         method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny/SetLockState/',
+        url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token,
