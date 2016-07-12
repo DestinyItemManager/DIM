@@ -118,7 +118,7 @@
     }
 
     return {
-      vendorItems: [],
+      vendorItems: {},
       vanguardHashes: ['1990950', '3003633346', '1575820975'], // Titan, Hunter, Warlock
       factionHashes: ['3611686524', '1821699360', '1808244981'], // Dead orbit, Future war, New mon
       miscHashes: ['174528503', '2680694281', '1998812735'], // Eris, Speaker, Variks

@@ -83,9 +83,9 @@
     });
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, dimSearchService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -186,6 +186,36 @@
           item.visible = (filters.length > 0) ? filterFn(item) : true;
         });
       });
+      
+      if (dimVendorService.vendorItems) {
+        var setVisible = function(vendor) {
+          _.each(vendor.items, function(classType) {
+            _.each(classType, function(armorType) {
+              _.each(armorType, function(item) {
+                item.visible = (filters.length > 0) ? filterFn(item) : true;
+              });
+            });
+          });
+        }
+        
+        setVisible(dimVendorService.vendorItems.crucible.Crucible);
+        setVisible(dimVendorService.vendorItems.exotics.Exotics);
+        _.each(dimVendorService.vendorItems.factions, function(faction) {
+          setVisible(faction);
+        });
+        _.each(dimVendorService.vendorItems.misc, function(miscVendor) {
+          setVisible(miscVendor);
+        });
+        _.each(dimVendorService.vendorItems.misc, function(miscVendor) {
+          setVisible(miscVendor);
+        });
+        _.each(dimVendorService.vendorItems.vanguard, function(vanguardVendor) {
+          setVisible(vanguardVendor);
+        });
+        if(dimVendorService.vendorItems.banner) {
+          setVisible(dimVendorService.vendorItems.banner.Banner);
+        }
+      }
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps

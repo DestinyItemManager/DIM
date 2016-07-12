@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$q', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService'];
 
-  function dimVendorCtrl($scope, $q, loadingTracker, dimVendorService, ngDialog, dimStoreService) {
+  function dimVendorCtrl($scope, $state, $q, loadingTracker, dimVendorService, ngDialog, dimStoreService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
@@ -14,6 +14,11 @@
 
     vm.vendors = dimVendorService.vendorItems;
     vm.activeVendors = _.keys(vm.vendors);
+    
+    if (_.isEmpty(vm.vendors)) {
+      $state.go('inventory');
+      return;
+    }
 
     function mergeMaps(o, map) {
       _.each(map, function(val, key) {
@@ -54,7 +59,7 @@
     $scope.$on('dim-stores-updated', function() {
       countCurrencies();
     });
-
+    
     $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult) {
         $dialog.position({
@@ -65,7 +70,7 @@
         });
       }
     });
-
+    
     angular.extend(vm, {
       active: 'Warlock',
       activeVendor: 'vanguard',

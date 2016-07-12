@@ -169,7 +169,7 @@ dd {
   }
 }
 
-.about, .app-settings, .filters, .support, .move-amount-popup, .xur, .vendor {
+.about, .app-settings, .filters, .support, .move-amount-popup, .xur {
   &.ngdialog {
     position: fixed;
     width: 100%;
@@ -934,108 +934,6 @@ dim-store-heading {
   cursor: pointer;
 }
 
-.vendor {
-  .ngdialog-content {
-    height: fit-content !important;
-    max-height: 100% !important;
-    width: 50% !important;
-  }
-  .ngdialog-inner-content {
-    overflow-y: scroll;
-    width: 100%;
-    height: 75vh;
-    background-color: #434444;
-  }
-  .vendor-button {
-    cursor: pointer;
-    background-color: gray;
-    padding: 3px 10px;
-    box-shadow: inset 0px 0px 1px black;
-    display: inline-block;
-    &:hover {
-      background-color: #E8A534;//$orange;
-    }
-    &:active, &.selected {
-      box-shadow: none;
-      background-color: #E8A534;//$orange;
-    }
-    input {
-      display: none;
-    }
-  }
-  h2 {
-    margin: 0;
-  }
-  h3 {
-    margin: 0;
-  }
-  .selectionPanel p {
-    display:inline-block;
-  }
-  .selectionPanel {
-    text-align: center;
-  }
-  .vendorContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap:wrap;
-    justify-content: center;
-  }
-  .vendorBlock {
-    margin-right: 20px;
-  }
-  .vendorHeader {
-    display: flex;
-    align-items: center;
-    padding-bottom: 10px;
-    justify-content: center;
-  }
-  .vendorRow {
-    display:flex;
-    flex-direction: row;
-    flex-wrap:wrap;
-    justify-content: center;
-  }
-  .sub-bucket {
-    background-size: 44px;
-    background-position: 2 2;
-    background-image: url("../images/bg_inventory_bucket_single_crop.png");
-    background-repeat: no-repeat; 
-  }
-  .unequipped {
-    margin-bottom: 5px;
-  }
-  .itemType {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .vendorIcon {
-    width: 31px;
-    height: 31px;
-    margin-left:10px;
-  }
-  .vendorItem {
-    display: inline-block;
-    margin-right: 3px;
-    margin-bottom: 5px;
-    &:last-child {
-      margin-right: 10px;
-    }
-  }
-  .currency img {
-    height: 12px;
-    width: 12px;
-  }
-  .cost {
-    margin-top: 6px;
-    font-size: 10px;
-  }
-  .notenough {
-    color: #CC5C58;
-  }
-}
-
 .xur {
   .ngdialog-content {
     height: fit-content !important;
@@ -1096,7 +994,7 @@ dim-store-heading {
   }
 }
 
-.ngdialog.xur-move-popup, .ngdialog.vendor-move-popup {
+.ngdialog.xur-move-popup {
   position: fixed;
   height: 0;
   z-index: 10000;

@@ -111,7 +111,8 @@
         .state('inventory', {
           url: "/inventory",
           templateUrl: "views/inventory.html"
-        }).state('best', {
+        })
+        .state('best', {
           url: "/best",
           templateUrl: "views/best.html"
         })
