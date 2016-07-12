@@ -50,7 +50,7 @@
         };
 
         var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
-        if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 50) {
+        if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
           dimInfoService.show('old-chrome', {
             title: 'Please Upgrade Chrome',
             view: 'views/upgrade-chrome.html?v=$DIM_VERSION',
