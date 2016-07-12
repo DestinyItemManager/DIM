@@ -19,8 +19,11 @@
     });
 
     $scope.$watch('app.settings.showNewAnimation', function(showAnimation) {
-      var animation = showAnimation ? 'new_overlay 5s infinite' : 'initial';
-      document.querySelector('html').style.setProperty("--overlay-animation", animation);
+      if (showAnimation) {
+        $('body').addClass('new-item-animated');
+      } else {
+        $('body').removeClass('new-item-animated');
+      }
     });
 
     hotkeys.add({

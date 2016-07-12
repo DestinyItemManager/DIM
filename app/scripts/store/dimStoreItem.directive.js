@@ -199,11 +199,10 @@
     }
   }
 
-  StoreItemCtrl.$inject = ['dimSettingsService'];
+  StoreItemCtrl.$inject = [];
 
-  function StoreItemCtrl(dimSettingsService) {
+  function StoreItemCtrl() {
     var vm = this;
-    vm.settings = dimSettingsService;
 
     vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
     vm.draggable = (vm.item.equipment || vm.item.location.hasTransferDestination) && !vm.item.location.inPostmaster;

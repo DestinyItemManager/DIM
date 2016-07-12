@@ -4,7 +4,6 @@
 
 :root {
   --item-size: 44px;
-  --overlay-animation: new_overlay 5s infinite;
 }
 
 
@@ -25,6 +24,10 @@ div:focus, span:focus {
   animation: var(--overlay-animation);
   width: var(--item-size);
   height: var(--item-size);
+  .new-item-animated & {
+    will-change: transform;
+    animation: new_overlay 4s linear infinite;
+  }
 }
 
 .new_overlay_overflow {
