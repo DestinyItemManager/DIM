@@ -18,14 +18,6 @@
       document.querySelector('html').style.setProperty("--item-size", size + 'px');
     });
 
-    $scope.$watch('app.settings.showNewAnimation', function(showAnimation) {
-      if (showAnimation) {
-        $('body').addClass('new-item-animated');
-      } else {
-        $('body').removeClass('new-item-animated');
-      }
-    });
-
     hotkeys.add({
       combo: ['f'],
       callback: function(event) {

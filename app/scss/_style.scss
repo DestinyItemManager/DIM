@@ -21,7 +21,6 @@ div:focus, span:focus {
 }
 
 .new_overlay {
-  animation: var(--overlay-animation);
   width: var(--item-size);
   height: var(--item-size);
   .new-item-animated & {
