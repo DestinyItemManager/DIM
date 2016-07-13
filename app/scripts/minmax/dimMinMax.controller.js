@@ -11,9 +11,6 @@
       buckets = [];
 
     function getBonusType(armorpiece) {
-      if(!armorpiece.normalStats) {
-        return '';
-      }
       return '' +
         (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
         (armorpiece.normalStats[1735777505].bonus > 0 ? 'disc ' : '') +
@@ -67,7 +64,7 @@
             best.push(curbest);
             // add the best -> if best is exotic -> get best legendary
             if(curbest.item.isExotic && armortype !== 'ClassItem') {
-              best.push(getBestItem(bucket[armortype], hash.stats, hash.type));
+              best.push(getBestItem(bucket[armortype], hash.stats, hash.type, true));
             }
           });
         }
