@@ -11,6 +11,9 @@
       buckets = [];
 
     function getBonusType(armorpiece) {
+      if(!armorpiece.normalStats) {
+        return '';
+      }
       return '' +
         (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
         (armorpiece.normalStats[1735777505].bonus > 0 ? 'disc ' : '') +
