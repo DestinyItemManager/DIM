@@ -37,6 +37,8 @@
       itemSort: 'primaryStat',
       // How many columns to display character buckets
       charCol: 3,
+      // How many columns to display vault buckets
+      vaultMaxCol: 999,
       // How big in pixels to draw items
       itemSize: 44,
 

@@ -1,5 +1,31 @@
 # Next
 
+* Fix move popup not closing when drag-moving an item.
+* Added ability to and filters for track or untracking quests and bounties.
+* Add option to show new item overlay animation
+
+# 3.8.2
+
+* Update filter list to include quality/percentage filters
+* Add year column to CSV export scripts
+* When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
+* The screen no longer jumps around when clicking on items, and the item details popup should always be visible.
+* Dialogs should be sized better now.
+* Fix character order in move popup buttons.
+* Restored the ability to set a maximum vault size. "Auto" (full width) is still an option, and is the default.
+* Armor quality is shown in Xur, loadouts, and the infusion dialog if advanced stats is turned on.
+* "Take" stackables works again.
+
+# 3.8.1
+
+* Added steps to Moments of Triumph popup (and other record books.)
+* Fixed wobbly refresh icon.
+* Fixed single item stat percentages.
+* Fixed armor export script.
+* Possible fix for loadout builder.
+
+# 3.8.0
+
 * Loadout builder redesign and major performance enchancements.
 * Items in the postmaster now have quality ratings, can use the infusion fuel finder, show up in the infusion fuel finder, compare against currently equipped items, etc. They behave just like a normal item except you can't move them and they're in a different spot.
 * The vault width preference has been removed - the vault now always takes up all the remaining space on the screen.
@@ -32,7 +58,7 @@
 * Loadout menus are now scrollable for users with over 8 custom loadouts on a single character.
 * Changing the character sort order now applies live, rather than requiring a refresh.
 * Use most recently logged in player to start with loadout builder.
-* Search queries will exlude the token `" and "` as some users were including that when chaining multiple filters.
+* Search queries will exclude the token `" and "` as some users were including that when chaining multiple filters.
 * Fix UI issue on move popup dialog that had some numbers expanding outside the dialog.
 * Consolidate beta icons to the icons folder.
 

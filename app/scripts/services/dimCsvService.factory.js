@@ -44,7 +44,7 @@
     }
 
     function downloadArmor(items, nameMap) {
-      var header = "Name, Tier, Type, Equippable, Light, Owner, % Leveled, Locked, Equipped, " +
+      var header = "Name, Tier, Type, Equippable, Light, Owner, % Leveled, Locked, Equipped, Year, " +
         "% Quality, % IntQ, % DiscQ, % StrQ, Int, Disc, Str, Perks\n";
       var data = "";
       items.forEach(function(item) {
@@ -64,18 +64,21 @@
         data += (item.percentComplete * 100).toFixed(0) + ", ";
         data += item.locked + ", ";
         data += item.equipped + ", ";
+        data += item.year + ", ";
         data += item.quality ? item.quality.max + ", " : "0, ";
         var stats = {};
-        item.stats.forEach(function(stat) {
-          var pct = 0;
-          if (stat.scaled && stat.scaled.min) {
-            pct = Math.round(100 * stat.scaled.min / stat.split);
-          }
-          stats[stat.name] = {
-            value: stat.value,
-            pct: pct
-          };
-        });
+        if (item.stats) {
+          item.stats.forEach(function(stat) {
+            var pct = 0;
+            if (stat.scaled && stat.scaled.min) {
+              pct = Math.round(100 * stat.scaled.min / stat.split);
+            }
+            stats[stat.name] = {
+              value: stat.value,
+              pct: pct
+            };
+          });
+        }
         data += stats.Intellect ? stats.Intellect.pct + ", " : "0, ";
         data += stats.Discipline ? stats.Discipline.pct + ", " : "0, ";
         data += stats.Strength ? stats.Strength.pct + ", " : "0, ";
@@ -92,7 +95,7 @@
     }
 
     function downloadWeapons(guns, nameMap) {
-      var header = "Name, Tier, Type, Light, Dmg, Owner, % Leveled, Locked, Equipped, " +
+      var header = "Name, Tier, Type, Light, Dmg, Owner, % Leveled, Locked, Equipped, Year," +
         "AA, Impact, Range, Stability, ROF, Reload, Mag, Equip, " +
         "Nodes\n";
       var data = "";
@@ -111,6 +114,7 @@
         data += (gun.percentComplete * 100).toFixed(0) + ", ";
         data += gun.locked + ", ";
         data += gun.equipped + ", ";
+        data += gun.year + ", ";
         var stats = {
           aa: 0,
           impact: 0,

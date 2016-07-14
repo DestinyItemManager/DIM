@@ -2,6 +2,11 @@
   'use strict';
 
   angular.module('dimApp')
+    .factory('dimSearchService', function() {
+      return {
+        query: ''
+      };
+    })
     .directive('dimSearchFilter', SearchFilter);
 
   SearchFilter.$inject = [];
@@ -37,6 +42,8 @@
     unascended: ['unascended', 'unassended', 'unasscended'],
     ascended: ['ascended', 'assended', 'asscended'],
     reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    tracked: ['tracked'],
+    untracked: ['untracked'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
@@ -51,10 +58,12 @@
   var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
     return "is:" + word;
   });
-  keywords.push("light:<", "light:>", "light:<=", "light:>=",
-                "level:<", "level:>", "level:<=", "level:>=",
-                "quality:<", "quality:>", "quality:<=", "quality:>=",
-                "percentage:<", "percentage:>", "percentage:<=", "percentage:>=");
+
+  // Filters that operate on ranges (>, <, >=, <=)
+  var ranges = ['light', 'level', 'quality', 'percentage'];
+  ranges.forEach(function(range) {
+    keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
+  });
 
   function Link(scope, element) {
     element.find('input').textcomplete([
@@ -76,16 +85,14 @@
     });
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
 
-  function SearchFilterCtrl($scope, dimStoreService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
-    vm.search = {
-      query: ""
-    };
+    vm.search = dimSearchService;
 
     $scope.$on('dim-stores-updated', function() {
       _duplicates = null;
@@ -242,6 +249,14 @@
       },
       reforgeable: function(predicate, item) {
         return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
+      },
+      untracked: function(predicate, item) {
+        return item.trackable &&
+          !item.tracked;
+      },
+      tracked: function(predicate, item) {
+        return item.trackable &&
+          item.tracked;
       },
       unlocked: function(predicate, item) {
         return item.lockable &&

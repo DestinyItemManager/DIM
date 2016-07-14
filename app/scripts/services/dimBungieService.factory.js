@@ -25,7 +25,7 @@
       transfer: transfer,
       equip: equip,
       equipItems: equipItems,
-      setLockState: setLockState,
+      setItemState: setItemState,
       getXur: getXur
     };
 
@@ -320,7 +320,8 @@
         .then(function() {
           return $q.all([
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
+            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
           ]).then(function(data) {
             return $q.resolve(data[0]);
           });
@@ -419,6 +420,38 @@
         var processPB = processProgressionResponse.bind(null, character);
 
         return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
+          .then($http)
+          .then(handleErrors)
+          .then(processPB);
+      });
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
+    function getCharacterAdvisorsRequest(token, platform, membershipId, character) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function processAdvisorsResponse(character, response) {
+      character.advisors = response.data.Response.data;
+      return character;
+    }
+
+    function getDestinyAdvisors(token, platform, membershipId, characters) {
+      var promises = characters.map(function(character) {
+        var processPB = processAdvisorsResponse.bind(null, character);
+
+        return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
           .then($http)
           .then(handleErrors)
           .then(processPB);
@@ -598,7 +631,12 @@
 
     /************************************************************************************************************************************/
 
-    function setLockState(item, store, lockState) {
+    function setItemState(item, store, lockState, type) {
+      switch (type) {
+      case 'lock': type = 'SetLockState'; break;
+      case 'track': type = 'SetQuestTrackedState'; break;
+      }
+
       var platform = dimState.active;
       var data = {
         token: null,
@@ -617,7 +655,7 @@
           return store;
         })
         .then(function(store) {
-          return getSetLockStateRequest(data.token, platform.type, item, store, lockState);
+          return getSetItemStateRequest(data.token, platform.type, item, store, lockState, type);
         })
         .then(retryOnThrottled)
         .then(handleErrors);
@@ -625,10 +663,10 @@
       return promise;
     }
 
-    function getSetLockStateRequest(token, membershipType, item, store, lockState) {
+    function getSetItemStateRequest(token, membershipType, item, store, lockState, type) {
       return {
         method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny/SetLockState/',
+        url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token,

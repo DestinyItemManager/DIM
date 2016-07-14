@@ -12,7 +12,8 @@
       scope: {
         item: '=dimMoveItemProperties',
         compareItem: '=dimCompareItem',
-        infuse: '=dimInfuse'
+        infuse: '=dimInfuse',
+        changeDetails: '&'
       },
       restrict: 'A',
       replace: true,
@@ -20,9 +21,12 @@
         '<div>',
         '  <div class="item-header" ng-class="vm.classes">',
         '    <div>',
-        '      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">',
-        '        <a ng-if="vm.item.lockable" href ng-click="vm.setLockState(vm.item)">',
+        '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
+        '        <a ng-if="vm.item.lockable" href ng-click="vm.setItemState(vm.item, \'lock\')" title="{{!vm.item.locked ? \'Lock\':\'Unlock\'}} {{::vm.item.typeName}}">',
         '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
+        '        </a>',
+        '        <a ng-if="vm.item.trackable" href ng-click="vm.setItemState(vm.item, \'track\')" title="{{!vm.item.tracked ? \'Track\':\'Untrack\'}} {{::vm.item.typeName}}">',
+        '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
         '        </a>',
         '      </span>',
         '      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-title">',
@@ -30,12 +34,12 @@
         '      </a>',
         '    </div>',
         '    <div>',
-        '      <span ng-if="vm.item.lockable || vm.item.dmg" class="icon">',
+        '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
         '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
         '      </span>',
         '      {{ vm.light }} {{ vm.item.typeName }}',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
-        '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.itemDetails = !vm.itemDetails">',
+        '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
         '        </i>',
         '      </a>',
@@ -61,7 +65,7 @@
         '        <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '      </span>',
         '      <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '        <span ng-if="stat.bar && vm.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
+        '        <span ng-if="stat.bar && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
         '      </span>',
         '    </div>',
         '    <div class="stat-box-row" ng-if="vm.item.quality && vm.item.quality.min">',
@@ -77,7 +81,7 @@
         '      <div class="objective-checkbox"><div></div></div>',
         '      <div class="objective-progress">',
         '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-        '        <div class="objective-description">{{ objective.description || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
+        '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
         '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
         '      </div>',
         '    </div>',
@@ -102,9 +106,10 @@
     // The 'i' keyboard shortcut toggles full details
     $scope.$on('dim-toggle-item-details', function() {
       vm.itemDetails = !vm.itemDetails;
+      vm.changeDetails();
     });
 
-    vm.setLockState = function setLockState(item) {
+    vm.setItemState = function setItemState(item, type) {
       if (vm.locking) {
         return;
       }
@@ -118,9 +123,20 @@
 
       vm.locking = true;
 
-      itemService.setLockState(item, store, !item.locked)
+      var state = false;
+      if (type === 'lock') {
+        state = !item.locked;
+      } else if (type === 'track') {
+        state = !item.tracked;
+      }
+
+      itemService.setItemState(item, store, state, type)
         .then(function(lockState) {
-          item.locked = lockState;
+          if (type === 'lock') {
+            item.locked = lockState;
+          } else if (type === 'track') {
+            item.tracked = lockState;
+          }
           $rootScope.$broadcast('dim-filter-invalidate');
         })
         .finally(function() {
