@@ -67,7 +67,7 @@
             best.push(curbest);
             // add the best -> if best is exotic -> get best legendary
             if(curbest.item.isExotic && armortype !== 'ClassItem') {
-              best.push(getBestItem(bucket[armortype], hash.stats, hash.type));
+              best.push(getBestItem(bucket[armortype], hash.stats, hash.type, true));
             }
           });
         }
