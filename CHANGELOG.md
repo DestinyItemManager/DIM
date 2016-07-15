@@ -4,6 +4,7 @@
 * Added ability to and filters for track or untracking quests and bounties.
 * Fix issue where some sets would be missing from the loadout builder.
 * Fixed #660 where postmaster items would not appear in the Postmaster section of DIM, ie Sterling Treasure after the reset.
+* Fixed #697 where loadouts will no longer remove the loadouts for the opposite platform.
 
 # 3.8.2
 
