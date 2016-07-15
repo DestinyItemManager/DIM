@@ -272,6 +272,10 @@
               if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
                 if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
                   _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+                    _.each(pail.items, function(item) {
+                      item.bucket = pail.bucketHash;
+                    });
+
                     items = _.union(items, pail.items);
                   });
                 }
