@@ -39,7 +39,7 @@
       };
     }
 
-    function getBestArmor(bucket, locked) {
+    function getBestArmor(bucket, locked, excluded) {
       var stat_hashes = [
           {stats: [144602215, 1735777505], type: 'intdisc'},
           {stats: [144602215, 4244567218], type: 'intstr'},
@@ -59,15 +59,20 @@
           best = [{item: locked[armortype], bonus_type: getBonusType(locked[armortype])}];
         } else {
           best = [];
+          // Filter out excluded
+          var filtered = _.filter(bucket[armortype], function(item) { 
+            return !_.findWhere(excluded[armortype], {id: item.id}); 
+          });
           stat_hashes.forEach(function(hash, index) {
             if(!vm.mode && index > 2) {
               return;
             }
-            curbest = getBestItem(bucket[armortype], hash.stats, hash.type);
+
+            curbest = getBestItem(filtered, hash.stats, hash.type);
             best.push(curbest);
             // add the best -> if best is exotic -> get best legendary
             if(curbest.item.isExotic && armortype !== 'ClassItem') {
-              best.push(getBestItem(bucket[armortype], hash.stats, hash.type, true));
+              best.push(getBestItem(filtered, hash.stats, hash.type, true));
             }
           });
         }
@@ -109,6 +114,7 @@
       scale_type: 'scaled',
       allSetTiers: [],
       highestsets: {},
+      excludeditems: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] },
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       type: 'Helmet',
       showBlues: false,
@@ -120,6 +126,10 @@
       ranked: {},
       lockedItemsValid: function(dropped_id, dropped_type) {
         dropped_id = dropped_id.split('-')[1];
+        if(_.findWhere(vm.excludeditems[dropped_type], {id: dropped_id})) {
+          return false;
+        }
+
         var item = _.findWhere(buckets[vm.active][dropped_type], {id: dropped_id}),
           exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         _.each(vm.lockeditems, function(lockeditem) {
@@ -131,6 +141,9 @@
           }
         });
         return exoticCount < 2;
+      },
+      excludedItemsValid: function(dropped_id, dropped_type) {
+        return !(vm.lockeditems[dropped_type] && vm.lockeditems[dropped_type].id === dropped_id);
       },
 
       onCharacterChange: function() {
@@ -164,6 +177,26 @@
           vm.lockedchanged = true;
         }
       },
+      onExcludedDrop: function(dropped_id, type) {
+        dropped_id = dropped_id.split('-')[1];
+        if(_.findWhere(vm.excludeditems[type], {id: dropped_id})) {
+          return;
+        }
+        var item = _.findWhere(buckets[vm.active][type], {id: dropped_id});
+        vm.excludeditems[type].push(item);
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if(vm.progress < 1.0) {
+          vm.excludedchanged = true;
+        }
+      },
+      onExcludedRemove: function(removed_id, removed_type) {
+        vm.excludeditems[removed_type] = _.filter(vm.excludeditems[removed_type], function(excludeditem) { return excludeditem.id !== removed_id; });
+
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if(vm.progress < 1.0) {
+          vm.excludedchanged = true;
+        }
+      },
       newLoadout: function(set) {
         ngDialog.closeAll();
         var loadout = { items: {} };
@@ -183,7 +216,7 @@
         });
       },
       getSetBucketsStep: function(activeGaurdian) {
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems),
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems, vm.excludeditems),
           helms = bestArmor.Helmet || [],
           gaunts = bestArmor.Gauntlets || [],
           chests = bestArmor.Chest || [],
