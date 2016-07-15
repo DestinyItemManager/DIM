@@ -76,13 +76,7 @@
         result = $q.when(_loadouts);
       }
 
-      return result.then(function(loadouts) {
-        // Filter to current platform
-        var platform = dimPlatformService.getActive();
-        return _.filter(loadouts, function(loadout) {
-          return loadout.platform === undefined || loadout.platform === platform.label; // Playstation or Xbox
-        });
-      });
+      return result;
     }
 
     function saveLoadouts(loadouts) {
