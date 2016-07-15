@@ -17,7 +17,7 @@
             <div class="sub-section" ng-if="saleItems.length > 0">
             <div class="store-cell">
               <div class="sub-bucket" ng-repeat="saleItem in saleItems">
-                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)"></dim-simple-item>
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
                 <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
                   {{::saleItem.cost.cost}}/{{vm.totalCoins[saleItem.cost.currency.itemHash]}}
                   <span class="currency"><img dim-bungie-image-fallback="::saleItem.cost.currency.icon" title="{{::saleItem.cost.currency.name}}"></span>

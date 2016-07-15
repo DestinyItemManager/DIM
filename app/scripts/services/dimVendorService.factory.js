@@ -198,12 +198,14 @@
             return $q.all(promises);
           })
           .then(function(vendorsWithProcessedItems) {
-            self.vendorItems.vanguard = initVanguardBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.vanguardHashes,vendor.vendorHash); }));
-            self.vendorItems.factions = initFactionBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.factionHashes,vendor.vendorHash); }));
-            self.vendorItems.misc = initMiscBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.miscHashes,vendor.vendorHash); }));
-            self.vendorItems.crucible = initCrucible(_.filter(vendorsWithProcessedItems, function(vendor) { return self.crucibleHash === vendor.vendorHash }));
-            self.vendorItems.banner = initBanner(_.filter(vendorsWithProcessedItems, function(vendor) { return self.bannerHash === vendor.vendorHash; }));
-            self.vendorItems.exotics = initExotics(_.filter(vendorsWithProcessedItems, function(vendor) { return self.exoticsHash === vendor.vendorHash; }));
+            var vendorItems = {};
+            vendorItems.vanguard = initVanguardBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.vanguardHashes,vendor.vendorHash); }));
+            vendorItems.factions = initFactionBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.factionHashes,vendor.vendorHash); }));
+            vendorItems.misc = initMiscBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.miscHashes,vendor.vendorHash); }));
+            vendorItems.crucible = initCrucible(_.filter(vendorsWithProcessedItems, function(vendor) { return self.crucibleHash === vendor.vendorHash }));
+            vendorItems.banner = initBanner(_.filter(vendorsWithProcessedItems, function(vendor) { return self.bannerHash === vendor.vendorHash; }));
+            vendorItems.exotics = initExotics(_.filter(vendorsWithProcessedItems, function(vendor) { return self.exoticsHash === vendor.vendorHash; }));
+            self.vendorItems = vendorItems;
             //self.vendorItems = vendorsWithProcessedItems;
             // // Now lets split the items in each vendor up by class and armor type
             // _.each(vendorsWithProcessedItems, function(vendorWithProcessedItems) {

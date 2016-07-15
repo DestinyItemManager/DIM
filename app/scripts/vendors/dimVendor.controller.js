@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', '$timeout', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService'];
 
-  function dimVendorCtrl($scope, $state, $q, loadingTracker, dimVendorService, ngDialog, dimStoreService) {
+  function dimVendorCtrl($scope, $state, $q, $timeout, loadingTracker, dimVendorService, ngDialog, dimStoreService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
@@ -59,14 +59,14 @@
     $scope.$on('dim-stores-updated', function() {
       countCurrencies();
     });
-    
+
     $scope.$on('ngDialog.opened', function(event, $dialog) {
-      if (dialogResult) {
+      if (dialogResult && $dialog[0].id === dialogResult.id) {
         $dialog.position({
           my: 'left top',
-          at: 'left bottom+4',
+          at: 'left bottom+2',
           of: detailItemElement,
-          collision: 'flip'
+          collision: 'flip flip',
         });
       }
     });
@@ -80,7 +80,11 @@
           dialogResult.close();
         }
 
-        if (detailItem !== item) {
+        if (detailItem === item) {
+          detailItem = null;
+          dialogResult = null;
+          detailItemElement = null;
+        } else {
           detailItem = item;
           detailItemElement = angular.element(e.currentTarget);
 
@@ -109,7 +113,7 @@
             scope: angular.extend($scope.$new(true), {
             }),
             controllerAs: 'vm',
-            controller: ['$scope', function() {
+            controller: [function() {
               var vm = this;
               angular.extend(vm, {
                 item: item,
@@ -122,10 +126,6 @@
               });
             }]
           });
-        } else if (detailItem === item) {
-          detailItem = null;
-          dialogResult = null;
-          detailItemElement = null;
         }
       },
       close: function() {
