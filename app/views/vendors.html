@@ -1,17 +1,17 @@
-<div class="minmax" ng-controller="dimVendorCtrl as vm">
+<div class="vendor" ng-controller="dimVendorCtrl as vm">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <h1 class="orange">Vendors</h1>
   <div class="vendor">
-    <div class="vendorContainer" ng-repeat="activeVendor in vm.activeVendors">
-    <div class="vendorBlock" ng-repeat="(vendorType, vendor) in vm.vendors[activeVendor]">
-      <div class="vendorHeader">
+    <div class="vendor-container" ng-repeat="activeVendor in vm.activeVendors">
+    <div class="vendor-block" ng-repeat="(vendorType, vendor) in vm.vendors[activeVendor]">
+      <div class="vendor-header">
         <div class="title">
         {{vendor.vendorName}}
-        <img class="vendorIcon" ng-src="{{vendor.vendorIcon}}" />
+        <img class="vendor-icon" ng-src="{{vendor.vendorIcon}}" />
         </div>
       </div>
-      <div class="vendorRow">
-        <div ng-repeat="(classType, armorTypes) in vendor.items">
+      <div class="vendor-row">
+        <div ng-class="{ 'vendor-col': activeVendor !== 'vanguard' }" ng-repeat="(classType, armorTypes) in vendor.items">
           <!--<h3>{{classType}}</h3>-->
           <div ng-repeat="(itemType, saleItems) in armorTypes">
             <div class="sub-section" ng-if="saleItems.length > 0">
