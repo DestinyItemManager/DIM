@@ -124,7 +124,11 @@
                   this.compareItem = item;
                 }
               });
-            }]
+            }],
+            // Setting these focus options prevents the page from
+            // jumping as dialogs are shown/hidden
+            trapFocus: false,
+            preserveFocus: false
           });
         }
       },

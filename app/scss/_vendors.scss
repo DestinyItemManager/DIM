@@ -74,7 +74,7 @@
 }
 
 .ngdialog.vendor-move-popup {
-  position: fixed;
+  position: absolute;
   z-index: 4;
   height: fit-content;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
