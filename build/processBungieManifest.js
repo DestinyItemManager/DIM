@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 var http = require('http');
 var fs = require('fs');
 var request = require('request');
@@ -7,66 +5,12 @@ var sqlite3 = require('sqlite3').verbose();
 var _ = require("underscore");
 var unzip = require('unzip');
 var mkdirp = require('mkdirp');
+var async = require("async");
+var ProgressBar = require('progress');
 
-var itemHashesJSON = require('./itemHashes.json');
 var progressionMeta = require('./progressionMeta.json');
 
-var db;
-var dbFile;
 var version;
-
-function processItemRow(icon, pRow, itemHash) {
-
-  var exists = fs.existsSync('.' + icon);
-
-  if (icon === undefined) {
-    exists = true;
-  }
-
-  var contains = true;
-
-  // if (itemHash) {
-  //   contains = _.contains(itemHashesJSON.itemHashes, parseInt(itemHash, 10));
-  // }
-  if (contains) {
-    if (!exists) {
-      var imageRequest = http.get('http://www.bungie.net' + icon, function(imageResponse) {
-        var imgFS = fs.createWriteStream('.' + icon);
-        imageResponse.on('end', function() {
-          console.log(icon);
-          imgFS.end();
-          pRow.next();
-        });
-        imageResponse.on('error', function(e) {
-          console.log("Image download error", e);
-        });
-
-        imageResponse.pipe(imgFS);
-      });
-    } else {
-      pRow.next();
-    }
-  } else {
-    pRow.next();
-  }
-}
-
-function processItemRows(rows, prop) {
-  var keys = _.keys(rows);
-  var i = 0;
-
-  return {
-    'next': next
-  };
-
-  function next() {
-    i = i + 1;
-
-    if (i < keys.length) {
-      processItemRow(rows[keys[i]][prop], this, keys[i]);
-    }
-  }
-}
 
 function onManifestRequest(error, response, body) {
   var parsedResponse = JSON.parse(body);
@@ -74,7 +18,7 @@ function onManifestRequest(error, response, body) {
   version = parsedResponse.Response.version;
 
   request
-    .get('http://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
+    .get('https://www.bungie.net' + parsedResponse.Response.mobileWorldContentPaths.en)
     .pipe(manifestFile)
     .on('close', onManifestDownloaded);
 }
@@ -82,10 +26,10 @@ function onManifestRequest(error, response, body) {
 function onManifestDownloaded() {
   fs.createReadStream('manifest.zip')
     .pipe(unzip.Parse())
-    .on('entry', function(entry) {
+    .on('entry', function (entry) {
       ws = fs.createWriteStream('manifest/' + entry.path);
 
-      ws.on('finish', function() {
+      ws.on('finish', function () {
         var exists = fs.existsSync('manifest/' + entry.path);
 
         if (exists) {
@@ -97,186 +41,274 @@ function onManifestDownloaded() {
     });
 }
 
-function extractDB(dbFile) {
-  db = new sqlite3.Database(dbFile, sqlite3.OPEN_READONLY);
-  var items = {};
+function downloadAssetFromBungie(icon, callback) {
+  if (_.isEmpty(icon)) {
+    callback();
+    return;
+  }
 
-  db.all('select * from DestinyInventoryItemDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      delete item.equippingBlock;
-      items[item.itemHash] = item;
-    });
-
-    var pRow = processItemRows(items, 'icon');
-    pRow.next();
-
-    var defs = fs.createWriteStream('api-manifest/items.json');
-    defs.write(JSON.stringify(items));
-    defs.end();
-  });
-
-  db.all('select * from DestinyStatDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      items[item.statHash] = item;
-    });
-
-    var defs = fs.createWriteStream('api-manifest/stats.json');
-    defs.write(JSON.stringify(items));
-  });
-
-  // get Record Book for progress tracking
-  db.all('select * from DestinyRecordDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      items[item.hash] = item;
-    });
-
-    var defs = fs.createWriteStream('api-manifest/records.json');
-    defs.write(JSON.stringify(items));
-  });
-
-  // Get objectives for progress tracking JFLAY2015
-  db.all('select * from DestinyObjectiveDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      delete item.equippingBlock;
-      items[item.objectiveHash] = item;
-    });
-
-    var defs = fs.createWriteStream('api-manifest/objectives.json');
-    defs.write(JSON.stringify(items));
-  });
-
-  db.all('select * from DestinyInventoryBucketDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      items[item.bucketHash] = item;
-    });
-
-    var defs = fs.createWriteStream('api-manifest/buckets.json');
-    defs.write(JSON.stringify(items));
-  });
-
-  db.all('select * from DestinyTalentGridDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      //delete item.equippingBlock;
-      items[item.gridHash] = item;
-    });
-
-    var nodes = {};
-    var index = 0;
-    _.values(items).forEach(function (item) {
-      item.nodes.forEach(function(node) {
-        node.steps.forEach(function(step) {
-          nodes[step.icon] = step; // index by icon so we get all the icons
-        });
+  if (!fs.existsSync('.' + icon)) {
+    let req = request.get('http://www.bungie.net' + icon)
+      .on('error', (err) => {
+        console.log(err);
+        callback();
       });
-    });
-    var pRow = processItemRows(nodes, 'icon');
-    pRow.next();
 
-    var defs = fs.createWriteStream('api-manifest/talent.json');
-    defs.write(JSON.stringify(items));
-  });
+    req.pause();
 
-  db.all('select * from DestinySandboxPerkDefinition', function(err, rows) {
-      if (err) {
-          throw err;
+    req.on('response', function (resp) {
+      if (resp.statusCode === 200) {
+        req.pipe(fs.createWriteStream('.' + icon).on('finish', () => {
+          callback();
+        }));
+
+        req.resume();
+      } else {
+        console.log('Error - ', icon);
+        callback();
       }
+    });
+  } else {
+    callback();
+  }
 
-      items = {};
-
-      rows.forEach(function(row) {
-          var item = JSON.parse(row.json);
-          items[item.perkHash] = item;
-      });
-
-      var defs = fs.createWriteStream('api-manifest/perks.json');
-      defs.write(JSON.stringify(items));
-  });
-
-
-  db.all('select * from DestinyProgressionDefinition', function(err, rows) {
-      if (err) {
-          throw err;
-      }
-
-      items = {};
-
-      rows.forEach(function(row) {
-          var item = JSON.parse(row.json);
-          items[item.progressionHash] = item;
-          if(progressionMeta[item.progressionHash]) {
-            item.label = progressionMeta[item.progressionHash].label;
-            item.color = progressionMeta[item.progressionHash].color;
-            item.scale = progressionMeta[item.progressionHash].scale;
-            item.order = progressionMeta[item.progressionHash].order;
-          }
-          item.steps = item.steps.map(function(i) { return i.progressTotal; });
-
-          delete item.progressionHash;
-          delete item.hash;
-      });
-
-      var pRow = processItemRows(items, 'icon');
-      pRow.next();
-
-      var defs = fs.createWriteStream('api-manifest/progression.json');
-      defs.write(JSON.stringify(items));
-  });
-
-  console.log("done.");
+  return;
 }
 
-mkdirp('api-manifest', function(err) { });
-mkdirp('img/misc', function(err) { });
-mkdirp('img/destiny_content/items', function(err) { });
-mkdirp('img/destiny_content/progression', function(err) { });
-mkdirp('common/destiny_content/icons', function(err) { });
+function generateManifest(dbPath, query, manifestPath, rowFn, postFn, cbFn) {
+  let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY);
+  let items = {};
+
+  db.each(query, (err, row) => {
+    if (err) { throw err; }
+
+    var item = rowFn(err, row);
+    items[item.DimHash] = item;
+  }, () => {
+    db.close();
+
+    _.each(items, item => {
+      delete item.DimHash;
+    });
+
+    fs.writeFile(manifestPath, JSON.stringify(items));
+
+    if (postFn) {
+      postFn(items, cbFn);
+    } else {
+      if (cbFn) {
+        cbFn();
+      }
+    }
+  });
+}
+
+function processItemDefinitions(err, row) {
+  let item = JSON.parse(row.json, (k, v) => (k === 'equippingBlock') ? undefined : v);
+  item.DimHash = item.itemHash;
+  return item;
+}
+
+function postProcessItemDefinitions(items, cb) {
+  let bar = new ProgressBar('  downloading items \t\t [:bar] :percent :current/:total',
+    {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: _.keys(items).length
+    });
+
+  async.eachSeries(items, (item, callback) => {
+    bar.tick();
+    downloadAssetFromBungie(item.icon, callback);
+  }, () => {
+    if (cb) {
+      cb();
+    }
+  });
+}
+
+function postProcessTalentGridDefinitions(items, cb) {
+  let nodes = {};
+
+  _.values(items).forEach(function (item) {
+    item.nodes.forEach(function (node) {
+      node.steps.forEach(function (step) {
+        nodes[step.icon] = step; // index by icon so we get all the icons
+      });
+    });
+  });
+
+  let bar = new ProgressBar('  downloading talents \t\t [:bar] :percent :current/:total',
+    {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: _.keys(nodes).length
+    });
+
+  async.eachSeries(nodes, (step, callback) => {
+    bar.tick();
+    downloadAssetFromBungie(step.icon, callback);
+  }, () => {
+    if (cb) {
+      cb();
+    }
+  });
+}
+
+function processProgressionDefinitions(err, row) {
+  let item = JSON.parse(row.json, (k, v) => (k === 'equippingBlock') ? undefined : v);
+  item.DimHash = item.progressionHash;
+
+  if (progressionMeta[item.progressionHash]) {
+    item.label = progressionMeta[item.progressionHash].label;
+    item.color = progressionMeta[item.progressionHash].color;
+    item.scale = progressionMeta[item.progressionHash].scale;
+    item.order = progressionMeta[item.progressionHash].order;
+  }
+
+  item.steps = item.steps.map(function (i) { return i.progressTotal; });
+
+  delete item.progressionHash;
+  delete item.hash;
+
+  return item;
+}
+
+function postProcessProgressionDefinitions(items, cb) {
+  let bar = new ProgressBar('  downloading progression \t [:bar] :percent :current/:total',
+    {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: _.keys(items).length
+    });
+
+  async.eachSeries(items, (item, callback) => {
+    bar.tick();
+    downloadAssetFromBungie(item.icon, callback);
+  }, () => {
+    if (cb) {
+      cb();
+    }
+  });
+}
+
+function processGenericDefinitions(hashProp, err, row) {
+  let item = JSON.parse(row.json);
+  item.DimHash = item[hashProp];
+  return item;
+}
+
+function postProcessGenericDefinitions(label, tabs, items, cb) {
+  let bar = new ProgressBar('  downloading ' + label + ' ' + _.map([tabs], num => '\t'.repeat(num)) + ' [:bar] :percent :current/:total',
+    {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: _.keys(items).length
+    });
+
+  async.eachOfSeries(items, (item, itemHash, callback) => {
+    bar.tick();
+    callback();
+  }, () => {
+    if (cb) {
+      cb();
+    }
+  });
+}
+
+function processObjectiveDefinitions(err, row) {
+  let item = JSON.parse(row.json, (k, v) => (k === 'equippingBlock') ? undefined : v);
+  item.DimHash = item.objectiveHash;
+  return item;
+}
+
+function processTalentGridDefinitions(err, row) {
+  let item = JSON.parse(row.json, (k, v) => (k === 'equippingBlock') ? undefined : v);
+  item.DimHash = item.gridHash;
+  return item;
+}
+
+function extractDB(dbFile) {
+  const steps = [
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyInventoryItemDefinition',
+      manifest: 'api-manifest/items.json',
+      processFn: processItemDefinitions,
+      postFn: postProcessItemDefinitions
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyStatDefinition',
+      manifest: 'api-manifest/stats.json',
+      processFn: processGenericDefinitions.bind(this, 'statHash'),
+      postFn: postProcessGenericDefinitions.bind(this, 'stats', 2)
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyRecordDefinition',
+      manifest: 'api-manifest/records.json',
+      processFn: processGenericDefinitions.bind(this, 'hash'),
+      postFn: postProcessGenericDefinitions.bind(this, 'records', 2)
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyObjectiveDefinition',
+      manifest: 'api-manifest/objectives.json',
+      processFn: processObjectiveDefinitions,
+      postFn: postProcessGenericDefinitions.bind(this, 'objectives', 1)
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyInventoryBucketDefinition',
+      manifest: 'api-manifest/buckets.json',
+      processFn: processGenericDefinitions.bind(this, 'bucketHash'),
+      postFn: postProcessGenericDefinitions.bind(this, 'buckets', 2)
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinySandboxPerkDefinition',
+      manifest: 'api-manifest/buckets.json',
+      processFn: processGenericDefinitions.bind(this, 'perkHash'),
+      postFn: postProcessGenericDefinitions.bind(this, 'perks', 2)
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyTalentGridDefinition',
+      manifest: 'api-manifest/talent.json',
+      processFn: processTalentGridDefinitions,
+      postFn: postProcessTalentGridDefinitions
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyProgressionDefinition',
+      manifest: 'api-manifest/progression.json',
+      processFn: processProgressionDefinitions,
+      postFn: postProcessProgressionDefinitions
+    }
+  ];
+
+  async.eachSeries(steps, (work, callback) => {
+    generateManifest(work.database, work.query, work.manifest, work.processFn, work.postFn, callback);
+  }, () => {
+    console.log("done.");
+  });
+}
+
+mkdirp('api-manifest', function (err) { });
+mkdirp('img/misc', function (err) { });
+mkdirp('img/destiny_content/items', function (err) { });
+mkdirp('img/destiny_content/progression', function (err) { });
+mkdirp('common/destiny_content/icons', function (err) { });
 
 request({
-    headers: {
-      'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0'
-    },
-    uri: 'http://www.bungie.net/platform/Destiny/Manifest/',
-    method: 'GET'
-  }, onManifestRequest);
+  headers: {
+    'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0'
+  },
+  uri: 'http://www.bungie.net/platform/Destiny/Manifest/',
+  method: 'GET'
+}, onManifestRequest);
