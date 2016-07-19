@@ -272,7 +272,7 @@ function extractDB(dbFile) {
     {
       database: dbFile,
       query: 'SELECT * FROM DestinySandboxPerkDefinition',
-      manifest: 'api-manifest/buckets.json',
+      manifest: 'api-manifest/perks.json',
       processFn: processGenericDefinitions.bind(this, 'perkHash'),
       postFn: postProcessGenericDefinitions.bind(this, 'perks', 2)
     },
