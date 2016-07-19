@@ -73,10 +73,15 @@
         vm.loadout = angular.copy(vm.defaults);
       });
 
+      scope.$watchCollection('vm.originalLoadout.items', function(newValue) {
+        vm.loadout = angular.copy(vm.originalLoadout);
+      });
+
       scope.$on('dim-edit-loadout', function(event, args) {
         if (args.loadout) {
           vm.show = true;
           dimLoadoutService.dialogOpen = true;
+          vm.originalLoadout = args.loadout;
           vm.loadout = angular.copy(args.loadout);
           if (args.equipAll) {
             _.each(vm.loadout.items, function(item) {
