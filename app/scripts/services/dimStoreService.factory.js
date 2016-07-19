@@ -129,12 +129,32 @@
       updateCharacters: updateCharacters,
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
-      processItems: processItems
+      processItems: processItems,
+      afterStoreSync: getIsStoreSyncingPromise
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
       _stores = [];
     });
+
+    var IsStoreSyncing = false;
+
+    function getIsStoreSyncingPromise() {
+      var self = service;
+
+      return $q(function(resolve, reject) {
+        if (self.IsStoreSyncing) {
+          var intervalId = window.setInterval(function() {
+            if (!self.IsStoreSyncing) {
+              clearInterval(intervalId);
+              resolve();
+            }
+          }, 250);
+        } else {
+          resolve();
+        }
+      });
+    }
 
     return service;
 
@@ -163,6 +183,10 @@
       if (_.isEmpty(_stores)) {
         clearNewItems();
       }
+
+      var self = service;
+      self.IsStoreSyncing = true;
+
       return dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
           var glimmer;
@@ -338,7 +362,13 @@
               hide: 'Don\'t show me new item notifications'
             }, 10000);
           }
+
+          self.IsStoreSyncing = false;
+
           return stores;
+        })
+        .catch(function() {
+          self.IsStoreSyncing = false;
         });
     }
 

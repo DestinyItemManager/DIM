@@ -385,21 +385,24 @@
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
-        var item = angular.copy(dimItemService.getItem({
-          id: itemPrimitive.id,
-          hash: itemPrimitive.hash
-        }));
+        dimStoreService.afterStoreSync()
+          .then(function() {
+            var item = angular.copy(dimItemService.getItem({
+              id: itemPrimitive.id,
+              hash: itemPrimitive.hash
+            }));
 
-        if (item) {
-          var discriminator = item.type.toLowerCase();
+            if (item) {
+              var discriminator = item.type.toLowerCase();
 
-          item.equipped = itemPrimitive.equipped;
+              item.equipped = itemPrimitive.equipped;
 
-          item.amount = itemPrimitive.amount;
+              item.amount = itemPrimitive.amount;
 
-          result.items[discriminator] = (result.items[discriminator] || []);
-          result.items[discriminator].push(item);
-        }
+              result.items[discriminator] = (result.items[discriminator] || []);
+              result.items[discriminator].push(item);
+            }
+          });
       });
 
       return result;
