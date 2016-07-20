@@ -1,4 +1,4 @@
-# Next
+# 3.8.3
 
 * Fix move popup not closing when drag-moving an item.
 * Added ability to and filters for track or untracking quests and bounties.
