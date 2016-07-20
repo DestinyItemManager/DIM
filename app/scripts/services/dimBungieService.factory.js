@@ -325,14 +325,14 @@
               promises.push(getVendor(data.token, platform, data.membershipId, character, vendorHash));
             });
           });
-          return $q.all(promises).then(function(data) {
+          return $q.all(promises).then(function(vendorData) {
             // Get banner if it's up
             var bannerPromises = [];
             _.each(data.characters, function(character) {
               bannerPromises.push(getVendor(data.token, platform, data.membershipId, character, '242140165'));
             });
             return $q.all(bannerPromises).then(function(bannerData) {
-              return $q.resolve(data.concat(bannerData));
+              return $q.resolve(vendorData.concat(bannerData));
             });
           });
         })
