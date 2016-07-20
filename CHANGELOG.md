@@ -6,6 +6,7 @@
 * Fixed #660 where postmaster items would not appear in the Postmaster section of DIM, ie Sterling Treasure after the reset.
 * Fixed #697 where loadouts will no longer remove the loadouts for the opposite platform.
 * Fix an issue where loadouts will not show any items, or transfer any items.
+* Add option to show new item overlay animation
 
 # 3.8.2
 

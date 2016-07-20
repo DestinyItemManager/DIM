@@ -134,7 +134,10 @@
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
-      _stores = [];
+      if ($rootScope.activePlatformUpdated === true) {
+        _stores = [];
+        $rootScope.activePlatformUpdated = false;
+      }
     });
 
     var IsStoreSyncing = false;
