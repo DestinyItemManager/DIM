@@ -21,3 +21,4 @@ build/extension
 build/dim-extension.zip
 
 .brackets.json
+.npmrc
