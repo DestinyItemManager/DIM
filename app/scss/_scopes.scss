@@ -1,0 +1,33 @@
+.scopes-dialog {
+  width: 100%;
+  height: 85%;
+}
+
+.mainScope {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scopeInfo {
+  position: absolute;
+  left: 350px;
+  top: 60px;
+  z-index: 10;
+}
+
+.scopeData {
+  list-style-type: none;
+}
+
+.scopeData li span {
+  font-weight: bold;
+}
+
+.mainScope .thumb img {
+  position: absolute;
+  left: 100px;
+  top: 65px;
+  width: 20%;
+  height: 20%;
+}

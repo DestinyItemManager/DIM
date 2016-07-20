@@ -49,7 +49,7 @@
         ' <g ng-attr-transform="scale({{vm.scaleFactor}})">',
         '  <g class="talent-node" ng-attr-transform="translate({{(node.column - vm.hiddenColumns) * (vm.totalNodeSize)}},{{node.row * (vm.totalNodeSize)}})" ng-repeat="node in vm.talentGrid.nodes | talentGridNodes:vm.hiddenColumns track by $index" ng-class="{ \'talent-node-activated\': node.activated, \'talent-node-showxp\': (!node.activated && node.xpRequired), \'talent-node-default\': (node.activated && !node.xpRequired && !node.exclusiveInColumn) }" ng-click="node.name == \'Infuse\' ? vm.infuse({\'$event\': $event}) : true">',
         '    <circle r="16" cx="-17" cy="17" transform="rotate(-90)" class="talent-node-xp" stroke-width="2" ng-attr-stroke-dasharray="{{100.0 * node.xp / node.xpRequired}} 100" />',
-        '    <image class="talent-node-img" xlink:href="" ng-attr-xlink:href="{{ node.icon | bungieIcon }}" x="20" y="20" height="96" width="96" transform="scale(0.25)"/>',
+        '    <image class="talent-node-img" xlink:href="" ng-attr-xlink:href="{{ node.icon | bungieIcon }}" x="20" y="20" height="96" width="96" transform="scale(0.25)" ng-click="vm.onScopeClick(node)" />',
         '    <title>{{node.name}}\n{{node.description}}</title>',
         '  </g>',
         '</g>',
@@ -58,9 +58,9 @@
     };
   }
 
-  TalentGridCtrl.$inject = [];
+  TalentGridCtrl.$inject = ['$window', 'ngDialog'];
 
-  function TalentGridCtrl() {
+  function TalentGridCtrl($window, ngDialog) {
     var vm = this;
     vm.nodeSize = 34;
     vm.nodePadding = 4;
@@ -81,5 +81,20 @@
       vm.numColumns = _.max(vm.talentGrid.nodes, 'column').column + 1 - vm.hiddenColumns;
       vm.numRows = vm.perksOnly ? 2 : (_.max(vm.talentGrid.nodes, 'row').row + 1);
     }
+
+    vm.onScopeClick = function(node) {
+      // Add a better check if is a scope node
+      if (node.column === 1) {
+        ngDialog.open({
+          template: 'views/scopes.html',
+          className: 'scopes-dialog',
+          controllerAs: 'dialog',
+          controller: function() {
+            var vm = this;
+            vm.hash = node.hash;
+          }
+        });
+      }
+    };
   }
 })();
