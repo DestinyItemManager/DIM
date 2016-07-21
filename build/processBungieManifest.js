@@ -110,7 +110,7 @@ function processItemDefinitions(err, row) {
 }
 
 function postProcessItemDefinitions(items, cb) {
-  let bar = new ProgressBar('  downloading items \t\t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading items \t\t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -139,7 +139,7 @@ function postProcessTalentGridDefinitions(items, cb) {
     });
   });
 
-  let bar = new ProgressBar('  downloading talents \t\t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading talents \t\t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -177,7 +177,7 @@ function processProgressionDefinitions(err, row) {
 }
 
 function postProcessProgressionDefinitions(items, cb) {
-  let bar = new ProgressBar('  downloading progression \t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading progression \t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -195,6 +195,39 @@ function postProcessProgressionDefinitions(items, cb) {
   });
 }
 
+function processVendorDefinitions(err, row) {
+  let item = JSON.parse(row.json).summary;
+  item.DimHash = item.vendorHash;
+
+  delete item.vendorHash;
+  delete item.hash;
+
+  return item;
+}
+
+function postProcessVendorDefinitions(items, cb) {
+  const bar = new ProgressBar('  downloading vendors \t\t [:bar] :percent :current/:total',
+    {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: _.keys(items).length
+    });
+
+  async.eachSeries(items, (item, callback) => {
+    bar.tick();
+    if (item.factionIcon) {
+      downloadAssetFromBungie(item.factionIcon, callback);
+    } else {
+      downloadAssetFromBungie(item.vendorIcon, callback);
+    }
+  }, () => {
+    if (cb) {
+      cb();
+    }
+  });
+}
+
 function processGenericDefinitions(hashProp, err, row) {
   let item = JSON.parse(row.json);
   item.DimHash = item[hashProp];
@@ -202,7 +235,7 @@ function processGenericDefinitions(hashProp, err, row) {
 }
 
 function postProcessGenericDefinitions(label, tabs, items, cb) {
-  let bar = new ProgressBar('  downloading ' + label + ' ' + _.map([tabs], num => '\t'.repeat(num)) + ' [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading ' + label + ' ' + _.map([tabs], num => '\t'.repeat(num)) + ' [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -289,6 +322,13 @@ function extractDB(dbFile) {
       manifest: 'api-manifest/progression.json',
       processFn: processProgressionDefinitions,
       postFn: postProcessProgressionDefinitions
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyVendorDefinition',
+      manifest: 'api-manifest/vendor.json',
+      processFn: processVendorDefinitions,
+      postFn: postProcessVendorDefinitions
     }
   ];
 
@@ -299,11 +339,12 @@ function extractDB(dbFile) {
   });
 }
 
-mkdirp('api-manifest', function (err) { });
-mkdirp('img/misc', function (err) { });
-mkdirp('img/destiny_content/items', function (err) { });
-mkdirp('img/destiny_content/progression', function (err) { });
-mkdirp('common/destiny_content/icons', function (err) { });
+mkdirp('api-manifest', function(err) { });
+mkdirp('img/misc', function(err) { });
+mkdirp('img/destiny_content/items', function(err) { });
+mkdirp('img/destiny_content/progression', function(err) { });
+mkdirp('img/destiny_content/vendor', function() { });
+mkdirp('common/destiny_content/icons', function(err) { });
 
 request({
   headers: {

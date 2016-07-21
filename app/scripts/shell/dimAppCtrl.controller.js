@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimCsvService, dimSettingsService, $window, $scope, $state) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope, $state) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -56,6 +56,10 @@
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
+    });
+
+    $rootScope.$on('dim-active-platform-updated', function(e, args) {
+      loadingTracker.addPromise(dimVendorService.updateVendorItems(args.platform.type));
     });
 
     vm.showSetting = function(e) {
@@ -185,6 +189,18 @@
       } else {
         filterResult.close();
       }
+    };
+
+    vm.vendor = dimVendorService;
+    vm.showVendors = function showVendors(e) {
+      e.stopPropagation();
+
+      ngDialog.open({
+        template: 'views/vendors.html',
+        className: 'vendor'
+      }).closePromise.then(function() {
+        ngDialog.closeAll();
+      });
     };
 
     vm.xur = dimXurService;
