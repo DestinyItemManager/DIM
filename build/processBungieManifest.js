@@ -110,7 +110,7 @@ function processItemDefinitions(err, row) {
 }
 
 function postProcessItemDefinitions(items, cb) {
-  let bar = new ProgressBar('  downloading items \t\t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading items \t\t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -139,7 +139,7 @@ function postProcessTalentGridDefinitions(items, cb) {
     });
   });
 
-  let bar = new ProgressBar('  downloading talents \t\t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading talents \t\t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -177,7 +177,7 @@ function processProgressionDefinitions(err, row) {
 }
 
 function postProcessProgressionDefinitions(items, cb) {
-  let bar = new ProgressBar('  downloading progression \t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading progression \t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -206,7 +206,7 @@ function processVendorDefinitions(err, row) {
 }
 
 function postProcessVendorDefinitions(items, cb) {
-  let bar = new ProgressBar('  downloading vendors \t\t [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading vendors \t\t [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
@@ -235,7 +235,7 @@ function processGenericDefinitions(hashProp, err, row) {
 }
 
 function postProcessGenericDefinitions(label, tabs, items, cb) {
-  let bar = new ProgressBar('  downloading ' + label + ' ' + _.map([tabs], num => '\t'.repeat(num)) + ' [:bar] :percent :current/:total',
+  const bar = new ProgressBar('  downloading ' + label + ' ' + _.map([tabs], num => '\t'.repeat(num)) + ' [:bar] :percent :current/:total',
     {
       complete: '=',
       incomplete: ' ',
