@@ -14,7 +14,7 @@
 
     vm.vendors = dimVendorService.vendorItems;
     vm.activeVendors = _.keys(vm.vendors);
-    
+
     if (_.isEmpty(vm.vendors)) {
       $state.go('inventory');
       return;
@@ -33,7 +33,8 @@
       var currencies = _.chain(vm.vendors)
             .values()
             .reduce(function(o, val) { o.push(_.values(val)); return o; }, [])
-            .flatten().pluck('costs')
+            .flatten()
+            .pluck('costs')
             .reduce(mergeMaps)
             .values()
             .pluck('currency')
@@ -66,11 +67,11 @@
           my: 'left top',
           at: 'left bottom+2',
           of: detailItemElement,
-          collision: 'flip flip',
+          collision: 'flip flip'
         });
       }
     });
-    
+
     angular.extend(vm, {
       active: 'Warlock',
       activeVendor: 'vanguard',

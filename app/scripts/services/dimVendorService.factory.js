@@ -25,30 +25,30 @@
         Warlock: getBuckets(items.filter(function(item) { return item.classType === 2 || item.classType === 3; }))
       };
     }
-    
+
     function initVanguardBuckets(vendors) {
-      if (!vendors || !vendors.length) return;
-      
-      var titan = _.findWhere(vendors, {vendorHash: '1990950'});
-      var hunter = _.findWhere(vendors, {vendorHash: '3003633346'});
-      var warlock = _.findWhere(vendors, {vendorHash: '1575820975'});
-      titan.items = {Titan: getBuckets(titan.items.filter(function(item) { return item.classType === 0 || item.classType === 3; }))};
-      hunter.items = {Hunter: getBuckets(hunter.items.filter(function(item) { return item.classType === 1 || item.classType === 3; }))};
-      warlock.items = {Warlock: getBuckets(warlock.items.filter(function(item) { return item.classType === 2 || item.classType === 3; }))};
-      
+      if (!vendors || !vendors.length) { return null; }
+
+      var titan = _.findWhere(vendors, { vendorHash: '1990950' });
+      var hunter = _.findWhere(vendors, { vendorHash: '3003633346' });
+      var warlock = _.findWhere(vendors, { vendorHash: '1575820975' });
+      titan.items = { Titan: getBuckets(titan.items.filter(function(item) { return item.classType === 0 || item.classType === 3; })) };
+      hunter.items = { Hunter: getBuckets(hunter.items.filter(function(item) { return item.classType === 1 || item.classType === 3; })) };
+      warlock.items = { Warlock: getBuckets(warlock.items.filter(function(item) { return item.classType === 2 || item.classType === 3; })) };
+
       return {
         Titan: titan,
         Hunter: hunter,
         Warlock: warlock
       };
     }
-    
+
     function initFactionBuckets(vendors) {
-      if (!vendors || !vendors.length) return;
-      
-      var deadorbit = _.findWhere(vendors, {vendorHash: '3611686524'});
-      var futurewar = _.findWhere(vendors, {vendorHash: '1821699360'});
-      var newmon = _.findWhere(vendors, {vendorHash: '1808244981'});
+      if (!vendors || !vendors.length) { return null; }
+
+      var deadorbit = _.findWhere(vendors, { vendorHash: '3611686524' });
+      var futurewar = _.findWhere(vendors, { vendorHash: '1821699360' });
+      var newmon = _.findWhere(vendors, { vendorHash: '1808244981' });
       deadorbit.items = initBuckets(deadorbit.items);
       futurewar.items = initBuckets(futurewar.items);
       newmon.items = initBuckets(newmon.items);
@@ -59,13 +59,13 @@
         NewMonarchy: newmon
       };
     }
-    
+
     function initMiscBuckets(vendors) {
-      if (!vendors || !vendors.length) return;
-      
-      var eris = _.findWhere(vendors, {vendorHash: '174528503'});
-      var speaker = _.findWhere(vendors, {vendorHash: '2680694281'});
-      var variks = _.findWhere(vendors, {vendorHash: '1998812735'});
+      if (!vendors || !vendors.length) { return null; }
+
+      var eris = _.findWhere(vendors, { vendorHash: '174528503' });
+      var speaker = _.findWhere(vendors, { vendorHash: '2680694281' });
+      var variks = _.findWhere(vendors, { vendorHash: '1998812735' });
       eris.items = initBuckets(eris.items);
       speaker.items = initBuckets(speaker.items);
       variks.items = initBuckets(variks.items);
@@ -76,31 +76,31 @@
         Variks: variks
       };
     }
-    
+
     function initBanner(vendors) {
-      if (!vendors || !vendors.length) return;
-      
-      var banner = _.findWhere(vendors, {vendorHash: '242140165'});
+      if (!vendors || !vendors.length) { return null; }
+
+      var banner = _.findWhere(vendors, { vendorHash: '242140165' });
       banner.items = initBuckets(banner.items);
 
       return {
         Banner: banner
       };
     }
-    
+
     function initCrucible(vendors) {
-     if (!vendors || !vendors.length) return;
-     
-     var cruc = _.findWhere(vendors, {vendorHash: '3746647075'});
-     cruc.items = initBuckets(cruc.items);
-     
-     return {
+      if (!vendors || !vendors.length) { return null; }
+
+      var cruc = _.findWhere(vendors, { vendorHash: '3746647075' });
+      cruc.items = initBuckets(cruc.items);
+
+      return {
         Crucible: cruc
       };
     }
-    
+
     function initExotics(vendors) {
-      var exotics = _.findWhere(vendors, {vendorHash: '3902439767'});
+      var exotics = _.findWhere(vendors, { vendorHash: '3902439767' });
       exotics.items = initBuckets(exotics.items);
 
       return {
@@ -147,7 +147,7 @@
                 var items = [];
                 _.each(vendor.saleItemCategories, function(categoryData) {
                   var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
-                  items.push.apply(items, filteredSaleItems);
+                  items.push(...filteredSaleItems);
                 });
                 vendorsWithItems.push({ vendorHash: vendor.vendorHash, vendorName: vendor.vendorName, vendorIcon: vendor.vendorIcon, items: items });
               }
@@ -199,10 +199,10 @@
           })
           .then(function(vendorsWithProcessedItems) {
             var vendorItems = {};
-            vendorItems.vanguard = initVanguardBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.vanguardHashes,vendor.vendorHash); }));
-            vendorItems.factions = initFactionBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.factionHashes,vendor.vendorHash); }));
-            vendorItems.misc = initMiscBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.miscHashes,vendor.vendorHash); }));
-            vendorItems.crucible = initCrucible(_.filter(vendorsWithProcessedItems, function(vendor) { return self.crucibleHash === vendor.vendorHash }));
+            vendorItems.vanguard = initVanguardBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.vanguardHashes, vendor.vendorHash); }));
+            vendorItems.factions = initFactionBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.factionHashes, vendor.vendorHash); }));
+            vendorItems.misc = initMiscBuckets(_.filter(vendorsWithProcessedItems, function(vendor) { return _.contains(self.miscHashes, vendor.vendorHash); }));
+            vendorItems.crucible = initCrucible(_.filter(vendorsWithProcessedItems, function(vendor) { return self.crucibleHash === vendor.vendorHash; }));
             vendorItems.banner = initBanner(_.filter(vendorsWithProcessedItems, function(vendor) { return self.bannerHash === vendor.vendorHash; }));
             vendorItems.exotics = initExotics(_.filter(vendorsWithProcessedItems, function(vendor) { return self.exoticsHash === vendor.vendorHash; }));
             self.vendorItems = vendorItems;

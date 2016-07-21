@@ -195,6 +195,39 @@ function postProcessProgressionDefinitions(items, cb) {
   });
 }
 
+function processVendorDefinitions(err, row) {
+  let item = JSON.parse(row.json).summary;
+  item.DimHash = item.vendorHash;
+
+  delete item.vendorHash;
+  delete item.hash;
+
+  return item;
+}
+
+function postProcessVendorDefinitions(items, cb) {
+  let bar = new ProgressBar('  downloading vendors \t\t [:bar] :percent :current/:total',
+    {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: _.keys(items).length
+    });
+
+  async.eachSeries(items, (item, callback) => {
+    bar.tick();
+    if(item.factionIcon) {
+      downloadAssetFromBungie(item.factionIcon, callback);
+    } else {
+      downloadAssetFromBungie(item.vendorIcon, callback);
+    }
+  }, () => {
+    if (cb) {
+      cb();
+    }
+  });
+}
+
 function processGenericDefinitions(hashProp, err, row) {
   let item = JSON.parse(row.json);
   item.DimHash = item[hashProp];
@@ -289,6 +322,13 @@ function extractDB(dbFile) {
       manifest: 'api-manifest/progression.json',
       processFn: processProgressionDefinitions,
       postFn: postProcessProgressionDefinitions
+    },
+    {
+      database: dbFile,
+      query: 'SELECT * FROM DestinyVendorDefinition',
+      manifest: 'api-manifest/vendor.json',
+      processFn: processVendorDefinitions,
+      postFn: postProcessVendorDefinitions
     }
   ];
 
@@ -297,33 +337,6 @@ function extractDB(dbFile) {
   }, () => {
     console.log("done.");
   });
-
-  db.all('select * from DestinyVendorDefinition', function(err, rows) {
-    if (err) {
-      throw err;
-    }
-
-    items = {};
-
-    rows.forEach(function(row) {
-      var item = JSON.parse(row.json);
-      items[item.summary.vendorHash] = item.summary;
-
-      delete item.summary.vendorHash;
-      delete item.hash;
-    });
-
-    var pRow = processItemRows(items, 'factionIcon');
-    pRow.next();
-
-    var pRowVend = processItemRows(items, 'vendorIcon');
-    pRowVend.next();
-
-    var defs = fs.createWriteStream('api-manifest/vendor.json');
-    defs.write(JSON.stringify(items));
-  });
-
-  console.log("done.");
 }
 
 mkdirp('api-manifest', function(err) { });

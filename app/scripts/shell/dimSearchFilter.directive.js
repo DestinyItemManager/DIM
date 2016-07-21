@@ -188,7 +188,7 @@
           item.visible = (filters.length > 0) ? filterFn(item) : true;
         });
       });
-      
+
       if (dimVendorService.vendorItems) {
         var setVisible = function(vendor) {
           _.each(vendor.items, function(classType) {
@@ -198,8 +198,8 @@
               });
             });
           });
-        }
-        
+        };
+
         setVisible(dimVendorService.vendorItems.crucible.Crucible);
         setVisible(dimVendorService.vendorItems.exotics.Exotics);
         _.each(dimVendorService.vendorItems.factions, function(faction) {
@@ -214,7 +214,7 @@
         _.each(dimVendorService.vendorItems.vanguard, function(vanguardVendor) {
           setVisible(vanguardVendor);
         });
-        if(dimVendorService.vendorItems.banner) {
+        if (dimVendorService.vendorItems.banner) {
           setVisible(dimVendorService.vendorItems.banner.Banner);
         }
       }
