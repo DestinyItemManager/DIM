@@ -206,12 +206,6 @@
             vendorItems.banner = initBanner(_.filter(vendorsWithProcessedItems, function(vendor) { return self.bannerHash === vendor.vendorHash; }));
             vendorItems.exotics = initExotics(_.filter(vendorsWithProcessedItems, function(vendor) { return self.exoticsHash === vendor.vendorHash; }));
             self.vendorItems = vendorItems;
-            //self.vendorItems = vendorsWithProcessedItems;
-            // // Now lets split the items in each vendor up by class and armor type
-            // _.each(vendorsWithProcessedItems, function(vendorWithProcessedItems) {
-              // vendorWithProcessedItems.items = initBuckets(vendorWithProcessedItems.items);
-            // });
-            // self.vendorItems = vendorsWithProcessedItems;
           });
       }
     };
