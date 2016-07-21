@@ -73,7 +73,7 @@
         vm.loadout = angular.copy(vm.defaults);
       });
 
-      scope.$watchCollection('vm.originalLoadout.items', function(newValue) {
+      scope.$watchCollection('vm.originalLoadout.items', function() {
         vm.loadout = angular.copy(vm.originalLoadout);
       });
 
