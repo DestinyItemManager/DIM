@@ -182,7 +182,7 @@
       if (!vm.store.isVault) {
         promise = promise.then(function() {
           var item = _.find(vault.items, function(i) {
-            return i.hash === vm.item.hash && i.location.inPostmaster;
+            return i.hash === vm.item.hash && !i.location.inPostmaster;
           });
           if (item) {
             var amount = vault.amountOfItem(vm.item);

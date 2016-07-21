@@ -42,6 +42,8 @@
     unascended: ['unascended', 'unassended', 'unasscended'],
     ascended: ['ascended', 'assended', 'asscended'],
     reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    tracked: ['tracked'],
+    untracked: ['untracked'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
@@ -277,6 +279,14 @@
       },
       reforgeable: function(predicate, item) {
         return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
+      },
+      untracked: function(predicate, item) {
+        return item.trackable &&
+          !item.tracked;
+      },
+      tracked: function(predicate, item) {
+        return item.trackable &&
+          item.tracked;
       },
       unlocked: function(predicate, item) {
         return item.lockable &&

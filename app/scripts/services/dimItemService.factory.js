@@ -21,11 +21,11 @@
       getItems: getItems,
       moveTo: moveTo,
       equipItems: equipItems,
-      setLockState: setLockState
+      setItemState: setItemState
     };
 
-    function setLockState(item, store, lockState) {
-      return dimBungieService.setLockState(item, store, lockState)
+    function setItemState(item, store, lockState, type) {
+      return dimBungieService.setItemState(item, store, lockState, type)
         .then(function() {
           return lockState;
         });

@@ -129,8 +129,35 @@
       updateCharacters: updateCharacters,
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
-      processItems: processItems
+      processItems: processItems,
+      afterStoreSync: getIsStoreSyncingPromise
     };
+
+    $rootScope.$on('dim-active-platform-updated', function() {
+      if ($rootScope.activePlatformUpdated === true) {
+        _stores = [];
+        $rootScope.activePlatformUpdated = false;
+      }
+    });
+
+    var IsStoreSyncing = false;
+
+    function getIsStoreSyncingPromise() {
+      var self = service;
+
+      return $q(function(resolve, reject) {
+        if (self.IsStoreSyncing) {
+          var intervalId = window.setInterval(function() {
+            if (!self.IsStoreSyncing) {
+              clearInterval(intervalId);
+              resolve();
+            }
+          }, 250);
+        } else {
+          resolve();
+        }
+      });
+    }
 
     return service;
 
@@ -159,6 +186,10 @@
       if (_.isEmpty(_stores)) {
         clearNewItems();
       }
+
+      var self = service;
+      self.IsStoreSyncing = true;
+
       return dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
           var glimmer;
@@ -268,6 +299,10 @@
               if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
                 if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
                   _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+                    _.each(pail.items, function(item) {
+                      item.bucket = pail.bucketHash;
+                    });
+
                     items = _.union(items, pail.items);
                   });
                 }
@@ -330,7 +365,13 @@
               hide: 'Don\'t show me new item notifications'
             }, 10000);
           }
+
+          self.IsStoreSyncing = false;
+
           return stores;
+        })
+        .catch(function() {
+          self.IsStoreSyncing = false;
         });
     }
 
@@ -481,6 +522,8 @@
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
         lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
+        trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
+        tracked: item.state === 2,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified

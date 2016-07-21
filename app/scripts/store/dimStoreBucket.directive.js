@@ -143,6 +143,7 @@
       var promise = $q.when(item.amount);
 
       if (item.maxStackSize > 1 && item.amount > 1 && ($event.shiftKey || hovering)) {
+        ngDialog.closeAll();
         var dialogResult = ngDialog.open({
           // TODO: break this out into a separate service/directive?
           template: [

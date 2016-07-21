@@ -52,9 +52,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService', 'dimPlatformService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService, $window, dimSearchService) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService, $window, dimSearchService, dimPlatformService) {
     var vm = this;
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -70,13 +70,19 @@
     vm.search = dimSearchService;
 
     function initLoadouts() {
+
       dimLoadoutService.getLoadouts()
         .then(function(loadouts) {
+          var platform = dimPlatformService.getActive();
+
           vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
-          vm.loadouts = _.filter(vm.loadouts, function(item) {
-            return vm.classTypeId === -1 || ((item.classType === -1) || (item.classType === vm.classTypeId));
-          });
+          vm.loadouts = _.chain(vm.loadouts)
+            .filter(item => _.isUndefined(item.platform) || item.platform === platform.label)
+            .filter(function(item) {
+              return vm.classTypeId === -1 || ((item.classType === -1) || (item.classType === vm.classTypeId));
+            })
+            .value();
         });
     }
     $rootScope.$on('dim-save-loadout', initLoadouts);

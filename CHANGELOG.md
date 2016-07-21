@@ -1,4 +1,17 @@
 # Next
+
+# 3.8.3
+
+* Fix move popup not closing when drag-moving an item.
+* Added ability to and filters for track or untracking quests and bounties.
+* Fix issue where some sets would be missing from the loadout builder.
+* Fixed #660 where postmaster items would not appear in the Postmaster section of DIM, ie Sterling Treasure after the reset.
+* Fixed #697 where loadouts will no longer remove the loadouts for the opposite platform.
+* Fix an issue where loadouts will not show any items, or transfer any items.
+* Add option to show new item overlay animation
+
+# 3.8.2
+
 * Update filter list to include quality/percentage filters
 * Add year column to CSV export scripts
 * When you have filtered items with a search, you can select a new search loadout option in the loadout menu to transfer matching items.
@@ -7,6 +20,7 @@
 * Fix character order in move popup buttons.
 * Restored the ability to set a maximum vault size. "Auto" (full width) is still an option, and is the default.
 * Armor quality is shown in Xur, loadouts, and the infusion dialog if advanced stats is turned on.
+* "Take" stackables works again.
 
 # 3.8.1
 
