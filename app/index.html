@@ -41,6 +41,7 @@
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)">About</span>
           <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
+          <span class="link" ng-disabled="loadingTracker.active()" ui-sref="vendors">Vendors</span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>
@@ -91,6 +92,7 @@
     <script src="scripts/services/dimSettingsService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimStoreService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimXurService.factory.js?v=$DIM_VERSION"></script>
+    <script src="scripts/services/dimVendorService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimCsvService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimItemService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimEngramFarmingService.factory.js?v=$DIM_VERSION"></script>
@@ -118,6 +120,7 @@
     <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/infuse/dimInfuse.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/xur/dimXur.controller.js?v=$DIM_VERSION"></script>
+    <script src="scripts/vendors/dimVendor.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMax.controller.js?v=$DIM_VERSION"></script>
     <!-- end app scripts -->
 

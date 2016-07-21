@@ -14,6 +14,7 @@
     Talent: 'talent',
     Years: 'year1',
     Progression: 'progression',
+    Vendor: 'vendor',
     Records: 'records'
   };
 
