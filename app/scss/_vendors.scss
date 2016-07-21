@@ -1,0 +1,98 @@
+.vendor {
+  width: 900px;
+  margin: 0 auto;
+  
+  .vendor-col {
+    margin-right: 20px;
+  }
+  .fa-arrow-circle-left {
+    padding-right: 5px;
+  }
+  .vendor-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+  }
+  .vendor-block {
+    margin-right: 20px;
+  }
+  .vendor-header {
+    display: flex;
+    padding-bottom: 10px;
+  }
+  .vendor-row {
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+  }
+  .sub-bucket {
+    background-size: --item-size;
+    background-position: 2 2;
+    background-image: url("../images/bg_inventory_bucket_single_crop.png");
+    background-repeat: no-repeat; 
+  }
+  .unequipped {
+    margin-bottom: 5px;
+  }
+  .item-type {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .store-cell {
+    flex-wrap: wrap;
+  }
+  .vendor-icon {
+    width: 30px;
+    height: 30px;
+    margin-top: 5px;
+    margin-right: 10px;
+    float:left;
+  }
+  .vendor-item {
+    display: inline-block;
+    margin-right: 3px;
+    margin-bottom: 5px;
+    &:last-child {
+      margin-right: 10px;
+    }
+  }
+  .currency img {
+    height: 12px;
+    width: 12px;
+  }
+  .cost {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+  .notenough {
+    color: #CC5C58;
+  }
+  .modal-open {
+    overflow: visible;
+  }
+}
+
+.ngdialog.vendor-move-popup {
+  position: absolute;
+  z-index: 4;
+  height: fit-content;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
+  .compare-items {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+  }
+  .more-item-details {
+    margin-top: 0;
+  }
+  .item {
+    opacity: 0.2;
+  }
+  .selected {
+    opacity: 1.0;
+  }
+  a {
+    outline: 0;
+  }
+}

@@ -1,4 +1,5 @@
 # Next
+* Show current vendor items being sold
 
 # 3.8.3
 
