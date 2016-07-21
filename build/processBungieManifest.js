@@ -297,7 +297,6 @@ function extractDB(dbFile) {
   }, () => {
     console.log("done.");
   });
-<<<<<<< HEAD
 
   db.all('select * from DestinyVendorDefinition', function(err, rows) {
     if (err) {
@@ -333,15 +332,6 @@ mkdirp('img/destiny_content/items', function(err) { });
 mkdirp('img/destiny_content/progression', function(err) { });
 mkdirp('img/destiny_content/vendor', function() { });
 mkdirp('common/destiny_content/icons', function(err) { });
-=======
-}
-
-mkdirp('api-manifest', function (err) { });
-mkdirp('img/misc', function (err) { });
-mkdirp('img/destiny_content/items', function (err) { });
-mkdirp('img/destiny_content/progression', function (err) { });
-mkdirp('common/destiny_content/icons', function (err) { });
->>>>>>> DestinyItemManager/dev
 
 request({
   headers: {

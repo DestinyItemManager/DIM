@@ -971,56 +971,6 @@ dim-store-heading {
   }
 }
 
-.move-popup {
-  background-color: #222;
-  cursor: default;
-  bottom: 50px;
-  min-height: 77px;
-  .interaction {
-    display: flex;
-    flex-direction: row;
-  }
-  .item-name {
-    background-color: #fff;
-    color: #000;
-    padding: 5px 28px 5px 5px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    overflow: hidden;
-    white-space: nowrap !important;
-  }
-  .bounty-description {
-    padding: 5px;
-    display: inline-block;
-  }
-}
-
-.ngdialog.xur-move-popup {
-  position: fixed;
-  height: 0;
-  z-index: 10000;
-  height: fit-content;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
-  .compare-items {
-    margin-top: 0;
-    display: flex;
-    flex-direction: row;
-  }
-  .more-item-details {
-    margin-top: 0;
-  }
-  .item {
-    opacity: 0.2;
-  }
-  .selected {
-    opacity: 1.0;
-  }
-  a {
-    outline: 0;
-  }
-}
-
 .move-amount {
   display: flex;
   flex-direction: row;
