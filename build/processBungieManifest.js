@@ -216,7 +216,7 @@ function postProcessVendorDefinitions(items, cb) {
 
   async.eachSeries(items, (item, callback) => {
     bar.tick();
-    if(item.factionIcon) {
+    if (item.factionIcon) {
       downloadAssetFromBungie(item.factionIcon, callback);
     } else {
       downloadAssetFromBungie(item.vendorIcon, callback);
