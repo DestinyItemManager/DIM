@@ -180,13 +180,13 @@
     }
 
     function applyLoadout(store, loadout) {
-      return dimActionQueue.queueAction(function () {
+      return dimActionQueue.queueAction(function() {
         return dimStoreService.afterStoreSync()
-          .then(function () {
+          .then(function() {
             var items = angular.copy(_.flatten(_.values(loadout.items)));
             var totalItems = items.length;
 
-            var loadoutItemIds = items.map(function (i) {
+            var loadoutItemIds = items.map(function(i) {
               return {
                 id: i.id,
                 hash: i.hash
@@ -194,7 +194,7 @@
             });
 
             // Only select stuff that needs to change state
-            items = _.filter(items, function (pseudoItem) {
+            items = _.filter(items, function(pseudoItem) {
               var item = dimItemService.getItem(pseudoItem);
               return !item ||
                 !item.equipment ||
@@ -204,18 +204,18 @@
 
             // vault can't equip
             if (store.isVault) {
-              items.forEach(function (i) { i.equipped = false; });
+              items.forEach(function(i) { i.equipped = false; });
             }
 
             // We'll equip these all in one go!
             var itemsToEquip = _.filter(items, 'equipped');
             if (itemsToEquip.length > 1) {
               // we'll use the equipItems function
-              itemsToEquip.forEach(function (i) { i.equipped = false; });
+              itemsToEquip.forEach(function(i) { i.equipped = false; });
             }
 
             // Stuff that's equipped on another character. We can bulk-dequip these
-            var itemsToDequip = _.filter(items, function (pseudoItem) {
+            var itemsToDequip = _.filter(items, function(pseudoItem) {
               var item = dimItemService.getItem(pseudoItem);
               return item.owner !== store.id && item.equipped;
             });
@@ -229,11 +229,11 @@
             var promise = $q.when();
 
             if (itemsToDequip.length > 1) {
-              var realItemsToDequip = itemsToDequip.map(function (i) {
+              var realItemsToDequip = itemsToDequip.map(function(i) {
                 return dimItemService.getItem(i);
               });
-              var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function (dequipItems, owner) {
-                var equipItems = realItemsToDequip.map(function (i) {
+              var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function(dequipItems, owner) {
+                var equipItems = realItemsToDequip.map(function(i) {
                   return dimItemService.getSimilarItem(i, loadoutItemIds);
                 });
                 return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
@@ -242,16 +242,16 @@
             }
 
             promise = promise
-              .then(function () {
+              .then(function() {
                 return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
               })
-              .then(function () {
+              .then(function() {
                 if (itemsToEquip.length > 1) {
                   // Use the bulk equipAll API to equip all at once.
-                  itemsToEquip = _.filter(itemsToEquip, function (i) {
+                  itemsToEquip = _.filter(itemsToEquip, function(i) {
                     return _.find(scope.successfulItems, { id: i.id });
                   });
-                  var realItemsToEquip = itemsToEquip.map(function (i) {
+                  var realItemsToEquip = itemsToEquip.map(function(i) {
                     return dimItemService.getItem(i);
                   });
                   return dimItemService.equipItems(store, realItemsToEquip);
@@ -259,18 +259,18 @@
                   return itemsToEquip;
                 }
               })
-              .then(function (equippedItems) {
+              .then(function(equippedItems) {
                 if (equippedItems.length < itemsToEquip.length) {
-                  var failedItems = _.filter(itemsToEquip, function (i) {
+                  var failedItems = _.filter(itemsToEquip, function(i) {
                     return !_.find(equippedItems, { id: i.id });
                   });
-                  failedItems.forEach(function (item) {
+                  failedItems.forEach(function(item) {
                     scope.failed++;
                     toaster.pop('error', loadout.name, 'Could not equip ' + item.name);
                   });
                 }
               })
-              .then(function () {
+              .then(function() {
                 // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
                 // is fixed on Bungie's end. When that happens, just remove this call.
                 if (scope.successfulItems.length > 0) {
@@ -278,7 +278,7 @@
                 }
                 return undefined;
               })
-              .then(function () {
+              .then(function() {
                 var value = 'success';
                 var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + store.name + '.';
 
@@ -388,8 +388,8 @@
       };
 
       dimStoreService.afterStoreSync()
-        .then(function () {
-          _.each(loadoutPrimitive.items, function (itemPrimitive) {
+        .then(function() {
+          _.each(loadoutPrimitive.items, function(itemPrimitive) {
             var item = angular.copy(dimItemService.getItem({
               id: itemPrimitive.id,
               hash: itemPrimitive.hash
@@ -421,8 +421,8 @@
       };
 
       dimStoreService.afterStoreSync()
-        .then(function () {
-          _.each(loadoutPrimitive.items, function (itemPrimitive) {
+        .then(function() {
+          _.each(loadoutPrimitive.items, function(itemPrimitive) {
             var item = angular.copy(dimItemService.getItem({
               id: itemPrimitive.id,
               hash: itemPrimitive.hash
@@ -452,8 +452,8 @@
       };
 
       dimStoreService.afterStoreSync()
-        .then(function () {
-          _.each(loadoutPrimitive.items, function (itemPrimitive) {
+        .then(function() {
+          _.each(loadoutPrimitive.items, function(itemPrimitive) {
             var item = angular.copy(dimItemService.getItem(itemPrimitive));
 
             if (item) {

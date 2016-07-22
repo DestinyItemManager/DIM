@@ -70,7 +70,6 @@
     vm.search = dimSearchService;
 
     function initLoadouts() {
-
       dimLoadoutService.getLoadouts()
         .then(function(loadouts) {
           var platform = dimPlatformService.getActive();
@@ -78,7 +77,7 @@
           vm.loadouts = _.sortBy(loadouts, 'name') || [];
 
           vm.loadouts = _.chain(vm.loadouts)
-            .filter(item => _.isUndefined(item.platform) || item.platform === platform.label)
+            .filter((item) => _.isUndefined(item.platform) || item.platform === platform.label)
             .filter(function(item) {
               return vm.classTypeId === -1 || ((item.classType === -1) || (item.classType === vm.classTypeId));
             })
