@@ -134,6 +134,10 @@
 
     $rootScope.$on('dim-active-platform-updated', function() {
       _stores = [];
+      _oldItems = {};
+      _currItems = {};
+      _newItems = {};
+
       $rootScope.$broadcast('dim-stores-updated', {
         stores: _stores
       });
