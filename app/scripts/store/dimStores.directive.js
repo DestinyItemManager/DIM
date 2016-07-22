@@ -92,9 +92,5 @@
     if (!vm.stores.length && dimPlatformService.getActive()) {
       loadingTracker.addPromise(dimStoreService.reloadStores());
     }
-
-    $scope.$on('dim-active-platform-updated', function(e) {
-      loadingTracker.addPromise(dimStoreService.reloadStores());
-    });
   }
 })();
