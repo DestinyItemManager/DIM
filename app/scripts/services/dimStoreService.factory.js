@@ -133,10 +133,7 @@
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
-      if ($rootScope.activePlatformUpdated === true) {
-        _stores = [];
-        $rootScope.activePlatformUpdated = false;
-      }
+      _stores = [];
     });
 
     return service;
