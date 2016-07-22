@@ -1,5 +1,7 @@
 # Next
+
 * Show current vendor items being sold
+* Move popup won't pop up under the header anymore.
 
 # 3.8.3
 
