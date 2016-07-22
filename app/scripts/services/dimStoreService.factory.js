@@ -140,12 +140,10 @@
       }
     });
 
-    var IsStoreSyncing = false;
-
     function getIsStoreSyncingPromise() {
       var self = service;
 
-      return $q(function(resolve, reject) {
+      return $q(function(resolve) {
         if (self.IsStoreSyncing) {
           var intervalId = window.setInterval(function() {
             if (!self.IsStoreSyncing) {

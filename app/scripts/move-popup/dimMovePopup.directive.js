@@ -84,7 +84,7 @@
               at: 'left top-2',
               of: element,
               collision: 'flip flip',
-              within: '.stores'
+              within: '.store-bounds'
             })
             .show();
         });

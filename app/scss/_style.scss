@@ -1317,6 +1317,15 @@ g {
   margin-top: 90px;
 }
 
+.store-bounds {
+  position: fixed;
+  pointer-events: none;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 141px;
+}
+
 .store-row {
   width: 100%;
   display: flex;

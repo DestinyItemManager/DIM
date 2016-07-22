@@ -65,6 +65,7 @@
       scope.$on('dim-create-new-loadout', function() {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
+        vm.loadout = angular.copy(vm.defaults);
       });
 
       scope.$on('dim-delete-loadout', function() {
