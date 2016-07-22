@@ -98,13 +98,8 @@
     vm.xur = dimXurService;
 
     vm.refresh = function refresh() {
-      var activePlatform = dimPlatformService.getActive();
-      if (activePlatform !== null) {
-        $rootScope.$broadcast('dim-active-platform-updated', {
-          platform: activePlatform
-        });
-        dimXurService.updateXur();
-      }
+      loadingTracker.addPromise(dimStoreService.reloadStores());
+      dimXurService.updateXur();
     };
 
     // Don't refresh more than once a minute
