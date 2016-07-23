@@ -3,6 +3,8 @@
 * Show current vendor items being sold
 * Move popup won't pop up under the header anymore.
 * If you have an open loadout, and you click "Create loadout", it switches to the new loadout now instead of leaving the previous loadout open.
+* DIM is once again faster.
+* The loadout editor won't stay visible when you change platforms.
 
 # 3.8.3
 
