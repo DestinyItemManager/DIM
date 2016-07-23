@@ -23,6 +23,9 @@
     });
     dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
 
+    // A promise used to dedup parallel calls to reloadStores
+    var reloadPromise;
+
     // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
     var cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
@@ -166,12 +169,17 @@
     }
 
     // Returns a promise for a fresh view of the stores and their items.
+    // If this is called while a reload is already happening, it'll return the promise
+    // for the ongoing reload rather than kicking off a new reload.
     function reloadStores() {
+      if (reloadPromise) {
+        return reloadPromise;
+      }
       _oldItems = buildItemMap(_stores);
       if (_.isEmpty(_stores)) {
         clearNewItems();
       }
-      return dimBungieService.getStores(dimPlatformService.getActive())
+      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
           var glimmer;
           var marks;
@@ -347,7 +355,13 @@
             }, 10000);
           }
           return stores;
+        })
+        .finally(function() {
+          // Clear the reload promise so this can be called again
+          reloadPromise = null;
         });
+
+      return reloadPromise;
     }
 
     function getStore(id) {
