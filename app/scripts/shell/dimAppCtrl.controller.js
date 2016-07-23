@@ -94,6 +94,10 @@
       $state.go($state.is('best') ? 'inventory' : 'best');
     };
 
+    vm.toggleVendors = function(e) {
+      $state.go($state.is('vendors') ? 'inventory' : 'vendors');
+    };
+
     dimXurService.updateXur();
     vm.xur = dimXurService;
 
