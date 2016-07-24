@@ -134,7 +134,8 @@
       clearNewItems: clearNewItems,
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
-      processItems: processItems
+      processItems: processItems,
+      hasNewItems: Boolean(_newItems.size)
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
@@ -1081,20 +1082,29 @@
 
     function clearNewItems() {
       _newItems = new Set();
+      _stores.forEach((store) => {
+        store.items.forEach((item) => {
+          item.isNew = false;
+        });
+      });
+      service.hasNewItems = false;
       saveNewItems();
     }
 
     function loadNewItems() {
       if (dimPlatformService.getActive()) {
         _newItems = new Set();
+        service.hasNewItems = false;
         return SyncService.get().then(function processCachedNewItems(data) {
           _newItems = new Set(data[newItemsKey()]);
+          service.hasNewItems = Boolean(_newItems.size);
         });
       }
       return $q.when();
     }
 
     function saveNewItems() {
+      service.hasNewItems = Boolean(_newItems.size);
       SyncService.set({ [newItemsKey()]: [..._newItems] });
     }
 
