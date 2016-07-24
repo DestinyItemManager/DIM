@@ -5,6 +5,10 @@
 * If you have an open loadout, and you click "Create loadout", it switches to the new loadout now instead of leaving the previous loadout open.
 * DIM is once again faster.
 * The loadout editor won't stay visible when you change platforms.
+* Fixed a lot of bugs that would show all your items as new.
+* New-ness of items persists across reloads and syncs across your Chrome profile.
+* New button to clear all new items. Keyboard shortcut is "x".
+* Help dialog for keyboard shortcuts. Triggered with "?".
 
 # 3.8.3
 
