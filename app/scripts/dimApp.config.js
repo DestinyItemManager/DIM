@@ -92,7 +92,7 @@
     .config([
       'hotkeysProvider',
       function(hotkeysProvider) {
-        hotkeysProvider.includeCheatSheet = false;
+        hotkeysProvider.includeCheatSheet = true;
       }
     ])
     .config([

@@ -24,6 +24,7 @@
 
     hotkeys.add({
       combo: ['f'],
+      description: "Start a search.",
       callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
@@ -42,6 +43,7 @@
 
     hotkeys.add({
       combo: ['r'],
+      description: "Refresh inventory.",
       callback: function() {
         vm.refresh();
       }
@@ -49,8 +51,17 @@
 
     hotkeys.add({
       combo: ['i'],
+      description: "Toggle showing full item details.",
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
+      }
+    });
+
+    hotkeys.add({
+      combo: ['x'],
+      description: "Clear new items.",
+      callback: function() {
+        storeService.clearNewItems();
       }
     });
 
