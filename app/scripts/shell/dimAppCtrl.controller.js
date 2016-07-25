@@ -61,7 +61,7 @@
       combo: ['x'],
       description: "Clear new items",
       callback: function() {
-        storeService.clearNewItems();
+        dimStoreService.clearNewItems();
       }
     });
 
