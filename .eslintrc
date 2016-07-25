@@ -24,7 +24,8 @@
     "zip": true,
     "Uint8Array": true,
     "Int32Array": true,
-    "DataView": true
+    "DataView": true,
+    "Proxy": true
   },
   "rules": {
     "array-callback-return": "error",

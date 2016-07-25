@@ -133,8 +133,8 @@
             // Get vendor metadata
             return dimVendorDefinitions.then(function(vendorDefs) {
               _.each(vendors, function(vendor) {
-                vendor.vendorName = vendorDefs[vendor.vendorHash].vendorName;
-                vendor.vendorIcon = vendorDefs[vendor.vendorHash].factionIcon || vendorDefs[vendor.vendorHash].vendorIcon;
+                vendor.vendorName = vendorDefs[vendor.vendorHash].summary.vendorName;
+                vendor.vendorIcon = vendorDefs[vendor.vendorHash].summary.factionIcon || vendorDefs[vendor.vendorHash].summary.vendorIcon;
               });
               return vendors;
             });

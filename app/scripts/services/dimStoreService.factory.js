@@ -23,6 +23,21 @@
     });
     dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
 
+    const progressionMeta = {
+      529303302: { label: "Cryptarch", color: "#C7990C", scale: ".8", order: 0 },
+      3233510749: { label: "Vanguard", color: "#161E28", scale: ".5", order: 1 },
+      1357277120: { label: "Crucible", color: "#a7342d", scale: ".8", order: 2 },
+      2778795080: { label: "Dead Orbit", color: "#cccccc", scale: ".5", order: 3 },
+      1424722124: { label: "Future War Cult", color: "#262247", scale: ".5", order: 4 },
+      3871980777: { label: "New Monarchy", color: "#862529", scale: ".5", order: 5 },
+      2161005788: { label: "Iron Banner", color: "#4d310a", scale: ".5", order: 6 },
+      174528503: { label: "Crota's Bane", color: "#9e9381", scale: ".5", order: 7 },
+      807090922: { label: "Queen's Wrath", color: "#2F1023", scale: ".5", order: 8 },
+      3641985238: { label: "House of Judgment", color: "#5AAC77", scale: ".5", order: 9 },
+      2335631936: { label: "Gunsmith", color: "#717272", scale: ".8", order: 10 },
+      2763619072: { label: "SRL", color: "#e92b38", scale: ".5", order: 11 }
+    };
+
     // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
     var cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
@@ -281,7 +296,7 @@
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               store.progression.progressions.forEach(function(prog) {
-                angular.extend(prog, progressionDefs[prog.progressionHash]);
+                angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
               });
 
               _.each(raw.data.buckets, function(bucket) {
