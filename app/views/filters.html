@@ -1,5 +1,5 @@
 <div id="filter-view">
-  <h1 class="orange">Filters</h1>
+  <h1>Filters</h1>
   <div class="ngdialog-inner-content">
   <p>
     Click filters below to apply, or by typing in the search box.
@@ -14,106 +14,116 @@
     </tr>
     <tr>
       <td>
-        <span>item name</span>
+        <dim-filter-link filter="item name"></dim-filter-link>
       </td>
       <td>Shows items where their name has a partial match to the filter text.</td>
     </tr>
     <tr>
       <td>
-        <span>is:arc</span>
-        <span>is:solar</span>
-        <span>is:void</span>
-        <span>is:kinetic</span>
+        <dim-filter-link filter="is:arc"></dim-filter-link>
+        <dim-filter-link filter="is:solar"></dim-filter-link>
+        <dim-filter-link filter="is:void"></dim-filter-link>
+        <dim-filter-link filter="is:kinetic"></dim-filter-link>
       </td>
       <td>Shows items based on their damage type.</td>
     </tr>
     <tr>
       <td>
-        <span>light:value</span>
-        <span>light:&gt;=value</span>
-        <span>light:&gt;value</span>
-        <span>light:&lt;value</span>
-        <span>light:&lt;=value</span>
+        <dim-filter-link filter="light:value"></dim-filter-link>
+        <dim-filter-link filter="light:&gt;=value"></dim-filter-link>
+        <dim-filter-link filter="light:&gt;value"></dim-filter-link>
+        <dim-filter-link filter="light:&lt;value"></dim-filter-link>
+        <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
       </td>
       <td>Shows items based on their light level (Attack for Weapons; Defense for Armor). "level" is an alias for "light".</td>
     </tr>
     <tr>
       <td>
-        <span>quality:value</span>
-        <span>quality:&gt;=value</span>
-        <span>quality:&gt;value</span>
-        <span>quality:&lt;value</span>
-        <span>quality:&lt;=value</span>
+        <dim-filter-link filter="quality:value"></dim-filter-link>
+        <dim-filter-link filter="quality:&gt;=value"></dim-filter-link>
+        <dim-filter-link filter="quality:&gt;value"></dim-filter-link>
+        <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
+        <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
       </td>
       <td>Shows items based on their total stat quality percentage. "percentage" is an alias for "quality".</td>
     </tr>
     <tr>
       <td>
-        <span>is:class</span>
-        <span>is:primary</span>
-        <span>is:special</span>
-        <span>is:heavy</span>
+        <dim-filter-link filter="quality:value"></dim-filter-link>
+        <dim-filter-link filter="quality:&gt;=value"></dim-filter-link>
+        <dim-filter-link filter="quality:&gt;value"></dim-filter-link>
+        <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
+        <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
+      </td>
+      <td>Shows items based on their roll quality percentage.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:class"></dim-filter-link>
+        <dim-filter-link filter="is:primary"></dim-filter-link>
+        <dim-filter-link filter="is:special"></dim-filter-link>
+        <dim-filter-link filter="is:heavy"></dim-filter-link>
       </td>
       <td>Shows items based on their weapon classes.</td>
     </tr>
     <tr>
       <td>
-        <span>is:helmet</span>
-        <span>is:gauntlets</span>
-        <span>is:chest</span>
-        <span>is:leg</span>
-        <span>is:classitem</span>
+        <dim-filter-link filter="is:helmet"></dim-filter-link>
+        <dim-filter-link filter="is:gauntlets"></dim-filter-link>
+        <dim-filter-link filter="is:chest"></dim-filter-link>
+        <dim-filter-link filter="is:leg"></dim-filter-link>
+        <dim-filter-link filter="is:classitem"></dim-filter-link>
       </td>
       <td>Shows armors based on their category.</td>
     </tr>
     <tr>
       <td>
-        <span>is:common</span>
-        <span>is:uncommon</span>
-        <span>is:rare</span>
-        <span>is:legendary</span>
-        <span>is:exotic</span>
+        <dim-filter-link filter="is:common"></dim-filter-link>
+        <dim-filter-link filter="is:uncommon"></dim-filter-link>
+        <dim-filter-link filter="is:rare"></dim-filter-link>
+        <dim-filter-link filter="is:legendary"></dim-filter-link>
+        <dim-filter-link filter="is:exotic"></dim-filter-link>
       </td>
       <td>Shows items based on their rarity tier.</td>
     </tr>
     <tr>
       <td>
-        <span>is:intellect</span>
-        <span>is:discipline</span>
-        <span>is:strength</span>
+        <dim-filter-link filter="is:intellect"></dim-filter-link>
+        <dim-filter-link filter="is:discipline"></dim-filter-link>
+        <dim-filter-link filter="is:strength"></dim-filter-link>
       </td>
       <td>Shows armor that has points in the named stat.</td>
     </tr>
     <tr>
       <td>
-        <span>is:infusable</span>
-        <span>is:infuse</span>
+        <dim-filter-link filter="is:infusable"></dim-filter-link>
+        <dim-filter-link filter="is:infuse"></dim-filter-link>
       </td>
       <td>Shows items that can be infused.</td>
     </tr>
     <tr>
       <td>
-        <span>is:ascended</span>
-        <span>is:unascended</span>
+        <dim-filter-link filter="is:ascended"></dim-filter-link>
+        <dim-filter-link filter="is:unascended"></dim-filter-link>
       </td>
       <td>Shows items that have an ascend node and if they have been ascended or not.</td>
     </tr>
     <tr>
       <td>
-        <span>is:reforgeable</span>
-        <span>is:reforge</span>
-        <span>is:rerollable</span>
-        <span>is:reroll</span>
+        <dim-filter-link filter="is:reforgeable"></dim-filter-link>
+        <dim-filter-link filter="is:reforge"></dim-filter-link>
+        <dim-filter-link filter="is:rerollable"></dim-filter-link>
+        <dim-filter-link filter="is:reroll"></dim-filter-link>
       </td>
       <td>Shows items that can be reforged at the Gunsmith.</td>
     </tr>
     <tr>
       <td>
-        <span>is:complete</span>
-        <span>is:incomplete</span>
-        <span>is:xpincomplete, is:needsxp</span>
-        <span>is:xpcomplete</span>
-        <span>is:upgraded</span>
+        <dim-filter-link filter="is:complete"></dim-filter-link>
+        <dim-filter-link filter="is:incomplete"></dim-filter-link>
+        <dim-filter-link filter="is:xpincomplete, is:needsxp"></dim-filter-link>
+        <dim-filter-link filter="is:xpcomplete"></dim-filter-link>
+        <dim-filter-link filter="is:upgraded"></dim-filter-link>
       </td>
       <td>Shows items at various states of leveling:
         <ul>
@@ -127,74 +137,74 @@
     </tr>
     <tr>
       <td>
-        <span>is:titan</span>
-        <span>is:hunter</span>
-        <span>is:warlock</span>
+        <dim-filter-link filter="is:titan"></dim-filter-link>
+        <dim-filter-link filter="is:hunter"></dim-filter-link>
+        <dim-filter-link filter="is:warlock"></dim-filter-link>
       </td>
       <td>Shows items based on their class affinty.</td>
     </tr>
     <tr>
       <td>
-        <span>is:dupe</span>
-        <span>is:duplicate</span>
+        <dim-filter-link filter="is:dupe"></dim-filter-link>
+        <dim-filter-link filter="is:duplicate"></dim-filter-link>
       </td>
       <td>Shows duplicate items</td>
     </tr>
     <tr>
       <td>
-        <span>is:locked</span>
-        <span>is:unlocked</span>
+        <dim-filter-link filter="is:locked"></dim-filter-link>
+        <dim-filter-link filter="is:unlocked"></dim-filter-link>
       </td>
       <td>Shows items based on their locked status.</td>
     </tr>
     <tr>
       <td>
-        <span>is:tracked</span>
-        <span>is:untracked</span>
+        <dim-filter-link filter="is:tracked"></dim-filter-link>
+        <dim-filter-link filter="is:untracked"></dim-filter-link>
       </td>
       <td>Shows quests/bounties based on their tracked status.</td>
     </tr>
     <tr>
       <td>
-        <span>is:stackable</span>
+        <dim-filter-link filter="is:stackable"></dim-filter-link>
       </td>
       <td>Shows items that can stack (ammo synths, strange coin, etc)</td>
     </tr>
     <tr>
       <td>
-        <span>is:pulserifle</span>
-        <span>is:scoutrifle</span>
-        <span>is:handcannon</span>
-        <span>is:autorifle</span>
-        <span>is:sniperrifle</span>
-        <span>is:shotgun</span>
-        <span>is:fusionrifle</span>
-        <span>is:sidearm</span>
-        <span>is:rocketlauncher</span>
-        <span>is:machinegun</span>
-        <span>is:sword</span>
-        <span>is:primaryweaponengram</span>
-        <span>is:specialweaponengram</span>
-        <span>is:heavyweaponengram</span>
+        <dim-filter-link filter="is:pulserifle"></dim-filter-link>
+        <dim-filter-link filter="is:scoutrifle"></dim-filter-link>
+        <dim-filter-link filter="is:handcannon"></dim-filter-link>
+        <dim-filter-link filter="is:autorifle"></dim-filter-link>
+        <dim-filter-link filter="is:sniperrifle"></dim-filter-link>
+        <dim-filter-link filter="is:shotgun"></dim-filter-link>
+        <dim-filter-link filter="is:fusionrifle"></dim-filter-link>
+        <dim-filter-link filter="is:sidearm"></dim-filter-link>
+        <dim-filter-link filter="is:rocketlauncher"></dim-filter-link>
+        <dim-filter-link filter="is:machinegun"></dim-filter-link>
+        <dim-filter-link filter="is:sword"></dim-filter-link>
+        <dim-filter-link filter="is:primaryweaponengram"></dim-filter-link>
+        <dim-filter-link filter="is:specialweaponengram"></dim-filter-link>
+        <dim-filter-link filter="is:heavyweaponengram"></dim-filter-link>
       </td>
       <td>Shows weapons based on their weapon type.</td>
     </tr>
     <tr>
       <td>
-        <span>is:engram</span>
+        <dim-filter-link filter="is:engram"></dim-filter-link>
       </td>
       <td>Shows engrams.</td>
     </tr>
     <tr>
       <td>
-        <span>is:new</span>
+        <dim-filter-link filter="is:new"></dim-filter-link>
       </td>
       <td>Shows new items.</td>
     </tr>
     <tr>
       <td>
-        <span>is:year1</span>
-        <span>is:year2</span>
+        <dim-filter-link filter="is:year1"></dim-filter-link>
+        <dim-filter-link filter="is:year2"></dim-filter-link>
       </td>
       <td>Shows items from which year of Destiny they appeared in.</td>
     </tr>
