@@ -97,6 +97,10 @@
       scope.$on('dim-store-item-clicked', function(event, args) {
         vm.add(args.item, args.clickEvent);
       });
+
+      scope.$on('dim-active-platform-updated', function() {
+        vm.show = false;
+      });
     }
   }
 

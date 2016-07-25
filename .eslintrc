@@ -18,7 +18,8 @@
     "chrome": true,
     "sum": true,
     "count": true,
-    "gapi": true
+    "gapi": true,
+    "Set": true
   },
   "rules": {
     "array-callback-return": "error",

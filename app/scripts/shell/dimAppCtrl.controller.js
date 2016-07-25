@@ -24,6 +24,7 @@
 
     hotkeys.add({
       combo: ['f'],
+      description: "Start a search",
       callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
@@ -42,6 +43,7 @@
 
     hotkeys.add({
       combo: ['r'],
+      description: "Refresh inventory",
       callback: function() {
         vm.refresh();
       }
@@ -49,8 +51,17 @@
 
     hotkeys.add({
       combo: ['i'],
+      description: "Toggle showing full item details",
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
+      }
+    });
+
+    hotkeys.add({
+      combo: ['x'],
+      description: "Clear new items",
+      callback: function() {
+        dimStoreService.clearNewItems();
       }
     });
 
@@ -94,17 +105,16 @@
       $state.go($state.is('best') ? 'inventory' : 'best');
     };
 
+    vm.toggleVendors = function(e) {
+      $state.go($state.is('vendors') ? 'inventory' : 'vendors');
+    };
+
     dimXurService.updateXur();
     vm.xur = dimXurService;
 
     vm.refresh = function refresh() {
-      var activePlatform = dimPlatformService.getActive();
-      if (activePlatform !== null) {
-        $rootScope.$broadcast('dim-active-platform-updated', {
-          platform: activePlatform
-        });
-        dimXurService.updateXur();
-      }
+      loadingTracker.addPromise(dimStoreService.reloadStores());
+      dimXurService.updateXur();
     };
 
     // Don't refresh more than once a minute
