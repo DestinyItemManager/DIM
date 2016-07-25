@@ -6,7 +6,12 @@
 
   ManifestService.$inject = ['$rootScope', '$q', 'dimBungieService', '$http'];
 
+  // TODO: profile memory of SQLite vs reading it all out at startup!
+  // TODO: so far this uses a lot more memory
   function ManifestService($rootScope, $q, dimBungieService, $http) {
+    // Testing flags
+    const alwaysLoadRemote = false;
+
     // TODO: expose state properties, loading progress
     return {
       // TODO Do this entirely with webworkers?
@@ -96,6 +101,10 @@
     function loadManifestFromCache(version) {
       // TODO: none of this works in Firefox?
       return $q(function(resolve, reject) {
+        if (alwaysLoadRemote) {
+          reject(new Error("Testing - always load remote"));
+          return;
+        }
         chrome.storage.local.get('manifest-version', function(obj) {
           var currentManifestVersion = obj['manifest-version'];
           if (chrome.runtime.lastError) {
