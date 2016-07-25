@@ -23,6 +23,7 @@
     "SQL": true,
     "zip": true,
     "Uint8Array": true,
+    "Int32Array": true,
     "DataView": true
   },
   "rules": {

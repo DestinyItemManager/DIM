@@ -7,6 +7,7 @@
   ManifestService.$inject = ['$rootScope', '$q', 'dimBungieService', '$http'];
 
   function ManifestService($rootScope, $q, dimBungieService, $http) {
+    // TODO: expose state properties, loading progress
     return {
       // TODO Do this entirely with webworkers?
       getManifest: function() {
@@ -33,14 +34,32 @@
                 return new SQL.Database(typedArray);
               });
           });
-      }
+      },
+
+      // TODO: memoize provides dumb caching but probably not necessary!
+      // TODO: have item services do it instead?
+      getRecord: _.memoize(function(db, table, id) {
+        console.time('getRecord ' + table + ' ' + id);
+        // TODO: prepared statements?
+        // TODO: web worker? 3.5ms per invocation right now. Time against normal DIM?
+        try {
+          // The ID in sqlite is a signed 32-bit int, while the id we use is unsigned, so we must convert
+          const sqlId = new Int32Array([id])[0];
+          const result = db.exec("SELECT json FROM " + table + " where id = " + sqlId);
+          if (result.length && result[0].values && result[0].values.length) {
+            return JSON.parse(result[0].values[0]);
+          }
+          return null;
+        } finally {
+          console.timeEnd('getRecord ' + table + ' ' + id);
+        }
+      }, (db, table, id) => table + '-' + id)
     };
 
     /**
      * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
      */
     function loadManifestRemote(version, path) {
-      // TODO: save zipped or post-zip?
       return $http.get("https://www.bungie.net/" + path, { responseType: "blob" })
         .then(function(response) {
           return unzipManifest(response.data);

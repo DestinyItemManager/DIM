@@ -27,8 +27,9 @@
 
 
     dimManifestService.getManifest().then(function(db) {
-      console.log(db);
-      console.log(db.exec("SELECT * FROM DestinyInventoryItemDefinition where id = -2146969240"));
+      console.log(dimManifestService.getRecord(db, 'DestinyInventoryItemDefinition', 3691883234));
+      console.log(dimManifestService.getRecord(db, 'DestinyInventoryItemDefinition', 255654879));
+      console.log(dimManifestService.getRecord(db, 'DestinyInventoryItemDefinition', 3536592559));
       console.timeEnd('manifest');
     });
 
