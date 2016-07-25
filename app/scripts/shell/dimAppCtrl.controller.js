@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state', 'dimManifestService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', 'dimStoreService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimCsvService', 'dimSettingsService', '$window', '$scope', '$state'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope, $state, dimManifestService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, storeService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimCsvService, dimSettingsService, $window, $scope, $state) {
     var vm = this;
     var aboutResult = null;
     var settingResult = null;
@@ -23,14 +23,6 @@
 
     $scope.$watch('app.settings.vaultMaxCol', function(cols) {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
-    });
-
-
-    dimManifestService.getManifest().then(function(db) {
-      console.log(dimManifestService.getRecord(db, 'DestinyInventoryItemDefinition', 3691883234));
-      console.log(dimManifestService.getRecord(db, 'DestinyInventoryItemDefinition', 255654879));
-      console.log(dimManifestService.getRecord(db, 'DestinyInventoryItemDefinition', 3536592559));
-      console.timeEnd('manifest');
     });
 
     hotkeys.add({
