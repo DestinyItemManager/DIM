@@ -276,7 +276,7 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
-                vendors: raw.character.vendors,
+                vendors: processVendors(raw.character.vendors),
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
