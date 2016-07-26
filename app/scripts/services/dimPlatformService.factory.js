@@ -90,7 +90,7 @@
     }
 
     function getActive() {
-      return (_active);
+      return _active;
     }
 
     function setActive(platform) {
@@ -102,8 +102,6 @@
       } else {
         promise = SyncService.set({ platformType: platform.type });
       }
-
-      $rootScope.activePlatformUpdated = true;
 
       $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
       return promise;
