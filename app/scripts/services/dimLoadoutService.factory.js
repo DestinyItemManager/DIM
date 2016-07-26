@@ -414,24 +414,21 @@
         items: {}
       };
 
-      dimStoreService.afterStoreSync()
-        .then(function() {
-          _.each(loadoutPrimitive.items, function(itemPrimitive) {
-            var item = angular.copy(dimItemService.getItem({
-              id: itemPrimitive.id,
-              hash: itemPrimitive.hash
-            }));
+      _.each(loadoutPrimitive.items, function(itemPrimitive) {
+        var item = angular.copy(dimItemService.getItem({
+          id: itemPrimitive.id,
+          hash: itemPrimitive.hash
+        }));
 
-            if (item) {
-              var discriminator = item.type.toLowerCase();
+        if (item) {
+          var discriminator = item.type.toLowerCase();
 
-              item.equipped = itemPrimitive.equipped;
+          item.equipped = itemPrimitive.equipped;
 
-              result.items[discriminator] = (result.items[discriminator] || []);
-              result.items[discriminator].push(item);
-            }
-          });
-        });
+          result.items[discriminator] = (result.items[discriminator] || []);
+          result.items[discriminator].push(item);
+        }
+      });
 
       return result;
     }
@@ -445,21 +442,18 @@
         items: {}
       };
 
-      dimStoreService.afterStoreSync()
-        .then(function() {
-          _.each(loadoutPrimitive.items, function(itemPrimitive) {
-            var item = angular.copy(dimItemService.getItem(itemPrimitive));
+      _.each(loadoutPrimitive.items, function(itemPrimitive) {
+        var item = angular.copy(dimItemService.getItem(itemPrimitive));
 
-            if (item) {
-              var discriminator = item.type.toLowerCase();
+        if (item) {
+          var discriminator = item.type.toLowerCase();
 
-              result.items[discriminator] = (result.items[discriminator] || []);
-              result.items[discriminator].push(item);
+          result.items[discriminator] = (result.items[discriminator] || []);
+          result.items[discriminator].push(item);
 
-              item.equipped = true;
-            }
-          });
-        });
+          item.equipped = true;
+        }
+      });
 
       return result;
     }
