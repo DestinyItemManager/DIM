@@ -9,6 +9,7 @@
 * New-ness of items persists across reloads and syncs across your Chrome profile.
 * New button to clear all new items. Keyboard shortcut is "x".
 * Help dialog for keyboard shortcuts. Triggered with "?".
+* When you have two characters of the same class, applying a loadout with a subclass will work all the time now.
 
 # 3.8.3
 
