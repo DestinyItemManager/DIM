@@ -10,12 +10,11 @@
         </td>
         <td>
           <div id="spreadsheetLinks">
-            <button ng-click="app.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Weapons</button>
-            <button ng-click="app.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Armor</button>
+            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Weapons</button>
+            <button ng-click="vm.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Armor</button>
           </div>
         </td>
       </tr>
-      <tr>
       <tr>
         <td>
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>

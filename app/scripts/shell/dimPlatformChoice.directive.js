@@ -20,9 +20,9 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker', '$http'];
+  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker'];
 
-  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker, $http) {
+  function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker) {
     var vm = this;
 
     vm.active = null;
@@ -31,33 +31,14 @@
       dimPlatformService.setActive(vm.active);
     };
 
-    activate();
-
-    function activate() {
-      var promise = $http.get('https://www.bungie.net', {
-        timeout: 5000
-      })
-        .then(function() {
-          return dimPlatformService.getPlatforms();
-        }, function() {
-          return dimPlatformService.getPlatforms();
-        });
-
-      loadingTracker.addPromise(promise);
-    }
+    loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
     $scope.$on('dim-platforms-updated', function(e, args) {
       vm.platforms = args.platforms;
     });
 
     $scope.$on('dim-active-platform-updated', function(e, args) {
-      if (_.isNull(args.platform)) {
-        dimState.active = vm.active = null;
-      } else {
-        // if (_.isNull(vm.active) || (vm.active.type !== args.platform.type)) {
-        dimState.active = vm.active = args.platform;
-        // }
-      }
+      dimState.active = vm.active = args.platform;
     });
   }
 })();
