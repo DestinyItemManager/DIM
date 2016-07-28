@@ -36,20 +36,20 @@
         '    </div>',
         '  </div>',
         '  <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
-        '    <div class="title">',
-        '      <span>{{::category}}</span>',
+        '    <div class="title" ng-click="vm.toggleCategory(category)">',
+        '      <span><i class="fa" ng-class="vm.settings.collapsedCategories[category] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> {{::category}}</span>',
         '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
         '    </div>',
-        '    <div class="store-row items" ng-repeat="bucket in ::buckets track by bucket.id">',
+        '    <div class="store-row items" ng-if="!vm.settings.collapsedCategories[category]" ng-repeat="bucket in ::buckets track by bucket.id">',
         '      <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '        <dim-store-bucket ng-if="::!store.isVault || vm.vault.vaultCounts[category] !== undefined" store-data="store" bucket-items="store.buckets[bucket.id]" bucket="bucket"></dim-store-bucket>',
         '      </div>',
         '    </div>',
         '  </div>',
-        '  <div class="title">',
-        '    <span>Reputation</span>',
+        '  <div class="title" ng-click="vm.toggleCategory(\'Reputation\')">',
+        '    <span><i class="fa" ng-class="vm.settings.collapsedCategories[\'Reputation\'] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> Reputation</span>',
         '  </div>',
-        '  <div class="store-row items">',
+        '  <div class="store-row items" ng-if="!vm.settings.collapsedCategories[\'Reputation\']">',
         '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <dim-store-reputation store-data="store"></dim-store-reputation>',
         '    </div>',
@@ -83,7 +83,11 @@
     dimBucketService.then(function(buckets) {
       vm.buckets = angular.copy(buckets);
     });
-
+    vm.toggleCategory = function(category) {
+      vm.settings.collapsedCategories[category] = !vm.settings.collapsedCategories[category];
+      vm.settings.save();
+    };
+console.log(vm.settings.collapsedCategories);
     $scope.$on('dim-stores-updated', function(e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
