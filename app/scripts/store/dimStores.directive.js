@@ -87,7 +87,7 @@
       vm.settings.collapsedCategories[category] = !vm.settings.collapsedCategories[category];
       vm.settings.save();
     };
-console.log(vm.settings.collapsedCategories);
+
     $scope.$on('dim-stores-updated', function(e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
