@@ -484,6 +484,9 @@ img {
   .icon {
     width: 30px;
   }
+  .collapse {
+    margin-left: -6px;
+  }
 }
 
 .equipped {
@@ -1296,6 +1299,15 @@ g {
   top: 141px;
 }
 
+.collapse {
+  cursor: pointer;
+  font-size: 14px;
+  color: $lightgray;
+  &:hover {
+    color: $orange;
+  }
+}
+
 .store-row {
   width: 100%;
   display: flex;
@@ -1304,6 +1316,10 @@ g {
   // Bit of a hack to make things line up
   &.items:last-child .store-cell {
     padding-bottom: 14px;
+  }
+
+  i.collapse {
+    margin: 16px 7px 8px 10px;
   }
 }
 
@@ -1322,6 +1338,10 @@ g {
     width: auto;
     flex: 1;
   }
+}
+.store-text {
+  align-self: center;
+  margin-top: 5px;
 }
 
 .store-header {
