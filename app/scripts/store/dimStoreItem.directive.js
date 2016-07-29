@@ -99,11 +99,11 @@
 
       vm.doubleClicked = function doubleClick(item, e) {
         e.stopPropagation();
-        var owner = dimStoreService.getStore(item.owner);
+        var active = _.sortBy(dimStoreService.getStores(), 'lastPlayed').reverse()[0];
 
-        if (item.canBeEquippedBy(owner)) {
-          dimItemService.moveTo(item, owner, !item.equipped);
-        }
+        dimItemService.moveTo(item, active,
+                              item.canBeEquippedBy(active) ? !item.equipped : false,
+                              active.amountOfItem(item));
       };
 
       vm.clicked = function openPopup(item, e) {

@@ -1,6 +1,6 @@
 # Next
-* Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
 
+* Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
 * Fix move popup not closing when drag-moving an item.
 
 # 3.8.2
