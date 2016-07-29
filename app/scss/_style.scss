@@ -465,6 +465,7 @@ img {
 }
 
 .title {
+  cursor: pointer;
   flex: 1;
   padding: 0 16px;
   background-color: #353535;
@@ -482,6 +483,9 @@ img {
   }
   .icon {
     width: 30px;
+  }
+  .collapse {
+    margin-left: -6px;
   }
 }
 
@@ -506,7 +510,7 @@ img {
 
 .sub-section {
   flex: 1;
-  margin-top: 14px;
+  margin-top: 6px;
   margin-bottom: 6px;
   position: relative;
   display: flex;
@@ -1295,6 +1299,15 @@ g {
   top: 141px;
 }
 
+.collapse {
+  cursor: pointer;
+  font-size: 14px;
+  color: $lightgray;
+  &:hover {
+    color: $orange;
+  }
+}
+
 .store-row {
   width: 100%;
   display: flex;
@@ -1303,6 +1316,11 @@ g {
   // Bit of a hack to make things line up
   &.items:last-child .store-cell {
     padding-bottom: 14px;
+  }
+
+  i.collapse {
+    outline: none;
+    padding: 8px 7px 8px 10px;
   }
 }
 
@@ -1321,6 +1339,9 @@ g {
     width: auto;
     flex: 1;
   }
+}
+.store-text {
+  padding-top: 5px;
 }
 
 .store-header {
