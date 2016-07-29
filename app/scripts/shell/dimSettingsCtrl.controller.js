@@ -3,9 +3,9 @@
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService'];
+  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService', 'dimCsvService', 'dimStoreService'];
 
-  function SettingsController(settings, $scope, SyncService) {
+  function SettingsController(settings, $scope, SyncService, dimCsvService, dimStoreService) {
     var vm = this;
 
     $scope.$watchCollection('vm.settings', function() {
@@ -24,6 +24,14 @@
 
     vm.driveSync = function() {
       SyncService.authorize();
+    };
+
+    vm.downloadWeaponCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
+    };
+
+    vm.downloadArmorCsv = function(){
+      dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
     };
   }
 })();

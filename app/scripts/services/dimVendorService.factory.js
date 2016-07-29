@@ -133,8 +133,10 @@
             // Get vendor metadata
             return dimVendorDefinitions.then(function(vendorDefs) {
               _.each(vendors, function(vendor) {
-                vendor.vendorName = vendorDefs[vendor.vendorHash].summary.vendorName;
-                vendor.vendorIcon = vendorDefs[vendor.vendorHash].summary.factionIcon || vendorDefs[vendor.vendorHash].summary.vendorIcon;
+                if (vendor) {
+                  vendor.vendorName = vendorDefs[vendor.vendorHash].summary.vendorName;
+                  vendor.vendorIcon = vendorDefs[vendor.vendorHash].summary.factionIcon || vendorDefs[vendor.vendorHash].summary.vendorIcon;
+                }
               });
               return vendors;
             });
@@ -143,7 +145,7 @@
             // Add items that are buyable to vendors
             var vendorsWithItems = [];
             _.each(vendors, function(vendor) {
-              if (vendor.enabled) {
+              if (vendor && vendor.enabled) {
                 var items = [];
                 _.each(vendor.saleItemCategories, function(categoryData) {
                   var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });

@@ -179,125 +179,134 @@
       return (hydration[(loadout.version)] || hydration['v1.0'])(loadout);
     }
 
+    // A special getItem that takes into account the fact that
+    // subclasses have unique IDs.
+    function getLoadoutItem(pseudoItem, store) {
+      var item = dimItemService.getItem(pseudoItem);
+      if (item.type === 'Class') {
+        item = _.find(store.items, {
+          hash: pseudoItem.hash
+        });
+      }
+      return item;
+    }
+
     function applyLoadout(store, loadout) {
       return dimActionQueue.queueAction(function() {
-        return dimStoreService.afterStoreSync()
-          .then(function() {
-            var items = angular.copy(_.flatten(_.values(loadout.items)));
-            var totalItems = items.length;
+        var items = angular.copy(_.flatten(_.values(loadout.items)));
+        var totalItems = items.length;
 
-            var loadoutItemIds = items.map(function(i) {
-              return {
-                id: i.id,
-                hash: i.hash
-              };
-            });
+        var loadoutItemIds = items.map(function(i) {
+          return {
+            id: i.id,
+            hash: i.hash
+          };
+        });
 
-            // Only select stuff that needs to change state
-            items = _.filter(items, function(pseudoItem) {
-              var item = dimItemService.getItem(pseudoItem);
-              return !item ||
-                !item.equipment ||
-                item.owner !== store.id ||
-                item.equipped !== pseudoItem.equipped;
-            });
+        // Only select stuff that needs to change state
+        items = _.filter(items, function(pseudoItem) {
+          var item = getLoadoutItem(pseudoItem, store);
+          return !item ||
+            !item.equipment ||
+            item.owner !== store.id ||
+            item.equipped !== pseudoItem.equipped;
+        });
 
-            // vault can't equip
-            if (store.isVault) {
-              items.forEach(function(i) { i.equipped = false; });
-            }
+        // vault can't equip
+        if (store.isVault) {
+          items.forEach(function(i) { i.equipped = false; });
+        }
 
-            // We'll equip these all in one go!
-            var itemsToEquip = _.filter(items, 'equipped');
-            if (itemsToEquip.length > 1) {
-              // we'll use the equipItems function
-              itemsToEquip.forEach(function(i) { i.equipped = false; });
-            }
+        // We'll equip these all in one go!
+        var itemsToEquip = _.filter(items, 'equipped');
+        if (itemsToEquip.length > 1) {
+          // we'll use the equipItems function
+          itemsToEquip.forEach(function(i) { i.equipped = false; });
+        }
 
-            // Stuff that's equipped on another character. We can bulk-dequip these
-            var itemsToDequip = _.filter(items, function(pseudoItem) {
-              var item = dimItemService.getItem(pseudoItem);
-              return item.owner !== store.id && item.equipped;
-            });
+        // Stuff that's equipped on another character. We can bulk-dequip these
+        var itemsToDequip = _.filter(items, function(pseudoItem) {
+          var item = dimItemService.getItem(pseudoItem);
+          return item.owner !== store.id && item.equipped;
+        });
 
-            var scope = {
-              failed: 0,
-              total: totalItems,
-              successfulItems: []
-            };
+        var scope = {
+          failed: 0,
+          total: totalItems,
+          successfulItems: []
+        };
 
-            var promise = $q.when();
+        var promise = $q.when();
 
-            if (itemsToDequip.length > 1) {
-              var realItemsToDequip = itemsToDequip.map(function(i) {
-                return dimItemService.getItem(i);
-              });
-              var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function(dequipItems, owner) {
-                var equipItems = realItemsToDequip.map(function(i) {
-                  return dimItemService.getSimilarItem(i, loadoutItemIds);
-                });
-                return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
-              });
-              promise = $q.all(dequips);
-            }
-
-            promise = promise
-              .then(function() {
-                return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
-              })
-              .then(function() {
-                if (itemsToEquip.length > 1) {
-                  // Use the bulk equipAll API to equip all at once.
-                  itemsToEquip = _.filter(itemsToEquip, function(i) {
-                    return _.find(scope.successfulItems, { id: i.id });
-                  });
-                  var realItemsToEquip = itemsToEquip.map(function(i) {
-                    return dimItemService.getItem(i);
-                  });
-                  return dimItemService.equipItems(store, realItemsToEquip);
-                } else {
-                  return itemsToEquip;
-                }
-              })
-              .then(function(equippedItems) {
-                if (equippedItems.length < itemsToEquip.length) {
-                  var failedItems = _.filter(itemsToEquip, function(i) {
-                    return !_.find(equippedItems, { id: i.id });
-                  });
-                  failedItems.forEach(function(item) {
-                    scope.failed++;
-                    toaster.pop('error', loadout.name, 'Could not equip ' + item.name);
-                  });
-                }
-              })
-              .then(function() {
-                // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
-                // is fixed on Bungie's end. When that happens, just remove this call.
-                if (scope.successfulItems.length > 0) {
-                  return dimStoreService.updateCharacters();
-                }
-                return undefined;
-              })
-              .then(function() {
-                var value = 'success';
-                var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + store.name + '.';
-
-                if (scope.failed > 0) {
-                  if (scope.failed === scope.total) {
-                    value = 'error';
-                    message = 'None of the items in your loadout could be transferred.';
-                  } else {
-                    value = 'warning';
-                    message = 'Your loadout has been partially transferred, but ' + scope.failed + ' of ' + scope.total + ' items had errors.';
-                  }
-                }
-
-                toaster.pop(value, loadout.name, message);
-              });
-
-            loadingTracker.addPromise(promise);
-            return promise;
+        if (itemsToDequip.length > 1) {
+          var realItemsToDequip = itemsToDequip.map(function(i) {
+            return dimItemService.getItem(i);
           });
+          var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function(dequipItems, owner) {
+            var equipItems = realItemsToDequip.map(function(i) {
+              return dimItemService.getSimilarItem(i, loadoutItemIds);
+            });
+            return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
+          });
+          promise = $q.all(dequips);
+        }
+
+        promise = promise
+          .then(function() {
+            return applyLoadoutItems(store, items, loadout, loadoutItemIds, scope);
+          })
+          .then(function() {
+            if (itemsToEquip.length > 1) {
+              // Use the bulk equipAll API to equip all at once.
+              itemsToEquip = _.filter(itemsToEquip, function(i) {
+                return _.find(scope.successfulItems, { id: i.id });
+              });
+              var realItemsToEquip = itemsToEquip.map(function(i) {
+                return getLoadoutItem(i, store);
+              });
+              return dimItemService.equipItems(store, realItemsToEquip);
+            } else {
+              return itemsToEquip;
+            }
+          })
+          .then(function(equippedItems) {
+            if (equippedItems.length < itemsToEquip.length) {
+              var failedItems = _.filter(itemsToEquip, function(i) {
+                return !_.find(equippedItems, { id: i.id });
+              });
+              failedItems.forEach(function(item) {
+                scope.failed++;
+                toaster.pop('error', loadout.name, 'Could not equip ' + item.name);
+              });
+            }
+          })
+          .then(function() {
+            // We need to do this until https://github.com/DestinyItemManager/DIM/issues/323
+            // is fixed on Bungie's end. When that happens, just remove this call.
+            if (scope.successfulItems.length > 0) {
+              return dimStoreService.updateCharacters();
+            }
+            return undefined;
+          })
+          .then(function() {
+            var value = 'success';
+            var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + store.name + '.';
+
+            if (scope.failed > 0) {
+              if (scope.failed === scope.total) {
+                value = 'error';
+                message = 'None of the items in your loadout could be transferred.';
+              } else {
+                value = 'warning';
+                message = 'Your loadout has been partially transferred, but ' + scope.failed + ' of ' + scope.total + ' items had errors.';
+              }
+            }
+
+            toaster.pop(value, loadout.name, message);
+          });
+
+        loadingTracker.addPromise(promise);
+        return promise;
       });
     }
 
@@ -310,7 +319,7 @@
 
       var promise = $q.when();
       var pseudoItem = items.shift();
-      var item = dimItemService.getItem(pseudoItem);
+      var item = getLoadoutItem(pseudoItem, store);
 
       if (item.type === 'Material' || item.type === 'Consumable') {
         // handle consumables!
@@ -387,26 +396,23 @@
         items: {}
       };
 
-      dimStoreService.afterStoreSync()
-        .then(function() {
-          _.each(loadoutPrimitive.items, function(itemPrimitive) {
-            var item = angular.copy(dimItemService.getItem({
-              id: itemPrimitive.id,
-              hash: itemPrimitive.hash
-            }));
+      _.each(loadoutPrimitive.items, function(itemPrimitive) {
+        var item = angular.copy(dimItemService.getItem({
+          id: itemPrimitive.id,
+          hash: itemPrimitive.hash
+        }));
 
-            if (item) {
-              var discriminator = item.type.toLowerCase();
+        if (item) {
+          var discriminator = item.type.toLowerCase();
 
-              item.equipped = itemPrimitive.equipped;
+          item.equipped = itemPrimitive.equipped;
 
-              item.amount = itemPrimitive.amount;
+          item.amount = itemPrimitive.amount;
 
-              result.items[discriminator] = (result.items[discriminator] || []);
-              result.items[discriminator].push(item);
-            }
-          });
-        });
+          result.items[discriminator] = (result.items[discriminator] || []);
+          result.items[discriminator].push(item);
+        }
+      });
 
       return result;
     }
@@ -420,24 +426,21 @@
         items: {}
       };
 
-      dimStoreService.afterStoreSync()
-        .then(function() {
-          _.each(loadoutPrimitive.items, function(itemPrimitive) {
-            var item = angular.copy(dimItemService.getItem({
-              id: itemPrimitive.id,
-              hash: itemPrimitive.hash
-            }));
+      _.each(loadoutPrimitive.items, function(itemPrimitive) {
+        var item = angular.copy(dimItemService.getItem({
+          id: itemPrimitive.id,
+          hash: itemPrimitive.hash
+        }));
 
-            if (item) {
-              var discriminator = item.type.toLowerCase();
+        if (item) {
+          var discriminator = item.type.toLowerCase();
 
-              item.equipped = itemPrimitive.equipped;
+          item.equipped = itemPrimitive.equipped;
 
-              result.items[discriminator] = (result.items[discriminator] || []);
-              result.items[discriminator].push(item);
-            }
-          });
-        });
+          result.items[discriminator] = (result.items[discriminator] || []);
+          result.items[discriminator].push(item);
+        }
+      });
 
       return result;
     }
@@ -451,21 +454,18 @@
         items: {}
       };
 
-      dimStoreService.afterStoreSync()
-        .then(function() {
-          _.each(loadoutPrimitive.items, function(itemPrimitive) {
-            var item = angular.copy(dimItemService.getItem(itemPrimitive));
+      _.each(loadoutPrimitive.items, function(itemPrimitive) {
+        var item = angular.copy(dimItemService.getItem(itemPrimitive));
 
-            if (item) {
-              var discriminator = item.type.toLowerCase();
+        if (item) {
+          var discriminator = item.type.toLowerCase();
 
-              result.items[discriminator] = (result.items[discriminator] || []);
-              result.items[discriminator].push(item);
+          result.items[discriminator] = (result.items[discriminator] || []);
+          result.items[discriminator].push(item);
 
-              item.equipped = true;
-            }
-          });
-        });
+          item.equipped = true;
+        }
+      });
 
       return result;
     }

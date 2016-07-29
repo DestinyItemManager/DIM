@@ -19,6 +19,7 @@
     "sum": true,
     "count": true,
     "gapi": true,
+    "Set": true,
     "base64js": true,
     "SQL": true,
     "zip": true,

@@ -21,6 +21,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="stylesheet" href="vendor/components-font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="vendor/angular-hotkeys/build/hotkeys.css">
     <link rel="stylesheet" href="styles/main.css?v=$DIM_VERSION">
   </head>
 
@@ -32,7 +33,7 @@
             <div dim-platform-choice class="header-right"></div>
             <div class="header-right" id="actions">
               <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-              <span class="link" ng-disabled="loadingTracker.active()" ng-click="app.toggleMinMax($event)" title="Loadout Builder"><i class="fa fa-bar-chart"></i></span>
+              <span class="link" ng-click="app.toggleMinMax($event)" title="Loadout Builder"><i class="fa fa-bar-chart"></i></span>
               <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
               <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
               <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
@@ -41,14 +42,11 @@
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)">About</span>
           <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
-          <span class="link" ng-disabled="loadingTracker.active()" ui-sref="vendors">Vendors</span>
+          <span class="link" ng-click="app.toggleVendors($event)">Vendors</span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>
       <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
-      <div class="about modal-dialog" ng-show="app.about"></div>
-      <div class="donate modal-dialog" ng-show="app.donate"></div>
-      <div class="filters modal-dialog" ng-show="app.filters"></div>
       <div id="content" class="content" ui-view></div>
       <div class="store-bounds"></div>
     </div>
@@ -109,6 +107,7 @@
     <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimSearchFilter.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimClickAnywhereButHere.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/shell/dimFilterLink.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimBungieImageFallback.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimPercentWidth.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimStores.directive.js?v=$DIM_VERSION"></script>
@@ -119,6 +118,7 @@
     <script src="scripts/store/dimSimpleItem.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimStats.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimEngramFarming.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/store/dimClearNewItems.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/move-popup/dimMoveAmount.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/move-popup/dimMovePopup.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/move-popup/dimTalentGrid.directive.js?v=$DIM_VERSION"></script>
