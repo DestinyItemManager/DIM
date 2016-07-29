@@ -35,6 +35,9 @@
           const table = `Destiny${tableShort}Definition`;
           return new Proxy({}, {
             get: function(target, name) {
+              if (name === 'then') {
+                return undefined;
+              }
               return dimManifestService.getRecord(db, table, name);
             }
           });

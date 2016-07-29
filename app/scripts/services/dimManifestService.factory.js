@@ -12,11 +12,15 @@
 
     let manifestPromise = null;
 
-    return {
+    const service = {
+      isLoaded: true,
+      statusText: null,
       getManifest: function() {
         if (manifestPromise) {
           return manifestPromise;
         }
+
+        service.isLoaded = false;
 
         // TODO: var language = window.navigator.language;
         var language = 'en';
@@ -31,6 +35,7 @@
                 return loadManifestRemote(version, path);
               })
               .then(function(typedArray) {
+                service.statusText = 'Building Destiny info database...';
                 return new SQL.Database(typedArray);
               });
           });
@@ -59,15 +64,20 @@
       }
     };
 
+    return service;
+
     /**
      * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
      */
     function loadManifestRemote(version, path) {
+      service.statusText = 'Downloading latest Destiny info from Bungie...';
       return $http.get("https://www.bungie.net/" + path, { responseType: "blob" })
         .then(function(response) {
+          service.statusText = 'Unzipping latest Destiny info...';
           return unzipManifest(response.data);
         })
         .then(function(arraybuffer) {
+          service.statusText = 'Saving latest Destiny info...';
           var typedArray = new Uint8Array(arraybuffer);
           var encoded = base64js.fromByteArray(typedArray);
           return $q(function(resolve, reject) {
@@ -97,6 +107,8 @@
           reject(new Error("Testing - always load remote"));
           return;
         }
+
+        service.statusText = "Loading saved Destiny info...";
         chrome.storage.local.get('manifest-version', function(obj) {
           var currentManifestVersion = obj['manifest-version'];
           if (chrome.runtime.lastError) {
