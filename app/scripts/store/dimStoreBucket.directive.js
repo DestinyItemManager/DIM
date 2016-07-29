@@ -184,7 +184,8 @@
           data: item,
           appendTo: 'body',
           overlay: true,
-          className: 'move-amount-popup'
+          className: 'move-amount-popup',
+          appendClassName: 'modal-dialog'
         });
 
         promise = dialogResult.closePromise.then(function(data) {

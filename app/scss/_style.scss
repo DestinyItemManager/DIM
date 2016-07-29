@@ -23,11 +23,13 @@ div:focus, span:focus {
 }
 
 .new_overlay {
-  will-change: transform;
-  animation: new_overlay 4s linear infinite;
   width: var(--item-size);
   height: var(--item-size);
   pointer-events: none;
+  .new-item-animated & {
+    will-change: transform;
+    animation: new_overlay 4s linear infinite;
+  }
 }
 
 .new_overlay_overflow {
@@ -143,52 +145,24 @@ dd {
   opacity: .20;
 }
 
-.modal-dialog {
+.ngdialog.modal-dialog {
   position: fixed;
-  height: 50%;
-  width: 50%;
-  background-color: #333;
-  z-index: 10001;
-  margin: 0 auto;
-  top: 0;
-  top: 25%;
-  left: 25%;
-  color: white;
-  padding: 20px;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  z-index: 10000;
   font-size: 13px;
-  border: 1px solid #333;
-  &:before {
-    content: " ";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 5px solid #f5dc56;
-  }
-}
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.about, .app-settings, .filters, .support, .move-amount-popup, .xur {
-  &.ngdialog {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    color: white;
-    z-index: 10000;
-    font-size: 13px;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .ngdialog-content {
-      max-height: fit-content;
-      max-width: 50%;
-      background-color: #222;
-      border: solid 1px #3e3e3e;
-      height: 70%;
-    }
+  .ngdialog-content {
+    max-height: fit-content;
+    max-width: 50%;
+    background-color: #222;
+    border: solid 1px #3e3e3e;
+    height: 70%;
   }
 }
 
@@ -289,9 +263,6 @@ a {
   background-color: transparent;
   position: relative;
   z-index: 100;
-  .orange {
-    color: $orange;
-  }
   > div > {
     h1, h2, h3, p, table, dl {
       padding-left: 25px;
@@ -934,7 +905,7 @@ dim-store-heading {
   cursor: pointer;
 }
 
-.xur {
+.ngdialog.xur {
   .ngdialog-content {
     height: fit-content !important;
     max-height: 100% !important;
@@ -1000,7 +971,7 @@ dim-store-heading {
     width: 40em;
     background-color: #222;
     border: solid 1px #3e3e3e;
-    overflow-y: scroll;
+    height: fit-content !important;
   }
   .ngdialog-inner-content {
     padding-left: 0;
@@ -1313,6 +1284,15 @@ g {
   display: block;
   // 90px margin to make room for the fixed header
   margin-top: 90px;
+}
+
+.store-bounds {
+  position: fixed;
+  pointer-events: none;
+  bottom: -800px;
+  left: 0;
+  right: 0;
+  top: 141px;
 }
 
 .store-row {
@@ -1948,7 +1928,6 @@ button.toast-close-button {
   width: 40rem;
   right: 0;
   border-radius: .5rem;
-  text-align: center;
   padding: .5rem 1rem;
   color: #e0e0e0;
   display: flex;
@@ -2000,6 +1979,43 @@ button.toast-close-button {
 
   p {
     margin: .25em 0;
+  }
+
+  &.ng-animate {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  &.ng-enter, &.ng-leave.ng-leave-active {
+    opacity: 0;
+    transform: translateY(5rem);
+  }
+
+  &.ng-leave, &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: translateY(0rem);
+  }
+}
+
+/* Clear new items */
+
+.clear-new-items {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+
+  button {
+    color: white;
+    padding: 1rem 1.5rem;
+    background-color: rgba(128, 128, 128, 1.0);
+    border-radius: 4px;
+    border: none;
+    text-align: center;
+    font-size: 1.5em;
+    transition: .3s background-color;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+    &:hover, &:active {
+      background-color: rgba(232, 165, 52, 1.0);
+    }
   }
 
   &.ng-animate {

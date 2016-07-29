@@ -65,6 +65,7 @@
       scope.$on('dim-create-new-loadout', function() {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;
+        vm.loadout = angular.copy(vm.defaults);
       });
 
       scope.$on('dim-delete-loadout', function() {
@@ -73,10 +74,15 @@
         vm.loadout = angular.copy(vm.defaults);
       });
 
+      scope.$watchCollection('vm.originalLoadout.items', function() {
+        vm.loadout = angular.copy(vm.originalLoadout);
+      });
+
       scope.$on('dim-edit-loadout', function(event, args) {
         if (args.loadout) {
           vm.show = true;
           dimLoadoutService.dialogOpen = true;
+          vm.originalLoadout = args.loadout;
           vm.loadout = angular.copy(args.loadout);
           if (args.equipAll) {
             _.each(vm.loadout.items, function(item) {
@@ -90,6 +96,10 @@
 
       scope.$on('dim-store-item-clicked', function(event, args) {
         vm.add(args.item, args.clickEvent);
+      });
+
+      scope.$on('dim-active-platform-updated', function() {
+        vm.show = false;
       });
     }
   }

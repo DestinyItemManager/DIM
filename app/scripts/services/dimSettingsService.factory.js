@@ -26,6 +26,8 @@
       itemDetails: false,
       // Show item quality percentages
       itemQuality: false,
+      // Show animation of new item overlay on new items
+      showNewAnimation: true,
       // Show elemental damage icons
       showElements: false,
       // Sort characters (mostRecent, mostRecentReverse, fixed)

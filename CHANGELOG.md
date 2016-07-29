@@ -1,7 +1,26 @@
 # Next
 
 * Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
+* Show current vendor items being sold
+* Move popup won't pop up under the header anymore.
+* If you have an open loadout, and you click "Create loadout", it switches to the new loadout now instead of leaving the previous loadout open.
+* DIM is once again faster.
+* The loadout editor won't stay visible when you change platforms.
+* Fixed a lot of bugs that would show all your items as new.
+* New-ness of items persists across reloads and syncs across your Chrome profile.
+* New button to clear all new items. Keyboard shortcut is "x".
+* Help dialog for keyboard shortcuts. Triggered with "?".
+* When you have two characters of the same class, applying a loadout with a subclass will work all the time now.
+
+# 3.8.3
+
 * Fix move popup not closing when drag-moving an item.
+* Added ability to and filters for track or untracking quests and bounties.
+* Fix issue where some sets would be missing from the loadout builder.
+* Fixed #660 where postmaster items would not appear in the Postmaster section of DIM, ie Sterling Treasure after the reset.
+* Fixed #697 where loadouts will no longer remove the loadouts for the opposite platform.
+* Fix an issue where loadouts will not show any items, or transfer any items.
+* Add option to show new item overlay animation
 
 # 3.8.2
 

@@ -4,8 +4,6 @@
   angular.module('dimApp')
     .factory('dimCsvService', CsvService);
 
-  CsvService.$inject = ['dimStoreService'];
-
   function CsvService() {
     // step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
     var FILTER_NODE_NAMES = ["Upgrade Defense", "Ascend", "Infuse", "Increase Intellect", "Increase Discipline",
@@ -64,8 +62,8 @@
         data += (item.percentComplete * 100).toFixed(0) + ", ";
         data += item.locked + ", ";
         data += item.equipped + ", ";
-        data += item.quality ? item.quality.max + ", " : "0, ";
         data += item.year + ", ";
+        data += item.quality ? item.quality.max + ", " : "0, ";
         var stats = {};
         if (item.stats) {
           item.stats.forEach(function(stat) {

@@ -19,7 +19,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true" ng-change="vm.filter()">'
+        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }
@@ -42,6 +42,8 @@
     unascended: ['unascended', 'unassended', 'unasscended'],
     ascended: ['ascended', 'assended', 'asscended'],
     reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+    tracked: ['tracked'],
+    untracked: ['untracked'],
     locked: ['locked'],
     unlocked: ['unlocked'],
     stackable: ['stackable'],
@@ -83,14 +85,18 @@
     });
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, dimSearchService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
     vm.search = dimSearchService;
+
+    $scope.$watch('vm.search.query', function() {
+      vm.filter();
+    });
 
     $scope.$on('dim-stores-updated', function() {
       _duplicates = null;
@@ -186,6 +192,36 @@
           item.visible = (filters.length > 0) ? filterFn(item) : true;
         });
       });
+
+      if (dimVendorService.vendorItems) {
+        var setVisible = function(vendor) {
+          _.each(vendor.items, function(classType) {
+            _.each(classType, function(armorType) {
+              _.each(armorType, function(item) {
+                item.visible = (filters.length > 0) ? filterFn(item) : true;
+              });
+            });
+          });
+        };
+
+        setVisible(dimVendorService.vendorItems.crucible.Crucible);
+        setVisible(dimVendorService.vendorItems.exotics.Exotics);
+        _.each(dimVendorService.vendorItems.factions, function(faction) {
+          setVisible(faction);
+        });
+        _.each(dimVendorService.vendorItems.misc, function(miscVendor) {
+          setVisible(miscVendor);
+        });
+        _.each(dimVendorService.vendorItems.misc, function(miscVendor) {
+          setVisible(miscVendor);
+        });
+        _.each(dimVendorService.vendorItems.vanguard, function(vanguardVendor) {
+          setVisible(vanguardVendor);
+        });
+        if (dimVendorService.vendorItems.banner) {
+          setVisible(dimVendorService.vendorItems.banner.Banner);
+        }
+      }
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -247,6 +283,14 @@
       },
       reforgeable: function(predicate, item) {
         return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
+      },
+      untracked: function(predicate, item) {
+        return item.trackable &&
+          !item.tracked;
+      },
+      tracked: function(predicate, item) {
+        return item.trackable &&
+          item.tracked;
       },
       unlocked: function(predicate, item) {
         return item.lockable &&

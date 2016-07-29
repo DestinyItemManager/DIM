@@ -84,7 +84,7 @@
               at: 'left top-2',
               of: element,
               collision: 'flip flip',
-              within: '.stores'
+              within: '.store-bounds'
             })
             .show();
         });
@@ -118,6 +118,7 @@
       ngDialog.open({
         template: 'views/infuse.html',
         className: 'app-settings',
+        appendClassName: 'modal-dialog',
         data: item,
         scope: $('#infuseDialog').scope()
       });

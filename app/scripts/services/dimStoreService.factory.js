@@ -4,17 +4,18 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
     var _stores = [];
-    var _oldItems = {};
-    var _currItems = {};
-    var _newItems = {};
     var progressionDefs = {};
     let recordsDefs = {};
     var buckets = {};
     var idTracker = {};
+
+    // A set of items IDs that are new - this is cleared out by the user
+    var _newItems = new Set();
+
     dimBucketService.then(function(defs) {
       buckets = defs;
     });
@@ -22,6 +23,9 @@
       progressionDefs = defs;
     });
     dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
+
+    // A promise used to dedup parallel calls to reloadStores
+    var reloadPromise;
 
     // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -127,13 +131,19 @@
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
+      clearNewItems: clearNewItems,
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
-      processItems: processItems
+      processItems: processItems,
+      hasNewItems: Boolean(_newItems.size)
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
       _stores = [];
+      $rootScope.$broadcast('dim-stores-updated', {
+        stores: _stores
+      });
+      loadingTracker.addPromise(loadNewItems().then(() => service.reloadStores()));
     });
 
     return service;
@@ -158,17 +168,23 @@
     }
 
     // Returns a promise for a fresh view of the stores and their items.
+    // If this is called while a reload is already happening, it'll return the promise
+    // for the ongoing reload rather than kicking off a new reload.
     function reloadStores() {
-      _oldItems = buildItemMap(_stores);
-      if (_.isEmpty(_stores)) {
-        clearNewItems();
+      if (reloadPromise) {
+        return reloadPromise;
       }
-      return dimBungieService.getStores(dimPlatformService.getActive())
+
+      // Save a snapshot of all the items before we update
+      const previousItemsMap = buildItemMap(_stores);
+      const previousItems = new Set(_.keys(previousItemsMap));
+
+      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
           var glimmer;
           var marks;
 
-          return $q.all(rawStores.map(function(raw) {
+          return $q.all([previousItemsMap, ...rawStores.map(function(raw) {
             var store;
             var items = [];
             if (!raw) {
@@ -272,13 +288,17 @@
               if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
                 if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
                   _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+                    _.each(pail.items, function(item) {
+                      item.bucket = pail.bucketHash;
+                    });
+
                     items = _.union(items, pail.items);
                   });
                 }
               }
             }
 
-            return processItems(store, items).then(function(items) {
+            return processItems(store, items, previousItems).then(function(items) {
               store.items = items;
 
               // by type-bucket
@@ -307,9 +327,31 @@
 
               return store;
             });
-          }));
+          })]);
         })
-        .then(function(stores) {
+        .then(function([previousItemsMap, ...stores]) {
+          // Save and notify about new items (but only if this wasn't the first load)
+          if (previousItems.size) {
+            // Save the list of new item IDs
+            saveNewItems();
+
+            // Only notify new items from this refresh
+            const notifyNewItems = _.omit(buildItemMap(stores), _.keys(previousItemsMap));
+
+            // Show a toaster about the new items
+            var listStr = '';
+            _.each(notifyNewItems, function(val) {
+              listStr += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
+            });
+            if (listStr) {
+              dimInfoService.show('newitemsbox', {
+                title: 'New items found',
+                body: '<p>The following items are new:</p><ul>' + listStr + '</ul>',
+                hide: 'Don\'t show me new item notifications'
+              }, 10000);
+            }
+          }
+
           _stores = stores;
 
           $rootScope.$broadcast('dim-stores-updated', {
@@ -318,24 +360,12 @@
 
           return stores;
         })
-        .then(function(stores) {
-          _currItems = buildItemMap(stores);
-          _newItems = clearStaleNewItems(_currItems, _newItems);
-          SyncService.set({ newItems: _.keys(_newItems) });
-
-          var listStr = '';
-          _.each(_newItems, function(val) {
-            listStr += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
-          });
-          if (listStr) {
-            dimInfoService.show('newitemsbox', {
-              title: 'New items found',
-              body: '<p>The following items are new:</p><ul>' + listStr + '</ul>',
-              hide: 'Don\'t show me new item notifications'
-            }, 10000);
-          }
-          return stores;
+        .finally(function() {
+          // Clear the reload promise so this can be called again
+          reloadPromise = null;
         });
+
+      return reloadPromise;
     }
 
     function getStore(id) {
@@ -356,7 +386,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, cachedNewItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -485,6 +515,8 @@
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
         lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
+        trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
+        tracked: item.state === 2,
         locked: item.locked,
         weaponClass: weaponClass || '',
         classified: itemDef.classified
@@ -492,38 +524,34 @@
 
       createdItem.index = createItemIndex(createdItem);
 
-      if (_.isEmpty(_stores)) {
-        createdItem.isNew = false;
-      } else {
-        createdItem.isNew = _.contains(cachedNewItems, createdItem.id);
-        if (createdItem.isNew === false) {
-          createdItem.isNew = isItemNew(createdItem.id);
-          if (createdItem.isNew) {
-            _newItems[createdItem.id] = { name: createdItem.name, type: createdItem.type };
-          }
-        }
+      // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
+      createdItem.isNew = false;
+      try {
+        createdItem.isNew = isItemNew(createdItem.id, previousItems);
+      } catch (e) {
+        console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
 
       try {
         createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs);
       } catch (e) {
-        console.error("Error building talent grid for " + createdItem.name, item, itemDef);
+        console.error("Error building talent grid for " + createdItem.name, item, itemDef, e);
       }
       try {
         createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
       } catch (e) {
-        console.error("Error building stats for " + createdItem.name, item, itemDef);
+        console.error("Error building stats for " + createdItem.name, item, itemDef, e);
       }
       try {
         createdItem.objectives = buildObjectives(item.objectives, objectiveDef);
       } catch (e) {
-        console.error("Error building objectives for " + createdItem.name, item, itemDef);
+        console.error("Error building objectives for " + createdItem.name, item, itemDef, e);
       }
       if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
         try {
           createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
         } catch (e) {
-          console.error("Error building quality rating for " + createdItem.name, item, itemDef);
+          console.error("Error building quality rating for " + createdItem.name, item, itemDef, e);
         }
       }
 
@@ -876,47 +904,6 @@
       return quality;
     }
 
-    function buildItemMap(stores) {
-      var itemMap = {};
-      _.each(stores, function(store) {
-        _.each(store.items, function(item) {
-          itemMap[item.id] = { name: item.name, type: item.type };
-        });
-      });
-      return itemMap;
-    }
-
-    function clearStaleNewItems(currItems, newItems) {
-      var newItemsClean = {};
-      _.each(newItems, function(val, id) {
-        if (currItems[id]) {
-          newItemsClean[id] = val;
-        }
-      });
-      return newItemsClean;
-    }
-
-    function isItemNew(newId) {
-      // Don't worry about general items and consumables
-      return newId !== '0' && !_oldItems[newId];
-    }
-
-    function dropNewItem(item) {
-      delete _newItems[item.id];
-      SyncService.set({ newItems: _.keys(_newItems) });
-      item.isNew = false;
-    }
-
-    function getCachedNewItems() {
-      return SyncService.get().then(function processCachedNewItems(data) {
-        return data.newItems || [];
-      });
-    }
-
-    function clearNewItems() {
-      SyncService.set({ newItems: [] });
-    }
-
     // thanks to /u/iihavetoes for the bonuses at each level
     // thanks to /u/tehdaw for the spreadsheet with bonuses
     // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
@@ -1059,7 +1046,74 @@
       })), 'sort');
     }
 
-    function processItems(owner, items) {
+    /** New Item Tracking **/
+
+    function buildItemMap(stores) {
+      var itemMap = {};
+      stores.forEach((store) => {
+        store.items.forEach((item) => {
+          itemMap[item.id] = { name: item.name, type: item.type };
+        });
+      });
+      return itemMap;
+    }
+
+    // Should this item display as new? Note the check for previousItems size, so that
+    // we don't mark everything as new on the first load.
+    function isItemNew(id, previousItems) {
+      let isNew = false;
+      if (_newItems.has(id)) {
+        isNew = true;
+      } else if (previousItems.size) {
+        // Zero id check is to ignore general items and consumables
+        isNew = (id !== '0' && !previousItems.has(id));
+        if (isNew) {
+          _newItems.add(id);
+        }
+      }
+      return isNew;
+    }
+
+    function dropNewItem(item) {
+      _newItems.delete(item.id);
+      saveNewItems();
+      item.isNew = false;
+    }
+
+    function clearNewItems() {
+      _newItems = new Set();
+      _stores.forEach((store) => {
+        store.items.forEach((item) => {
+          item.isNew = false;
+        });
+      });
+      service.hasNewItems = false;
+      saveNewItems();
+    }
+
+    function loadNewItems() {
+      if (dimPlatformService.getActive()) {
+        _newItems = new Set();
+        service.hasNewItems = false;
+        return SyncService.get().then(function processCachedNewItems(data) {
+          _newItems = new Set(data[newItemsKey()]);
+          service.hasNewItems = Boolean(_newItems.size);
+        });
+      }
+      return $q.when();
+    }
+
+    function saveNewItems() {
+      service.hasNewItems = Boolean(_newItems.size);
+      SyncService.set({ [newItemsKey()]: [..._newItems] });
+    }
+
+    function newItemsKey() {
+      const platform = dimPlatformService.getActive();
+      return 'newItems-' + (platform ? platform.type : '');
+    }
+
+    function processItems(owner, items, previousItems = new Set()) {
       idTracker = {};
       return $q.all([
         dimItemDefinitions,
@@ -1070,7 +1124,7 @@
         dimTalentDefinitions,
         dimYearsDefinitions,
         dimProgressionDefinitions,
-        getCachedNewItems()])
+        previousItems])
         .then(function(args) {
           var result = [];
           _.each(items, function(item) {
