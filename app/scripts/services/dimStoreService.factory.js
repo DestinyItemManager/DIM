@@ -124,6 +124,7 @@
     };
 
     var service = {
+      getActiveStore: getActiveStore,
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
@@ -161,6 +162,10 @@
         });
         return _stores;
       });
+    }
+
+    function getActiveStore() {
+      return _.sortBy(_stores, 'lastPlayed').reverse()[0];
     }
 
     function getStores() {
