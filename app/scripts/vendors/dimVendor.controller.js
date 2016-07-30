@@ -12,6 +12,7 @@
     var detailItem = null;
     var detailItemElement = null;
 
+    vm.stores = dimStoreService.getStores();
     vm.vendors = dimVendorService.vendorItems;
     vm.activeVendors = _.keys(vm.vendors);
 

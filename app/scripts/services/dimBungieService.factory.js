@@ -472,7 +472,7 @@
     function getCharacterVendorsRequest(token, platform, membershipId, character, vendorId) {
       return {
         method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/?definitions=false',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token

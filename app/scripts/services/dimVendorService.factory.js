@@ -127,7 +127,7 @@
       exoticsHash: '3902439767',
       updateVendorItems: function() {
         var self = this;
-
+        return $q.when(function () { console.log('done'); });
         return dimBungieService.getVendors(dimPlatformService.getActive())
           .then(function(vendors) {
             // Get vendor metadata
@@ -169,7 +169,7 @@
           })
           .then(function(vendorsWithItems) {
             // Up to this point we have a vendor for each character on the account
-            // Let's combine the items today by vendorHash and filter out weapons and < 280 light gear
+            // Let's combine the items by vendorHash and filter out weapons and < 280 light gear
             var grouped = _.groupBy(vendorsWithItems, 'vendorHash');
             var mergedVendors = _.map(_.keys(grouped), function(key) {
               var combinedItems = _.filter(_.uniq(_.flatten(_.pluck(grouped[key], 'items')), function(item) { return item.itemHash; }), function(item) {

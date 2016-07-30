@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
     var _stores = [];
     var progressionDefs = {};
     let recordsDefs = {};
@@ -179,8 +179,10 @@
       const previousItemsMap = buildItemMap(_stores);
       const previousItems = new Set(_.keys(previousItemsMap));
 
-      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
-        .then(function(rawStores) {
+      reloadPromise = $q.all([dimVendorDefinitions, dimBungieService.getStores(dimPlatformService.getActive())])
+        .then(function(args) {
+          var vendorDefs = args[0];
+          var rawStores = args[1];
           var glimmer;
           var marks;
 
@@ -267,7 +269,7 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
-                vendors: processVendors(raw.character.vendors),
+                vendors: processVendors(vendorDefs, raw.character.vendors),
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
@@ -387,8 +389,8 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, item, owner) {
-      var itemDef = definitions[item.itemHash];
+    function processSingleItem(itemDefs, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, item, owner) {
+      var itemDef = itemDefs[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
         // maybe it is classified...
@@ -1203,6 +1205,30 @@
       } else {
         return '-:--';
       }
+    }
+    
+    function processVendors(vendorDefs, vendors) {
+      _.each(vendors, function(vendor, vendorHash) {
+        var def = vendorDefs[vendorHash];
+        vendor.vendorName = def.vendorName;
+        vendor.vendorIcon = def.factionIcon || def.vendorIcon;
+        if (vendor.enabled) {
+          var items = [];
+          var costs = [];
+          _.each(vendor.saleItemCategories, function(categoryData) {
+            var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.costs.length; });
+            items.push(...filteredSaleItems);
+          });
+          vendor.items = items;
+          
+          var costs = _.reduce(vendor.items, function(o, saleItem) {
+            o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
+            return o;
+          }, {});
+          vendor.costs = costs;
+        }
+      });
+      return vendors;
     }
 
     function getStatsData(data) {
