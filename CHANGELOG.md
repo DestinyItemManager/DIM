@@ -12,6 +12,7 @@
 * New button to clear all new items. Keyboard shortcut is "x".
 * Help dialog for keyboard shortcuts. Triggered with "?".
 * When you have two characters of the same class, applying a loadout with a subclass will work all the time now.
+* Item class requirements are part of the header ("Hunter Helmet") instead of in the stats area.
 
 # 3.8.3
 
