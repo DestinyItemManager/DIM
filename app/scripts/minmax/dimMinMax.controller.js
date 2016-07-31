@@ -318,7 +318,7 @@
         }
 
         var allItems = [];
-        vm.active = stores.getActiveStore().class.toLowerCase() || 'warlock';
+        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
         _.each(stores, function(store) {
           var items = _.filter(store.items, function(item) {
