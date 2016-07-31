@@ -640,6 +640,7 @@ img {
   }
   .element {
     display: none;
+    pointer-events: none;
     .show-elements & {
       display: block;
       position: absolute;

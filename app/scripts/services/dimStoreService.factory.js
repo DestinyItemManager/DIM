@@ -184,10 +184,11 @@
       const previousItemsMap = buildItemMap(_stores);
       const previousItems = new Set(_.keys(previousItemsMap));
 
-      reloadPromise = $q.all([dimVendorDefinitions, dimBungieService.getStores(dimPlatformService.getActive())])
+      reloadPromise = $q.all([dimItemDefinitions, dimVendorDefinitions, dimBungieService.getStores(dimPlatformService.getActive())])
         .then(function(args) {
-          var vendorDefs = args[0];
-          var rawStores = args[1];
+          var itemDefs = args[0];
+          var vendorDefs = args[1];
+          var rawStores = args[2];
           var glimmer;
           var marks;
 
@@ -274,7 +275,7 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
-                vendors: processVendors(vendorDefs, raw.character.vendors),
+                vendors: processVendors(itemDefs, vendorDefs, raw.character.vendors),
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
@@ -305,9 +306,12 @@
                 }
               }
             }
-
+            
+            var promises = [];
+            
+            //promises.push(processItems(store, items, previousItems).then(function(items) {
             return processItems(store, items, previousItems).then(function(items) {
-              store.items = items;
+            store.items = items;
 
               // by type-bucket
               store.buckets = _.groupBy(items, function(i) {
@@ -335,6 +339,11 @@
 
               return store;
             });
+            //}));
+            
+            // TODO: Add another promise for vendors
+            
+            return $q.all(promises);
           })]);
         })
         .then(function([previousItemsMap, ...stores]) {
@@ -1212,7 +1221,7 @@
       }
     }
     
-    function processVendors(vendorDefs, vendors) {
+    function processVendors(itemDefs, vendorDefs, vendors) {
       _.each(vendors, function(vendor, vendorHash) {
         var def = vendorDefs[vendorHash];
         vendor.vendorName = def.vendorName;
