@@ -37,7 +37,7 @@
         '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
         '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
         '      </span>',
-        '      {{ vm.light }} {{ vm.item.typeName }}',
+        '      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }}',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
         '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
@@ -51,9 +51,6 @@
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
-        '    <div ng-if="vm.classType && vm.classType !== \'Unknown\'" class="stat-box-row">',
-        '      <span class="stat-box-text stat-box-cell" ng-bind="vm.classType"></span>',
-        '    </div>',
         '    <div class="stat-box-row" ng-repeat="stat in vm.item.stats track by $index">',
         '      <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>',
         '      <span class="stat-box-outer">',
@@ -165,11 +162,16 @@
       if (vm.item.primStat.statHash === 3897883278) {
         // it's armor.
         vm.light += ' Defense';
-        vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
       } else if (vm.item.primStat.statHash === 368428387) {
         // it's a weapon.
         vm.light += ' Attack';
         vm.classes['is-' + vm.item.dmg] = true;
+      }
+      if (vm.item.classTypeName !== 'unknown' &&
+          // These already include the class name
+          vm.item.type !== 'ClassItem' &&
+          vm.item.type !== 'Artifact') {
+        vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
       }
     }
 
