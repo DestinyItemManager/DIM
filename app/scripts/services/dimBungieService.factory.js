@@ -318,23 +318,21 @@
         .then(addCharactersToData)
         .then(function() {
           // Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue
-          var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767'];
+          var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767', '242140165'];
           var promises = [];
           _.each(vendorHashes, function(vendorHash) {
             _.each(data.characters, function(character) {
-              promises.push(getVendor(data.token, platform, data.membershipId, character, vendorHash));
+              var vendorPromise = getVendor(data.token, platform, data.membershipId, character, vendorHash)
+                    .catch(function(e) {
+                      if (e.message !== 'The Vendor you requested was not found.') {
+                        throw e;
+                      }
+                    });
+
+              promises.push(vendorPromise);
             });
           });
-          return $q.all(promises).then(function(vendorData) {
-            // Get banner if it's up
-            var bannerPromises = [];
-            _.each(data.characters, function(character) {
-              bannerPromises.push(getVendor(data.token, platform, data.membershipId, character, '242140165'));
-            });
-            return $q.all(bannerPromises).then(function(bannerData) {
-              return $q.resolve(vendorData.concat(bannerData));
-            });
-          });
+          return $q.all(promises);
         })
         .catch(function(e) {
           toaster.pop('error', 'Bungie.net Error', e.message);
@@ -348,7 +346,7 @@
     function getVendor(token, platform, membershipId, character, vendorId) {
       return $q.when({
         method: 'GET',
-        url: 'https://www.bungie.net/platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/?lc=en&fmt=true&lcin=true&definitions=true',
+        url: 'https://www.bungie.net/platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/?definitions=false',
         headers: {
           'X-API-Key': apiKey,
           'x-csrf': token

@@ -318,7 +318,7 @@
         }
 
         var allItems = [];
-        vm.active = _.sortBy(stores, 'lastPlayed').reverse()[0].class.toLowerCase() || 'warlock';
+        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
         _.each(stores, function(store) {
           var items = _.filter(store.items, function(item) {

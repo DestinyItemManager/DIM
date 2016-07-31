@@ -41,6 +41,8 @@
       vaultMaxCol: 999,
       // How big in pixels to draw items
       itemSize: 44,
+      // Which categories or buckets should be collapsed?
+      collapsedSections: {},
 
       save: function() {
         if (!_loaded) {
