@@ -35,6 +35,7 @@
     line-height: 10px;
     margin: 6px 4px 6px 0;
     cursor: pointer;
+    user-select: none;
     &:last-child {
       margin-right: 10px;
     }
