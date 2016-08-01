@@ -38,7 +38,13 @@
               if (name === 'then') {
                 return undefined;
               }
-              return dimManifestService.getRecord(db, table, name);
+
+              if (this.hasOwnProperty(name)) {
+                return this[name];
+              }
+              const val = dimManifestService.getRecord(db, table, name);
+              this[name] = val;
+              return val;
             }
           });
         })

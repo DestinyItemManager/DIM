@@ -43,7 +43,7 @@
         return manifestPromise;
       },
 
-      getRecord: _.memoize(function(db, table, id) {
+      getRecord: function(db, table, id) {
         // The ID in sqlite is a signed 32-bit int, while the id we use is unsigned, so we must convert
         const sqlId = new Int32Array([id])[0];
         const result = db.exec(`SELECT json FROM ${table} where id = ${sqlId}`);
@@ -51,7 +51,7 @@
           return JSON.parse(result[0].values[0]);
         }
         return null;
-      }, (db, table, id) => table + '-' + id),
+      },
 
       getAllRecords: function(db, table) {
         const rows = db.exec(`SELECT json FROM ${table}`);
