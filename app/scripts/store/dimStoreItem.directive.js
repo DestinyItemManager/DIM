@@ -72,6 +72,8 @@
     };
 
     function Link(scope, element) {
+      console.timeEnd('First item directive built');
+
       var vm = scope.vm;
       var dialogResult = null;
 

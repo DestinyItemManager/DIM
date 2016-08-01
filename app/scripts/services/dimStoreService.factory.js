@@ -184,8 +184,10 @@
       const previousItemsMap = buildItemMap(_stores);
       const previousItems = new Set(_.keys(previousItemsMap));
 
+      console.time('Load stores (Bungie API)');
       reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
+          console.timeEnd('Load stores (Bungie API)');
           var glimmer;
           var marks;
 
