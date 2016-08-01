@@ -29,9 +29,9 @@
 
 
 
-  StoreItem.$inject = ['dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
+  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
 
-  function StoreItem(dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
+  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
     var otherDialog = null;
 
     return {
@@ -59,7 +59,7 @@
         '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete && !vm.item.complete">',
         '      <div dim-percent-width="vm.item.percentComplete"></div>',
         '    </div>',
-        '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)">',
+        '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)" ng-dblclick="vm.doubleClicked(vm.item, $event)">',
         '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-if="vm.item.isNew" class="new_overlay_overflow">',
@@ -72,6 +72,8 @@
     };
 
     function Link(scope, element) {
+      console.timeEnd('First item directive built');
+
       var vm = scope.vm;
       var dialogResult = null;
 
@@ -96,6 +98,14 @@
           }
         });
       }
+
+      vm.doubleClicked = function doubleClick(item, e) {
+        e.stopPropagation();
+        var active = dimStoreService.getActiveStore();
+
+
+        dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false);
+      };
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();

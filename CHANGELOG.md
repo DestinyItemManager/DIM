@@ -1,6 +1,8 @@
 # Next
 
-* Show current vendor items being sold
+* Expand/collapse sections in DIM.
+* Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
+* Show current vendor items being sold.
 * Move popup won't pop up under the header anymore.
 * If you have an open loadout, and you click "Create loadout", it switches to the new loadout now instead of leaving the previous loadout open.
 * DIM is once again faster.
@@ -10,6 +12,7 @@
 * New button to clear all new items. Keyboard shortcut is "x".
 * Help dialog for keyboard shortcuts. Triggered with "?".
 * When you have two characters of the same class, applying a loadout with a subclass will work all the time now.
+* Item class requirements are part of the header ("Hunter Helmet") instead of in the stats area.
 
 # 3.8.3
 
