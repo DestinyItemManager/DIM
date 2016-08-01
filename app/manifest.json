@@ -18,8 +18,7 @@
     "storage",
     "*://*.bungie.net/*",
     "cookies",
-    "identity",
-    "unlimitedStorage"
+    "identity"
   ],
   "oauth2": {
     "client_id": "22022180893-klqc2vd3ubp8ap5kmsk3j4ad67i8kmcm.apps.googleusercontent.com",

@@ -78,23 +78,34 @@
         })
         .then(function(arraybuffer) {
           service.statusText = 'Saving latest Destiny info...';
-          var typedArray = new Uint8Array(arraybuffer);
-          var encoded = base64js.fromByteArray(typedArray);
-          return $q(function(resolve, reject) {
-            // Note: this requires the 'unlimitedStorage' permission, as the
-            // uncompressed manifest is ~40MB.
-            chrome.storage.local.set({
-              manifest: encoded,
-              'manifest-version': version
-            }, function() {
-              if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-              } else {
-                resolve(typedArray);
-              }
+
+          getLocalManifestFile().then((fileEntry) => {
+            fileEntry.createWriter((fileWriter) => {
+              fileWriter.onwriteend = function(e) {
+                localStorage.setItem('manifest-version', version);
+              };
+
+              fileWriter.onerror = function(e) {
+                console.error('Write of manifest file failed', e);
+              };
+
+              fileWriter.write(new Blob([arraybuffer], "application/octet-stream"));
             });
           });
+
+          var typedArray = new Uint8Array(arraybuffer);
+          return typedArray;
         });
+    }
+
+    function getLocalManifestFile() {
+      return $q((resolve, reject) => {
+        const requestFileSystem = (window.requestFileSystem || window.webkitRequestFileSystem);
+        // Ask for 60MB of temporary space. If Chrome gets rid of it we can always redownload.
+        requestFileSystem(window.TEMPORARY, 60 * 1024 * 1024, (fs) => {
+          fs.root.getFile('dimManifest', {}, (f) => resolve(f), (e) => reject(e));
+        });
+      });
     }
 
     /**
@@ -102,33 +113,31 @@
      * version as a Uint8Array, or rejects.
      */
     function loadManifestFromCache(version) {
-      return $q(function(resolve, reject) {
-        if (alwaysLoadRemote) {
-          reject(new Error("Testing - always load remote"));
-          return;
-        }
+      if (alwaysLoadRemote) {
+        return $q.reject(new Error("Testing - always load remote"));
+      }
 
-        service.statusText = "Loading saved Destiny info...";
-        chrome.storage.local.get('manifest-version', function(obj) {
-          var currentManifestVersion = obj['manifest-version'];
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else if (currentManifestVersion === version) {
-            chrome.storage.local.get('manifest', function(obj2) {
-              var currentManifest = obj2.manifest;
-              if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-              } else if (currentManifest) {
-                resolve(base64js.toByteArray(currentManifest));
-              } else {
-                reject(new Error("no stored manifest despite version"));
-              }
+      service.statusText = "Loading saved Destiny info...";
+      var currentManifestVersion = localStorage.getItem('manifest-version');
+      if (currentManifestVersion === version) {
+        // One version of this used chrome.storage.local with a
+        // base64-encoded string, which is a bit slower. We may need
+        // to do that again if the requestFileSystem API gets
+        // removed.
+        return getLocalManifestFile()
+          .then((fileEntry) => {
+            return $q((resolve, reject) => {
+              fileEntry.file((file) => {
+                var reader = new FileReader();
+                reader.addEventListener("error", (e) => { reject(e); });
+                reader.addEventListener("loadend", () => resolve(new Uint8Array(reader.result)));
+                reader.readAsArrayBuffer(file);
+              }, (e) => reject(e));
             });
-          } else {
-            reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
-          }
-        });
-      });
+          });
+      } else {
+        return $q.reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
+      }
     }
 
     /**
@@ -136,6 +145,7 @@
      */
     function unzipManifest(blob) {
       return $q(function(resolve, reject) {
+        zip.useWebWorkers = true;
         zip.workerScriptsPath = "vendor/zip.js/WebContent/";
         zip.createReader(new zip.BlobReader(blob), function(zipReader) {
           // get all entries from the zip
@@ -143,6 +153,7 @@
             if (entries.length) {
               entries[0].getData(new zip.BlobWriter(), function(blob) {
                 var blobReader = new FileReader();
+                blobReader.addEventListener("error", (e) => { reject(e); });
                 blobReader.addEventListener("loadend", function() {
                   zipReader.close(function() {
                     resolve(blobReader.result);
