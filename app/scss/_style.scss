@@ -2062,20 +2062,20 @@ dim-manifest-progress {
   justify-content: center;
 
   .manifest-progress {
-    width: 36rem;
+    width: 24rem;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    border-radius: 8px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     padding: 1.5rem 1.5rem;
     background-color: #222;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
 
     i {
-      font-size: 4rem;
+      font-size: 2rem;
+      margin-bottom: .5rem;
     }
 
     &.ng-animate {
