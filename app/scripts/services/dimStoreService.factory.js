@@ -449,6 +449,9 @@
 
         // unidentified item.
         if (!itemDef.itemName) {
+          if (!itemDef) {
+            dimManifestService.warnMissingDefinition();
+          }
           console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
           window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
         }

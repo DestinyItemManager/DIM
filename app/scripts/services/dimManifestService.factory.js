@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimManifestService', ManifestService);
 
-  ManifestService.$inject = ['$rootScope', '$q', 'dimBungieService', '$http'];
+  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster'];
 
-  function ManifestService($rootScope, $q, dimBungieService, $http) {
+  function ManifestService($q, dimBungieService, $http, toaster) {
     // Testing flags
     const alwaysLoadRemote = false;
 
@@ -19,6 +19,21 @@
     const service = {
       isLoaded: true,
       statusText: null,
+      version: null,
+
+      // This tells users to reload the extension. It fires no more
+      // often than every 10 seconds, and only warns if the manifest
+      // version has actually changed.
+      warnMissingDefinition: _.debounce(function() {
+        dimBungieService.getManifest()
+          .then(function(data) {
+            // The manifest has updated!
+            if (data.version !== service.version) {
+              toaster.pop('error', 'Outdated Destiny Info', "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.");
+            }
+          });
+      }, 10000, true),
+
       getManifest: function() {
         if (manifestPromise) {
           return manifestPromise;
@@ -32,6 +47,7 @@
         manifestPromise = dimBungieService.getManifest()
           .then(function(data) {
             var version = data.version;
+            service.version = version;
 
             return loadManifestFromCache(version)
               .catch(function(e) {
