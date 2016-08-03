@@ -12,6 +12,10 @@
 
     let manifestPromise = null;
 
+    const makeStatement = _.memoize(function(table, db) {
+      return db.prepare(`select json from ${table} where id = ?`);
+    });
+
     const service = {
       isLoaded: true,
       statusText: null,
@@ -44,11 +48,14 @@
       },
 
       getRecord: function(db, table, id) {
-        // The ID in sqlite is a signed 32-bit int, while the id we use is unsigned, so we must convert
+        const statement = makeStatement(table, db);
+        // The ID in sqlite is a signed 32-bit int, while the id we
+        // use is unsigned, so we must convert
         const sqlId = new Int32Array([id])[0];
-        const result = db.exec(`SELECT json FROM ${table} where id = ${sqlId}`);
-        if (result.length && result[0].values && result[0].values.length) {
-          return JSON.parse(result[0].values[0]);
+        const result = statement.get([sqlId]);
+        statement.reset();
+        if (result.length) {
+          return JSON.parse(result[0]);
         }
         return null;
       },
