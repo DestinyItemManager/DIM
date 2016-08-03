@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', '$interval', '$location', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 
-  function dimVendorCtrl($scope, $state, $q, $interval, $location, ngDialog, dimStoreService, dimSettingsService) {
+  function dimVendorCtrl($scope, $state, $q, ngDialog, dimStoreService, dimSettingsService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;

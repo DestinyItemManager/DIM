@@ -303,7 +303,7 @@
                 }
               }
             }
-            
+
             return processItems(store, items, previousItems).then(function(items) {
               store.items = items;
 
@@ -1217,13 +1217,13 @@
         return '-:--';
       }
     }
-    
+
     function processVendors(vendors) {
       return $q.all([dimVendorDefinitions, dimItemDefinitions])
         .then(function(args) {
           var vendorDefs = args[0];
           var itemDefs = args[1];
-          
+
           var promises = [];
           _.each(vendors, function(vendor, vendorHash) {
             var def = vendorDefs[vendorHash];
@@ -1233,13 +1233,12 @@
             vendor.costs = [];
             if (vendor.enabled) {
               var items = [];
-              var costs = [];
               _.each(vendor.saleItemCategories, function(categoryData) {
                 var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
                 items.push(...filteredSaleItems);
               });
               vendor.items = _.pluck(items, 'item');
-              
+
               var costs = _.reduce(items, function(o, saleItem) {
                 o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
                 return o;
