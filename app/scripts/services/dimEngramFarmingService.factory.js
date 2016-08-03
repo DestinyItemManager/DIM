@@ -4,13 +4,13 @@
   angular.module('dimApp')
     .factory('dimEngramFarmingService', EngramFarmingService);
 
-  EngramFarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster'];
+  EngramFarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService'];
 
   /**
    * A service for "farming" engrams by moving them continuously off a character,
    * so that they don't go to the Postmaster.
    */
-  function EngramFarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster) {
+  function EngramFarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService) {
     var intervalId;
     var cancelReloadListener;
     return {
@@ -23,48 +23,51 @@
       moveItemsToVault: function(items, incrementCounter) {
         var self = this;
         var nospace = "No space left!";
-        return _.reduce(items, function(promise, item) {
-          return promise
-            .then(function() {
-              var vault = dimStoreService.getVault();
-              var vaultSpaceLeft = vault.spaceLeftForItem(item);
-              if (vaultSpaceLeft <= 1) {
-                // If we're down to one space, try putting it on other characters
-                var otherStores = _.select(dimStoreService.getStores(), function(store) {
-                  return !store.isVault && store.id !== self.store.id;
-                });
-
-                var otherStoresWithSpace = _.select(otherStores, function(store) {
-                  return store.spaceLeftForItem(item) > 0;
-                });
-                if (otherStoresWithSpace.length) {
-                  return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items);
-                } else if (vaultSpaceLeft === 0) {
-                  // If there's no room on other characters to move out of the vault,
-                  // give up entirely.
-                  if (!_.any(otherStores, function(store) {
-                    return _.any(dimCategory[item.bucket.sort], function(category) {
-                      return store.spaceLeftForItem({ type: category }) > 0;
+        return dimBucketService
+          .then(function(buckets) {
+            return _.reduce(items, function(promise, item) {
+              return promise
+                .then(function() {
+                  var vault = dimStoreService.getVault();
+                  var vaultSpaceLeft = vault.spaceLeftForItem(item);
+                  if (vaultSpaceLeft <= 1) {
+                    // If we're down to one space, try putting it on other characters
+                    var otherStores = _.select(dimStoreService.getStores(), function(store) {
+                      return !store.isVault && store.id !== self.store.id;
                     });
-                  })) {
-                    return $q.reject(new Error(nospace));
+
+                    var otherStoresWithSpace = _.select(otherStores, function(store) {
+                      return store.spaceLeftForItem(item) > 0;
+                    });
+                    if (otherStoresWithSpace.length) {
+                      return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items);
+                    } else if (vaultSpaceLeft === 0) {
+                      // If there's no room on other characters to move out of the vault,
+                      // give up entirely.
+                      if (!_.any(otherStores, function(store) {
+                        return _.any(dimCategory[item.bucket.sort], function(category) {
+                          return store.spaceLeftForItem({ type: category, location: buckets.byType[category], bucket: buckets.byType[category] }) > 0;
+                        });
+                      })) {
+                        return $q.reject(new Error(nospace));
+                      }
+                    }
                   }
-                }
-              }
-              return dimItemService.moveTo(item, vault, false, item.amount, items);
-            })
-            .then(function() {
-              if (incrementCounter) {
-                self.engramsMoved++;
-              }
-            })
-            .catch(function(e) {
-              // No need to whine about being out of space
-              if (e.message !== nospace) {
-                toaster.pop('error', item.name, e.message);
-              }
-            });
-        }, $q.resolve());
+                  return dimItemService.moveTo(item, vault, false, item.amount, items);
+                })
+                .then(function() {
+                  if (incrementCounter) {
+                    self.engramsMoved++;
+                  }
+                })
+                .catch(function(e) {
+                  // No need to whine about being out of space
+                  if (e.message !== nospace) {
+                    toaster.pop('error', item.name, e.message);
+                  }
+                });
+            }, $q.resolve());
+          });
       },
       moveEngramsToVault: function() {
         var self = this;
