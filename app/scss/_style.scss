@@ -2,6 +2,8 @@
 /* css-indent-offset: 2 */
 /* End:                 */
 
+@import "variables.scss";
+
 :root {
   --item-size: 44px;
   --character-columns: 3;
@@ -642,6 +644,7 @@ img {
   }
   .element {
     display: none;
+    pointer-events: none;
     .show-elements & {
       display: block;
       position: absolute;
@@ -1352,6 +1355,9 @@ g {
   z-index: 10;
 }
 
+.reputation {
+  margin-left: 28px;
+}
 
 /* Loadout editor */
 

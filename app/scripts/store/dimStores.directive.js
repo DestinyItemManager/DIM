@@ -50,7 +50,7 @@
         '  <div class="title" ng-click="vm.toggleSection(\'Reputation\')">',
         '    <span><i class="fa collapse" ng-class="vm.settings.collapsedSections[\'Reputation\'] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> Reputation</span>',
         '  </div>',
-        '  <div class="store-row items" ng-if="!vm.settings.collapsedSections[\'Reputation\']">',
+        '  <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections[\'Reputation\']">',
         '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '      <dim-store-reputation store-data="store"></dim-store-reputation>',
         '    </div>',
