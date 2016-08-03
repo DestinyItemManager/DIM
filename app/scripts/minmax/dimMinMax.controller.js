@@ -177,7 +177,10 @@
           vm.lockedchanged = true;
         }
       },
-      onExcludedDrop: function(droppedId) {
+      excludeItem: function(item) {
+        vm.onExcludedDrop(item.owner + '-' + item.id, item.type);
+      },
+      onExcludedDrop: function(droppedId, type) {
         droppedId = droppedId.split('-')[1];
         if(_.findWhere(vm.excludeditems, {id: droppedId})) {
           return;
