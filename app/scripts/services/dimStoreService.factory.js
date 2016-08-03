@@ -1247,7 +1247,9 @@
               vendor.costs = costs;
             }
             promises.push(processItems({ id: null }, vendor.items).then(function(items) {
-              vendor.items = items;
+              vendor.items = {};
+              vendor.items.armor = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280; });
+              vendor.items.weapons = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280; });
               return vendor;
             }));
           });

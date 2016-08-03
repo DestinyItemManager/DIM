@@ -1,22 +1,43 @@
 .vendor {
-  width: 900px;
+  width: calc((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 4);
   margin: 0 auto;
   
   .vendor-col {
     margin-right: 20px;
   }
+  .vendor-reset-header {
+    padding-right: 35px;
+  }
+  .vendor-armor, .vendor-weaps {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .vendor-item {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  .char-cols {
+    display: flex;
+    flex-direction: column;
+    background-size: var(--item-size);
+    background-position: 4px 35px;
+    background-image: url('../images/bg_inventory_bucket_single_crop.png');
+    background-repeat: no-repeat;
+    &:last-child {
+      background-image: none;
+    }
+  }
+  .char-cols h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
   .fa-arrow-circle-left {
     padding-right: 5px;
   }
-  .vendor-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap:wrap;
-  }
-  .vendor-block {
-    margin-right: 20px;
-  }
-  .vendor-header {
+  .vendor-headers {
     display: flex;
     padding-bottom: 10px;
   }
@@ -24,23 +45,14 @@
     display:flex;
     flex-direction: row;
     flex-wrap:wrap;
-  }
-  .sub-bucket {
-    background-size: --item-size;
-    background-position: 2 2;
-    background-image: url("../images/bg_inventory_bucket_single_crop.png");
-    background-repeat: no-repeat; 
-  }
-  .unequipped {
-    margin-bottom: 5px;
-  }
-  .item-type {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    margin-bottom: 10px;
+    margin-top: 10px;
   }
   .store-cell {
     flex-wrap: wrap;
+    &:last-child {
+      justify-content: flex-end;
+    }
   }
   .vendor-icon {
     width: 30px;
@@ -48,14 +60,6 @@
     margin-top: 5px;
     margin-right: 10px;
     float:left;
-  }
-  .vendor-item {
-    display: inline-block;
-    margin-right: 3px;
-    margin-bottom: 5px;
-    &:last-child {
-      margin-right: 10px;
-    }
   }
   .currency img {
     height: 12px;

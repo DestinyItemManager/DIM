@@ -1,8 +1,14 @@
 <div class="vendor" ng-controller="dimVendorCtrl as vm">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
-  <h1 class="orange">Vendors</h1>
-  <div class="vendor">
-    <div class="vendor-block" ng-repeat="(idx, vendorHash) in vm.vendorHashes">
+  <h1>Vendors</h1>
+  <div class="vendor-headers">
+    <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+      <dim-store-heading ng-if="!store.isVault" class="character" store-data="store"></dim-store-heading>
+      <h2 ng-if="store.isVault" class="vendor-reset-header">Reset In:</h2>
+    </div>
+  </div>
+  <div class="vendors">
+    <div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes">
       <div ng-if="vm.vendors[0][vendorHash]">
         <div class="vendor-header">
           <div class="title">
@@ -12,12 +18,25 @@
           </div>
         </div>
         <div class="vendor-row">
-          <div class="vendor-category" ng-repeat="(idx, vendors) in vm.vendors">
-            <div class="vendor-item" ng-repeat="saleItem in vendors[vendorHash].items">
-              <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
-              <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
-                {{::vendors[vendorHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[vendors[vendorHash].costs[saleItem.hash].currency.itemHash]}}
-                <span class="currency"><img dim-bungie-image-fallback="::vendors[vendorHash].costs[saleItem.hash].currency.icon" title="{{::vendors[vendorHash].costs[saleItem.itemHash].currency.name}}"></span>
+          <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+            <h3 ng-if="store.vendors[vendorHash].items.armor.length">Armor</h3>
+            <div class="vendor-armor">
+              <div class="vendor-item" ng-repeat="saleItem in store.vendors[vendorHash].items.armor">
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].cost.currency.itemHash] < store.vendors[vendorHash].costs[saleItem.hash].cost.cost)}">
+                  {{::store.vendors[vendorHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::store.vendors[vendorHash].costs[saleItem.hash].currency.icon" title="{{::store.vendors[vendorHash].costs[saleItem.itemHash].currency.name}}"></span>
+                </div>
+              </div>
+            </div>
+            <h3 ng-if="store.vendors[vendorHash].items.weapons.length">Weapons</h3>
+            <div class="vendor-weaps">
+              <div class="vendor-item" ng-repeat="saleItem in store.vendors[vendorHash].items.weapons">
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].cost.currency.itemHash] < store.vendors[vendorHash].costs[saleItem.hash].cost.cost)}">
+                  {{::store.vendors[vendorHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::store.vendors[vendorHash].costs[saleItem.hash].currency.icon" title="{{::store.vendors[vendorHash].costs[saleItem.itemHash].currency.name}}"></span>
+                </div>
               </div>
             </div>
           </div>

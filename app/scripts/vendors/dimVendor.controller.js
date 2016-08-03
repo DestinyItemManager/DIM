@@ -4,15 +4,17 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', '$interval', '$location', 'ngDialog', 'dimStoreService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', '$interval', '$location', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 
-  function dimVendorCtrl($scope, $state, $q, $interval, $location, ngDialog, dimStoreService) {
+  function dimVendorCtrl($scope, $state, $q, $interval, $location, ngDialog, dimStoreService, dimSettingsService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
     var detailItemElement = null;
 
-    vm.vendors = _.omit(_.pluck(dimStoreService.getStores(), 'vendors'), function(value) {
+    vm.settings = dimSettingsService;
+    vm.stores = dimStoreService.getStores();
+    vm.vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
       return !value;
     });
     
@@ -24,11 +26,6 @@
     
     // Banner, Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue
     vm.vendorHashes = ['242140165', '1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '3746647075', '174528503', '2680694281', '1998812735', '3902439767'];
-    
-    // vm.allVendors = _.uniq(_.reduce(vm.vendors, function(o, vendors) {
-      // o.push(..._.keys(vendors));
-      // return o;
-    // }, []));
 
     function mergeMaps(o, map) {
       _.each(map, function(val, key) {
@@ -53,10 +50,14 @@
             .value();
       vm.totalCoins = {};
       currencies.forEach(function(currencyHash) {
-        // Legendary marks are a special case
+        // Legendary marks and glimmer are special cases
         if (currencyHash === 2534352370) {
           vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
             return store.legendaryMarks || 0;
+          });
+        } else if (currencyHash === 3159615086) {
+          vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
+            return store.glimmer || 0;
           });
         } else {
           vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
