@@ -1308,8 +1308,27 @@ g {
   cursor: pointer;
   font-size: 14px;
   color: $lightgray;
+  user-select: none;
+  opacity: 0;
   &:hover {
     color: $orange;
+  }
+  &.store-text {
+    width: 100%;
+  }
+}
+
+.store-row, .title {
+  &:hover {
+    .collapse {
+      opacity: 1;
+    }
+    .store-text.collapse {
+      color: $orange;
+    }
+  }
+  &.collapsed .collapse {
+    opacity: 1;
   }
 }
 
@@ -1325,7 +1344,9 @@ g {
 
   i.collapse {
     outline: none;
-    padding: 8px 7px 8px 10px;
+    position: absolute;
+    left: 0;
+    padding: 8px 7px 8px 8px;
   }
 }
 
@@ -1337,7 +1358,7 @@ g {
 
   &.vault {
     max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
-    background-color: rgba(245, 245, 245, 0.25);
+    background-color: $lightgray;
     padding: 0 12px 1px;
     margin-left: -12px;
     margin-right: 0;
