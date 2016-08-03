@@ -111,6 +111,7 @@
 
         if (vm.shiftClickCallback && e.shiftKey) {
           vm.shiftClickCallback(item);
+          return;
         }
 
         dimStoreService.dropNewItem(item);
