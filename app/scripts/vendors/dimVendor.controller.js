@@ -17,13 +17,13 @@
     vm.vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
       return !value;
     });
-    
+
 
     if (_.isEmpty(vm.vendors)) {
       $state.go('inventory');
       return;
     }
-    
+
     // Banner, Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue
     vm.vendorHashes = ['242140165', '1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '3746647075', '174528503', '2680694281', '1998812735', '3902439767'];
 

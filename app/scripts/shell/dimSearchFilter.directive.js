@@ -191,7 +191,7 @@
         _.each(store.items, function(item) {
           item.visible = (filters.length > 0) ? filterFn(item) : true;
         });
-        
+
         // Filter vendor items
         _.each(store.vendors, function(vendor) {
           _.each(vendor.items.armor, function(item) {

@@ -462,7 +462,7 @@
     }
 
     /************************************************************************************************************************************/
-    
+
     function getCharacterVendorsRequest(token, platform, membershipId, character, vendorId) {
       return {
         method: 'GET',
@@ -474,21 +474,21 @@
         withCredentials: true
       };
     }
-    
+
     function parseVendorData(vendorData) {
       return vendorData;
     }
-    
+
     function processVendorsResponse(character, response) {
-      if (!character.vendors) { 
+      if (!character.vendors) {
         character.vendors = {};
       }
-      
+
       var vendorData = response.data.Response.data;
       character.vendors[vendorData.vendorHash] = parseVendorData(vendorData);
       return character;
     }
-    
+
     function getDestinyVendors(token, platform, membershipId, characters) {
       // Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue, Banner
       var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767', '242140165'];
