@@ -184,11 +184,8 @@
       const previousItemsMap = buildItemMap(_stores);
       const previousItems = new Set(_.keys(previousItemsMap));
 
-      reloadPromise = $q.all([dimItemDefinitions, dimVendorDefinitions, dimBungieService.getStores(dimPlatformService.getActive())])
-        .then(function(args) {
-          var itemDefs = args[0];
-          var vendorDefs = args[1];
-          var rawStores = args[2];
+      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
+        .then(function(rawStores) {
           var glimmer;
           var marks;
 
@@ -275,7 +272,7 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
-                vendors: processVendors(itemDefs, vendorDefs, raw.character.vendors),
+                vendors: raw.character.vendors,
                 isVault: false
               });
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
@@ -307,11 +304,8 @@
               }
             }
             
-            var promises = [];
-            
-            //promises.push(processItems(store, items, previousItems).then(function(items) {
             return processItems(store, items, previousItems).then(function(items) {
-            store.items = items;
+              store.items = items;
 
               // by type-bucket
               store.buckets = _.groupBy(items, function(i) {
@@ -338,12 +332,15 @@
               }
 
               return store;
+            })
+            .then(function(store) {
+              return processVendors(store.vendors).then(function(vendors) {
+                _.each(vendors, function(vendor) {
+                  store.vendors[vendor.vendorHash] = vendor;
+                });
+                return store;
+              });
             });
-            //}));
-            
-            // TODO: Add another promise for vendors
-            
-            return $q.all(promises);
           })]);
         })
         .then(function([previousItemsMap, ...stores]) {
@@ -1221,28 +1218,42 @@
       }
     }
     
-    function processVendors(itemDefs, vendorDefs, vendors) {
-      _.each(vendors, function(vendor, vendorHash) {
-        var def = vendorDefs[vendorHash];
-        vendor.vendorName = def.vendorName;
-        vendor.vendorIcon = def.factionIcon || def.vendorIcon;
-        if (vendor.enabled) {
-          var items = [];
-          var costs = [];
-          _.each(vendor.saleItemCategories, function(categoryData) {
-            var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.costs.length; });
-            items.push(...filteredSaleItems);
-          });
-          vendor.items = items;
+    function processVendors(vendors) {
+      return $q.all([dimVendorDefinitions, dimItemDefinitions])
+        .then(function(args) {
+          var vendorDefs = args[0];
+          var itemDefs = args[1];
           
-          var costs = _.reduce(vendor.items, function(o, saleItem) {
-            o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
-            return o;
-          }, {});
-          vendor.costs = costs;
-        }
-      });
-      return vendors;
+          var promises = [];
+          _.each(vendors, function(vendor, vendorHash) {
+            var def = vendorDefs[vendorHash];
+            vendor.vendorName = def.vendorName;
+            vendor.vendorIcon = def.factionIcon || def.vendorIcon;
+            vendor.items = [];
+            vendor.costs = [];
+            if (vendor.enabled) {
+              var items = [];
+              var costs = [];
+              _.each(vendor.saleItemCategories, function(categoryData) {
+                var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
+                items.push(...filteredSaleItems);
+              });
+              vendor.items = _.pluck(items, 'item');
+              
+              var costs = _.reduce(items, function(o, saleItem) {
+                o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
+                return o;
+              }, {});
+              vendor.costs = costs;
+            }
+            promises.push(processItems({ id: null }, vendor.items).then(function(items) {
+              vendor.items = items;
+              return vendor;
+            }));
+          });
+
+          return $q.all(promises);
+        });
     }
 
     function getStatsData(data) {

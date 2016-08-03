@@ -4,22 +4,31 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', '$timeout', 'loadingTracker', 'dimVendorService', 'ngDialog', 'dimStoreService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', '$interval', '$location', 'ngDialog', 'dimStoreService'];
 
-  function dimVendorCtrl($scope, $state, $q, $timeout, loadingTracker, dimVendorService, ngDialog, dimStoreService) {
+  function dimVendorCtrl($scope, $state, $q, $interval, $location, ngDialog, dimStoreService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
     var detailItemElement = null;
 
-    vm.stores = dimStoreService.getStores();
-    vm.vendors = dimVendorService.vendorItems;
-    vm.activeVendors = _.keys(vm.vendors);
+    vm.vendors = _.omit(_.pluck(dimStoreService.getStores(), 'vendors'), function(value) {
+      return !value;
+    });
+    
 
     if (_.isEmpty(vm.vendors)) {
       $state.go('inventory');
       return;
     }
+    
+    // Banner, Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue
+    vm.vendorHashes = ['242140165', '1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '3746647075', '174528503', '2680694281', '1998812735', '3902439767'];
+    
+    // vm.allVendors = _.uniq(_.reduce(vm.vendors, function(o, vendors) {
+      // o.push(..._.keys(vendors));
+      // return o;
+    // }, []));
 
     function mergeMaps(o, map) {
       _.each(map, function(val, key) {
@@ -74,8 +83,6 @@
     });
 
     angular.extend(vm, {
-      active: 'Warlock',
-      activeVendor: 'vanguard',
       itemClicked: function(item, e) {
         e.stopPropagation();
         if (dialogResult) {
