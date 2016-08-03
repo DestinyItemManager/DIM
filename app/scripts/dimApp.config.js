@@ -59,9 +59,9 @@
         }
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        dimInfoService.show('changelogv382', {
-          title: 'DIM v3.8.2 Released',
-          view: 'views/changelog-toaster.html?v=v3.8.2'
+        dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
+          title: 'DIM v$DIM_VERSION Released',
+          view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
         });
 
 //        if (chrome && chrome.identity) {
@@ -92,7 +92,7 @@
     .config([
       'hotkeysProvider',
       function(hotkeysProvider) {
-        hotkeysProvider.includeCheatSheet = false;
+        hotkeysProvider.includeCheatSheet = true;
       }
     ])
     .config([
@@ -120,9 +120,14 @@
         .state('inventory', {
           url: "/inventory",
           templateUrl: "views/inventory.html"
-        }).state('best', {
+        })
+        .state('best', {
           url: "/best",
           templateUrl: "views/best.html"
+        })
+        .state('vendors', {
+          url: "/vendors",
+          templateUrl: "views/vendors.html"
         });
     });
 })();

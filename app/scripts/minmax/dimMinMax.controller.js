@@ -6,16 +6,15 @@
 
   dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog, dimLoadoutService) {
-    var vm = this,
-      buckets = [];
+  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog) {
+    var vm = this;
+    var buckets = [];
 
     function getBonusType(armorpiece) {
-      if(!armorpiece.normalStats) {
+      if (!armorpiece.normalStats) {
         return '';
       }
-      return '' +
-        (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
+      return (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
         (armorpiece.normalStats[1735777505].bonus > 0 ? 'disc ' : '') +
         (armorpiece.normalStats[4244567218].bonus > 0 ? 'str' : '');
     }
@@ -27,8 +26,8 @@
           if (nonExotic && o.isExotic) {
             return 0;
           }
-          var bonus = 0,
-            total = 0;
+          var bonus = 0;
+          var total = 0;
           stats.forEach(function(stat) {
             total += o.normalStats[stat][vm.scale_type];
             bonus = o.normalStats[stat].bonus;
@@ -40,31 +39,32 @@
     }
 
     function getBestArmor(bucket, locked, excluded) {
-      var stat_hashes = [
-          {stats: [144602215, 1735777505], type: 'intdisc'},
-          {stats: [144602215, 4244567218], type: 'intstr'},
-          {stats: [1735777505, 4244567218], type: 'discstr'},
-          {stats: [144602215], type: 'int'},
-          {stats: [1735777505], type: 'disc'},
-          {stats: [4244567218], type: 'str'}
-        ],
-        armor = {},
-        best = [],
-        best_non_exotic = [],
-        curbest,
-        best_combs,
-        armortype;
+      var statHashes = [
+          { stats: [144602215, 1735777505], type: 'intdisc' },
+          { stats: [144602215, 4244567218], type: 'intstr' },
+          { stats: [1735777505, 4244567218], type: 'discstr' },
+          { stats: [144602215], type: 'int' },
+          { stats: [1735777505], type: 'disc' },
+          { stats: [4244567218], type: 'str' }
+      ];
+      var armor = {};
+      var best = [];
+      var curbest;
+      var bestCombs;
+      var armortype;
+
       for (armortype in bucket) {
-        if(locked[armortype] !== null) {
-          best = [{item: locked[armortype], bonus_type: getBonusType(locked[armortype])}];
+        if (locked[armortype]) {
+          best = [{ item: locked[armortype], bonus_type: getBonusType(locked[armortype]) }];
         } else {
           best = [];
+          
           // Filter out excluded
           var filtered = _.filter(bucket[armortype], function(item) { 
             return !_.findWhere(excluded[armortype], {id: item.id}); 
           });
-          stat_hashes.forEach(function(hash, index) {
-            if(!vm.mode && index > 2) {
+          statHashes.forEach(function(hash, index) {
+            if (!vm.mode && index > 2) {
               return;
             }
 
@@ -77,22 +77,22 @@
           });
         }
 
-        best_combs = [];
+        bestCombs = [];
         _.each(_.uniq(best, false, function(o) {
           return o.item.index;
         }), function(obj) {
           obj.bonus_type = getBonusType(obj.item);
           if (obj.bonus_type.indexOf('int') > -1) {
-            best_combs.push({item: obj.item, bonus_type: 'int'});
+            bestCombs.push({ item: obj.item, bonus_type: 'int' });
           }
           if (obj.bonus_type.indexOf('disc') > -1) {
-            best_combs.push({item: obj.item, bonus_type: 'disc'});
+            bestCombs.push({ item: obj.item, bonus_type: 'disc' });
           }
           if (obj.bonus_type.indexOf('str') > -1) {
-            best_combs.push({item: obj.item, bonus_type: 'str'});
+            bestCombs.push({ item: obj.item, bonus_type: 'str' });
           }
         });
-        armor[armortype] = best_combs;
+        armor[armortype] = bestCombs;
       }
       return armor;
     }
@@ -124,19 +124,19 @@
       setOrderValues: ['-str_val', '-disc_val', '-int_val'],
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
-      lockedItemsValid: function(dropped_id, dropped_type) {
-        dropped_id = dropped_id.split('-')[1];
-        if(_.findWhere(vm.excludeditems[dropped_type], {id: dropped_id})) {
+      lockedItemsValid: function(droppedId, droppedType) {
+        droppedId = droppedId.split('-')[1];
+        if(_.findWhere(vm.excludeditems[droppedType], {id: droppedId})) {
           return false;
         }
-
-        var item = _.findWhere(buckets[vm.active][dropped_type], {id: dropped_id}),
-          exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
+        
+        var item = _.findWhere(buckets[vm.active][droppedType], { id: droppedId });
+        var exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         _.each(vm.lockeditems, function(lockeditem) {
-          if(lockeditem === null || lockeditem.type === dropped_type) {
+          if (lockeditem === null || lockeditem.type === droppedType) {
             return;
           }
-          if(lockeditem.isExotic && lockeditem.type !== 'ClassItem') {
+          if (lockeditem.isExotic && lockeditem.type !== 'ClassItem') {
             exoticCount += 1;
           }
         });
@@ -151,46 +151,46 @@
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
-      onModeChange: function () {
+      onModeChange: function() {
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
         vm.setOrderValues = vm.setOrder.split(',');
       },
-      onDrop: function(dropped_id, type) {
-        dropped_id = dropped_id.split('-')[1];
-        if(vm.lockeditems[type] && vm.lockeditems[type].id === dropped_id) {
+      onDrop: function(droppedId, type) {
+        droppedId = droppedId.split('-')[1];
+        if (vm.lockeditems[type] && vm.lockeditems[type].id === droppedId) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], {id: dropped_id});
+        var item = _.findWhere(buckets[vm.active][type], { id: droppedId });
         vm.lockeditems[type] = item;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
-        if(vm.progress < 1.0) {
+        if (vm.progress < 1.0) {
           vm.lockedchanged = true;
         }
       },
-      onRemove: function(removed_type) {
-        vm.lockeditems[removed_type] = null;
+      onRemove: function(removedType) {
+        vm.lockeditems[removedType] = null;
 
         vm.highestsets = vm.getSetBucketsStep(vm.active);
-        if(vm.progress < 1.0) {
+        if (vm.progress < 1.0) {
           vm.lockedchanged = true;
         }
       },
-      onExcludedDrop: function(dropped_id, type) {
-        dropped_id = dropped_id.split('-')[1];
-        if(_.findWhere(vm.excludeditems[type], {id: dropped_id})) {
+      onExcludedDrop: function(droppedId, type) {
+        droppedId = droppedId.split('-')[1];
+        if(_.findWhere(vm.excludeditems[type], {id: droppedId})) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], {id: dropped_id});
+        var item = _.findWhere(buckets[vm.active][type], {id: droppedId});
         vm.excludeditems[type].push(item);
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
-      onExcludedRemove: function(removed_id, removed_type) {
-        vm.excludeditems[removed_type] = _.filter(vm.excludeditems[removed_type], function(excludeditem) { return excludeditem.id !== removed_id; });
+      onExcludedRemove: function(removedId, removedType) {
+        vm.excludeditems[removedType] = _.filter(vm.excludeditems[removedType], function(excludeditem) { return excludeditem.id !== removedId; });
 
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
@@ -208,7 +208,7 @@
         loadout.items.classitem = [items.ClassItem.item];
         loadout.items.ghost = [items.Ghost.item];
         loadout.items.artifact = [items.Artifact.item];
-        loadout.classType = ({'warlock': 0, 'titan': 1, 'hunter': 2})[vm.active];
+        loadout.classType = ({ warlock: 0, titan: 1, hunter: 2 })[vm.active];
 
         $scope.$broadcast('dim-edit-loadout', {
           loadout: loadout,
@@ -216,29 +216,32 @@
         });
       },
       getSetBucketsStep: function(activeGaurdian) {
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems, vm.excludeditems),
-          helms = bestArmor.Helmet || [],
-          gaunts = bestArmor.Gauntlets || [],
-          chests = bestArmor.Chest || [],
-          legs = bestArmor.Leg || [],
-          classItems = bestArmor.ClassItem || [],
-          ghosts = bestArmor.Ghost || [],
-          artifacts = bestArmor.Artifact || [],
-          set_map = {},
-          int, dis, str, set,
-          combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
-        if(combos === 0) {
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems, vm.excludeditems);
+        var helms = bestArmor.Helmet || [];
+        var gaunts = bestArmor.Gauntlets || [];
+        var chests = bestArmor.Chest || [];
+        var legs = bestArmor.Leg || [];
+        var classItems = bestArmor.ClassItem || [];
+        var ghosts = bestArmor.Ghost || [];
+        var artifacts = bestArmor.Artifact || [];
+        var setMap = {};
+        var int;
+        var dis;
+        var str;
+        var set;
+        var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
+        if (combos === 0) {
           return null;
         }
 
-        function step(activeGaurdian, h, g, c, l, ci, gh, ar, processed_count) {
-          for(; h < helms.length; ++h) {
-            for(; g < gaunts.length; ++g) {
-              for(; c < chests.length; ++c) {
-                for(; l < legs.length; ++l) {
-                  for(; ci < classItems.length; ++ci) {
-                    for(; gh < ghosts.length; ++gh) {
-                      for(; ar < artifacts.length; ++ar) {
+        function step(activeGaurdian, h, g, c, l, ci, gh, ar, processedCount) {
+          for (; h < helms.length; ++h) {
+            for (; g < gaunts.length; ++g) {
+              for (; c < chests.length; ++c) {
+                for (; l < legs.length; ++l) {
+                  for (; ci < classItems.length; ++ci) {
+                    for (; gh < ghosts.length; ++gh) {
+                      for (; ar < artifacts.length; ++ar) {
                         set = {
                           armor: {
                             Helmet: helms[h],
@@ -267,7 +270,7 @@
                           disc_val: 0,
                           str_val: 0
                         };
-                        if(validSet(set.armor)) {
+                        if (validSet(set.armor)) {
                           _.each(set.armor, function(armor) {
                             int = armor.item.normalStats[144602215];
                             dis = armor.item.normalStats[1735777505];
@@ -277,37 +280,37 @@
                             set.stats.STAT_DISCIPLINE.value += dis[vm.scale_type];
                             set.stats.STAT_STRENGTH.value += str[vm.scale_type];
 
-                            switch(armor.bonus_type) {
-                              case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
-                              case 'disc': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
-                              case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
+                            switch (armor.bonus_type) {
+                            case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
+                            case 'disc': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
+                            case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
                             }
                           });
 
-                          var tiers_string = Math.min(Math.floor(set.stats.STAT_INTELLECT.value/60), 5) +
-                              '/' + Math.min(Math.floor(set.stats.STAT_DISCIPLINE.value/60), 5) +
-                              '/' + Math.min(Math.floor(set.stats.STAT_STRENGTH.value/60), 5);
-                          if(set_map[tiers_string]) {
-                            set_map[tiers_string].push(set);
+                          var tiersString = Math.min(Math.floor(set.stats.STAT_INTELLECT.value / 60), 5) +
+                              '/' + Math.min(Math.floor(set.stats.STAT_DISCIPLINE.value / 60), 5) +
+                              '/' + Math.min(Math.floor(set.stats.STAT_STRENGTH.value / 60), 5);
+                          if (setMap[tiersString]) {
+                            setMap[tiersString].push(set);
                           } else {
-                            set_map[tiers_string] = [set];
+                            setMap[tiersString] = [set];
                           }
                         }
 
-                        processed_count++;
-                        if(processed_count % 50000 === 0) { // do this so the page doesn't lock up
-                          if(vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
+                        processedCount++;
+                        if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
+                          if (vm.active !== activeGaurdian || vm.lockedchanged || $location.path() !== '/best') {
                             // If active gaurdian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             return;
                           }
-                          vm.progress = processed_count/combos;
-                          $timeout(step, 0, true, activeGaurdian, h,g,c,l,ci,gh,ar,processed_count);
+                          vm.progress = processedCount / combos;
+                          $timeout(step, 0, true, activeGaurdian, h, g, c, l, ci, gh, ar, processedCount);
                           return;
                         }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
-          var tiers = _.each(_.groupBy(Object.keys(set_map), function(set) {
+          var tiers = _.each(_.groupBy(Object.keys(setMap), function(set) {
             return _.reduce(set.split('/'), function(memo, num){
               return memo + parseInt(num, 10);
             }, 0);
@@ -316,11 +319,11 @@
           });
 
           vm.allSetTiers = [];
-          var tier_keys = Object.keys(tiers);
-          for (var t = tier_keys.length; t-- > tier_keys.length - 3;) {
-            if(tier_keys[t]) {
-              vm.allSetTiers.push('- Tier ' + tier_keys[t] + ' -');
-              _.each(tiers[tier_keys[t]], function(set) {
+          var tierKeys = Object.keys(tiers);
+          for (var t = tierKeys.length; t-- > tierKeys.length - 3;) {
+            if (tierKeys[t]) {
+              vm.allSetTiers.push('- Tier ' + tierKeys[t] + ' -');
+              _.each(tiers[tierKeys[t]], function(set) {
                 vm.allSetTiers.push(set);
               });
             }
@@ -329,14 +332,14 @@
           vm.activesets = vm.allSetTiers[1];
 
           // Finish progress
-          vm.progress = processed_count/combos;
+          vm.progress = processedCount / combos;
           console.log('processed', combos, 'combinations.');
           console.timeEnd('elapsed');
         }
         console.time('elapsed');
         vm.lockedchanged = false;
-          $timeout(step, 0, true, activeGaurdian, 0,0,0,0,0,0,0,0);
-        return set_map;
+        $timeout(step, 0, true, activeGaurdian, 0, 0, 0, 0, 0, 0, 0, 0);
+        return setMap;
       },
       getBonus: dimStoreService.getBonus,
       getStore: dimStoreService.getStore,
@@ -350,9 +353,9 @@
         }
 
         var allItems = [];
-        vm.active = _.sortBy(stores, 'lastPlayed').reverse()[0].class.toLowerCase() || 'warlock';
+        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
-        _.each(stores, function(store, id) {
+        _.each(stores, function(store) {
           var items = _.filter(store.items, function(item) {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
@@ -383,26 +386,26 @@
           // put items into buckets and create normalize stats property
           return {
             Helmet: items.filter(function(item) {
-                return item.type === 'Helmet';
-              }).map(normalizeStats),
+              return item.type === 'Helmet';
+            }).map(normalizeStats),
             Gauntlets: items.filter(function(item) {
-                return item.type === 'Gauntlets';
-              }).map(normalizeStats),
+              return item.type === 'Gauntlets';
+            }).map(normalizeStats),
             Chest: items.filter(function(item) {
-                return item.type === 'Chest';
-              }).map(normalizeStats),
+              return item.type === 'Chest';
+            }).map(normalizeStats),
             Leg: items.filter(function(item) {
-                return item.type === 'Leg';
-              }).map(normalizeStats),
+              return item.type === 'Leg';
+            }).map(normalizeStats),
             ClassItem: items.filter(function(item) {
-                return item.type === 'ClassItem';
-              }).map(normalizeStats),
+              return item.type === 'ClassItem';
+            }).map(normalizeStats),
             Ghost: items.filter(function(item) {
-                return item.type === 'Ghost';
-              }).map(normalizeStats),
+              return item.type === 'Ghost';
+            }).map(normalizeStats),
             Artifact: items.filter(function(item) {
-                return item.type === 'Artifact';
-              }).map(normalizeStats)
+              return item.type === 'Artifact';
+            }).map(normalizeStats)
           };
         }
 

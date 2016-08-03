@@ -83,9 +83,9 @@
     };
   }
 
-  StoreBucketCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue'];
+  StoreBucketCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimInfoService'];
 
-  function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue) {
+  function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimInfoService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -121,6 +121,7 @@
       }
     };
     vm.onDrop = function(id, $event, equip) {
+
       vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event, hovering);
       hovering = false;
       dragHelp.classList.remove('drag-dwell-activated');
@@ -129,6 +130,15 @@
 
     vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
+
+      if (target.id === dimStoreService.getActiveStore().id && equip) {
+        dimInfoService.show('doubleclick', {
+          title: 'Did you know?',
+          body: ['<p>If you\'re moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.</p>',
+                 '<p>Try it out next time!<p>'].join(''),
+          hide: 'Don\'t show this tip again'
+        });
+      }
 
       if (item.notransfer && item.owner !== target.id) {
         return $q.reject(new Error('Cannot move that item off this character.'));
@@ -174,7 +184,8 @@
           data: item,
           appendTo: 'body',
           overlay: true,
-          className: 'move-amount-popup'
+          className: 'move-amount-popup',
+          appendClassName: 'modal-dialog'
         });
 
         promise = dialogResult.closePromise.then(function(data) {

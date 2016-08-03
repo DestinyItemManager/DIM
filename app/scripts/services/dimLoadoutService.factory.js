@@ -179,6 +179,18 @@
       return (hydration[(loadout.version)] || hydration['v1.0'])(loadout);
     }
 
+    // A special getItem that takes into account the fact that
+    // subclasses have unique IDs.
+    function getLoadoutItem(pseudoItem, store) {
+      var item = dimItemService.getItem(pseudoItem);
+      if (item.type === 'Class') {
+        item = _.find(store.items, {
+          hash: pseudoItem.hash
+        });
+      }
+      return item;
+    }
+
     function applyLoadout(store, loadout) {
       return dimActionQueue.queueAction(function() {
         var items = angular.copy(_.flatten(_.values(loadout.items)));
@@ -193,7 +205,7 @@
 
         // Only select stuff that needs to change state
         items = _.filter(items, function(pseudoItem) {
-          var item = dimItemService.getItem(pseudoItem);
+          var item = getLoadoutItem(pseudoItem, store);
           return !item ||
             !item.equipment ||
             item.owner !== store.id ||
@@ -250,7 +262,7 @@
                 return _.find(scope.successfulItems, { id: i.id });
               });
               var realItemsToEquip = itemsToEquip.map(function(i) {
-                return dimItemService.getItem(i);
+                return getLoadoutItem(i, store);
               });
               return dimItemService.equipItems(store, realItemsToEquip);
             } else {
@@ -307,7 +319,7 @@
 
       var promise = $q.when();
       var pseudoItem = items.shift();
-      var item = dimItemService.getItem(pseudoItem);
+      var item = getLoadoutItem(pseudoItem, store);
 
       if (item.type === 'Material' || item.type === 'Consumable') {
         // handle consumables!
