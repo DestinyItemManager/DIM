@@ -2,6 +2,8 @@
 /* css-indent-offset: 2 */
 /* End:                 */
 
+@import "variables.scss";
+
 :root {
   --item-size: 44px;
   --character-columns: 3;
@@ -378,20 +380,22 @@ body {
   }
 }
 
-.ngdialog {
-  ::-webkit-scrollbar {
-    width: 3px;
-  }
+::-webkit-scrollbar {
+  width: 3px;
 
-  ::-webkit-scrollbar-track {
-    background: rgba(228, 228, 228, 0.2);
-    border-radius: 3px;
+  &:horizontal {
+    height: 3px;
   }
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: #E4E4E4;
-    border-radius: 3px;
-  }
+::-webkit-scrollbar-track {
+  background: rgba(228, 228, 228, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4E4E4;
+  border-radius: 3px;
 }
 
 #system {
@@ -1351,6 +1355,9 @@ g {
   z-index: 10;
 }
 
+.reputation {
+  margin-left: 28px;
+}
 
 /* Loadout editor */
 
