@@ -108,7 +108,7 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
-        
+
         if (vm.shiftClickCallback && e.shiftKey) {
           vm.shiftClickCallback(item);
         }

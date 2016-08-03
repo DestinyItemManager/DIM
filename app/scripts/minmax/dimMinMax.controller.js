@@ -58,10 +58,10 @@
           best = [{ item: locked[armortype], bonus_type: getBonusType(locked[armortype]) }];
         } else {
           best = [];
-          
+
           // Filter out excluded
-          var filtered = _.filter(bucket[armortype], function(item) { 
-            return !_.findWhere(excluded, {id: item.id}); 
+          var filtered = _.filter(bucket[armortype], function(item) {
+            return !_.findWhere(excluded, { id: item.id });
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
@@ -71,7 +71,7 @@
             curbest = getBestItem(filtered, hash.stats, hash.type);
             best.push(curbest);
             // add the best -> if best is exotic -> get best legendary
-            if(curbest.item.isExotic && armortype !== 'ClassItem') {
+            if (curbest.item.isExotic && armortype !== 'ClassItem') {
               best.push(getBestItem(filtered, hash.stats, hash.type, true));
             }
           });
@@ -126,10 +126,10 @@
       ranked: {},
       lockedItemsValid: function(droppedId, droppedType) {
         droppedId = droppedId.split('-')[1];
-        if(_.findWhere(vm.excludeditems, {id: droppedId})) {
+        if (_.findWhere(vm.excludeditems, { id: droppedId })) {
           return false;
         }
-        
+
         var item = _.findWhere(buckets[vm.active][droppedType], { id: droppedId });
         var exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         _.each(vm.lockeditems, function(lockeditem) {
@@ -142,10 +142,9 @@
         });
         return exoticCount < 2;
       },
-      excludedItemsValid: function(dropped_id, dropped_type) {
-        return !(vm.lockeditems[dropped_type] && vm.lockeditems[dropped_type].id === dropped_id);
+      excludedItemsValid: function(droppedId, droppedType) {
+        return !(vm.lockeditems[droppedType] && vm.lockeditems[droppedType].id === droppedId);
       },
-
       onCharacterChange: function() {
         vm.ranked = buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
@@ -182,13 +181,13 @@
       },
       onExcludedDrop: function(droppedId, type) {
         droppedId = droppedId.split('-')[1];
-        if(_.findWhere(vm.excludeditems, {id: droppedId})) {
+        if (_.findWhere(vm.excludeditems, { id: droppedId })) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], {id: droppedId});
+        var item = _.findWhere(buckets[vm.active][type], { id: droppedId });
         vm.excludeditems.push(item);
         vm.highestsets = vm.getSetBucketsStep(vm.active);
-        if(vm.progress < 1.0) {
+        if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
@@ -196,7 +195,7 @@
         vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.id !== removedId; });
 
         vm.highestsets = vm.getSetBucketsStep(vm.active);
-        if(vm.progress < 1.0) {
+        if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
