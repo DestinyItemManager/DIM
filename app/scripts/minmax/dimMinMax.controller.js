@@ -61,7 +61,7 @@
           
           // Filter out excluded
           var filtered = _.filter(bucket[armortype], function(item) { 
-            return !_.findWhere(excluded[armortype], {id: item.id}); 
+            return !_.findWhere(excluded, {id: item.id}); 
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
@@ -114,7 +114,7 @@
       scale_type: 'scaled',
       allSetTiers: [],
       highestsets: {},
-      excludeditems: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] },
+      excludeditems: [],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       type: 'Helmet',
       showBlues: false,
@@ -126,7 +126,7 @@
       ranked: {},
       lockedItemsValid: function(droppedId, droppedType) {
         droppedId = droppedId.split('-')[1];
-        if(_.findWhere(vm.excludeditems[droppedType], {id: droppedId})) {
+        if(_.findWhere(vm.excludeditems, {id: droppedId})) {
           return false;
         }
         
@@ -177,20 +177,20 @@
           vm.lockedchanged = true;
         }
       },
-      onExcludedDrop: function(droppedId, type) {
+      onExcludedDrop: function(droppedId) {
         droppedId = droppedId.split('-')[1];
-        if(_.findWhere(vm.excludeditems[type], {id: droppedId})) {
+        if(_.findWhere(vm.excludeditems, {id: droppedId})) {
           return;
         }
         var item = _.findWhere(buckets[vm.active][type], {id: droppedId});
-        vm.excludeditems[type].push(item);
+        vm.excludeditems.push(item);
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
-      onExcludedRemove: function(removedId, removedType) {
-        vm.excludeditems[removedType] = _.filter(vm.excludeditems[removedType], function(excludeditem) { return excludeditem.id !== removedId; });
+      onExcludedRemove: function(removedId) {
+        vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.id !== removedId; });
 
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if(vm.progress < 1.0) {

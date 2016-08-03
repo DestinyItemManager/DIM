@@ -58,16 +58,15 @@
       </div>
     </div>
   </div>
-  <div class="section">
+  <div class="section" ng-show="vm.excludeditems">
     <p>Excluded Items <small>- Drag and drop any item into its bucket to build sets without that specific gear.</small></p>
     <div class="itemQuality">
-      <div class="excluded-container" ng-repeat="(type, excludeditems) in normal.excludeditems">
-        <div class="label">{{type}}</div>
-        <div ui-on-drop="normal.onExcludedDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.excludedItemsValid($data, type)">
+      <div class="excluded-container">
+        <div ui-on-drop="normal.onExcludedDrop($data)" drop-validate="normal.excludedItemsValid($data)">
           <div class="excluded-items">
             <div class="excluded-item" ng-repeat="excludeditem in excludeditems">
               <dim-store-item item-data="excludeditem" store-data="normal.getStore(excludeditem.owner)"></dim-store-item>
-              <div class="close" ng-click="normal.onExcludedRemove(excludeditem.id, type)" role="button" tabindex="0"></div>
+              <div class="close" ng-click="normal.onExcludedRemove(excludeditem.id)" role="button" tabindex="0"></div>
             </div>
           </div>
         </div>
