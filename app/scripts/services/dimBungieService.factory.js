@@ -490,8 +490,8 @@
     }
 
     function getDestinyVendors(token, platform, membershipId, characters) {
-      // Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue, Banner
-      var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767', '242140165'];
+      // Titan van, Hunter van, Warlock van, Van quart, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Cruc quart, Speaker, Variks, Exotic Blue, Banner
+      var vendorHashes = ['1990950', '3003633346', '1575820975', '2668878854', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '3658200622', '2680694281', '1998812735', '3902439767', '242140165'];
       var promises = [];
       _.each(vendorHashes, function(vendorHash) {
         _.each(characters, function(character) {
