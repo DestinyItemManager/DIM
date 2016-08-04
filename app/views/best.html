@@ -94,6 +94,12 @@
             <span ng-show="normal.scale_type === 'scaled'">Calculates loadouts as if all items were 335 defense.</span>
             <span ng-show="normal.scale_type === 'base'">Calculates loadouts at current defense levels.</span></small>
         </p>
+        <p>
+          <label>
+            <input type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
+            <span>Include vendor items</span>
+          </label>
+        </p>
       </div></span>
       <span><ul ng-show="showHelp">
         <li>Higher Tiers are better

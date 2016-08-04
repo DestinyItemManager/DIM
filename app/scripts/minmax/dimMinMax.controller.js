@@ -9,6 +9,7 @@
   function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog) {
     var vm = this;
     var buckets = [];
+    var vendorBuckets = [];
 
     function getBonusType(armorpiece) {
       if (!armorpiece.normalStats) {
@@ -38,7 +39,7 @@
       };
     }
 
-    function getBestArmor(bucket, locked) {
+    function getBestArmor(bucket, vendorBucket, locked) {
       var statHashes = [
           { stats: [144602215, 1735777505], type: 'intdisc' },
           { stats: [144602215, 4244567218], type: 'intstr' },
@@ -53,6 +54,7 @@
       var bestCombs;
       var armortype;
       for (armortype in bucket) {
+        var combined = (vm.includeVendors) ? bucket[armortype].concat(vendorBucket[armortype]) : bucket[armortype];
         if (locked[armortype]) {
           best = [{ item: locked[armortype], bonus_type: getBonusType(locked[armortype]) }];
         } else {
@@ -61,11 +63,11 @@
             if (!vm.mode && index > 2) {
               return;
             }
-            curbest = getBestItem(bucket[armortype], hash.stats, hash.type);
+            curbest = getBestItem(combined, hash.stats, hash.type);
             best.push(curbest);
             // add the best -> if best is exotic -> get best legendary
             if (curbest.item.isExotic && armortype !== 'ClassItem') {
-              best.push(getBestItem(bucket[armortype], hash.stats, hash.type, true));
+              best.push(getBestItem(combined, hash.stats, hash.type, true));
             }
           });
         }
@@ -109,6 +111,7 @@
       highestsets: {},
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       type: 'Helmet',
+      includeVendors: false,
       showBlues: false,
       showExotics: true,
       showYear1: false,
@@ -137,6 +140,9 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onModeChange: function() {
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+      },
+      onIncludeVendorsChange: function() {
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
@@ -181,7 +187,7 @@
         });
       },
       getSetBucketsStep: function(activeGaurdian) {
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems);
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems);
         var helms = bestArmor.Helmet || [];
         var gaunts = bestArmor.Gauntlets || [];
         var chests = bestArmor.Chest || [];
@@ -318,6 +324,7 @@
         }
 
         var allItems = [];
+        var vendorItems = [];
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
         _.each(stores, function(store) {
@@ -330,6 +337,18 @@
           });
 
           allItems = allItems.concat(items);
+          
+          _.each(store.vendors, function(vendor) {
+            var vendItems = _.filter(vendor.items, function(item) {
+            return item.primStat &&
+              item.primStat.statHash === 3897883278 && // has defense hash
+              ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
+              item.primStat.value >= 280 && // only 280+ light items
+              item.stats;
+            });
+
+            vendorItems = vendorItems.concat(vendItems);
+          });
         });
 
         function normalizeStats(item) {
@@ -375,8 +394,9 @@
         }
 
         function initBuckets() {
-          function loadBucket(classType) {
-            return getBuckets(allItems.filter(function(item) {
+          function loadBucket(classType, useVendorItems = false) {
+            var items = (useVendorItems) ? vendorItems : allItems;
+            return getBuckets(items.filter(function(item) {
               return item.classType === classType || item.classType === 3;
             }));
           }
@@ -385,6 +405,12 @@
             hunter: loadBucket(1),
             warlock: loadBucket(2)
           };
+          
+          vendorBuckets = {
+            titan: loadBucket(0, true),
+            hunter: loadBucket(1, true),
+            warlock: loadBucket(2, true)
+          }
         }
 
         initBuckets();
