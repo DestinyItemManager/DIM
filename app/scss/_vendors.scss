@@ -1,12 +1,20 @@
 .vendor {
-  width: calc((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 4);
+  width: calc(((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 3) + 150px);
   margin: 0 auto;
   
   .vendor-col {
     margin-right: 20px;
   }
   .vendor-reset-header {
-    padding-right: 35px;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    bottom: 0;
+  }
+  .vendor-reset-container {
+    width: 150px;
+    position: relative;
   }
   .vendor-armor, .vendor-weaps {
     display: flex;

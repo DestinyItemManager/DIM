@@ -2,12 +2,88 @@
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <h1>Vendors</h1>
   <div class="vendor-headers">
-    <div class="store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
-      <dim-store-heading ng-if="!store.isVault" class="character" store-data="store"></dim-store-heading>
-      <h2 ng-if="store.isVault" class="vendor-reset-header">Reset In:</h2>
+    <div class="store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+      <dim-store-heading class="character" store-data="store"></dim-store-heading>
+    </div>
+    <div class="vendor-reset-container">
+      <h2 class="vendor-reset-header">Reset In:</h2>
     </div>
   </div>
   <div class="vendors">
+    <div class="vendor-char-items">
+      <div ng-if="vm.vendors[0][vm.bannerHash]">
+        <div class="vendor-header">
+          <div class="title">
+          {{vm.vendors[0][vm.bannerHash].vendorName}}
+          <img class="vendor-icon" ng-src="{{vm.vendors[0][vm.bannerHash].vendorIcon}}" />
+          <timer ng-if="!vm.vendors[0][vm.bannerHash].nextRefreshDate.startsWith('9999')" style="float:right" end-time="vm.vendors[0][vm.bannerHash].nextRefreshDate" max-time-unit="'day'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+          </div>
+        </div>
+        <div class="vendor-row">
+          <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+            <h3 ng-if="store.vendors[vm.bannerHash].items.armor.length">Armor</h3>
+            <div class="vendor-armor">
+              <div class="vendor-item" ng-repeat="saleItem in store.vendors[vm.bannerHash].items.armor">
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[store.vendors[vm.bannerHash].costs[saleItem.hash].cost.currency.itemHash] < store.vendors[vm.bannerHash].costs[saleItem.hash].cost.cost)}">
+                  {{::store.vendors[vm.bannerHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[store.vendors[vm.bannerHash].costs[saleItem.hash].currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::store.vendors[vm.bannerHash].costs[saleItem.hash].currency.icon" title="{{::store.vendors[vm.bannerHash].costs[saleItem.itemHash].currency.name}}"></span>
+                </div>
+              </div>
+            </div>
+            <h3 ng-if="store.vendors[vm.bannerHash].items.weapons.length">Weapons</h3>
+            <div class="vendor-weaps">
+              <div class="vendor-item" ng-repeat="saleItem in store.vendors[vm.bannerHash].items.weapons">
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[store.vendors[vm.bannerHash].costs[saleItem.hash].cost.currency.itemHash] < store.vendors[vm.bannerHash].costs[saleItem.hash].cost.cost)}">
+                  {{::store.vendors[vm.bannerHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[store.vendors[vm.bannerHash].costs[saleItem.hash].currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::store.vendors[vm.bannerHash].costs[saleItem.hash].currency.icon" title="{{::store.vendors[vm.bannerHash].costs[saleItem.itemHash].currency.name}}"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vendor-char-items">
+      <div ng-if="vm.vendors[0][vm.vanguardHashes[0]]">
+        <div class="vendor-header">
+          <div class="title">
+          Vanguard
+          <img class="vendor-icon" ng-src="{{vm.vendors[0][vm.vanguardHashes[0]].vendorIcon}}" />
+          <timer style="float:right" end-time="vm.vendors[0][vm.vanguardHashes[0]].nextRefreshDate" max-time-unit="'day'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+          </div>
+        </div>
+        <div class="vendor-row">
+          <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+            <div ng-repeat="(idx, vendorHash) in vm.vanguardHashes">
+            <div ng-if="store.vendors[vendorHash].items.armor.length"">
+            <h3 ng-if="store.vendors[vendorHash].items.armor.length">Armor</h3>
+            <div class="vendor-armor">
+              <div class="vendor-item" ng-repeat="saleItem in store.vendors[vendorHash].items.armor">
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].cost.currency.itemHash] < store.vendors[vendorHash].costs[saleItem.hash].cost.cost)}">
+                  {{::store.vendors[vendorHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::store.vendors[vendorHash].costs[saleItem.hash].currency.icon" title="{{::store.vendors[vendorHash].costs[saleItem.itemHash].currency.name}}"></span>
+                </div>
+              </div>
+            </div>
+            <h3 ng-if="store.vendors[vendorHash].items.weapons.length">Weapons</h3>
+            <div class="vendor-weaps">
+              <div class="vendor-item" ng-repeat="saleItem in store.vendors[vendorHash].items.weapons">
+                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
+                <div class="cost" ng-class="{notenough: (vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].cost.currency.itemHash] < store.vendors[vendorHash].costs[saleItem.hash].cost.cost)}">
+                  {{::store.vendors[vendorHash].costs[saleItem.hash].cost}}/{{vm.totalCoins[store.vendors[vendorHash].costs[saleItem.hash].currency.itemHash]}}
+                  <span class="currency"><img dim-bungie-image-fallback="::store.vendors[vendorHash].costs[saleItem.hash].currency.icon" title="{{::store.vendors[vendorHash].costs[saleItem.itemHash].currency.name}}"></span>
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes">
       <div ng-if="vm.vendors[0][vendorHash]">
         <div class="vendor-header">
