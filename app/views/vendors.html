@@ -5,9 +5,6 @@
     <div class="store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
       <dim-store-heading class="character" store-data="store"></dim-store-heading>
     </div>
-    <div class="vendor-reset-container">
-      <h2 class="vendor-reset-header">Reset In:</h2>
-    </div>
   </div>
   <div class="vendors">
     <div class="vendor-char-items">
