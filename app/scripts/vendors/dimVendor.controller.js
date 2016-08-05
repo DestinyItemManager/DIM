@@ -24,7 +24,7 @@
     }
 
     // Banner
-    vm.bannerHash = '242140165';
+    vm.bannerHash = ['242140165'];
 
     // Titan van, Hunter van, Warlock van
     vm.vanguardHashes = ['1990950', '3003633346', '1575820975'];
