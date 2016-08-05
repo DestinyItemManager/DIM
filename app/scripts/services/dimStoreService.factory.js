@@ -12,6 +12,7 @@
     let recordsDefs = {};
     var buckets = {};
     var idTracker = {};
+    var includeVendors = true;
 
     // A set of items IDs that are new - this is cleared out by the user
     var _newItems = new Set();
@@ -144,7 +145,7 @@
       $rootScope.$broadcast('dim-stores-updated', {
         stores: _stores
       });
-      loadingTracker.addPromise(loadNewItems().then(() => service.reloadStores()));
+      loadingTracker.addPromise(loadNewItems().then(() => service.reloadStores(true)));
     });
 
     return service;
@@ -175,7 +176,7 @@
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
-    function reloadStores() {
+    function reloadStores(includeVendors = false) {
       if (reloadPromise) {
         return reloadPromise;
       }
@@ -184,7 +185,7 @@
       const previousItemsMap = buildItemMap(_stores);
       const previousItems = new Set(_.keys(previousItemsMap));
 
-      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
+      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)
         .then(function(rawStores) {
           var glimmer;
           var marks;

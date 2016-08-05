@@ -299,7 +299,7 @@
 
     /************************************************************************************************************************************/
 
-    function getStores(platform) {
+    function getStores(platform, includeVendors) {
       var data = {
         token: null,
         membershipId: null
@@ -318,12 +318,15 @@
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
-          return $q.all([
+          var promises = [
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
             getDestinyProgression(data.token, platform, data.membershipId, data.characters),
-            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters),
-            getDestinyVendors(data.token, platform, data.membershipId, data.characters)
-          ]).then(function(data) {
+            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
+          ];
+          if (includeVendors) {
+            promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
+          }
+          return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
           });
         })

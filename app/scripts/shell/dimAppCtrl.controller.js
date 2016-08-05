@@ -107,9 +107,21 @@
 
     dimXurService.updateXur();
     vm.xur = dimXurService;
+    
+    var shouldIncludeVendors = function(stores) {
+      var include = false;
+      var currDate = new Date().toISOString();
+      _.each(stores, function(store) {
+        if (store.minRefreshDate <  currDate) {
+          include = true;
+        }
+      });
+      return include;
+    };
 
     vm.refresh = function refresh() {
-      loadingTracker.addPromise(dimStoreService.reloadStores());
+      var includeVendors = shouldIncludeVendors(dimStoreService.getStores());
+      loadingTracker.addPromise(dimStoreService.reloadStores(includeVendors));
       dimXurService.updateXur();
     };
 
