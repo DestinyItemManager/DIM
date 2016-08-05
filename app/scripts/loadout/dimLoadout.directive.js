@@ -82,8 +82,8 @@
         if (args.loadout) {
           vm.show = true;
           dimLoadoutService.dialogOpen = true;
-          vm.originalLoadout = args.loadout;
           vm.loadout = angular.copy(args.loadout);
+          vm.originalLoadout = vm.loadout;
           if (args.equipAll) {
             _.each(vm.loadout.items, function(item) {
               if (item[0]) {
