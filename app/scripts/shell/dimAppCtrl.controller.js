@@ -107,12 +107,12 @@
 
     dimXurService.updateXur();
     vm.xur = dimXurService;
-    
+
     var shouldIncludeVendors = function(stores) {
       var include = false;
       var currDate = new Date().toISOString();
       _.each(stores, function(store) {
-        if (store.minRefreshDate <  currDate) {
+        if (store.minRefreshDate < currDate) {
           include = true;
         }
       });

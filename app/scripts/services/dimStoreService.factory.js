@@ -12,7 +12,6 @@
     let recordsDefs = {};
     var buckets = {};
     var idTracker = {};
-    var includeVendors = true;
 
     // A set of items IDs that are new - this is cleared out by the user
     var _newItems = new Set();
@@ -276,6 +275,13 @@
                 vendors: raw.character.vendors,
                 isVault: false
               });
+
+              if (!includeVendors) {
+                var prevStore = _.findWhere(_stores, { id: raw.id });
+                store.vendors = prevStore.vendors;
+                store.minRefreshDate = prevStore.minRefreshDate;
+              }
+
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               store.progression.progressions.forEach(function(prog) {
@@ -338,6 +344,9 @@
               return processVendors(store.vendors).then(function(vendors) {
                 _.each(vendors, function(vendor) {
                   store.vendors[vendor.vendorHash] = vendor;
+                  if (!store.minRefreshDate || vendor.nextRefreshDate < store.minRefreshDate) {
+                    store.minRefreshDate = vendor.nextRefreshDate;
+                  }
                 });
                 return store;
               });
