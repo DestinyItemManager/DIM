@@ -185,15 +185,14 @@
       }
 
       // Save a snapshot of all the items before we update
-      const previousItemsMap = buildItemMap(_stores);
-      const previousItems = new Set(_.keys(previousItemsMap));
+      const previousItems = buildItemSet(_stores);
 
       reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
         .then(function(rawStores) {
           var glimmer;
           var marks;
 
-          return $q.all([previousItemsMap, ...rawStores.map(function(raw) {
+          return $q.all(rawStores.map(function(raw) {
             var store;
             var items = [];
             if (!raw) {
@@ -336,29 +335,12 @@
 
               return store;
             });
-          })]);
+          }));
         })
-        .then(function([previousItemsMap, ...stores]) {
-          // Save and notify about new items (but only if this wasn't the first load)
+        .then(function(stores) {
           if (previousItems.size) {
             // Save the list of new item IDs
             saveNewItems();
-
-            // Only notify new items from this refresh
-            const notifyNewItems = _.omit(buildItemMap(stores), _.keys(previousItemsMap));
-
-            // Show a toaster about the new items
-            var listStr = '';
-            _.each(notifyNewItems, function(val) {
-              listStr += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
-            });
-            if (listStr) {
-              dimInfoService.show('newitemsbox', {
-                title: 'New items found',
-                body: '<p>The following items are new:</p><ul>' + listStr + '</ul>',
-                hide: 'Don\'t show me new item notifications'
-              }, 10000);
-            }
           }
 
           _stores = stores;
@@ -1057,14 +1039,14 @@
 
     /** New Item Tracking **/
 
-    function buildItemMap(stores) {
-      var itemMap = {};
+    function buildItemSet(stores) {
+      var itemSet = new Set();
       stores.forEach((store) => {
         store.items.forEach((item) => {
-          itemMap[item.id] = { name: item.name, type: item.type };
+          itemSet.add(item.id);
         });
       });
-      return itemMap;
+      return itemSet;
     }
 
     // Should this item display as new? Note the check for previousItems size, so that
