@@ -51,15 +51,15 @@
 
   angular.module('dimApp')
     .component('dimVendorItems', VendorItems);
-    
+
   VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService'];
-    
+
   function VendorItemsCtrl($scope, ngDialog, dimStoreService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
     var detailItemElement = null;
-    
+
     $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult && $dialog[0].id === dialogResult.id) {
         $dialog.position({
@@ -70,7 +70,7 @@
         });
       }
     });
-    
+
     angular.extend(vm, {
       itemClicked: function(item, e) {
         e.stopPropagation();
