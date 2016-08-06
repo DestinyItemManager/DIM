@@ -9,6 +9,10 @@
     var _platforms = [];
     var _active = null;
 
+    // Testing
+    var testFakeXbox = false;
+    var testFakePlaystation = false;
+
     var service = {
       getPlatforms: getPlatforms,
       getActive: getActive,
@@ -35,6 +39,16 @@
           type: 1,
           label: 'Xbox'
         });
+
+        // A fake PSN account for Xbox-only testers
+        if (testFakePlaystation) {
+          _platforms.push({
+            id: bungieUser.gamerTag,
+            type: 2,
+            fake: true,
+            label: 'Fake PlayStation'
+          });
+        }
       }
 
       if (bungieUser.psnId) {
@@ -43,6 +57,16 @@
           type: 2,
           label: 'PlayStation'
         });
+
+        // A fake Xbox account for PSN-only testers
+        if (testFakeXbox) {
+          _platforms.push({
+            id: bungieUser.psnId,
+            type: 2,
+            fake: true,
+            label: 'Fake Xbox'
+          });
+        }
       }
 
       $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });

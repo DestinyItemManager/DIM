@@ -186,8 +186,15 @@
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
+      const activePlatform = dimPlatformService.getActive();
 
-      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
+      function fakeItemId(item) {
+        if (activePlatform.fake && item.itemInstanceId !== "0") {
+          item.itemInstanceId = 'fake-' + item.itemInstanceId;
+        }
+      }
+
+      reloadPromise = dimBungieService.getStores(activePlatform)
         .then(function(rawStores) {
           var glimmer;
           var marks;
@@ -248,6 +255,7 @@
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket.items, function(item) {
                   item.bucket = bucket.bucketHash;
+                  fakeItemId(item);
                 });
 
                 items = _.union(items, bucket.items);
@@ -287,6 +295,7 @@
                 _.each(bucket, function(pail) {
                   _.each(pail.items, function(item) {
                     item.bucket = pail.bucketHash;
+                    fakeItemId(item);
                   });
 
                   items = _.union(items, pail.items);
@@ -298,6 +307,7 @@
                   _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
                     _.each(pail.items, function(item) {
                       item.bucket = pail.bucketHash;
+                      fakeItemId(item);
                     });
 
                     items = _.union(items, pail.items);
