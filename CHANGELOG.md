@@ -19,6 +19,7 @@
 * Better handling of items with "The Life Exotic" perk.
 * New aliases for rarity filters (is:white, is:green, is:blue, is:purple, is:yellow).
 * An alternate option for the "Gather Engrams" loadout can exclude gathering exotic engrams.
+* Removed popup notification for new items.
 
 # 3.8.3
 
