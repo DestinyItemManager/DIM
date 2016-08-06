@@ -31,7 +31,7 @@
   var filterTrans = {
     dmg: ['arc', 'solar', 'void', 'kinetic'],
     type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
-    tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
+    tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
     incomplete: ['incomplete'],
     complete: ['complete'],
     xpcomplete: ['xpcomplete'],
@@ -262,7 +262,14 @@
         return item.type.toLowerCase() === predicate;
       },
       tier: function(predicate, item) {
-        return item.tier.toLowerCase() === predicate;
+        const tierMap = {
+          white: 'common',
+          green: 'uncommon',
+          blue: 'rare',
+          purple: 'legendary',
+          yellow: 'exotic'
+        };
+        return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
       },
       // Incomplete will show items that are not fully leveled.
       incomplete: function(predicate, item) {

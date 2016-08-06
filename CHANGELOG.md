@@ -17,6 +17,7 @@
 * Clicking away from the Xur dialog will close any open item popups.
 * Fixed an issue where you could not equip a loadout that included an exotic item when you already had an exotic equipped that was not going to be replaced by the loadout.
 * Better handling of items with "The Life Exotic" perk.
+* New aliases for rarity filters (is:white, is:green, is:blue, is:purple, is:yellow).
 
 # 3.8.3
 
