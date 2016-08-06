@@ -13,6 +13,7 @@
 * Help dialog for keyboard shortcuts. Triggered with "?".
 * When you have two characters of the same class, applying a loadout with a subclass will work all the time now.
 * Item class requirements are part of the header ("Hunter Helmet") instead of in the stats area.
+* You can search for the opposite of "is:" filters with "not:" filters. For example, "is:helmet not:hunter quality:>90".
 
 # 3.8.3
 
