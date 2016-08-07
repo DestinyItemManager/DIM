@@ -226,7 +226,7 @@
                               dimRaceDefinitions,
                               dimStatDefinitions,
                               loadNewItems(activePlatform),
-                              $translate(['VAULT']),
+                              $translate(['Vault']),
                               dimBungieService.getStores(dimPlatformService.getActive())])
         .then(function([progressionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
@@ -255,9 +255,9 @@
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
-                name: translations.VAULT,
+                name: translations.Vault,
                 class: 'vault',
-                className: translations.VAULT,
+                className: translations.Vault,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
                 background: '/images/vault-background.png',
@@ -1264,7 +1264,6 @@
       }
     }
 
-<<<<<<< 8c2cdc5c79a25d65b0f7ccc45e92f4f06f15da51
     function processVendors(vendors) {
       return $q.all([dimVendorDefinitions, dimItemDefinitions])
         .then(function([vendorDefs, itemDefs]) {
@@ -1308,10 +1307,7 @@
         });
     }
 
-    function getStatsData(data) {
-=======
     function getStatsData(statDefs, data) {
->>>>>>> Localize stat names
       var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
       var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
       var ret = {};
