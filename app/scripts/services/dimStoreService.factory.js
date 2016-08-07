@@ -489,34 +489,6 @@
           icon: '/img/misc/missing_icon.png'
         };
 
-        if (item.itemHash === 194424271) {
-          itemType = 'Armor Shader';
-          itemDef.bucketTypeHash = 2973005342;
-          itemDef.classType = 3;
-          itemDef.itemTypeName = 'Armor Shader';
-          itemDef.description = '';
-          itemDef.itemName = 'Walkabout - Classified';
-          itemDef.nonTransferrable = true;
-          itemDef.equipRequiredLevel = 0;
-          itemDef.equipment = true;
-          item.isEquipment = true;
-        }
-
-        if (item.itemHash === 1963806104) {
-          itemType = 'Mystery Bag';
-          itemDef.bucketTypeHash = 1469714392;
-          itemDef.icon = "/common/destiny_content/icons/3651da8a8b0add3161e840c7104078ed.jpg";
-          itemDef.classType = 3;
-          itemDef.itemTypeName = itemType;
-          itemDef.description = "Contains 1 Guaranteed Item and up to 4 Possible Items. This item is nonreturnable.";
-          itemDef.itemName = "Sterling Treasure";
-          itemDef.maxStackSize = 99;
-          itemDef.nonTransferrable = true;
-          itemDef.equipRequiredLevel = 0;
-          itemDef.equipment = false;
-          item.isEquipment = false;
-        }
-
         // unidentified item.
         if (!itemDef.itemName) {
           if (!itemDef) {
