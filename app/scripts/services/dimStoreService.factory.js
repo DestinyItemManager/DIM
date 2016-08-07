@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
     var _stores = [];
     var idTracker = {};
 
@@ -124,6 +124,10 @@
       },
       canBeInLoadout: function() {
         return this.equipment || this.type === 'Material' || this.type === 'Consumable';
+      },
+      // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
+      hasLifeExotic: function() {
+        return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { name: 'The Life Exotic' }) !== undefined);
       }
     };
 

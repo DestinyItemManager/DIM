@@ -2,6 +2,8 @@
 /* css-indent-offset: 2 */
 /* End:                 */
 
+@import "variables.scss";
+
 :root {
   --item-size: 44px;
   --character-columns: 3;
@@ -1353,6 +1355,9 @@ g {
   z-index: 10;
 }
 
+.reputation, .store-header {
+  margin-left: 28px;
+}
 
 /* Loadout editor */
 

@@ -31,7 +31,7 @@
   var filterTrans = {
     dmg: ['arc', 'solar', 'void', 'kinetic'],
     type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
-    tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic'],
+    tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
     incomplete: ['incomplete'],
     complete: ['complete'],
     xpcomplete: ['xpcomplete'],
@@ -55,9 +55,9 @@
     new: ['new']
   };
 
-  var keywords = _.flatten(_.values(filterTrans)).map(function(word) {
-    return "is:" + word;
-  });
+  var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
+    return ["is:" + word, "not:" + word];
+  }));
 
   // Filters that operate on ranges (>, <, >=, <=)
   var ranges = ['light', 'level', 'quality', 'percentage'];
@@ -69,7 +69,7 @@
     element.find('input').textcomplete([
       {
         words: keywords,
-        match: /\b((li|le|qu|pe|is:)\w*)$/,
+        match: /\b((li|le|qu|pe|is:|not:)\w*)$/,
         search: function(term, callback) {
           callback($.map(this.words, function(word) {
             return word.indexOf(term) === 0 ? word : null;
@@ -77,7 +77,8 @@
         },
         index: 1,
         replace: function(word) {
-          return word.indexOf('is:') === 0 ? (word + ' ') : word;
+          return (word.indexOf('is:') === 0 && word.indexOf('not:') === 0)
+            ? (word + ' ') : word;
         }
       }
     ], {
@@ -150,8 +151,8 @@
       var filterFn;
       var filters = [];
 
-      function addPredicate(predicate, filter) {
-        filters.push({ predicate: predicate, value: filter });
+      function addPredicate(predicate, filter, invert = false) {
+        filters.push({ predicate: predicate, value: filter, invert: invert });
       }
 
       _.each(searchTerms, function(term) {
@@ -161,11 +162,26 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter);
           } else {
-            for (var key in filterTrans) {
+            for (const key in filterTrans) {
               if (filterTrans.hasOwnProperty(key) && filterTrans[key].indexOf(filter) > -1) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter);
+                break;
+              }
+            }
+          }
+        } else if (term.indexOf('not:') >= 0) {
+          filter = term.replace('not:', '');
+          if (_cachedFilters[filter]) {
+            predicate = _cachedFilters[filter];
+            addPredicate(predicate, filter, true);
+          } else {
+            for (const key in filterTrans) {
+              if (filterTrans.hasOwnProperty(key) && filterTrans[key].indexOf(filter) > -1) {
+                predicate = key;
+                _cachedFilters[filter] = key;
+                addPredicate(predicate, filter, true);
                 break;
               }
             }
@@ -183,7 +199,8 @@
 
       filterFn = function(item) {
         return _.all(filters, function(filter) {
-          return filterFns[filter.predicate](filter.value, item);
+          var result = filterFns[filter.predicate](filter.value, item);
+          return filter.invert ? !result : result;
         });
       };
 
@@ -245,7 +262,14 @@
         return item.type.toLowerCase() === predicate;
       },
       tier: function(predicate, item) {
-        return item.tier.toLowerCase() === predicate;
+        const tierMap = {
+          white: 'common',
+          green: 'uncommon',
+          blue: 'rare',
+          purple: 'legendary',
+          yellow: 'exotic'
+        };
+        return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
       },
       // Incomplete will show items that are not fully leveled.
       incomplete: function(predicate, item) {

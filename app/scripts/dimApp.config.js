@@ -13,13 +13,6 @@
       active: null,
       debug: true
     })
-    .value('dimItemTier', {
-      exotic: 'Exotic',
-      legendary: 'Legendary',
-      rare: 'Rare',
-      uncommon: 'Uncommon',
-      basic: 'Basic'
-    })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
     }]);

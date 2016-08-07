@@ -44,6 +44,12 @@
       }
     });
 
+    $scope.$on('$destroy', function() {
+      if (dialogResult) {
+        dialogResult.close();
+      }
+    });
+
     angular.extend(vm, {
       itemCategories: dimXurService.itemCategories,
       categoryOrder: [
@@ -106,9 +112,6 @@
         }
       },
       close: function() {
-        if (dialogResult) {
-          dialogResult.close();
-        }
         $scope.closeThisDialog();
       }
     });

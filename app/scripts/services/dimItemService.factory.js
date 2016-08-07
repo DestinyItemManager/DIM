@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimItemService', ItemService);
 
-  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimItemTier', 'dimCategory', '$q'];
+  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimCategory', '$q'];
 
-  function ItemService(dimStoreService, dimBungieService, dimItemTier, dimCategory, $q) {
+  function ItemService(dimStoreService, dimBungieService, dimCategory, $q) {
     // We'll reload the stores to check if things have been
     // thrown away or moved and we just don't have up to date info. But let's
     // throttle these calls so we don't just keep refreshing over and over.
@@ -173,11 +173,11 @@
         return value;
       });
 
-      if (result && result.tier === dimItemTier.exotic) {
+      if (result && result.isExotic) {
         var prefix = _.filter(store.items, function(i) {
           return i.equipped &&
             i.bucket.sort === item.bucket.sort &&
-            i.tier === dimItemTier.exotic;
+            i.isExotic;
         });
 
         if (prefix.length === 0) {
@@ -192,6 +192,9 @@
 
     // Bulk equip items. Only use for multiple equips at once.
     function equipItems(store, items) {
+      if (items.length === 1) {
+        return equipItem(items[0]);
+      }
       return dimBungieService.equipItems(store, items)
         .then(function(equippedItems) {
           return equippedItems.map(function(i) {
@@ -251,18 +254,12 @@
                 i.isExotic);
       });
 
-      // Fix for "The Life Exotic" Perk on Exotic Items
-      // Can equip multiples
-      function hasLifeExotic(item) {
-        return _.find(item.talentGrid.nodes, { name: 'The Life Exotic' }) !== undefined;
-      }
-
       if (equippedExotics.length === 0) {
         deferred.resolve(true);
       } else if (equippedExotics.length === 1) {
         var equippedExotic = equippedExotics[0];
 
-        if (hasLifeExotic(item) || hasLifeExotic(equippedExotic)) {
+        if (item.hasLifeExotic() || equippedExotic.hasLifeExotic()) {
           deferred.resolve(true);
         } else {
           dequipItem(equippedExotic)
@@ -275,8 +272,8 @@
         }
       } else if (equippedExotics.length === 2) {
         // Assume that only one of the equipped items has 'The Life Exotic' perk
-        if (hasLifeExotic(item)) {
-          var exoticItemWithPerk = _.find(equippedExotics, hasLifeExotic(item));
+        if (item.hasLifeExotic()) {
+          var exoticItemWithPerk = _.find(equippedExotics, item.hasLifeExotic());
           dequipItem(exoticItemWithPerk)
             .then(function() {
               deferred.resolve(true);
@@ -286,7 +283,7 @@
             });
         } else {
           var equippedExoticWithoutPerk = _.find(equippedExotics, function(item) {
-            return !hasLifeExotic(item);
+            return !item.hasLifeExotic();
           });
 
           dequipItem(equippedExoticWithoutPerk)
