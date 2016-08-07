@@ -27,6 +27,17 @@
       2763619072: { label: "SRL", color: "#e92b38", scale: ".5", order: 11 }
     };
 
+    // Maps tierType to tierTypeName in English
+    const tiers = [
+      'Unused 0',
+      'Unused 1',
+      'Common',
+      'Uncommon',
+      'Rare',
+      'Legendary',
+      'Exotic'
+    ];
+
     // A promise used to dedup parallel calls to reloadStores
     var _reloadPromise;
 
@@ -554,8 +565,8 @@
         hash: item.itemHash,
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        tier: itemDef.tierTypeName || 'Common',
-        isExotic: itemDef.tierTypeName === 'Exotic',
+        tier: tiers[itemDef.tierType] || 'Common',
+        isExotic: tiers[itemDef.tierType] === 'Exotic',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
