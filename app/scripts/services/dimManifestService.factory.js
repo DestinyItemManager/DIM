@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimManifestService', ManifestService);
 
-  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster'];
+  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService'];
 
-  function ManifestService($q, dimBungieService, $http, toaster) {
+  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService) {
     // Testing flags
     const alwaysLoadRemote = false;
 
@@ -41,17 +41,15 @@
 
         service.isLoaded = false;
 
-        // TODO: var language = window.navigator.language;
-        var language = 'en';
-
         manifestPromise = dimBungieService.getManifest()
           .then(function(data) {
             var version = data.version;
+            console.log(data);
             service.version = version;
 
             return loadManifestFromCache(version)
               .catch(function(e) {
-                var path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+                var path = data.mobileWorldContentPaths[dimSettingsService.language] || data.mobileWorldContentPaths.en;
                 return loadManifestRemote(version, path);
               })
               .then(function(typedArray) {
