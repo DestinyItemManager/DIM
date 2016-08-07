@@ -72,13 +72,13 @@
         }
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
-      updateCharacterInfo: function(characterInfo) {
+      updateCharacterInfo: function(statDefs, characterInfo) {
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
-        this.stats = getStatsData(characterInfo.characterBase);
+        this.stats = getStatsData(statDefs, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
@@ -149,7 +149,6 @@
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
-      getStatsData: getStatsData,
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
@@ -175,11 +174,14 @@
     // (level, light, int/dis/str, etc.). This does not update the
     // items in the stores - to do that, call reloadStores.
     function updateCharacters() {
-      return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
+      return $q.all([
+        dimStatDefinitions,
+        dimBungieService.getCharacters(dimPlatformService.getActive())
+      ]).then(function([statDefs, bungieStores]) {
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
-            dStore.updateCharacterInfo(bStore.base);
+            dStore.updateCharacterInfo(statDefs, bStore.base);
           }
         });
         return _stores;
@@ -222,10 +224,11 @@
                               dimBucketService,
                               dimClassDefinitions,
                               dimRaceDefinitions,
+                              dimStatDefinitions,
                               loadNewItems(activePlatform),
                               $translate(['VAULT']),
                               dimBungieService.getStores(dimPlatformService.getActive())])
-        .then(function([progressionDefs, buckets, classes, races, newItems, translations, rawStores]) {
+        .then(function([progressionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -328,7 +331,7 @@
                 background: 'http://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
-                stats: getStatsData(character.characterBase),
+                stats: getStatsData(statDefs, character.characterBase),
                 class: getClass(character.characterBase.classType),
                 className: classes[character.characterBase.classHash].className,
                 genderRace: genderRace,
@@ -1261,6 +1264,7 @@
       }
     }
 
+<<<<<<< 8c2cdc5c79a25d65b0f7ccc45e92f4f06f15da51
     function processVendors(vendors) {
       return $q.all([dimVendorDefinitions, dimItemDefinitions])
         .then(function([vendorDefs, itemDefs]) {
@@ -1305,6 +1309,9 @@
     }
 
     function getStatsData(data) {
+=======
+    function getStatsData(statDefs, data) {
+>>>>>>> Localize stat names
       var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
       var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
       var ret = {};
@@ -1315,10 +1322,16 @@
         case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
         case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
-        if (!data.stats[stats[s]]) {
+
+        const stat = data.stats[stats[s]];
+        if (!stat) {
           continue;
         }
-        statHash.value = data.stats[stats[s]].value;
+        statHash.value = stat.value;
+        const statDef = statDefs[stat.statHash];
+        if (statDef) {
+          statHash.name = statDef.statName; // localized name
+        }
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {
           statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
