@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
     var _stores = [];
     var progressionDefs = {};
     let recordsDefs = {};
@@ -336,7 +336,7 @@
         })
         .then(function([previousItemsMap, ...stores]) {
           // Save and notify about new items (but only if this wasn't the first load)
-          if (previousItems.size) {
+          if (previousItems.size && dimSettingsService.showNewItems) {
             // Save the list of new item IDs
             saveNewItems();
 
