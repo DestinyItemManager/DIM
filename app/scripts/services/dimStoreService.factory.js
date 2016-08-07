@@ -140,7 +140,7 @@
       },
       // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
       hasLifeExotic: function() {
-        return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { name: 'The Life Exotic' }) !== undefined);
+        return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { hash: 4044819214 }) !== undefined);
       }
     };
 
