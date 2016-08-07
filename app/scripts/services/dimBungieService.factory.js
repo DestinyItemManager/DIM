@@ -113,7 +113,7 @@
     function getBnetCookies() {
       return $q(function(resolve, reject) {
         chrome.cookies.getAll({
-          domain: '.bungie.net'
+          domain: 'www.bungie.net'
         }, getAllCallback);
 
         function getAllCallback(cookies) {
