@@ -18,7 +18,8 @@
     Talent: 'TalentGrid',
     Progression: 'Progression',
     Vendor: 'Vendor',
-    Records: 'Record'
+    Records: 'Record',
+    ItemCategory: 'ItemCategory'
   };
 
   const eagerTables = {

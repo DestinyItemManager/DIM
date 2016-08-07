@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
     var _stores = [];
     var _idTracker = {};
 
@@ -129,8 +129,11 @@
           (!this.notransfer || this.owner === store.id) &&
           !this.location.inPostmaster;
       },
+      inCategory: function(categoryName) {
+        return _.contains(this.categories, categoryName);
+      },
       isEngram: function() {
-        return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
+        return this.inCategory('CATEGORY_ENGRAM');
       },
       canBeInLoadout: function() {
         return this.equipment || this.type === 'Material' || this.type === 'Consumable';
@@ -459,7 +462,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, previousItems, newItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -550,10 +553,10 @@
 
       var itemType = normalBucket.type;
 
-      var weaponClass = null;
-      if (normalBucket.inWeapons) {
-        weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
-      }
+      const categories = _.compact(itemDef.itemCategoryHashes.map((c) => {
+        const category = itemCategories[c];
+        return category ? category.identifier : null;
+      }));
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -565,6 +568,7 @@
         hash: item.itemHash,
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
+        categories: categories, // see dimItemCategoryDefinitions
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
         name: itemDef.itemName,
@@ -594,7 +598,6 @@
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
-        weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
 
@@ -1209,6 +1212,7 @@
         dimYearsDefinitions,
         dimProgressionDefinitions,
         dimRecordsDefinitions,
+        dimItemCategoryDefinitions,
         previousItems,
         newItems])
         .then(function(args) {
