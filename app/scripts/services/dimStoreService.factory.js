@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
     var _stores = [];
     var _idTracker = {};
 
@@ -218,13 +218,14 @@
       }
 
       console.time('Load stores (Bungie API)');
-      reloadPromise = $q.all([dimProgressionDefinitions,
+      _reloadPromise = $q.all([dimProgressionDefinitions,
                               dimBucketService,
                               dimClassDefinitions,
                               dimRaceDefinitions,
                               loadNewItems(activePlatform),
+                              $translate(['VAULT']),
                               dimBungieService.getStores(dimPlatformService.getActive())])
-        .then(function([progressionDefs, buckets, classes, races, newItems, rawStores]) {
+        .then(function([progressionDefs, buckets, classes, races, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -251,8 +252,9 @@
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
-                name: 'Vault',
+                name: translations.VAULT,
                 class: 'vault',
+                className: translations.VAULT,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
                 background: '/images/vault-background.png',

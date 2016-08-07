@@ -4,7 +4,7 @@
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$rootScope', 'SyncService', '$window'];
+  SettingsService.$inject = ['$rootScope', 'SyncService', '$window', '$translate'];
 
   /**
    * The settings service provides a settings object which contains
@@ -17,7 +17,7 @@
    * load in the user's actual settings, so it is a good sidea to
    * always watch the settings you are using.
    */
-  function SettingsService($rootScope, SyncService, $window) {
+  function SettingsService($rootScope, SyncService, $window, $translate) {
     var _loaded = false;
 
     const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
@@ -73,6 +73,9 @@
       _loaded = true;
       $rootScope.$evalAsync(function() {
         angular.extend(settings, savedSettings);
+        console.log(settings.language);
+        $translate.use(settings.language);
+        $translate.fallbackLanguage('en');
       });
     });
 
