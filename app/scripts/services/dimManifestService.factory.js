@@ -44,7 +44,6 @@
         manifestPromise = dimBungieService.getManifest()
           .then(function(data) {
             var version = data.version;
-            console.log(data);
             service.version = version;
 
             const language = dimSettingsService.language;
