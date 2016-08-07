@@ -12,6 +12,9 @@ var sqlite3 = require('sqlite3').verbose();
 var target = process.argv[3];
 
 var tables = (process.argv[4] || '').split(',');
+if (tables.length == 1 && !tables[0].length) {
+  tables = [];
+}
 
 var db = new sqlite3.Database(process.argv[2], sqlite3.OPEN_READONLY);
 
@@ -36,7 +39,7 @@ function dig(object, target, table, result) {
 
 db.serialize(function () {
   db.each("select name from sqlite_master where type='table'", function (err, table) {
-    if (tables.indexOf(table.name) >= 0) {
+    if (!tables.length || tables.indexOf(table.name) >= 0) {
       db.all("select * from " + table.name, function (err, result) {
         (result || []).forEach(function(entry) {
           if (entry.id === target) {
