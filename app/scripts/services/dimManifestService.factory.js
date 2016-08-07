@@ -102,19 +102,26 @@
         .then(function(arraybuffer) {
           service.statusText = 'Saving latest Destiny info...';
 
-          getLocalManifestFile().then((fileEntry) => {
-            fileEntry.createWriter((fileWriter) => {
-              fileWriter.onwriteend = function(e) {
-                localStorage.setItem('manifest-version', version);
-              };
+          getLocalManifestFile()
+            .then((fileEntry) => {
+              fileEntry.createWriter((fileWriter) => {
+                fileWriter.onwriteend = function(e) {
+                  if (fileWriter.length === 0) { // truncate finished
+                    localStorage.setItem('manifest-version', version);
+                    fileWriter.write(new Blob([arraybuffer], { type: "application/octet-stream" }));
+                  } else { // blob write finished
+                    console.log("Sucessfully stored " + fileWriter.length + " byte manifest file.");
+                  }
+                };
 
-              fileWriter.onerror = function(e) {
-                console.error('Write of manifest file failed', e);
-              };
+                fileWriter.onerror = function(e) {
+                  console.error('Write of manifest file failed', e);
+                };
 
-              fileWriter.write(new Blob([arraybuffer], "application/octet-stream"));
-            });
-          });
+                fileWriter.truncate(0); // clear it out first
+              });
+            })
+            .catch((e) => console.log('Error saving manifest file', e));
 
           var typedArray = new Uint8Array(arraybuffer);
           return typedArray;
@@ -126,8 +133,8 @@
         const requestFileSystem = (window.requestFileSystem || window.webkitRequestFileSystem);
         // Ask for 60MB of temporary space. If Chrome gets rid of it we can always redownload.
         requestFileSystem(window.TEMPORARY, 60 * 1024 * 1024, (fs) => {
-          fs.root.getFile('dimManifest', {}, (f) => resolve(f), (e) => reject(e));
-        });
+          fs.root.getFile('dimManifest', { create: true, exclusive: false }, (f) => resolve(f), (e) => reject(e));
+        }, (e) => reject(e));
       });
     }
 
@@ -153,7 +160,14 @@
               fileEntry.file((file) => {
                 var reader = new FileReader();
                 reader.addEventListener("error", (e) => { reject(e); });
-                reader.addEventListener("loadend", () => resolve(new Uint8Array(reader.result)));
+                reader.addEventListener("loadend", () => {
+                  var typedArray = new Uint8Array(reader.result);
+                  if (typedArray.length) {
+                    resolve(typedArray);
+                  } else {
+                    reject(new Error("Empty cached manifest file"));
+                  }
+                });
                 reader.readAsArrayBuffer(file);
               }, (e) => reject(e));
             });
