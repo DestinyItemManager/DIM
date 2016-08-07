@@ -19,6 +19,8 @@
 * Fixed an issue where you could not equip a loadout that included an exotic item when you already had an exotic equipped that was not going to be replaced by the loadout.
 * Better handling of items with "The Life Exotic" perk.
 * New aliases for rarity filters (is:white, is:green, is:blue, is:purple, is:yellow).
+* An alternate option for the "Gather Engrams" loadout can exclude gathering exotic engrams.
+* Removed popup notification for new items.
 
 # 3.8.3
 
