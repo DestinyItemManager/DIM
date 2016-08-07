@@ -787,7 +787,7 @@
       var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
       var totalXPRequired = xpToReachLevel(maxLevelRequired);
 
-      var ascendNode = _.find(gridNodes, { name: 'Ascend' });
+      var ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
       // Fix for stuff that has nothing in early columns
       var minColumn = _.min(gridNodes, 'column').column;
@@ -802,7 +802,7 @@
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: Boolean(ascendNode),
         ascended: Boolean(ascendNode && ascendNode.activated),
-        infusable: _.any(gridNodes, { name: 'Infuse' })
+        infusable: _.any(gridNodes, { hash: 1270552711 })
       };
     }
 
@@ -1044,7 +1044,7 @@
       var activeArmorNode;
       if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
-          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); // [1034209669, 1263323987, 193091484]
+          return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
         });
         if (armorNodes) {
           activeArmorNode = _.findWhere(armorNodes, { activated: true }) || { hash: 0 };
@@ -1057,24 +1057,21 @@
           return undefined;
         }
 
-        var name = def.statName;
-        if (name === 'Aim assistance') {
-          name = 'Aim Assist';
-        }
+        const identifier = def.statIdentifier;
 
         // Only include these hidden stats, in this order
-        var secondarySort = ['Aim Assist', 'Equip Speed'];
+        var secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
         var secondaryIndex = -1;
 
         var sort = _.findIndex(item.stats, { statHash: stat.statHash });
         var itemStat;
         if (sort < 0) {
-          secondaryIndex = secondarySort.indexOf(name);
+          secondaryIndex = secondarySort.indexOf(identifier);
           sort = 50 + secondaryIndex;
         } else {
           itemStat = item.stats[sort];
           // Always at the end
-          if (name === 'Magazine' || name === 'Energy') {
+          if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
             sort = 100;
           }
         }
@@ -1092,16 +1089,16 @@
         var base = val;
         var bonus = 0;
 
-        if (item.primaryStat.statHash === 3897883278) {
-          if ((name === 'Intellect' && _.find(armorNodes, { name: 'Increase Intellect' })) ||
-             (name === 'Discipline' && _.find(armorNodes, { name: 'Increase Discipline' })) ||
-             (name === 'Strength' && _.find(armorNodes, { name: 'Increase Strength' }))) {
+        if (item.primaryStat.statIdentifier === 'STAT_DEFENSE') {
+          if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
+             (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
+             (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
             bonus = getBonus(item.primaryStat.value, type);
 
             if (activeArmorNode &&
-                ((name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
-                 (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
-                 (name === 'Strength' && activeArmorNode.name === 'Increase Strength'))) {
+                ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+                 (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+                 (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
               base = Math.max(0, val - bonus);
             }
           }
@@ -1111,11 +1108,11 @@
           base: base,
           bonus: bonus,
           statHash: stat.statHash,
-          name: name,
+          name: def.statName,
           sort: sort,
           value: val,
           maximumValue: maximumValue,
-          bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
+          bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY' // energy == magazine for swords
         };
       })), 'sort');
     }
