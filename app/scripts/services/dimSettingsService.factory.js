@@ -73,7 +73,6 @@
       _loaded = true;
       $rootScope.$evalAsync(function() {
         angular.extend(settings, savedSettings);
-        console.log(settings.language);
         $translate.use(settings.language);
         $translate.fallbackLanguage('en');
       });

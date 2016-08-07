@@ -8,30 +8,33 @@
 
       $translateProvider
         .translations('en', {
-          "LEVEL": "Level",
-          "WEAPONS": "Weapons",
-          "ARMOR": "Armor",
-          "EQUIP": "Equip",
-          "VAULT": "Vault"
+          LEVEL: "Level",
+          WEAPONS: "Weapons",
+          ARMOR: "Armor",
+          EQUIP: "Equip",
+          VAULT: "Vault"
         })
         .translations('it', {
-          "LEVEL": "Livello",
-          "WEAPONS": "Armi",
-          "ARMOR": "Armatura",
-          "EQUIP": "Equipaggia",
-          "VAULT": "Deposito"
+          LEVEL: "Livello",
+          WEAPONS: "Armi",
+          ARMOR: "Armatura",
+          EQUIP: "Equipaggia",
+          VAULT: "Deposito"
         })
         .translations('de', {
-          "EQUIP": "Ausstatten",
-          "VAULT": "Ausrüstungstresor"
+          EQUIP: "Ausstatten",
+          VAULT: "Ausrüstungstresor"
         })
-        .translations('fr', {})
+        .translations('fr', {
+        })
         .translations('es', {
-          "VAULT": "Bóveda",
-          "LEVEL": "Nivel"
+          VAULT: "Bóveda",
+          LEVEL: "Nivel"
         })
-        .translations('ja', {})
-        .translations('pt-br', {})
+        .translations('ja', {
+        })
+        .translations('pt-br', {
+        })
         .fallbackLanguage('en');
     }]);
 })();
