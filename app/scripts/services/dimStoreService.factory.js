@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
     var _stores = [];
     var _idTracker = {};
 
@@ -218,8 +218,13 @@
       }
 
       console.time('Load stores (Bungie API)');
-      _reloadPromise = $q.all([dimProgressionDefinitions, dimBucketService, loadNewItems(activePlatform), dimBungieService.getStores(activePlatform, includeVendors)])
-        .then(function([progressionDefs, buckets, newItems, rawStores]) {
+      reloadPromise = $q.all([dimProgressionDefinitions,
+                              dimBucketService,
+                              dimClassDefinitions,
+                              dimRaceDefinitions,
+                              loadNewItems(activePlatform),
+                              dimBungieService.getStores(dimPlatformService.getActive())])
+        .then(function([progressionDefs, buckets, classes, races, newItems, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -241,10 +246,12 @@
               return undefined;
             }
 
+            const character = raw.character.base;
+
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
-                name: 'vault',
+                name: 'Vault',
                 class: 'vault',
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
@@ -297,25 +304,33 @@
               });
             } else {
               try {
-                glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
-                marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+                glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
               } catch (e) {
                 glimmer = 0;
                 marks = 0;
               }
 
+              const race = races[character.characterBase.raceHash];
+              let genderRace = "";
+              if (character.characterBase.genderType === 0) {
+                genderRace = race.raceNameMale;
+              } else {
+                genderRace = race.raceNameFemale;
+              }
+
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: 'http://bungie.net/' + raw.character.base.emblemPath,
-                lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                background: 'http://bungie.net/' + raw.character.base.backgroundPath,
-                level: raw.character.base.characterLevel,
-                powerLevel: raw.character.base.characterBase.powerLevel,
-                stats: getStatsData(raw.character.base.characterBase),
-                class: getClass(raw.character.base.characterBase.classType),
-                gender: getGender(raw.character.base.characterBase.genderType),
-                race: getRace(raw.character.base.characterBase.raceHash),
-                percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
+                icon: 'http://bungie.net/' + character.emblemPath,
+                lastPlayed: character.characterBase.dateLastPlayed,
+                background: 'http://bungie.net/' + character.backgroundPath,
+                level: character.characterLevel,
+                powerLevel: character.characterBase.powerLevel,
+                stats: getStatsData(character.characterBase),
+                class: getClass(character.characterBase.classType),
+                className: classes[character.characterBase.classHash].className,
+                genderRace: genderRace,
+                percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
                 vendors: raw.character.vendors,
@@ -328,7 +343,7 @@
                 store.minRefreshDate = prevStore.minRefreshDate;
               }
 
-              store.name = store.gender + ' ' + store.race + ' ' + store.class;
+              store.name = store.genderRace + ' ' + store.className;
 
               store.progression.progressions.forEach(function(prog) {
                 angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
@@ -345,9 +360,9 @@
                 });
               });
 
-              if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
-                if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
-                  _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+              if (_.has(character.inventory.buckets, 'Invisible')) {
+                if (_.size(character.inventory.buckets.Invisible) > 0) {
+                  _.each(character.inventory.buckets.Invisible, function(pail) {
                     _.each(pail.items, function(item) {
                       item.bucket = pail.bucketHash;
                       fakeItemId(item);
@@ -1242,28 +1257,6 @@
         return 'hunter';
       case 2:
         return 'warlock';
-      }
-      return 'unknown';
-    }
-
-    function getRace(hash) {
-      switch (hash) {
-      case 3887404748:
-        return 'human';
-      case 898834093:
-        return 'exo';
-      case 2803282938:
-        return 'awoken';
-      }
-      return 'unknown';
-    }
-
-    function getGender(type) {
-      switch (type) {
-      case 0:
-        return 'male';
-      case 1:
-        return 'female';
       }
       return 'unknown';
     }

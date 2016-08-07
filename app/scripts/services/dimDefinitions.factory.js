@@ -23,7 +23,9 @@
   };
 
   const eagerTables = {
-    ItemBucket: 'InventoryBucket'
+    ItemBucket: 'InventoryBucket',
+    Class: 'Class',
+    Race: 'Race'
   };
 
   var mod = angular.module('dimApp');
