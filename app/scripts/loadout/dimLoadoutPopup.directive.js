@@ -37,7 +37,8 @@
         '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
         '    </li>',
         '    <li class="loadout-set">',
-        '      <span ng-click="vm.gatherEngramsLoadout($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
+        '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: true  } )"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
+        '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: false })"><i class="fa fa-ban"></i> Exotics</span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
@@ -282,13 +283,13 @@
     };
 
     // A dynamic loadout set up to level weapons and armor
-    vm.gatherEngramsLoadout = function gatherEngramsLoadout($event) {
+    vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
       var engrams = _.select(dimItemService.getItems(), function(i) {
-        return i.isEngram() && !i.location.inPostmaster;
+        return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
       });
 
       if (engrams.length === 0) {
-        toaster.pop('warning', 'Gather Engrams', 'No engrams are available to transfer.');
+        toaster.pop('warning', 'Gather Engrams', 'No ' + (options.exotics ? '' : 'non-exotic ') + 'engrams are available to transfer.');
         return;
       }
 
