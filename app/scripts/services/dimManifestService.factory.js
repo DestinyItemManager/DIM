@@ -47,10 +47,12 @@
             console.log(data);
             service.version = version;
 
-            return loadManifestFromCache(version)
+            const language = dimSettingsService.language;
+
+            return loadManifestFromCache(version, language)
               .catch(function(e) {
-                var path = data.mobileWorldContentPaths[dimSettingsService.language] || data.mobileWorldContentPaths.en;
-                return loadManifestRemote(version, path);
+                var path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+                return loadManifestRemote(version, language, path);
               })
               .then(function(typedArray) {
                 service.statusText = 'Building Destiny info database...';
@@ -90,7 +92,7 @@
     /**
      * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
      */
-    function loadManifestRemote(version, path) {
+    function loadManifestRemote(version, language, path) {
       service.statusText = 'Downloading latest Destiny info from Bungie...';
       return $http.get("https://www.bungie.net/" + path, { responseType: "blob" })
         .then(function(response) {
@@ -105,7 +107,7 @@
               fileEntry.createWriter((fileWriter) => {
                 fileWriter.onwriteend = function(e) {
                   if (fileWriter.length === 0) { // truncate finished
-                    localStorage.setItem('manifest-version', version);
+                    localStorage.setItem('manifest-version', version + '-' + language);
                     fileWriter.write(new Blob([arraybuffer], { type: "application/octet-stream" }));
                   } else { // blob write finished
                     console.log("Sucessfully stored " + fileWriter.length + " byte manifest file.");
@@ -140,14 +142,14 @@
      * Returns a promise for the cached manifest of the specified
      * version as a Uint8Array, or rejects.
      */
-    function loadManifestFromCache(version) {
+    function loadManifestFromCache(version, language) {
       if (alwaysLoadRemote) {
         return $q.reject(new Error("Testing - always load remote"));
       }
 
       service.statusText = "Loading saved Destiny info...";
       var currentManifestVersion = localStorage.getItem('manifest-version');
-      if (currentManifestVersion === version) {
+      if (currentManifestVersion === version + '-' + language) {
         // One version of this used chrome.storage.local with a
         // base64-encoded string, which is a bit slower. We may need
         // to do that again if the requestFileSystem API gets
