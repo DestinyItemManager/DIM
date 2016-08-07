@@ -259,7 +259,7 @@
       } else if (equippedExotics.length === 1) {
         var equippedExotic = equippedExotics[0];
 
-        if (item.hasLifeExotic() || item.hasLifeExotic()) {
+        if (item.hasLifeExotic() || equippedExotic.hasLifeExotic()) {
           deferred.resolve(true);
         } else {
           dequipItem(equippedExotic)
