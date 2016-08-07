@@ -8,21 +8,10 @@
 
   function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
     var _stores = [];
-    var progressionDefs = {};
-    let recordsDefs = {};
-    var buckets = {};
     var idTracker = {};
 
     // A set of items IDs that are new - this is cleared out by the user
     var _newItems = new Set();
-
-    dimBucketService.then(function(defs) {
-      buckets = defs;
-    });
-    dimProgressionDefinitions.then(function(defs) {
-      progressionDefs = defs;
-    });
-    dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
 
     const progressionMeta = {
       529303302: { label: "Cryptarch", color: "#C7990C", scale: ".8", order: 0 },
@@ -200,8 +189,8 @@
       const previousItems = new Set(_.keys(previousItemsMap));
 
       console.time('Load stores (Bungie API)');
-      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
-        .then(function(rawStores) {
+      reloadPromise = $q.all([dimProgressionDefinitions, dimBucketService, dimBungieService.getStores(dimPlatformService.getActive())])
+        .then(function([progressionDefs, buckets, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           var glimmer;
           var marks;
@@ -409,7 +398,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, previousItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -1150,6 +1139,7 @@
         dimTalentDefinitions,
         dimYearsDefinitions,
         dimProgressionDefinitions,
+        dimRecordsDefinitions,
         previousItems])
         .then(function(args) {
           var result = [];
