@@ -104,9 +104,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'dimItemTier', 'toaster', 'dimPlatformService', 'dimSettingsService'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, dimItemTier, toaster, dimPlatformService, dimSettingsService) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -217,13 +217,13 @@
         } else if (item.equipped) {
           item.equipped = false;
         } else {
-          if (item.tier === dimItemTier.exotic) {
+          if (item.isExotic) {
             var exotic = _.chain(vm.loadout.items)
               .values()
               .flatten()
               .findWhere({
                 sort: item.bucket.sort,
-                tier: dimItemTier.exotic,
+                isExotic: true,
                 equipped: true
               })
               .value();

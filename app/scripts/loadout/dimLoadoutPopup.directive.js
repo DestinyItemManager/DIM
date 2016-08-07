@@ -52,9 +52,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'dimItemTier', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService', 'dimPlatformService'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService', 'dimPlatformService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, dimItemTier, toaster, dimEngramFarmingService, $window, dimSearchService, dimPlatformService) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimEngramFarmingService, $window, dimSearchService, dimPlatformService) {
     var vm = this;
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -359,7 +359,7 @@
       var itemsByType = _.groupBy(applicableItems, 'type');
 
       var isExotic = function(item) {
-        return item.tier === dimItemTier.exotic;
+        return item.isExotic && !item.hasLifeExotic();
       };
 
       // Pick the best item
