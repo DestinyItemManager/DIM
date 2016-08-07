@@ -589,6 +589,10 @@
 
       createdItem.index = createItemIndex(createdItem);
 
+      if (createdItem.primStat) {
+        createdItem.primStat.stat = statDef[createdItem.primStat.statHash];
+      }
+
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
