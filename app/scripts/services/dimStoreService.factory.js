@@ -8,24 +8,23 @@
 
   function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
     var _stores = [];
-    var progressionDefs = {};
-    let recordsDefs = {};
-    var buckets = {};
-    var idTracker = {};
+    var _progressionDefs = {};
+    let _recordsDefs = {};
+    var _buckets = {};
+    var _idTracker = {};
 
-    // A set of items IDs that are new - this is cleared out by the user
-    var _newItems = new Set();
+    var _removedNewItems = new Set();
 
     dimBucketService.then(function(defs) {
-      buckets = defs;
+      _buckets = defs;
     });
     dimProgressionDefinitions.then(function(defs) {
-      progressionDefs = defs;
+      _progressionDefs = defs;
     });
-    dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
+    dimRecordsDefinitions.then((defs) => { _recordsDefs = defs; });
 
     // A promise used to dedup parallel calls to reloadStores
-    var reloadPromise;
+    var _reloadPromise;
 
     // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -140,15 +139,16 @@
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: processItems,
-      hasNewItems: Boolean(_newItems.size)
+      hasNewItems: false
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
       _stores = [];
+      service.hasNewItems = false;
       $rootScope.$broadcast('dim-stores-updated', {
         stores: _stores
       });
-      loadingTracker.addPromise(loadNewItems().then(() => service.reloadStores()));
+      loadingTracker.addPromise(service.reloadStores());
     });
 
     return service;
@@ -180,19 +180,37 @@
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
     function reloadStores() {
-      if (reloadPromise) {
-        return reloadPromise;
+      const activePlatform = dimPlatformService.getActive();
+      if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
+        return _reloadPromise;
       }
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
+      const firstLoad = (previousItems.size === 0);
 
-      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
-        .then(function(rawStores) {
+      function fakeItemId(item) {
+        if (activePlatform.fake && item.itemInstanceId !== "0") {
+          item.itemInstanceId = 'fake-' + item.itemInstanceId;
+        }
+      }
+
+      _reloadPromise = $q.all([loadNewItems(activePlatform), dimBungieService.getStores(activePlatform)])
+        .then(function([newItems, rawStores]) {
+          if (activePlatform !== dimPlatformService.getActive()) {
+            throw new Error("Active platform mismatch");
+          }
+
           var glimmer;
           var marks;
+          _removedNewItems.forEach((id) => newItems.delete(id));
+          _removedNewItems.clear();
+          service.hasNewItems = (newItems.size !== 0);
 
-          return $q.all(rawStores.map(function(raw) {
+          return $q.all([newItems, ...rawStores.map(function(raw) {
+            if (activePlatform !== dimPlatformService.getActive()) {
+              throw new Error("Active platform mismatch");
+            }
             var store;
             var items = [];
             if (!raw) {
@@ -220,7 +238,7 @@
                   if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return buckets[sort].capacity;
+                  return _buckets[sort].capacity;
                 },
                 spaceLeftForItem: function(item) {
                   var sort = item.sort;
@@ -248,6 +266,7 @@
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket.items, function(item) {
                   item.bucket = bucket.bucketHash;
+                  fakeItemId(item);
                 });
 
                 items = _.union(items, bucket.items);
@@ -280,13 +299,14 @@
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               store.progression.progressions.forEach(function(prog) {
-                angular.extend(prog, progressionDefs[prog.progressionHash]);
+                angular.extend(prog, _progressionDefs[prog.progressionHash]);
               });
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
                   _.each(pail.items, function(item) {
                     item.bucket = pail.bucketHash;
+                    fakeItemId(item);
                   });
 
                   items = _.union(items, pail.items);
@@ -298,6 +318,7 @@
                   _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
                     _.each(pail.items, function(item) {
                       item.bucket = pail.bucketHash;
+                      fakeItemId(item);
                     });
 
                     items = _.union(items, pail.items);
@@ -306,7 +327,11 @@
               }
             }
 
-            return processItems(store, items, previousItems).then(function(items) {
+            return processItems(store, items, previousItems, newItems).then(function(items) {
+              if (activePlatform !== dimPlatformService.getActive()) {
+                throw new Error("Active platform mismatch");
+              }
+
               store.items = items;
 
               // by type-bucket
@@ -315,7 +340,7 @@
               });
 
               // Fill in any missing buckets
-              _.values(buckets.byType).forEach(function(bucket) {
+              _.values(_buckets.byType).forEach(function(bucket) {
                 if (!store.buckets[bucket.id]) {
                   store.buckets[bucket.id] = [];
                 }
@@ -325,7 +350,7 @@
                 store.vaultCounts = {};
                 ['Weapons', 'Armor', 'General'].forEach(function(category) {
                   store.vaultCounts[category] = 0;
-                  buckets.byCategory[category].forEach(function(bucket) {
+                  _buckets.byCategory[category].forEach(function(bucket) {
                     if (store.buckets[bucket.id]) {
                       store.vaultCounts[category] += store.buckets[bucket.id].length;
                     }
@@ -335,12 +360,20 @@
 
               return store;
             });
-          }));
+          })]);
         })
-        .then(function(stores) {
-          if (previousItems.size) {
+        .then(function([newItems, ...stores]) {
+          if (activePlatform !== dimPlatformService.getActive()) {
+            throw new Error("Active platform mismatch");
+          }
+
+          // Save and notify about new items (but only if this wasn't the first load)
+          if (!firstLoad) {
             // Save the list of new item IDs
-            saveNewItems();
+            _removedNewItems.forEach((id) => newItems.delete(id));
+            _removedNewItems.clear();
+            saveNewItems(newItems);
+            service.hasNewItems = (newItems.size !== 0);
           }
 
           _stores = stores;
@@ -351,12 +384,22 @@
 
           return stores;
         })
+        .catch(function(e) {
+          if (e.message === 'Active platform mismatch') {
+            // no problem, just canceling the request
+            return null;
+          }
+          throw e;
+        })
         .finally(function() {
           // Clear the reload promise so this can be called again
-          reloadPromise = null;
+          if (_reloadPromise.activePlatform === activePlatform) {
+            _reloadPromise = null;
+          }
         });
 
-      return reloadPromise;
+      _reloadPromise.activePlatform = activePlatform;
+      return _reloadPromise;
     }
 
     function getStore(id) {
@@ -369,15 +412,15 @@
       var index = item.hash + '-';
       if (item.id === '0') {
         index = index + item.amount;
-        idTracker[index] = (idTracker[index] || 0) + 1;
-        index = index + '-' + idTracker[index];
+        _idTracker[index] = (_idTracker[index] || 0) + 1;
+        index = index + '-' + _idTracker[index];
       } else {
         index = index + item.id;
       }
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, newItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -518,7 +561,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = isItemNew(createdItem.id, previousItems);
+        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
@@ -551,7 +594,7 @@
         try {
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
-          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(recordsDefs[record.recordHash], record));
+          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(_recordsDefs[record.recordHash], record));
 
           createdItem.objectives = buildRecords(recordBook, objectiveDef);
 
@@ -1051,52 +1094,56 @@
 
     // Should this item display as new? Note the check for previousItems size, so that
     // we don't mark everything as new on the first load.
-    function isItemNew(id, previousItems) {
+    function isItemNew(id, previousItems, newItems) {
       let isNew = false;
-      if (_newItems.has(id)) {
+      if (newItems.has(id)) {
         isNew = true;
+      } else if (_removedNewItems.has(id)) {
+        isNew = false;
       } else if (previousItems.size) {
         // Zero id check is to ignore general items and consumables
         isNew = (id !== '0' && !previousItems.has(id));
         if (isNew) {
-          _newItems.add(id);
+          newItems.add(id);
         }
       }
       return isNew;
     }
 
     function dropNewItem(item) {
-      _newItems.delete(item.id);
-      saveNewItems();
+      _removedNewItems.add(item.id);
       item.isNew = false;
+      loadNewItems(dimPlatformService.getActive()).then((newItems) => {
+        newItems.delete(item.id);
+        service.hasNewItems = (newItems.size !== 0);
+        saveNewItems(newItems);
+      });
     }
 
     function clearNewItems() {
-      _newItems = new Set();
       _stores.forEach((store) => {
         store.items.forEach((item) => {
-          item.isNew = false;
+          if (item.isNew) {
+            _removedNewItems.add(item.id);
+            item.isNew = false;
+          }
         });
       });
       service.hasNewItems = false;
-      saveNewItems();
+      saveNewItems(new Set());
     }
 
-    function loadNewItems() {
-      if (dimPlatformService.getActive()) {
-        _newItems = new Set();
-        service.hasNewItems = false;
+    function loadNewItems(activePlatform) {
+      if (activePlatform) {
         return SyncService.get().then(function processCachedNewItems(data) {
-          _newItems = new Set(data[newItemsKey()]);
-          service.hasNewItems = Boolean(_newItems.size);
+          return new Set(data[newItemsKey()]);
         });
       }
-      return $q.when();
+      return $q.resolve(new Set());
     }
 
-    function saveNewItems() {
-      service.hasNewItems = Boolean(_newItems.size);
-      SyncService.set({ [newItemsKey()]: [..._newItems] });
+    function saveNewItems(newItems) {
+      SyncService.set({ [newItemsKey()]: [...newItems] });
     }
 
     function newItemsKey() {
@@ -1104,8 +1151,8 @@
       return 'newItems-' + (platform ? platform.type : '');
     }
 
-    function processItems(owner, items, previousItems = new Set()) {
-      idTracker = {};
+    function processItems(owner, items, previousItems = new Set(), newItems = new Set()) {
+      _idTracker = {};
       return $q.all([
         dimItemDefinitions,
         dimBucketService,
@@ -1115,7 +1162,8 @@
         dimTalentDefinitions,
         dimYearsDefinitions,
         dimProgressionDefinitions,
-        previousItems])
+        previousItems,
+        newItems])
         .then(function(args) {
           var result = [];
           _.each(items, function(item) {
