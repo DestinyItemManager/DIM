@@ -11,11 +11,11 @@
         });
       };
     })
-    .filter('bungieIcon', function($sce) {
+    .filter('bungieIcon', ['$sce', function($sce) {
       return function(icon) {
-        return $sce.trustAsResourceUrl(chrome.extension.getURL(icon));
+        return $sce.trustAsResourceUrl('http://www.bungie.net' + icon);
       };
-    })
+    }])
     .directive('svgBindViewbox', function() {
       return {
         link: function(scope, element, attrs) {

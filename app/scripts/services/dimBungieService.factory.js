@@ -27,7 +27,8 @@
       equipItems: equipItems,
       setItemState: setItemState,
       getXur: getXur,
-      getVendors: getVendors
+      getVendors: getVendors,
+      getManifest: getManifest
     };
 
     return service;
@@ -108,6 +109,28 @@
         active: true
       });
     }
+
+
+    /************************************************************************************************************************************/
+
+    function getManifest() {
+      return $q.when({
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
+        headers: {
+          'X-API-Key': apiKey
+        }
+      })
+      .then(function(request) {
+        return $http(request);
+      })
+      .then(handleErrors)
+      .then(function(response) {
+        return response.data.Response;
+      });
+    }
+
+
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
@@ -226,6 +249,7 @@
         return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
       }
     }
+
 
     /************************************************************************************************************************************/
 

@@ -4,25 +4,29 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimItemTier', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimItemTier, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
     var _stores = [];
-    var progressionDefs = {};
-    let recordsDefs = {};
-    var buckets = {};
     var idTracker = {};
 
     // A set of items IDs that are new - this is cleared out by the user
     var _newItems = new Set();
 
-    dimBucketService.then(function(defs) {
-      buckets = defs;
-    });
-    dimProgressionDefinitions.then(function(defs) {
-      progressionDefs = defs;
-    });
-    dimRecordsDefinitions.then((defs) => { recordsDefs = defs; });
+    const progressionMeta = {
+      529303302: { label: "Cryptarch", color: "#C7990C", scale: ".8", order: 0 },
+      3233510749: { label: "Vanguard", color: "#161E28", scale: ".5", order: 1 },
+      1357277120: { label: "Crucible", color: "#a7342d", scale: ".8", order: 2 },
+      2778795080: { label: "Dead Orbit", color: "#cccccc", scale: ".5", order: 3 },
+      1424722124: { label: "Future War Cult", color: "#262247", scale: ".5", order: 4 },
+      3871980777: { label: "New Monarchy", color: "#862529", scale: ".5", order: 5 },
+      2161005788: { label: "Iron Banner", color: "#4d310a", scale: ".5", order: 6 },
+      174528503: { label: "Crota's Bane", color: "#9e9381", scale: ".5", order: 7 },
+      807090922: { label: "Queen's Wrath", color: "#2F1023", scale: ".5", order: 8 },
+      3641985238: { label: "House of Judgment", color: "#5AAC77", scale: ".5", order: 9 },
+      2335631936: { label: "Gunsmith", color: "#717272", scale: ".8", order: 10 },
+      2763619072: { label: "SRL", color: "#e92b38", scale: ".5", order: 11 }
+    };
 
     // A promise used to dedup parallel calls to reloadStores
     var reloadPromise;
@@ -184,8 +188,10 @@
       const previousItemsMap = buildItemMap(_stores);
       const previousItems = new Set(_.keys(previousItemsMap));
 
-      reloadPromise = dimBungieService.getStores(dimPlatformService.getActive())
-        .then(function(rawStores) {
+      console.time('Load stores (Bungie API)');
+      reloadPromise = $q.all([dimProgressionDefinitions, dimBucketService, dimBungieService.getStores(dimPlatformService.getActive())])
+        .then(function([progressionDefs, buckets, rawStores]) {
+          console.timeEnd('Load stores (Bungie API)');
           var glimmer;
           var marks;
 
@@ -277,7 +283,7 @@
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               store.progression.progressions.forEach(function(prog) {
-                angular.extend(prog, progressionDefs[prog.progressionHash]);
+                angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
               });
 
               _.each(raw.data.buckets, function(bucket) {
@@ -368,6 +374,7 @@
         .finally(function() {
           // Clear the reload promise so this can be called again
           reloadPromise = null;
+          dimManifestService.isLoaded = true;
         });
 
       return reloadPromise;
@@ -391,7 +398,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, previousItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -431,6 +438,9 @@
 
         // unidentified item.
         if (!itemDef.itemName) {
+          if (!itemDef) {
+            dimManifestService.warnMissingDefinition();
+          }
           console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
           window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
         }
@@ -1129,9 +1139,11 @@
         dimTalentDefinitions,
         dimYearsDefinitions,
         dimProgressionDefinitions,
+        dimRecordsDefinitions,
         previousItems])
         .then(function(args) {
           var result = [];
+          dimManifestService.statusText = 'Loading Destiny characters and inventory...';
           _.each(items, function(item) {
             var createdItem = null;
             try {

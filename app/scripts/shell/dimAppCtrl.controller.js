@@ -21,7 +21,6 @@
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
-
     hotkeys.add({
       combo: ['f'],
       description: "Start a search",

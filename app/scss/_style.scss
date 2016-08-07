@@ -1947,6 +1947,23 @@ button.toast-close-button {
   margin: 0;
 }
 
+// Makes an element appear up from the bottom of the screen with a fade
+@mixin pop-in {
+  &.ng-animate {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  &.ng-enter, &.ng-leave.ng-leave-active {
+    opacity: 0;
+    transform: translateY(5rem);
+  }
+
+  &.ng-leave, &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: translateY(0rem);
+  }
+}
+
 /* Engram Farming */
 
 #engram-farming {
@@ -2010,19 +2027,7 @@ button.toast-close-button {
     margin: .25em 0;
   }
 
-  &.ng-animate {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  }
-
-  &.ng-enter, &.ng-leave.ng-leave-active {
-    opacity: 0;
-    transform: translateY(5rem);
-  }
-
-  &.ng-leave, &.ng-enter.ng-enter-active {
-    opacity: 1;
-    transform: translateY(0rem);
-  }
+  @include pop-in;
 }
 
 /* Clear new items */
@@ -2047,17 +2052,49 @@ button.toast-close-button {
     }
   }
 
-  &.ng-animate {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  }
+  @include pop-in;
+}
 
-  &.ng-enter, &.ng-leave.ng-leave-active {
-    opacity: 0;
-    transform: translateY(5rem);
-  }
+dim-manifest-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  &.ng-leave, &.ng-enter.ng-enter-active {
-    opacity: 1;
-    transform: translateY(0rem);
+  pointer-events: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .manifest-progress {
+    width: 24rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 1rem;
+    padding: 1.5rem 1.5rem;
+    background-color: #222;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+
+    i {
+      font-size: 2rem;
+      margin-bottom: .5rem;
+    }
+
+    &.ng-animate {
+      transition: opacity 0.3s ease-out;
+    }
+
+    &.ng-enter, &.ng-leave.ng-leave-active {
+      opacity: 0;
+    }
+
+    &.ng-leave, &.ng-enter.ng-enter-active {
+      opacity: 1;
+    }
   }
 }
