@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
     var _stores = [];
     var _progressionDefs = {};
     let _recordsDefs = {};
@@ -148,7 +148,7 @@
       $rootScope.$broadcast('dim-stores-updated', {
         stores: _stores
       });
-      loadingTracker.addPromise(service.reloadStores());
+      loadingTracker.addPromise(service.reloadStores(true));
     });
 
     return service;
@@ -179,7 +179,7 @@
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
-    function reloadStores() {
+    function reloadStores(includeVendors = false) {
       const activePlatform = dimPlatformService.getActive();
       if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
         return _reloadPromise;
@@ -195,7 +195,7 @@
         }
       }
 
-      _reloadPromise = $q.all([loadNewItems(activePlatform), dimBungieService.getStores(activePlatform)])
+      _reloadPromise = $q.all([loadNewItems(activePlatform), dimBungieService.getStores(activePlatform, includeVendors)])
         .then(function([newItems, rawStores]) {
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -294,8 +294,16 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
+                vendors: raw.character.vendors,
                 isVault: false
               });
+
+              if (!includeVendors) {
+                var prevStore = _.findWhere(_stores, { id: raw.id });
+                store.vendors = prevStore.vendors;
+                store.minRefreshDate = prevStore.minRefreshDate;
+              }
+
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               store.progression.progressions.forEach(function(prog) {
@@ -359,6 +367,17 @@
               }
 
               return store;
+            })
+            .then(function(store) {
+              return processVendors(store.vendors).then(function(vendors) {
+                _.each(vendors, function(vendor) {
+                  store.vendors[vendor.vendorHash] = vendor;
+                  if (!store.minRefreshDate || vendor.nextRefreshDate < store.minRefreshDate) {
+                    store.minRefreshDate = vendor.nextRefreshDate;
+                  }
+                });
+                return store;
+              });
             });
           })]);
         })
@@ -1241,6 +1260,45 @@
       } else {
         return '-:--';
       }
+    }
+
+    function processVendors(vendors) {
+      return $q.all([dimVendorDefinitions, dimItemDefinitions])
+        .then(function(args) {
+          var vendorDefs = args[0];
+          var itemDefs = args[1];
+
+          var promises = [];
+          _.each(vendors, function(vendor, vendorHash) {
+            var def = vendorDefs[vendorHash];
+            vendor.vendorName = def.vendorName;
+            vendor.vendorIcon = def.factionIcon || def.vendorIcon;
+            vendor.items = [];
+            vendor.costs = [];
+            if (vendor.enabled) {
+              var items = [];
+              _.each(vendor.saleItemCategories, function(categoryData) {
+                var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
+                items.push(...filteredSaleItems);
+              });
+              vendor.items = _.pluck(items, 'item');
+
+              var costs = _.reduce(items, function(o, saleItem) {
+                o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
+                return o;
+              }, {});
+              vendor.costs = costs;
+            }
+            promises.push(processItems({ id: null }, vendor.items).then(function(items) {
+              vendor.items = {};
+              vendor.items.armor = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280; });
+              vendor.items.weapons = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280; });
+              return vendor;
+            }));
+          });
+
+          return $q.all(promises);
+        });
     }
 
     function getStatsData(data) {
