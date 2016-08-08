@@ -4,14 +4,13 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
     var _stores = [];
-    var idTracker = {};
+    var _idTracker = {};
 
-    // A set of items IDs that are new - this is cleared out by the user
-    var _newItems = new Set();
+    var _removedNewItems = new Set();
 
     const progressionMeta = {
       529303302: { label: "Cryptarch", color: "#C7990C", scale: ".8", order: 0 },
@@ -29,7 +28,7 @@
     };
 
     // A promise used to dedup parallel calls to reloadStores
-    var reloadPromise;
+    var _reloadPromise;
 
     // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
@@ -144,15 +143,16 @@
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: processItems,
-      hasNewItems: Boolean(_newItems.size)
+      hasNewItems: false
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
       _stores = [];
+      service.hasNewItems = false;
       $rootScope.$broadcast('dim-stores-updated', {
         stores: _stores
       });
-      loadingTracker.addPromise(loadNewItems().then(() => service.reloadStores()));
+      loadingTracker.addPromise(service.reloadStores(true));
     });
 
     return service;
@@ -183,23 +183,40 @@
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
-    function reloadStores() {
-      if (reloadPromise) {
-        return reloadPromise;
+    function reloadStores(includeVendors = false) {
+      const activePlatform = dimPlatformService.getActive();
+      if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
+        return _reloadPromise;
       }
 
       // Save a snapshot of all the items before we update
-      const previousItemsMap = buildItemMap(_stores);
-      const previousItems = new Set(_.keys(previousItemsMap));
+      const previousItems = buildItemSet(_stores);
+      const firstLoad = (previousItems.size === 0);
+
+      function fakeItemId(item) {
+        if (activePlatform.fake && item.itemInstanceId !== "0") {
+          item.itemInstanceId = 'fake-' + item.itemInstanceId;
+        }
+      }
 
       console.time('Load stores (Bungie API)');
-      reloadPromise = $q.all([dimProgressionDefinitions, dimBucketService, dimBungieService.getStores(dimPlatformService.getActive())])
-        .then(function([progressionDefs, buckets, rawStores]) {
+      _reloadPromise = $q.all([dimProgressionDefinitions, dimBucketService, loadNewItems(activePlatform), dimBungieService.getStores(activePlatform, includeVendors)])
+        .then(function([progressionDefs, buckets, newItems, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
+          if (activePlatform !== dimPlatformService.getActive()) {
+            throw new Error("Active platform mismatch");
+          }
+
           var glimmer;
           var marks;
+          _removedNewItems.forEach((id) => newItems.delete(id));
+          _removedNewItems.clear();
+          service.hasNewItems = (newItems.size !== 0);
 
-          return $q.all([previousItemsMap, ...rawStores.map(function(raw) {
+          return $q.all([newItems, ...rawStores.map(function(raw) {
+            if (activePlatform !== dimPlatformService.getActive()) {
+              throw new Error("Active platform mismatch");
+            }
             var store;
             var items = [];
             if (!raw) {
@@ -255,6 +272,7 @@
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket.items, function(item) {
                   item.bucket = bucket.bucketHash;
+                  fakeItemId(item);
                 });
 
                 items = _.union(items, bucket.items);
@@ -282,8 +300,16 @@
                 percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
+                vendors: raw.character.vendors,
                 isVault: false
               });
+
+              if (!includeVendors) {
+                var prevStore = _.findWhere(_stores, { id: raw.id });
+                store.vendors = prevStore.vendors;
+                store.minRefreshDate = prevStore.minRefreshDate;
+              }
+
               store.name = store.gender + ' ' + store.race + ' ' + store.class;
 
               store.progression.progressions.forEach(function(prog) {
@@ -294,6 +320,7 @@
                 _.each(bucket, function(pail) {
                   _.each(pail.items, function(item) {
                     item.bucket = pail.bucketHash;
+                    fakeItemId(item);
                   });
 
                   items = _.union(items, pail.items);
@@ -305,6 +332,7 @@
                   _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
                     _.each(pail.items, function(item) {
                       item.bucket = pail.bucketHash;
+                      fakeItemId(item);
                     });
 
                     items = _.union(items, pail.items);
@@ -313,7 +341,11 @@
               }
             }
 
-            return processItems(store, items, previousItems).then(function(items) {
+            return processItems(store, items, previousItems, newItems).then(function(items) {
+              if (activePlatform !== dimPlatformService.getActive()) {
+                throw new Error("Active platform mismatch");
+              }
+
               store.items = items;
 
               // by type-bucket
@@ -341,30 +373,32 @@
               }
 
               return store;
+            })
+            .then(function(store) {
+              return processVendors(store.vendors).then(function(vendors) {
+                _.each(vendors, function(vendor) {
+                  store.vendors[vendor.vendorHash] = vendor;
+                  if (!store.minRefreshDate || vendor.nextRefreshDate < store.minRefreshDate) {
+                    store.minRefreshDate = vendor.nextRefreshDate;
+                  }
+                });
+                return store;
+              });
             });
           })]);
         })
-        .then(function([previousItemsMap, ...stores]) {
+        .then(function([newItems, ...stores]) {
+          if (activePlatform !== dimPlatformService.getActive()) {
+            throw new Error("Active platform mismatch");
+          }
+
           // Save and notify about new items (but only if this wasn't the first load)
-          if (previousItems.size) {
+          if (!firstLoad) {
             // Save the list of new item IDs
-            saveNewItems();
-
-            // Only notify new items from this refresh
-            const notifyNewItems = _.omit(buildItemMap(stores), _.keys(previousItemsMap));
-
-            // Show a toaster about the new items
-            var listStr = '';
-            _.each(notifyNewItems, function(val) {
-              listStr += '<li>[' + val.type + ']' + ' ' + val.name + '</li>';
-            });
-            if (listStr) {
-              dimInfoService.show('newitemsbox', {
-                title: 'New items found',
-                body: '<p>The following items are new:</p><ul>' + listStr + '</ul>',
-                hide: 'Don\'t show me new item notifications'
-              }, 10000);
-            }
+            _removedNewItems.forEach((id) => newItems.delete(id));
+            _removedNewItems.clear();
+            saveNewItems(newItems);
+            service.hasNewItems = (newItems.size !== 0);
           }
 
           _stores = stores;
@@ -375,13 +409,23 @@
 
           return stores;
         })
+        .catch(function(e) {
+          if (e.message === 'Active platform mismatch') {
+            // no problem, just canceling the request
+            return null;
+          }
+          throw e;
+        })
         .finally(function() {
           // Clear the reload promise so this can be called again
-          reloadPromise = null;
+          if (_reloadPromise.activePlatform === activePlatform) {
+            _reloadPromise = null;
+          }
           dimManifestService.isLoaded = true;
         });
 
-      return reloadPromise;
+      _reloadPromise.activePlatform = activePlatform;
+      return _reloadPromise;
     }
 
     function getStore(id) {
@@ -394,15 +438,15 @@
       var index = item.hash + '-';
       if (item.id === '0') {
         index = index + item.amount;
-        idTracker[index] = (idTracker[index] || 0) + 1;
-        index = index + '-' + idTracker[index];
+        _idTracker[index] = (_idTracker[index] || 0) + 1;
+        index = index + '-' + _idTracker[index];
       } else {
         index = index + item.id;
       }
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, previousItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, previousItems, newItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -546,7 +590,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = isItemNew(createdItem.id, previousItems);
+        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
@@ -1067,64 +1111,68 @@
 
     /** New Item Tracking **/
 
-    function buildItemMap(stores) {
-      var itemMap = {};
+    function buildItemSet(stores) {
+      var itemSet = new Set();
       stores.forEach((store) => {
         store.items.forEach((item) => {
-          itemMap[item.id] = { name: item.name, type: item.type };
+          itemSet.add(item.id);
         });
       });
-      return itemMap;
+      return itemSet;
     }
 
     // Should this item display as new? Note the check for previousItems size, so that
     // we don't mark everything as new on the first load.
-    function isItemNew(id, previousItems) {
+    function isItemNew(id, previousItems, newItems) {
       let isNew = false;
-      if (_newItems.has(id)) {
+      if (newItems.has(id)) {
         isNew = true;
+      } else if (_removedNewItems.has(id)) {
+        isNew = false;
       } else if (previousItems.size) {
         // Zero id check is to ignore general items and consumables
         isNew = (id !== '0' && !previousItems.has(id));
         if (isNew) {
-          _newItems.add(id);
+          newItems.add(id);
         }
       }
       return isNew;
     }
 
     function dropNewItem(item) {
-      _newItems.delete(item.id);
-      saveNewItems();
+      _removedNewItems.add(item.id);
       item.isNew = false;
+      loadNewItems(dimPlatformService.getActive()).then((newItems) => {
+        newItems.delete(item.id);
+        service.hasNewItems = (newItems.size !== 0);
+        saveNewItems(newItems);
+      });
     }
 
     function clearNewItems() {
-      _newItems = new Set();
       _stores.forEach((store) => {
         store.items.forEach((item) => {
-          item.isNew = false;
+          if (item.isNew) {
+            _removedNewItems.add(item.id);
+            item.isNew = false;
+          }
         });
       });
       service.hasNewItems = false;
-      saveNewItems();
+      saveNewItems(new Set());
     }
 
-    function loadNewItems() {
-      if (dimPlatformService.getActive()) {
-        _newItems = new Set();
-        service.hasNewItems = false;
+    function loadNewItems(activePlatform) {
+      if (activePlatform) {
         return SyncService.get().then(function processCachedNewItems(data) {
-          _newItems = new Set(data[newItemsKey()]);
-          service.hasNewItems = Boolean(_newItems.size);
+          return new Set(data[newItemsKey()]);
         });
       }
-      return $q.when();
+      return $q.resolve(new Set());
     }
 
-    function saveNewItems() {
-      service.hasNewItems = Boolean(_newItems.size);
-      SyncService.set({ [newItemsKey()]: [..._newItems] });
+    function saveNewItems(newItems) {
+      SyncService.set({ [newItemsKey()]: [...newItems] });
     }
 
     function newItemsKey() {
@@ -1132,8 +1180,8 @@
       return 'newItems-' + (platform ? platform.type : '');
     }
 
-    function processItems(owner, items, previousItems = new Set()) {
-      idTracker = {};
+    function processItems(owner, items, previousItems = new Set(), newItems = new Set()) {
+      _idTracker = {};
       return $q.all([
         dimItemDefinitions,
         dimBucketService,
@@ -1144,7 +1192,8 @@
         dimYearsDefinitions,
         dimProgressionDefinitions,
         dimRecordsDefinitions,
-        previousItems])
+        previousItems,
+        newItems])
         .then(function(args) {
           var result = [];
           dimManifestService.statusText = 'Loading Destiny characters and inventory...';
@@ -1223,6 +1272,45 @@
       } else {
         return '-:--';
       }
+    }
+
+    function processVendors(vendors) {
+      return $q.all([dimVendorDefinitions, dimItemDefinitions])
+        .then(function(args) {
+          var vendorDefs = args[0];
+          var itemDefs = args[1];
+
+          var promises = [];
+          _.each(vendors, function(vendor, vendorHash) {
+            var def = vendorDefs[vendorHash];
+            vendor.vendorName = def.vendorName;
+            vendor.vendorIcon = def.factionIcon || def.vendorIcon;
+            vendor.items = [];
+            vendor.costs = [];
+            if (vendor.enabled) {
+              var items = [];
+              _.each(vendor.saleItemCategories, function(categoryData) {
+                var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
+                items.push(...filteredSaleItems);
+              });
+              vendor.items = _.pluck(items, 'item');
+
+              var costs = _.reduce(items, function(o, saleItem) {
+                o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
+                return o;
+              }, {});
+              vendor.costs = costs;
+            }
+            promises.push(processItems({ id: null }, vendor.items).then(function(items) {
+              vendor.items = {};
+              vendor.items.armor = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280; });
+              vendor.items.weapons = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280; });
+              return vendor;
+            }));
+          });
+
+          return $q.all(promises);
+        });
     }
 
     function getStatsData(data) {
