@@ -6,7 +6,7 @@
     controllerAs: 'vm',
     bindings: {
       stores: '<storesData',
-      vendors: '<vendorsData',
+      vendors: '=vendorsData',
       vendorHashes: '<vendorHashes',
       totalCoins: '<totalCoins'
     },
