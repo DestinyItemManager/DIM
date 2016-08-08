@@ -705,8 +705,6 @@
         var talentNodeGroup = possibleNodes[node.nodeHash];
         var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
-        // TODO: nodes and shit still use names
-
         var nodeName = talentNodeSelected.nodeStepName;
 
         // Filter out some weird bogus nodes
