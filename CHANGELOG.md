@@ -1,5 +1,5 @@
 # Next
-
+* Add ability to exclude items from loadout builder.
 * Expand/collapse sections in DIM.
 * Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
 * Show current vendor items being sold.

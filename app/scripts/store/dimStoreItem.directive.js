@@ -43,7 +43,8 @@
       restrict: 'E',
       scope: {
         store: '=storeData',
-        item: '=itemData'
+        item: '=itemData',
+        shiftClickCallback: '=shiftClickCallback'
       },
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
@@ -107,6 +108,11 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
+
+        if (vm.shiftClickCallback && e.shiftKey) {
+          vm.shiftClickCallback(item);
+          return;
+        }
 
         dimStoreService.dropNewItem(item);
 
