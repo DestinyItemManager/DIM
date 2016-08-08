@@ -1092,7 +1092,7 @@
         var base = val;
         var bonus = 0;
 
-        if (item.primaryStat.statIdentifier === 'STAT_DEFENSE') {
+        if (item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
           if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
              (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
              (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
