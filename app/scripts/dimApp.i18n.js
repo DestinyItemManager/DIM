@@ -12,7 +12,8 @@
           Weapons: "Weapons",
           Armor: "Armor",
           Equip: "Equip",
-          Vault: "Vault"
+          Vault: "Vault",
+          Vanguard: "Vanguard"
         })
         .translations('it', {
           Level: "Livello",
@@ -31,7 +32,8 @@
           Level: "Nivel",
           Weapons: "Arma",
           Armor: "Armadura",
-          Vault: "Bóveda"
+          Vault: "Bóveda",
+          Vanguard: "Vanguardia"
         })
         .translations('ja', {
         })

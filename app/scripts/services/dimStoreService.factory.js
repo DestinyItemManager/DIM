@@ -227,7 +227,7 @@
                               dimStatDefinitions,
                               loadNewItems(activePlatform),
                               $translate(['Vault']),
-                              dimBungieService.getStores(dimPlatformService.getActive())])
+                               dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)])
         .then(function([progressionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
@@ -1266,7 +1266,7 @@
       return $q.all([dimVendorDefinitions, dimItemDefinitions])
         .then(function([vendorDefs, itemDefs]) {
           return $q.all(_.map(vendors, function(vendor, vendorHash) {
-            var def = vendorDefs[vendorHash];
+            var def = vendorDefs[vendorHash].summary;
             vendor.vendorName = def.vendorName;
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
             vendor.items = [];
