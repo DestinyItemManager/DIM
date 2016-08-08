@@ -1359,6 +1359,12 @@ g {
   margin-left: 28px;
 }
 
+.reputation {
+  & .vault {
+    margin-right: 28px;
+  }
+}
+
 /* Loadout editor */
 
 #loadout-drawer {
