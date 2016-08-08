@@ -29,9 +29,9 @@
 
 
 
-  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
+  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue'];
 
-  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
+  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope, dimActionQueue) {
     var otherDialog = null;
 
     return {
@@ -98,13 +98,12 @@
         });
       }
 
-      vm.doubleClicked = function doubleClick(item, e) {
+      vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
         e.stopPropagation();
         var active = dimStoreService.getActiveStore();
 
-
         dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false);
-      };
+      });
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
