@@ -1355,13 +1355,13 @@ g {
   z-index: 10;
 }
 
-.reputation, .store-header {
+.store-header {
   margin-left: 28px;
 }
 
 .reputation {
-  & .vault {
-    margin-right: 28px;
+  & .store-cell:first-child {
+    margin-left: 28px;
   }
 }
 
