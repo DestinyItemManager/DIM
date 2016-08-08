@@ -32,7 +32,8 @@
     "ng-http-rate-limiter": "~1.0.0"
   },
   "resolutions": {
-    "angular": "~1.5.3"
+    "angular": "~1.5.3",
+    "humanize-duration": "~3.9.1"
   }
 }
 
