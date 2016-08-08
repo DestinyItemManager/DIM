@@ -26,8 +26,7 @@
       equip: equip,
       equipItems: equipItems,
       setItemState: setItemState,
-      getXur: getXur,
-      getVendors: getVendors
+      getXur: getXur
     };
 
     return service;
@@ -113,7 +112,7 @@
     function getBnetCookies() {
       return $q(function(resolve, reject) {
         chrome.cookies.getAll({
-          domain: '.bungie.net'
+          domain: 'www.bungie.net'
         }, getAllCallback);
 
         function getAllCallback(cookies) {
@@ -298,72 +297,9 @@
       });
     }
 
-    function getVendors(platform) {
-      var data = {
-        token: null,
-        membershipId: null
-      };
-
-      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
-      var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
-      var addCharactersToData = assignResultAndForward.bind(null, data, 'characters');
-      var getMembershipPB = getMembership.bind(null, platform);
-      var getCharactersPB = getCharacters.bind(null, platform);
-
-      var promise = getBungleToken()
-        .then(addTokenToData)
-        .then(getMembershipPB)
-        .then(addMembershipIdToData)
-        .then(getCharactersPB)
-        .then(addCharactersToData)
-        .then(function() {
-          // Titan van, Hunter van, Warlock van, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Speaker, Variks, Exotic Blue
-          var vendorHashes = ['1990950', '3003633346', '1575820975', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '2680694281', '1998812735', '3902439767', '242140165'];
-          var promises = [];
-          _.each(vendorHashes, function(vendorHash) {
-            _.each(data.characters, function(character) {
-              var vendorPromise = getVendor(data.token, platform, data.membershipId, character, vendorHash)
-                    .catch(function(e) {
-                      if (e.message !== 'The Vendor you requested was not found.') {
-                        throw e;
-                      }
-                    });
-
-              promises.push(vendorPromise);
-            });
-          });
-          return $q.all(promises);
-        })
-        .catch(function(e) {
-          toaster.pop('error', 'Bungie.net Error', e.message);
-
-          return $q.reject(e);
-        });
-
-      return promise;
-    }
-
-    function getVendor(token, platform, membershipId, character, vendorId) {
-      return $q.when({
-        method: 'GET',
-        url: 'https://www.bungie.net/platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/?definitions=false',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        }
-      })
-      .then(function(request) {
-        return $http(request);
-      })
-      .then(handleErrors)
-      .then(function(response) {
-        return response.data.Response.data;
-      });
-    }
-
     /************************************************************************************************************************************/
 
-    function getStores(platform) {
+    function getStores(platform, includeVendors) {
       var data = {
         token: null,
         membershipId: null
@@ -382,11 +318,15 @@
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
-          return $q.all([
+          var promises = [
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
             getDestinyProgression(data.token, platform, data.membershipId, data.characters),
             getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
-          ]).then(function(data) {
+          ];
+          if (includeVendors) {
+            promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
+          }
+          return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
           });
         })
@@ -519,6 +459,58 @@
           .then($http)
           .then(handleErrors)
           .then(processPB);
+      });
+
+      return $q.all(promises);
+    }
+
+    /************************************************************************************************************************************/
+
+    function getCharacterVendorsRequest(token, platform, membershipId, character, vendorId) {
+      return {
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/',
+        headers: {
+          'X-API-Key': apiKey,
+          'x-csrf': token
+        },
+        withCredentials: true
+      };
+    }
+
+    function parseVendorData(vendorData) {
+      return vendorData;
+    }
+
+    function processVendorsResponse(character, response) {
+      if (!character.vendors) {
+        character.vendors = {};
+      }
+
+      var vendorData = response.data.Response.data;
+      character.vendors[vendorData.vendorHash] = parseVendorData(vendorData);
+      return character;
+    }
+
+    function getDestinyVendors(token, platform, membershipId, characters) {
+      // Titan van, Hunter van, Warlock van, Van quart, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Cruc quart, Speaker, Variks, Exotic Blue, Banner
+      var vendorHashes = ['1990950', '3003633346', '1575820975', '2668878854', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '3658200622', '2680694281', '1998812735', '3902439767', '242140165'];
+      var promises = [];
+      _.each(vendorHashes, function(vendorHash) {
+        _.each(characters, function(character) {
+          var processPB = processVendorsResponse.bind(null, character);
+          promises.push(
+            $q.when(getCharacterVendorsRequest(token, platform, membershipId, character, vendorHash))
+              .then($http)
+              .then(handleErrors)
+              .then(processPB)
+              .catch(function(e) {
+                if (e.message !== 'The Vendor you requested was not found.') {
+                  throw e;
+                }
+              })
+          );
+        });
       });
 
       return $q.all(promises);
