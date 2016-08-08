@@ -34,7 +34,8 @@
     "sql.js": "*"
   },
   "resolutions": {
-    "angular": "~1.5.3"
+    "angular": "~1.5.3",
+    "humanize-duration": "~3.9.1"
   }
 }
 

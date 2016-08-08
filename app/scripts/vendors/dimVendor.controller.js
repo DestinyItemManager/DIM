@@ -10,7 +10,7 @@
     var vm = this;
 
     vm.settings = dimSettingsService;
-    vm.stores = dimStoreService.getStores();
+    vm.stores = _.reject(dimStoreService.getStores(), (s) => s.isVault);
     vm.vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
       return !value;
     });

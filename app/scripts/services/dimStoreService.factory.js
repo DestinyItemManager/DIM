@@ -183,11 +183,15 @@
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
-    function reloadStores(includeVendors = false) {
+    function reloadStores() {
       const activePlatform = dimPlatformService.getActive();
       if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
         return _reloadPromise;
       }
+
+      // Include vendors on the first load and if they're expired
+      const currDate = new Date().toISOString();
+      const includeVendors = !_stores.length || _.any(_stores, (store) => store.minRefreshDate < currDate);
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
@@ -372,18 +376,16 @@
                 });
               }
 
-              return store;
-            })
-            .then(function(store) {
-              return processVendors(store.vendors).then(function(vendors) {
-                _.each(vendors, function(vendor) {
-                  store.vendors[vendor.vendorHash] = vendor;
-                  if (!store.minRefreshDate || vendor.nextRefreshDate < store.minRefreshDate) {
-                    store.minRefreshDate = vendor.nextRefreshDate;
-                  }
+              return processVendors(store.vendors)
+                .then(function(vendors) {
+                  _.each(vendors, function(vendor) {
+                    store.vendors[vendor.vendorHash] = vendor;
+                    if (!store.minRefreshDate || vendor.nextRefreshDate < store.minRefreshDate) {
+                      store.minRefreshDate = vendor.nextRefreshDate;
+                    }
+                  });
+                  return store;
                 });
-                return store;
-              });
             });
           })]);
         })
@@ -1276,12 +1278,8 @@
 
     function processVendors(vendors) {
       return $q.all([dimVendorDefinitions, dimItemDefinitions])
-        .then(function(args) {
-          var vendorDefs = args[0];
-          var itemDefs = args[1];
-
-          var promises = [];
-          _.each(vendors, function(vendor, vendorHash) {
+        .then(function([vendorDefs, itemDefs]) {
+          return $q.all(_.map(vendors, function(vendor, vendorHash) {
             var def = vendorDefs[vendorHash];
             vendor.vendorName = def.vendorName;
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
@@ -1290,26 +1288,34 @@
             if (vendor.enabled) {
               var items = [];
               _.each(vendor.saleItemCategories, function(categoryData) {
-                var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) { return saleItem.item.isEquipment && saleItem.costs.length; });
+                var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) {
+                  return saleItem.item.isEquipment && saleItem.costs.length;
+                });
                 items.push(...filteredSaleItems);
               });
               vendor.items = _.pluck(items, 'item');
 
               var costs = _.reduce(items, function(o, saleItem) {
-                o[saleItem.item.itemHash] = { cost: saleItem.costs[0].value, currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash') };
+                o[saleItem.item.itemHash] = {
+                  cost: saleItem.costs[0].value,
+                  currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
+                };
                 return o;
               }, {});
               vendor.costs = costs;
             }
-            promises.push(processItems({ id: null }, vendor.items).then(function(items) {
-              vendor.items = {};
-              vendor.items.armor = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280; });
-              vendor.items.weapons = _.filter(items, function(item) { return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280; });
-              return vendor;
-            }));
-          });
-
-          return $q.all(promises);
+            return processItems({ id: null }, vendor.items)
+              .then(function(items) {
+                vendor.items = {};
+                vendor.items.armor = _.filter(items, function(item) {
+                  return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280;
+                });
+                vendor.items.weapons = _.filter(items, function(item) {
+                  return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280;
+                });
+                return vendor;
+              });
+          }));
         });
     }
 
