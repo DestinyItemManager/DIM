@@ -16,6 +16,16 @@
     vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: num }));
     vm.vaultColOptions.unshift({ id: 999, name: 'Auto' });
 
+    vm.languageOptions = {
+      en: 'English',
+      de: 'Deutsch',
+      fr: 'Français',
+      es: 'Español',
+      it: 'Italiano',
+      ja: '日本語',
+      'pt-br': 'Português do Brasil'
+    };
+
     vm.settings = settings;
 
     vm.showSync = function() {

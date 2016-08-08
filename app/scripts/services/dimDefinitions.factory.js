@@ -18,11 +18,14 @@
     Talent: 'TalentGrid',
     Progression: 'Progression',
     Vendor: 'Vendor',
-    Records: 'Record'
+    Records: 'Record',
+    ItemCategory: 'ItemCategory'
   };
 
   const eagerTables = {
-    ItemBucket: 'InventoryBucket'
+    ItemBucket: 'InventoryBucket',
+    Class: 'Class',
+    Race: 'Race'
   };
 
   var mod = angular.module('dimApp');

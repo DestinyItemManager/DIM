@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
     var _stores = [];
     var _idTracker = {};
 
@@ -26,6 +26,17 @@
       2335631936: { label: "Gunsmith", color: "#717272", scale: ".8", order: 10 },
       2763619072: { label: "SRL", color: "#e92b38", scale: ".5", order: 11 }
     };
+
+    // Maps tierType to tierTypeName in English
+    const tiers = [
+      'Unused 0',
+      'Unused 1',
+      'Common',
+      'Uncommon',
+      'Rare',
+      'Legendary',
+      'Exotic'
+    ];
 
     // A promise used to dedup parallel calls to reloadStores
     var _reloadPromise;
@@ -61,13 +72,13 @@
         }
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
-      updateCharacterInfo: function(characterInfo) {
+      updateCharacterInfo: function(statDefs, characterInfo) {
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
-        this.stats = getStatsData(characterInfo.characterBase);
+        this.stats = getStatsData(statDefs, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
@@ -118,15 +129,18 @@
           (!this.notransfer || this.owner === store.id) &&
           !this.location.inPostmaster;
       },
+      inCategory: function(categoryName) {
+        return _.contains(this.categories, categoryName);
+      },
       isEngram: function() {
-        return !this.equipment && this.typeName.toLowerCase().indexOf('engram') >= 0;
+        return this.inCategory('CATEGORY_ENGRAM');
       },
       canBeInLoadout: function() {
         return this.equipment || this.type === 'Material' || this.type === 'Consumable';
       },
       // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
       hasLifeExotic: function() {
-        return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { name: 'The Life Exotic' }) !== undefined);
+        return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { hash: 4044819214 }) !== undefined);
       }
     };
 
@@ -135,7 +149,6 @@
       getStores: getStores,
       reloadStores: reloadStores,
       getStore: getStore,
-      getStatsData: getStatsData,
       getBonus: getBonus,
       getVault: getStore.bind(null, 'vault'),
       updateCharacters: updateCharacters,
@@ -161,11 +174,14 @@
     // (level, light, int/dis/str, etc.). This does not update the
     // items in the stores - to do that, call reloadStores.
     function updateCharacters() {
-      return dimBungieService.getCharacters(dimPlatformService.getActive()).then(function(bungieStores) {
+      return $q.all([
+        dimStatDefinitions,
+        dimBungieService.getCharacters(dimPlatformService.getActive())
+      ]).then(function([statDefs, bungieStores]) {
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
-            dStore.updateCharacterInfo(bStore.base);
+            dStore.updateCharacterInfo(statDefs, bStore.base);
           }
         });
         return _stores;
@@ -204,8 +220,15 @@
       }
 
       console.time('Load stores (Bungie API)');
-      _reloadPromise = $q.all([dimProgressionDefinitions, dimBucketService, loadNewItems(activePlatform), dimBungieService.getStores(activePlatform, includeVendors)])
-        .then(function([progressionDefs, buckets, newItems, rawStores]) {
+      _reloadPromise = $q.all([dimProgressionDefinitions,
+                              dimBucketService,
+                              dimClassDefinitions,
+                              dimRaceDefinitions,
+                              dimStatDefinitions,
+                              loadNewItems(activePlatform),
+                              $translate(['Vault']),
+                               dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)])
+        .then(function([progressionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -227,11 +250,14 @@
               return undefined;
             }
 
+            const character = raw.character.base;
+
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
-                name: 'vault',
+                name: translations.Vault,
                 class: 'vault',
+                className: translations.Vault,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
                 background: '/images/vault-background.png',
@@ -283,25 +309,33 @@
               });
             } else {
               try {
-                glimmer = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
-                marks = _.find(raw.character.base.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+                glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
               } catch (e) {
                 glimmer = 0;
                 marks = 0;
               }
 
+              const race = races[character.characterBase.raceHash];
+              let genderRace = "";
+              if (character.characterBase.genderType === 0) {
+                genderRace = race.raceNameMale;
+              } else {
+                genderRace = race.raceNameFemale;
+              }
+
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: 'http://bungie.net/' + raw.character.base.emblemPath,
-                lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                background: 'http://bungie.net/' + raw.character.base.backgroundPath,
-                level: raw.character.base.characterLevel,
-                powerLevel: raw.character.base.characterBase.powerLevel,
-                stats: getStatsData(raw.character.base.characterBase),
-                class: getClass(raw.character.base.characterBase.classType),
-                gender: getGender(raw.character.base.characterBase.genderType),
-                race: getRace(raw.character.base.characterBase.raceHash),
-                percentToNextLevel: raw.character.base.percentToNextLevel / 100.0,
+                icon: 'http://bungie.net/' + character.emblemPath,
+                lastPlayed: character.characterBase.dateLastPlayed,
+                background: 'http://bungie.net/' + character.backgroundPath,
+                level: character.characterLevel,
+                powerLevel: character.characterBase.powerLevel,
+                stats: getStatsData(statDefs, character.characterBase),
+                class: getClass(character.characterBase.classType),
+                className: classes[character.characterBase.classHash].className,
+                genderRace: genderRace,
+                percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
                 vendors: raw.character.vendors,
@@ -314,7 +348,7 @@
                 store.minRefreshDate = prevStore.minRefreshDate;
               }
 
-              store.name = store.gender + ' ' + store.race + ' ' + store.class;
+              store.name = store.genderRace + ' ' + store.className;
 
               store.progression.progressions.forEach(function(prog) {
                 angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
@@ -331,9 +365,9 @@
                 });
               });
 
-              if (_.has(raw.character.base.inventory.buckets, 'Invisible')) {
-                if (_.size(raw.character.base.inventory.buckets.Invisible) > 0) {
-                  _.each(raw.character.base.inventory.buckets.Invisible, function(pail) {
+              if (_.has(character.inventory.buckets, 'Invisible')) {
+                if (_.size(character.inventory.buckets.Invisible) > 0) {
+                  _.each(character.inventory.buckets.Invisible, function(pail) {
                     _.each(pail.items, function(item) {
                       item.bucket = pail.bucketHash;
                       fakeItemId(item);
@@ -448,7 +482,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, previousItems, newItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -457,34 +491,6 @@
           classified: true,
           icon: '/img/misc/missing_icon.png'
         };
-
-        if (item.itemHash === 194424271) {
-          itemType = 'Armor Shader';
-          itemDef.bucketTypeHash = 2973005342;
-          itemDef.classType = 3;
-          itemDef.itemTypeName = 'Armor Shader';
-          itemDef.description = '';
-          itemDef.itemName = 'Walkabout - Classified';
-          itemDef.nonTransferrable = true;
-          itemDef.equipRequiredLevel = 0;
-          itemDef.equipment = true;
-          item.isEquipment = true;
-        }
-
-        if (item.itemHash === 1963806104) {
-          itemType = 'Mystery Bag';
-          itemDef.bucketTypeHash = 1469714392;
-          itemDef.icon = "/common/destiny_content/icons/3651da8a8b0add3161e840c7104078ed.jpg";
-          itemDef.classType = 3;
-          itemDef.itemTypeName = itemType;
-          itemDef.description = "Contains 1 Guaranteed Item and up to 4 Possible Items. This item is nonreturnable.";
-          itemDef.itemName = "Sterling Treasure";
-          itemDef.maxStackSize = 99;
-          itemDef.nonTransferrable = true;
-          itemDef.equipRequiredLevel = 0;
-          itemDef.equipment = false;
-          item.isEquipment = false;
-        }
 
         // unidentified item.
         if (!itemDef.itemName) {
@@ -539,10 +545,10 @@
 
       var itemType = normalBucket.type;
 
-      var weaponClass = null;
-      if (normalBucket.inWeapons) {
-        weaponClass = itemDef.itemTypeName.toLowerCase().replace(/\s/g, '');
-      }
+      const categories = _.compact(itemDef.itemCategoryHashes.map((c) => {
+        const category = itemCategories[c];
+        return category ? category.identifier : null;
+      }));
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -554,8 +560,9 @@
         hash: item.itemHash,
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        tier: itemDef.tierTypeName || 'Common',
-        isExotic: itemDef.tierTypeName === 'Exotic',
+        categories: categories, // see dimItemCategoryDefinitions
+        tier: tiers[itemDef.tierType] || 'Common',
+        isExotic: tiers[itemDef.tierType] === 'Exotic',
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -583,11 +590,14 @@
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
-        weaponClass: weaponClass || '',
         classified: itemDef.classified
       });
 
       createdItem.index = createItemIndex(createdItem);
+
+      if (createdItem.primStat) {
+        createdItem.primStat.stat = statDef[createdItem.primStat.statHash];
+      }
 
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
@@ -778,7 +788,7 @@
       var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
       var totalXPRequired = xpToReachLevel(maxLevelRequired);
 
-      var ascendNode = _.find(gridNodes, { name: 'Ascend' });
+      var ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
       // Fix for stuff that has nothing in early columns
       var minColumn = _.min(gridNodes, 'column').column;
@@ -793,7 +803,7 @@
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: Boolean(ascendNode),
         ascended: Boolean(ascendNode && ascendNode.activated),
-        infusable: _.any(gridNodes, { name: 'Infuse' })
+        infusable: _.any(gridNodes, { hash: 1270552711 })
       };
     }
 
@@ -1035,7 +1045,7 @@
       var activeArmorNode;
       if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
-          return _.contains(['Increase Intellect', 'Increase Discipline', 'Increase Strength'], node.name); // [1034209669, 1263323987, 193091484]
+          return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
         });
         if (armorNodes) {
           activeArmorNode = _.findWhere(armorNodes, { activated: true }) || { hash: 0 };
@@ -1048,24 +1058,21 @@
           return undefined;
         }
 
-        var name = def.statName;
-        if (name === 'Aim assistance') {
-          name = 'Aim Assist';
-        }
+        const identifier = def.statIdentifier;
 
         // Only include these hidden stats, in this order
-        var secondarySort = ['Aim Assist', 'Equip Speed'];
+        var secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
         var secondaryIndex = -1;
 
         var sort = _.findIndex(item.stats, { statHash: stat.statHash });
         var itemStat;
         if (sort < 0) {
-          secondaryIndex = secondarySort.indexOf(name);
+          secondaryIndex = secondarySort.indexOf(identifier);
           sort = 50 + secondaryIndex;
         } else {
           itemStat = item.stats[sort];
           // Always at the end
-          if (name === 'Magazine' || name === 'Energy') {
+          if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
             sort = 100;
           }
         }
@@ -1083,16 +1090,16 @@
         var base = val;
         var bonus = 0;
 
-        if (item.primaryStat.statHash === 3897883278) {
-          if ((name === 'Intellect' && _.find(armorNodes, { name: 'Increase Intellect' })) ||
-             (name === 'Discipline' && _.find(armorNodes, { name: 'Increase Discipline' })) ||
-             (name === 'Strength' && _.find(armorNodes, { name: 'Increase Strength' }))) {
+        if (item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
+          if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
+             (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
+             (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
             bonus = getBonus(item.primaryStat.value, type);
 
             if (activeArmorNode &&
-                ((name === 'Intellect' && activeArmorNode.name === 'Increase Intellect') ||
-                 (name === 'Discipline' && activeArmorNode.name === 'Increase Discipline') ||
-                 (name === 'Strength' && activeArmorNode.name === 'Increase Strength'))) {
+                ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+                 (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+                 (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
               base = Math.max(0, val - bonus);
             }
           }
@@ -1102,11 +1109,11 @@
           base: base,
           bonus: bonus,
           statHash: stat.statHash,
-          name: name,
+          name: def.statName,
           sort: sort,
           value: val,
           maximumValue: maximumValue,
-          bar: name !== 'Magazine' && name !== 'Energy' // energy == magazine for swords
+          bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY' // energy == magazine for swords
         };
       })), 'sort');
     }
@@ -1194,6 +1201,7 @@
         dimYearsDefinitions,
         dimProgressionDefinitions,
         dimRecordsDefinitions,
+        dimItemCategoryDefinitions,
         previousItems,
         newItems])
         .then(function(args) {
@@ -1223,28 +1231,6 @@
         return 'hunter';
       case 2:
         return 'warlock';
-      }
-      return 'unknown';
-    }
-
-    function getRace(hash) {
-      switch (hash) {
-      case 3887404748:
-        return 'human';
-      case 898834093:
-        return 'exo';
-      case 2803282938:
-        return 'awoken';
-      }
-      return 'unknown';
-    }
-
-    function getGender(type) {
-      switch (type) {
-      case 0:
-        return 'male';
-      case 1:
-        return 'female';
       }
       return 'unknown';
     }
@@ -1280,7 +1266,7 @@
       return $q.all([dimVendorDefinitions, dimItemDefinitions])
         .then(function([vendorDefs, itemDefs]) {
           return $q.all(_.map(vendors, function(vendor, vendorHash) {
-            var def = vendorDefs[vendorHash];
+            var def = vendorDefs[vendorHash].summary;
             vendor.vendorName = def.vendorName;
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
             vendor.items = [];
@@ -1319,7 +1305,7 @@
         });
     }
 
-    function getStatsData(data) {
+    function getStatsData(statDefs, data) {
       var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
       var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
       var ret = {};
@@ -1330,10 +1316,16 @@
         case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
         case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
-        if (!data.stats[stats[s]]) {
+
+        const stat = data.stats[stats[s]];
+        if (!stat) {
           continue;
         }
-        statHash.value = data.stats[stats[s]].value;
+        statHash.value = stat.value;
+        const statDef = statDefs[stat.statHash];
+        if (statDef) {
+          statHash.name = statDef.statName; // localized name
+        }
 
         if (statsWithTiers.indexOf(stats[s]) > -1) {
           statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
