@@ -37,7 +37,7 @@
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
-          <dim-store-item item-data="item" store-data="normal.getStore(item.owner)"></dim-store-item>
+          <dim-store-item shift-click-callback="normal.excludeItem" item-data="item" store-data="normal.getStore(item.owner)"></dim-store-item>
         </div>
       </div>
     </div>
@@ -54,6 +54,21 @@
             <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>
           </div>
           <div class="label">{{type}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section" ng-show="normal.excludeditems.length">
+    <p>Excluded Items <small>- Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.</small></p>
+    <div class="itemQuality">
+      <div class="excluded-container">
+        <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="normal.onExcludedDrop($data, $channel)" drop-validate="normal.excludedItemsValid($data)">
+          <div class="excluded-items">
+            <div class="excluded-item" ng-repeat="excludeditem in normal.excludeditems">
+              <dim-store-item item-data="excludeditem" store-data="normal.getStore(excludeditem.owner)"></dim-store-item>
+              <div class="close" ng-click="normal.onExcludedRemove(excludeditem.id)" role="button" tabindex="0"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -125,8 +140,8 @@
     <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">
       <div><dim-stats stats="set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
       <div class="itemQuality">
-        <div  class="set-item" ng-repeat="armorpiece in set.armor">
-          <dim-store-item item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
+        <div class="set-item" ng-repeat="armorpiece in set.armor">
+          <dim-store-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
           <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
         </div>

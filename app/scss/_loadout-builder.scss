@@ -49,6 +49,14 @@
       border:2px solid #DDD;
     }
   }
+  
+  .excluded-item {
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+    position: relative;
+  }
 
   dim-stats {
     display: inline-block;
@@ -70,6 +78,23 @@
     }
   }
   .set-item:last-child {
+    margin-right: 0;
+  }
+  
+  .excluded-items {
+    border: 2px solid #DDD;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 452px;
+    min-height: 60px;
+  }
+  
+  .excluded-container {
+    margin-right: 10px;
+  }
+  
+  .excluded-container:last-child {
     margin-right: 0;
   }
 }

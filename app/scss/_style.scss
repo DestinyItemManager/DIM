@@ -1359,8 +1359,14 @@ g {
   z-index: 10;
 }
 
-.reputation, .store-header {
+.store-header {
   margin-left: 28px;
+}
+
+.reputation {
+  & .store-cell:first-child {
+    margin-left: 28px;
+  }
 }
 
 /* Loadout editor */
