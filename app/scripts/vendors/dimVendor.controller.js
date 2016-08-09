@@ -10,10 +10,19 @@
     var vm = this;
 
     vm.settings = dimSettingsService;
-    vm.stores = _.reject(dimStoreService.getStores(), (s) => s.isVault);
-    vm.vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
-      return !value;
+    function init(stores) {
+      vm.stores = _.reject(stores, (s) => s.isVault);
+      vm.vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
+        return !value;
+      });
+      countCurrencies(stores);
+    }
+
+    init(dimStoreService.getStores());
+    $scope.$on('dim-stores-updated', function(e, args) {
+      init(args.stores);
     });
+
 
     if (_.isEmpty(vm.vendors)) {
       $state.go('inventory');
@@ -38,7 +47,7 @@
       return o;
     }
 
-    function countCurrencies() {
+    function countCurrencies(stores) {
       var currencies = _.chain(vm.vendors)
             .values()
             .reduce(function(o, val) { o.push(_.values(val)); return o; }, [])
@@ -54,24 +63,20 @@
       currencies.forEach(function(currencyHash) {
         // Legendary marks and glimmer are special cases
         if (currencyHash === 2534352370) {
-          vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
+          vm.totalCoins[currencyHash] = sum(stores, function(store) {
             return store.legendaryMarks || 0;
           });
         } else if (currencyHash === 3159615086) {
-          vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
+          vm.totalCoins[currencyHash] = sum(stores, function(store) {
             return store.glimmer || 0;
           });
         } else {
-          vm.totalCoins[currencyHash] = sum(dimStoreService.getStores(), function(store) {
+          vm.totalCoins[currencyHash] = sum(stores, function(store) {
             return store.amountOfItem({ hash: currencyHash });
           });
         }
       });
     }
 
-    countCurrencies();
-    $scope.$on('dim-stores-updated', function() {
-      countCurrencies();
-    });
   }
 })();
