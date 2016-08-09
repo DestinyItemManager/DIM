@@ -39,11 +39,7 @@
       };
     }
 
-<<<<<<< HEAD
-    function getBestArmor(bucket, vendorBucket, locked) {
-=======
-    function getBestArmor(bucket, locked, excluded) {
->>>>>>> dev
+    function getBestArmor(bucket, vendorBucket locked, excluded) {
       var statHashes = [
           { stats: [144602215, 1735777505], type: 'intdisc' },
           { stats: [144602215, 4244567218], type: 'intstr' },
@@ -66,27 +62,19 @@
           best = [];
 
           // Filter out excluded
-          var filtered = _.filter(bucket[armortype], function(item) {
+          var filtered = _.filter(combined, function(item) {
             return !_.findWhere(excluded, { id: item.id });
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
               return;
             }
-<<<<<<< HEAD
-            curbest = getBestItem(combined, hash.stats, hash.type);
-            best.push(curbest);
-            // add the best -> if best is exotic -> get best legendary
-            if (curbest.item.isExotic && armortype !== 'ClassItem') {
-              best.push(getBestItem(combined, hash.stats, hash.type, true));
-=======
 
             curbest = getBestItem(filtered, hash.stats, hash.type);
             best.push(curbest);
             // add the best -> if best is exotic -> get best legendary
             if (curbest.item.isExotic && armortype !== 'ClassItem') {
               best.push(getBestItem(filtered, hash.stats, hash.type, true));
->>>>>>> dev
             }
           });
         }
@@ -237,11 +225,7 @@
         });
       },
       getSetBucketsStep: function(activeGaurdian) {
-<<<<<<< HEAD
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems);
-=======
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems, vm.excludeditems);
->>>>>>> dev
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems);
         var helms = bestArmor.Helmet || [];
         var gaunts = bestArmor.Gauntlets || [];
         var chests = bestArmor.Chest || [];
@@ -393,7 +377,7 @@
           });
 
           allItems = allItems.concat(items);
-          
+
           _.each(store.vendors, function(vendor) {
             var vendItems = _.filter(vendor.items, function(item) {
             return item.primStat &&
@@ -461,7 +445,7 @@
             hunter: loadBucket(1),
             warlock: loadBucket(2)
           };
-          
+
           vendorBuckets = {
             titan: loadBucket(0, true),
             hunter: loadBucket(1, true),
