@@ -1,5 +1,5 @@
 # Next
-
+* Add ability to exclude items from loadout builder.
 * Expand/collapse sections in DIM.
 * Double clicking an item will equip it on the current character. 2x click on equipped, dequips.
 * Show current vendor items being sold.
@@ -13,6 +13,13 @@
 * Help dialog for keyboard shortcuts. Triggered with "?".
 * When you have two characters of the same class, applying a loadout with a subclass will work all the time now.
 * Item class requirements are part of the header ("Hunter Helmet") instead of in the stats area.
+* You can search for the opposite of "is:" filters with "not:" filters. For example, "is:helmet not:hunter quality:>90".
+* Clicking away from the Xur dialog will close any open item popups.
+* Fixed an issue where you could not equip a loadout that included an exotic item when you already had an exotic equipped that was not going to be replaced by the loadout.
+* Better handling of items with "The Life Exotic" perk.
+* New aliases for rarity filters (is:white, is:green, is:blue, is:purple, is:yellow).
+* An alternate option for the "Gather Engrams" loadout can exclude gathering exotic engrams.
+* Removed popup notification for new items.
 
 # 3.8.3
 

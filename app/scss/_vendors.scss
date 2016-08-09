@@ -1,46 +1,61 @@
 .vendor {
-  width: 900px;
+  width: calc(((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 3) - 12px);
   margin: 0 auto;
-  
+
   .vendor-col {
     margin-right: 20px;
+  }
+  .vendor-timer {
+    float: right;
+  }
+  .vendor-armor, .vendor-weaps {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .vendor-item {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    width: calc(var(--item-size) + 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .char-cols {
+    display: flex;
+    flex-direction: column;
+  }
+  .char-cols h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    &:first-child {
+      margin-top: 0px;
+    }
   }
   .fa-arrow-circle-left {
     padding-right: 5px;
   }
-  .vendor-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap:wrap;
-  }
-  .vendor-block {
-    margin-right: 20px;
-  }
-  .vendor-header {
+  .vendor-headers {
     display: flex;
     padding-bottom: 10px;
+  }
+  .vendor-header {
+    .title {
+      padding: 0 8px;
+    }
   }
   .vendor-row {
     display:flex;
     flex-direction: row;
     flex-wrap:wrap;
-  }
-  .sub-bucket {
-    background-size: --item-size;
-    background-position: 2 2;
-    background-image: url("../images/bg_inventory_bucket_single_crop.png");
-    background-repeat: no-repeat; 
-  }
-  .unequipped {
-    margin-bottom: 5px;
-  }
-  .item-type {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    margin-bottom: 10px;
+    margin-top: 10px;
   }
   .store-cell {
     flex-wrap: wrap;
+    &:last-child {
+      justify-content: flex-end;
+      margin-right: 0;
+    }
   }
   .vendor-icon {
     width: 30px;
@@ -49,21 +64,14 @@
     margin-right: 10px;
     float:left;
   }
-  .vendor-item {
-    display: inline-block;
-    margin-right: 3px;
-    margin-bottom: 5px;
-    &:last-child {
-      margin-right: 10px;
-    }
-  }
   .currency img {
     height: 12px;
     width: 12px;
   }
   .cost {
-    margin-top: 6px;
     font-size: 10px;
+    margin-top: 4px;
+    margin-left: 2px;
   }
   .notenough {
     color: #CC5C58;

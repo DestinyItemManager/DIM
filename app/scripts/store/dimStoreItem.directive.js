@@ -29,9 +29,9 @@
 
 
 
-  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope'];
+  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue'];
 
-  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope) {
+  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope, dimActionQueue) {
     var otherDialog = null;
 
     return {
@@ -43,7 +43,8 @@
       restrict: 'E',
       scope: {
         store: '=storeData',
-        item: '=itemData'
+        item: '=itemData',
+        shiftClickCallback: '=shiftClickCallback'
       },
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
@@ -97,16 +98,20 @@
         });
       }
 
-      vm.doubleClicked = function doubleClick(item, e) {
+      vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
         e.stopPropagation();
         var active = dimStoreService.getActiveStore();
 
-
         dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false);
-      };
+      });
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
+
+        if (vm.shiftClickCallback && e.shiftKey) {
+          vm.shiftClickCallback(item);
+          return;
+        }
 
         dimStoreService.dropNewItem(item);
 

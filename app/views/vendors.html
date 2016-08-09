@@ -1,37 +1,14 @@
 <div class="vendor" ng-controller="dimVendorCtrl as vm">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
-  <h1 class="orange">Vendors</h1>
-  <div class="vendor">
-    <div class="vendor-container" ng-repeat="activeVendor in vm.activeVendors">
-    <div class="vendor-block" ng-repeat="(vendorType, vendor) in vm.vendors[activeVendor]">
-      <div class="vendor-header">
-        <div class="title">
-        {{vendor.vendorName}}
-        <img class="vendor-icon" ng-src="{{vendor.vendorIcon}}" />
-        </div>
-      </div>
-      <div class="vendor-row">
-        <div ng-class="{ 'vendor-col': activeVendor !== 'vanguard' }" ng-repeat="(classType, armorTypes) in vendor.items">
-          <!--<h3>{{classType}}</h3>-->
-          <div ng-repeat="(itemType, saleItems) in armorTypes">
-            <div class="sub-section" ng-if="saleItems.length > 0">
-            <div class="store-cell">
-              <div class="sub-bucket" ng-repeat="saleItem in saleItems">
-                <dim-simple-item  id="vendor-{{::saleItem.hash}}" item-data="saleItem" ng-click="vm.itemClicked(saleItem, $event)" ng-class="{ 'search-hidden': !saleItem.visible }"></dim-simple-item>
-                <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.cost)}">
-                  {{::saleItem.cost.cost}}/{{vm.totalCoins[saleItem.cost.currency.itemHash]}}
-                  <span class="currency"><img dim-bungie-image-fallback="::saleItem.cost.currency.icon" title="{{::saleItem.cost.currency.name}}"></span>
-                </div>
-              </div>
-            </div>
-            </div>
-            <!--<div ng-if="saleItems.length === 0" style="height:72px;margin-left:0;" class="unequipped sub-bucket">
-              <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>
-            </div>-->
-          </div>
-        </div>
-      </div>
+  <h1>Vendors</h1>
+  <div class="vendor-headers">
+    <div class="store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+      <dim-store-heading class="character" store-data="store"></dim-store-heading>
     </div>
-    </div>
+  </div>
+  <div class="vendors">
+    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.bannerHash" total-coins="vm.totalCoins"></dim-vendor-items>
+    <dim-vendor-items-combined stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vanguardHashes" total-coins="vm.totalCoins"></dim-vendor-items-combined>
+    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
   </div>
 </div>

@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimVendorService', 'dimSettingsService', '$window', '$scope', '$state'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService', '$window', '$scope', '$state'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimVendorService, dimSettingsService, $window, $scope, $state) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -63,10 +63,6 @@
       callback: function() {
         dimStoreService.clearNewItems();
       }
-    });
-
-    $rootScope.$on('dim-active-platform-updated', function(e, args) {
-      loadingTracker.addPromise(dimVendorService.updateVendorItems(args.platform.type));
     });
 
     /**

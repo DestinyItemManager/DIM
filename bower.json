@@ -12,6 +12,8 @@
     "AngularJS-Toaster": "https://github.com/DestinyItemManager/AngularJS-Toaster.git#master",
     "angular": "~1.5.3",
     "angular-animate": "1.5.x",
+    "angular-moment": "~0.10.3",
+    "angular-timer": "~1.3.4",
     "angular-chrome-storage": "infomofo/angular-chrome-storage",
     "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.5",
     "angular-messages": "~1.3.x",
@@ -19,6 +21,7 @@
     "angular-promise-tracker": "~2.1.0",
     "angular-ui-router": "~0.2.x",
     "components-font-awesome": "~4.4.0",
+    "humanize-duration": "~3.9.1",
     "jquery": "~2",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
     "ngDialog": "~0.5.x",
@@ -29,6 +32,8 @@
     "ng-http-rate-limiter": "~1.0.0"
   },
   "resolutions": {
-    "angular": "~1.5.3"
+    "angular": "~1.5.3",
+    "humanize-duration": "~3.9.1"
   }
 }
+

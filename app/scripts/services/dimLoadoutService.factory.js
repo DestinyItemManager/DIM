@@ -264,7 +264,30 @@
               var realItemsToEquip = itemsToEquip.map(function(i) {
                 return getLoadoutItem(i, store);
               });
-              return dimItemService.equipItems(store, realItemsToEquip);
+
+              // Check for an equipped exotic without The Life Exotic
+              // perk, which occupies a slot that won't be already
+              // replaced with a loadout item, and remove
+              // it. Otherwise, the bulk equip will fail because
+              // Bungie doesn't unequip to make room for exotics.
+              const exoticsToEquip = _.filter(realItemsToEquip, (i) => i.isExotic);
+              const problemExotics = _.compact(exoticsToEquip.map((exotic) => {
+                return _.find(store.items, (i) => {
+                  return i.equipped &&
+                    i.bucket.sort === exotic.sort &&
+                    i.isExotic &&
+                    !i.hasLifeExotic() &&
+                    !_.find(realItemsToEquip, { type: i.type });
+                });
+              }));
+
+              let fixProblemExotics = $q.when();
+              if (problemExotics.length) {
+                const similarItems = problemExotics.map((i) => dimItemService.getSimilarItem(i, loadoutItemIds));
+                fixProblemExotics = dimItemService.equipItems(store, similarItems);
+              }
+
+              return fixProblemExotics.then(() => dimItemService.equipItems(store, realItemsToEquip));
             } else {
               return itemsToEquip;
             }
