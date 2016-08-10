@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+
+"use strict";
+
 var http = require('http');
 var fs = require('fs');
 var request = require('request');
@@ -7,8 +11,6 @@ var unzip = require('unzip');
 var mkdirp = require('mkdirp');
 var async = require("async");
 var ProgressBar = require('progress');
-
-var progressionMeta = require('./progressionMeta.json');
 
 var version;
 
@@ -27,7 +29,7 @@ function onManifestDownloaded() {
   fs.createReadStream('manifest.zip')
     .pipe(unzip.Parse())
     .on('entry', function (entry) {
-      ws = fs.createWriteStream('manifest/' + entry.path);
+      let ws = fs.createWriteStream('manifest/' + entry.path);
 
       ws.on('finish', function () {
         var exists = fs.existsSync('manifest/' + entry.path);
@@ -91,7 +93,8 @@ function generateManifest(dbPath, query, manifestPath, rowFn, postFn, cbFn) {
       delete item.DimHash;
     });
 
-    fs.writeFile(manifestPath, JSON.stringify(items));
+    // No need to actually generate the JSON anymore. We just want the images.
+    // fs.writeFile(manifestPath, JSON.stringify(items));
 
     if (postFn) {
       postFn(items, cbFn);
@@ -155,25 +158,6 @@ function postProcessTalentGridDefinitions(items, cb) {
       cb();
     }
   });
-}
-
-function processProgressionDefinitions(err, row) {
-  let item = JSON.parse(row.json, (k, v) => (k === 'equippingBlock') ? undefined : v);
-  item.DimHash = item.progressionHash;
-
-  if (progressionMeta[item.progressionHash]) {
-    item.label = progressionMeta[item.progressionHash].label;
-    item.color = progressionMeta[item.progressionHash].color;
-    item.scale = progressionMeta[item.progressionHash].scale;
-    item.order = progressionMeta[item.progressionHash].order;
-  }
-
-  item.steps = item.steps.map(function (i) { return i.progressTotal; });
-
-  delete item.progressionHash;
-  delete item.hash;
-
-  return item;
 }
 
 function postProcessProgressionDefinitions(items, cb) {
@@ -320,7 +304,7 @@ function extractDB(dbFile) {
       database: dbFile,
       query: 'SELECT * FROM DestinyProgressionDefinition',
       manifest: 'api-manifest/progression.json',
-      processFn: processProgressionDefinitions,
+      processFn: processGenericDefinitions.bind(this, 'progressionHash'),
       postFn: postProcessProgressionDefinitions
     },
     {
