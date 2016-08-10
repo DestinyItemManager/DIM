@@ -51,9 +51,7 @@
     margin-top: 10px;
   }
   .store-cell {
-    flex-wrap: wrap;
     &:last-child {
-      justify-content: flex-end;
       margin-right: 0;
     }
   }
