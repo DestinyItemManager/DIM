@@ -20,6 +20,13 @@
             resolve('http://www.bungie.net' + path);
           })
           .error(function() {
+            if (ga) {
+              // Log the failure in Google Analytics
+              ga('send', 'exception', {
+                exDescription: 'IconFallback',
+                exFatal: false
+              });
+            }
             $(this).remove();
             resolve(chrome.extension.getURL(path));
           });
