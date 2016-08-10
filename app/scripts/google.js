@@ -14,4 +14,8 @@
   ga.l = Number(new Date);
   ga('create', 'UA-60316581-1', 'auto');
   ga('set', 'DIMVersion', '$DIM_VERSION');
+
+  // Remove this if the $stateChangeSuccess handler in
+  // dimApp.config.js is enabled, or you'll double-count hits.
+  ga('send', 'pageview');
 })();

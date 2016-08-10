@@ -62,7 +62,8 @@
         $rootScope.$on('$stateChangeSuccess', function() {
           if (ga) {
             ga('set', 'page', $location.path());
-            ga('send', 'pageview');
+            // Disable sending pageviews on state changes for now, over concerns that we'll go over our free GA limits.
+            // ga('send', 'pageview');
           }
         });
 
