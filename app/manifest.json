@@ -33,7 +33,7 @@
     }
   },
   "options_page": "index.html",
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://apis.google.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false
 }
