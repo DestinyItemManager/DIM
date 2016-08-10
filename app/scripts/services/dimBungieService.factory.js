@@ -103,7 +103,7 @@
 
     function openBungieNetTab() {
       chrome.tabs.create({
-        url: 'http://bungie.net',
+        url: 'https://bungie.net',
         active: true
       });
     }
