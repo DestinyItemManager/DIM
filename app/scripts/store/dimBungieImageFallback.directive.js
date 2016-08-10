@@ -14,10 +14,10 @@
     // we don't try again.
     var loadImage = _.memoize(function(path) {
       return $q(function(resolve) {
-        $('<img/>').attr('src', 'http://www.bungie.net' + path)
+        $('<img/>').attr('src', 'https://www.bungie.net' + path)
           .load(function() {
             $(this).remove();
-            resolve('http://www.bungie.net' + path);
+            resolve('https://www.bungie.net' + path);
           })
           .error(function() {
             $(this).remove();
