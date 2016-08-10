@@ -642,7 +642,7 @@
           if (recordBook.progression) {
             recordBook.progression = angular.extend(recordBook.progression, progressDefs[recordBook.progression.progressionHash]);
             createdItem.progress = recordBook.progression;
-            createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step, 0);
+            createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step.progressTotal, 0);
           } else {
             createdItem.percentComplete = _.countBy(createdItem.objectives, function(task) {
               return task.complete;
@@ -688,7 +688,7 @@
         }
         var totalXPRequired = 0;
         for (var step = 1; step <= level; step++) {
-          totalXPRequired += progressSteps[Math.min(step, progressSteps.length) - 1];
+          totalXPRequired += progressSteps[Math.min(step, progressSteps.length) - 1].progressTotal;
         }
 
         return totalXPRequired;
