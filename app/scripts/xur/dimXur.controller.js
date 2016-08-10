@@ -12,6 +12,11 @@
     var detailItem = null;
     var detailItemElement = null;
 
+    if (ga) {
+      // Send a virtual pageview event, even though this is a popup
+      ga('send', 'pageview', { page: '/xur' });
+    }
+
     function countCurrencies() {
       var currencies = _.chain(dimXurService.itemCategories)
             .values()

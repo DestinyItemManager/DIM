@@ -87,6 +87,11 @@
           result.closePromise.then(function() {
             result = null;
           });
+
+          if (ga) {
+            // Send a virtual pageview event, even though this is a popup
+            ga('send', 'pageview', { page: '/' + name });
+          }
         }
       };
     }
