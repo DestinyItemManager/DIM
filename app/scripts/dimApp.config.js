@@ -17,8 +17,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', '$location',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, $location) {
         $rootScope.loadingTracker = loadingTracker;
 
         // 1 Hour
@@ -55,6 +55,15 @@
         dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
           title: 'DIM v$DIM_VERSION Released',
           view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
+        });
+
+        // http://www.arnaldocapo.com/blog/post/google-analytics-and-angularjs-with-ui-router/72
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/single-page-applications
+        $rootScope.$on('$stateChangeSuccess', function() {
+          if (ga) {
+            ga('set', 'page', $location.path());
+            ga('send', 'pageview');
+          }
         });
 
 //        if (chrome && chrome.identity) {
