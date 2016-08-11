@@ -93,7 +93,7 @@
           vm.originalLoadout = args.loadout;
 
           // Filter out any vendor items and equip all if requested
-          args.loadout.warnitems = _.reduce(args.loadout.items, function(o, items, type) {
+          args.loadout.warnitems = _.reduce(args.loadout.items, function(o, items) {
             var vendorItems = _.filter(items, function(item) { return !item.owner; });
             o = o.concat(...vendorItems);
             return o;

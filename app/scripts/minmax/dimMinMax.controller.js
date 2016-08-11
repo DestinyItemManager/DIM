@@ -395,7 +395,7 @@
 
           _.each(store.vendors, function(vendor) {
             var vendItems = _.filter(vendor.items.armor, function(item) {
-            return item.primStat &&
+              return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
               ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
               item.primStat.value >= 280 && // only 280+ light items
@@ -465,7 +465,7 @@
             titan: loadBucket(0, true),
             hunter: loadBucket(1, true),
             warlock: loadBucket(2, true)
-          }
+          };
         }
 
         initBuckets();
