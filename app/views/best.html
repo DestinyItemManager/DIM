@@ -41,6 +41,25 @@
         </div>
       </div>
     </div>
+
+    <div ng-show="normal.includeVendors">
+      Vendor Items: <select ng-model='normal.vendorType' ng-options="bucket as bucket for (bucket, data) in normal.rankedVendors"></select>
+      <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
+
+      <div class="itemQuality">
+        <div ng-repeat="item in normal.rankedVendors[normal.vendorType] | orderBy:'-quality.min'">
+          <div class="item-container" ng-if="item.primStat.value >= 280">
+            <div class="item-stats">
+              <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
+                <small ng-if="normalStat.scaled === 0">-</small>
+                <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
+              </div>
+            </div>
+            <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="item" store-data="normal.getStore(item.owner)"></dim-min-max-item>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="section">
@@ -50,7 +69,7 @@
         <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
           <div ng-switch-when="null" class="empty-item"></div>
           <div ng-switch-default>
-            <dim-store-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-store-item>
+            <dim-min-max-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-min-max-item>
             <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>
           </div>
           <div class="label">{{type}}</div>
@@ -65,8 +84,8 @@
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="normal.onExcludedDrop($data, $channel)" drop-validate="normal.excludedItemsValid($data)">
           <div class="excluded-items">
             <div class="excluded-item" ng-repeat="excludeditem in normal.excludeditems">
-              <dim-store-item item-data="excludeditem" store-data="normal.getStore(excludeditem.owner)"></dim-store-item>
-              <div class="close" ng-click="normal.onExcludedRemove(excludeditem.id)" role="button" tabindex="0"></div>
+              <dim-min-max-item item-data="excludeditem" store-data="normal.getStore(excludeditem.owner)"></dim-min-max-item>
+              <div class="close" ng-click="normal.onExcludedRemove(excludeditem.index)" role="button" tabindex="0"></div>
             </div>
           </div>
         </div>
@@ -75,12 +94,6 @@
   </div>
   <p>
   </p>
-  <div ng-show="!normal.highestsets">
-    <p>Missing legendary or exotic pieces to build a full set!</p>
-  </div>
-  <div ng-show="normal.progress < 1 && normal.highestsets">
-    <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
-  </div>
   <div ng-show="normal.progress >= 1">
     <p>Filter sets (Intellect/Discipline/Strength):
       <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
@@ -142,12 +155,18 @@
 -->
     </p>
   </div>
+  <div ng-show="!normal.highestsets">
+    <p>Missing legendary or exotic pieces to build a full set!</p>
+  </div>
+  <div ng-show="normal.progress < 1 && normal.highestsets">
+    <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
+  </div>
   <div ng-show="normal.progress >= 1">
     <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">
       <div><dim-stats stats="set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
       <div class="itemQuality">
         <div class="set-item" ng-repeat="armorpiece in set.armor">
-          <dim-store-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-store-item>
+          <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
           <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
         </div>

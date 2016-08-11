@@ -546,6 +546,7 @@
         type: itemType,
         tier: itemDef.tierTypeName || 'Common',
         isExotic: itemDef.tierTypeName === 'Exotic',
+        isVendorItem: (!owner || owner.id === null),
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -1294,6 +1295,9 @@
             }
             return processItems({ id: null }, vendor.items)
               .then(function(items) {
+                _.each(items, function(item) {
+                  item.vendorIcon = vendor.vendorIcon;
+                });
                 vendor.items = {};
                 vendor.items.armor = _.filter(items, function(item) {
                   return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280;

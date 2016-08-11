@@ -39,7 +39,7 @@
       };
     }
 
-    function getBestArmor(bucket, vendorBucket locked, excluded) {
+    function getBestArmor(bucket, vendorBucket, locked, excluded) {
       var statHashes = [
           { stats: [144602215, 1735777505], type: 'intdisc' },
           { stats: [144602215, 4244567218], type: 'intstr' },
@@ -63,7 +63,7 @@
 
           // Filter out excluded
           var filtered = _.filter(combined, function(item) {
-            return !_.findWhere(excluded, { id: item.id });
+            return !_.findWhere(excluded, { index: item.index });
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
@@ -108,6 +108,15 @@
       ) < 2;
     }
 
+    function getId(index) {
+      var split = index.split('-');
+      return split[1] === '1' ? index : split[1];
+    }
+
+    function getItemById(id, type) {
+      return _.findWhere(buckets[vm.active][type], { id: id }) || _.findWhere(vendorBuckets[vm.active][type], { index: id });
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/1',
@@ -119,6 +128,7 @@
       excludeditems: [],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       type: 'Helmet',
+      vendorType: 'Helmet',
       includeVendors: false,
       showBlues: false,
       showExotics: true,
@@ -128,12 +138,12 @@
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
       lockedItemsValid: function(droppedId, droppedType) {
-        droppedId = droppedId.split('-')[1];
+        droppedId = getId(droppedId);
         if (_.findWhere(vm.excludeditems, { id: droppedId })) {
           return false;
         }
 
-        var item = _.findWhere(buckets[vm.active][droppedType], { id: droppedId });
+        var item = getItemById(droppedId, droppedType);
         var exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         _.each(vm.lockeditems, function(lockeditem) {
           if (lockeditem === null || lockeditem.type === droppedType) {
@@ -150,6 +160,7 @@
       },
       onCharacterChange: function() {
         vm.ranked = buckets[vm.active];
+        vm.rankedVendors = vendorBuckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -164,11 +175,11 @@
         vm.setOrderValues = vm.setOrder.split(',');
       },
       onDrop: function(droppedId, type) {
-        droppedId = droppedId.split('-')[1];
+        droppedId = getId(droppedId);
         if (vm.lockeditems[type] && vm.lockeditems[type].id === droppedId) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], { id: droppedId });
+        var item = getItemById(droppedId, type);
         vm.lockeditems[type] = item;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
@@ -184,22 +195,26 @@
         }
       },
       excludeItem: function(item) {
-        vm.onExcludedDrop(item.owner + '-' + item.id, item.type);
+        if (item.owner) {
+          vm.onExcludedDrop(item.owner + '-' + item.id, item.type);
+        } else {
+          vm.onExcludedDrop(item.index, item.type);
+        }
       },
       onExcludedDrop: function(droppedId, type) {
-        droppedId = droppedId.split('-')[1];
+        droppedId = getId(droppedId);
         if (_.findWhere(vm.excludeditems, { id: droppedId })) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], { id: droppedId });
+        var item = getItemById(droppedId, type);
         vm.excludeditems.push(item);
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
-      onExcludedRemove: function(removedId) {
-        vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.id !== removedId; });
+      onExcludedRemove: function(removedIndex) {
+        vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.index !== removedIndex; });
 
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
@@ -379,7 +394,7 @@
           allItems = allItems.concat(items);
 
           _.each(store.vendors, function(vendor) {
-            var vendItems = _.filter(vendor.items, function(item) {
+            var vendItems = _.filter(vendor.items.armor, function(item) {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
               ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
