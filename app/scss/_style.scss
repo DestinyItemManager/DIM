@@ -2038,36 +2038,40 @@ button.toast-close-button {
 /* Clear new items */
 
 .clear-new-items {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  display: none;
+  .show-new-items & {
+    display: block;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
 
-  button {
-    color: white;
-    padding: 1rem 1.5rem;
-    background-color: rgba(128, 128, 128, 1.0);
-    border-radius: 4px;
-    border: none;
-    text-align: center;
-    font-size: 1.5em;
-    transition: .3s background-color;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
-    &:hover, &:active {
-      background-color: rgba(232, 165, 52, 1.0);
+    button {
+      color: white;
+      padding: 1rem 1.5rem;
+      background-color: rgba(128, 128, 128, 1.0);
+      border-radius: 4px;
+      border: none;
+      text-align: center;
+      font-size: 1.5em;
+      transition: .3s background-color;
+      box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+      &:hover, &:active {
+        background-color: rgba(232, 165, 52, 1.0);
+      }
     }
-  }
 
-  &.ng-animate {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  }
+    &.ng-animate {
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    }
 
-  &.ng-enter, &.ng-leave.ng-leave-active {
-    opacity: 0;
-    transform: translateY(5rem);
-  }
+    &.ng-enter, &.ng-leave.ng-leave-active {
+      opacity: 0;
+      transform: translateY(5rem);
+    }
 
-  &.ng-leave, &.ng-enter.ng-enter-active {
-    opacity: 1;
-    transform: translateY(0rem);
+    &.ng-leave, &.ng-enter.ng-enter-active {
+      opacity: 1;
+      transform: translateY(0rem);
+    }
   }
 }
