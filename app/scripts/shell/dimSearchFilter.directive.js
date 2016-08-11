@@ -344,7 +344,7 @@
           269776572, // -house-banners
           3632619276, // -silken-codex
           2904517731, // -axiomatic-beads
-          1932910919 //-network-keys
+          1932910919 // -network-keys
         ];
         switch (predicate) {
         case 'glimmerboost':
