@@ -7,15 +7,15 @@
   head.appendChild(script);
 })();
 
-window._gaq = window._gaq || [];
-window._gaq.push(['_setAccount', 'UA-60316581-1']);
-window._gaq.push(['_trackPageview']);
+(function() {
+  window.ga = window.ga || function(...args) {
+    (ga.q = ga.q || []).push(...args);
+  };
+  ga.l = Number(new Date);
+  ga('create', 'UA-60316581-1', 'auto');
+  ga('set', 'DIMVersion', '$DIM_VERSION');
 
-(function loadGA() {
-  var ga = document.createElement('script');
-  ga.type = 'text/javascript';
-  ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(ga, s);
+  // Remove this if the $stateChangeSuccess handler in
+  // dimApp.config.js is enabled, or you'll double-count hits.
+  ga('send', 'pageview');
 })();

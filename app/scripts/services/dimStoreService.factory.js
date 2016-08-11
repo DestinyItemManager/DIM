@@ -61,8 +61,8 @@
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
-        this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
-        this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
+        this.background = 'https://bungie.net/' + characterInfo.backgroundPath;
+        this.icon = 'https://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
@@ -286,9 +286,9 @@
 
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: 'http://bungie.net/' + raw.character.base.emblemPath,
+                icon: 'https://bungie.net/' + raw.character.base.emblemPath,
                 lastPlayed: raw.character.base.characterBase.dateLastPlayed,
-                background: 'http://bungie.net/' + raw.character.base.backgroundPath,
+                background: 'https://bungie.net/' + raw.character.base.backgroundPath,
                 level: raw.character.base.characterLevel,
                 powerLevel: raw.character.base.characterBase.powerLevel,
                 stats: getStatsData(raw.character.base.characterBase),

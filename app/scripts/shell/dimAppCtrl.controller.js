@@ -87,6 +87,12 @@
           result.closePromise.then(function() {
             result = null;
           });
+
+          if (ga) {
+            // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
+            // Send a virtual pageview event, even though this is a popup
+            // ga('send', 'pageview', { page: '/' + name });
+          }
         }
       };
     }
