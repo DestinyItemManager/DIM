@@ -35,9 +35,13 @@ div:focus, span:focus {
 }
 
 .new_overlay_overflow {
-  width: var(--item-size);
-  height: var(--item-size);
-  overflow: hidden;
+  display: none;
+  .show-new-items & {
+    display: block;
+    width: var(--item-size);
+    height: var(--item-size);
+    overflow: hidden;
+  }
 }
 
 /**
