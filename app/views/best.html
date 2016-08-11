@@ -26,7 +26,10 @@
     </label>
 -->
     Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
-    <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
+    <label>
+      <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
+      <span>Include vendor items</span>
+    </label>
 
     <div class="itemQuality">
       <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
@@ -44,7 +47,6 @@
 
     <div ng-show="normal.includeVendors">
       Vendor Items: <select ng-model='normal.vendorType' ng-options="bucket as bucket for (bucket, data) in normal.rankedVendors"></select>
-      <span> (+{{normal.getBonus(335, normal.type)}} bonus excluded from items)</span>
 
       <div class="itemQuality">
         <div ng-repeat="item in normal.rankedVendors[normal.vendorType] | orderBy:'-quality.min'">
@@ -122,15 +124,11 @@
             <span ng-show="normal.scale_type === 'scaled'">Calculates loadouts as if all items were 335 defense.</span>
             <span ng-show="normal.scale_type === 'base'">Calculates loadouts at current defense levels.</span></small>
         </p>
-        <p>
-          <label>
-            <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
-            <span>Include vendor items</span>
-          </label>
-        </p>
       </div></span>
       <span><ul ng-show="showHelp">
-        <li>Higher Tiers are better
+        <li>Drag and drop items into the locked buckets to build sets with only that gear</li>
+        <li>Shift click an item to build sets without that gear</li>
+        <li>Higher Tiers are better</li>
           <ul>
             <li>4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)</li>
             <li>Intellect speeds up Super recharge time</li>
