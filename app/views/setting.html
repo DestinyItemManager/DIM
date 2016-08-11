@@ -41,6 +41,14 @@
       </tr>
       <tr>
         <td>
+          <label for="showNewItems" title="Will show new items with an overlay.">Show new items with an overlay</label>
+        </td>
+        <td>
+          <input type="checkbox" id="showNewItems" ng-model="vm.settings.showNewItems"/>
+        </td>
+      </tr>
+      <tr ng-show="vm.settings.showNewItems">
+        <td>
           <label for="showNewAnimation" title="Will show the animated new item overlay on new items. Turning this off can save CPU cycles.">Show new item overlay animations on new items.</label>
         </td>
         <td>
