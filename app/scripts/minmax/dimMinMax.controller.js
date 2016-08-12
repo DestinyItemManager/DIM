@@ -118,7 +118,7 @@
     }
 
     function alreadyExists(set, id) {
-      return  _.findWhere(set, { id: id }) || _.findWhere(set, { index: id });
+      return _.findWhere(set, { id: id }) || _.findWhere(set, { index: id });
     }
 
     function mergeBuckets(bucket1, bucket2) {
@@ -171,7 +171,7 @@
         return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
       onCharacterChange: function() {
-        vm.ranked = (vm.includeVendors)? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -180,7 +180,7 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
-        vm.ranked = (vm.includeVendors)? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
@@ -189,7 +189,7 @@
       onDrop: function(droppedId, type) {
         droppedId = getId(droppedId);
         if (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], droppedId)) {
-          return false;
+          return;
         }
         var item = getItemById(droppedId, type);
         vm.lockeditems[type] = item;
@@ -212,7 +212,7 @@
       onExcludedDrop: function(droppedId, type) {
         droppedId = getId(droppedId);
         if (alreadyExists(vm.excludeditems, droppedId)) {
-          return false;
+          return;
         }
         var item = getItemById(droppedId, type);
         vm.excludeditems.push(item);
