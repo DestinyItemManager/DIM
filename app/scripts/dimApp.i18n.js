@@ -41,7 +41,7 @@
           Weapons: "Armes",
           Armor: "Armure",
           General: "Général",
-          Postmaster: "Commis des postes",          
+          Postmaster: "Commis des postes",
           Equip: "Équiper",
           Vault: "Coffres",
           Vanguard: "Avant-garde"
@@ -50,7 +50,7 @@
           Level: "Nivel",
           Weapons: "Armas",
           Armor: "Armadura",
-          Postmaster: "Administración",          
+          Postmaster: "Administración",
           Equip: "Equipar",
           Vault: "Depósito",
           Vanguard: "Vanguardia"
@@ -60,7 +60,7 @@
           Weapons: "武器",
           Armor: "装甲",
           General: "一般的な",
-          Postmaster: "郵便局",          
+          Postmaster: "郵便局",
           Equip: "装備し",
           Vault: "保管",
           Vanguard: "前衛"
@@ -71,7 +71,7 @@
           Armor: "Armadura",
           Equip: "Equipar",
           General: "Geral",
-          Postmaster: "Chefe do Correio",          
+          Postmaster: "Chefe do Correio",
           Vault: "Cofres",
           Vanguard: "Vanguarda"
         })
