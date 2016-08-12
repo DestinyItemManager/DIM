@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimInfoService, SyncService, loadingTracker) {
     var _stores = [];
     var _progressionDefs = {};
     let _recordsDefs = {};
@@ -582,7 +582,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
+        createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
