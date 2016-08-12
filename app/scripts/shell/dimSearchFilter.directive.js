@@ -346,13 +346,14 @@
           2904517731, // -axiomatic-beads
           1932910919 // -network-keys
         ];
+
         switch (predicate) {
         case 'glimmerboost':
           return boosts.includes(item.hash);
         case 'glimmersupply':
           return supplies.includes(item.hash);
         case 'glimmeritem':
-          return boosts.concat(supplies).includes(item.hash);
+          return boosts.includes(item.hash) || supplies.includes(item.hash);
         }
         return false;
       },
