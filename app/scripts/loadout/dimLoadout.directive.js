@@ -31,7 +31,15 @@
         '        <p id="loadout-error"></p>',
         '      </form>',
         '    </div>',
-        '    <div id="loadout-contents">',
+        '    <p ng-if="vm.loadout.warnitems.length">These vendor items cannot be equipped:</p>',
+        '    <div ng-if="vm.loadout.warnitems.length" class="loadout-contents">',
+        '      <div ng-repeat="item in vm.loadout.warnitems" id="loadout-warn-item-{{:: $index }}" class="loadout-item">',
+        '        <dim-simple-item item-data="item"></dim-simple-item>',
+        '        <div class="fa warn"></div>',
+        '      </div>',
+        '    </div>',
+        '    <p ng-if="vm.loadout.warnitems.length" >These items can be equipped:</p>',
+        '    <div id="loadout-contents" class="loadout-contents">',
         '      <div ng-repeat="value in vm.types track by value" class="loadout-{{ value }} loadout-bucket" ng-if="vm.loadout.items[value].length">',
         '        <div ng-repeat="item in vm.loadout.items[value] | sortItems:vm.settings.itemSort track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="loadout-item">',
         '          <dim-simple-item item-data="item"></dim-simple-item>',
@@ -83,14 +91,21 @@
           vm.show = true;
           dimLoadoutService.dialogOpen = true;
           vm.originalLoadout = args.loadout;
+
+          // Filter out any vendor items and equip all if requested
+          args.loadout.warnitems = _.reduce(args.loadout.items, function(o, items) {
+            var vendorItems = _.filter(items, function(item) { return !item.owner; });
+            o = o.concat(...vendorItems);
+            return o;
+          }, []);
+
+          _.each(args.loadout.items, function(items, type) {
+            args.loadout.items[type] = _.filter(items, function(item) { return item.owner; });
+            if (args.equipAll && args.loadout.items[type][0]) {
+              args.loadout.items[type][0].equipped = true;
+            }
+          });
           vm.loadout = angular.copy(args.loadout);
-          if (args.equipAll) {
-            _.each(vm.loadout.items, function(item) {
-              if (item[0]) {
-                item[0].equipped = true;
-              }
-            });
-          }
         }
       });
 
