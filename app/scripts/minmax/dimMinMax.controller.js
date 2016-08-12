@@ -117,6 +117,18 @@
       return _.findWhere(buckets[vm.active][type], { id: id }) || _.findWhere(vendorBuckets[vm.active][type], { index: id });
     }
 
+    function alreadyExists(set, id) {
+      return  _.findWhere(set, { id: id }) || _.findWhere(set, { index: id });
+    }
+
+    function mergeBuckets(bucket1, bucket2) {
+      var merged = {};
+      _.each(_.keys(bucket1), function(type) {
+        merged[type] = bucket1[type].concat(bucket2[type]);
+      });
+      return merged;
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/1',
@@ -138,8 +150,7 @@
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
       lockedItemsValid: function(droppedId, droppedType) {
-        droppedId = getId(droppedId);
-        if (_.findWhere(vm.excludeditems, { id: droppedId })) {
+        if (alreadyExists(vm.excludeditems, getId(droppedId))) {
           return false;
         }
 
@@ -159,8 +170,7 @@
         return !(vm.lockeditems[droppedType] && vm.lockeditems[droppedType].id === droppedId);
       },
       onCharacterChange: function() {
-        vm.ranked = buckets[vm.active];
-        vm.rankedVendors = vendorBuckets[vm.active];
+        vm.ranked = (vm.includeVendors)? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -169,15 +179,15 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
+        vm.ranked = (vm.includeVendors)? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
         vm.setOrderValues = vm.setOrder.split(',');
       },
       onDrop: function(droppedId, type) {
-        droppedId = getId(droppedId);
-        if (vm.lockeditems[type] && vm.lockeditems[type].id === droppedId) {
-          return;
+        if (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], getId(droppedId))) {
+          return false;
         }
         var item = getItemById(droppedId, type);
         vm.lockeditems[type] = item;
@@ -195,16 +205,11 @@
         }
       },
       excludeItem: function(item) {
-        if (item.owner) {
-          vm.onExcludedDrop(item.owner + '-' + item.id, item.type);
-        } else {
-          vm.onExcludedDrop(item.index, item.type);
-        }
+        vm.onExcludedDrop(item.index, item.type);
       },
       onExcludedDrop: function(droppedId, type) {
-        droppedId = getId(droppedId);
-        if (_.findWhere(vm.excludeditems, { id: droppedId })) {
-          return;
+        if (alreadyExists(vm.excludeditems, getId(droppedId))) {
+          return false;
         }
         var item = getItemById(droppedId, type);
         vm.excludeditems.push(item);

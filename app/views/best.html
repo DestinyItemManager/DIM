@@ -40,25 +40,7 @@
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
-          <dim-store-item shift-click-callback="normal.excludeItem" item-data="item" store-data="normal.getStore(item.owner)"></dim-store-item>
-        </div>
-      </div>
-    </div>
-
-    <div ng-show="normal.includeVendors">
-      Vendor Items: <select ng-model='normal.vendorType' ng-options="bucket as bucket for (bucket, data) in normal.rankedVendors"></select>
-
-      <div class="itemQuality">
-        <div ng-repeat="item in normal.rankedVendors[normal.vendorType] | orderBy:'-quality.min'">
-          <div class="item-container" ng-if="item.primStat.value >= 280">
-            <div class="item-stats">
-              <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
-                <small ng-if="normalStat.scaled === 0">-</small>
-                <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
-              </div>
-            </div>
-            <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="item" store-data="normal.getStore(item.owner)"></dim-min-max-item>
-          </div>
+          <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="item" store-data="normal.getStore(item.owner)"></dim-min-max-item>
         </div>
       </div>
     </div>
