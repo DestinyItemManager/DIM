@@ -20,37 +20,47 @@
           Weapons: "Armi",
           Armor: "Armatura",
           Equip: "Equipaggia",
-          Vault: "Deposito"
+          Vault: "Depositi",
+          Vanguard: "Avanguardia"
         })
         .translations('de', {
           Weapons: "Waffen",
-          Armor: "Schutz",
-          Equip: "Ausstatten",
-          Vault: "Ausrüstungstresor"
+          Armor: "Rüstung",
+          Equip: "Ausrüsten",
+          Vault: "Tresor",
+          Vanguard: "Vorhut"
         })
         .translations('fr', {
           Level: "Niveau",
           Weapons: "Armes",
           Armor: "Armure",
           Equip: "Équiper",
-          Vault: "Coffres"
+          Vault: "Coffres",
+          Vanguard: "Avant-garde"
         })
         .translations('es', {
           Level: "Nivel",
           Weapons: "Armas",
           Armor: "Armadura",
           Equip: "Equipar",
-          Vault: "Bóveda",
+          Vault: "Depósito",
           Vanguard: "Vanguardia"
         })
         .translations('ja', {
+          Level: "レベル",
+          Weapons: "武器",
+          Armor: "装甲",
+          Equip: "装備し",
+          Vault: "保管",
+          Vanguard: "前衛"
         })
         .translations('pt-br', {
-          Level: "Nivel",
+          Level: "Nível",
           Weapons: "Armas",
           Armor: "Armadura",
           Equip: "Equipar",
-          Vault: "Cofres"
+          Vault: "Cofres",
+          Vanguard: "Vanguarda"
         })
         .fallbackLanguage('en');
     }]);
