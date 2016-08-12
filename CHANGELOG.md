@@ -1,5 +1,6 @@
 # Next
 
+* New glimmer-based filters, is:glimmeritem, is:glimmerboost, is:glimmersupply
 * Add option for new item and its popup to be hidden
 * Add ability to exclude items from loadout builder.
 * Expand/collapse sections in DIM.
