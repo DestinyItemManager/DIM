@@ -150,7 +150,8 @@
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
       lockedItemsValid: function(droppedId, droppedType) {
-        if (alreadyExists(vm.excludeditems, getId(droppedId))) {
+        droppedId = getId(droppedId);
+        if (alreadyExists(vm.excludeditems, droppedId)) {
           return false;
         }
 
@@ -186,7 +187,8 @@
         vm.setOrderValues = vm.setOrder.split(',');
       },
       onDrop: function(droppedId, type) {
-        if (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], getId(droppedId))) {
+        droppedId = getId(droppedId);
+        if (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], droppedId)) {
           return false;
         }
         var item = getItemById(droppedId, type);
@@ -208,7 +210,8 @@
         vm.onExcludedDrop(item.index, item.type);
       },
       onExcludedDrop: function(droppedId, type) {
-        if (alreadyExists(vm.excludeditems, getId(droppedId))) {
+        droppedId = getId(droppedId);
+        if (alreadyExists(vm.excludeditems, droppedId)) {
           return false;
         }
         var item = getItemById(droppedId, type);
