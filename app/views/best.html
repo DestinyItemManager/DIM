@@ -65,7 +65,7 @@
     <p>Excluded Items <small>- Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.</small></p>
     <div class="itemQuality">
       <div class="excluded-container">
-        <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="normal.onExcludedDrop($data, $channel)" drop-validate="normal.excludedItemsValid($data)">
+        <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="normal.onExcludedDrop($data, $channel)" drop-validate="normal.excludedItemsValid($data, $channel)">
           <div class="excluded-items">
             <div class="excluded-item" ng-repeat="excludeditem in normal.excludeditems">
               <dim-min-max-item item-data="excludeditem" store-data="normal.getStore(excludeditem.owner)"></dim-min-max-item>

@@ -168,7 +168,7 @@
         return exoticCount < 2;
       },
       excludedItemsValid: function(droppedId, droppedType) {
-        return !(vm.lockeditems[droppedType] && vm.lockeditems[droppedType].id === droppedId);
+        return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
       onCharacterChange: function() {
         vm.ranked = (vm.includeVendors)? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
