@@ -60,7 +60,7 @@
           Weapons: "武器",
           Armor: "よろい",
           General: "一般的な",
-          Postmaster: "郵便局",
+          Postmaster: "郵便局長",
           Equip: "装備する",
           Vault: "倉庫",
           Vanguard: "前衛"
