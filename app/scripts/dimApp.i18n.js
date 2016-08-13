@@ -11,6 +11,8 @@
           Level: "Level",
           Weapons: "Weapons",
           Armor: "Armor",
+          General: "General",
+          Postmaster: "Postmaster",
           Equip: "Equip",
           Vault: "Vault",
           Vanguard: "Vanguard"
@@ -19,38 +21,59 @@
           Level: "Livello",
           Weapons: "Armi",
           Armor: "Armatura",
+          General: "Generale",
+          Postmaster: "Amministratrice",
           Equip: "Equipaggia",
-          Vault: "Deposito"
+          Vault: "Depositi",
+          Vanguard: "Avanguardia"
         })
         .translations('de', {
           Weapons: "Waffen",
-          Armor: "Schutz",
-          Equip: "Ausstatten",
-          Vault: "Ausrüstungstresor"
+          Armor: "Rüstung",
+          General: "Allgemein",
+          Postmaster: "Poststelle",
+          Equip: "Ausrüsten",
+          Vault: "Tresor",
+          Vanguard: "Vorhut"
         })
         .translations('fr', {
           Level: "Niveau",
           Weapons: "Armes",
           Armor: "Armure",
+          General: "Général",
+          Postmaster: "Commis des postes",
           Equip: "Équiper",
-          Vault: "Coffres"
+          Vault: "Coffres",
+          Vanguard: "Avant-garde"
         })
         .translations('es', {
           Level: "Nivel",
           Weapons: "Armas",
           Armor: "Armadura",
+          Postmaster: "Administración",
           Equip: "Equipar",
-          Vault: "Bóveda",
+          Vault: "Depósito",
           Vanguard: "Vanguardia"
         })
         .translations('ja', {
+          Level: "レベル",
+          Weapons: "武器",
+          Armor: "装甲",
+          General: "一般的な",
+          Postmaster: "郵便局",
+          Equip: "装備し",
+          Vault: "保管",
+          Vanguard: "前衛"
         })
         .translations('pt-br', {
-          Level: "Nivel",
+          Level: "Nível",
           Weapons: "Armas",
           Armor: "Armadura",
           Equip: "Equipar",
-          Vault: "Cofres"
+          General: "Geral",
+          Postmaster: "Chefe do Correio",
+          Vault: "Cofres",
+          Vanguard: "Vanguarda"
         })
         .fallbackLanguage('en');
     }]);
