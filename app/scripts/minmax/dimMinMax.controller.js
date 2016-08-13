@@ -483,7 +483,7 @@
     vm.getItems();
 
     $scope.$on('dim-stores-updated', function() {
-      vm.onCharacterChange();
+      vm.getSetBucketsStep(vm.active);
     });
   }
 })();
