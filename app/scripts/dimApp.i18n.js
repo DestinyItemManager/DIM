@@ -15,7 +15,8 @@
           Postmaster: "Postmaster",
           Equip: "Equip",
           Vault: "Vault",
-          Vanguard: "Vanguard"
+          Vanguard: "Vanguard",
+          Reputation: "Reputation"
         })
         .translations('it', {
           Level: "Livello",
