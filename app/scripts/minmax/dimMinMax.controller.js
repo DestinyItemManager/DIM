@@ -481,5 +481,9 @@
       }
     });
     vm.getItems();
+
+    $scope.$on('dim-stores-updated', function() {
+      vm.onCharacterChange();
+    });
   }
 })();
