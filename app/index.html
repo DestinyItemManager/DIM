@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="styles/main.css?v=$DIM_VERSION">
   </head>
 
-  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.settings.itemQuality, 'new-item-animated': app.settings.showNewAnimation }">
+  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
     <div class="ng-cloak" ng-click="trackActivity()">
       <div id="header">
         <div class="content">
@@ -53,6 +53,7 @@
     </div>
 
     <script src="scripts/google.js?v=$DIM_VERSION"></script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
 
     <!-- begin vendor scripts -->
     <script src="vendor/jquery/dist/jquery.min.js?v=$DIM_VERSION"></script>
@@ -134,6 +135,7 @@
     <script src="scripts/vendors/dimVendor.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/vendors/dimVendorItems.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMax.controller.js?v=$DIM_VERSION"></script>
+    <script src="scripts/minmax/dimMinMaxItem.directive.js?v=$DIM_VERSION"></script>
     <!-- end app scripts -->
 
     <!-- <script src="scripts/scripts.min.js?v=$DIM_VERSION"></script> -->

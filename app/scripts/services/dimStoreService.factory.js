@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
     var _stores = [];
     var _idTracker = {};
 
@@ -76,8 +76,8 @@
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
-        this.background = 'http://bungie.net/' + characterInfo.backgroundPath;
-        this.icon = 'http://bungie.net/' + characterInfo.emblemPath;
+        this.background = 'https://bungie.net/' + characterInfo.backgroundPath;
+        this.icon = 'https://bungie.net/' + characterInfo.emblemPath;
         this.stats = getStatsData(statDefs, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
@@ -326,9 +326,9 @@
 
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: 'http://bungie.net/' + character.emblemPath,
+                icon: 'https://bungie.net/' + character.emblemPath,
                 lastPlayed: character.characterBase.dateLastPlayed,
-                background: 'http://bungie.net/' + character.backgroundPath,
+                background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
                 stats: getStatsData(statDefs, character.characterBase),
@@ -563,6 +563,7 @@
         categories: categories, // see dimItemCategoryDefinitions
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
+        isVendorItem: (!owner || owner.id === null),
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -602,7 +603,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
+        createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
@@ -1292,6 +1293,9 @@
             }
             return processItems({ id: null }, vendor.items)
               .then(function(items) {
+                _.each(items, function(item) {
+                  item.vendorIcon = vendor.vendorIcon;
+                });
                 vendor.items = {};
                 vendor.items.armor = _.filter(items, function(item) {
                   return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280;

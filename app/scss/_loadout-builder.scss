@@ -2,6 +2,10 @@
   width: 900px;
   margin: 0 auto;
 
+  #includeVendors {
+    vertical-align: middle;
+  }
+
   .fa-arrow-circle-left {
     padding-right: 5px;
   }
@@ -13,6 +17,10 @@
   .label {
     text-align: center;
     font-size: 10px;
+  }
+  .vendor-checkbox {
+    margin: 0;
+    margin-left: 10px;
   }
 
   .itemQuality {
@@ -49,7 +57,28 @@
       border:2px solid #DDD;
     }
   }
-  
+
+  .item-overlay-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .vendor-icon-background {
+    pointer-events: none;
+    background-color: rgba(100, 100, 100, 0.6);
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+  .vendor-icon {
+    width: 20px;
+    height: 20px;
+  }
+
   .excluded-item {
     display: inline-block;
     margin-right: 5px;
@@ -70,6 +99,7 @@
     float: left;
   }
   .set-item {
+    position: relative;
     display: inline-block;
     margin-right: 7px;
     .talent-grid.smaller {
@@ -80,7 +110,7 @@
   .set-item:last-child {
     margin-right: 0;
   }
-  
+
   .excluded-items {
     border: 2px solid #DDD;
     display: flex;
@@ -89,13 +119,12 @@
     width: 452px;
     min-height: 60px;
   }
-  
+
   .excluded-container {
     margin-right: 10px;
   }
-  
+
   .excluded-container:last-child {
     margin-right: 0;
   }
 }
-

@@ -8,18 +8,30 @@
 
   ImageFallback.$inject = ['$q'];
 
+  // Report image fallback no more than once an hour
+  var reportFallback = _.debounce(function() {
+    if (ga) {
+      // Log the failure in Google Analytics
+      ga('send', 'exception', {
+        exDescription: 'IconFallback',
+        exFatal: false
+      });
+    }
+  }, 60 * 60 * 1000, true);
+
   function ImageFallback($q) {
     // Return an always-successful promise to either the bungie-hosted image
     // or the local (slower) extension hosted image. Memoized so once we know
     // we don't try again.
     var loadImage = _.memoize(function(path) {
       return $q(function(resolve) {
-        $('<img/>').attr('src', 'http://www.bungie.net' + path)
+        $('<img/>').attr('src', 'https://www.bungie.net' + path)
           .load(function() {
             $(this).remove();
-            resolve('http://www.bungie.net' + path);
+            resolve('https://www.bungie.net' + path);
           })
           .error(function() {
+            reportFallback();
             $(this).remove();
             resolve(chrome.extension.getURL(path));
           });

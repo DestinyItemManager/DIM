@@ -9,6 +9,7 @@
   function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog) {
     var vm = this;
     var buckets = [];
+    var vendorBuckets = [];
 
     function getBonusType(armorpiece) {
       if (!armorpiece.normalStats) {
@@ -38,7 +39,7 @@
       };
     }
 
-    function getBestArmor(bucket, locked, excluded) {
+    function getBestArmor(bucket, vendorBucket, locked, excluded) {
       var statHashes = [
           { stats: [144602215, 1735777505], type: 'intdisc' },
           { stats: [144602215, 4244567218], type: 'intstr' },
@@ -54,14 +55,15 @@
       var armortype;
 
       for (armortype in bucket) {
+        var combined = (vm.includeVendors) ? bucket[armortype].concat(vendorBucket[armortype]) : bucket[armortype];
         if (locked[armortype]) {
           best = [{ item: locked[armortype], bonus_type: getBonusType(locked[armortype]) }];
         } else {
           best = [];
 
           // Filter out excluded
-          var filtered = _.filter(bucket[armortype], function(item) {
-            return !_.findWhere(excluded, { id: item.id });
+          var filtered = _.filter(combined, function(item) {
+            return !_.findWhere(excluded, { index: item.index });
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
@@ -106,6 +108,27 @@
       ) < 2;
     }
 
+    function getId(index) {
+      var split = index.split('-');
+      return split[1] === '1' ? index : split[1];
+    }
+
+    function getItemById(id, type) {
+      return _.findWhere(buckets[vm.active][type], { id: id }) || _.findWhere(vendorBuckets[vm.active][type], { index: id });
+    }
+
+    function alreadyExists(set, id) {
+      return _.findWhere(set, { id: id }) || _.findWhere(set, { index: id });
+    }
+
+    function mergeBuckets(bucket1, bucket2) {
+      var merged = {};
+      _.each(_.keys(bucket1), function(type) {
+        merged[type] = bucket1[type].concat(bucket2[type]);
+      });
+      return merged;
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/1',
@@ -117,6 +140,8 @@
       excludeditems: [],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       type: 'Helmet',
+      vendorType: 'Helmet',
+      includeVendors: false,
       showBlues: false,
       showExotics: true,
       showYear1: false,
@@ -125,12 +150,12 @@
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
       lockedItemsValid: function(droppedId, droppedType) {
-        droppedId = droppedId.split('-')[1];
-        if (_.findWhere(vm.excludeditems, { id: droppedId })) {
+        droppedId = getId(droppedId);
+        if (alreadyExists(vm.excludeditems, droppedId)) {
           return false;
         }
 
-        var item = _.findWhere(buckets[vm.active][droppedType], { id: droppedId });
+        var item = getItemById(droppedId, droppedType);
         var exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         _.each(vm.lockeditems, function(lockeditem) {
           if (lockeditem === null || lockeditem.type === droppedType) {
@@ -143,10 +168,10 @@
         return exoticCount < 2;
       },
       excludedItemsValid: function(droppedId, droppedType) {
-        return !(vm.lockeditems[droppedType] && vm.lockeditems[droppedType].id === droppedId);
+        return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
       onCharacterChange: function() {
-        vm.ranked = buckets[vm.active];
+        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -154,15 +179,19 @@
       onModeChange: function() {
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
+      onIncludeVendorsChange: function() {
+        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+      },
       onOrderChange: function() {
         vm.setOrderValues = vm.setOrder.split(',');
       },
       onDrop: function(droppedId, type) {
-        droppedId = droppedId.split('-')[1];
-        if (vm.lockeditems[type] && vm.lockeditems[type].id === droppedId) {
+        droppedId = getId(droppedId);
+        if (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], droppedId)) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], { id: droppedId });
+        var item = getItemById(droppedId, type);
         vm.lockeditems[type] = item;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
@@ -178,22 +207,22 @@
         }
       },
       excludeItem: function(item) {
-        vm.onExcludedDrop(item.owner + '-' + item.id, item.type);
+        vm.onExcludedDrop(item.index, item.type);
       },
       onExcludedDrop: function(droppedId, type) {
-        droppedId = droppedId.split('-')[1];
-        if (_.findWhere(vm.excludeditems, { id: droppedId })) {
+        droppedId = getId(droppedId);
+        if (alreadyExists(vm.excludeditems, droppedId)) {
           return;
         }
-        var item = _.findWhere(buckets[vm.active][type], { id: droppedId });
+        var item = getItemById(droppedId, type);
         vm.excludeditems.push(item);
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
-      onExcludedRemove: function(removedId) {
-        vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.id !== removedId; });
+      onExcludedRemove: function(removedIndex) {
+        vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.index !== removedIndex; });
 
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
@@ -219,7 +248,7 @@
         });
       },
       getSetBucketsStep: function(activeGaurdian) {
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vm.lockeditems, vm.excludeditems);
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems);
         var helms = bestArmor.Helmet || [];
         var gaunts = bestArmor.Gauntlets || [];
         var chests = bestArmor.Chest || [];
@@ -358,6 +387,7 @@
         }
 
         var allItems = [];
+        var vendorItems = [];
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
         _.each(stores, function(store) {
@@ -370,6 +400,18 @@
           });
 
           allItems = allItems.concat(items);
+
+          _.each(store.vendors, function(vendor) {
+            var vendItems = _.filter(vendor.items.armor, function(item) {
+              return item.primStat &&
+              item.primStat.statHash === 3897883278 && // has defense hash
+              ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
+              item.primStat.value >= 280 && // only 280+ light items
+              item.stats;
+            });
+
+            vendorItems = vendorItems.concat(vendItems);
+          });
         });
 
         function normalizeStats(item) {
@@ -415,8 +457,9 @@
         }
 
         function initBuckets() {
-          function loadBucket(classType) {
-            return getBuckets(allItems.filter(function(item) {
+          function loadBucket(classType, useVendorItems = false) {
+            var items = (useVendorItems) ? vendorItems : allItems;
+            return getBuckets(items.filter(function(item) {
               return item.classType === classType || item.classType === 3;
             }));
           }
@@ -424,6 +467,12 @@
             titan: loadBucket(0),
             hunter: loadBucket(1),
             warlock: loadBucket(2)
+          };
+
+          vendorBuckets = {
+            titan: loadBucket(0, true),
+            hunter: loadBucket(1, true),
+            warlock: loadBucket(2, true)
           };
         }
 

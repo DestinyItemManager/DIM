@@ -70,7 +70,8 @@
     year: ['year1', 'year2'],
     infusable: ['infusable', 'infuse'],
     stattype: ['intellect', 'discipline', 'strength'],
-    new: ['new']
+    new: ['new'],
+    glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
   };
 
   var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
@@ -349,6 +350,30 @@
         }
 
         return (item.classType === value);
+      },
+      glimmer: function(predicate, item) {
+        var boosts = [
+          1043138475, // -black-wax-idol
+          1772853454, // -blue-polyphage
+          3783295803, // -ether-seeds
+          3446457162  // -resupply-codes
+        ];
+        var supplies = [
+          269776572, // -house-banners
+          3632619276, // -silken-codex
+          2904517731, // -axiomatic-beads
+          1932910919 // -network-keys
+        ];
+
+        switch (predicate) {
+        case 'glimmerboost':
+          return boosts.includes(item.hash);
+        case 'glimmersupply':
+          return supplies.includes(item.hash);
+        case 'glimmeritem':
+          return boosts.includes(item.hash) || supplies.includes(item.hash);
+        }
+        return false;
       },
       stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
