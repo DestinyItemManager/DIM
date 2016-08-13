@@ -11,6 +11,11 @@ To get started with DIM, download the extension from the [Chrome Store](https://
 
 To beta test new features in DIM, download the beta extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager-beta/mkiipknpfaacbjdagdeppdacpgpdjklc).
 
+## Translation
+
+If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portugese), great way to help with DIM development is to provide translations. This can be done from the GitHub UI without JavaScript development experience. See [the Translation wiki](https://github.com/DestinyItemManager/DIM/wiki/Translations) for more info on how to help.
+
+
 ##Requirements
 DIM is an extension that runs within the Chrome Desktop Web Browser.
 
@@ -39,7 +44,6 @@ Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob
 ##Bugs and feature requests
 
 Have a bug or a feature request? Please first search for [existing and closed issues](https://github.com/DestinyItemManager/DIM/issues). If your problem or idea is not addressed yet, please open a new issue.
-
 
 ##Community
 Keep track of development and community news.
