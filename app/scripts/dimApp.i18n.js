@@ -59,12 +59,12 @@
         .translations('ja', {
           Level: "レベル",
           Weapons: "武器",
-          Armor: "装甲",
-          General: "一般的な",
-          Postmaster: "郵便局",
-          Equip: "装備し",
-          Vault: "保管",
-          Vanguard: "前衛"
+          Armor: "よろい",
+          General: "全般",
+          Postmaster: "ポストマスター",
+          Equip: "装備する",
+          Vault: "装備",
+          Vanguard: "バンガード"
         })
         .translations('pt-br', {
           Level: "Nível",
