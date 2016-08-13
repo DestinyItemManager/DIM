@@ -26,7 +26,8 @@
           Postmaster: "Amministratrice",
           Equip: "Equipaggia",
           Vault: "Depositi",
-          Vanguard: "Avanguardia"
+          Vanguard: "Avanguardia",
+          Reputation: "Reputazione"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -35,7 +36,8 @@
           Postmaster: "Poststelle",
           Equip: "Ausrüsten",
           Vault: "Tresor",
-          Vanguard: "Vorhut"
+          Vanguard: "Vorhut",
+          Reputation: "Ruf"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -45,7 +47,8 @@
           Postmaster: "Commis des postes",
           Equip: "Équiper",
           Vault: "Coffres",
-          Vanguard: "Avant-garde"
+          Vanguard: "Avant-garde",
+          Reputation: "Estime"
         })
         .translations('es', {
           Level: "Nivel",
@@ -54,7 +57,8 @@
           Postmaster: "Administración",
           Equip: "Equipar",
           Vault: "Depósito",
-          Vanguard: "Vanguardia"
+          Vanguard: "Vanguardia",
+          Reputation: "Reputación"
         })
         .translations('ja', {
           Level: "レベル",
@@ -64,7 +68,8 @@
           Postmaster: "ポストマスター",
           Equip: "装備する",
           Vault: "装備",
-          Vanguard: "バンガード"
+          Vanguard: "バンガード",
+          Reputation: "評価"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -74,7 +79,8 @@
           General: "Geral",
           Postmaster: "Chefe do Correio",
           Vault: "Cofres",
-          Vanguard: "Vanguarda"
+          Vanguard: "Vanguarda",
+          Reputation: "Reputação"
         })
         .fallbackLanguage('en');
     }]);
