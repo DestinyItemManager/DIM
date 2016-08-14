@@ -15,7 +15,8 @@
           Postmaster: "Postmaster",
           Equip: "Equip",
           Vault: "Vault",
-          Progress: "Progress"
+          Progress: "Progress",
+          Vendors: "Vendors",
           Vanguard: "Vanguard",
           Reputation: "Reputation"
         })
@@ -28,6 +29,7 @@
           Equip: "Equipaggia",
           Vault: "Depositi",
           Progress: "Progresso",
+          Vendors: "Mercanti",
           Vanguard: "Avanguardia",
           Reputation: "Reputazione"
         })
@@ -39,6 +41,7 @@
           Equip: "Ausrüsten",
           Vault: "Tresor",
           Progress: "Fortschritt",
+          Vendors: "Händler",
           Vanguard: "Vorhut",
           Reputation: "Ruf"
         })
@@ -51,6 +54,7 @@
           Equip: "Équiper",
           Vault: "Coffres",
           Progress: "Progression",
+          Vendors: "Marchands",
           Vanguard: "Avant-garde",
           Reputation: "Estime"
         })
@@ -62,6 +66,7 @@
           Equip: "Equipar",
           Vault: "Depósito",
           Progress: "Progreso",
+          Vendors: "Comerciantes",
           Vanguard: "Vanguardia",
           Reputation: "Reputación"
         })
@@ -74,6 +79,7 @@
           Equip: "装備する",
           Vault: "装備",
           Progress: "進行状況",
+          Vendors: "ベンダー",
           Vanguard: "バンガード",
           Reputation: "評価"
         })
@@ -86,6 +92,7 @@
           Postmaster: "Chefe do Correio",
           Vault: "Cofres",
           Progress: "Progresso",
+          Vendors: "Vendedores",
           Vanguard: "Vanguarda",
           Reputation: "Reputação"
         })
