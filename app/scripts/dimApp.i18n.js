@@ -18,7 +18,7 @@
           Progress: "Progress",
           Vendors: "Vendors",
           Vanguard: "Vanguard",
-          Reputation: "Reputation"
+          Reputation: "Reputation",
         })
         .translations('it', {
           Level: "Livello",
@@ -31,7 +31,7 @@
           Progress: "Progresso",
           Vendors: "Mercanti",
           Vanguard: "Avanguardia",
-          Reputation: "Reputazione"
+          Reputation: "Reputazione",
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -43,7 +43,7 @@
           Progress: "Fortschritt",
           Vendors: "Händler",
           Vanguard: "Vorhut",
-          Reputation: "Ruf"
+          Reputation: "Ruf",
         })
         .translations('fr', {
           Level: "Niveau",
@@ -56,7 +56,7 @@
           Progress: "Progression",
           Vendors: "Marchands",
           Vanguard: "Avant-garde",
-          Reputation: "Estime"
+          Reputation: "Estime",
         })
         .translations('es', {
           Level: "Nivel",
@@ -68,7 +68,7 @@
           Progress: "Progreso",
           Vendors: "Comerciantes",
           Vanguard: "Vanguardia",
-          Reputation: "Reputación"
+          Reputation: "Reputación",
         })
         .translations('ja', {
           Level: "レベル",
@@ -81,7 +81,7 @@
           Progress: "進行状況",
           Vendors: "ベンダー",
           Vanguard: "バンガード",
-          Reputation: "評価"
+          Reputation: "評価",
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -94,7 +94,7 @@
           Progress: "Progresso",
           Vendors: "Vendedores",
           Vanguard: "Vanguarda",
-          Reputation: "Reputação"
+          Reputation: "Reputação",
         })
         .fallbackLanguage('en');
     }]);
