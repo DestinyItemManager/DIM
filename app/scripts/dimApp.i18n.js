@@ -15,6 +15,7 @@
           Postmaster: "Postmaster",
           Equip: "Equip",
           Vault: "Vault",
+          Progress: "Progress"
           Vanguard: "Vanguard",
           Reputation: "Reputation"
         })
@@ -26,6 +27,7 @@
           Postmaster: "Amministratrice",
           Equip: "Equipaggia",
           Vault: "Depositi",
+          Progress: "Progresso",
           Vanguard: "Avanguardia",
           Reputation: "Reputazione"
         })
@@ -36,6 +38,7 @@
           Postmaster: "Poststelle",
           Equip: "Ausrüsten",
           Vault: "Tresor",
+          Progress: "Fortschritt",
           Vanguard: "Vorhut",
           Reputation: "Ruf"
         })
@@ -47,6 +50,7 @@
           Postmaster: "Commis des postes",
           Equip: "Équiper",
           Vault: "Coffres",
+          Progress: "Progression",
           Vanguard: "Avant-garde",
           Reputation: "Estime"
         })
@@ -57,6 +61,7 @@
           Postmaster: "Administración",
           Equip: "Equipar",
           Vault: "Depósito",
+          Progress: "Progreso",
           Vanguard: "Vanguardia",
           Reputation: "Reputación"
         })
@@ -68,6 +73,7 @@
           Postmaster: "ポストマスター",
           Equip: "装備する",
           Vault: "装備",
+          Progress: "進行状況",
           Vanguard: "バンガード",
           Reputation: "評価"
         })
@@ -79,6 +85,7 @@
           General: "Geral",
           Postmaster: "Chefe do Correio",
           Vault: "Cofres",
+          Progress: "Progresso",
           Vanguard: "Vanguarda",
           Reputation: "Reputação"
         })
