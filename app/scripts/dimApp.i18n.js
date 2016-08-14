@@ -104,7 +104,7 @@
           Vanguard: "バンガード",
           Reputation: "評価",
           About: "紹介",
-          Support: "サポート"
+          Support: "サポート",
           Settings: "設定"
         })
         .translations('pt-br', {
