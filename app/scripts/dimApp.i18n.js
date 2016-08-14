@@ -38,7 +38,7 @@
           Vanguard: "Avanguardia",
           Reputation: "Reputazione",
           About: "Chi siamo",
-          Support: "Aiutare",          
+          Support: "Aiutare",
           Settings: "Impostazioni"
         })
         .translations('de', {
