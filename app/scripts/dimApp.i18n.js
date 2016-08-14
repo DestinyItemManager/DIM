@@ -34,7 +34,7 @@
           Vendors: "Mercanti",
           Vanguard: "Avanguardia",
           Reputation: "Reputazione",
-          About: "Chi siamo",            
+          About: "Chi siamo",
           Settings: "Impostazioni"
         })
         .translations('de', {
