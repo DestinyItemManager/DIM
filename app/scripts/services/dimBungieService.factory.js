@@ -57,7 +57,7 @@
                  response.config.url.indexOf('/Account/') >= 0 &&
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
-	  } else if (errorCode > 1) {
+      } else if (errorCode > 1) {
         console.log('Error Code: ' + errorCode);
         return $q.reject(new Error(response.data.Message));
       }
@@ -200,9 +200,9 @@
       return membershipPromise;
 
       function getBnetMembershipReqest(token) {
-	    if (platform === null) {
-		  return $q.reject(new Error('hideme'));
-        }		  
+        if (platform === null) {
+          return $q.reject(new Error('hideme'));
+        }
         return {
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
@@ -223,8 +223,8 @@
       }
 
       function rejectBnetMembershipRequest(response) {
-	    if (platform === null) {
-		  return $q.reject(new Error('hideme'));
+        if (platform === null) {
+          return $q.reject(new Error('hideme'));
         }
         if (response.status === -1) {
           return $q.reject(new Error('You may not be connected to the internet.'));
