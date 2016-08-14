@@ -19,6 +19,8 @@
           Vendors: "Vendors",
           Vanguard: "Vanguard",
           Reputation: "Reputation",
+          About: "About",
+          Settings: "Settings"
         })
         .translations('it', {
           Level: "Livello",
@@ -32,6 +34,8 @@
           Vendors: "Mercanti",
           Vanguard: "Avanguardia",
           Reputation: "Reputazione",
+          About: "Chi siamo",            
+          Settings: "Impostazioni"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -44,6 +48,8 @@
           Vendors: "Händler",
           Vanguard: "Vorhut",
           Reputation: "Ruf",
+          About: "Über",
+          Settings: "Einstellungen"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -57,6 +63,8 @@
           Vendors: "Marchands",
           Vanguard: "Avant-garde",
           Reputation: "Estime",
+          About: "À propos",
+          Settings: "Paramètres"
         })
         .translations('es', {
           Level: "Nivel",
@@ -69,6 +77,8 @@
           Vendors: "Comerciantes",
           Vanguard: "Vanguardia",
           Reputation: "Reputación",
+          About: "Sobre",
+          Settings: "Configuración"
         })
         .translations('ja', {
           Level: "レベル",
@@ -82,6 +92,8 @@
           Vendors: "ベンダー",
           Vanguard: "バンガード",
           Reputation: "評価",
+          About: "紹介",
+          Settings: "設定"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -95,6 +107,8 @@
           Vendors: "Vendedores",
           Vanguard: "Vanguarda",
           Reputation: "Reputação",
+          About: "Sobre",
+          Settings: "Configurações"
         })
         .fallbackLanguage('en');
     }]);
