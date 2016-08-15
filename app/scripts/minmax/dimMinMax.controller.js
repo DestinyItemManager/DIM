@@ -180,7 +180,22 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
-        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        if (!vm.includeVendors) {
+          vm.ranked = buckets[vm.active];
+
+          // Filter any vendor items from locked or excluded items
+          _.each(vm.lockeditems, function(item, type) {
+            if (item && item.isVendorItem) {
+              vm.lockeditems[type] = null;
+            }
+          });
+
+          vm.excludeditems = _.filter(vm.excludeditems, function(item) {
+            return !item.isVendorItem;
+          });
+        } else {
+          vm.ranked = mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]);
+        }
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
