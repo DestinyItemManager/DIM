@@ -180,7 +180,9 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
-        if (!vm.includeVendors) {
+        if (vm.includeVendors) {
+          vm.ranked = mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]);
+        } else {
           vm.ranked = buckets[vm.active];
 
           // Filter any vendor items from locked or excluded items
@@ -193,8 +195,6 @@
           vm.excludeditems = _.filter(vm.excludeditems, function(item) {
             return !item.isVendorItem;
           });
-        } else {
-          vm.ranked = mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]);
         }
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
