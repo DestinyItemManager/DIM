@@ -49,6 +49,7 @@
       <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
       <div id="content" class="content" ui-view></div>
       <div class="store-bounds"></div>
+      <a class="loadout random" href="#" ng-disabled="vm.disableRandomLoadout" ng-if="app.showRandomLoadout" ng-click="app.applyRandomLoadout($event)">&Pi;</a>
     </div>
 
     <script src="scripts/google.js?v=$DIM_VERSION"></script>
