@@ -23,6 +23,7 @@
 * New aliases for rarity filters (is:white, is:green, is:blue, is:purple, is:yellow).
 * An alternate option for the "Gather Engrams" loadout can exclude gathering exotic engrams.
 * Removed popup notification for new items.
+* #798 Keyword searches will now scan perk descriptions.
 
 # 3.8.3
 
