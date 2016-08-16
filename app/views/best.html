@@ -51,7 +51,14 @@
     <div class="itemQuality">
       <div ng-repeat="(type, lockeditem) in normal.lockeditems">
         <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
-          <div ng-switch-when="null" class="empty-item"></div>
+          <div ng-switch-when="null" class="empty-item">
+            <div class="perk-addition">
+              <div class="perk-addition-text-container">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <small class="perk-addition-text">Lock perk</small>
+              </div>
+            </div>
+          </div>
           <div ng-switch-default>
             <dim-min-max-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-min-max-item>
             <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>

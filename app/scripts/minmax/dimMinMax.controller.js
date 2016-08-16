@@ -387,7 +387,9 @@
         }
 
         var allItems = [];
+        var allPerks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
         var vendorItems = [];
+        var vendorPerks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
         _.each(stores, function(store) {
@@ -400,6 +402,13 @@
           });
 
           allItems = allItems.concat(items);
+          _.each(items, function(item) {
+            // Filter out any unnecessary perks here
+            allPerks[item.type] = _.chain(allPerks[item.type].concat(item.talentGrid.nodes))
+                                    .uniq(function(node) { return node.hash; })
+                                    .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                                    .value();
+          });
 
           _.each(store.vendors, function(vendor) {
             var vendItems = _.filter(vendor.items.armor, function(item) {
@@ -411,6 +420,18 @@
             });
 
             vendorItems = vendorItems.concat(vendItems);
+            _.each(vendItems, function(item) {
+              // Filter out any unnecessary perks here
+              vendorPerks[item.type] = _.chain(vendorPerks[item.type].concat(item.talentGrid.nodes))
+                                      .uniq(function(node) { return node.hash; })
+                                      .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                                      .value();
+            });
+          });
+
+          // Remove overlapping perks in allPerks from vendorPerks
+          _.each(vendorPerks, function(perks, type) {
+            vendorPerks[type] = _.reject(perks, function(perk) { return _.contains(_.pluck(allPerks[type], 'hash'), perk.hash); });
           });
         });
 
