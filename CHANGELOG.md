@@ -24,6 +24,7 @@
 * An alternate option for the "Gather Engrams" loadout can exclude gathering exotic engrams.
 * Removed popup notification for new items.
 * #798 Keyword searches will now scan perk descriptions.
+* #799 Randomize equipped items for current character. Don't look at us if you have to play a match using Thorn.
 
 # 3.8.3
 
