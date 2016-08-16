@@ -1,5 +1,7 @@
 # Next
 
+# 3.9.0
+
 * New glimmer-based filters, is:glimmeritem, is:glimmerboost, is:glimmersupply
 * Add option for new item and its popup to be hidden
 * Add ability to exclude items from loadout builder.
