@@ -100,15 +100,34 @@
   angular.module('dimApp')
     .component('dimVendorItem', VendorItem)
     .component('dimVendorItems', VendorItems)
-    .component('dimVendorItemsCombined', VendorItemsCombined);
+    .component('dimVendorItemsCombined', VendorItemsCombined)
+    .filter('sortStores', function() {
+      return function sortStores(stores, order) {
+        if (order === 'mostRecent') {
+          return _.sortBy(stores, 'lastPlayed').reverse();
+        } else if (order === 'mostRecentReverse') {
+          return _.sortBy(stores, function(store) {
+            if (store.isVault) {
+              return Infinity;
+            } else {
+              return store.lastPlayed;
+            }
+          });
+        } else {
+          return _.sortBy(stores, 'id');
+        }
+      };
+    });
 
-  VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService'];
+  VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 
-  function VendorItemsCtrl($scope, ngDialog, dimStoreService) {
+  function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) {
     var vm = this;
     var dialogResult = null;
     var detailItem = null;
     var detailItemElement = null;
+
+    vm.settings = dimSettingsService;
 
     $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult && $dialog[0].id === dialogResult.id) {

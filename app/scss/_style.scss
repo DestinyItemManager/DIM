@@ -2087,3 +2087,15 @@ button.toast-close-button {
     }
   }
 }
+
+.loadout {
+  &.random {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: .5rem;
+    color: #222;
+    text-decoration: none;
+    font-weight: normal;
+  }
+}
