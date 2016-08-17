@@ -28,24 +28,12 @@
 
     vm.downloadWeaponCsv = function(){
       dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
-      if (ga) {
-        ga('send', 'event', {
-          eventCategory: 'Download CSV',
-          eventAction: 'click',
-          eventLabel: 'Weapons'
-        });
-      }
+      _gaq.push(['_trackEvent', 'Download CSV', 'Weapons']);
     };
 
     vm.downloadArmorCsv = function(){
       dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Armor");
-      if (ga) {
-        ga('send', 'event', {
-          eventCategory: 'Download CSV',
-          eventAction: 'click',
-          eventLabel: 'Armor'
-        });
-      }
+      _gaq.push(['_trackEvent', 'Download CSV', 'Armor']);
     };
   }
 })();
