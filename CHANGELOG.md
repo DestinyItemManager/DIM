@@ -1,4 +1,5 @@
 # Next
+* [#812](https://github.com/DestinyItemManager/DIM/issues/812) Removed rare masks from the items table used by the random item loadout.
 
 # 3.9.1
 * [#801](https://github.com/DestinyItemManager/DIM/issues/801) Resolved error with vendor page character sorting.
