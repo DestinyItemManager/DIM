@@ -1,7 +1,11 @@
 # Next
+
+# 3.9.2
+
 * [#812](https://github.com/DestinyItemManager/DIM/issues/812) Removed rare masks from the items table used by the random item loadout.
 
 # 3.9.1
+
 * [#801](https://github.com/DestinyItemManager/DIM/issues/801) Resolved error with vendor page character sorting.
 * [#792](https://github.com/DestinyItemManager/DIM/pull/792) Warning if user clicks on perks to notify them that they can only be changed in game.
 * [#795](https://github.com/DestinyItemManager/DIM/pull/795) Updated strange coin icon for Xur.
