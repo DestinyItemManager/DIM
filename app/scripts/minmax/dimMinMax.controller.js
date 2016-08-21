@@ -129,6 +129,10 @@
       return merged;
     }
 
+    function resetLockedItems() {
+      vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/1',
@@ -172,8 +176,8 @@
       },
       onCharacterChange: function() {
         vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
-        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.excludeditems = [];
+        resetLockedItems();
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onModeChange: function() {
@@ -496,5 +500,13 @@
       }
     });
     vm.getItems();
+
+    $scope.$on('dim-stores-updated', function() {
+      vm.getSetBucketsStep(vm.active);
+    });
+
+    $scope.$on('dim-active-platform-updated', function() {
+      resetLockedItems();
+    });
   }
 })();
