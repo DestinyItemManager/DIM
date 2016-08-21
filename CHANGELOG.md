@@ -1,5 +1,7 @@
 # Next
 
+* [#823](https://github.com/DestinyItemManager/DIM/issues/823) Added 'current' property to stores.
+
 # 3.9.2
 
 * [#812](https://github.com/DestinyItemManager/DIM/issues/812) Removed rare masks from the items table used by the random item loadout.

@@ -210,6 +210,16 @@
             throw new Error("Active platform mismatch");
           }
 
+          const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
+            if (rawStore.id === 'vault') {
+              return memo;
+            }
+
+            const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
+
+            return (!memo) ? d1 : ((d1 >= memo) ? d1 : memo);
+          }, null);
+
           var glimmer;
           var marks;
           _removedNewItems.forEach((id) => newItems.delete(id));
@@ -231,6 +241,7 @@
                 id: 'vault',
                 name: 'vault',
                 class: 'vault',
+                current: false,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
                 background: '/images/vault-background.png',
@@ -292,6 +303,7 @@
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
                 icon: 'https://bungie.net/' + raw.character.base.emblemPath,
+                current: lastPlayedDate.getTime() === (new Date(raw.character.base.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: raw.character.base.characterBase.dateLastPlayed,
                 background: 'https://bungie.net/' + raw.character.base.backgroundPath,
                 level: raw.character.base.characterLevel,

@@ -2099,3 +2099,13 @@ button.toast-close-button {
     font-weight: normal;
   }
 }
+
+.current.character .character-box:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-top: 20px solid gold;
+  border-right: 20px solid transparent;
+}
