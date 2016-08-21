@@ -217,7 +217,7 @@
 
             const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
 
-            return (!memo) ? d1 : ((d1 >= memo) ? d1 : memo);
+            return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
           }, null);
 
           var glimmer;
