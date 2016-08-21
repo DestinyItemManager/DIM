@@ -20,7 +20,8 @@
     "count": true,
     "gapi": true,
     "Set": true,
-    "ga": true
+    "ga": true,
+    "_gaq": true
   },
   "rules": {
     "array-callback-return": "error",

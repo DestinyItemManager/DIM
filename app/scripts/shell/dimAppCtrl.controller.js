@@ -152,7 +152,7 @@
     vm.showRandomLoadout = false;
     vm.disableRandomLoadout = false;
 
-    vm.applyRandomLoadout = function($event) {
+    vm.applyRandomLoadout = function() {
       const loadout = {};
 
       if (vm.disableRandomLoadout) {
@@ -208,12 +208,12 @@
 
             const foundExotic = {};
 
-            var fn = (type) => (item) => ((item.type === type)
-              && item.equipment
-              && (store.level >= item.equipRequiredLevel)
-              && (item.typeName !== 'Mask' || ((item.typeName === 'Mask') && (item.tier === 'Legendary')))
-              && (!item.notransfer || (item.notransfer && (item.owner === store.id)))
-              && (!foundExotic[item.bucket.sort] || (foundExotic[item.bucket.sort] && !item.isExotic)));
+            var fn = (type) => (item) => ((item.type === type) &&
+              item.equipment &&
+              (store.level >= item.equipRequiredLevel) &&
+              (item.typeName !== 'Mask' || ((item.typeName === 'Mask') && (item.tier === 'Legendary'))) &&
+              (!item.notransfer || (item.notransfer && (item.owner === store.id))) &&
+              (!foundExotic[item.bucket.sort] || (foundExotic[item.bucket.sort] && !item.isExotic)));
 
             _.each(types, (type) => {
               const filteredItems = _.filter(accountItems, fn(type));
