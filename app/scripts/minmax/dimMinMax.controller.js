@@ -72,7 +72,7 @@
           var filtered = _.filter(combined, function(item) {
             return !_.findWhere(excluded, { index: item.index }) &&   // Not excluded
                     // Doesn't have a locked perk
-                    (lockedPerks[armortype].length === 0 || _.some(lockedPerks[armortype], function(perkHash) { return _.findWhere(item.talentGrid.nodes, {hash: perkHash}); }));
+                    (lockedPerks[armortype].length === 0 || _.some(lockedPerks[armortype], function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
