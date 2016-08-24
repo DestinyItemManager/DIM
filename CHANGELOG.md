@@ -1,5 +1,17 @@
 # Next
 
+# 3.9.2
+
+* [#812](https://github.com/DestinyItemManager/DIM/issues/812) Removed rare masks from the items table used by the random item loadout.
+
+# 3.9.1
+
+* [#801](https://github.com/DestinyItemManager/DIM/issues/801) Resolved error with vendor page character sorting.
+* [#792](https://github.com/DestinyItemManager/DIM/pull/792) Warning if user clicks on perks to notify them that they can only be changed in game.
+* [#795](https://github.com/DestinyItemManager/DIM/pull/795) Updated strange coin icon for Xur.
+
+# 3.9.0
+
 * New glimmer-based filters, is:glimmeritem, is:glimmerboost, is:glimmersupply
 * Add option for new item and its popup to be hidden
 * Add ability to exclude items from loadout builder.
@@ -23,6 +35,8 @@
 * New aliases for rarity filters (is:white, is:green, is:blue, is:purple, is:yellow).
 * An alternate option for the "Gather Engrams" loadout can exclude gathering exotic engrams.
 * Removed popup notification for new items.
+* #798 Keyword searches will now scan perk descriptions.
+* #799 Randomize equipped items for current character. Don't look at us if you have to play a match using Thorn.
 
 # 3.8.3
 

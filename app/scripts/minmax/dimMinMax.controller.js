@@ -192,8 +192,24 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
-        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        // TODO: Remove vendor perks here
         vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
+        if (vm.includeVendors) {
+          vm.ranked = mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]);
+        } else {
+          vm.ranked = buckets[vm.active];
+
+          // Filter any vendor items from locked or excluded items
+          _.each(vm.lockeditems, function(item, type) {
+            if (item && item.isVendorItem) {
+              vm.lockeditems[type] = null;
+            }
+          });
+
+          vm.excludeditems = _.filter(vm.excludeditems, function(item) {
+            return !item.isVendorItem;
+          });
+        }
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
