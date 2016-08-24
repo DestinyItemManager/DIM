@@ -10,6 +10,13 @@
     var vm = this;
     var buckets = [];
     var vendorBuckets = [];
+    vm.perks = {};
+    vm.vendorPerks = {};
+
+    _.each(['warlock', 'titan', 'hunter'], function(classType) {
+      vm.perks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
+      vm.vendorPerks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
+    });
 
     function getBonusType(armorpiece) {
       if (!armorpiece.normalStats) {
@@ -39,7 +46,7 @@
       };
     }
 
-    function getBestArmor(bucket, vendorBucket, locked, excluded) {
+    function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
       var statHashes = [
           { stats: [144602215, 1735777505], type: 'intdisc' },
           { stats: [144602215, 4244567218], type: 'intstr' },
@@ -61,9 +68,11 @@
         } else {
           best = [];
 
-          // Filter out excluded
+          // Filter out excluded and non-wanted perks
           var filtered = _.filter(combined, function(item) {
-            return !_.findWhere(excluded, { index: item.index });
+            return !_.findWhere(excluded, { index: item.index }) &&   // Not excluded
+                    // Doesn't have a locked perk
+                    (lockedPerks[armortype].length === 0 || _.some(lockedPerks[armortype], function(perkHash) { return _.findWhere(item.talentGrid.nodes, {hash: perkHash}); }));
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
@@ -139,6 +148,7 @@
       highestsets: {},
       excludeditems: [],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
+      lockedperks: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] },
       type: 'Helmet',
       vendorType: 'Helmet',
       includeVendors: false,
@@ -149,6 +159,7 @@
       setOrderValues: ['-str_val', '-disc_val', '-int_val'],
       statOrder: '-stats.STAT_INTELLECT.value',
       ranked: {},
+      activePerks: {},
       lockedItemsValid: function(droppedId, droppedType) {
         droppedId = getId(droppedId);
         if (alreadyExists(vm.excludeditems, droppedId)) {
@@ -172,6 +183,7 @@
       },
       onCharacterChange: function() {
         vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -181,10 +193,21 @@
       },
       onIncludeVendorsChange: function() {
         vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
+        vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onOrderChange: function() {
         vm.setOrderValues = vm.setOrder.split(',');
+      },
+      onPerkLocked: function(perk, type) {
+        perk.active = !perk.active;
+        vm.perkschanged = true;
+        if (perk.active) {
+          vm.lockedperks[type].push(perk.hash);
+        } else {
+          vm.lockedperks[type] = _.filter(vm.lockedperks[type], function(perkHash) { return perkHash !== perk.hash; });
+        }
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onDrop: function(droppedId, type) {
         droppedId = getId(droppedId);
@@ -248,7 +271,7 @@
         });
       },
       getSetBucketsStep: function(activeGaurdian) {
-        var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems);
+        var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
         var helms = bestArmor.Helmet || [];
         var gaunts = bestArmor.Gauntlets || [];
         var chests = bestArmor.Chest || [];
@@ -387,9 +410,8 @@
         }
 
         var allItems = [];
-        var allPerks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
         var vendorItems = [];
-        var vendorPerks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
+
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
 
         _.each(stores, function(store) {
@@ -404,10 +426,20 @@
           allItems = allItems.concat(items);
           _.each(items, function(item) {
             // Filter out any unnecessary perks here
-            allPerks[item.type] = _.chain(allPerks[item.type].concat(item.talentGrid.nodes))
-                                    .uniq(function(node) { return node.hash; })
-                                    .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
-                                    .value();
+            if (item.classType === 3) {
+              _.each(['warlock', 'titan', 'hunter'], function(classType) {
+                // Filter out any unnecessary perks here
+                vm.perks[classType][item.type] = _.chain(vm.perks[classType][item.type].concat(item.talentGrid.nodes))
+                                                .uniq(function(node) { return node.hash; })
+                                                .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                                                .value();
+              });
+            } else {
+              vm.perks[item.classTypeName][item.type] = _.chain(vm.perks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
+                                                      .uniq(function(node) { return node.hash; })
+                                                      .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                                                      .value();
+            }
           });
 
           _.each(store.vendors, function(vendor) {
@@ -421,17 +453,29 @@
 
             vendorItems = vendorItems.concat(vendItems);
             _.each(vendItems, function(item) {
-              // Filter out any unnecessary perks here
-              vendorPerks[item.type] = _.chain(vendorPerks[item.type].concat(item.talentGrid.nodes))
-                                      .uniq(function(node) { return node.hash; })
-                                      .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
-                                      .value();
+              if (item.classType === 3) {
+                _.each(['warlock', 'titan', 'hunter'], function(classType) {
+                  // Filter out any unnecessary perks here
+                  vm.vendorPerks[classType][item.type] = _.chain(vm.vendorPerks[classType][item.type].concat(item.talentGrid.nodes))
+                                                        .uniq(function(node) { return node.hash; })
+                                                        .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                                                        .value();
+                });
+              } else {
+                // Filter out any unnecessary perks here
+                vm.vendorPerks[item.classTypeName][item.type] = _.chain(vm.vendorPerks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
+                                                              .uniq(function(node) { return node.hash; })
+                                                              .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                                                              .value();
+              }
             });
           });
 
           // Remove overlapping perks in allPerks from vendorPerks
-          _.each(vendorPerks, function(perks, type) {
-            vendorPerks[type] = _.reject(perks, function(perk) { return _.contains(_.pluck(allPerks[type], 'hash'), perk.hash); });
+          _.each(vm.vendorPerks, function(perksWithType, classType) {
+            _.each(perksWithType, function(perkArr, type) {
+              vm.vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(vm.perks[classType][type], 'hash'), perk.hash); });
+            });
           });
         });
 

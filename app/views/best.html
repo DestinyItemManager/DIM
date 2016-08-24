@@ -51,7 +51,13 @@
     <div class="itemQuality">
       <div ng-repeat="(type, lockeditem) in normal.lockeditems">
         <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
-          <div ng-switch-when="null" class="empty-item">
+          <div ng-switch-when="null" class="empty-item perk-select-hidden" toggle-class="perk-select-hidden">
+            <div class="perk-select-box">
+              <div class="perk" ng-class="{'active-perk' : perk.active}" ng-repeat="perk in normal.activePerks[type]" ng-click="normal.onPerkLocked(perk, type)">
+                <img ng-src="{{perk.icon}}" ng-attr-title="{{perk.description}}"></img>
+                <small>{{perk.name}}</small>
+              </div>
+            </div>
             <div class="perk-addition">
               <div class="perk-addition-text-container">
                 <i class="fa fa-plus" aria-hidden="true"></i>

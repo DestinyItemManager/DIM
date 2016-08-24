@@ -21,7 +21,17 @@
   };
 
   angular.module('dimApp')
-    .component('dimMinMaxItem', MinMaxItem);
+    .component('dimMinMaxItem', MinMaxItem)
+    .directive('toggleClass', function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          element.bind('click', function() {
+            element.toggleClass(attrs.toggleClass);
+          });
+        }
+      };
+    });
 
   MinMaxItemCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService'];
 
