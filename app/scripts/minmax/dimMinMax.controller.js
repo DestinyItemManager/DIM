@@ -185,6 +185,7 @@
         vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.lockedperks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] },
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
@@ -376,10 +377,11 @@
 
                         processedCount++;
                         if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
-                          if (vm.active !== activeGaurdian || vm.lockedchanged || vm.excludedchanged || $location.path() !== '/best') {
+                          if (vm.active !== activeGaurdian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/best') {
                             // If active gaurdian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
+                            vm.perkschanged = false;
                             return;
                           }
                           vm.progress = processedCount / combos;
@@ -417,6 +419,7 @@
         console.time('elapsed');
         vm.lockedchanged = false;
         vm.excludedchanged = false;
+        vm.perkschanged = false;
         $timeout(step, 0, true, activeGaurdian, 0, 0, 0, 0, 0, 0, 0, 0);
         return setMap;
       },

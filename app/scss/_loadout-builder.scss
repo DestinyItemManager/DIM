@@ -165,7 +165,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: calc((var(--item-size) + 6px) * 6);
+  width: calc(((var(--item-size) + 20px) * 5) + 7px);
   min-height: var(--item-size);
   max-height: calc((var(--item-size) * 5) + 10px);
   overflow-y: auto;
