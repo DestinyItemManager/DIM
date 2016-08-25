@@ -37,13 +37,12 @@
   angular.module('dimApp')
     .component('dimMinMaxLocks', MinMaxLocks);
 
-  MinMaxLocksCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService'];
+  MinMaxLocksCtrl.$inject = ['$scope', 'ngDialog'];
 
-  function MinMaxLocksCtrl($scope, ngDialog, dimStoreService) {
+  function MinMaxLocksCtrl($scope, ngDialog) {
     var vm = this;
     var dialogResult = null;
     var detailItemElement = null;
-    var onPerkLocked
 
     $scope.$on('ngDialog.opened', function(event, $dialog) {
       if (dialogResult && $dialog[0].id === dialogResult.id) {
