@@ -150,7 +150,7 @@
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] },
       type: 'Helmet',
-      vendorType: 'Helmet',
+      openPerkSelect: 'none',
       includeVendors: false,
       showBlues: false,
       showExotics: true,
@@ -267,6 +267,12 @@
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
+      },
+      openPerkSelectBox: function(type) {
+        vm.openPerkSelect = type;
+      },
+      closePerkSelectBoxes: function() {
+        vm.openPerkSelect = 'none';
       },
       newLoadout: function(set) {
         ngDialog.closeAll();

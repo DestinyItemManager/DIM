@@ -23,21 +23,6 @@
     display:none;
   }
 
-  .perk-select-box {
-    display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: calc((var(--item-size) + 6px) * 6);
-    min-height: var(--item-size);
-    max-height: calc((var(--item-size) * 5) + 10px);
-    overflow-y: auto;
-    background-color: #656565;
-    border: 2px solid #DDD;
-    z-index: 3;
-  }
-
   .perk-addition-text-container {
     display: table-cell;
     vertical-align: middle;
@@ -48,29 +33,6 @@
   .perk-addition-text {
     display: block;
     font-size: 8px;
-  }
-
-  .perk {
-    width: calc(var(--item-size) + 20px);
-    padding-left: 3px;
-    padding-right: 3px;
-    cursor: pointer;
-  }
-
-  .perk:hover, .active-perk {
-    background-color: #E8A534;
-  }
-
-  .perk img {
-    width: var(--item-size);
-    height: var(--item-size);
-    display: block;
-    margin: auto;
-  }
-
-  .perk small {
-    text-align: center;
-    display: block;
   }
 
   .fa-arrow-circle-left {
@@ -193,5 +155,43 @@
 
   .excluded-container:last-child {
     margin-right: 0;
+  }
+}
+
+.ngdialog.perk-select-popup .perk-select-box {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc((var(--item-size) + 6px) * 6);
+  min-height: var(--item-size);
+  max-height: calc((var(--item-size) * 5) + 10px);
+  overflow-y: auto;
+  background-color: #656565;
+  border: 2px solid #DDD;
+  z-index: 3;
+  & .perk {
+    width: calc(var(--item-size) + 20px);
+    padding-left: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+  }
+
+  & .perk:hover, & .active-perk {
+    background-color: #E8A534;
+  }
+
+  & .perk img {
+    width: var(--item-size);
+    height: var(--item-size);
+    display: block;
+    margin: auto;
+  }
+
+  & .perk small {
+    text-align: center;
+    display: block;
   }
 }
