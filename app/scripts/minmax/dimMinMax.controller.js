@@ -54,7 +54,7 @@
       var andPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'and'; }), Number);
       var orPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'or'; }), Number);
 
-      return _.some(orPerkHashes, function(perkHash) {  return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }) ||
+      return _.some(orPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }) ||
              (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
     }
 
