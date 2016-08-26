@@ -6,6 +6,7 @@
     controllerAs: 'vm',
     bindings: {
       lockedItems: '<',
+      lockedPerks: '<',
       activePerks: '<',
       lockedItemsValid: '&',
       onDrop: '&',
@@ -17,7 +18,7 @@
       '<div ng-repeat="(type, lockeditem) in vm.lockedItems">',
       '  <div class="locked-item" ng-switch="lockeditem" ui-on-drop="vm.onDrop({$data: $data, type: type})" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="vm.lockedItemsValid({$data: $data, type: type})">',
       '    <div ng-switch-when="null" class="empty-item">',
-      '      <div class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, type, $event)">',
+      '      <div class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, vm.lockedPerks, type, $event)">',
       '        <div ng-if="!vm.activePerks[type]" class="perk-addition-text-container">',
       '          <i class="fa fa-plus" aria-hidden="true"></i>',
       '          <small class="perk-addition-text">Lock perk</small>',
@@ -60,7 +61,7 @@
     });
 
     angular.extend(vm, {
-      addPerkClicked: function(perks, type, e) {
+      addPerkClicked: function(perks, lockedPerks, type, e) {
         e.stopPropagation();
         if (dialogResult) {
           dialogResult.close();
@@ -76,7 +77,7 @@
         dialogResult = ngDialog.open({
           template: [
             '<div class="perk-select-box" dim-click-anywhere-but-here="closeThisDialog()">',
-            '  <div class="perk" ng-class="{\'active-perk-or\' : perk.active === \'or\', \'active-perk-and\' : perk.active === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
+            '  <div class="perk" ng-class="{\'active-perk-or\' : vmd.lockedPerks[vmd.type][perk.hash] === \'or\', \'active-perk-and\' : vmd.lockedPerks[vmd.type][perk.hash] === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
             '    <img ng-src="{{perk.icon}}" ng-attr-title="{{perk.description}}"></img>',
             '    <small>{{perk.name}}</small>',
             '  </div>',
@@ -92,6 +93,7 @@
             var vmd = this;
             angular.extend(vmd, {
               perks: perks,
+              lockedPerks: lockedPerks,
               type: type,
               onPerkLocked: vm.onPerkLocked
             });

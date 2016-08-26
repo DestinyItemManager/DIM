@@ -227,11 +227,17 @@
         vm.setOrderValues = vm.setOrder.split(',');
       },
       onPerkLocked: function(perk, type, $event) {
-        perk.active = ($event.shiftKey) ? 'and' : ((vm.lockedperks[type][perk.hash]) ? 'none' : 'or');
-        if (perk.active === 'none') {
+        var activeType = 'none';
+        if ($event.shiftKey) {
+          activeType = (vm.lockedperks[type][perk.hash] === 'and') ? 'none' : 'and';
+        } else {
+          activeType = (vm.lockedperks[type][perk.hash] === 'or') ? 'none' : 'or';
+        }
+
+        if (activeType === 'none') {
           delete vm.lockedperks[type][perk.hash];
         } else {
-          vm.lockedperks[type][perk.hash] = perk.active;
+          vm.lockedperks[type][perk.hash] = activeType;
         }
         vm.perkschanged = true;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -278,12 +284,6 @@
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
-      },
-      openPerkSelectBox: function(type) {
-        vm.openPerkSelect = type;
-      },
-      closePerkSelectBoxes: function() {
-        vm.openPerkSelect = 'none';
       },
       newLoadout: function(set) {
         ngDialog.closeAll();
