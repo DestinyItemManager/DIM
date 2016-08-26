@@ -159,6 +159,7 @@
 }
 
 .ngdialog.perk-select-popup .perk-select-box {
+  user-select: none;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -183,7 +184,7 @@
     background-color: #E8A534;
   }
 
-  & .active-perk-and {
+  &.shift-held .perk:hover, & .active-perk-and {
     background-color: #b184c5;
   }
 

@@ -42,9 +42,9 @@
   angular.module('dimApp')
     .component('dimMinMaxLocks', MinMaxLocks);
 
-  MinMaxLocksCtrl.$inject = ['$scope', 'ngDialog'];
+  MinMaxLocksCtrl.$inject = ['$scope', 'hotkeys', 'ngDialog'];
 
-  function MinMaxLocksCtrl($scope, ngDialog) {
+  function MinMaxLocksCtrl($scope, hotkeys, ngDialog) {
     var vm = this;
     var dialogResult = null;
     var detailItemElement = null;
@@ -67,16 +67,11 @@
           dialogResult.close();
         }
 
-        if (vm.shiftClickCallback && e.shiftKey) {
-          vm.shiftClickCallback(vm.itemData);
-          return;
-        }
-
         detailItemElement = angular.element(e.currentTarget);
 
         dialogResult = ngDialog.open({
           template: [
-            '<div class="perk-select-box" dim-click-anywhere-but-here="closeThisDialog()">',
+            '<div class="perk-select-box" tabindex="0" ng-keydown="vmd.onKeyDown($event)" ng-keyup="vmd.onKeyUp($event)" ng-class="{\'shift-held\' : vmd.shiftHeld }" dim-click-anywhere-but-here="closeThisDialog()">',
             '  <div class="perk" ng-class="{\'active-perk-or\' : vmd.lockedPerks[vmd.type][perk.hash] === \'or\', \'active-perk-and\' : vmd.lockedPerks[vmd.type][perk.hash] === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
             '    <img ng-src="{{perk.icon}}" ng-attr-title="{{perk.description}}"></img>',
             '    <small>{{perk.name}}</small>',
@@ -94,13 +89,24 @@
             angular.extend(vmd, {
               perks: perks,
               lockedPerks: lockedPerks,
+              shiftHeld: false,
               type: type,
-              onPerkLocked: vm.onPerkLocked
+              onPerkLocked: vm.onPerkLocked,
+              onKeyDown: function(e) {
+                if (e.shiftKey) {
+                  vmd.shiftHeld = true;
+                }
+              },
+              onKeyUp: function(e) {
+                if (e.shiftKey === false) {
+                  vmd.shiftHeld = false;
+                }
+              }
             });
           }],
           // Setting these focus options prevents the page from
           // jumping as dialogs are shown/hidden
-          trapFocus: false,
+          trapFocus: true,
           preserveFocus: false
         });
       },

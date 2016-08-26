@@ -161,6 +161,7 @@
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
       type: 'Helmet',
       openPerkSelect: 'none',
+      shiftHeld: false,
       includeVendors: false,
       showBlues: false,
       showExotics: true,
