@@ -54,10 +54,8 @@
       var andPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'and'; }), Number);
       var orPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'or'; }), Number);
 
-      return _.some(orPerkHashes, function(perkHash) {
-        return _.findWhere(item.talentGrid.nodes, { hash: perkHash });
-      }) ||
-              (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
+      return _.some(orPerkHashes, function(perkHash) {  return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }) ||
+             (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
     }
 
     function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
@@ -230,7 +228,7 @@
       },
       onPerkLocked: function(perk, type, $event) {
         perk.active = ($event.shiftKey) ? 'and' : ((vm.lockedperks[type][perk.hash]) ? 'none' : 'or');
-        if(perk.active === 'none') {
+        if (perk.active === 'none') {
           delete vm.lockedperks[type][perk.hash];
         } else {
           vm.lockedperks[type][perk.hash] = perk.active;
