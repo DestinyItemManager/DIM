@@ -18,7 +18,11 @@
       '  <div class="locked-item" ng-switch="lockeditem" ui-on-drop="vm.onDrop({$data: $data, type: type})" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="vm.lockedItemsValid({$data: $data, type: type})">',
       '    <div ng-switch-when="null" class="empty-item">',
       '      <div class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, type, $event)">',
-      '        <div class="perk-addition-text-container">',
+      '        <div ng-if="!vm.activePerks[type]" class="perk-addition-text-container">',
+      '          <i class="fa fa-plus" aria-hidden="true"></i>',
+      '          <small class="perk-addition-text">Lock perk</small>',
+      '        </div>',
+      '        <div ng-if="vm.activePerks[type]" class="perk-addition-text-container">',
       '          <i class="fa fa-plus" aria-hidden="true"></i>',
       '          <small class="perk-addition-text">Lock perk</small>',
       '        </div>',
@@ -72,7 +76,7 @@
         dialogResult = ngDialog.open({
           template: [
             '<div class="perk-select-box" dim-click-anywhere-but-here="closeThisDialog()">',
-            '  <div class="perk" ng-class="{\'active-perk\' : perk.active}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type})">',
+            '  <div class="perk" ng-class="{\'active-perk-or\' : perk.active === \'or\', \'active-perk-and\' : perk.active === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
             '    <img ng-src="{{perk.icon}}" ng-attr-title="{{perk.description}}"></img>',
             '    <small>{{perk.name}}</small>',
             '  </div>',

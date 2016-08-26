@@ -179,8 +179,12 @@
     cursor: pointer;
   }
 
-  & .perk:hover, & .active-perk {
+  & .perk:hover, & .active-perk-or {
     background-color: #E8A534;
+  }
+
+  & .active-perk-and {
+    background-color: #b184c5;
   }
 
   & .perk img {

@@ -46,6 +46,20 @@
       };
     }
 
+    function hasPerks(item, lockedPerks) {
+      if (_.isEmpty(lockedPerks)) {
+        return true;
+      }
+
+      var andPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'and'; }), Number);
+      var orPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'or'; }), Number);
+
+      return _.some(orPerkHashes, function(perkHash) {
+        return _.findWhere(item.talentGrid.nodes, { hash: perkHash });
+      }) ||
+              (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
+    }
+
     function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
       var statHashes = [
           { stats: [144602215, 1735777505], type: 'intdisc' },
@@ -70,9 +84,7 @@
 
           // Filter out excluded and non-wanted perks
           var filtered = _.filter(combined, function(item) {
-            return !_.findWhere(excluded, { index: item.index }) &&   // Not excluded
-                    // Doesn't have a locked perk
-                    (lockedPerks[armortype].length === 0 || _.some(lockedPerks[armortype], function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
+            return !_.findWhere(excluded, { index: item.index }) && hasPerks(item, lockedPerks[armortype]); // Not excluded and has the correct locked perks
           });
           statHashes.forEach(function(hash, index) {
             if (!vm.mode && index > 2) {
@@ -148,7 +160,7 @@
       highestsets: {},
       excludeditems: [],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
-      lockedperks: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] },
+      lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
       type: 'Helmet',
       openPerkSelect: 'none',
       includeVendors: false,
@@ -185,7 +197,7 @@
         vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
         vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
-        vm.lockedperks = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Artifact: [], Ghost: [] };
+        vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
@@ -216,14 +228,14 @@
       onOrderChange: function() {
         vm.setOrderValues = vm.setOrder.split(',');
       },
-      onPerkLocked: function(perk, type) {
-        perk.active = !perk.active;
-        vm.perkschanged = true;
-        if (perk.active) {
-          vm.lockedperks[type].push(perk.hash);
+      onPerkLocked: function(perk, type, $event) {
+        perk.active = ($event.shiftKey) ? 'and' : ((vm.lockedperks[type][perk.hash]) ? 'none' : 'or');
+        if(perk.active === 'none') {
+          delete vm.lockedperks[type][perk.hash];
         } else {
-          vm.lockedperks[type] = _.filter(vm.lockedperks[type], function(perkHash) { return perkHash !== perk.hash; });
+          vm.lockedperks[type][perk.hash] = perk.active;
         }
+        vm.perkschanged = true;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onDrop: function(droppedId, type) {
