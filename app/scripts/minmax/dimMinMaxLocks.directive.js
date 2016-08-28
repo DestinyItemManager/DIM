@@ -8,6 +8,7 @@
       lockedItems: '<',
       lockedPerks: '<',
       activePerks: '<',
+      shiftHeld: '<',
       lockedItemsValid: '&',
       onDrop: '&',
       onRemove: '&',
@@ -18,14 +19,13 @@
       '<div ng-repeat="(type, lockeditem) in vm.lockedItems">',
       '  <div class="locked-item" ng-switch="lockeditem" ui-on-drop="vm.onDrop({$data: $data, type: type})" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="vm.lockedItemsValid({$data: $data, type: type})">',
       '    <div ng-switch-when="null" class="empty-item">',
-      '      <div class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, vm.lockedPerks, type, $event)">',
-      '        <div ng-if="!vm.activePerks[type]" class="perk-addition-text-container">',
-      '          <i class="fa fa-plus" aria-hidden="true"></i>',
+      '      <div ng-switch="vm.hasLockedPerks(vm.lockedPerks, type)" class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, vm.lockedPerks, type, $event)">',
+      '        <div ng-switch-when="false" class="perk-addition-text-container">',
+      '          <i class="fa fa-plus"></i>',
       '          <small class="perk-addition-text">Lock perk</small>',
       '        </div>',
-      '        <div ng-if="vm.activePerks[type]" class="perk-addition-text-container">',
-      '          <i class="fa fa-plus" aria-hidden="true"></i>',
-      '          <small class="perk-addition-text">Lock perk</small>',
+      '        <div ng-switch-when="true" class="locked-perk-notification" ng-init="first = vm.getFirstPerk(vm.lockedPerks, type)">',
+      '          <img ng-src="{{first.icon}}" ng-attr-title="{{first.description}}" />',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -61,6 +61,12 @@
     });
 
     angular.extend(vm, {
+      getFirstPerk: function(lockedPerks, type) {
+        return vm.lockedPerks[type][_.keys(vm.lockedPerks[type])[0]];
+      },
+      hasLockedPerks: function(lockedPerks, type) {
+        return _.keys(lockedPerks[type]).length > 0;
+      },
       addPerkClicked: function(perks, lockedPerks, type, e) {
         e.stopPropagation();
         if (dialogResult) {
@@ -71,8 +77,8 @@
 
         dialogResult = ngDialog.open({
           template: [
-            '<div class="perk-select-box" tabindex="0" ng-keydown="vmd.onKeyDown($event)" ng-keyup="vmd.onKeyUp($event)" ng-class="{\'shift-held\' : vmd.shiftHeld }" dim-click-anywhere-but-here="closeThisDialog()">',
-            '  <div class="perk" ng-class="{\'active-perk-or\' : vmd.lockedPerks[vmd.type][perk.hash] === \'or\', \'active-perk-and\' : vmd.lockedPerks[vmd.type][perk.hash] === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
+            '<div class="perk-select-box" ng-class="{\'shift-held\' : vmd.shiftHeld }" dim-click-anywhere-but-here="closeThisDialog()">',
+            '  <div class="perk" ng-class="{\'active-perk-or\' : vmd.lockedPerks[vmd.type][perk.hash].lockType === \'or\', \'active-perk-and\' : vmd.lockedPerks[vmd.type][perk.hash].lockType === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
             '    <img ng-src="{{perk.icon}}" ng-attr-title="{{perk.description}}"></img>',
             '    <small>{{perk.name}}</small>',
             '  </div>',
@@ -81,32 +87,34 @@
           overlay: false,
           className: 'perk-select-popup',
           showClose: false,
-          scope: angular.extend($scope.$new(true), {
-          }),
+          scope: angular.extend($scope.$new(true), {}),
           controllerAs: 'vmd',
-          controller: [function() {
+          controller: ['$document', function($document) {
             var vmd = this;
+
+            $document.keyup(function(e) {
+              $scope.$apply(function() {
+                vmd.shiftHeld = e.shiftKey;
+              });
+            });
+
+            $document.keydown(function(e) {
+              $scope.$apply(function() {
+                vmd.shiftHeld = e.shiftKey;
+              });
+            });
+
             angular.extend(vmd, {
               perks: perks,
               lockedPerks: lockedPerks,
-              shiftHeld: false,
+              shiftHeld: vm.shiftHeld,
               type: type,
-              onPerkLocked: vm.onPerkLocked,
-              onKeyDown: function(e) {
-                if (e.shiftKey) {
-                  vmd.shiftHeld = true;
-                }
-              },
-              onKeyUp: function(e) {
-                if (e.shiftKey === false) {
-                  vmd.shiftHeld = false;
-                }
-              }
+              onPerkLocked: vm.onPerkLocked
             });
           }],
           // Setting these focus options prevents the page from
           // jumping as dialogs are shown/hidden
-          trapFocus: true,
+          trapFocus: false,
           preserveFocus: false
         });
       },

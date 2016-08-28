@@ -6,15 +6,19 @@
     vertical-align: middle;
   }
 
+  .locked-perk-notification img {
+    width: var(--item-size);
+    height: var(--item-size);
+  }
+
   .perk-addition {
-    opacity: 0;
     text-align: center;
     width: 100%;
     height: 100%;
     cursor: pointer;
   }
 
-  .perk-addition:hover {
+  .perk-addition-text-container:hover {
     opacity: 1;
     transition: 1s;
   }
@@ -24,6 +28,7 @@
   }
 
   .perk-addition-text-container {
+    opacity: 0;
     display: table-cell;
     vertical-align: middle;
     width: var(--item-size);

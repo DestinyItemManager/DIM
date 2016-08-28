@@ -4,14 +4,22 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$document', '$timeout', '$location', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog) {
+  function dimMinMaxCtrl($scope, $state, $q, $document, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog) {
     var vm = this;
     var buckets = [];
     var vendorBuckets = [];
     vm.perks = {};
     vm.vendorPerks = {};
+
+    $document.keyup(function(e) {
+      vm.shiftHeld = e.shiftKey;
+    });
+
+    $document.keydown(function(e) {
+      vm.shiftHeld = e.shiftKey;
+    });
 
     _.each(['warlock', 'titan', 'hunter'], function(classType) {
       vm.perks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
@@ -51,8 +59,8 @@
         return true;
       }
 
-      var andPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'and'; }), Number);
-      var orPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash] === 'or'; }), Number);
+      var andPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash].lockType === 'and'; }), Number);
+      var orPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash].lockType === 'or'; }), Number);
 
       return _.some(orPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }) ||
              (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
@@ -160,7 +168,6 @@
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
       type: 'Helmet',
-      openPerkSelect: 'none',
       shiftHeld: false,
       includeVendors: false,
       showBlues: false,
@@ -230,15 +237,15 @@
       onPerkLocked: function(perk, type, $event) {
         var activeType = 'none';
         if ($event.shiftKey) {
-          activeType = (vm.lockedperks[type][perk.hash] === 'and') ? 'none' : 'and';
+          activeType = (vm.lockedperks[type][perk.hash] && vm.lockedperks[type][perk.hash].lockType === 'and') ? 'none' : 'and';
         } else {
-          activeType = (vm.lockedperks[type][perk.hash] === 'or') ? 'none' : 'or';
+          activeType = (vm.lockedperks[type][perk.hash] && vm.lockedperks[type][perk.hash].lockType === 'or') ? 'none' : 'or';
         }
 
         if (activeType === 'none') {
           delete vm.lockedperks[type][perk.hash];
         } else {
-          vm.lockedperks[type][perk.hash] = activeType;
+          vm.lockedperks[type][perk.hash] = { icon: perk.icon, description: perk.description, lockType: activeType };
         }
         vm.perkschanged = true;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
