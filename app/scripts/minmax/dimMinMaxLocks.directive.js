@@ -93,15 +93,19 @@
             var vmd = this;
 
             $document.keyup(function(e) {
-              $scope.$apply(function() {
-                vmd.shiftHeld = e.shiftKey;
-              });
+              if (vmd.shiftHeld) {
+                $scope.$apply(function() {
+                  vmd.shiftHeld = e.shiftKey;
+                });
+              }
             });
 
             $document.keydown(function(e) {
-              $scope.$apply(function() {
-                vmd.shiftHeld = e.shiftKey;
-              });
+              if (e.shiftKey) {
+                $scope.$apply(function() {
+                  vmd.shiftHeld = e.shiftKey;
+                });
+              }
             });
 
             angular.extend(vmd, {
