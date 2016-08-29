@@ -13,13 +13,13 @@
     vm.perks = {};
     vm.vendorPerks = {};
 
-    $document.keyup(function(e) {
-      vm.shiftHeld = e.shiftKey;
-    });
+    //$document.keyup(function(e) {
+    //  vm.shiftHeld = e.shiftKey;
+    //});
 
-    $document.keydown(function(e) {
-      vm.shiftHeld = e.shiftKey;
-    });
+    //$document.keydown(function(e) {
+    //  vm.shiftHeld = e.shiftKey;
+    //});
 
     _.each(['warlock', 'titan', 'hunter'], function(classType) {
       vm.perks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
@@ -211,7 +211,6 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
-        // TODO: Remove vendor perks here
         vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
         if (vm.includeVendors) {
           vm.ranked = mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]);
@@ -562,11 +561,11 @@
             ClassItem: items.filter(function(item) {
               return item.type === 'ClassItem';
             }).map(normalizeStats),
-            Ghost: items.filter(function(item) {
-              return item.type === 'Ghost';
-            }).map(normalizeStats),
             Artifact: items.filter(function(item) {
               return item.type === 'Artifact';
+            }).map(normalizeStats),
+            Ghost: items.filter(function(item) {
+              return item.type === 'Ghost';
             }).map(normalizeStats)
           };
         }

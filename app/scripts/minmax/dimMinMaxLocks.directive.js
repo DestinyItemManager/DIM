@@ -101,7 +101,7 @@
             });
 
             $document.keydown(function(e) {
-              if (e.shiftKey) {
+              if (vmd.shiftHeld === false && e.shiftKey) {
                 $scope.$apply(function() {
                   vmd.shiftHeld = e.shiftKey;
                 });
