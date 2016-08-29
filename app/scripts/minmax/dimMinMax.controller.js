@@ -13,14 +13,6 @@
     vm.perks = {};
     vm.vendorPerks = {};
 
-    //$document.keyup(function(e) {
-    //  vm.shiftHeld = e.shiftKey;
-    //});
-
-    //$document.keydown(function(e) {
-    //  vm.shiftHeld = e.shiftKey;
-    //});
-
     _.each(['warlock', 'titan', 'hunter'], function(classType) {
       vm.perks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
       vm.vendorPerks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
@@ -168,7 +160,6 @@
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
       type: 'Helmet',
-      shiftHeld: false,
       includeVendors: false,
       showBlues: false,
       showExotics: true,

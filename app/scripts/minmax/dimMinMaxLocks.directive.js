@@ -8,7 +8,6 @@
       lockedItems: '<',
       lockedPerks: '<',
       activePerks: '<',
-      shiftHeld: '<',
       lockedItemsValid: '&',
       onDrop: '&',
       onRemove: '&',
@@ -111,7 +110,7 @@
             angular.extend(vmd, {
               perks: perks,
               lockedPerks: lockedPerks,
-              shiftHeld: vm.shiftHeld,
+              shiftHeld: false,
               type: type,
               onPerkLocked: vm.onPerkLocked
             });
