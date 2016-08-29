@@ -13,12 +13,12 @@
     var perks = {
       warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
       titan: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
-      hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+      hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] }
     };
     var vendorPerks = {
       warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
       titan: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
-      hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+      hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] }
     };
 
     function getBonusType(armorpiece) {
@@ -182,13 +182,13 @@
         }
 
         var item = getItemById(droppedId, droppedType);
-        var startCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0)
+        var startCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         return (
           startCount +
-          (vm.lockeditems.Helmet && vm.lockeditems.Helmet.item.isExotic) +
-          (vm.lockeditems.Gauntlets && vm.lockeditems.Gauntlets.item.isExotic) +
-          (vm.lockeditems.Chest && vm.lockeditems.Chest.item.isExotic) +
-          (vm.lockeditems.Leg && vm.lockeditems.Leg.item.isExotic)
+          (vm.lockeditems.Helmet && vm.lockeditems.Helmet.isExotic) +
+          (vm.lockeditems.Gauntlets && vm.lockeditems.Gauntlets.isExotic) +
+          (vm.lockeditems.Chest && vm.lockeditems.Chest.isExotic) +
+          (vm.lockeditems.Leg && vm.lockeditems.Leg.isExotic)
         ) < 2;
       },
       excludedItemsValid: function(droppedId, droppedType) {
