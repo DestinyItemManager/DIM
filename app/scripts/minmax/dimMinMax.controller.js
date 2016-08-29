@@ -10,13 +10,16 @@
     var vm = this;
     var buckets = [];
     var vendorBuckets = [];
-    vm.perks = {};
-    vm.vendorPerks = {};
-
-    _.each(['warlock', 'titan', 'hunter'], function(classType) {
-      vm.perks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
-      vm.vendorPerks[classType] = { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] };
-    });
+    var perks = {
+      warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+      titan: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+      hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+    };
+    var vendorPerks = {
+      warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+      titan: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+      hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
+    };
 
     function getBonusType(armorpiece) {
       if (!armorpiece.normalStats) {
@@ -27,8 +30,8 @@
         (armorpiece.normalStats[4244567218].bonus > 0 ? 'str' : '');
     }
 
-    // for specifc armor (Helmet), look at stats (int/dis), return best one.
     function getBestItem(armor, stats, type, nonExotic) {
+      // for specifc armor (Helmet), look at stats (int/dis), return best one.
       return {
         item: _.max(armor, function(o) {
           if (nonExotic && o.isExotic) {
@@ -37,7 +40,7 @@
           var bonus = 0;
           var total = 0;
           stats.forEach(function(stat) {
-            total += o.normalStats[stat][vm.scale_type];
+            total += o.normalStats[stat][vm.scaleType];
             bonus = o.normalStats[stat].bonus;
           });
           return total + bonus;
@@ -85,7 +88,7 @@
             return !_.findWhere(excluded, { index: item.index }) && hasPerks(item, lockedPerks[armortype]); // Not excluded and has the correct locked perks
           });
           statHashes.forEach(function(hash, index) {
-            if (!vm.mode && index > 2) {
+            if (!vm.fullMode && index > 2) {
               return;
             }
 
@@ -120,10 +123,10 @@
 
     function validSet(gearset) {
       return (
-        gearset.Helmet.item.isExotic +
-        gearset.Gauntlets.item.isExotic +
-        gearset.Chest.item.isExotic +
-        gearset.Leg.item.isExotic
+        (gearset.Helmet && gearset.Helmet.item.isExotic) +
+        (gearset.Gauntlets && gearset.Gauntlets.item.isExotic) +
+        (gearset.Chest && gearset.Chest.item.isExotic) +
+        (gearset.Leg && gearset.Leg.item.isExotic)
       ) < 2;
     }
 
@@ -148,27 +151,30 @@
       return merged;
     }
 
+    function getActiveBuckets(bucket1, bucket2, merge) {
+      // Merge both buckets or return bucket1 if merge is false
+      return (merge) ? mergeBuckets(bucket1, bucket2) : bucket1;
+    }
+
     angular.extend(vm, {
       active: 'warlock',
-      activesets: '5/5/1',
-      progress: 0,
-      mode: false,
-      scale_type: 'scaled',
-      allSetTiers: [],
-      highestsets: {},
-      excludeditems: [],
-      lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
-      lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
+      activesets: '5/5/2',
       type: 'Helmet',
+      scaleType: 'scaled',
+      progress: 0,
+      fullMode: false,
       includeVendors: false,
       showBlues: false,
       showExotics: true,
       showYear1: false,
-      setOrder: '-str_val,-disc_val,-int_val',
-      setOrderValues: ['-str_val', '-disc_val', '-int_val'],
-      statOrder: '-stats.STAT_INTELLECT.value',
+      allSetTiers: [],
+      highestsets: {},
       ranked: {},
       activePerks: {},
+      excludeditems: [],
+      lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
+      lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
+      setOrderValues: ['-str_val', '-disc_val', '-int_val'],
       lockedItemsValid: function(droppedId, droppedType) {
         droppedId = getId(droppedId);
         if (alreadyExists(vm.excludeditems, droppedId)) {
@@ -176,23 +182,21 @@
         }
 
         var item = getItemById(droppedId, droppedType);
-        var exoticCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
-        _.each(vm.lockeditems, function(lockeditem) {
-          if (lockeditem === null || lockeditem.type === droppedType) {
-            return;
-          }
-          if (lockeditem.isExotic && lockeditem.type !== 'ClassItem') {
-            exoticCount += 1;
-          }
-        });
-        return exoticCount < 2;
+        var startCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0)
+        return (
+          startCount +
+          (vm.lockeditems.Helmet && vm.lockeditems.Helmet.item.isExotic) +
+          (vm.lockeditems.Gauntlets && vm.lockeditems.Gauntlets.item.isExotic) +
+          (vm.lockeditems.Chest && vm.lockeditems.Chest.item.isExotic) +
+          (vm.lockeditems.Leg && vm.lockeditems.Leg.item.isExotic)
+        ) < 2;
       },
       excludedItemsValid: function(droppedId, droppedType) {
         return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
       onCharacterChange: function() {
-        vm.ranked = (vm.includeVendors) ? mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]) : buckets[vm.active];
-        vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
+        vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
+        vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
         vm.excludeditems = [];
@@ -202,7 +206,7 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onIncludeVendorsChange: function() {
-        vm.activePerks = (vm.includeVendors) ? mergeBuckets(vm.perks[vm.active], vm.vendorPerks[vm.active]) : vm.perks[vm.active];
+        vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
         if (vm.includeVendors) {
           vm.ranked = mergeBuckets(buckets[vm.active], vendorBuckets[vm.active]);
         } else {
@@ -222,14 +226,11 @@
           // Filter any vendor perks from locked perks
           _.each(vm.lockedperks, function(perkMap, type) {
             vm.lockedperks[type] = _.omit(perkMap, function(perk, perkHash) {
-              return _.findWhere(vm.vendorPerks[vm.active][type], { hash: Number(perkHash) });
+              return _.findWhere(vendorPerks[vm.active][type], { hash: Number(perkHash) });
             });
           });
         }
         vm.highestsets = vm.getSetBucketsStep(vm.active);
-      },
-      onOrderChange: function() {
-        vm.setOrderValues = vm.setOrder.split(',');
       },
       onPerkLocked: function(perk, type, $event) {
         var activeType = 'none';
@@ -272,7 +273,7 @@
       },
       onExcludedDrop: function(droppedId, type) {
         droppedId = getId(droppedId);
-        if (alreadyExists(vm.excludeditems, droppedId)) {
+        if (alreadyExists(vm.excludeditems, droppedId) || (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], droppedId))) {
           return;
         }
         var item = getItemById(droppedId, type);
@@ -369,9 +370,9 @@
                             dis = armor.item.normalStats[1735777505];
                             str = armor.item.normalStats[4244567218];
 
-                            set.stats.STAT_INTELLECT.value += int[vm.scale_type];
-                            set.stats.STAT_DISCIPLINE.value += dis[vm.scale_type];
-                            set.stats.STAT_STRENGTH.value += str[vm.scale_type];
+                            set.stats.STAT_INTELLECT.value += int[vm.scaleType];
+                            set.stats.STAT_DISCIPLINE.value += dis[vm.scaleType];
+                            set.stats.STAT_STRENGTH.value += str[vm.scaleType];
 
                             switch (armor.bonus_type) {
                             case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
@@ -469,13 +470,13 @@
             if (item.classType === 3) {
               _.each(['warlock', 'titan', 'hunter'], function(classType) {
                 // Filter out any unnecessary perks here
-                vm.perks[classType][item.type] = _.chain(vm.perks[classType][item.type].concat(item.talentGrid.nodes))
+                perks[classType][item.type] = _.chain(perks[classType][item.type].concat(item.talentGrid.nodes))
                                                 .uniq(function(node) { return node.hash; })
                                                 .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
                                                 .value();
               });
             } else {
-              vm.perks[item.classTypeName][item.type] = _.chain(vm.perks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
+              perks[item.classTypeName][item.type] = _.chain(perks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
                                                       .uniq(function(node) { return node.hash; })
                                                       .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
                                                       .value();
@@ -496,14 +497,14 @@
               if (item.classType === 3) {
                 _.each(['warlock', 'titan', 'hunter'], function(classType) {
                   // Filter out any unnecessary perks here
-                  vm.vendorPerks[classType][item.type] = _.chain(vm.vendorPerks[classType][item.type].concat(item.talentGrid.nodes))
+                  vendorPerks[classType][item.type] = _.chain(vendorPerks[classType][item.type].concat(item.talentGrid.nodes))
                                                         .uniq(function(node) { return node.hash; })
                                                         .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
                                                         .value();
                 });
               } else {
                 // Filter out any unnecessary perks here
-                vm.vendorPerks[item.classTypeName][item.type] = _.chain(vm.vendorPerks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
+                vendorPerks[item.classTypeName][item.type] = _.chain(vendorPerks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
                                                               .uniq(function(node) { return node.hash; })
                                                               .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
                                                               .value();
@@ -512,9 +513,9 @@
           });
 
           // Remove overlapping perks in allPerks from vendorPerks
-          _.each(vm.vendorPerks, function(perksWithType, classType) {
+          _.each(vendorPerks, function(perksWithType, classType) {
             _.each(perksWithType, function(perkArr, type) {
-              vm.vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(vm.perks[classType][type], 'hash'), perk.hash); });
+              vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
             });
           });
         });
