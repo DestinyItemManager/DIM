@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$document', '$timeout', '$location', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $document, $timeout, $location, loadingTracker, dimStoreService, dimItemService, ngDialog) {
+  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog) {
     var vm = this;
     var buckets = [];
     var vendorBuckets = [];
