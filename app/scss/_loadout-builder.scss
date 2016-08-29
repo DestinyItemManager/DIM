@@ -6,6 +6,20 @@
     vertical-align: middle;
   }
 
+  .example {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+  }
+
+  .ex-or {
+    background-color: #E8A534;
+  }
+
+  .ex-and {
+    background-color: #B184C5;
+  }
+
   .locked-perk-notification img {
     width: var(--item-size);
     height: var(--item-size);
@@ -190,7 +204,7 @@
   }
 
   &.shift-held .perk:hover, & .active-perk-and {
-    background-color: #b184c5;
+    background-color: #B184C5;
   }
 
   & .perk img {
