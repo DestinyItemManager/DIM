@@ -45,7 +45,7 @@
           });
           return total + bonus;
         }),
-        bonus_type: type
+        bonusType: type
       };
     }
 
@@ -79,7 +79,7 @@
       for (armortype in bucket) {
         var combined = (vm.includeVendors) ? bucket[armortype].concat(vendorBucket[armortype]) : bucket[armortype];
         if (locked[armortype]) {
-          best = [{ item: locked[armortype], bonus_type: getBonusType(locked[armortype]) }];
+          best = [{ item: locked[armortype], bonusType: getBonusType(locked[armortype]) }];
         } else {
           best = [];
 
@@ -105,15 +105,15 @@
         _.each(_.uniq(best, false, function(o) {
           return o.item.index;
         }), function(obj) {
-          obj.bonus_type = getBonusType(obj.item);
-          if (obj.bonus_type.indexOf('int') > -1) {
-            bestCombs.push({ item: obj.item, bonus_type: 'int' });
+          obj.bonusType = getBonusType(obj.item);
+          if (obj.bonusType.indexOf('int') > -1) {
+            bestCombs.push({ item: obj.item, bonusType: 'int' });
           }
-          if (obj.bonus_type.indexOf('disc') > -1) {
-            bestCombs.push({ item: obj.item, bonus_type: 'disc' });
+          if (obj.bonusType.indexOf('disc') > -1) {
+            bestCombs.push({ item: obj.item, bonusType: 'disc' });
           }
-          if (obj.bonus_type.indexOf('str') > -1) {
-            bestCombs.push({ item: obj.item, bonus_type: 'str' });
+          if (obj.bonusType.indexOf('str') > -1) {
+            bestCombs.push({ item: obj.item, bonusType: 'str' });
           }
         });
         armor[armortype] = bestCombs;
@@ -123,10 +123,10 @@
 
     function validSet(gearset) {
       return (
-        (gearset.Helmet && gearset.Helmet.item.isExotic) +
-        (gearset.Gauntlets && gearset.Gauntlets.item.isExotic) +
-        (gearset.Chest && gearset.Chest.item.isExotic) +
-        (gearset.Leg && gearset.Leg.item.isExotic)
+        gearset.Helmet.item.isExotic +
+        gearset.Gauntlets.item.isExotic +
+        gearset.Chest.item.isExotic +
+        gearset.Leg.item.isExotic
       ) < 2;
     }
 
@@ -185,10 +185,10 @@
         var startCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         return (
           startCount +
-          (vm.lockeditems.Helmet && vm.lockeditems.Helmet.isExotic) +
-          (vm.lockeditems.Gauntlets && vm.lockeditems.Gauntlets.isExotic) +
-          (vm.lockeditems.Chest && vm.lockeditems.Chest.isExotic) +
-          (vm.lockeditems.Leg && vm.lockeditems.Leg.isExotic)
+          (droppedType !== 'Helmet' && vm.lockeditems.Helmet && vm.lockeditems.Helmet.isExotic) +
+          (droppedType !== 'Gauntlets' && vm.lockeditems.Gauntlets && vm.lockeditems.Gauntlets.isExotic) +
+          (droppedType !== 'Chest' && vm.lockeditems.Chest && vm.lockeditems.Chest.isExotic) +
+          (droppedType !== 'Leg' && vm.lockeditems.Leg && vm.lockeditems.Leg.isExotic)
         ) < 2;
       },
       excludedItemsValid: function(droppedId, droppedType) {
@@ -374,7 +374,7 @@
                             set.stats.STAT_DISCIPLINE.value += dis[vm.scaleType];
                             set.stats.STAT_STRENGTH.value += str[vm.scaleType];
 
-                            switch (armor.bonus_type) {
+                            switch (armor.bonusType) {
                             case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
                             case 'disc': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
                             case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;

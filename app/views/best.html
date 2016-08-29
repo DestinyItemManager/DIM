@@ -20,11 +20,6 @@
     <span class='dim-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.active}} gear</span>
   </p>
   <div class="section" ng-show="showGear">
-<!--
-    <label ng-class="{selected: normal.type === bucket}" class='dim-button' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
-      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
-    </label>
--->
     Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <label>
       <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
