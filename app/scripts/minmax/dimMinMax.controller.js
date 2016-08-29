@@ -228,6 +228,13 @@
           vm.excludeditems = _.filter(vm.excludeditems, function(item) {
             return !item.isVendorItem;
           });
+
+          // Filter any vendor perks from locked perks
+          _.each(vm.lockedperks, function(perkMap, type) {
+            vm.lockedperks[type] = _.omit(perkMap, function(perk, perkHash) {
+              return _.findWhere(vm.vendorPerks[vm.active][type], { hash: Number(perkHash) });
+            });
+          });
         }
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
