@@ -10,7 +10,7 @@
 
   // Report image fallback no more than once an hour
   var reportFallback = _.debounce(function() {
-      _gaq.push(['_trackEvent', 'exception', 'IconFallback']);
+    _gaq.push(['_trackEvent', 'exception', 'IconFallback']);
     // if (ga) {
     //   // Log the failure in Google Analytics
     //   ga('send', 'exception', {
