@@ -245,8 +245,10 @@
         } else {
           vm.lockedperks[type][perk.hash] = { icon: perk.icon, description: perk.description, lockType: activeType };
         }
-        vm.perkschanged = true;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.perkschanged = true;
+        }
       },
       onDrop: function(droppedId, type) {
         droppedId = getId(droppedId);
