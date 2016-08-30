@@ -21,7 +21,6 @@
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
-
     hotkeys.add({
       combo: ['f'],
       description: "Start a search",
@@ -179,11 +178,11 @@
               warlock: 2
             })[store.class];
 
-            const checkClassType = function(classType) {
+            var checkClassType = function(classType) {
               return ((classType === 3) || (classType === classTypeId));
             };
 
-            const types = ['Class',
+            var types = ['Class',
               'Primary',
               'Special',
               'Heavy',
@@ -196,13 +195,13 @@
               'Ghost'];
 
             let accountItems = [];
-            const items = {};
+            var items = {};
 
             _.each(stores, (store) => {
               accountItems = accountItems.concat(_.filter(store.items, (item) => checkClassType(item.classType)));
             });
 
-            const foundExotic = {};
+            var foundExotic = {};
 
             var fn = (type) => (item) => ((item.type === type) &&
               item.equipment &&
@@ -229,7 +228,7 @@
               items: items
             });
           }
-          return $q.reject();
+          return null;
         })
         .then(() => {
           vm.disableRandomLoadout = false;
