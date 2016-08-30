@@ -5,10 +5,10 @@
     controller: PlatformChoiceCtrl,
     controllerAs: 'vm',
     bindToController: true,
-    template: [
-      '<select id="system" ng-if="vm.platforms.length > 1" ng-options="platform.label for platform in vm.platforms" ng-model="vm.active" ng-change="vm.update()"></select>',
-      '<i ng-if="vm.active" class="fa fa-user"></i> <span id="user" class="header-right">{{ vm.active.id }}</span>'
-    ].join('')
+    template: `
+      <select id="system" ng-if="vm.platforms.length > 1" ng-options="platform.label for platform in vm.platforms" ng-model="vm.active" ng-change="vm.update()"></select>
+      <i ng-if="vm.active" class="fa fa-user"></i> <span id="user" class="header-right">{{ vm.active.id }}</span>'
+    `
   });
 
   PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker'];

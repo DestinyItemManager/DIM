@@ -78,17 +78,17 @@
           var compareItemCount = sum(compareItems, 'amount');
 
           dialogResult = ngDialog.open({
-            template: [
-              '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-              '  <dim-move-item-properties item="vm.item" dim-compare-item="vm.compareItem"></dim-move-item-properties>',
-              '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-              '    <div>Compare with what you already have:</div>',
-              '    <div class="compare-items">',
-              '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
-              '    </div>',
-              '  </div>',
-              '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-              '</div>'].join(''),
+            template: `
+              <div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">
+                <dim-move-item-properties item="vm.item" dim-compare-item="vm.compareItem"></dim-move-item-properties>
+                <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">
+                  <div>Compare with what you already have:</div>
+                  <div class="compare-items">
+                    <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>
+                  </div>
+                </div>
+                <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>
+              </div>`,
             plain: true,
             overlay: false,
             className: 'move-popup xur-move-popup',

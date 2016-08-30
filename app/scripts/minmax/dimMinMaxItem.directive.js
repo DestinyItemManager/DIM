@@ -9,15 +9,15 @@
       storeData: '<',
       shiftClickCallback: '='
     },
-    template: [
-      '<div ng-if="vm.itemData.isVendorItem" class="item-overlay-container">',
-      '  <div class="vendor-icon-background">',
-      '    <img ng-src="{{vm.itemData.vendorIcon}}" class="vendor-icon" />',
-      '  </div>',
-      '  <dim-simple-item ui-draggable="true" drag="::vm.itemData.index" drag-channel="{{ ::vm.itemData.type }}" id="vendor-{{::vm.itemData.hash}}" item-data="vm.itemData" ng-click="vm.itemClicked(vm.itemData, $event)" ng-class="{ \'search-hidden\': !vm.itemData.visible }"></dim-simple-item>',
-      '</div>',
-      '<dim-store-item ng-if="!vm.itemData.isVendorItem" shift-click-callback="vm.shiftClickCallback" item-data="vm.itemData" store-data="vm.storeData"></dim-store-item>'
-    ].join('')
+    template: `
+      <div ng-if="vm.itemData.isVendorItem" class="item-overlay-container">
+        <div class="vendor-icon-background">
+          <img ng-src="{{vm.itemData.vendorIcon}}" class="vendor-icon" />
+        </div>
+        <dim-simple-item ui-draggable="true" drag="::vm.itemData.index" drag-channel="{{ ::vm.itemData.type }}" id="vendor-{{::vm.itemData.hash}}" item-data="vm.itemData" ng-click="vm.itemClicked(vm.itemData, $event)" ng-class="{ \'search-hidden\': !vm.itemData.visible }"></dim-simple-item>
+      </div>
+      <dim-store-item ng-if="!vm.itemData.isVendorItem" shift-click-callback="vm.shiftClickCallback" item-data="vm.itemData" store-data="vm.storeData"></dim-store-item>
+    `
   };
 
   angular.module('dimApp')
@@ -69,17 +69,18 @@
           var compareItemCount = sum(compareItems, 'amount');
 
           dialogResult = ngDialog.open({
-            template: [
-              '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-              '  <dim-move-item-properties item="vm.item" dim-compare-item="vm.compareItem"></dim-move-item-properties>',
-              '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-              '    <div>Compare with what you already have:</div>',
-              '    <div class="compare-items">',
-              '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
-              '    </div>',
-              '  </div>',
-              '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-              '</div>'].join(''),
+            template: `
+              <div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">
+                <dim-move-item-properties item="vm.item" dim-compare-item="vm.compareItem"></dim-move-item-properties>
+                <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">
+                  <div>Compare with what you already have:</div>
+                  <div class="compare-items">
+                    <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>
+                  </div>
+                </div>
+                <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>
+              </div>
+            `,
             plain: true,
             overlay: false,
             className: 'move-popup vendor-move-popup',

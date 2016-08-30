@@ -1,43 +1,34 @@
 (function() {
   'use strict';
 
-  angular.module('dimApp')
-    .directive('dimStats', Stats);
-
-  Stats.$inject = [];
-
-  function Stats() {
-    return {
-      controller: StatsCtrl,
-      controllerAs: 'vm',
-      bindToController: true,
-      scope: {
-        stats: '='
-      },
-      template: [
-        '<div class="stat-bars">',
-        '  <div class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">',
-        '    <img src="images/intellect.png">',
-        '    <div class="bar" ng-repeat="n in vm.stats.STAT_INTELLECT.tiers track by $index">',
-        '      <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>',
-        '    </div>',
-        '  </div>',
-        '  <div class="stat" title="{{vm.formatTooltip(\'STAT_DISCIPLINE\')}}">',
-        '    <img src="images/discipline.png">',
-        '    <div class="bar" ng-repeat="n in vm.stats.STAT_DISCIPLINE.tiers track by $index">',
-        '      <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>',
-        '    </div>',
-        '  </div>',
-        '  <div class="stat" title="{{vm.formatTooltip(\'STAT_STRENGTH\')}}">',
-        '    <img src="images/strength.png">',
-        '    <div class="bar" ng-repeat="n in vm.stats.STAT_STRENGTH.tiers track by $index">',
-        '      <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>',
-        '    </div>',
-        '  </div>',
-        '</div>'
-      ].join('')
-    };
-  }
+  angular.module('dimApp').component('dimStats', {
+    controller: StatsCtrl,
+    controllerAs: 'vm',
+    bindings: {
+      stats: '<'
+    },
+    template: `
+      <div class="stat-bars">
+        <div class="stat" title="{{vm.formatTooltip(\'STAT_INTELLECT\')}}">
+          <img src="images/intellect.png">
+          <div class="bar" ng-repeat="n in vm.stats.STAT_INTELLECT.tiers track by $index">
+            <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>
+          </div>
+        </div>
+        <div class="stat" title="{{vm.formatTooltip(\'STAT_DISCIPLINE\')}}">
+          <img src="images/discipline.png">
+          <div class="bar" ng-repeat="n in vm.stats.STAT_DISCIPLINE.tiers track by $index">
+            <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>
+          </div>
+        </div>
+        <div class="stat" title="{{vm.formatTooltip(\'STAT_STRENGTH\')}}">
+          <img src="images/strength.png">
+          <div class="bar" ng-repeat="n in vm.stats.STAT_STRENGTH.tiers track by $index">
+            <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>
+          </div>
+        </div>
+      </div>`
+  });
 
   StatsCtrl.$inject = [];
 

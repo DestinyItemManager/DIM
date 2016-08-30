@@ -6,11 +6,11 @@
    */
   angular.module('dimApp')
     .component('dimClearNewItems', {
-      template: [
-        '<div class="clear-new-items" ng-if="$ctrl.storeService.hasNewItems">',
-        '  <button ng-click="$ctrl.storeService.clearNewItems()" title="Keyboard shortcut: X"><i class="fa fa-thumbs-up"></i> Clear new items</button>',
-        '</div>'
-      ].join(''),
+      template: `
+        <div class="clear-new-items" ng-if="$ctrl.storeService.hasNewItems">
+          <button ng-click="$ctrl.storeService.clearNewItems()" title="Keyboard shortcut: X"><i class="fa fa-thumbs-up"></i> Clear new items</button>
+        </div>'
+      `,
       controller: ClearNewItemsCtrl
     });
 
