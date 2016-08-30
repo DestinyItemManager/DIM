@@ -20,8 +20,7 @@
     "sum": true,
     "count": true,
     "gapi": true,
-    "Set": true,
-    "ga": true
+    "Set": true
   },
   "rules": {
     "array-callback-return": "error",
