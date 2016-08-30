@@ -20,11 +20,6 @@
     <span class='dim-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.active}} gear</span>
   </p>
   <div class="section" ng-show="showGear">
-<!--
-    <label ng-class="{selected: normal.type === bucket}" class='dim-button' ng-repeat="bucket as bucket for (bucket, data) in normal.ranked">
-      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.type' value='{{bucket}}'>{{bucket}}
-    </label>
--->
     Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
     <label>
       <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
@@ -48,18 +43,13 @@
 
   <div class="section">
     <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear.</small></p>
-    <div class="itemQuality">
-      <div ng-repeat="(type, lockeditem) in normal.lockeditems">
-        <div class="locked-item" ng-switch="lockeditem" ui-on-drop="normal.onDrop($data, type)" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="normal.lockedItemsValid($data, type)">
-          <div ng-switch-when="null" class="empty-item"></div>
-          <div ng-switch-default>
-            <dim-min-max-item item-data="lockeditem" store-data="normal.getStore(lockeditem.owner)"></dim-min-max-item>
-            <div class="close" ng-click="normal.onRemove(type)" role="button" tabindex="0"></div>
-          </div>
-          <div class="label">{{type}}</div>
-        </div>
-      </div>
-    </div>
+    <dim-min-max-locks class="itemQuality" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
+      locked-items-valid="normal.lockedItemsValid($data, type)"
+      on-drop="normal.onDrop($data, type)"
+      on-remove="normal.onRemove(type)"
+      get-store="normal.getStore(owner)"
+      on-perk-locked="normal.onPerkLocked(perk, type, $event)">
+    </dim-min-max-locks>
   </div>
   <div class="section" ng-show="normal.excludeditems.length">
     <p>Excluded Items <small>- Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.</small></p>
@@ -86,28 +76,36 @@
       <span><div ng-show="showAdvanced">
         <p>
           <label>
-            <select ng-model="normal.mode" ng-change="normal.onModeChange()" ng-options="(item ? 'Full' : 'Fast') for item in [false, true]">
+            <select ng-model="normal.fullMode" ng-change="normal.onModeChange()" ng-options="(item ? 'Full' : 'Fast') for item in [false, true]">
             </select>
             Processing mode
           </label>
           <small>-
-            <span ng-hide="normal.mode">Only looks at your best gear</span>
-            <span ng-show="normal.mode">Looks at more gear, but takes longer.</span></small>
+            <span ng-hide="normal.fullMode">Only looks at your best gear</span>
+            <span ng-show="normal.fullMode">Looks at more gear, but takes longer.</span></small>
         </p>
         <p>
           <label>
-            <select ng-model="normal.scale_type" ng-change="normal.onModeChange()">
+            <select ng-model="normal.scaleType" ng-change="normal.onModeChange()">
               <option value="scaled">Scaled</option>
               <option value="base">Current</option>
             </select>
             Light mode
           </label>
           <small>-
-            <span ng-show="normal.scale_type === 'scaled'">Calculates loadouts as if all items were 335 defense.</span>
-            <span ng-show="normal.scale_type === 'base'">Calculates loadouts at current defense levels.</span></small>
+            <span ng-show="normal.scaleType === 'scaled'">Calculates loadouts as if all items were 335 defense.</span>
+            <span ng-show="normal.scaleType === 'base'">Calculates loadouts at current defense levels.</span></small>
         </p>
       </div></span>
       <span><ul ng-show="showHelp">
+        <li>Lock a set of perks by clicking a lock bucket and selecting perks</li>
+        <ul>
+          <li>If a perk doesn't appear it means that you own no armor with that perk</li>
+          <li>To use armor with multiple perks together shift+click the desired perks</li>
+          <li><div class="example ex-or"></div> - Armor with any of these perks will be used ("or")</li>
+          <li><div class="example ex-and"></div> - Armor with all of these perks will be used ("and")</li>
+          </li>
+        </ul>
         <li>Drag and drop items into the locked buckets to build sets with only that gear</li>
         <li>Shift click an item to build sets without that gear</li>
         <li>Higher Tiers are better</li>
@@ -122,17 +120,6 @@
         <li>Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.</li>
         <li>As an items defense level increases, the stats on that item (int/dis/str) also increase.</li>
       </ul></span>
-<!--
-      &nbsp; Order:
-      <select ng-model='normal.setOrder' ng-change="normal.onOrderChange()">
-        <option value="-int_val,-disc_val,-str_val">Int/Dis/Str</option>
-        <option value="-int_val,-str_val,-disc_val">Int/Str/Dis</option>
-        <option value="-disc_val,-int_val,-str_val">Dis/Int/Str</option>
-        <option value="-disc_val,-str_val,-int_val">Dis/Str/Int</option>
-        <option value="-str_val,-int_val,-disc_val">Str/Int/Dis</option>
-        <option value="-str_val,-disc_val,-int_val">Str/Dis/Int</option>
-      </select>
--->
     </p>
   </div>
   <div ng-show="!normal.highestsets">

@@ -6,6 +6,54 @@
     vertical-align: middle;
   }
 
+  .example {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+  }
+
+  .ex-or {
+    background-color: #E8A534;
+  }
+
+  .ex-and {
+    background-color: #B184C5;
+  }
+
+  .locked-perk-notification img {
+    width: var(--item-size);
+    height: var(--item-size);
+  }
+
+  .perk-addition {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .perk-addition-text-container:hover {
+    opacity: 1;
+    transition: 1s;
+  }
+
+  .perk-select-hidden .perk-select-box {
+    display:none;
+  }
+
+  .perk-addition-text-container {
+    opacity: 0;
+    display: table-cell;
+    vertical-align: middle;
+    width: var(--item-size);
+    height: var(--item-size);
+  }
+
+  .perk-addition-text {
+    display: block;
+    font-size: 8px;
+  }
+
   .fa-arrow-circle-left {
     padding-right: 5px;
   }
@@ -126,5 +174,48 @@
 
   .excluded-container:last-child {
     margin-right: 0;
+  }
+}
+
+.ngdialog.perk-select-popup .perk-select-box {
+  user-select: none;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(((var(--item-size) + 20px) * 5) + 7px);
+  min-height: var(--item-size);
+  max-height: calc((var(--item-size) * 5) + 10px);
+  overflow-y: auto;
+  background-color: #656565;
+  border: 2px solid #DDD;
+  z-index: 3;
+  & .perk {
+    width: calc(var(--item-size) + 20px);
+    padding-left: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+  }
+
+  & .perk:hover, & .active-perk-or {
+    background-color: #E8A534;
+  }
+
+  &.shift-held .perk:hover, & .active-perk-and {
+    background-color: #B184C5;
+  }
+
+  & .perk img {
+    width: var(--item-size);
+    height: var(--item-size);
+    display: block;
+    margin: auto;
+  }
+
+  & .perk small {
+    text-align: center;
+    display: block;
   }
 }
