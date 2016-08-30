@@ -15,7 +15,7 @@
       template: `
         <svg preserveAspectRatio="xMaxYMin meet" svg-bind-viewbox="0 0 {{(vm.numColumns * vm.totalNodeSize - vm.nodePadding) * vm.scaleFactor}} {{(vm.numRows * vm.totalNodeSize - vm.nodePadding) * vm.scaleFactor + 1}}" class="talent-grid" ng-attr-height="{{(vm.numRows * vm.totalNodeSize - vm.nodePadding) * vm.scaleFactor}}" ng-attr-width="{{(vm.numColumns * vm.totalNodeSize - vm.nodePadding) * vm.scaleFactor}}">
          <g ng-attr-transform="scale({{vm.scaleFactor}})">
-          <g class="talent-node" ng-attr-transform="translate({{(node.column - vm.hiddenColumns) * (vm.totalNodeSize)}},{{node.row * (vm.totalNodeSize)}})" ng-repeat="node in vm.talentGrid.nodes | talentGridNodes:vm.hiddenColumns track by $index" ng-class="{ \'talent-node-activated\': node.activated, \'talent-node-showxp\': (!node.activated && node.xpRequired), \'talent-node-default\': (node.activated && !node.xpRequired && !node.exclusiveInColumn) }" ng-click="vm.nodeClick(node, $event)">
+          <g class="talent-node" ng-attr-transform="translate({{(node.column - vm.hiddenColumns) * (vm.totalNodeSize)}},{{node.row * (vm.totalNodeSize)}})" ng-repeat="node in vm.grid.nodes | talentGridNodes:vm.hiddenColumns track by $index" ng-class="{ \'talent-node-activated\': node.activated, \'talent-node-showxp\': (!node.activated && node.xpRequired), \'talent-node-default\': (node.activated && !node.xpRequired && !node.exclusiveInColumn) }" ng-click="vm.nodeClick(node, $event)">
             <circle r="16" cx="-17" cy="17" transform="rotate(-90)" class="talent-node-xp" stroke-width="2" ng-attr-stroke-dasharray="{{100.0 * node.xp / node.xpRequired}} 100" />
             <image class="talent-node-img" xlink:href="" ng-attr-xlink:href="{{ node.icon | bungieIcon }}" x="20" y="20" height="96" width="96" transform="scale(0.25)"/>
             <title>{{node.name}}\n{{node.description}}</title>
@@ -79,17 +79,17 @@
 
     vm.hiddenColumns = 0;
     if (vm.perksOnly) {
-      if (_.find(vm.talentGrid.nodes, { hash: infuseHash })) {
+      if (_.find(vm.grid.nodes, { hash: infuseHash })) {
         vm.hiddenColumns += 1;
       }
-      if (_.find(vm.talentGrid.nodes, { hash: 2133116599 })) {
+      if (_.find(vm.grid.nodes, { hash: 2133116599 })) {
         vm.hiddenColumns += 1;
       }
     }
 
-    if (vm.talentGrid) {
-      vm.numColumns = _.max(vm.talentGrid.nodes, 'column').column + 1 - vm.hiddenColumns;
-      vm.numRows = vm.perksOnly ? 2 : (_.max(vm.talentGrid.nodes, 'row').row + 1);
+    if (vm.grid) {
+      vm.numColumns = _.max(vm.grid.nodes, 'column').column + 1 - vm.hiddenColumns;
+      vm.numRows = vm.perksOnly ? 2 : (_.max(vm.grid.nodes, 'row').row + 1);
     }
   }
 })();
