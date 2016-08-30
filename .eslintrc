@@ -15,12 +15,12 @@
     "angular": true,
     "$": true,
     "_": true,
+    "_gaq": true,
     "chrome": true,
     "sum": true,
     "count": true,
     "gapi": true,
-    "Set": true,
-    "ga": true
+    "Set": true
   },
   "rules": {
     "array-callback-return": "error",

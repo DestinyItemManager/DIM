@@ -17,8 +17,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', '$location',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, $location) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
         // 1 Hour

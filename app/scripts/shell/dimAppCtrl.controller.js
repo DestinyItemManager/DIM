@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular.module('dimApp')
@@ -10,22 +10,21 @@
     var vm = this;
 
     vm.settings = dimSettingsService;
-    $scope.$watch('app.settings.itemSize', function (size) {
+    $scope.$watch('app.settings.itemSize', function(size) {
       document.querySelector('html').style.setProperty("--item-size", size + 'px');
     });
-    $scope.$watch('app.settings.charCol', function (cols) {
+    $scope.$watch('app.settings.charCol', function(cols) {
       document.querySelector('html').style.setProperty("--character-columns", cols);
     });
 
-    $scope.$watch('app.settings.vaultMaxCol', function (cols) {
+    $scope.$watch('app.settings.vaultMaxCol', function(cols) {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
-
 
     hotkeys.add({
       combo: ['f'],
       description: "Start a search",
-      callback: function (event) {
+      callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
         event.preventDefault();
@@ -36,7 +35,7 @@
     hotkeys.add({
       combo: ['esc'],
       allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-      callback: function () {
+      callback: function() {
         $rootScope.$broadcast('dim-escape-filter-input');
       }
     });
@@ -44,7 +43,7 @@
     hotkeys.add({
       combo: ['r'],
       description: "Refresh inventory",
-      callback: function () {
+      callback: function() {
         vm.refresh();
       }
     });
@@ -52,7 +51,7 @@
     hotkeys.add({
       combo: ['i'],
       description: "Toggle showing full item details",
-      callback: function () {
+      callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
     });
@@ -60,7 +59,7 @@
     hotkeys.add({
       combo: ['x'],
       description: "Clear new items",
-      callback: function () {
+      callback: function() {
         dimStoreService.clearNewItems();
       }
     });
@@ -71,7 +70,7 @@
      */
     function showPopupFunction(name) {
       var result;
-      return function (e) {
+      return function(e) {
         e.stopPropagation();
 
         if (result) {
@@ -84,7 +83,7 @@
             appendClassName: 'modal-dialog'
           });
 
-          result.closePromise.then(function () {
+          result.closePromise.then(function() {
             result = null;
           });
 
@@ -103,11 +102,11 @@
     vm.showFilters = showPopupFunction('filters');
     vm.showXur = showPopupFunction('xur');
 
-    vm.toggleMinMax = function (e) {
+    vm.toggleMinMax = function(e) {
       $state.go($state.is('best') ? 'inventory' : 'best');
     };
 
-    vm.toggleVendors = function (e) {
+    vm.toggleVendors = function(e) {
       $state.go($state.is('vendors') ? 'inventory' : 'vendors');
     };
 
@@ -122,10 +121,10 @@
     // Don't refresh more than once a minute
     var refresh = _.throttle(vm.refresh, 60 * 1000);
 
-    vm.startAutoRefreshTimer = function () {
+    vm.startAutoRefreshTimer = function() {
       var secondsToWait = 360;
 
-      $rootScope.autoRefreshTimer = $interval(function () {
+      $rootScope.autoRefreshTimer = $interval(function() {
         // Only Refresh If We're Not Already Doing Something
         // And We're Not Inactive
         if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
@@ -137,24 +136,20 @@
     vm.startAutoRefreshTimer();
 
     // Refresh when the user comes back to the page
-    document.addEventListener("visibilitychange", function () {
+    document.addEventListener("visibilitychange", function() {
       if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
         refresh();
       }
     }, false);
 
-    var storesUpdated = false;
-
-    $scope.$on('dim-stores-updated', function () {
+    $scope.$on('dim-stores-updated', function() {
       vm.showRandomLoadout = true;
     });
 
     vm.showRandomLoadout = false;
     vm.disableRandomLoadout = false;
 
-    vm.applyRandomLoadout = function ($event) {
-      const loadout = {};
-
+    vm.applyRandomLoadout = function() {
       if (vm.disableRandomLoadout) {
         return;
       }
@@ -183,11 +178,11 @@
               warlock: 2
             })[store.class];
 
-            let checkClassType = function (classType) {
+            var checkClassType = function(classType) {
               return ((classType === 3) || (classType === classTypeId));
-            }
+            };
 
-            let types = ['Class',
+            var types = ['Class',
               'Primary',
               'Special',
               'Heavy',
@@ -200,22 +195,22 @@
               'Ghost'];
 
             let accountItems = [];
-            const items = {};
+            var items = {};
 
-            _.each(stores, store => {
-              accountItems = accountItems.concat(_.filter(store.items, item => checkClassType(item.classType)));
+            _.each(stores, (store) => {
+              accountItems = accountItems.concat(_.filter(store.items, (item) => checkClassType(item.classType)));
             });
 
-            let foundExotic = {};
+            var foundExotic = {};
 
-            var fn = type => item => ((item.type === type)
-              && item.equipment
-              && (store.level >= item.equipRequiredLevel)
-              && (item.typeName !== 'Mask' || ((item.typeName === 'Mask') && (item.tier === 'Legendary')))
-              && (!item.notransfer || (item.notransfer && (item.owner === store.id)))
-              && (!foundExotic[item.bucket.sort] || (foundExotic[item.bucket.sort] && !item.isExotic )));
+            var fn = (type) => (item) => ((item.type === type) &&
+              item.equipment &&
+              (store.level >= item.equipRequiredLevel) &&
+              (item.typeName !== 'Mask' || ((item.typeName === 'Mask') && (item.tier === 'Legendary'))) &&
+              (!item.notransfer || (item.notransfer && (item.owner === store.id))) &&
+              (!foundExotic[item.bucket.sort] || (foundExotic[item.bucket.sort] && !item.isExotic)));
 
-            _.each(types, type => {
+            _.each(types, (type) => {
               const filteredItems = _.filter(accountItems, fn(type));
               const random = filteredItems[Math.floor(Math.random() * filteredItems.length)];
 
@@ -231,8 +226,9 @@
               classType: -1,
               name: 'random',
               items: items
-            })
+            });
           }
+          return null;
         })
         .then(() => {
           vm.disableRandomLoadout = false;
@@ -240,6 +236,6 @@
         .catch(() => {
           vm.disableRandomLoadout = false;
         });
-    }
+    };
   }
 })();
