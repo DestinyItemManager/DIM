@@ -8,15 +8,15 @@
       totalCoins: '<',
       itemClicked: '&'
     },
-    template: [
-      '<div class="vendor-item">',
-      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
-      '  <div class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
-      '    {{::$ctrl.cost.cost}}/{{$ctrl.totalCoins[$ctrl.cost.currency.itemHash]}}',
-      '    <span class="currency"><img dim-bungie-image-fallback="::$ctrl.cost.currency.icon" title="{{::$ctrl.cost.currency.name}}"></span>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: `
+      <div class="vendor-item">
+        <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>
+        <div class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">
+          {{::$ctrl.cost.cost}}/{{$ctrl.totalCoins[$ctrl.cost.currency.itemHash]}}
+          <span class="currency"><img dim-bungie-image-fallback="::$ctrl.cost.currency.icon" title="{{::$ctrl.cost.currency.name}}"></span>
+        </div>
+      </div>
+    `
   };
 
   var VendorItems = {
@@ -28,35 +28,35 @@
       vendorHashes: '<vendorHashes',
       totalCoins: '<totalCoins'
     },
-    template: [
-      '<div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes" ng-init="firstVendor = vm.vendors[0][vendorHash]">',
-      ' <div ng-if="firstVendor">',
-      '   <div class="vendor-header">',
-      '     <div class="title">',
-      '     {{firstVendor.vendorName}}',
-      '     <img class="vendor-icon" ng-src="{{firstVendor.vendorIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '     </div>',
-      '   </div>',
-      '   <div class="vendor-row">',
-      '     <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '       <div ng-if="store.vendors[vendorHash].items.armor.length">',
-      '         <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Armor</h3>',
-      '         <div class="vendor-armor">',
-      '           <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '         </div>',
-      '       </div>',
-      '       <div ng-if="store.vendors[vendorHash].items.weapons.length">',
-      '         <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Weapons</h3>',
-      '         <div class="vendor-weaps">',
-      '           <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '         </div>',
-      '       </div>',
-      '     </div>',
-      '   </div>',
-      ' </div>',
-      '</div>'
-    ].join('')
+    template: `
+      <div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes" ng-init="firstVendor = vm.vendors[0][vendorHash]">
+       <div ng-if="firstVendor">
+         <div class="vendor-header">
+           <div class="title">
+           {{firstVendor.vendorName}}
+           <img class="vendor-icon" ng-src="{{firstVendor.vendorIcon}}" />
+           <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+           </div>
+         </div>
+         <div class="vendor-row">
+           <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+             <div ng-if="store.vendors[vendorHash].items.armor.length">
+               <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Armor</h3>
+               <div class="vendor-armor">
+                 <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>
+               </div>
+             </div>
+             <div ng-if="store.vendors[vendorHash].items.weapons.length">
+               <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Weapons</h3>
+               <div class="vendor-weaps">
+                 <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+      </div>
+    `
   };
 
   var VendorItemsCombined = {
@@ -68,33 +68,33 @@
       vendorHashes: '<vendorHashes',
       totalCoins: '<totalCoins'
     },
-    template: [
-      '<div class="vendor-char-items" ng-init="firstVendor = vm.vendors[0][vm.vendorHashes[0]]">',
-      '  <div ng-if="firstVendor">',
-      '    <div class="vendor-header">',
-      '      <div class="title">',
-      '        Vanguard',
-      '        <img class="vendor-icon" ng-src="{{firstVendor.vendorIcon}}" />',
-      '        <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '      </div>',
-      '    </div>',
-      '    <div class="vendor-row">',
-      '      <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '        <div ng-repeat="(idx, vendorHash) in vm.vendorHashes">',
-      '          <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Armor</h3>',
-      '          <div class="vendor-armor">',
-      '            <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
-      '          <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Weapons</h3>',
-      '          <div class="vendor-weaps">',
-      '            <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: `
+      <div class="vendor-char-items" ng-init="firstVendor = vm.vendors[0][vm.vendorHashes[0]]">
+        <div ng-if="firstVendor">
+          <div class="vendor-header">
+            <div class="title">
+              Vanguard
+              <img class="vendor-icon" ng-src="{{firstVendor.vendorIcon}}" />
+              <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+            </div>
+          </div>
+          <div class="vendor-row">
+            <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+              <div ng-repeat="(idx, vendorHash) in vm.vendorHashes">
+                <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Armor</h3>
+                <div class="vendor-armor">
+                  <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>
+                </div>
+                <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Weapons</h3>
+                <div class="vendor-weaps">
+                  <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
   };
 
   angular.module('dimApp')
@@ -162,17 +162,18 @@
           var compareItemCount = sum(compareItems, 'amount');
 
           dialogResult = ngDialog.open({
-            template: [
-              '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-              '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
-              '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-              '    <div>Compare with what you already have:</div>',
-              '    <div class="compare-items">',
-              '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
-              '    </div>',
-              '  </div>',
-              '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-              '</div>'].join(''),
+            template: `
+              <div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">
+                <dim-move-item-properties item="vm.item" dim-compare-item="vm.compareItem"></dim-move-item-properties>
+                <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">
+                  <div>Compare with what you already have:</div>
+                  <div class="compare-items">
+                    <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>
+                  </div>
+                </div>
+                <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>
+              </div>
+            `,
             plain: true,
             overlay: false,
             className: 'move-popup vendor-move-popup',
