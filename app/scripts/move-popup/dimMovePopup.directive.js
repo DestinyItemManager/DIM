@@ -1,58 +1,52 @@
 (function() {
   'use strict';
 
-  angular.module('dimApp')
-    .directive('dimMovePopup', MovePopup);
-
-  function MovePopup() {
-    return {
-      controller: MovePopupController,
-      controllerAs: 'vm',
-      bindToController: true,
-      restrict: 'A',
-      scope: {
-        store: '=dimStore',
-        item: '=dimItem'
-      },
-      replace: true,
-      template: [
-        '<div class="move-popup" alt="" title="">',
-        '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></div>',
-        '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
-        '  <div class="interaction">',
-        '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-        '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
-        '        data-type="item" data-character="{{::store.id}}">',
-        '        <span>Vault</span>',
-        '      </div>',
-        '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
-        '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
-        '        <span>Equip</span>',
-        '      </div>',
-        '      <div class="move-button move-store" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
-        '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
-        '        data-type="item" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})"> ',
-        '        <span>Store</span>',
-        '      </div>',
-        '    </div>',
-        '    <div class="move-button move-consolidate" alt="Consolidate" title="Consolidate" ',
-        '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.consolidate()">',
-        '      <span>Take</span>',
-        '    </div>',
-        '    <div class="move-button move-distribute" alt="Distribute Evenly" title="Distribute Evenly" ',
-        '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
-        '      <span>Split</span>',
-        '    </div>',
-        '  <div class="locations">',
-        '    <div class="move-button infuse-perk" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" ng-style="{ \'background-image\': \'url(/images/\' + vm.item.bucket.sort + \'.png)\' }"></div>',
-        '  </div>',
-        '  </div>',
-        '</div>'
-      ].join('')
-    };
-  }
+  angular.module('dimApp').component('dimMovePopup', {
+    controller: MovePopupController,
+    controllerAs: 'vm',
+    bindToController: true,
+    bindings: {
+      store: '=dimStore',
+      item: '=dimItem'
+    },
+    replace: true,
+    template: [
+      '<div class="move-popup" alt="" title="">',
+      '  <dim-move-item-properties item="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></dim-move-item-properties>',
+      '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+      '  <div class="interaction">',
+      '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
+      '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+      '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
+      '        data-type="item" data-character="{{::store.id}}">',
+      '        <span>Vault</span>',
+      '      </div>',
+      '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+      '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
+      '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
+      '        <span>Equip</span>',
+      '      </div>',
+      '      <div class="move-button move-store" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+      '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
+      '        data-type="item" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})"> ',
+      '        <span>Store</span>',
+      '      </div>',
+      '    </div>',
+      '    <div class="move-button move-consolidate" alt="Consolidate" title="Consolidate" ',
+      '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.consolidate()">',
+      '      <span>Take</span>',
+      '    </div>',
+      '    <div class="move-button move-distribute" alt="Distribute Evenly" title="Distribute Evenly" ',
+      '      ng-if="!vm.item.notransfer && vm.item.maxStackSize > 1" ng-click="vm.distribute()">',
+      '      <span>Split</span>',
+      '    </div>',
+      '  <div class="locations">',
+      '    <div class="move-button infuse-perk" ng-if="vm.item.talentGrid.infusable" ng-click="vm.infuse(vm.item, $event)" title="Infusion fuel finder" alt="Infusion calculator" ng-style="{ \'background-image\': \'url(/images/\' + vm.item.bucket.sort + \'.png)\' }"></div>',
+      '  </div>',
+      '  </div>',
+      '</div>'
+    ].join('')
+  });
 
   MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService', '$timeout', 'dimSettingsService'];
 

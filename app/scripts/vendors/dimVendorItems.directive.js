@@ -164,7 +164,7 @@
           dialogResult = ngDialog.open({
             template: [
               '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-              '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
+              '  <dim-move-item-properties item="vm.item" dim-compare-item="vm.compareItem"></dim-move-item-properties>',
               '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
               '    <div>Compare with what you already have:</div>',
               '    <div class="compare-items">',

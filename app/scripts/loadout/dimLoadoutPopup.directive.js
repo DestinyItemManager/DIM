@@ -1,57 +1,49 @@
 (function() {
   'use strict';
-  angular.module('dimApp')
-    .directive('dimLoadoutPopup', LoadoutPopup);
 
-  LoadoutPopup.$inject = [];
-
-  function LoadoutPopup() {
-    return {
-      controller: LoadoutPopupCtrl,
-      controllerAs: 'vm',
-      bindToController: true,
-      restrict: 'A',
-      scope: {
-        store: '=dimLoadoutPopup'
-      },
-      replace: true,
-      template: [
-        '<div class="loadout-popup-content">',
-        '  <ul class="loadout-list">',
-        '    <li class="loadout-set">',
-        '      <span ng-click="vm.newLoadout($event)">+ Create Loadout</span>',
-        '      <span ng-click="vm.newLoadoutFromEquipped($event)">From Equipped</span>',
-        '    </li>',
-        '    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
-        '      <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
-        '      <span ng-click="vm.deleteLoadout(loadout, $event)"><i class="fa fa-trash-o"></i></span>',
-        '      <span ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
-        '    </li>',
-        '    <li class="loadout-set" ng-if="vm.search.query">',
-        '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> Search: "{{vm.search.query}}"</span>',
-        '    </li>',
-        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
-        '    </li>',
-        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
-        '    </li>',
-        '    <li class="loadout-set">',
-        '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: true  } )"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
-        '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: false })"><i class="fa fa-ban"></i> Exotics</span>',
-        '    </li>',
-        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
-        '    </li>',
-        '    <li class="loadout-set" ng-if="vm.previousLoadout">',
-        '      <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
-        '      <span ng-click="vm.applyLoadout(vm.previousLoadout, $event)">All items</span>',
-        '    </li>',
-        '  </ul>',
-        '</div>'
-      ].join('')
-    };
-  }
+  angular.module('dimApp').component('dimLoadoutPopup', {
+    controller: LoadoutPopupCtrl,
+    controllerAs: 'vm',
+    bindings: {
+      store: '<'
+    },
+    replace: true,
+    template: [
+      '<div class="loadout-popup-content">',
+      '  <ul class="loadout-list">',
+      '    <li class="loadout-set">',
+      '      <span ng-click="vm.newLoadout($event)">+ Create Loadout</span>',
+      '      <span ng-click="vm.newLoadoutFromEquipped($event)">From Equipped</span>',
+      '    </li>',
+      '    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">',
+      '      <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">{{ loadout.name }}</span>',
+      '      <span ng-click="vm.deleteLoadout(loadout, $event)"><i class="fa fa-trash-o"></i></span>',
+      '      <span ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
+      '    </li>',
+      '    <li class="loadout-set" ng-if="vm.search.query">',
+      '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> Search: "{{vm.search.query}}"</span>',
+      '    </li>',
+      '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+      '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> Maximize Light</span>',
+      '    </li>',
+      '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+      '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> Item Leveling</span>',
+      '    </li>',
+      '    <li class="loadout-set">',
+      '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: true  } )"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Gather Engrams</span>',
+      '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: false })"><i class="fa fa-ban"></i> Exotics</span>',
+      '    </li>',
+      '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+      '      <span ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> Engrams to Vault</span>',
+      '    </li>',
+      '    <li class="loadout-set" ng-if="vm.previousLoadout">',
+      '      <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
+      '      <span ng-click="vm.applyLoadout(vm.previousLoadout, $event)">All items</span>',
+      '    </li>',
+      '  </ul>',
+      '</div>'
+    ].join('')
+  });
 
   LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService', 'dimPlatformService'];
 
