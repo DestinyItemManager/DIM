@@ -596,7 +596,7 @@
       try {
         createdItem.tag = (_.find(taggedItems, function(tag) {
           return tag.id === createdItem.id;
-        }) || {type: undefined}).type;
+        }) || { type: undefined }).type;
       } catch (e) {
         console.error("Error determining tag for " + createdItem.name, item, itemDef, e);
       }

@@ -19,8 +19,6 @@
 
     vm.settings = dimSettingsService;
 
-    console.log(vm.item.tag)
-
     vm.selected = _.find(vm.settings.itemTags, function(tag) {
       return tag.type === vm.item.tag;
     });
