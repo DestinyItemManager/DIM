@@ -660,6 +660,19 @@ img {
   }
 }
 
+.item-tag {
+  text-shadow: 1px 1px #000;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  &.fa-star {
+    color: gold;
+  }
+  &.fa-trash {
+    color: limegreen;
+  }
+}
+
 .item .stack {
   position: absolute;
   bottom: 0;
