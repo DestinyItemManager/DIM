@@ -204,8 +204,8 @@
         }
       }
 
-      _reloadPromise = $q.all([loadNewItems(activePlatform), dimBungieService.getStores(activePlatform, includeVendors)])
-        .then(function([newItems, rawStores]) {
+      _reloadPromise = $q.all([loadNewItems(activePlatform), loadTaggedItems(activePlatform), dimBungieService.getStores(activePlatform, includeVendors)])
+        .then(function([newItems, taggedItems, rawStores]) {
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
@@ -344,7 +344,7 @@
               }
             }
 
-            return processItems(store, items, previousItems, newItems).then(function(items) {
+            return processItems(store, items, previousItems, newItems, taggedItems).then(function(items) {
               if (activePlatform !== dimPlatformService.getActive()) {
                 throw new Error("Active platform mismatch");
               }
@@ -446,7 +446,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, newItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, previousItems, newItems, taggedItems, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -591,6 +591,14 @@
         createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
+      }
+
+      try {
+        createdItem.tag = (_.find(taggedItems, function(tag) {
+          return tag.id === createdItem.id;
+        }) || {type: undefined}).type;
+      } catch (e) {
+        console.error("Error determining tag for " + createdItem.name, item, itemDef, e);
       }
 
       try {
@@ -1169,6 +1177,15 @@
       return $q.resolve(new Set());
     }
 
+    function loadTaggedItems(activePlatform) {
+      if (activePlatform) {
+        return SyncService.get().then(function processCachedNewItems(data) {
+          return data[itemTagKey()];
+        });
+      }
+      return $q.resolve({});
+    }
+
     function saveNewItems(newItems) {
       SyncService.set({ [newItemsKey()]: [...newItems] });
     }
@@ -1178,7 +1195,12 @@
       return 'newItems-' + (platform ? platform.type : '');
     }
 
-    function processItems(owner, items, previousItems = new Set(), newItems = new Set()) {
+    function itemTagKey() {
+      const platform = dimPlatformService.getActive();
+      return 'taggedItems-' + (platform ? platform.type : '');
+    }
+
+    function processItems(owner, items, previousItems = new Set(), newItems = new Set(), taggedItems) {
       _idTracker = {};
       return $q.all([
         dimItemDefinitions,
@@ -1190,7 +1212,8 @@
         dimYearsDefinitions,
         dimProgressionDefinitions,
         previousItems,
-        newItems])
+        newItems,
+        taggedItems])
         .then(function(args) {
           var result = [];
           _.each(items, function(item) {

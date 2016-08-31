@@ -2,20 +2,86 @@
   'use strict';
 
   angular.module('dimApp')
-    .factory('dimSearchService', function() {
+    .factory('dimSearchService', function(dimSettingsService) {
+      /**
+       * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
+       * values that will set the left-hand to the "match."
+       */
+      var filterTrans = {
+        dmg: ['arc', 'solar', 'void', 'kinetic'],
+        type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
+        tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
+        incomplete: ['incomplete'],
+        complete: ['complete'],
+        xpcomplete: ['xpcomplete'],
+        xpincomplete: ['xpincomplete', 'needsxp'],
+        upgraded: ['upgraded'],
+        classType: ['titan', 'hunter', 'warlock'],
+        dupe: ['dupe', 'duplicate'],
+        unascended: ['unascended', 'unassended', 'unasscended'],
+        ascended: ['ascended', 'assended', 'asscended'],
+        reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+        tracked: ['tracked'],
+        untracked: ['untracked'],
+        locked: ['locked'],
+        unlocked: ['unlocked'],
+        stackable: ['stackable'],
+        engram: ['engram'],
+        weaponClass: ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
+        year: ['year1', 'year2'],
+        infusable: ['infusable', 'infuse'],
+        stattype: ['intellect', 'discipline', 'strength'],
+        new: ['new'],
+        glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
+        itemtags: _.compact(dimSettingsService.itemTags.map(function(tag) {
+          return tag.type;
+        }))
+      };
+
+      var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
+        return ["is:" + word, "not:" + word];
+      }));
+
+      // Filters that operate on ranges (>, <, >=, <=)
+      var ranges = ['light', 'level', 'quality', 'percentage'];
+      ranges.forEach(function(range) {
+        keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
+      });
+
       return {
-        query: ''
+        query: '',
+        filterTrans: filterTrans,
+        keywords: keywords
       };
     })
     .directive('dimSearchFilter', SearchFilter);
 
-  SearchFilter.$inject = [];
+  SearchFilter.$inject = ['dimSearchService'];
 
-  function SearchFilter() {
+  function SearchFilter(dimSearchService) {
     return {
       controller: SearchFilterCtrl,
       controllerAs: 'vm',
-      link: Link,
+      link: function Link(scope, element) {
+        element.find('input').textcomplete([
+          {
+            words: dimSearchService.keywords,
+            match: /\b((li|le|qu|pe|is:|not:)\w*)$/,
+            search: function(term, callback) {
+              callback($.map(this.words, function(word) {
+                return word.indexOf(term) === 0 ? word : null;
+              }));
+            },
+            index: 1,
+            replace: function(word) {
+              return (word.indexOf('is:') === 0 && word.indexOf('not:') === 0)
+                ? (word + ' ') : word;
+            }
+          }
+        ], {
+          zIndex: 1000
+        });
+      },
       bindToController: true,
       restrict: 'A',
       template: [
@@ -24,68 +90,7 @@
     };
   }
 
-  /**
-   * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
-   * values that will set the left-hand to the "match."
-   */
-  var filterTrans = {
-    dmg: ['arc', 'solar', 'void', 'kinetic'],
-    type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
-    tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
-    incomplete: ['incomplete'],
-    complete: ['complete'],
-    xpcomplete: ['xpcomplete'],
-    xpincomplete: ['xpincomplete', 'needsxp'],
-    upgraded: ['upgraded'],
-    classType: ['titan', 'hunter', 'warlock'],
-    dupe: ['dupe', 'duplicate'],
-    unascended: ['unascended', 'unassended', 'unasscended'],
-    ascended: ['ascended', 'assended', 'asscended'],
-    reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-    tracked: ['tracked'],
-    untracked: ['untracked'],
-    locked: ['locked'],
-    unlocked: ['unlocked'],
-    stackable: ['stackable'],
-    engram: ['engram'],
-    weaponClass: ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
-    year: ['year1', 'year2'],
-    infusable: ['infusable', 'infuse'],
-    stattype: ['intellect', 'discipline', 'strength'],
-    new: ['new'],
-    glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
-  };
 
-  var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
-    return ["is:" + word, "not:" + word];
-  }));
-
-  // Filters that operate on ranges (>, <, >=, <=)
-  var ranges = ['light', 'level', 'quality', 'percentage'];
-  ranges.forEach(function(range) {
-    keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
-  });
-
-  function Link(scope, element) {
-    element.find('input').textcomplete([
-      {
-        words: keywords,
-        match: /\b((li|le|qu|pe|is:|not:)\w*)$/,
-        search: function(term, callback) {
-          callback($.map(this.words, function(word) {
-            return word.indexOf(term) === 0 ? word : null;
-          }));
-        },
-        index: 1,
-        replace: function(word) {
-          return (word.indexOf('is:') === 0 && word.indexOf('not:') === 0)
-            ? (word + ' ') : word;
-        }
-      }
-    ], {
-      zIndex: 1000
-    });
-  }
 
   SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
 
@@ -163,8 +168,8 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter);
           } else {
-            for (const key in filterTrans) {
-              if (filterTrans.hasOwnProperty(key) && filterTrans[key].indexOf(filter) > -1) {
+            for (const key in dimSearchService.filterTrans) {
+              if (dimSearchService.filterTrans.hasOwnProperty(key) && dimSearchService.filterTrans[key].indexOf(filter) > -1) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter);
@@ -178,8 +183,8 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter, true);
           } else {
-            for (const key in filterTrans) {
-              if (filterTrans.hasOwnProperty(key) && filterTrans[key].indexOf(filter) > -1) {
+            for (const key in dimSearchService.filterTrans) {
+              if (dimSearchService.filterTrans.hasOwnProperty(key) && dimSearchService.filterTrans[key].indexOf(filter) > -1) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter, true);
@@ -356,6 +361,9 @@
           return boosts.includes(item.hash) || supplies.includes(item.hash);
         }
         return false;
+      },
+      itemtags: function(predicate, item) {
+        return item.tag && item.tag.indexOf(predicate) >= 0;
       },
       stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });

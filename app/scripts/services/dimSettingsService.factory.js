@@ -45,6 +45,13 @@
       itemSize: 44,
       // Which categories or buckets should be collapsed?
       collapsedSections: {},
+      // Predefined item tags. Maybe eventually allow to add more (also i18n?)
+      itemTags: [
+        { type: undefined, label: 'Tag Item' },
+        { type: 'favorite', label: 'Favorite' },
+        { type: 'keep', label: 'Keep' },
+        { type: 'delete', label: 'Delete' }
+      ],
 
       save: function() {
         if (!_loaded) {
