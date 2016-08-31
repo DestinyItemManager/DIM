@@ -43,7 +43,7 @@
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
         '        </i>',
         '      </a>',
-        '    <dim-item-tag item="vm.item"></dim-item-tag>',
+        '    <dim-item-tag ng-if="vm.item.isEquipment" item="vm.item"></dim-item-tag>',
         '    </div>',
         '  </div>',
         '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
