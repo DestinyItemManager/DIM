@@ -135,7 +135,7 @@
         <div class="set-item" ng-repeat="armorpiece in set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small>{{armorpiece.bonus_type === 'int'? 'Intellect': (armorpiece.bonus_type === 'disc'? 'Discipline' : 'Strength')}}</small></div>
+          <div class="label"><small>{{armorpiece.bonusType === 'int'? 'Intellect': (armorpiece.bonusType === 'disc'? 'Discipline' : 'Strength')}}</small></div>
         </div>
       </div>
     </div>
