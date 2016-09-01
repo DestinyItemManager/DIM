@@ -9,6 +9,22 @@
   function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService) {
     var vm = this;
 
+    var $window = $(window);
+    var $vendorHeaders = $('#vendorHeaders');
+    var $vendorHeadersBackground = $('#vendorHeadersBackground');
+    var vendorsTop = $vendorHeaders.offset().top - 66; // Subtract height of title and back link
+
+    function stickyHeader(e) {
+      $vendorHeaders.toggleClass('sticky', $window.scrollTop() > vendorsTop);
+      $vendorHeadersBackground.toggleClass('sticky', $window.scrollTop() > vendorsTop);
+    }
+
+    $window.on('scroll', stickyHeader);
+
+    $scope.$on('$destroy', function() {
+      $window.off('scroll', stickyHeader);
+    });
+
     vm.settings = dimSettingsService;
     function init(stores) {
       vm.stores = _.reject(stores, (s) => s.isVault);
