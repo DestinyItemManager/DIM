@@ -49,7 +49,9 @@
       <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
       <div id="content" class="content" ui-view></div>
       <div class="store-bounds"></div>
-      <a class="loadout random" href="#" ng-disabled="vm.disableRandomLoadout" ng-if="app.showRandomLoadout" ng-click="app.applyRandomLoadout($event)">&Pi;</a>
+      <div class="random-loadout" ng-controller="dimRandomCtrl as random">
+        <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
+      </div>
     </div>
 
     <script src="scripts/google.js?v=$DIM_VERSION"></script>
@@ -102,6 +104,7 @@
     <script src="scripts/services/dimSyncService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/dimLoadout.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/loadout/random/dimRandom.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAppCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimSettingsCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
