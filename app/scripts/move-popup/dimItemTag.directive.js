@@ -12,34 +12,24 @@
     `
   });
 
-  ItemTagController.$inject = ['SyncService', 'dimPlatformService', 'dimSettingsService'];
+  ItemTagController.$inject = ['SyncService', 'dimPlatformService', 'dimSettingsService', 'dimItemTagService'];
 
-  function ItemTagController(SyncService, dimPlatformService, dimSettingsService) {
+  function ItemTagController(SyncService, dimPlatformService, dimSettingsService, dimItemTagService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
-
     vm.selected = _.find(vm.settings.itemTags, function(tag) {
       return tag.type === vm.item.tag;
     });
 
     vm.updateTag = function() {
       vm.item.tag = vm.selected.type;
-
       SyncService.get().then(function(data) {
-        if (!data[itemTagKey()]) {
-          data[itemTagKey()] = {};
-        }
-        data[itemTagKey()][vm.item.id] = { id: vm.item.id, type: vm.item.tag };
-
+        data = data[dimItemTagService.getKey()] || {};
+        data[vm.item.id] = { id: vm.item.id, type: vm.item.tag };
         SyncService.set(data);
       });
     };
-
-    function itemTagKey() {
-      const platform = dimPlatformService.getActive();
-      return 'taggedItems-' + (platform ? platform.type : '');
-    }
   }
 })();
 
