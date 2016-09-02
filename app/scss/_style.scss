@@ -661,20 +661,16 @@ img {
 }
 
 .item-tag {
-  -webkit-text-stroke: 1px black;
+  text-shadow: 0px 0px 4px black;
+  -webkit-text-stroke: .4px black;
   position: absolute;
   top: 3px;
   right: 3px;
-  &.fa-star {
-    color: gold;
-  }
-  &.fa-tag {
-    color: gold;
-  }
-  &.fa-ban {
-    -webkit-text-stroke: 1px red;
-    color: black;
-  }
+  color: gold;
+//  &.fa-ban {
+//    -webkit-text-stroke: 0px;
+//    color: red;
+//  }
 }
 
 .item .stack {
