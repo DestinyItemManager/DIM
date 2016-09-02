@@ -10,7 +10,7 @@
     var key;
 
     function getKey() {
-      if(key) {
+      if (key) {
         return key;
       }
       var platform = dimPlatformService.getActive();
@@ -19,7 +19,7 @@
     }
 
     function cleanTags() {
-      if(!key) {
+      if (!key) {
         return;
       }
       let accountItems = [];
