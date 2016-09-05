@@ -24,7 +24,7 @@
             title: content.title,
             body: [
               '<p>' + body + '</p>',
-              '<input style="margin-top: 1px; vertical-align: middle; font-size:30px;" id="info-' + id + '" type="checkbox">',
+              '<input id="info-' + id + '" type="checkbox">',
               '<label for="info-' + id + '">' + content.hide + '</label></p>'
             ].join(''),
             timeout: timeout,

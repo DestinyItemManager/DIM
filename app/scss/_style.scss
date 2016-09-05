@@ -1556,10 +1556,18 @@ h2, h3, h4 {
   }
 }
 
+.toast-info {
+  input[type='checkbox'] {
+    margin: -2px 5px 0 0;
+    vertical-align: middle;
+    font-size:30px;
+  }
+}
+
 .toast-close-button {
   position: relative;
   right: 0em;
-  top: -0.3em;
+  top: -0.4em;
   float: right;
   font-size: 30px;
   font-weight: bold;
