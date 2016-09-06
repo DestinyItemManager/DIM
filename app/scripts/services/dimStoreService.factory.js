@@ -4,27 +4,28 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
     var _stores = [];
     var _idTracker = {};
 
     var _removedNewItems = new Set();
 
+    // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
-      529303302: { label: "Cryptarch", color: "#C7990C", scale: ".8", order: 0 },
-      3233510749: { label: "Vanguard", color: "#161E28", scale: ".5", order: 1 },
-      1357277120: { label: "Crucible", color: "#a7342d", scale: ".8", order: 2 },
-      2778795080: { label: "Dead Orbit", color: "#cccccc", scale: ".5", order: 3 },
-      1424722124: { label: "Future War Cult", color: "#262247", scale: ".5", order: 4 },
-      3871980777: { label: "New Monarchy", color: "#862529", scale: ".5", order: 5 },
-      2161005788: { label: "Iron Banner", color: "#4d310a", scale: ".5", order: 6 },
-      174528503: { label: "Crota's Bane", color: "#9e9381", scale: ".5", order: 7 },
-      807090922: { label: "Queen's Wrath", color: "#2F1023", scale: ".5", order: 8 },
-      3641985238: { label: "House of Judgment", color: "#5AAC77", scale: ".5", order: 9 },
-      2335631936: { label: "Gunsmith", color: "#717272", scale: ".8", order: 10 },
-      2763619072: { label: "SRL", color: "#e92b38", scale: ".5", order: 11 }
+      529303302: { label: "Cryptarch", order: 0 },
+      3233510749: { label: "Vanguard", order: 1 },
+      1357277120: { label: "Crucible", order: 2 },
+      2778795080: { label: "Dead Orbit", order: 3 },
+      1424722124: { label: "Future War Cult", order: 4 },
+      3871980777: { label: "New Monarchy", order: 5 },
+      2161005788: { label: "Iron Banner", order: 6 },
+      174528503: { label: "Crota's Bane", order: 7 },
+      807090922: { label: "Queen's Wrath", order: 8 },
+      3641985238: { label: "House of Judgment", order: 9 },
+      2335631936: { label: "Gunsmith", order: 10 },
+      2763619072: { label: "SRL", order: 11 }
     };
 
     // Maps tierType to tierTypeName in English
@@ -226,6 +227,7 @@
 
       console.time('Load stores (Bungie API)');
       _reloadPromise = $q.all([dimProgressionDefinitions,
+                              dimFactionDefinitions,
                               dimBucketService,
                               dimClassDefinitions,
                               dimRaceDefinitions,
@@ -233,7 +235,7 @@
                               loadNewItems(activePlatform),
                               $translate(['Vault']),
                                dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)])
-        .then(function([progressionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
+        .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -357,6 +359,10 @@
 
               store.progression.progressions.forEach(function(prog) {
                 angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
+                if (faction) {
+                  prog.faction = faction;
+                }
               });
 
               _.each(raw.data.buckets, function(bucket) {
