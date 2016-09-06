@@ -106,9 +106,9 @@
               fileEntry.createWriter((fileWriter) => {
                 fileWriter.onwriteend = function(e) {
                   if (fileWriter.length === 0) { // truncate finished
-                    localStorage.setItem('manifest-version', version + '-' + language);
                     fileWriter.write(new Blob([arraybuffer], { type: "application/octet-stream" }));
                   } else { // blob write finished
+                    localStorage.setItem('manifest-version', version + '-' + language);
                     console.log("Sucessfully stored " + fileWriter.length + " byte manifest file.");
                   }
                 };
