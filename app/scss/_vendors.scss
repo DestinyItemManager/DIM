@@ -5,6 +5,28 @@
   .vendors {
     margin-top: 90px;
   }
+  .vendorLabels h1 {
+    display: inline-block;
+  }
+  .vendorTabs {
+    float:right;
+    display:inline-block;
+  }
+  .vendorTabs label {
+    display: inline-block;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-weight:400;
+    font-size:1.5em;
+    cursor: pointer;
+    &.active {
+      color: #FB9F28
+    }
+    & input {
+      display: none;
+    }
+  }
   .vendor-col {
     margin-right: 20px;
   }

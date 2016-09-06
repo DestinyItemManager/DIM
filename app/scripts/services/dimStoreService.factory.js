@@ -1279,6 +1279,10 @@
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
             vendor.items = [];
             vendor.costs = [];
+            vendor.hasArmorWeaps = false;
+            vendor.hasVehicles = false;
+            vendor.hasShaders = false;
+            vendor.hasEmblems = false;
             if (vendor.enabled) {
               var items = [];
               _.each(vendor.saleItemCategories, function(categoryData) {

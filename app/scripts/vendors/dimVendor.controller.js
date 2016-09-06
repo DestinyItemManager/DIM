@@ -93,5 +93,10 @@
         }
       });
     }
+
+    angular.extend(vm, {
+      activeTab: 'armorweaps'
+    });
+
   }
 })();
