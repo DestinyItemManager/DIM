@@ -19,7 +19,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
+        '<input id="filter-input" placeholder="{{\'filter_help\' | translate}}" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }

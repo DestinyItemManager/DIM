@@ -13,7 +13,7 @@
     })
     .filter('bungieIcon', ['$sce', function($sce) {
       return function(icon) {
-        return $sce.trustAsResourceUrl('http://www.bungie.net' + icon);
+        return $sce.trustAsResourceUrl('https://www.bungie.net' + icon);
       };
     }])
     .directive('svgBindViewbox', function() {

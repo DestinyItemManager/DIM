@@ -25,7 +25,8 @@
   const eagerTables = {
     ItemBucket: 'InventoryBucket',
     Class: 'Class',
-    Race: 'Race'
+    Race: 'Race',
+    Faction: 'Faction'
   };
 
   var mod = angular.module('dimApp');

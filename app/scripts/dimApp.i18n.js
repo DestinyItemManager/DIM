@@ -16,7 +16,15 @@
           Equip: "Equip",
           Vault: "Vault",
           Vanguard: "Vanguard",
-          Reputation: "Reputation"
+          Reputation: "Reputation",
+          Super_cooldown: "Super cooldown",
+          Melee_cooldown: "Melee cooldown",
+          Grenade_cooldown: "Grenade cooldown",
+          tier_progress: "{{progress}} for {{tier}}",
+          About: "About",
+          'Support DIM': "Support DIM",
+          Vendors: "Vendors",
+          filter_help: "Search item/perk or is:arc"
         })
         .translations('it', {
           Level: "Livello",
@@ -58,7 +66,8 @@
           Equip: "Equipar",
           Vault: "Depósito",
           Vanguard: "Vanguardia",
-          Reputation: "Reputación"
+          Reputation: "Reputación",
+          tier_progress: "{{progress}} por {{tier}}"
         })
         .translations('ja', {
           Level: "レベル",
