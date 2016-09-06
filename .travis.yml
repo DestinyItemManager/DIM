@@ -1,7 +1,7 @@
 language: node_js
 node_js: "4"
 before_install: npm install -g grunt-cli && npm install -g bower
-install: npm install && bower install
+install: npm install
 before_script: grunt publish_chrome_beta
 branches:
   only:
