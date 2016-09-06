@@ -21,7 +21,6 @@
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
-
     hotkeys.add({
       combo: ['f'],
       description: "Start a search",
@@ -143,8 +142,6 @@
       }
     }, false);
 
-    var storesUpdated = false;
-
     $scope.$on('dim-stores-updated', function() {
       vm.showRandomLoadout = true;
     });
@@ -153,8 +150,6 @@
     vm.disableRandomLoadout = false;
 
     vm.applyRandomLoadout = function() {
-      const loadout = {};
-
       if (vm.disableRandomLoadout) {
         return;
       }
@@ -183,11 +178,11 @@
               warlock: 2
             })[store.class];
 
-            const checkClassType = function(classType) {
+            var checkClassType = function(classType) {
               return ((classType === 3) || (classType === classTypeId));
             };
 
-            const types = ['Class',
+            var types = ['Class',
               'Primary',
               'Special',
               'Heavy',
@@ -200,13 +195,13 @@
               'Ghost'];
 
             let accountItems = [];
-            const items = {};
+            var items = {};
 
             _.each(stores, (store) => {
               accountItems = accountItems.concat(_.filter(store.items, (item) => checkClassType(item.classType)));
             });
 
-            const foundExotic = {};
+            var foundExotic = {};
 
             var fn = (type) => (item) => ((item.type === type) &&
               item.equipment &&
@@ -233,6 +228,7 @@
               items: items
             });
           }
+          return null;
         })
         .then(() => {
           vm.disableRandomLoadout = false;

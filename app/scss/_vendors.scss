@@ -2,6 +2,9 @@
   width: calc(((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 3) - 12px);
   margin: 0 auto;
 
+  .vendors {
+    margin-top: 90px;
+  }
   .vendor-col {
     margin-right: 20px;
   }
@@ -34,9 +37,28 @@
   .fa-arrow-circle-left {
     padding-right: 5px;
   }
+  .vendor-headers-background {
+    display: none;
+    position: fixed;
+    height: 90px;
+    left: 0;
+    width: 100%;
+    top: 50px;
+    background-color: #434444;
+    z-index: 4;
+  }
+  .vendor-headers-background.sticky {
+    display: block;
+  }
+  .vendor-headers.sticky {
+    position:fixed;
+    top: 64px;
+  }
   .vendor-headers {
+    position: absolute;
+    top: 142px;
+    z-index: 4;
     display: flex;
-    padding-bottom: 10px;
   }
   .vendor-header {
     .title {

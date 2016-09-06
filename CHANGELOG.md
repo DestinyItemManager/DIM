@@ -1,4 +1,5 @@
 # Next
+* Add ability to create loadouts by selecting sets of perks
 
 * [#823](https://github.com/DestinyItemManager/DIM/issues/823) Added 'current' property to stores.
 
