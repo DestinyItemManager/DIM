@@ -28,11 +28,11 @@
     });
 
 
-
   StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue'];
 
   function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope, dimActionQueue) {
     var otherDialog = null;
+    let firstItemTimed = false;
 
     return {
       bindToController: true,
@@ -73,7 +73,10 @@
     };
 
     function Link(scope, element) {
-      console.timeEnd('First item directive built');
+      if (!firstItemTimed) {
+        console.timeEnd('First item directive built');
+        firstItemTimed = true;
+      }
 
       var vm = scope.vm;
       var dialogResult = null;
