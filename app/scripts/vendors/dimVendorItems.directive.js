@@ -13,7 +13,7 @@
       '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
       '  <div class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
       '    {{::$ctrl.cost.cost}}/{{$ctrl.totalCoins[$ctrl.cost.currency.itemHash]}}',
-      '    <span class="currency"><img dim-bungie-image-fallback="::$ctrl.cost.currency.icon" title="{{::$ctrl.cost.currency.name}}"></span>',
+      '    <span class="currency"><img ng-src="{{::$ctrl.cost.currency.icon | bungieIcon}}" title="{{::$ctrl.cost.currency.name}}"></span>',
       '  </div>',
       '</div>'
     ].join('')
@@ -74,7 +74,7 @@
       '    <div class="vendor-header">',
       '      <div class="title">',
       '        <span translate="Vanguard"></span>',
-      '        <img class="vendor-icon" ng-src="{{firstVendor.vendorIcon}}" />',
+      '        <img class="vendor-icon" ng-src="{{::firstVendor.vendorIcon | bungieIcon}}" />',
       '        <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '      </div>',
       '    </div>',

@@ -60,7 +60,7 @@
         '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete && !vm.item.complete">',
         '      <div dim-percent-width="vm.item.percentComplete"></div>',
         '    </div>',
-        '    <div class="img" dim-bungie-image-fallback="::vm.item.icon" ng-click="vm.clicked(vm.item, $event)" ng-dblclick="vm.doubleClicked(vm.item, $event)">',
+        '    <img ng-src="{{::vm.item.icon | bungieIcon}}" ng-click="vm.clicked(vm.item, $event)" ng-dblclick="vm.doubleClicked(vm.item, $event)">',
         '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
         '    <div ng-if="vm.item.isNew" class="new_overlay_overflow">',
