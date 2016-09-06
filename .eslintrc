@@ -22,7 +22,6 @@
     "gapi": true,
     "Set": true,
     "ga": true,
-    "_gaq": true
     "Set": true
   },
   "rules": {
