@@ -205,6 +205,11 @@
         return _reloadPromise;
       }
 
+      // #786 Exiting early when finding no activePlatform.
+      if (!activePlatform) {
+        return $q.reject("Cannot find active platform.");
+      }
+
       // Include vendors on the first load and if they're expired
       const currDate = new Date().toISOString();
       const includeVendors = !_stores.length || _.any(_stores, (store) => store.minRefreshDate < currDate);

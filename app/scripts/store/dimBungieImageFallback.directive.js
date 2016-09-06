@@ -10,13 +10,14 @@
 
   // Report image fallback no more than once an hour
   var reportFallback = _.debounce(function() {
-    if (ga) {
-      // Log the failure in Google Analytics
-      ga('send', 'exception', {
-        exDescription: 'IconFallback',
-        exFatal: false
-      });
-    }
+    _gaq.push(['_trackEvent', 'exception', 'IconFallback']);
+    // if (ga) {
+    //   // Log the failure in Google Analytics
+    //   ga('send', 'exception', {
+    //     exDescription: 'IconFallback',
+    //     exFatal: false
+    //   });
+    // }
   }, 60 * 60 * 1000, true);
 
   function ImageFallback($q) {

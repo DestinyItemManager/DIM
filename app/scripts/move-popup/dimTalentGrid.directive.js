@@ -58,18 +58,33 @@
     };
   }
 
-  TalentGridCtrl.$inject = [];
+  TalentGridCtrl.$inject = ['dimInfoService'];
 
-  function TalentGridCtrl() {
+  function TalentGridCtrl(dimInfoService) {
+    const infuseHash = 1270552711;
     var vm = this;
     vm.nodeSize = 34;
     vm.nodePadding = 4;
     vm.scaleFactor = 1.1;
     vm.totalNodeSize = vm.nodeSize + vm.nodePadding;
 
+    vm.nodeClick = function(node, $event) {
+      if (node.hash === infuseHash) {
+        vm.infuse({ $event });
+      } else if (node.exclusiveInColumn) {
+        // popup warning
+        dimInfoService.show('lostitems', {
+          type: 'warning',
+          title: 'Changing Perks Not Supported',
+          body: "Sorry, there's no way to change perks outside the game. We wish we could!",
+          hide: 'Never show me this again.'
+        });
+      }
+    };
+
     vm.hiddenColumns = 0;
     if (vm.perksOnly) {
-      if (_.find(vm.talentGrid.nodes, { hash: 1270552711 })) {
+      if (_.find(vm.talentGrid.nodes, { hash: infuseHash })) {
         vm.hiddenColumns += 1;
       }
       if (_.find(vm.talentGrid.nodes, { hash: 2133116599 })) {

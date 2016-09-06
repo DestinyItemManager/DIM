@@ -19,8 +19,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', '$location',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, $location) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
         $rootScope.loadingTracker = loadingTracker;
 
         // 1 Hour
@@ -62,11 +62,11 @@
         // http://www.arnaldocapo.com/blog/post/google-analytics-and-angularjs-with-ui-router/72
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/single-page-applications
         $rootScope.$on('$stateChangeSuccess', function() {
-          if (ga) {
-            ga('set', 'page', $location.path());
+          // if (ga) {
+          //   ga('set', 'page', $location.path());
             // Disable sending pageviews on state changes for now, over concerns that we'll go over our free GA limits.
             // ga('send', 'pageview');
-          }
+          // }
         });
 
 //        if (chrome && chrome.identity) {

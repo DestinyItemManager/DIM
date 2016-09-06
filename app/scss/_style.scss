@@ -1556,12 +1556,20 @@ h2, h3, h4 {
   }
 }
 
+.toast-info {
+  input[type='checkbox'] {
+    margin: -2px 5px 0 0;
+    vertical-align: middle;
+    font-size:30px;
+  }
+}
+
 .toast-close-button {
   position: relative;
-  right: -0.3em;
-  top: -0.3em;
+  right: 0em;
+  top: -0.4em;
   float: right;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   color: white;
   text-shadow: 0 1px 0 white;
@@ -2122,5 +2130,17 @@ dim-manifest-progress {
     &.ng-leave, &.ng-enter.ng-enter-active {
       opacity: 1;
     }
+  }
+}
+
+.loadout {
+  &.random {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: .5rem;
+    color: #222;
+    text-decoration: none;
+    font-weight: normal;
   }
 }

@@ -15,6 +15,7 @@
     "angular": true,
     "$": true,
     "_": true,
+    "_gaq": true,
     "chrome": true,
     "sum": true,
     "count": true,

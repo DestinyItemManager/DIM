@@ -396,7 +396,8 @@
         return item.name.toLowerCase().indexOf(predicate) >= 0 ||
           // Search perks as well
           (item.talentGrid && _.any(item.talentGrid.nodes, function(node) {
-            return node.name.toLowerCase().indexOf(predicate) >= 0;
+            // Fixed #798 by searching on the description too.
+            return (node.name + ' ' + node.description).toLowerCase().indexOf(predicate) >= 0;
           }));
       },
       light: function(predicate, item) {

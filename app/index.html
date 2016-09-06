@@ -50,10 +50,10 @@
       <div id="content" class="content" ui-view></div>
       <div class="store-bounds"></div>
       <dim-manifest-progress></dim-manifest-progress>
+      <a class="loadout random" href="#" ng-disabled="vm.disableRandomLoadout" ng-if="app.showRandomLoadout" ng-click="app.applyRandomLoadout($event)">&Pi;</a>
     </div>
 
     <script src="scripts/google.js?v=$DIM_VERSION"></script>
-    <script async src='https://www.google-analytics.com/analytics.js'></script>
 
     <!-- begin vendor scripts -->
     <script src="vendor/jquery/dist/jquery.min.js?v=$DIM_VERSION"></script>
@@ -66,7 +66,7 @@
     <script src="vendor/angular-moment/angular-moment.min.js?v=$DIM_VERSION"></script>
     <script src="vendor/humanize-duration/humanize-duration.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-timer/dist/angular-timer.min.js?v=$DIM_VERSION"></script>
-    <script src="scripts/toaster.js?v=$DIM_VERSION"></script>
+    <script src="vendor/AngularJS-Toaster/toaster.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-native-dragdrop/draganddrop.js?v=$DIM_VERSION"></script>
     <script src="vendor/ngDialog/js/ngDialog.min.js?v=$DIM_VERSION"></script>
     <script src="vendor/Angular.uuid2/dist/angular-uuid2.min.js?v=$DIM_VERSION"></script>
@@ -136,6 +136,7 @@
     <script src="scripts/vendors/dimVendorItems.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMax.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMaxItem.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/minmax/dimMinMaxLocks.directive.js?v=$DIM_VERSION"></script>
     <!-- end app scripts -->
 
     <!-- <script src="scripts/scripts.min.js?v=$DIM_VERSION"></script> -->
