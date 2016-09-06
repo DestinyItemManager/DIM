@@ -169,7 +169,7 @@
     }
 
     function getActiveStore() {
-      return _.sortBy(_stores, 'lastPlayed').reverse()[0];
+      return _.find(_stores, 'current');
     }
 
     function getStores() {
