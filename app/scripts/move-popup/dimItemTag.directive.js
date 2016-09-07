@@ -12,9 +12,9 @@
     `
   });
 
-  ItemTagController.$inject = ['SyncService', 'dimPlatformService', 'dimSettingsService', 'dimItemTagService'];
+  ItemTagController.$inject = ['$rootScope', 'SyncService', 'dimPlatformService', 'dimSettingsService', 'dimItemTagService'];
 
-  function ItemTagController(SyncService, dimPlatformService, dimSettingsService, dimItemTagService) {
+  function ItemTagController($rootScope, SyncService, dimPlatformService, dimSettingsService, dimItemTagService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -24,6 +24,7 @@
 
     vm.updateTag = function() {
       vm.item.tag = vm.selected.type;
+      $rootScope.$broadcast('dim-filter-invalidate');
       SyncService.get().then(function(data) {
         data = data[dimItemTagService.getKey()] || {};
         data[vm.item.id] = { id: vm.item.id, type: vm.item.tag };
