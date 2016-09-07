@@ -30,7 +30,7 @@
       armorweaps: ['armor', 'weapons'],
       vehicles: ['ships', 'vehicles'],
       shadersembs: ['shaders', 'emblems'],
-      emotes: ['emotes'],
+      emotes: ['emotes']
     };
     // Banner
     vm.bannerHash = ['242140165'];
