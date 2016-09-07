@@ -25,25 +25,50 @@
       $window.off('scroll', stickyHeader);
     });
 
+    vm.activeTab = 'armorweaps';
+    vm.activeTypeDefs = {
+      'armorweaps' : ['armor', 'weapons'],
+      'vehicles' : ['ships', 'vehicles'],
+      'shadersembs' : ['shaders', 'emblems'],
+      'emotes' : ['emotes'],
+    }
     vm.settings = dimSettingsService;
     function init(stores) {
+      if (_.isEmpty(stores)) {
+        $state.go('inventory');
+        return;
+      }
+
       vm.stores = _.reject(stores, (s) => s.isVault);
-      vm.vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
+      var vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
         return !value;
       });
+      vm.vendors = {armorweaps: {}, vehicles: {}, shadersembs: {}, emotes: {}};
+      _.each(vendors, function(vendorMap, index) {
+        vm.vendors.armorweaps[index] = {};
+        vm.vendors.vehicles[index] = {};
+        vm.vendors.shadersembs[index] = {};
+        vm.vendors.emotes[index] = {};
+        _.each(vendorMap, function(vendor, vendorHash) {
+          if (vendor.hasArmorWeaps) {
+            vm.vendors.armorweaps[index][vendorHash] = vendor;
+          } else if (vendor.hasVehicles) {
+            vm.vendors.vehicles[index][vendorHash] = vendor;
+          } else if (vendor.hasShadersEmbs) {
+            vm.vendors.shadersembs[index][vendorHash] = vendor;
+          } else if (vendor.hasEmotes) {
+            vm.vendors.emotes[index][vendorHash] = vendor;
+          }
+        });
+      });
       countCurrencies(stores);
+      vm.vendorHashes = _.keys(vm.vendors[vm.activeTab][0]);
     }
 
     init(dimStoreService.getStores());
     $scope.$on('dim-stores-updated', function(e, args) {
       init(args.stores);
     });
-
-
-    if (_.isEmpty(vm.vendors)) {
-      $state.go('inventory');
-      return;
-    }
 
     // Banner
     vm.bannerHash = ['242140165'];
@@ -52,7 +77,7 @@
     vm.vanguardHashes = ['1990950', '3003633346', '1575820975'];
 
     // Van quart, Dead orb, Future war, New mon, Cruc hand, Cruc quart, Eris Morn, Speaker, Variks, Exotic Blue
-    vm.vendorHashes = ['2668878854', '3611686524', '1821699360', '1808244981', '3746647075', '3658200622', '174528503', '2680694281', '1998812735', '3902439767'];
+    //vm.vendorHashes = ['2668878854', '3611686524', '1821699360', '1808244981', '3746647075', '3658200622', '174528503', '2680694281', '1998812735', '3902439767'];
 
     function mergeMaps(o, map) {
       _.each(map, function(val, key) {
@@ -95,8 +120,9 @@
     }
 
     angular.extend(vm, {
-      activeTab: 'armorweaps'
+      onTabChange: function() {
+        vm.vendorHashes = _.keys(vm.vendors[vm.activeTab][0]);
+      }
     });
-
   }
 })();

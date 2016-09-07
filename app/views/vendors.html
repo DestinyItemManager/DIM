@@ -4,16 +4,16 @@
     <h1>Vendors</h1>
     <div class="vendorTabs">
       <label ng-class="{active: vm.activeTab === 'armorweaps'}">
-        <input type='radio' ng-model='vm.activeTab' value='armorweaps'>Armor &amp; Weapons
+        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='armorweaps'>Armor &amp; Weapons
       </label>
       <label ng-class="{active: vm.activeTab === 'vehicles'}">
-        <input type='radio' ng-model='vm.activeTab' value='vehicles'>Vehicles
+        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='vehicles'>Ships &amp; Vehicles
       </label>
-      <label ng-class="{active: vm.activeTab === 'shaders'}">
-        <input type='radio' ng-model='vm.activeTab' value='shaders'>Shaders
+      <label ng-class="{active: vm.activeTab === 'shadersembs'}">
+        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='shadersembs'>Shaders &amp; Emblems
       </label>
       <label ng-class="{active: vm.activeTab === 'emotes'}">
-        <input type='radio' ng-model='vm.activeTab' value='emotes'>Emotes
+        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='emotes'>Emotes
       </label>
     </div>
   </div>
@@ -24,8 +24,8 @@
     </div>
   </div>
   <div class="vendors">
-    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.bannerHash" total-coins="vm.totalCoins"></dim-vendor-items>
-    <dim-vendor-items-combined stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vanguardHashes" total-coins="vm.totalCoins"></dim-vendor-items-combined>
-    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
+    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.bannerHash" total-coins="vm.totalCoins"></dim-vendor-items>
+    <dim-vendor-items-combined stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vanguardHashes" total-coins="vm.totalCoins"></dim-vendor-items-combined>
+    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
   </div>
 </div>

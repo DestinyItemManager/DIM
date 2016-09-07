@@ -25,36 +25,33 @@
     bindings: {
       stores: '<storesData',
       vendors: '<vendorsData',
+      types: '<displayTypes',
       vendorHashes: '<vendorHashes',
       totalCoins: '<totalCoins'
     },
     template: [
-      '<div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes" ng-init="firstVendor = vm.vendors[0][vendorHash]">',
-      ' <div ng-if="firstVendor">',
-      '   <div class="vendor-header">',
-      '     <div class="title">',
-      '     {{firstVendor.vendorName}}',
-      '     <img class="vendor-icon" ng-src="{{firstVendor.vendorIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '     </div>',
-      '   </div>',
-      '   <div class="vendor-row">',
-      '     <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '       <div ng-if="store.vendors[vendorHash].items.armor.length">',
-      '         <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Armor</h3>',
-      '         <div class="vendor-armor">',
-      '           <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '         </div>',
-      '       </div>',
-      '       <div ng-if="store.vendors[vendorHash].items.weapons.length">',
-      '         <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length">Weapons</h3>',
-      '         <div class="vendor-weaps">',
-      '           <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '         </div>',
-      '       </div>',
-      '     </div>',
-      '   </div>',
-      ' </div>',
+      '<div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes">',
+      '  <div ng-if="vm.vendors[0][vendorHash]">',
+      '    <div class="vendor-header">',
+      '      <div class="title">',
+      '        {{vm.vendors[0][vendorHash].vendorName}}',
+      '        <img class="vendor-icon" ng-src="{{vm.vendors[0][vendorHash].vendorIcon}}" />',
+      '        <timer class="vendor-timer" ng-if="vm.vendors[0][vendorHash].nextRefreshDate[0] !== \'9\'" end-time="vm.vendors[0][vendorHash].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '      </div>',
+      '    </div>',
+      '    <div class="vendor-row">',
+      '      <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
+      '        <div ng-repeat="type in vm.types">',
+      '          <div ng-if="store.vendors[vendorHash].items[type].length" ng-init="showTitles = vm.eachHasItems(store.vendors[vendorHash].items, vm.types)">',
+      '            <h3 ng-if="showTitles">{{type | uppercase}}</h3>',
+      '            <div class="vendor-armor">',
+      '              <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items[type]" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
+      '            </div>',
+      '          </div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
       '</div>'
     ].join('')
   };
@@ -141,6 +138,9 @@
     });
 
     angular.extend(vm, {
+      eachHasItems: function(items, types) {
+        return types.length > 1 && _.every(types, function(type) { return items[type].length; });
+      },
       itemClicked: function(item, e) {
         e.stopPropagation();
         if (dialogResult) {
