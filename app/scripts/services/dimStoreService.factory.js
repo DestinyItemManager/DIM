@@ -1299,7 +1299,7 @@
               });
               vendor.items = _.pluck(items, 'item');
               vendor.costs = _.reduce(items, function(o, saleItem) {
-                if(saleItem.costs.length) {
+                if (saleItem.costs.length) {
                   o[saleItem.item.itemHash] = {
                     cost: saleItem.costs[0].value,
                     currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
@@ -1310,7 +1310,7 @@
             }
             return processItems({ id: null }, vendor.items)
               .then(function(items) {
-                vendor.items = {armor: [], weapons: [], ships: [], vehicles: [], shaders: [], emblems: [], emotes: []};
+                vendor.items = { armor: [], weapons: [], ships: [], vehicles: [], shaders: [], emblems: [], emotes: [] };
                 _.each(items, function(item) {
                   item.vendorIcon = vendor.vendorIcon;
                   if (item.primStat && item.primStat.statHash === 3897883278) {
