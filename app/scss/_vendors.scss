@@ -1,5 +1,5 @@
 .vendor {
-  width: calc(((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 3) - 12px);
+  width: calc(((var(--item-size) + 40px)*3)*var(--character-columns) + 24px);
   margin: 0 auto;
 
   .vendors {
@@ -40,14 +40,18 @@
   .vendor-item {
     margin-right: 5px;
     margin-bottom: 5px;
-    width: calc(var(--item-size) + 20px);
+    width: calc(var(--item-size) + 35px);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+  }
+  .vendor-header-col {
+    width: calc((var(--item-size) + 40px)*3);
   }
   .char-cols {
     display: flex;
     flex-direction: column;
+    width: calc((var(--item-size) + 40px)*3);
   }
   .char-cols h3 {
     margin-top: 10px;
@@ -114,6 +118,9 @@
     font-size: 10px;
     margin-top: 4px;
     margin-left: 2px;
+  }
+  .empty-cost {
+    height: 14px;
   }
   .notenough {
     color: #CC5C58;

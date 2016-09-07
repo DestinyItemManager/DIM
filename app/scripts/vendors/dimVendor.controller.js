@@ -89,7 +89,7 @@
     }
 
     function countCurrencies(stores) {
-      var currencies = _.chain(vm.vendors)
+      var currencies = _.chain(vm.vendors[vm.activeTab])
             .values()
             .reduce(function(o, val) { o.push(_.values(val)); return o; }, [])
             .flatten()
@@ -122,6 +122,7 @@
     angular.extend(vm, {
       onTabChange: function() {
         vm.vendorHashes = _.keys(vm.vendors[vm.activeTab][0]);
+        countCurrencies(dimStoreService.getStores());
       }
     });
   }

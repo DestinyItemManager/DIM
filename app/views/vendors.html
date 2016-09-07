@@ -19,7 +19,7 @@
   </div>
   <div id="vendorHeadersBackground" class="vendor-headers-background"></div>
   <div id="vendorHeaders" class="vendor-headers">
-    <div class="store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+    <div class="vendor-header-col store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
       <dim-store-heading class="character" store-data="store"></dim-store-heading>
     </div>
   </div>

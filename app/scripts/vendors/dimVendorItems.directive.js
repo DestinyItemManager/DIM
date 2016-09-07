@@ -11,9 +11,11 @@
     template: [
       '<div class="vendor-item">',
       '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
-      '  <div class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
+      '  <div ng-if="$ctrl.cost" class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
       '    {{::$ctrl.cost.cost}}/{{$ctrl.totalCoins[$ctrl.cost.currency.itemHash]}}',
       '    <span class="currency"><img dim-bungie-image-fallback="::$ctrl.cost.currency.icon" title="{{::$ctrl.cost.currency.name}}"></span>',
+      '  </div>',
+      '  <div ng-if="!$ctrl.cost" class="empty-cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
       '  </div>',
       '</div>'
     ].join('')
