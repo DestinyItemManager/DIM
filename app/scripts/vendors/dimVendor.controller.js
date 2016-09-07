@@ -32,6 +32,12 @@
       'shadersembs' : ['shaders', 'emblems'],
       'emotes' : ['emotes'],
     }
+    // Banner
+    vm.bannerHash = ['242140165'];
+
+    // Titan van, Hunter van, Warlock van
+    vm.vanguardHashes = ['1990950', '3003633346', '1575820975'];
+
     vm.settings = dimSettingsService;
     function init(stores) {
       if (_.isEmpty(stores)) {
@@ -62,19 +68,13 @@
         });
       });
       countCurrencies(stores);
-      vm.vendorHashes = _.keys(vm.vendors[vm.activeTab][0]);
+      vm.vendorHashes = _.chain(vm.vendors[vm.activeTab]).values().reduce(function(o, val) { o.push(_.keys(val)); return o; }, []).flatten().uniq().reject(function (hash) { return _.contains(vm.vanguardHashes, hash); }).value();
     }
 
     init(dimStoreService.getStores());
     $scope.$on('dim-stores-updated', function(e, args) {
       init(args.stores);
     });
-
-    // Banner
-    vm.bannerHash = ['242140165'];
-
-    // Titan van, Hunter van, Warlock van
-    vm.vanguardHashes = ['1990950', '3003633346', '1575820975'];
 
     // Van quart, Dead orb, Future war, New mon, Cruc hand, Cruc quart, Eris Morn, Speaker, Variks, Exotic Blue
     //vm.vendorHashes = ['2668878854', '3611686524', '1821699360', '1808244981', '3746647075', '3658200622', '174528503', '2680694281', '1998812735', '3902439767'];
@@ -121,7 +121,7 @@
 
     angular.extend(vm, {
       onTabChange: function() {
-        vm.vendorHashes = _.keys(vm.vendors[vm.activeTab][0]);
+        vm.vendorHashes = _.chain(vm.vendors[vm.activeTab]).values().reduce(function(o, val) { o.push(_.keys(val)); return o; }, []).flatten().uniq().reject(function (hash) { return _.contains(vm.vanguardHashes, hash); }).value();
         countCurrencies(dimStoreService.getStores());
       }
     });

@@ -68,7 +68,7 @@
       totalCoins: '<totalCoins'
     },
     template: [
-      '<div class="vendor-char-items" ng-init="firstVendor = vm.vendors[0][vm.vendorHashes[0]]">',
+      '<div class="vendor-char-items" ng-init="firstVendor = vm.getFirstVendorCombined(vm.vendors, vm.vendorHashes[0])">',
       '  <div ng-if="firstVendor">',
       '    <div class="vendor-header">',
       '      <div class="title">',
@@ -142,6 +142,13 @@
     angular.extend(vm, {
       eachHasItems: function(items, types) {
         return types.length > 1 && _.every(types, function(type) { return items[type].length; });
+      },
+      getFirstVendorCombined: function(vendors, vendorHash) {
+        if (vendors) {
+          return _.find(vendors, function(vendor) {
+            return vendor[vendorHash];
+          })[vendorHash];
+        }
       },
       itemClicked: function(item, e) {
         e.stopPropagation();

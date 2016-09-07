@@ -24,8 +24,8 @@
     </div>
   </div>
   <div class="vendors">
-    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.bannerHash" total-coins="vm.totalCoins"></dim-vendor-items>
-    <dim-vendor-items-combined stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vanguardHashes" total-coins="vm.totalCoins"></dim-vendor-items-combined>
+    <dim-vendor-items ng-if="vm.activeTab === 'armorweaps'" stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.bannerHash" total-coins="vm.totalCoins"></dim-vendor-items>
+    <dim-vendor-items-combined ng-if="vm.activeTab === 'armorweaps'" stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vanguardHashes" total-coins="vm.totalCoins"></dim-vendor-items-combined>
     <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
   </div>
 </div>
