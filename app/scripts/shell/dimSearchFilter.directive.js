@@ -212,7 +212,7 @@
 
         // Filter vendor items
         _.each(store.vendors, function(vendor) {
-          _.each(vendor.items, function(items, type) {
+          _.each(vendor.items, function(items) {
             _.each(items, function(item) {
               item.visible = (filters.length > 0) ? filterFn(item) : true;
             });

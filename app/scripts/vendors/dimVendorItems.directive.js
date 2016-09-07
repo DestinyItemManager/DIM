@@ -149,6 +149,7 @@
             return vendor[vendorHash];
           })[vendorHash];
         }
+        return null;
       },
       itemClicked: function(item, e) {
         e.stopPropagation();
