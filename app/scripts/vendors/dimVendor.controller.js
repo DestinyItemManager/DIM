@@ -58,11 +58,14 @@
         _.each(vendorMap, function(vendor, vendorHash) {
           if (vendor.hasArmorWeaps) {
             vm.vendors.armorweaps[index][vendorHash] = vendor;
-          } else if (vendor.hasVehicles) {
+          }
+          if (vendor.hasVehicles) {
             vm.vendors.vehicles[index][vendorHash] = vendor;
-          } else if (vendor.hasShadersEmbs) {
+          }
+          if (vendor.hasShadersEmbs) {
             vm.vendors.shadersembs[index][vendorHash] = vendor;
-          } else if (vendor.hasEmotes) {
+          }
+          if (vendor.hasEmotes) {
             vm.vendors.emotes[index][vendorHash] = vendor;
           }
         });

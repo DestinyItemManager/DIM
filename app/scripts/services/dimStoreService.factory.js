@@ -552,6 +552,7 @@
         tier: itemDef.tierTypeName || 'Common',
         isExotic: itemDef.tierTypeName === 'Exotic',
         isVendorItem: (!owner || owner.id === null),
+        isUnlocked: (!owner || owner.id === null) ? item.isUnlocked : true,
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -1107,6 +1108,10 @@
       })), 'sort');
     }
 
+    function isSaleItemUnlocked(saleItem) {
+      return _.every(saleItem.unlockStatuses, function(status) { return status.isSet; });
+    }
+
     /** New Item Tracking **/
 
     function buildItemSet(stores) {
@@ -1287,6 +1292,7 @@
               var items = [];
               _.each(vendor.saleItemCategories, function(categoryData) {
                 var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) {
+                  saleItem.item.isUnlocked = isSaleItemUnlocked(saleItem);
                   return saleItem.item.isEquipment;
                 });
                 items.push(...filteredSaleItems);

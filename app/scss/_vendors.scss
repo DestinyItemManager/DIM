@@ -130,6 +130,15 @@
   }
 }
 
+.locked-overlay {
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  background-color: rgba(40,40,40,0.5);
+}
+
 .ngdialog.vendor-move-popup {
   position: absolute;
   z-index: 4;
