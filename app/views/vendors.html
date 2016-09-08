@@ -1,6 +1,6 @@
 <div class="vendor" ng-controller="dimVendorCtrl as vm">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
-  <h1>Vendors</h1>
+  <h1 translate="Vendors"></h1>
   <div id="vendorHeadersBackground" class="vendor-headers-background"></div>
   <div id="vendorHeaders" class="vendor-headers">
     <div class="store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">

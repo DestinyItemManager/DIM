@@ -2,7 +2,12 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreHeading', StoreHeading);
+    .directive('dimStoreHeading', StoreHeading)
+    .filter('firstLetter', function() {
+      return function(str) {
+        return str.substring(0, 1);
+      };
+    });
 
   function StoreHeading() {
     return {
@@ -30,8 +35,8 @@
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
         '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',
         '<div ng-if="vm.store.isVault" class="vault-capacity">',
-        '  <div class="vault-bucket" title="{{sort}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
-        '    <div class="vault-bucket-tag">{{sort.substring(0,1)}}</div>',
+        '  <div class="vault-bucket" title="{{sort | translate}}: {{size}}/{{capacity}}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort})">',
+        '    <div class="vault-bucket-tag">{{sort | translate | firstLetter}}</div>',
         '    <div class="vault-fill-bar">',
         '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',
         '    </div>',
