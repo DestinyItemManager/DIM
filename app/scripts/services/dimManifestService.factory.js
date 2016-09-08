@@ -148,7 +148,7 @@
 
       service.statusText = "Loading saved Destiny info...";
       var currentManifestVersion = localStorage.getItem('manifest-version');
-      if (currentManifestVersion === version + '-' + language) {
+      if (currentManifestVersion === (version + '-' + language)) {
         // One version of this used chrome.storage.local with a
         // base64-encoded string, which is a bit slower. We may need
         // to do that again if the requestFileSystem API gets
@@ -172,7 +172,7 @@
             });
           });
       } else {
-        return $q.reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
+        return $q.reject(new Error("version mismatch: " + (version + '-' + language) + ' ' + currentManifestVersion));
       }
     }
 
