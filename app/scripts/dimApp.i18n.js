@@ -24,6 +24,8 @@
           About: "About",
           'Support DIM': "Support DIM",
           Vendors: "Vendors",
+          Support: "Support",
+          Settings: "Settings",
           filter_help: "Search item/perk or is:arc"
         })
         .translations('it', {
@@ -51,6 +53,7 @@
           Reputation: "Ruf",
           About: "Über",
           Support: "Unterstützen",
+          Settings: "Einstellungen"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -64,6 +67,7 @@
           Reputation: "Estime",
           About: "À propos",
           Support: "Soutien",
+          Settings: "Paramètres"
         })
         .translations('es', {
           Level: "Nivel",
@@ -77,6 +81,7 @@
           tier_progress: "{{progress}} por {{tier}}",
           About: "Sobre",
           Support: "Apoyo",
+          Settings: "Configuración"
         })
         .translations('ja', {
           Level: "レベル",
@@ -90,6 +95,7 @@
           Reputation: "評価",
           About: "紹介",
           Support: "サポート",
+          Settings: "設定"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -103,6 +109,7 @@
           Reputation: "Reputação",
           About: "Sobre",
           Support: "Apoio",
+          Settings: "Configurações"
         })
         .fallbackLanguage('en');
     }]);
