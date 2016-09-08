@@ -1,26 +1,28 @@
 <div class="vendor" ng-controller="dimVendorCtrl as vm">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
-  <div class="vendorLabels">
-    <h1>Vendors</h1>
-    <div class="vendorTabs">
-      <label ng-class="{active: vm.activeTab === 'armorweaps'}">
-        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='armorweaps'>Armor &amp; Weapons
-      </label>
-      <label ng-class="{active: vm.activeTab === 'vehicles'}">
-        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='vehicles'>Ships &amp; Vehicles
-      </label>
-      <label ng-class="{active: vm.activeTab === 'shadersembs'}">
-        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='shadersembs'>Shaders &amp; Emblems
-      </label>
-      <label ng-class="{active: vm.activeTab === 'emotes'}">
-        <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='emotes'>Emotes
-      </label>
-    </div>
-  </div>
   <div id="vendorHeadersBackground" class="vendor-headers-background"></div>
-  <div id="vendorHeaders" class="vendor-headers">
-    <div class="vendor-header-col store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
-      <dim-store-heading class="character" store-data="store"></dim-store-heading>
+  <div id="vendorHeaderWrapper" class="vendorHeaderWrapper">
+    <div class="vendorLabels">
+      <h1>Vendors</h1>
+      <div class="vendorTabs">
+        <label ng-class="{active: vm.activeTab === 'armorweaps'}">
+          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='armorweaps'>Armor &amp; Weapons
+        </label>
+        <label ng-class="{active: vm.activeTab === 'vehicles'}">
+          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='vehicles'>Ships &amp; Vehicles
+        </label>
+        <label ng-class="{active: vm.activeTab === 'shadersembs'}">
+          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='shadersembs'>Shaders &amp; Emblems
+        </label>
+        <label ng-class="{active: vm.activeTab === 'emotes'}">
+          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='emotes'>Emotes
+        </label>
+      </div>
+    </div>
+    <div id="vendorHeaders" class="vendor-headers">
+      <div class="vendor-header-col store-cell" ng-if="!store.isVault" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">
+        <dim-store-heading class="character" store-data="store"></dim-store-heading>
+      </div>
     </div>
   </div>
   <div class="vendors">

@@ -10,9 +10,9 @@
     var vm = this;
 
     var $window = $(window);
-    var $vendorHeaders = $('#vendorHeaders');
+    var $vendorHeaders = $('#vendorHeaderWrapper');
     var $vendorHeadersBackground = $('#vendorHeadersBackground');
-    var vendorsTop = $vendorHeaders.offset().top - 66; // Subtract height of title and back link
+    var vendorsTop = $vendorHeaders.offset().top - 50; // Subtract height of title and back link
 
     function stickyHeader(e) {
       $vendorHeaders.toggleClass('sticky', $window.scrollTop() > vendorsTop);

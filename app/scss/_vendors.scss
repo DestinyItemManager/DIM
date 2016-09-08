@@ -3,10 +3,12 @@
   margin: 0 auto;
 
   .vendors {
-    margin-top: 90px;
+    margin-top: 125px;
   }
   .vendorLabels h1 {
     display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
   }
   .vendorTabs {
     float:right;
@@ -15,8 +17,7 @@
   .vendorTabs label {
     display: inline-block;
     margin-left: 20px;
-    margin-top: 20px;
-    margin-bottom: 15px;
+    margin-top: 15px;
     font-weight:400;
     font-size:1.3em;
     cursor: pointer;
@@ -66,25 +67,27 @@
   .vendor-headers-background {
     display: none;
     position: fixed;
-    height: 90px;
+    height: 123px;
     left: 0;
     width: 100%;
     top: 50px;
     background-color: #434444;
     z-index: 4;
   }
+  .vendorHeaderWrapper {
+    position: absolute;
+    top: 85px;
+    z-index: 5;
+  }
+  .vendorHeaderWrapper.sticky {
+    position:fixed;
+    top: 50px;
+  }
   .vendor-headers-background.sticky {
     display: block;
     box-shadow: 0 1px 6px 0px #222;
   }
-  .vendor-headers.sticky {
-    position:fixed;
-    top: 64px;
-  }
   .vendor-headers {
-    position: absolute;
-    top: 142px;
-    z-index: 4;
     display: flex;
   }
   .vendor-header {
@@ -121,7 +124,7 @@
     margin-left: 2px;
   }
   .empty-cost {
-    height: 14px;
+    height: 18px;
   }
   .notenough {
     color: #CC5C58;
