@@ -35,7 +35,10 @@
           Equip: "Equipaggia",
           Vault: "Depositi",
           Vanguard: "Avanguardia",
-          Reputation: "Reputazione"
+          Reputation: "Reputazione",
+          About: "Chi siamo",
+          Support: "Aiutare",
+          Settings: "Impostazioni"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -45,7 +48,9 @@
           Equip: "Ausrüsten",
           Vault: "Tresor",
           Vanguard: "Vorhut",
-          Reputation: "Ruf"
+          Reputation: "Ruf",
+          About: "Über",
+          Support: "Unterstützen",
         })
         .translations('fr', {
           Level: "Niveau",
@@ -56,7 +61,9 @@
           Equip: "Équiper",
           Vault: "Coffres",
           Vanguard: "Avant-garde",
-          Reputation: "Estime"
+          Reputation: "Estime",
+          About: "À propos",
+          Support: "Soutien",
         })
         .translations('es', {
           Level: "Nivel",
@@ -67,7 +74,9 @@
           Vault: "Depósito",
           Vanguard: "Vanguardia",
           Reputation: "Reputación",
-          tier_progress: "{{progress}} por {{tier}}"
+          tier_progress: "{{progress}} por {{tier}}",
+          About: "Sobre",
+          Support: "Apoyo",
         })
         .translations('ja', {
           Level: "レベル",
@@ -78,7 +87,9 @@
           Equip: "装備する",
           Vault: "装備",
           Vanguard: "バンガード",
-          Reputation: "評価"
+          Reputation: "評価",
+          About: "紹介",
+          Support: "サポート",
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -89,7 +100,9 @@
           Postmaster: "Chefe do Correio",
           Vault: "Cofres",
           Vanguard: "Vanguarda",
-          Reputation: "Reputação"
+          Reputation: "Reputação",
+          About: "Sobre",
+          Support: "Apoio",
         })
         .fallbackLanguage('en');
     }]);
