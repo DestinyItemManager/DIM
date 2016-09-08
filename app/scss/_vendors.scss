@@ -1,5 +1,5 @@
 .vendor {
-  width: calc(((var(--item-size) + 40px)*3)*var(--character-columns) + 24px);
+  width: calc(((var(--item-size) + 40px)*3)*var(--character-columns) + 120px);
   margin: 0 auto;
 
   .vendors {
@@ -48,11 +48,13 @@
   }
   .vendor-header-col {
     width: calc((var(--item-size) + 40px)*3);
+    margin-right: 60px;
   }
   .char-cols {
     display: flex;
     flex-direction: column;
     width: calc((var(--item-size) + 40px)*3);
+    margin-right: 60px;
   }
   .char-cols h3 {
     margin-top: 10px;
