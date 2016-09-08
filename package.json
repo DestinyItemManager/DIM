@@ -22,8 +22,6 @@
   },
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "devDependencies": {
-    "adm-zip": "^0.4.7",
-    "async": "^2.0.0",
     "autoprefixer": "^6.3.7",
     "bower": "^1.7.9",
     "grunt": "^1.0.1",
@@ -41,14 +39,10 @@
     "jpm": "^1.1.1",
     "jshint": "^2.9.2",
     "load-grunt-tasks": "^3.5.0",
-    "mkdirp": "^0.5.1",
     "node-sass": "^3.8.0",
-    "progress": "^1.1.8",
     "request": "^2.73.0",
-    "request-promise": "^4.0.2",
     "sqlite3": "^3.1.4",
     "uglify-js": "^2.7.0",
-    "underscore": "^1.8.3",
-    "unzipper": "^0.3.1"
+    "unzip": "^0.1.11"
   }
 }

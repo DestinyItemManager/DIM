@@ -19,10 +19,28 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="Search item/perk or is:arc" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
+        '<input id="filter-input" placeholder="{{\'filter_help\' | translate}}" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }
+
+  // Map from search term to category names. All categories must be present in matching items.
+  const categoryFilters = {
+    pulserifle: ['CATEGORY_PULSE_RIFLE'],
+    scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
+    handcannon: ['CATEGORY_HAND_CANNON'],
+    autorifle: ['CATEGORY_AUTO_RIFLE'],
+    primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
+    sniperrifle: ['CATEGORY_SNIPER_RIFLE'],
+    shotgun: ['CATEGORY_SHOTGUN'],
+    fusionrifle: ['CATEGORY_FUSION_RIFLE'],
+    specialweaponengram: ['CATEGORY_SPECIAL_WEAPON', 'CATEGORY_ENGRAM'],
+    rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
+    machinegun: ['CATEGORY_MACHINE_GUN'],
+    heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
+    sidearm: ['CATEGORY_SIDEARM'],
+    sword: ['CATEGORY_SWORD']
+  };
 
   /**
    * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
@@ -48,7 +66,7 @@
     unlocked: ['unlocked'],
     stackable: ['stackable'],
     engram: ['engram'],
-    weaponClass: ['pulserifle', 'scoutrifle', 'handcannon', 'autorifle', 'primaryweaponengram', 'sniperrifle', 'shotgun', 'fusionrifle', 'specialweaponengram', 'rocketlauncher', 'machinegun', 'heavyweaponengram', 'sidearm', 'sword'],
+    category: _.keys(categoryFilters),
     year: ['year1', 'year2'],
     infusable: ['infusable', 'infuse'],
     stattype: ['intellect', 'discipline', 'strength'],
@@ -369,8 +387,10 @@
       infusable: function(predicate, item) {
         return item.talentGrid && item.talentGrid.infusable;
       },
-      weaponClass: function(predicate, item) {
-        return predicate.toLowerCase().replace(/\s/g, '') === item.weaponClass;
+      category: function(predicate, item) {
+        const categories = categoryFilters[predicate.toLowerCase().replace(/\s/g, '')];
+        return categories && categories.length &&
+          _.all(categories, (c) => item.inCategory(c));
       },
       keyword: function(predicate, item) {
         return item.name.toLowerCase().indexOf(predicate) >= 0 ||
