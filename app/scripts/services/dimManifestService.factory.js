@@ -110,6 +110,7 @@
                   } else { // blob write finished
                     localStorage.setItem('manifest-version', version + '-' + language);
                     console.log("Sucessfully stored " + fileWriter.length + " byte manifest file.");
+                    _gaq.push(['_trackEvent', 'Manifest', 'Downloaded']);
                   }
                 };
 
@@ -172,6 +173,7 @@
             });
           });
       } else {
+        _gaq.push(['_trackEvent', 'Manifest', 'Need New Manifest']);
         return $q.reject(new Error("version mismatch: " + (version + '-' + language) + ' ' + currentManifestVersion));
       }
     }
