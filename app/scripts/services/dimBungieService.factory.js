@@ -186,7 +186,15 @@
             message = 'You may not be connected to the internet.';
           }
 
-          toaster.pop('error', 'Bungie.net Error', message, 0);
+          var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
+
+          toaster.pop({
+            type: 'error',
+            bodyOutputType: 'trustedHtml',
+            title: 'Bungie.net Error',
+            body: message + twitter,
+            showCloseButton: false
+          });
 
           return $q.reject(e);
         });
