@@ -345,7 +345,7 @@
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
                 icon: 'https://bungie.net/' + character.emblemPath,
-                current: lastPlayedDate.getTime() === (new Date(raw.character.base.characterBase.dateLastPlayed)).getTime(),
+                current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
