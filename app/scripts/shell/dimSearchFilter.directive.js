@@ -68,7 +68,7 @@
         query: '',
         filterTrans: filterTrans,
         keywords: keywords,
-        categoryFilters: categoryFilters,
+        categoryFilters: categoryFilters
       };
     })
     .directive('dimSearchFilter', SearchFilter);
