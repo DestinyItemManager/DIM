@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  console.time('First item directive built');
+
   angular.module('dimApp')
     .value('dimPlatformIds', {
       xbl: null,

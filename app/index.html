@@ -40,15 +40,16 @@
             </div>
           </span>
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
-          <span class="link" ng-click="app.showAbout($event)">About</span>
-          <span class="link" ng-click="app.showSupport($event)">Support DIM</span>
-          <span class="link" ng-click="app.toggleVendors($event)">Vendors</span>
+          <span class="link" ng-click="app.showAbout($event)" translate="About"></span>
+          <span class="link" ng-click="app.showSupport($event)" translate="Support DIM"></span>
+          <span class="link" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>
       <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
       <div id="content" class="content" ui-view></div>
       <div class="store-bounds"></div>
+      <dim-manifest-progress></dim-manifest-progress>
       <div class="random-loadout" ng-controller="dimRandomCtrl as random">
         <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
       </div>
@@ -77,20 +78,25 @@
     <script src="vendor/angular-messages/angular-messages.min.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-promise-tracker/promise-tracker.js?v=$DIM_VERSION"></script>
     <script src="vendor/jquery-textcomplete/dist/jquery.textcomplete.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angularjs-slider/dist/rzslider.js"></script>
-    <script src="vendor/ng-http-rate-limiter/dist/ng-http-rate-limiter.js"></script>
+    <script src="vendor/angularjs-slider/dist/rzslider.js?v=$DIM_VERSION"></script>
+    <script src="vendor/ng-http-rate-limiter/dist/ng-http-rate-limiter.js?v=$DIM_VERSION"></script>
+    <script src="vendor/angular-translate/angular-translate.min.js?v=$DIM_VERSION"></script>
     <!-- end vendor scripts -->
 
     <script src="vendor/angular-chrome-storage/angular-chrome-storage.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-hotkeys/build/hotkeys.js?v=$DIM_VERSION"></script>
+    <script src="vendor/zip.js/WebContent/zip.js?v=$DIM_VERSION"></script>
+    <script src="vendor/sql.js/js/sql.js?v=$DIM_VERSION"></script>
 
     <!-- begin app scripts -->
     <script src="scripts/util.js?v=$DIM_VERSION"></script>
     <script src="scripts/dimApp.module.js?v=$DIM_VERSION"></script>
     <script src="scripts/dimApp.config.js?v=$DIM_VERSION"></script>
+    <script src="scripts/dimApp.i18n.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimActionQueue.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimBungieService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimDefinitions.factory.js?v=$DIM_VERSION"></script>
+    <script src="scripts/services/dimManifestService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimBucketService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimInfoService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimPlatformService.factory.js?v=$DIM_VERSION"></script>
@@ -111,7 +117,7 @@
     <script src="scripts/shell/dimSearchFilter.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimClickAnywhereButHere.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimFilterLink.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimBungieImageFallback.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/shell/dimManifestProgress.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimPercentWidth.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimStores.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/store/dimStoreBucket.directive.js?v=$DIM_VERSION"></script>
