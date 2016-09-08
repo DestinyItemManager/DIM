@@ -160,12 +160,8 @@
 
     if (vm.item.primStat) {
       vm.light = vm.item.primStat.value.toString();
-      if (vm.item.primStat.statHash === 3897883278) {
-        // it's armor.
-        vm.light += ' Defense';
-      } else if (vm.item.primStat.statHash === 368428387) {
-        // it's a weapon.
-        vm.light += ' Attack';
+      vm.light += ' ' + vm.item.primStat.stat.statName;
+      if (vm.item.dmg) {
         vm.classes['is-' + vm.item.dmg] = true;
       }
       if (vm.item.classTypeName !== 'unknown' &&

@@ -30,12 +30,9 @@
         vm.infused = 0;
         vm.target = null;
         vm.exotic = item.tier === 'Exotic';
-        vm.statType =
-          vm.source.primStat.statHash === 3897883278 ? 'Defense' // armor item
-          : vm.source.primStat.statHash === 368428387 ? 'Attack' // weapon item
-          : 'Unknown'; // new item?
+        vm.stat = vm.source.primStat.stat;
         vm.wildcardMaterialIcon = item.bucket.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1'
-          : vm.statType === 'Attack' ? 'f2572a4949fb16df87ba9760f713dac3'
+          : vm.stat.statIdentifier === 'STAT_DAMAGE' ? 'f2572a4949fb16df87ba9760f713dac3'
           : '972ae2c6ccbf59cde293a2ed50a57a93';
         vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
         // 2 motes, or 10 armor/weapon materials
@@ -116,7 +113,7 @@
             amount: 2,
             equipped: false
           });
-        } else if (vm.statType === 'Attack') {
+        } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
           // Weapon Parts
           items.material.push({
             id: '0',

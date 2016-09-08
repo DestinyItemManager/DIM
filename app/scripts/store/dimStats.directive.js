@@ -39,9 +39,9 @@
     };
   }
 
-  StatsCtrl.$inject = [];
+  StatsCtrl.$inject = ['$filter'];
 
-  function StatsCtrl() {
+  function StatsCtrl($filter) {
     var vm = this;
 
     _.each(vm.stats, function(stat) {
@@ -60,10 +60,10 @@
       var tier = vm.stats[which].tier;
       var cooldown = vm.stats[which].cooldown || '';
       if (tier !== 5) {
-        next = ' (' + (vm.stats[which].value % 60) + '/60 for T' + (tier + 1) + ')';
+        next = ' (' + $filter('translate')('tier_progress', { progress: (vm.stats[which].value % 60) + "/60", tier: 'T' + (tier + 1) }) + ')';
       }
       if (cooldown) {
-        cooldown = '\n' + vm.stats[which].effect + ' cooldown: ' + cooldown;
+        cooldown = '\n' + $filter('translate')(vm.stats[which].effect + '_cooldown') + ": " + cooldown;
       }
       return 'T' + tier + ' ' + vm.stats[which].name + next + cooldown;
     };

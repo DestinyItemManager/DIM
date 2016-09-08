@@ -20,7 +20,15 @@
     "sum": true,
     "count": true,
     "gapi": true,
-    "Set": true
+    "Set": true,
+    "base64js": true,
+    "SQL": true,
+    "zip": true,
+    "Uint8Array": true,
+    "Int32Array": true,
+    "DataView": true,
+    "Proxy": true,
+    "ga": true
   },
   "rules": {
     "array-callback-return": "error",

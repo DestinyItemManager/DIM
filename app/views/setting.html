@@ -17,6 +17,14 @@
       </tr>
       <tr>
         <td>
+          <label for="language">Language (reload DIM to take effect)</label>
+        </td>
+        <td>
+          <select id="language" ng-model="vm.settings.language" ng-options="code as name for (code, name) in vm.languageOptions" required></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
         </td>
         <td>

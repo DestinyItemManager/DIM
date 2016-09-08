@@ -12,7 +12,7 @@
       </div>
 
       <div class="infuseSourceDetailsRow">
-        <div>{{vm.statType}}</div>
+        <div>{{vm.stat.statName}}</div>
         <div class="bigValue">{{vm.source.primStat.value}}</div>
       </div>
     </div>
@@ -41,7 +41,7 @@
         <span>using 3 <span class="currency"><img alt="Legendary Marks" title="Legendary Marks" src="/images/legendaryMarks.png"></span></span>
         <span ng-if="vm.exotic">+ 1 <span class="currency"><img alt="Exotic Shards" title="Exotic Shards" src="http://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
         <span>+ 250 <span class="currency"><img alt="Glimmer" title="Glimmer" src="/images/glimmer.png"></span></span>
-        <span>+ {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="Materials" title="Materials"  dim-bungie-image-fallback="vm.wildcardMaterialIcon"></span></span>
+        <span>+ {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="Materials" title="Materials" ng-src="{{vm.wildcardMaterialIcon | bungieIcon}}"></span></span>
       </div>
       <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()">Transfer items</button>
     </div>

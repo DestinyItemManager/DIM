@@ -9,14 +9,12 @@
     template: [
       '<div class="sub-section sort-progression">',
       '  <div class="unequipped">',
-      '    <div class="item" ng-if="faction.color" ng-repeat="faction in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{faction.label}}\n{{faction.progressToNextLevel}}/{{faction.nextLevelAt}}\nLevel: {{faction.level}}">',
+      '    <div class="item" ng-if="rep.order >= 0" ng-repeat="rep in vm.store.progression.progressions | orderBy:\'order\' track by $index" title="{{rep.faction.factionName}}\n{{rep.progressToNextLevel}}/{{rep.nextLevelAt}}\n{{\'Level\' | translate}}: {{rep.level}}">',
       '      <svg width="48" height="48">',
-      '        <polygon stroke-dasharray="130" fill="{{faction.color}}" points="24,1 47,24 24,47 1,24"/>',
-      '        <image xlink:href="" ng-attr-xlink:href="{{faction.icon | bungieIcon}}" ng-attr-x="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" ng-attr-y="{{faction.scale === \'.8\' ? 6 : 48-(faction.scale*48)}}" width="48" height="48" ng-attr-transform="scale({{faction.scale}})" />',
-      '        <polygon fill-opacity="0" stroke="#666" stroke-width="2" points="24,1 47,24 24,47 1,24" stroke-linecap="square"/>',
-      '        <polygon stroke-dasharray="130" ng-if="faction.progressToNextLevel > 0" style="stroke-dashoffset:{{130-(130*faction.progressToNextLevel/faction.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="2" points="24,1 47,24 24,47 1,24" stroke-linecap="square"/>',
+      '        <image xlink:href="" ng-attr-xlink:href="{{rep.faction.factionIcon | bungieIcon}}" width="48" height="48" />',
+      '        <polygon stroke-dasharray="130" ng-if="rep.progressToNextLevel > 0" style="stroke-dashoffset:{{130-(130*rep.progressToNextLevel/rep.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="3" points="24,2.5 45.5,24 24,45.5 2.5,24" stroke-linecap="butt"/>',
       '      </svg>',
-      '      <div class="item-stat item-faction" ng-bind="faction.level"></div>',
+      '      <div class="item-stat item-faction" ng-bind="rep.level"></div>',
       '    </div>',
       '  </div>',
       '</div>'

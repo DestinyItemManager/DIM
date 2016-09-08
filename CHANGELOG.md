@@ -1,4 +1,5 @@
 # Next
+* Add ability to create loadouts by selecting sets of perks
 
 # 3.9.2
 
