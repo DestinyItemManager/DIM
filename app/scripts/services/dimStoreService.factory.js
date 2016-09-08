@@ -190,7 +190,7 @@
     }
 
     function getActiveStore() {
-      return _.sortBy(_stores, 'lastPlayed').reverse()[0];
+      return _.find(_stores, 'current');
     }
 
     function getStores() {
@@ -241,6 +241,16 @@
             throw new Error("Active platform mismatch");
           }
 
+          const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
+            if (rawStore.id === 'vault') {
+              return memo;
+            }
+
+            const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
+
+            return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
+          }, null);
+
           var glimmer;
           var marks;
           _removedNewItems.forEach((id) => newItems.delete(id));
@@ -264,6 +274,7 @@
                 id: 'vault',
                 name: translations.Vault,
                 class: 'vault',
+                current: false,
                 className: translations.Vault,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
@@ -334,6 +345,7 @@
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
                 icon: 'https://bungie.net/' + character.emblemPath,
+                current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,

@@ -130,7 +130,7 @@
     vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
 
-      if (target.id === dimStoreService.getActiveStore().id && equip) {
+      if (target.current && equip) {
         dimInfoService.show('doubleclick', {
           title: 'Did you know?',
           body: ['<p>If you\'re moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.</p>',
