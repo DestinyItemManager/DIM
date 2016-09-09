@@ -352,8 +352,9 @@
         .then(function() {
           var promises = [
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
-            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+            //,
+            //getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
           ];
           if (includeVendors) {
             promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
