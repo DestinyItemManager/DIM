@@ -24,7 +24,7 @@
       '          <small class="perk-addition-text">Lock perk</small>',
       '        </div>',
       '        <div ng-switch-when="true" class="locked-perk-notification">',
-      '          <img ng-src="{{vm.getFirstPerk(vm.lockedPerks, type).icon}}" ng-attr-title="{{vm.getFirstPerk(vm.lockedPerks, type).description}}" />',
+      '          <img ng-src="{{vm.getFirstPerk(vm.lockedPerks, type).icon | bungieIcon}}" ng-attr-title="{{vm.getFirstPerk(vm.lockedPerks, type).description}}" />',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -78,7 +78,7 @@
           template: [
             '<div class="perk-select-box" ng-class="{\'shift-held\' : vmd.shiftHeld }" dim-click-anywhere-but-here="closeThisDialog()">',
             '  <div class="perk" ng-class="{\'active-perk-or\' : vmd.lockedPerks[vmd.type][perk.hash].lockType === \'or\', \'active-perk-and\' : vmd.lockedPerks[vmd.type][perk.hash].lockType === \'and\'}" ng-repeat="perk in vmd.perks[vmd.type]" ng-click="vmd.onPerkLocked({perk: perk, type: vmd.type, $event: $event})">',
-            '    <img ng-src="{{perk.icon}}" ng-attr-title="{{perk.description}}"></img>',
+            '    <img ng-src="{{perk.icon | bungieIcon}}" ng-attr-title="{{perk.description}}" />',
             '    <small>{{perk.name}}</small>',
             '  </div>',
             '</div>'].join(''),
