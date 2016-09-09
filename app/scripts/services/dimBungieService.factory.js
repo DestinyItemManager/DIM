@@ -363,7 +363,18 @@
           });
         })
         .catch(function(e) {
-          toaster.pop('error', 'Bungie.net Error', e.message);
+
+          var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
+
+          toaster.pop({
+            type: 'error',
+            bodyOutputType: 'trustedHtml',
+            title: 'Bungie.net Error',
+            body: e.message + twitter,
+            showCloseButton: false
+          });
+
+          // toaster.pop('error', 'Bungie.net Error', e.message);
 
           return $q.reject(e);
         });
