@@ -24,7 +24,7 @@
       '          <small class="perk-addition-text">Lock perk</small>',
       '        </div>',
       '        <div ng-switch-when="true" class="locked-perk-notification">',
-      '          <img ng-src="{{vm.getFirstPerk(vm.lockedPerks, type).icon} | bungieIcon}" ng-attr-title="{{vm.getFirstPerk(vm.lockedPerks, type).description}}" />',
+      '          <img ng-src="{{vm.getFirstPerk(vm.lockedPerks, type).icon | bungieIcon}}" ng-attr-title="{{vm.getFirstPerk(vm.lockedPerks, type).description}}" />',
       '        </div>',
       '      </div>',
       '    </div>',
