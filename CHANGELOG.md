@@ -4,6 +4,10 @@
 * Don't attempt to build record books when advisors are not loaded.
 * Dragged items now include their border and light level again.
 * New-item overlays have been restored (enable in settings).
+* Reenable record book progress.
+* Better handle errors when record book info isn't available.
+* Show an error message if the manifest doesn't load.
+* Fix an error when equipping loadouts.
 
 # 3.10.0
 
