@@ -530,6 +530,7 @@ img {
 }
 
 .sub-bucket {
+  min-height: calc(var(--item-size) + 4px);
   background-size: var(--item-size);
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');

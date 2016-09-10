@@ -25,6 +25,7 @@
         'Material',
         'Emblem',
         'Shader',
+        'Ornament',
         'Emote',
         'Ship',
         'Vehicle',
@@ -64,6 +65,7 @@
       BUCKET_BOUNTIES: "Bounties",
       BUCKET_SPECIAL_WEAPON: "Special",
       BUCKET_SHADER: "Shader",
+      BUCKET_ORNAMENT: "Ornament",
       BUCKET_EMOTES: "Emote",
       BUCKET_MAIL: "Messages",
       BUCKET_BUILD: "Class",
@@ -139,9 +141,9 @@
       });
 
       _.each(dimCategory, function(types, category) {
-        buckets.byCategory[category] = types.map(function(type) {
+        buckets.byCategory[category] = _.compact(types.map(function(type) {
           return buckets.byType[type];
-        });
+        }));
       });
 
       return buckets;

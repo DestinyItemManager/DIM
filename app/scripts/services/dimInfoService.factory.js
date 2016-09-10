@@ -53,6 +53,12 @@
           }
           content.func();
         });
+      },
+      // Remove prefs for "don't show this again"
+      resetHiddenInfos: function() {
+        SyncService.get().then(function(data) {
+          SyncService.set(_.omit(data, (v, k) => k.startsWith('info.')), true);
+        });
       }
     };
   }
