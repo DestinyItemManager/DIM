@@ -639,7 +639,7 @@ img {
   cursor: pointer;
   border: 2px solid #DDD;
   > {
-    img {
+    .img, img {
       width: var(--item-size);
       height: var(--item-size);
       background-size: cover;

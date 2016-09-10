@@ -3,6 +3,8 @@
 * Fixed error building talent grid for Hawkmoon.
 * Don't attempt to build record books when advisors are not loaded.
 * Dragged items now include their border and light level again.
+* New-item overlays have been restored (enable in settings).
+
 # 3.10.0
 
 * Add ability to create loadouts by selecting sets of perks.
