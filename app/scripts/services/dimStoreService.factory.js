@@ -73,6 +73,9 @@
         }
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
+      updateCharacterInfoFromEquip: function(characterInfo) {
+        dimStatDefinitions.then((statDefs) => this.updateCharacterInfo(statDefs, characterInfo));
+      },
       updateCharacterInfo: function(statDefs, characterInfo) {
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
