@@ -471,6 +471,7 @@
             stores: stores
           });
 
+          dimManifestService.isLoaded = true;
           return stores;
         })
         .catch(function(e) {
@@ -485,7 +486,6 @@
           if (_reloadPromise.activePlatform === activePlatform) {
             _reloadPromise = null;
           }
-          dimManifestService.isLoaded = true;
         });
 
       _reloadPromise.activePlatform = activePlatform;

@@ -57,6 +57,11 @@
                 service.statusText = 'Building Destiny info database...';
                 return new SQL.Database(typedArray);
               });
+          })
+          .catch((e) => {
+            service.statusText = "Error loading Destiny info: " + e.message + ". Reload to retry.";
+            manifestPromise = null;
+            return $q.reject(e);
           });
 
         return manifestPromise;
