@@ -618,7 +618,7 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
+        lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
