@@ -655,7 +655,7 @@
       }
 
       // More objectives properties
-      if (itemDef.recordBookHash && itemDef.recordBookHash > 0) {
+      if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
         try {
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
@@ -679,7 +679,7 @@
             .all('isComplete')
             .value();
         } catch (e) {
-          console.error("Error building record book for " + createdItem.name, item, itemDef);
+          console.error("Error building record book for " + createdItem.name, item, itemDef, e);
         }
       } else if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
@@ -728,6 +728,10 @@
       var gridNodes = item.nodes.map(function(node) {
         var talentNodeGroup = possibleNodes[node.nodeHash];
         var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+
+        if (!talentNodeSelected) {
+          return undefined;
+        }
 
         var nodeName = talentNodeSelected.nodeStepName;
 

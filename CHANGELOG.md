@@ -1,7 +1,17 @@
+# Next
+
+* Fixed error building talent grid for Hawkmoon.
+* Don't attempt to build record books when advisors are not loaded.
+* Dragged items now include their border and light level again.
 # 3.10.0
 
-* Add ability to create loadouts by selecting sets of perks
+* Add ability to create loadouts by selecting sets of perks.
 * [#823](https://github.com/DestinyItemManager/DIM/issues/823) Added 'current' property to stores.
+* The DIM extension is now much smaller.
+* DIM can now display item information in all supported Destiny languages. Choose your language in the settings then reload DIM.
+* We now automatically pick up Destiny data updates, so DIM should work after patches without needing an update.
+* The Reputation section should match the in-game logos better now.
+* Disable new item overlays due to a bug.
 
 # 3.9.2
 
