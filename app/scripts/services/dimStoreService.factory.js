@@ -369,13 +369,15 @@
 
               store.name = store.genderRace + ' ' + store.className;
 
-              store.progression.progressions.forEach(function(prog) {
-                angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
-                const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
-                if (faction) {
-                  prog.faction = faction;
-                }
-              });
+              if (store.progression) {
+                store.progression.progressions.forEach(function(prog) {
+                  angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                  const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
+                  if (faction) {
+                    prog.faction = faction;
+                  }
+                });
+              }
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
