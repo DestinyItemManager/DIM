@@ -30,7 +30,11 @@
           Vendors: "Vendors",
           Support: "Support",
           Settings: "Settings",
-          filter_help: "Search item/perk or is:arc"
+          filter_help: "Search item/perk or is:arc",
+          'Tag Item': "Tag Item",
+          Favorite: "Favorite",
+          Keep: "Keep",
+          Delete: "Delete"
         })
         .translations('it', {
           Level: "Livello",
