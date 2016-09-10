@@ -1,3 +1,7 @@
+# Next
+
+* Fixed a "move-canceled" message showing up sometimes when applying loadouts.
+
 # 3.10.2
 
 * Fixed error building talent grid for Hawkmoon.
