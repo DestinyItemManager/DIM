@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="styles/main.css?v=$DIM_VERSION">
   </head>
 
-  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements }">
+  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: !app.settings.disableQuality && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
     <div class="ng-cloak" ng-click="trackActivity()">
       <div id="header">
         <div class="content">
