@@ -22,3 +22,4 @@ build/dim-extension.zip
 
 .brackets.json
 .npmrc
+npm-debug.log
