@@ -1,6 +1,7 @@
 # Next
 
 * You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters.
+* Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 
 # 3.10.2
 

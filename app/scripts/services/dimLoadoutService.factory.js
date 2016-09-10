@@ -399,7 +399,9 @@
         })
         .catch(function(e) {
           scope.failed++;
-          toaster.pop('error', item.name, e.message);
+          if (e.message !== 'move-canceled') {
+            toaster.pop('error', item.name, e.message);
+          }
         })
         .finally(function() {
           // Keep going
