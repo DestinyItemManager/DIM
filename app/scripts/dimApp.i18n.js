@@ -58,7 +58,11 @@
           'Support DIM': "Aiutare DIM",
           Vendors: "Mercanti",
           Support: "Aiutare",
-          Settings: "Impostazioni"
+          Settings: "Impostazioni",
+          'Tag Item': "Elemento Tag",
+          Favorite: "Preferito",
+          Keep: "Tenere",
+          Delete: "Cancellare"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -81,7 +85,11 @@
           'Support DIM': "Unterstützen DIM",
           Vendors: "Händler"
           Support: "Unterstützen",
-          Settings: "Einstellungen"
+          Settings: "Einstellungen",
+          'Tag Item': "Tag Artikel",
+          Favorite: "Favorit",
+          Keep: "Behalten",
+          Delete: "Löschen"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -105,7 +113,11 @@
           'Support DIM': "Soutien DIM",
           Vendors: "Marchands",
           Support: "Soutien",
-          Settings: "Paramètres"
+          Settings: "Paramètres",
+          'Tag Item': "Tag Article",
+          Favorite: "Préféré",
+          Keep: "Garder",
+          Delete: "Effacer"
         })
         .translations('es', {
           Level: "Nivel",
@@ -128,7 +140,11 @@
           'Support DIM': "Apoyo DIM",
           Vendors: "Comerciantes",
           Support: "Apoyo",
-          Settings: "Configuración"
+          Settings: "Configuración",
+          'Tag Item': "Elemento de Etiqueta",
+          Favorite: "Favorito",
+          Keep: "Guardar",
+          Delete: "Borrar"
         })
         .translations('ja', {
           Level: "レベル",
@@ -147,7 +163,11 @@
           'Support DIM': "サポート DIM",
           Vendors: "ベンダー",
           Support: "サポート",
-          Settings: "設定"
+          Settings: "設定",
+          'Tag Item': "タグアイテム",
+          Favorite: "本命",
+          Keep: "保つ",
+          Delete: "消す"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -171,7 +191,11 @@
           'Support DIM': "Apoio DIM",
           Vendors: "Vendedores",
           Support: "Apoio",
-          Settings: "Configurações"
+          Settings: "Configurações",
+          'Tag Item': "Item de Tag",
+          Favorite: "Favorito",
+          Keep: "Guarda",
+          Delete: "Excluir"
         })
         .fallbackLanguage('en');
     }]);
