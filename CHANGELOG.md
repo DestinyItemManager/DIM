@@ -1,3 +1,7 @@
+# Next
+
+* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters.
+
 # 3.10.2
 
 * Fixed error building talent grid for Hawkmoon.
@@ -8,7 +12,6 @@
 * Better handle errors when record book info isn't available.
 * Show an error message if the manifest doesn't load.
 * Fix an error when equipping loadouts.
-* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters.
 * DIM usage tips will only show up once per session now. You can bring back previously hidden tips with a button in the settings page.
 
 # 3.10.0
