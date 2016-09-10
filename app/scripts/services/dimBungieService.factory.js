@@ -353,8 +353,11 @@
           var promises = [
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
             getDestinyProgression(data.token, platform, data.membershipId, data.characters)
-            //,
-            //getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
+              // Don't let failure of progression fail other requests.
+              .catch((e) => console.error("Failed to load character progression", e)),
+            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
+              // Don't let failure of advisors fail other requests.
+              .catch((e) => console.error("Failed to load advisors", e))
           ];
           if (includeVendors) {
             promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
