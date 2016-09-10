@@ -47,7 +47,7 @@
       var data = "";
       items.forEach(function(item) {
         data += item.name + ", ";
-        data += (item.tag || '') + ", ";
+        data += (item.dimInfo.tag || '') + ", ";
         data += item.tier + ", ";
         data += item.typeName + ", ";
         var equippable = item.classTypeName;
@@ -100,7 +100,7 @@
       var data = "";
       guns.forEach(function(gun) {
         data += gun.name + ", ";
-        data += (gun.tag || '') + ", ";
+        data += (gun.dimInfo.tag || '') + ", ";
         data += gun.tier + ", ";
         data += gun.typeName + ", ";
         data += gun.primStat.value + ", ";

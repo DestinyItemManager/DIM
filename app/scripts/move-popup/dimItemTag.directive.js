@@ -12,24 +12,22 @@
     `
   });
 
-  ItemTagController.$inject = ['$rootScope', 'SyncService', 'dimPlatformService', 'dimSettingsService', 'dimItemTagService'];
+  ItemTagController.$inject = ['$scope', '$rootScope', 'dimSettingsService'];
 
-  function ItemTagController($rootScope, SyncService, dimPlatformService, dimSettingsService, dimItemTagService) {
+  function ItemTagController($scope, $rootScope, dimSettingsService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
-    vm.selected = _.find(vm.settings.itemTags, function(tag) {
-      return tag.type === vm.item.tag;
+    $scope.$watch('vm.item.dimInfo.tag', function() {
+      vm.selected = _.find(vm.settings.itemTags, function(tag) {
+        return tag.type === vm.item.dimInfo.tag;
+      });
     });
 
     vm.updateTag = function() {
-      vm.item.tag = vm.selected.type;
+      vm.item.dimInfo.tag = vm.selected.type;
       $rootScope.$broadcast('dim-filter-invalidate');
-      SyncService.get().then(function(data) {
-        data = data[dimItemTagService.getKey()] || {};
-        data[vm.item.id] = { id: vm.item.id, type: vm.item.tag };
-        SyncService.set(data);
-      });
+      vm.item.dimInfo.save();
     };
   }
 })();

@@ -673,7 +673,10 @@ img {
 //  &.fa-ban {
 //    -webkit-text-stroke: 0px;
 //    color: red;
-//  }
+  //  }
+  &.no-tag {
+    display: none;
+  }
 }
 
 .item .stack {
