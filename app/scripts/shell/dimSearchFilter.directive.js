@@ -378,7 +378,7 @@
         return false;
       },
       itemtags: function(predicate, item) {
-        return item.dimInfo.tag === predicate;
+        return item.dimInfo && item.dimInfo.tag === predicate;
       },
       stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });

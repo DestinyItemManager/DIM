@@ -8,6 +8,7 @@
 * Better handle errors when record book info isn't available.
 * Show an error message if the manifest doesn't load.
 * Fix an error when equipping loadouts.
+* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters.
 
 # 3.10.0
 

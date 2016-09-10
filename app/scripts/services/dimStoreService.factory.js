@@ -645,9 +645,6 @@
         } catch (e) {
           console.error("Error getting extra DIM info for " + createdItem.name, item, itemDef, e);
         }
-        if (createdItem.name === 'La Verdad') {
-          console.log(createdItem);
-        }
       }
 
       try {
