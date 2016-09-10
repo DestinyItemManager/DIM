@@ -8,7 +8,7 @@
       item: '='
     },
     template: `
-      <select ng-options="tag as tag.label for tag in $ctrl.settings.itemTags track by tag.type" ng-model="$ctrl.selected" ng-change="$ctrl.updateTag()"></select>
+      <select ng-options="tag as tag.label | translate for tag in $ctrl.settings.itemTags track by tag.type" ng-model="$ctrl.selected" ng-change="$ctrl.updateTag()"></select>
     `
   });
 
