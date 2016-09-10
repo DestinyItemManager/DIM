@@ -6,17 +6,6 @@
     <table>
       <tr>
         <td>
-          <label for="spreadsheetLinks" title="Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.">Download Spreadsheets</label>
-        </td>
-        <td>
-          <div id="spreadsheetLinks">
-            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Weapons</button>
-            <button ng-click="vm.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Armor</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
           <label for="language">Language (reload DIM to take effect)</label>
         </td>
         <td>
@@ -126,6 +115,25 @@
             <br>
           <label>
             <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }">Fixed (By Character Age)</label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="spreadsheetLinks" title="Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.">Download Spreadsheets</label>
+        </td>
+        <td>
+          <div id="spreadsheetLinks">
+            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Weapons</button>
+            <button ng-click="vm.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> Armor</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="resetHiddenInfos">DIM Info Popups</label>
+        </td>
+        <td>
+          <button ng-click="vm.resetHiddenInfos()">Reset previously hidden info tips</button>
         </td>
       </tr>
     </table>

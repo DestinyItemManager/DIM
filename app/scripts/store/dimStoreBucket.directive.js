@@ -127,16 +127,21 @@
       $timeout.cancel(dragTimer);
     };
 
+    // Only show this once per session
+    const didYouKnow = _.once(() => {
+      dimInfoService.show('doubleclick', {
+        title: 'Did you know?',
+        body: ['<p>If you\'re moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.</p>',
+               '<p>Try it out next time!<p>'].join(''),
+        hide: 'Don\'t show this tip again'
+      });
+    });
+
     vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
       var target = vm.store;
 
       if (target.current && equip) {
-        dimInfoService.show('doubleclick', {
-          title: 'Did you know?',
-          body: ['<p>If you\'re moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.</p>',
-                 '<p>Try it out next time!<p>'].join(''),
-          hide: 'Don\'t show this tip again'
-        });
+        didYouKnow();
       }
 
       if (item.notransfer && item.owner !== target.id) {
