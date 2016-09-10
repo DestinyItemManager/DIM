@@ -18,6 +18,7 @@
 
     const service = {
       isLoaded: true,
+      isError: false,
       statusText: null,
       version: null,
 
@@ -61,6 +62,7 @@
           .catch((e) => {
             service.statusText = "Error loading Destiny info: " + e.message + ". Reload to retry.";
             manifestPromise = null;
+            service.isError = true;
             return $q.reject(e);
           });
 

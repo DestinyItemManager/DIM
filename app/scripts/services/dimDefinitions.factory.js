@@ -33,7 +33,7 @@
 
   // Load objects that lazily load their properties from the sqlite DB.
   _.each(lazyTables, function(tableShort, name) {
-    var factory = function(dimManifestService) {
+    var factory = function(dimManifestService, $q) {
       return dimManifestService.getManifest()
         .then(function(db) {
           const table = `Destiny${tableShort}Definition`;
@@ -54,15 +54,16 @@
         })
         .catch(function(e) {
           console.error(e);
+          return $q.reject(e);
         });
     };
-    factory.$inject = ['dimManifestService'];
+    factory.$inject = ['dimManifestService', '$q'];
     mod.factory(`dim${name}Definitions`, factory);
   });
 
   // Resources that need to be fully loaded (because they're iterated over)
   _.each(eagerTables, function(tableShort, name) {
-    var factory = function(dimManifestService) {
+    var factory = function(dimManifestService, $q) {
       return dimManifestService.getManifest()
         .then(function(db) {
           const table = `Destiny${tableShort}Definition`;
@@ -70,15 +71,16 @@
         })
         .catch(function(e) {
           console.error(e);
+          return $q.reject(e);
         });
     };
-    factory.$inject = ['dimManifestService'];
+    factory.$inject = ['dimManifestService', '$q'];
     mod.factory(`dim${name}Definitions`, factory);
   });
 
   // Resources that come from precomputed JSON files
   _.each(files, function(file, name) {
-    var factory = function($http) {
+    var factory = function($http, $q) {
       // console.time("loading " + name);
       return $http.get('scripts/api-manifest/' + file + '.json?v=$DIM_VERSION')
         .then(function(json) {
@@ -87,9 +89,10 @@
         })
         .catch(function(e) {
           console.error(e);
+          return $q.reject(e);
         });
     };
-    factory.$inject = ['$http'];
+    factory.$inject = ['$http', '$q'];
     mod.factory(`dim${name}Definitions`, factory);
   });
 })(angular);
