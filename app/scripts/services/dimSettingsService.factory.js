@@ -57,9 +57,9 @@
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
         { type: undefined, label: 'Tag Item' },
-        { type: 'favorite', label: 'Favorite' },
-        { type: 'keep', label: 'Keep' },
-        { type: 'delete', label: 'Delete' }
+        { type: 'favorite', label: 'Favorite', hotkey: '!' },
+        { type: 'keep', label: 'Keep', hotkey: '@' },
+        { type: 'delete', label: 'Delete', hotkey: '#' }
       ],
 
       language: defaultLanguage(),

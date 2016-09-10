@@ -18,7 +18,7 @@
     var vm = this;
 
     vm.settings = dimSettingsService;
-    $scope.$watch('vm.item.dimInfo.tag', function() {
+    $scope.$watch(() => vm.item.dimInfo.tag, function() {
       vm.selected = _.find(vm.settings.itemTags, function(tag) {
         return tag.type === vm.item.dimInfo.tag;
       });
@@ -29,6 +29,15 @@
       $rootScope.$broadcast('dim-filter-invalidate');
       vm.item.dimInfo.save();
     };
+
+    $scope.$on('dim-item-tag', (e, args) => {
+      if (vm.item.dimInfo.tag === args.tag) {
+        delete vm.item.dimInfo.tag;
+      } else {
+        vm.item.dimInfo.tag = args.tag;
+      }
+      vm.item.dimInfo.save();
+    });
   }
 })();
 
