@@ -73,6 +73,9 @@
         }
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
+      updateCharacterInfoFromEquip: function(characterInfo) {
+        dimStatDefinitions.then((statDefs) => this.updateCharacterInfo(statDefs, characterInfo));
+      },
       updateCharacterInfo: function(statDefs, characterInfo) {
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
@@ -190,7 +193,7 @@
     }
 
     function getActiveStore() {
-      return _.sortBy(_stores, 'lastPlayed').reverse()[0];
+      return _.find(_stores, 'current');
     }
 
     function getStores() {
@@ -242,6 +245,16 @@
             throw new Error("Active platform mismatch");
           }
 
+          const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
+            if (rawStore.id === 'vault') {
+              return memo;
+            }
+
+            const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
+
+            return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
+          }, null);
+
           var glimmer;
           var marks;
           _removedNewItems.forEach((id) => newItems.delete(id));
@@ -265,6 +278,7 @@
                 id: 'vault',
                 name: translations.Vault,
                 class: 'vault',
+                current: false,
                 className: translations.Vault,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
@@ -335,6 +349,7 @@
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
                 icon: 'https://bungie.net/' + character.emblemPath,
+                current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
@@ -358,13 +373,15 @@
 
               store.name = store.genderRace + ' ' + store.className;
 
-              store.progression.progressions.forEach(function(prog) {
-                angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
-                const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
-                if (faction) {
-                  prog.faction = faction;
-                }
-              });
+              if (store.progression) {
+                store.progression.progressions.forEach(function(prog) {
+                  angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                  const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
+                  if (faction) {
+                    prog.faction = faction;
+                  }
+                });
+              }
 
               _.each(raw.data.buckets, function(bucket) {
                 _.each(bucket, function(pail) {
@@ -652,7 +669,7 @@
       }
 
       // More objectives properties
-      if (itemDef.recordBookHash && itemDef.recordBookHash > 0) {
+      if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
         try {
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
@@ -676,7 +693,7 @@
             .all('isComplete')
             .value();
         } catch (e) {
-          console.error("Error building record book for " + createdItem.name, item, itemDef);
+          console.error("Error building record book for " + createdItem.name, item, itemDef, e);
         }
       } else if (createdItem.objectives) {
         createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
@@ -725,6 +742,10 @@
       var gridNodes = item.nodes.map(function(node) {
         var talentNodeGroup = possibleNodes[node.nodeHash];
         var talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
+
+        if (!talentNodeSelected) {
+          return undefined;
+        }
 
         var nodeName = talentNodeSelected.nodeStepName;
 

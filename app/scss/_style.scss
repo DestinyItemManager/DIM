@@ -639,7 +639,7 @@ img {
   cursor: pointer;
   border: 2px solid #DDD;
   > {
-    img {
+    .img, img {
       width: var(--item-size);
       height: var(--item-size);
       background-size: cover;
@@ -2159,4 +2159,14 @@ dim-manifest-progress {
     text-decoration: none;
     font-weight: normal;
   }
+}
+
+.current.character .character-box:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-top: 15px solid gold;
+  border-right: 15px solid transparent;
 }
