@@ -36,6 +36,7 @@
       } else {
         vm.item.dimInfo.tag = args.tag;
       }
+      $rootScope.$broadcast('dim-filter-invalidate');
       vm.item.dimInfo.save();
     });
   }
