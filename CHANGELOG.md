@@ -8,6 +8,7 @@
 * Better handle errors when record book info isn't available.
 * Show an error message if the manifest doesn't load.
 * Fix an error when equipping loadouts.
+* DIM usage tips will only show up once per session now. You can bring back previously hidden tips with a button in the settings page.
 
 # 3.10.0
 
