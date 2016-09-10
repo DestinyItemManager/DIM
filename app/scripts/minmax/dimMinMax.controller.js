@@ -568,7 +568,7 @@
           function loadBucket(classType, useVendorItems = false) {
             var items = (useVendorItems) ? vendorItems : allItems;
             return getBuckets(items.filter(function(item) {
-              return item.classType === classType || item.classType === 3;
+              return (item.classType === classType || item.classType === 3) && item.stats.length;
             }));
           }
           buckets = {

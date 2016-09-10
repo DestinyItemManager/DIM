@@ -21,17 +21,17 @@
         '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-        '      <div class="move-button move-vault" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-vault" alt="{{::store.name}}" title="{{::store.name}}" ',
         '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}">',
         '        <span>Vault</span>',
         '      </div>',
-        '      <div class="move-button move-equip" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-equip" alt="{{::store.name}}" title="{{::store.name}}" ',
         '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
         '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
         '        <span>Equip</span>',
         '      </div>',
-        '      <div class="move-button move-store" alt="{{::vm.characterInfo(store) }}" title="{{::vm.characterInfo(store) }}" ',
+        '      <div class="move-button move-store" alt="{{::store.name}}" title="{{::store.name}}" ',
         '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})"> ',
         '        <span>Store</span>',
@@ -100,10 +100,6 @@
       }
     });
 
-    function capitalizeFirstLetter(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
     /*
     * Open up the dialog for infusion by passing
     * the selected item
@@ -124,24 +120,21 @@
       });
     };
 
-    vm.characterInfo = function characterInfo(store) {
-      if (store.isVault) {
-        return 'Vault';
-      } else {
-        return store.level + ' ' + capitalizeFirstLetter(store.race) + ' ' + capitalizeFirstLetter(store.gender) + ' ' + capitalizeFirstLetter(store.class);
-      }
-    };
-
-    /**
-     * Move the item to the specified store. Equip it if equip is true.
-     */
-    vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
+    // Only show this once per session
+    const didYouKnow = _.once(() => {
       dimInfoService.show('movebox', {
         title: 'Did you know?',
         body: ['<p>Items can be dragged and dropped between different characters/vault columns.</p>',
                '<p>Try it out next time!<p>'].join(''),
         hide: 'Don\'t show this tip again'
       });
+    });
+
+    /**
+     * Move the item to the specified store. Equip it if equip is true.
+     */
+    vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
+      didYouKnow();
 
       var reload = vm.item.equipped || equip;
       var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);

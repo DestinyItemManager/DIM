@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Destiny Item Manager",
-  "version": "3.9.2",
+  "version": "3.10.2",
   "description": "Robust interface to manage gear, weapons, and items in Destiny.",
   "icons": {
     "16": "icon16.png",
@@ -33,7 +33,7 @@
     }
   },
   "options_page": "index.html",
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false
 }

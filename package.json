@@ -1,9 +1,14 @@
 {
   "name": "dim",
-  "version": "3.9.2",
+  "version": "3.10.2",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
+    "dev-chrome": "./node_modules/.bin/grunt dev-chrome",
+    "dev-firefox": "./node_modules/.bin/grunt dev-firefox",
+    "generate-css": "./node_modules/.bin/grunt css",
+    "lint": "./node_modules/.bin/grunt eslint",
+    "postinstall": "./node_modules/.bin/bower install",
     "test": "echo \"No tests\""
   },
   "repository": {
@@ -17,9 +22,8 @@
   },
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "devDependencies": {
-    "adm-zip": "^0.4.7",
-    "async": "^2.0.0",
     "autoprefixer": "^6.3.7",
+    "bower": "^1.7.9",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-compress": "^1.3.0",
@@ -35,14 +39,10 @@
     "jpm": "^1.1.1",
     "jshint": "^2.9.2",
     "load-grunt-tasks": "^3.5.0",
-    "mkdirp": "^0.5.1",
     "node-sass": "^3.8.0",
-    "progress": "^1.1.8",
     "request": "^2.73.0",
-    "request-promise": "^4.0.2",
     "sqlite3": "^3.1.4",
     "uglify-js": "^2.7.0",
-    "underscore": "^1.8.3",
-    "unzipper": "^0.3.1"
+    "unzip": "^0.1.11"
   }
 }

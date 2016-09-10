@@ -15,7 +15,6 @@ $item-header-spacing: 5px;
   padding: $item-header-spacing 28px $item-header-spacing $item-header-spacing;
   position: relative;
   text-overflow: ellipsis;
-  white-space: nowrap !important;
 
   &.is-arc {
     background-color: $arc;

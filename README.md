@@ -11,6 +11,11 @@ To get started with DIM, download the extension from the [Chrome Store](https://
 
 To beta test new features in DIM, download the beta extension from the [Chrome Store](https://chrome.google.com/webstore/detail/destiny-item-manager-beta/mkiipknpfaacbjdagdeppdacpgpdjklc).
 
+## Translation
+
+If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portugese), a great way to help with DIM development is to provide translations. This can be done from the GitHub UI without JavaScript development experience. See [the Translation wiki](https://github.com/DestinyItemManager/DIM/wiki/Translations) for more info on how to help.
+
+
 ##Requirements
 DIM is an extension that runs within the Chrome Desktop Web Browser.
 
@@ -23,14 +28,13 @@ Clone the repo:
 Install dependencies:
 
 * `npm install`
-* `bower install` (if you don't already have bower installed, install it with `npm install -g bower`)
 
 Generate CSS
-* `grunt css`
-* `grunt dev-chrome` or `grunt dev-firefox` (This will watch the scss files for any changes and generate a new style.css)
+* `npm run generate-css`
+* `npm run dev-chrome` or `npm run dev-firefox` (This will watch the scss files for any changes and generate a new style.css)
 
 Check code Style
-* `grunt eslint` will tell you if you're following the DIM code style (and automatically fix what it can).
+* `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
 You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk).
 
@@ -39,7 +43,6 @@ Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob
 ##Bugs and feature requests
 
 Have a bug or a feature request? Please first search for [existing and closed issues](https://github.com/DestinyItemManager/DIM/issues). If your problem or idea is not addressed yet, please open a new issue.
-
 
 ##Community
 Keep track of development and community news.

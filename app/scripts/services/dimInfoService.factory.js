@@ -24,18 +24,12 @@
             title: content.title,
             body: [
               '<p>' + body + '</p>',
-              '<input style="margin-top: 1px; vertical-align: middle;" id="info-' + id + '" type="checkbox">',
+              '<input id="info-' + id + '" type="checkbox">',
               '<label for="info-' + id + '">' + content.hide + '</label></p>'
             ].join(''),
             timeout: timeout,
             bodyOutputType: 'trustedHtml',
             showCloseButton: true,
-            clickHandler: function(a, b) {
-              if (b) {
-                return true;
-              }
-              return false;
-            },
             onHideCallback: function() {
               if ($('#info-' + id)
                 .is(':checked')) {
@@ -58,6 +52,12 @@
             showToaster(content.body, data, timeout);
           }
           content.func();
+        });
+      },
+      // Remove prefs for "don't show this again"
+      resetHiddenInfos: function() {
+        SyncService.get().then(function(data) {
+          SyncService.set(_.omit(data, (v, k) => k.startsWith('info.')), true);
         });
       }
     };

@@ -26,7 +26,8 @@
       equip: equip,
       equipItems: equipItems,
       setItemState: setItemState,
-      getXur: getXur
+      getXur: getXur,
+      getManifest: getManifest
     };
 
     return service;
@@ -107,6 +108,28 @@
         active: true
       });
     }
+
+
+    /************************************************************************************************************************************/
+
+    function getManifest() {
+      return $q.when({
+        method: 'GET',
+        url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
+        headers: {
+          'X-API-Key': apiKey
+        }
+      })
+      .then(function(request) {
+        return $http(request);
+      })
+      .then(handleErrors)
+      .then(function(response) {
+        return response.data.Response;
+      });
+    }
+
+
     /************************************************************************************************************************************/
 
     function getBnetCookies() {
@@ -163,7 +186,15 @@
             message = 'You may not be connected to the internet.';
           }
 
-          toaster.pop('error', 'Bungie.net Error', message, 0);
+          var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
+
+          toaster.pop({
+            type: 'error',
+            bodyOutputType: 'trustedHtml',
+            title: 'Bungie.net Error',
+            body: message + twitter,
+            showCloseButton: false
+          });
 
           return $q.reject(e);
         });
@@ -225,6 +256,7 @@
         return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
       }
     }
+
 
     /************************************************************************************************************************************/
 
@@ -320,8 +352,12 @@
         .then(function() {
           var promises = [
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters),
+            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+              // Don't let failure of progression fail other requests.
+              .catch((e) => console.error("Failed to load character progression", e)),
             getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
+              // Don't let failure of advisors fail other requests.
+              .catch((e) => console.error("Failed to load advisors", e))
           ];
           if (includeVendors) {
             promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
@@ -331,7 +367,18 @@
           });
         })
         .catch(function(e) {
-          toaster.pop('error', 'Bungie.net Error', e.message);
+
+          var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
+
+          toaster.pop({
+            type: 'error',
+            bodyOutputType: 'trustedHtml',
+            title: 'Bungie.net Error',
+            body: e.message + twitter,
+            showCloseButton: false
+          });
+
+          // toaster.pop('error', 'Bungie.net Error', e.message);
 
           return $q.reject(e);
         });
@@ -677,7 +724,7 @@
         .then(handleErrors)
         .then(function(response) {
           var data = response.data.Response;
-          store.updateCharacterInfo(data.summary);
+          store.updateCharacterInfoFromEquip(data.summary);
           return _.select(items, function(i) {
             var item = _.find(data.equipResults, { itemInstanceId: i.id });
             return item && item.equipStatus === 1;

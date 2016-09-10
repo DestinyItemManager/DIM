@@ -530,6 +530,7 @@ img {
 }
 
 .sub-bucket {
+  min-height: calc(var(--item-size) + 4px);
   background-size: var(--item-size);
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
@@ -644,6 +645,9 @@ img {
       height: var(--item-size);
       background-size: cover;
       display: block;
+      &:focus {
+        outline: none;
+      }
     }
   }
   .element {
@@ -1556,12 +1560,20 @@ h2, h3, h4 {
   }
 }
 
+.toast-info {
+  input[type='checkbox'] {
+    margin: -2px 5px 0 0;
+    vertical-align: middle;
+    font-size:30px;
+  }
+}
+
 .toast-close-button {
   position: relative;
-  right: -0.3em;
-  top: -0.3em;
+  right: 0em;
+  top: -0.4em;
   float: right;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   color: white;
   text-shadow: 0 1px 0 white;
@@ -1969,6 +1981,23 @@ button.toast-close-button {
   margin: 0;
 }
 
+// Makes an element appear up from the bottom of the screen with a fade
+@mixin pop-in {
+  &.ng-animate {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  &.ng-enter, &.ng-leave.ng-leave-active {
+    opacity: 0;
+    transform: translateY(5rem);
+  }
+
+  &.ng-leave, &.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: translateY(0rem);
+  }
+}
+
 /* Engram Farming */
 
 #engram-farming {
@@ -2032,19 +2061,7 @@ button.toast-close-button {
     margin: .25em 0;
   }
 
-  &.ng-animate {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  }
-
-  &.ng-enter, &.ng-leave.ng-leave-active {
-    opacity: 0;
-    transform: translateY(5rem);
-  }
-
-  &.ng-leave, &.ng-enter.ng-enter-active {
-    opacity: 1;
-    transform: translateY(0rem);
-  }
+  @include pop-in;
 }
 
 /* Clear new items */
@@ -2072,18 +2089,50 @@ button.toast-close-button {
       }
     }
 
+    @include pop-in;
+  }
+}
+
+dim-manifest-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  pointer-events: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .manifest-progress {
+    width: 24rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 1rem;
+    padding: 1.5rem 1.5rem;
+    background-color: #222;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+
+    i {
+      font-size: 2rem;
+      margin-bottom: .5rem;
+    }
+
     &.ng-animate {
-      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      transition: opacity 0.3s ease-out;
     }
 
     &.ng-enter, &.ng-leave.ng-leave-active {
       opacity: 0;
-      transform: translateY(5rem);
     }
 
     &.ng-leave, &.ng-enter.ng-enter-active {
       opacity: 1;
-      transform: translateY(0rem);
     }
   }
 }
@@ -2098,4 +2147,14 @@ button.toast-close-button {
     text-decoration: none;
     font-weight: normal;
   }
+}
+
+.current.character .character-box:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-top: 15px solid gold;
+  border-right: 15px solid transparent;
 }

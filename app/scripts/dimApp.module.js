@@ -14,6 +14,7 @@
     'ajoslin.promise-tracker',
     'cfp.hotkeys',
     'rzModule',
-    'ngHttpRateLimiter'
+    'ngHttpRateLimiter',
+    'pascalprecht.translate'
   ]);
 })();
