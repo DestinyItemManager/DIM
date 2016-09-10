@@ -1,4 +1,4 @@
-# Next
+# 3.10.2
 
 * Fixed error building talent grid for Hawkmoon.
 * Don't attempt to build record books when advisors are not loaded.
