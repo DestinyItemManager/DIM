@@ -32,6 +32,20 @@
           'background-image': 'url(https://bungie.net' + value + ')'
         };
       };
+    })
+    .filter('tagIcon', function() {
+      return function tagIcon(value) {
+        const iconType = {
+          favorite: 'star',
+          keep: 'tag',
+          delete: 'ban'
+        }[value];
+        if (iconType) {
+          return "item-tag fa fa-" + iconType;
+        } else {
+          return "item-tag no-tag";
+        }
+      };
     });
 
 
@@ -70,6 +84,7 @@
         '    <div class="img" ng-style="::vm.item.icon | bungieBackground" ng-click="vm.clicked(vm.item, $event)" ng-dblclick="vm.doubleClicked(vm.item, $event)">',
         '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
         '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
+        '    <span ng-class="vm.item.dimInfo.tag | tagIcon"></span>',
         '    <div ng-if="vm.item.isNew" class="new_overlay_overflow">',
         '      <img class="new_overlay" src="/images/overlay.svg" height="44" width="44"/>',
         '    </div>',

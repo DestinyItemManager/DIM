@@ -56,6 +56,18 @@
       }
     });
 
+    _.each(dimSettingsService.itemTags, (tag) => {
+      if (tag.hotkey) {
+        hotkeys.add({
+          combo: [tag.hotkey],
+          description: "Mark item as '" + tag.label + "'",
+          callback: function() {
+            $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+          }
+        });
+      }
+    });
+
     hotkeys.add({
       combo: ['x'],
       description: "Clear new items",
