@@ -96,6 +96,12 @@
             <span ng-show="normal.scaleType === 'scaled'">Calculates loadouts as if all items were 335 defense.</span>
             <span ng-show="normal.scaleType === 'base'">Calculates loadouts at current defense levels.</span></small>
         </p>
+        <p>
+          <label>
+            <input type="checkbox" ng-model="normal.showBlues" ng-change="normal.onModeChange()">
+            <span>Include rare (blue) items</span>
+          </label>
+        </p>
       </div></span>
       <span><ul ng-show="showHelp">
         <li>Lock a set of perks by clicking a lock bucket and selecting perks</li>
@@ -129,15 +135,18 @@
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
   </div>
   <div ng-show="normal.progress >= 1">
-    <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">
-      <div><dim-stats stats="set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
+    <!--<div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">--->
+    <div ng-repeat="setType in normal.highestsets">
+    <div class="section loadout" ng-if="setType.tiers[normal.activesets]">
+      <div><dim-stats stats="setType.set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)">Create Loadout</span></div>
       <div class="itemQuality">
-        <div class="set-item" ng-repeat="armorpiece in set.armor">
+        <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small>{{armorpiece.bonusType === 'int'? 'Intellect': (armorpiece.bonusType === 'disc'? 'Discipline' : 'Strength')}}</small></div>
+          <div class="label"><small>{{armorpiece.bonusType === 'int'? 'Intellect': (armorpiece.bonusType === 'dis'? 'Discipline' : 'Strength')}}</small></div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>
