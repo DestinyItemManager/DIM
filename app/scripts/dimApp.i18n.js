@@ -35,7 +35,8 @@
           Favorite: "Favorite",
           Keep: "Keep",
           Delete: "Delete",
-          Infuse: "Infuse"
+          Infuse: "Infuse",
+          notes_placeholder: "Add notes to this item"
         })
         .translations('it', {
           Level: "Livello",
