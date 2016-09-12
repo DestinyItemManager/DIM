@@ -56,7 +56,7 @@
       }));
 
       dimSettingsService.itemTags.forEach(function(tag) {
-        if(tag.type) {
+        if (tag.type) {
           keywords.push("tag:" + tag.type);
         }
       });
@@ -400,7 +400,7 @@
         return item.dimInfo && item.dimInfo.tag === predicate;
       },
       notes: function(predicate, item) {
-        return item.dimInfo && item.dimInfo.notes &&  item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
+        return item.dimInfo && item.dimInfo.notes && item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
       },
       stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
