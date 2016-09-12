@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimItemInfoService', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimItemInfoService, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
     var _stores = [];
     var _idTracker = {};
 
@@ -245,9 +245,10 @@
                               dimRaceDefinitions,
                               dimStatDefinitions,
                               loadNewItems(activePlatform),
+                              dimItemInfoService(activePlatform),
                               $translate(['Vault']),
                               loadStores(activePlatform, includeVendors)])
-        .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
+        .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -269,7 +270,7 @@
           _removedNewItems.clear();
           service.hasNewItems = (newItems.size !== 0);
 
-          return $q.all([newItems, ...rawStores.map(function(raw) {
+          return $q.all([newItems, itemInfoService, ...rawStores.map(function(raw) {
             if (activePlatform !== dimPlatformService.getActive()) {
               throw new Error("Active platform mismatch");
             }
@@ -416,7 +417,7 @@
               }
             }
 
-            return processItems(store, items, previousItems, newItems).then(function(items) {
+            return processItems(store, items, previousItems, newItems, itemInfoService).then(function(items) {
               if (activePlatform !== dimPlatformService.getActive()) {
                 throw new Error("Active platform mismatch");
               }
@@ -460,7 +461,7 @@
             });
           })]);
         })
-        .then(function([newItems, ...stores]) {
+        .then(function([newItems, itemInfoService, ...stores]) {
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
@@ -479,6 +480,8 @@
           $rootScope.$broadcast('dim-stores-updated', {
             stores: stores
           });
+
+          itemInfoService.cleanInfos(stores);
 
           return stores;
         })
@@ -519,7 +522,7 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, item, owner) {
+    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
       if (!itemDef || itemDef.itemName === 'Classified') {
@@ -625,7 +628,7 @@
         dmg: dmgName,
         visible: true,
         year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
-        lockable: (currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable,
+        lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
@@ -644,6 +647,14 @@
         createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
+      }
+
+      if (itemInfoService) {
+        try {
+          createdItem.dimInfo = itemInfoService.infoForItem(createdItem.hash, createdItem.id);
+        } catch (e) {
+          console.error("Error getting extra DIM info for " + createdItem.name, item, itemDef, e);
+        }
       }
 
       try {
@@ -1236,7 +1247,7 @@
       return 'newItems-' + (platform ? platform.type : '');
     }
 
-    function processItems(owner, items, previousItems = new Set(), newItems = new Set()) {
+    function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
       _idTracker = {};
       return $q.all([
         dimItemDefinitions,
@@ -1250,7 +1261,8 @@
         dimRecordsDefinitions,
         dimItemCategoryDefinitions,
         previousItems,
-        newItems])
+        newItems,
+        itemInfoService])
         .then(function(args) {
           var result = [];
           dimManifestService.statusText = 'Loading Destiny characters and inventory...';

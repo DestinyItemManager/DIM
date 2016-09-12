@@ -54,6 +54,13 @@
       itemSize: 44,
       // Which categories or buckets should be collapsed?
       collapsedSections: {},
+      // Predefined item tags. Maybe eventually allow to add more (also i18n?)
+      itemTags: [
+        { type: undefined, label: 'Tag Item' },
+        { type: 'favorite', label: 'Favorite', hotkey: '!' },
+        { type: 'keep', label: 'Keep', hotkey: '@' },
+        { type: 'delete', label: 'Delete', hotkey: '#' }
+      ],
 
       language: defaultLanguage(),
 

@@ -72,6 +72,15 @@
   .interaction {
     margin: 0 6px;
   }
+  dim-item-tag {
+    position: absolute;
+    right: 5px;
+    select {
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+  }
 }
 
 .move-button {
