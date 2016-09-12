@@ -136,18 +136,18 @@
   </div>
   <div ng-show="normal.progress >= 1">
     <div class="section loadout" ng-repeat="setType in normal.activeHighestSets">
-      <div><dim-stats stats="setType.set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)">Create Loadout</span></div>
+      <div><dim-stats stats="setType.tiers[normal.activesets].stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)">Create Loadout</span></div>
       <div class="itemQuality">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small>{{armorpiece.bonusType === 'int'? 'Intellect': (armorpiece.bonusType === 'dis'? 'Discipline' : 'Strength')}}</small></div>
-          <div class="other-configs" ng-show="collapsedConfigs[$parent.$parent.$index]" ng-repeat="config in setType.tiers[normal.activesets]">
+          <div class="label"><small>{{setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'int'? 'Intellect': (setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Discipline' : 'Strength')}}</small></div>
+          <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[normal.activesets].configs">
             <small>{{config[armorpiece.item.type] === 'int'? 'Intellect': (config[armorpiece.item.type] === 'dis'? 'Discipline' : 'Strength')}}</small>
           </div>
         </div>
       </div>
-      <div class="expand-configs" ng-model="collapsedConfigs[$index]" ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]">
+      <div ng-show="setType.tiers[normal.activesets].configs.length > 1" class="expand-configs" ng-model="collapsedConfigs[$index]" ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]">
         <div ng-show="!collapsedConfigs[$index]"><span title="Show configurations"><i class="fa fa-caret-right"></i></span> Show all configurations</div>
         <div ng-show="collapsedConfigs[$index]"><span title="Hide configurations"><i class="fa fa-caret-up"></i></span> Hide all configurations</div>
       </div>

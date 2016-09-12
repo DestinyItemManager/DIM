@@ -430,13 +430,13 @@
                           // so we reduce memory usage
                           if (setMap[set.setHash]) {
                             if (setMap[set.setHash].tiers[tiersString]) {
-                              setMap[set.setHash].tiers[tiersString].push(getBonusConfig(set.armor));
+                              setMap[set.setHash].tiers[tiersString].configs.push(getBonusConfig(set.armor));
                             } else {
-                              setMap[set.setHash].tiers[tiersString] = [getBonusConfig(set.armor)];
+                              setMap[set.setHash].tiers[tiersString] = {stats: set.stats, configs: [getBonusConfig(set.armor)]};
                             }
                           } else {
                             setMap[set.setHash] = {set: set, tiers: {}};
-                            setMap[set.setHash].tiers[tiersString] = [getBonusConfig(set.armor)];
+                            setMap[set.setHash].tiers[tiersString] = {stats: set.stats, configs: [getBonusConfig(set.armor)]};
                           }
                         }
 
