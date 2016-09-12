@@ -203,7 +203,7 @@
     function loadStores(activePlatform, includeVendors) {
       if (includeVendors) {
         return $q.when(dimVendorDefinitions).then(function(vendorDefs) {
-          return dimBungieService.getStores(activePlatform, includeVendors, vendorDefs)
+          return dimBungieService.getStores(activePlatform, includeVendors, vendorDefs);
         });
       }
       return dimBungieService.getStores(activePlatform, includeVendors);
