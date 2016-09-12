@@ -1,7 +1,8 @@
 # Next
 
-* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters.
+* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters. There are also keyboard shortcuts - press "?" to see them.
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
+* Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
 
 # 3.10.2
 
