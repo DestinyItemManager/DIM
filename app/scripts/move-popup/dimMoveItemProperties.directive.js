@@ -49,6 +49,7 @@
         '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
         '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
+        '  <textarea placeholder="Add notes to this item" class="item-notes" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.item.dimInfo.save()"></textarea>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',

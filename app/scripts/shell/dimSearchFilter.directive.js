@@ -48,21 +48,27 @@
         infusable: ['infusable', 'infuse'],
         stattype: ['intellect', 'discipline', 'strength'],
         new: ['new'],
-        glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
-        itemtags: _.compact(dimSettingsService.itemTags.map(function(tag) {
-          return tag.type;
-        }))
+        glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
       };
 
       var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
         return ["is:" + word, "not:" + word];
       }));
 
+      dimSettingsService.itemTags.forEach(function(tag) {
+        if(tag.type) {
+          keywords.push("tag:" + tag.type);
+        }
+      });
+
       // Filters that operate on ranges (>, <, >=, <=)
       var ranges = ['light', 'level', 'quality', 'percentage'];
       ranges.forEach(function(range) {
         keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
       });
+
+      // free form notes on items
+      keywords.push('notes:');
 
       return {
         query: '',
@@ -83,7 +89,7 @@
         element.find('input').textcomplete([
           {
             words: dimSearchService.keywords,
-            match: /\b((li|le|qu|pe|is:|not:)\w*)$/,
+            match: /\b((li|le|qu|pe|is:|not:|tag:|notes:)\w*)$/,
             search: function(term, callback) {
               callback($.map(this.words, function(word) {
                 return word.indexOf(term) === 0 ? word : null;
@@ -166,7 +172,12 @@
     vm.filter = function() {
       var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
       filterValue = filterValue.replace(/\s+and\s+/, ' ');
-      var searchTerms = filterValue.split(/\s+/);
+
+      // could probably tidy this regex, just a quick hack to support multi term:
+      // [^\s]*"[^"]*" -> match is:"stuff here"
+      // [^\s]*'[^']*' -> match is:'stuff here'
+      // [^\s"']+' -> match is:stuff
+      var searchTerms = filterValue.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
       var filter;
       var predicate = '';
       var filterFn;
@@ -177,6 +188,8 @@
       }
 
       _.each(searchTerms, function(term) {
+        term = term.replace(/'/g, '').replace(/"/g, '');
+
         if (term.indexOf('is:') >= 0) {
           filter = term.replace('is:', '');
           if (_cachedFilters[filter]) {
@@ -207,6 +220,12 @@
               }
             }
           }
+        } else if (term.indexOf('tag:') >= 0) {
+          filter = term.replace('tag:', '');
+          addPredicate("itemtags", filter);
+        } else if (term.indexOf('notes:') >= 0) {
+          filter = term.replace('notes:', '');
+          addPredicate("notes", filter);
         } else if (term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
           filter = term.replace('light:', '').replace('level:', '');
           addPredicate("light", filter);
@@ -379,6 +398,9 @@
       },
       itemtags: function(predicate, item) {
         return item.dimInfo && item.dimInfo.tag === predicate;
+      },
+      notes: function(predicate, item) {
+        return item.dimInfo && item.dimInfo.notes &&  item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
       },
       stattype: function(predicate, item) {
         return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });

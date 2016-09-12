@@ -1,6 +1,7 @@
 # Next
 
-* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters. There are also keyboard shortcuts - press "?" to see them.
+* You can now mark items as "favorite", "keep", "delete" or "infuse". There are corresponding search filters (tag:keep, tag:favorite, etc.) There are also keyboard shortcuts - press "?" to see them.
+* You can now add custom notes to items. Just type them in the box and it automatically saves the text. You can also search for notes -> notes:"god roll"
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
 

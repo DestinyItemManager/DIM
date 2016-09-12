@@ -34,7 +34,8 @@
           'Tag Item': "Tag Item",
           Favorite: "Favorite",
           Keep: "Keep",
-          Delete: "Delete"
+          Delete: "Delete",
+          Infuse: "Infuse"
         })
         .translations('it', {
           Level: "Livello",
