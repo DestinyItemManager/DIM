@@ -49,7 +49,8 @@
         '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
         '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
-        '  <textarea placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.item.dimInfo.save()"></textarea>',
+        '  <form name="notes"><textarea name="data" placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
+        '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength">Error! Max 120 characters for notes.</span>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
@@ -107,6 +108,12 @@
       vm.itemDetails = !vm.itemDetails;
       vm.changeDetails();
     });
+
+    vm.updateNote = function() {
+      if(angular.isDefined(vm.item.dimInfo.notes)) {
+        vm.item.dimInfo.save();
+      }
+    }
 
     vm.setItemState = function setItemState(item, type) {
       if (vm.locking) {
