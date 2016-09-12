@@ -200,6 +200,15 @@
       return _stores;
     }
 
+    function loadStores(activePlatform, includeVendors) {
+      if (includeVendors) {
+        return $q.when(dimVendorDefinitions).then(function(vendorDefs) {
+          return dimBungieService.getStores(activePlatform, includeVendors, vendorDefs)
+        });
+      }
+      return dimBungieService.getStores(activePlatform, includeVendors);
+    }
+
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
@@ -237,7 +246,7 @@
                               dimStatDefinitions,
                               loadNewItems(activePlatform),
                               $translate(['Vault']),
-                               dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)])
+                              loadStores(activePlatform, includeVendors)])
         .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {

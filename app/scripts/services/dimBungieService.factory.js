@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimVendorDefinitions', 'dimState', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimVendorDefinitions, dimState, toaster) {
+  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
     var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
     var tokenPromise = null;
     var platformPromise = null;
@@ -331,7 +331,7 @@
 
     /************************************************************************************************************************************/
 
-    function getStores(platform, includeVendors) {
+    function getStores(platform, includeVendors, vendorDefs) {
       var data = {
         token: null,
         membershipId: null
@@ -360,7 +360,7 @@
               .catch((e) => console.error("Failed to load advisors", e))
           ];
           if (includeVendors) {
-            promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
+            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters));
           }
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
@@ -539,30 +539,25 @@
       return character;
     }
 
-    function getDestinyVendors(token, platform, membershipId, characters) {
-      // sparrowHash = 1501155019,
-      // Titan van, Hunter van, Warlock van, Van quart, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Cruc quart, Speaker, Variks, Exotic Blue, Banner
-      // var vendorHashes = ['1990950', '3003633346', '1575820975', '2668878854', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '3658200622', '2680694281', '1998812735', '3902439767', '242140165'];
-      return $q.when(dimVendorDefinitions).then(function(vendors) {
-        var promises = [];
-        _.each(_.keys(vendors), function(vendorHash) {
-          _.each(characters, function(character) {
-            var processPB = processVendorsResponse.bind(null, character);
-            promises.push(
-              $q.when(getCharacterVendorsRequest(token, platform, membershipId, character, vendorHash))
-                .then($http)
-                .then(handleErrors)
-                .then(processPB)
-                .catch(function(e) {
-                  if (e.message !== 'The Vendor you requested was not found.') {
-                    throw e;
-                  }
-                })
-            );
-          });
+    function getDestinyVendors(vendorDefs, token, platform, membershipId, characters) {
+      var promises = [];
+      _.each(vendorDefs, function(vendorDef, vendorHash) {
+        _.each(characters, function(character) {
+          var processPB = processVendorsResponse.bind(null, character);
+          promises.push(
+            $q.when(getCharacterVendorsRequest(token, platform, membershipId, character, vendorHash))
+              .then($http)
+              .then(handleErrors)
+              .then(processPB)
+              .catch(function(e) {
+                if (e.message !== 'The Vendor you requested was not found.') {
+                  throw e;
+                }
+              })
+          );
         });
-        return $q.all(promises);
       });
+      return $q.all(promises);
     }
 
     /************************************************************************************************************************************/

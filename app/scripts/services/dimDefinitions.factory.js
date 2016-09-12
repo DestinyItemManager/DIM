@@ -17,7 +17,6 @@
     Stat: 'Stat',
     Talent: 'TalentGrid',
     Progression: 'Progression',
-    Vendor: 'Vendor',
     Records: 'Record',
     ItemCategory: 'ItemCategory'
   };
@@ -26,7 +25,8 @@
     ItemBucket: 'InventoryBucket',
     Class: 'Class',
     Race: 'Race',
-    Faction: 'Faction'
+    Faction: 'Faction',
+    Vendor: 'Vendor'
   };
 
   var mod = angular.module('dimApp');
