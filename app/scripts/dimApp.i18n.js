@@ -64,7 +64,7 @@
           'Tag Item': "Elemento Tag",
           Favorite: "Preferito",
           Keep: "Tenere",
-          Junk: "",
+          Junk: "Giunca",
           Infuse: "Infondi",
           notes_placeholder: "Aggiungere note a questa voce"
         })
@@ -93,7 +93,7 @@
           'Tag Item': "Tag Artikel",
           Favorite: "Favorit",
           Keep: "Behalten",
-          Junk: "",
+          Junk: "Trödel",
           Infuse: "Infundieren",
           notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel"
         })
@@ -123,7 +123,7 @@
           'Tag Item': "Tag Article",
           Favorite: "Préféré",
           Keep: "Garder",
-          Junk: "",
+          Junk: "Jonque",
           Infuse: "Infuser",
           notes_placeholder: "Ajouter des notes à cet article"
         })
@@ -152,7 +152,7 @@
           'Tag Item': "Elemento de Etiqueta",
           Favorite: "Favorito",
           Keep: "Guardar",
-          Junk: "",
+          Junk: "Basura",
           Infuse: "Infundir",
           notes_placeholder: "Agregar notas a este artículo"
         })
@@ -177,7 +177,7 @@
           'Tag Item': "タグアイテム",
           Favorite: "本命",
           Keep: "保つ",
-          Junk: "",
+          Junk: "ジャンク",
           Infuse: "煎じる",
           notes_placeholder: "このアイテムにメモを追加"
         })
@@ -207,7 +207,7 @@
           'Tag Item': "Item de Tag",
           Favorite: "Favorito",
           Keep: "Guarda",
-          Junk: "",
+          Junk: "Lixo",
           Infuse: "Infundir",
           notes_placeholder: "Adicionar observações a este item"
         })
