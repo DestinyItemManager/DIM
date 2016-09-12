@@ -34,7 +34,7 @@
           'Tag Item': "Tag Item",
           Favorite: "Favorite",
           Keep: "Keep",
-          Delete: "Delete",
+          Dismantle: "Dismantle",
           Infuse: "Infuse",
           notes_placeholder: "Add notes to this item"
         })
@@ -64,7 +64,7 @@
           'Tag Item': "Elemento Tag",
           Favorite: "Preferito",
           Keep: "Tenere",
-          Delete: "Cancellare",
+          Dismantle: "",
           Infuse: "Infondi",
           notes_placeholder: "Aggiungere note a questa voce"
         })
@@ -93,7 +93,7 @@
           'Tag Item': "Tag Artikel",
           Favorite: "Favorit",
           Keep: "Behalten",
-          Delete: "Löschen",
+          Dismantle: "",
           Infuse: "Infundieren",
           notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel"
         })
@@ -123,7 +123,7 @@
           'Tag Item': "Tag Article",
           Favorite: "Préféré",
           Keep: "Garder",
-          Delete: "Effacer",
+          Dismantle: "",
           Infuse: "Infuser",
           notes_placeholder: "Ajouter des notes à cet article"
         })
@@ -152,7 +152,7 @@
           'Tag Item': "Elemento de Etiqueta",
           Favorite: "Favorito",
           Keep: "Guardar",
-          Delete: "Borrar",
+          Dismantle: "",
           Infuse: "Infundir",
           notes_placeholder: "Agregar notas a este artículo"
         })
@@ -177,7 +177,7 @@
           'Tag Item': "タグアイテム",
           Favorite: "本命",
           Keep: "保つ",
-          Delete: "消す",
+          Dismantle: "",
           Infuse: "煎じる",
           notes_placeholder: "このアイテムにメモを追加"
         })
@@ -207,7 +207,7 @@
           'Tag Item': "Item de Tag",
           Favorite: "Favorito",
           Keep: "Guarda",
-          Delete: "Excluir",
+          Dismantle: "",
           Infuse: "Infundir",
           notes_placeholder: "Adicionar observações a este item"
         })
