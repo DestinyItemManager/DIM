@@ -80,7 +80,15 @@
     }
 
     function getBonusConfig(armor) {
-      return _.map(armor, function(piece) { return piece.bonusType; });
+      return {
+        Helmet: armor.Helmet.bonusType,
+        Gauntlets: armor.Gauntlets.bonusType,
+        Chest: armor.Chest.bonusType,
+        Leg: armor.Leg.bonusType,
+        ClassItem: armor.ClassItem.bonusType,
+        Artifact: armor.Artifact.bonusType,
+        Ghost: armor.Ghost.bonusType
+      };
     }
 
     function genSetHash(armor) {
@@ -148,6 +156,22 @@
       return armor;
     }
 
+    function getActiveHighestSets(setMap, activeSets) {
+      var count = 0;
+      var topSets = [];
+      _.each(setMap, function(setType, setHash) {
+        if (count >= 10) {
+          return;
+        }
+
+        if (setType.tiers[activeSets]) {
+          topSets.push(setType);
+          count += 1;
+        }
+      });
+      return topSets;
+    }
+
     function validSet(gearset) {
       return (
         gearset.Helmet.item.isExotic +
@@ -196,9 +220,11 @@
       showYear1: false,
       allSetTiers: [],
       highestsets: {},
+      activeHighestSets: [],
       ranked: {},
       activePerks: {},
       excludeditems: [],
+      collapsedConfigs: [false, false, false, false, false, false, false, false, false, false],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
       setOrderValues: ['-str_val', '-dis_val', '-int_val'],
@@ -228,6 +254,9 @@
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
+      },
+      onActiveSetsChange: function() {
+        vm.activeHighestSets = getActiveHighestSets(vm.highestsets, vm.activesets);
       },
       onModeChange: function() {
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -446,6 +475,8 @@
           }
 
           vm.activesets = vm.allSetTiers[1];
+          vm.activeHighestSets = getActiveHighestSets(setMap, vm.activesets);
+          vm.collapsedConfigs = [false, false, false, false, false, false, false, false, false, false];
 
           // Finish progress
           vm.progress = processedCount / combos;

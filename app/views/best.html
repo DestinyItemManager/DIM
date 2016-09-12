@@ -70,7 +70,7 @@
   </p>
   <div ng-show="normal.progress >= 1">
     <p>Filter sets (Intellect/Discipline/Strength):
-      <select ng-model='normal.activesets' ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
+      <select ng-model='normal.activesets' ng-change="normal.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
       <span class="dim-button" ng-click='showAdvanced=!showAdvanced;showHelp=false'>Advanced Options</span>
       <span class="dim-button" ng-click='showHelp=!showHelp;showAdvanced=false'>Need help?</span>
       <span><div ng-show="showAdvanced">
@@ -135,18 +135,22 @@
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
   </div>
   <div ng-show="normal.progress >= 1">
-    <!--<div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">--->
-    <div ng-repeat="setType in normal.highestsets">
-    <div class="section loadout" ng-if="setType.tiers[normal.activesets]">
+    <div class="section loadout" ng-repeat="setType in normal.activeHighestSets">
       <div><dim-stats stats="setType.set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)">Create Loadout</span></div>
       <div class="itemQuality">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
           <div class="label"><small>{{armorpiece.bonusType === 'int'? 'Intellect': (armorpiece.bonusType === 'dis'? 'Discipline' : 'Strength')}}</small></div>
+          <div class="other-configs" ng-show="collapsedConfigs[$parent.$parent.$index]" ng-repeat="config in setType.tiers[normal.activesets]">
+            <small>{{config[armorpiece.item.type] === 'int'? 'Intellect': (config[armorpiece.item.type] === 'dis'? 'Discipline' : 'Strength')}}</small>
+          </div>
         </div>
       </div>
+      <div class="expand-configs" ng-model="collapsedConfigs[$index]" ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]">
+        <div ng-show="!collapsedConfigs[$index]"><span title="Show configurations"><i class="fa fa-caret-right"></i></span> Show all configurations</div>
+        <div ng-show="collapsedConfigs[$index]"><span title="Hide configurations"><i class="fa fa-caret-up"></i></span> Hide all configurations</div>
+      </div>
     </div>
-  </div>
   </div>
 </div>
