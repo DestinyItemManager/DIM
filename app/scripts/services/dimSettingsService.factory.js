@@ -59,7 +59,7 @@
         { type: undefined, label: 'Tag Item' },
         { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
         { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
-        { type: 'dismantle', label: 'Dismantle', hotkey: '#', icon: 'ban' },
+        { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
         { type: 'infuse', label: 'Infuse', hotkey: '$', icon: 'bolt' }
       ],
 
@@ -89,7 +89,7 @@
         { type: undefined, label: 'Tag Item' },
         { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
         { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
-        { type: 'dismantle', label: 'Dismantle', hotkey: '#', icon: 'ban' },
+        { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
         { type: 'infuse', label: 'Infuse', hotkey: '$', icon: 'bolt' }
       ];
 
