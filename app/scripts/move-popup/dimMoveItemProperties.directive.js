@@ -110,10 +110,10 @@
     });
 
     vm.updateNote = function() {
-      if(angular.isDefined(vm.item.dimInfo.notes)) {
+      if (angular.isDefined(vm.item.dimInfo.notes)) {
         vm.item.dimInfo.save();
       }
-    }
+    };
 
     vm.setItemState = function setItemState(item, type) {
       if (vm.locking) {
