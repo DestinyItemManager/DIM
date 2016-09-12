@@ -64,7 +64,9 @@
           'Tag Item': "Elemento Tag",
           Favorite: "Preferito",
           Keep: "Tenere",
-          Delete: "Cancellare"
+          Delete: "Cancellare",
+          Infuse: "Infondi",
+          notes_placeholder: "Aggiungere note a questa voce"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -91,7 +93,9 @@
           'Tag Item': "Tag Artikel",
           Favorite: "Favorit",
           Keep: "Behalten",
-          Delete: "Löschen"
+          Delete: "Löschen",
+          Infuse: "Infundieren",
+          notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -119,7 +123,9 @@
           'Tag Item': "Tag Article",
           Favorite: "Préféré",
           Keep: "Garder",
-          Delete: "Effacer"
+          Delete: "Effacer",
+          Infuse: "Infuser",
+          notes_placeholder: "Ajouter des notes à cet article"
         })
         .translations('es', {
           Level: "Nivel",
@@ -146,7 +152,9 @@
           'Tag Item': "Elemento de Etiqueta",
           Favorite: "Favorito",
           Keep: "Guardar",
-          Delete: "Borrar"
+          Delete: "Borrar",
+          Infuse: "Infundir",
+          notes_placeholder: "Agregar notas a este artículo"
         })
         .translations('ja', {
           Level: "レベル",
@@ -169,7 +177,9 @@
           'Tag Item': "タグアイテム",
           Favorite: "本命",
           Keep: "保つ",
-          Delete: "消す"
+          Delete: "消す",
+          Infuse: "煎じる",
+          notes_placeholder: "このアイテムにメモを追加"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -197,7 +207,9 @@
           'Tag Item': "Item de Tag",
           Favorite: "Favorito",
           Keep: "Guarda",
-          Delete: "Excluir"
+          Delete: "Excluir",
+          Infuse: "Infundir",
+          notes_placeholder: "Adicionar observações a este item"
         })
         .fallbackLanguage('en');
     }]);
