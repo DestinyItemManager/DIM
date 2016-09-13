@@ -87,7 +87,7 @@
         <p>
           <label>
             <select ng-model="normal.scaleType" ng-change="normal.onModeChange()">
-              <option value="scaled">Scaled</option>
+              <option ng-if="normal.allowScaling" value="scaled">Scaled</option>
               <option value="base">Current</option>
             </select>
             Light mode
@@ -98,7 +98,7 @@
         </p>
         <p>
           <label>
-            <input type="checkbox" ng-model="normal.showBlues" ng-change="normal.onModeChange()">
+            <input id="includeRares" type="checkbox" ng-model="normal.showBlues" ng-change="normal.onModeChange()">
             <span>Include rare (blue) items</span>
           </label>
         </p>

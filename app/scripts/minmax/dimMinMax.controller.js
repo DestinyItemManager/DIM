@@ -4,10 +4,15 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog'];
+  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', 'dimSettingsService', 'dimStoreService', 'ngDialog'];
 
-  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, dimStoreService, ngDialog) {
+  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, dimSettingsService, dimStoreService, ngDialog) {
     var vm = this;
+
+    // Disable scaled option when ROI drops
+    vm.allowScaling = !dimSettingsService.disableQuality;
+    vm.scaleType = vm.allowScaling ? 'scaled' : 'base';
+
     var buckets = [];
     var vendorBuckets = [];
     var perks = {
@@ -211,7 +216,6 @@
       active: 'warlock',
       activesets: '5/5/2',
       type: 'Helmet',
-      scaleType: 'scaled',
       progress: 0,
       fullMode: false,
       includeVendors: false,
