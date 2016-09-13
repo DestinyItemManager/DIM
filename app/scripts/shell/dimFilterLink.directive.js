@@ -25,6 +25,12 @@
         filter = filter.trim();
       }
 
+      if (filter === 'notes:value') {
+        itemNameFilter = true;
+        filter = $window.prompt("Enter notes text:");
+        filter = 'notes:"' + filter.trim() + '"';
+      }
+
       if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0) {
         var type = filter.split(':');
         var lightFilterType = type[1];

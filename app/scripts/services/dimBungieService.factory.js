@@ -367,7 +367,6 @@
           });
         })
         .catch(function(e) {
-
           var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
 
           toaster.pop({

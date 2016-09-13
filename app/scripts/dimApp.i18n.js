@@ -34,7 +34,9 @@
           'Tag Item': "Tag Item",
           Favorite: "Favorite",
           Keep: "Keep",
-          Delete: "Delete"
+          Junk: "Junk",
+          Infuse: "Infuse",
+          notes_placeholder: "Add notes to this item"
         })
         .translations('it', {
           Level: "Livello",
@@ -62,7 +64,9 @@
           'Tag Item': "Elemento Tag",
           Favorite: "Preferito",
           Keep: "Tenere",
-          Delete: "Cancellare"
+          Junk: "Giunca",
+          Infuse: "Infondi",
+          notes_placeholder: "Aggiungere note a questa voce"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -89,7 +93,9 @@
           'Tag Item': "Tag Artikel",
           Favorite: "Favorit",
           Keep: "Behalten",
-          Delete: "Löschen"
+          Junk: "Trödel",
+          Infuse: "Infundieren",
+          notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -117,7 +123,9 @@
           'Tag Item': "Tag Article",
           Favorite: "Préféré",
           Keep: "Garder",
-          Delete: "Effacer"
+          Junk: "Jonque",
+          Infuse: "Infuser",
+          notes_placeholder: "Ajouter des notes à cet article"
         })
         .translations('es', {
           Level: "Nivel",
@@ -144,7 +152,9 @@
           'Tag Item': "Elemento de Etiqueta",
           Favorite: "Favorito",
           Keep: "Guardar",
-          Delete: "Borrar"
+          Junk: "Basura",
+          Infuse: "Infundir",
+          notes_placeholder: "Agregar notas a este artículo"
         })
         .translations('ja', {
           Level: "レベル",
@@ -167,7 +177,9 @@
           'Tag Item': "タグアイテム",
           Favorite: "本命",
           Keep: "保つ",
-          Delete: "消す"
+          Junk: "ジャンク",
+          Infuse: "煎じる",
+          notes_placeholder: "このアイテムにメモを追加"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -195,7 +207,9 @@
           'Tag Item': "Item de Tag",
           Favorite: "Favorito",
           Keep: "Guarda",
-          Delete: "Excluir"
+          Junk: "Lixo",
+          Infuse: "Infundir",
+          notes_placeholder: "Adicionar observações a este item"
         })
         .fallbackLanguage('en');
     }]);

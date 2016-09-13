@@ -57,9 +57,10 @@
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
         { type: undefined, label: 'Tag Item' },
-        { type: 'favorite', label: 'Favorite', hotkey: '!' },
-        { type: 'keep', label: 'Keep', hotkey: '@' },
-        { type: 'delete', label: 'Delete', hotkey: '#' }
+        { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
+        { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
+        { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
+        { type: 'infuse', label: 'Infuse', hotkey: '$', icon: 'bolt' }
       ],
 
       language: defaultLanguage(),
@@ -82,6 +83,15 @@
 
       // self destruct timer for quality, hope we can remove this some day...
       savedSettings.disableQuality = new Date('9/19/2016') <= new Date();
+
+      // for now just override itemTags. eventually let users create own?
+      savedSettings.itemTags = [
+        { type: undefined, label: 'Tag Item' },
+        { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
+        { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
+        { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
+        { type: 'infuse', label: 'Infuse', hotkey: '$', icon: 'bolt' }
+      ];
 
       _loaded = true;
       $rootScope.$evalAsync(function() {
