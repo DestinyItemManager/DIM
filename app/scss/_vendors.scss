@@ -1,9 +1,32 @@
 .vendor {
-  width: calc(((40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)) + 12px) * 3) - 12px);
+  width: calc(((var(--item-size) + 40px)*3)*var(--character-columns) + 120px);
   margin: 0 auto;
 
   .vendors {
-    margin-top: 90px;
+    margin-top: 125px;
+  }
+  .vendorLabels h1 {
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+  .vendorTabs {
+    float:right;
+    display:inline-block;
+  }
+  .vendorTabs label {
+    display: inline-block;
+    margin-left: 20px;
+    margin-top: 15px;
+    font-weight:400;
+    font-size:1.3em;
+    cursor: pointer;
+    &.active {
+      color: #FB9F28
+    }
+    & input {
+      display: none;
+    }
   }
   .vendor-col {
     margin-right: 20px;
@@ -18,14 +41,20 @@
   .vendor-item {
     margin-right: 5px;
     margin-bottom: 5px;
-    width: calc(var(--item-size) + 20px);
+    width: calc(var(--item-size) + 35px);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+  }
+  .vendor-header-col {
+    width: calc((var(--item-size) + 40px)*3);
+    margin-right: 60px;
   }
   .char-cols {
     display: flex;
     flex-direction: column;
+    width: calc((var(--item-size) + 40px)*3);
+    margin-right: 60px;
   }
   .char-cols h3 {
     margin-top: 10px;
@@ -40,24 +69,27 @@
   .vendor-headers-background {
     display: none;
     position: fixed;
-    height: 90px;
+    height: 123px;
     left: 0;
     width: 100%;
     top: 50px;
     background-color: #434444;
     z-index: 4;
   }
+  .vendorHeaderWrapper {
+    position: absolute;
+    top: 85px;
+    z-index: 5;
+  }
+  .vendorHeaderWrapper.sticky {
+    position:fixed;
+    top: 50px;
+  }
   .vendor-headers-background.sticky {
     display: block;
-  }
-  .vendor-headers.sticky {
-    position:fixed;
-    top: 64px;
+    box-shadow: 0 1px 6px 0px #222;
   }
   .vendor-headers {
-    position: absolute;
-    top: 142px;
-    z-index: 4;
     display: flex;
   }
   .vendor-header {
@@ -93,12 +125,24 @@
     margin-top: 4px;
     margin-left: 2px;
   }
+  .empty-cost {
+    height: 18px;
+  }
   .notenough {
     color: #CC5C58;
   }
   .modal-open {
     overflow: visible;
   }
+}
+
+.locked-overlay {
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  background-color: rgba(40,40,40,0.5);
 }
 
 .ngdialog.vendor-move-popup {

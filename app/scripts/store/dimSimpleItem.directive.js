@@ -13,6 +13,7 @@
       restrict: 'E',
       template: [
         '<div title="{{ vm.item.primStat.value }} {{:: vm.item.name }}" alt="{{ vm.item.primStat.value }} {{:: vm.item.name }}" class="item">',
+        '  <div ng-if="!vm.item.isUnlocked" class="locked-overlay"></div>',
         '  <div class="item-elem" ng-class="{ complete: vm.item.complete }">',
         '    <div class="img" ng-style="::vm.item.icon | bungieBackground">',
         '    <span ng-class="vm.item.dimInfo.tag | tagIcon"></span>',

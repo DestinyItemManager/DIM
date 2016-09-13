@@ -200,6 +200,15 @@
       return _stores;
     }
 
+    function loadStores(activePlatform, includeVendors) {
+      if (includeVendors) {
+        return $q.when(dimVendorDefinitions).then(function(vendorDefs) {
+          return dimBungieService.getStores(activePlatform, includeVendors, vendorDefs);
+        });
+      }
+      return dimBungieService.getStores(activePlatform, includeVendors);
+    }
+
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
@@ -238,7 +247,7 @@
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
                               $translate(['Vault']),
-                              dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)])
+                              loadStores(activePlatform, includeVendors)])
         .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
@@ -595,6 +604,7 @@
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
         isVendorItem: (!owner || owner.id === null),
+        isUnlocked: (!owner || owner.id === null) ? item.isUnlocked : true,
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -1162,6 +1172,10 @@
       })), 'sort');
     }
 
+    function isSaleItemUnlocked(saleItem) {
+      return _.every(saleItem.unlockStatuses, function(status) { return status.isSet; });
+    }
+
     /** New Item Tracking **/
 
     function buildItemSet(stores) {
@@ -1316,36 +1330,57 @@
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
             vendor.items = [];
             vendor.costs = [];
+            vendor.hasArmorWeaps = false;
+            vendor.hasVehicles = false;
+            vendor.hasShadersEmbs = false;
+            vendor.hasEmotes = false;
             if (vendor.enabled) {
               var items = [];
               _.each(vendor.saleItemCategories, function(categoryData) {
                 var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) {
-                  return saleItem.item.isEquipment && saleItem.costs.length;
+                  saleItem.item.isUnlocked = isSaleItemUnlocked(saleItem);
+                  return saleItem.item.isEquipment;
                 });
                 items.push(...filteredSaleItems);
               });
               vendor.items = _.pluck(items, 'item');
-
-              var costs = _.reduce(items, function(o, saleItem) {
-                o[saleItem.item.itemHash] = {
-                  cost: saleItem.costs[0].value,
-                  currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
-                };
+              vendor.costs = _.reduce(items, function(o, saleItem) {
+                if (saleItem.costs.length) {
+                  o[saleItem.item.itemHash] = {
+                    cost: saleItem.costs[0].value,
+                    currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
+                  };
+                }
                 return o;
               }, {});
-              vendor.costs = costs;
             }
             return processItems({ id: null }, vendor.items)
               .then(function(items) {
+                vendor.items = { armor: [], weapons: [], ships: [], vehicles: [], shaders: [], emblems: [], emotes: [] };
                 _.each(items, function(item) {
                   item.vendorIcon = vendor.vendorIcon;
-                });
-                vendor.items = {};
-                vendor.items.armor = _.filter(items, function(item) {
-                  return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280;
-                });
-                vendor.items.weapons = _.filter(items, function(item) {
-                  return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280;
+                  if (item.primStat && item.primStat.statHash === 3897883278) {
+                    vendor.hasArmorWeaps = true;
+                    vendor.items.armor.push(item);
+                  } else if (item.primStat && item.primStat.statHash === 368428387) {
+                    vendor.hasArmorWeaps = true;
+                    vendor.items.weapons.push(item);
+                  } else if (item.primStat && item.primStat.statHash === 1501155019) {
+                    vendor.hasVehicles = true;
+                    vendor.items.vehicles.push(item);
+                  } else if (item.type === "Ship") {
+                    vendor.hasVehicles = true;
+                    vendor.items.ships.push(item);
+                  } else if (item.type === "Emblem") {
+                    vendor.hasShadersEmbs = true;
+                    vendor.items.emblems.push(item);
+                  } else if (item.type === "Shader") {
+                    vendor.hasShadersEmbs = true;
+                    vendor.items.shaders.push(item);
+                  } else if (item.type === "Emote") {
+                    vendor.hasEmotes = true;
+                    vendor.items.emotes.push(item);
+                  }
                 });
                 return vendor;
               });
