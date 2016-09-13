@@ -45,7 +45,8 @@
           var bonus = 0;
           var total = 0;
           stats.forEach(function(stat) {
-            total += o.normalStats[stat][vm.scaleType];
+            var scaleType = (o.tier === 'Rare') ? 'base' : vm.scaleType;
+            total += o.normalStats[stat][scaleType];
             bonus = o.normalStats[stat].bonus;
           });
           return total + bonus;
@@ -72,9 +73,11 @@
         var dis = armor.item.normalStats[1735777505];
         var str = armor.item.normalStats[4244567218];
 
-        set.stats.STAT_INTELLECT.value += int[vm.scaleType];
-        set.stats.STAT_DISCIPLINE.value += dis[vm.scaleType];
-        set.stats.STAT_STRENGTH.value += str[vm.scaleType];
+        var scaleType = (armor.item.tier === 'Rare') ? 'base' : vm.scaleType;
+
+        set.stats.STAT_INTELLECT.value += int[scaleType];
+        set.stats.STAT_DISCIPLINE.value += dis[scaleType];
+        set.stats.STAT_STRENGTH.value += str[scaleType];
 
         switch (armor.bonusType) {
         case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
@@ -146,6 +149,9 @@
           return o.item.index;
         }), function(obj) {
           obj.bonusType = getBonusType(obj.item);
+          if (obj.bonusType === '') {
+            bestCombs.push({ item: obj.item, bonusType: '' });
+          }
           if (obj.bonusType.indexOf('int') > -1) {
             bestCombs.push({ item: obj.item, bonusType: 'int' });
           }
@@ -513,7 +519,6 @@
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
               ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
-              item.primStat.value >= 280 && // only 280+ light items
               item.stats;
           });
         }

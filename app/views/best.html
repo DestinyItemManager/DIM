@@ -129,7 +129,14 @@
     </p>
   </div>
   <div ng-show="!normal.highestsets">
-    <p>Missing legendary or exotic pieces to build a full set!</p>
+    <p ng-show="!normal.showBlues">Missing legendary or exotic pieces to build a full set!</p>
+    <p ng-show="normal.showBlues">Missing rare, legendary, or exotic pieces to build a full set!</p>
+    <p>
+      <label>
+        <input class="includeRares" type="checkbox" ng-model="normal.showBlues" ng-change="normal.onModeChange()">
+        <span>Include rare (blue) items</span>
+      </label>
+    </p>
   </div>
   <div ng-show="normal.progress < 1 && normal.highestsets">
     <p>Loading best sets ({{normal.progress*100 | number:2}}%)</p>
@@ -141,9 +148,9 @@
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small translate="{{setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'int'? 'Intellect': (setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Discipline' : 'Strength')}}"></small></div>
+          <div class="label"><small translate="{{setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'int'? 'Intellect': setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Discipline' : setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'str'? 'Strength' : 'No Bonus'}}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[normal.activesets].configs">
-            <small translate="{{config[armorpiece.item.type] === 'int'? 'Intellect': (config[armorpiece.item.type] === 'dis'? 'Discipline' : 'Strength')}}"></small>
+            <small translate="{{config[armorpiece.item.type] === 'int'? 'Intellect' : config[armorpiece.item.type] === 'dis'? 'Discipline' : config[armorpiece.item.type] === 'str'? 'Strength' : 'No Bonus'}}"></small>
           </div>
         </div>
       </div>
