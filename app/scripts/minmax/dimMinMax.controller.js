@@ -412,7 +412,7 @@
                               name: 'Strength'
                             }
                           },
-                          setHash: 0,
+                          setHash: 0
                         };
                         if (validSet(set.armor)) {
                           set.setHash = genSetHash(set.armor);
