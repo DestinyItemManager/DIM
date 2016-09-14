@@ -834,7 +834,9 @@
           // itemNode: node
         };
       });
-      gridNodes = _.compact(gridNodes);
+
+      // We need to unique-ify because Ornament nodes show up twice!
+      gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
 
       // This can be handy for visualization/debugging
       // var columns = _.groupBy(gridNodes, 'column');
