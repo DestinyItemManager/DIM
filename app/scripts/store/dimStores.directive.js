@@ -36,8 +36,8 @@
         '    </div>',
         '  </div>',
         '  <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
-        '    <div class="title" ng-click="vm.toggleSection(category)">',
-        '      <span><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="{{::category}}"></span></span>',
+        '    <div class="title">',
+        '      <span ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="{{::category}}"></span></span>',
         '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
         '    </div>',
         '    <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i>',
@@ -72,10 +72,21 @@
     }
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService'];
+  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService', 'dimInfoService'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService) {
+  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService) {
     var vm = this;
+
+    // Only show this once per session
+    const didYouKnow = _.once(() => {
+      dimInfoService.show('collapsed', {
+        title: 'Did you know?',
+        body: [
+          '<p>You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don\'t need to normally use.</p>',
+          '<p>To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.<p>'].join(''),
+        hide: 'Don\'t show this tip again'
+      });
+    });
 
     vm.settings = settings;
     vm.stores = dimStoreService.getStores();
@@ -85,6 +96,7 @@
       vm.buckets = angular.copy(buckets);
     });
     vm.toggleSection = function(id) {
+      didYouKnow();
       vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
       vm.settings.save();
     };
