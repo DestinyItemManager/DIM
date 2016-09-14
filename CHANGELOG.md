@@ -4,6 +4,7 @@
 * You can now add custom notes to items. Just type them in the box and it automatically saves the text. You can also search for notes -> notes:"god roll"
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
+* Fixed "Aim assist" stat not showing up in CSV (and no stats showing up if your language wasn't English).
 
 # 3.10.2
 
