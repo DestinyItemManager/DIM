@@ -126,29 +126,30 @@
           equipSpeed: 0
         };
         gun.stats.forEach(function(stat) {
-          switch (stat.name) {
-          case 'Aim Assist':
+          switch (stat.statHash) {
+          case 1345609583: // Aim Assist
             stats.aa = stat.value;
             break;
-          case 'Impact':
+          case 4043523819: // Impact
             stats.impact = stat.value;
             break;
-          case 'Range':
+          case 1240592695: // Range
             stats.range = stat.value;
             break;
-          case 'Stability':
+          case 155624089: // Stability
             stats.stability = stat.value;
             break;
-          case 'Rate of Fire':
+          case 4284893193: // Rate of fire
             stats.rof = stat.value;
             break;
-          case 'Reload':
+          case 4188031367: // Reload
             stats.reload = stat.value;
             break;
-          case 'Magazine':
+          case 3871231066: // Magazine
+          case 925767036: // Energy
             stats.magazine = stat.value;
             break;
-          case 'Equip Speed':
+          case 943549884: // Equip Speed
             stats.equipSpeed = stat.value;
             break;
           }
