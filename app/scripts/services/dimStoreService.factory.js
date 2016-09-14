@@ -638,7 +638,7 @@
       createdItem.index = createItemIndex(createdItem);
 
       // Moving rare masks destroys them
-      if (createdItem.isInCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
+      if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
         createdItem.notransfer = true;
       }
 
