@@ -84,7 +84,7 @@
         data += stats.Intellect ? stats.Intellect.value + ", " : "0, ";
         data += stats.Discipline ? stats.Discipline.value + ", " : "0, ";
         data += stats.Strength ? stats.Strength.value + ", " : "0, ";
-        data += (item.dimInfo && item.dimInfo.notes || '') + ", ";
+        data += ((item.dimInfo && item.dimInfo.notes) || '') + ", ";
         // if DB is out of date this can be null, can't hurt to be careful
         if (item.talentGrid) {
           data += buildNodeString(item.talentGrid.nodes);
@@ -163,7 +163,7 @@
         data += stats.reload + ", ";
         data += stats.magazine + ", ";
         data += stats.equipSpeed + ", ";
-        data += (gun.dimInfo && gun.dimInfo.notes || '') + ", ";
+        data += ((gun.dimInfo && gun.dimInfo.notes) || '') + ", ";
         // haven't seen this null yet, but can't hurt to check since we saw it on armor above
         if (gun.talentGrid) {
           data += buildNodeString(gun.talentGrid.nodes);
