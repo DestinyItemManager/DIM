@@ -79,7 +79,19 @@
           Keep: "Tenere",
           Junk: "Giunca",
           Infuse: "Infondi",
-          notes_placeholder: "Aggiungere note a questa voce"
+          notes_placeholder: "Aggiungere note a questa voce",
+          'Create Loadout': "Creare Loadout",
+          loadout_from_equipped: "Fornito",
+          'Edit Loadout': "Modifica Loadout",
+          'Delete Loadout': "Cancellare Loadout",
+          apply_search_loadout: "Elementi = \"{{query}}\"",
+          'Maximize Light': "Massimizzare la Luce",
+          'Item Leveling': "Elemento di Livellamento",
+          'Gather Engrams': "Raccogliere Engram",
+          gather_engrams_except_exotics: "Esotiche",
+          farming_mode: "Engram a Depositi (Coltura)",
+          restore_all_items: "Tutti gli Elementi",
+          Loadouts: "Loadouts"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -108,7 +120,19 @@
           Keep: "Behalten",
           Junk: "Trödel",
           Infuse: "Infundieren",
-          notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel"
+          notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel",
+          'Create Loadout': "Erstellen Ausladen",
+          loadout_from_equipped: "Ausgestattet",
+          'Edit Loadout': "Bearbeiten Ausladen",
+          'Delete Loadout': "Löschen Ausladen",
+          apply_search_loadout: "Artikel = \"{{query}}\"",
+          'Maximize Light': "Maximieren Licht",
+          'Item Leveling': "Artikel Nivellierung",
+          'Gather Engrams': "Sammeln Engramme",
+          gather_engrams_except_exotics: "Exotics",
+          farming_mode: "Engramme Tresor (Ackerbau)",
+          restore_all_items: "Alle Elemente",
+          Loadouts: "Bewaffnungen"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -138,7 +162,19 @@
           Keep: "Garder",
           Junk: "Jonque",
           Infuse: "Infuser",
-          notes_placeholder: "Ajouter des notes à cet article"
+          notes_placeholder: "Ajouter des notes à cet article",
+          'Create Loadout': "Créer Loadout",
+          loadout_from_equipped: "Equipée",
+          'Edit Loadout': "Modifier Loadout",
+          'Delete Loadout': "Effacer Loadout",
+          apply_search_loadout: "Articles = \"{{query}}\"",
+          'Maximize Light': "Maximiser la Lumière",
+          'Item Leveling': "Article Nivellement",
+          'Gather Engrams': "Recueillir des Engrammes",
+          gather_engrams_except_exotics: "Exotiques",
+          farming_mode: "Engrammes Coffres (Agriculture)",
+          restore_all_items: "Tous les Articles",
+          Loadouts: "Loadouts"
         })
         .translations('es', {
           Level: "Nivel",
@@ -167,7 +203,19 @@
           Keep: "Guardar",
           Junk: "Basura",
           Infuse: "Infundir",
-          notes_placeholder: "Agregar notas a este artículo"
+          notes_placeholder: "Agregar notas a este artículo",
+          'Create Loadout': "Crear Loadout",
+          loadout_from_equipped: "Equipado",
+          'Edit Loadout': "Editar Loadout",
+          'Delete Loadout': "Borrar Loadout",
+          apply_search_loadout: "Artículos = \"{{query}}\"",
+          'Maximize Light': "Maximizar la Luz",
+          'Item Leveling': "Nivelación Elemento",
+          'Gather Engrams': "Recopilar Engramas",
+          gather_engrams_except_exotics: "Exóticas",
+          farming_mode: "Engramas a Depósito (Agricultura)",
+          restore_all_items: "Todos los Artículos",
+          Loadouts: "Loadouts"
         })
         .translations('ja', {
           Level: "レベル",
@@ -192,7 +240,19 @@
           Keep: "保つ",
           Junk: "ジャンク",
           Infuse: "煎じる",
-          notes_placeholder: "このアイテムにメモを追加"
+          notes_placeholder: "このアイテムにメモを追加",
+          'Create Loadout': "作る Loadout",
+          loadout_from_equipped: "備える",
+          'Edit Loadout': "編集 Loadout",
+          'Delete Loadout': "削除 Loadout",
+          apply_search_loadout: "箇条 = \"{{query}}\"",
+          'Maximize Light': "ライトを最大化",
+          'Item Leveling': "アイテムの平準化",
+          'Gather Engrams': "エングラムを収集",
+          gather_engrams_except_exotics: "エキゾチック",
+          farming_mode: "エングラムは、 装備 (農業)",
+          restore_all_items: "品揃え",
+          Loadouts: "Loadouts"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -222,7 +282,19 @@
           Keep: "Guarda",
           Junk: "Lixo",
           Infuse: "Infundir",
-          notes_placeholder: "Adicionar observações a este item"
+          notes_placeholder: "Adicionar observações a este item",
+          'Create Loadout': "Crio Loadout",
+          loadout_from_equipped: "Equipado",
+          'Edit Loadout': "Editar Loadout",
+          'Delete Loadout': "Excluir Loadout",
+          apply_search_loadout: "Itens = \"{{query}}\"",
+          'Maximize Light': "Maximizar a Luz",
+          'Item Leveling': "Nivelamento Item",
+          'Gather Engrams': "Reunir Engramas",
+          gather_engrams_except_exotics: "Exóticos",
+          farming_mode: "Engramas a Cofres (Agricultura)",
+          restore_all_items: "Todos os Itens",
+          Loadouts: "Loadouts"
         })
         .fallbackLanguage('en');
     }]);
