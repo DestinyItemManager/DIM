@@ -5,6 +5,7 @@
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
 * Fixed "Aim assist" stat not showing up in CSV (and no stats showing up if your language wasn't English).
+* We now catch manifest updates that don't update the manifest version - if you see broken images, try reloading DIM and it should pick up new info.
 
 # 3.10.2
 
