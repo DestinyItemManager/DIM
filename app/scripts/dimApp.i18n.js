@@ -37,7 +37,19 @@
           Junk: "Junk",
           Infuse: "Infuse",
           notes_placeholder: "Add notes to this item",
-          before_loadout: "Before '{{name}}'"
+          before_loadout: "Before '{{name}}'",
+          'Create Loadout': "Create Loadout",
+          loadout_from_equipped: "Equipped",
+          'Edit Loadout': "Edit Loadout",
+          'Delete Loadout': "Delete Loadout",
+          apply_search_loadout: "Items = \"{{query}}\"",
+          'Maximize Light': "Maximize Light",
+          'Item Leveling': "Item Leveling",
+          'Gather Engrams': "Gather Engrams",
+          gather_engrams_except_exotics: "Exotics",
+          farming_mode: "Engrams to Vault (Farming)",
+          restore_all_items: "All Items",
+          Loadouts: "Loadouts"
         })
         .translations('it', {
           Level: "Livello",
