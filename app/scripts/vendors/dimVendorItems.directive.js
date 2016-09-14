@@ -38,7 +38,7 @@
       '     <div class="title">',
       '     {{vm.vendors[0][vendorHash].vendorName}}',
       '     <img class="vendor-icon" ng-src="{{::vm.vendors[0][vendorHash].vendorIcon | bungieIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '     <timer class="vendor-timer" ng-if="vm.vendors[0][vendorHash].nextRefreshDate[0] !== \'9\'" end-time="vm.vendors[0][vendorHash].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
       '    <div class="vendor-row">',
