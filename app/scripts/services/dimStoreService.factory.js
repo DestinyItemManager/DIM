@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimItemInfoService', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
+  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimItemInfoService', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate', 'uuid2'];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimItemInfoService, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
+  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimItemInfoService, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate, uuid2) {
     var _stores = [];
     var _idTracker = {};
 
@@ -113,6 +113,20 @@
           });
         }
         item.owner = this.id;
+      },
+      // Create a loadout from this store's equipped items
+      loadoutFromCurrentlyEquipped: function(name) {
+        return {
+          id: uuid2.newguid(),
+          classType: -1,
+          name: name,
+          items: _(this.items)
+            .chain()
+            .select((item) => item.canBeInLoadout())
+            .map((i) => angular.copy(i))
+            .groupBy((i) => i.type.toLowerCase())
+            .value()
+        };
       }
     };
 

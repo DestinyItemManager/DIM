@@ -97,7 +97,7 @@
     vm.newLoadoutFromEquipped = function newLoadout($event) {
       ngDialog.closeAll();
 
-      var loadout = filterLoadoutToEquipped(loadoutFromCurrentlyEquipped(vm.store.items, ""));
+      var loadout = filterLoadoutToEquipped(vm.store.loadoutFromCurrentlyEquipped(""));
       // We don't want to prepopulate the loadout with a bunch of cosmetic junk
       // like emblems and ships and horns.
       loadout.items = _.pick(loadout.items,
@@ -129,25 +129,6 @@
       });
     };
 
-    function loadoutFromCurrentlyEquipped(items, name) {
-      return {
-        classType: -1,
-        name: name,
-        items: _(items)
-          .chain()
-          .select(function(item) {
-            return item.canBeInLoadout();
-          })
-          .map(function(i) {
-            return angular.copy(i);
-          })
-          .groupBy(function(i) {
-            return i.type.toLowerCase();
-          })
-          .value()
-      };
-    }
-
     function filterLoadoutToEquipped(loadout) {
       var filteredLoadout = angular.copy(loadout);
       filteredLoadout.items = _.mapObject(filteredLoadout.items, function(items) {
@@ -160,24 +141,13 @@
       ngDialog.closeAll();
       dimEngramFarmingService.stop();
 
-      if (!dimLoadoutService.previousLoadouts[vm.store.id]) {
-        dimLoadoutService.previousLoadouts[vm.store.id] = [];
-      }
-
-      if (!vm.store.isVault) {
-        if (loadout === vm.previousLoadout) {
-          vm.previousLoadout = dimLoadoutService.previousLoadouts[vm.store.id].pop();
-        } else {
-          vm.previousLoadout = loadoutFromCurrentlyEquipped(vm.store.items, 'Before "' + loadout.name + '"');
-          dimLoadoutService.previousLoadouts[vm.store.id].push(vm.previousLoadout); // ugly hack
-        }
-      }
-
       if (filterToEquipped) {
         loadout = filterLoadoutToEquipped(loadout);
       }
 
-      dimLoadoutService.applyLoadout(vm.store, loadout);
+      dimLoadoutService.applyLoadout(vm.store, loadout, true).then(() => {
+        vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
+      });
     };
 
     // A dynamic loadout set up to level weapons and armor
