@@ -5,6 +5,7 @@
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
 * Fixed "Aim assist" stat not showing up in CSV (and no stats showing up if your language wasn't English).
+* Worked around a bug in the manifest data where Ornamenent nodes show up twice.
 
 # 3.10.2
 
