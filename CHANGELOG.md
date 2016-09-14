@@ -4,6 +4,7 @@
 * You can now add custom notes to items. Just type them in the box and it automatically saves the text. You can also search for notes -> notes:"god roll"
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
 * Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
+* We now catch manifest updates that don't update the manifest version - if you see broken images, try reloading DIM and it should pick up new info.
 
 # 3.10.2
 
