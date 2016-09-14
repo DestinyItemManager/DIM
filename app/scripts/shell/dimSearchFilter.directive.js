@@ -58,6 +58,8 @@
       dimSettingsService.itemTags.forEach(function(tag) {
         if (tag.type) {
           keywords.push("tag:" + tag.type);
+        } else {
+          keywords.push("tag:none");
         }
       });
 
@@ -396,7 +398,7 @@
         return false;
       },
       itemtags: function(predicate, item) {
-        return item.dimInfo && item.dimInfo.tag === predicate;
+        return item.dimInfo && (item.dimInfo.tag === predicate || (item.dimInfo.tag === undefined && predicate === 'none'));
       },
       notes: function(predicate, item) {
         return item.dimInfo && item.dimInfo.notes && item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
