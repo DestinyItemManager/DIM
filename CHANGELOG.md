@@ -9,6 +9,7 @@
 * Worked around a bug in the manifest data where Ornamenent nodes show up twice.
 * DIM won't allow you to move rare Masks, because that'll destroy them.
 * The "Random" auto loadout can now be un-done from the loadout menu.
+* For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
 
 # 3.10.2
 
