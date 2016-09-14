@@ -535,7 +535,6 @@
 
       if (itemDef.redacted) {
         console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
-        window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
       }
 
       if (!itemDef.itemName) {
@@ -581,10 +580,10 @@
 
       var itemType = normalBucket.type;
 
-      const categories = _.compact(itemDef.itemCategoryHashes.map((c) => {
+      const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
         const category = itemCategories[c];
         return category ? category.identifier : null;
-      }));
+      })) : [];
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
