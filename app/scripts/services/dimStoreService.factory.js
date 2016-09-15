@@ -525,24 +525,28 @@
     function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = definitions[item.itemHash];
       // Missing definition?
-      if (!itemDef || itemDef.itemName === 'Classified') {
+      if (!itemDef) {
         // maybe it is classified...
         itemDef = {
-          classified: true,
-          icon: '/img/misc/missing_icon.png'
+          itemName: "Missing Item",
+          redacted: true
         };
-
-        // unidentified item.
-        if (!itemDef.itemName) {
-          if (!itemDef) {
-            dimManifestService.warnMissingDefinition();
-          }
-          console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
-          window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
-        }
+        dimManifestService.warnMissingDefinition();
       }
 
-      if (!itemDef.itemTypeName || !itemDef.itemName) {
+      if (!itemDef.icon) {
+        itemDef.icon = '/img/misc/missing_icon.png';
+      }
+
+      if (!itemDef.itemTypeName) {
+        itemDef.itemTypeName = 'Unknown';
+      }
+
+      if (itemDef.redacted) {
+        console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+      }
+
+      if (!itemDef.itemName) {
         return null;
       }
 
@@ -585,10 +589,10 @@
 
       var itemType = normalBucket.type;
 
-      const categories = _.compact(itemDef.itemCategoryHashes.map((c) => {
+      const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
         const category = itemCategories[c];
         return category ? category.identifier : null;
-      }));
+      })) : [];
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -632,7 +636,7 @@
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
-        classified: itemDef.classified
+        classified: itemDef.redacted
       });
 
       createdItem.index = createItemIndex(createdItem);
