@@ -208,7 +208,7 @@
       }
 
       scope.$watch('vm.item.quality', function() {
-        vm.badgeClassNames['item-stat-no-bg'] = (vm.item.quality && vm.item.quality.min > 0);
+        vm.badgeClassNames['item-stat-no-bg'] = vm.item.quality;
       });
     }
   }
