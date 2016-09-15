@@ -209,9 +209,9 @@
           'Tag Item': "Item de Tag",
           tier_progress: "{{progress}} por {{tier}}",
           Vanguard: "Vanguarda",
+          Vault: "Cofres",
           Vendors: "Vendedores",
           Weapons: "Armas"
-          Vault: "Cofres",
         })
         .fallbackLanguage('en');
     }]);
