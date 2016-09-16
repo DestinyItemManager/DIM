@@ -1,12 +1,12 @@
 <div ng-controller="dimSettingsCtrl as vm">
-  <h1>Settings</h1>
+  <h1 translate="Settings">Settings</h1>
   <div class="ngdialog-inner-content">
 <!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
   <form class="settings">
     <table>
       <tr>
         <td>
-          <label for="language">Language (reload DIM to take effect)</label>
+          <label for="language" translate="Language">Language (reload DIM to take effect)</label>
         </td>
         <td>
           <select id="language" ng-model="vm.settings.language" ng-options="code as name for (code, name) in vm.languageOptions" required></select>
