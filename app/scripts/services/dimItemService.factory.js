@@ -112,7 +112,9 @@
 
       if (equip) {
         var equipped = _.find(target.buckets[item.location.id], { equipped: true });
-        equipped.equipped = false;
+        if (equipped) {
+          equipped.equipped = false;
+        }
         item.equipped = true;
       }
 

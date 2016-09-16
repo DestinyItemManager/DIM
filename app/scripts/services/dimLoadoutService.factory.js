@@ -181,13 +181,13 @@
     }
 
     // A special getItem that takes into account the fact that
-    // subclasses have unique IDs.
+    // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
     function getLoadoutItem(pseudoItem, store) {
       var item = dimItemService.getItem(pseudoItem);
-      if (item.type === 'Class') {
+      if (_.contains(['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'], item.type)) {
         item = _.find(store.items, {
           hash: pseudoItem.hash
-        });
+        }) || item;
       }
       return item;
     }

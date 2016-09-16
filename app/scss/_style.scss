@@ -1488,7 +1488,7 @@ g {
     border-top: solid 1px #151515;
   }
 
-  span:first-child {
+  > span:first-child {
     flex: 1;
     padding: 0 10px;
     overflow: hidden;
@@ -1504,7 +1504,7 @@ g {
     }
   }
 
-  span:not(:first-child) {
+  > span:not(:first-child) {
     padding: 0 12px;
     text-align: center;
     color: #888;
