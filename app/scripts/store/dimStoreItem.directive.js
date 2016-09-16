@@ -29,7 +29,7 @@
     .filter('bungieBackground', function() {
       return function backgroundImage(value) {
         return {
-          'background-image': 'url(https://bungie.net' + value + ')'
+          'background-image': 'url(https://www.bungie.net' + value + ')'
         };
       };
     })

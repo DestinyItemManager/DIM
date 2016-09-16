@@ -3,7 +3,7 @@ Destiny Item Manager (DIM) lets [Destiny](http://destinythegame.com/)  game play
 
 Loadouts give players the ability to define sets of items that they want on their Guardians. When a loadout is selected, DIM will move all of the items referenced by the Loadout to a Guardian. If the item was equipped by another guardian, the Loadouts feature will replace that item with a similar item, if possible, to allow the Loadout referenced item to be transfered. With a single click of a button, you can have a PVP, PVE, or Raid-ready guardian.
 
-DIM is based on the same services used by the Destiny Companion app to move and equip items. DIM will never ask for your credentials to [Bungie.net](http;//bungie.net).  Once logged into Bungie.net, DIM will be able to see your Guardians inventory and Vault.  Once you logout of Bungie, DIM will no longer have access to your Guardians or Vault.
+DIM is based on the same services used by the Destiny Companion app to move and equip items. DIM will never ask for your credentials to [Bungie.net](https://www.bungie.net).  Once logged into Bungie.net, DIM will be able to see your Guardians inventory and Vault.  Once you logout of Bungie, DIM will no longer have access to your Guardians or Vault.
 
 DIM will not be able to dismantle any of your items.
 
