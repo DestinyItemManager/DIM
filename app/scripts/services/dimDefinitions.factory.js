@@ -1,43 +1,47 @@
 (function(angular) {
   'use strict';
 
-  // These define all the different definition objects, each one of
-  // which will be a Promise for the data they contain. Data files are
-  // in scripts/api-manifest and have a .json extension. Definition
-  // objects will be named dim<Name>Definitions.
-
   const files = {
     Years: 'year1'
   };
 
-  const lazyTables = {
-    Item: 'InventoryItem',
-    Objective: 'Objective',
-    SandboxPerk: 'SandboxPerk',
-    Stat: 'Stat',
-    Talent: 'TalentGrid',
-    Progression: 'Progression',
-    Records: 'Record',
-    ItemCategory: 'ItemCategory'
-  };
+  const lazyTables = [
+    'InventoryItem',
+    'Objective',
+    'SandboxPerk',
+    'Stat',
+    'TalentGrid',
+    'Progression',
+    'Record',
+    'ItemCategory'
+  ];
 
-  const eagerTables = {
-    ItemBucket: 'InventoryBucket',
-    Class: 'Class',
-    Race: 'Race',
-    Faction: 'Faction',
-    Vendor: 'Vendor'
-  };
+  const eagerTables = [
+    'InventoryBucket',
+    'Class',
+    'Race',
+    'Faction',
+    'Vendor'
+  ];
 
-  var mod = angular.module('dimApp');
+  const mod = angular.module('dimApp');
 
-  // Load objects that lazily load their properties from the sqlite DB.
-  _.each(lazyTables, function(tableShort, name) {
-    var factory = function(dimManifestService, $q) {
-      return dimManifestService.getManifest()
-        .then(function(db) {
+  mod.factory('dimDefinitions', Definitions);
+
+  /**
+   * Manifest database definitions. This returns a promise for an
+   * objet that has a property named after each of the tables listed
+   * above (defs.TalentGrid, etc.).
+   */
+  function Definitions($q, dimManifestService) {
+    return dimManifestService.getManifest()
+      .then(function(db) {
+        const defs = {};
+
+        // Load objects that lazily load their properties from the sqlite DB.
+        lazyTables.forEach(function(tableShort) {
           const table = `Destiny${tableShort}Definition`;
-          return new Proxy({}, {
+          defs[tableShort] = new Proxy({}, {
             get: function(target, name) {
               if (name === 'then') {
                 return undefined;
@@ -51,33 +55,26 @@
               return val;
             }
           });
-        })
-        .catch(function(e) {
-          console.error(e);
-          return $q.reject(e);
         });
-    };
-    factory.$inject = ['dimManifestService', '$q'];
-    mod.factory(`dim${name}Definitions`, factory);
-  });
 
-  // Resources that need to be fully loaded (because they're iterated over)
-  _.each(eagerTables, function(tableShort, name) {
-    var factory = function(dimManifestService, $q) {
-      return dimManifestService.getManifest()
-        .then(function(db) {
+        // Resources that need to be fully loaded (because they're iterated over)
+        eagerTables.forEach(function(tableShort) {
           const table = `Destiny${tableShort}Definition`;
-          return dimManifestService.getAllRecords(db, table);
-        })
-        .catch(function(e) {
-          console.error(e);
-          return $q.reject(e);
+          defs[tableShort] = dimManifestService.getAllRecords(db, table);
         });
-    };
-    factory.$inject = ['dimManifestService', '$q'];
-    mod.factory(`dim${name}Definitions`, factory);
-  });
 
+        return defs;
+      })
+      .catch(function(e) {
+        console.error(e);
+        return $q.reject(e);
+      });
+  }
+
+  /**
+   * Since we have very few of these, they are each their own promise
+   * (dimYearsDefinitions, for example).
+   */
   // Resources that come from precomputed JSON files
   _.each(files, function(file, name) {
     var factory = function($http, $q) {
