@@ -36,7 +36,8 @@
           Keep: "Keep",
           Junk: "Junk",
           Infuse: "Infuse",
-          notes_placeholder: "Add notes to this item"
+          notes_placeholder: "Add notes to this item",
+          before_loadout: "Before '{{name}}'"
         })
         .translations('it', {
           Level: "Livello",

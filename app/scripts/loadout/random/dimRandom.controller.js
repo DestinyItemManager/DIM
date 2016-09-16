@@ -93,7 +93,7 @@
               classType: -1,
               name: 'random',
               items: items
-            });
+            }, true);
           }
           return null;
         })
