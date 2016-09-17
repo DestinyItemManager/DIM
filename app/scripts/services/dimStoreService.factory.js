@@ -767,6 +767,7 @@
         });
       } else if (createdItem.talentGrid) {
         createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
+        createdItem.complete = createdItem.talentGrid.complete;
       }
 
       return createdItem;
@@ -904,6 +905,7 @@
       if (minColumn > 0) {
         gridNodes.forEach(function(node) { node.column -= minColumn; });
       }
+      var maxColumn = _.max(gridNodes, 'column').column;
 
       return {
         nodes: _.sortBy(gridNodes, function(node) { return node.column + (0.1 * node.row); }),
@@ -912,7 +914,8 @@
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: Boolean(ascendNode),
         ascended: Boolean(ascendNode && ascendNode.activated),
-        infusable: _.any(gridNodes, { hash: 1270552711 })
+        infusable: _.any(gridNodes, { hash: 1270552711 }),
+        complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
     }
 
