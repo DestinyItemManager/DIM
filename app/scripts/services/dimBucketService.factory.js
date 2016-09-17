@@ -43,9 +43,9 @@
       ]
     });
 
-  BucketService.$inject = ['dimItemBucketDefinitions', 'dimCategory'];
+  BucketService.$inject = ['dimDefinitions', 'dimCategory'];
 
-  function BucketService(dimItemBucketDefinitions, dimCategory) {
+  function BucketService(dimDefinitions, dimCategory) {
     // A mapping from the bucket names to DIM item types
     // Some buckets like vault and currencies have been ommitted
     var bucketToType = {
@@ -90,7 +90,7 @@
       });
     });
 
-    return dimItemBucketDefinitions.then(function(bucketDefs) {
+    return dimDefinitions.then(function(defs) {
       var buckets = {
         byHash: {}, // numeric hash -> bucket
         byId: {}, // BUCKET_LEGS -> bucket
@@ -112,7 +112,7 @@
           this.byType[this.unknown.type] = this.unknown;
         }
       };
-      _.each(bucketDefs, function(def) {
+      _.each(defs.InventoryBucket, function(def) {
         if (def.enabled) {
           var bucket = {
             id: def.bucketIdentifier,

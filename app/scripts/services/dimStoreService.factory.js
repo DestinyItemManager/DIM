@@ -4,9 +4,43 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimItemInfoService', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate', 'uuid2'];
+  StoreService.$inject = [
+    '$rootScope',
+    '$q',
+    'dimBungieService',
+    'dimPlatformService',
+    'dimSettingsService',
+    'dimCategory',
+    'dimDefinitions',
+    'dimBucketService',
+    'dimYearsDefinitions',
+    'dimItemInfoService',
+    'dimInfoService',
+    'SyncService',
+    'loadingTracker',
+    'dimManifestService',
+    '$translate',
+    'uuid2'
+  ];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimItemInfoService, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate, uuid2) {
+  function StoreService(
+    $rootScope,
+    $q,
+    dimBungieService,
+    dimPlatformService,
+    dimSettingsService,
+    dimCategory,
+    dimDefinitions,
+    dimBucketService,
+    dimYearsDefinitions,
+    dimItemInfoService,
+    dimInfoService,
+    SyncService,
+    loadingTracker,
+    dimManifestService,
+    $translate,
+    uuid2
+  ) {
     var _stores = [];
     var _idTracker = {};
 
@@ -74,15 +108,15 @@
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
-        dimStatDefinitions.then((statDefs) => this.updateCharacterInfo(statDefs, characterInfo));
+        dimDefinitions.then((defs) => this.updateCharacterInfo(defs.Stat, characterInfo));
       },
-      updateCharacterInfo: function(statDefs, characterInfo) {
+      updateCharacterInfo: function(defs, characterInfo) {
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'https://www.bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'https://www.bungie.net/' + characterInfo.emblemPath;
-        this.stats = getStatsData(statDefs, characterInfo.characterBase);
+        this.stats = getStatsData(defs.Stat, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
@@ -193,13 +227,13 @@
     // items in the stores - to do that, call reloadStores.
     function updateCharacters() {
       return $q.all([
-        dimStatDefinitions,
+        dimDefinitions,
         dimBungieService.getCharacters(dimPlatformService.getActive())
-      ]).then(function([statDefs, bungieStores]) {
+      ]).then(function([defs, bungieStores]) {
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
-            dStore.updateCharacterInfo(statDefs, bStore.base);
+            dStore.updateCharacterInfo(defs, bStore.base);
           }
         });
         return _stores;
@@ -216,8 +250,8 @@
 
     function loadStores(activePlatform, includeVendors) {
       if (includeVendors) {
-        return $q.when(dimVendorDefinitions).then(function(vendorDefs) {
-          return dimBungieService.getStores(activePlatform, includeVendors, vendorDefs);
+        return $q.when(dimDefinitions).then(function(defs) {
+          return dimBungieService.getStores(activePlatform, includeVendors, defs.Vendor);
         });
       }
       return dimBungieService.getStores(activePlatform, includeVendors);
@@ -252,17 +286,13 @@
       }
 
       console.time('Load stores (Bungie API)');
-      _reloadPromise = $q.all([dimProgressionDefinitions,
-                              dimFactionDefinitions,
+      _reloadPromise = $q.all([dimDefinitions,
                               dimBucketService,
-                              dimClassDefinitions,
-                              dimRaceDefinitions,
-                              dimStatDefinitions,
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
                               $translate(['Vault']),
                               loadStores(activePlatform, includeVendors)])
-        .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, itemInfoService, translations, rawStores]) {
+        .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -361,7 +391,7 @@
                 marks = 0;
               }
 
-              const race = races[character.characterBase.raceHash];
+              const race = defs.Race[character.characterBase.raceHash];
               let genderRace = "";
               if (character.characterBase.genderType === 0) {
                 genderRace = race.raceNameMale;
@@ -377,9 +407,9 @@
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
-                stats: getStatsData(statDefs, character.characterBase),
+                stats: getStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
-                className: classes[character.characterBase.classHash].className,
+                className: defs.Class[character.characterBase.classHash].className,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
@@ -398,8 +428,8 @@
 
               if (store.progression) {
                 store.progression.progressions.forEach(function(prog) {
-                  angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
-                  const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
+                  angular.extend(prog, defs.Progression[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                  const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
                   if (faction) {
                     prog.faction = faction;
                   }
@@ -536,8 +566,8 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, itemInfoService, item, owner) {
-      var itemDef = definitions[item.itemHash];
+    function processSingleItem(defs, buckets, yearsDefs, previousItems, newItems, itemInfoService, item, owner) {
+      var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
         // maybe it is classified...
@@ -604,7 +634,7 @@
       var itemType = normalBucket.type;
 
       const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-        const category = itemCategories[c];
+        const category = defs.ItemCategory[c];
         return category ? category.identifier : null;
       })) : [];
 
@@ -618,7 +648,7 @@
         hash: item.itemHash,
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        categories: categories, // see dimItemCategoryDefinitions
+        categories: categories, // see defs.ItemCategory
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
         isVendorItem: (!owner || owner.id === null),
@@ -661,7 +691,7 @@
       }
 
       if (createdItem.primStat) {
-        createdItem.primStat.stat = statDef[createdItem.primStat.statHash];
+        createdItem.primStat.stat = defs.Stat[createdItem.primStat.statHash];
       }
 
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -681,17 +711,17 @@
       }
 
       try {
-        createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs);
+        createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
       } catch (e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef, e);
       }
       try {
-        createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
+        createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
       } catch (e) {
         console.error("Error building stats for " + createdItem.name, item, itemDef, e);
       }
       try {
-        createdItem.objectives = buildObjectives(item.objectives, objectiveDef);
+        createdItem.objectives = buildObjectives(item.objectives, defs.Objective);
       } catch (e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef, e);
       }
@@ -708,12 +738,12 @@
         try {
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
-          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(recordsDefs[record.recordHash], record));
+          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(defs.Record[record.recordHash], record));
 
-          createdItem.objectives = buildRecords(recordBook, objectiveDef);
+          createdItem.objectives = buildRecords(recordBook, defs.Objective);
 
           if (recordBook.progression) {
-            recordBook.progression = angular.extend(recordBook.progression, progressDefs[recordBook.progression.progressionHash]);
+            recordBook.progression = angular.extend(recordBook.progression, defs.Progression[recordBook.progression.progressionHash]);
             createdItem.progress = recordBook.progression;
             createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step.progressTotal, 0);
           } else {
@@ -1275,16 +1305,9 @@
     function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
       _idTracker = {};
       return $q.all([
-        dimItemDefinitions,
+        dimDefinitions,
         dimBucketService,
-        dimStatDefinitions,
-        dimObjectiveDefinitions,
-        dimSandboxPerkDefinitions,
-        dimTalentDefinitions,
         dimYearsDefinitions,
-        dimProgressionDefinitions,
-        dimRecordsDefinitions,
-        dimItemCategoryDefinitions,
         previousItems,
         newItems,
         itemInfoService])
@@ -1347,10 +1370,10 @@
     }
 
     function processVendors(vendors) {
-      return $q.all([dimVendorDefinitions, dimItemDefinitions])
-        .then(function([vendorDefs, itemDefs]) {
+      return dimDefinitions
+        .then(function(defs) {
           return $q.all(_.map(vendors, function(vendor, vendorHash) {
-            var def = vendorDefs[vendorHash].summary;
+            var def = defs.Vendor[vendorHash].summary;
             vendor.vendorName = def.vendorName;
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
             vendor.items = [];
@@ -1373,7 +1396,7 @@
                 if (saleItem.costs.length) {
                   o[saleItem.item.itemHash] = {
                     cost: saleItem.costs[0].value,
-                    currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
+                    currency: _.pick(defs.InventoryItem[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
                   };
                 }
                 return o;
