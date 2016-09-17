@@ -10,6 +10,10 @@
     var _loadouts = [];
     var _previousLoadouts = {}; // by character ID
 
+    $rootScope.$on('dim-active-platform-updated', function() {
+      _loadouts.splice(0);
+    });
+
     return {
       dialogOpen: false,
       getLoadouts: getLoadouts,
@@ -53,6 +57,8 @@
         _loadouts = _loadouts.splice(0);
       }
     }
+
+
 
     function getLoadouts(getLatest) {
       var deferred = $q.defer();
