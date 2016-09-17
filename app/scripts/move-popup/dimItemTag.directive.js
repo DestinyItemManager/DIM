@@ -18,7 +18,7 @@
     var vm = this;
 
     vm.settings = dimSettingsService;
-    $scope.$watch(() => vm.item.dimInfo.tag, function() {
+    $scope.$watch('$ctrl.item.dimInfo.tag', function() {
       vm.selected = _.find(vm.settings.itemTags, function(tag) {
         return tag.type === vm.item.dimInfo.tag;
       });
