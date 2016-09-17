@@ -10,6 +10,7 @@
 * DIM won't allow you to move rare Masks, because that'll destroy them.
 * The "Random" auto loadout can now be un-done from the loadout menu.
 * For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
+* We handle manifest download/cache errors better, by deleting the cached file and letting you retry.
 
 # 3.10.2
 
