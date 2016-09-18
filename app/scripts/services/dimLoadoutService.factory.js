@@ -442,7 +442,7 @@
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v3.0',
         items: {
-          'unknown': []
+          unknown: []
         }
       };
 
@@ -483,7 +483,7 @@
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v3.0',
         items: {
-          'unknown': []
+          unknown: []
         }
       };
 
@@ -508,7 +508,7 @@
             equipped: itemPrimitive.equipped
           };
 
-          result.items['unknown'].push(item);
+          result.items.unknown.push(item);
         }
       });
 
@@ -522,7 +522,7 @@
         classType: -1,
         version: 'v3.0',
         items: {
-          'unknown': []
+          unknown: []
         }
       };
 
@@ -544,7 +544,7 @@
             equipped: itemPrimitive.equipped
           };
 
-          result.items['unknown'].push(item);
+          result.items.unknown.push(item);
         }
       });
 
