@@ -61,14 +61,17 @@
               })
               .then(function(typedArray) {
                 service.statusText = 'Building Destiny info database...';
-                return new SQL.Database(typedArray);
+                const db = new SQL.Database(typedArray);
+                // do a small request, just to test it out
+                service.getAllRecords(db, 'DestinyRaceDefinition');
+                return db;
               });
           })
           .catch((e) => {
             service.statusText = "Error loading Destiny info: " + e.message + ". Reload to retry.";
             manifestPromise = null;
             service.isError = true;
-            return $q.reject(e);
+            return deleteManifestFile().finally(() => $q.reject(e));
           });
 
         return manifestPromise;
@@ -150,6 +153,15 @@
       });
     }
 
+    function deleteManifestFile() {
+      localStorage.removeItem('manifest-version');
+      getLocalManifestFile().then((fileEntry) => {
+        return $q((resolve, reject) => {
+          fileEntry.remove(resolve, reject);
+        });
+      });
+    }
+
     /**
      * Returns a promise for the cached manifest of the specified
      * version as a Uint8Array, or rejects.
@@ -172,7 +184,7 @@
               fileEntry.file((file) => {
                 var reader = new FileReader();
                 reader.addEventListener("error", (e) => { reject(e); });
-                reader.addEventListener("loadend", () => {
+                reader.addEventListener("load", () => {
                   var typedArray = new Uint8Array(reader.result);
                   if (typedArray.length) {
                     resolve(typedArray);
@@ -204,7 +216,7 @@
               entries[0].getData(new zip.BlobWriter(), function(blob) {
                 var blobReader = new FileReader();
                 blobReader.addEventListener("error", (e) => { reject(e); });
-                blobReader.addEventListener("loadend", function() {
+                blobReader.addEventListener("load", function() {
                   zipReader.close(function() {
                     resolve(blobReader.result);
                   });
