@@ -10,6 +10,7 @@
 * DIM won't allow you to move rare Masks, because that'll destroy them.
 * The "Random" auto loadout can now be un-done from the loadout menu.
 * For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
+* Items that are complete but do not have an ornament get a gold border just like in the game.
 
 # 3.10.2
 
