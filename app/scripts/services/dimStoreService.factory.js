@@ -4,9 +4,43 @@
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimPlatformService', 'dimSettingsService', 'dimCategory', 'dimItemDefinitions', 'dimVendorDefinitions', 'dimBucketService', 'dimStatDefinitions', 'dimObjectiveDefinitions', 'dimTalentDefinitions', 'dimSandboxPerkDefinitions', 'dimYearsDefinitions', 'dimProgressionDefinitions', 'dimRecordsDefinitions', 'dimItemCategoryDefinitions', 'dimClassDefinitions', 'dimRaceDefinitions', 'dimFactionDefinitions', 'dimItemInfoService', 'dimInfoService', 'SyncService', 'loadingTracker', 'dimManifestService', '$translate'];
+  StoreService.$inject = [
+    '$rootScope',
+    '$q',
+    'dimBungieService',
+    'dimPlatformService',
+    'dimSettingsService',
+    'dimCategory',
+    'dimDefinitions',
+    'dimBucketService',
+    'dimYearsDefinitions',
+    'dimItemInfoService',
+    'dimInfoService',
+    'SyncService',
+    'loadingTracker',
+    'dimManifestService',
+    '$translate',
+    'uuid2'
+  ];
 
-  function StoreService($rootScope, $q, dimBungieService, dimPlatformService, dimSettingsService, dimCategory, dimItemDefinitions, dimVendorDefinitions, dimBucketService, dimStatDefinitions, dimObjectiveDefinitions, dimTalentDefinitions, dimSandboxPerkDefinitions, dimYearsDefinitions, dimProgressionDefinitions, dimRecordsDefinitions, dimItemCategoryDefinitions, dimClassDefinitions, dimRaceDefinitions, dimFactionDefinitions, dimItemInfoService, dimInfoService, SyncService, loadingTracker, dimManifestService, $translate) {
+  function StoreService(
+    $rootScope,
+    $q,
+    dimBungieService,
+    dimPlatformService,
+    dimSettingsService,
+    dimCategory,
+    dimDefinitions,
+    dimBucketService,
+    dimYearsDefinitions,
+    dimItemInfoService,
+    dimInfoService,
+    SyncService,
+    loadingTracker,
+    dimManifestService,
+    $translate,
+    uuid2
+  ) {
     var _stores = [];
     var _idTracker = {};
 
@@ -74,15 +108,15 @@
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
-        dimStatDefinitions.then((statDefs) => this.updateCharacterInfo(statDefs, characterInfo));
+        dimDefinitions.then((defs) => this.updateCharacterInfo(defs.Stat, characterInfo));
       },
-      updateCharacterInfo: function(statDefs, characterInfo) {
+      updateCharacterInfo: function(defs, characterInfo) {
         this.level = characterInfo.characterLevel;
         this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
         this.powerLevel = characterInfo.characterBase.powerLevel;
-        this.background = 'https://bungie.net/' + characterInfo.backgroundPath;
-        this.icon = 'https://bungie.net/' + characterInfo.emblemPath;
-        this.stats = getStatsData(statDefs, characterInfo.characterBase);
+        this.background = 'https://www.bungie.net/' + characterInfo.backgroundPath;
+        this.icon = 'https://www.bungie.net/' + characterInfo.emblemPath;
+        this.stats = getStatsData(defs.Stat, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
@@ -113,6 +147,20 @@
           });
         }
         item.owner = this.id;
+      },
+      // Create a loadout from this store's equipped items
+      loadoutFromCurrentlyEquipped: function(name) {
+        return {
+          id: uuid2.newguid(),
+          classType: -1,
+          name: name,
+          items: _(this.items)
+            .chain()
+            .select((item) => item.canBeInLoadout())
+            .map((i) => angular.copy(i))
+            .groupBy((i) => i.type.toLowerCase())
+            .value()
+        };
       }
     };
 
@@ -179,13 +227,13 @@
     // items in the stores - to do that, call reloadStores.
     function updateCharacters() {
       return $q.all([
-        dimStatDefinitions,
+        dimDefinitions,
         dimBungieService.getCharacters(dimPlatformService.getActive())
-      ]).then(function([statDefs, bungieStores]) {
+      ]).then(function([defs, bungieStores]) {
         _.each(_stores, function(dStore) {
           if (!dStore.isVault) {
             var bStore = _.findWhere(bungieStores, { id: dStore.id });
-            dStore.updateCharacterInfo(statDefs, bStore.base);
+            dStore.updateCharacterInfo(defs, bStore.base);
           }
         });
         return _stores;
@@ -198,6 +246,15 @@
 
     function getStores() {
       return _stores;
+    }
+
+    function loadStores(activePlatform, includeVendors) {
+      if (includeVendors) {
+        return $q.when(dimDefinitions).then(function(defs) {
+          return dimBungieService.getStores(activePlatform, includeVendors, defs.Vendor);
+        });
+      }
+      return dimBungieService.getStores(activePlatform, includeVendors);
     }
 
     // Returns a promise for a fresh view of the stores and their items.
@@ -229,17 +286,13 @@
       }
 
       console.time('Load stores (Bungie API)');
-      _reloadPromise = $q.all([dimProgressionDefinitions,
-                              dimFactionDefinitions,
+      _reloadPromise = $q.all([dimDefinitions,
                               dimBucketService,
-                              dimClassDefinitions,
-                              dimRaceDefinitions,
-                              dimStatDefinitions,
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
                               $translate(['Vault']),
-                              dimBungieService.getStores(dimPlatformService.getActive(), includeVendors)])
-        .then(function([progressionDefs, factionDefs, buckets, classes, races, statDefs, newItems, itemInfoService, translations, rawStores]) {
+                              loadStores(activePlatform, includeVendors)])
+        .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -338,7 +391,7 @@
                 marks = 0;
               }
 
-              const race = races[character.characterBase.raceHash];
+              const race = defs.Race[character.characterBase.raceHash];
               let genderRace = "";
               if (character.characterBase.genderType === 0) {
                 genderRace = race.raceNameMale;
@@ -348,15 +401,15 @@
 
               store = angular.extend(Object.create(StoreProto), {
                 id: raw.id,
-                icon: 'https://bungie.net/' + character.emblemPath,
+                icon: 'https://www.bungie.net/' + character.emblemPath,
                 current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
-                stats: getStatsData(statDefs, character.characterBase),
+                stats: getStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
-                className: classes[character.characterBase.classHash].className,
+                className: defs.Class[character.characterBase.classHash].className,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
@@ -375,8 +428,8 @@
 
               if (store.progression) {
                 store.progression.progressions.forEach(function(prog) {
-                  angular.extend(prog, progressionDefs[prog.progressionHash], progressionMeta[prog.progressionHash]);
-                  const faction = _.find(factionDefs, { progressionHash: prog.progressionHash });
+                  angular.extend(prog, defs.Progression[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                  const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
                   if (faction) {
                     prog.faction = faction;
                   }
@@ -513,27 +566,31 @@
       return index;
     }
 
-    function processSingleItem(definitions, buckets, statDef, objectiveDef, perkDefs, talentDefs, yearsDefs, progressDefs, recordsDefs, itemCategories, previousItems, newItems, itemInfoService, item, owner) {
-      var itemDef = definitions[item.itemHash];
+    function processSingleItem(defs, buckets, yearsDefs, previousItems, newItems, itemInfoService, item, owner) {
+      var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
-      if (!itemDef || itemDef.itemName === 'Classified') {
+      if (!itemDef) {
         // maybe it is classified...
         itemDef = {
-          classified: true,
-          icon: '/img/misc/missing_icon.png'
+          itemName: "Missing Item",
+          redacted: true
         };
-
-        // unidentified item.
-        if (!itemDef.itemName) {
-          if (!itemDef) {
-            dimManifestService.warnMissingDefinition();
-          }
-          console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
-          window.onerror("Missing Item Definition - " + JSON.stringify(_.pick(item, 'canEquip', 'cannotEquipReason', 'equipRequiredLevel', 'isEquipment', 'itemHash', 'location', 'stackSize', 'talentGridHash')), 'dimStoreService.factory.js', 491, 11);
-        }
+        dimManifestService.warnMissingDefinition();
       }
 
-      if (!itemDef.itemTypeName || !itemDef.itemName) {
+      if (!itemDef.icon) {
+        itemDef.icon = '/img/misc/missing_icon.png';
+      }
+
+      if (!itemDef.itemTypeName) {
+        itemDef.itemTypeName = 'Unknown';
+      }
+
+      if (itemDef.redacted) {
+        console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+      }
+
+      if (!itemDef.itemName) {
         return null;
       }
 
@@ -576,10 +633,10 @@
 
       var itemType = normalBucket.type;
 
-      const categories = _.compact(itemDef.itemCategoryHashes.map((c) => {
-        const category = itemCategories[c];
+      const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
+        const category = defs.ItemCategory[c];
         return category ? category.identifier : null;
-      }));
+      })) : [];
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
@@ -591,10 +648,11 @@
         hash: item.itemHash,
         // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
-        categories: categories, // see dimItemCategoryDefinitions
+        categories: categories, // see defs.ItemCategory
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
         isVendorItem: (!owner || owner.id === null),
+        isUnlocked: (!owner || owner.id === null) ? item.isUnlocked : true,
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -622,13 +680,18 @@
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
-        classified: itemDef.classified
+        classified: itemDef.redacted
       });
 
       createdItem.index = createItemIndex(createdItem);
 
+      // Moving rare masks destroys them
+      if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
+        createdItem.notransfer = true;
+      }
+
       if (createdItem.primStat) {
-        createdItem.primStat.stat = statDef[createdItem.primStat.statHash];
+        createdItem.primStat.stat = defs.Stat[createdItem.primStat.statHash];
       }
 
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -648,17 +711,17 @@
       }
 
       try {
-        createdItem.talentGrid = buildTalentGrid(item, talentDefs, progressDefs);
+        createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
       } catch (e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef, e);
       }
       try {
-        createdItem.stats = buildStats(item, itemDef, statDef, createdItem.talentGrid, itemType);
+        createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
       } catch (e) {
         console.error("Error building stats for " + createdItem.name, item, itemDef, e);
       }
       try {
-        createdItem.objectives = buildObjectives(item.objectives, objectiveDef);
+        createdItem.objectives = buildObjectives(item.objectives, defs.Objective);
       } catch (e) {
         console.error("Error building objectives for " + createdItem.name, item, itemDef, e);
       }
@@ -675,12 +738,12 @@
         try {
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
-          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(recordsDefs[record.recordHash], record));
+          recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(defs.Record[record.recordHash], record));
 
-          createdItem.objectives = buildRecords(recordBook, objectiveDef);
+          createdItem.objectives = buildRecords(recordBook, defs.Objective);
 
           if (recordBook.progression) {
-            recordBook.progression = angular.extend(recordBook.progression, progressDefs[recordBook.progression.progressionHash]);
+            recordBook.progression = angular.extend(recordBook.progression, defs.Progression[recordBook.progression.progressionHash]);
             createdItem.progress = recordBook.progression;
             createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step.progressTotal, 0);
           } else {
@@ -704,6 +767,7 @@
         });
       } else if (createdItem.talentGrid) {
         createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
+        createdItem.complete = createdItem.talentGrid.complete;
       }
 
       return createdItem;
@@ -824,7 +888,9 @@
           // itemNode: node
         };
       });
-      gridNodes = _.compact(gridNodes);
+
+      // We need to unique-ify because Ornament nodes show up twice!
+      gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
 
       // This can be handy for visualization/debugging
       // var columns = _.groupBy(gridNodes, 'column');
@@ -839,6 +905,7 @@
       if (minColumn > 0) {
         gridNodes.forEach(function(node) { node.column -= minColumn; });
       }
+      var maxColumn = _.max(gridNodes, 'column').column;
 
       return {
         nodes: _.sortBy(gridNodes, function(node) { return node.column + (0.1 * node.row); }),
@@ -847,7 +914,8 @@
         totalXP: Math.min(totalXPRequired, totalXP),
         hasAscendNode: Boolean(ascendNode),
         ascended: Boolean(ascendNode && ascendNode.activated),
-        infusable: _.any(gridNodes, { hash: 1270552711 })
+        infusable: _.any(gridNodes, { hash: 1270552711 }),
+        complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
     }
 
@@ -927,7 +995,7 @@
                 : (quality.min + "%-" + quality.max)) + '%';
       }
 
-      if (!stats || light.value < 280) {
+      if (!stats || !stats.length || light.value < 280) {
         return null;
       }
 
@@ -1162,6 +1230,10 @@
       })), 'sort');
     }
 
+    function isSaleItemUnlocked(saleItem) {
+      return _.every(saleItem.unlockStatuses, function(status) { return status.isSet; });
+    }
+
     /** New Item Tracking **/
 
     function buildItemSet(stores) {
@@ -1236,16 +1308,9 @@
     function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
       _idTracker = {};
       return $q.all([
-        dimItemDefinitions,
+        dimDefinitions,
         dimBucketService,
-        dimStatDefinitions,
-        dimObjectiveDefinitions,
-        dimSandboxPerkDefinitions,
-        dimTalentDefinitions,
         dimYearsDefinitions,
-        dimProgressionDefinitions,
-        dimRecordsDefinitions,
-        dimItemCategoryDefinitions,
         previousItems,
         newItems,
         itemInfoService])
@@ -1308,44 +1373,65 @@
     }
 
     function processVendors(vendors) {
-      return $q.all([dimVendorDefinitions, dimItemDefinitions])
-        .then(function([vendorDefs, itemDefs]) {
+      return dimDefinitions
+        .then(function(defs) {
           return $q.all(_.map(vendors, function(vendor, vendorHash) {
-            var def = vendorDefs[vendorHash].summary;
+            var def = defs.Vendor[vendorHash].summary;
             vendor.vendorName = def.vendorName;
             vendor.vendorIcon = def.factionIcon || def.vendorIcon;
             vendor.items = [];
             vendor.costs = [];
+            vendor.hasArmorWeaps = false;
+            vendor.hasVehicles = false;
+            vendor.hasShadersEmbs = false;
+            vendor.hasEmotes = false;
             if (vendor.enabled) {
               var items = [];
               _.each(vendor.saleItemCategories, function(categoryData) {
                 var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) {
-                  return saleItem.item.isEquipment && saleItem.costs.length;
+                  saleItem.item.isUnlocked = isSaleItemUnlocked(saleItem);
+                  return saleItem.item.isEquipment;
                 });
                 items.push(...filteredSaleItems);
               });
               vendor.items = _.pluck(items, 'item');
-
-              var costs = _.reduce(items, function(o, saleItem) {
-                o[saleItem.item.itemHash] = {
-                  cost: saleItem.costs[0].value,
-                  currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
-                };
+              vendor.costs = _.reduce(items, function(o, saleItem) {
+                if (saleItem.costs.length) {
+                  o[saleItem.item.itemHash] = {
+                    cost: saleItem.costs[0].value,
+                    currency: _.pick(defs.InventoryItem[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
+                  };
+                }
                 return o;
               }, {});
-              vendor.costs = costs;
             }
             return processItems({ id: null }, vendor.items)
               .then(function(items) {
+                vendor.items = { armor: [], weapons: [], ships: [], vehicles: [], shaders: [], emblems: [], emotes: [] };
                 _.each(items, function(item) {
                   item.vendorIcon = vendor.vendorIcon;
-                });
-                vendor.items = {};
-                vendor.items.armor = _.filter(items, function(item) {
-                  return item.primStat && item.primStat.statHash === 3897883278 && item.primStat.value >= 280;
-                });
-                vendor.items.weapons = _.filter(items, function(item) {
-                  return item.primStat && item.primStat.statHash === 368428387 && item.primStat.value >= 280;
+                  if (item.primStat && item.primStat.statHash === 3897883278) {
+                    vendor.hasArmorWeaps = true;
+                    vendor.items.armor.push(item);
+                  } else if (item.primStat && item.primStat.statHash === 368428387) {
+                    vendor.hasArmorWeaps = true;
+                    vendor.items.weapons.push(item);
+                  } else if (item.primStat && item.primStat.statHash === 1501155019) {
+                    vendor.hasVehicles = true;
+                    vendor.items.vehicles.push(item);
+                  } else if (item.type === "Ship") {
+                    vendor.hasVehicles = true;
+                    vendor.items.ships.push(item);
+                  } else if (item.type === "Emblem") {
+                    vendor.hasShadersEmbs = true;
+                    vendor.items.emblems.push(item);
+                  } else if (item.type === "Shader") {
+                    vendor.hasShadersEmbs = true;
+                    vendor.items.shaders.push(item);
+                  } else if (item.type === "Emote") {
+                    vendor.hasEmotes = true;
+                    vendor.items.emotes.push(item);
+                  }
                 });
                 return vendor;
               });

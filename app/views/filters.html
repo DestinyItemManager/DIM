@@ -211,15 +211,25 @@
       <td>Shows new items.</td>
     </tr><tr>
       <td>
-        <dim-filter-link filter="is:favorite"></dim-filter-link>
-        <dim-filter-link filter="is:keep"></dim-filter-link>
-        <dim-filter-link filter="is:delete"></dim-filter-link>
+        <dim-filter-link filter="tag:none"></dim-filter-link>
+        <dim-filter-link filter="tag:favorite"></dim-filter-link>
+        <dim-filter-link filter="tag:keep"></dim-filter-link>
+        <dim-filter-link filter="tag:junk"></dim-filter-link>
+        <dim-filter-link filter="tag:infuse"></dim-filter-link>
       </td>
       <td><ul>
+        <li>Shows items with out a tag.</li>
         <li>Shows favorite items.</li>
         <li>Shows keep items.</li>
-        <li>Shows items you wish to eventually delete.</li>
+        <li>Shows items you wish to eventually dismantle.</li>
+        <li>Shows items you wish to eventually infuse.</li>
       </ul></td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="notes:value"></dim-filter-link>
+      </td>
+      <td>Search for items that you have tagged with custom notes</td>
     </tr>
     <tr>
       <td>

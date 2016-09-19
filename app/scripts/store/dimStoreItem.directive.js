@@ -29,24 +29,28 @@
     .filter('bungieBackground', function() {
       return function backgroundImage(value) {
         return {
-          'background-image': 'url(https://bungie.net' + value + ')'
+          'background-image': 'url(https://www.bungie.net' + value + ')'
         };
       };
     })
-    .filter('tagIcon', function() {
+    .filter('tagIcon', ['dimSettingsService', function(dimSettingsService) {
+      var iconType = {};
+
+      dimSettingsService.itemTags.forEach((tag) => {
+        if (tag.type) {
+          iconType[tag.type] = tag.icon;
+        }
+      });
+
       return function tagIcon(value) {
-        const iconType = {
-          favorite: 'star',
-          keep: 'tag',
-          delete: 'ban'
-        }[value];
-        if (iconType) {
-          return "item-tag fa fa-" + iconType;
+        var icon = iconType[value];
+        if (icon) {
+          return "item-tag fa fa-" + icon;
         } else {
           return "item-tag no-tag";
         }
       };
-    });
+    }]);
 
 
   StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue'];
@@ -204,7 +208,7 @@
       }
 
       scope.$watch('vm.item.quality', function() {
-        vm.badgeClassNames['item-stat-no-bg'] = (vm.item.quality && vm.item.quality.min > 0);
+        vm.badgeClassNames['item-stat-no-bg'] = vm.item.quality;
       });
     }
   }

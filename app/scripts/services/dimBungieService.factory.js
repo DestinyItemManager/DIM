@@ -331,7 +331,7 @@
 
     /************************************************************************************************************************************/
 
-    function getStores(platform, includeVendors) {
+    function getStores(platform, includeVendors, vendorDefs) {
       var data = {
         token: null,
         membershipId: null
@@ -360,14 +360,15 @@
               .catch((e) => console.error("Failed to load advisors", e))
           ];
           if (includeVendors) {
-            promises.push(getDestinyVendors(data.token, platform, data.membershipId, data.characters));
+            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters).catch((error) => {
+              console.warn("Vendors are not able to be downloaded atm.");
+            }));
           }
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
           });
         })
         .catch(function(e) {
-
           var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
 
           toaster.pop({
@@ -539,11 +540,9 @@
       return character;
     }
 
-    function getDestinyVendors(token, platform, membershipId, characters) {
-      // Titan van, Hunter van, Warlock van, Van quart, Dead orb, Future war, New mon, Eris Morn, Cruc hand, Cruc quart, Speaker, Variks, Exotic Blue, Banner
-      var vendorHashes = ['1990950', '3003633346', '1575820975', '2668878854', '3611686524', '1821699360', '1808244981', '174528503', '3746647075', '3658200622', '2680694281', '1998812735', '3902439767', '242140165'];
+    function getDestinyVendors(vendorDefs, token, platform, membershipId, characters) {
       var promises = [];
-      _.each(vendorHashes, function(vendorHash) {
+      _.each(vendorDefs, function(vendorDef, vendorHash) {
         _.each(characters, function(character) {
           var processPB = processVendorsResponse.bind(null, character);
           promises.push(
@@ -559,7 +558,6 @@
           );
         });
       });
-
       return $q.all(promises);
     }
 

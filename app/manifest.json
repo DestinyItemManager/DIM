@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Destiny Item Manager",
-  "version": "3.10.2",
+  "version": "3.10.5",
   "description": "Robust interface to manage gear, weapons, and items in Destiny.",
   "icons": {
     "16": "icon16.png",

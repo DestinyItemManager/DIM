@@ -28,8 +28,11 @@
       warnMissingDefinition: _.debounce(function() {
         dimBungieService.getManifest()
           .then(function(data) {
+            const language = dimSettingsService.language;
+            const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+
             // The manifest has updated!
-            if (data.version !== service.version) {
+            if (path !== service.version) {
               toaster.pop('error', 'Outdated Destiny Info', "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.");
             }
           });
@@ -44,26 +47,31 @@
 
         manifestPromise = dimBungieService.getManifest()
           .then(function(data) {
-            var version = data.version;
+            const language = dimSettingsService.language;
+            const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+
+            // Use the path as the version, rather than the "version" field, because
+            // Bungie can update the manifest file without changing that version.
+            const version = path;
             service.version = version;
 
-            const language = dimSettingsService.language;
-
-            return loadManifestFromCache(version, language)
+            return loadManifestFromCache(version)
               .catch(function(e) {
-                var path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
                 return loadManifestRemote(version, language, path);
               })
               .then(function(typedArray) {
                 service.statusText = 'Building Destiny info database...';
-                return new SQL.Database(typedArray);
+                const db = new SQL.Database(typedArray);
+                // do a small request, just to test it out
+                service.getAllRecords(db, 'DestinyRaceDefinition');
+                return db;
               });
           })
           .catch((e) => {
             service.statusText = "Error loading Destiny info: " + e.message + ". Reload to retry.";
             manifestPromise = null;
             service.isError = true;
-            return $q.reject(e);
+            return deleteManifestFile().finally(() => $q.reject(e));
           });
 
         return manifestPromise;
@@ -115,7 +123,7 @@
                   if (fileWriter.length === 0) { // truncate finished
                     fileWriter.write(new Blob([arraybuffer], { type: "application/octet-stream" }));
                   } else { // blob write finished
-                    localStorage.setItem('manifest-version', version + '-' + language);
+                    localStorage.setItem('manifest-version', version);
                     console.log("Sucessfully stored " + fileWriter.length + " byte manifest file.");
                     _gaq.push(['_trackEvent', 'Manifest', 'Downloaded']);
                   }
@@ -145,18 +153,27 @@
       });
     }
 
+    function deleteManifestFile() {
+      localStorage.removeItem('manifest-version');
+      getLocalManifestFile().then((fileEntry) => {
+        return $q((resolve, reject) => {
+          fileEntry.remove(resolve, reject);
+        });
+      });
+    }
+
     /**
      * Returns a promise for the cached manifest of the specified
      * version as a Uint8Array, or rejects.
      */
-    function loadManifestFromCache(version, language) {
+    function loadManifestFromCache(version) {
       if (alwaysLoadRemote) {
         return $q.reject(new Error("Testing - always load remote"));
       }
 
       service.statusText = "Loading saved Destiny info...";
       var currentManifestVersion = localStorage.getItem('manifest-version');
-      if (currentManifestVersion === (version + '-' + language)) {
+      if (currentManifestVersion === version) {
         // One version of this used chrome.storage.local with a
         // base64-encoded string, which is a bit slower. We may need
         // to do that again if the requestFileSystem API gets
@@ -167,7 +184,7 @@
               fileEntry.file((file) => {
                 var reader = new FileReader();
                 reader.addEventListener("error", (e) => { reject(e); });
-                reader.addEventListener("loadend", () => {
+                reader.addEventListener("load", () => {
                   var typedArray = new Uint8Array(reader.result);
                   if (typedArray.length) {
                     resolve(typedArray);
@@ -181,7 +198,7 @@
           });
       } else {
         _gaq.push(['_trackEvent', 'Manifest', 'Need New Manifest']);
-        return $q.reject(new Error("version mismatch: " + (version + '-' + language) + ' ' + currentManifestVersion));
+        return $q.reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
       }
     }
 
@@ -199,7 +216,7 @@
               entries[0].getData(new zip.BlobWriter(), function(blob) {
                 var blobReader = new FileReader();
                 blobReader.addEventListener("error", (e) => { reject(e); });
-                blobReader.addEventListener("loadend", function() {
+                blobReader.addEventListener("load", function() {
                   zipReader.close(function() {
                     resolve(blobReader.result);
                   });

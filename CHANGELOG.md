@@ -1,7 +1,24 @@
-# Next
+# 3.10.5
 
-* You can now mark items as "favorite", "keep" or "delete". There are corresponding search filters.
+* Added Ornaments.
+
+# 3.10.4
+
+* We handle manifest download/cache errors better, by deleting the cached file and letting you retry.
+* Date armor ratings end is on 9/20/2016 @ 2AM Pacific.
+* Fixed issues with broken images by downloading from Bungie.net with https.
+* Loadouts for multi-platform users will now save selected and equipped items for both platforms.  Previously, when switching platforms, loadouts would remove items from the loadout for the opposite platform.
+
+# 3.10.3
+
 * Fixed a "move-canceled" message showing up sometimes when applying loadouts.
+* Bugged items like Iron Shell no longer attempt to compute quality. They'll fix themselves when Bungie fixes them.
+* Fixed "Aim assist" stat not showing up in CSV (and no stats showing up if your language wasn't English).
+* We now catch manifest updates that don't update the manifest version - if you see broken images, try reloading DIM and it should pick up new info.
+* Worked around a bug in the manifest data where Ornamenent nodes show up twice.
+* DIM won't allow you to move rare Masks, because that'll destroy them.
+* The "Random" auto loadout can now be un-done from the loadout menu.
+* For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
 
 # 3.10.2
 

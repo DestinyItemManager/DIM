@@ -30,7 +30,7 @@
         '  <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" title="{{vm.xpTillMote}}">',
         '    <div class="barFill" dim-percent-width="vm.levelBar"></div>',
         '  </div>',
-        '  <div class="loadout-button" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
+        '  <div class="loadout-button" title="{{ \'Loadouts\' | translate }}" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
         '</div>',
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
         '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',

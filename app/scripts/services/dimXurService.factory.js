@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimXurService', XurService);
 
-  XurService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimItemDefinitions', 'dimStoreService', '$http'];
+  XurService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimDefinitions', 'dimStoreService', '$http'];
 
-  function XurService($rootScope, $q, dimBungieService, dimItemDefinitions, dimStoreService, $http) {
+  function XurService($rootScope, $q, dimBungieService, dimDefinitions, dimStoreService, $http) {
     var xurTest = false; // set this to true when you want to test but Xur's not around
     function xurTestData() {
       return $http.get('scripts/xur/xur.json')
@@ -26,7 +26,7 @@
           self.available = xurData && xurData.enabled && xurData.saleItemCategories;
 
           if (self.available) {
-            dimItemDefinitions.then(function(itemDefs) {
+            dimDefinitions.then(function(defs) {
               self.itemCategories = {};
               var rawItems = [];
               xurData.saleItemCategories.forEach(function(categoryData) {
@@ -34,7 +34,7 @@
                   rawItems.push(saleItem.item);
                   return {
                     cost: saleItem.costs[0].value,
-                    currency: _.pick(itemDefs[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash'),
+                    currency: _.pick(defs.InventoryItem[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash'),
                     itemHash: saleItem.item.itemHash
                   };
                 });

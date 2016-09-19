@@ -47,7 +47,7 @@
                 store.items.forEach((item) => {
                   const itemKey = item.hash + '-' + item.id;
                   const info = infos[itemKey];
-                  if (info) {
+                  if (info && (info.tag !== undefined || (info.notes && info.notes.length))) {
                     remain[itemKey] = info;
                   }
                 });
