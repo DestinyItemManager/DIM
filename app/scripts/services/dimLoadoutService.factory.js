@@ -10,6 +10,10 @@
     var _loadouts = [];
     var _previousLoadouts = {}; // by character ID
 
+    $rootScope.$on('dim-stores-updated', function() {
+      getLoadouts(true);
+    });
+
     return {
       dialogOpen: false,
       getLoadouts: getLoadouts,
@@ -53,6 +57,8 @@
         _loadouts = _loadouts.splice(0);
       }
     }
+
+
 
     function getLoadouts(getLatest) {
       var deferred = $q.defer();
@@ -435,7 +441,9 @@
         platform: loadoutPrimitive.platform,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v3.0',
-        items: {}
+        items: {
+          unknown: []
+        }
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
@@ -453,6 +461,15 @@
 
           result.items[discriminator] = (result.items[discriminator] || []);
           result.items[discriminator].push(item);
+        } else {
+          item = {
+            id: itemPrimitive.id,
+            hash: itemPrimitive.hash,
+            amount: itemPrimitive.amount,
+            equipped: itemPrimitive.equipped
+          };
+
+          result.items.unknown.push(item);
         }
       });
 
@@ -465,7 +482,9 @@
         name: loadoutPrimitive.name,
         classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
         version: 'v3.0',
-        items: {}
+        items: {
+          unknown: []
+        }
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
@@ -481,6 +500,15 @@
 
           result.items[discriminator] = (result.items[discriminator] || []);
           result.items[discriminator].push(item);
+        } else {
+          item = {
+            id: itemPrimitive.id,
+            hash: itemPrimitive.hash,
+            amount: itemPrimitive.amount,
+            equipped: itemPrimitive.equipped
+          };
+
+          result.items.unknown.push(item);
         }
       });
 
@@ -493,7 +521,9 @@
         name: loadoutPrimitive.name,
         classType: -1,
         version: 'v3.0',
-        items: {}
+        items: {
+          unknown: []
+        }
       };
 
       _.each(loadoutPrimitive.items, function(itemPrimitive) {
@@ -506,6 +536,15 @@
           result.items[discriminator].push(item);
 
           item.equipped = true;
+        } else {
+          item = {
+            id: itemPrimitive.id,
+            hash: itemPrimitive.hash,
+            amount: itemPrimitive.amount,
+            equipped: itemPrimitive.equipped
+          };
+
+          result.items.unknown.push(item);
         }
       });
 
