@@ -360,7 +360,9 @@
               .catch((e) => console.error("Failed to load advisors", e))
           ];
           if (includeVendors) {
-            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters));
+            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters).catch((error) => {
+              console.warn("Vendors are not able to be downloaded atm.");
+            }));
           }
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
