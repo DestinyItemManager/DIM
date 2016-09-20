@@ -372,10 +372,10 @@
         var amountAlreadyHave = store.amountOfItem(pseudoItem);
         var amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          var otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
+          const otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
             return store.id === otherStore.id;
           });
-          var storesByAmount = _.sortBy(otherStores.map(function(store) {
+          const storesByAmount = _.sortBy(otherStores.map(function(store) {
             return {
               store: store,
               amount: store.amountOfItem(pseudoItem)
@@ -384,9 +384,9 @@
 
           let totalAmount = amountAlreadyHave;
           while (amountNeeded > 0) {
-            var source = _.max(storesByAmount, 'amount');
-            var amountToMove = Math.min(source.amount, amountNeeded);
-            var sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
+            const source = _.max(storesByAmount, 'amount');
+            const amountToMove = Math.min(source.amount, amountNeeded);
+            const sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(function() {
@@ -401,9 +401,7 @@
             amountNeeded -= amountToMove;
             totalAmount += amountToMove;
 
-            promise = promise.then(function() {
-              return dimItemService.moveTo(sourceItem, store, false, amountToMove);
-            });
+            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove));
           }
         }
       } else {
