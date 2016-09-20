@@ -233,9 +233,9 @@
     }
 
     function moveToStore(item, store, equip, amount) {
-      var source = dimStoreService.getStore(item.owner);
       return dimBungieService.transfer(item, store, amount)
         .then(function() {
+          var source = dimStoreService.getStore(item.owner);
           var newItem = updateItemModel(item, source, store, false, amount);
           if ((newItem.owner !== 'vault') && equip) {
             return equipItem(newItem);
