@@ -56,7 +56,8 @@
       }));
 
       // TODO: remove if(false)
-      if(false) {
+      var todoRemove = false;
+      if (todoRemove) {
         dimSettingsService.itemTags.forEach(function(tag) {
           if (tag.type) {
             keywords.push("tag:" + tag.type);
@@ -74,7 +75,7 @@
 
       // free form notes on items
       // TODO: remove if(false)
-      if(false) {
+      if (todoRemove) {
         keywords.push('notes:');
       }
 
