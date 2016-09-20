@@ -29,7 +29,7 @@
         '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
         '        </a>',
         '      </span>',
-        '      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-title">',
+        '      <a target="_blank" rel="noopener noreferrer" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}#{{ vm.item.talentGrid.dtrPerks }}" class="item-title">',
         '        {{vm.title}}',
         '      </a>',
         '    </div>',
