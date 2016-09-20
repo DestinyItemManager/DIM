@@ -1265,6 +1265,9 @@
     }
 
     function dropNewItem(item) {
+      if (!item.isNew) {
+        return;
+      }
       _removedNewItems.add(item.id);
       item.isNew = false;
       loadNewItems(dimPlatformService.getActive()).then((newItems) => {
