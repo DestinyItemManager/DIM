@@ -55,13 +55,17 @@
         return ["is:" + word, "not:" + word];
       }));
 
-      dimSettingsService.itemTags.forEach(function(tag) {
-        if (tag.type) {
-          keywords.push("tag:" + tag.type);
-        } else {
-          keywords.push("tag:none");
-        }
-      });
+      // TODO: remove if(false)
+      var todoRemove = false;
+      if (todoRemove) {
+        dimSettingsService.itemTags.forEach(function(tag) {
+          if (tag.type) {
+            keywords.push("tag:" + tag.type);
+          } else {
+            keywords.push("tag:none");
+          }
+        });
+      }
 
       // Filters that operate on ranges (>, <, >=, <=)
       var ranges = ['light', 'level', 'quality', 'percentage'];
@@ -70,7 +74,10 @@
       });
 
       // free form notes on items
-      keywords.push('notes:');
+      // TODO: remove if(false)
+      if (todoRemove) {
+        keywords.push('notes:');
+      }
 
       return {
         query: '',
