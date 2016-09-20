@@ -1328,7 +1328,6 @@
     }
 
     function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
-      _idTracker = {};
       return $q.all([
         dimDefinitions,
         dimBucketService,
