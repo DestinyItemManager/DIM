@@ -775,7 +775,7 @@
 
     function buildTalentGrid(item, talentDefs, progressDefs) {
       var talentGridDef = talentDefs[item.talentGridHash];
-      if (!item.progression || !talentGridDef) {
+      if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length) {
         return undefined;
       }
 
