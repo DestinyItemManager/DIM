@@ -3,6 +3,7 @@
 * You can now mark items as "favorite", "keep", "junk" or "infuse". There are corresponding search filters (tag:keep, tag:favorite, etc.) There are also keyboard shortcuts - press "?" to see them.
 * You can now add custom notes to items. Just type them in the box and it automatically saves the text. You can also search for notes -> notes:"god roll"
 * The DestinyTracker link in the item popup header now includes your perk rolls and selected perk. Share your roll easily!
+* Fixed moving consumables in loadouts. Before, you would frequently get errors applying a loadout that included consumables. We also have a friendlier, more informative error message when you don't have enough of a consumable to fulfill your loadout.
 
 # 3.10.5
 

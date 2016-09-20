@@ -369,36 +369,39 @@
 
       if (item.type === 'Material' || item.type === 'Consumable') {
         // handle consumables!
-        var amountNeeded = pseudoItem.amount - store.amountOfItem(pseudoItem);
+        var amountAlreadyHave = store.amountOfItem(pseudoItem);
+        var amountNeeded = pseudoItem.amount - amountAlreadyHave;
         if (amountNeeded > 0) {
-          var otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
+          const otherStores = _.reject(dimStoreService.getStores(), function(otherStore) {
             return store.id === otherStore.id;
           });
-          var storesByAmount = _.sortBy(otherStores.map(function(store) {
+          const storesByAmount = _.sortBy(otherStores.map(function(store) {
             return {
               store: store,
               amount: store.amountOfItem(pseudoItem)
             };
           }), 'amount').reverse();
 
+          let totalAmount = amountAlreadyHave;
           while (amountNeeded > 0) {
-            var source = _.max(storesByAmount, 'amount');
-            var amountToMove = Math.min(source.amount, amountNeeded);
-            var sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
+            const source = _.max(storesByAmount, 'amount');
+            const amountToMove = Math.min(source.amount, amountNeeded);
+            const sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(function() {
-                return $q.reject(new Error("There's not enough " + item.name + " to fulfill your loadout."));
+                const error = new Error("You have " + totalAmount + " " + item.name + ", but your loadout asks for " + pseudoItem.amount + ". We transfered all you had.");
+                error.level = 'warn';
+                return $q.reject(error);
               });
               break;
             }
 
             source.amount -= amountToMove;
             amountNeeded -= amountToMove;
+            totalAmount += amountToMove;
 
-            promise = promise.then(function() {
-              return dimItemService.moveTo(sourceItem, store, false, amountToMove);
-            });
+            promise = promise.then(() => dimItemService.moveTo(sourceItem, store, false, amountToMove));
           }
         }
       } else {
@@ -421,9 +424,12 @@
           scope.successfulItems.push(item);
         })
         .catch(function(e) {
-          scope.failed++;
           if (e.message !== 'move-canceled') {
-            toaster.pop('error', item.name, e.message);
+            const level = e.level || 'error';
+            if (level === 'error') {
+              scope.failed++;
+            }
+            toaster.pop(e.level || 'error', item.name, e.message);
           }
         })
         .finally(function() {
