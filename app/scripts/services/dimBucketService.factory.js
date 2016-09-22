@@ -34,6 +34,7 @@
       Progress: [
         'Bounties',
         'Quests',
+        'RecordBook',
         'Missions'
       ],
       Postmaster: [
@@ -60,6 +61,7 @@
       BUCKET_CONSUMABLES: "Consumable",
       BUCKET_PRIMARY_WEAPON: "Primary",
       BUCKET_CLASS_ITEMS: "ClassItem",
+      BUCKET_BOOK_LARGE: "RecordBook",
       BUCKET_QUESTS: "Quests",
       BUCKET_VEHICLE: "Vehicle",
       BUCKET_BOUNTIES: "Bounties",

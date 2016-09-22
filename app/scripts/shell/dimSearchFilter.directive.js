@@ -287,7 +287,7 @@
         return item.dmg === predicate;
       },
       type: function(predicate, item) {
-        return item.type.toLowerCase() === predicate;
+        return item.type && item.type.toLowerCase() === predicate;
       },
       tier: function(predicate, item) {
         const tierMap = {
