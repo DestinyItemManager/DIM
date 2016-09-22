@@ -13,6 +13,9 @@
       active: null,
       debug: true
     })
+    .value('dimFeatureFlags', {
+      tagsEnabled: ('$DIM_FLAVOR' !== 'release') // Tags are off in release right now
+    })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
     }]);
@@ -54,10 +57,13 @@
         }
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-          title: 'DIM v$DIM_VERSION Released',
-          view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
-        });
+        // eslint-disable-next-line no-constant-condition
+        if ("$DIM_FLAVOR" === 'release' && "$DIM_FLAVOR" === 'beta') {
+          dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
+            title: 'DIM v$DIM_VERSION Released',
+            view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
+          });
+        }
 
         // http://www.arnaldocapo.com/blog/post/google-analytics-and-angularjs-with-ui-router/72
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/single-page-applications
