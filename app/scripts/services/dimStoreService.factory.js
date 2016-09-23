@@ -20,7 +20,8 @@
     'loadingTracker',
     'dimManifestService',
     '$translate',
-    'uuid2'
+    'uuid2',
+    'dimFeatureFlags'
   ];
 
   function StoreService(
@@ -39,7 +40,8 @@
     loadingTracker,
     dimManifestService,
     $translate,
-    uuid2
+    uuid2,
+    dimFeatureFlags
   ) {
     var _stores = [];
     var _idTracker = {};
@@ -273,7 +275,9 @@
 
       // Include vendors on the first load and if they're expired
       const currDate = new Date().toISOString();
-      const includeVendors = false && (!_stores.length || _.any(_stores, (store) => store.minRefreshDate < currDate));
+      const includeVendors = dimFeatureFlags.vendorsEnabled &&
+              (!_stores.length ||
+               _.any(_stores, (store) => store.minRefreshDate < currDate));
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
