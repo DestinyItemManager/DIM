@@ -51,6 +51,7 @@
       category: _.keys(categoryFilters),
       infusable: ['infusable', 'infuse'],
       stattype: ['intellect', 'discipline', 'strength'],
+      year: ['year1', 'year2', 'year3'],
       new: ['new'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
     };
@@ -526,6 +527,8 @@
           return item.year === 1;
         } else if (predicate === 'year2') {
           return item.year === 2;
+        } else if (predicate === 'year3') {
+          return item.year === 3;
         } else {
           return false;
         }
