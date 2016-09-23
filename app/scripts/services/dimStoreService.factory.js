@@ -273,7 +273,7 @@
 
       // Include vendors on the first load and if they're expired
       const currDate = new Date().toISOString();
-      const includeVendors = !_stores.length || _.any(_stores, (store) => store.minRefreshDate < currDate);
+      const includeVendors = false && (!_stores.length || _.any(_stores, (store) => store.minRefreshDate < currDate));
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
@@ -420,8 +420,10 @@
 
               if (!includeVendors) {
                 var prevStore = _.findWhere(_stores, { id: raw.id });
-                store.vendors = prevStore.vendors;
-                store.minRefreshDate = prevStore.minRefreshDate;
+                if (prevStore) {
+                  store.vendors = prevStore.vendors;
+                  store.minRefreshDate = prevStore.minRefreshDate;
+                }
               }
 
               store.name = store.genderRace + ' ' + store.className;
