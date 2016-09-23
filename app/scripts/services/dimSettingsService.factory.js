@@ -81,10 +81,6 @@
     SyncService.get().then(function(data) {
       var savedSettings = data['settings-v1.0'] || {};
 
-      // self destruct timer for quality, hope we can remove this some day...
-      // savedSettings.disableQuality = new Date('2016-09-20T09:00:00.000Z') <= new Date();
-      savedSettings.disableQuality = false;
-
       // for now just override itemTags. eventually let users create own?
       savedSettings.itemTags = [
         { type: undefined, label: 'Tag Item' },
