@@ -4,10 +4,11 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog'];
+  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog', 'dimFeatureFlags'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog) {
+  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog, dimFeatureFlags) {
     var vm = this;
+    vm.featureFlags = dimFeatureFlags;
     var buckets = [];
     var vendorBuckets = [];
     var perks = {
@@ -160,7 +161,7 @@
       active: 'warlock',
       activesets: '5/5/2',
       type: 'Helmet',
-      scaleType: 'scaled',
+      scaleType: vm.featureFlags.qualityEnabled ? 'scaled' : 'base',
       progress: 0,
       fullMode: false,
       includeVendors: false,

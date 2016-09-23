@@ -20,7 +20,8 @@
     'loadingTracker',
     'dimManifestService',
     '$translate',
-    'uuid2'
+    'uuid2',
+    'dimFeatureFlags'
   ];
 
   function StoreService(
@@ -39,7 +40,8 @@
     loadingTracker,
     dimManifestService,
     $translate,
-    uuid2
+    uuid2,
+    dimFeatureFlags
   ) {
     var _stores = [];
     var _idTracker = {};
@@ -273,7 +275,9 @@
 
       // Include vendors on the first load and if they're expired
       const currDate = new Date().toISOString();
-      const includeVendors = !_stores.length || _.any(_stores, (store) => store.minRefreshDate < currDate);
+      const includeVendors = dimFeatureFlags.vendorsEnabled &&
+              (!_stores.length ||
+               _.any(_stores, (store) => store.minRefreshDate < currDate));
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
@@ -420,8 +424,10 @@
 
               if (!includeVendors) {
                 var prevStore = _.findWhere(_stores, { id: raw.id });
-                store.vendors = prevStore.vendors;
-                store.minRefreshDate = prevStore.minRefreshDate;
+                if (prevStore) {
+                  store.vendors = prevStore.vendors;
+                  store.minRefreshDate = prevStore.minRefreshDate;
+                }
               }
 
               store.name = store.genderRace + ' ' + store.className;
@@ -631,7 +637,7 @@
         currentBucket = normalBucket;
       }
 
-      var itemType = normalBucket.type;
+      var itemType = normalBucket.type || 'Unknown';
 
       const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
         const category = defs.ItemCategory[c];

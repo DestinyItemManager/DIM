@@ -43,13 +43,13 @@
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
         '        </i>',
         '      </a>',
-        '    <dim-item-tag ng-if="vm.item.lockable && false || TODO_REMOVE_FALSE" item="vm.item"></dim-item-tag>',
+        '    <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>',
         '    </div>',
         '  </div>',
         '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
         '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
-        '  <form ng-if="vm.item.lockable && false || TODO_REMOVE_FALSE" name="notes"><textarea name="data" placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
+        '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
         '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength">Error! Max 120 characters for notes.</span>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
@@ -65,10 +65,10 @@
         '        <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '      </span>',
         '      <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '        <span ng-if="stat.bar && !vm.settings.disableQuality && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
+        '        <span ng-if="stat.bar && vm.featureFlags.qualityEnabled && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
         '      </span>',
         '    </div>',
-        '    <div class="stat-box-row" ng-if="!vm.settings.disableQuality && vm.item.quality && vm.item.quality.min">',
+        '    <div class="stat-box-row" ng-if="vm.featureFlags.qualityEnabled && vm.item.quality && vm.item.quality.min">',
         '      <span class="stat-box-text stat-box-cell">Stats quality</span>',
         '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll</span>',
         '    </div>',
@@ -91,10 +91,12 @@
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope', 'dimFeatureFlags'];
 
-  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope) {
+  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags) {
     var vm = this;
+
+    vm.featureFlags = dimFeatureFlags;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
       vm.item.talentGrid ||

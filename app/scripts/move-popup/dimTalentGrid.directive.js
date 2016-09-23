@@ -10,25 +10,6 @@
           return !node.hidden && node.column >= hiddenColumns;
         });
       };
-    })
-    .filter('bungieIcon', ['$sce', function($sce) {
-      return function(icon) {
-        return $sce.trustAsResourceUrl('https://www.bungie.net' + icon);
-      };
-    }])
-    .directive('svgBindViewbox', function() {
-      return {
-        link: function(scope, element, attrs) {
-          /*
-           inserts the evaluated value of the "svg-bind-viewbox" attribute
-           into the "viewBox" attribute, making sure to capitalize the "B",
-           as this SVG attribute name is case-sensitive.
-           */
-          attrs.$observe('svgBindViewbox', function(value) {
-            element.get(0).setAttribute('viewBox', value);
-          });
-        }
-      };
     });
 
 

@@ -8,6 +8,8 @@
 * The progress bar around the reputation diamonds is now more accurate.
 * Enabled item quality. 
 * Item Quality is enabled by default for new installs.
+* A new Record Books row in Progress has your Rise of Iron record book.
+* Searches now work for all characters and the vault again.
 
 # 3.10.5
 

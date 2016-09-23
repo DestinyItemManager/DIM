@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="styles/main.css?v=$DIM_VERSION">
   </head>
 
-  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: !app.settings.disableQuality && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
+  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.featureFlags.qualityEnabled && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
     <div class="ng-cloak" ng-click="trackActivity()">
       <div id="header">
         <div class="content">
@@ -42,7 +42,7 @@
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)" translate="About"></span>
           <span class="link" ng-click="app.showSupport($event)" translate="Support DIM"></span>
-          <span class="link" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
+          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>
@@ -112,6 +112,7 @@
     <script src="scripts/loadout/dimLoadout.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/random/dimRandom.controller.js?v=$DIM_VERSION"></script>
+    <script src="scripts/shell/dimAngularFilters.filter.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAppCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimSettingsCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
