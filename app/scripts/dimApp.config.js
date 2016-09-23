@@ -19,7 +19,7 @@
       // vendors are off until we can make them lighter on the API
       vendorsEnabled: false,
       // Stats are off in release until we get better formulas
-      qualityEnabled: false && ('$DIM_FLAVOR' !== 'release')
+      qualityEnabled: ('$DIM_FLAVOR' !== 'release')
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
