@@ -28,7 +28,7 @@
           <input type="checkbox" id="details" ng-model="vm.settings.itemDetails"/>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="vm.featureFlags.qualityEnabled">
         <td>
           <label for="itemQuality" title="Will enable advanced min/max features on the move dialog and enable the armor comparison view.">Enable advanced stat quality comparison features</label>
         </td>
