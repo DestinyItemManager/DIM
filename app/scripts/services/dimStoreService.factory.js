@@ -993,6 +993,10 @@
     function getScaledStat(base, light) {
       var max = 335;
 
+      if (light > 335) {
+        light = 335;
+      }
+
       return {
         min: Math.floor((base) * (fitValue(max) / fitValue(light))),
         max: Math.floor((base + 1) * (fitValue(max) / fitValue(light)))
@@ -1009,6 +1013,11 @@
         if (!quality) {
           return '';
         }
+
+        if (light > 335) {
+          light = 335;
+        }
+
         return ((quality.min === quality.max || light === 335)
                 ? quality.min
                 : (quality.min + "%-" + quality.max)) + '%';
