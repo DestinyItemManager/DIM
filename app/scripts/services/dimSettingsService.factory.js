@@ -34,7 +34,7 @@
       // Show full details in item popup
       itemDetails: false,
       // Show item quality percentages
-      itemQuality: false,
+      itemQuality: true,
       // Show new items with an overlay
       showNewItems: false,
       // Show animation of new item overlay on new items
