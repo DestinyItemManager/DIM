@@ -3,36 +3,6 @@
 
   angular.module('dimApp')
     .directive('dimStoreItem', StoreItem)
-    // A filter that will heatmap-color a background according to a percentage
-    .filter('qualityColor', function() {
-      return function getColor(value, property) {
-        property = property || 'background-color';
-        var color = 0;
-        if (value <= 85) {
-          color = 0;
-        } else if (value <= 90) {
-          color = 20;
-        } else if (value <= 95) {
-          color = 60;
-        } else if (value <= 99) {
-          color = 120;
-        } else if (value >= 100) {
-          color = 190;
-        } else {
-          return 'white';
-        }
-        var result = {};
-        result[property] = 'hsl(' + color + ',85%,60%)';
-        return result;
-      };
-    })
-    .filter('bungieBackground', function() {
-      return function backgroundImage(value) {
-        return {
-          'background-image': 'url(https://www.bungie.net' + value + ')'
-        };
-      };
-    })
     .filter('tagIcon', ['dimSettingsService', function(dimSettingsService) {
       var iconType = {};
 
