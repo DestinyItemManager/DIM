@@ -32,6 +32,9 @@ div:focus, span:focus {
     will-change: transform;
     animation: new_overlay 4s linear infinite;
   }
+  .on-dragging & {
+    display: none;
+  }
 }
 
 .new_overlay_overflow {
