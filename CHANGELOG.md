@@ -6,6 +6,8 @@
 * Fixed moving consumables in loadouts. Before, you would frequently get errors applying a loadout that included consumables. We also have a friendlier, more informative error message when you don't have enough of a consumable to fulfill your loadout.
 * Fixed a bug where when moving stacks of items, the stack would disappear.
 * The progress bar around the reputation diamonds is now more accurate.
+* Enabled item quality. 
+* Item Quality is enabled by default for new installs.
 
 # 3.10.5
 
