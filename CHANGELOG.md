@@ -1,7 +1,5 @@
-# Next
+# 3.10.6
 
-* You can now mark items as "favorite", "keep", "junk" or "infuse". There are corresponding search filters (tag:keep, tag:favorite, etc.) There are also keyboard shortcuts - press "?" to see them.
-* You can now add custom notes to items. Just type them in the box and it automatically saves the text. You can also search for notes -> notes:"god roll"
 * The DestinyTracker link in the item popup header now includes your perk rolls and selected perk. Share your roll easily!
 * Fixed moving consumables in loadouts. Before, you would frequently get errors applying a loadout that included consumables. We also have a friendlier, more informative error message when you don't have enough of a consumable to fulfill your loadout.
 * Fixed a bug where when moving stacks of items, the stack would disappear.
@@ -10,6 +8,7 @@
 * Item Quality is enabled by default for new installs.
 * A new Record Books row in Progress has your Rise of Iron record book.
 * Searches now work for all characters and the vault again.
+* Can equip loadouts onto the current character from Loadout Builder.
 
 # 3.10.5
 

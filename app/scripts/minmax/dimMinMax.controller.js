@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog', 'dimFeatureFlags'];
+  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog, dimFeatureFlags) {
+  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
     var buckets = [];
@@ -311,6 +311,28 @@
           loadout: loadout,
           equipAll: true
         });
+      },
+      equipItems: function(set) {
+        ngDialog.closeAll();
+        var loadout = { items: {} };
+        var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
+        loadout.items.helmet = [items.Helmet.item];
+        loadout.items.chest = [items.Chest.item];
+        loadout.items.gauntlets = [items.Gauntlets.item];
+        loadout.items.leg = [items.Leg.item];
+        loadout.items.classitem = [items.ClassItem.item];
+        loadout.items.ghost = [items.Ghost.item];
+        loadout.items.artifact = [items.Artifact.item];
+        loadout.classType = ({ warlock: 0, titan: 1, hunter: 2 })[vm.active];
+
+        return $q.when(dimStoreService.getActiveStore())
+          .then(function(current) {
+            return dimLoadoutService.applyLoadout(current, {
+              classType: -1,
+              name: 'minmax',
+              items: items
+            }, true);
+          });
       },
       getSetBucketsStep: function(activeGaurdian) {
         var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems, vm.lockedperks);

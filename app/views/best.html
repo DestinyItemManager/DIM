@@ -130,7 +130,7 @@
   </div>
   <div ng-show="normal.progress >= 1">
     <div class="section loadout" ng-repeat="set in normal.highestsets[normal.activesets] | orderBy:normal.setOrderValues | limitTo:10">
-      <div><dim-stats stats="set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(set)">Create Loadout</span></div>
+      <div><dim-stats stats="set.stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(set)">Create Loadout</span>&nbsp;&nbsp;<span class='dim-button' ng-click="normal.equipItems(set)">Equip on Current Character</span></div>
       <div class="minmax-section">
         <div class="set-item" ng-repeat="armorpiece in set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
