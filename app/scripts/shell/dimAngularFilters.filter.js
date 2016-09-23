@@ -1,4 +1,6 @@
 (function() {
+  'use strict';
+
   // This file defines Angular filters for DIM that may be shared among
   // different parts of DIM.
 
@@ -149,5 +151,4 @@
       }
     };
   });
-
 })();
