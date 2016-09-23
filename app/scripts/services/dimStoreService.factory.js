@@ -631,7 +631,7 @@
         currentBucket = normalBucket;
       }
 
-      var itemType = normalBucket.type;
+      var itemType = normalBucket.type || 'Unknown';
 
       const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
         const category = defs.ItemCategory[c];
