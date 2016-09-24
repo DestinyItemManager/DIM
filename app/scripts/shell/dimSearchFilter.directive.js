@@ -123,9 +123,9 @@
     };
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService', 'dimLoadoutService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, dimSearchService, dimLoadoutService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
