@@ -38,7 +38,7 @@
           _loadouts.splice(0);
           
           _.each(ids, function(id) {
-            data[id]['items'].forEach(function (item) {
+            data[id].items.forEach(function (item) {
               var itemFromStore = dimItemService.getItem({
                 id: item.id,
                 hash: item.hash
@@ -46,7 +46,6 @@
               if (itemFromStore) {
                 itemFromStore.isInLoadout = true;
               }
-              
             });
             _loadouts.push(hydrate(data[id]));
           });

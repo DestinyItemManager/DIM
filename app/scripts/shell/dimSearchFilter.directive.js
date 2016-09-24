@@ -531,7 +531,7 @@
           return false;
         }
       },
-      inloadout: function (predicate, item) {
+      inloadout: function(predicate, item) {
         return item.isInLoadout;
       },
       new: function(predicate, item) {
