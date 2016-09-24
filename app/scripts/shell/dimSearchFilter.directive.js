@@ -51,6 +51,7 @@
       category: _.keys(categoryFilters),
       infusable: ['infusable', 'infuse'],
       stattype: ['intellect', 'discipline', 'strength'],
+      inloadout: ['inloadout'],
       new: ['new'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
     };
@@ -122,9 +123,9 @@
     };
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService', 'dimLoadoutService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, dimSearchService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimSearchService, dimLoadoutService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -529,6 +530,9 @@
         } else {
           return false;
         }
+      },
+      inloadout: function (predicate, item) {
+        return item.isInLoadout;
       },
       new: function(predicate, item) {
         return item.isNew;
