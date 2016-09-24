@@ -36,8 +36,17 @@
         if (version === 'v3.0') {
           var ids = data['loadouts-v3.0'];
           _loadouts.splice(0);
-
+          
           _.each(ids, function(id) {
+            data[id].items.forEach(function (item) {
+              var itemFromStore = dimItemService.getItem({
+                id: item.id,
+                hash: item.hash
+              });
+              if (itemFromStore) {
+                itemFromStore.isInLoadout = true;
+              }
+            });
             _loadouts.push(hydrate(data[id]));
           });
         } else {
