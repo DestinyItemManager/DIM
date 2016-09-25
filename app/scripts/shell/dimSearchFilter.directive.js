@@ -51,9 +51,9 @@
       category: _.keys(categoryFilters),
       infusable: ['infusable', 'infuse'],
       stattype: ['intellect', 'discipline', 'strength'],
-      year: ['year1', 'year2', 'year3'],
       new: ['new'],
-      glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
+      glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
+      year: ['year1', 'year2', 'year3']
     };
 
     var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
