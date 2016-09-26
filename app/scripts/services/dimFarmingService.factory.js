@@ -13,6 +13,12 @@
   function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService, dimSettingsService) {
     var intervalId;
     var cancelReloadListener;
+    var glimmerHashes = [
+      269776572, // -house-banners
+      3632619276, // -silken-codex
+      2904517731, // -axiomatic-beads
+      1932910919 // -network-keys
+    ];
     return {
       active: false,
       store: null,
@@ -75,7 +81,7 @@
         var toMove = _.select(store.items, function(i) {
           return !i.location.inPostmaster && (
             (dimSettingsService.farming.engrams && i.isEngram()) ||
-            (dimSettingsService.farming.greens && i.tier.toLowerCase() === 'uncommon'));
+            (dimSettingsService.farming.glimmer && glimmerHashes.includes(i.hash)));
         });
 
         if (toMove.length === 0) {
@@ -103,7 +109,8 @@
                           'Gauntlets',
                           'Chest',
                           'Leg',
-                          'ClassItem'];
+                          'ClassItem',
+                          'Consumables'];
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
