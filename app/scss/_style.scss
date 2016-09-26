@@ -2033,7 +2033,7 @@ button.toast-close-button {
 
 /* Engram Farming */
 
-#engram-farming {
+#item-farming {
   position: fixed;
   bottom: 6rem;
   background-color: rgba(0, 0, 0, 0.9);
@@ -2063,16 +2063,19 @@ button.toast-close-button {
     }
   }
 
-  .engram-details {
+  .item-details {
     flex: 1;
     margin: 0 1em;
+    ul {
+      list-style: none;
+    }
   }
 
   .engram-icon {
     position: relative;
   }
 
-  .engram-count {
+  .item-count {
     font-size: 16px;
     position: absolute;
     width: 100%;

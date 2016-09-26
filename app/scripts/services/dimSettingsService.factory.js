@@ -54,6 +54,11 @@
       itemSize: 44,
       // Which categories or buckets should be collapsed?
       collapsedSections: {},
+      // What settings for farming mode
+      farming: {
+        engrams: true,
+        greens: false
+      },
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
         { type: undefined, label: 'Tag Item' },
