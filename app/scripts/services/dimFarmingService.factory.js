@@ -75,7 +75,7 @@
             }, $q.resolve());
           });
       },
-      doFarmItems: function() {
+      farmItems: function() {
         var self = this;
         var store = dimStoreService.getStore(self.store.id);
         var toMove = _.select(store.items, function(i) {
@@ -128,7 +128,7 @@
             itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
                 Common: 0,
-                Uncommon: 1,
+                Uncommon: 9, // Move greens last since we mostly just want to dismantle those
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4
@@ -155,7 +155,7 @@
       start: function(store) {
         var self = this;
         function farm() {
-          self.doFarmItems().then(function() {
+          self.farmItems().then(function() {
             self.makeRoomForItems();
           });
         }
