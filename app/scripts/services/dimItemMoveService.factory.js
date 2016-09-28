@@ -75,22 +75,17 @@
         });
       }
 
-      var itemName;
-      promise = promise.then(function() {
-        itemName = dimItemService.getItem({ hash: actionableItem.hash }, store).name;
-      });
-
       promise = promise.then(function() {
         var message;
         if (store.isVault) {
-          message = 'All ' + itemName + ' is now in your vault.';
+          message = 'All ' + actionableItem.name + ' is now in your vault.';
         } else {
-          message = 'All ' + itemName + ' is now on your ' + store.name + ".";
+          message = 'All ' + actionableItem.name + ' is now on your ' + store.name + ".";
         }
-        toaster.pop('success', 'Consolidated ' + itemName, message);
+        toaster.pop('success', 'Consolidated ' + actionableItem.name, message);
       })
       .catch(function(a) {
-        toaster.pop('error', itemName, a.message);
+        toaster.pop('error', actionableItem.name, a.message);
       });
 
       loadingTracker.addPromise(promise);
@@ -164,13 +159,11 @@
         return applyMoves(targetMoves);
       });
 
-      var itemName = dimItemService.getItem({ hash: actionableItem.hash }, store).name;
-
       promise = promise.then(function() {
-        toaster.pop('success', 'Distributed ' + itemName, itemName + ' is now equally divided between characters.');
+        toaster.pop('success', 'Distributed ' + actionableItem.name, actionableItem.name + ' is now equally divided between characters.');
       })
       .catch(function(a) {
-        toaster.pop('error', itemName, a.message);
+        toaster.pop('error', actionableItem.name, a.message);
       });
 
       loadingTracker.addPromise(promise);

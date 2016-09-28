@@ -160,6 +160,18 @@
           });
         }
 
+        this.consolidate = [
+          angular.copy(dimItemService.getItem({
+            hash: 417308266 // three of coins
+          })),
+          angular.copy(dimItemService.getItem({
+            hash: 211861343 // heavy ammo synth
+          }))
+        ];
+        this.consolidate.forEach(function(item) {
+          item.amount = store.amountOfItem(item);
+        });
+
         if (!this.active) {
           this.active = true;
           this.store = store;

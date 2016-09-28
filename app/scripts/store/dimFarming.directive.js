@@ -21,9 +21,8 @@
         '    <ul><li><input type="checkbox" id="farm-engrams" ng-model="vm.settings.engrams"/><label for="farm-engrams">Engrams</label>',
         '      </li><li><input type="checkbox" id="farm-glimmer" ng-model="vm.settings.glimmer"/><label for="farm-glimmer">Glimmer items</label>',
         '    </li></ul>',
-        '    <p>Consolidate to active character ',
-        '      <span class="dim-button" ng-click="vm.consolidate({hash: 417308266}, vm.service.store)">Three of Coins</span>',
-        '      <span class="dim-button" ng-click="vm.consolidate({hash: 211861343}, vm.service.store)">Heavy Ammo</span></p>',
+        '    <p>Consolidate to active character <span ng-repeat="item in vm.service.consolidate  track by $index">',
+        '      <dim-simple-item item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></span></p>',
         '  </div>',
         '  <button ng-click="vm.stop($event)">Stop</button>',
         '</div>'
@@ -35,6 +34,7 @@
 
   function FarmingCtrl(dimFarmingService, dimSettingsService, dimItemMoveService) {
     var vm = this;
+
     angular.extend(vm, {
       service: dimFarmingService,
       settings: dimSettingsService.farming,
