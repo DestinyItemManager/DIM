@@ -7,7 +7,6 @@
   ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService'];
 
   function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService) {
-
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('movebox', {
@@ -76,9 +75,8 @@
         });
       }
 
+      var itemName = dimItemService.getItem({ hash: actionableItem.hash }, store).name;
       promise = promise.then(function() {
-        var itemName = dimItemService.getItem({ hash: actionableItem.hash }, store).name;
-
         var message;
         if (store.isVault) {
           message = 'All ' + itemName + ' is now in your vault.';
