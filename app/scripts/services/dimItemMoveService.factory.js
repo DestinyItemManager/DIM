@@ -78,9 +78,9 @@
       promise = promise.then(function() {
         var message;
         if (store.isVault) {
-          message = 'All ' + actionableItem.name + ' is now in your vault.';
+          message = 'All ' + actionableItem.name + ' are now in your vault.';
         } else {
-          message = 'All ' + actionableItem.name + ' is now on your ' + store.name + ".";
+          message = 'All ' + actionableItem.name + ' are now on your ' + store.name + ".";
         }
         toaster.pop('success', 'Consolidated ' + actionableItem.name, message);
       })

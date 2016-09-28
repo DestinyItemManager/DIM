@@ -110,7 +110,8 @@
                           'Chest',
                           'Leg',
                           'ClassItem',
-                          'Consumables'];
+                          'Consumables',
+                          'Materials'];
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
@@ -155,22 +156,30 @@
       start: function(store) {
         var self = this;
         function farm() {
+          var consolidateHashes = [
+            417308266, // three of coins
+            211861343, // heavy ammo synth
+            937555249, // motes of light
+            1738186005, // motes of light
+            1542293174, // armor materials
+            1898539128, // weapon parts
+          ];
+
+          self.consolidate = consolidateHashes.map(function(hash) {
+            var ret = angular.copy(dimItemService.getItem({
+              hash: hash
+            }));
+            ret.amount = 0;
+            dimStoreService.getStores().forEach(function(s) {
+              ret.amount += s.amountOfItem(ret);
+            })
+            return ret;
+          });
+
           self.farmItems().then(function() {
             self.makeRoomForItems();
           });
         }
-
-        this.consolidate = [
-          angular.copy(dimItemService.getItem({
-            hash: 417308266 // three of coins
-          })),
-          angular.copy(dimItemService.getItem({
-            hash: 211861343 // heavy ammo synth
-          }))
-        ];
-        this.consolidate.forEach(function(item) {
-          item.amount = store.amountOfItem(item);
-        });
 
         if (!this.active) {
           this.active = true;
