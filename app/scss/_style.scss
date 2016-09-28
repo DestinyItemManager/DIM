@@ -2043,12 +2043,13 @@ button.toast-close-button {
   border-radius: .5rem;
   padding: .5rem 1rem;
   color: #e0e0e0;
-  display: flex;
-  flex-direction: row;
   align-items: center;
   text-align: left;
+  display: flex;
+  flex-direction: row;
 
   button {
+    margin-left: 1em;
     color: white;
     background-color: rgba(128, 128, 128, .8);
     border-radius: 4px;
@@ -2064,15 +2065,22 @@ button.toast-close-button {
   }
 
   .item-details {
-    flex: 1;
-    margin: 0 1em;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    span {
+      flex: 1;
+    }
     ul {
+      margin: 0;
+      padding: 0;
       list-style: none;
     }
   }
 
   .engram-icon {
     position: relative;
+    margin-right: 1em;
   }
 
   .item-count {

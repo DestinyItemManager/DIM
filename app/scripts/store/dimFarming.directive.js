@@ -9,24 +9,29 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {},
-      template: [
-        '<div id="item-farming" ng-if="vm.service.active">',
-        '  <div class="engram-icon">',
-        '    <div class="item-count">{{vm.service.itemsMoved}}</div>',
-        '    <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>',
-        '  </div>',
-        '  <div class="item-details">',
-        '    <h1>Sending {{vm.service.store.name}}\'s items to the vault</h1>',
-        '    <p>DIM will watch for new items and move them to the vault. It\'ll also keep one space open per type to keep anything from going to the Postmaster.</p>',
-        '    <ul><li><input type="checkbox" id="farm-engrams" ng-model="vm.settings.engrams"/><label for="farm-engrams">Engrams</label>',
-        '      </li><li><input type="checkbox" id="farm-glimmer" ng-model="vm.settings.glimmer"/><label for="farm-glimmer">Glimmer items</label>',
-        '    </li></ul>',
-        '    <p>Consolidate to active character <span ng-repeat="item in vm.service.consolidate  track by $index">',
-        '      <dim-simple-item item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></span></p>',
-        '  </div>',
-        '  <button ng-click="vm.stop($event)">Stop</button>',
-        '</div>'
-      ].join('')
+      template: `
+        <div ng-if="vm.service.active" id="item-farming">
+          <span class="engram-icon">
+            <div class="item-count">{{vm.service.itemsMoved}}</div>
+            <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>
+          </span>
+          <span>
+            <p>DIM is moving new items from {{vm.service.store.name}} to the vault and leaving one space open per item type to prevent items from going to the Postmaster.</p>
+            <div class="item-details">
+              <span>
+                <p>Farm Items</p>
+                <ul>
+                  <li><input type="checkbox" id="farm-engrams" ng-model="vm.settings.engrams"/><label for="farm-engrams">Engrams</label></li>
+                  <li><input type="checkbox" id="farm-glimmer" ng-model="vm.settings.glimmer"/><label for="farm-glimmer">Glimmer Items</label></li>
+                </ul>
+              </span><span>
+                <p>Quick Move</p>
+                <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
+              </span>
+            </div>
+          </span>
+          <span><button ng-click="vm.stop($event)">Stop</button></span>
+        </div>`
     };
   }
 
