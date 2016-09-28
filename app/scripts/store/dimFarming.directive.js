@@ -21,6 +21,9 @@
         '    <ul><li><input type="checkbox" id="farm-engrams" ng-model="vm.settings.engrams"/><label for="farm-engrams">Engrams</label>',
         '      </li><li><input type="checkbox" id="farm-glimmer" ng-model="vm.settings.glimmer"/><label for="farm-glimmer">Glimmer items</label>',
         '    </li></ul>',
+        '    <p>Consolidate to active character ',
+        '      <span class="dim-button" ng-click="vm.consolidate({hash: 417308266}, vm.service.store)">Three of Coins</span>',
+        '      <span class="dim-button" ng-click="vm.consolidate({hash: 211861343}, vm.service.store)">Heavy Ammo</span></p>',
         '  </div>',
         '  <button ng-click="vm.stop($event)">Stop</button>',
         '</div>'
@@ -28,13 +31,14 @@
     };
   }
 
-  FarmingCtrl.$inject = ['dimFarmingService', 'dimSettingsService'];
+  FarmingCtrl.$inject = ['dimFarmingService', 'dimSettingsService', 'dimItemMoveService'];
 
-  function FarmingCtrl(dimFarmingService, dimSettingsService) {
+  function FarmingCtrl(dimFarmingService, dimSettingsService, dimItemMoveService) {
     var vm = this;
     angular.extend(vm, {
       service: dimFarmingService,
       settings: dimSettingsService.farming,
+      consolidate: dimItemMoveService.consolidate,
       stop: function($event) {
         $event.preventDefault();
         dimFarmingService.stop();
