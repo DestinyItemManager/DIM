@@ -172,7 +172,7 @@
             ret.amount = 0;
             dimStoreService.getStores().forEach(function(s) {
               ret.amount += s.amountOfItem(ret);
-            })
+            });
             return ret;
           });
 
