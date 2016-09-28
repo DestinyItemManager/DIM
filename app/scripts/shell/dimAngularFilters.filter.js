@@ -70,10 +70,10 @@
         return items;
       }
 
-      var specific_sort_order = []
+      var specificSortOrder = []
       // Group like items in the General Section
       if (items.length && items[0].location.id == "BUCKET_CONSUMABLES") {
-        specific_sort_order = [
+        specificSortOrder = [
           1043138475, // black-wax-idol
           1772853454, // blue-polyphage
           3783295803, // ether-seeds
@@ -108,13 +108,13 @@
 
           2575095887, // Splicer Intel Relay
           3815757277, // Splicer Cache Key
-          4244618453, // Splicer Key
-        ]
+          4244618453  // Splicer Key
+        ];
       }
 
       // Group like items in the General Section
       if (items.length && items[0].location.id == "BUCKET_MATERIALS") {
-        specific_sort_order = [
+        specificSortOrder = [
           1797491610, // Helium
           3242866270, // Relic Iron
           2882093969, // Spin Metal
@@ -139,15 +139,15 @@
           342707700,  // Stolen Rune
           2906158273, // Antiquated Rune
           2620224196, // Stolen Rune (Charging)
-          2906158273, // Antiquated Rune (Charging)
-        ]
+          2906158273  // Antiquated Rune (Charging)
+        ];
       }
 
-      if (specific_sort_order.length > 0) {
+      if (specificSortOrder.length > 0) {
         items = _.sortBy(items, function(item) {
-          var ix = specific_sort_order.indexOf(item.hash);
+          var ix = specificSortOrder.indexOf(item.hash);
           return (ix == -1) ? 999 : ix; 
-        })
+        });
         return items;
       }
 
