@@ -75,7 +75,11 @@
         });
       }
 
-      var itemName = dimItemService.getItem({ hash: actionableItem.hash }, store).name;
+      var itemName;
+      promise = promise.then(function() {
+        itemName = dimItemService.getItem({ hash: actionableItem.hash }, store).name;
+      });
+
       promise = promise.then(function() {
         var message;
         if (store.isVault) {
