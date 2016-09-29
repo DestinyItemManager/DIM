@@ -55,7 +55,7 @@
             const version = path;
             service.version = version;
 
-            return loadManifestFromCache(version + 1)
+            return loadManifestFromCache(version)
               .catch(function(e) {
                 return loadManifestRemote(version, language, path);
               })
