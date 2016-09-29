@@ -37,13 +37,10 @@
                   var vault = dimStoreService.getVault();
                   var vaultSpaceLeft = vault.spaceLeftForItem(item);
                   if (vaultSpaceLeft <= 1) {
-                    var otherStores;
-                    if (dimSettingsService.farming.characterStorage) {
-                      // If we're down to one space, try putting it on other characters
-                      otherStores = _.select(dimStoreService.getStores(), function(store) {
-                        return !store.isVault && store.id !== self.store.id;
-                      });
-                    }
+                    // If we're down to one space, try putting it on other characters
+                    var otherStores = _.select(dimStoreService.getStores(), function(store) {
+                      return !store.isVault && store.id !== self.store.id;
+                    });
 
                     var otherStoresWithSpace = _.select(otherStores, function(store) {
                       return store.spaceLeftForItem(item) > 0;
@@ -128,12 +125,13 @@
         var itemsToMove = [];
         _.each(itemsByType, function(items) {
           // subtract 1 from capacity because we excluded the equipped item
-          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
+          // if we are at capacity, but there are any Uncommon items in the mix. don't move anything.
+          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1) && !_.pluck(items, 'tier').includes('Uncommon')) {
             // We'll move the lowest-value item to the vault.
             itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
                 Common: 0,
-                Uncommon: dimSettingsService.farming.keepGreens ? 9 : 1, // Move greens last since we mostly just want to dismantle those
+                Uncommon: 1,
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4
