@@ -146,6 +146,7 @@
       var platform = dimPlatformService.getActive();
       vm.loadout.platform = platform.label; // Playstation or Xbox
       dimLoadoutService.saveLoadout(vm.loadout);
+      $rootScope.$broadcast('dim-filter-invalidate');
       vm.cancel();
     };
 
