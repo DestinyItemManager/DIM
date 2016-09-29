@@ -55,7 +55,7 @@
             const version = path;
             service.version = version;
 
-            return loadManifestFromCache(version)
+            return loadManifestFromCache(version + 1)
               .catch(function(e) {
                 return loadManifestRemote(version, language, path);
               })
@@ -108,7 +108,7 @@
      */
     function loadManifestRemote(version, language, path) {
       service.statusText = 'Downloading latest Destiny info from Bungie...';
-      return $http.get("https://www.bungie.net/" + path, { responseType: "blob" })
+      return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
         .then(function(response) {
           service.statusText = 'Unzipping latest Destiny info...';
           return unzipManifest(response.data);
