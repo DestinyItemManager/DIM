@@ -83,6 +83,7 @@
         var store = dimStoreService.getStore(self.store.id);
         var toMove = _.select(store.items, function(i) {
           return !i.location.inPostmaster && (
+            (i.tier === 'Uncommon' && i.type === 'ClassItem') || // TODO: remove this once bug is fixed in game.
             (dimSettingsService.farming.engrams && i.isEngram()) ||
             (dimSettingsService.farming.glimmer && glimmerHashes.includes(i.hash)));
         });
