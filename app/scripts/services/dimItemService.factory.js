@@ -469,7 +469,12 @@
         if (item.canBeEquippedBy(store)) {
           resolve(true);
         } else {
-          reject(new Error("This can only be equipped on " + item.classTypeName + "s at or above level " + item.equipRequiredLevel + "."));
+		  var classified = ["Classified", "Klassifiziert", "Confidentiel", "Clasificado", "Classificato", "機密", "Acesso restrito"];
+          if classified.includes(item.itemName) {
+			reject(new Error("This item is classified and can not be transferred at this time."));
+		  } else {
+            reject(new Error("This can only be equipped on " + item.classTypeName + "s at or above level " + item.equipRequiredLevel + "."));
+		  }
         }
       });
     }
