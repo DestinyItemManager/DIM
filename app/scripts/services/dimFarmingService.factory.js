@@ -38,7 +38,7 @@
                   var vaultSpaceLeft = vault.spaceLeftForItem(item);
                   if (vaultSpaceLeft <= 1) {
                     var otherStores;
-                    if (!dimSettingsService.farming.pushToVaultOnly) {
+                    if (dimSettingsService.farming.characterStorage) {
                       // If we're down to one space, try putting it on other characters
                       otherStores = _.select(dimStoreService.getStores(), function(store) {
                         return !store.isVault && store.id !== self.store.id;
@@ -132,7 +132,7 @@
             itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
                 Common: 0,
-                Uncommon: dimSettingsService.farming.moveGreens ? 1 : 9, // Move greens last since we mostly just want to dismantle those
+                Uncommon: dimSettingsService.farming.keepGreens ? 9 : 1, // Move greens last since we mostly just want to dismantle those
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4

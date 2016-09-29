@@ -58,8 +58,8 @@
       farming: {
         engrams: true,
         glimmer: true,
-        pushToVaultOnly: false,
-        moveGreens: true,
+        characterStorage: true,
+        keepGreens: true,
       },
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
