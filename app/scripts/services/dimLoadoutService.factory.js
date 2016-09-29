@@ -175,6 +175,7 @@
           return saveLoadouts(loadouts);
         })
         .then(function(loadouts) {
+          $rootScope.$broadcast('dim-filter-invalidate');
           $rootScope.$broadcast('dim-save-loadout', {
             loadout: loadout
           });
