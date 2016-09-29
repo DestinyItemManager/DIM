@@ -161,8 +161,8 @@
             211861343, // heavy ammo synth
             937555249, // motes of light
             1738186005, // motes of light
-            1542293174, // armor materials
-            1898539128, // weapon parts
+//            1542293174, // armor materials
+//            1898539128, // weapon parts
           ];
 
           self.consolidate = consolidateHashes.map(function(hash) {
