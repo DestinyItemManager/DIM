@@ -57,7 +57,9 @@
       // What settings for farming mode
       farming: {
         engrams: true,
-        glimmer: true
+        glimmer: true,
+        pushToVaultOnly: false,
+        moveGreens: true,
       },
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [

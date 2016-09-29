@@ -17,8 +17,14 @@
           </span>
           <span>
             <p>DIM is moving new items from {{vm.service.store.name}} to the vault and leaving one space open per item type to prevent items from going to the Postmaster.</p>
-            <div class="item-details">
+            <p class="item-details">
               <span>
+                <input type="checkbox" id="farm-vault" ng-model="vm.settings.pushToVaultOnly"/><label for="farm-vault">Use characters for storage <i class="fa fa-question-circle" title="If this is checked, then farmed items will be moved to the vault and any characters. If you're trying to maximize your storage options, keep this checked. Be warned, for the most efficient storage, some items may move to unexpected places on other characters."></i></label>
+              </span><span>
+                <input type="checkbox" id="farm-greens" ng-model="vm.settings.moveGreens"/><label for="farm-greens">Keep Uncommon Items <i class="fa fa-question-circle" title="If this is checked, then Uncommon (green) items will have a higher preference of staying on your active character."></i></label>
+              </span>
+            </p>
+            <div class="item-details"><span>
                 <p>Farm Items</p>
                 <ul>
                   <li><input type="checkbox" id="farm-engrams" ng-model="vm.settings.engrams"/><label for="farm-engrams">Engrams</label></li>

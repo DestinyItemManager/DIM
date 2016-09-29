@@ -37,10 +37,13 @@
                   var vault = dimStoreService.getVault();
                   var vaultSpaceLeft = vault.spaceLeftForItem(item);
                   if (vaultSpaceLeft <= 1) {
-                    // If we're down to one space, try putting it on other characters
-                    var otherStores = _.select(dimStoreService.getStores(), function(store) {
-                      return !store.isVault && store.id !== self.store.id;
-                    });
+                    var otherStores;
+                    if (!dimSettingsService.farming.pushToVaultOnly) {
+                      // If we're down to one space, try putting it on other characters
+                      otherStores = _.select(dimStoreService.getStores(), function(store) {
+                        return !store.isVault && store.id !== self.store.id;
+                      });
+                    }
 
                     var otherStoresWithSpace = _.select(otherStores, function(store) {
                       return store.spaceLeftForItem(item) > 0;
@@ -129,7 +132,7 @@
             itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
                 Common: 0,
-                Uncommon: 9, // Move greens last since we mostly just want to dismantle those
+                Uncommon: dimSettingsService.farming.moveGreens ? 1 : 9, // Move greens last since we mostly just want to dismantle those
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4
