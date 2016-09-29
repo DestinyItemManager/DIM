@@ -1,14 +1,21 @@
+# Next
+
+* Added `is:inloadout` filter
+* Link to wiki for stat quality in the move-popup box.
+* Prevent double click to move item if loadout dialog is open.
+
 # 3.10.6
 
 * The DestinyTracker link in the item popup header now includes your perk rolls and selected perk. Share your roll easily!
 * Fixed moving consumables in loadouts. Before, you would frequently get errors applying a loadout that included consumables. We also have a friendlier, more informative error message when you don't have enough of a consumable to fulfill your loadout.
 * Fixed a bug where when moving stacks of items, the stack would disappear.
 * The progress bar around the reputation diamonds is now more accurate.
-* Enabled item quality. 
+* Enabled item quality.
 * Item Quality is enabled by default for new installs.
 * A new Record Books row in Progress has your Rise of Iron record book.
 * Searches now work for all characters and the vault again.
 * Can equip loadouts onto the current character from Loadout Builder.
+* Added ability to feature toggle items between Beta + Release.
 
 # 3.10.5
 
