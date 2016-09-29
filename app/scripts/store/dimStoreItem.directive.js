@@ -100,10 +100,12 @@
       }
 
       vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
-        e.stopPropagation();
-        var active = dimStoreService.getActiveStore();
+        if (!dimLoadoutService.dialogOpen) {
+          e.stopPropagation();
+          var active = dimStoreService.getActiveStore();
 
-        dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false);
+          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false, item.amount);
+        }
       });
 
       vm.clicked = function openPopup(item, e) {
