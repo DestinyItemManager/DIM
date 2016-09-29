@@ -51,6 +51,7 @@
       category: _.keys(categoryFilters),
       infusable: ['infusable', 'infuse'],
       stattype: ['intellect', 'discipline', 'strength'],
+      inloadout: ['inloadout'],
       new: ['new'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
     };
@@ -529,6 +530,9 @@
         } else {
           return false;
         }
+      },
+      inloadout: function(predicate, item) {
+        return item.isInLoadout;
       },
       new: function(predicate, item) {
         return item.isNew;

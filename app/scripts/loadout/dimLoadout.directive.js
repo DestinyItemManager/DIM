@@ -3,7 +3,7 @@
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService'];
+  Loadout.$inject = ['$rootScope', 'dimLoadoutService'];
 
   function Loadout(dimLoadoutService) {
     return {
@@ -119,9 +119,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService'];
+  LoadoutCtrl.$inject = ['$rootScope', 'dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService) {
+  function LoadoutCtrl($rootScope, dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -146,6 +146,7 @@
       var platform = dimPlatformService.getActive();
       vm.loadout.platform = platform.label; // Playstation or Xbox
       dimLoadoutService.saveLoadout(vm.loadout);
+      $rootScope.$broadcast('dim-filter-invalidate');
       vm.cancel();
     };
 
