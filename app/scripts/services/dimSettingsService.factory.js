@@ -32,7 +32,7 @@
       // Hide items that don't match the current search
       hideFilteredItems: false,
       // Show full details in item popup
-      itemDetails: false,
+      itemDetails: true,
       // Show item quality percentages
       itemQuality: true,
       // Show new items with an overlay
