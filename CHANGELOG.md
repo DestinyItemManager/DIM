@@ -3,6 +3,7 @@
 * Added `is:inloadout` filter
 * Link to wiki for stat quality in the move-popup box.
 * Prevent double click to move item if loadout dialog is open.
+* [#889](https://github.com/DestinyItemManager/DIM/issues/889) Fixed stats for Iron Banner and Trials of Osiris items. 
 
 # 3.10.6
 
