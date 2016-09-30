@@ -724,6 +724,10 @@
       }
       try {
         createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
+
+        if (createdItem.stats && createdItem.stats.length == 0) {
+          createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
+        }
       } catch (e) {
         console.error("Error building stats for " + createdItem.name, item, itemDef, e);
       }
@@ -1199,7 +1203,7 @@
         }
       }
 
-      return _.sortBy(_.compact(_.map(item.stats, function(stat) {
+      return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
         var def = statDef[stat.statHash];
         if (!def) {
           return undefined;
