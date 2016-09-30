@@ -1199,7 +1199,7 @@
         }
       }
 
-      return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
+      return _.sortBy(_.compact(_.map(item.stats, function(stat) {
         var def = statDef[stat.statHash];
         if (!def) {
           return undefined;
