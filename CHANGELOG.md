@@ -5,6 +5,9 @@
 * Prevent double click to move item if loadout dialog is open.
 * [#889](https://github.com/DestinyItemManager/DIM/issues/889) Fixed stats for Iron Banner and Trials of Osiris items.
 * Fix infusion finder preview item not changing as you choose different fuel items. Also filter out year 1 items.
+* Fix some green boots that would show up with a gold border.
+* Move ornaments inbetween materials and emblems.
+* Full item details are shown in the move popup by default (they can still be turned off in settings).
 
 # 3.10.6
 
