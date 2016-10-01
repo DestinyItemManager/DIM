@@ -5,7 +5,7 @@
     Click filters below to apply, or by typing in the search box.
   </p>
   <p>
-    Filters are combined using 'and' logic, for example "is:arc light:>300" will return all arc items with over 300 light.
+    Filters are combined using 'and' logic, for example "is:arc light:>300" will return all arc items with over 300 light. Filters can be negated using "not:", for example "not:engram" will find all non-engram items.
   </p>
   <table>
     <tr>
@@ -49,6 +49,42 @@
     </tr>
     <tr>
       <td>
+        <dim-filter-link filter="is:light"></dim-filter-link>
+        <dim-filter-link filter="has:light"></dim-filter-link>
+      </td>
+      <td>Items that contribute to your light level.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:weapon"></dim-filter-link>
+        <dim-filter-link filter="is:armor"></dim-filter-link>
+        <dim-filter-link filter="is:cosmetic"></dim-filter-link>
+      </td>
+      <td>High level item categories.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:equipment"></dim-filter-link>
+        <dim-filter-link filter="is:equippable"></dim-filter-link>
+      </td>
+      <td>Items that can be equipped.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:transferable"></dim-filter-link>
+        <dim-filter-link filter="is:movable"></dim-filter-link>
+      </td>
+      <td>Items that can be moved between characters.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:equipped"></dim-filter-link>
+      </td>
+      <td>Items that are currently equipped on a character.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:weapon"></dim-filter-link>
         <dim-filter-link filter="is:class"></dim-filter-link>
         <dim-filter-link filter="is:primary"></dim-filter-link>
         <dim-filter-link filter="is:special"></dim-filter-link>
@@ -58,6 +94,7 @@
     </tr>
     <tr>
       <td>
+        <dim-filter-link filter="is:armor"></dim-filter-link>
         <dim-filter-link filter="is:helmet"></dim-filter-link>
         <dim-filter-link filter="is:gauntlets"></dim-filter-link>
         <dim-filter-link filter="is:chest"></dim-filter-link>
@@ -245,6 +282,12 @@
       </td>
       <td>Shows items that are included in any loadout.</td>
     </tr>
-    
+    <tr>
+      <td>
+        <dim-filter-link filter="is:postmaster"></dim-filter-link>
+        <dim-filter-link filter="is:inpostmaster"></dim-filter-link>
+      </td>
+      <td>Items that are currently in the Postmaster.</td>
+    </tr>
   </table>
   </div>
