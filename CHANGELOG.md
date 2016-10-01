@@ -8,6 +8,7 @@
 * Fix some green boots that would show up with a gold border.
 * Move ornaments inbetween materials and emblems.
 * Full item details are shown in the move popup by default (they can still be turned off in settings).
+* Consumables and materials are now sorted by category.
 
 # 3.10.6
 
