@@ -921,6 +921,10 @@
       // We need to unique-ify because Ornament nodes show up twice!
       gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
 
+      if (!gridNodes.length) {
+        return undefined;
+      }
+
       // This can be handy for visualization/debugging
       // var columns = _.groupBy(gridNodes, 'column');
 
