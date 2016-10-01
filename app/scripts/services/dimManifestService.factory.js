@@ -155,7 +155,7 @@
 
     function deleteManifestFile() {
       localStorage.removeItem('manifest-version');
-      getLocalManifestFile().then((fileEntry) => {
+      return getLocalManifestFile().then((fileEntry) => {
         return $q((resolve, reject) => {
           fileEntry.remove(resolve, reject);
         });
