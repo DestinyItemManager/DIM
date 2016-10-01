@@ -64,6 +64,7 @@
           // all items in store
           var items = _.filter(store.items, function(item) {
             return item.primStat &&
+              item.year !== 1 &&
               (!item.locked || vm.showLockedItems) &&
               item.type === vm.source.type &&
               item.primStat.value > vm.source.primStat.value;
