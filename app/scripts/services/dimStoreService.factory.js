@@ -576,7 +576,7 @@
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
-        // maybe it is classified...
+        // maybe it is redacted...
         itemDef = {
           itemName: "Missing Item",
           redacted: true
@@ -584,6 +584,9 @@
         dimManifestService.warnMissingDefinition();
       }
 
+      if (!itemDef.icon && !itemDef.action) {
+          itemDef.classified = true;
+      }
       if (!itemDef.icon) {
         itemDef.icon = '/img/misc/missing_icon.png';
       }
@@ -686,8 +689,8 @@
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
-        classified: itemDef.redacted,
-        isClassified: !itemDef.action,
+        redacted: itemDef.redacted,
+        classified: itemDef.classified,
         isInLoadout: false
       });
 
