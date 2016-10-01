@@ -687,6 +687,7 @@
         tracked: item.state === 2,
         locked: item.locked,
         classified: itemDef.redacted,
+        isClassified: !itemDef.action,
         isInLoadout: false
       });
 
