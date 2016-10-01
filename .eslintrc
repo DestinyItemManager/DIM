@@ -74,7 +74,6 @@
     "comma-style": "error",
     "key-spacing": "error",
     "keyword-spacing": "error",
-    "linebreak-style": "error",
     "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
     "no-array-constructor": "error",
     "no-lonely-if": "error",
