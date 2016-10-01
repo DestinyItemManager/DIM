@@ -464,12 +464,19 @@
       }
     }
 
+    function isClassified(item) {
+        if (!item.action) {
+            return true;
+        }
+        return false;
+    }
+
     function canEquip(item, store) {
       return $q(function(resolve, reject) {
         if (item.canBeEquippedBy(store)) {
           resolve(true);
         } else {
-          if (!item.action) {
+          if (isClassified) {
             reject(new Error("This item is classified and can not be transferred at this time."));
           } else {
             reject(new Error("This can only be equipped on " + item.classTypeName + "s at or above level " + item.equipRequiredLevel + "."));
