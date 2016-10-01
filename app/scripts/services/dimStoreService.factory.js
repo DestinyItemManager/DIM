@@ -585,7 +585,7 @@
       }
 
       if (!itemDef.icon && !itemDef.action) {
-          itemDef.classified = true;
+        itemDef.classified = true;
       }
       if (!itemDef.icon) {
         itemDef.icon = '/img/misc/missing_icon.png';
