@@ -665,7 +665,7 @@
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         equipment: item.isEquipment,
