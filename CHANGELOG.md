@@ -11,6 +11,7 @@
 * Consumables and materials are now sorted by category.
 * A bunch of consumables that can't be moved by the API (Treasure Keys, Splicer Keys, Wormsinger Runes, etc) no show up as non-transferable in DIM.
 * Husk of the Pit will no longer be equipped by the Item Leveling loadout.
+* Fixed equipping loadouts onto the current character from Loadout Builder.
 
 # 3.10.6
 
