@@ -15,6 +15,7 @@
 * The default shader no longer counts as a duplicate item.
 * DIM no longer tries to equip exotic faction class items where your character isn't aligned with the right faction.
 * Fixed more cases where your loadouts wouldn't be applied because you already had an exotic equipped.
+* New filters: is:light, is:hasLight, is:weapon, is:armor, is:cosmetic, is:equipment, is:equippable, is:postmaster, is:inpostmaster, is:equipped, is:transferable, is:movable.
 
 # 3.10.6
 
