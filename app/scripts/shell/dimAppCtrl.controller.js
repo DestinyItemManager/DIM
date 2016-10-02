@@ -79,7 +79,7 @@
     });
 
     hotkeys.add({
-      combo: ['ctrl+shift+d'],
+      combo: ['ctrl+alt+shift+d'],
       callback: function() {
         dimFeatureFlags.debugMode = true;
         console.log("***** DIM DEBUG MODE ENABLED *****");
