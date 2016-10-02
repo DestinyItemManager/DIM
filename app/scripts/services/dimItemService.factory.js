@@ -199,7 +199,7 @@
         if (i.isExotic) {
           const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
           // If we aren't already equipping into that slot...
-          if (!_.find(items, { type: otherExotic.type })) {
+          if (otherExotic && !_.find(items, { type: otherExotic.type })) {
             const similarItem = getSimilarItem(otherExotic);
             const target = dimStoreService.getStore(similarItem.owner);
 
