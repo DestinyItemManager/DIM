@@ -201,6 +201,9 @@
           // If we aren't already equipping into that slot...
           if (otherExotic && !_.find(items, { type: otherExotic.type })) {
             const similarItem = getSimilarItem(otherExotic);
+            if (!similarItem) {
+              return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + otherExotic.name));
+            }
             const target = dimStoreService.getStore(similarItem.owner);
 
             if (store.id === target.id) {
