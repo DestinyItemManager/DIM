@@ -572,11 +572,9 @@
           cq: 1587918730,
           eris: 1662396737
         };
-        
         if (!item) {
           return false;
         }
-        
         return (item.sourceHashes.includes(vendorHashes[predicate]));
       },
       // filter on what activity an item can come from. Currently supports
@@ -612,19 +610,15 @@
           coe: 3739898362,
           af: 1389125983
         };
-        
         if (!item) {
           return false;
         }
-     
-        if (predicate == "vanilla") {
+        if (predicate === "vanilla") {
           return item.year === 1;
         }
         else {
           return (item.sourceHashes.includes(activityHashes[predicate]));
         }
-        
-        
       },
       inloadout: function(predicate, item) {
         return item.isInLoadout;

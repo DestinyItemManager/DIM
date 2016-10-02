@@ -426,8 +426,8 @@
                 });
 
                 items = _.union(items, bucket.items);
-              }); 
-           } else {
+              });
+            } else {
               try {
                 glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
@@ -796,7 +796,7 @@
       try {
         createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
 
-        if (createdItem.stats && createdItem.stats.length == 0) {
+        if (createdItem.stats && createdItem.stats.length === 0) {
           createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
         }
       } catch (e) {
