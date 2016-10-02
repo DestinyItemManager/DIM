@@ -5,8 +5,8 @@
     .factory('dimLoadoutService', LoadoutService);
 
 
-  LoadoutService.$inject = ['$q', '$rootScope', '$translate', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue', '$filter'];
-  function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue, $filter) {
+  LoadoutService.$inject = ['$q', '$rootScope', '$translate', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue'];
+  function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
     var _loadouts = [];
     var _previousLoadouts = {}; // by character ID
 
@@ -220,7 +220,7 @@
             if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
               _previousLoadouts[store.id].pop();
             } else {
-              const previousLoadout = store.loadoutFromCurrentlyEquipped($filter('translate')('before_loadout', { name: loadout.name }));
+              const previousLoadout = store.loadoutFromCurrentlyEquipped($translate.instant('before_loadout', { name: loadout.name }));
               _previousLoadouts[store.id].push(previousLoadout);
             }
           }
