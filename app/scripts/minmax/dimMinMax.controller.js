@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', '$translate', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
+  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, $translate, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
     var buckets = [];
@@ -314,7 +314,7 @@
       },
       equipItems: function(set) {
         ngDialog.closeAll();
-        var loadout = { items: {} };
+        var loadout = { items: {}, name: $translate.instant('LoadoutAppliedAuto') };
         var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
         loadout.items.helmet = [items.Helmet.item];
         loadout.items.chest = [items.Chest.item];
@@ -325,14 +325,13 @@
         loadout.items.artifact = [items.Artifact.item];
         loadout.classType = ({ warlock: 0, titan: 1, hunter: 2 })[vm.active];
 
-        return $q.when(dimStoreService.getActiveStore())
-          .then(function(current) {
-            return dimLoadoutService.applyLoadout(current, {
-              classType: -1,
-              name: 'minmax',
-              items: items
-            }, true);
-          });
+        loadout = angular.copy(loadout);
+
+        _.each(loadout.items, function(val) {
+          val[0].equipped = true;
+        });
+
+        return dimLoadoutService.applyLoadout(dimStoreService.getActiveStore(), loadout, true);
       },
       getSetBucketsStep: function(activeGaurdian) {
         var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems, vm.lockedperks);

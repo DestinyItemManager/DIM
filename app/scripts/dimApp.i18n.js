@@ -49,7 +49,11 @@
           gather_engrams_except_exotics: "Exotics",
           farming_mode: "Engrams to Vault (Farming)",
           restore_all_items: "All Items",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          LoadoutAppliedAuto: "Automatic Loadout Builder",
+          LoadoutApplied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
+          LoadoutAppliedError: "None of the items in your loadout could be transferred.",
+          LoadoutAppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors."
         })
         .translations('it', {
           Level: "Livello",
