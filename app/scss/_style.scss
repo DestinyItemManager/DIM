@@ -6,6 +6,7 @@
 
 :root {
   --item-size: 44px;
+  --num-characters: 3;
   --character-columns: 3;
   --vault-max-columns: 999;
 }
@@ -1312,8 +1313,8 @@ g {
 
 .content {
   // This assumes 3 characters
-  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * 3 + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
-  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * 3 + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
 }
 
 #header {

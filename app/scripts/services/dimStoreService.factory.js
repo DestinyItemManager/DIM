@@ -533,6 +533,9 @@
 
           itemInfoService.cleanInfos(stores);
 
+          // Let our styling know how many characters there are
+          document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
+
           return stores;
         })
         .catch(function(e) {
