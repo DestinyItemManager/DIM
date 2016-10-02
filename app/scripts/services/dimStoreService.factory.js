@@ -829,6 +829,11 @@
         createdItem.complete = createdItem.talentGrid.complete;
       }
 
+      // In debug mode, keep the original JSON around
+      if (dimFeatureFlags.debugMode) {
+        createdItem.originalItem = item;
+      }
+
       return createdItem;
     }
 
