@@ -110,7 +110,7 @@
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
-        dimDefinitions.then((defs) => this.updateCharacterInfo(defs.Stat, characterInfo));
+        dimDefinitions.then((defs) => this.updateCharacterInfo(defs, characterInfo));
       },
       updateCharacterInfo: function(defs, characterInfo) {
         this.level = characterInfo.characterLevel;

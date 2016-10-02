@@ -194,15 +194,23 @@
 
     // Bulk equip items. Only use for multiple equips at once.
     function equipItems(store, items) {
-      if (items.length === 1) {
-        return equipItem(items[0]);
-      }
-      return dimBungieService.equipItems(store, items)
-        .then(function(equippedItems) {
-          return equippedItems.map(function(i) {
-            return updateItemModel(i, store, store, true);
+      // Check for (and move aside) exotics
+      const canEquip = items.map((i) => !i.isExotic || canEquipExotic(i, store));
+      return $q.all(canEquip).then((equippable) => {
+        if (!_.all(equippable)) {
+          throw new Error("Some of the exotics in your loadout couldn't be equipped.");
+        }
+
+        if (items.length === 1) {
+          return equipItem(items[0]);
+        }
+        return dimBungieService.equipItems(store, items)
+          .then(function(equippedItems) {
+            return equippedItems.map(function(i) {
+              return updateItemModel(i, store, store, true);
+            });
           });
-        });
+      });
     }
 
     function equipItem(item) {
