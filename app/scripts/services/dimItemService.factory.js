@@ -215,6 +215,9 @@
 
     function dequipItem(item) {
       var similarItem = getSimilarItem(item);
+      if (!similarItem) {
+        return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + item.name));
+      }
       var source = dimStoreService.getStore(item.owner);
       var target = dimStoreService.getStore(similarItem.owner);
 
