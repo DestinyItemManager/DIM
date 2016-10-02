@@ -276,9 +276,9 @@
             return dimItemService.getItem(i);
           });
           var dequips = _.map(_.groupBy(realItemsToDequip, 'owner'), function(dequipItems, owner) {
-            var equipItems = realItemsToDequip.map(function(i) {
+            var equipItems = _.compact(realItemsToDequip.map(function(i) {
               return dimItemService.getSimilarItem(i, loadoutItemIds);
-            });
+            }));
             return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
           });
           promise = $q.all(dequips);
