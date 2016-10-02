@@ -10,6 +10,7 @@
 * Full item details are shown in the move popup by default (they can still be turned off in settings).
 * Consumables and materials are now sorted by category.
 * A bunch of consumables that can't be moved by the API (Treasure Keys, Splicer Keys, Wormsinger Runes, etc) no show up as non-transferable in DIM.
+* Husk of the Pit will no longer be equipped by the Item Leveling loadout.
 
 # 3.10.6
 
