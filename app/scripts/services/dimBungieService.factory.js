@@ -59,10 +59,10 @@
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode > 1) {
-        if (response.data.Message) {
-          return $q.reject(new Error(response.data.Message));
-        } else {
+        if (typeof response.data.Message === "undefined") {
           return $q.reject(new Error('The Bungie API is currently experiencing difficulties.'));
+        } else {
+          return $q.reject(new Error(response.data.Message));
         }
       }
 
