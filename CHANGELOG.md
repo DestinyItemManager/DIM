@@ -14,6 +14,7 @@
 * Fixed equipping loadouts onto the current character from Loadout Builder.
 * The default shader no longer counts as a duplicate item.
 * DIM no longer tries to equip exotic faction class items where your character isn't aligned with the right faction.
+* Fixed more cases where your loadouts wouldn't be applied because you already had an exotic equipped.
 
 # 3.10.6
 
