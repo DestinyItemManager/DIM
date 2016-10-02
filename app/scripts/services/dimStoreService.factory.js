@@ -163,8 +163,47 @@
             .groupBy((i) => i.type.toLowerCase())
             .value()
         };
+      },
+      factionAlignment: function() {
+        const factionBadges = {
+          969832704: 'Future War Cult',
+          27411484: 'Dead Orbit',
+          2954371221: 'New Monarchy'
+        };
+
+        const badge = _.find(this.buckets.BUCKET_MISSION, (i) => factionBadges[i.hash]);
+        if (!badge) {
+          return null;
+        }
+
+        return factionBadges[badge.hash];
       }
     };
+
+    /**
+     * Check to see if this item has a node that restricts it to a
+     * certain faction, and if the character is aligned with that
+     * faction.
+     */
+    function factionItemAligns(store, item) {
+      if (!item.talentGrid) {
+        return true;
+      }
+
+      // Nodes that require matching faction alignment
+      const factionNodes = {
+        652505621: 'New Monarchy',
+        2669659850: 'Future War Cult',
+        2794386410: 'Dead Orbit'
+      };
+
+      const factionNode = _.find(item.talentGrid.nodes, (n) => factionNodes[n.hash]);
+      if (!factionNode) {
+        return true;
+      }
+
+      return factionNodes[factionNode.hash] === store.factionAlignment();
+    }
 
     // Prototype for Item objects - add methods to this to add them to all
     // items.
@@ -174,6 +213,7 @@
         if (store.isVault) {
           return false;
         }
+
         return this.equipment &&
           // For the right class
           (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
@@ -181,7 +221,8 @@
           this.equipRequiredLevel <= store.level &&
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
-          !this.location.inPostmaster;
+          !this.location.inPostmaster &&
+          (this.type === 'ClassItem' && factionItemAligns(store, this));
       },
       inCategory: function(categoryName) {
         return _.contains(this.categories, categoryName);
