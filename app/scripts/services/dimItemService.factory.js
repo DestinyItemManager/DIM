@@ -195,11 +195,27 @@
     // Bulk equip items. Only use for multiple equips at once.
     function equipItems(store, items) {
       // Check for (and move aside) exotics
-      const canEquip = items.map((i) => !i.isExotic || canEquipExotic(i, store));
-      return $q.all(canEquip).then((equippable) => {
-        if (!_.all(equippable)) {
-          throw new Error("Some of the exotics in your loadout couldn't be equipped.");
+      const extraItemsToEquip = _.compact(items.map((i) => {
+        if (i.isExotic) {
+          const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
+          // If we aren't already equipping into that slot...
+          if (!_.find(items, { type: otherExotic.type })) {
+            const similarItem = getSimilarItem(otherExotic);
+            const target = dimStoreService.getStore(similarItem.owner);
+
+            if (store.id === target.id) {
+              return similarItem;
+            } else {
+              // If we need to get the similar item from elsewhere, do that first
+              return moveTo(similarItem, store, true).then(() => similarItem);
+            }
+          }
         }
+        return undefined;
+      }));
+
+      return $q.all(extraItemsToEquip).then((extraItems) => {
+        items = items.concat(extraItems);
 
         if (items.length === 1) {
           return equipItem(items[0]);
@@ -216,27 +232,25 @@
     function equipItem(item) {
       return dimBungieService.equip(item)
         .then(function() {
-          var store = dimStoreService.getStore(item.owner);
+          const store = dimStoreService.getStore(item.owner);
           return updateItemModel(item, store, store, true);
         });
     }
 
     function dequipItem(item) {
-      var similarItem = getSimilarItem(item);
+      const similarItem = getSimilarItem(item);
       if (!similarItem) {
         return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + item.name));
       }
-      var source = dimStoreService.getStore(item.owner);
-      var target = dimStoreService.getStore(similarItem.owner);
+      const source = dimStoreService.getStore(item.owner);
+      const target = dimStoreService.getStore(similarItem.owner);
 
-      var p = $q.when();
+      let p = $q.when();
       if (source.id !== target.id) {
         p = moveTo(similarItem, source, true);
       }
 
-      return p.then(function() {
-        return equipItem(similarItem);
-      });
+      return p.then(() => equipItem(similarItem));
     }
 
     function moveToVault(item, amount) {
@@ -256,11 +270,31 @@
         });
     }
 
+    /**
+     * This returns a promise for true if the exotic can be
+     * equipped. In the process it will move aside any existing exotic
+     * that would conflict. If it could not move aside, this
+     * rejects. It never returns false.
+     */
     function canEquipExotic(item, store) {
-      var deferred = $q.defer();
-      var promise = deferred.promise;
+      const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
+      if (otherExotic) {
+        return dequipItem(otherExotic)
+          .then(() => true)
+          .catch(function() {
+            throw new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + otherExotic.type + ' slot cannot be unequipped.');
+          });
+      } else {
+        return $q.resolve(true);
+      }
+    }
 
-      var equippedExotics = _.filter(store.items, function(i) {
+    /**
+     * Identify the other exotic, if any, that needs to be moved
+     * aside. This is not a promise, it returns immediately.
+     */
+    function getOtherExoticThatNeedsDequipping(item, store) {
+      const equippedExotics = _.filter(store.items, (i) => {
         return (i.equipped &&
                 i.location.id !== item.location.id &&
                 i.location.sort === item.location.sort &&
@@ -268,48 +302,24 @@
       });
 
       if (equippedExotics.length === 0) {
-        deferred.resolve(true);
+        return null;
       } else if (equippedExotics.length === 1) {
-        var equippedExotic = equippedExotics[0];
+        const equippedExotic = equippedExotics[0];
 
         if (item.hasLifeExotic() || equippedExotic.hasLifeExotic()) {
-          deferred.resolve(true);
+          return null;
         } else {
-          dequipItem(equippedExotic)
-            .then(function() {
-              deferred.resolve(true);
-            })
-            .catch(function() {
-              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExotic.type + ' slot cannot be unequipped.'));
-            });
+          return equippedExotic;
         }
       } else if (equippedExotics.length === 2) {
         // Assume that only one of the equipped items has 'The Life Exotic' perk
-        if (item.hasLifeExotic()) {
-          var exoticItemWithPerk = _.find(equippedExotics, item.hasLifeExotic());
-          dequipItem(exoticItemWithPerk)
-            .then(function() {
-              deferred.resolve(true);
-            })
-            .catch(function() {
-              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + exoticItemWithPerk.type + ' slot cannot be unequipped.'));
-            });
-        } else {
-          var equippedExoticWithoutPerk = _.find(equippedExotics, function(item) {
-            return !item.hasLifeExotic();
-          });
-
-          dequipItem(equippedExoticWithoutPerk)
-            .then(function() {
-              deferred.resolve(true);
-            })
-            .catch(function() {
-              deferred.reject(new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + equippedExoticWithoutPerk.type + ' slot cannot be unequipped.'));
-            });
-        }
+        const hasLifeExotic = item.hasLifeExotic();
+        return _.find(equippedExotics, (i) => {
+          return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
+        });
+      } else {
+        throw new Error("We don't know how you got more than 2 equipped exotics!");
       }
-
-      return promise;
     }
 
     function chooseMoveAsideItem(store, item, moveContext) {
