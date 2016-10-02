@@ -471,7 +471,7 @@
         } else if (item.classified) {
           reject(new Error("This item is classified and can not be transferred at this time."));
         } else {
-          reject(new Error("This can only be equipped on " + item.classTypeName + "s at or above level " + item.equipRequiredLevel + "."));
+          reject(new Error("This can only be equipped on " + (item.classTypeName === 'unknown' ? 'character' : item.classTypeName) + "s at or above level " + item.equipRequiredLevel + "."));
         }
       });
     }

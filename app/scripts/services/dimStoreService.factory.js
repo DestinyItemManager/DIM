@@ -222,7 +222,7 @@
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
           !this.location.inPostmaster &&
-          (this.type === 'ClassItem' && factionItemAligns(store, this));
+          factionItemAligns(store, this);
       },
       inCategory: function(categoryName) {
         return _.contains(this.categories, categoryName);
