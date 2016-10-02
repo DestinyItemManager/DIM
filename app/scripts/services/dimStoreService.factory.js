@@ -110,7 +110,7 @@
         return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
-        dimDefinitions.then((defs) => this.updateCharacterInfo(defs.Stat, characterInfo));
+        dimDefinitions.then((defs) => this.updateCharacterInfo(defs, characterInfo));
       },
       updateCharacterInfo: function(defs, characterInfo) {
         this.level = characterInfo.characterLevel;
@@ -163,8 +163,47 @@
             .groupBy((i) => i.type.toLowerCase())
             .value()
         };
+      },
+      factionAlignment: function() {
+        const factionBadges = {
+          969832704: 'Future War Cult',
+          27411484: 'Dead Orbit',
+          2954371221: 'New Monarchy'
+        };
+
+        const badge = _.find(this.buckets.BUCKET_MISSION, (i) => factionBadges[i.hash]);
+        if (!badge) {
+          return null;
+        }
+
+        return factionBadges[badge.hash];
       }
     };
+
+    /**
+     * Check to see if this item has a node that restricts it to a
+     * certain faction, and if the character is aligned with that
+     * faction.
+     */
+    function factionItemAligns(store, item) {
+      if (!item.talentGrid) {
+        return true;
+      }
+
+      // Nodes that require matching faction alignment
+      const factionNodes = {
+        652505621: 'New Monarchy',
+        2669659850: 'Future War Cult',
+        2794386410: 'Dead Orbit'
+      };
+
+      const factionNode = _.find(item.talentGrid.nodes, (n) => factionNodes[n.hash]);
+      if (!factionNode) {
+        return true;
+      }
+
+      return factionNodes[factionNode.hash] === store.factionAlignment();
+    }
 
     // Prototype for Item objects - add methods to this to add them to all
     // items.
@@ -174,6 +213,7 @@
         if (store.isVault) {
           return false;
         }
+
         return this.equipment &&
           // For the right class
           (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
@@ -181,7 +221,8 @@
           this.equipRequiredLevel <= store.level &&
           // can be moved or is already here
           (!this.notransfer || this.owner === store.id) &&
-          !this.location.inPostmaster;
+          !this.location.inPostmaster &&
+          factionItemAligns(store, this);
       },
       inCategory: function(categoryName) {
         return _.contains(this.categories, categoryName);
@@ -533,6 +574,9 @@
 
           itemInfoService.cleanInfos(stores);
 
+          // Let our styling know how many characters there are
+          document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
+
           return stores;
         })
         .catch(function(e) {
@@ -576,7 +620,7 @@
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
-        // maybe it is classified...
+        // maybe it is redacted...
         itemDef = {
           itemName: "Missing Item",
           redacted: true
@@ -584,6 +628,9 @@
         dimManifestService.warnMissingDefinition();
       }
 
+      if (!itemDef.icon && !itemDef.action) {
+        itemDef.classified = true;
+      }
       if (!itemDef.icon) {
         itemDef.icon = '/img/misc/missing_icon.png';
       }
@@ -684,7 +731,7 @@
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         equipment: item.isEquipment,
@@ -708,7 +755,9 @@
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
         locked: item.locked,
-        classified: itemDef.redacted
+        redacted: itemDef.redacted,
+        classified: itemDef.classified,
+        isInLoadout: false
       });
 
       createdItem.index = createItemIndex(createdItem);
@@ -745,6 +794,10 @@
       }
       try {
         createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
+
+        if (createdItem.stats && createdItem.stats.length == 0) {
+          createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
+        }
       } catch (e) {
         console.error("Error building stats for " + createdItem.name, item, itemDef, e);
       }
@@ -937,6 +990,10 @@
 
       // We need to unique-ify because Ornament nodes show up twice!
       gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
+
+      if (!gridNodes.length) {
+        return undefined;
+      }
 
       // This can be handy for visualization/debugging
       // var columns = _.groupBy(gridNodes, 'column');

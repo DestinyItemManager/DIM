@@ -108,7 +108,7 @@
      */
     function loadManifestRemote(version, language, path) {
       service.statusText = 'Downloading latest Destiny info from Bungie...';
-      return $http.get("https://www.bungie.net/" + path, { responseType: "blob" })
+      return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
         .then(function(response) {
           service.statusText = 'Unzipping latest Destiny info...';
           return unzipManifest(response.data);
@@ -155,7 +155,7 @@
 
     function deleteManifestFile() {
       localStorage.removeItem('manifest-version');
-      getLocalManifestFile().then((fileEntry) => {
+      return getLocalManifestFile().then((fileEntry) => {
         return $q((resolve, reject) => {
           fileEntry.remove(resolve, reject);
         });
