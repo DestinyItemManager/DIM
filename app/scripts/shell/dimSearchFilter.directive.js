@@ -362,7 +362,8 @@
             .value();
         }
 
-        return _duplicates[item.hash] > 1;
+        // We filter out the "Default Shader" because everybody has one per character
+        return item.hash !== 4248210736 && _duplicates[item.hash] > 1;
       },
       classType: function(predicate, item) {
         var value;
