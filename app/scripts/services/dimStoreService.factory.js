@@ -426,8 +426,8 @@
                 });
 
                 items = _.union(items, bucket.items);
-              });
-            } else {
+              }); 
+           } else {
               try {
                 glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
@@ -751,6 +751,7 @@
         dmg: dmgName,
         visible: true,
         year: itemYear,
+        sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
