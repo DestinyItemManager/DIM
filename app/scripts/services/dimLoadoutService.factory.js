@@ -5,8 +5,8 @@
     .factory('dimLoadoutService', LoadoutService);
 
 
-  LoadoutService.$inject = ['$q', '$rootScope', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue', '$filter'];
-  function LoadoutService($q, $rootScope, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue, $filter) {
+  LoadoutService.$inject = ['$q', '$rootScope', '$translate', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue', '$filter'];
+  function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue, $filter) {
     var _loadouts = [];
     var _previousLoadouts = {}; // by character ID
 
@@ -346,15 +346,16 @@
           })
           .then(function() {
             var value = 'success';
-            var message = 'Your loadout of ' + scope.total + ' items has been transferred to your ' + store.name + '.';
+
+            var message = $translate.instant('LoadoutApplied', { amount: scope.total, store: store.name });
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {
                 value = 'error';
-                message = 'None of the items in your loadout could be transferred.';
+                message = $translate.instant('LoadoutAppliedError');
               } else {
                 value = 'warning';
-                message = 'Your loadout has been partially transferred, but ' + scope.failed + ' of ' + scope.total + ' items had errors.';
+                message = $translate.instant('LoadoutAppliedWarn', { failed: scope.failed, total: scope.total });
               }
             }
 
