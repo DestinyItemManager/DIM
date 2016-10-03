@@ -21,6 +21,7 @@
       saveLoadout: saveLoadout,
       addItemToLoadout: addItemToLoadout,
       applyLoadout: applyLoadout,
+      getLight: getLight,
       previousLoadouts: _previousLoadouts
     };
 
@@ -66,8 +67,6 @@
         _loadouts = _loadouts.splice(0);
       }
     }
-
-
 
     function getLoadouts(getLatest) {
       var deferred = $q.defer();
@@ -206,6 +205,19 @@
         }) || item;
       }
       return item;
+    }
+
+    function getLight(loadout, noArtifact) {
+      var itemWeight = {
+        Weapons: noArtifact ? .1304 : .12,
+        Armor: noArtifact ? .1087 : .10,
+        General: noArtifact ? .087 : .08
+      };
+      return _.reduce(loadout.items, function(memo, items) {
+        var item = _.findWhere(items, { equipped: true });
+
+        return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
+      }, 0);
     }
 
     function applyLoadout(store, loadout, allowUndo = false) {
