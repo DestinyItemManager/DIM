@@ -693,7 +693,29 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
+      // determine what year this item came from based on sourceHash value
+      // items will hopefully be tagged as follows
+      // No value: Vanilla, Crota's End, House of Wolves
+      // The Taken King (year 2): 460228854
+      // Rise of Iron (year3): 24296771
+
+      // This could be further refined for CE/HoW based on activity. See
+      // DestinyRewardSourceDefinition and filter on %SOURCE%
+      // if sourceHash doesn't contain these values, we assume they came from
+      // year 1
+      var itemYear = 1;
+
+      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+        itemYear = 2;
+      }
+      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+        itemYear = 3;
+      }
+
+      // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
       var createdItem = angular.extend(Object.create(ItemProto), {
+        // figure out what year this item is probably from
+
         // The bucket the item is currently in
         location: currentBucket,
         // The bucket the item normally resides in (even though it may be in the vault/postmaster)
@@ -728,7 +750,8 @@
         classTypeName: getClass(itemDef.classType),
         dmg: dmgName,
         visible: true,
-        year: (yearsDefs.year1.indexOf(item.itemHash) >= 0 ? 1 : 2),
+        year: itemYear,
+        sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
         tracked: item.state === 2,
@@ -773,7 +796,7 @@
       try {
         createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
 
-        if (createdItem.stats && createdItem.stats.length == 0) {
+        if (createdItem.stats && createdItem.stats.length === 0) {
           createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
         }
       } catch (e) {
