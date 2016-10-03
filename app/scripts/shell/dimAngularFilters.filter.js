@@ -143,7 +143,7 @@
         ];
       }
 
-      if (specificSortOrder.length > 0 && sort !== 'rarity') {
+      if (specificSortOrder.length > 0 && sort !== 'rarityThenPrimary') {
         items = _.sortBy(items, function(item) {
           var ix = specificSortOrder.indexOf(item.hash);
           return (ix === -1) ? 999 : ix;
@@ -152,7 +152,7 @@
       }
 
       items = _.sortBy(items || [], 'name');
-      if (sort === 'primaryStat' || sort === 'rarity' || sort === 'quality') {
+      if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
         items = _.sortBy(items, function(item) {
           return (item.primStat) ? (-1 * item.primStat.value) : 1000;
         });
@@ -162,7 +162,7 @@
           return item.quality && item.quality.min ? -item.quality.min : 1000;
         });
       }
-      if (sort === 'rarity' || (items.length && items[0].location.inGeneral)) {
+      if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
         items = _.sortBy(items, function(item) {
           switch (item.tier) {
           case 'Exotic':

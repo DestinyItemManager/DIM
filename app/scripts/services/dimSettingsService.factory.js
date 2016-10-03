@@ -43,7 +43,7 @@
       showElements: false,
       // Sort characters (mostRecent, mostRecentReverse, fixed)
       characterOrder: 'mostRecent',
-      // Sort items in buckets (primaryStat, rarity, quality)
+      // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
       itemSort: 'primaryStat',
       // How many columns to display character buckets
       charCol: 3,
