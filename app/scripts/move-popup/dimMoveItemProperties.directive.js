@@ -86,14 +86,18 @@
         '      </div>',
         '    </div>',
         '  </div>',
+        '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
+        '    <a ui-sref="debugItem({itemId: vm.item.id})">View Item Debug Info</a>',
+        '    <button ng-click="vm.dumpDebugInfo()">Dump info to console</a>',
+        '  </div>',
         '</div>'
       ].join('')
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope', 'dimFeatureFlags'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope', 'dimFeatureFlags', 'dimDefinitions'];
 
-  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags) {
+  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
     var vm = this;
 
     vm.featureFlags = dimFeatureFlags;
@@ -216,5 +220,14 @@
         });
       }
     }
+
+    vm.dumpDebugInfo = function() {
+      console.log("DEBUG INFO for '" + vm.item.name + "'");
+      console.log("DIM Item", vm.item);
+      console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+shift+r) and refresh items to see this.");
+      dimDefinitions.then((defs) => {
+        console.log("Manifest Item Definition", defs.InventoryItem[vm.item.hash]);
+      });
+    };
   }
 })();

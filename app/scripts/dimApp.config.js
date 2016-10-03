@@ -19,7 +19,9 @@
       // vendors are off until we can make them lighter on the API
       vendorsEnabled: false,
       // Stats are off in release until we get better formulas
-      qualityEnabled: true
+      qualityEnabled: true,
+      // Additional debugging / item info tools
+      debugMode: false
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
@@ -144,6 +146,10 @@
         .state('vendors', {
           url: "/vendors",
           templateUrl: "views/vendors.html"
+        })
+        .state('debugItem', {
+          url: "/debugItem/:itemId",
+          templateUrl: "views/debugItem.html"
         });
     });
 })();
