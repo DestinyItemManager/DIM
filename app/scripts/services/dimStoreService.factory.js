@@ -860,6 +860,8 @@
       // do specific things for specific items
       if (createdItem.hash === 491180618) { // Trials Cards
         createdItem.objectives = buildTrials(owner.advisors.activities.trials.extended);
+        var best = owner.advisors.activities.trials.extended.highestWinRank;
+        createdItem.percentComplete = best >= 7 ? 1 : (best >= 5 ? .5 : 0);
       }
 
       return createdItem;
