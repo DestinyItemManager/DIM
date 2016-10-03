@@ -3,10 +3,12 @@
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService', 'dimCsvService', 'dimStoreService', 'dimInfoService'];
+  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService', 'dimCsvService', 'dimStoreService', 'dimInfoService', 'dimFeatureFlags'];
 
-  function SettingsController(settings, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService) {
+  function SettingsController(settings, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags) {
     var vm = this;
+
+    vm.featureFlags = dimFeatureFlags;
 
     $scope.$watchCollection('vm.settings', function() {
       settings.save();

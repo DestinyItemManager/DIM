@@ -86,7 +86,11 @@
     cursor: pointer;
   }
 
-  .itemQuality {
+  .equip-button {
+    margin-left: 5px;
+  }
+
+  .minmax-section {
     width: 100%;
     display: flex;
     flex-direction: row;

@@ -1,4 +1,4 @@
-<div class="minmax" ng-controller="dimMinMaxCtrl as normal">
+<div class="minmax" ng-controller="dimMinMaxCtrl as normal" ng-class="{ itemQuality: normal.featureFlags.qualityEnabled }">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <h1>Loadout builder</h1>
 
@@ -26,7 +26,7 @@
       <span>Include vendor items</span>
     </label>
 
-    <div class="itemQuality">
+    <div class="minmax-section">
       <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
           <div class="item-stats">
@@ -43,7 +43,7 @@
 
   <div class="section">
     <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear.</small></p>
-    <dim-min-max-locks class="itemQuality" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
+    <dim-min-max-locks class="minmax-section" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
       locked-items-valid="normal.lockedItemsValid($data, type)"
       on-drop="normal.onDrop($data, type)"
       on-remove="normal.onRemove(type)"
@@ -53,7 +53,7 @@
   </div>
   <div class="section" ng-show="normal.excludeditems.length">
     <p>Excluded Items <small>- Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.</small></p>
-    <div class="itemQuality">
+    <div class="minmax-section">
       <div class="excluded-container">
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="normal.onExcludedDrop($data, $channel)" drop-validate="normal.excludedItemsValid($data, $channel)">
           <div class="excluded-items">
@@ -87,7 +87,7 @@
         <p>
           <label>
             <select ng-model="normal.scaleType" ng-change="normal.onModeChange()">
-              <option ng-if="normal.allowScaling" value="scaled">Scaled</option>
+              <option ng-if="normal.featureFlags.qualityEnabled" value="scaled">Scaled</option>
               <option value="base">Current</option>
             </select>
             Light mode
@@ -110,11 +110,11 @@
           <li>To use armor with multiple perks together shift+click the desired perks</li>
           <li><div class="example ex-or"></div> - Armor with any of these perks will be used ("or")</li>
           <li><div class="example ex-and"></div> - Armor with all of these perks will be used ("and")</li>
-          </li>
         </ul>
         <li>Drag and drop items into the locked buckets to build sets with only that gear</li>
         <li>Shift click an item to build sets without that gear</li>
         <li>Higher Tiers are better</li>
+        <li>
           <ul>
             <li>4/5/2 (a Tier 11 build) is 4 Intellect, 5 Discipline, 2 Strength (4+5+2 = Tier 11)</li>
             <li>Intellect speeds up Super recharge time</li>
@@ -143,8 +143,8 @@
   </div>
   <div ng-show="normal.progress >= 1">
     <div class="section loadout" ng-repeat="setType in normal.activeHighestSets">
-      <div><dim-stats stats="setType.tiers[normal.activesets].stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)">Create Loadout</span></div>
-      <div class="itemQuality">
+      <div><dim-stats stats="setType.tiers[normal.activesets].stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)">Create Loadout</span><span class='dim-button equip-button' ng-click="normal.equipItems(set)">Equip on Current Character</span></div>
+      <div class="minmax-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
           <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>

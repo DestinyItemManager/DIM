@@ -2,53 +2,7 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreBucket', StoreBucket)
-    .filter('equipped', function() {
-      return function(items, isEquipped) {
-        return _.select(items || [], function(item) {
-          return item.equipped === isEquipped;
-        });
-      };
-    })
-    .filter('sortItems', function() {
-      return function(items, sort) {
-        // Don't resort postmaster items - that way people can see
-        // what'll get bumped when it's full.
-        if (items.length && items[0].location.inPostmaster) {
-          return items;
-        }
-        items = _.sortBy(items || [], 'name');
-        if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
-          items = _.sortBy(items, function(item) {
-            return (item.primStat) ? (-1 * item.primStat.value) : 1000;
-          });
-        }
-        if (sort === 'quality') {
-          items = _.sortBy(items, function(item) {
-            return item.quality && item.quality.min ? -item.quality.min : 1000;
-          });
-        }
-        if (sort === 'rarity' || sort === 'rarityThenPrimary') {
-          items = _.sortBy(items, function(item) {
-            switch (item.tier) {
-            case 'Exotic':
-              return 0;
-            case 'Legendary':
-              return 1;
-            case 'Rare':
-              return 2;
-            case 'Uncommon':
-              return 3;
-            case 'Common':
-              return 4;
-            default:
-              return 5;
-            }
-          });
-        }
-        return items;
-      };
-    });
+    .directive('dimStoreBucket', StoreBucket);
 
   function StoreBucket() {
     return {
