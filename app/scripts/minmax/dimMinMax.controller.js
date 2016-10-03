@@ -6,7 +6,7 @@
 
   dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog,  dimFeatureFlags, dimLoadoutService) {
+  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
 
