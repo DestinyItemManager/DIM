@@ -6,6 +6,7 @@
 
 :root {
   --item-size: 44px;
+  --num-characters: 3;
   --character-columns: 3;
   --vault-max-columns: 999;
 }
@@ -344,6 +345,9 @@ a {
   margin: 2px 4px;
   color: #eee;
   display: block;
+}
+
+#filter-view td span.ng-binding {
   &:hover {
     color: #68a0b7;
     cursor: pointer;
@@ -658,10 +662,11 @@ img {
     .show-elements & {
       display: block;
       position: absolute;
-      top: 2px;
-      right: 2px;
-      height: 14px;
-      width: 14px;
+      bottom: 2px;
+      left: 2px;
+      height: 16px;
+      width: 16px;
+      filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
     }
   }
 }
@@ -672,10 +677,7 @@ img {
   top: 4px;
   left: 4px;
   color: gold;
-//  &.fa-ban {
-//    -webkit-text-stroke: 0px;
-//    color: red;
-  //  }
+  pointer-events: none;
   &.no-tag {
     display: none;
   }
@@ -1314,8 +1316,8 @@ g {
 
 .content {
   // This assumes 3 characters
-  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * 3 + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
-  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * 3 + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
+  min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
+  max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
 }
 
 #header {

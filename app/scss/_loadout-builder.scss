@@ -5,6 +5,10 @@
   #includeVendors {
     vertical-align: middle;
   }
+  .includeRares {
+    vertical-align: middle;
+    margin-left: 0;
+  }
 
   .example {
     width: 10px;
@@ -64,16 +68,30 @@
   }
   .label {
     text-align: center;
-    font-size: 10px;
+  }
+  .other-configs {
+    text-align: center;
   }
   .vendor-checkbox {
     margin: 0;
     margin-left: 10px;
   }
 
+  .loadout {
+    margin-bottom: 20px;
+  }
+
+  .expand-configs:hover {
+    color: #E8A534;
+    cursor: pointer;
+  }
+
+  .equip-button {
+    margin-left: 5px;
+  }
+
   .minmax-section {
     width: 100%;
-    margin-bottom: 20px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;

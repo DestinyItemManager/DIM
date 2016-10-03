@@ -154,7 +154,9 @@
     vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.canBeEquippedBy(vm.store) &&
-          i.talentGrid && !i.talentGrid.xpComplete; // Still need XP
+          i.talentGrid &&
+          !i.talentGrid.xpComplete && // Still need XP
+          i.hash !== 2168530918; // Husk of the pit has a weirdo one-off xp mechanic
       });
 
       var bestItemFn = function(item) {

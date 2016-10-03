@@ -102,9 +102,12 @@
       vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
         if (!dimLoadoutService.dialogOpen) {
           e.stopPropagation();
-          var active = dimStoreService.getActiveStore();
+          const active = dimStoreService.getActiveStore();
 
-          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false, item.amount);
+          // Equip if it's not equipped or it's on another character
+          const equip = !item.equipped || item.owner !== active.id;
+
+          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
         }
       });
 
