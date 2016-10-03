@@ -857,6 +857,11 @@
         createdItem.originalItem = item;
       }
 
+      // do specific things for specific items
+      if(createdItem.hash === 491180618) { // Trials Cards
+        createdItem.objectives = buildTrials(owner.advisors.activities.trials.extended);
+      }
+
       return createdItem;
     }
 
@@ -1027,6 +1032,25 @@
         dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
         complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
+    }
+
+    function buildTrials(trials) {
+      function buildObjective(name, current, max, bool) {
+        return {
+          displayName: $translate.instant(name),
+          progress: current,
+          completionValue: max,
+          complete: bool ? current >= max : current === max,
+          boolean: bool
+        }
+      };
+
+      return [
+        buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins),
+        buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses),
+        buildObjective(trials.winRewardDetails[0].winCount + ' Win reward (Armor)', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
+        buildObjective(trials.winRewardDetails[1].winCount + ' Win reward (Weapon)', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
+      ];
     }
 
     function buildRecords(recordBook, objectiveDef) {
