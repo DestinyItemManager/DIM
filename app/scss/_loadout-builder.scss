@@ -182,8 +182,8 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    width: 452px;
-    min-height: 60px;
+    width: calc((var(--item-size) + 14px)*7);
+    min-height: var(--item-size);
   }
 
   .excluded-container {
