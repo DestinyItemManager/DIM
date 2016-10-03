@@ -4,13 +4,13 @@
   angular.module('dimApp')
     .factory('dimFarmingService', FarmingService);
 
-  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService', 'dimSettingsService'];
+  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService'];
 
   /**
    * A service for "farming" items by moving them continuously off a character,
    * so that they don't go to the Postmaster.
    */
-  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService, dimSettingsService) {
+  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService) {
     var intervalId;
     var cancelReloadListener;
     var glimmerHashes = [
