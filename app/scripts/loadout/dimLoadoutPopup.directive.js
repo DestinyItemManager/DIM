@@ -31,7 +31,7 @@
         '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> {{ \'apply_search_loadout\' | translate:{ query: vm.search.query } }}</span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> {{ \'Maximize Light\' | translate }} <span class="light">{{ vm.maxLightValue }}</span></span>',
+        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> {{ \'Maximize Light\' | translate }} <span class="light" ng-bind="::vm.maxLightValue"></span></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> {{ \'Item Leveling\' | translate }}</span>',
@@ -256,7 +256,7 @@
       }
       return loadout;
     };
-    vm.maxLightValue = dimLoadoutService.getLight(vm.maxLightLoadout()).toFixed(2);
+    vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout()).toFixed(2);
 
     // A dynamic loadout set up to level weapons and armor
     vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
