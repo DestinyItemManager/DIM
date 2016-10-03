@@ -210,10 +210,11 @@
     // Pass in full loadout and store objects. loadout should have all types of weapon and armor
     // or it won't be accurate. function properly supports guardians w/o artifacts
     function getLight(store, loadout) {
+      console.log(store)
       var itemWeight = {
-        Weapons: store.light === 40 ? .12 : .1304,
-        Armor: store.light === 40 ? .10 : .1087,
-        General: store.light === 40 ? .08 : .087
+        Weapons: store.level === 40 ? .12 : .1304,
+        Armor: store.level === 40 ? .10 : .1087,
+        General: store.level === 40 ? .08 : .087
       };
       return _.reduce(loadout.items, function(memo, items) {
         var item = _.findWhere(items, { equipped: true });
