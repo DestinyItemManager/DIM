@@ -858,7 +858,7 @@
       }
 
       // do specific things for specific items
-      if(createdItem.hash === 491180618) { // Trials Cards
+      if (createdItem.hash === 491180618) { // Trials Cards
         createdItem.objectives = buildTrials(owner.advisors.activities.trials.extended);
       }
 
@@ -1042,8 +1042,8 @@
           completionValue: max,
           complete: bool ? current >= max : current === max,
           boolean: bool
-        }
-      };
+        };
+      }
 
       return [
         buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins),
