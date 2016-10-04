@@ -16,6 +16,10 @@ $item-header-spacing: 5px;
   position: relative;
   text-overflow: ellipsis;
 
+  .fa {
+    cursor: pointer;
+  }
+
   &.is-arc {
     background-color: $arc;
   }
@@ -26,10 +30,8 @@ $item-header-spacing: 5px;
     background-color: $void;
   }
 
-  a {
-    color: #000;
-  }
   .item-title {
+    color: #000;
     font-size: 1rem;
   }
   .icon {

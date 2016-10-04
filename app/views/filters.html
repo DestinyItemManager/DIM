@@ -5,7 +5,7 @@
     Click filters below to apply, or by typing in the search box.
   </p>
   <p>
-    Filters are combined using 'and' logic, for example "is:arc light:>300" will return all arc items with over 300 light.
+    Filters are combined using 'and' logic, for example "is:arc light:>300" will return all arc items with over 300 light. Filters can be negated using "not:", for example "not:engram" will find all non-engram items.
   </p>
   <table>
     <tr>
@@ -49,6 +49,42 @@
     </tr>
     <tr>
       <td>
+        <dim-filter-link filter="is:light"></dim-filter-link>
+        <dim-filter-link filter="has:light"></dim-filter-link>
+      </td>
+      <td>Items that contribute to your light level.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:weapon"></dim-filter-link>
+        <dim-filter-link filter="is:armor"></dim-filter-link>
+        <dim-filter-link filter="is:cosmetic"></dim-filter-link>
+      </td>
+      <td>High level item categories.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:equipment"></dim-filter-link>
+        <dim-filter-link filter="is:equippable"></dim-filter-link>
+      </td>
+      <td>Items that can be equipped.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:transferable"></dim-filter-link>
+        <dim-filter-link filter="is:movable"></dim-filter-link>
+      </td>
+      <td>Items that can be moved between characters.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:equipped"></dim-filter-link>
+      </td>
+      <td>Items that are currently equipped on a character.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:weapon"></dim-filter-link>
         <dim-filter-link filter="is:class"></dim-filter-link>
         <dim-filter-link filter="is:primary"></dim-filter-link>
         <dim-filter-link filter="is:special"></dim-filter-link>
@@ -58,6 +94,7 @@
     </tr>
     <tr>
       <td>
+        <dim-filter-link filter="is:armor"></dim-filter-link>
         <dim-filter-link filter="is:helmet"></dim-filter-link>
         <dim-filter-link filter="is:gauntlets"></dim-filter-link>
         <dim-filter-link filter="is:chest"></dim-filter-link>
@@ -235,8 +272,87 @@
       <td>
         <dim-filter-link filter="is:year1"></dim-filter-link>
         <dim-filter-link filter="is:year2"></dim-filter-link>
+        <dim-filter-link filter="is:year3"></dim-filter-link>
       </td>
       <td>Shows items from which year of Destiny they appeared in.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:inloadout"></dim-filter-link>
+        <dim-filter-link filter="not:inloadout"></dim-filter-link>
+      </td>
+      <td>Shows items that are included in any loadout.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:postmaster"></dim-filter-link>
+        <dim-filter-link filter="is:inpostmaster"></dim-filter-link>
+      </td>
+      <td>Items that are currently in the Postmaster.</td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:fwc"></dim-filter-link>
+        <dim-filter-link filter="is:do"></dim-filter-link>
+        <dim-filter-link filter="is:nm"></dim-filter-link>
+        <dim-filter-link filter="is:speaker"></dim-filter-link>
+        <dim-filter-link filter="is:variks"></dim-filter-link>
+        <dim-filter-link filter="is:shipwright"></dim-filter-link>
+        <dim-filter-link filter="is:osiris"></dim-filter-link>
+        <dim-filter-link filter="is:xur"></dim-filter-link>
+        <dim-filter-link filter="is:shaxx"></dim-filter-link>
+        <dim-filter-link filter="is:cq"></dim-filter-link>
+        <dim-filter-link filter="is:eris"></dim-filter-link>
+      </td>
+      <td>
+        <span>Item is available from vendor <i>Future War Cult</i></span>
+        <span>Item is available from vendor <i>Dead Orbit</i></span>
+        <span>Item is available from vendor <i>New Monarchy</i></span>
+        <span>Item is available from vendor <i>Speaker</i></span>
+        <span>Item is available from vendor <i>Variks</i></span>
+        <span>Item is available from vendor <i>Shipwright</i> (Amanda Holiday)</span>
+        <span>Item is available from vendor <i>Osiris</i></span>
+        <span>Item is available from vendor <i>Xur</i></span>
+        <span>Item is available from vendor <i>Shaxx</i></span>
+        <span>Item is available from vendor <i>Crucible Quartermaster</i></span>
+        <span>Item is available from vendor Eris Morn</span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <dim-filter-link filter="is:vanilla"></dim-filter-link>
+        <dim-filter-link filter="is:qw"></dim-filter-link>
+        <dim-filter-link filter="is:ib"></dim-filter-link>
+        <dim-filter-link filter="is:vog"></dim-filter-link>
+        <dim-filter-link filter="is:ce"></dim-filter-link>
+        <dim-filter-link filter="is:cd"></dim-filter-link>
+        <dim-filter-link filter="is:poe"></dim-filter-link>
+        <dim-filter-link filter="is:trials"></dim-filter-link>
+        <dim-filter-link filter="is:ttk"></dim-filter-link>
+        <dim-filter-link filter="is:coe"></dim-filter-link>
+        <dim-filter-link filter="is:kf"></dim-filter-link>
+        <dim-filter-link filter="is:srl"></dim-filter-link>
+        <dim-filter-link filter="is:roi"></dim-filter-link>
+        <dim-filter-link filter="is:af"></dim-filter-link>
+        <dim-filter-link filter="is:wotm"></dim-filter-link>
+      </td>
+      <td>
+        <span>Available from release <i>Vanilla</i></span>
+        <span>Available from activity <i>Queen's Wrath</i></span>
+        <span>Available from activity <i>Iron Banner</i></span>
+        <span>Available from activity <i>Vault of Glass</i></span>
+        <span>Available from activity <i>Crota's End</i></span>
+        <span>Available from activity <i>Prison of Elders</i></span>
+        <span>Available from activity <i>Trials of Osiris</i></span>
+        <span>Available from release <i>The Taken King</i></span>
+        <span>Available from activity <i>Challenge of Elders</i></span>
+        <span>Available from activity <i>King's Fall</i></span>
+        <span>Available from activity <i>Sparrow Racing League</i></span>
+        <span>Available from activity <i>Crimson Doubles</i></span>
+        <span>Available from release <i>Rise of Iron</i></span>
+        <span>Available from activity <i>Archon Forge</i></span>
+        <span>Available from activity <i>Wrath of the Machine</i></span>
+      </td>
     </tr>
   </table>
   </div>

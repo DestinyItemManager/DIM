@@ -78,6 +78,14 @@
       }
     });
 
+    hotkeys.add({
+      combo: ['ctrl+alt+shift+d'],
+      callback: function() {
+        dimFeatureFlags.debugMode = true;
+        console.log("***** DIM DEBUG MODE ENABLED *****");
+      }
+    });
+
     /**
      * Show a popup dialog containing the given template. Its class
      * will be based on the name.
