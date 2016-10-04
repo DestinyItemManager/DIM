@@ -1799,6 +1799,15 @@ button.toast-close-button {
   }
 }
 
+.changelog-toaster {
+  margin:0;
+  padding:0;
+  list-style-type: none;
+  li {
+    margin-bottom: 2px;
+  }
+}
+
 /*
  * AngularJS-Toaster
  * Version 0.3

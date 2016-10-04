@@ -1,4 +1,4 @@
-# Next
+# 3.11.0
 
 ##### New
 * Added Quick Move items to farming mode.
@@ -8,6 +8,8 @@
 * New filters for items based on where they come from: is:year3, is:fwc, is:do, is:nm, is:speaker, is:variks, is:shipwright, is:vanguard, is:osiris, is:xur, is:shaxx, is:cq, is:eris, is:vanilla, is:trials, is:ib, is:qw, is:cd, is:srl, is:vog, is:ce, is:ttk, is:kf, is:roi, is:wotm, is:poe, is:coe, is:af.
 * Added debug mode (ctrl+alt+shift+d) to view an item in the move-popup dialog.
 * Added max light value to max light button in dropdown.
+* Major loadout builder performance enhancements.
+* Support rare (blue) items in loadout builder.
 
 ##### Tweaks
 * Consumables and materials are now sorted by category.
@@ -28,6 +30,8 @@
 * DIM no longer tries to equip exotic faction class items where your character isn't aligned with the right faction.
 * Fixed more cases where your loadouts wouldn't be applied because you already had an exotic equipped.
 * Elemental Icons moved to bottom left to not cover the expansion symbol.
+* Loadout builder no longer shows duplicate sets.
+* Fix equip loadout builder equip to current character.
 
 # 3.10.6
 

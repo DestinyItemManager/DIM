@@ -15,13 +15,15 @@
     })
     .value('dimFeatureFlags', {
       // Tags are off in release right now
-      tagsEnabled: ('$DIM_FLAVOR' !== 'release'),
+      tagsEnabled: '$DIM_FLAVOR' !== 'release',
       // vendors are off until we can make them lighter on the API
       vendorsEnabled: false,
       // Stats are off in release until we get better formulas
       qualityEnabled: true,
       // Additional debugging / item info tools
-      debugMode: false
+      debugMode: false,
+      // show changelog toaster
+      changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta' || true,
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
@@ -29,8 +31,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', 'dimFeatureFlags',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, dimFeatureFlags) {
         $rootScope.loadingTracker = loadingTracker;
 
         // 1 Hour
@@ -64,8 +66,7 @@
         }
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        // eslint-disable-next-line no-constant-condition
-        if ("$DIM_FLAVOR" === 'release' || "$DIM_FLAVOR" === 'beta') {
+        if (dimFeatureFlags.changelogToaster) {
           dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
             title: 'DIM v$DIM_VERSION Released',
             view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
