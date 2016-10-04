@@ -54,9 +54,9 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', 'ngDialog', '$q', 'toaster', 'dimActionQueue', 'dimInfoService', '$timeout', 'dimSettingsService'];
+  MovePopupController.$inject = ['$scope', 'dimStoreService', 'ngDialog', '$timeout', 'dimSettingsService', 'dimItemMoveService'];
 
-  function MovePopupController($scope, loadingTracker, dimStoreService, dimItemService, ngDialog, $q, toaster, dimActionQueue, dimInfoService, $timeout, dimSettingsService) {
+  function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
     var vm = this;
     vm.settings = dimSettingsService;
 
@@ -119,167 +119,21 @@
       });
     };
 
-    // Only show this once per session
-    const didYouKnow = _.once(() => {
-      dimInfoService.show('movebox', {
-        title: 'Did you know?',
-        body: ['<p>Items can be dragged and dropped between different characters/vault columns.</p>',
-               '<p>Try it out next time!<p>'].join(''),
-        hide: 'Don\'t show this tip again'
-      });
-    });
-
-    /**
-     * Move the item to the specified store. Equip it if equip is true.
-     */
-    vm.moveItemTo = dimActionQueue.wrap(function moveItemTo(store, equip) {
-      didYouKnow();
-
-      var reload = vm.item.equipped || equip;
-      var promise = dimItemService.moveTo(vm.item, store, equip, vm.moveAmount);
-
-      if (reload) {
-        // Refresh light levels and such
-        promise = promise.then(function() {
-          return dimStoreService.updateCharacters();
-        });
-      }
-
-      promise = promise
-        .catch(function(a) {
-          toaster.pop('error', vm.item.name, a.message);
-        });
-
-      loadingTracker.addPromise(promise);
+    function closeThisDialog() {
       $scope.$parent.closeThisDialog();
-      return promise;
-    });
+    }
 
-    vm.consolidate = dimActionQueue.wrap(function() {
-      var stores = _.filter(dimStoreService.getStores(), function(s) { return s.id !== vm.item.owner && !s.isVault; });
-      var vault = dimStoreService.getVault();
+    vm.consolidate = function() {
+      dimItemMoveService.consolidate(vm.item, vm.store, closeThisDialog);
+    };
 
-      var promise = $q.all(stores.map(function(store) {
-        // First move everything into the vault
-        var item = _.find(store.items, function(i) {
-          return i.hash === vm.item.hash && !i.location.inPostmaster;
-        });
-        if (item) {
-          var amount = store.amountOfItem(vm.item);
-          return dimItemService.moveTo(item, vault, false, amount);
-        }
-        return undefined;
-      }));
+    vm.distribute = function() {
+      dimItemMoveService.distribute(vm.item, vm.store, closeThisDialog);
+    };
 
-      // Then move from the vault to the character
-      if (!vm.store.isVault) {
-        promise = promise.then(function() {
-          var item = _.find(vault.items, function(i) {
-            return i.hash === vm.item.hash && !i.location.inPostmaster;
-          });
-          if (item) {
-            var amount = vault.amountOfItem(vm.item);
-            return dimItemService.moveTo(item, vm.store, false, amount);
-          }
-          return undefined;
-        });
-      }
-
-      promise = promise.then(function() {
-        var message;
-        if (vm.store.isVault) {
-          message = 'All ' + vm.item.name + ' is now in your vault.';
-        } else {
-          message = 'All ' + vm.item.name + ' is now on your ' + vm.store.name + ".";
-        }
-        toaster.pop('success', 'Consolidated ' + vm.item.name, message);
-      })
-      .catch(function(a) {
-        toaster.pop('error', vm.item.name, a.message);
-      });
-
-      loadingTracker.addPromise(promise);
-      $scope.$parent.closeThisDialog();
-      return promise;
-    });
-
-    vm.distribute = dimActionQueue.wrap(function() {
-      // Sort vault to the end
-      var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id === 'vault' ? 2 : 1; });
-
-      var total = 0;
-      var amounts = stores.map(function(store) {
-        var amount = store.amountOfItem(vm.item);
-        total += amount;
-        return amount;
-      });
-
-      var numTargets = stores.length - 1; // exclude the vault
-      var remainder = total % numTargets;
-      var targets = stores.map(function(store, index) {
-        if (index >= numTargets) {
-          return 0; // don't want any in the vault
-        }
-        var result;
-        if (remainder > 0) {
-          result = Math.ceil(total / numTargets);
-        } else {
-          result = Math.floor(total / numTargets);
-        }
-        remainder--;
-        return result;
-      });
-      var deltas = _.zip(amounts, targets).map(function(pair) {
-        return pair[1] - pair[0];
-      });
-
-      var vaultMoves = [];
-      var targetMoves = [];
-      var vaultIndex = stores.length - 1;
-      var vault = stores[vaultIndex];
-
-      deltas.forEach(function(delta, index) {
-        if (delta < 0 && index !== vaultIndex) {
-          vaultMoves.push({
-            source: stores[index],
-            target: vault,
-            amount: -delta
-          });
-        } else if (delta > 0) {
-          targetMoves.push({
-            source: vault,
-            target: stores[index],
-            amount: delta
-          });
-        }
-      });
-
-      // All moves to vault in parallel, then all moves to targets in parallel
-      function applyMoves(moves) {
-        return $q.all(moves.map(function(move) {
-          var item = _.find(move.source.items, function(i) {
-            return i.hash === vm.item.hash;
-          });
-          return dimItemService.moveTo(item, move.target, false, move.amount);
-        }));
-      }
-
-      var promise = applyMoves(vaultMoves)
-            .then(function() {
-              return applyMoves(targetMoves);
-            });
-
-      promise = promise.then(function() {
-        toaster.pop('success', 'Distributed ' + vm.item.name, vm.item.name + ' is now equally divided between characters.');
-      })
-      .catch(function(a) {
-        toaster.pop('error', vm.item.name, a.message);
-      });
-
-      loadingTracker.addPromise(promise);
-      $scope.$parent.closeThisDialog();
-      return promise;
-    });
+    vm.moveItemTo = function(store, equip) {
+      dimItemMoveService.moveItemTo(vm.item, store, equip, vm.moveAmount, closeThisDialog);
+    };
 
     vm.stores = dimStoreService.getStores();
 

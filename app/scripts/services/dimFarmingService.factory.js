@@ -2,24 +2,30 @@
   'use strict';
 
   angular.module('dimApp')
-    .factory('dimEngramFarmingService', EngramFarmingService);
+    .factory('dimFarmingService', FarmingService);
 
-  EngramFarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService'];
+  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService'];
 
   /**
-   * A service for "farming" engrams by moving them continuously off a character,
+   * A service for "farming" items by moving them continuously off a character,
    * so that they don't go to the Postmaster.
    */
-  function EngramFarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService) {
+  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService) {
     var intervalId;
     var cancelReloadListener;
+    var glimmerHashes = [
+      269776572, // -house-banners
+      3632619276, // -silken-codex
+      2904517731, // -axiomatic-beads
+      1932910919 // -network-keys
+    ];
     return {
       active: false,
       store: null,
-      engramsMoved: 0,
-      movingEngrams: false,
+      itemsMoved: 0,
+      movingItems: false,
       makingRoom: false,
-      // Move all engrams on the selected character to the vault.
+      // Move all items on the selected character to the vault.
       moveItemsToVault: function(items, incrementCounter) {
         var self = this;
         var nospace = "No space left!";
@@ -57,7 +63,7 @@
                 })
                 .then(function() {
                   if (incrementCounter) {
-                    self.engramsMoved++;
+                    self.itemsMoved++;
                   }
                 })
                 .catch(function(e) {
@@ -69,26 +75,29 @@
             }, $q.resolve());
           });
       },
-      moveEngramsToVault: function() {
+      farmItems: function() {
         var self = this;
         var store = dimStoreService.getStore(self.store.id);
-        var engrams = _.select(store.items, function(i) {
-          return i.isEngram() && !i.location.inPostmaster;
+        var toMove = _.select(store.items, function(i) {
+          return !i.location.inPostmaster && (
+            (i.tier === 'Uncommon' && i.type === 'ClassItem') || // TODO: remove this once bug is fixed in game.
+            i.isEngram() ||
+            glimmerHashes.includes(i.hash));
         });
 
-        if (engrams.length === 0) {
+        if (toMove.length === 0) {
           return $q.resolve();
         }
 
-        self.movingEngrams = true;
-        return self.moveItemsToVault(engrams, true)
+        self.movingItems = true;
+        return self.moveItemsToVault(toMove, true)
           .finally(function() {
-            self.movingEngrams = false;
+            self.movingItems = false;
           });
       },
       // Ensure that there's one open space in each category that could
       // hold an engram, so they don't go to the postmaster.
-      makeRoomForEngrams: function() {
+      makeRoomForItems: function() {
         var self = this;
 
         var store = dimStoreService.getStore(self.store.id);
@@ -101,7 +110,10 @@
                           'Gauntlets',
                           'Chest',
                           'Leg',
-                          'ClassItem'];
+                          'ClassItem',
+                          'Ghost',
+                          'Consumables',
+                          'Materials'];
 
         var applicableItems = _.select(store.items, function(i) {
           return !i.equipped &&
@@ -114,7 +126,8 @@
         var itemsToMove = [];
         _.each(itemsByType, function(items) {
           // subtract 1 from capacity because we excluded the equipped item
-          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
+          // if we are at capacity, but there are any Uncommon items in the mix. don't move anything.
+          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1) && !_.pluck(items, 'tier').includes('Uncommon')) {
             // We'll move the lowest-value item to the vault.
             itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
@@ -146,23 +159,43 @@
       start: function(store) {
         var self = this;
         function farm() {
-          self.moveEngramsToVault().then(function() {
-            self.makeRoomForEngrams();
+          var consolidateHashes = [
+            417308266, // three of coins
+            211861343, // heavy ammo synth
+            937555249, // motes of light
+            1738186005, // motes of light
+//            1542293174, // armor materials
+//            1898539128, // weapon parts
+          ];
+
+          self.consolidate = consolidateHashes.map(function(hash) {
+            var ret = angular.copy(dimItemService.getItem({
+              hash: hash
+            }));
+            ret.amount = 0;
+            dimStoreService.getStores().forEach(function(s) {
+              ret.amount += s.amountOfItem(ret);
+            });
+            return ret;
+          });
+
+          self.farmItems().then(function() {
+            self.makeRoomForItems();
           });
         }
 
         if (!this.active) {
           this.active = true;
           this.store = store;
-          this.engramsMoved = 0;
-          this.movingEngrams = false;
+          this.itemsMoved = 0;
+          this.movingItems = false;
           this.makingRoom = false;
 
           // Whenever the store is reloaded, run the farming algo
           // That way folks can reload manually too
           cancelReloadListener = $rootScope.$on('dim-stores-updated', function() {
             // prevent some recursion...
-            if (self.active && !self.movingEngrams && !self.makingRoom) {
+            if (self.active && !self.movingItems && !self.makingRoom) {
               farm();
             }
           });

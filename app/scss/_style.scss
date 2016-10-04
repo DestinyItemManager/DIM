@@ -1518,6 +1518,18 @@ g {
       color: #222;
     }
   }
+
+  .light {
+    font-weight: 200;
+    font-size: 11px;
+    color: #f5dc56;
+  }
+  .light:before {
+    content: "\2726";
+    display: inline-block;
+    vertical-align: 7%;
+    font-size: 50%;
+  }
 }
 
 .button-extra {
@@ -1787,6 +1799,15 @@ button.toast-close-button {
   }
 }
 
+.changelog-toaster {
+  margin:0;
+  padding:0;
+  list-style-type: none;
+  li {
+    margin-bottom: 2px;
+  }
+}
+
 /*
  * AngularJS-Toaster
  * Version 0.3
@@ -2036,20 +2057,20 @@ button.toast-close-button {
 
 /* Engram Farming */
 
-#engram-farming {
+#item-farming {
   position: fixed;
   bottom: 6rem;
   background-color: rgba(0, 0, 0, 0.9);
-  left: calc(50% - 20rem);
-  width: 40rem;
+  left: calc(50% - 21.5rem);
+  width: 43rem;
   right: 0;
   border-radius: .5rem;
   padding: .5rem 1rem;
   color: #e0e0e0;
-  display: flex;
-  flex-direction: row;
   align-items: center;
   text-align: left;
+  display: flex;
+  flex-direction: row;
 
   button {
     color: white;
@@ -2066,16 +2087,26 @@ button.toast-close-button {
     }
   }
 
-  .engram-details {
-    flex: 1;
-    margin: 0 1em;
+  .item-details {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    span {
+      flex: 1;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
   }
 
   .engram-icon {
     position: relative;
+    margin-right: 1em;
   }
 
-  .engram-count {
+  .item-count {
     font-size: 16px;
     position: absolute;
     width: 100%;
