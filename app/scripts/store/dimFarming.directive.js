@@ -21,7 +21,6 @@
               <p>Quick Move</p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
             </span></div>
-            <small>*Uncommon (green) items will not go to the vault. You must delete them in-game to keep farming.</small>
           </span>
           <span><button ng-click="vm.stop($event)">Stop</button></span>
         </div>`
