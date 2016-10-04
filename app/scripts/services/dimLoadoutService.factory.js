@@ -21,6 +21,7 @@
       saveLoadout: saveLoadout,
       addItemToLoadout: addItemToLoadout,
       applyLoadout: applyLoadout,
+      getLight: getLight,
       previousLoadouts: _previousLoadouts
     };
 
@@ -66,8 +67,6 @@
         _loadouts = _loadouts.splice(0);
       }
     }
-
-
 
     function getLoadouts(getLatest) {
       var deferred = $q.defer();
@@ -206,6 +205,21 @@
         }) || item;
       }
       return item;
+    }
+
+    // Pass in full loadout and store objects. loadout should have all types of weapon and armor
+    // or it won't be accurate. function properly supports guardians w/o artifacts
+    function getLight(store, loadout) {
+      var itemWeight = {
+        Weapons: store.level === 40 ? .12 : .1304,
+        Armor: store.level === 40 ? .10 : .1087,
+        General: store.level === 40 ? .08 : .087
+      };
+      return _.reduce(loadout.items, function(memo, items) {
+        var item = _.findWhere(items, { equipped: true });
+
+        return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
+      }, 0);
     }
 
     function applyLoadout(store, loadout, allowUndo = false) {

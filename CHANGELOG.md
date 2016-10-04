@@ -5,6 +5,7 @@
 * New filters: is:light, is:hasLight, is:weapon, is:armor, is:cosmetic, is:equipment, is:equippable, is:postmaster, is:inpostmaster, is:equipped, is:transferable, is:movable.
 * New filters for items based on where they come from: is:year3, is:fwc, is:do, is:nm, is:speaker, is:variks, is:shipwright, is:vanguard, is:osiris, is:xur, is:shaxx, is:cq, is:eris, is:vanilla, is:trials, is:ib, is:qw, is:cd, is:srl, is:vog, is:ce, is:ttk, is:kf, is:roi, is:wotm, is:poe, is:coe, is:af.
 * Added debug mode (ctrl+alt+shift+d) to view an item in the move-popup dialog.
+* Added max light value to max light button in dropdown.
 
 ##### Tweaks
 * Consumables and materials are now sorted by category.

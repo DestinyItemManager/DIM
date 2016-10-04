@@ -1518,6 +1518,18 @@ g {
       color: #222;
     }
   }
+
+  .light {
+    font-weight: 200;
+    font-size: 11px;
+    color: #f5dc56;
+  }
+  .light:before {
+    content: "\2726";
+    display: inline-block;
+    vertical-align: 7%;
+    font-size: 50%;
+  }
 }
 
 .button-extra {
