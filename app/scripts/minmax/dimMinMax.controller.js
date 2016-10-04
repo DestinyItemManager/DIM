@@ -537,6 +537,7 @@
           return _.filter(items, function(item) {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
+              item.talentGrid && item.talentGrid.nodes &&
               ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
               item.stats;
           });
