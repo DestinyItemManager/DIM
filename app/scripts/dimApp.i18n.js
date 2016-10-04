@@ -47,7 +47,7 @@
           'Item Leveling': "Item Leveling",
           'Gather Engrams': "Gather Engrams",
           gather_engrams_except_exotics: "Exotics",
-          farming_mode: "Engrams to Vault (Farming)",
+          farming_mode: "Farming Mode (move items)",
           restore_all_items: "All Items",
           Loadouts: "Loadouts",
           LoadoutAppliedAuto: "Automatic Loadout Builder",
