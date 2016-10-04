@@ -22,14 +22,14 @@
         '  <div class="item-header" ng-class="vm.classes">',
         '    <div>',
         '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
-        '        <a ng-if="vm.item.lockable" href ng-click="vm.setItemState(vm.item, \'lock\')" title="{{!vm.item.locked ? \'Lock\':\'Unlock\'}} {{::vm.item.typeName}}">',
+        '        <span ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, \'lock\')" title="{{!vm.item.locked ? \'Lock\':\'Unlock\'}} {{::vm.item.typeName}}">',
         '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
-        '        </a>',
-        '        <a ng-if="vm.item.trackable" href ng-click="vm.setItemState(vm.item, \'track\')" title="{{!vm.item.tracked ? \'Track\':\'Untrack\'}} {{::vm.item.typeName}}">',
+        '        </span>',
+        '        <span ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" title="{{!vm.item.tracked ? \'Track\':\'Untrack\'}} {{::vm.item.typeName}}">',
         '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
-        '        </a>',
+        '        </span>',
         '      </span>',
-        '      <a target="_new" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}" class="item-title">',
+        '      <a target="_blank" rel="noopener noreferrer" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}#{{ vm.item.talentGrid.dtrPerks }}" class="item-title">',
         '        {{vm.title}}',
         '      </a>',
         '    </div>',
@@ -39,17 +39,17 @@
         '      </span>',
         '      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }}',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
-        '      <a ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" href ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
+        '      <span ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
         '        </i>',
-        '      </a>',
-        '    <dim-item-tag ng-if="vm.item.lockable" item="vm.item"></dim-item-tag>',
+        '      </span>',
+        '    <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>',
         '    </div>',
         '  </div>',
         '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
         '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
-        '  <form ng-if="vm.item.lockable" name="notes"><textarea name="data" placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
+        '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
         '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength">Error! Max 120 characters for notes.</span>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
@@ -65,12 +65,12 @@
         '        <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue), \'lower-stats\': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>',
         '      </span>',
         '      <span class="stat-box-val stat-box-cell" ng-class="{ \'higher-stats\': (stat.value > stat.equippedStatsValue && stat.comparable), \'lower-stats\': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}',
-        '        <span ng-if="stat.bar && !vm.settings.disableQuality && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
+        '        <span ng-if="stat.bar && vm.featureFlags.qualityEnabled && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:\'color\'">({{ stat.qualityPercentage.range }})</span>',
         '      </span>',
         '    </div>',
-        '    <div class="stat-box-row" ng-if="!vm.settings.disableQuality && vm.item.quality && vm.item.quality.min">',
+        '    <div class="stat-box-row" ng-if="vm.featureFlags.qualityEnabled && vm.item.quality && vm.item.quality.min">',
         '      <span class="stat-box-text stat-box-cell">Stats quality</span>',
-        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll</span>',
+        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll <a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"><i class="fa fa-question-circle" title="Click for more information about what Stats Quality is."></i></a></span>',
         '    </div>',
         '  </div>',
         '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
@@ -86,15 +86,21 @@
         '      </div>',
         '    </div>',
         '  </div>',
+        '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
+        '    <a ui-sref="debugItem({itemId: vm.item.id})">View Item Debug Info</a>',
+        '    <button ng-click="vm.dumpDebugInfo()">Dump info to console</a>',
+        '  </div>',
         '</div>'
       ].join('')
     };
   }
 
-  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope'];
+  MoveItemPropertiesCtrl.$inject = ['$sce', '$q', 'dimStoreService', 'dimItemService', 'dimSettingsService', 'ngDialog', '$scope', '$rootScope', 'dimFeatureFlags', 'dimDefinitions'];
 
-  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope) {
+  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
     var vm = this;
+
+    vm.featureFlags = dimFeatureFlags;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
       vm.item.talentGrid ||
@@ -214,5 +220,14 @@
         });
       }
     }
+
+    vm.dumpDebugInfo = function() {
+      console.log("DEBUG INFO for '" + vm.item.name + "'");
+      console.log("DIM Item", vm.item);
+      console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+shift+r) and refresh items to see this.");
+      dimDefinitions.then((defs) => {
+        console.log("Manifest Item Definition", defs.InventoryItem[vm.item.hash]);
+      });
+    };
   }
 })();

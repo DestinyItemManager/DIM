@@ -2,59 +2,76 @@
   'use strict';
 
   angular.module('dimApp')
-    .factory('dimSearchService', function(dimSettingsService) {
-      const categoryFilters = {
-        pulserifle: ['CATEGORY_PULSE_RIFLE'],
-        scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
-        handcannon: ['CATEGORY_HAND_CANNON'],
-        autorifle: ['CATEGORY_AUTO_RIFLE'],
-        primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
-        sniperrifle: ['CATEGORY_SNIPER_RIFLE'],
-        shotgun: ['CATEGORY_SHOTGUN'],
-        fusionrifle: ['CATEGORY_FUSION_RIFLE'],
-        specialweaponengram: ['CATEGORY_SPECIAL_WEAPON', 'CATEGORY_ENGRAM'],
-        rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
-        machinegun: ['CATEGORY_MACHINE_GUN'],
-        heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
-        sidearm: ['CATEGORY_SIDEARM'],
-        sword: ['CATEGORY_SWORD']
-      };
+    .factory('dimSearchService', SearchService)
+    .directive('dimSearchFilter', SearchFilter);
 
-      /**
-       * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
-       * values that will set the left-hand to the "match."
-       */
-      var filterTrans = {
-        dmg: ['arc', 'solar', 'void', 'kinetic'],
-        type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
-        tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
-        incomplete: ['incomplete'],
-        complete: ['complete'],
-        xpcomplete: ['xpcomplete'],
-        xpincomplete: ['xpincomplete', 'needsxp'],
-        upgraded: ['upgraded'],
-        classType: ['titan', 'hunter', 'warlock'],
-        dupe: ['dupe', 'duplicate'],
-        unascended: ['unascended', 'unassended', 'unasscended'],
-        ascended: ['ascended', 'assended', 'asscended'],
-        reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
-        tracked: ['tracked'],
-        untracked: ['untracked'],
-        locked: ['locked'],
-        unlocked: ['unlocked'],
-        stackable: ['stackable'],
-        engram: ['engram'],
-        category: _.keys(categoryFilters),
-        infusable: ['infusable', 'infuse'],
-        stattype: ['intellect', 'discipline', 'strength'],
-        new: ['new'],
-        glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply']
-      };
+  SearchService.$inject = ['dimSettingsService', 'dimFeatureFlags'];
+  function SearchService(dimSettingsService, dimFeatureFlags) {
+    const categoryFilters = {
+      pulserifle: ['CATEGORY_PULSE_RIFLE'],
+      scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
+      handcannon: ['CATEGORY_HAND_CANNON'],
+      autorifle: ['CATEGORY_AUTO_RIFLE'],
+      primaryweaponengram: ['CATEGORY_PRIMARY_WEAPON', 'CATEGORY_ENGRAM'],
+      sniperrifle: ['CATEGORY_SNIPER_RIFLE'],
+      shotgun: ['CATEGORY_SHOTGUN'],
+      fusionrifle: ['CATEGORY_FUSION_RIFLE'],
+      specialweaponengram: ['CATEGORY_SPECIAL_WEAPON', 'CATEGORY_ENGRAM'],
+      rocketlauncher: ['CATEGORY_ROCKET_LAUNCHER'],
+      machinegun: ['CATEGORY_MACHINE_GUN'],
+      heavyweaponengram: ['CATEGORY_HEAVY_WEAPON', 'CATEGORY_ENGRAM'],
+      sidearm: ['CATEGORY_SIDEARM'],
+      sword: ['CATEGORY_SWORD']
+    };
 
-      var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
-        return ["is:" + word, "not:" + word];
-      }));
+    /**
+     * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
+     * values that will set the left-hand to the "match."
+     */
+    var filterTrans = {
+      dmg: ['arc', 'solar', 'void', 'kinetic'],
+      type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
+      tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
+      incomplete: ['incomplete'],
+      complete: ['complete'],
+      xpcomplete: ['xpcomplete'],
+      xpincomplete: ['xpincomplete', 'needsxp'],
+      upgraded: ['upgraded'],
+      classType: ['titan', 'hunter', 'warlock'],
+      dupe: ['dupe', 'duplicate'],
+      unascended: ['unascended', 'unassended', 'unasscended'],
+      ascended: ['ascended', 'assended', 'asscended'],
+      reforgeable: ['reforgeable', 'reforge', 'rerollable', 'reroll'],
+      tracked: ['tracked'],
+      untracked: ['untracked'],
+      locked: ['locked'],
+      unlocked: ['unlocked'],
+      stackable: ['stackable'],
+      engram: ['engram'],
+      category: _.keys(categoryFilters),
+      infusable: ['infusable', 'infuse'],
+      stattype: ['intellect', 'discipline', 'strength'],
+      inloadout: ['inloadout'],
+      new: ['new'],
+      glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
+      year: ['year1', 'year2', 'year3'],
+      vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris'],
+      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af'],
+      hasLight: ['light', 'haslight'],
+      weapon: ['weapon'],
+      armor: ['armor'],
+      cosmetic: ['cosmetic'],
+      equipment: ['equipment', 'equippable'],
+      postmaster: ['postmaster', 'inpostmaster'],
+      equipped: ['equipped'],
+      transferable: ['transferable', 'movable']
+    };
 
+    var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
+      return ["is:" + word, "not:" + word];
+    }));
+
+    if (dimFeatureFlags.tagsEnabled) {
       dimSettingsService.itemTags.forEach(function(tag) {
         if (tag.type) {
           keywords.push("tag:" + tag.type);
@@ -62,24 +79,26 @@
           keywords.push("tag:none");
         }
       });
+    }
 
-      // Filters that operate on ranges (>, <, >=, <=)
-      var ranges = ['light', 'level', 'quality', 'percentage'];
-      ranges.forEach(function(range) {
-        keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
-      });
+    // Filters that operate on ranges (>, <, >=, <=)
+    var ranges = ['light', 'level', 'quality', 'percentage'];
+    ranges.forEach(function(range) {
+      keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
+    });
 
-      // free form notes on items
+    // free form notes on items
+    if (dimFeatureFlags.tagsEnabled) {
       keywords.push('notes:');
+    }
 
-      return {
-        query: '',
-        filterTrans: filterTrans,
-        keywords: keywords,
-        categoryFilters: categoryFilters
-      };
-    })
-    .directive('dimSearchFilter', SearchFilter);
+    return {
+      query: '',
+      filterTrans: filterTrans,
+      keywords: keywords,
+      categoryFilters: categoryFilters
+    };
+  }
 
   SearchFilter.$inject = ['dimSearchService'];
 
@@ -280,7 +299,7 @@
         return item.dmg === predicate;
       },
       type: function(predicate, item) {
-        return item.type.toLowerCase() === predicate;
+        return item.type && item.type.toLowerCase() === predicate;
       },
       tier: function(predicate, item) {
         const tierMap = {
@@ -354,7 +373,8 @@
             .value();
         }
 
-        return _duplicates[item.hash] > 1;
+        // We filter out the "Default Shader" because everybody has one per character
+        return item.hash !== 4248210736 && _duplicates[item.hash] > 1;
       },
       classType: function(predicate, item) {
         var value;
@@ -519,12 +539,133 @@
           return item.year === 1;
         } else if (predicate === 'year2') {
           return item.year === 2;
+        } else if (predicate === 'year3') {
+          return item.year === 3;
         } else {
           return false;
         }
       },
+      // filter on what vendor an item can come from. Currently supports
+      //   * Future War Cult (fwc)
+      //   * Dead Orbit (do)
+      //   * New Monarchy (nm)
+      //   * Speaker (speaker)
+      //   * Variks (variks)
+      //   * Shipwright (shipwright)
+      //   * Osiris: (osiris)
+      //   * Xur: (xur)
+      //   * Shaxx: (shaxx)
+      //   * Crucible Quartermaster (cq)
+      //   * Eris Morn (eris)
+      vendor: function(predicate, item) {
+        var vendorHashes = {
+          fwc: 2859308742,
+          do: 3080587303,
+          nm: 1963381593,
+          speaker: 3498761033,
+          variks: 3523074641,
+          shipwright: 3660582080,
+          vanguard: 3496730577,
+          osiris: 482203941,
+          xur: 941581325,
+          shaxx: 1257353826,
+          cq: 1587918730,
+          eris: 1662396737
+        };
+        if (!item) {
+          return false;
+        }
+        return (item.sourceHashes.includes(vendorHashes[predicate]));
+      },
+      // filter on what activity an item can come from. Currently supports
+      //   * Vanilla (vanilla)
+      //   * Trials (trials)
+      //   * Iron Banner (ib)
+      //   * Queen's Wrath (qw)
+      //   * Crimson Doubles (cd)
+      //   * Sparrow Racing League (srl)
+      //   * Vault of Glass (vog)
+      //   * Crota's End (ce)
+      //   * The Taken King (ttk)
+      //   * King's Fall (kf)
+      //   * Rise of Iron (roi)
+      //   * Wrath of the Machine (wotm)
+      //   * Prison of Elders (poe)
+      //   * Challenge of Elders (coe)
+      //   * Archon Forge (af)
+      activity: function(predicate, item) {
+        var activityHashes = {
+          trials: 3413298620,
+          ib: 478645002,
+          qw: 3286066462,
+          cd: 344892955,
+          srl: 3945957624,
+          vog: 686593720,
+          ce: 3107502809,
+          ttk: 460228854,
+          kf: 3551688287,
+          roi: 24296771,
+          wotm: 3147905712,
+          poe: 36493462,
+          coe: 3739898362,
+          af: 1389125983
+        };
+        if (!item) {
+          return false;
+        }
+        if (predicate === "vanilla") {
+          return item.year === 1;
+        }
+        else {
+          return (item.sourceHashes.includes(activityHashes[predicate]));
+        }
+      },
+      inloadout: function(predicate, item) {
+        return item.isInLoadout;
+      },
       new: function(predicate, item) {
         return item.isNew;
+      },
+      hasLight: function(predicate, item) {
+        const lightBuckets = ["BUCKET_CHEST",
+                                 "BUCKET_LEGS",
+                                 "BUCKET_ARTIFACT",
+                                 "BUCKET_HEAVY_WEAPON",
+                                 "BUCKET_PRIMARY_WEAPON",
+                                 "BUCKET_CLASS_ITEMS",
+                                 "BUCKET_SPECIAL_WEAPON",
+                                 "BUCKET_HEAD",
+                                 "BUCKET_ARMS",
+                                 "BUCKET_GHOST"];
+        return item.bucket && _.contains(lightBuckets, item.bucket.id);
+      },
+      weapon: function(predicate, item) {
+        return item.bucket && item.bucket.sort === 'Weapons';
+      },
+      armor: function(predicate, item) {
+        return item.bucket && item.bucket.sort === 'Armor';
+      },
+      cosmetic: function(predicate, item) {
+        const cosmeticBuckets = ["BUCKET_SHADER",
+                                 "BUCKET_MODS",
+                                 "BUCKET_EMOTES",
+                                 "BUCKET_EMBLEM",
+                                 "BUCKET_VEHICLE",
+                                 "BUCKET_SHIP",
+                                 "BUCKET_HORN"];
+        return item.bucket && _.contains(cosmeticBuckets, item.bucket.id);
+      },
+      equipment: function(predicate, item) {
+        return item.equipment;
+      },
+      postmaster: function(predicate, item) {
+        return item.location && item.location.inPostmaster;
+      },
+      equipped: function(predicate, item) {
+        return item.equipped;
+      },
+      transferable: function(predicate, item) {
+        return !item.notransfer;
       }
     };
   }

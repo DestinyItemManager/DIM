@@ -4,10 +4,12 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$state', '$q', '$timeout', '$location', 'dimStoreService', 'ngDialog'];
+  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
 
-  function dimMinMaxCtrl($scope, $state, $q, $timeout, $location, dimStoreService, ngDialog) {
+  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
     var vm = this;
+    vm.featureFlags = dimFeatureFlags;
+
     var buckets = [];
     var vendorBuckets = [];
     var perks = {
@@ -26,7 +28,7 @@
         return '';
       }
       return (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
-        (armorpiece.normalStats[1735777505].bonus > 0 ? 'disc ' : '') +
+        (armorpiece.normalStats[1735777505].bonus > 0 ? 'dis ' : '') +
         (armorpiece.normalStats[4244567218].bonus > 0 ? 'str' : '');
     }
 
@@ -40,7 +42,8 @@
           var bonus = 0;
           var total = 0;
           stats.forEach(function(stat) {
-            total += o.normalStats[stat][vm.scaleType];
+            var scaleType = (o.tier === 'Rare') ? 'base' : vm.scaleType;
+            total += o.normalStats[stat][scaleType];
             bonus = o.normalStats[stat].bonus;
           });
           return total + bonus;
@@ -61,13 +64,49 @@
              (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
     }
 
+    function calcArmorStats(set) {
+      _.each(set.armor, function(armor) {
+        var int = armor.item.normalStats[144602215];
+        var dis = armor.item.normalStats[1735777505];
+        var str = armor.item.normalStats[4244567218];
+
+        var scaleType = (armor.item.tier === 'Rare') ? 'base' : vm.scaleType;
+
+        set.stats.STAT_INTELLECT.value += int[scaleType];
+        set.stats.STAT_DISCIPLINE.value += dis[scaleType];
+        set.stats.STAT_STRENGTH.value += str[scaleType];
+
+        switch (armor.bonusType) {
+        case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
+        case 'dis': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
+        case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
+        }
+      });
+    }
+
+    function getBonusConfig(armor) {
+      return {
+        Helmet: armor.Helmet.bonusType,
+        Gauntlets: armor.Gauntlets.bonusType,
+        Chest: armor.Chest.bonusType,
+        Leg: armor.Leg.bonusType,
+        ClassItem: armor.ClassItem.bonusType,
+        Artifact: armor.Artifact.bonusType,
+        Ghost: armor.Ghost.bonusType
+      };
+    }
+
+    function genSetHash(armor) {
+      return _.map(armor, function(piece) { return piece.item.id; }).join('');
+    }
+
     function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
       var statHashes = [
-          { stats: [144602215, 1735777505], type: 'intdisc' },
+          { stats: [144602215, 1735777505], type: 'intdis' },
           { stats: [144602215, 4244567218], type: 'intstr' },
-          { stats: [1735777505, 4244567218], type: 'discstr' },
+          { stats: [1735777505, 4244567218], type: 'disstr' },
           { stats: [144602215], type: 'int' },
-          { stats: [1735777505], type: 'disc' },
+          { stats: [1735777505], type: 'dis' },
           { stats: [4244567218], type: 'str' }
       ];
       var armor = {};
@@ -87,6 +126,7 @@
           var filtered = _.filter(combined, function(item) {
             return !_.findWhere(excluded, { index: item.index }) && hasPerks(item, lockedPerks[armortype]); // Not excluded and has the correct locked perks
           });
+
           statHashes.forEach(function(hash, index) {
             if (!vm.fullMode && index > 2) {
               return;
@@ -106,11 +146,14 @@
           return o.item.index;
         }), function(obj) {
           obj.bonusType = getBonusType(obj.item);
+          if (obj.bonusType === '') {
+            bestCombs.push({ item: obj.item, bonusType: '' });
+          }
           if (obj.bonusType.indexOf('int') > -1) {
             bestCombs.push({ item: obj.item, bonusType: 'int' });
           }
-          if (obj.bonusType.indexOf('disc') > -1) {
-            bestCombs.push({ item: obj.item, bonusType: 'disc' });
+          if (obj.bonusType.indexOf('dis') > -1) {
+            bestCombs.push({ item: obj.item, bonusType: 'dis' });
           }
           if (obj.bonusType.indexOf('str') > -1) {
             bestCombs.push({ item: obj.item, bonusType: 'str' });
@@ -119,6 +162,22 @@
         armor[armortype] = bestCombs;
       }
       return armor;
+    }
+
+    function getActiveHighestSets(setMap, activeSets) {
+      var count = 0;
+      var topSets = [];
+      _.each(setMap, function(setType) {
+        if (count >= 10) {
+          return;
+        }
+
+        if (setType.tiers[activeSets]) {
+          topSets.push(setType);
+          count += 1;
+        }
+      });
+      return topSets;
     }
 
     function validSet(gearset) {
@@ -160,7 +219,7 @@
       active: 'warlock',
       activesets: '5/5/2',
       type: 'Helmet',
-      scaleType: 'scaled',
+      scaleType: vm.featureFlags.qualityEnabled ? 'scaled' : 'base',
       progress: 0,
       fullMode: false,
       includeVendors: false,
@@ -169,12 +228,14 @@
       showYear1: false,
       allSetTiers: [],
       highestsets: {},
+      activeHighestSets: [],
       ranked: {},
       activePerks: {},
       excludeditems: [],
+      collapsedConfigs: [false, false, false, false, false, false, false, false, false, false],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
-      setOrderValues: ['-str_val', '-disc_val', '-int_val'],
+      setOrderValues: ['-str_val', '-dis_val', '-int_val'],
       lockedItemsValid: function(droppedId, droppedType) {
         droppedId = getId(droppedId);
         if (alreadyExists(vm.excludeditems, droppedId)) {
@@ -201,6 +262,9 @@
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
         vm.excludeditems = [];
         vm.highestsets = vm.getSetBucketsStep(vm.active);
+      },
+      onActiveSetsChange: function() {
+        vm.activeHighestSets = getActiveHighestSets(vm.highestsets, vm.activesets);
       },
       onModeChange: function() {
         vm.highestsets = vm.getSetBucketsStep(vm.active);
@@ -297,6 +361,20 @@
         ngDialog.closeAll();
         var loadout = { items: {} };
         var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
+        _.each(items, function(itemContainer, itemType) {
+          loadout.items[itemType.toLowerCase()] = [itemContainer.item];
+        });
+        loadout.classType = ({ warlock: 0, titan: 1, hunter: 2 })[vm.active];
+
+        $scope.$broadcast('dim-edit-loadout', {
+          loadout: loadout,
+          equipAll: true
+        });
+      },
+      equipItems: function(set) {
+        ngDialog.closeAll();
+        var loadout = { items: {}, name: $translate.instant('LoadoutAppliedAuto') };
+        var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
         loadout.items.helmet = [items.Helmet.item];
         loadout.items.chest = [items.Chest.item];
         loadout.items.gauntlets = [items.Gauntlets.item];
@@ -306,10 +384,13 @@
         loadout.items.artifact = [items.Artifact.item];
         loadout.classType = ({ warlock: 0, titan: 1, hunter: 2 })[vm.active];
 
-        $scope.$broadcast('dim-edit-loadout', {
-          loadout: loadout,
-          equipAll: true
+        loadout = angular.copy(loadout);
+
+        _.each(loadout.items, function(val) {
+          val[0].equipped = true;
         });
+
+        return dimLoadoutService.applyLoadout(dimStoreService.getActiveStore(), loadout, true);
       },
       getSetBucketsStep: function(activeGaurdian) {
         var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
@@ -321,10 +402,8 @@
         var ghosts = bestArmor.Ghost || [];
         var artifacts = bestArmor.Artifact || [];
         var setMap = {};
-        var int;
-        var dis;
-        var str;
         var set;
+        var tiersSet = new Set();
         var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
         if (combos === 0) {
           return null;
@@ -362,34 +441,28 @@
                               name: 'Strength'
                             }
                           },
-                          int_val: 0,
-                          disc_val: 0,
-                          str_val: 0
+                          setHash: 0
                         };
                         if (validSet(set.armor)) {
-                          _.each(set.armor, function(armor) {
-                            int = armor.item.normalStats[144602215];
-                            dis = armor.item.normalStats[1735777505];
-                            str = armor.item.normalStats[4244567218];
-
-                            set.stats.STAT_INTELLECT.value += int[vm.scaleType];
-                            set.stats.STAT_DISCIPLINE.value += dis[vm.scaleType];
-                            set.stats.STAT_STRENGTH.value += str[vm.scaleType];
-
-                            switch (armor.bonusType) {
-                            case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
-                            case 'disc': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
-                            case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
-                            }
-                          });
-
+                          set.setHash = genSetHash(set.armor);
+                          calcArmorStats(set);
                           var tiersString = Math.min(Math.floor(set.stats.STAT_INTELLECT.value / 60), 5) +
                               '/' + Math.min(Math.floor(set.stats.STAT_DISCIPLINE.value / 60), 5) +
                               '/' + Math.min(Math.floor(set.stats.STAT_STRENGTH.value / 60), 5);
-                          if (setMap[tiersString]) {
-                            setMap[tiersString].push(set);
+
+                          tiersSet.add(tiersString);
+
+                          // Build a map of all sets but only keep one copy of armor
+                          // so we reduce memory usage
+                          if (setMap[set.setHash]) {
+                            if (setMap[set.setHash].tiers[tiersString]) {
+                              setMap[set.setHash].tiers[tiersString].configs.push(getBonusConfig(set.armor));
+                            } else {
+                              setMap[set.setHash].tiers[tiersString] = { stats: set.stats, configs: [getBonusConfig(set.armor)] };
+                            }
                           } else {
-                            setMap[tiersString] = [set];
+                            setMap[set.setHash] = { set: set, tiers: {} };
+                            setMap[set.setHash].tiers[tiersString] = { stats: set.stats, configs: [getBonusConfig(set.armor)] };
                           }
                         }
 
@@ -408,8 +481,8 @@
                         }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
-          var tiers = _.each(_.groupBy(Object.keys(setMap), function(set) {
-            return _.reduce(set.split('/'), function(memo, num){
+          var tiers = _.each(_.groupBy([...tiersSet.keys()], function(tierString) {
+            return _.reduce(tierString.split('/'), function(memo, num){
               return memo + parseInt(num, 10);
             }, 0);
           }), function(tier) {
@@ -428,6 +501,8 @@
           }
 
           vm.activesets = vm.allSetTiers[1];
+          vm.activeHighestSets = getActiveHighestSets(setMap, vm.activesets);
+          vm.collapsedConfigs = [false, false, false, false, false, false, false, false, false, false];
 
           // Finish progress
           vm.progress = processedCount / combos;
@@ -443,7 +518,6 @@
       },
       getBonus: dimStoreService.getBonus,
       getStore: dimStoreService.getStore,
-      // get Items for infusion
       getItems: function() {
         var stores = dimStoreService.getStores();
 
@@ -452,64 +526,56 @@
           return;
         }
 
-        var allItems = [];
-        var vendorItems = [];
+        function filterPerks(perks, item) {
+          return _.chain(perks.concat(item.talentGrid.nodes))
+                  .uniq(function(node) { return node.hash; })
+                  .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                  .value();
+        }
 
-        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
-
-        _.each(stores, function(store) {
-          var items = _.filter(store.items, function(item) {
+        function filterItems(items) {
+          return _.filter(items, function(item) {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
               ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
-              item.primStat.value >= 280 && // only 280+ light items
               item.stats;
           });
+        }
+
+        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
+
+        var allItems = [];
+        var vendorItems = [];
+        _.each(stores, function(store) {
+          var items = filterItems(store.items);
 
           allItems = allItems.concat(items);
+
+          // Build a map of perks
           _.each(items, function(item) {
-            // Filter out any unnecessary perks here
             if (item.classType === 3) {
               _.each(['warlock', 'titan', 'hunter'], function(classType) {
-                // Filter out any unnecessary perks here
-                perks[classType][item.type] = _.chain(perks[classType][item.type].concat(item.talentGrid.nodes))
-                                                .uniq(function(node) { return node.hash; })
-                                                .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
-                                                .value();
+                perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
               });
             } else {
-              perks[item.classTypeName][item.type] = _.chain(perks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
-                                                      .uniq(function(node) { return node.hash; })
-                                                      .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
-                                                      .value();
+              perks[item.classTypeName][item.type] = filterPerks(perks[item.classTypeName][item.type], item);
             }
           });
 
+          // Process vendors here
           _.each(store.vendors, function(vendor) {
-            var vendItems = _.filter(vendor.items.armor, function(item) {
-              return item.primStat &&
-              item.primStat.statHash === 3897883278 && // has defense hash
-              ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
-              item.primStat.value >= 280 && // only 280+ light items
-              item.stats;
-            });
+            var vendItems = filterItems(vendor.items.armor);
 
             vendorItems = vendorItems.concat(vendItems);
+
+            // Build a map of perks
             _.each(vendItems, function(item) {
               if (item.classType === 3) {
                 _.each(['warlock', 'titan', 'hunter'], function(classType) {
-                  // Filter out any unnecessary perks here
-                  vendorPerks[classType][item.type] = _.chain(vendorPerks[classType][item.type].concat(item.talentGrid.nodes))
-                                                        .uniq(function(node) { return node.hash; })
-                                                        .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
-                                                        .value();
+                  vendorPerks[classType][item.type] = filterPerks(vendorPerks[classType][item.type], item);
                 });
               } else {
-                // Filter out any unnecessary perks here
-                vendorPerks[item.classTypeName][item.type] = _.chain(vendorPerks[item.classTypeName][item.type].concat(item.talentGrid.nodes))
-                                                              .uniq(function(node) { return node.hash; })
-                                                              .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
-                                                              .value();
+                vendorPerks[item.classTypeName][item.type] = filterPerks(vendorPerks[item.classTypeName][item.type], item);
               }
             });
           });
@@ -522,49 +588,46 @@
           });
         });
 
-        function normalizeStats(item) {
-          item.normalStats = {};
-          _.each(item.stats, function(stat) {
-            item.normalStats[stat.statHash] = {
-              statHash: stat.statHash,
-              base: stat.base,
-              scaled: stat.scaled ? stat.scaled.min : 0,
-              bonus: stat.bonus,
-              split: stat.split,
-              qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0
-            };
-          });
-          return item;
-        }
-
-        function getBuckets(items) {
-          // put items into buckets and create normalize stats property
-          return {
-            Helmet: items.filter(function(item) {
-              return item.type === 'Helmet';
-            }).map(normalizeStats),
-            Gauntlets: items.filter(function(item) {
-              return item.type === 'Gauntlets';
-            }).map(normalizeStats),
-            Chest: items.filter(function(item) {
-              return item.type === 'Chest';
-            }).map(normalizeStats),
-            Leg: items.filter(function(item) {
-              return item.type === 'Leg';
-            }).map(normalizeStats),
-            ClassItem: items.filter(function(item) {
-              return item.type === 'ClassItem';
-            }).map(normalizeStats),
-            Artifact: items.filter(function(item) {
-              return item.type === 'Artifact';
-            }).map(normalizeStats),
-            Ghost: items.filter(function(item) {
-              return item.type === 'Ghost';
-            }).map(normalizeStats)
-          };
-        }
-
         function initBuckets() {
+          function normalizeStats(item) {
+            item.normalStats = {};
+            _.each(item.stats, function(stat) {
+              item.normalStats[stat.statHash] = {
+                statHash: stat.statHash,
+                base: stat.base,
+                scaled: stat.scaled ? stat.scaled.min : 0,
+                bonus: stat.bonus,
+                split: stat.split,
+                qualityPercentage: stat.qualityPercentage ? stat.qualityPercentage.min : 0
+              };
+            });
+            return item;
+          }
+          function getBuckets(items) {
+            return {
+              Helmet: items.filter(function(item) {
+                return item.type === 'Helmet';
+              }).map(normalizeStats),
+              Gauntlets: items.filter(function(item) {
+                return item.type === 'Gauntlets';
+              }).map(normalizeStats),
+              Chest: items.filter(function(item) {
+                return item.type === 'Chest';
+              }).map(normalizeStats),
+              Leg: items.filter(function(item) {
+                return item.type === 'Leg';
+              }).map(normalizeStats),
+              ClassItem: items.filter(function(item) {
+                return item.type === 'ClassItem';
+              }).map(normalizeStats),
+              Artifact: items.filter(function(item) {
+                return item.type === 'Artifact';
+              }).map(normalizeStats),
+              Ghost: items.filter(function(item) {
+                return item.type === 'Ghost';
+              }).map(normalizeStats)
+            };
+          }
           function loadBucket(classType, useVendorItems = false) {
             var items = (useVendorItems) ? vendorItems : allItems;
             return getBuckets(items.filter(function(item) {
@@ -584,10 +647,19 @@
           };
         }
 
-        initBuckets();
-        vm.onCharacterChange(); // start processing
+        initBuckets();  // Get items
+        vm.onCharacterChange(); // Start processing
       }
     });
+
+    // Entry point of builder this get stores and starts processing
     vm.getItems();
+    $rootScope.$on('dim-active-platform-updated', function() {
+      vm.activePerks = {};
+      vm.excludeditems = [];
+      vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+      vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
+      vm.getItems();
+    });
   }
 })();

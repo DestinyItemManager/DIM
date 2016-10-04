@@ -3,36 +3,6 @@
 
   angular.module('dimApp')
     .directive('dimStoreItem', StoreItem)
-    // A filter that will heatmap-color a background according to a percentage
-    .filter('qualityColor', function() {
-      return function getColor(value, property) {
-        property = property || 'background-color';
-        var color = 0;
-        if (value <= 85) {
-          color = 0;
-        } else if (value <= 90) {
-          color = 20;
-        } else if (value <= 95) {
-          color = 60;
-        } else if (value <= 99) {
-          color = 120;
-        } else if (value >= 100) {
-          color = 190;
-        } else {
-          return 'white';
-        }
-        var result = {};
-        result[property] = 'hsl(' + color + ',85%,60%)';
-        return result;
-      };
-    })
-    .filter('bungieBackground', function() {
-      return function backgroundImage(value) {
-        return {
-          'background-image': 'url(https://www.bungie.net' + value + ')'
-        };
-      };
-    })
     .filter('tagIcon', ['dimSettingsService', function(dimSettingsService) {
       var iconType = {};
 
@@ -130,10 +100,15 @@
       }
 
       vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
-        e.stopPropagation();
-        var active = dimStoreService.getActiveStore();
+        if (!dimLoadoutService.dialogOpen) {
+          e.stopPropagation();
+          const active = dimStoreService.getActiveStore();
 
-        dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? !item.equipped : false);
+          // Equip if it's not equipped or it's on another character
+          const equip = !item.equipped || item.owner !== active.id;
+
+          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
+        }
       });
 
       vm.clicked = function openPopup(item, e) {

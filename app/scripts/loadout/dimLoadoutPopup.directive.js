@@ -31,7 +31,7 @@
         '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> {{ \'apply_search_loadout\' | translate:{ query: vm.search.query } }}</span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> {{ \'Maximize Light\' | translate }}</span>',
+        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> {{ \'Maximize Light\' | translate }} <span class="light" ng-bind="::vm.maxLightValue"></span></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> {{ \'Item Leveling\' | translate }}</span>',
@@ -154,7 +154,9 @@
     vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.canBeEquippedBy(vm.store) &&
-          i.talentGrid && !i.talentGrid.xpComplete; // Still need XP
+          i.talentGrid &&
+          !i.talentGrid.xpComplete && // Still need XP
+          i.hash !== 2168530918; // Husk of the pit has a weirdo one-off xp mechanic
       });
 
       var bestItemFn = function(item) {
@@ -249,8 +251,12 @@
       };
 
       var loadout = optimalLoadout(applicableItems, bestItemFn, 'Maximize Light');
-      vm.applyLoadout(loadout, $event);
+      if ($event) {
+        vm.applyLoadout(loadout, $event);
+      }
+      return loadout;
     };
+    vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout()).toFixed(1);
 
     // A dynamic loadout set up to level weapons and armor
     vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {

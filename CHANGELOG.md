@@ -1,3 +1,45 @@
+# Next
+
+##### New
+* Added `is:inloadout` filter
+* New filters: is:light, is:hasLight, is:weapon, is:armor, is:cosmetic, is:equipment, is:equippable, is:postmaster, is:inpostmaster, is:equipped, is:transferable, is:movable.
+* New filters for items based on where they come from: is:year3, is:fwc, is:do, is:nm, is:speaker, is:variks, is:shipwright, is:vanguard, is:osiris, is:xur, is:shaxx, is:cq, is:eris, is:vanilla, is:trials, is:ib, is:qw, is:cd, is:srl, is:vog, is:ce, is:ttk, is:kf, is:roi, is:wotm, is:poe, is:coe, is:af.
+* Added debug mode (ctrl+alt+shift+d) to view an item in the move-popup dialog.
+* Added max light value to max light button in dropdown.
+
+##### Tweaks
+* Consumables and materials are now sorted by category.
+* All other items in the General Bucket are sorted by Rarity.
+* Move ornaments inbetween materials and emblems.
+* Link to wiki for stat quality in the move-popup box.
+* Full item details are shown in the move popup by default (they can still be turned off in settings).
+
+##### Bugfixes
+* Prevent double click to move item if loadout dialog is open.
+* [#889](https://github.com/DestinyItemManager/DIM/issues/889) Fixed stats for Iron Banner and Trials of Osiris items.
+* Fix infusion finder preview item not changing as you choose different fuel items. Also filter out year 1 items.
+* Fix some green boots that would show up with a gold border.
+* A bunch of consumables that can't be moved by the API (Treasure Keys, Splicer Keys, Wormsinger Runes, etc) now show up as non-transferable in DIM.
+* Husk of the Pit will no longer be equipped by the Item Leveling loadout.
+* Fixed equipping loadouts onto the current character from Loadout Builder.
+* The default shader no longer counts as a duplicate item.
+* DIM no longer tries to equip exotic faction class items where your character isn't aligned with the right faction.
+* Fixed more cases where your loadouts wouldn't be applied because you already had an exotic equipped.
+* Elemental Icons moved to bottom left to not cover the expansion symbol.
+
+# 3.10.6
+
+* The DestinyTracker link in the item popup header now includes your perk rolls and selected perk. Share your roll easily!
+* Fixed moving consumables in loadouts. Before, you would frequently get errors applying a loadout that included consumables. We also have a friendlier, more informative error message when you don't have enough of a consumable to fulfill your loadout.
+* Fixed a bug where when moving stacks of items, the stack would disappear.
+* The progress bar around the reputation diamonds is now more accurate.
+* Enabled item quality.
+* Item Quality is enabled by default for new installs.
+* A new Record Books row in Progress has your Rise of Iron record book.
+* Searches now work for all characters and the vault again.
+* Can equip loadouts onto the current character from Loadout Builder.
+* Added ability to feature toggle items between Beta + Release.
+
 # 3.10.5
 
 * Added Ornaments.

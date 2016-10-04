@@ -59,7 +59,11 @@
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode > 1) {
-        return $q.reject(new Error(response.data.Message));
+        if (typeof response.data.Message === "undefined") {
+          return $q.reject(new Error('The Bungie API is currently experiencing difficulties.'));
+        } else {
+          return $q.reject(new Error(response.data.Message));
+        }
       }
 
       return response;
@@ -360,7 +364,7 @@
               .catch((e) => console.error("Failed to load advisors", e))
           ];
           if (includeVendors) {
-            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters).catch((error) => {
+            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters).catch(() => {
               console.warn("Vendors are not able to be downloaded atm.");
             }));
           }

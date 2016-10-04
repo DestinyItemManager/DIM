@@ -2,12 +2,7 @@
   'use strict';
 
   angular.module('dimApp')
-    .directive('dimStoreHeading', StoreHeading)
-    .filter('firstLetter', function() {
-      return function(str) {
-        return str.substring(0, 1);
-      };
-    });
+    .directive('dimStoreHeading', StoreHeading);
 
   function StoreHeading() {
     return {
