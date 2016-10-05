@@ -54,17 +54,17 @@
         return;
       }
 
-      if(args.dupes) {
-        vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash })
+      if (args.dupes) {
+        vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
       } else {
         var dupe = _.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id });
-        if(!dupe) {
+        if (!dupe) {
           vm.comparisons.push(args.item);
         }
       }
     };
 
-    vm.remove = function remove(item, $event) {
+    vm.remove = function remove(item) {
       vm.comparisons = vm.comparisons.filter(function(compare) {
         return compare.index !== item.index;
       });
