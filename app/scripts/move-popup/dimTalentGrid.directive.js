@@ -19,7 +19,7 @@
       controller: TalentGridCtrl,
       controllerAs: 'vm',
       scope: {
-        talentGrid: '=dimTalentGrid',
+        talentGrid: '=',
         perksOnly: '=',
         infuse: '&dimInfuse'
       },

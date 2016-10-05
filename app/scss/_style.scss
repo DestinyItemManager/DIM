@@ -124,18 +124,6 @@ div:focus, span:focus {
   width: 250px;
   margin-left: -10px;
   margin-bottom: 4px;
-  padding-left: 5px;
-  height: 22px;
-  background: rgb(46, 46, 46);
-  border: none;
-  border-bottom: 1px solid gray;
-  color: white;
-
-  &:hover, &:focus {
-    background: transparent;
-    outline: none;
-    border-bottom: 1px solid $orange;
-  }
 }
 
 dt {
@@ -1417,13 +1405,23 @@ g {
   width: 100%;
   z-index: 3;
   bottom: 0;
-  background: rgba(195, 188, 180, 0.9);
-  color: #1a1e24;
-  box-shadow: 0 -1px 30px 2px #000;
+  background: #434444;
+  color: #e0e0e0;
+  box-shadow: 0 -1px 6px 0px #222;
 }
 
 .loadout-item {
   position: relative;
+}
+
+.compare-item {
+  display: inline-block;
+  position: relative;
+  margin: 0 5px 5px 5px;
+  .talent-grid {
+    height: 89px;
+    width: 150px;
+  }
 }
 
 .loadout-content {

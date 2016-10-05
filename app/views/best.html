@@ -147,7 +147,7 @@
       <div class="minmax-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
-          <dim-talent-grid class="smaller" dim-talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
+          <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
           <div class="label"><small translate="{{setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'int'? 'Intellect': setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Discipline' : setType.tiers[normal.activesets].configs[0][armorpiece.item.type] === 'str'? 'Strength' : 'No Bonus'}}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[normal.activesets].configs">
             <small translate="{{config[armorpiece.item.type] === 'int'? 'Intellect' : config[armorpiece.item.type] === 'dis'? 'Discipline' : config[armorpiece.item.type] === 'str'? 'Strength' : 'No Bonus'}}"></small>
