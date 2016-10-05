@@ -535,11 +535,11 @@
           }
 
           function filterPerks(perks, item) {
+            // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
+            var unwantedPerkHashes = [1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599];
             return _.chain(perks.concat(item.talentGrid.nodes))
                     .uniq(function(node) { return node.hash; })
-                    // [1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599]
-                    // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
-                    .reject(function(node) { return _.contains([1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599], node.hash); })
+                    .reject(function(node) { return _.contains(unwantedPerkHashes, node.hash); })
                     .value();
           }
 
