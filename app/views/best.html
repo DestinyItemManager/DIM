@@ -3,24 +3,24 @@
   <h1>Loadout builder</h1>
 
   <p>
-    <label ng-class="{selected: normal.active === 'warlock'}" class='dim-button'>
-      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='warlock'>Warlock
+    <label ng-class="{selected: normal.active === 2}" class='dim-button'>
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='2'>{{normal.i18nClassNames[2]}}
     </label>
-    <label ng-class="{selected: normal.active === 'titan'}" class='dim-button'>
-      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='titan'>Titan
+    <label ng-class="{selected: normal.active === 0}" class='dim-button'>
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='0'>{{normal.i18nClassNames[0]}}
     </label>
-    <label ng-class="{selected: normal.active === 'hunter'}" class='dim-button'>
-      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='hunter'>Hunter
+    <label ng-class="{selected: normal.active === 1}" class='dim-button'>
+      <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='1'>{{normal.i18nClassNames[1]}}
     </label>
   </p>
 
   <dim-loadout></dim-loadout>
 
   <p>
-    <span class='dim-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.active}} gear</span>
+    <span class='dim-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.i18nClassNames[normal.active]}} gear</span>
   </p>
   <div class="section" ng-show="showGear">
-    Armor: <select ng-model='normal.type' ng-options="bucket as bucket for (bucket, data) in normal.ranked"></select>
+    Armor: <select ng-model='normal.type' ng-options="val as type for (val, type) in normal.i18nItemNames"></select>
     <label>
       <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
       <span>Include vendor items</span>
@@ -44,6 +44,7 @@
   <div class="section">
     <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear.</small></p>
     <dim-min-max-locks class="minmax-section" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
+      i18n-item-names="normal.i18nItemNames"
       locked-items-valid="normal.lockedItemsValid($data, type)"
       on-drop="normal.onDrop($data, type)"
       on-remove="normal.onRemove(type)"

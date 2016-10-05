@@ -8,6 +8,7 @@
       lockedItems: '<',
       lockedPerks: '<',
       activePerks: '<',
+      i18nItemNames: '<',
       lockedItemsValid: '&',
       onDrop: '&',
       onRemove: '&',
@@ -32,7 +33,7 @@
       '      <dim-min-max-item item-data="lockeditem" store-data="vm.getStore({owner: lockeditem.owner})"></dim-min-max-item>',
       '      <div class="close" ng-click="vm.onRemove({type: type})" role="button" tabindex="0"></div>',
       '    </div>',
-      '    <div class="label">{{type}}</div>',
+      '    <div class="label">{{vm.i18nItemNames[type]}}</div>',
       '  </div>',
       '</div>'
     ].join('')
