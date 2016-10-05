@@ -21,11 +21,11 @@
           <div class="compare-bucket">
             <span class="compare-item fixed-left">
               <div>&nbsp;</div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
@@ -58,6 +58,12 @@
 
     vm.compareSimilar = function(type) {
       vm.comparisons = _.union(vm.comparisons, type === 'archetype' ? vm.archeTypes : vm.similarTypes);
+    };
+
+    vm.sort = function(statHash) {
+      vm.comparisons = _.sortBy(vm.comparisons, function(item) {
+        return _.findWhere(item.stats, { statHash: statHash }).value;
+      }).reverse();
     };
 
     vm.add = function add(args) {
