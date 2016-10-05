@@ -1,3 +1,8 @@
+# 3.11.1
+
+* Fixed an issue with farming mode where users without motes, 3oC, coins, or heavy could not use farming mode.
+* Fixed an issue where classified items would not show up in the UI.
+
 # 3.11.0
 
 ##### New
