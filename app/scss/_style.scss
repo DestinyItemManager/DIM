@@ -1414,6 +1414,12 @@ g {
   position: relative;
 }
 
+.compare-bucket {
+  white-space: nowrap;
+  overflow-x: scroll;
+  width: 100%;
+}
+
 .compare-item {
   display: inline-block;
   position: relative;
