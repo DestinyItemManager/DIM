@@ -1434,6 +1434,9 @@ g {
   margin: 0 5px 5px 5px;
   min-width: 150px;
   max-width: 150px;
+  .highlight {
+    color: $orange;
+  }
   .talent-grid {
     height: 89px;
     width: 150px;

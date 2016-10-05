@@ -21,11 +21,11 @@
           <div class="compare-bucket">
             <span class="compare-item fixed-left">
               <div>&nbsp;</div>
-              <div ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
-              <div class="stat-box-row" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
