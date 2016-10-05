@@ -172,7 +172,7 @@
             var ret = angular.copy(dimItemService.getItem({
               hash: hash
             }));
-            if (ret !== null) {
+            if (ret) {
               ret.amount = 0;
               dimStoreService.getStores().forEach(function(s) {
                 ret.amount += s.amountOfItem(ret);
