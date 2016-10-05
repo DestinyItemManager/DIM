@@ -66,7 +66,7 @@
     return function(items, sort) {
       // Don't resort postmaster items - that way people can see
       // what'll get bumped when it's full.
-      if (items.length && items[0].location.inPostmaster) {
+      if (items.length && (items[0].location.inPostmaster || items[0].location.id === "BUCKET_BOUNTIES")) {
         return items;
       }
 
