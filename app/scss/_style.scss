@@ -1410,6 +1410,12 @@ g {
   box-shadow: 0 -1px 6px 0px #222;
 }
 
+dim-compare {
+  #loadout-drawer {
+    padding-left: 1em;
+  }
+}
+
 .loadout-item {
   position: relative;
 }
@@ -1423,7 +1429,7 @@ g {
   .fixed-left {
     border-left: none;
     position: fixed;
-    left: 0;
+    left: 1em;
     min-width: 100px;
   }
 }
