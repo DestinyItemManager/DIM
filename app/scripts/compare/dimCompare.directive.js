@@ -37,9 +37,9 @@
     };
   }
 
-  CompareCtrl.$inject = ['$scope', 'dimCompareService', 'dimItemService'];
+  CompareCtrl.$inject = ['$scope', 'toaster', 'dimCompareService', 'dimItemService'];
 
-  function CompareCtrl($scope, dimCompareService, dimItemService) {
+  function CompareCtrl($scope, toaster, dimCompareService, dimItemService) {
     var vm = this;
     vm.show = dimCompareService.dialogOpen;
 
@@ -63,7 +63,12 @@
     };
 
     vm.add = function add(args) {
-      if ((!args.item.location.inWeapons && !args.item.location.inArmor) || !args.item.talentGrid || !args.item.equipment || (vm.comparisons.length && vm.comparisons[0].typeName !== undefined && args.item.typeName !== vm.comparisons[0].typeName)) {
+      if ((!args.item.location.inWeapons && !args.item.location.inArmor) || !args.item.talentGrid || !args.item.equipment) {
+        return;
+      }
+
+      if (vm.comparisons.length && vm.comparisons[0].typeName !== undefined && args.item.typeName !== vm.comparisons[0].typeName) {
+        toaster.pop('warning', args.item.name, 'Can not compare this item as it is not a ' + vm.comparisons[0].typeName + '.');
         return;
       }
 
