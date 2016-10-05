@@ -25,11 +25,9 @@
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
-              <div class="stat-box-row" ng-repeat="stat in item.stats track by $index">
-                <span ng-bind="::stat.value"></span>
-              </div>
+              <div class="stat-box-row" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
-              <div class="close" ng-click="vm.remove(item, $event); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>
+              <div class="close" ng-click="vm.remove(item);"></div>
             </span>
           </div>
         </div>
