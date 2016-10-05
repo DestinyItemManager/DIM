@@ -68,7 +68,7 @@
         vm.similarTypes = _.where(dimItemService.getItems(), { typeName: args.item.typeName });
         vm.archeTypes = _.filter(dimItemService.getItems(), function(item) {
           var arch = _.find(item.stats, { statHash: 4284893193 });
-          if(!arch) {
+          if (!arch) {
             return false;
           }
           return item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: 4284893193 }).base;
