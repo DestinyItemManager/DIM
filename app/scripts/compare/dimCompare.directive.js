@@ -25,8 +25,8 @@
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
-              <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-style="stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max | qualityColor:'color'" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
+              <div class="grid-wrap"><dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid></div>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
           </div>
@@ -42,6 +42,7 @@
     vm.show = dimCompareService.dialogOpen;
 
     vm.comparisons = [];
+    vm.statRanges = {};
 
     $scope.$on('dim-store-item-compare', function(event, args) {
       vm.show = true;
@@ -61,7 +62,7 @@
     };
 
     vm.sort = function(statHash) {
-      vm.comparisons = _.sortBy(vm.comparisons, function(item) {
+      vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), function(item) {
         return _.findWhere(item.stats, { statHash: statHash }).value;
       }).reverse();
     };
@@ -101,7 +102,26 @@
 
       if (!vm.comparisons.length) {
         vm.cancel();
+        return;
       }
     };
+
+    $scope.$watch('vm.comparisons', function() {
+      var statBuckets = {};
+
+      _.each(vm.comparisons, function(item) {
+        _.each(item.stats, function(stat) {
+          (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
+        });
+      });
+
+      vm.statRanges = {};
+      _.each(statBuckets, function(bucket, hash) {
+        vm.statRanges[hash] = {
+          min: Math.min(...bucket),
+          max: Math.max(...bucket)
+        };
+      });
+    }, true);
   }
 })();

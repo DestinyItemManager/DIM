@@ -1410,6 +1410,12 @@ g {
   box-shadow: 0 -1px 6px 0px #222;
 }
 
+dim-compare {
+  #loadout-drawer {
+    padding-left: 5px;
+  }
+}
+
 .loadout-item {
   position: relative;
 }
@@ -1419,11 +1425,13 @@ g {
   overflow-x: scroll;
   width: 100%;
   display: flex;
-  margin-left: 100px;
+  margin-left: 150px;
   .fixed-left {
+    border-left: none;
+    padding-left: 5px;
     position: fixed;
     left: 0;
-    width: 100px;
+    width: 150px;
   }
 }
 
@@ -1431,16 +1439,19 @@ g {
   align-self: flex-start;
   flex: 1;
   position: relative;
-  margin: 0 5px 5px 5px;
   min-width: 150px;
   max-width: 150px;
+  border-left: 1px solid $lightgray;
   .highlight {
-    color: $orange;
+    opacity: .6;
+    background-color: gray;
     cursor: pointer;
   }
-  .talent-grid {
-    height: 89px;
-    width: 150px;
+  .grid-wrap {
+    width: 135px;
+  }
+  .close {
+    right: 14px;
   }
 }
 
