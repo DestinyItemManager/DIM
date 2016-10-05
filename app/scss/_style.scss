@@ -1418,12 +1418,22 @@ g {
   white-space: nowrap;
   overflow-x: scroll;
   width: 100%;
+  display: flex;
+  margin-left: 100px;
+  .fixed-left {
+    position: fixed;
+    left: 0;
+    width: 100px;
+  }
 }
 
 .compare-item {
-  display: inline-block;
+  align-self: flex-start;
+  flex: 1;
   position: relative;
   margin: 0 5px 5px 5px;
+  min-width: 150px;
+  max-width: 150px;
   .talent-grid {
     height: 89px;
     width: 150px;

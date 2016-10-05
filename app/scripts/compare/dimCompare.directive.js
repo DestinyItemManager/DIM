@@ -19,11 +19,14 @@
             <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
           </p>
           <div class="compare-bucket">
+            <span class="compare-item fixed-left">
+              <div>Stats</div>
+              <div ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
+            </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
-              <div ng-bind="::item.typeName"></div>
               <div class="stat-box-row" ng-repeat="stat in item.stats track by $index">
-                <span ng-bind="::(stat.value + ' ' + stat.name)"></span>
+                <span ng-bind="::stat.value"></span>
               </div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
               <div class="close" ng-click="vm.remove(item, $event); vm.form.name.$rollbackViewValue(); $event.stopPropagation();"></div>
@@ -60,7 +63,7 @@
     };
 
     vm.add = function add(args) {
-      if ((!args.item.location.inWeapons && !args.item.location.inArmor) || !args.item.talentGrid || !args.item.equipment) {
+      if ((!args.item.location.inWeapons && !args.item.location.inArmor) || !args.item.talentGrid || !args.item.equipment || (vm.comparisons.length && vm.comparisons[0].typeName !== undefined && args.item.typeName !== vm.comparisons[0].typeName)) {
         return;
       }
 
@@ -74,6 +77,7 @@
           return item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: 4284893193 }).base;
         });
         vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
+        console.log(vm.statNames);
       } else {
         var dupe = _.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id });
         if (!dupe) {
