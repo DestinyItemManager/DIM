@@ -118,7 +118,8 @@
     vm.openCompare = function() {
       ngDialog.closeAll();
       $rootScope.$broadcast('dim-store-item-compare', {
-        item: vm.item
+        item: vm.item,
+        dupes: true
       });
     };
 

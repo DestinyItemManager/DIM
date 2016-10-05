@@ -40,8 +40,7 @@
       vm.show = true;
       dimCompareService.dialogOpen = true;
 
-//      vm.comparisons = _.find(dimItemService.getItems(), { hash: args.item.hash });
-      vm.add(args.item, args.clickEvent);
+      vm.add(args);
     });
 
     vm.cancel = function cancel() {
@@ -50,15 +49,18 @@
       dimCompareService.dialogOpen = false;
     };
 
-    vm.add = function add(item, $event) {
-      if ((!item.location.inWeapons && !item.location.inArmor) || !item.talentGrid || !item.equipment) {
+    vm.add = function add(args) {
+      if ((!args.item.location.inWeapons && !args.item.location.inArmor) || !args.item.talentGrid || !args.item.equipment) {
         return;
       }
 
-      var clone = angular.copy(item);
-      var dupe = _.findWhere(vm.comparisons, { hash: clone.hash, id: clone.id });
-      if(!dupe) {
-        vm.comparisons.push(clone);
+      if(args.dupes) {
+        vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash })
+      } else {
+        var dupe = _.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id });
+        if(!dupe) {
+          vm.comparisons.push(args.item);
+        }
       }
     };
 
