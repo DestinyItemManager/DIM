@@ -26,7 +26,7 @@
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
               <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-style="stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max | qualityColor:'color'" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
-              <div class="grid-wrap"><dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid></div>
+              <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
           </div>
