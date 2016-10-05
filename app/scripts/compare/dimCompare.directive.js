@@ -20,7 +20,7 @@
           </p>
           <div class="compare-bucket">
             <span class="compare-item fixed-left">
-              <div>Stats</div>
+              <div>&nbsp;</div>
               <div ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
@@ -77,7 +77,6 @@
           return item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: 4284893193 }).base;
         });
         vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
-        console.log(vm.statNames);
       } else {
         var dupe = _.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id });
         if (!dupe) {
