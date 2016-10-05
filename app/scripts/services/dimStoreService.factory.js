@@ -632,6 +632,7 @@
       if (!itemDef.icon && !itemDef.action) {
         itemDef.classified = true;
       }
+
       if (!itemDef.icon) {
         itemDef.icon = '/img/misc/missing_icon.png';
       }
@@ -705,14 +706,14 @@
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
       var itemYear = 1;
-
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-        itemYear = 2;
+      if (!itemDef.classified) {
+        if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+          itemYear = 2;
+        }
+        if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+          itemYear = 3;
+        }
       }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        itemYear = 3;
-      }
-
       // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from

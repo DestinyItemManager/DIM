@@ -101,6 +101,11 @@
     }
   }
 
+  .lock-container {
+    position: relative;
+    width: calc(var(--item-size) + 4px);
+  }
+
   .item-container {
     margin: 20px 17px 0px 0;
   }

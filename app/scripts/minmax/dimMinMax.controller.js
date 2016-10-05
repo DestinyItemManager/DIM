@@ -222,8 +222,8 @@
 
     dimDefinitions.then(function(defs) {
       angular.extend(vm, {
-        active: 'Titan',
-        i18nClassNames: _.pluck(_.sortBy(defs.Class, function(classDef) { return classDef.classType; }), 'className'),
+        active: 'titan',
+        i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.pluck(_.sortBy(defs.Class, function(classDef) { return classDef.classType; }), 'className')),
         i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], function(key) { return defs.ItemCategory[key].title; })),
         activesets: '5/5/2',
         type: 'Helmet',
@@ -537,7 +537,9 @@
           function filterPerks(perks, item) {
             return _.chain(perks.concat(item.talentGrid.nodes))
                     .uniq(function(node) { return node.hash; })
-                    .reject(function(node) { return _.contains(['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma'], node.name); })
+                    // [1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599]
+                    // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
+                    .reject(function(node) { return _.contains([1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599], node.hash); })
                     .value();
           }
 
@@ -545,12 +547,13 @@
             return _.filter(items, function(item) {
               return item.primStat &&
                 item.primStat.statHash === 3897883278 && // has defense hash
+                item.talentGrid && item.talentGrid.nodes &&
                 ((vm.showBlues && item.tier === 'Rare') || item.tier === 'Legendary' || (vm.showExotics && item.isExotic)) && // is legendary or exotic
                 item.stats;
             });
           }
 
-          vm.active = dimStoreService.getActiveStore().classType || 0;
+          vm.active = dimStoreService.getActiveStore().class || 'titan';
 
           var allItems = [];
           var vendorItems = [];
@@ -643,15 +646,15 @@
               }));
             }
             buckets = {
-              0: loadBucket(0),
-              1: loadBucket(1),
-              2: loadBucket(2)
+              titan: loadBucket(0),
+              hunter: loadBucket(1),
+              warlock: loadBucket(2)
             };
 
             vendorBuckets = {
-              0: loadBucket(0, true),
-              1: loadBucket(1, true),
-              2: loadBucket(2, true)
+              titan: loadBucket(0, true),
+              hunter: loadBucket(1, true),
+              warlock: loadBucket(2, true)
             };
           }
 
