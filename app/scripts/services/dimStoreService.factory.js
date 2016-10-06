@@ -641,7 +641,7 @@
       }
 
       if (itemDef.redacted) {
-        console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+        console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
       }
 
       if (!itemDef.itemName) {
