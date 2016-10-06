@@ -18,10 +18,10 @@
             <label class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}s</label>
             <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
           </p>
-          <div class="compare-bucket">
+          <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
             <span class="compare-item fixed-left">
               <div>&nbsp;</div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <div ng-bind="::item.name"></div>
@@ -53,6 +53,9 @@
 
     vm.cancel = function cancel() {
       vm.comparisons = [];
+      vm.statRanges = {};
+      vm.highlight = null;
+      vm.sortedHash = null;
       vm.show = false;
       dimCompareService.dialogOpen = false;
     };
@@ -62,6 +65,7 @@
     };
 
     vm.sort = function(statHash) {
+      vm.sortedHash = statHash;
       vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), function(item) {
         return _.findWhere(item.stats, { statHash: statHash }).value;
       }).reverse();

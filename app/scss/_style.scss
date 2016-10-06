@@ -1445,9 +1445,12 @@ dim-compare {
     padding-left: 5px;
   }
   .highlight {
-    opacity: .8;
+    color: white !important;
     background-color: gray;
     cursor: pointer;
+  }
+  .sorted {
+    color: $orange;
   }
   .close {
     top: 0px;
