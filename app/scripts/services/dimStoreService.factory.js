@@ -705,7 +705,6 @@
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
       var itemYear = 1;
-      if (!itemDef.classified) {
         if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
           itemYear = 2;
         }
