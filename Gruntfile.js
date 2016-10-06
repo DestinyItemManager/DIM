@@ -227,6 +227,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']);
 
+
+
   grunt.registerTask('update_firefox_manifest', function() {
     var manifest = grunt.file.readJSON('dist/firefox/manifest.json');
     manifest.applications = firefoxBrowserSupport;
@@ -262,6 +264,12 @@ module.exports = function(grunt) {
     'replace:beta_version',
     'compress:firefox'
   ]);
+
+
+  // Aliases for local dev to mirror README examples
+  grunt.registerTask('dev-firefox', ['default']);
+  grunt.registerTask('dev-chrome', ['default']);
+
 
   // Builds release-able extensions in dist/
   grunt.registerTask('build_extension', [
