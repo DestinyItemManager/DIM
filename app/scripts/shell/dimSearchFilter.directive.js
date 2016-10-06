@@ -572,7 +572,7 @@
           cq: 1587918730,
           eris: 1662396737
         };
-        if (!item) {
+        if (!item || !item.sourceHashes) {
           return false;
         }
         return (item.sourceHashes.includes(vendorHashes[predicate]));
