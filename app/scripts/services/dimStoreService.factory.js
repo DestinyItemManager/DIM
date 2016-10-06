@@ -705,13 +705,12 @@
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
       var itemYear = 1;
-      if (itemDef.sourceHashes) {
-        if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-          itemYear = 2;
-        }
-        if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-          itemYear = 3;
-        }
+      if (!itemDef.sourceHashes) {
+        itemYear = 1;
+      } else if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+        itemYear = 2;
+      } else if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+        itemYear = 3;
       }
       // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
       var createdItem = angular.extend(Object.create(ItemProto), {
