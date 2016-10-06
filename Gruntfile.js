@@ -227,8 +227,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']);
 
-
-
   grunt.registerTask('update_firefox_manifest', function() {
     var manifest = grunt.file.readJSON('dist/firefox/manifest.json');
     manifest.applications = firefoxBrowserSupport;
