@@ -66,7 +66,8 @@
     return function(items, sort) {
       // Don't resort postmaster items - that way people can see
       // what'll get bumped when it's full.
-      if (items.length && (items[0].location.inPostmaster || items[0].location.id === "BUCKET_BOUNTIES")) {
+      var dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER"];
+      if (items.length && dontsort.includes(items[0].location.id)) {
         return items;
       }
 
