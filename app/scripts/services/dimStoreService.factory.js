@@ -13,7 +13,6 @@
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
-    'dimYearsDefinitions',
     'dimItemInfoService',
     'dimInfoService',
     'SyncService',
@@ -33,7 +32,6 @@
     dimCategory,
     dimDefinitions,
     dimBucketService,
-    dimYearsDefinitions,
     dimItemInfoService,
     dimInfoService,
     SyncService,
@@ -616,7 +614,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, yearsDefs, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -1432,7 +1430,6 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
-        dimYearsDefinitions,
         previousItems,
         newItems,
         itemInfoService])

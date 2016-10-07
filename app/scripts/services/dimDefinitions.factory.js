@@ -1,10 +1,6 @@
 (function(angular) {
   'use strict';
 
-  const files = {
-    Years: 'year1'
-  };
-
   const lazyTables = [
     'InventoryItem',
     'Objective',
@@ -70,26 +66,4 @@
         return $q.reject(e);
       });
   }
-
-  /**
-   * Since we have very few of these, they are each their own promise
-   * (dimYearsDefinitions, for example).
-   */
-  // Resources that come from precomputed JSON files
-  _.each(files, function(file, name) {
-    var factory = function($http, $q) {
-      // console.time("loading " + name);
-      return $http.get('scripts/api-manifest/' + file + '.json?v=$DIM_VERSION')
-        .then(function(json) {
-          // console.timeEnd("loading " + name);
-          return json.data;
-        })
-        .catch(function(e) {
-          console.error(e);
-          return $q.reject(e);
-        });
-    };
-    factory.$inject = ['$http', '$q'];
-    mod.factory(`dim${name}Definitions`, factory);
-  });
 })(angular);
