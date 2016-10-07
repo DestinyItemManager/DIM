@@ -50,7 +50,7 @@
           farming_mode: "Farming Mode (move items)",
           restore_all_items: "All Items",
           Loadouts: "Loadouts",
-          Progress: "Progess",
+          Progress: "Progress",
           LoadoutAppliedAuto: "Automatic Loadout Builder",
           LoadoutApplied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
           LoadoutAppliedError: "None of the items in your loadout could be transferred.",
