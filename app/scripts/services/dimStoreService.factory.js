@@ -13,7 +13,6 @@
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
-    'dimYearsDefinitions',
     'dimItemInfoService',
     'dimInfoService',
     'SyncService',
@@ -33,7 +32,6 @@
     dimCategory,
     dimDefinitions,
     dimBucketService,
-    dimYearsDefinitions,
     dimItemInfoService,
     dimInfoService,
     SyncService,
@@ -616,7 +614,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, yearsDefs, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -641,7 +639,7 @@
       }
 
       if (itemDef.redacted) {
-        console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+        console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
       }
 
       if (!itemDef.itemName) {
@@ -1432,7 +1430,6 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
-        dimYearsDefinitions,
         previousItems,
         newItems,
         itemInfoService])

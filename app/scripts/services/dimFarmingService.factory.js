@@ -179,7 +179,7 @@
               });
             }
             return ret;
-          }).filter(item => !_.isUndefined(item));
+          }).filter((item) => !_.isUndefined(item));
 
           self.farmItems().then(function() {
             self.makeRoomForItems();
