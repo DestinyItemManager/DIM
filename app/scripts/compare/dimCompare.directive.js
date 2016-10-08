@@ -14,8 +14,8 @@
       template: `
         <div id="loadout-drawer" ng-if="vm.show">
           <p>
-            <label ng-if="vm.archeTypes.length-1" class="dim-button" ng-click="vm.compareSimilar('archetype')">Compare in archetype ({{ vm.archeTypes.length }})</label>
-            <label ng-if="vm.similarTypes.length-1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}s ({{ vm.similarTypes.length }})</label>
+            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')">Compare in archetype ({{ vm.archeTypes.length }})</label>
+            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}s ({{ vm.similarTypes.length }})</label>
             <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
           </p>
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
@@ -57,6 +57,8 @@
     vm.cancel = function cancel() {
       vm.comparisons = [];
       vm.statRanges = {};
+      vm.similarTypes = [];
+      vm.archeTypes = [];
       vm.highlight = null;
       vm.sortedHash = null;
       vm.show = false;
@@ -86,12 +88,15 @@
 
       if (args.dupes) {
         vm.similarTypes = _.where(dimItemService.getItems(), { typeName: args.item.typeName });
+        if(vm.similarTypes[0].location.inArmor) {
+          vm.similarTypes = _.where(vm.similarTypes, { classType: args.item.classType });
+        }
         vm.archeTypes = _.filter(dimItemService.getItems(), function(item) {
           var arch = _.find(item.stats, { statHash: args.item.stats[0].statHash });
           if (!arch) {
             return false;
           }
-          return item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: args.item.stats[0].statHash }).base;
+          return item.location.inWeapons && item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: args.item.stats[0].statHash }).base;
         });
         vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
       } else {
