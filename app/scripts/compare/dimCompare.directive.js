@@ -84,11 +84,11 @@
       if (args.dupes) {
         vm.similarTypes = _.where(dimItemService.getItems(), { typeName: args.item.typeName });
         vm.archeTypes = _.filter(dimItemService.getItems(), function(item) {
-          var arch = _.find(item.stats, { statHash: 4284893193 });
+          var arch = _.find(item.stats, { statHash: args.item.stats[0].statHash });
           if (!arch) {
             return false;
           }
-          return item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: 4284893193 }).base;
+          return item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: args.item.stats[0].statHash }).base;
         });
         vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
       } else {
