@@ -14,8 +14,8 @@
       template: `
         <div id="loadout-drawer" ng-if="vm.show">
           <p>
-            <label class="dim-button" ng-click="vm.compareSimilar('archetype')">Compare in archetype</label>
-            <label class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}s</label>
+            <label ng-if="vm.archeTypes.length-1" class="dim-button" ng-click="vm.compareSimilar('archetype')">Compare in archetype ({{ vm.archeTypes.length - 1 }})</label>
+            <label ng-if="vm.similarTypes.length-1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}s ({{ vm.similarTypes.length }})</label>
             <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
           </p>
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
