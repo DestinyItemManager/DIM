@@ -21,9 +21,11 @@
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
             <span class="compare-item fixed-left">
               <div>&nbsp;</div>
+              <div>&nbsp;</div>
               <div ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
+              <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
               <div ng-bind="::item.name"></div>
               <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-style="stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max | qualityColor:'color'" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
@@ -35,10 +37,11 @@
     };
   }
 
-  CompareCtrl.$inject = ['$scope', 'toaster', 'dimCompareService', 'dimItemService'];
+  CompareCtrl.$inject = ['$scope', 'toaster', 'dimCompareService', 'dimItemService', 'dimFeatureFlags'];
 
-  function CompareCtrl($scope, toaster, dimCompareService, dimItemService) {
+  function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeatureFlags) {
     var vm = this;
+    vm.featureFlags = dimFeatureFlags;
     vm.show = dimCompareService.dialogOpen;
 
     vm.comparisons = [];

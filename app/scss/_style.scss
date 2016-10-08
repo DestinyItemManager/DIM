@@ -1457,6 +1457,15 @@ dim-compare {
     right: 6px;
     padding-left: 0px;
   }
+  dim-item-tag {
+    display: block;
+    select {
+      background: transparent;
+      border: none;
+      color: white;
+      width: 125px;
+    }
+  }
 }
 
 .loadout-content {
