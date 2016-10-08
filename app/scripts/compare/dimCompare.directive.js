@@ -88,7 +88,7 @@
 
       if (args.dupes) {
         vm.similarTypes = _.where(dimItemService.getItems(), { typeName: args.item.typeName });
-        if(vm.similarTypes[0].location.inArmor) {
+        if (vm.similarTypes[0].location.inArmor) {
           vm.similarTypes = _.where(vm.similarTypes, { classType: args.item.classType });
         }
         vm.archeTypes = _.filter(dimItemService.getItems(), function(item) {
