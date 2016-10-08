@@ -18,6 +18,14 @@
       membershipPromise = null;
     });
 
+    // Don't open bungie tab more than once a minute
+    const openBungieNetTab = _.debounce(() => {
+      chrome.tabs.create({
+        url: 'https://bungie.net',
+        active: true
+      });
+    }, 60 * 1000, true);
+
     var service = {
       getPlatforms: getPlatforms,
       getCharacters: getCharacters,
@@ -27,7 +35,8 @@
       equipItems: equipItems,
       setItemState: setItemState,
       getXur: getXur,
-      getManifest: getManifest
+      getManifest: getManifest,
+      getVendorForCharacter: getVendorForCharacter
     };
 
     return service;
@@ -104,14 +113,6 @@
 
       return a;
     }
-
-    function openBungieNetTab() {
-      chrome.tabs.create({
-        url: 'https://bungie.net',
-        active: true
-      });
-    }
-
 
     /************************************************************************************************************************************/
 
@@ -564,6 +565,33 @@
       return $q.all(promises);
     }
 
+    function getVendorForCharacter(character, vendorHash) {
+      var platform = dimState.active;
+      var data = {
+        token: null,
+        membershipType: null
+      };
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var getMembershipPB = getMembership.bind(null, platform);
+      return getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(() => {
+          return {
+            method: 'GET',
+            url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorHash + '/',
+            headers: {
+              'X-API-Key': apiKey,
+              'x-csrf': data.token
+            },
+            withCredentials: true
+          };
+        })
+        .then($http)
+        .then(handleErrors)
+        .then((response) => response.data.Response.data);
+    }
+
     /************************************************************************************************************************************/
 
     function transfer(item, store, amount) {
@@ -582,9 +610,6 @@
         .then(getMembershipPB)
         .then(addMembershipTypeToDataPB)
         .then(function() {
-          return store;
-        })
-        .then(function(store) {
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
