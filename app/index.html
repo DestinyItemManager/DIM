@@ -34,7 +34,7 @@
             <div class="header-right" id="actions">
               <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
               <span class="link" ng-click="app.toggleMinMax($event)" title="Loadout Builder"><i class="fa fa-bar-chart"></i></span>
-              <span class="link" title="Available faction ranks"><i class="fa fa-list-alt"></i></span>  
+              <span class="link" ng-click="app.showMatsExchange($event)" title="Available faction ranks"><i class="fa fa-list-alt"></i></span>  
               <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
               <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
               <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
@@ -115,6 +115,7 @@
     <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/random/dimRandom.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAngularFilters.filter.js?v=$DIM_VERSION"></script>
+    <script src="scripts/shell/dimMaterialsExchangeCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAppCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimSettingsCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
