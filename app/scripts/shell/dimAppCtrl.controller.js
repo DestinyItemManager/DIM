@@ -123,7 +123,7 @@
     vm.showSupport = showPopupFunction('support');
     vm.showFilters = showPopupFunction('filters');
     vm.showXur = showPopupFunction('xur');
-    vm.showMatsCount = showPopupFunction('mats');
+    vm.showMatsExchange = showPopupFunction('mats-exchange');
 
     vm.toggleMinMax = function(e) {
       $state.go($state.is('best') ? 'inventory' : 'best');
