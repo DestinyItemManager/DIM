@@ -41,11 +41,11 @@
     vm.settings = dimSettingsService;
     function init(stores) {
       if (_.isEmpty(stores)) {
-        $state.go('inventory');
         return;
       }
 
       vm.stores = _.reject(stores, (s) => s.isVault);
+
       var vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
         return !value;
       });
@@ -70,6 +70,7 @@
           }
         });
       });
+
       countCurrencies(stores);
       vm.vendorHashes = _.chain(vm.vendors[vm.activeTab])
                         .values()
@@ -77,11 +78,13 @@
                         .flatten()
                         .uniq()
                         .reject(function(hash) { return _.contains(vm.vanguardHashes, hash); })
-                        .value();
+        .value();
     }
 
     init(dimStoreService.getStores());
-    $scope.$on('dim-stores-updated', function(e, args) {
+    // TODO: watch vendors instead?
+    // TODO: get vendors directly from vendor service!
+    $scope.$on('dim-vendors-updated', function(e, args) {
       init(args.stores);
     });
 

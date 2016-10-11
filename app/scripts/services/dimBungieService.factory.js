@@ -339,7 +339,7 @@
 
     /************************************************************************************************************************************/
 
-    function getStores(platform, includeVendors, vendorDefs) {
+    function getStores(platform) {
       var data = {
         token: null,
         membershipId: null
@@ -367,11 +367,6 @@
               // Don't let failure of advisors fail other requests.
               .catch((e) => console.error("Failed to load advisors", e))
           ];
-          if (includeVendors) {
-            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters).catch(() => {
-              console.warn("Vendors are not able to be downloaded atm.");
-            }));
-          }
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
           });
@@ -522,53 +517,6 @@
 
     /************************************************************************************************************************************/
 
-    function getCharacterVendorsRequest(token, platform, membershipId, character, vendorId) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function parseVendorData(vendorData) {
-      return vendorData;
-    }
-
-    function processVendorsResponse(character, response) {
-      if (!character.vendors) {
-        character.vendors = {};
-      }
-
-      var vendorData = response.data.Response.data;
-      character.vendors[vendorData.vendorHash] = parseVendorData(vendorData);
-      return character;
-    }
-
-    function getDestinyVendors(vendorDefs, token, platform, membershipId, characters) {
-      var promises = [];
-      _.each(vendorDefs, function(vendorDef, vendorHash) {
-        _.each(characters, function(character) {
-          var processPB = processVendorsResponse.bind(null, character);
-          promises.push(
-            $q.when(getCharacterVendorsRequest(token, platform, membershipId, character, vendorHash))
-              .then($http)
-              .then(handleErrors)
-              .then(processPB)
-              .catch(function(e) {
-                if (e.message !== 'The Vendor you requested was not found.') {
-                  throw e;
-                }
-              })
-          );
-        });
-      });
-      return $q.all(promises);
-    }
-
     function getVendorForCharacter(character, vendorHash) {
       var platform = dimState.active;
       var data = {
@@ -581,7 +529,6 @@
         .then(addTokenToDataPB)
         .then(getMembershipPB)
         .then(() => {
-          console.log(platform.type, character.id, vendorHash);
           return {
             method: 'GET',
             url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorHash + '/',

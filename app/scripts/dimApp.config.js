@@ -128,6 +128,7 @@
       // what I assume is clock skew between Bungie's hosts when they calculate a global rate limit.
       rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1100);
       rateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1100);
+      rateLimiterConfigProvider.addLimiter(/\/Vendor\//, 2, 1100);
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
