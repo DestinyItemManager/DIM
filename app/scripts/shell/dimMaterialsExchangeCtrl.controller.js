@@ -51,7 +51,6 @@
     function mapXurItems(hashes) {
       var mappedItems = mapItems(hashes);
       mappedItems[1].amount = mappedItems[0].amount * 3;
-
       return mappedItems;
     }
   }
