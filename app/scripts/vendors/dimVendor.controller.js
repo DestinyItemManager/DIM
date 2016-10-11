@@ -82,6 +82,7 @@
                         .uniq()
                         .reject(function(hash) { return _.contains(vm.vanguardHashes, hash); })
         .value();
+      console.log(vm);
     }
 
     init(dimStoreService.getStores());

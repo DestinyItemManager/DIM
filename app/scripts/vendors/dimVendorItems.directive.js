@@ -4,18 +4,16 @@
   var VendorItem = {
     bindings: {
       saleItem: '<',
-      cost: '<',
+      costs: '<',
       totalCoins: '<',
       itemClicked: '&'
     },
     template: [
       '<div class="vendor-item">',
       '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
-      '  <div ng-if="$ctrl.cost" class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
-      '    {{::$ctrl.cost.cost}}/{{$ctrl.totalCoins[$ctrl.cost.currency.itemHash]}}',
-      '    <span class="currency"><img ng-src="{{::$ctrl.cost.currency.icon | bungieIcon}}" title="{{::$ctrl.cost.currency.name}}"></span>',
-      '  </div>',
-      '  <div ng-if="!$ctrl.cost" class="empty-cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
+      '  <div ng-repeat="cost in $ctrl.costs" class="cost" ng-class="{notenough: ($ctrl.totalCoins[cost.currency.itemHash] < cost.value)}">',
+      '    {{::cost.value}}/{{$ctrl.totalCoins[cost.currency.itemHash]}}',
+      '    <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
       '  </div>',
       '</div>'
     ].join('')
@@ -41,14 +39,12 @@
       '     <timer class="vendor-timer" ng-if="vm.vendors[0][vendorHash].nextRefreshDate[0] !== \'9\'" end-time="vm.vendors[0][vendorHash].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
-      '    <div class="vendor-row">',
-      '      <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '        <div ng-repeat="type in vm.types">',
-      '          <div ng-if="store.vendors[vendorHash].items[type].length">',
-      '            <h3 ng-if="vm.eachHasItems(store.vendors[vendorHash].items, vm.types)">{{type | uppercase}}</h3>',
-      '            <div class="vendor-armor">',
-      '              <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items[type]" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '            </div>',
+      '   <div class="vendor-row">',
+      '     <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
+      '       <div ng-repeat="category in store.vendors[vendorHash].categories">',
+      '          <h3>{{category.title}}</h3>',
+      '          <div class="vendor-armor">',
+      '            <dim-vendor-item ng-repeat="saleItem in category.items" sale-item="saleItem.item" costs="saleItem.costs" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '          </div>',
       '        </div>',
       '      </div>',

@@ -69,7 +69,6 @@
                 return loadVendor(store, vendorDef, platform, defs)
                   .then((vendor) => {
                     if (vendor) {
-                      console.log('processed vendor', vendor.name, vendor);
                       vendorData[vendor.hash] = vendor;
                       store.vendors = vendorData;
                     }
@@ -161,10 +160,14 @@
       // organize by category!
 
       let items = _.flatten(vendor.saleItemCategories.map((categoryData) => {
-        return _.filter(categoryData.saleItems, (saleItem) => {
+        return categoryData.saleItems;
+
+        // TODO populate unlocked
+        /*_.filter(categoryData.saleItems, (saleItem) => {
           saleItem.item.isUnlocked = isSaleItemUnlocked(saleItem);
           return saleItem.item.isEquipment;
         });
+         */
       }));
       createdVendor.costs = _.reduce(items, (o, saleItem) => {
         if (saleItem.costs.length) {
@@ -226,7 +229,6 @@
             }
           });
 
-          console.log('createdVendor', createdVendor);
           return createdVendor;
         });
     }
