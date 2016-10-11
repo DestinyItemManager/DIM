@@ -860,7 +860,7 @@
 
     function buildTalentGrid(item, talentDefs, progressDefs) {
       var talentGridDef = talentDefs[item.talentGridHash];
-      if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length) {
+      if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length || !progressDefs[item.progression.progressionHash]) {
         return undefined;
       }
 

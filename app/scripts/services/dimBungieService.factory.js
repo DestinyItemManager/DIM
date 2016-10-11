@@ -68,10 +68,14 @@
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode > 1) {
-        if (!response.data.Message) {
+        if (response.data.Message) {
+          const error = new Error(response.data.Message);
+          error.code = response.data.ErrorCode;
+          error.status = response.data.ErrorStatus;
+          return $q.reject(error);
+        } else {
           return $q.reject(new Error('The Bungie API is currently experiencing difficulties.'));
         }
-        return $q.reject(new Error(response.data.Message));
       }
 
       return response;
@@ -577,6 +581,7 @@
         .then(addTokenToDataPB)
         .then(getMembershipPB)
         .then(() => {
+          console.log(platform.type, character.id, vendorHash);
           return {
             method: 'GET',
             url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorHash + '/',

@@ -128,9 +128,12 @@
       },
       getFirstVendorCombined: function(vendors, vendorHash) {
         if (vendors) {
-          return _.find(vendors, function(vendor) {
+          const vendor = _.find(vendors, function(vendor) {
             return vendor[vendorHash];
-          })[vendorHash];
+          });
+          if (vendor) {
+            return vendor[vendorHash];
+          }
         }
         return null;
       },
