@@ -1,6 +1,44 @@
 <div ng-controller="dimMaterialsExchangeCtrl as vm">
 	<h1>Materials Exchange</h1>
 	<div class="ngdialog-inner-content">
+		<h2>Variks</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						Ether Seed
+					</td>
+					<td></td>
+					<td>
+						Glimmer
+					</td>
+					<td></td>
+					<td>
+						Faction Rep
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<dim-simple-item item-data="vm.variksMats[0]"></dim-simple-item>
+					</td>
+					<td>+</td>
+					<td>
+						<div title="Glimmer" alt=" Glimmer" class="item ng-isolate-scope">
+							<div class="item-elem">
+								<div class="img" style="background-image: url(&quot;/images/glimmer.png&quot;);">
+									<div class="item-stat item-equipment stat-damage-">{{vm.variksMats[0].amount * 250}}</div>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>=</td>
+					<td>
+						{{(vm.variksMats[0].amount * 25)}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
 		<h2>Xur</h2>
 		<table>
 			<tbody>
@@ -27,13 +65,13 @@
 					</td>
 					<td>=</td>
 					<td>
-						{{(vm.xurMats[1].amount * 25)/2500}}
+						{{(vm.xurMats[1].amount * 25)}}
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		<br/>
-		<h2>Materials</h2>
+		<h2>Materials on hand</h2>
 		<table>
 			<tbody>
 				<tr>
@@ -41,10 +79,19 @@
 						<dim-simple-item item-data="item"></dim-simple-item>
 					</td>
 				</tr>
-				<tr></tr>
+				<tr>
+					<td ng-repeat="item in vm.materials">
+						{{vm.calculateRep(item)}}
+					</td>
+				</tr>
 				<tr>
 					<td ng-repeat="item in vm.planataryMats">
-						<dim-simple-item item-data="item"></dim-simple-item>
+						<dim-simple-item item-data="item"></dim-simple-item>						
+					</td>
+				</tr>
+				<tr>
+					<td ng-repeat="item in vm.planataryMats">
+						{{vm.calculateRep(item)}}
 					</td>
 				</tr>
 			</tbody>

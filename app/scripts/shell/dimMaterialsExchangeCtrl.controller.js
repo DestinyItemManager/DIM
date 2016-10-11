@@ -29,9 +29,15 @@
       211861343  // heavy ammo synth
     ];
 
+    var variksMatsHashes = [
+      3783295803 // Ether Seeds
+    ];
+
+    vm.glimmer = dimStoreService.getVault().glimmer;
     vm.xurMats = mapXurItems(xurMatsHashes);
     vm.planataryMats = mapItems(planataryMatsHashes);
     vm.materials = mapItems(materialsHashes);
+    vm.variksMats = mapItems(variksMatsHashes);
 
     function mapItems(hashes) {
       return hashes.map(function(hash) {
@@ -53,5 +59,26 @@
       mappedItems[1].amount = mappedItems[0].amount * 3;
       return mappedItems;
     }
+
+    vm.calculateRep = function(item) {
+      switch (item.hash) {
+      case 211861343:
+        return Math.round(item.amount * 25);       // heavy ammo synth
+      case 937555249:
+        return Math.round(item.amount / 5) * 100;  // motes of light
+      case 928169143:
+        return Math.round(item.amount / 4) * 25;   // special ammo synth
+      case 1542293174: // armor materials
+      case 1898539128: // weapon parts
+      case 1797491610: // Helium Filaments
+      case 2882093969: // Spin Metal
+      case 3242866270: // Relic Iron
+      case 2254123540: // Spirit Bloom
+      case 3164836592: // Wormspore
+        return Math.round(item.amount / 25) * 50;
+      default:
+        return '?';
+      }
+    };
   }
 })();
