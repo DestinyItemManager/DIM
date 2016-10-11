@@ -14,8 +14,8 @@
       template: `
         <div id="loadout-drawer" ng-if="vm.show">
           <p>
-            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')">Compare in archetype ({{ vm.archeTypes.length }})</label>
-            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}s ({{ vm.similarTypes.length }})</label>
+            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')">{{ vm.similarTypes[0].location.inWeapons ? 'Compare in archetype' : 'Compare similar splits' }} ({{ vm.archeTypes.length }})</label>
+            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}{{ vm.similarTypes[0].typeName === 'Gauntlets' ? '' : 's'}} ({{ vm.similarTypes.length }})</label>
             <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
           </p>
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
@@ -27,7 +27,10 @@
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
               <div ng-bind="::item.name"></div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-style="stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max | qualityColor:'color'" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-bind="::stat.value"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.similarTypes[0].location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
+                <span ng-bind="::stat.value"></span>
+                <span ng-if="::stat.value && !vm.similarTypes[0].location.inWeapons" class="range">({{::stat.qualityPercentage.range}})</span>
+              </div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
@@ -77,26 +80,40 @@
     };
 
     vm.add = function add(args) {
-      if ((!args.item.location.inWeapons && !args.item.location.inArmor) || !args.item.talentGrid || !args.item.equipment) {
+      if (!args.item.talentGrid || !args.item.equipment) {
         return;
       }
 
-      if (vm.comparisons.length && vm.comparisons[0].typeName !== undefined && args.item.typeName !== vm.comparisons[0].typeName) {
+      if (vm.comparisons.length && vm.comparisons[0].typeName && args.item.typeName !== vm.comparisons[0].typeName) {
+        if (vm.comparisons[0].classType && args.item.classType !== vm.comparisons[0].classType) {
+          toaster.pop('warning', args.item.name, 'Can not compare this item as it is not for a ' + vm.comparisons[0].classType + '.');
+          return;
+        }
         toaster.pop('warning', args.item.name, 'Can not compare this item as it is not a ' + vm.comparisons[0].typeName + '.');
         return;
       }
 
       if (args.dupes) {
         vm.similarTypes = _.where(dimItemService.getItems(), { typeName: args.item.typeName });
-        if (vm.similarTypes[0].location.inArmor) {
+        var armorSplit;
+        if (!vm.similarTypes[0].location.inWeapons) {
           vm.similarTypes = _.where(vm.similarTypes, { classType: args.item.classType });
+          armorSplit = _.reduce(args.item.stats, function(memo, stat) {
+            return memo + (stat.base === 0 ? 0 : stat.statHash);
+          }, 0);
         }
-        vm.archeTypes = _.filter(dimItemService.getItems(), function(item) {
-          var arch = _.find(item.stats, { statHash: args.item.stats[0].statHash });
-          if (!arch) {
-            return false;
+
+        vm.archeTypes = _.filter(vm.similarTypes, function(item) {
+          if (item.location.inWeapons) {
+            var arch = _.find(item.stats, { statHash: args.item.stats[0].statHash });
+            if (!arch) {
+              return false;
+            }
+            return arch.base === _.find(args.item.stats, { statHash: args.item.stats[0].statHash }).base;
           }
-          return item.location.inWeapons && item.typeName === args.item.typeName && arch.base === _.find(args.item.stats, { statHash: args.item.stats[0].statHash }).base;
+          return _.reduce(item.stats, function(memo, stat) {
+            return memo + (stat.base === 0 ? 0 : stat.statHash);
+          }, 0) === armorSplit;
         });
         vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
       } else {
