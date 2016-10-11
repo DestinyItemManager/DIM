@@ -46,9 +46,12 @@
 
       vm.stores = _.reject(stores, (s) => s.isVault);
 
+      // TODO: actually process vendors into the shape we want
+
       var vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
         return !value;
       });
+
       vm.vendors = { armorweaps: {}, vehicles: {}, shadersembs: {}, emotes: {} };
       _.each(vendors, function(vendorMap, index) {
         vm.vendors.armorweaps[index] = {};
