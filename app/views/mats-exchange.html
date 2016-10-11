@@ -1,41 +1,53 @@
 <div ng-controller="dimMaterialsExchangeCtrl as vm">
-    <h1>Materials Exchange</h1>
-    <div class="ngdialog-inner-content">
-        <h2>Xur</h2>
-        <table align="center">
-            <tbody>
-                <tr>
-                    <td>
-                        Strange Coin
-                    </td>
-                    <td></td>
-                    <td>
-                        Heavy Synth
-                    </td>
-                    <td></td>
-                    <td>
-                       Faction Rep
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <dim-simple-item item-data="vm.xurMats[0]"></dim-simple-item>
-                    </td>
-                    <td><i class="fa fa-arrow-right"/></td>
-                    <td>
-                        <dim-simple-item item-data="vm.xurMats[1]"></dim-simple-item>
-                    </td>
-                    <td>=</td>
-                    <td>
-                        {{(vm.xurMats[1].amount * 25)/2500}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-
-        <p>
-            <dim-simple-item ng-repeat="item in vm.materials track by $index" item-data="item"></dim-simple-item>
-        </p>
-    </div>
+	<h1>Materials Exchange</h1>
+	<div class="ngdialog-inner-content">
+		<h2>Xur</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						Strange Coin
+					</td>
+					<td></td>
+					<td>
+						Heavy Synth
+					</td>
+					<td></td>
+					<td>
+						Faction Rep
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<dim-simple-item item-data="vm.xurMats[0]"></dim-simple-item>
+					</td>
+					<td><i class="fa fa-arrow-right" /></td>
+					<td>
+						<dim-simple-item item-data="vm.xurMats[1]"></dim-simple-item>
+					</td>
+					<td>=</td>
+					<td>
+						{{(vm.xurMats[1].amount * 25)/2500}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br/>
+		<h2>Materials</h2>
+		<table>
+			<tbody>
+				<tr>
+					<td ng-repeat="item in vm.materials">
+						<dim-simple-item item-data="item"></dim-simple-item>
+					</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td ng-repeat="item in vm.planataryMats">
+						<dim-simple-item item-data="item"></dim-simple-item>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
