@@ -263,6 +263,12 @@ module.exports = function(grunt) {
     'compress:firefox'
   ]);
 
+
+  // Aliases for local dev to mirror README examples
+  grunt.registerTask('dev-firefox', ['default']);
+  grunt.registerTask('dev-chrome', ['default']);
+
+
   // Builds release-able extensions in dist/
   grunt.registerTask('build_extension', [
     'build',

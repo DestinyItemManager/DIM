@@ -163,7 +163,7 @@
             417308266, // three of coins
             211861343, // heavy ammo synth
             937555249, // motes of light
-            1738186005, // motes of light
+            1738186005 // motes of light
 //            1542293174, // armor materials
 //            1898539128, // weapon parts
           ];
@@ -172,12 +172,14 @@
             var ret = angular.copy(dimItemService.getItem({
               hash: hash
             }));
-            ret.amount = 0;
-            dimStoreService.getStores().forEach(function(s) {
-              ret.amount += s.amountOfItem(ret);
-            });
+            if (ret) {
+              ret.amount = 0;
+              dimStoreService.getStores().forEach(function(s) {
+                ret.amount += s.amountOfItem(ret);
+              });
+            }
             return ret;
-          });
+          }).filter((item) => !_.isUndefined(item));
 
           self.farmItems().then(function() {
             self.makeRoomForItems();

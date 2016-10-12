@@ -256,7 +256,7 @@
       }
       return loadout;
     };
-    vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout()).toFixed(1);
+    vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout());
 
     // A dynamic loadout set up to level weapons and armor
     vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {

@@ -13,7 +13,6 @@
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
-    'dimYearsDefinitions',
     'dimItemInfoService',
     'dimInfoService',
     'SyncService',
@@ -33,7 +32,6 @@
     dimCategory,
     dimDefinitions,
     dimBucketService,
-    dimYearsDefinitions,
     dimItemInfoService,
     dimInfoService,
     SyncService,
@@ -616,7 +614,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, yearsDefs, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -631,6 +629,7 @@
       if (!itemDef.icon && !itemDef.action) {
         itemDef.classified = true;
       }
+
       if (!itemDef.icon) {
         itemDef.icon = '/img/misc/missing_icon.png';
       }
@@ -640,7 +639,7 @@
       }
 
       if (itemDef.redacted) {
-        console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+        console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
       }
 
       if (!itemDef.itemName) {
@@ -704,14 +703,14 @@
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
       var itemYear = 1;
-
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-        itemYear = 2;
+      if (!itemDef.classified) {
+        if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+          itemYear = 2;
+        }
+        if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+          itemYear = 3;
+        }
       }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        itemYear = 3;
-      }
-
       // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
@@ -1431,7 +1430,6 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
-        dimYearsDefinitions,
         previousItems,
         newItems,
         itemInfoService])

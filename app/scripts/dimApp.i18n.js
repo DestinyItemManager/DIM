@@ -50,6 +50,7 @@
           farming_mode: "Farming Mode (move items)",
           restore_all_items: "All Items",
           Loadouts: "Loadouts",
+          Progress: "Progress",
           LoadoutAppliedAuto: "Automatic Loadout Builder",
           LoadoutApplied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
           LoadoutAppliedError: "None of the items in your loadout could be transferred.",
@@ -95,7 +96,8 @@
           gather_engrams_except_exotics: "Esotiche",
           farming_mode: "Engram a Depositi (Coltura)",
           restore_all_items: "Tutti gli Elementi",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          Progress: "Progesso"
         })
         .translations('de', {
           Weapons: "Waffen",
@@ -136,7 +138,8 @@
           gather_engrams_except_exotics: "Exotics",
           farming_mode: "Engramme zum Tresor",
           restore_all_items: "Alle Elemente",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          Progress: "Fortschritt"
         })
         .translations('fr', {
           Level: "Niveau",
@@ -178,7 +181,8 @@
           gather_engrams_except_exotics: "Exotiques",
           farming_mode: "Engrammes Coffres (Agriculture)",
           restore_all_items: "Tous les Articles",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          Progress: "La Progression"
         })
         .translations('es', {
           Level: "Nivel",
@@ -219,7 +223,8 @@
           gather_engrams_except_exotics: "Exóticas",
           farming_mode: "Engramas a Depósito (Agricultura)",
           restore_all_items: "Todos los Artículos",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          Progress: "Progreso"
         })
         .translations('ja', {
           Level: "レベル",
@@ -256,7 +261,8 @@
           gather_engrams_except_exotics: "エキゾチック",
           farming_mode: "エングラムは、 装備 (農業)",
           restore_all_items: "品揃え",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          Progress: "進捗"
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -298,7 +304,8 @@
           gather_engrams_except_exotics: "Exóticos",
           farming_mode: "Engramas a Cofres (Agricultura)",
           restore_all_items: "Todos os Itens",
-          Loadouts: "Loadouts"
+          Loadouts: "Loadouts",
+          Progress: "Progresso"
         })
         .fallbackLanguage('en');
     }]);
