@@ -52,8 +52,6 @@
 
       // TODO: actually process vendors into the shape we want
 
-      vm.vendors = _.pluck(vm.stores, 'vendors');
-
       // TODO: put event vendors in front
 
       // TODO: rearrange vendors by vendor, then by character???
@@ -83,7 +81,6 @@
       });
        */
       countCurrencies(vm.stores);
-      vm.vendorHashes = _.uniq(_.flatten(vm.vendors.map((v) => _.keys(v))));
       console.log(vm);
     }
 
@@ -102,7 +99,7 @@
     });
 
     function countCurrencies(stores) {
-      var currencies = _.chain(vm.vendors)
+      var currencies = _.chain(vm.vendorService.vendors)
             .map((c) => _.values(c))
             .flatten()
             .pluck('categories')

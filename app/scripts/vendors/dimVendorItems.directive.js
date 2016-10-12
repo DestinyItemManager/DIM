@@ -26,23 +26,21 @@
       stores: '<storesData',
       vendors: '=vendorsData',
       types: '<displayTypes',
-      vendorHashes: '<vendorHashes',
       totalCoins: '<totalCoins',
       activeTab: '<activeTab'
     },
     template: [
-      '<div class="vendor-char-items" ng-repeat="vendorHash in vm.vendorHashes">',
-      ' <div ng-if="vm.vendors[0][vendorHash] && vm.vendors[0][vendorHash][vm.activeTab]">',
+      '<div class="vendor-char-items" ng-repeat="vendorsByStore in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'eventVendor\',\'vendorOrder\'] track by key">',
       '   <div class="vendor-header">',
       '     <div class="title">',
-      '     {{vm.vendors[0][vendorHash].name}}',
-      '     <img class="vendor-icon" ng-src="{{::vm.vendors[0][vendorHash].icon | bungieIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="vm.vendors[0][vendorHash].nextRefreshDate[0] !== \'9\'" end-time="vm.vendors[0][vendorHash].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '     {{vendorsByStore[0].name}}',
+      '     <img class="vendor-icon" ng-src="{{::vendorsByStore[0].icon | bungieIcon}}" />',
+      '     <timer class="vendor-timer" ng-if="vendorsByStore[0].nextRefreshDate[0] !== \'9\'" end-time="vendorsByStore[0].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
       '   <div class="vendor-row">',
       '     <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '       <div ng-repeat="category in store.vendors[vendorHash].categories | vendorTab:vm.activeTab track by category.title">',
+      '       <div ng-repeat="category in vendorsByStore[store.id].categories | vendorTab:vm.activeTab track by category.title">',
       '          <h3>{{category.title}}</h3>',
       '          <div class="vendor-armor">',
       '            <dim-vendor-item ng-repeat="saleItem in category.items" sale-item="saleItem.item" costs="saleItem.costs" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem.item, $event)"></dim-vendor-item>',
@@ -50,7 +48,6 @@
       '        </div>',
       '      </div>',
       '    </div>',
-      ' </div>',
       '</div>'
     ].join('')
   };
@@ -59,11 +56,15 @@
     .component('dimVendorItem', VendorItem)
     .component('dimVendorItems', VendorItems)
     .filter('vendorTab', function() {
-      return function backgroundImage(categories, prop) {
+      return function vendorTab(categories, prop) {
         return _.filter(categories, (category) => {
-          console.log(category, prop, category[prop]);
           return category[prop];
         });
+      };
+    })
+    .filter('values', function() {
+      return function values(obj) {
+        return _.values(obj);
       };
     });
 

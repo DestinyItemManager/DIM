@@ -449,8 +449,7 @@
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
-                isVault: false,
-                vendors: {}
+                isVault: false
               });
 
               store.name = store.genderRace + ' ' + store.className;

@@ -23,9 +23,8 @@
     dimPlatformService,
     $q
   ) {
-
     /*
-    const vendorWhiteList = [
+    const allVendors = [
       1990950, // Titan Vanguard
       44395194, // Vehicles
       134701236, // Guardian Outfitter
@@ -34,7 +33,7 @@
       459708109, // Shipwright
       570929315, // Gunsmith
       614738178, // Emote Collection
-      1303406887, // Cryptarch
+      1303406887, // Cryptarch (Reef)
       1410745145, // Queen's Wrath
       1460182514, // Exotic Weapon Blueprints
       1527174714, // Bounty Tracker
@@ -45,7 +44,7 @@
       1998812735, // House of Judgment
       2021251983, // Postmaster
       2190824860, // Vanguard Scout
-      2190824863, // Cryptarch
+      2190824863, // Tyra Karn (Cryptarch)
       2244880194, // Ship Collection
       2420628997, // Shader Collection
       2610555297, // Iron Banner
@@ -61,86 +60,122 @@
       3746647075, // Crucible Handler
       3902439767, // Exotic Armor Blueprints
       3917130357, // Eververse
-      4269570979 // Cryptarch
+      4269570979 // Cryptarch (Tower)
     ];
      */
 
     // Vendors we don't want to load
     const vendorBlackList = [
       2796397637, // Agent of the Nine
-      4269570979 // Cryptarch
+      2021251983, // Postmaster,
+      4269570979, // Cryptarch (Tower)
+      1303406887 // Cryptarch (Reef)
+    ];
+
+    // Vendors we know don't carry class-specific items
+    const nonClassSpecificVendors = [
+      44395194, // Vehicles
+      134701236, // Guardian Outfitter
+      459708109, // Shipwright
+      570929315, // Gunsmith
+      614738178, // Emote Collection
+      2244880194, // Ship Collection
+      2420628997, // Shader Collection
+      3301500998, // Emblem Collection
+      3917130357, // Eververse
+      2190824863 // Tyra Karn (Cryptarch)
     ];
 
     const service = {
       vendorsLoaded: false,
       reloadVendors: reloadVendors,
-      // By character, then by hash
+      // By hash, then by character id
       vendors: {},
       totalVendors: 0,
       loadedVendors: 0
-
-      // TODO: remove from stores at all!
     };
 
     $rootScope.$on('dim-stores-updated', function(e, stores) {
-      if (stores.stores.length > 0) {
+      if (stores.stores.length) {
         service.reloadVendors(stores.stores, dimPlatformService.getActive());
       }
     });
 
+    // TODO: trigger on characters, not stores
     // TODO: clear on platform switch
     // TODO: idempotent promise
+    // TODO: Fix filters, loadout builder
 
     return service;
 
-    // TODO: Fix filters, loadout builder
+    function setVendorData(store, vendor) {
+      // TODO: time to merge 'em
+
+      // Expiration per character???
+
+      const vendorData = service.vendors[vendor.hash] = service.vendors[vendor.hash] || {};
+      vendorData[store.id] = vendor;
+      vendorData[0] = vendor; // TODO: hack!
+    }
 
     function reloadVendors(stores, platform) {
       const characters = _.reject(stores, 'isVault');
-      // TODO: whitelist vendors
+
+      // Pick a stable character
+      const primeCharacter = _.min(characters, 'id');
+
       return dimDefinitions.then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
 
-        service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
+        service.totalVendors = (characters.length *
+                                (vendorList.length - vendorBlackList.length - nonClassSpecificVendors.length)) +
+          nonClassSpecificVendors.length;
         service.loadedVendors = 0;
 
-        return $q.all(_.flatten(characters.map((store) => {
-          service.vendors[store.id] = service.vendors[store.id] || {};
-          const vendorData = service.vendors[store.id];
-          return _.map(vendorList, (vendorDef) => {
-            // TODO: not all vendors for all characters! (hunter vangaurd, etc)
-
-            if (!vendorBlackList.includes(vendorDef.hash)) {
-              if (vendorData &&
-                  vendorData[vendorDef.hash] &&
-                  vendorData[vendorDef.hash].nextRefreshDate > new Date().toISOString()) {
-                store.vendors = vendorData;
-                // TODO: merge vendor data!!!
-                service.loadedVendors++;
-                return vendorData[vendorDef.hash];
-              } else {
-                return loadVendor(store, vendorDef, platform, defs)
-                  .then((vendor) => {
-                    if (vendor) {
-                      vendorData[vendor.hash] = vendor;
-                      store.vendors = vendorData;
-                    }
-                    //console.log(vendor);
-                    service.loadedVendors++;
-                    return vendor;
-                  });
-              }
-            }
+        return $q.all(_.flatten(vendorList.map((vendorDef) => {
+          if (vendorBlackList.includes(vendorDef.hash)) {
             return null;
-          });
+          }
+
+          if (nonClassSpecificVendors.includes(vendorDef.hash)) {
+            return $q.when(loadVendorForCharacter(primeCharacter, vendorDef, platform, defs))
+              .then((vendor) => {
+                if (vendor) {
+                  characters.forEach((store) => {
+                    setVendorData(store, vendor);
+                    console.log('vendor?', store.name, vendor);
+                  });
+                }
+                return vendor;
+              });
+          } else {
+            return characters.map((store) => loadVendorForCharacter(store, vendorDef, platform, defs));
+          }
         })));
       }).then(() => {
         $rootScope.$broadcast('dim-vendors-updated', { stores: stores });
       });
     }
 
-    // TODO: Limit to certain vendors
+    function loadVendorForCharacter(store, vendorDef, platform, defs) {
+      if (service.vendors[vendorDef.hash] &&
+          service.vendors[vendorDef.hash][store.id] &&
+          service.vendors[vendorDef.hash][store.id].nextRefreshDate > new Date().toISOString()) {
+        service.loadedVendors++;
+        return service.vendors[vendorDef.hash][store.id];
+      } else {
+        return loadVendor(store, vendorDef, platform, defs)
+          .then((vendor) => {
+            if (vendor) {
+              setVendorData(store, vendor);
+            }
+            service.loadedVendors++;
+            return vendor;
+          });
+      }
+    }
+
     function loadVendor(store, vendorDef, platform, defs) {
       const vendorHash = vendorDef.hash;
 
@@ -159,21 +194,15 @@
               .then((vendor) => {
                 return idbKeyval
                   .set(key, vendor)
-                // TODO: cache processed items
                   .then(() => vendor);
               })
               .catch((e) => {
                 //console.log("vendor error", e, e.code, e.status);
-                // DestinyVendor
                 if (e.status === 'DestinyVendorNotFound') {
                   // TODO: save a tombstone w/ time+jitter
-
                 }
                 return vendor; // FOR NOW
               });
-            // TODO: catch notfound
-
-            // TODO: track percentage complete
           }
         })
         .then((vendor) => {
@@ -190,9 +219,6 @@
     }
 
     function processVendor(vendor, vendorDef, defs) {
-      // TODO: why is IB wrong??? all titan!
-      //
-      //console.log(vendor, vendorDef);
       var def = vendorDef.summary;
       const createdVendor = {
         hash: vendorDef.hash,
@@ -200,7 +226,9 @@
         icon: def.factionIcon || def.vendorIcon,
         nextRefreshDate: vendor.nextRefreshDate,
         expires: null,
-        eventVendor: def.mapSectionIdentifier === 'EVENT'
+        eventVendor: def.mapSectionIdentifier === 'EVENT',
+        vendorOrder: def.vendorOrder,
+        faction: def.factionHash // TODO: show rep!
       };
 
       // Collapse Vanguard
@@ -209,43 +237,9 @@
         createdVendor.name = def.mapSectionName;
       }
 
-      // TODO: group/associate by faction!
-      //factionHash, mapSectionName
-      //mapSectionIdentifier:"VANGUARD"
-
-      /*
-      vendor.hash = vendorDef.hash;
-      vendor.vendorName = def.vendorName;
-      vendor.vendorIcon = def.factionIcon || def.vendorIcon;
-      vendor.items = [];
-      vendor.costs = [];
-      vendor.hasArmorWeaps = false;
-      vendor.hasVehicles = false;
-      vendor.hasShadersEmbs = false;
-      vendor.hasEmotes = false;
-       */
-      //vendor.nextRefreshDate;
-      // organize by category!
-
       const items = _.flatten(vendor.saleItemCategories.map((categoryData) => {
         return categoryData.saleItems;
-
-        // TODO populate unlocked
-        /*_.filter(categoryData.saleItems, (saleItem) => {
-          saleItem.item.isUnlocked = isSaleItemUnlocked(saleItem);
-          return saleItem.item.isEquipment;
-        });
-         */
       }));
-      createdVendor.costs = _.reduce(items, (o, saleItem) => {
-        if (saleItem.costs.length) {
-          o[saleItem.item.itemHash] = {
-            cost: saleItem.costs[0].value,
-            currency: _.pick(defs.InventoryItem[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
-          };
-        }
-        return o;
-      }, {});
 
       return dimStoreService.processItems({ id: null }, _.pluck(items, 'item'))
         .then(function(items) {
@@ -264,7 +258,6 @@
               };
             });
 
-            // TODO: propagate this up to the vendor itself!
             let hasArmorWeaps = false;
             let hasVehicles = false;
             let hasShadersEmbs = false;
