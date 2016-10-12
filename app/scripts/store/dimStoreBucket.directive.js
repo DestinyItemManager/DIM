@@ -124,7 +124,10 @@
             '    <form ng-submit="vm.finish()">',
             '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
             '    </form>',
-            '    <div class="buttons"><button ng-click="vm.finish()">Move</button></buttons>',
+            '    <div class="buttons">' +
+            '      <button ng-click="vm.finish()">Move</button>',
+            '      <span ng-show="vm.stacksWorth > 0"><input type="checkbox" ng-click="vm.stacksWorthClick()">Enough to fill a stack</span>',
+            '    </div>',
             '  </div>',
             '</div>'].join(''),
           scope: $scope,
@@ -134,6 +137,10 @@
             vm.item = $scope.ngDialogData;
             vm.moveAmount = vm.item.amount;
             vm.maximum = dimStoreService.getStore(vm.item.owner).amountOfItem(item);
+            vm.stacksWorth = Math.max(item.maxStackSize - target.amountOfItem(item), 0);
+            vm.stacksWorthClick = function() {
+              vm.moveAmount = vm.stacksWorth;
+            };
             vm.finish = function() {
               $scope.closeThisDialog(vm.moveAmount);
             };
