@@ -102,6 +102,7 @@
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
 
         service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
+        service.loadedVendors = 0;
 
         return $q.all(_.flatten(characters.map((store) => {
           service.vendors[store.id] = service.vendors[store.id] || {};
@@ -262,6 +263,7 @@
               };
             });
 
+            // TODO: propagate this up to the vendor itself!
             let hasArmorWeaps = false;
             let hasVehicles = false;
             let hasShadersEmbs = false;
@@ -307,6 +309,13 @@
 
           createdVendor.allItems = items;
           createdVendor.categories = categories;
+
+          createdVendor.hasArmorWeaps = _.any(categories, 'hasArmorWeaps');
+          createdVendor.hasVehicles = _.any(categories, 'hasVehicles');
+          createdVendor.hasShadersEmbs = _.any(categories, 'hasShadersEmbs');
+          createdVendor.hasEmotes = _.any(categories, 'hasEmotes');
+          createdVendor.hasConsumables = _.any(categories, 'hasConsumables');
+          createdVendor.hasBounties = _.any(categories, 'hasBounties');
 
           return createdVendor;
         });

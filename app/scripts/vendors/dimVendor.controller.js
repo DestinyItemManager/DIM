@@ -25,7 +25,7 @@
       $window.off('scroll', stickyHeader);
     });
 
-    vm.activeTab = 'armorweaps';
+    vm.activeTab = 'hasArmorWeaps';
     vm.activeTypeDefs = {
       armorweaps: ['armor', 'weapons'],
       vehicles: ['ships', 'vehicles'],
@@ -132,18 +132,5 @@
         }
       });
     }
-
-    angular.extend(vm, {
-      onTabChange: function() {
-        vm.vendorHashes = _.chain(vm.vendors[vm.activeTab])
-                          .values()
-                          .reduce(function(o, val) { o.push(_.keys(val)); return o; }, [])
-                          .flatten()
-                          .uniq()
-                          .reject(function(hash) { return _.contains(vm.vanguardHashes, hash); })
-                          .value();
-        countCurrencies(dimStoreService.getStores());
-      }
-    });
   }
 })();

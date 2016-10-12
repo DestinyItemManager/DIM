@@ -29,11 +29,12 @@
       vendors: '=vendorsData',
       types: '<displayTypes',
       vendorHashes: '<vendorHashes',
-      totalCoins: '<totalCoins'
+      totalCoins: '<totalCoins',
+      activeTab: '<activeTab'
     },
     template: [
       '<div class="vendor-char-items" ng-repeat="vendorHash in vm.vendorHashes">',
-      ' <div ng-if="vm.vendors[0][vendorHash]">',
+      ' <div ng-if="vm.vendors[0][vendorHash] && vm.vendors[0][vendorHash][vm.activeTab]">',
       '   <div class="vendor-header">',
       '     <div class="title">',
       '     {{vm.vendors[0][vendorHash].name}}',
@@ -43,7 +44,7 @@
       '   </div>',
       '   <div class="vendor-row">',
       '     <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '       <div ng-repeat="category in store.vendors[vendorHash].categories">',
+      '       <div ng-repeat="category in store.vendors[vendorHash].categories | vendorTab:vm.activeTab track by category.title">',
       '          <h3>{{category.title}}</h3>',
       '          <div class="vendor-armor">',
       '            <dim-vendor-item ng-repeat="saleItem in category.items" sale-item="saleItem.item" costs="saleItem.costs" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
@@ -58,7 +59,15 @@
 
   angular.module('dimApp')
     .component('dimVendorItem', VendorItem)
-    .component('dimVendorItems', VendorItems);
+    .component('dimVendorItems', VendorItems)
+    .filter('vendorTab', function() {
+      return function backgroundImage(categories, prop) {
+        return _.filter(categories, (category) => {
+          console.log(category, prop, category[prop]);
+          return category[prop];
+        });
+      };
+    });
 
   VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 

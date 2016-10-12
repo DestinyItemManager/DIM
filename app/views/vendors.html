@@ -6,17 +6,23 @@
       <h1><span translate="Vendors"></span>
         {{vm.vendorService.loadedVendors}} / {{vm.vendorService.totalVendors}}</h1>
       <div class="vendorTabs">
-        <label ng-class="{active: vm.activeTab === 'armorweaps'}">
-          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='armorweaps'>Armor &amp; Weapons
+        <label ng-class="{active: vm.activeTab === 'hasArmorWeaps'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasArmorWeaps'>Armor &amp; Weapons
         </label>
-        <label ng-class="{active: vm.activeTab === 'vehicles'}">
-          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='vehicles'>Ships &amp; Vehicles
+        <label ng-class="{active: vm.activeTab === 'hasVehicles'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasVehicles'>Ships &amp; Vehicles
         </label>
-        <label ng-class="{active: vm.activeTab === 'shadersembs'}">
-          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='shadersembs'>Shaders &amp; Emblems
+        <label ng-class="{active: vm.activeTab === 'hasConsumables'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasConsumables'>Consumables
         </label>
-        <label ng-class="{active: vm.activeTab === 'emotes'}">
-          <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='emotes'>Emotes
+        <label ng-class="{active: vm.activeTab === 'hasBounties'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasBounties'>Bounties
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasShadersEmbs'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasShadersEmbs'>Shaders &amp; Emblems
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasEmotes'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasEmotes'>Emotes
         </label>
       </div>
     </div>
@@ -27,6 +33,6 @@
     </div>
   </div>
   <div class="vendors">
-    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
+    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vendorHashes" active-tab="vm.activeTab" total-coins="vm.totalCoins"></dim-vendor-items>
   </div>
 </div>
