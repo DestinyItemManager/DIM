@@ -56,11 +56,11 @@
 					</td>
 					<td><i class="fa fa-arrow-right"/></td>
 					<td>
-						<dim-simple-item item-data="vm.gunSmithMatsHashes[0]"></dim-simple-item>
+						<dim-simple-item item-data="vm.gunSmithMats[0]"></dim-simple-item>
 					</td>
 					<td>=</td>
 					<td>
-						{{vm.calculateRep(vm.gunSmithMatsHashes[0])}}					
+						{{vm.calculateRep(vm.gunSmithMats[0])}}					
 					</td>
 				</tr>
 			</tbody>
@@ -172,7 +172,7 @@
 					</td>
 					<td>=</td>
 					<td>
-						{{(vm.erisMats[1].amount * 25)}}
+						{{vm.calculateRep(vm.erisMats[1])}}
 					</td>
 				</tr>
 			</tbody>

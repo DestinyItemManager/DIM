@@ -50,8 +50,8 @@
     vm.planataryMats = mapItems(planataryMatsHashes);
     vm.materials = mapItems(materialsHashes);
     vm.variksMats = mapVariksItems(variksMatsHashes);
-    vm.erisMatsHashes = mapErisItems(erisMatsHashes);
-    vm.gunSmithMatsHashes = mapGunsmithItems(gunSmithMatsHashes);
+    vm.erisMats = mapErisItems(erisMatsHashes);
+    vm.gunSmithMats = mapGunsmithItems(gunSmithMatsHashes);
 
     function mapItems(hashes) {
       return hashes.map(function(hash) {
