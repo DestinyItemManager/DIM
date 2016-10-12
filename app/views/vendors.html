@@ -3,7 +3,8 @@
   <div id="vendorHeadersBackground" class="vendor-headers-background"></div>
   <div id="vendorHeaderWrapper" class="vendorHeaderWrapper">
     <div class="vendorLabels">
-      <h1 translate="Vendors"></h1>
+      <h1><span translate="Vendors"></span>
+        {{vm.vendorService.loadedVendors}} / {{vm.vendorService.totalVendors}}</h1>
       <div class="vendorTabs">
         <label ng-class="{active: vm.activeTab === 'armorweaps'}">
           <input type='radio' ng-change='vm.onTabChange()' ng-model='vm.activeTab' value='armorweaps'>Armor &amp; Weapons
@@ -26,8 +27,6 @@
     </div>
   </div>
   <div class="vendors">
-    <dim-vendor-items ng-if="vm.activeTab === 'armorweaps'" stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.bannerHash" total-coins="vm.totalCoins"></dim-vendor-items>
-    <dim-vendor-items-combined ng-if="vm.activeTab === 'armorweaps'" stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vanguardHashes" total-coins="vm.totalCoins"></dim-vendor-items-combined>
-    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors[vm.activeTab]" display-types="vm.activeTypeDefs[vm.activeTab]" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
+    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendors" vendor-hashes="vm.vendorHashes" total-coins="vm.totalCoins"></dim-vendor-items>
   </div>
 </div>

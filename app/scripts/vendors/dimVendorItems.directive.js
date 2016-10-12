@@ -19,6 +19,8 @@
     ].join('')
   };
 
+  // TODO: use a filter to implement tabs!!
+
   var VendorItems = {
     controller: VendorItemsCtrl,
     controllerAs: 'vm',
@@ -30,7 +32,7 @@
       totalCoins: '<totalCoins'
     },
     template: [
-      '<div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes">',
+      '<div class="vendor-char-items" ng-repeat="vendorHash in vm.vendorHashes">',
       ' <div ng-if="vm.vendors[0][vendorHash]">',
       '   <div class="vendor-header">',
       '     <div class="title">',
@@ -54,48 +56,9 @@
     ].join('')
   };
 
-  var VendorItemsCombined = {
-    controller: VendorItemsCtrl,
-    controllerAs: 'vm',
-    bindings: {
-      stores: '<storesData',
-      vendors: '=vendorsData',
-      vendorHashes: '<vendorHashes',
-      totalCoins: '<totalCoins'
-    },
-    template: [
-      '<div class="vendor-char-items" ng-init="firstVendor = vm.getFirstVendorCombined(vm.vendors, vm.vendorHashes[0])">',
-      '  <div ng-if="firstVendor">',
-      '    <div class="vendor-header">',
-      '      <div class="title">',
-      '        <span translate="Vanguard"></span>',
-      '        <img class="vendor-icon" ng-src="{{::firstVendor.icon | bungieIcon}}" />',
-      '        <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '      </div>',
-      '    </div>',
-      '    <div class="vendor-row">',
-      '      <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '        <div ng-repeat="(idx, vendorHash) in vm.vendorHashes">',
-      '          <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length" translate="Armor"></h3>',
-      '          <div class="vendor-armor">',
-      '            <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
-      '          <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length" translate="Weapons"></h3>',
-      '          <div class="vendor-weaps">',
-      '            <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
-  };
-
   angular.module('dimApp')
     .component('dimVendorItem', VendorItem)
-    .component('dimVendorItems', VendorItems)
-    .component('dimVendorItemsCombined', VendorItemsCombined);
+    .component('dimVendorItems', VendorItems);
 
   VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 
@@ -153,6 +116,7 @@
 
           var compareItemCount = sum(compareItems, 'amount');
 
+          // TODO: gotta fix this too
           dialogResult = ngDialog.open({
             template: [
               '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',

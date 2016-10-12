@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService', dimVendorService];
 
-  function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService) {
+  function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
     var vm = this;
 
     var $window = $(window);
@@ -32,13 +32,17 @@
       shadersembs: ['shaders', 'emblems'],
       emotes: ['emotes']
     };
+
+    /*
     // Banner
     vm.bannerHash = [242140165];
 
     // Titan van, Hunter van, Warlock van
     vm.vanguardHashes = [1990950, 3003633346, 1575820975];
+     */
 
     vm.settings = dimSettingsService;
+    vm.vendorService = dimVendorService;
     function init(stores) {
       if (_.isEmpty(stores)) {
         return;
@@ -48,10 +52,14 @@
 
       // TODO: actually process vendors into the shape we want
 
-      var vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
-        return !value;
-      });
+      vm.vendors = _.pluck(vm.stores, 'vendors');
 
+      // TODO: put event vendors in front
+
+      // TODO: rearrange vendors by vendor, then by character???
+      // TODO: merge vendors / category items
+
+      /*
       vm.vendors = { armorweaps: {}, vehicles: {}, shadersembs: {}, emotes: {} };
       _.each(vendors, function(vendorMap, index) {
         vm.vendors.armorweaps[index] = {};
@@ -73,15 +81,10 @@
           }
         });
       });
+       */
 
       countCurrencies(stores);
-      vm.vendorHashes = _.chain(vm.vendors[vm.activeTab])
-                        .values()
-                        .reduce(function(o, val) { o.push(_.keys(val)); return o; }, [])
-                        .flatten()
-                        .uniq()
-                        .reject(function(hash) { return _.contains(vm.vanguardHashes, hash); })
-        .value();
+      vm.vendorHashes = _.uniq(_.flatten(vm.vendors.map((v) => _.keys(v))));
       console.log(vm);
     }
 
@@ -91,6 +94,8 @@
     $scope.$on('dim-vendors-updated', function(e, args) {
       init(args.stores);
     });
+
+    // TODO: count currencies on store updated
 
     // Van quart, Dead orb, Future war, New mon, Cruc hand, Cruc quart, Eris Morn, Speaker, Variks, Exotic Blue
     // vm.vendorHashes = ['2668878854', '3611686524', '1821699360', '1808244981', '3746647075', '3658200622', '174528503', '2680694281', '1998812735', '3902439767'];
