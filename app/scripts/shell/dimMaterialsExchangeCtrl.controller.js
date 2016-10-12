@@ -76,7 +76,7 @@
 
     function mapGunsmithItems(hashes) {
       var mappedItems = mapItems(hashes);
-      mappedItems[0].amount = Math.floor(vm.glimmer / 5);
+      mappedItems[0].amount = Math.floor(vm.glimmer / 250) * 5;
       return mappedItems;
     }
 
