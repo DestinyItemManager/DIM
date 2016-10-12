@@ -34,11 +34,24 @@
       211861343  // heavy ammo synth
     ];
 
+    var erisMatsHashes = [
+      1043138475, // black wax idol
+      211861343  // heavy ammo synth
+    ];
+
+    var gunSmithMatsHashes = [
+      1898539128  // weapon parts
+    ];
+
+
+
     vm.glimmer = dimStoreService.getVault().glimmer;
     vm.xurMats = mapXurItems(xurMatsHashes);
     vm.planataryMats = mapItems(planataryMatsHashes);
     vm.materials = mapItems(materialsHashes);
     vm.variksMats = mapVariksItems(variksMatsHashes);
+    vm.erisMatsHashes = mapErisItems(erisMatsHashes);
+    vm.gunSmithMatsHashes = mapGunsmithItems(gunSmithMatsHashes);
 
     function mapItems(hashes) {
       return hashes.map(function(hash) {
@@ -61,20 +74,32 @@
       return mappedItems;
     }
 
+    function mapGunsmithItems(hashes) {
+      var mappedItems = mapItems(hashes);
+      mappedItems[0].amount = Math.floor(vm.glimmer / 5);
+      return mappedItems;
+    }
+
     function mapVariksItems(hashes) {
       var mappedItems = mapItems(hashes);
       mappedItems[1].amount = mappedItems[0].amount;
       return mappedItems;
     }
 
+    function mapErisItems(hashes) {
+      var mappedItems = mapItems(hashes);
+      mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
+      return mappedItems;
+    }
+
     vm.calculateRep = function(item) {
       switch (item.hash) {
       case 211861343:
-        return Math.round(item.amount * 25);       // heavy ammo synth
+        return Math.floor(item.amount * 25);       // heavy ammo synth
       case 937555249:
-        return Math.round(item.amount / 5) * 100;  // motes of light
+        return Math.floor(item.amount / 5) * 100;  // motes of light
       case 928169143:
-        return Math.round(item.amount / 4) * 25;   // special ammo synth
+        return Math.floor(item.amount / 4) * 25;   // special ammo synth
       case 1542293174: // armor materials
       case 1898539128: // weapon parts
       case 1797491610: // Helium Filaments
@@ -82,7 +107,7 @@
       case 3242866270: // Relic Iron
       case 2254123540: // Spirit Bloom
       case 3164836592: // Wormspore
-        return Math.round(item.amount / 25) * 50;
+        return Math.floor(item.amount / 25) * 50;
       default:
         return '?';
       }
