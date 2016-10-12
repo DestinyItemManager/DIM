@@ -19,8 +19,6 @@
     ].join('')
   };
 
-  // TODO: use a filter to implement tabs!!
-
   var VendorItems = {
     controller: VendorItemsCtrl,
     controllerAs: 'vm',
@@ -47,7 +45,7 @@
       '       <div ng-repeat="category in store.vendors[vendorHash].categories | vendorTab:vm.activeTab track by category.title">',
       '          <h3>{{category.title}}</h3>',
       '          <div class="vendor-armor">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.items" sale-item="saleItem.item" costs="saleItem.costs" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
+      '            <dim-vendor-item ng-repeat="saleItem in category.items" sale-item="saleItem.item" costs="saleItem.costs" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem.item, $event)"></dim-vendor-item>',
       '          </div>',
       '        </div>',
       '      </div>',
@@ -125,7 +123,6 @@
 
           var compareItemCount = sum(compareItems, 'amount');
 
-          // TODO: gotta fix this too
           dialogResult = ngDialog.open({
             template: [
               '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',

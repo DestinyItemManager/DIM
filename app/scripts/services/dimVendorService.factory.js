@@ -93,6 +93,7 @@
 
     return service;
 
+    // TODO: Fix filters, loadout builder
 
     function reloadVendors(stores, platform) {
       const characters = _.reject(stores, 'isVault');
