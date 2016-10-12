@@ -4,7 +4,7 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService', dimVendorService];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService', 'dimVendorService'];
 
   function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
     var vm = this;
@@ -82,41 +82,36 @@
         });
       });
        */
-
-      countCurrencies(stores);
+      countCurrencies(vm.stores);
       vm.vendorHashes = _.uniq(_.flatten(vm.vendors.map((v) => _.keys(v))));
       console.log(vm);
     }
 
-    init(dimStoreService.getStores());
+    vm.stores = _.reject(dimStoreService.getStores(), (s) => s.isVault);
+    init(vm.stores);
+
     // TODO: watch vendors instead?
     // TODO: get vendors directly from vendor service!
     $scope.$on('dim-vendors-updated', function(e, args) {
       init(args.stores);
     });
 
-    // TODO: count currencies on store updated
-
-    // Van quart, Dead orb, Future war, New mon, Cruc hand, Cruc quart, Eris Morn, Speaker, Variks, Exotic Blue
-    // vm.vendorHashes = ['2668878854', '3611686524', '1821699360', '1808244981', '3746647075', '3658200622', '174528503', '2680694281', '1998812735', '3902439767'];
-
-    function mergeMaps(o, map) {
-      _.each(map, function(val, key) {
-        if (!o[key]) {
-          o[key] = map[key];
-        }
-      });
-      return o;
-    }
+    $scope.$on('dim-stores-updated', function(e, args) {
+      vm.stores = _.reject(args.stores, (s) => s.isVault);
+      countCurrencies(args.stores);
+    });
 
     function countCurrencies(stores) {
-      var currencies = _.chain(vm.vendors[vm.activeTab])
-            .values()
-            .reduce(function(o, val) { o.push(_.values(val)); return o; }, [])
+      var currencies = _.chain(vm.vendors)
+            .map((c) => _.values(c))
+            .flatten()
+            .pluck('categories')
+            .flatten()
+            .flatten()
+            .pluck('items')
             .flatten()
             .pluck('costs')
-            .reduce(mergeMaps)
-            .values()
+            .flatten()
             .pluck('currency')
             .pluck('itemHash')
             .unique()
@@ -125,13 +120,11 @@
       currencies.forEach(function(currencyHash) {
         // Legendary marks and glimmer are special cases
         if (currencyHash === 2534352370) {
-          vm.totalCoins[currencyHash] = sum(stores, function(store) {
-            return store.legendaryMarks || 0;
-          });
+          vm.totalCoins[currencyHash] = dimStoreService.getVault().legendaryMarks;
         } else if (currencyHash === 3159615086) {
-          vm.totalCoins[currencyHash] = sum(stores, function(store) {
-            return store.glimmer || 0;
-          });
+          vm.totalCoins[currencyHash] = dimStoreService.getVault().glimmer;
+        } else if (currencyHash === 2749350776) {
+          vm.totalCoins[currencyHash] = dimStoreService.getVault().silver;
         } else {
           vm.totalCoins[currencyHash] = sum(stores, function(store) {
             return store.amountOfItem({ hash: currencyHash });

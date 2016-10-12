@@ -248,7 +248,7 @@
       return dimStoreService.processItems({ id: null }, _.pluck(items, 'item'))
         .then(function(items) {
           const itemsByHash = _.indexBy(items, 'hash');
-          const categories = _.mapObject(vendor.saleItemCategories, (category) => {
+          const categories = _.map(vendor.saleItemCategories, (category) => {
             const categoryItems = category.saleItems.map((saleItem) => {
               return {
                 costs: saleItem.costs.map((cost) => {

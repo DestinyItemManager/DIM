@@ -342,6 +342,7 @@
 
           var glimmer;
           var marks;
+          var silver;
           _removedNewItems.forEach((id) => newItems.delete(id));
           _removedNewItems.clear();
           service.hasNewItems = (newItems.size !== 0);
@@ -371,6 +372,7 @@
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
+                silver: silver,
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
@@ -418,6 +420,7 @@
               try {
                 glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+                silver = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2749350776; }).value;
               } catch (e) {
                 glimmer = 0;
                 marks = 0;
