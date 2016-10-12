@@ -30,14 +30,15 @@
     ];
 
     var variksMatsHashes = [
-      3783295803 // Ether Seeds
+      3783295803, // Ether Seeds
+      211861343  // heavy ammo synth
     ];
 
     vm.glimmer = dimStoreService.getVault().glimmer;
     vm.xurMats = mapXurItems(xurMatsHashes);
     vm.planataryMats = mapItems(planataryMatsHashes);
     vm.materials = mapItems(materialsHashes);
-    vm.variksMats = mapItems(variksMatsHashes);
+    vm.variksMats = mapVariksItems(variksMatsHashes);
 
     function mapItems(hashes) {
       return hashes.map(function(hash) {
@@ -57,6 +58,12 @@
     function mapXurItems(hashes) {
       var mappedItems = mapItems(hashes);
       mappedItems[1].amount = mappedItems[0].amount * 3;
+      return mappedItems;
+    }
+
+    function mapVariksItems(hashes) {
+      var mappedItems = mapItems(hashes);
+      mappedItems[1].amount = mappedItems[0].amount;
       return mappedItems;
     }
 
