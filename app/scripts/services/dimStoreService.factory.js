@@ -702,12 +702,12 @@
       // DestinyRewardSourceDefinition and filter on %SOURCE%
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
+      itemDef.sourceHashes = itemDef.sourceHashes || [];
       var itemYear = 1;
-      if (!itemDef.sourceHashes) {
-        itemYear = 1;
-      } else if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
         itemYear = 2;
-      } else if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+      }
+      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
         itemYear = 3;
       }
       // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
