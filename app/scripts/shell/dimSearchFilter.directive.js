@@ -615,8 +615,9 @@
         }
         if (predicate === "vanilla") {
           return item.year === 1;
+        } else {
+          return (item.sourceHashes.includes(activityHashes[predicate]));
         }
-        return (item.sourceHashes.includes(activityHashes[predicate]));
       },
       inloadout: function(predicate, item) {
         return item.isInLoadout;
