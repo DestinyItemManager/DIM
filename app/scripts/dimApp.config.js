@@ -148,6 +148,10 @@
           url: "/vendors",
           templateUrl: "views/vendors.html"
         })
+        .state('materials-exchange', {
+          url: "/materials-exchange",
+          templateUrl: "views/mats-exchange.html"
+        })
         .state('debugItem', {
           url: "/debugItem/:itemId",
           templateUrl: "views/debugItem.html"

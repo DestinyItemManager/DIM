@@ -3,10 +3,17 @@
 
   angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
-  MaterialsController.$inject = ['$scope', 'dimItemService', 'dimStoreService'];
+  MaterialsController.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$state'];
 
-  function MaterialsController($scope, dimItemService, dimStoreService) {
+  function MaterialsController($scope, dimItemService, dimStoreService, $state) {
     var vm = this;
+
+    var stores = dimStoreService.getStores();
+
+    if (stores.length === 0) {
+      $state.go('inventory');
+      return;
+    }
 
     var materialsHashes = [
       211861343,  // heavy ammo synth
@@ -54,13 +61,13 @@
     vm.gunSmithMats = mapGunsmithItems(gunSmithMatsHashes);
 
     function mapItems(hashes) {
-      return hashes.map(function(hash) {
+      return hashes.map(function (hash) {
         var ret = angular.copy(dimItemService.getItem({
           hash: hash
         }));
         if (ret) {
           ret.amount = 0;
-          dimStoreService.getStores().forEach(function(s) {
+          dimStoreService.getStores().forEach(function (s) {
             ret.amount += s.amountOfItem(ret);
           });
         }
@@ -92,24 +99,24 @@
       return mappedItems;
     }
 
-    vm.calculateRep = function(item) {
+    vm.calculateRep = function (item) {
       switch (item.hash) {
-      case 211861343:
-        return Math.floor(item.amount * 25);       // heavy ammo synth
-      case 937555249:
-        return Math.floor(item.amount / 5) * 100;  // motes of light
-      case 928169143:
-        return Math.floor(item.amount / 4) * 25;   // special ammo synth
-      case 1542293174: // armor materials
-      case 1898539128: // weapon parts
-      case 1797491610: // Helium Filaments
-      case 2882093969: // Spin Metal
-      case 3242866270: // Relic Iron
-      case 2254123540: // Spirit Bloom
-      case 3164836592: // Wormspore
-        return Math.floor(item.amount / 25) * 50;
-      default:
-        return '?';
+        case 211861343:
+          return Math.floor(item.amount * 25);       // heavy ammo synth
+        case 937555249:
+          return Math.floor(item.amount / 5) * 100;  // motes of light
+        case 928169143:
+          return Math.floor(item.amount / 4) * 25;   // special ammo synth
+        case 1542293174: // armor materials
+        case 1898539128: // weapon parts
+        case 1797491610: // Helium Filaments
+        case 2882093969: // Spin Metal
+        case 3242866270: // Relic Iron
+        case 2254123540: // Spirit Bloom
+        case 3164836592: // Wormspore
+          return Math.floor(item.amount / 25) * 50;
+        default:
+          return '?';
       }
     };
   }

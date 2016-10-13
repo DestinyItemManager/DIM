@@ -1,4 +1,5 @@
 <div ng-controller="dimMaterialsExchangeCtrl as vm" class="materials-exchange">
+	<a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
 	<h1>Materials Exchange</h1>
 	<div class="ngdialog-inner-content">
 		<h2>Materials on hand</h2>
@@ -16,7 +17,7 @@
 				</tr>
 				<tr>
 					<td ng-repeat="item in vm.planataryMats">
-						<dim-simple-item item-data="item"></dim-simple-item>						
+						<dim-simple-item item-data="item"></dim-simple-item>
 					</td>
 				</tr>
 				<tr>
@@ -31,7 +32,7 @@
 		<h2>Gunsmith</h2>
 		<table>
 			<tbody>
-				<tr>					
+				<tr>
 					<td>
 						Glimmer
 					</td>
@@ -54,13 +55,13 @@
 							</div>
 						</div>
 					</td>
-					<td><i class="fa fa-arrow-right"/></td>
+					<td><i class="fa fa-arrow-right" /></td>
 					<td>
 						<dim-simple-item item-data="vm.gunSmithMats[0]"></dim-simple-item>
 					</td>
 					<td>=</td>
 					<td>
-						{{vm.calculateRep(vm.gunSmithMats[0])}}					
+						{{vm.calculateRep(vm.gunSmithMats[0])}}
 					</td>
 				</tr>
 			</tbody>
