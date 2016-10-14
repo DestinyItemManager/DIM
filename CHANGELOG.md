@@ -1,3 +1,8 @@
+# Next
+
+* Don't sort bounties (although, the game does not provide the in-game order.)
+* Fix max-light rounding
+
 # 3.11.1
 
 * Fixed an issue with farming mode where users without motes, 3oC, coins, or heavy could not use farming mode.
