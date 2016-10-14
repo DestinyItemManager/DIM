@@ -1,6 +1,6 @@
 # Next
 
-* Don't sort bounties (although, the game does not provide the in-game order.)
+* Don't sort bounties (the API does not currently provide the in-game order.)
 * Fix max-light rounding
 
 # 3.11.1
