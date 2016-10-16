@@ -240,6 +240,8 @@
       ranked: {},
       activePerks: {},
       excludeditems: [],
+      activeCharacters: [],
+      selectedCharacter: 0,
       collapsedConfigs: [false, false, false, false, false, false, false, false, false, false],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
@@ -266,6 +268,8 @@
       onCharacterChange: function() {
         vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
+        vm.activeCharacters = _.where(dimStoreService.getStores(), { class: vm.active });
+        vm.selectedCharacter = 0;
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
         vm.excludeditems = [];
@@ -365,8 +369,11 @@
           vm.excludedchanged = true;
         }
       },
+      onSelectedCharacterChange: function(idx) {
+        vm.selectedCharacter = idx;
+      },
       lockEquipped: function() {
-        var store = _.findWhere(dimStoreService.getStores(), { class: vm.active });
+        var store = vm.activeCharacters[vm.selectedCharacter];
         var loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(""));
         var items = _.pick(loadout.items,
                                'helmet',
@@ -582,6 +589,7 @@
         }
 
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
+        vm.activeCharacters = _.where(dimStoreService.getStores(), { class: vm.active });
 
         var allItems = [];
         var vendorItems = [];
