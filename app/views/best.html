@@ -42,7 +42,7 @@
   </div>
 
   <div class="section">
-    <p>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear. <span ng-show="!normal.excludeditems.length">Shift + click to exclude items.</span></small></p>
+    <p><span class='dim-button locked-button' ng-click="normal.lockEquipped()">Lock Equipped</span><span class='dim-button locked-button' ng-click="normal.clearLocked()">Clear Locked</span>Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear. <span ng-show="!normal.excludeditems.length">Shift + click to exclude items.</span></small></p>
     <dim-min-max-locks class="minmax-section" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
       locked-items-valid="normal.lockedItemsValid($data, type)"
       on-drop="normal.onDrop($data, type)"

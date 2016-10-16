@@ -215,6 +215,14 @@
       return (merge) ? mergeBuckets(bucket1, bucket2) : bucket1;
     }
 
+    function filterLoadoutToEquipped(loadout) {
+      var filteredLoadout = angular.copy(loadout);
+      filteredLoadout.items = _.mapObject(filteredLoadout.items, function(items) {
+        return _.select(items, 'equipped');
+      });
+      return filteredLoadout;
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/2',
@@ -355,6 +363,36 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
+        }
+      },
+      lockEquipped: function() {
+        var store = _.findWhere(dimStoreService.getStores(), { class: vm.active });
+        var loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(""));
+        var items = _.pick(loadout.items,
+                               'helmet',
+                               'gauntlets',
+                               'chest',
+                               'leg',
+                               'classitem',
+                               'artifact',
+                               'ghost');
+        vm.lockeditems.Helmet = items.helmet[0];
+        vm.lockeditems.Gauntlets = items.gauntlets[0];
+        vm.lockeditems.Chest = items.chest[0];
+        vm.lockeditems.Leg = items.leg[0];
+        vm.lockeditems.ClassItem = items.classitem[0];
+        vm.lockeditems.Artifact = items.artifact[0];
+        vm.lockeditems.Ghost = items.ghost[0];
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.lockedchanged = true;
+        }
+      },
+      clearLocked: function() {
+        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.lockedchanged = true;
         }
       },
       newLoadout: function(set) {
