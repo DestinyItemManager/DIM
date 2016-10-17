@@ -103,6 +103,11 @@
       makeRoomForItems: function() {
         var self = this;
 
+        // early out if users don't want farming mode rearranging non-engram-items in their inventory
+        if (dimSettingsService.farming.makeRoomForItems === false) {
+            return $q.resolve();
+        }
+
         var store = dimStoreService.getStore(self.store.id);
         // TODO: this'll be easier with buckets
         // These types can have engrams
