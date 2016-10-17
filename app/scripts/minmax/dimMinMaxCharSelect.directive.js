@@ -9,11 +9,11 @@
       selectedCharacter: '='
     },
     template: [
-      '<div class="minmax-select-box" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[0].background + \')\' }">',
-      '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[0].icon + \')\' }"></div>',
-      '  <div class="race-gender">{{:: vm.activeCharacters[0].genderRace }}</div>',
-      '  <div class="level"><span translate="Level"></span> {{ vm.activeCharacters[0].level }}</div>',
-      '  <div class="level powerLevel">{{ vm.activeCharacters[0].powerLevel }}</div>',
+      '<div class="minmax-select-box" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[vm.selectedCharacter].background + \')\' }">',
+      '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[vm.selectedCharacter].icon + \')\' }"></div>',
+      '  <div class="race-gender">{{ vm.activeCharacters[vm.selectedCharacter].genderRace }}</div>',
+      '  <div class="level"><span translate="Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>',
+      '  <div class="level powerLevel">{{ vm.activeCharacters[vm.selectedCharacter].powerLevel }}</div>',
       '  <div class="minmax-select-button" title="{{ \'Characters\' | translate }}" ng-click="vm.openCharSelectPopup($event)"><i class="fa fa-chevron-down"></i></div>',
       '</div>',
       '<div id="char-select"></div>'
@@ -21,14 +21,14 @@
   };
 
   var MinMaxCharPopup = {
-    controller: MinMaxCharSelectCtrl,
     controllerAs: 'vm',
     bindings: {
       activeCharacters: '<',
-      selectedCharacter: '='
+      selectedCharacter: '=',
+      onSelectedChange: '&'
     },
     template: [
-      '<div class="minmax-select-box" ng-repeat="(idx, char) in vm.activeCharacters" ng-click="vm.selectCharacter(idx)" style="width:210px" ng-style="{ \'background-image\': \'url(\' + char.background + \')\' }">',
+      '<div class="minmax-select-box" ng-repeat="(idx, char) in vm.activeCharacters" ng-click="vm.onSelectedChange({idx: idx})" style="width:210px" ng-style="{ \'background-image\': \'url(\' + char.background + \')\' }">',
       '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + char.icon + \')\' }"></div>',
       '  <div class="race-gender">{{:: char.genderRace }}</div>',
       '  <div class="level"><span translate="Level"></span> {{ char.level }}</div>',
@@ -47,8 +47,8 @@
     var vm = this;
     var dialogResult = null;
 
-    vm.selectCharacter = function selectCharacter(index) {
-      vm.selectedCharacter = index;
+    vm.onSelectedChange = function onSelectedChange(idx) {
+      vm.selectedCharacter = idx;
       ngDialog.closeAll();
     };
 
@@ -60,8 +60,8 @@
 
         dialogResult = ngDialog.open({
           template: [
-            '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-min-max-char-popup="vm.store">',
-            '  <dim-min-max-char-popup active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter"></dim-min-max-char-popup>',
+            '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()">',
+            '  <dim-min-max-char-popup active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(idx)"></dim-min-max-char-popup>',
             '</div>'].join(''),
           plain: true,
           appendTo: 'div[id="char-select"]',
