@@ -3,7 +3,7 @@
   margin: 0 auto;
 
   .vendors {
-    margin-top: 125px;
+    margin-top: 55px;
   }
   .vendorLabels h1 {
     display: inline-block;
@@ -34,7 +34,7 @@
   .vendor-timer {
     float: right;
   }
-  .vendor-armor, .vendor-weaps {
+  .vendor-items {
     display: flex;
     flex-wrap: wrap;
   }
@@ -46,15 +46,9 @@
     flex-direction: column;
     align-items: center;
   }
-  .vendor-header-col {
-    width: calc((var(--item-size) + 40px)*3);
-    margin-right: 60px;
-  }
   .char-cols {
     display: flex;
     flex-direction: column;
-    width: calc((var(--item-size) + 40px)*3);
-    margin-right: 60px;
   }
   .char-cols h3 {
     margin-top: 10px;
@@ -69,7 +63,7 @@
   .vendor-headers-background {
     display: none;
     position: fixed;
-    height: 123px;
+    height: 51px;
     left: 0;
     width: 100%;
     top: 50px;
@@ -141,8 +135,9 @@
   height: calc(var(--item-size) + 4px);
   position: absolute;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   background-color: rgba(40,40,40,0.5);
+  margin-top: 2px;
 }
 
 .ngdialog.vendor-move-popup {

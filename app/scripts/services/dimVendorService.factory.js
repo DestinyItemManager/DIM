@@ -72,27 +72,14 @@
       1303406887 // Cryptarch (Reef)
     ];
 
-    // Vendors we know don't carry class-specific items
-    const nonClassSpecificVendors = [
-      44395194, // Vehicles
-      134701236, // Guardian Outfitter
-      459708109, // Shipwright
-      570929315, // Gunsmith
-      614738178, // Emote Collection
-      2244880194, // Ship Collection
-      2420628997, // Shader Collection
-      3301500998, // Emblem Collection
-      3917130357, // Eververse
-      2190824863 // Tyra Karn (Cryptarch)
-    ];
-
     const service = {
       vendorsLoaded: false,
       reloadVendors: reloadVendors,
-      // By hash, then by character id
+      // By hash
       vendors: {},
       totalVendors: 0,
       loadedVendors: 0
+      // TODO: expose getVendor promise
     };
 
     $rootScope.$on('dim-stores-updated', function(e, stores) {
@@ -105,6 +92,7 @@
     // TODO: clear on platform switch
     // TODO: idempotent promise
     // TODO: Fix filters, loadout builder
+    // TODO: vanguard only one char
 
     return service;
 
@@ -121,9 +109,6 @@
     function reloadVendors(stores, platform) {
       const characters = _.reject(stores, 'isVault');
 
-      // Pick a stable character
-      const primeCharacter = _.min(characters, 'id');
-
       return dimDefinitions.then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
@@ -138,24 +123,70 @@
             return null;
           }
 
-          if (nonClassSpecificVendors.includes(vendorDef.hash)) {
-            return $q.when(loadVendorForCharacter(primeCharacter, vendorDef, platform, defs))
-              .then((vendor) => {
-                if (vendor) {
-                  characters.forEach((store) => {
-                    setVendorData(store, vendor);
-                    console.log('vendor?', store.name, vendor);
-                  });
-                }
-                return vendor;
-              });
-          } else {
-            return characters.map((store) => loadVendorForCharacter(store, vendorDef, platform, defs));
-          }
+          return $q.all(characters.map((store) => loadVendorForCharacter(store, vendorDef, platform, defs)))
+            .then((vendors) => {
+              const nonNullVendors = _.compact(vendors);
+              if (nonNullVendors.length) {
+                const mergedVendor = mergeVendors(_.compact(vendors));
+                service.vendors[mergedVendor.hash] = mergedVendor;
+              }
+            });
         })));
       }).then(() => {
         $rootScope.$broadcast('dim-vendors-updated', { stores: stores });
       });
+    }
+
+    // TODO: loadVendor (loads appropriate chars)
+
+
+    function mergeVendors([firstVendor, ...otherVendors]) {
+      const mergedVendor = angular.copy(firstVendor);
+
+      otherVendors.forEach((vendor) => {
+        vendor.categories.forEach((category) => {
+          const existingCategory = _.find(mergedVendor.categories, { title: category.title });
+          if (existingCategory) {
+            mergeCategory(existingCategory, category);
+          } else {
+            mergedVendor.categories.push(category);
+          }
+        });
+
+        mergedVendor.hasArmorWeaps = mergedVendor.hasArmorWeaps || vendor.hasArmorWeaps;
+        mergedVendor.hasVehicles = mergedVendor.hasVehicles || vendor.hasVehicles;
+        mergedVendor.hasShadersEmbs = mergedVendor.hasShadersEmbs || vendor.hasShadersEmbs;
+        mergedVendor.hasEmotes = mergedVendor.hasEmotes || vendor.hasEmotes;
+        mergedVendor.hasConsumables = mergedVendor.hasConsumables || vendor.hasConsumables;
+        mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
+      });
+
+      // TODO: sort categories by index
+
+      mergedVendor.categories = _.sortBy(mergedVendor.categories, 'index');
+      mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'));
+
+      return mergedVendor;
+    }
+
+    function mergeCategory(mergedCategory, otherCategory) {
+      otherCategory.saleItems.forEach((saleItem) => {
+        const existingSaleItem = _.find(mergedCategory.saleItems, (existingSaleItem) =>
+                                    existingSaleItem.item.hash === saleItem.item.hash);
+        if (existingSaleItem) {
+          // TODO: set unlock flags, etc
+          existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
+        } else {
+          mergedCategory.saleItems.push(saleItem);
+        }
+      });
+
+      mergedCategory.hasArmorWeaps = mergedCategory.hasArmorWeaps || otherCategory.hasArmorWeaps;
+      mergedCategory.hasVehicles = mergedCategory.hasVehicles || otherCategory.hasVehicles;
+      mergedCategory.hasShadersEmbs = mergedCategory.hasShadersEmbs || otherCategory.hasShadersEmbs;
+      mergedCategory.hasEmotes = mergedCategory.hasEmotes || otherCategory.hasEmotes;
+      mergedCategory.hasConsumables = mergedCategory.hasConsumables || otherCategory.hasConsumables;
+      mergedCategory.hasBounties = mergedCategory.hasBounties || otherCategory.hasBounties;
     }
 
     function loadVendorForCharacter(store, vendorDef, platform, defs) {
@@ -167,11 +198,15 @@
       } else {
         return loadVendor(store, vendorDef, platform, defs)
           .then((vendor) => {
-            if (vendor) {
-              setVendorData(store, vendor);
-            }
             service.loadedVendors++;
             return vendor;
+          })
+          .catch((e) => {
+            // TODO: ???
+
+            service.loadedVendors++;
+            console.log(e);
+            return null;
           });
       }
     }
@@ -183,33 +218,49 @@
       return idbKeyval
         .get(key)
         .then((vendor) => {
-          // TODO: eververse never expires... which means set a short expiration!
-          if (vendor && vendor.nextRefreshDate > new Date().toISOString()) {
+          if (vendor && vendor.expires > Date.now()) {
             //console.log("loaded local", key, vendor);
+            // TODO: Check failed??
+            if (vendor.failed) {
+              throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
+            }
             return vendor;
           } else {
             //console.log("load remote", key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
             return dimBungieService
               .getVendorForCharacter(store, vendorHash)
               .then((vendor) => {
+                vendor.expires = calculateExpiration(vendor.nextRefreshDate);
                 return idbKeyval
                   .set(key, vendor)
                   .then(() => vendor);
               })
               .catch((e) => {
-                //console.log("vendor error", e, e.code, e.status);
+                console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
                 if (e.status === 'DestinyVendorNotFound') {
-                  // TODO: save a tombstone w/ time+jitter
+                  const vendor = {
+                    failed: true,
+                    code: e.code,
+                    status: e.status,
+                    expires: Date.now() + (60 * 60 * 1000) + ((Math.random() - 0.5) * (60 * 60 * 1000))
+                  };
+
+                  return idbKeyval
+                    .set(key, vendor)
+                    .then(() => {
+                      throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
+                    });
                 }
-                return vendor; // FOR NOW
+                throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
               });
           }
         })
         .then((vendor) => {
-          if (vendor && true && vendor.enabled) {
+          if (vendor && vendor.enabled) {
             const processed = processVendor(vendor, vendorDef, defs);
             return processed;
           }
+          console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
           return null;
         });
     }
@@ -218,24 +269,30 @@
       return ['vendor', store.id, platform.type, vendorHash].join('-');
     }
 
+    function calculateExpiration(nextRefreshDate) {
+      const date = new Date(nextRefreshDate).getTime();
+
+      // If the expiration is too far in the future, replace it with +8h
+      if (date > 7 * 24 * 60 * 60 * 1000) {
+        return Date.now() + (8 * 60 * 60 * 1000);
+      }
+
+      return date;
+    }
+
     function processVendor(vendor, vendorDef, defs) {
       var def = vendorDef.summary;
       const createdVendor = {
+        def: vendorDef,
         hash: vendorDef.hash,
         name: def.vendorName,
         icon: def.factionIcon || def.vendorIcon,
         nextRefreshDate: vendor.nextRefreshDate,
-        expires: null,
+        expires: calculateExpiration(vendor.nextRefreshDate),
         eventVendor: def.mapSectionIdentifier === 'EVENT',
-        vendorOrder: def.vendorOrder,
+        vendorOrder: (def.mapSectionOrder * 1000) + def.vendorOrder,
         faction: def.factionHash // TODO: show rep!
       };
-
-      // Collapse Vanguard
-      if (def.mapSectionIdentifier === 'VANGUARD') {
-        createdVendor.hash = 'VANGUARD';
-        createdVendor.name = def.mapSectionName;
-      }
 
       const items = _.flatten(vendor.saleItemCategories.map((categoryData) => {
         return categoryData.saleItems;
@@ -290,8 +347,9 @@
             });
 
             return {
+              index: category.categoryIndex,
               title: category.categoryTitle,
-              items: categoryItems,
+              saleItems: categoryItems,
               hasArmorWeaps: hasArmorWeaps,
               hasVehicles: hasVehicles,
               hasShadersEmbs: hasShadersEmbs,
@@ -316,7 +374,7 @@
     }
 
     function isSaleItemUnlocked(saleItem) {
-      return _.every(saleItem.unlockStatuses, function(status) { return status.isSet; });
+      return _.every(saleItem.unlockStatuses, 'isSet');
     }
   }
 })();

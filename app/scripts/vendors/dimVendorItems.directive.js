@@ -6,10 +6,12 @@
       saleItem: '<',
       costs: '<',
       totalCoins: '<',
+      isUnlocked: '<',
       itemClicked: '&'
     },
     template: [
       '<div class="vendor-item">',
+      '  <div ng-if="!$ctrl.isUnlocked" class="locked-overlay"></div>',
       '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
       '  <div ng-repeat="cost in $ctrl.costs" class="cost" ng-class="{notenough: ($ctrl.totalCoins[cost.currency.itemHash] < cost.value)}">',
       '    {{::cost.value}}/{{$ctrl.totalCoins[cost.currency.itemHash]}}',
@@ -30,20 +32,20 @@
       activeTab: '<activeTab'
     },
     template: [
-      '<div class="vendor-char-items" ng-repeat="vendorsByStore in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'eventVendor\',\'vendorOrder\'] track by key">',
+      '<div class="vendor-char-items" ng-repeat="vendor in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
       '   <div class="vendor-header">',
       '     <div class="title">',
-      '     {{vendorsByStore[0].name}}',
-      '     <img class="vendor-icon" ng-src="{{::vendorsByStore[0].icon | bungieIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="vendorsByStore[0].nextRefreshDate[0] !== \'9\'" end-time="vendorsByStore[0].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '     {{vendor.name}}',
+      '     <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
+      '     <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
       '   <div class="vendor-row">',
-      '     <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '       <div ng-repeat="category in vendorsByStore[store.id].categories | vendorTab:vm.activeTab track by category.title">',
+      '     <div class="char-cols">',
+      '       <div ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
       '          <h3>{{category.title}}</h3>',
-      '          <div class="vendor-armor">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.items" sale-item="saleItem.item" costs="saleItem.costs" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem.item, $event)"></dim-vendor-item>',
+      '          <div class="vendor-items">',
+      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems" sale-item="saleItem.item" costs="saleItem.costs" is-unlocked="saleItem.unlocked" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem.item, $event)"></dim-vendor-item>',
       '          </div>',
       '        </div>',
       '      </div>',
@@ -56,10 +58,9 @@
     .component('dimVendorItem', VendorItem)
     .component('dimVendorItems', VendorItems)
     .filter('vendorTab', function() {
+      // TODO: filter item categories?
       return function vendorTab(categories, prop) {
-        return _.filter(categories, (category) => {
-          return category[prop];
-        });
+        return _.filter(categories, prop);
       };
     })
     .filter('values', function() {
@@ -67,6 +68,8 @@
         return _.values(obj);
       };
     });
+
+  // TODO: separate out class-specific stuff?
 
   VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 

@@ -699,7 +699,6 @@
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
         isVendorItem: (!owner || owner.id === null),
-        isUnlocked: (!owner || owner.id === null) ? item.isUnlocked : true,
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,

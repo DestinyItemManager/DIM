@@ -33,14 +33,6 @@
       emotes: ['emotes']
     };
 
-    /*
-    // Banner
-    vm.bannerHash = [242140165];
-
-    // Titan van, Hunter van, Warlock van
-    vm.vanguardHashes = [1990950, 3003633346, 1575820975];
-     */
-
     vm.settings = dimSettingsService;
     vm.vendorService = dimVendorService;
     function init(stores) {
@@ -57,29 +49,6 @@
       // TODO: rearrange vendors by vendor, then by character???
       // TODO: merge vendors / category items
 
-      /*
-      vm.vendors = { armorweaps: {}, vehicles: {}, shadersembs: {}, emotes: {} };
-      _.each(vendors, function(vendorMap, index) {
-        vm.vendors.armorweaps[index] = {};
-        vm.vendors.vehicles[index] = {};
-        vm.vendors.shadersembs[index] = {};
-        vm.vendors.emotes[index] = {};
-        _.each(vendorMap, function(vendor, vendorHash) {
-          if (vendor.hasArmorWeaps) {
-            vm.vendors.armorweaps[index][vendorHash] = vendor;
-          }
-          if (vendor.hasVehicles) {
-            vm.vendors.vehicles[index][vendorHash] = vendor;
-          }
-          if (vendor.hasShadersEmbs) {
-            vm.vendors.shadersembs[index][vendorHash] = vendor;
-          }
-          if (vendor.hasEmotes) {
-            vm.vendors.emotes[index][vendorHash] = vendor;
-          }
-        });
-      });
-       */
       countCurrencies(vm.stores);
       console.log(vm);
     }
@@ -100,12 +69,11 @@
 
     function countCurrencies(stores) {
       var currencies = _.chain(vm.vendorService.vendors)
-            .map((c) => _.values(c))
-            .flatten()
+            .values()
             .pluck('categories')
             .flatten()
             .flatten()
-            .pluck('items')
+            .pluck('saleItems')
             .flatten()
             .pluck('costs')
             .flatten()
