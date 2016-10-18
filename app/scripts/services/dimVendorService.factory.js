@@ -93,18 +93,10 @@
     // TODO: idempotent promise
     // TODO: Fix filters, loadout builder
     // TODO: vanguard only one char
+    // TODO: populate vendorsLoaded
+    // TODO: populate unlock per char
 
     return service;
-
-    function setVendorData(store, vendor) {
-      // TODO: time to merge 'em
-
-      // Expiration per character???
-
-      const vendorData = service.vendors[vendor.hash] = service.vendors[vendor.hash] || {};
-      vendorData[store.id] = vendor;
-      vendorData[0] = vendor; // TODO: hack!
-    }
 
     function reloadVendors(stores, platform) {
       const characters = _.reject(stores, 'isVault');
@@ -113,9 +105,7 @@
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
 
-        service.totalVendors = (characters.length *
-                                (vendorList.length - vendorBlackList.length - nonClassSpecificVendors.length)) +
-          nonClassSpecificVendors.length;
+        service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
         service.loadedVendors = 0;
 
         return $q.all(_.flatten(vendorList.map((vendorDef) => {
