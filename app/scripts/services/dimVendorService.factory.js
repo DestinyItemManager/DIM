@@ -122,14 +122,20 @@
               return null;
             }
 
-            return $q.all(characters.map((store) => loadVendorForCharacter(store, vendorDef, defs)))
-              .then((vendors) => {
-                const nonNullVendors = _.compact(vendors);
-                if (nonNullVendors.length) {
-                  const mergedVendor = mergeVendors(_.compact(vendors));
-                  service.vendors[mergedVendor.hash] = mergedVendor;
-                }
-              });
+            if (service.vendors[vendorDef.hash] &&
+                service.vendors[vendorDef.hash].expires > Date.now()) {
+              service.loadedVendors++;
+              return service.vendors[vendorDef.hash];
+            } else {
+              return $q.all(characters.map((store) => loadVendorForCharacter(store, vendorDef, defs)))
+                .then((vendors) => {
+                  const nonNullVendors = _.compact(vendors);
+                  if (nonNullVendors.length) {
+                    const mergedVendor = mergeVendors(_.compact(vendors));
+                    service.vendors[mergedVendor.hash] = mergedVendor;
+                  }
+                });
+            }
           })));
         })
         .then(() => {
@@ -197,24 +203,18 @@
     }
 
     function loadVendorForCharacter(store, vendorDef, defs) {
-      if (service.vendors[vendorDef.hash] &&
-          service.vendors[vendorDef.hash].expires > Date.now()) {
-        service.loadedVendors++;
-        return service.vendors[vendorDef.hash];
-      } else {
-        return loadVendor(store, vendorDef, defs)
-          .then((vendor) => {
-            service.loadedVendors++;
-            return vendor;
-          })
-          .catch((e) => {
-            // TODO: ???
+      return loadVendor(store, vendorDef, defs)
+        .then((vendor) => {
+          service.loadedVendors++;
+          return vendor;
+        })
+        .catch((e) => {
+          // TODO: ???
 
-            service.loadedVendors++;
-            console.log(e);
-            return null;
-          });
-      }
+          service.loadedVendors++;
+          console.log(e);
+          return null;
+        });
     }
 
     function loadVendor(store, vendorDef, defs) {
@@ -310,6 +310,7 @@
           const categories = _.map(vendor.saleItemCategories, (category) => {
             const categoryItems = category.saleItems.map((saleItem) => {
               return {
+                index: saleItem.vendorItemIndex,
                 costs: saleItem.costs.map((cost) => {
                   return {
                     value: cost.value,
@@ -317,6 +318,7 @@
                   };
                 }),
                 item: itemsByHash[saleItem.item.itemHash],
+                // TODO: caveat, this won't update very often!
                 unlocked: isSaleItemUnlocked(saleItem),
                 unlockedByCharacter: [store.id]
               };
@@ -330,16 +332,13 @@
             let hasBounties = false;
             categoryItems.forEach((saleItem) => {
               const item = saleItem.item;
-              if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor') {
+              if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
                 hasArmorWeaps = true;
               }
               if (item.type === 'Ship' || item.type === 'Vehicle') {
                 hasVehicles = true;
               }
-              if (item.type === "Emblem") {
-                hasShadersEmbs = true;
-              }
-              if (item.type === "Shader") {
+              if (item.type === "Emblem" || item.type === "Shader") {
                 hasShadersEmbs = true;
               }
               if (item.type === "Emote") {

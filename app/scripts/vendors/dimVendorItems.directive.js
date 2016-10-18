@@ -13,7 +13,7 @@
       '<div class="vendor-item">',
       '  <div ng-if="!$ctrl.isUnlocked" class="locked-overlay"></div>',
       '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
-      '  <div ng-repeat="cost in $ctrl.costs" class="cost" ng-class="{notenough: ($ctrl.totalCoins[cost.currency.itemHash] < cost.value)}">',
+      '  <div ng-repeat="cost in $ctrl.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[cost.currency.itemHash] < cost.value)}">',
       '    {{::cost.value}}/{{$ctrl.totalCoins[cost.currency.itemHash]}}',
       '    <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
       '  </div>',
@@ -45,7 +45,7 @@
       '       <div ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
       '          <h3>{{category.title}}</h3>',
       '          <div class="vendor-items">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems" sale-item="saleItem.item" costs="saleItem.costs" is-unlocked="saleItem.unlocked" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
+      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem.item" costs="saleItem.costs" is-unlocked="saleItem.unlocked" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '          </div>',
       '        </div>',
       '      </div>',
@@ -58,9 +58,20 @@
     .component('dimVendorItem', VendorItem)
     .component('dimVendorItems', VendorItems)
     .filter('vendorTab', function() {
-      // TODO: filter item categories?
       return function vendorTab(categories, prop) {
         return _.filter(categories, prop);
+      };
+    })
+    .filter('vendorTabItems', function() {
+      return function vendorTab(items, prop) {
+        return _.filter(items, {
+          hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
+          hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
+          hasShadersEmbs: (saleItem) => (saleItem.item.type === "Emblem" || saleItem.item.type === "Shader"),
+          hasEmotes: (saleItem) => (saleItem.item.type === "Emote"),
+          hasConsumables: (saleItem) => (saleItem.item.type === "Material" || saleItem.item.type === "Consumable"),
+          hasBounties: (saleItem) => (saleItem.item.type === 'Bounties')
+        }[prop]);
       };
     })
     .filter('values', function() {
@@ -140,8 +151,8 @@
               '  </div>',
               '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
               '  <div class="item-details">',
-              '    <div>Availabile on:</div>',
-              '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores">',
+              '    <div>Available on:</div>',
+              '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
               '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
               '      {{store.name}}',
               '    </div>',
@@ -157,8 +168,9 @@
             controller: [function() {
               var innerVm = this;
               angular.extend(innerVm, {
+                settings: innerVm.settings,
                 item: item,
-                unlockStores: saleItem.unlockedByCharacter.map((id) => _.find(vm.stores, { id })),
+                unlockStores: saleItem.unlockedByCharacter.map((id) => _.find(dimStoreService.getStores(), { id })),
                 compareItems: compareItems,
                 compareItem: _.first(compareItems),
                 compareItemCount: compareItemCount,
