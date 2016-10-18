@@ -35,31 +35,22 @@
 
     vm.settings = dimSettingsService;
     vm.vendorService = dimVendorService;
-    function init(stores) {
+    function init(stores = dimStoreService.getStores()) {
       if (_.isEmpty(stores)) {
         return;
       }
 
       vm.stores = _.reject(stores, (s) => s.isVault);
 
-      // TODO: actually process vendors into the shape we want
-
-      // TODO: put event vendors in front
-
-      // TODO: rearrange vendors by vendor, then by character???
-      // TODO: merge vendors / category items
-
-      countCurrencies(vm.stores);
+      countCurrencies(stores);
       console.log(vm);
     }
 
-    vm.stores = _.reject(dimStoreService.getStores(), (s) => s.isVault);
-    init(vm.stores);
+    init();
 
     // TODO: watch vendors instead?
-    // TODO: get vendors directly from vendor service!
-    $scope.$on('dim-vendors-updated', function(e, args) {
-      init(args.stores);
+    $scope.$on('dim-vendors-updated', function() {
+      init();
     });
 
     $scope.$on('dim-stores-updated', function(e, args) {

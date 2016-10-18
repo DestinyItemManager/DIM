@@ -72,6 +72,8 @@
       1303406887 // Cryptarch (Reef)
     ];
 
+    let _reloadPromise = null;
+
     const service = {
       vendorsLoaded: false,
       reloadVendors: reloadVendors,
@@ -83,48 +85,65 @@
     };
 
     $rootScope.$on('dim-stores-updated', function(e, stores) {
+      // TODO: trigger on characters, not stores
       if (stores.stores.length) {
-        service.reloadVendors(stores.stores, dimPlatformService.getActive());
+        service.reloadVendors(stores.stores);
       }
     });
 
-    // TODO: trigger on characters, not stores
-    // TODO: clear on platform switch
-    // TODO: idempotent promise
+    $rootScope.$on('dim-active-platform-updated', function() {
+      service.vendors = {};
+      service.vendorsLoaded = false;
+    });
+
     // TODO: Fix filters, loadout builder
-    // TODO: vanguard only one char
     // TODO: populate vendorsLoaded
-    // TODO: populate unlock per char
 
     return service;
 
-    function reloadVendors(stores, platform) {
+    function reloadVendors(stores) {
+      const activePlatform = dimPlatformService.getActive();
+      if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
+        return _reloadPromise;
+      }
+
       const characters = _.reject(stores, 'isVault');
 
-      return dimDefinitions.then((defs) => {
-        // Narrow down to only visible vendors (not packages and such)
-        const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
+      _reloadPromise = dimDefinitions
+        .then((defs) => {
+          // Narrow down to only visible vendors (not packages and such)
+          const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
 
-        service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
-        service.loadedVendors = 0;
+          service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
+          service.loadedVendors = 0;
 
-        return $q.all(_.flatten(vendorList.map((vendorDef) => {
-          if (vendorBlackList.includes(vendorDef.hash)) {
-            return null;
+          return $q.all(_.flatten(vendorList.map((vendorDef) => {
+            if (vendorBlackList.includes(vendorDef.hash)) {
+              return null;
+            }
+
+            return $q.all(characters.map((store) => loadVendorForCharacter(store, vendorDef, defs)))
+              .then((vendors) => {
+                const nonNullVendors = _.compact(vendors);
+                if (nonNullVendors.length) {
+                  const mergedVendor = mergeVendors(_.compact(vendors));
+                  service.vendors[mergedVendor.hash] = mergedVendor;
+                }
+              });
+          })));
+        })
+        .then(() => {
+          $rootScope.$broadcast('dim-vendors-updated');
+        })
+        .finally(function() {
+          // Clear the reload promise so this can be called again
+          if (_reloadPromise.activePlatform === activePlatform) {
+            _reloadPromise = null;
           }
+        });
 
-          return $q.all(characters.map((store) => loadVendorForCharacter(store, vendorDef, platform, defs)))
-            .then((vendors) => {
-              const nonNullVendors = _.compact(vendors);
-              if (nonNullVendors.length) {
-                const mergedVendor = mergeVendors(_.compact(vendors));
-                service.vendors[mergedVendor.hash] = mergedVendor;
-              }
-            });
-        })));
-      }).then(() => {
-        $rootScope.$broadcast('dim-vendors-updated', { stores: stores });
-      });
+      _reloadPromise.activePlatform = activePlatform;
+      return _reloadPromise;
     }
 
     // TODO: loadVendor (loads appropriate chars)
@@ -151,8 +170,6 @@
         mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
       });
 
-      // TODO: sort categories by index
-
       mergedVendor.categories = _.sortBy(mergedVendor.categories, 'index');
       mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'));
 
@@ -164,7 +181,6 @@
         const existingSaleItem = _.find(mergedCategory.saleItems, (existingSaleItem) =>
                                     existingSaleItem.item.hash === saleItem.item.hash);
         if (existingSaleItem) {
-          // TODO: set unlock flags, etc
           existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
           existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
         } else {
@@ -180,14 +196,13 @@
       mergedCategory.hasBounties = mergedCategory.hasBounties || otherCategory.hasBounties;
     }
 
-    function loadVendorForCharacter(store, vendorDef, platform, defs) {
+    function loadVendorForCharacter(store, vendorDef, defs) {
       if (service.vendors[vendorDef.hash] &&
-          service.vendors[vendorDef.hash][store.id] &&
-          service.vendors[vendorDef.hash][store.id].nextRefreshDate > new Date().toISOString()) {
+          service.vendors[vendorDef.hash].expires > Date.now()) {
         service.loadedVendors++;
-        return service.vendors[vendorDef.hash][store.id];
+        return service.vendors[vendorDef.hash];
       } else {
-        return loadVendor(store, vendorDef, platform, defs)
+        return loadVendor(store, vendorDef, defs)
           .then((vendor) => {
             service.loadedVendors++;
             return vendor;
@@ -202,10 +217,10 @@
       }
     }
 
-    function loadVendor(store, vendorDef, platform, defs) {
+    function loadVendor(store, vendorDef, defs) {
       const vendorHash = vendorDef.hash;
 
-      const key = vendorKey(store, vendorHash, platform);
+      const key = vendorKey(store, vendorHash);
       return idbKeyval
         .get(key)
         .then((vendor) => {
@@ -256,8 +271,8 @@
         });
     }
 
-    function vendorKey(store, vendorHash, platform) {
-      return ['vendor', store.id, platform.type, vendorHash].join('-');
+    function vendorKey(store, vendorHash) {
+      return ['vendor', store.id, vendorHash].join('-');
     }
 
     function calculateExpiration(nextRefreshDate) {
