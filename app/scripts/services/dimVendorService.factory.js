@@ -64,7 +64,7 @@
     ];
      */
 
-    // Vendors we don't want to load
+    // Vendors we don't want to load by default
     const vendorBlackList = [
       2796397637, // Agent of the Nine
       2021251983, // Postmaster,
@@ -81,7 +81,7 @@
       vendors: {},
       totalVendors: 0,
       loadedVendors: 0
-      // TODO: expose getVendor promise
+      // TODO: expose getVendor promise, idempotently?
     };
 
     $rootScope.$on('dim-stores-updated', function(e, stores) {
@@ -226,7 +226,6 @@
         .then((vendor) => {
           if (vendor && vendor.expires > Date.now()) {
             //console.log("loaded local", key, vendor);
-            // TODO: Check failed??
             if (vendor.failed) {
               throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
             }
