@@ -166,6 +166,7 @@
         if (existingSaleItem) {
           // TODO: set unlock flags, etc
           existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
+          existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
         } else {
           mergedCategory.saleItems.push(saleItem);
         }
@@ -247,7 +248,7 @@
         })
         .then((vendor) => {
           if (vendor && vendor.enabled) {
-            const processed = processVendor(vendor, vendorDef, defs);
+            const processed = processVendor(vendor, vendorDef, defs, store);
             return processed;
           }
           console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
@@ -270,7 +271,7 @@
       return date;
     }
 
-    function processVendor(vendor, vendorDef, defs) {
+    function processVendor(vendor, vendorDef, defs, store) {
       var def = vendorDef.summary;
       const createdVendor = {
         def: vendorDef,
@@ -301,7 +302,8 @@
                   };
                 }),
                 item: itemsByHash[saleItem.item.itemHash],
-                unlocked: isSaleItemUnlocked(saleItem)
+                unlocked: isSaleItemUnlocked(saleItem),
+                unlockedByCharacter: [store.id]
               };
             });
 

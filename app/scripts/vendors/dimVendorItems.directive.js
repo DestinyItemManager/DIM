@@ -45,7 +45,7 @@
       '       <div ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
       '          <h3>{{category.title}}</h3>',
       '          <div class="vendor-items">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems" sale-item="saleItem.item" costs="saleItem.costs" is-unlocked="saleItem.unlocked" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem.item, $event)"></dim-vendor-item>',
+      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems" sale-item="saleItem.item" costs="saleItem.costs" is-unlocked="saleItem.unlocked" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '          </div>',
       '        </div>',
       '      </div>',
@@ -107,12 +107,13 @@
         }
         return null;
       },
-      itemClicked: function(item, e) {
+      itemClicked: function(saleItem, e) {
         e.stopPropagation();
         if (dialogResult) {
           dialogResult.close();
         }
 
+        const item = saleItem.item;
         if (detailItem === item) {
           detailItem = null;
           dialogResult = null;
@@ -138,6 +139,13 @@
               '    </div>',
               '  </div>',
               '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
+              '  <div class="item-details">',
+              '    <div>Availabile on:</div>',
+              '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores">',
+              '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
+              '      {{store.name}}',
+              '    </div>',
+              '  </div>',
               '</div>'].join(''),
             plain: true,
             overlay: false,
@@ -147,9 +155,10 @@
             }),
             controllerAs: 'vm',
             controller: [function() {
-              var vm = this;
-              angular.extend(vm, {
+              var innerVm = this;
+              angular.extend(innerVm, {
                 item: item,
+                unlockStores: saleItem.unlockedByCharacter.map((id) => _.find(vm.stores, { id })),
                 compareItems: compareItems,
                 compareItem: _.first(compareItems),
                 compareItemCount: compareItemCount,
