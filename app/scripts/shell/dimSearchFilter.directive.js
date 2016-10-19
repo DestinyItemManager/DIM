@@ -615,8 +615,7 @@
         }
         if (predicate === "vanilla") {
           return item.year === 1;
-        }
-        else {
+        } else {
           return (item.sourceHashes.includes(activityHashes[predicate]));
         }
       },
