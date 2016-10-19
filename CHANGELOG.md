@@ -2,6 +2,8 @@
 
 * Don't sort bounties (the API does not currently provide the in-game order.)
 * Fix max-light rounding
+* When moving consumable stacks, you can now choose to fill up one stack's worth.
+* Fix a bug in the new filters for source.
 
 # 3.11.1
 
