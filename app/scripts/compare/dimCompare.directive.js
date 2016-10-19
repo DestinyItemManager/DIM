@@ -31,7 +31,9 @@
                 <span ng-bind="::stat.value"></span>
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
               </div>
-              <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
+              <div ng-repeat="node in vm.talentGrids[item.id].nodes" title="{{node.description}}">
+               {{node.name}}
+              </div>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
           </div>
@@ -151,6 +153,40 @@
           max: Math.max(...bucket)
         };
       });
+
+
+      const nodeCounts = {};
+      vm.talentGrids = {};
+      _.each(vm.comparisons, (item) => {
+        _.each(item.talentGrid.nodes, (node) => {
+          if (!nodeCounts[node.hash]) {
+            nodeCounts[node.hash] = 0;
+          }
+          nodeCounts[node.hash]++;
+        });
+      });
+
+      const commonNodes = new Set();
+      _.each(nodeCounts, (count, hash) => {
+        if (count === vm.comparisons.length) {
+          commonNodes.add(hash);
+        }
+      });
+
+      vm.talentGrids = {};
+      _.each(vm.comparisons, (item) => {
+        vm.talentGrids[item.id] = trimTalentGrid(item.talentGrid, commonNodes);
+      });
     }, true);
+
+    function trimTalentGrid(talentGrid, commonNodes) {
+      const trimmedGrid = angular.copy(talentGrid);
+      trimmedGrid.nodes = _.reject(trimmedGrid.nodes, (n) => commonNodes.has(n.hash.toString()));
+      if (trimmedGrid.nodes.length) {
+        return trimmedGrid;
+      } else {
+        return null;
+      }
+    }
   }
 })();
