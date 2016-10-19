@@ -22,6 +22,7 @@
     });
 
     vm.featureFlags = dimFeatureFlags;
+    vm.vendorService = dimVendorService;
 
     hotkeys.add({
       combo: ['f'],

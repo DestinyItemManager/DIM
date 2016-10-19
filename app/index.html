@@ -42,7 +42,7 @@
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)" translate="About"></span>
           <span class="link" ng-click="app.showSupport($event)" translate="Support DIM"></span>
-          <span class="link" ng-if="true || app.featureFlags.vendorsEnabled" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
+          <span class="link" ng-if="app.featureFlags.vendorsEnabled && app.vendorService.vendorsLoaded" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>

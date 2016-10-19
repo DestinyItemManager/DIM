@@ -97,7 +97,6 @@
     });
 
     // TODO: Fix loadout builder
-    // TODO: populate vendorsLoaded
 
     return service;
 
@@ -140,6 +139,7 @@
         })
         .then(() => {
           $rootScope.$broadcast('dim-vendors-updated');
+          service.vendorsLoaded = true;
         })
         .finally(function() {
           // Clear the reload promise so this can be called again
