@@ -96,7 +96,7 @@
       service.vendorsLoaded = false;
     });
 
-    // TODO: Fix filters, loadout builder
+    // TODO: Fix loadout builder
     // TODO: populate vendorsLoaded
 
     return service;
