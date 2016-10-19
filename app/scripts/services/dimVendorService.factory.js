@@ -224,13 +224,13 @@
         .get(key)
         .then((vendor) => {
           if (vendor && vendor.expires > Date.now()) {
-            //console.log("loaded local", key, vendor);
+            // console.log("loaded local", key, vendor);
             if (vendor.failed) {
               throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
             }
             return vendor;
           } else {
-            //console.log("load remote", key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
+            // console.log("load remote", key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
             return dimBungieService
               .getVendorForCharacter(store, vendorHash)
               .then((vendor) => {
