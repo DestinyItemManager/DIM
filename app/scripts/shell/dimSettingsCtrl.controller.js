@@ -17,6 +17,7 @@
     vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: num }));
     vm.vaultColOptions = _.range(5, 21).map((num) => ({ id: num, name: num }));
     vm.vaultColOptions.unshift({ id: 999, name: 'Auto' });
+    vm.dblClickActions = [{ id: 1, name: 'Equip' }, { id: 2, name: 'Move' }];
 
     vm.languageOptions = {
       en: 'English',

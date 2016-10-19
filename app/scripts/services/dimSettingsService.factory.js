@@ -49,6 +49,8 @@
       charCol: 3,
       // How many columns to display vault buckets
       vaultMaxCol: 999,
+      // Which action to take when double clicking
+      dblClickAction: 1,
       // How big in pixels to draw items
       itemSize: 44,
       // Which categories or buckets should be collapsed?
