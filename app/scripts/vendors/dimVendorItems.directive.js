@@ -104,20 +104,6 @@
     });
 
     angular.extend(vm, {
-      eachHasItems: function(items, types) {
-        return types.length > 1 && _.every(types, function(type) { return items[type].length; });
-      },
-      getFirstVendorCombined: function(vendors, vendorHash) {
-        if (vendors) {
-          const vendor = _.find(vendors, function(vendor) {
-            return vendor[vendorHash];
-          });
-          if (vendor) {
-            return vendor[vendorHash];
-          }
-        }
-        return null;
-      },
       itemClicked: function(saleItem, e) {
         e.stopPropagation();
         if (dialogResult) {

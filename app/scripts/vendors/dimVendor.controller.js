@@ -43,7 +43,6 @@
       vm.stores = _.reject(stores, (s) => s.isVault);
 
       countCurrencies(stores);
-      console.log(vm);
     }
 
     init();
