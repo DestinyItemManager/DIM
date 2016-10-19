@@ -66,10 +66,15 @@
     // rank 1 = 1500
     // rank 2 = 2000
     // rank 3+ = 2500
-      var total = Array.from(vm.repPool).reduce((totalRep, current) => {
-        return totalRep + current;
-      });
-      console.log(total);
+      var total = 0;
+
+      for (var key in vm.repPool) {
+        total = total + vm.repPool[key];
+      }
+
+      var totalRank = total + vm.activeFaction.progressToNextLevel;
+      vm.newRank = Math.floor((totalRank) / 2500) + vm.activeFaction.level;
+      vm.newExperiance = (totalRank % 2500);
     }
 
 
