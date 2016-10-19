@@ -96,9 +96,8 @@
       service.vendorsLoaded = false;
     });
 
-    // TODO: Fix loadout builder
-
     return service;
+
 
     function reloadVendors(stores) {
       const activePlatform = dimPlatformService.getActive();
