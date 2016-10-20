@@ -30,7 +30,7 @@
       onSelected: '&'
     },
     template: [
-      '<div class="minmax-select-box dropdown-option" ng-repeat="(idx, char) in vm.activeCharacters" ng-click="vm.onSelected({idx: idx})" ng-style="{ \'background-image\': \'url(\' + char.background + \')\' }">',
+      '<div class="minmax-select-box dropdown-option" ng-repeat="(idx, char) in vm.activeCharacters" ng-show="idx !== vm.selectedCharacter" ng-click="vm.onSelected({idx: idx})" ng-style="{ \'background-image\': \'url(\' + char.background + \')\' }">',
       '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + char.icon + \')\' }"></div>',
       '  <div class="class">{{ char.className }}</div>',
       '  <div class="race-gender">{{:: char.genderRace }}</div>',
