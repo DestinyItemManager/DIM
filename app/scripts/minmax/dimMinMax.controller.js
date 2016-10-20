@@ -566,8 +566,7 @@
 
         // Process vendors here
         _.each(dimVendorService.vendors, function(vendor) {
-          var vendItems = filterItems(_.select(vendor.allItems, (saleItem) => saleItem.item.bucket.sort === 'Armor'));
-
+          var vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
           vendorItems = vendorItems.concat(vendItems);
 
           // Build a map of perks

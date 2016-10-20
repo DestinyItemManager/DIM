@@ -363,6 +363,10 @@
             };
           });
 
+          items.forEach((item) => {
+            item.vendorIcon = createdVendor.icon;
+          });
+
           createdVendor.allItems = items;
           createdVendor.categories = categories;
 
