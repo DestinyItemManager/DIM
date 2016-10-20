@@ -279,7 +279,7 @@
         vm.selectedCharacter = 0;
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
-        vm.excludeditems = [];
+        vm.excludeditems = _.filter(vm.excludeditems, function(item) { return item.id === '6917529101951964046'; });
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onActiveSetsChange: function() {
@@ -602,8 +602,16 @@
 
         var allItems = [];
         var vendorItems = [];
+        var hasFelwinter = false;
         _.each(stores, function(store) {
           var items = filterItems(store.items);
+
+          // Exclude felwinter if we have one
+          var felwinter = _.findWhere(items, { id: '6917529101951964046' });
+          if (!hasFelwinter && felwinter) {
+            hasFelwinter = true;
+            vm.excludeditems.push(felwinter);
+          }
 
           allItems = allItems.concat(items);
 
