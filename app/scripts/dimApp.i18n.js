@@ -182,7 +182,6 @@
           farming_mode: "Engrammes aux Coffres (mode Farm)",
           restore_all_items: "Tous les Articles",
           Loadouts: "Loadouts",
-          Progress: "Progression",
           LoadoutAppliedAuto: "Constructeur de Loadout automatique",
           LoadoutApplied: "Votre loadout de {{amount}} articles a été transféré à votre {{store}}",
           LoadoutAppliedError: "Aucun des articles de votre loadout n'a pu être transféré.",
