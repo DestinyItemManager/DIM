@@ -6,11 +6,13 @@
     controllerAs: 'vm',
     bindings: {
       activeCharacters: '<',
-      selectedCharacter: '='
+      selectedCharacter: '=',
+      onSelectedChange: '&'
     },
     template: [
       '<div class="minmax-select-box" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[vm.selectedCharacter].background + \')\' }">',
       '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[vm.selectedCharacter].icon + \')\' }"></div>',
+      '  <div class="class">{{ vm.activeCharacters[vm.selectedCharacter].className }}</div>',
       '  <div class="race-gender">{{ vm.activeCharacters[vm.selectedCharacter].genderRace }}</div>',
       '  <div class="level"><span translate="Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>',
       '  <div class="level powerLevel">{{ vm.activeCharacters[vm.selectedCharacter].powerLevel }}</div>',
@@ -25,11 +27,12 @@
     bindings: {
       activeCharacters: '<',
       selectedCharacter: '=',
-      onSelectedChange: '&'
+      onSelected: '&'
     },
     template: [
-      '<div class="minmax-select-box" ng-repeat="(idx, char) in vm.activeCharacters" ng-click="vm.onSelectedChange({idx: idx})" style="width:210px" ng-style="{ \'background-image\': \'url(\' + char.background + \')\' }">',
+      '<div class="minmax-select-box" ng-repeat="(idx, char) in vm.activeCharacters" ng-click="vm.onSelected({idx: idx})" style="width:220px" ng-style="{ \'background-image\': \'url(\' + char.background + \')\' }">',
       '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + char.icon + \')\' }"></div>',
+      '  <div class="class">{{ char.className }}</div>',
       '  <div class="race-gender">{{:: char.genderRace }}</div>',
       '  <div class="level"><span translate="Level"></span> {{ char.level }}</div>',
       '  <div class="level powerLevel">{{ char.powerLevel }}</div>',
@@ -47,8 +50,12 @@
     var vm = this;
     var dialogResult = null;
 
-    vm.onSelectedChange = function onSelectedChange(idx) {
-      vm.selectedCharacter = idx;
+    vm.onSelected = function onSelected(idx) {
+      if (vm.selectedCharacter !== idx) {
+        var prev = vm.selectedCharacter;
+        vm.selectedCharacter = idx;
+        vm.onSelectedChange({ prev: prev, new: idx });
+      }
       ngDialog.closeAll();
     };
 
@@ -61,7 +68,7 @@
         dialogResult = ngDialog.open({
           template: [
             '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()">',
-            '  <dim-min-max-char-popup active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(idx)"></dim-min-max-char-popup>',
+            '  <dim-min-max-char-popup active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected="vm.onSelected(idx)"></dim-min-max-char-popup>',
             '</div>'].join(''),
           plain: true,
           appendTo: 'div[id="char-select"]',

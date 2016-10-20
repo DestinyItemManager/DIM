@@ -2,7 +2,7 @@
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <h1>Loadout builder</h1>
 
-  <p>
+  <!--<p>
     <label ng-class="{selected: normal.active === 'warlock'}" class='dim-button'>
       <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='warlock'>Warlock
     </label>
@@ -12,7 +12,8 @@
     <label ng-class="{selected: normal.active === 'hunter'}" class='dim-button'>
       <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='hunter'>Hunter
     </label>
-  </p>
+  </p>-->
+  <dim-min-max-char-select active-characters="normal.activeCharacters" selected-character="normal.selectedCharacter" on-selected-change="normal.onSelectedChange(prev, new)"></dim-min-max-char-select>
 
   <dim-loadout></dim-loadout>
 
@@ -42,7 +43,6 @@
   </div>
 
   <div class="section">
-    <dim-min-max-char-select ng-if="normal.activeCharacters.length > 1" active-characters="normal.activeCharacters" selected-character="normal.selectedCharacter"></dim-min-max-char-select>
     <p><span class='dim-button locked-button' ng-click="normal.lockEquipped()">Lock Equipped</span>
        <span class='dim-button locked-button' ng-click="normal.clearLocked()">Clear Locked</span>
        Locked Items <small>- Drag and drop any item into its bucket to build sets with that specific gear. <span ng-show="!normal.excludeditems.length">Shift + click to exclude items.</span></small></p>

@@ -265,10 +265,17 @@
       excludedItemsValid: function(droppedId, droppedType) {
         return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
+      onSelectedChange: function(prevIdx, selectedIdx) {
+        if (vm.activeCharacters[prevIdx].class !== vm.activeCharacters[selectedIdx].class) {
+          vm.active = vm.activeCharacters[selectedIdx].class;
+          vm.onCharacterChange();
+          vm.selectedCharacter = selectedIdx;
+        }
+      },
       onCharacterChange: function() {
         vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
-        vm.activeCharacters = _.where(dimStoreService.getStores(), { class: vm.active });
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
         vm.selectedCharacter = 0;
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
@@ -589,7 +596,9 @@
         }
 
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
-        vm.activeCharacters = _.where(dimStoreService.getStores(), { class: vm.active });
+        var strs = dimStoreService.getStores();
+        vm.selectedCharacter = _.findIndex(strs, function(st) { return st.id === vm.active.id; });
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
 
         var allItems = [];
         var vendorItems = [];
