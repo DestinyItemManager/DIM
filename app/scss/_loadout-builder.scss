@@ -133,6 +133,9 @@
     color: #f5f5f5;
     text-decoration: none;
     background-size: cover;
+    &.dropdown-option {
+      width: 220px;
+    }
     .emblem {
       position: absolute;
       left: 0;
