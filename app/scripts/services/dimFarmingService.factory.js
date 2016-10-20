@@ -4,13 +4,13 @@
   angular.module('dimApp')
     .factory('dimFarmingService', FarmingService);
 
-  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService'];
+  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService', 'dimSettingsService'];
 
   /**
    * A service for "farming" items by moving them continuously off a character,
    * so that they don't go to the Postmaster.
    */
-  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService) {
+  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService, dimSettingsService) {
     var intervalId;
     var cancelReloadListener;
     var glimmerHashes = [
@@ -20,6 +20,7 @@
       1932910919 // -network-keys
     ];
     return {
+      settings: dimSettingsService.farming,
       active: false,
       store: null,
       itemsMoved: 0,
@@ -80,8 +81,8 @@
         var store = dimStoreService.getStore(self.store.id);
         var toMove = _.select(store.items, function(i) {
           return !i.location.inPostmaster && (
-            (i.tier === 'Uncommon' && i.type === 'ClassItem') || // TODO: remove this once bug is fixed in game.
             i.isEngram() ||
+            (self.settings.farmGreens && i.type === 'Uncommon') ||
             glimmerHashes.includes(i.hash));
         });
 
@@ -126,13 +127,13 @@
         var itemsToMove = [];
         _.each(itemsByType, function(items) {
           // subtract 1 from capacity because we excluded the equipped item
-          // if we are at capacity, but there are any Uncommon items in the mix. don't move anything.
-          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1) && !_.pluck(items, 'tier').includes('Uncommon')) {
+          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
             // We'll move the lowest-value item to the vault.
             itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
               var value = {
+                // we can assume if someone isn't farming greens they want to keep them on their character to dismantle
                 Common: 0,
-                Uncommon: 1,
+                Uncommon: self.settings.farmGreens ? 1 : 9,
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4

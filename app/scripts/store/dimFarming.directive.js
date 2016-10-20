@@ -18,6 +18,9 @@
           <span>
             <p>DIM is moving Engram and Glimmer items from {{vm.service.store.name}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.</p>
             <div class="item-details"><span>
+              <p>Configuration</p>
+              <p><input id="farm-greens" type='checkbox' ng-model='vm.service.settings.farmGreens' /><label for="farm-greens">Farm Uncommon/Green Items</label></p>
+            </span><span>
               <p>Quick Move</p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
             </span></div>
@@ -27,14 +30,13 @@
     };
   }
 
-  FarmingCtrl.$inject = ['dimFarmingService', 'dimSettingsService', 'dimItemMoveService'];
+  FarmingCtrl.$inject = ['dimFarmingService', 'dimItemMoveService'];
 
-  function FarmingCtrl(dimFarmingService, dimSettingsService, dimItemMoveService) {
+  function FarmingCtrl(dimFarmingService, dimItemMoveService) {
     var vm = this;
 
     angular.extend(vm, {
       service: dimFarmingService,
-      settings: dimSettingsService.farming,
       consolidate: dimItemMoveService.consolidate,
       stop: function($event) {
         $event.preventDefault();
