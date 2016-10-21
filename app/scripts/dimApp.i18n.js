@@ -66,7 +66,7 @@
           Full: "Full",
           ProcessingMode: "Processing mode",
           ProcessingModeHelpFast: "Only looks at your best gear.",
-          ProcessingModeHelpFull: "Looks at your more gear, but takes longer.",
+          ProcessingModeHelpFull: "Looks at more gear, but takes longer.",
           Scaled: "Scaled",
           Current: "Current",
           LightMode: "Light mode",
