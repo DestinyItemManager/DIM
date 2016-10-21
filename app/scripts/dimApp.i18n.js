@@ -77,7 +77,9 @@
           LBEquip: "Equip on Current Character",
           LBShowAllConfigs: "Show all configurations",
           LBLoading: "Loading best sets ({{percentage}}%)",
-          LBVendor: "Include Vendor items"
+          LBVendor: "Include Vendor items",
+          LBExclude: "Exclude Items",
+          LBExcludeHelp: "Shift + click an item (or drag and drop into its bucket) to build sets without specific gear."
         })
         .translations('it', {
           Level: "Livello",
