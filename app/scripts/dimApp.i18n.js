@@ -76,7 +76,8 @@
           LBhelp: "Need help?",
           LBEquip: "Equip on Current Character",
           LBShowAllConfigs: "Show all configurations",
-          LBLoading: "Loading best sets ({{percentage}}%)"
+          LBLoading: "Loading best sets ({{percentage}}%)",
+          LBVendor: "Include Vendor items"
         })
         .translations('it', {
           Level: "Livello",
