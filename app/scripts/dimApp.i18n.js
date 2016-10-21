@@ -75,7 +75,8 @@
           LBIncludeRare: "Include rare (blue) items",
           LBhelp: "Need help?",
           LBEquip: "Equip on Current Character",
-          LBShowAllConfigs: "Show all configurations"
+          LBShowAllConfigs: "Show all configurations",
+          LBLoading: "Loading best sets ({{percentage}}%)"
         })
         .translations('it', {
           Level: "Livello",
