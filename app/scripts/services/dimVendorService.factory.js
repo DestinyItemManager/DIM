@@ -131,6 +131,8 @@
                   if (nonNullVendors.length) {
                     const mergedVendor = mergeVendors(_.compact(vendors));
                     service.vendors[mergedVendor.hash] = mergedVendor;
+                  } else {
+                    delete service.vendors[vendorDef.hash];
                   }
                 });
             }
