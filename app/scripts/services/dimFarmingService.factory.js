@@ -19,8 +19,10 @@
       2904517731, // -axiomatic-beads
       1932910919 // -network-keys
     ];
+
+    var settings = dimSettingsService.farming;
+
     return {
-      settings: dimSettingsService.farming,
       active: false,
       store: null,
       itemsMoved: 0,
@@ -82,7 +84,7 @@
         var toMove = _.select(store.items, function(i) {
           return !i.location.inPostmaster && (
             i.isEngram() ||
-            (self.settings.farmGreens && i.type === 'Uncommon') ||
+            (settings.farmGreens && i.type === 'Uncommon') ||
             glimmerHashes.includes(i.hash));
         });
 
@@ -133,7 +135,7 @@
               var value = {
                 // we can assume if someone isn't farming greens they want to keep them on their character to dismantle
                 Common: 0,
-                Uncommon: self.settings.farmGreens ? 1 : 9,
+                Uncommon: settings.farmGreens ? 1 : 9,
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4
