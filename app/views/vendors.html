@@ -1,4 +1,5 @@
 <div class="vendor" ng-controller="dimVendorCtrl as vm">
+  <div ng-if="!vm.vendorService.vendorsLoaded" class="vendor-loading"><i class="fa-spin fa fa-refresh"></i> Loading vendors...</div>
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <div id="vendorHeadersBackground" class="vendor-headers-background"></div>
   <div id="vendorHeaderWrapper" class="vendorHeaderWrapper">
