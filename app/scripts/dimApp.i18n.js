@@ -80,7 +80,7 @@
           LBLoading: "Loading best sets ({{percentage}}%)",
           LBVendor: "Include Vendor items",
           LBExclude: "Exclude Items",
-          LBExcludeHelp: "Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.",
+          LBExcludeHelp: "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
           LBLockPerk: "Lock perk",
           LBMissing1: "Missing legendary or exotic pieces to build a full set!",
           LBMissing2: "Missing rare, legendary, or exotic pieces to build a full set!"
