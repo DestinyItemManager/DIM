@@ -22,7 +22,7 @@
       '      <div ng-switch="vm.hasLockedPerks(vm.lockedPerks, type)" class="perk-addition" ng-click="vm.addPerkClicked(vm.activePerks, vm.lockedPerks, type, $event)">',
       '        <div ng-switch-when="false" class="perk-addition-text-container">',
       '          <i class="fa fa-plus"></i>',
-      '          <small class="perk-addition-text">Lock perk</small>',
+      '          <small class="perk-addition-text" translate="Lock perk"></small>',
       '        </div>',
       '        <div ng-switch-when="true" class="locked-perk-notification">',
       '          <img ng-src="{{vm.getFirstPerk(vm.lockedPerks, type).icon | bungieIcon}}" ng-attr-title="{{vm.getFirstPerk(vm.lockedPerks, type).description}}" />',
