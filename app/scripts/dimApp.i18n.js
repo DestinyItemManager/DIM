@@ -79,7 +79,8 @@
           LBLoading: "Loading best sets ({{percentage}}%)",
           LBVendor: "Include Vendor items",
           LBExclude: "Exclude Items",
-          LBExcludeHelp: "Shift + click an item (or drag and drop into its bucket) to build sets without specific gear."
+          LBExcludeHelp: "Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.",
+          LBLockPerk: "Lock perk"
         })
         .translations('it', {
           Level: "Livello",
