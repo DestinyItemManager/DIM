@@ -702,14 +702,13 @@
       // DestinyRewardSourceDefinition and filter on %SOURCE%
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
+      itemDef.sourceHashes = itemDef.sourceHashes || [];
       var itemYear = 1;
-      if (!itemDef.classified) {
-        if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-          itemYear = 2;
-        }
-        if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-          itemYear = 3;
-        }
+      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+        itemYear = 2;
+      }
+      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+        itemYear = 3;
       }
       // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
       var createdItem = angular.extend(Object.create(ItemProto), {
