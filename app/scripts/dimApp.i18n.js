@@ -76,11 +76,14 @@
           LBhelp: "Need help?",
           LBEquip: "Equip on Current Character",
           LBShowAllConfigs: "Show all configurations",
+          LBHideAllConfigs: "Hide all configurations",
           LBLoading: "Loading best sets ({{percentage}}%)",
           LBVendor: "Include Vendor items",
           LBExclude: "Exclude Items",
           LBExcludeHelp: "Shift + click an item (or drag and drop into its bucket) to build sets without specific gear.",
-          LBLockPerk: "Lock perk"
+          LBLockPerk: "Lock perk",
+          LBMissing1: "Missing legendary or exotic pieces to build a full set!",
+          LBMissing2: "Missing rare, legendary, or exotic pieces to build a full set!"
         })
         .translations('it', {
           Level: "Livello",
