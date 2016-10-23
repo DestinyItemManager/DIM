@@ -66,7 +66,7 @@
 
     // Vendors we don't want to load by default
     const vendorBlackList = [
-      2796397637, // Agent of the Nine
+      //2796397637, // Agent of the Nine
       2021251983, // Postmaster,
       4269570979, // Cryptarch (Tower)
       1303406887 // Cryptarch (Reef)
@@ -228,6 +228,7 @@
           if (vendor && vendor.expires > Date.now()) {
             // console.log("loaded local", key, vendor);
             if (vendor.failed) {
+              // TODO: delete from cache
               throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
             }
             return vendor;

@@ -62,7 +62,6 @@
             .values()
             .pluck('categories')
             .flatten()
-            .flatten()
             .pluck('saleItems')
             .flatten()
             .pluck('costs')

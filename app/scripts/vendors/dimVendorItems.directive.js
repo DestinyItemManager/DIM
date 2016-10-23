@@ -4,18 +4,18 @@
   var VendorItem = {
     bindings: {
       saleItem: '<',
-      costs: '<',
       totalCoins: '<',
-      isUnlocked: '<',
       itemClicked: '&'
     },
     template: [
       '<div class="vendor-item">',
-      '  <div ng-if="!$ctrl.isUnlocked" class="locked-overlay"></div>',
-      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
-      '  <div ng-repeat="cost in $ctrl.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[cost.currency.itemHash] < cost.value)}">',
-      '    {{::cost.value}}/{{$ctrl.totalCoins[cost.currency.itemHash]}}',
-      '    <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
+      '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
+      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
+      '  <div class="vendor-costs">',
+      '    <div ng-repeat="cost in $ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
+      '      {{::cost.value}}',
+      '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
+      '    </div>',
       '  </div>',
       '</div>'
     ].join('')
@@ -28,11 +28,11 @@
       stores: '<storesData',
       vendors: '=vendorsData',
       types: '<displayTypes',
-      totalCoins: '<totalCoins',
-      activeTab: '<activeTab'
+      totalCoins: '<',
+      activeTab: '<'
     },
     template: [
-      '<div class="vendor-char-items" ng-repeat="vendor in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
+      '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
       '   <div class="vendor-header">',
       '     <div class="title">',
       '     {{vendor.name}}',
@@ -40,12 +40,13 @@
       '     <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
+      '   <dim-vendor-currencies vendor-categories="vendor.categories | vendorTab:vm.activeTab" total-coins="vm.totalCoins"></dim-vendor-currencies>',
       '   <div class="vendor-row">',
       '     <div class="char-cols">',
-      '       <div ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
-      '          <h3>{{category.title}}</h3>',
+      '       <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
+      '          <h3 class="category-title">{{category.title}}</h3>',
       '          <div class="vendor-items">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem.item" costs="saleItem.costs" is-unlocked="saleItem.unlocked" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
+      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '          </div>',
       '        </div>',
       '      </div>',
