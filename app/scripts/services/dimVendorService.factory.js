@@ -66,7 +66,6 @@
 
     // Vendors we don't want to load by default
     const vendorBlackList = [
-      //2796397637, // Agent of the Nine
       2021251983, // Postmaster,
       4269570979, // Cryptarch (Tower)
       1303406887 // Cryptarch (Reef)
