@@ -89,7 +89,13 @@
           ManifestError2: "Reload to retry.",
           ManifestDownload: "Downloading latest Destiny info from Bungie",
           ManifestUnzip: "Unzipping latest Destiny info",
-          ManifestSave: "Saving latest Destiny info"
+          ManifestSave: "Saving latest Destiny info",
+          ArmorAndWeapons: "Armor & Weapons",
+          ShipsAndVehicles: "Ships & Vehicles",
+          Consumables: "Consumables",
+          Bounties: "Bounties",
+          ShadersAndEmblems: "Shaders & Emblems",
+          Emotes: "Emotes"
         })
         .translations('it', {
           Level: "Livello",
