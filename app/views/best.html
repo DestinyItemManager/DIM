@@ -27,7 +27,7 @@
     </label>
 
     <div class="minmax-section">
-      <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
+      <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min' track by $index">
         <div class="item-container" ng-if="item.primStat.value >= 280">
           <div class="item-stats">
             <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
