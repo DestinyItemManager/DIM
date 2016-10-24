@@ -23,9 +23,9 @@
     }]);
 
 
-  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue'];
+  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue', 'dimSettingsService'];
 
-  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope, dimActionQueue) {
+  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope, dimActionQueue, settings) {
     var otherDialog = null;
     let firstItemTimed = false;
 
@@ -104,8 +104,8 @@
           e.stopPropagation();
           const active = dimStoreService.getActiveStore();
 
-          // Equip if it's not equipped or it's on another character
-          const equip = !item.equipped || item.owner !== active.id;
+          // Check setting for dblClickAction, Equip if it's not equipped or it's on another character
+          const equip = (settings.dblClickAction === 1) && (!item.equipped || item.owner !== active.id);
 
           dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
         }

@@ -116,6 +116,14 @@
       </tr>
       <tr>
         <td>
+          <label for="dblClickAction" title="Select the action for double clicking an item">Double Click Action</label>
+        </td>
+        <td>
+          <select id="dblClickAction" ng-model="vm.settings.dblClickAction" ng-options="option.id as option.name for option in vm.dblClickActions" required></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
           <label for="spreadsheetLinks" title="Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.">Download Spreadsheets</label>
         </td>
         <td>
