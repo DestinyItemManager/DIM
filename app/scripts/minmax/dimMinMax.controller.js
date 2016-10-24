@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService', 'dimVendorService'];
 
-  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
+  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimVendorService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
 
@@ -625,30 +625,29 @@
               perks[item.classTypeName][item.type] = filterPerks(perks[item.classTypeName][item.type], item);
             }
           });
+        });
 
-          // Process vendors here
-          _.each(store.vendors, function(vendor) {
-            var vendItems = filterItems(vendor.items.armor);
+        // Process vendors here
+        _.each(dimVendorService.vendors, function(vendor) {
+          var vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
+          vendorItems = vendorItems.concat(vendItems);
 
-            vendorItems = vendorItems.concat(vendItems);
-
-            // Build a map of perks
-            _.each(vendItems, function(item) {
-              if (item.classType === 3) {
-                _.each(['warlock', 'titan', 'hunter'], function(classType) {
-                  vendorPerks[classType][item.type] = filterPerks(vendorPerks[classType][item.type], item);
-                });
-              } else {
-                vendorPerks[item.classTypeName][item.type] = filterPerks(vendorPerks[item.classTypeName][item.type], item);
-              }
-            });
+          // Build a map of perks
+          _.each(vendItems, function(item) {
+            if (item.classType === 3) {
+              _.each(['warlock', 'titan', 'hunter'], function(classType) {
+                vendorPerks[classType][item.type] = filterPerks(vendorPerks[classType][item.type], item);
+              });
+            } else {
+              vendorPerks[item.classTypeName][item.type] = filterPerks(vendorPerks[item.classTypeName][item.type], item);
+            }
           });
+        });
 
-          // Remove overlapping perks in allPerks from vendorPerks
-          _.each(vendorPerks, function(perksWithType, classType) {
-            _.each(perksWithType, function(perkArr, type) {
-              vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
-            });
+        // Remove overlapping perks in allPerks from vendorPerks
+        _.each(vendorPerks, function(perksWithType, classType) {
+          _.each(perksWithType, function(perkArr, type) {
+            vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
           });
         });
 
