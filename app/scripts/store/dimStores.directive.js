@@ -27,7 +27,7 @@
         '      <div ng-if="!vm.settings.collapsedSections[bucket.id]" class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
         '        <dim-store-bucket ng-if="::!store.isVault || vm.vault.vaultCounts[category] !== undefined" store-data="store" bucket-items="store.buckets[bucket.id]" bucket="bucket"></dim-store-bucket>',
         '      </div>',
-        '      <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse">Show {{bucket.name}}</div>',
+        '      <div ng-if="vm.settings.collapsedSections[bucket.id]" ng-click="vm.toggleSection(bucket.id)" class="store-text collapse"><span translate="ShowBucket" translate-values="{ bucket: bucket.name }"></span></div>',
         '    </div>',
         '  </div>',
         '  <div class="title" ng-click="vm.toggleSection(\'Reputation\')">',

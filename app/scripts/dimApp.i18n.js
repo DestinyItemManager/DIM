@@ -140,7 +140,8 @@
           ExportSSHelp: "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
           DIMPopups: "DIM Info Popups",
           DIMPopupsReset: "Reset previously hidden info tips",
-          DragHelp: "Hold shift or pause over drop zone to transfer a partial stack"
+          DragHelp: "Hold shift or pause over drop zone to transfer a partial stack",
+          ShowBucket: "Show {{bucket}}"
         })
         .translations('it', {
           Level: "Livello",
