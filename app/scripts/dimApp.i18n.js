@@ -97,6 +97,7 @@
           ManifestLoad: "Loading saved Destiny info",
           ManifestUnzip: "Unzipping latest Destiny info",
           ManifestSave: "Saving latest Destiny info",
+          VendorsLoad: "Loading Vendors",
           ArmorAndWeapons: "Armor & Weapons",
           ShipsAndVehicles: "Ships & Vehicles",
           Consumables: "Consumables",
