@@ -595,9 +595,8 @@
           });
         }
 
-        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
-        var strs = dimStoreService.getStores();
-        vm.selectedCharacter = _.findIndex(strs, function(st) { return st.id === vm.active.id; });
+        vm.selectedCharacter = dimStoreService.getActiveStore();
+        vm.active = vm.selectedCharacter.class.toLowerCase() || 'warlock';
         vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
 
         var allItems = [];
