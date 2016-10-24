@@ -18,6 +18,14 @@
       membershipPromise = null;
     });
 
+    // Don't open bungie tab more than once a minute
+    const openBungieNetTab = _.debounce(() => {
+      chrome.tabs.create({
+        url: 'https://bungie.net',
+        active: true
+      });
+    }, 60 * 1000, true);
+
     var service = {
       getPlatforms: getPlatforms,
       getCharacters: getCharacters,
@@ -27,7 +35,8 @@
       equipItems: equipItems,
       setItemState: setItemState,
       getXur: getXur,
-      getManifest: getManifest
+      getManifest: getManifest,
+      getVendorForCharacter: getVendorForCharacter
     };
 
     return service;
@@ -59,10 +68,14 @@
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode > 1) {
-        if (!response.data.Message) {
+        if (response.data.Message) {
+          const error = new Error(response.data.Message);
+          error.code = response.data.ErrorCode;
+          error.status = response.data.ErrorStatus;
+          return $q.reject(error);
+        } else {
           return $q.reject(new Error('The Bungie API is currently experiencing difficulties.'));
         }
-        return $q.reject(new Error(response.data.Message));
       }
 
       return response;
@@ -104,14 +117,6 @@
 
       return a;
     }
-
-    function openBungieNetTab() {
-      chrome.tabs.create({
-        url: 'https://bungie.net',
-        active: true
-      });
-    }
-
 
     /************************************************************************************************************************************/
 
@@ -334,7 +339,7 @@
 
     /************************************************************************************************************************************/
 
-    function getStores(platform, includeVendors, vendorDefs) {
+    function getStores(platform) {
       var data = {
         token: null,
         membershipId: null
@@ -362,11 +367,6 @@
               // Don't let failure of advisors fail other requests.
               .catch((e) => console.error("Failed to load advisors", e))
           ];
-          if (includeVendors) {
-            promises.push(getDestinyVendors(vendorDefs, data.token, platform, data.membershipId, data.characters).catch(() => {
-              console.warn("Vendors are not able to be downloaded atm.");
-            }));
-          }
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
           });
@@ -517,51 +517,31 @@
 
     /************************************************************************************************************************************/
 
-    function getCharacterVendorsRequest(token, platform, membershipId, character, vendorId) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorId + '/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
+    function getVendorForCharacter(character, vendorHash) {
+      var platform = dimState.active;
+      var data = {
+        token: null,
+        membershipType: null
       };
-    }
-
-    function parseVendorData(vendorData) {
-      return vendorData;
-    }
-
-    function processVendorsResponse(character, response) {
-      if (!character.vendors) {
-        character.vendors = {};
-      }
-
-      var vendorData = response.data.Response.data;
-      character.vendors[vendorData.vendorHash] = parseVendorData(vendorData);
-      return character;
-    }
-
-    function getDestinyVendors(vendorDefs, token, platform, membershipId, characters) {
-      var promises = [];
-      _.each(vendorDefs, function(vendorDef, vendorHash) {
-        _.each(characters, function(character) {
-          var processPB = processVendorsResponse.bind(null, character);
-          promises.push(
-            $q.when(getCharacterVendorsRequest(token, platform, membershipId, character, vendorHash))
-              .then($http)
-              .then(handleErrors)
-              .then(processPB)
-              .catch(function(e) {
-                if (e.message !== 'The Vendor you requested was not found.') {
-                  throw e;
-                }
-              })
-          );
-        });
-      });
-      return $q.all(promises);
+      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+      var getMembershipPB = getMembership.bind(null, platform);
+      return getBungleToken()
+        .then(addTokenToDataPB)
+        .then(getMembershipPB)
+        .then(() => {
+          return {
+            method: 'GET',
+            url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorHash + '/',
+            headers: {
+              'X-API-Key': apiKey,
+              'x-csrf': data.token
+            },
+            withCredentials: true
+          };
+        })
+        .then($http)
+        .then(handleErrors)
+        .then((response) => response.data.Response.data);
     }
 
     /************************************************************************************************************************************/
@@ -582,9 +562,6 @@
         .then(getMembershipPB)
         .then(addMembershipTypeToDataPB)
         .then(function() {
-          return store;
-        })
-        .then(function(store) {
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
