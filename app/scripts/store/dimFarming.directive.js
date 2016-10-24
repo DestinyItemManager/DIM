@@ -18,14 +18,14 @@
           <span>
             <p>DIM is moving Engram and Glimmer items from {{vm.service.store.name}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.</p>
             <div class="item-details"><span>
-              <p>Configuration</p>
-              <p><input id="farm-greens" type='checkbox' ng-model='vm.settings.farmGreens' /><label for="farm-greens" title="If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character.">Move Uncommon/Green Items to Vault</label></p>
+              <p><span translate="configuration"></span></p>
+              <p><input id="farm-greens" type='checkbox' ng-model='vm.settings.farmGreens' /><label for="farm-greens" title="If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character."><span translate="farming_config1"></span></label></p>
             </span><span>
-              <p>Quick Move</p>
+              <p><span translate="farming_quickmove"></span></p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
             </span></div>
           </span>
-          <span><button ng-click="vm.stop($event)">Stop</button></span>
+          <span><button ng-click="vm.stop($event)"><span translate="stop"></span></button></span>
         </div>`
     };
   }
