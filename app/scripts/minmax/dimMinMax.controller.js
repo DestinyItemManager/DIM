@@ -215,6 +215,14 @@
       return (merge) ? mergeBuckets(bucket1, bucket2) : bucket1;
     }
 
+    function filterLoadoutToEquipped(loadout) {
+      var filteredLoadout = angular.copy(loadout);
+      filteredLoadout.items = _.mapObject(filteredLoadout.items, function(items) {
+        return _.select(items, 'equipped');
+      });
+      return filteredLoadout;
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/2',
@@ -232,6 +240,8 @@
       ranked: {},
       activePerks: {},
       excludeditems: [],
+      activeCharacters: [],
+      selectedCharacter: 0,
       collapsedConfigs: [false, false, false, false, false, false, false, false, false, false],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
@@ -255,12 +265,21 @@
       excludedItemsValid: function(droppedId, droppedType) {
         return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
+      onSelectedChange: function(prevIdx, selectedIdx) {
+        if (vm.activeCharacters[prevIdx].class !== vm.activeCharacters[selectedIdx].class) {
+          vm.active = vm.activeCharacters[selectedIdx].class;
+          vm.onCharacterChange();
+          vm.selectedCharacter = selectedIdx;
+        }
+      },
       onCharacterChange: function() {
         vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
+        vm.selectedCharacter = 0;
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
-        vm.excludeditems = [];
+        vm.excludeditems = _.filter(vm.excludeditems, function(item) { return item.hash === 2672107540; });
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onActiveSetsChange: function() {
@@ -355,6 +374,39 @@
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
+        }
+      },
+      onSelectedCharacterChange: function(idx) {
+        vm.selectedCharacter = idx;
+      },
+      lockEquipped: function() {
+        var store = vm.activeCharacters[vm.selectedCharacter];
+        var loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(""));
+        var items = _.pick(loadout.items,
+                               'helmet',
+                               'gauntlets',
+                               'chest',
+                               'leg',
+                               'classitem',
+                               'artifact',
+                               'ghost');
+        vm.lockeditems.Helmet = items.helmet[0];
+        vm.lockeditems.Gauntlets = items.gauntlets[0];
+        vm.lockeditems.Chest = items.chest[0];
+        vm.lockeditems.Leg = items.leg[0];
+        vm.lockeditems.ClassItem = items.classitem[0];
+        vm.lockeditems.Artifact = items.artifact[0];
+        vm.lockeditems.Ghost = items.ghost[0];
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.lockedchanged = true;
+        }
+      },
+      clearLocked: function() {
+        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.lockedchanged = true;
         }
       },
       newLoadout: function(set) {
@@ -544,11 +596,22 @@
         }
 
         vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
+        var strs = dimStoreService.getStores();
+        vm.selectedCharacter = _.findIndex(strs, function(st) { return st.id === vm.active.id; });
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
 
         var allItems = [];
         var vendorItems = [];
+        var hasFelwinter = false;
         _.each(stores, function(store) {
           var items = filterItems(store.items);
+
+          // Exclude felwinter if we have one
+          var felwinter = _.findWhere(items, { hash: 2672107540 });
+          if (!hasFelwinter && felwinter) {
+            hasFelwinter = true;
+            vm.excludeditems.push(felwinter);
+          }
 
           allItems = allItems.concat(items);
 
