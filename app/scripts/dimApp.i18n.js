@@ -103,7 +103,9 @@
           Consumables: "Consumables",
           Bounties: "Bounties",
           ShadersAndEmblems: "Shaders & Emblems",
-          Emotes: "Emotes"
+          Emotes: "Emotes",
+          RefreshDestinyData: "Refresh Destiny Data",
+          Filters: "Filters"
         })
         .translations('it', {
           Level: "Livello",
