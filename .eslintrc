@@ -28,7 +28,8 @@
     "Int32Array": true,
     "DataView": true,
     "Proxy": true,
-    "ga": true
+    "ga": true,
+    "idbKeyval": true
   },
   "rules": {
     "array-callback-return": "error",
