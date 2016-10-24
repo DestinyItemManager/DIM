@@ -2,7 +2,7 @@
   <a ui-sref='inventory' class="link" translate="Back to DIM"><i class='fa fa-arrow-circle-left'></i></a>
   <h1 translate="Loadout Builder"></h1>
 
-  <p>
+  <!--<p>
     <label ng-class="{selected: normal.active === 'warlock'}" class='dim-button'>
       <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='warlock'>{{normal.i18nClassNames.warlock}}
     </label>
@@ -12,7 +12,8 @@
     <label ng-class="{selected: normal.active === 'hunter'}" class='dim-button'>
       <input ng-change="normal.onCharacterChange()" type='radio' ng-model='normal.active' value='hunter'>{{normal.i18nClassNames.hunter}}
     </label>
-  </p>
+  </p>-->
+  <dim-min-max-char-select active-characters="normal.activeCharacters" selected-character="normal.selectedCharacter" on-selected-change="normal.onSelectedChange(prev, new)"></dim-min-max-char-select>
 
   <dim-loadout></dim-loadout>
 
@@ -42,7 +43,9 @@
   </div>
 
   <div class="section">
-    <p><span translate="Locked Items"></span>&nbsp;-&nbsp;<small translate="Drag and drop any item into its bucket to build set with that specific gear."></small>&nbsp;<small ng-show="!normal.excludeditems.length" translate="Shift + click to exclude items."></small></p>
+    <p><span class='dim-button locked-button' ng-click="normal.lockEquipped()">Lock Equipped</span>
+       <span class='dim-button locked-button' ng-click="normal.clearLocked()">Clear Locked</span>
+       <span translate="Locked Items"></span>&nbsp;-&nbsp;<small translate="Drag and drop any item into its bucket to build set with that specific gear."></small>&nbsp;<small ng-show="!normal.excludeditems.length" translate="Shift + click to exclude items."></small>
     <dim-min-max-locks class="minmax-section" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
       i18n-item-names="normal.i18nItemNames"
       locked-items-valid="normal.lockedItemsValid($data, type)"
