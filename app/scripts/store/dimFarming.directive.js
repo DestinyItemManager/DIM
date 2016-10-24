@@ -20,6 +20,7 @@
             <div class="item-details"><span>
               <p translate="FarmingMode.Configuration"></p>
               <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate="FarmingMode.Greens"></p>
+              <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" title="If checked, DIM will move weapons and armor around to make space in the vault for engrams.">Allow weapons/armor rearranging</label></p>
             </span><span>
               <p translate="FarmingMode.Quickmove"></p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
