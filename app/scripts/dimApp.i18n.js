@@ -64,6 +64,7 @@
           BackToDIM: "Back to DIM",
           LoadoutBuilder: "Loadout Builder",
           ShowGear: "Show {{class}} gear",
+          HideGear: "Hide {{class}} gear",
           LBLocked: "Locked Items",
           LBLockedHelp: "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
           FilterSets: "Filter sets",
