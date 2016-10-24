@@ -65,6 +65,8 @@
           LoadoutBuilder: "Loadout Builder",
           ShowGear: "Show {{class}} gear",
           HideGear: "Hide {{class}} gear",
+          LockEquipped: "Lock Equipped",
+          ClearLocked: "Clear Locked",
           LBLocked: "Locked Items",
           LBLockedHelp: "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
           FilterSets: "Filter sets",
