@@ -16,7 +16,7 @@
             <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>
           </span>
           <span>
-            <p>{{::'farming_desc' | translate}}</p> 
+            <p>DIM is moving Engram and Glimmer items from {{vm.service.store.name}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.</p> 
             <div class="item-details"><span>
               <p><span translate="configuration"></span></p>
               <p><input id="farm-greens" type='checkbox' ng-model='vm.settings.farmGreens' /><label for="farm-greens" title="{{::'farming_config1_tooltip' | translate}}">{{::'farming_config1' | translate}}</label></p>
