@@ -94,6 +94,7 @@
           ManifestError1: "Error loading Destiny info: ",
           ManifestError2: "Reload to retry.",
           ManifestDownload: "Downloading latest Destiny info from Bungie",
+          ManifestLoad: "Loading saved Destiny info",
           ManifestUnzip: "Unzipping latest Destiny info",
           ManifestSave: "Saving latest Destiny info",
           ArmorAndWeapons: "Armor & Weapons",
