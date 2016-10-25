@@ -7,7 +7,7 @@
   BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
   function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
-    var apiKey = '57c5ff5864634503a0340ffdfbeb20c0';
+    var apiKey = '8f0be500571741738b5d0832246a523c';
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
