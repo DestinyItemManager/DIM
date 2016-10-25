@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimManifestService', ManifestService);
 
-  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService', '$filter'];
+  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService', '$translate'];
 
-  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $filter) {
+  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate) {
     // Testing flags
     const alwaysLoadRemote = false;
 
@@ -60,7 +60,7 @@
                 return loadManifestRemote(version, language, path);
               })
               .then(function(typedArray) {
-                service.statusText = $filter('translate')('ManifestBuild') + '...';
+                service.statusText = $translate.instant('ManifestBuild') + '...';
                 const db = new SQL.Database(typedArray);
                 // do a small request, just to test it out
                 service.getAllRecords(db, 'DestinyRaceDefinition');
@@ -68,7 +68,7 @@
               });
           })
           .catch((e) => {
-            service.statusText = $filter('translate')('ManifestError1') + e.message + ". " + $filter('translate')('ManifestError2');
+            service.statusText = $translate.instant('ManifestError1') + e.message + ". " + $translate.instant('ManifestError2');
             manifestPromise = null;
             service.isError = true;
             return deleteManifestFile().finally(() => $q.reject(e));
@@ -107,14 +107,14 @@
      * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
      */
     function loadManifestRemote(version, language, path) {
-      service.statusText = $filter('translate')('ManifestDownload') + '...';
+      service.statusText = $translate.instant('ManifestDownload') + '...';
       return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
         .then(function(response) {
-          service.statusText = $filter('translate')('ManifestUnzip') + '...';
+          service.statusText = $translate.instant('ManifestUnzip') + '...';
           return unzipManifest(response.data);
         })
         .then(function(arraybuffer) {
-          service.statusText = $filter('translate')('ManifestSave') + '...';
+          service.statusText = $translate.instant('ManifestSave') + '...';
 
           getLocalManifestFile()
             .then((fileEntry) => {
@@ -171,7 +171,7 @@
         return $q.reject(new Error("Testing - always load remote"));
       }
 
-      service.statusText = $filter('translate')('ManifestLoad') + '...';
+      service.statusText = $translate.instant('ManifestLoad') + '...';
       var currentManifestVersion = localStorage.getItem('manifest-version');
       if (currentManifestVersion === version) {
         // One version of this used chrome.storage.local with a

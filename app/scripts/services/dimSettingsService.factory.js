@@ -59,7 +59,7 @@
       },
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
-        { type: undefined, label: 'Tag Item' },
+        { type: undefined, label: 'TagItem' },
         { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
         { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
         { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
@@ -86,7 +86,7 @@
 
       // for now just override itemTags. eventually let users create own?
       savedSettings.itemTags = [
-        { type: undefined, label: 'Tag Item' },
+        { type: undefined, label: 'TagItem' },
         { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
         { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
         { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
