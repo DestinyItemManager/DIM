@@ -117,10 +117,8 @@
           }, 0) === armorSplit;
         });
         vm.comparisons = _.where(dimItemService.getItems(), { hash: vm.compare.hash });
-      } else {
-        if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
-          vm.comparisons.push(args.item);
-        }
+      } else if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
+        vm.comparisons.push(args.item);
       }
     };
 
