@@ -139,7 +139,11 @@
           farming_mode: "Engramme zum Tresor",
           restore_all_items: "Alle Elemente",
           Loadouts: "Loadouts",
-          Progress: "Fortschritt"
+          Progress: "Fortschritt",
+          LoadoutAppliedAuto: "Automatic Loadout Builder",
+          LoadoutApplied: "Dein Loadout mit {{amount}} Gegenständen wurde zu deinem {{store}} übertragen.",
+          LoadoutAppliedError: "Keiner der Gegenstände aus deinem Loadout konnte übertragen werden.",
+          LoadoutAppliedWarn: "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten einen Fehler."
         })
         .translations('fr', {
           Level: "Niveau",
