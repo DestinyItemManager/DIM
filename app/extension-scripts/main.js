@@ -1,6 +1,6 @@
 (function() {
   chrome.browserAction.onClicked.addListener(function() {
-    var newURL = "chrome-extension://" + chrome.runtime.id + "/index.html";
-    chrome.tabs.create({ url: newURL });
+    var appUrl = chrome.extension.getURL('index.html');
+    chrome.tabs.create({ url: appUrl });
   });
 })();
