@@ -190,6 +190,7 @@
           Progress: "Progesso"
         })
         .translations('de', {
+          Level: "Level",
           Weapons: "Waffen",
           Armor: "Rüstung",
           General: "Allgemein",
@@ -211,12 +212,14 @@
           Vendors: "Händler",
           Support: "Unterstützen",
           Settings: "Einstellungen",
-          'Tag Item': "Tag Artikel",
+          filter_help: "Suche nach Gegenstand/Perk oder is:arc",
+          'Tag Item': "Gegenstand taggen",
           Favorite: "Favorit",
           Keep: "Behalten",
           Junk: "Trödel",
           Infuse: "Infundieren",
           notes_placeholder: "Hinzufügen von Anmerkungen zu diesem Artikel",
+          before_loadout: "Zurück zu '{{name}}'",
           'Create Loadout': "Loadout erstellen",
           loadout_from_equipped: "Aus angelegter Ausrüstung",
           'Edit Loadout': "Loadout bearbeiten",
