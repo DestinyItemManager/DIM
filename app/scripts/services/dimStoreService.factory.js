@@ -859,9 +859,10 @@
 
       // do specific things for specific items
       if (createdItem.hash === 491180618) { // Trials Cards
-        createdItem.objectives = buildTrials(owner.advisors.activities.trials.extended);
+        createdItem.objectives = buildTrials(owner.advisors.activities.trials);
         var best = owner.advisors.activities.trials.extended.highestWinRank;
-        createdItem.percentComplete = best >= 7 ? 1 : (best >= 5 ? .5 : 0);
+        createdItem.complete = owner.advisors.activities.trials.completion.success;
+        createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
       }
 
       return createdItem;
@@ -1037,6 +1038,8 @@
     }
 
     function buildTrials(trials) {
+      var flawless = trials.completion.success;
+      trials = trials.extended;
       function buildObjective(name, current, max, bool) {
         return {
           displayName: $translate.instant(name),
@@ -1052,6 +1055,7 @@
         buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses),
         buildObjective(trials.winRewardDetails[0].winCount + ' Win reward (Armor)', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
         buildObjective(trials.winRewardDetails[1].winCount + ' Win reward (Weapon)', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
+        buildObjective('Flawless', flawless, 1, true),
       ];
     }
 
