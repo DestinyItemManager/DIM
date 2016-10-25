@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService'];
+  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService', 'dimVendorService'];
 
-  function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService) {
+  function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
     var vm = this;
 
     var $window = $(window);
@@ -25,86 +25,47 @@
       $window.off('scroll', stickyHeader);
     });
 
-    vm.activeTab = 'armorweaps';
+    vm.activeTab = 'hasArmorWeaps';
     vm.activeTypeDefs = {
       armorweaps: ['armor', 'weapons'],
       vehicles: ['ships', 'vehicles'],
       shadersembs: ['shaders', 'emblems'],
       emotes: ['emotes']
     };
-    // Banner
-    vm.bannerHash = ['242140165'];
-
-    // Titan van, Hunter van, Warlock van
-    vm.vanguardHashes = ['1990950', '3003633346', '1575820975'];
 
     vm.settings = dimSettingsService;
-    function init(stores) {
+    vm.vendorService = dimVendorService;
+    function init(stores = dimStoreService.getStores()) {
       if (_.isEmpty(stores)) {
-        $state.go('inventory');
         return;
       }
 
       vm.stores = _.reject(stores, (s) => s.isVault);
-      var vendors = _.omit(_.pluck(vm.stores, 'vendors'), function(value) {
-        return !value;
-      });
-      vm.vendors = { armorweaps: {}, vehicles: {}, shadersembs: {}, emotes: {} };
-      _.each(vendors, function(vendorMap, index) {
-        vm.vendors.armorweaps[index] = {};
-        vm.vendors.vehicles[index] = {};
-        vm.vendors.shadersembs[index] = {};
-        vm.vendors.emotes[index] = {};
-        _.each(vendorMap, function(vendor, vendorHash) {
-          if (vendor.hasArmorWeaps) {
-            vm.vendors.armorweaps[index][vendorHash] = vendor;
-          }
-          if (vendor.hasVehicles) {
-            vm.vendors.vehicles[index][vendorHash] = vendor;
-          }
-          if (vendor.hasShadersEmbs) {
-            vm.vendors.shadersembs[index][vendorHash] = vendor;
-          }
-          if (vendor.hasEmotes) {
-            vm.vendors.emotes[index][vendorHash] = vendor;
-          }
-        });
-      });
+
       countCurrencies(stores);
-      vm.vendorHashes = _.chain(vm.vendors[vm.activeTab])
-                        .values()
-                        .reduce(function(o, val) { o.push(_.keys(val)); return o; }, [])
-                        .flatten()
-                        .uniq()
-                        .reject(function(hash) { return _.contains(vm.vanguardHashes, hash); })
-                        .value();
     }
 
-    init(dimStoreService.getStores());
-    $scope.$on('dim-stores-updated', function(e, args) {
-      init(args.stores);
+    init();
+
+    // TODO: watch vendors instead?
+    $scope.$on('dim-vendors-updated', function() {
+      init();
     });
 
-    // Van quart, Dead orb, Future war, New mon, Cruc hand, Cruc quart, Eris Morn, Speaker, Variks, Exotic Blue
-    // vm.vendorHashes = ['2668878854', '3611686524', '1821699360', '1808244981', '3746647075', '3658200622', '174528503', '2680694281', '1998812735', '3902439767'];
-
-    function mergeMaps(o, map) {
-      _.each(map, function(val, key) {
-        if (!o[key]) {
-          o[key] = map[key];
-        }
-      });
-      return o;
-    }
+    $scope.$on('dim-stores-updated', function(e, args) {
+      vm.stores = _.reject(args.stores, (s) => s.isVault);
+      countCurrencies(args.stores);
+    });
 
     function countCurrencies(stores) {
-      var currencies = _.chain(vm.vendors[vm.activeTab])
+      var currencies = _.chain(vm.vendorService.vendors)
             .values()
-            .reduce(function(o, val) { o.push(_.values(val)); return o; }, [])
+            .pluck('categories')
+            .flatten()
+            .pluck('saleItems')
             .flatten()
             .pluck('costs')
-            .reduce(mergeMaps)
-            .values()
+            .flatten()
             .pluck('currency')
             .pluck('itemHash')
             .unique()
@@ -113,13 +74,11 @@
       currencies.forEach(function(currencyHash) {
         // Legendary marks and glimmer are special cases
         if (currencyHash === 2534352370) {
-          vm.totalCoins[currencyHash] = sum(stores, function(store) {
-            return store.legendaryMarks || 0;
-          });
+          vm.totalCoins[currencyHash] = dimStoreService.getVault().legendaryMarks;
         } else if (currencyHash === 3159615086) {
-          vm.totalCoins[currencyHash] = sum(stores, function(store) {
-            return store.glimmer || 0;
-          });
+          vm.totalCoins[currencyHash] = dimStoreService.getVault().glimmer;
+        } else if (currencyHash === 2749350776) {
+          vm.totalCoins[currencyHash] = dimStoreService.getVault().silver;
         } else {
           vm.totalCoins[currencyHash] = sum(stores, function(store) {
             return store.amountOfItem({ hash: currencyHash });
@@ -127,18 +86,5 @@
         }
       });
     }
-
-    angular.extend(vm, {
-      onTabChange: function() {
-        vm.vendorHashes = _.chain(vm.vendors[vm.activeTab])
-                          .values()
-                          .reduce(function(o, val) { o.push(_.keys(val)); return o; }, [])
-                          .flatten()
-                          .uniq()
-                          .reject(function(hash) { return _.contains(vm.vanguardHashes, hash); })
-                          .value();
-        countCurrencies(dimStoreService.getStores());
-      }
-    });
   }
 })();
