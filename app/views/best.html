@@ -1,7 +1,7 @@
 <div class="minmax" ng-controller="dimMinMaxCtrl as normal" ng-class="{ itemQuality: normal.featureFlags.qualityEnabled }">
   <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>
   <h1>Loadout builder</h1>
-  
+
   <dim-min-max-char-select active-characters="normal.activeCharacters" selected-character="normal.selectedCharacter" on-selected-change="normal.onSelectedChange(prev, new)"></dim-min-max-char-select>
 
   <dim-loadout></dim-loadout>
@@ -17,7 +17,7 @@
     </label>
 
     <div class="minmax-section">
-      <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min' track by $index">
+      <div ng-repeat="item in normal.ranked[normal.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
           <div class="item-stats">
             <div ng-repeat="stat in item.stats track by $index" ng-init="normalStat = item.normalStats[stat.statHash]" ng-style="normalStat.qualityPercentage | qualityColor:'color'">
