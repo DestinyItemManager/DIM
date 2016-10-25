@@ -14,8 +14,8 @@
       template: `
         <div id="loadout-drawer" ng-if="vm.show">
           <p>
-            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')">{{ vm.similarTypes[0].location.inWeapons ? 'Compare in archetype' : 'Compare similar splits' }} ({{ vm.archeTypes.length }})</label>
-            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.similarTypes[0].typeName }}{{ vm.similarTypes[0].typeName === 'Gauntlets' ? '' : 's'}} ({{ vm.similarTypes.length }})</label>
+            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')">{{ vm.compare.location.inWeapons ? 'Compare in archetype' : 'Compare similar splits' }} ({{ vm.archeTypes.length }})</label>
+            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.compare.typeName }}{{ vm.compare.typeName === 'Gauntlets' ? '' : 's'}} ({{ vm.similarTypes.length }})</label>
             <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
           </p>
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
@@ -27,7 +27,7 @@
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
               <div ng-bind="::item.name"></div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.similarTypes[0].location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
                 <span ng-bind="::stat.value"></span>
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
               </div>
@@ -94,31 +94,31 @@
       }
 
       if (args.dupes) {
-        vm.similarTypes = _.where(dimItemService.getItems(), { typeName: args.item.typeName });
+        vm.compare = args.item;
+        vm.similarTypes = _.where(dimItemService.getItems(), { typeName: vm.compare.typeName });
         var armorSplit;
-        if (!vm.similarTypes[0].location.inWeapons) {
-          vm.similarTypes = _.where(vm.similarTypes, { classType: args.item.classType });
-          armorSplit = _.reduce(args.item.stats, function(memo, stat) {
+        if (!vm.compare.location.inWeapons) {
+          vm.similarTypes = _.where(vm.similarTypes, { classType: vm.compare.classType });
+          armorSplit = _.reduce(vm.compare.stats, function(memo, stat) {
             return memo + (stat.base === 0 ? 0 : stat.statHash);
           }, 0);
         }
 
         vm.archeTypes = _.filter(vm.similarTypes, function(item) {
           if (item.location.inWeapons) {
-            var arch = _.find(item.stats, { statHash: args.item.stats[0].statHash });
+            var arch = _.find(item.stats, { statHash: vm.compare.stats[0].statHash });
             if (!arch) {
               return false;
             }
-            return arch.base === _.find(args.item.stats, { statHash: args.item.stats[0].statHash }).base;
+            return arch.base === _.find(vm.compare.stats, { statHash: vm.compare.stats[0].statHash }).base;
           }
           return _.reduce(item.stats, function(memo, stat) {
             return memo + (stat.base === 0 ? 0 : stat.statHash);
           }, 0) === armorSplit;
         });
-        vm.comparisons = _.where(dimItemService.getItems(), { hash: args.item.hash });
+        vm.comparisons = _.where(dimItemService.getItems(), { hash: vm.compare.hash });
       } else {
-        var dupe = _.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id });
-        if (!dupe) {
+        if (!_.findWhere(vm.comparisons, { hash: args.item.hash, id: args.item.id })) {
           vm.comparisons.push(args.item);
         }
       }
