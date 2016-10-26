@@ -193,7 +193,6 @@
           ItemLeveling: "Elemento di Livellamento",
           GatherEngrams: "Raccogliere Engram",
           GatherEngramsExceptExotics: "Esotiche",
-          FarmingMode: "Engram a Depositi (Coltura)",
           RestoreAllItems: "Tutti gli Elementi",
           Loadouts: "Loadouts",
           Progress: "Progesso"
@@ -375,7 +374,6 @@
           ItemLeveling: "Evolution d'article",
           GatherEngrams: "Rassembler les Engrammes",
           GatherEngramsExceptExotics: "Exotiques",
-          FarmingMode: "Engrammes aux Coffres (mode Farm)",
           RestoreAllItems: "Tous les Articles",
           Loadouts: "Loadouts",
           LoadoutAppliedAuto: "Constructeur de Loadout automatique",
@@ -419,7 +417,6 @@
           ItemLeveling: "Nivelación Elemento",
           GatherEngrams: "Recopilar Engramas",
           GatherEngramsExceptExotics: "Exóticas",
-          FarmingMode: "Engramas a Depósito (Agricultura)",
           RestoreAllItems: "Todos los Artículos",
           Loadouts: "Loadouts",
           Progress: "Progreso"
@@ -456,7 +453,6 @@
           ItemLeveling: "アイテムの平準化",
           GatherEngrams: "エングラムを収集",
           GatherEngramsExceptExotics: "エキゾチック",
-          FarmingMode: "エングラムは、 装備 (農業)",
           RestoreAllItems: "品揃え",
           Loadouts: "Loadouts",
           Progress: "進捗"
