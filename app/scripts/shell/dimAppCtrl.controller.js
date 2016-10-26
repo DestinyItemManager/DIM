@@ -26,7 +26,7 @@
 
     hotkeys.add({
       combo: ['f'],
-      description: $translate.instant('StartSearch'),
+      description: $translate.instant('Hotkey.StartSearch'),
       callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 

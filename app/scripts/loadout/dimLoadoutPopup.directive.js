@@ -117,7 +117,7 @@
     };
 
     vm.deleteLoadout = function deleteLoadout(loadout) {
-      if ($window.confirm($translate.instant('Loadout.ConfirmDelete', { name: loadout.name }))) {
+      if ($window.confirm($translate.instant('Loadouts.ConfirmDelete', { name: loadout.name }))) {
         dimLoadoutService.deleteLoadout(loadout);
       }
     };

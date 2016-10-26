@@ -237,9 +237,9 @@
             Super: "Super Abklingzeit",
             Grenade: "Granaten Abklingzeit",
             Melee: "Nahkampf Abklingzeit" },
-          FarmimgMode: {
+          FarmingMode: {
             FarmingMode: "Engramme zum Tresor",
-            FarmingDesc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
+            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
             Configuration: "Konfiguration",
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
