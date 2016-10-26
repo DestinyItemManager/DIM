@@ -235,7 +235,7 @@
             if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
               _previousLoadouts[store.id].pop();
             } else {
-              const previousLoadout = store.loadoutFromCurrentlyEquipped($translate.instant('BeforeLoadout', { name: loadout.name }));
+              const previousLoadout = store.loadoutFromCurrentlyEquipped($translate.instant('Loadout.Before', { name: loadout.name }));
               _previousLoadouts[store.id].push(previousLoadout);
             }
           }
@@ -340,15 +340,15 @@
           .then(function() {
             var value = 'success';
 
-            var message = $translate.instant('LoadoutApplied', { amount: scope.total, store: store.name });
+            var message = $translate.instant('Loadout.Applied', { amount: scope.total, store: store.name });
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {
                 value = 'error';
-                message = $translate.instant('LoadoutAppliedError');
+                message = $translate.instant('Loadout.AppliedError');
               } else {
                 value = 'warning';
-                message = $translate.instant('LoadoutAppliedWarn', { failed: scope.failed, total: scope.total });
+                message = $translate.instant('Loadout.AppliedWarn', { failed: scope.failed, total: scope.total });
               }
             }
 

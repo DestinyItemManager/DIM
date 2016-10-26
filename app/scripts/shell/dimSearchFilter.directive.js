@@ -129,7 +129,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" translate-attr="{ placeholder: \'FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
+        '<input id="filter-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }

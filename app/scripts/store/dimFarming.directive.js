@@ -16,16 +16,16 @@
             <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>
           </span>
           <span>
-            <p translate="FarmingDesc" translate-values="{ store: vm.service.store.name }"></p>
+            <p translate="FarmingMode.Desc" translate-values="{ store: vm.service.store.name }"></p>
             <div class="item-details"><span>
-              <p translate>Configuration</p>
-              <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingConfig1Tooltip'}" translate>FarmingConfig1</p>
+              <p translate>FarmingMode.Configuration</p>
+              <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate>FarmingMode.Greens</p>
             </span><span>
-              <p translate>FarmingQuickmove</p>
+              <p translate>FarmingMode.Quickmove</p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
             </span></div>
           </span>
-          <span><button ng-click="vm.stop($event)" translate>Stop</button></span>
+          <span><button ng-click="vm.stop($event)" translate>FarmingMode.Stop</button></span>
         </div>`
     };
   }

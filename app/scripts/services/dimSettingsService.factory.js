@@ -59,11 +59,11 @@
       },
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
-        { type: undefined, label: 'TagItem' },
-        { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
-        { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
-        { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
-        { type: 'infuse', label: 'Infuse', hotkey: '$', icon: 'bolt' }
+        { type: undefined, label: 'Tags.TagItem' },
+        { type: 'favorite', label: 'Tags.Favorite', hotkey: '!', icon: 'star' },
+        { type: 'keep', label: 'Tags.Keep', hotkey: '@', icon: 'tag' },
+        { type: 'junk', label: 'Tags.Junk', hotkey: '#', icon: 'ban' },
+        { type: 'infuse', label: 'Tags.Infuse', hotkey: '$', icon: 'bolt' }
       ],
 
       language: defaultLanguage(),
@@ -86,11 +86,11 @@
 
       // for now just override itemTags. eventually let users create own?
       savedSettings.itemTags = [
-        { type: undefined, label: 'TagItem' },
-        { type: 'favorite', label: 'Favorite', hotkey: '!', icon: 'star' },
-        { type: 'keep', label: 'Keep', hotkey: '@', icon: 'tag' },
-        { type: 'junk', label: 'Junk', hotkey: '#', icon: 'ban' },
-        { type: 'infuse', label: 'Infuse', hotkey: '$', icon: 'bolt' }
+        { type: undefined, label: 'Tags.TagItem' },
+        { type: 'favorite', label: 'Tags.Favorite', hotkey: '!', icon: 'star' },
+        { type: 'keep', label: 'Tags.Keep', hotkey: '@', icon: 'tag' },
+        { type: 'junk', label: 'Tags.Junk', hotkey: '#', icon: 'ban' },
+        { type: 'infuse', label: 'Tags.Infuse', hotkey: '$', icon: 'bolt' }
       ];
 
       _loaded = true;
