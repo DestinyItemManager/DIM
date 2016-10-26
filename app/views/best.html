@@ -20,10 +20,10 @@
     <span class='dim-button' ng-click="showGear=!showGear">{{!showGear ? 'Show' : 'Hide'}} {{normal.i18nClassNames[normal.active]}} gear</span>
   </p>
   <div class="section" ng-show="showGear">
-    <span translate="Armor"></span>: <select ng-model='normal.type' ng-change="normal.testchange()" ng-options="val as type for (val, type) in normal.i18nItemNames"></select>
+    <span translate>Armor</span>: <select ng-model='normal.type' ng-change="normal.testchange()" ng-options="val as type for (val, type) in normal.i18nItemNames"></select>
     <label>
       <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="normal.includeVendors" ng-change="normal.onIncludeVendorsChange()">
-      <span>Include vendor items</span>
+      <span translate>LBVendor</span>
     </label>
 
     <div class="minmax-section">
@@ -42,7 +42,7 @@
   </div>
 
   <div class="section">
-    <p><span translate="Locked Items"></span>&nbsp;-&nbsp;<small translate="Drag and drop any item into its bucket to build set with that specific gear."></small>&nbsp;<small ng-show="!normal.excludeditems.length" translate="Shift + click to exclude items."></small></p>
+    <p><span translate>LBLocked</span> - <small translate>LBLockedHelp</small></p>
     <dim-min-max-locks class="minmax-section" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
       i18n-item-names="normal.i18nItemNames"
       locked-items-valid="normal.lockedItemsValid($data, type)"
@@ -53,7 +53,7 @@
     </dim-min-max-locks>
   </div>
   <div class="section" ng-show="normal.excludeditems.length">
-    <p><span translate="Excluded Items"></span>&nbsp;-&nbsp;<small translate="Shift + click an item (or drag and drop into its bucket) to build sets without specific gear."></small></p>
+    <p><span translate>LBExclude</span> - <small translate>LBExcludeHelp</small></p>
     <div class="minmax-section">
       <div class="excluded-container">
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="normal.onExcludedDrop($data, $channel)" drop-validate="normal.excludedItemsValid($data, $channel)">
@@ -70,37 +70,37 @@
   <p>
   </p>
   <div ng-show="normal.progress >= 1">
-    <p>Filter sets (<span translate="Intellect"></span>/<span translate="Discipline"></span>/<span translate="Strength"></span>):
+    <p translate>FilterSets (<span translate="Intellect"></span>/<span translate="Discipline"></span>/<span translate="Strength"></span>):
       <select ng-model='normal.activesets' ng-change="normal.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
-      <span class="dim-button" ng-click='showAdvanced=!showAdvanced;showHelp=false' translate="Advanced Options"></span>
-      <span class="dim-button" ng-click='showHelp=!showHelp;showAdvanced=false' translate="Need help?"></span>
+      <span class="dim-button" ng-click='showAdvanced=!showAdvanced;showHelp=false' translate>AdvancedOptions</span>
+      <span class="dim-button" ng-click='showHelp=!showHelp;showAdvanced=false' translate>LBHelp</span>
       <span><div ng-show="showAdvanced">
         <p>
           <label>
             <select ng-model="normal.fullMode" ng-change="normal.onModeChange()" ng-options="(item ? 'Full' : 'Fast') for item in [false, true]">
             </select>
-            Processing mode
+            <span translate>ProcessingMode</span>
           </label>
           <small>-
-            <span ng-hide="normal.fullMode" translate="Only looks at your best gear"></span>
-            <span ng-show="normal.fullMode" translate="Looks at more gear, but takes longer."></span></small>
+            <span ng-hide="normal.fullMode" translate>ProcessingModeHelpFast</span>
+            <span ng-show="normal.fullMode" translate>ProcessingModeHelpFull</span></small>
         </p>
         <p>
           <label>
             <select ng-model="normal.scaleType" ng-change="normal.onModeChange()">
-              <option ng-if="normal.featureFlags.qualityEnabled" value="scaled" translate="Scaled"></option>
-              <option value="base" translate="Current"></option>
+              <option ng-if="normal.featureFlags.qualityEnabled" value="scaled" translate>Scaled</option>
+              <option value="base" translate>Current</option>
             </select>
-            Light mode
+            <span translate>LightMode</span>
           </label>
           <small>-
-            <span ng-show="normal.scaleType === 'scaled'" translate="Calculates loadouts as if all items were 350 defense."></span>
-            <span ng-show="normal.scaleType === 'base'" translate="Calculates loadouts at current defense levels."></span></small>
+            <span ng-show="normal.scaleType === 'scaled'" translate>LightModeHelpScaled</span>
+            <span ng-show="normal.scaleType === 'base'" translate>LightModeHelpCurrent</span></small>
         </p>
         <p>
           <label>
             <input id="includeRares" type="checkbox" ng-model="normal.showBlues" ng-change="normal.onModeChange()">
-            <span translate="Include rare (blue) items"></span>
+            <span translate>LBIncludeRare</span>
           </label>
         </p>
       </div></span>
@@ -130,21 +130,21 @@
     </p>
   </div>
   <div ng-show="!normal.highestsets">
-    <p ng-show="!normal.showBlues" translate="Missing legendary or exotic pieces to build a full set!"></p>
-    <p ng-show="normal.showBlues" translate="Missing rare, legendary, or exotic pieces to build a full set!"></p>
+    <p ng-show="!normal.showBlues" translate>LBMissing1</p>
+    <p ng-show="normal.showBlues" translate>LBMissing2</p>
     <p>
       <label>
         <input class="includeRares" type="checkbox" ng-model="normal.showBlues" ng-change="normal.onModeChange()">
-        <span translate="Include rare (blue) items"></span>
+        <span translate>LBIncludeRare</span>
       </label>
     </p>
   </div>
   <div ng-show="normal.progress < 1 && normal.highestsets">
-    <p translate="Loading best sets ({{normal.progress*100 | number:2}}%)"></p>
+    <p translate="LBLoading" translate-values="{ percent: {{normal.progress*100 | number:2}} }"></p>
   </div>
   <div ng-show="normal.progress >= 1">
     <div class="section loadout" ng-repeat="setType in normal.activeHighestSets">
-      <div><dim-stats stats="setType.tiers[normal.activesets].stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)" translate="Create Loadout"></span><span class='dim-button equip-button' ng-click="normal.equipItems(set)">Equip on Current Character</span></div>
+      <div><dim-stats stats="setType.tiers[normal.activesets].stats"></dim-stats><span class='dim-button' ng-click="normal.newLoadout(setType.set)" translate>CreateLoadout</span><span class='dim-button equip-button' ng-click="normal.equipItems(set)" translate>LBEquip</span></div>
       <div class="minmax-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <dim-min-max-item shift-click-callback="normal.excludeItem" item-data="armorpiece.item" store-data="normal.getStore(armorpiece.item.owner)"></dim-min-max-item>
@@ -156,8 +156,8 @@
         </div>
       </div>
       <div ng-show="setType.tiers[normal.activesets].configs.length > 1" class="expand-configs" ng-model="collapsedConfigs[$index]" ng-click="collapsedConfigs[$index]=!collapsedConfigs[$index]">
-        <div ng-show="!collapsedConfigs[$index]"><span title="Show configurations"><i class="fa fa-caret-right"></i></span> <span translate="Show all configurations"></span></div>
-        <div ng-show="collapsedConfigs[$index]"><span title="Hide configurations"><i class="fa fa-caret-up"></i></span> <span translate="Hide all configurations"></span></div>
+        <div ng-show="!collapsedConfigs[$index]"><span translate-attr="{ title: 'LBShowConfigs'}"><i class="fa fa-caret-right"></i></span> <span translate>LBShowAllConfigs</span></div>
+        <div ng-show="collapsedConfigs[$index]"><span translate-attr="{ title: 'LBHideConfigs'}"><i class="fa fa-caret-up"></i></span> <span translate>LBHideAllConfigs</span></div>
       </div>
     </div>
   </div>
