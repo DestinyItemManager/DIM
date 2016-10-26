@@ -223,7 +223,7 @@
           Vendors: "Händler",
           Support: "Unterstützen",
           Settings: "Einstellungen",
-          FilterHelp: "Gegenstand/Perk oder is:arc",
+          FilterHelp: "Suche nach Item/Perk oder is:arc",
           TagItem: "Gegenstand taggen",
           Favorite: "Favorit",
           Keep: "Behalten",
