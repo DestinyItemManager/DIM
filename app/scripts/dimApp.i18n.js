@@ -150,7 +150,12 @@
           DIMPopups: "DIM Info Popups",
           DIMPopupsReset: "Reset previously hidden info tips",
           DragHelp: "Hold shift or pause over drop zone to transfer a partial stack",
-          ShowBucket: "Show {{bucket}}"
+          ShowBucket: "Show {{bucket}}",
+          StartSearch: "Start a search",
+          RefreshInventory: "Refresh inventory",
+          ToggleDetails: "Toggle showing full item details",
+          MarkItemAs: "Mark item as '{{tag}}'",
+          ClearNewItems: "Clear new items"
         })
         .translations('it', {
           Level: "Livello",
