@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService', '$window', '$scope', '$state', 'dimFeatureFlags', 'dimVendorService'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService', '$window', '$scope', '$state', 'dimFeatureFlags', 'dimVendorService', '$translate'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService, $translate) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -26,7 +26,7 @@
 
     hotkeys.add({
       combo: ['f'],
-      description: "Start a search",
+      description: $translate.instant('StartSearch'),
       callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
