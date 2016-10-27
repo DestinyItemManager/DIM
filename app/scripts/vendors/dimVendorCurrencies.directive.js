@@ -25,7 +25,7 @@
   function VendorCurrenciesCtrl($scope, $filter) {
     const vm = this;
 
-    $scope.$watch(['vm.vendorCategories', 'vm.propertyFilter'], () => {
+    $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
       vm.currencies = _.chain(vm.vendorCategories)
         .filter(vm.propertyFilter)
         .pluck('saleItems')
