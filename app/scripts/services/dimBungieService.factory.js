@@ -9,7 +9,6 @@
 
   function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
     var apiKey = apikey;
-    console.log(apiKey);
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
