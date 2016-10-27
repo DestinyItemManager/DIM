@@ -87,8 +87,8 @@
         '    </div>',
         '  </div>',
         '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
-        '    <a ui-sref="debugItem({itemId: vm.item.id})">View Item Debug Info</a>',
-        '    <button ng-click="vm.dumpDebugInfo()">Dump info to console</a>',
+        '    <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>',
+        '    <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>',
         '  </div>',
         '</div>'
       ].join('')
@@ -224,7 +224,7 @@
     vm.dumpDebugInfo = function() {
       console.log("DEBUG INFO for '" + vm.item.name + "'");
       console.log("DIM Item", vm.item);
-      console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+shift+r) and refresh items to see this.");
+      console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
       dimDefinitions.then((defs) => {
         console.log("Manifest Item Definition", defs.InventoryItem[vm.item.hash]);
       });

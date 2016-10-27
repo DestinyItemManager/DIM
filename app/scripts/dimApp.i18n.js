@@ -22,6 +22,9 @@
             Grenade: "Grenade cooldown",
             Melee: "Melee cooldown",
             Super: "Super cooldown" },
+          Debug: {
+            Dump: "Dump info to console",
+            View: "View Item Debug Info" },
           FarmingMode: {
             FarmingMode: "Farming Mode (move items)",
             Desc: "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
