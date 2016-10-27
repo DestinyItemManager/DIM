@@ -68,7 +68,8 @@
               });
           })
           .catch((e) => {
-            service.statusText = $translate.instant('Manifest.Error1') + e.message + ". " + $translate.instant('Manifest.Error2');
+
+            service.statusText = $translate.instant('Manifest.Error1') + (e.message || e) + ". " + $translate.instant('Manifest.Error2');
             manifestPromise = null;
             service.isError = true;
             return deleteManifestFile().finally(() => $q.reject(e));
