@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimAppCtrl', DimApp);
 
-  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService', '$window', '$scope', '$state', 'dimFeatureFlags', 'dimVendorService', '$translate'];
+  DimApp.$inject = ['ngDialog', '$rootScope', 'loadingTracker', 'dimPlatformService', '$interval', 'hotkeys', '$timeout', 'dimStoreService', 'dimXurService', 'dimSettingsService', '$window', '$scope', '$state', 'dimFeatureFlags', 'dimVendorService'];
 
-  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService, $translate) {
+  function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -26,7 +26,7 @@
 
     hotkeys.add({
       combo: ['f'],
-      description: $translate.instant('Hotkey.StartSearch'),
+      description: 'Start a search',
       callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
@@ -59,6 +59,7 @@
       }
     });
 
+/* Add each hotkey manually until hotkeys can be translated.
     _.each(dimSettingsService.itemTags, (tag) => {
       if (tag.hotkey) {
         hotkeys.add({
@@ -68,6 +69,38 @@
             $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
           }
         });
+      }
+    });
+*/
+    hotkeys.add({
+      combo: ['!'],
+      description: "Mark item as 'Favorite'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
+      }
+    });
+
+    hotkeys.add({
+      combo: ['@'],
+      description: "Mark item as 'Keep'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
+      }
+    });
+
+    hotkeys.add({
+      combo: ['#'],
+      description: "Mark item as 'Junk'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
+      }
+    });
+
+    hotkeys.add({
+      combo: ['$'],
+      description: "Mark item as 'Infuse'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
       }
     });
 
