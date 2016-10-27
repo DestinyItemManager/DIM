@@ -40,9 +40,9 @@
             </div>
           </span>
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
-          <span class="link" ng-click="app.showAbout($event)" translate>Header.About</span>
-          <span class="link" ng-click="app.showSupport($event)" translate>Header.SupportDIM</span>
-          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate>Vendors</span>
+          <span class="link" ng-click="app.showAbout($event)" translate="Header.About"></span>
+          <span class="link" ng-click="app.showSupport($event)" translate="Header.SupportDIM"></span>
+          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>

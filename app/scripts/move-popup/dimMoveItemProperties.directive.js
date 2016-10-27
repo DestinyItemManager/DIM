@@ -50,7 +50,7 @@
         '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
         '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
-        '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate>Notes.Error</span>',
+        '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',

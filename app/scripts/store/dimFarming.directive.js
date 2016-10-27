@@ -18,14 +18,14 @@
           <span>
             <p translate="FarmingMode.Desc" translate-values="{ store: vm.service.store.name }"></p>
             <div class="item-details"><span>
-              <p translate>FarmingMode.Configuration</p>
-              <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate>FarmingMode.Greens</p>
+              <p translate="FarmingMode.Configuration"></p>
+              <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate="FarmingMode.Greens"></p>
             </span><span>
-              <p translate>FarmingMode.Quickmove</p>
+              <p translate="FarmingMode.Quickmove"></p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
             </span></div>
           </span>
-          <span><button ng-click="vm.stop($event)" translate>FarmingMode.Stop</button></span>
+          <span><button ng-click="vm.stop($event)" translate="FarmingMode.Stop"></button></span>
         </div>`
     };
   }
