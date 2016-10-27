@@ -322,7 +322,7 @@
             SaveAsNew: "Speichern als...",
             Cancel: "Abbrechen",
             ItemsWithIcon: "Gegenstände mit diesem Symbol werden angelegt.",
-            ClickToEquip: "Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren..",
+            ClickToEquip: "Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren.",
             AppliedAuto: "Automatischer Loadout Builder",
             Applied: "Dein Loadout aus {{amount}} Gegenständen wurde zum {{store}} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
