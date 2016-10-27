@@ -316,7 +316,7 @@
                     value: cost.value,
                     currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
                   };
-                }),
+                }).filter((c) => c.value > 0),
                 item: itemsByHash[saleItem.item.itemHash],
                 // TODO: caveat, this won't update very often!
                 unlocked: isSaleItemUnlocked(saleItem),
