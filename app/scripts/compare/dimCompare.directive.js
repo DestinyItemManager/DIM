@@ -18,13 +18,15 @@
             <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" translate="Compare.All" translate-values="{ type: vm.compare.typeName, quantity: vm.similarTypes.length}"></label>
             <label class="dim-button" ng-click="vm.cancel()" translate>Compare.Close</label>
           </p>
+          <!-- TODO: css hover -->
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
             <span class="compare-item fixed-left">
+              <!-- TODO: get rid of this, use a table! -->
               <div>&nbsp;</div>
               <div>&nbsp;</div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by stat.statHash" ng-bind="::stat.name"></div>
             </span>
-            <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
+            <span ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
               <div ng-bind="::item.name" class="item-name"></div>
               <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
@@ -146,12 +148,13 @@
 
       vm.statRanges = {};
       _.each(statBuckets, function(bucket, hash) {
-        vm.statRanges[hash] = {
+        const statRange = {
           min: Math.min(...bucket),
           max: Math.max(...bucket)
         };
+        statRange.enabled = statRange.min !== statRange.max;
+        vm.statRanges[hash] = statRange;
       });
-
 
       const nodeCounts = {};
       vm.talentGrids = {};
@@ -173,11 +176,11 @@
 
       vm.talentGrids = {};
       _.each(vm.comparisons, (item) => {
-        vm.talentGrids[item.id] = trimTalentGrid(item.talentGrid, commonNodes);
+        vm.talentGrids[item.id] = trimTalentGrid(item.talentGrid, commonNodes, nodeCounts);
       });
     }, true);
 
-    function trimTalentGrid(talentGrid, commonNodes) {
+    function trimTalentGrid(talentGrid, commonNodes, nodeCounts) {
       const trimmedGrid = angular.copy(talentGrid);
       trimmedGrid.nodes = _.reject(trimmedGrid.nodes, (n) => commonNodes.has(n.hash.toString()));
       if (trimmedGrid.nodes.length) {
