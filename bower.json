@@ -23,6 +23,7 @@
     "components-font-awesome": "~4.4.0",
     "humanize-duration": "~3.9.1",
     "jquery": "~2",
+    "jquery-ui": "~1.12",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",
     "ngDialog": "~0.5.x",
     "underscore": "~1.8.x",

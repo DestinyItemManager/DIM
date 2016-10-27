@@ -38,6 +38,7 @@
     "grunt-webstore-upload": "^0.9.3",
     "jpm": "^1.1.1",
     "jshint": "^2.9.2",
+    "jquery-ui": "~1.12",
     "load-grunt-tasks": "^3.5.0",
     "node-sass": "^3.8.0",
     "request": "^2.73.0",
