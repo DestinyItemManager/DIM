@@ -1,9 +1,6 @@
 app/scripts/jquery-ui.position.js
 app/vendor/
 build/
-build/processBungieManifest.js
-build/getBungieManifest.js
-build/manifestDig.js
 dist/
 Gruntfile.js
 karma.conf.js
