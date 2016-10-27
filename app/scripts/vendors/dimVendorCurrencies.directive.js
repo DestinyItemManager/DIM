@@ -6,10 +6,11 @@
     controllerAs: 'vm',
     bindings: {
       vendorCategories: '<',
-      totalCoins: '<'
+      totalCoins: '<',
+      propertyFilter: '<'
     },
     template: [
-      '<div class="vendor-currency" ng-repeat="currency in vm.currencies track by $index">',
+      '<div class="vendor-currency" ng-repeat="currency in vm.currencies track by currency.itemHash">',
       '  {{vm.totalCoins[currency.itemHash]}}',
       '  <img ng-src="{{::currency.icon | bungieIcon}}" title="{{::currency.itemName}}"/>',
       '</div>'
@@ -19,14 +20,16 @@
   angular.module('dimApp')
     .component('dimVendorCurrencies', VendorCurrencies);
 
-  VendorCurrenciesCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
+  VendorCurrenciesCtrl.$inject = ['$scope', '$filter'];
 
-  function VendorCurrenciesCtrl($scope) {
+  function VendorCurrenciesCtrl($scope, $filter) {
     const vm = this;
 
-    $scope.$watch('vm.vendorCategories', () => {
+    $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
       vm.currencies = _.chain(vm.vendorCategories)
+        .filter(vm.propertyFilter)
         .pluck('saleItems')
+        .map((i) => $filter('vendorTabItems')(i, vm.propertyFilter))
         .flatten()
         .pluck('costs')
         .flatten()

@@ -68,7 +68,7 @@
               });
           })
           .catch((e) => {
-            service.statusText = "Error loading Destiny info: " + e.message + ". Reload to retry.";
+            service.statusText = "Error loading Destiny info: " + (e.message || e) + ". Reload to retry.";
             manifestPromise = null;
             service.isError = true;
             return deleteManifestFile().finally(() => $q.reject(e));

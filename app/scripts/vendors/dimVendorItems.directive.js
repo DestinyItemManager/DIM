@@ -40,7 +40,7 @@
       '     <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
-      '   <dim-vendor-currencies vendor-categories="vendor.categories | vendorTab:vm.activeTab" total-coins="vm.totalCoins"></dim-vendor-currencies>',
+      '   <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
       '   <div class="vendor-row">',
       '     <div class="char-cols">',
       '       <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',

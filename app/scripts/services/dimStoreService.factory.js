@@ -1086,7 +1086,7 @@
                 : (quality.min + "%-" + quality.max)) + '%';
       }
 
-      if (!stats || !stats.length || light.value < 280) {
+      if (!stats || !stats.length || !light || light.value < 280) {
         return null;
       }
 
@@ -1246,7 +1246,7 @@
 
       var armorNodes = [];
       var activeArmorNode;
-      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+      if (grid && grid.nodes && item.primaryStat && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
           return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
         });
@@ -1293,7 +1293,7 @@
         var base = val;
         var bonus = 0;
 
-        if (item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
+        if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
           if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
              (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
              (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
