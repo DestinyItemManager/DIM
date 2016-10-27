@@ -212,7 +212,7 @@
           // TODO: ???
 
           service.loadedVendors++;
-          console.log(e);
+          // console.log(e);
           return null;
         });
     }
@@ -242,7 +242,7 @@
                   .then(() => vendor);
               })
               .catch((e) => {
-                console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
+                // console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
                 if (e.status === 'DestinyVendorNotFound') {
                   const vendor = {
                     failed: true,
@@ -266,7 +266,7 @@
             const processed = processVendor(vendor, vendorDef, defs, store);
             return processed;
           }
-          console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
+          // console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
           return null;
         });
     }
