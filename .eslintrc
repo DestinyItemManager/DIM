@@ -70,6 +70,7 @@
     "block-spacing": "error",
     "camelcase": ["error", {
       "properties": "never"
+      
     }],
     "comma-spacing": "error",
     "comma-style": "error",
