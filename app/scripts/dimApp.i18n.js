@@ -9,6 +9,10 @@
       $translateProvider
         .translations('en', {
           Level: "Level",
+          Armor: "Armor",
+          General: "General",
+          Weapons: "Weapons",
+          Vault: "Vault",
           Bucket: {
             Armor: "Armor",
             General: "General",
@@ -182,6 +186,7 @@
           Armor: "Armatura",
           General: "Generale",
           Weapons: "Armi",
+          Vault: "Depositi",
           Bucket: {
             Armor: "Armatura",
             General: "Generale",
@@ -232,6 +237,7 @@
           Weapons: "Waffen",
           Armor: "Rüstung",
           General: "Allgemein",
+          Vault: "Tresor",
           Bucket: {
             Show: "Zeige {{bucket}}",
             Weapons: "Waffen",
@@ -390,6 +396,7 @@
           Weapons: "Armes",
           Armor: "Armure",
           General: "Général",
+          Vault: "Coffres",
           Bucket: {
             Weapons: "Armes",
             Armor: "Armure",
@@ -442,6 +449,7 @@
           Level: "Nivel",
           Weapons: "Armas",
           Armor: "Armadura",
+          Vault: "Depósito",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armadura",
@@ -491,6 +499,7 @@
           Weapons: "武器",
           Armor: "よろい",
           General: "全般",
+          Vault: "装備",
           Bucket: {
             Weapons: "武器",
             Armor: "よろい",
@@ -537,6 +546,7 @@
           Weapons: "Armas",
           Armor: "Armaduras",
           General: "Geral",
+          Vault: "Cofre",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armaduras",
