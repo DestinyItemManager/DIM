@@ -176,6 +176,9 @@
         })
         .translations('it', {
           Level: "Livello",
+          Armor: "Armatura",
+          General: "Generale",
+          Weapons: "Armi",
           Bucket: {
             Armor: "Armatura",
             General: "Generale",
@@ -223,6 +226,9 @@
         })
         .translations('de', {
           Level: "Level",
+          Weapons: "Waffen",
+          Armor: "Rüstung",
+          General: "Allgemein",
           Bucket: {
             Show: "Zeige {{bucket}}",
             Weapons: "Waffen",
@@ -378,6 +384,9 @@
         })
         .translations('fr', {
           Level: "Niveau",
+          Weapons: "Armes",
+          Armor: "Armure",
+          General: "Général",
           Bucket: {
             Weapons: "Armes",
             Armor: "Armure",
@@ -428,6 +437,8 @@
         })
         .translations('es', {
           Level: "Nivel",
+          Weapons: "Armas",
+          Armor: "Armadura",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armadura",
@@ -474,6 +485,9 @@
         })
         .translations('ja', {
           Level: "レベル",
+          Weapons: "武器",
+          Armor: "よろい",
+          General: "全般",
           Bucket: {
             Weapons: "武器",
             Armor: "よろい",
@@ -517,6 +531,9 @@
         })
         .translations('pt-br', {
           Level: "Nível",
+          Weapons: "Armas",
+          Armor: "Armaduras",
+          General: "Geral",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armaduras",
