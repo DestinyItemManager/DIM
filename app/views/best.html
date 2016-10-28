@@ -32,7 +32,11 @@
   </div>
 
   <div class="section">
-    <p><span translate="LB.Locked"></span> - <small translate="LB.LockedHelp"></small></p>
+    <p>
+      <span class='dim-button locked-button' ng-click="normal.lockEquipped()">Lock Equipped</span>
+      <span class='dim-button locked-button' ng-click="normal.clearLocked()">Clear Locked</span>
+      <span translate="LB.Locked"></span> - <small translate="LB.LockedHelp"></small>
+    </p>
     <dim-min-max-locks class="minmax-section" locked-items="normal.lockeditems" locked-perks="normal.lockedperks" active-perks="normal.activePerks"
       i18n-item-names="normal.i18nItemNames"
       locked-items-valid="normal.lockedItemsValid($data, type)"
