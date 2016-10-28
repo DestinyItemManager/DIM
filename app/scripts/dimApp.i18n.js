@@ -252,6 +252,9 @@
             Super: "Super Abklingzeit",
             Grenade: "Granaten Abklingzeit",
             Melee: "Nahkampf Abklingzeit" },
+          Debug: {
+            Dump: "Info in Konsole ausgeben",
+            View: "Zeige Item Debug Info" },
           FarmingMode: {
             FarmingMode: "Engramme zum Tresor",
             Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
@@ -302,7 +305,9 @@
             Help: "Brauchst du Hilfe?",
             Equip: "Am aktuellen Charakter anlegen.",
             ShowAllConfigs: "Zeige alle Varianten",
+            ShowConfigs: "Zeige Varianten",
             HideAllConfigs: "Verstecke alle Varianten",
+            HideConfigs: "Verstecke Varianten",
             Loading: "Lade die besten Sets ({{percentage}}%)",
             Vendor: "Gegenstände von Händlern einschließen",
             Exclude: "Ignorierte Gegenstände",
