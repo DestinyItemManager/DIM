@@ -239,26 +239,26 @@
           General: "Allgemein",
           Vault: "Tresor",
           Bucket: {
-            Show: "Zeige {{bucket}}",
-            Weapons: "Waffen",
             Armor: "Rüstung",
             General: "Allgemein",
             Postmaster: "Poststelle",
             Progress: "Fortschritt",
+            Reputation: "Ruf",
+            Show: "Zeige {{bucket}}",
             Vault: "Tresor",
             Vanguard: "Vorhut",
-            Reputation: "Ruf" },
+            Weapons: "Waffen" },
           Cooldown: {
-            Super: "Super Abklingzeit",
             Grenade: "Granaten Abklingzeit",
-            Melee: "Nahkampf Abklingzeit" },
+            Melee: "Nahkampf Abklingzeit",
+            Super: "Super Abklingzeit" },
           Debug: {
             Dump: "Info in Konsole ausgeben",
             View: "Zeige Item Debug Info" },
           FarmingMode: {
-            FarmingMode: "Engramme zum Tresor",
-            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
             Configuration: "Konfiguration",
+            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
+            FarmingMode: "Engramme zum Tresor",
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
               Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter." },
@@ -274,11 +274,11 @@
             BackToDIM: "Zurück zu DIM",
             Drag: "Halte Shift oder pausiere über der Drop-Zone, um einen Teilstapel zu übertragen" },
           Hotkey: {
-            StartSearch: "Starte eine Suche",
-            RefreshInventory: "Aktualisiere Inventar",
-            ToggleDetails: "Schalter für vollständige Artikeldetails",
+            ClearNewItems: "Neue Elemente löschen",
             MarkItemAs: "Markiere Element als '{{tag}}'",
-            ClearNewItems: "Neue Elemente löschen" },
+            RefreshInventory: "Aktualisiere Inventar",
+            StartSearch: "Starte eine Suche",
+            ToggleDetails: "Schalter für vollständige Artikeldetails" },
           LB: {
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
@@ -347,6 +347,7 @@
             Unzip: "Entpacke neueste Daten",
             Save: "Speichere neueste Daten" },
           Notes: {
+            Error: "Fehler! Max 120 Zeichen für Notizen.",
             Help: "Notiz für diesen Artikel" },
           Settings: {
             Settings: "Einstellungen",
