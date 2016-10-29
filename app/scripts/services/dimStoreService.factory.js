@@ -249,7 +249,8 @@
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: processItems,
-      hasNewItems: false
+      hasNewItems: false,
+      getQualityRating: getQualityRating
     };
 
     $rootScope.$on('dim-active-platform-updated', function() {
