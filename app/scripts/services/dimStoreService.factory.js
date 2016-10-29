@@ -658,12 +658,11 @@
         // items in the vault.
         if (itemDef.classified) {
           if (currentBucket.id === ('BUCKET_VAULT_WEAPONS')) {
-            currentBucket = buckets.byHash[953998645]; // Set as Heavy Weapon
-            itemDef.itemCategoryHashes = [0, 4, 12];
+            currentBucket = buckets.byType.Heavy;
           } else if (currentBucket.id === ('BUCKET_VAULT_ARMOR')) {
-            currentBucket = buckets.byHash[1585787867]; // Set as ClassItem
+            currentBucket = buckets.byType.ClassItem;
           } else if (currentBucket.id === ('BUCKET_VAULT_ITEMS')) {
-            currentBucket = buckets.byHash[434908299]; // Set as Artifact
+            currentBucket = buckets.byType.Artifact;
           }
         } else {
           currentBucket = normalBucket;
