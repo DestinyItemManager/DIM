@@ -331,8 +331,25 @@
             let hasConsumables = false;
             let hasBounties = false;
             categoryItems.forEach((saleItem) => {
-              const item = saleItem.item;
+              var item = saleItem.item;
               if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
+                var temp = defs.InventoryItem[item.hash];
+                var hash = null;
+
+                if (temp.stats[3897883278]) {
+                  hash = 3897883278;
+                } else if (temp.stats[368428387]) {
+                  hash = 368428387;
+                }
+
+                if (hash) {
+                  item.primStat = temp.stats[hash];
+                  if (item.primStat.value > 350) {
+                    item.primStat.value = 280;
+                  }
+                  item.primStat.stat = defs.Stat[hash];
+                }
+
                 hasArmorWeaps = true;
               }
               if (item.type === 'Ship' || item.type === 'Vehicle') {
