@@ -399,9 +399,9 @@
       }
 
       if (hash) {
-        item.year = getItemYear(itemDef);
         item.primStat = itemDef.stats[hash];
         item.primStat.stat = defs.Stat[hash];
+        item.year = getItemYear(item);
         if (item.isExotic) {
           if (createdVendor.hash === 2796397637) { // fixes xur exotics
             item.primStat.value = 350;
@@ -446,12 +446,13 @@
       if (itemDef.sourceHashes.indexOf(460228854) >= 0 ||  // ttk
           itemDef.sourceHashes.indexOf(3523074641) >= 0 || // variks
           itemDef.sourceHashes.indexOf(3551688287) >= 0 || // kings fall
-          itemDef.hash === 3688594188) { // boolean gemini
+          itemDef.hash === 3688594188) {                   // boolean gemini
         itemYear = 2;
       }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0 ||  // roi
-          itemDef.hash === 1170904292 ||                  // iron gjallorhorn
-          itemDef.hash === 1623420384) {                  // The young wolfs howl
+      if ((itemDef.sourceHashes.indexOf(24296771) >= 0 ||  // roi
+          !itemDef.sourceHashes.length) &&                 // new items
+          !(itemDef.primStat.minimum === 170) &&           // ttk CE exotic class items
+          !(itemDef.hash === 3688594188)) {                // boolean gemini
         itemYear = 3;
       }
       return itemYear;
