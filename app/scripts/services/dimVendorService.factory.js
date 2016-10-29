@@ -402,39 +402,7 @@
         item.primStat = itemDef.stats[hash];
         item.primStat.stat = defs.Stat[hash];
         item.year = getItemYear(item);
-        if (item.isExotic) {
-          if (createdVendor.hash === 2796397637) { // fixes xur exotics
-            item.primStat.value = 350;
-          } else if (createdVendor.hash === 1460182514 || // fix exotics in
-                     createdVendor.hash === 3902439767) { // kiosks
-            if (item.year === 2) {  // year 2
-              item.primStat.value = 280;
-            }
-            if (item.year === 3 || item.primStat.value === 3) {
-              item.primStat.value = 320;
-            } else if (item.year === 1) {
-              if (item.primStat.minimum <= 145) {
-                item.primStat.value = 160;
-              }
-              if (item.primStat.minimum === 155) {
-                item.primStat.value = 170;
-              }
-            }
-            if (item.hash === 346443849) { // vex mythoclast
-              item.primStat.value = 162;
-            }
-            if (item.hash === 2344494718) { // 4th horseman
-              item.primStat.value = 155;
-            }
-            if (item.hash === 2809229973) { // necrochasm
-              item.primStat.value = 172;
-            }
-            if (item.hash === 3705198528) { // dragon's breath
-              item.primStat.value = 167;
-            }
-          }
-        }
-
+        setItemPrimStat(item, createdVendor);
         item.quality = getQualityRating(item.stats, item.primStat, item.bucket.type);
       }
       return item;
@@ -456,6 +424,41 @@
         itemYear = 3;
       }
       return itemYear;
+    }
+
+    function setItemPrimStat(item, createdVendor) {
+      if (item.isExotic) {
+        if (createdVendor.hash === 2796397637) { // fixes xur exotics
+          item.primStat.value = 350;
+        } else if (createdVendor.hash === 1460182514 || // fix exotics in
+                   createdVendor.hash === 3902439767) { // kiosks
+          if (item.year === 2) {  // year 2
+            item.primStat.value = 280;
+          }
+          if (item.year === 3 || item.primStat.value === 3) {
+            item.primStat.value = 320;
+          } else if (item.year === 1) {
+            if (item.primStat.minimum <= 145) {
+              item.primStat.value = 160;
+            }
+            if (item.primStat.minimum === 155) {
+              item.primStat.value = 170;
+            }
+          }
+          if (item.hash === 346443849) { // vex mythoclast
+            item.primStat.value = 162;
+          }
+          if (item.hash === 2344494718) { // 4th horseman
+            item.primStat.value = 155;
+          }
+          if (item.hash === 2809229973) { // necrochasm
+            item.primStat.value = 172;
+          }
+          if (item.hash === 3705198528) { // dragon's breath
+            item.primStat.value = 167;
+          }
+        }
+      }
     }
     // TODO: Remove these functions and access them directly from dimStoreService.
 
