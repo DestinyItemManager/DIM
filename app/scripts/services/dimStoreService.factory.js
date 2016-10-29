@@ -657,11 +657,11 @@
         // TODO: Remove this if Bungie ever returns bucket.id for classified
         // items in the vault.
         if (itemDef.classified) {
-          if (currentBucket.id === ('BUCKET_VAULT_WEAPONS')) {
+          if (currentBucket.id.endsWith('WEAPONS')) {
             currentBucket = buckets.byType.Heavy;
-          } else if (currentBucket.id === ('BUCKET_VAULT_ARMOR')) {
+          } else if (currentBucket.id.endsWith('ARMOR')) {
             currentBucket = buckets.byType.ClassItem;
-          } else if (currentBucket.id === ('BUCKET_VAULT_ITEMS')) {
+          } else if (currentBucket.id.endsWith('ITEMS')) {
             currentBucket = buckets.byType.Artifact;
           }
         } else {
