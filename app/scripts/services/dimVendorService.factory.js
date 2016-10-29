@@ -110,7 +110,6 @@
         .then((defs) => {
           // Narrow down to only visible vendors (not packages and such)
           const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
-
           service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
           service.loadedVendors = 0;
 
@@ -317,7 +316,7 @@
                     currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
                   };
                 }).filter((c) => c.value > 0),
-                item: getItem(itemsByHash[saleItem.item.itemHash], defs, createdVendor),
+                item: itemsByHash[saleItem.item.itemHash],
                 // TODO: caveat, this won't update very often!
                 unlocked: isSaleItemUnlocked(saleItem),
                 unlockedByCharacter: [store.id]
@@ -367,6 +366,7 @@
 
           items.forEach((item) => {
             item.vendorIcon = createdVendor.icon;
+            item = getItem(item, defs, createdVendor);
           });
 
           createdVendor.allItems = items;
@@ -389,6 +389,7 @@
 
     function getItem(itemByHash, defs, createdVendor) {
       var item = itemByHash;
+      //console.log(item);
       var itemDef = defs.InventoryItem[item.hash];
       var hash = null;
 
@@ -399,18 +400,65 @@
       }
 
       if (hash) {
+        item.year = getItemYear(itemDef);
         item.primStat = itemDef.stats[hash];
-        if (item.isExotic && item.primStat.value > 350 && createdVendor.name.startsWith('Exotic')) { // fixes exotics in kiosk
-          item.primStat.value = 280;
-        } else if (item.isExotic && item.primStat.value > 350) { // fixes exotics on xur
-          item.primStat.value = 350;
+        if (item.isExotic) {
+          if (createdVendor.hash === 2796397637) { // fixes xur exotics
+            item.primStat.value = 350;
+          } else if (createdVendor.hash === 1460182514 || // fix exotics in
+                     createdVendor.hash === 3902439767) { // kiosks
+            if (item.primStat.value > 280) {
+              item.primStat.value = item.primStat.minimum;
+            }
+            if (item.year === 3 || item.primStat.value === 3) {
+              item.primStat.value = 320;
+            } else if (item.year === 2) {
+              if (item.primStat.minimum <= 145) {
+                item.primStat.value = 160;
+              }
+              if (item.primStat.minimum === 155) {
+                item.primStat.value = 170;
+              }
+            } else if (item.year === 1) {
+              if (item.primStat.value < 160) {
+                item.primStat.value = 160;
+              }
+              if (item.sourceHashes.indexOf(36493462) >= 0 && item.primStat.minimum !== 135) { // y1 poe
+                item.primStat.value = 170;
+              }
+            }
+            if (item.hash === 346443849) { // vex mythoclast
+              item.primStat.value = 162;
+            }
+            if (item.hash === 2344494718) { // 4th horseman
+              item.primStat.value = 155;
+            }
+            if (item.hash === 2809229973) { // necrochasm
+              item.primStat.value = 172;
+            }
+            if (item.hash === 3705198528) { // dragon's breath
+              item.primStat.value = 167;
+            }
+          }
         }
+
         item.primStat.stat = defs.Stat[hash];
         item.quality = getQualityRating(item.stats, item.primStat, item.bucket.type);
       }
       return item;
     }
 
+    function getItemYear(itemDef) {
+      itemDef.sourceHashes = itemDef.sourceHashes || [];
+      var itemYear = 1;
+      if (itemDef.sourceHashes.indexOf(460228854) >= 0 || itemDef.sourceHashes.indexOf(541934873) >= 0) {
+        itemYear = 2;
+      }
+      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+        itemYear = 3;
+      }
+      return itemYear;
+    }
     // TODO: Remove these functions and access them directly from dimStoreService.
 
     function fitValue(light) {
