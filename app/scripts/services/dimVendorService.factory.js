@@ -401,6 +401,7 @@
       if (hash) {
         item.year = getItemYear(itemDef);
         item.primStat = itemDef.stats[hash];
+        item.primStat.stat = defs.Stat[hash];
         if (item.isExotic) {
           if (createdVendor.hash === 2796397637) { // fixes xur exotics
             item.primStat.value = 350;
@@ -441,7 +442,6 @@
           }
         }
 
-        item.primStat.stat = defs.Stat[hash];
         item.quality = getQualityRating(item.stats, item.primStat, item.bucket.type);
       }
       return item;
