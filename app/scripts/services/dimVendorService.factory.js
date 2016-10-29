@@ -389,7 +389,6 @@
 
     function getItem(itemByHash, defs, createdVendor) {
       var item = itemByHash;
-      //console.log(item);
       var itemDef = defs.InventoryItem[item.hash];
       var hash = null;
 
