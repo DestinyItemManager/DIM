@@ -407,8 +407,8 @@
             item.primStat.value = 350;
           } else if (createdVendor.hash === 1460182514 || // fix exotics in
                      createdVendor.hash === 3902439767) { // kiosks
-            if (item.primStat.value > 280) {
-              item.primStat.value = item.primStat.minimum;
+            if (item.year === 2) {  // year 2
+              item.primStat.value = 280;
             }
             if (item.year === 3 || item.primStat.value === 3) {
               item.primStat.value = 320;
@@ -417,13 +417,6 @@
                 item.primStat.value = 160;
               }
               if (item.primStat.minimum === 155) {
-                item.primStat.value = 170;
-              }
-            } else if (item.year === 1) {
-              if (item.primStat.value < 160) {
-                item.primStat.value = 160;
-              }
-              if (item.sourceHashes.indexOf(36493462) >= 0 && item.primStat.minimum !== 135) { // y1 poe
                 item.primStat.value = 170;
               }
             }
@@ -452,15 +445,14 @@
       var itemYear = 1;
       if (itemDef.sourceHashes.indexOf(460228854) >= 0 ||  // ttk
           itemDef.sourceHashes.indexOf(3523074641) >= 0 || // variks
-          itemDef.sourceHashes.indexOf(3551688287) >= 0) { // kings fall
+          itemDef.sourceHashes.indexOf(3551688287) >= 0 || // kings fall
+          itemDef.hash === 3688594188) { // boolean gemini
         itemYear = 2;
       }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        if (itemDef.hash === 3688594188) { // boolean gemini
-          itemYear = 2;
-        } else {
-          itemYear = 3;
-        }
+      if (itemDef.sourceHashes.indexOf(24296771) >= 0 ||  // roi
+          itemDef.hash === 1170904292 ||                  // iron gjallorhorn
+          itemDef.hash === 1623420384) {                  // The young wolfs howl
+        itemYear = 3;
       }
       return itemYear;
     }
