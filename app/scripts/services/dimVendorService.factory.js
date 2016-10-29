@@ -317,7 +317,7 @@
                     currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
                   };
                 }).filter((c) => c.value > 0),
-                item: itemsByHash[saleItem.item.itemHash],
+                item: getItem(itemsByHash[saleItem.item.itemHash], defs, createdVendor),
                 // TODO: caveat, this won't update very often!
                 unlocked: isSaleItemUnlocked(saleItem),
                 unlockedByCharacter: [store.id]
@@ -333,28 +333,6 @@
             categoryItems.forEach((saleItem) => {
               var item = saleItem.item;
               if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
-                var itemDef = defs.InventoryItem[item.hash];
-                var hash = null;
-
-                if (itemDef.stats[3897883278]) {
-                  hash = 3897883278;
-                } else if (itemDef.stats[368428387]) {
-                  hash = 368428387;
-                }
-
-                if (hash) {
-                  item.primStat = itemDef.stats[hash];
-                  if (item.isExotic && item.primStat.value > 350 && createdVendor.name.startsWith('Exotic')) { // fixes exotics in kiosk
-                    item.primStat.value = 280;
-                  } else if (item.isExotic && item.primStat.value > 350) { // fixes exotics on xur
-                    item.primStat.value = 350;
-                  }
-                  item.primStat.stat = defs.Stat[hash];
-                }
-
-                // TODO: Access this directly from dimStoreService.
-                item.quality = getQualityRating(item.stats, item.primStat, item.bucket.type);
-
                 hasArmorWeaps = true;
               }
               if (item.type === 'Ship' || item.type === 'Vehicle') {
@@ -409,6 +387,30 @@
       return _.every(saleItem.unlockStatuses, 'isSet');
     }
 
+    function getItem(itemByHash, defs, createdVendor) {
+      var item = itemByHash;
+      var itemDef = defs.InventoryItem[item.hash];
+      var hash = null;
+
+      if (itemDef.stats && itemDef.stats[3897883278]) {
+        hash = 3897883278;
+      } else if (itemDef.stats && itemDef.stats[368428387]) {
+        hash = 368428387;
+      }
+
+      if (hash) {
+        item.primStat = itemDef.stats[hash];
+        if (item.isExotic && item.primStat.value > 350 && createdVendor.name.startsWith('Exotic')) { // fixes exotics in kiosk
+          item.primStat.value = 280;
+        } else if (item.isExotic && item.primStat.value > 350) { // fixes exotics on xur
+          item.primStat.value = 350;
+        }
+        item.primStat.stat = defs.Stat[hash];
+        item.quality = getQualityRating(item.stats, item.primStat, item.bucket.type);
+      }
+      return item;
+    }
+
     // TODO: Remove these functions and access them directly from dimStoreService.
 
     function fitValue(light) {
@@ -434,6 +436,10 @@
       };
     }
 
+    // thanks to bungie armory for the max-base stats
+    // thanks to /u/iihavetoes for rates + equation
+    // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+    // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
       // For a quality property, return a range string (min-max percentage)
       function getQualityRange(light, quality) {
