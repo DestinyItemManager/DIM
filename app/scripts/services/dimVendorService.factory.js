@@ -412,7 +412,7 @@
             }
             if (item.year === 3 || item.primStat.value === 3) {
               item.primStat.value = 320;
-            } else if (item.year === 2) {
+            } else if (item.year === 1) {
               if (item.primStat.minimum <= 145) {
                 item.primStat.value = 160;
               }
@@ -450,11 +450,17 @@
     function getItemYear(itemDef) {
       itemDef.sourceHashes = itemDef.sourceHashes || [];
       var itemYear = 1;
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0 || itemDef.sourceHashes.indexOf(541934873) >= 0) {
+      if (itemDef.sourceHashes.indexOf(460228854) >= 0 ||  // ttk
+          itemDef.sourceHashes.indexOf(3523074641) >= 0 || // variks
+          itemDef.sourceHashes.indexOf(3551688287) >= 0) { // kings fall
         itemYear = 2;
       }
       if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        itemYear = 3;
+        if (itemDef.hash === 3688594188) { // boolean gemini
+          itemYear = 2;
+        } else {
+          itemYear = 3;
+        }
       }
       return itemYear;
     }
