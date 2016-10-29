@@ -411,16 +411,16 @@
     function getItemYear(itemDef) {
       itemDef.sourceHashes = itemDef.sourceHashes || [];
       var itemYear = 1;
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0 ||  // ttk
-          itemDef.sourceHashes.indexOf(3523074641) >= 0 || // variks
-          itemDef.sourceHashes.indexOf(3551688287) >= 0 || // kings fall
-          itemDef.hash === 3688594188) {                   // boolean gemini
+      if (itemDef.sourceHashes.includes(460228854) ||  // ttk
+          itemDef.sourceHashes.includes(3523074641) || // variks
+          itemDef.sourceHashes.includes(3551688287) || // kings fall
+          itemDef.hash === 3688594188) {      // boolean gemini
         itemYear = 2;
       }
-      if ((itemDef.sourceHashes.indexOf(24296771) >= 0 ||  // roi
-          !itemDef.sourceHashes.length) &&                 // new items
-          !(itemDef.primStat.minimum === 170) &&           // ttk CE exotic class items
-          !(itemDef.hash === 3688594188)) {                // boolean gemini
+      if ((itemDef.sourceHashes.includes(24296771) ||        // roi
+          !itemDef.sourceHashes.length) &&          // new items
+          !(itemDef.primStat.minimum === 170) &&    // ttk CE exotic class items
+          !(itemDef.hash === 3688594188)) {         // boolean gemini
         itemYear = 3;
       }
       return itemYear;
@@ -428,34 +428,39 @@
 
     function setItemPrimStat(item, createdVendor) {
       if (item.isExotic) {
-        if (createdVendor.hash === 2796397637) { // fixes xur exotics
+        switch (createdVendor.hash) {
+        case 2796397637: // fixes xur exotics
           item.primStat.value = 350;
-        } else if (createdVendor.hash === 1460182514 || // fix exotics in
-                   createdVendor.hash === 3902439767) { // kiosks
+          break;
+        case 1460182514:  // fix exotics in
+        case 3902439767:  // kiosks
           if (item.year === 2) {  // year 2
             item.primStat.value = 280;
           }
           if (item.year === 3 || item.primStat.value === 3) {
             item.primStat.value = 320;
-          } else if (item.year === 1) {
+          }
+          if (item.year === 1) {
             if (item.primStat.minimum <= 145) {
               item.primStat.value = 160;
             }
             if (item.primStat.minimum === 155) {
               item.primStat.value = 170;
             }
-          }
-          if (item.hash === 346443849) { // vex mythoclast
-            item.primStat.value = 162;
-          }
-          if (item.hash === 2344494718) { // 4th horseman
-            item.primStat.value = 155;
-          }
-          if (item.hash === 2809229973) { // necrochasm
-            item.primStat.value = 172;
-          }
-          if (item.hash === 3705198528) { // dragon's breath
-            item.primStat.value = 167;
+            switch (item.hash) {
+            case 346443849: // vex mythoclast
+              item.primStat.value = 162;
+              break;
+            case 2344494718:  // 4th horseman
+              item.primStat.value = 155;
+              break;
+            case 2809229973:   // necrochasm
+              item.primStat.value = 172;
+              break;
+            case 3705198528:  // dragon's breath
+              item.primStat.value = 167;
+              break;
+            }
           }
         }
       }
