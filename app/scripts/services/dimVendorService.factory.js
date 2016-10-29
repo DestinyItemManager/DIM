@@ -330,7 +330,7 @@
             let hasConsumables = false;
             let hasBounties = false;
             categoryItems.forEach((saleItem) => {
-              var item = saleItem.item;
+              const item = saleItem.item;
               if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
                 hasArmorWeaps = true;
               }
