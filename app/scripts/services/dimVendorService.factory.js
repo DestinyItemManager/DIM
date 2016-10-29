@@ -333,22 +333,27 @@
             categoryItems.forEach((saleItem) => {
               var item = saleItem.item;
               if (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost') {
-                var temp = defs.InventoryItem[item.hash];
+                var itemDef = defs.InventoryItem[item.hash];
                 var hash = null;
 
-                if (temp.stats[3897883278]) {
+                if (itemDef.stats[3897883278]) {
                   hash = 3897883278;
-                } else if (temp.stats[368428387]) {
+                } else if (itemDef.stats[368428387]) {
                   hash = 368428387;
                 }
 
                 if (hash) {
-                  item.primStat = temp.stats[hash];
-                  if (item.primStat.value > 350) {
+                  item.primStat = itemDef.stats[hash];
+                  if (item.isExotic && item.primStat.value > 350 && createdVendor.name.startsWith('Exotic')) { // fixes exotics in kiosk
                     item.primStat.value = 280;
+                  } else if (item.isExotic && item.primStat.value > 350) { // fixes exotics on xur
+                    item.primStat.value = 350;
                   }
                   item.primStat.stat = defs.Stat[hash];
                 }
+
+                // TODO: Access this directly from dimStoreService.
+                item.quality = getQualityRating(item.stats, item.primStat, item.bucket.type);
 
                 hasArmorWeaps = true;
               }
@@ -402,6 +407,143 @@
 
     function isSaleItemUnlocked(saleItem) {
       return _.every(saleItem.unlockStatuses, 'isSet');
+    }
+
+    // TODO: Remove these functions and access them directly from dimStoreService.
+
+    function fitValue(light) {
+      if (light > 300) {
+        return (0.2546 * light) - 23.825;
+      } if (light > 200) {
+        return (0.1801 * light) - 1.4612;
+      } else {
+        return -1;
+      }
+    }
+
+    function getScaledStat(base, light) {
+      var max = 335;
+
+      if (light > 335) {
+        light = 335;
+      }
+
+      return {
+        min: Math.floor((base) * (fitValue(max) / fitValue(light))),
+        max: Math.floor((base + 1) * (fitValue(max) / fitValue(light)))
+      };
+    }
+
+    function getQualityRating(stats, light, type) {
+      // For a quality property, return a range string (min-max percentage)
+      function getQualityRange(light, quality) {
+        if (!quality) {
+          return '';
+        }
+
+        if (light > 335) {
+          light = 335;
+        }
+
+        return ((quality.min === quality.max || light === 335)
+                ? quality.min
+                : (quality.min + "%-" + quality.max)) + '%';
+      }
+
+      if (!stats || !stats.length || !light || light.value < 280) {
+        return null;
+      }
+
+      var split = 0;
+      switch (type.toLowerCase()) {
+      case 'helmet':
+        split = 46; // bungie reports 48, but i've only seen 46
+        break;
+      case 'gauntlets':
+        split = 41; // bungie reports 43, but i've only seen 41
+        break;
+      case 'chest':
+        split = 61;
+        break;
+      case 'leg':
+        split = 56;
+        break;
+      case 'classitem':
+      case 'ghost':
+        split = 25;
+        break;
+      case 'artifact':
+        split = 38;
+        break;
+      default:
+        return null;
+      }
+
+      var ret = {
+        total: {
+          min: 0,
+          max: 0
+        },
+        max: split * 2
+      };
+
+      var pure = 0;
+      stats.forEach(function(stat) {
+        var scaled = {
+          min: 0,
+          max: 0
+        };
+        if (stat.base) {
+          scaled = getScaledStat(stat.base, light.value);
+          pure = scaled.min;
+        }
+        stat.scaled = scaled;
+        stat.split = split;
+        stat.qualityPercentage = {
+          min: Math.round(100 * stat.scaled.min / stat.split),
+          max: Math.round(100 * stat.scaled.max / stat.split)
+        };
+        ret.total.min += scaled.min || 0;
+        ret.total.max += scaled.max || 0;
+      });
+
+      if (pure === ret.total.min) {
+        stats.forEach(function(stat) {
+          stat.scaled = {
+            min: Math.floor(stat.scaled.min / 2),
+            max: Math.floor(stat.scaled.max / 2)
+          };
+          stat.qualityPercentage = {
+            min: Math.round(100 * stat.scaled.min / stat.split),
+            max: Math.round(100 * stat.scaled.max / stat.split)
+          };
+        });
+      }
+
+      var quality = {
+        min: Math.round(ret.total.min / ret.max * 100),
+        max: Math.round(ret.total.max / ret.max * 100)
+      };
+
+      if (type.toLowerCase() !== 'artifact') {
+        stats.forEach(function(stat) {
+          stat.qualityPercentage = {
+            min: Math.min(100, stat.qualityPercentage.min),
+            max: Math.min(100, stat.qualityPercentage.max)
+          };
+        });
+        quality = {
+          min: Math.min(100, quality.min),
+          max: Math.min(100, quality.max)
+        };
+      }
+
+      stats.forEach(function(stat) {
+        stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
+      });
+      quality.range = getQualityRange(light.value, quality);
+
+      return quality;
     }
   }
 })();
