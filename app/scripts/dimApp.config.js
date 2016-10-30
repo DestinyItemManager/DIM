@@ -16,16 +16,14 @@
     .value('dimFeatureFlags', {
       // Tags are off in release right now
       tagsEnabled: '$DIM_FLAVOR' !== 'release',
-      // vendors are off until we can make them lighter on the API
-      vendorsEnabled: false,
-      // Stats are off in release until we get better formulas
+      vendorsEnabled: true,
       qualityEnabled: true,
       // Additional debugging / item info tools
       debugMode: false,
       // show changelog toaster
       changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
 
-      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release',
+      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release'
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();

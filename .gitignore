@@ -24,3 +24,5 @@ build/dim-extension.zip
 .brackets.json
 .npmrc
 npm-debug.log
+
+app/scripts/apiKey.js

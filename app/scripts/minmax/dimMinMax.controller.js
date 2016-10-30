@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService'];
+  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService', 'dimVendorService'];
 
-  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService) {
+  function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimVendorService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
 
@@ -215,6 +215,14 @@
       return (merge) ? mergeBuckets(bucket1, bucket2) : bucket1;
     }
 
+    function filterLoadoutToEquipped(loadout) {
+      var filteredLoadout = angular.copy(loadout);
+      filteredLoadout.items = _.mapObject(filteredLoadout.items, function(items) {
+        return _.select(items, 'equipped');
+      });
+      return filteredLoadout;
+    }
+
     angular.extend(vm, {
       active: 'warlock',
       activesets: '5/5/2',
@@ -232,6 +240,8 @@
       ranked: {},
       activePerks: {},
       excludeditems: [],
+      activeCharacters: [],
+      selectedCharacter: 0,
       collapsedConfigs: [false, false, false, false, false, false, false, false, false, false],
       lockeditems: { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null },
       lockedperks: { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} },
@@ -255,12 +265,21 @@
       excludedItemsValid: function(droppedId, droppedType) {
         return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
       },
+      onSelectedChange: function(prevIdx, selectedIdx) {
+        if (vm.activeCharacters[prevIdx].class !== vm.activeCharacters[selectedIdx].class) {
+          vm.active = vm.activeCharacters[selectedIdx].class;
+          vm.onCharacterChange();
+          vm.selectedCharacter = selectedIdx;
+        }
+      },
       onCharacterChange: function() {
         vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
+        vm.selectedCharacter = 0;
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
-        vm.excludeditems = [];
+        vm.excludeditems = _.filter(vm.excludeditems, function(item) { return item.hash === 2672107540; });
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onActiveSetsChange: function() {
@@ -357,6 +376,39 @@
           vm.excludedchanged = true;
         }
       },
+      onSelectedCharacterChange: function(idx) {
+        vm.selectedCharacter = idx;
+      },
+      lockEquipped: function() {
+        var store = vm.activeCharacters[vm.selectedCharacter];
+        var loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(""));
+        var items = _.pick(loadout.items,
+                               'helmet',
+                               'gauntlets',
+                               'chest',
+                               'leg',
+                               'classitem',
+                               'artifact',
+                               'ghost');
+        vm.lockeditems.Helmet = items.helmet[0];
+        vm.lockeditems.Gauntlets = items.gauntlets[0];
+        vm.lockeditems.Chest = items.chest[0];
+        vm.lockeditems.Leg = items.leg[0];
+        vm.lockeditems.ClassItem = items.classitem[0];
+        vm.lockeditems.Artifact = items.artifact[0];
+        vm.lockeditems.Ghost = items.ghost[0];
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.lockedchanged = true;
+        }
+      },
+      clearLocked: function() {
+        vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
+        vm.highestsets = vm.getSetBucketsStep(vm.active);
+        if (vm.progress < 1.0) {
+          vm.lockedchanged = true;
+        }
+      },
       newLoadout: function(set) {
         ngDialog.closeAll();
         var loadout = { items: {} };
@@ -373,7 +425,7 @@
       },
       equipItems: function(set) {
         ngDialog.closeAll();
-        var loadout = { items: {}, name: $translate.instant('LoadoutAppliedAuto') };
+        var loadout = { items: {}, name: $translate.instant('Loadouts.AppliedAuto') };
         var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
         loadout.items.helmet = [items.Helmet.item];
         loadout.items.chest = [items.Chest.item];
@@ -543,12 +595,22 @@
           });
         }
 
-        vm.active = dimStoreService.getActiveStore().class.toLowerCase() || 'warlock';
+        vm.selectedCharacter = dimStoreService.getActiveStore();
+        vm.active = vm.selectedCharacter.class.toLowerCase() || 'warlock';
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
 
         var allItems = [];
         var vendorItems = [];
+        var hasFelwinter = false;
         _.each(stores, function(store) {
           var items = filterItems(store.items);
+
+          // Exclude felwinter if we have one
+          var felwinter = _.findWhere(items, { hash: 2672107540 });
+          if (!hasFelwinter && felwinter) {
+            hasFelwinter = true;
+            vm.excludeditems.push(felwinter);
+          }
 
           allItems = allItems.concat(items);
 
@@ -562,30 +624,29 @@
               perks[item.classTypeName][item.type] = filterPerks(perks[item.classTypeName][item.type], item);
             }
           });
+        });
 
-          // Process vendors here
-          _.each(store.vendors, function(vendor) {
-            var vendItems = filterItems(vendor.items.armor);
+        // Process vendors here
+        _.each(dimVendorService.vendors, function(vendor) {
+          var vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
+          vendorItems = vendorItems.concat(vendItems);
 
-            vendorItems = vendorItems.concat(vendItems);
-
-            // Build a map of perks
-            _.each(vendItems, function(item) {
-              if (item.classType === 3) {
-                _.each(['warlock', 'titan', 'hunter'], function(classType) {
-                  vendorPerks[classType][item.type] = filterPerks(vendorPerks[classType][item.type], item);
-                });
-              } else {
-                vendorPerks[item.classTypeName][item.type] = filterPerks(vendorPerks[item.classTypeName][item.type], item);
-              }
-            });
+          // Build a map of perks
+          _.each(vendItems, function(item) {
+            if (item.classType === 3) {
+              _.each(['warlock', 'titan', 'hunter'], function(classType) {
+                vendorPerks[classType][item.type] = filterPerks(vendorPerks[classType][item.type], item);
+              });
+            } else {
+              vendorPerks[item.classTypeName][item.type] = filterPerks(vendorPerks[item.classTypeName][item.type], item);
+            }
           });
+        });
 
-          // Remove overlapping perks in allPerks from vendorPerks
-          _.each(vendorPerks, function(perksWithType, classType) {
-            _.each(perksWithType, function(perkArr, type) {
-              vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
-            });
+        // Remove overlapping perks in allPerks from vendorPerks
+        _.each(vendorPerks, function(perksWithType, classType) {
+          _.each(perksWithType, function(perkArr, type) {
+            vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
           });
         });
 
