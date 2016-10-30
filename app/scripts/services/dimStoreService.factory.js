@@ -702,7 +702,6 @@
         classTypeName: getClass(itemDef.classType),
         dmg: dmgName,
         visible: true,
-        year: item.year,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
