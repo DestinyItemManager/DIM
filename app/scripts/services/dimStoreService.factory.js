@@ -653,8 +653,21 @@
       // We cheat a bit for items in the vault, since we treat the
       // vault as a character. So put them in the bucket they would
       // have been in if they'd been on a character.
+      // TODO: Remove this if Bungie ever returns bucket.id for classified
+      // items in the vault.
       if (currentBucket.id.startsWith('BUCKET_VAULT')) {
-        currentBucket = normalBucket;
+        if (itemDef.classified) {
+          if (currentBucket.id === ('BUCKET_VAULT_WEAPONS')) {
+            currentBucket = buckets.byHash[953998645]; // Set as Heavy Weapon
+            itemDef.itemCategoryHashes = [0, 4, 12];
+          } else if (currentBucket.id === ('BUCKET_VAULT_ARMOR')) {
+            currentBucket = buckets.byHash[1585787867]; // Set as ClassItem
+          } else if (currentBucket.id === ('BUCKET_VAULT_ITEMS')) {
+            currentBucket = buckets.byHash[434908299]; // Set as Artifact
+          }
+        } else {
+          currentBucket = normalBucket;
+        }
       }
 
       var itemType = normalBucket.type || 'Unknown';
