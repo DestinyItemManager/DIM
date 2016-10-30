@@ -9,6 +9,7 @@
 * Fix a bug in the new filters for source.
 * Fix incognito mode launching
 * More i18n.
+* Added more detection for item years
 
 # 3.11.1
 
