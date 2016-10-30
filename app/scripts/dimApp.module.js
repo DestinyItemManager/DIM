@@ -3,7 +3,6 @@
 
   angular.module('dimApp', [
     'ui.router',
-    'ngAnimate',
     'timer',
     'ngAria',
     'ngDialog',
