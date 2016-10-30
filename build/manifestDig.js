@@ -22,7 +22,7 @@ function dig(object, target, table, result) {
   if (typeof object === 'object') {
     for (var key in object) {
       if (key === target) {
-        console.log(result);
+        console.log('{ "table": "' + table + '", "result": ' + result + ' }');
       } else {
         dig(object[key], target, table, result);
       }
@@ -32,7 +32,7 @@ function dig(object, target, table, result) {
       dig(val, target, table, result);
     });
   } else if (object == target) {
-    console.log(result);
+    console.log('{ "table": "' + table + '", "result": ' + result + ' }');
   }
 }
 
@@ -43,7 +43,7 @@ db.serialize(function () {
       db.all("select * from " + table.name, function (err, result) {
         (result || []).forEach(function(entry) {
           if (entry.id === target) {
-            console.log(entry.json);
+            console.log('{ "table": "' + table.name + '", "result": ' + entry.json + ' }');
           } else {
             try {
               var doc = JSON.parse(entry.json);
