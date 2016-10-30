@@ -7,6 +7,10 @@ engines:
   fixme:
     enabled: true
 
+ratings:
+   paths:
+   - "**.js"
+
 exclude_paths:
   - "**/vendor"
   - "**/jquery-ui.position.js"
