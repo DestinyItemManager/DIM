@@ -3,16 +3,21 @@
 
   angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
-  MaterialsController.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$state'];
+  MaterialsController.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$state', 'dimFeatureFlags'];
 
-  function MaterialsController($scope, dimItemService, dimStoreService, $state) {
+  function MaterialsController($scope, dimItemService, dimStoreService, $state, dimFeatureFlags) {
+    if (!dimFeatureFlags.materialsExchangeEnabled) {
+      $state.go('inventory');
+      return;
+    }
+
     var vm = this;
     vm.repPool = {};
     vm.newRank = 0;
     vm.newExperiance = 0;
 
     vm.factions = [
-     // 174528503, eris breaks things atm
+      // 174528503, eris breaks things atm
       3871980777,
       1424722124,
       2778795080
@@ -53,8 +58,8 @@
       vm.setActiveFaction(vm.activeFaction.hash);
     };
 
-    vm.toggleItem = function(item){
-      if (vm.repPool[item.hash]){
+    vm.toggleItem = function(item) {
+      if (vm.repPool[item.hash]) {
         delete vm.repPool[item.hash];
       } else {
         vm.repPool[item.hash] = vm.calculateRep(item);
@@ -63,9 +68,9 @@
     };
 
     function updateRanks() {
-    // rank 1 = 1500
-    // rank 2 = 2000
-    // rank 3+ = 2500
+      // rank 1 = 1500
+      // rank 2 = 2000
+      // rank 3+ = 2500
       var total = 0;
 
       for (var key in vm.repPool) {
