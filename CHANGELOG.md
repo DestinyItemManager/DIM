@@ -1,10 +1,14 @@
 # Next
 
 * The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown.
-* Don't sort bounties (the API does not currently provide the in-game order.)
-* Fix max-light rounding
+* Loadout builder has option to load from equipped items.
+* Added option to farm green engrams or not.
 * When moving consumable stacks, you can now choose to fill up one stack's worth.
+* Don't sort bounties (the API does not currently provide the in-game order.)
+* Fix max-light rounding.
 * Fix a bug in the new filters for source.
+* Fix incognito mode launching
+* More i18n.
 
 # 3.11.1
 
