@@ -25,7 +25,7 @@
       // show changelog toaster
       changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
 
-      materialsExchangeEnabled: 'beta' === 'beta',
+      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release',
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
