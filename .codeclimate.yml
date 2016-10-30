@@ -1,6 +1,9 @@
 engines:
   eslint:
     enabled: false
+    checks:
+      complexity:
+        enabled: false
     channel: "eslint-2"
   duplication:
     enabled: true
