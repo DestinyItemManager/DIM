@@ -3,7 +3,7 @@ engines:
     enabled: false
     checks:
       complexity:
-        enabled: false
+        enabled: true
     channel: "eslint-2"
   duplication:
     enabled: true
