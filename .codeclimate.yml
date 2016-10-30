@@ -1,17 +1,22 @@
 engines:
-  eslint:
-    enabled: true
-    channel: "eslint-2"
   duplication:
+    config:
+      languages:
+        - javascript
+        - php
+    enabled: true
+  eslint:
+    channel: eslint-2
+    checks:
+      complexity:
+        enabled: true
     enabled: true
   fixme:
     enabled: true
-
-ratings:
-   paths:
-   - "**.js"
-
 exclude_paths:
   - "**/vendor"
   - "**/jquery-ui.position.js"
   - "**/build"
+ratings:
+  paths:
+    - "**.js"
