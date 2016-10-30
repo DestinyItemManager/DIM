@@ -25,7 +25,6 @@
     controller: VendorItemsCtrl,
     controllerAs: 'vm',
     bindings: {
-      stores: '<storesData',
       vendors: '=vendorsData',
       types: '<displayTypes',
       totalCoins: '<',
@@ -42,12 +41,10 @@
       '   </div>',
       '   <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
       '   <div class="vendor-row">',
-      '     <div class="char-cols">',
-      '       <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
-      '          <h3 class="category-title">{{category.title}}</h3>',
-      '          <div class="vendor-items">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
+      '     <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
+      '        <h3 class="category-title">{{category.title}}</h3>',
+      '        <div class="vendor-items">',
+      '          <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -60,11 +57,17 @@
     .component('dimVendorItems', VendorItems)
     .filter('vendorTab', function() {
       return function vendorTab(categories, prop) {
+        if (!prop) {
+          return categories;
+        }
         return _.filter(categories, prop);
       };
     })
     .filter('vendorTabItems', function() {
       return function vendorTab(items, prop) {
+        if (!prop) {
+          return items;
+        }
         return _.filter(items, {
           hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
           hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
