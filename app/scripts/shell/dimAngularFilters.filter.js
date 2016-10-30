@@ -193,7 +193,7 @@
       property = property || 'background-color';
       var color = 0;
       if (value < 0) {
-        return 'white';
+        return { [property]: 'white' };
       } else if (value <= 85) {
         color = 0;
       } else if (value <= 90) {
