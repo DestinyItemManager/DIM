@@ -9,6 +9,7 @@
 * Fix a bug in the new filters for source.
 * Fix incognito mode launching
 * More i18n.
+* Handle classified items in the vault.
 
 # 3.11.1
 
