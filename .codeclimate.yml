@@ -4,6 +4,10 @@ engines:
     checks:
       complexity:
         enabled: true
+      no-mixed-operators:
+        enabled: false
+      rest-spread-spacing:
+        enabled: false
     channel: "eslint-2"
   duplication:
     enabled: true
