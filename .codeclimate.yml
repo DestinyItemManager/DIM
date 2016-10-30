@@ -2,7 +2,16 @@ engines:
   eslint:
     enabled: true
     channel: "eslint-2"
+  duplication:
+    enabled: true
+  fixme:
+    enabled: true
 
 ratings:
    paths:
    - "**.js"
+
+exclude_paths:
+  - "**/vendor"
+  - "**/jquery-ui.position.js"
+  - "**/build"
