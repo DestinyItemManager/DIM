@@ -7,10 +7,10 @@ engines:
     channel: "eslint-2"
   duplication:
     enabled: true
-        config:
-          languages:
-          - javascript
-          - php
+    config:
+      languages:
+      - javascript
+      - php
   fixme:
     enabled: true
 
