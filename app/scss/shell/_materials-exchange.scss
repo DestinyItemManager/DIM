@@ -34,6 +34,16 @@
                     flex: 1 1 auto;
                     display: flex;
                     justify-content: space-around;
+
+                    .faction{
+                       &:hover{
+                         cursor: pointer;
+                         background-color: rgba(245, 245, 245, 0.1);
+                       }
+                       &.selected{
+                        background-color: rgba(245, 245, 245, 0.25);
+                      }
+                    }
                 }
                 .faction-info{
                     table tr td.col{

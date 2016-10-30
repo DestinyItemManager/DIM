@@ -24,7 +24,7 @@
 
 	<div class="faction-details">
 		<div class="faction-selector">
-			<div class="faction" ng-click="vm.setActiveFaction(key)" ng-repeat="(key,rep) in vm.activeCharacter.factions"
+			<div class="faction" ng-class="{selected : vm.activeFaction.hash == key}" ng-click="vm.setActiveFaction(key)" ng-repeat="(key,rep) in vm.activeCharacter.factions"
 				title="{{rep.faction.factionName}} {{rep.progressToNextLevel}}/{{rep.nextLevelAt}}">
 				<image ng-src="{{rep.faction.factionIcon | bungieIcon}}" />
 			</div>
@@ -45,7 +45,7 @@
 					<td class="col">{{vm.activeFaction.level}}</td>
 					<td class="col">{{vm.activeFaction.progressToNextLevel}}/{{vm.activeFaction.nextLevelAt}}</td>
 					<td class="col">{{vm.newRank}}</td>
-					<td class="col">{{vm.newExperiance}}/{{vm.activeFaction.nextLevelAt}}</td>					
+					<td class="col">{{vm.newExperiance}}/{{vm.activeFaction.nextLevelAt}}</td>
 				</tr>
 			</table>
 		</div>
