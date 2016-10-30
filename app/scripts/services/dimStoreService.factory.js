@@ -666,6 +666,8 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
+      itemDef.sourceHashes = itemDef.sourceHashes || [];
+
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
 
@@ -1452,7 +1454,7 @@
       // DestinyRewardSourceDefinition and filter on %SOURCE%
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
-      item.sourceHashes = item.sourceHashes || [];
+
       item.year = 1;
       if (item.sourceHashes.includes(460228854) ||  // ttk
           item.sourceHashes.includes(3523074641) || // variks
