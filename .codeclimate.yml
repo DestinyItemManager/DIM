@@ -2,7 +2,11 @@ engines:
   eslint:
     enabled: true
     channel: "eslint-2"
+  duplication: true
 
 ratings:
    paths:
-   - "**.js"
+   - "app/**/*"
+
+exclude_paths:
+- "**/vendor"
