@@ -11,7 +11,7 @@
 * Fix a bug in the new filters for source.
 * Fix incognito mode launching
 * More i18n.
-* Handle classified items in the vault.
+* Classified items in the vault are now counted and shown.
 * DIM is faster!
 * Memory of Felwinter is now excluded from loadout builder by default.
 
