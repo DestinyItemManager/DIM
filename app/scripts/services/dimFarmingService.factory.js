@@ -57,7 +57,7 @@
                         return _.any(dimCategory[item.bucket.sort], function(category) {
                           return store.spaceLeftForItem({ type: category, location: buckets.byType[category], bucket: buckets.byType[category] }) > 0;
                         });
-                      })) {
+                      }) || (!settings.makeRoomForItems)) {
                         return $q.reject(new Error(nospace));
                       }
                     }
@@ -185,7 +185,7 @@
           }).filter((item) => !_.isUndefined(item));
 
           self.farmItems().then(function() {
-            if (settings.makeRoomForItems !== false) {
+            if (settings.makeRoomForItems) {
               self.makeRoomForItems();
             }
           });
