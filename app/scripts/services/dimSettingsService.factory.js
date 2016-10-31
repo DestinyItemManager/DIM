@@ -43,8 +43,7 @@
       showElements: false,
       // Sort characters (mostRecent, mostRecentReverse, fixed)
       characterOrder: 'mostRecent',
-      // Sort items in buckets (primaryStat, rarityThenPrimary,
-      // rarity, quality)
+      // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
       itemSort: 'primaryStat',
       // How many columns to display character buckets
       charCol: 3,
@@ -54,6 +53,10 @@
       itemSize: 44,
       // Which categories or buckets should be collapsed?
       collapsedSections: {},
+      // What settings for farming mode
+      farming: {
+        farmGreens: true
+      },
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
         { type: undefined, label: 'Tag Item' },

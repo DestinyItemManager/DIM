@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "3.10.6",
+  "version": "3.11.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
@@ -33,7 +33,7 @@
     "grunt-eslint": "^19.0.0",
     "grunt-postcss": "^0.8.0",
     "grunt-sass": "^1.2.0",
-    "grunt-sync": "^0.5.2",
+    "grunt-sync": "^0.6.2",
     "grunt-text-replace": "^0.4.0",
     "grunt-webstore-upload": "^0.9.3",
     "jpm": "^1.1.1",

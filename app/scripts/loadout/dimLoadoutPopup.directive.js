@@ -31,7 +31,7 @@
         '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> {{ \'apply_search_loadout\' | translate:{ query: vm.search.query } }}</span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> {{ \'Maximize Light\' | translate }}</span>',
+        '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> {{ \'Maximize Light\' | translate }} <span class="light" ng-bind="::vm.maxLightValue"></span></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> {{ \'Item Leveling\' | translate }}</span>',
@@ -41,7 +41,7 @@
         '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: false })"><i class="fa fa-ban"></i> {{ \'gather_engrams_except_exotics\' | translate }}</span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
-        '      <span ng-click="vm.startFarmingEngrams($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> {{ \'farming_mode\' | translate }}</span>',
+        '      <span ng-click="vm.startFarming($event)"><img class="fa" src="/images/engram.svg" height="12" width="12"/> {{ \'farming_mode\' | translate }}</span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="vm.previousLoadout">',
         '      <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)"><i class="fa fa-undo"></i> {{vm.previousLoadout.name}}</span>',
@@ -53,9 +53,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimEngramFarmingService', '$window', 'dimSearchService', 'dimPlatformService'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimFarmingService', '$window', 'dimSearchService', 'dimPlatformService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimEngramFarmingService, $window, dimSearchService, dimPlatformService) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService) {
     var vm = this;
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -139,7 +139,7 @@
 
     vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
       ngDialog.closeAll();
-      dimEngramFarmingService.stop();
+      dimFarmingService.stop();
 
       if (filterToEquipped) {
         loadout = filterLoadoutToEquipped(loadout);
@@ -251,8 +251,12 @@
       };
 
       var loadout = optimalLoadout(applicableItems, bestItemFn, 'Maximize Light');
-      vm.applyLoadout(loadout, $event);
+      if ($event) {
+        vm.applyLoadout(loadout, $event);
+      }
+      return loadout;
     };
+    vm.maxLightValue = dimLoadoutService.getLight(vm.store, vm.maxLightLoadout());
 
     // A dynamic loadout set up to level weapons and armor
     vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
@@ -322,9 +326,9 @@
       vm.applyLoadout(loadout, $event);
     };
 
-    vm.startFarmingEngrams = function startFarmingEngrams() {
+    vm.startFarming = function startFarming() {
       ngDialog.closeAll();
-      dimEngramFarmingService.start(vm.store);
+      dimFarmingService.start(vm.store);
     };
 
     // Generate an optimized loadout based on a filtered set of items and a value function

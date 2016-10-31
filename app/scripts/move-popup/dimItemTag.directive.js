@@ -8,7 +8,7 @@
       item: '='
     },
     template: `
-      <select ng-options="tag as tag.label | translate for tag in $ctrl.settings.itemTags track by tag.type" ng-model="$ctrl.selected" ng-change="$ctrl.updateTag()"></select>
+      <select ng-if="$ctrl.item.dimInfo" ng-options="tag as tag.label | translate for tag in $ctrl.settings.itemTags track by tag.type" ng-model="$ctrl.selected" ng-change="$ctrl.updateTag()"></select>
     `
   });
 
@@ -19,9 +19,11 @@
 
     vm.settings = dimSettingsService;
     $scope.$watch('$ctrl.item.dimInfo.tag', function() {
-      vm.selected = _.find(vm.settings.itemTags, function(tag) {
-        return tag.type === vm.item.dimInfo.tag;
-      });
+      if (vm.item.dimInfo) {
+        vm.selected = _.find(vm.settings.itemTags, function(tag) {
+          return tag.type === vm.item.dimInfo.tag;
+        });
+      }
     });
 
     vm.updateTag = function() {

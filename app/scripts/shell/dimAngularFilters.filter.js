@@ -66,7 +66,8 @@
     return function(items, sort) {
       // Don't resort postmaster items - that way people can see
       // what'll get bumped when it's full.
-      if (items.length && items[0].location.inPostmaster) {
+      var dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER"];
+      if (items.length && dontsort.includes(items[0].location.id)) {
         return items;
       }
 
@@ -143,7 +144,7 @@
         ];
       }
 
-      if (specificSortOrder.length > 0) {
+      if (specificSortOrder.length > 0 && sort !== 'rarityThenPrimary') {
         items = _.sortBy(items, function(item) {
           var ix = specificSortOrder.indexOf(item.hash);
           return (ix === -1) ? 999 : ix;
@@ -162,7 +163,7 @@
           return item.quality && item.quality.min ? -item.quality.min : 1000;
         });
       }
-      if (sort === 'rarity' || sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
+      if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
         items = _.sortBy(items, function(item) {
           switch (item.tier) {
           case 'Exotic':

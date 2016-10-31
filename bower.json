@@ -1,7 +1,7 @@
 {
   "name": "dim",
   "description": "An item manager for Destiny.",
-  "version": "3.10.6",
+  "version": "3.11.1",
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "repository": {
     "type": "git",
@@ -32,11 +32,11 @@
     "ng-http-rate-limiter": "~1.0.0",
     "zip.js": "*",
     "sql.js": "*",
-    "angular-translate": "^2.11.1"
+    "angular-translate": "^2.11.1",
+    "idb-keyval": "*"
   },
   "resolutions": {
     "angular": "~1.5.8",
     "humanize-duration": "~3.9.1"
   }
 }
-

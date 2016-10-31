@@ -1,10 +1,28 @@
 # Next
 
+* The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown.
+* Don't sort bounties (the API does not currently provide the in-game order.)
+* Fix max-light rounding
+* When moving consumable stacks, you can now choose to fill up one stack's worth.
+* Fix a bug in the new filters for source.
+
+# 3.11.1
+
+* Fixed an issue with farming mode where users without motes, 3oC, coins, or heavy could not use farming mode.
+* Fixed an issue where classified items would not show up in the UI.
+
+# 3.11.0
+
 ##### New
+* Added Quick Move items to farming mode.
+* Farming mode now also moves glimmer items to vault.
 * Added `is:inloadout` filter
 * New filters: is:light, is:hasLight, is:weapon, is:armor, is:cosmetic, is:equipment, is:equippable, is:postmaster, is:inpostmaster, is:equipped, is:transferable, is:movable.
 * New filters for items based on where they come from: is:year3, is:fwc, is:do, is:nm, is:speaker, is:variks, is:shipwright, is:vanguard, is:osiris, is:xur, is:shaxx, is:cq, is:eris, is:vanilla, is:trials, is:ib, is:qw, is:cd, is:srl, is:vog, is:ce, is:ttk, is:kf, is:roi, is:wotm, is:poe, is:coe, is:af.
 * Added debug mode (ctrl+alt+shift+d) to view an item in the move-popup dialog.
+* Added max light value to max light button in dropdown.
+* Major loadout builder performance enhancements.
+* Support rare (blue) items in loadout builder.
 
 ##### Tweaks
 * Consumables and materials are now sorted by category.
@@ -25,6 +43,8 @@
 * DIM no longer tries to equip exotic faction class items where your character isn't aligned with the right faction.
 * Fixed more cases where your loadouts wouldn't be applied because you already had an exotic equipped.
 * Elemental Icons moved to bottom left to not cover the expansion symbol.
+* Loadout builder no longer shows duplicate sets.
+* Fix equip loadout builder equip to current character.
 
 # 3.10.6
 
