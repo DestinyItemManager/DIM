@@ -9,10 +9,6 @@
       $translateProvider
         .translations('en', {
           Level: "Level",
-          Armor: "Armor",
-          General: "General",
-          Weapons: "Weapons",
-          Vault: "Vault",
           Bucket: {
             Armor: "Armor",
             General: "General",
@@ -183,10 +179,6 @@
         })
         .translations('it', {
           Level: "Livello",
-          Armor: "Armatura",
-          General: "Generale",
-          Weapons: "Armi",
-          Vault: "Depositi",
           Bucket: {
             Armor: "Armatura",
             General: "Generale",
@@ -234,10 +226,6 @@
         })
         .translations('de', {
           Level: "Level",
-          Weapons: "Waffen",
-          Armor: "Rüstung",
-          General: "Allgemein",
-          Vault: "Tresor",
           Bucket: {
             Armor: "Rüstung",
             General: "Allgemein",
@@ -408,10 +396,6 @@
         })
         .translations('fr', {
           Level: "Niveau",
-          Weapons: "Armes",
-          Armor: "Armure",
-          General: "Général",
-          Vault: "Coffres",
           Bucket: {
             Weapons: "Armes",
             Armor: "Armure",
@@ -462,9 +446,6 @@
         })
         .translations('es', {
           Level: "Nivel",
-          Weapons: "Armas",
-          Armor: "Armadura",
-          Vault: "Depósito",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armadura",
@@ -511,10 +492,6 @@
         })
         .translations('ja', {
           Level: "レベル",
-          Weapons: "武器",
-          Armor: "よろい",
-          General: "全般",
-          Vault: "装備",
           Bucket: {
             Weapons: "武器",
             Armor: "よろい",
@@ -558,10 +535,6 @@
         })
         .translations('pt-br', {
           Level: "Nível",
-          Weapons: "Armas",
-          Armor: "Armaduras",
-          General: "Geral",
-          Vault: "Cofre",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armaduras",
