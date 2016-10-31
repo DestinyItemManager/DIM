@@ -177,9 +177,9 @@
             ShadersAndEmblems: "Shaders & Emblems",
             Emotes: "Emotes" },
           TrialsCard: {
-            'FiveWins': "5 Win Reward (Armor)",
-            'SevenWins': "7 Win Reward (Weapon)",
-            'Flawless': "Flawless"
+            FiveWins: "5 Win Reward (Armor)",
+            SevenWins: "7 Win Reward (Weapon)",
+            Flawless: "Flawless"
           }
         })
         .translations('it', {
