@@ -654,7 +654,19 @@
       // vault as a character. So put them in the bucket they would
       // have been in if they'd been on a character.
       if (currentBucket.id.startsWith('BUCKET_VAULT')) {
-        currentBucket = normalBucket;
+        // TODO: Remove this if Bungie ever returns bucket.id for classified
+        // items in the vault.
+        if (itemDef.classified) {
+          if (currentBucket.id.endsWith('WEAPONS')) {
+            currentBucket = buckets.byType.Heavy;
+          } else if (currentBucket.id.endsWith('ARMOR')) {
+            currentBucket = buckets.byType.ClassItem;
+          } else if (currentBucket.id.endsWith('ITEMS')) {
+            currentBucket = buckets.byType.Artifact;
+          }
+        } else {
+          currentBucket = normalBucket;
+        }
       }
 
       var itemType = normalBucket.type || 'Unknown';
@@ -1085,7 +1097,7 @@
                 : (quality.min + "%-" + quality.max)) + '%';
       }
 
-      if (!stats || !stats.length || light.value < 280) {
+      if (!stats || !stats.length || !light || light.value < 280) {
         return null;
       }
 
@@ -1245,7 +1257,7 @@
 
       var armorNodes = [];
       var activeArmorNode;
-      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+      if (grid && grid.nodes && item.primaryStat && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
           return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
         });
@@ -1292,7 +1304,7 @@
         var base = val;
         var bonus = 0;
 
-        if (item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
+        if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
           if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
              (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
              (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {

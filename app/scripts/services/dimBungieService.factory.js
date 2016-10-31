@@ -1,3 +1,4 @@
+/* global apikey: false */
 (function() {
   'use strict';
 
@@ -7,7 +8,7 @@
   BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
   function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
-    var apiKey = '8f0be500571741738b5d0832246a523c';
+    var apiKey = apikey;
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;

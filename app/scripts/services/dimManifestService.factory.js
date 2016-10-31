@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimManifestService', ManifestService);
 
-  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService'];
+  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService', '$translate'];
 
-  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService) {
+  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate) {
     // Testing flags
     const alwaysLoadRemote = false;
 
@@ -60,7 +60,7 @@
                 return loadManifestRemote(version, language, path);
               })
               .then(function(typedArray) {
-                service.statusText = 'Building Destiny info database...';
+                service.statusText = $translate.instant('Manifest.Build') + '...';
                 const db = new SQL.Database(typedArray);
                 // do a small request, just to test it out
                 service.getAllRecords(db, 'DestinyRaceDefinition');
@@ -68,7 +68,7 @@
               });
           })
           .catch((e) => {
-            service.statusText = "Error loading Destiny info: " + e.message + ". Reload to retry.";
+            service.statusText = $translate.instant('Manifest.Error1') + (e.message || e) + ". " + $translate.instant('Manifest.Error2');
             manifestPromise = null;
             service.isError = true;
             return deleteManifestFile().finally(() => $q.reject(e));
@@ -107,14 +107,14 @@
      * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
      */
     function loadManifestRemote(version, language, path) {
-      service.statusText = 'Downloading latest Destiny info from Bungie...';
+      service.statusText = $translate.instant('Manifest.Download') + '...';
       return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
         .then(function(response) {
-          service.statusText = 'Unzipping latest Destiny info...';
+          service.statusText = $translate.instant('Manifest.Unzip') + '...';
           return unzipManifest(response.data);
         })
         .then(function(arraybuffer) {
-          service.statusText = 'Saving latest Destiny info...';
+          service.statusText = $translate.instant('Manifest.Save') + '...';
 
           getLocalManifestFile()
             .then((fileEntry) => {
@@ -171,7 +171,7 @@
         return $q.reject(new Error("Testing - always load remote"));
       }
 
-      service.statusText = "Loading saved Destiny info...";
+      service.statusText = $translate.instant('Manifest.Load') + '...';
       var currentManifestVersion = localStorage.getItem('manifest-version');
       if (currentManifestVersion === version) {
         // One version of this used chrome.storage.local with a

@@ -49,8 +49,8 @@
         '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
         '    <div dim-percent-width="vm.item.percentComplete"></div>',
         '  </div>',
-        '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" placeholder="{{ \'notes_placeholder\' | translate }}" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
-        '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength">Error! Max 120 characters for notes.</span>',
+        '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
+        '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
         '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
         '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
@@ -87,8 +87,8 @@
         '    </div>',
         '  </div>',
         '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
-        '    <a ui-sref="debugItem({itemId: vm.item.id})">View Item Debug Info</a>',
-        '    <button ng-click="vm.dumpDebugInfo()">Dump info to console</a>',
+        '    <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>',
+        '    <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>',
         '  </div>',
         '</div>'
       ].join('')
@@ -232,7 +232,7 @@
     vm.dumpDebugInfo = function() {
       console.log("DEBUG INFO for '" + vm.item.name + "'");
       console.log("DIM Item", vm.item);
-      console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+shift+r) and refresh items to see this.");
+      console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
       dimDefinitions.then((defs) => {
         console.log("Manifest Item Definition", defs.InventoryItem[vm.item.hash]);
       });

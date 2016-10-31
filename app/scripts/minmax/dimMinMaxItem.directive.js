@@ -62,9 +62,9 @@
           detailItem = item;
           detailItemElement = angular.element(e.currentTarget);
 
-          var compareItems = _.flatten(dimStoreService.getStores().map(function(store) {
+          var compareItems = flatMap(dimStoreService.getStores(), function(store) {
             return _.filter(store.items, { hash: item.hash });
-          }));
+          });
 
           var compareItemCount = sum(compareItems, 'amount');
 
