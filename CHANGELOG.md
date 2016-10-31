@@ -1,4 +1,5 @@
 # Next
+* Added `is:sublime` filter
 
 # 3.13.0
 
