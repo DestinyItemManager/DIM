@@ -32,7 +32,7 @@
         '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',
         '<div ng-if="vm.store.isVault" class="vault-capacity">',
         '  <div class="vault-bucket" translate-attr="{ title: \'{{bucket | translate}}: {{size}}/{{::capacity}}\' }" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort}); bucket = \'Bucket.\' + sort">',
-        '    <div class="vault-bucket-tag" >{{::bucket | translate | firstLetter}}</div>',
+        '    <div class="vault-bucket-tag">{{::bucket | translate | firstLetter}}</div>',
         '    <div class="vault-fill-bar">',
         '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',
         '    </div>',
