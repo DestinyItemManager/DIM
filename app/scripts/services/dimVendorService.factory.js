@@ -176,8 +176,7 @@
         mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
       });
 
-      mergedVendor.categories = _.sortBy(mergedVendor.categories, 'index');
-      mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'));
+      mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'), true);
 
       return mergedVendor;
     }
@@ -212,7 +211,7 @@
           // TODO: ???
 
           service.loadedVendors++;
-          console.log(e);
+          // console.log(e);
           return null;
         });
     }
@@ -242,7 +241,7 @@
                   .then(() => vendor);
               })
               .catch((e) => {
-                console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
+                // console.log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
                 if (e.status === 'DestinyVendorNotFound') {
                   const vendor = {
                     failed: true,
@@ -266,7 +265,7 @@
             const processed = processVendor(vendor, vendorDef, defs, store);
             return processed;
           }
-          console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
+          // console.log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
           return null;
         });
     }
@@ -300,9 +299,9 @@
         faction: def.factionHash // TODO: show rep!
       };
 
-      const items = _.flatten(vendor.saleItemCategories.map((categoryData) => {
+      const items = flatMap(vendor.saleItemCategories, (categoryData) => {
         return categoryData.saleItems;
-      }));
+      });
 
       return dimStoreService.processItems({ id: null }, _.pluck(items, 'item'))
         .then(function(items) {
@@ -316,7 +315,7 @@
                     value: cost.value,
                     currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
                   };
-                }),
+                }).filter((c) => c.value > 0),
                 item: itemsByHash[saleItem.item.itemHash],
                 // TODO: caveat, this won't update very often!
                 unlocked: isSaleItemUnlocked(saleItem),

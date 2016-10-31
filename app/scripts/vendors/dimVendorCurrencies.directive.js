@@ -6,10 +6,11 @@
     controllerAs: 'vm',
     bindings: {
       vendorCategories: '<',
-      totalCoins: '<'
+      totalCoins: '<',
+      propertyFilter: '<'
     },
     template: [
-      '<div class="vendor-currency" ng-repeat="currency in vm.currencies track by $index">',
+      '<div class="vendor-currency" ng-repeat="currency in vm.currencies track by currency.itemHash">',
       '  {{vm.totalCoins[currency.itemHash]}}',
       '  <img ng-src="{{::currency.icon | bungieIcon}}" title="{{::currency.itemName}}"/>',
       '</div>'
@@ -19,20 +20,28 @@
   angular.module('dimApp')
     .component('dimVendorCurrencies', VendorCurrencies);
 
-  VendorCurrenciesCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
+  VendorCurrenciesCtrl.$inject = ['$scope', '$filter'];
 
-  function VendorCurrenciesCtrl($scope) {
+  function VendorCurrenciesCtrl($scope, $filter) {
     const vm = this;
 
-    $scope.$watch('vm.vendorCategories', () => {
-      vm.currencies = _.chain(vm.vendorCategories)
-        .pluck('saleItems')
-        .flatten()
-        .pluck('costs')
-        .flatten()
-        .pluck('currency')
-        .unique((c) => c.itemHash)
-        .value();
+    $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
+      const allCurrencies = {};
+      const vendorTabItems = $filter('vendorTabItems');
+      const allItems = vendorTabItems(flatMap(vm.vendorCategories, (category) => {
+        if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
+          return category.saleItems;
+        }
+        return undefined;
+      }), vm.propertyFilter);
+
+      allItems.forEach((saleItem) => {
+        saleItem.costs.forEach((cost) => {
+          allCurrencies[cost.currency.itemHash] = cost.currency;
+        });
+      });
+
+      vm.currencies = allCurrencies;
     });
   }
 })();

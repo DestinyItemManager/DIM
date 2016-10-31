@@ -26,7 +26,7 @@
 
     hotkeys.add({
       combo: ['f'],
-      description: "Start a search",
+      description: 'Start a search',
       callback: function(event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
@@ -59,6 +59,7 @@
       }
     });
 
+/* Add each hotkey manually until hotkeys can be translated.
     _.each(dimSettingsService.itemTags, (tag) => {
       if (tag.hotkey) {
         hotkeys.add({
@@ -68,6 +69,38 @@
             $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
           }
         });
+      }
+    });
+*/
+    hotkeys.add({
+      combo: ['!'],
+      description: "Mark item as 'Favorite'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
+      }
+    });
+
+    hotkeys.add({
+      combo: ['@'],
+      description: "Mark item as 'Keep'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
+      }
+    });
+
+    hotkeys.add({
+      combo: ['#'],
+      description: "Mark item as 'Junk'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
+      }
+    });
+
+    hotkeys.add({
+      combo: ['$'],
+      description: "Mark item as 'Infuse'",
+      callback: function() {
+        $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
       }
     });
 
@@ -124,6 +157,7 @@
     vm.showSupport = showPopupFunction('support');
     vm.showFilters = showPopupFunction('filters');
     vm.showXur = showPopupFunction('xur');
+    vm.showMatsExchange = showPopupFunction('mats-exchange');
 
     vm.toggleMinMax = function(e) {
       $state.go($state.is('best') ? 'inventory' : 'best');

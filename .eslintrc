@@ -19,6 +19,7 @@
     "chrome": true,
     "sum": true,
     "count": true,
+    "flatMap": true,
     "gapi": true,
     "Set": true,
     "base64js": true,

@@ -32,16 +32,18 @@
           <span class="header-right">
             <div dim-platform-choice class="header-right"></div>
             <div class="header-right" id="actions">
-              <span class="link" ng-click="app.refresh($event)" title="Refresh Destiny Data"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-              <span class="link" ng-click="app.toggleMinMax($event)" title="Loadout Builder"><i class="fa fa-bar-chart"></i></span>
-              <span class="link" ng-click="app.showSetting($event)" title="Settings"><i class="fa fa-cog"></i></span>
-              <span class="link" ng-click="app.showFilters($event)" title="Filters"><i class="fa fa-filter"></i></span>
+
+              <span class="link" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
+              <span class="link" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
+              <span class="link" ng-if="app.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" title="Available faction ranks"><i class="fa fa-list-alt"></i></span>
+              <span class="link" ng-click="app.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
+              <span class="link" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-filter"></i></span>
               <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
             </div>
           </span>
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
-          <span class="link" ng-click="app.showAbout($event)" translate="About"></span>
-          <span class="link" ng-click="app.showSupport($event)" translate="Support DIM"></span>
+          <span class="link" ng-click="app.showAbout($event)" translate="Header.About"></span>
+          <span class="link" ng-click="app.showSupport($event)" translate="Header.SupportDIM"></span>
           <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
@@ -62,7 +64,6 @@
     <script src="scripts/jquery-ui.position.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular/angular.min.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-ui-router/release/angular-ui-router.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-animate/angular-animate.min.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-aria/angular-aria.min.js?v=$DIM_VERSION"></script>
     <script src="vendor/moment/moment.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-moment/angular-moment.min.js?v=$DIM_VERSION"></script>
@@ -116,6 +117,7 @@
     <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/random/dimRandom.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAngularFilters.filter.js?v=$DIM_VERSION"></script>
+    <script src="scripts/shell/dimMaterialsExchangeCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAppCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimSettingsCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
@@ -148,6 +150,8 @@
     <script src="scripts/minmax/dimMinMaxLocks.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMaxCharSelect.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/debug/dimDebugItem.controller.js?v=$DIM_VERSION"></script>
+    <script src="scripts/materials-exchange/dimCollapsible.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/apiKey.js?v=$DIM_VERSION"></script>
     <!-- end app scripts -->
 
     <!-- <script src="scripts/scripts.min.js?v=$DIM_VERSION"></script> -->

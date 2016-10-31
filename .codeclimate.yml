@@ -1,0 +1,28 @@
+engines:
+  duplication:
+    config:
+      languages:
+        - javascript
+        - php
+    enabled: true
+  eslint:
+    channel: eslint-2
+    checks:
+      complexity:
+        enabled: true
+      # fix for errored code climate linters.
+      no-mixed-operators:
+        enabled: false
+      rest-spread-spacing:
+        enabled: false
+    enabled: true
+  fixme:
+    enabled: true
+exclude_paths:
+  - "**/vendor"
+  - "**/jquery-ui.position.js"
+  - "**/build"
+  - "app/scripts/dimApp.i18n.js"
+ratings:
+  paths:
+    - "**.js"

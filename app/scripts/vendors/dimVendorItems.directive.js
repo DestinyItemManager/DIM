@@ -10,9 +10,9 @@
     template: [
       '<div class="vendor-item">',
       '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
-      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
+      '  <dim-simple-item item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
       '  <div class="vendor-costs">',
-      '    <div ng-repeat="cost in $ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
+      '    <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
       '      {{::cost.value}}',
       '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
       '    </div>',
@@ -25,7 +25,6 @@
     controller: VendorItemsCtrl,
     controllerAs: 'vm',
     bindings: {
-      stores: '<storesData',
       vendors: '=vendorsData',
       types: '<displayTypes',
       totalCoins: '<',
@@ -35,19 +34,17 @@
       '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
       '   <div class="vendor-header">',
       '     <div class="title">',
-      '     {{vendor.name}}',
+      '     {{::vendor.name}}',
       '     <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
       '     <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
-      '   <dim-vendor-currencies vendor-categories="vendor.categories | vendorTab:vm.activeTab" total-coins="vm.totalCoins"></dim-vendor-currencies>',
+      '   <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
       '   <div class="vendor-row">',
-      '     <div class="char-cols">',
-      '       <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
-      '          <h3 class="category-title">{{category.title}}</h3>',
-      '          <div class="vendor-items">',
-      '            <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
+      '     <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
+      '        <h3 class="category-title">{{::category.title}}</h3>',
+      '        <div class="vendor-items">',
+      '          <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '        </div>',
       '      </div>',
       '    </div>',
@@ -60,11 +57,17 @@
     .component('dimVendorItems', VendorItems)
     .filter('vendorTab', function() {
       return function vendorTab(categories, prop) {
+        if (!prop || !prop.length) {
+          return categories;
+        }
         return _.filter(categories, prop);
       };
     })
     .filter('vendorTabItems', function() {
       return function vendorTab(items, prop) {
+        if (!prop || !prop.length) {
+          return items;
+        }
         return _.filter(items, {
           hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
           hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
