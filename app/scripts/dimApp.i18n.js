@@ -54,7 +54,12 @@
           LoadoutAppliedAuto: "Automatic Loadout Builder",
           LoadoutApplied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
           LoadoutAppliedError: "None of the items in your loadout could be transferred.",
-          LoadoutAppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors."
+          LoadoutAppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors.",
+          TrialsCard: {
+            'FiveWins': "5 Win Reward (Armor)",
+            'SevenWins': "7 Win Reward (Weapon)",
+            'Flawless': "Flawless"
+          }
         })
         .translations('it', {
           Level: "Livello",
