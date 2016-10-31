@@ -151,8 +151,8 @@ module.exports = function(grunt) {
 
     watch: {
       sass: {
-        files:['app/scss/*.scss'],
-        tasks:['css'],
+        files:['app/scss/**/*.scss'],
+        tasks:['css','sync'],
         options: { spawn: false }
       },
       dist: {
@@ -262,6 +262,12 @@ module.exports = function(grunt) {
     'replace:beta_version',
     'compress:firefox'
   ]);
+
+
+  // Aliases for local dev to mirror README examples
+  grunt.registerTask('dev-firefox', ['default']);
+  grunt.registerTask('dev-chrome', ['default']);
+
 
   // Builds release-able extensions in dist/
   grunt.registerTask('build_extension', [

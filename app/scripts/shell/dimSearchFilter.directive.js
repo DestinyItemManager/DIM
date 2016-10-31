@@ -129,14 +129,14 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" placeholder="{{\'filter_help\' | translate}}" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
+        '<input id="filter-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimSearchService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, dimSearchService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -148,6 +148,11 @@
     });
 
     $scope.$on('dim-stores-updated', function() {
+      _duplicates = null;
+      vm.filter();
+    });
+
+    $scope.$on('dim-vendors-updated', function() {
       _duplicates = null;
       vm.filter();
     });
@@ -269,14 +274,13 @@
         _.each(store.items, function(item) {
           item.visible = (filters.length > 0) ? filterFn(item) : true;
         });
+      });
 
-        // Filter vendor items
-        _.each(store.vendors, function(vendor) {
-          _.each(vendor.items, function(items) {
-            _.each(items, function(item) {
-              item.visible = (filters.length > 0) ? filterFn(item) : true;
-            });
-          });
+
+      // Filter vendor items
+      _.each(dimVendorService.vendors, function(vendor) {
+        _.each(vendor.allItems, function(saleItem) {
+          saleItem.item.visible = (filters.length > 0) ? filterFn(saleItem.item) : true;
         });
       });
     };
@@ -615,8 +619,7 @@
         }
         if (predicate === "vanilla") {
           return item.year === 1;
-        }
-        else {
+        } else {
           return (item.sourceHashes.includes(activityHashes[predicate]));
         }
       },

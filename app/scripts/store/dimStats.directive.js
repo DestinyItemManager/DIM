@@ -60,10 +60,10 @@
       var tier = vm.stats[which].tier;
       var cooldown = vm.stats[which].cooldown || '';
       if (tier !== 5) {
-        next = ' (' + $translate.instant('tier_progress', { progress: (vm.stats[which].value % 60) + "/60", tier: 'T' + (tier + 1) }) + ')';
+        next = ' (' + $translate.instant('Stats.TierProgress', { progress: (vm.stats[which].value % 60) + "/60", tier: 'T' + (tier + 1) }) + ')';
       }
       if (cooldown) {
-        cooldown = '\n' + $translate.instant(vm.stats[which].effect + '_cooldown') + ": " + cooldown;
+        cooldown = '\n' + $translate.instant('Cooldown.' + vm.stats[which].effect) + ": " + cooldown;
       }
       return 'T' + tier + ' ' + vm.stats[which].name + next + cooldown;
     };

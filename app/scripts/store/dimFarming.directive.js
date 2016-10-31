@@ -16,25 +16,28 @@
             <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>
           </span>
           <span>
-            <p>DIM is moving Engram and Glimmer items from {{vm.service.store.name}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.</p>
+            <p translate="FarmingMode.Desc" translate-values="{ store: vm.service.store.name }"></p>
             <div class="item-details"><span>
-              <p>Quick Move</p>
+              <p translate="FarmingMode.Configuration"></p>
+              <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate="FarmingMode.Greens"></p>
+            </span><span>
+              <p translate="FarmingMode.Quickmove"></p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
             </span></div>
           </span>
-          <span><button ng-click="vm.stop($event)">Stop</button></span>
+          <span><button ng-click="vm.stop($event)" translate="FarmingMode.Stop"></button></span>
         </div>`
     };
   }
 
-  FarmingCtrl.$inject = ['dimFarmingService', 'dimSettingsService', 'dimItemMoveService'];
+  FarmingCtrl.$inject = ['dimFarmingService', 'dimItemMoveService', 'dimSettingsService'];
 
-  function FarmingCtrl(dimFarmingService, dimSettingsService, dimItemMoveService) {
+  function FarmingCtrl(dimFarmingService, dimItemMoveService, dimSettingsService) {
     var vm = this;
 
     angular.extend(vm, {
       service: dimFarmingService,
-      settings: dimSettingsService.farming,
+      settings: dimSettingsService,
       consolidate: dimItemMoveService.consolidate,
       stop: function($event) {
         $event.preventDefault();

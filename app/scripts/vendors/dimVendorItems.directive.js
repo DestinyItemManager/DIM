@@ -4,18 +4,18 @@
   var VendorItem = {
     bindings: {
       saleItem: '<',
-      cost: '<',
       totalCoins: '<',
       itemClicked: '&'
     },
     template: [
       '<div class="vendor-item">',
-      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.visible }"></dim-simple-item>',
-      '  <div ng-if="$ctrl.cost" class="cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
-      '    {{::$ctrl.cost.cost}}/{{$ctrl.totalCoins[$ctrl.cost.currency.itemHash]}}',
-      '    <span class="currency"><img ng-src="{{::$ctrl.cost.currency.icon | bungieIcon}}" title="{{::$ctrl.cost.currency.name}}"></span>',
-      '  </div>',
-      '  <div ng-if="!$ctrl.cost" class="empty-cost" ng-class="{notenough: ($ctrl.totalCoins[$ctrl.cost.currency.itemHash] < $ctrl.cost.cost)}">',
+      '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
+      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
+      '  <div class="vendor-costs">',
+      '    <div ng-repeat="cost in $ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
+      '      {{::cost.value}}',
+      '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
+      '    </div>',
       '  </div>',
       '</div>'
     ].join('')
@@ -25,73 +25,29 @@
     controller: VendorItemsCtrl,
     controllerAs: 'vm',
     bindings: {
-      stores: '<storesData',
       vendors: '=vendorsData',
       types: '<displayTypes',
-      vendorHashes: '<vendorHashes',
-      totalCoins: '<totalCoins'
+      totalCoins: '<',
+      activeTab: '<'
     },
     template: [
-      '<div class="vendor-char-items" ng-repeat="(idx, vendorHash) in vm.vendorHashes">',
-      ' <div ng-if="vm.vendors[0][vendorHash]">',
+      '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
       '   <div class="vendor-header">',
       '     <div class="title">',
-      '     {{vm.vendors[0][vendorHash].vendorName}}',
-      '     <img class="vendor-icon" ng-src="{{::vm.vendors[0][vendorHash].vendorIcon | bungieIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="vm.vendors[0][vendorHash].nextRefreshDate[0] !== \'9\'" end-time="vm.vendors[0][vendorHash].nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '     {{vendor.name}}',
+      '     <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
+      '     <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '     </div>',
       '   </div>',
-      '    <div class="vendor-row">',
-      '      <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '        <div ng-repeat="type in vm.types">',
-      '          <div ng-if="store.vendors[vendorHash].items[type].length">',
-      '            <h3 ng-if="vm.eachHasItems(store.vendors[vendorHash].items, vm.types)">{{type | uppercase}}</h3>',
-      '            <div class="vendor-armor">',
-      '              <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items[type]" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '            </div>',
-      '          </div>',
+      '   <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
+      '   <div class="vendor-row">',
+      '     <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
+      '        <h3 class="category-title">{{category.title}}</h3>',
+      '        <div class="vendor-items">',
+      '          <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '        </div>',
       '      </div>',
       '    </div>',
-      ' </div>',
-      '</div>'
-    ].join('')
-  };
-
-  var VendorItemsCombined = {
-    controller: VendorItemsCtrl,
-    controllerAs: 'vm',
-    bindings: {
-      stores: '<storesData',
-      vendors: '=vendorsData',
-      vendorHashes: '<vendorHashes',
-      totalCoins: '<totalCoins'
-    },
-    template: [
-      '<div class="vendor-char-items" ng-init="firstVendor = vm.getFirstVendorCombined(vm.vendors, vm.vendorHashes[0])">',
-      '  <div ng-if="firstVendor">',
-      '    <div class="vendor-header">',
-      '      <div class="title">',
-      '        <span translate="Vanguard"></span>',
-      '        <img class="vendor-icon" ng-src="{{::firstVendor.vendorIcon | bungieIcon}}" />',
-      '        <timer class="vendor-timer" ng-if="firstVendor.nextRefreshDate[0] !== \'9\'" end-time="firstVendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '      </div>',
-      '    </div>',
-      '    <div class="vendor-row">',
-      '      <div class="char-cols store-cell" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-      '        <div ng-repeat="(idx, vendorHash) in vm.vendorHashes">',
-      '          <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length" translate="Armor"></h3>',
-      '          <div class="vendor-armor">',
-      '            <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.armor" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
-      '          <h3 ng-if="store.vendors[vendorHash].items.armor.length && store.vendors[vendorHash].items.weapons.length" translate="Weapons"></h3>',
-      '          <div class="vendor-weaps">',
-      '            <dim-vendor-item ng-repeat="saleItem in store.vendors[vendorHash].items.weapons" sale-item="saleItem" cost="store.vendors[vendorHash].costs[saleItem.hash]" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
       '</div>'
     ].join('')
   };
@@ -99,7 +55,36 @@
   angular.module('dimApp')
     .component('dimVendorItem', VendorItem)
     .component('dimVendorItems', VendorItems)
-    .component('dimVendorItemsCombined', VendorItemsCombined);
+    .filter('vendorTab', function() {
+      return function vendorTab(categories, prop) {
+        if (!prop) {
+          return categories;
+        }
+        return _.filter(categories, prop);
+      };
+    })
+    .filter('vendorTabItems', function() {
+      return function vendorTab(items, prop) {
+        if (!prop) {
+          return items;
+        }
+        return _.filter(items, {
+          hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
+          hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
+          hasShadersEmbs: (saleItem) => (saleItem.item.type === "Emblem" || saleItem.item.type === "Shader"),
+          hasEmotes: (saleItem) => (saleItem.item.type === "Emote"),
+          hasConsumables: (saleItem) => (saleItem.item.type === "Material" || saleItem.item.type === "Consumable"),
+          hasBounties: (saleItem) => (saleItem.item.type === 'Bounties')
+        }[prop]);
+      };
+    })
+    .filter('values', function() {
+      return function values(obj) {
+        return _.values(obj);
+      };
+    });
+
+  // TODO: separate out class-specific stuff?
 
   VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 
@@ -123,23 +108,13 @@
     });
 
     angular.extend(vm, {
-      eachHasItems: function(items, types) {
-        return types.length > 1 && _.every(types, function(type) { return items[type].length; });
-      },
-      getFirstVendorCombined: function(vendors, vendorHash) {
-        if (vendors) {
-          return _.find(vendors, function(vendor) {
-            return vendor[vendorHash];
-          })[vendorHash];
-        }
-        return null;
-      },
-      itemClicked: function(item, e) {
+      itemClicked: function(saleItem, e) {
         e.stopPropagation();
         if (dialogResult) {
           dialogResult.close();
         }
 
+        const item = saleItem.item;
         if (detailItem === item) {
           detailItem = null;
           dialogResult = null;
@@ -165,6 +140,13 @@
               '    </div>',
               '  </div>',
               '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
+              '  <div class="item-details">',
+              '    <div>Available on:</div>',
+              '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
+              '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
+              '      {{store.name}}',
+              '    </div>',
+              '  </div>',
               '</div>'].join(''),
             plain: true,
             overlay: false,
@@ -174,9 +156,11 @@
             }),
             controllerAs: 'vm',
             controller: [function() {
-              var vm = this;
-              angular.extend(vm, {
+              var innerVm = this;
+              angular.extend(innerVm, {
+                settings: innerVm.settings,
                 item: item,
+                unlockStores: saleItem.unlockedByCharacter.map((id) => _.find(dimStoreService.getStores(), { id })),
                 compareItems: compareItems,
                 compareItem: _.first(compareItems),
                 compareItemCount: compareItemCount,

@@ -209,17 +209,18 @@
 
     // Pass in full loadout and store objects. loadout should have all types of weapon and armor
     // or it won't be accurate. function properly supports guardians w/o artifacts
+    // returns to tenth decimal place.
     function getLight(store, loadout) {
       var itemWeight = {
         Weapons: store.level === 40 ? .12 : .1304,
         Armor: store.level === 40 ? .10 : .1087,
         General: store.level === 40 ? .08 : .087
       };
-      return _.reduce(loadout.items, function(memo, items) {
+      return (Math.floor(10 * _.reduce(loadout.items, function(memo, items) {
         var item = _.findWhere(items, { equipped: true });
 
         return memo + (item.primStat.value * itemWeight[item.location.id === 'BUCKET_CLASS_ITEMS' ? 'General' : item.location.sort]);
-      }, 0);
+      }, 0)) / 10).toFixed(1);
     }
 
     function applyLoadout(store, loadout, allowUndo = false) {
@@ -234,7 +235,7 @@
             if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
               _previousLoadouts[store.id].pop();
             } else {
-              const previousLoadout = store.loadoutFromCurrentlyEquipped($translate.instant('before_loadout', { name: loadout.name }));
+              const previousLoadout = store.loadoutFromCurrentlyEquipped($translate.instant('Loadouts.Before', { name: loadout.name }));
               _previousLoadouts[store.id].push(previousLoadout);
             }
           }
@@ -339,15 +340,15 @@
           .then(function() {
             var value = 'success';
 
-            var message = $translate.instant('LoadoutApplied', { amount: scope.total, store: store.name });
+            var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name });
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {
                 value = 'error';
-                message = $translate.instant('LoadoutAppliedError');
+                message = $translate.instant('Loadouts.AppliedError');
               } else {
                 value = 'warning';
-                message = $translate.instant('LoadoutAppliedWarn', { failed: scope.failed, total: scope.total });
+                message = $translate.instant('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
               }
             }
 

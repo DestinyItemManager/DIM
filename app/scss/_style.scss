@@ -1521,14 +1521,14 @@ g {
 
   .light {
     font-weight: 200;
-    font-size: 11px;
     color: #f5dc56;
-  }
-  .light:before {
-    content: "\2726";
-    display: inline-block;
-    vertical-align: 7%;
-    font-size: 50%;
+    float: right;
+    &:before {
+      content: "\2726";
+      display: inline-block;
+      vertical-align: 7%;
+      font-size: 50%;
+    }
   }
 }
 
@@ -2224,4 +2224,8 @@ dim-manifest-progress {
   z-index: 1000;
   border-top: 15px solid gold;
   border-right: 15px solid transparent;
+}
+
+.disabled {
+  opacity: 0.5;
 }

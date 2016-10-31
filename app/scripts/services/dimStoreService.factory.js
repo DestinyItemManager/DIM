@@ -13,7 +13,6 @@
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
-    'dimYearsDefinitions',
     'dimItemInfoService',
     'dimInfoService',
     'SyncService',
@@ -33,7 +32,6 @@
     dimCategory,
     dimDefinitions,
     dimBucketService,
-    dimYearsDefinitions,
     dimItemInfoService,
     dimInfoService,
     SyncService,
@@ -291,13 +289,8 @@
       return _stores;
     }
 
-    function loadStores(activePlatform, includeVendors) {
-      if (includeVendors) {
-        return $q.when(dimDefinitions).then(function(defs) {
-          return dimBungieService.getStores(activePlatform, includeVendors, defs.Vendor);
-        });
-      }
-      return dimBungieService.getStores(activePlatform, includeVendors);
+    function loadStores(activePlatform) {
+      return dimBungieService.getStores(activePlatform);
     }
 
     // Returns a promise for a fresh view of the stores and their items.
@@ -313,12 +306,6 @@
       if (!activePlatform) {
         return $q.reject("Cannot find active platform.");
       }
-
-      // Include vendors on the first load and if they're expired
-      const currDate = new Date().toISOString();
-      const includeVendors = dimFeatureFlags.vendorsEnabled &&
-              (!_stores.length ||
-               _.any(_stores, (store) => store.minRefreshDate < currDate));
 
       // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
@@ -336,7 +323,7 @@
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
                               $translate(['Vault']),
-                              loadStores(activePlatform, includeVendors)])
+                              loadStores(activePlatform)])
         .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
@@ -355,6 +342,7 @@
 
           var glimmer;
           var marks;
+          var silver;
           _removedNewItems.forEach((id) => newItems.delete(id));
           _removedNewItems.clear();
           service.hasNewItems = (newItems.size !== 0);
@@ -384,6 +372,7 @@
                 items: [],
                 legendaryMarks: marks,
                 glimmer: glimmer,
+                silver: silver,
                 isVault: true,
                 // Vault has different capacity rules
                 capacityForItem: function(item) {
@@ -431,6 +420,7 @@
               try {
                 glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
                 marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+                silver = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2749350776; }).value;
               } catch (e) {
                 glimmer = 0;
                 marks = 0;
@@ -459,17 +449,8 @@
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
                 advisors: raw.character.advisors,
-                vendors: raw.character.vendors,
                 isVault: false
               });
-
-              if (!includeVendors) {
-                var prevStore = _.findWhere(_stores, { id: raw.id });
-                if (prevStore) {
-                  store.vendors = prevStore.vendors;
-                  store.minRefreshDate = prevStore.minRefreshDate;
-                }
-              }
 
               store.name = store.genderRace + ' ' + store.className;
 
@@ -539,16 +520,7 @@
                 });
               }
 
-              return processVendors(store.vendors)
-                .then(function(vendors) {
-                  _.each(vendors, function(vendor) {
-                    store.vendors[vendor.vendorHash] = vendor;
-                    if (!store.minRefreshDate || vendor.nextRefreshDate < store.minRefreshDate) {
-                      store.minRefreshDate = vendor.nextRefreshDate;
-                    }
-                  });
-                  return store;
-                });
+              return store;
             });
           })]);
         })
@@ -616,7 +588,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, yearsDefs, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -641,7 +613,7 @@
       }
 
       if (itemDef.redacted) {
-        console.warn('Missing Item Definition:\n\n', item, '\n\nplease contact a developer to get this item added.');
+        console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
       }
 
       if (!itemDef.itemName) {
@@ -682,7 +654,19 @@
       // vault as a character. So put them in the bucket they would
       // have been in if they'd been on a character.
       if (currentBucket.id.startsWith('BUCKET_VAULT')) {
-        currentBucket = normalBucket;
+        // TODO: Remove this if Bungie ever returns bucket.id for classified
+        // items in the vault.
+        if (itemDef.classified) {
+          if (currentBucket.id.endsWith('WEAPONS')) {
+            currentBucket = buckets.byType.Heavy;
+          } else if (currentBucket.id.endsWith('ARMOR')) {
+            currentBucket = buckets.byType.ClassItem;
+          } else if (currentBucket.id.endsWith('ITEMS')) {
+            currentBucket = buckets.byType.Artifact;
+          }
+        } else {
+          currentBucket = normalBucket;
+        }
       }
 
       var itemType = normalBucket.type || 'Unknown';
@@ -704,14 +688,13 @@
       // DestinyRewardSourceDefinition and filter on %SOURCE%
       // if sourceHash doesn't contain these values, we assume they came from
       // year 1
+      itemDef.sourceHashes = itemDef.sourceHashes || [];
       var itemYear = 1;
-      if (!itemDef.classified) {
-        if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-          itemYear = 2;
-        }
-        if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-          itemYear = 3;
-        }
+      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
+        itemYear = 2;
+      }
+      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
+        itemYear = 3;
       }
       // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
       var createdItem = angular.extend(Object.create(ItemProto), {
@@ -728,7 +711,6 @@
         tier: tiers[itemDef.tierType] || 'Common',
         isExotic: tiers[itemDef.tierType] === 'Exotic',
         isVendorItem: (!owner || owner.id === null),
-        isUnlocked: (!owner || owner.id === null) ? item.isUnlocked : true,
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
@@ -863,7 +845,7 @@
 
     function buildTalentGrid(item, talentDefs, progressDefs) {
       var talentGridDef = talentDefs[item.talentGridHash];
-      if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length) {
+      if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length || !progressDefs[item.progression.progressionHash]) {
         return undefined;
       }
 
@@ -1115,7 +1097,7 @@
                 : (quality.min + "%-" + quality.max)) + '%';
       }
 
-      if (!stats || !stats.length || light.value < 280) {
+      if (!stats || !stats.length || !light || light.value < 280) {
         return null;
       }
 
@@ -1275,7 +1257,7 @@
 
       var armorNodes = [];
       var activeArmorNode;
-      if (grid && grid.nodes && item.primaryStat.statHash === 3897883278) {
+      if (grid && grid.nodes && item.primaryStat && item.primaryStat.statHash === 3897883278) {
         armorNodes = _.filter(grid.nodes, function(node) {
           return _.contains([1034209669, 1263323987, 193091484], node.hash); // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
         });
@@ -1322,7 +1304,7 @@
         var base = val;
         var bonus = 0;
 
-        if (item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
+        if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
           if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
              (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
              (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
@@ -1348,10 +1330,6 @@
           bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY' // energy == magazine for swords
         };
       })), 'sort');
-    }
-
-    function isSaleItemUnlocked(saleItem) {
-      return _.every(saleItem.unlockStatuses, function(status) { return status.isSet; });
     }
 
     /** New Item Tracking **/
@@ -1432,7 +1410,6 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
-        dimYearsDefinitions,
         previousItems,
         newItems,
         itemInfoService])
@@ -1492,73 +1469,6 @@
       } else {
         return '-:--';
       }
-    }
-
-    function processVendors(vendors) {
-      return dimDefinitions
-        .then(function(defs) {
-          return $q.all(_.map(vendors, function(vendor, vendorHash) {
-            var def = defs.Vendor[vendorHash].summary;
-            vendor.vendorName = def.vendorName;
-            vendor.vendorIcon = def.factionIcon || def.vendorIcon;
-            vendor.items = [];
-            vendor.costs = [];
-            vendor.hasArmorWeaps = false;
-            vendor.hasVehicles = false;
-            vendor.hasShadersEmbs = false;
-            vendor.hasEmotes = false;
-            if (vendor.enabled) {
-              var items = [];
-              _.each(vendor.saleItemCategories, function(categoryData) {
-                var filteredSaleItems = _.filter(categoryData.saleItems, function(saleItem) {
-                  saleItem.item.isUnlocked = isSaleItemUnlocked(saleItem);
-                  return saleItem.item.isEquipment;
-                });
-                items.push(...filteredSaleItems);
-              });
-              vendor.items = _.pluck(items, 'item');
-              vendor.costs = _.reduce(items, function(o, saleItem) {
-                if (saleItem.costs.length) {
-                  o[saleItem.item.itemHash] = {
-                    cost: saleItem.costs[0].value,
-                    currency: _.pick(defs.InventoryItem[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash')
-                  };
-                }
-                return o;
-              }, {});
-            }
-            return processItems({ id: null }, vendor.items)
-              .then(function(items) {
-                vendor.items = { armor: [], weapons: [], ships: [], vehicles: [], shaders: [], emblems: [], emotes: [] };
-                _.each(items, function(item) {
-                  item.vendorIcon = vendor.vendorIcon;
-                  if (item.primStat && item.primStat.statHash === 3897883278) {
-                    vendor.hasArmorWeaps = true;
-                    vendor.items.armor.push(item);
-                  } else if (item.primStat && item.primStat.statHash === 368428387) {
-                    vendor.hasArmorWeaps = true;
-                    vendor.items.weapons.push(item);
-                  } else if (item.primStat && item.primStat.statHash === 1501155019) {
-                    vendor.hasVehicles = true;
-                    vendor.items.vehicles.push(item);
-                  } else if (item.type === "Ship") {
-                    vendor.hasVehicles = true;
-                    vendor.items.ships.push(item);
-                  } else if (item.type === "Emblem") {
-                    vendor.hasShadersEmbs = true;
-                    vendor.items.emblems.push(item);
-                  } else if (item.type === "Shader") {
-                    vendor.hasShadersEmbs = true;
-                    vendor.items.shaders.push(item);
-                  } else if (item.type === "Emote") {
-                    vendor.hasEmotes = true;
-                    vendor.items.emotes.push(item);
-                  }
-                });
-                return vendor;
-              });
-          }));
-        });
     }
 
     function getStatsData(statDefs, data) {
