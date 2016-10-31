@@ -25,3 +25,4 @@ exclude_paths:
 ratings:
   paths:
     - "**.js"
+- "app/scripts/dimApp.i18n.js"
