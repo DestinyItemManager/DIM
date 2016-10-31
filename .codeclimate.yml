@@ -10,6 +10,13 @@ engines:
     checks:
       complexity:
         enabled: true
+      # fix for errored code climate linters.
+      no-mixed-operators:
+        enabled: false
+      rest-spread-spacing:
+        enabled: false
+    config:
+      config: ./.codeclimate.eslintrc
     enabled: true
   fixme:
     enabled: true
@@ -17,6 +24,7 @@ exclude_paths:
   - "**/vendor"
   - "**/jquery-ui.position.js"
   - "**/build"
+  - "app/scripts/dimApp.i18n.js"
 ratings:
   paths:
     - "**.js"

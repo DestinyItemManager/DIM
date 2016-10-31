@@ -3,6 +3,7 @@ dist/
 app/styles
 .settings/
 .idea/
+.vscode/
 node_modules/
 build/common
 build/img

@@ -36,7 +36,7 @@
       '  <div class="race-gender">{{:: char.genderRace }}</div>',
       '  <div class="level"><span translate="Level"></span> {{ char.level }}</div>',
       '  <div class="level powerLevel">{{ char.powerLevel }}</div>',
-      '</div>',
+      '</div>'
     ].join('')
   };
 
