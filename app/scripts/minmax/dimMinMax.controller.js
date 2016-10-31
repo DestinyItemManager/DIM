@@ -421,7 +421,7 @@
         },
         equipItems: function(set) {
           ngDialog.closeAll();
-          var loadout = { items: {}, name: $translate.instant('LoadoutAppliedAuto') };
+          var loadout = { items: {}, name: $translate.instant('Loadouts.AppliedAuto') };
           var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
           loadout.items.helmet = [items.Helmet.item];
           loadout.items.chest = [items.Chest.item];

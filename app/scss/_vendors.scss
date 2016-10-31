@@ -1,5 +1,6 @@
 .vendor {
-  width: calc(((var(--item-size) + 40px)*3)*var(--character-columns) + 120px);
+  max-width: 900px;
+  min-width: 450px;
   margin: 0 auto;
 
   .vendors {
@@ -44,10 +45,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .char-cols {
-    display: flex;
-    flex-direction: column;
   }
   .category-title {
     margin-top: 10px;
@@ -95,11 +92,11 @@
     }
   }
   .vendor-row {
-    display:flex;
-    flex-direction: row;
-    flex-wrap:wrap;
     margin-bottom: 10px;
     margin-top: 10px;
+  }
+  .vendor-category {
+    margin-bottom: 8px;
   }
   .store-cell {
     &:last-child {

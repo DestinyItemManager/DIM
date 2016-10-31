@@ -1,4 +1,6 @@
 # Destiny Item Manager
+[![Code Climate](https://codeclimate.com/github/DestinyItemManager/DIM/badges/gpa.svg)](https://codeclimate.com/github/DestinyItemManager/DIM)    [![Test Coverage](https://codeclimate.com/github/DestinyItemManager/DIM/badges/coverage.svg)](https://codeclimate.com/github/DestinyItemManager/DIM/coverage)    [![Issue Count](https://codeclimate.com/github/DestinyItemManager/DIM/badges/issue_count.svg)](https://codeclimate.com/github/DestinyItemManager/DIM)
+
 Destiny Item Manager (DIM) lets [Destiny](http://destinythegame.com/)  game players easily move items between their Guardians and the Vault. DIM's goal is to let players equip their guardians quickly. Our Loadouts feature accomplishes this by removing manual steps needed when transferring items.
 
 Loadouts give players the ability to define sets of items that they want on their Guardians. When a loadout is selected, DIM will move all of the items referenced by the Loadout to a Guardian. If the item was equipped by another guardian, the Loadouts feature will replace that item with a similar item, if possible, to allow the Loadout referenced item to be transfered. With a single click of a button, you can have a PVP, PVE, or Raid-ready guardian.
@@ -36,7 +38,14 @@ Generate CSS
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-You can run now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk).
+You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk).
+
+Get your own API key:
+
+* Goto [Bungie](https://www.bungie.net/en/Application)
+* Open your extension in another tab, copy the url up to `/index.html`.
+* Paste your extension url into the `Origin Header` section on bungie.net
+* Copy your API-key from bungie.net into the `app/apiKey.js` file.
 
 Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/dev/CONTRIBUTING.md) for more tips.
 

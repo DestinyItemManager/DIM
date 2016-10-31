@@ -3,6 +3,7 @@ dist/
 app/styles
 .settings/
 .idea/
+.vscode/
 node_modules/
 build/common
 build/img
@@ -23,3 +24,5 @@ build/dim-extension.zip
 .brackets.json
 .npmrc
 npm-debug.log
+
+app/scripts/apiKey.js
