@@ -14,7 +14,7 @@
           Weapons: "Weapons",
           Vault: "Vault",
           About: {
-            About: "About Destiny Item Manager (DIM)",
+            AboutDIM: "About Destiny Item Manager (DIM)",
             Description: "DIM is built upon the same services used by Bungie.net and the Destiny Companion App. DIM can access the items within your Guardians inventory and the Vault for both PlayStation and Xbox. You then can drag and drop items anywhere you wish to move them.",
             ContactUs: "Contact Us",
             ContactTwitterText: "Be sure to follow us to stay on top of updates and realtime application state information.",
@@ -258,7 +258,7 @@
           General: "Allgemein",
           Vault: "Tresor",
           About: {
-            About: "Über Destiny Item Manager (DIM)",
+            AboutDIM: "Über Destiny Item Manager (DIM)",
             Description: "DIM basiert auf denselben Diensten von Bungie.net und der Destiny Companion App. DIM kann auf die Elemente in deinem Hüter-Inventar und den Tresor für PlayStation und Xbox zugreifen. Du kannst dann Elemente per Drag & Drop verschieben, wenn Du sie verschieben möchtest.",
             ContactUs: "Kontaktiere uns",
             ContactTwitterText: "Folge uns, um über Updates und Informationen zu DIM benachrichtigt zu werden.",
