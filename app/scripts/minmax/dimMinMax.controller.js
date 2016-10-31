@@ -271,12 +271,22 @@
         excludedItemsValid: function(droppedId, droppedType) {
           return !(vm.lockeditems[droppedType] && alreadyExists([vm.lockeditems[droppedType]], droppedId));
         },
+        onSelectedChange: function(prevIdx, selectedIdx) {
+          if (vm.activeCharacters[prevIdx].class !== vm.activeCharacters[selectedIdx].class) {
+            vm.active = vm.activeCharacters[selectedIdx].class;
+            vm.onCharacterChange();
+            vm.selectedCharacter = selectedIdx;
+          }
+        },
         onCharacterChange: function() {
           vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
+          vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
+          var activeStore = dimStoreService.getActiveStore();
+          vm.selectedCharacter = _.findIndex(vm.activeCharacters, function(char) { return char.id === activeStore.id; });
           vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
           vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
           vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
-          vm.excludeditems = [];
+          vm.excludeditems = _.filter(vm.excludeditems, function(item) { return item.hash === 2672107540; });
           vm.highestsets = vm.getSetBucketsStep(vm.active);
         },
         onActiveSetsChange: function() {
@@ -371,9 +381,6 @@
           if (vm.progress < 1.0) {
             vm.excludedchanged = true;
           }
-        },
-        onSelectedCharacterChange: function(idx) {
-          vm.selectedCharacter = idx;
         },
         lockEquipped: function() {
           var store = vm.activeCharacters[vm.selectedCharacter];
@@ -596,6 +603,7 @@
           vm.selectedCharacter = dimStoreService.getActiveStore();
           vm.active = vm.selectedCharacter.class.toLowerCase() || 'warlock';
           vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
+          vm.selectedCharacter = _.findIndex(vm.activeCharacters, function(char) { return char.id === vm.selectedCharacter.id; });
 
           var allItems = [];
           var vendorItems = [];
