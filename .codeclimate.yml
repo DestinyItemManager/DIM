@@ -22,7 +22,7 @@ exclude_paths:
   - "**/vendor"
   - "**/jquery-ui.position.js"
   - "**/build"
+  - "app/scripts/dimApp.i18n.js"
 ratings:
   paths:
     - "**.js"
-- "app/scripts/dimApp.i18n.js"
