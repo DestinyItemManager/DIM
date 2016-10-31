@@ -21,7 +21,9 @@
       // Additional debugging / item info tools
       debugMode: false,
       // show changelog toaster
-      changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta'
+      changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
+
+      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release'
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
@@ -145,6 +147,10 @@
         .state('vendors', {
           url: "/vendors",
           templateUrl: "views/vendors.html"
+        })
+        .state('materials-exchange', {
+          url: "/materials-exchange",
+          templateUrl: "views/mats-exchange.html"
         })
         .state('debugItem', {
           url: "/debugItem/:itemId",
