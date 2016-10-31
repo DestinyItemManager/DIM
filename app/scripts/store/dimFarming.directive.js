@@ -16,11 +16,11 @@
             <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>
           </span>
           <span>
-            <p translate="FarmingMode.Desc" translate-values="{ store: vm.service.store.name }"></p>
+            <p translate="{{vm.settings.farming.makeRoomForItems ? 'FarmingMode.DescMakeRoom' : 'FarmingMode.Desc'}}" translate-values="{ store: vm.service.store.name }"></p>
             <div class="item-details"><span>
               <p translate="FarmingMode.Configuration"></p>
               <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate="FarmingMode.Greens"></p>
-              <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" title="If checked, DIM will move weapons and armor around to make space in the vault for engrams.">Allow weapons/armor rearranging</label></p>
+              <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" translate-attr="{title: 'FarmingMode.MakeRoom.Tooltip'}" translate="FarmingMode.MakeRoom"></label></p>
             </span><span>
               <p translate="FarmingMode.Quickmove"></p>
               <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
