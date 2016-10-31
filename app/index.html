@@ -42,7 +42,7 @@
           <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
           <span class="link" ng-click="app.showAbout($event)" translate="About"></span>
           <span class="link" ng-click="app.showSupport($event)" translate="Support DIM"></span>
-          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
+          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
           <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
         </div>
       </div>
@@ -81,6 +81,7 @@
     <script src="vendor/angularjs-slider/dist/rzslider.js?v=$DIM_VERSION"></script>
     <script src="vendor/ng-http-rate-limiter/dist/ng-http-rate-limiter.js?v=$DIM_VERSION"></script>
     <script src="vendor/angular-translate/angular-translate.min.js?v=$DIM_VERSION"></script>
+    <script src="vendor/idb-keyval/dist/idb-keyval-min.js?v=$DIM_VERSION"></script>
     <!-- end vendor scripts -->
 
     <script src="vendor/angular-chrome-storage/angular-chrome-storage.js?v=$DIM_VERSION"></script>
@@ -103,6 +104,7 @@
     <script src="scripts/services/dimLoadoutService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimSettingsService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimStoreService.factory.js?v=$DIM_VERSION"></script>
+    <script src="scripts/services/dimVendorService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimXurService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimCsvService.factory.js?v=$DIM_VERSION"></script>
     <script src="scripts/services/dimItemService.factory.js?v=$DIM_VERSION"></script>
@@ -142,9 +144,11 @@
     <script src="scripts/xur/dimXur.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/vendors/dimVendor.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/vendors/dimVendorItems.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/vendors/dimVendorCurrencies.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMax.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMaxItem.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMaxLocks.directive.js?v=$DIM_VERSION"></script>
+    <script src="scripts/minmax/dimMinMaxCharSelect.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/debug/dimDebugItem.controller.js?v=$DIM_VERSION"></script>
     <!-- end app scripts -->
 

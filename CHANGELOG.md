@@ -1,3 +1,11 @@
+# Next
+
+* The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown.
+* Don't sort bounties (the API does not currently provide the in-game order.)
+* Fix max-light rounding
+* When moving consumable stacks, you can now choose to fill up one stack's worth.
+* Fix a bug in the new filters for source.
+
 # 3.11.1
 
 * Fixed an issue with farming mode where users without motes, 3oC, coins, or heavy could not use farming mode.

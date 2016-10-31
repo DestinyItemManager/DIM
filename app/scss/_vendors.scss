@@ -3,7 +3,7 @@
   margin: 0 auto;
 
   .vendors {
-    margin-top: 125px;
+    margin-top: 55px;
   }
   .vendorLabels h1 {
     display: inline-block;
@@ -34,31 +34,28 @@
   .vendor-timer {
     float: right;
   }
-  .vendor-armor, .vendor-weaps {
+  .vendor-items {
     display: flex;
     flex-wrap: wrap;
   }
   .vendor-item {
-    margin-right: 5px;
-    margin-bottom: 5px;
-    width: calc(var(--item-size) + 35px);
+    margin-right: 1px;
+    margin-bottom: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  .vendor-header-col {
-    width: calc((var(--item-size) + 40px)*3);
-    margin-right: 60px;
-  }
   .char-cols {
     display: flex;
     flex-direction: column;
-    width: calc((var(--item-size) + 40px)*3);
-    margin-right: 60px;
   }
-  .char-cols h3 {
+  .category-title {
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-left: 2px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #CCC;
+    margin-bottom: 4px;
     &:first-child {
       margin-top: 0px;
     }
@@ -69,7 +66,7 @@
   .vendor-headers-background {
     display: none;
     position: fixed;
-    height: 123px;
+    height: 51px;
     left: 0;
     width: 100%;
     top: 50px;
@@ -79,7 +76,7 @@
   .vendorHeaderWrapper {
     position: absolute;
     top: 85px;
-    z-index: 5;
+    z-index: 4;
   }
   .vendorHeaderWrapper.sticky {
     position:fixed;
@@ -120,9 +117,12 @@
     height: 12px;
     width: 12px;
   }
+  .vendor-costs {
+    margin-top: 3px;
+  }
   .cost {
     font-size: 10px;
-    margin-top: 4px;
+    margin-top: 1px;
     margin-left: 2px;
   }
   .empty-cost {
@@ -136,13 +136,28 @@
   }
 }
 
+.unlocked-character {
+  display: flex;
+  flex-direction: horizontal;
+  align-items: center;
+
+  .emblem {
+    width: 24px;
+    height: 24px;
+    margin: 2px 8px 2px 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    background-size: cover;
+  }
+}
+
 .locked-overlay {
   width: calc(var(--item-size) + 4px);
   height: calc(var(--item-size) + 4px);
   position: absolute;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   background-color: rgba(40,40,40,0.5);
+  margin-top: 2px;
 }
 
 .ngdialog.vendor-move-popup {
@@ -166,5 +181,27 @@
   }
   a {
     outline: 0;
+  }
+}
+
+.vendor-loading {
+  float: right;
+}
+
+dim-vendor-currencies {
+  float: right;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  .vendor-currency {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+    img {
+      vertical-align: bottom;
+      height: 16px;
+      width: 16px;
+    }
   }
 }
