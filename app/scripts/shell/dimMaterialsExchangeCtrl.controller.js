@@ -96,7 +96,7 @@
       2882093969, // Spin Metal
       3242866270, // Relic Iron
       2254123540, // Spirit Bloom
-      3164836592, // Wormspore
+      3164836592 // Wormspore
     ];
 
     var xurMatsHashes = [
