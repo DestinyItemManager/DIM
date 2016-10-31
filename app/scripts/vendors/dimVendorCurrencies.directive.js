@@ -26,16 +26,22 @@
     const vm = this;
 
     $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {
-      vm.currencies = _.chain(vm.vendorCategories)
-        .filter(vm.propertyFilter)
-        .pluck('saleItems')
-        .map((i) => $filter('vendorTabItems')(i, vm.propertyFilter))
-        .flatten()
-        .pluck('costs')
-        .flatten()
-        .pluck('currency')
-        .unique((c) => c.itemHash)
-        .value();
+      const allCurrencies = {};
+      const vendorTabItems = $filter('vendorTabItems');
+      const allItems = vendorTabItems(flatMap(vm.vendorCategories, (category) => {
+        if (!vm.propertyFilter || !vm.propertyFilter.length || category[vm.propertyFilter]) {
+          return category.saleItems;
+        }
+        return undefined;
+      }), vm.propertyFilter);
+
+      allItems.forEach((saleItem) => {
+        saleItem.costs.forEach((cost) => {
+          allCurrencies[cost.currency.itemHash] = cost.currency;
+        });
+      });
+
+      vm.currencies = allCurrencies;
     });
   }
 })();
