@@ -78,8 +78,9 @@
         '  </div>',
         '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '    <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
-        '      <div class="objective-checkbox"><div></div></div>',
-        '      <div class="objective-progress">',
+        '      <i ng-if="objective.displayStyle === \'trials\'" class="fa fa-circle trials" ng-repeat="i in vm.getNumber(objective) track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
+        '      <div ng-if="objective.displayStyle !== \'trials\'" class="objective-checkbox"><div></div></div>',
+        '      <div ng-if="objective.displayStyle !== \'trials\'" class="objective-progress">',
         '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
         '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
         '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
@@ -100,6 +101,12 @@
   function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
     var vm = this;
 
+    vm.getNumber = function(objective) {
+      if (objective.completionValue === 9 && objective.progress > 9) {
+        return new Array(objective.value);
+      }
+      return new Array(objective.completionValue);
+    };
     vm.featureFlags = dimFeatureFlags;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||

@@ -1040,19 +1040,20 @@
     function buildTrials(trials) {
       var flawless = trials.completion.success;
       trials = trials.extended;
-      function buildObjective(name, current, max, bool) {
+      function buildObjective(name, current, max, bool, style) {
         return {
+          displayStyle: style,
           displayName: $translate.instant(name),
           progress: current,
           completionValue: max,
-          complete: bool ? current >= max : current === max,
+          complete: bool ? current >= max : false,
           boolean: bool
         };
       }
 
       return [
-        buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins),
-        buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses),
+        buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins, false, 'trials'),
+        buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
         buildObjective(trials.winRewardDetails[0].winCount + ' Win reward (Armor)', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
         buildObjective(trials.winRewardDetails[1].winCount + ' Win reward (Weapon)', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
         buildObjective('Flawless', flawless, 1, true),

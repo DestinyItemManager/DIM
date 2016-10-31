@@ -2194,3 +2194,17 @@ dim-manifest-progress {
   border-top: 15px solid gold;
   border-right: 15px solid transparent;
 }
+
+
+.fa.fa-circle.trials {
+  font-size: 18px;
+  margin-right: 3px;
+  color: #b12e21;
+  opacity: 1;
+  &.wins {
+    color: #cfd92b;
+  }
+  &.incomplete {
+    opacity: .35;
+  }
+}
