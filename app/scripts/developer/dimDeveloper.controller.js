@@ -16,6 +16,6 @@
     vm.save = function() {
       localStorage.apiKey = vm.apiKey;
       window.location = vm.chromeURL + 'index.html';
-    }
+    };
   }
 })();

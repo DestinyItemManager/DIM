@@ -8,8 +8,9 @@
 
   function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster) {
     var apiKey = localStorage.apiKey;
-    console.log('loaded', apiKey)
+    /* eslint no-constant-condition: 0*/
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
+      /* eslint no-undef: 0*/
       apiKey = $DIM_API_KEY;
     }
 
@@ -74,7 +75,7 @@
         return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
-        $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'))
+        $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
       } else if (errorCode > 1) {
         if (response.data.Message) {
           const error = new Error(response.data.Message);
