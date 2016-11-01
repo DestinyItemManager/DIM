@@ -4,10 +4,10 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster', 'dimSettingsService'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster, dimSettingsService) {
-    var apiKey;
+  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
+    var apiKey = localStorage.apiKey;
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
       apiKey = $DIM_API_KEY;
     }
@@ -72,22 +72,15 @@
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
-        if (dimSettingsService.apiKey) {
-          apiKey = dimSettingsService.apiKey;
-
-          // retry with new key.
-          platformPromise = undefined;
-          return getPlatforms();
+        console.log(apiKey);
+        if (localStorage.apiKey === "" || localStorage.apiKey === "null" || localStorage.apiKey === "undefined") {
+          return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
         }
-
-        console.log('current key', apiKey, dimSettingsService.apiKey);
-        apiKey = prompt('Please enter an API key', dimSettingsService.apiKey);
+        apiKey = prompt('Please enter an API key', localStorage.apiKey);
         if (!apiKey) {
           return $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
         }
-
-        dimSettingsService.apiKey = apiKey;
-        dimSettingsService.save();
+        localStorage.apiKey = apiKey;
 
         // retry with new key.
         platformPromise = undefined;
