@@ -102,12 +102,6 @@
   function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
     var vm = this;
 
-    vm.getNumber = function(objective) {
-      if (objective.completionValue === 9 && objective.progress > 9) {
-        return new Array(objective.value);
-      }
-      return new Array(objective.completionValue);
-    };
     vm.featureFlags = dimFeatureFlags;
 
     vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
