@@ -71,6 +71,9 @@
 
     function calcArmorStats(set) {
       _.each(set.armor, function(armor) {
+        if (!armor.item.normalStats) {
+          return;
+        }
         var int = armor.item.normalStats[144602215];
         var dis = armor.item.normalStats[1735777505];
         var str = armor.item.normalStats[4244567218];
