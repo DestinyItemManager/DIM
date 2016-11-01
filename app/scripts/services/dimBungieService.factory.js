@@ -10,8 +10,7 @@
     var apiKey = localStorage.apiKey;
     /* eslint no-constant-condition: 0*/
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
-      /* eslint no-undef: 0*/
-      apiKey = $DIM_API_KEY;
+      apiKey = '$DIM_API_KEY';
     }
 
     var tokenPromise = null;

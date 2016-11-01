@@ -104,7 +104,7 @@ module.exports = function(grunt) {
           to: 'release'
         }, {
           from: '$DIM_API_KEY',
-          to: '8f0be500571741738b5d0832246a523c'
+          to: process.env.API_KEY
         }]
       },
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
           to: 'beta'
         }, {
           from: '$DIM_API_KEY',
-          to: 'b4955e857a294dcbafd320532c407265'
+          to: process.env.API_KEY
         }]
       }
     },
