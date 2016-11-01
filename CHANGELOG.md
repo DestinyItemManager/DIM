@@ -1,5 +1,6 @@
 # Next
 
+* Added detailed information to the Trials of Osiris popup card.
 * Added more detection for item years
 
 # 3.13.0
