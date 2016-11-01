@@ -32,8 +32,10 @@
           <span class="header-right">
             <div dim-platform-choice class="header-right"></div>
             <div class="header-right" id="actions">
+
               <span class="link" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
               <span class="link" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
+              <span class="link" ng-if="app.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" title="Available faction ranks"><i class="fa fa-list-alt"></i></span>
               <span class="link" ng-click="app.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
               <span class="link" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-filter"></i></span>
               <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
@@ -115,6 +117,7 @@
     <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/loadout/random/dimRandom.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAngularFilters.filter.js?v=$DIM_VERSION"></script>
+    <script src="scripts/shell/dimMaterialsExchangeCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimAppCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimSettingsCtrl.controller.js?v=$DIM_VERSION"></script>
     <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
@@ -147,6 +150,7 @@
     <script src="scripts/minmax/dimMinMaxLocks.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/minmax/dimMinMaxCharSelect.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/debug/dimDebugItem.controller.js?v=$DIM_VERSION"></script>
+    <script src="scripts/materials-exchange/dimCollapsible.directive.js?v=$DIM_VERSION"></script>
     <script src="scripts/apiKey.js?v=$DIM_VERSION"></script>
     <!-- end app scripts -->
 
