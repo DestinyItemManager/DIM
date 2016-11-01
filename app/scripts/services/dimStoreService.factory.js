@@ -678,25 +678,8 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      // determine what year this item came from based on sourceHash value
-      // items will hopefully be tagged as follows
-      // No value: Vanilla, Crota's End, House of Wolves
-      // The Taken King (year 2): 460228854
-      // Rise of Iron (year3): 24296771
-
-      // This could be further refined for CE/HoW based on activity. See
-      // DestinyRewardSourceDefinition and filter on %SOURCE%
-      // if sourceHash doesn't contain these values, we assume they came from
-      // year 1
       itemDef.sourceHashes = itemDef.sourceHashes || [];
-      var itemYear = 1;
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-        itemYear = 2;
-      }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        itemYear = 3;
-      }
-      // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
+
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
 
@@ -733,7 +716,6 @@
         classTypeName: getClass(itemDef.classType),
         dmg: dmgName,
         visible: true,
-        year: itemYear,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
@@ -797,6 +779,8 @@
           console.error("Error building quality rating for " + createdItem.name, item, itemDef, e);
         }
       }
+
+      setItemYear(createdItem);
 
       // More objectives properties
       if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
@@ -1468,6 +1452,32 @@
         }
       } else {
         return '-:--';
+      }
+    }
+
+    function setItemYear(item) {
+      // determine what year this item came from based on sourceHash value
+      // items will hopefully be tagged as follows
+      // No value: Vanilla, Crota's End, House of Wolves
+      // The Taken King (year 2): 460228854
+      // Rise of Iron (year3): 24296771
+
+      // This could be further refined for CE/HoW based on activity. See
+      // DestinyRewardSourceDefinition and filter on %SOURCE%
+      // if sourceHash doesn't contain these values, we assume they came from
+      // year 1
+
+      item.year = 1;
+      if (item.sourceHashes.includes(460228854) ||  // ttk
+          item.sourceHashes.includes(3523074641) || // variks
+          (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
+          item.sourceHashes.includes(3739898362) || // elders challenge
+          item.sourceHashes.includes(3551688287)) { // kings fall
+        item.year = 2;
+      }
+      if ((item.sourceHashes.includes(24296771) ||        // roi
+          !item.sourceHashes.length)) {                   // new items
+        item.year = 3;
       }
     }
 
