@@ -1,5 +1,7 @@
 # Next
 
+* Added more detection for item years
+
 # 3.13.0
 
 * The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown. Item stats and quality will hopefully show up on 11/8.
@@ -11,7 +13,6 @@
 * Fix a bug in the new filters for source.
 * Fix incognito mode launching
 * More i18n.
-* Added more detection for item years
 * Classified items in the vault are now counted and shown.
 * DIM is faster!
 * Memory of Felwinter is now excluded from loadout builder by default.
