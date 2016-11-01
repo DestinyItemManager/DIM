@@ -824,6 +824,14 @@
         createdItem.originalItem = item;
       }
 
+      // do specific things for specific items
+      if (createdItem.hash === 491180618) { // Trials Cards
+        createdItem.objectives = buildTrials(owner.advisors.activities.trials);
+        var best = owner.advisors.activities.trials.extended.highestWinRank;
+        createdItem.complete = owner.advisors.activities.trials.completion.success;
+        createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
+      }
+
       return createdItem;
     }
 
@@ -994,6 +1002,29 @@
         dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
         complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
+    }
+
+    function buildTrials(trials) {
+      var flawless = trials.completion.success;
+      trials = trials.extended;
+      function buildObjective(name, current, max, bool, style) {
+        return {
+          displayStyle: style,
+          displayName: $translate.instant('TrialsCard.' + name),
+          progress: current,
+          completionValue: max,
+          complete: bool ? current >= max : false,
+          boolean: bool
+        };
+      }
+
+      return [
+        buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins, false, 'trials'),
+        buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
+        buildObjective('FiveWins', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
+        buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
+        buildObjective('Flawless', flawless, 1, true),
+      ];
     }
 
     function buildRecords(recordBook, objectiveDef) {
