@@ -176,8 +176,7 @@
         mergedVendor.hasBounties = mergedVendor.hasBounties || vendor.hasBounties;
       });
 
-      mergedVendor.categories = _.sortBy(mergedVendor.categories, 'index');
-      mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'));
+      mergedVendor.allItems = _.flatten(_.pluck(mergedVendor.categories, 'saleItems'), true);
 
       return mergedVendor;
     }
@@ -300,9 +299,9 @@
         faction: def.factionHash // TODO: show rep!
       };
 
-      const items = _.flatten(vendor.saleItemCategories.map((categoryData) => {
+      const items = flatMap(vendor.saleItemCategories, (categoryData) => {
         return categoryData.saleItems;
-      }));
+      });
 
       return dimStoreService.processItems({ id: null }, _.pluck(items, 'item'))
         .then(function(items) {

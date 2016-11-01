@@ -6,17 +6,20 @@
     <div class="vendorLabels">
       <h1 translate="Vendors"></h1>
       <div class="vendorTabs">
+        <label ng-class="{active: vm.activeTab === ''}">
+          <input type='radio' ng-model='vm.activeTab' value=''>All
+        </label>
         <label ng-class="{active: vm.activeTab === 'hasArmorWeaps'}">
           <input type='radio' ng-model='vm.activeTab' value='hasArmorWeaps'><span translate="Vendors.ArmorAndWeapons"></span>
-        </label>
-        <label ng-class="{active: vm.activeTab === 'hasVehicles'}">
-          <input type='radio' ng-model='vm.activeTab' value='hasVehicles'><span translate="Vendors.ShipsAndVehicles"></span>
         </label>
         <label ng-class="{active: vm.activeTab === 'hasConsumables'}">
           <input type='radio' ng-model='vm.activeTab' value='hasConsumables'><span translate="Vendors.Consumables"></span>
         </label>
         <label ng-class="{active: vm.activeTab === 'hasBounties'}">
           <input type='radio' ng-model='vm.activeTab' value='hasBounties'><span translate="Vendors.Bounties"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasVehicles'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasVehicles'><span translate="Vendors.ShipsAndVehicles"></span>
         </label>
         <label ng-class="{active: vm.activeTab === 'hasShadersEmbs'}">
           <input type='radio' ng-model='vm.activeTab' value='hasShadersEmbs'><span translate="Vendors.ShadersAndEmblems"></span>
