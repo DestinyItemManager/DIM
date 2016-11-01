@@ -1,5 +1,7 @@
 # Next
 
+* Added detailed information to the Trials of Osiris popup card.
+
 # 3.13.0
 
 * The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown. Item stats and quality will hopefully show up on 11/8.
