@@ -19,7 +19,7 @@
     "angular-native-dragdrop": "https://github.com/angular-dragdrop/angular-dragdrop.git",
     "angular-promise-tracker": "~2.1.0",
     "angular-ui-router": "~0.2.x",
-    "components-font-awesome": "~4.4.0",
+    "components-font-awesome": "~4.7.0",
     "humanize-duration": "~3.9.1",
     "jquery": "~2",
     "lz-string": "https://github.com/pieroxy/lz-string.git#~1.4.x",

@@ -706,9 +706,6 @@
         amount: item.stackSize,
         primStat: item.primaryStat,
         typeName: itemDef.itemTypeName,
-        // "perks" are the two or so talent grid items that are "featured" for an
-        // item in its popup in the game. We don't currently use these.
-        // perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
         maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
         // 0: titan, 1: hunter, 2: warlock, 3: any
@@ -757,6 +754,13 @@
         createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
       } catch (e) {
         console.error("Error building talent grid for " + createdItem.name, item, itemDef, e);
+      }
+      if (item.perks && item.perks.length) {
+        try {
+          createdItem.perks = buildPerks(item.perks, defs.SandboxPerk);
+        } catch (e) {
+          console.error("Error building Perks for " + createdItem.name, item, itemDef, e);
+        }
       }
       try {
         createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
@@ -1002,6 +1006,22 @@
         dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
         complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
+    }
+
+    function buildPerks(perks, perksDefs) {
+      if (!perks || !perks.length) {
+        return [];
+      }
+      return perks.map((perk) => {
+        const def = perksDefs[perk.perkHash];
+        return {
+          hash: perk.perkHash,
+          active: perk.isActive,
+          icon: perk.iconPath,
+          description: def.displayDescription,
+          name: def.displayName
+        };
+      });
     }
 
     function buildTrials(trials) {
