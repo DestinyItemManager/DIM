@@ -132,6 +132,7 @@
         if (result) {
           result.close();
         } else {
+          var lang = vm.settings.language + '/';
           ngDialog.closeAll();
           if (name !== 'about' && name !== 'support') {
             result = ngDialog.open({
@@ -141,7 +142,7 @@
             });
           } else {
             result = ngDialog.open({
-              template: 'views/' + vm.settings.language + '/' + name + '.html',
+              template: 'views/' + lang + name + '.html',
               className: name,
               appendClassName: 'modal-dialog'
             });
