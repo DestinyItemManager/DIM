@@ -1339,9 +1339,13 @@ g {
   cursor: pointer;
   font-size: 14px;
   color: $lightgray;
-  &:hover {
+  &:hover, .collapse-handle:hover & {
     color: $orange;
   }
+}
+
+.collapse-handle {
+  cursor: pointer;
 }
 
 .store-row {
