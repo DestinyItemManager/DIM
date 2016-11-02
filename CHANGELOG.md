@@ -1,4 +1,5 @@
 # Next
+* Added `is:sublime` filter
 
 * Added detailed information to the Trials of Osiris popup card.
 * Added more detection for item years.
