@@ -71,9 +71,6 @@
 
     function calcArmorStats(set) {
       _.each(set.armor, function(armor) {
-        if (!armor.item.normalStats) {
-          return;
-        }
         var int = armor.item.normalStats[144602215];
         var dis = armor.item.normalStats[1735777505];
         var str = armor.item.normalStats[4244567218];
@@ -396,13 +393,14 @@
                                  'classitem',
                                  'artifact',
                                  'ghost');
-          vm.lockeditems.Helmet = items.helmet[0];
-          vm.lockeditems.Gauntlets = items.gauntlets[0];
-          vm.lockeditems.Chest = items.chest[0];
-          vm.lockeditems.Leg = items.leg[0];
-          vm.lockeditems.ClassItem = items.classitem[0];
-          vm.lockeditems.Artifact = items.artifact[0];
-          vm.lockeditems.Ghost = items.ghost[0];
+          // Do not lock items with no stats
+          vm.lockeditems.Helmet = items.helmet[0].stats ? items.helmet[0] : null;
+          vm.lockeditems.Gauntlets = items.gauntlets[0].stats ? items.gauntlets[0] : null;
+          vm.lockeditems.Chest = items.chest[0].stats ? items.chest[0] : null;
+          vm.lockeditems.Leg = items.leg[0].stats ? items.leg[0] : null;
+          vm.lockeditems.ClassItem = items.classitem[0].stats ? items.classitem[0] : null;
+          vm.lockeditems.Artifact = items.artifact[0].stats ? items.artifact[0] : null;
+          vm.lockeditems.Ghost = items.ghost[0].stats ? items.ghost[0] : null;
           vm.highestsets = vm.getSetBucketsStep(vm.active);
           if (vm.progress < 1.0) {
             vm.lockedchanged = true;
@@ -450,8 +448,8 @@
 
           return dimLoadoutService.applyLoadout(dimStoreService.getActiveStore(), loadout, true);
         },
-        getSetBucketsStep: function(activeGaurdian) {
-          var bestArmor = getBestArmor(buckets[activeGaurdian], vendorBuckets[activeGaurdian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
+        getSetBucketsStep: function(activeGuardian) {
+          var bestArmor = getBestArmor(buckets[activeGuardian], vendorBuckets[activeGuardian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
           var helms = bestArmor.Helmet || [];
           var gaunts = bestArmor.Gauntlets || [];
           var chests = bestArmor.Chest || [];
@@ -467,7 +465,7 @@
             return null;
           }
 
-          function step(activeGaurdian, h, g, c, l, ci, gh, ar, processedCount) {
+          function step(activeGuardian, h, g, c, l, ci, gh, ar, processedCount) {
             for (; h < helms.length; ++h) {
               for (; g < gaunts.length; ++g) {
                 for (; c < chests.length; ++c) {
@@ -526,15 +524,15 @@
 
                           processedCount++;
                           if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
-                            if (vm.active !== activeGaurdian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/best') {
-                              // If active gaurdian or page is changed then stop processing combinations
+                            if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/best') {
+                              // If active guardian or page is changed then stop processing combinations
                               vm.lockedchanged = false;
                               vm.excludedchanged = false;
                               vm.perkschanged = false;
                               return;
                             }
                             vm.progress = processedCount / combos;
-                            $timeout(step, 0, true, activeGaurdian, h, g, c, l, ci, gh, ar, processedCount);
+                            $timeout(step, 0, true, activeGuardian, h, g, c, l, ci, gh, ar, processedCount);
                             return;
                           }
                         } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
@@ -571,7 +569,7 @@
           vm.lockedchanged = false;
           vm.excludedchanged = false;
           vm.perkschanged = false;
-          $timeout(step, 0, true, activeGaurdian, 0, 0, 0, 0, 0, 0, 0, 0);
+          $timeout(step, 0, true, activeGuardian, 0, 0, 0, 0, 0, 0, 0, 0);
           return setMap;
         },
         getBonus: dimStoreService.getBonus,
