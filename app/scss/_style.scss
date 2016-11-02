@@ -389,20 +389,10 @@ body {
 }
 
 ::-webkit-scrollbar {
-  @media all and (max-width: 768px) {
-    width: 3px;
+  width: 10px;
 
-    &:horizontal {
-      height: 3px;
-    }
-  }
-  
-  @media all and (min-width: 769px){
-    width: 10px;
-
-    &:horizontal{
-      height:10px;
-    }
+  &:horizontal{
+    height:10px;
   }
 }
 
