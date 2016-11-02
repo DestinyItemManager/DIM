@@ -133,12 +133,19 @@
           result.close();
         } else {
           ngDialog.closeAll();
-          result = ngDialog.open({
-            template: 'views/' + name + '.html',
-            className: name,
-            appendClassName: 'modal-dialog'
-          });
-
+          if (name !== 'about' && name !== 'support') {
+            result = ngDialog.open({
+              template: 'views/' + name + '.html',
+              className: name,
+              appendClassName: 'modal-dialog'
+            });
+          } else {
+            result = ngDialog.open({
+              template: 'views/' + vm.settings.language + '/' + name + '.html',
+              className: name,
+              appendClassName: 'modal-dialog'
+            });
+          }
           result.closePromise.then(function() {
             result = null;
           });
