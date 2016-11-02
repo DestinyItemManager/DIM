@@ -124,26 +124,36 @@
      * Show a popup dialog containing the given template. Its class
      * will be based on the name.
      */
-    function showPopupFunction(name) {
+    function showPopupFunction(name, lang) {
       var result;
       return function(e) {
         e.stopPropagation();
-
+        if (lang) {
+          lang = vm.settings.language;
+        }
         if (result) {
           result.close();
         } else {
-          var lang = vm.settings.language + '/';
           ngDialog.closeAll();
-          if (name !== 'about' && name !== 'support') {
+          if (lang) {
+            result = ngDialog.open({
+              template: 'views/' + lang + '/' + name + '.html',
+              className: name,
+              name: name,
+              appendClassName: 'modal-dialog'
+            });
+            /* Lang Fallback
+            result = ngDialog.open({
+              template: 'views/en/' + name + '.html',
+              className: name,
+              name: name,
+              appendClassName: 'modal-dialog'
+            }); */
+          } else {
             result = ngDialog.open({
               template: 'views/' + name + '.html',
               className: name,
-              appendClassName: 'modal-dialog'
-            });
-          } else {
-            result = ngDialog.open({
-              template: 'views/' + lang + name + '.html',
-              className: name,
+              name: name,
               appendClassName: 'modal-dialog'
             });
           }
@@ -159,10 +169,10 @@
         }
       };
     }
-
-    vm.showSetting = showPopupFunction('setting');
-    vm.showAbout = showPopupFunction('about');
-    vm.showSupport = showPopupFunction('support');
+    var lang = vm.settings.language;
+    vm.showSetting = showPopupFunction('setting', lang);
+    vm.showAbout = showPopupFunction('about', lang);
+    vm.showSupport = showPopupFunction('support', lang);
     vm.showFilters = showPopupFunction('filters');
     vm.showXur = showPopupFunction('xur');
     vm.showMatsExchange = showPopupFunction('mats-exchange');
