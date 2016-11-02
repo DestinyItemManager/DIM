@@ -1,0 +1,139 @@
+<div ng-controller="dimSettingsCtrl as vm">
+  <h1>Settings</h1>
+  <div class="ngdialog-inner-content">
+<!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
+  <form class="settings">
+    <table>
+      <tr>
+        <td>
+          <label for="language">Language (reload DIM to take effect)</label>
+        </td>
+        <td>
+          <select id="language" ng-model="vm.settings.language" ng-options="code as name for (code, name) in vm.languageOptions" required></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="condensedItems" title="Items that do not match filter criteria will be hidden.">Hide Unfiltered Items while Filtering</label>
+        </td>
+        <td>
+          <input type="checkbox" ng-model="vm.settings.hideFilteredItems"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="details" title="Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.">Always Show Item Details</label>
+        </td>
+        <td>
+          <input type="checkbox" id="details" ng-model="vm.settings.itemDetails"/>
+        </td>
+      </tr>
+      <tr ng-if="vm.featureFlags.qualityEnabled">
+        <td>
+          <label for="itemQuality" title="Will enable advanced min/max features on the move dialog and enable the armor comparison view.">Enable advanced stat quality comparison features</label>
+        </td>
+        <td>
+          <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="showNewItems" title="Will show new items with an overlay.">Show new items with an overlay.</label>
+        </td>
+        <td>
+          <input type="checkbox" id="showNewItems" ng-model="vm.settings.showNewItems"/>
+        </td>
+      </tr>
+      <tr ng-if="vm.settings.showNewItems">
+        <td>
+          <label for="showNewAnimation" title="Will show the animated new item overlay on new items. Turning this off can save CPU cycles.">Show new item overlay animations on new items.</label>
+        </td>
+        <td>
+          <input type="checkbox" id="showNewAnimation" ng-model="vm.settings.showNewAnimation"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="showElements" title="Show elemental damage icons on weapons.">Show elemental damage icons on weapons</label>
+        </td>
+        <td>
+          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="itemSort" title="Sort items by rarity or their primary stat value.">Sort Items by:</label>
+        </td>
+        <td>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat">Primary stat</label>
+          <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary">Rarity</label>
+          <br>
+          <label ng-show="vm.settings.itemQuality">
+            <input type="radio" ng-model="vm.settings.itemSort" value="quality">Stat roll percent</label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="charCol" title="Select the number of columns for character inventory.">Character Inventory Columns</label>
+        </td>
+        <td>
+          <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="charCol" title="Select the maximum number of columns for vault.">Vault Maximum Inventory Columns</label>
+        </td>
+        <td>
+          <select id="charCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="itemSize" title="How big should items be?">Item Size</label>
+        </td>
+        <td>
+          <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" ng-change="vm.save()" /> <button ng-click="vm.settings.itemSize = 44>Reset to Default</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label title="Characters can be ordered by last login or based on their creation date.">Character Order</label>
+        </td>
+        <td>
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent" ng-model-options="{ updateOn: 'default blur' }">By Most Recent Character</label>
+            <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecentReverse" ng-model-options="{ updateOn: 'default blur' }">By Most Recent Character (Reversed)</label>
+            <br>
+          <label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }">Fixed (By Character Age)</label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="spreadsheetLinks" tite="Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.">Download Spreadsheets</label>
+        </td>
+        <td>
+          <div id="spreadsheetLinks">
+            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Weapons"></span></button>
+            <button ng-click="vm.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Armor"></span></button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="resetHiddenInfos">DIM Info Popups</label>
+        </td>
+        <td>
+          <button ng-click="vm.resetHiddenInfos()">Reset previously hidden info tips</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+  </div>
+</div>
