@@ -53,6 +53,8 @@
       itemSize: 44,
       // Which categories or buckets should be collapsed?
       collapsedSections: {},
+      // Preference for perks display, 'talent' grid or 'perks' list
+      perks: 'talent',
       // What settings for farming mode
       farming: {
         farmGreens: true
@@ -79,6 +81,12 @@
         });
       }
     };
+
+    $rootScope.$on('dim-toggle-perk-display', () => {
+      $rootScope.$evalAsync(() => {
+        settings.perks = settings.perks === 'talent' ? 'perks' : 'talent';
+      });
+    });
 
     // Load settings async
     SyncService.get().then(function(data) {

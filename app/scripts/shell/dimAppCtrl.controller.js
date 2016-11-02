@@ -59,6 +59,14 @@
       }
     });
 
+    hotkeys.add({
+      combo: ['p'],
+      description: "Toggle perk/talent display style",
+      callback: function() {
+        $rootScope.$broadcast('dim-toggle-perk-display');
+      }
+    });
+
 /* Add each hotkey manually until hotkeys can be translated.
     _.each(dimSettingsService.itemTags, (tag) => {
       if (tag.hotkey) {

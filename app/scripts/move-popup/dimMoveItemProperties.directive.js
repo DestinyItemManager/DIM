@@ -73,8 +73,12 @@
         '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll <a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"><i class="fa fa-question-circle" title="Click for more information about what Stats Quality is."></i></a></span>',
         '    </div>',
         '  </div>',
-        '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
+        '  <div class="talent-options"><i ng-click="vm.perksPref(\'talent\')" class="fa fa-braille" ng-class="{ selected: vm.settings.perks === \'talent\' }"></i><i ng-click="vm.perksPref(\'perks\')" class="fa fa-list-ul" ng-class="{ selected: vm.settings.perks === \'perks\' }"></i></div>',
+        '  <div class="item-details item-talents" ng-if="vm.item.talentGrid && vm.itemDetails && vm.settings.perks === \'talent\'">',
         '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '  </div>',
+        '  <div class="item-details item-perks" ng-if="vm.item.perks && vm.itemDetails && vm.settings.perks === \'perks\'">',
+        '    <dim-perks perks="vm.item.perks"></dim-perks>',
         '  </div>',
         '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '    <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
@@ -156,6 +160,11 @@
         .finally(function() {
           vm.locking = false;
         });
+    };
+
+    vm.perksPref = function(pref) {
+      vm.settings.perks = pref;
+      vm.settings.save();
     };
 
     vm.classes = {
