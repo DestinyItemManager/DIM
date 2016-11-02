@@ -184,10 +184,12 @@
     function mergeCategory(mergedCategory, otherCategory) {
       otherCategory.saleItems.forEach((saleItem) => {
         const existingSaleItem = _.find(mergedCategory.saleItems, (existingSaleItem) =>
-                                    existingSaleItem.item.hash === saleItem.item.hash);
+                                        existingSaleItem.item.hash === saleItem.item.hash);
         if (existingSaleItem) {
           existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
-          existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
+          if (existingSaleItem.unlocked) {
+            existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
+          }
         } else {
           mergedCategory.saleItems.push(saleItem);
         }
