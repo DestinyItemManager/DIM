@@ -172,7 +172,7 @@
       };
     }
     var lang = ' ';
-    vm.showSetting = showPopupFunction('setting', lang);
+    vm.showSetting = showPopupFunction('setting');
     vm.showAbout = showPopupFunction('about', lang);
     vm.showSupport = showPopupFunction('support', lang);
     vm.showFilters = showPopupFunction('filters');
