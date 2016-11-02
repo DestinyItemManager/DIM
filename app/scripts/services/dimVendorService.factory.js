@@ -309,7 +309,8 @@
         .then(function(items) {
           const itemsByHash = _.indexBy(items, 'hash');
           const categories = _.map(vendor.saleItemCategories, (category) => {
-            const categoryItems = category.saleItems.map((saleItem) => {
+            // Uniquify these because Bungie sends down dups...
+            const categoryItems = _.uniq(category.saleItems.map((saleItem) => {
               return {
                 index: saleItem.vendorItemIndex,
                 costs: saleItem.costs.map((cost) => {
@@ -323,7 +324,7 @@
                 unlocked: isSaleItemUnlocked(saleItem),
                 unlockedByCharacter: [store.id]
               };
-            });
+            }), (saleItem) => saleItem.item.hash);
 
             let hasArmorWeaps = false;
             let hasVehicles = false;
