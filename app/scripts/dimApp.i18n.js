@@ -16,6 +16,7 @@
             Progress: "Progress",
             Reputation: "Reputation",
             Show: "Show {{bucket}}",
+            Unknown: "Unknown",
             Vault: "Vault",
             Weapons: "Weapons" },
           Cooldown: {
@@ -190,6 +191,7 @@
             Postmaster: "Amministratrice",
             Progress: "Progesso",
             Reputation: "Reputazione",
+            Unknown: "Sconosciuto",
             Vault: "Depositi",
             Weapons: "Armi" },
           Cooldown: {
@@ -238,6 +240,7 @@
             Progress: "Fortschritt",
             Reputation: "Ruf",
             Show: "Zeige {{bucket}}",
+            Unknown: "Unbekannt",
             Vault: "Tresor",
             Vanguard: "Vorhut",
             Weapons: "Waffen" },
@@ -406,6 +409,7 @@
             Armor: "Armure",
             General: "Général",
             Postmaster: "Commis des postes",
+            Unknown: "Inconnu",
             Vault: "Coffres",
             Reputation: "Estime" },
           Cooldown: {
@@ -456,6 +460,7 @@
             Armor: "Armadura",
             Postmaster: "Administración",
             Progress: "Progreso",
+            Unknown: "Desconocido",
             Vault: "Depósito",
             Reputation: "Reputación" },
           Cooldown: {
@@ -503,6 +508,7 @@
             General: "全般",
             Postmaster: "ポストマスター",
             Vault: "装備",
+            Unknown: "未知の",
             Vanguard: "バンガード",
             Progress: "進捗",
             Reputation: "評価" },
@@ -546,6 +552,7 @@
             General: "Geral",
             Postmaster: "Chefe do Correio",
             Progress: "Progresso",
+            Unknown: "Desconhecido",
             Vault: "Cofre",
             Vanguard: "Vanguarda",
             Reputation: "Reputação" },
