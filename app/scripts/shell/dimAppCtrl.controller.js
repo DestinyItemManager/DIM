@@ -128,16 +128,18 @@
       var result;
       return function(e) {
         e.stopPropagation();
+
         if (lang) {
-          lang = vm.settings.language;
+          lang = vm.settings.language + '/'; // set language
         }
+
         if (result) {
           result.close();
         } else {
           ngDialog.closeAll();
           if (lang) {
             result = ngDialog.open({
-              template: 'views/' + lang + '/' + name + '.html',
+              template: 'views/' + lang + name + '.html',
               className: name,
               name: name,
               appendClassName: 'modal-dialog'
@@ -169,7 +171,7 @@
         }
       };
     }
-    var lang = vm.settings.language;
+    var lang = ' ';
     vm.showSetting = showPopupFunction('setting', lang);
     vm.showAbout = showPopupFunction('about', lang);
     vm.showSupport = showPopupFunction('support', lang);
