@@ -35,7 +35,7 @@
               Greens: "Move Uncommon/Green Items to Vault",
               Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character." },
             MakeRoom: {
-              MakeRoom: "Allow weapons/armor rearranging",
+              MakeRoom: "Make room to pick up items by moving equipment",
               Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams." },
             Quickmove: "Quick Move",
             Stop: "Stop" },
