@@ -29,12 +29,12 @@
           FarmingMode: {
             FarmingMode: "Farming Mode (move items)",
             Desc: "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
-            DescMakeRoom: "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
             Configuration: "Configuration",
             Greens: {
               Greens: "Move Uncommon/Green Items to Vault",
               Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character." },
             MakeRoom: {
+              Desc: "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
               MakeRoom: "Make room to pick up items by moving equipment",
               Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams." },
             Quickmove: "Quick Move",
