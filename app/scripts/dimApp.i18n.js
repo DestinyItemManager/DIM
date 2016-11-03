@@ -63,9 +63,9 @@
             LockedHelp: "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
             FilterSets: "Filter sets",
             AdvancedOptions: "Advanced Options",
-            Fast: "Fast",
-            Full: "Full",
             ProcessingMode: {
+              Fast: "Fast",
+              Full: "Full",
               ProcessingMode: "Processing mode",
               HelpFast: "Only looks at your best gear.",
               HelpFull: "Looks at more gear, but takes longer." },
@@ -163,6 +163,7 @@
           Stats: {
             Discipline: "Discipline",
             Intellect: "Intellect",
+            NoBonus: "No Bonus",
             Strength: "Strength",
             TierProgress: "{{progress}} for {{tier}}" },
           Tags: {
@@ -173,6 +174,7 @@
             Keep: "Keep" },
           Vendors: {
             Vendors: "Vendors",
+            All: "All",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",
@@ -283,15 +285,15 @@
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
             HideGear: "Verstecke {{class}} Ausrüstung",
-            LockEquipped: "Lock Equipped",
-            ClearLocked: "Clear Locked",
+            LockEquipped: "Sperren Ausrüstung",
+            ClearLocked: "Klar Sperren",
             Locked: "Festgelegte Gegenstände",
             LockedHelp: "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn für die generierten Loadouts festzulegen. Mit Shift + Klick kannst du Gegenstände ignorieren.",
             FilterSets: "Sets filtern",
             AdvancedOptions: "Erweiterte Optionen",
-            Fast: "Schnelle",
-            Full: "Vollständige",
             ProcessingMode: {
+              Fast: "Schnelle",
+              Full: "Vollständige",
               ProcessingMode: "Berechnung",
               HelpFast: "Nur die beste Ausrüstung wird einbezogen.",
               HelpFull: "Bezieht die ganze Ausrüstung mit ein." },
@@ -398,6 +400,7 @@
             Infuse: "Infundieren" },
           Vendors: {
             Vendors: "Händler",
+            All: "Alle",
             VendorsLoad: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
