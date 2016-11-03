@@ -65,7 +65,7 @@
       if (cooldown) {
         cooldown = '\n' + $translate.instant('Cooldown.' + vm.stats[which].effect) + ": " + cooldown;
       }
-      return 'T' + tier + ' ' + vm.stats[which].name + next + cooldown;
+      return 'T' + tier + ' ' + $translate.instant('Stats.' + vm.stats[which].name) + next + cooldown;
     };
   }
 })();
