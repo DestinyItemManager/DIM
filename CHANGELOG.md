@@ -1,4 +1,12 @@
 # Next
+* Added `is:sublime` filter
+
+* Added detailed information to the Trials of Osiris popup card.
+* Added more detection for item years.
+* The collapse button now no longer takes up the whole bucket height.
+* Fixed marking which characters had access to vendor items.
+* Fix duplicate ghosts in Vangaurd vendors.
+* Fix tracking new items when the new-item shine is disabled.
 
 # 3.13.0
 

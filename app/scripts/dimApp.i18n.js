@@ -9,10 +9,6 @@
       $translateProvider
         .translations('en', {
           Level: "Level",
-          Armor: "Armor",
-          General: "General",
-          Weapons: "Weapons",
-          Vault: "Vault",
           Bucket: {
             Armor: "Armor",
             General: "General",
@@ -20,6 +16,7 @@
             Progress: "Progress",
             Reputation: "Reputation",
             Show: "Show {{bucket}}",
+            Unknown: "Unknown",
             Vault: "Vault",
             Weapons: "Weapons" },
           Cooldown: {
@@ -181,20 +178,22 @@
             Consumables: "Consumables",
             Bounties: "Bounties",
             ShadersAndEmblems: "Shaders & Emblems",
-            Emotes: "Emotes" }
+            Emotes: "Emotes" },
+          TrialsCard: {
+            FiveWins: "5 Win Reward (Armor)",
+            SevenWins: "7 Win Reward (Weapon)",
+            Flawless: "Flawless"
+          }
         })
         .translations('it', {
           Level: "Livello",
-          Armor: "Armatura",
-          General: "Generale",
-          Weapons: "Armi",
-          Vault: "Depositi",
           Bucket: {
             Armor: "Armatura",
             General: "Generale",
             Postmaster: "Amministratrice",
             Progress: "Progesso",
             Reputation: "Reputazione",
+            Unknown: "Sconosciuto",
             Vault: "Depositi",
             Weapons: "Armi" },
           Cooldown: {
@@ -236,10 +235,6 @@
         })
         .translations('de', {
           Level: "Level",
-          Weapons: "Waffen",
-          Armor: "Rüstung",
-          General: "Allgemein",
-          Vault: "Tresor",
           Bucket: {
             Armor: "Rüstung",
             General: "Allgemein",
@@ -247,6 +242,7 @@
             Progress: "Fortschritt",
             Reputation: "Ruf",
             Show: "Zeige {{bucket}}",
+            Unknown: "Unbekannt",
             Vault: "Tresor",
             Vanguard: "Vorhut",
             Weapons: "Waffen" },
@@ -411,15 +407,12 @@
         })
         .translations('fr', {
           Level: "Niveau",
-          Weapons: "Armes",
-          Armor: "Armure",
-          General: "Général",
-          Vault: "Coffres",
           Bucket: {
             Weapons: "Armes",
             Armor: "Armure",
             General: "Général",
             Postmaster: "Commis des postes",
+            Unknown: "Inconnu",
             Vault: "Coffres",
             Reputation: "Estime" },
           Cooldown: {
@@ -465,14 +458,12 @@
         })
         .translations('es', {
           Level: "Nivel",
-          Weapons: "Armas",
-          Armor: "Armadura",
-          Vault: "Depósito",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armadura",
             Postmaster: "Administración",
             Progress: "Progreso",
+            Unknown: "Desconocido",
             Vault: "Depósito",
             Reputation: "Reputación" },
           Cooldown: {
@@ -514,16 +505,13 @@
         })
         .translations('ja', {
           Level: "レベル",
-          Weapons: "武器",
-          Armor: "よろい",
-          General: "全般",
-          Vault: "装備",
           Bucket: {
             Weapons: "武器",
             Armor: "よろい",
             General: "全般",
             Postmaster: "ポストマスター",
             Vault: "装備",
+            Unknown: "未知の",
             Vanguard: "バンガード",
             Progress: "進捗",
             Reputation: "評価" },
@@ -561,16 +549,13 @@
         })
         .translations('pt-br', {
           Level: "Nível",
-          Weapons: "Armas",
-          Armor: "Armaduras",
-          General: "Geral",
-          Vault: "Cofre",
           Bucket: {
             Weapons: "Armas",
             Armor: "Armaduras",
             General: "Geral",
             Postmaster: "Chefe do Correio",
             Progress: "Progresso",
+            Unknown: "Desconhecido",
             Vault: "Cofre",
             Vanguard: "Vanguarda",
             Reputation: "Reputação" },

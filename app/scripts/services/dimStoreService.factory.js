@@ -9,7 +9,6 @@
     '$q',
     'dimBungieService',
     'dimPlatformService',
-    'dimSettingsService',
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
@@ -28,7 +27,6 @@
     $q,
     dimBungieService,
     dimPlatformService,
-    dimSettingsService,
     dimCategory,
     dimDefinitions,
     dimBucketService,
@@ -679,25 +677,8 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      // determine what year this item came from based on sourceHash value
-      // items will hopefully be tagged as follows
-      // No value: Vanilla, Crota's End, House of Wolves
-      // The Taken King (year 2): 460228854
-      // Rise of Iron (year3): 24296771
-
-      // This could be further refined for CE/HoW based on activity. See
-      // DestinyRewardSourceDefinition and filter on %SOURCE%
-      // if sourceHash doesn't contain these values, we assume they came from
-      // year 1
       itemDef.sourceHashes = itemDef.sourceHashes || [];
-      var itemYear = 1;
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-        itemYear = 2;
-      }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        itemYear = 3;
-      }
-      // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
+
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
 
@@ -734,7 +715,6 @@
         classTypeName: getClass(itemDef.classType),
         dmg: dmgName,
         visible: true,
-        year: itemYear,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
@@ -759,7 +739,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
+        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
@@ -798,6 +778,8 @@
           console.error("Error building quality rating for " + createdItem.name, item, itemDef, e);
         }
       }
+
+      setItemYear(createdItem);
 
       // More objectives properties
       if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
@@ -839,6 +821,14 @@
       // In debug mode, keep the original JSON around
       if (dimFeatureFlags.debugMode) {
         createdItem.originalItem = item;
+      }
+
+      // do specific things for specific items
+      if (createdItem.hash === 491180618) { // Trials Cards
+        createdItem.objectives = buildTrials(owner.advisors.activities.trials);
+        var best = owner.advisors.activities.trials.extended.highestWinRank;
+        createdItem.complete = owner.advisors.activities.trials.completion.success;
+        createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
       }
 
       return createdItem;
@@ -1011,6 +1001,29 @@
         dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
         complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
+    }
+
+    function buildTrials(trials) {
+      var flawless = trials.completion.success;
+      trials = trials.extended;
+      function buildObjective(name, current, max, bool, style) {
+        return {
+          displayStyle: style,
+          displayName: $translate.instant('TrialsCard.' + name),
+          progress: current,
+          completionValue: max,
+          complete: bool ? current >= max : false,
+          boolean: bool
+        };
+      }
+
+      return [
+        buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins, false, 'trials'),
+        buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
+        buildObjective('FiveWins', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
+        buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
+        buildObjective('Flawless', flawless, 1, true),
+      ];
     }
 
     function buildRecords(recordBook, objectiveDef) {
@@ -1469,6 +1482,32 @@
         }
       } else {
         return '-:--';
+      }
+    }
+
+    function setItemYear(item) {
+      // determine what year this item came from based on sourceHash value
+      // items will hopefully be tagged as follows
+      // No value: Vanilla, Crota's End, House of Wolves
+      // The Taken King (year 2): 460228854
+      // Rise of Iron (year3): 24296771
+
+      // This could be further refined for CE/HoW based on activity. See
+      // DestinyRewardSourceDefinition and filter on %SOURCE%
+      // if sourceHash doesn't contain these values, we assume they came from
+      // year 1
+
+      item.year = 1;
+      if (item.sourceHashes.includes(460228854) ||  // ttk
+          item.sourceHashes.includes(3523074641) || // variks
+          (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
+          item.sourceHashes.includes(3739898362) || // elders challenge
+          item.sourceHashes.includes(3551688287)) { // kings fall
+        item.year = 2;
+      }
+      if ((item.sourceHashes.includes(24296771) ||        // roi
+          !item.sourceHashes.length)) {                   // new items
+        item.year = 3;
       }
     }
 
