@@ -153,6 +153,7 @@
         }
       };
     }
+
     vm.showSetting = showPopupFunction('setting');
     vm.showAbout = showPopupFunction('about', true);
     vm.showSupport = showPopupFunction('support', true);
