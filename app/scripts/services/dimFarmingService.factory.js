@@ -50,6 +50,9 @@
                     });
                     if (otherStoresWithSpace.length) {
                       return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items);
+                    } else if ((vaultSpaceLeft === 1) && !settings.makeRoomForItems) {
+                      // Still allow transfers through the Vault to other characters.
+                      return $q.reject(new Error(nospace));
                     } else if (vaultSpaceLeft === 0) {
                       // If there's no room on other characters to move out of the vault,
                       // give up entirely.
@@ -57,7 +60,7 @@
                         return _.any(dimCategory[item.bucket.sort], function(category) {
                           return store.spaceLeftForItem({ type: category, location: buckets.byType[category], bucket: buckets.byType[category] }) > 0;
                         });
-                      })) {
+                      }) || (!settings.makeRoomForItems)) {
                         return $q.reject(new Error(nospace));
                       }
                     }
@@ -185,7 +188,9 @@
           }).filter((item) => !_.isUndefined(item));
 
           self.farmItems().then(function() {
-            self.makeRoomForItems();
+            if (settings.makeRoomForItems) {
+              self.makeRoomForItems();
+            }
           });
         }
 

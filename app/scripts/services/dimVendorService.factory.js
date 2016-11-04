@@ -184,10 +184,12 @@
     function mergeCategory(mergedCategory, otherCategory) {
       otherCategory.saleItems.forEach((saleItem) => {
         const existingSaleItem = _.find(mergedCategory.saleItems, (existingSaleItem) =>
-                                    existingSaleItem.item.hash === saleItem.item.hash);
+                                        existingSaleItem.item.hash === saleItem.item.hash);
         if (existingSaleItem) {
           existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
-          existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
+          if (existingSaleItem.unlocked) {
+            existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
+          }
         } else {
           mergedCategory.saleItems.push(saleItem);
         }
@@ -307,7 +309,8 @@
         .then(function(items) {
           const itemsByHash = _.indexBy(items, 'hash');
           const categories = _.map(vendor.saleItemCategories, (category) => {
-            const categoryItems = category.saleItems.map((saleItem) => {
+            // Uniquify these because Bungie sends down dups...
+            const categoryItems = _.uniq(category.saleItems.map((saleItem) => {
               return {
                 index: saleItem.vendorItemIndex,
                 costs: saleItem.costs.map((cost) => {
@@ -321,7 +324,7 @@
                 unlocked: isSaleItemUnlocked(saleItem),
                 unlockedByCharacter: [store.id]
               };
-            });
+            }), (saleItem) => saleItem.item.hash);
 
             let hasArmorWeaps = false;
             let hasVehicles = false;

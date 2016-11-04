@@ -16,6 +16,7 @@
             Progress: "Progress",
             Reputation: "Reputation",
             Show: "Show {{bucket}}",
+            Unknown: "Unknown",
             Vault: "Vault",
             Weapons: "Weapons" },
           Cooldown: {
@@ -32,6 +33,10 @@
             Greens: {
               Greens: "Move Uncommon/Green Items to Vault",
               Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character." },
+            MakeRoom: {
+              Desc: "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
+              MakeRoom: "Make room to pick up items by moving equipment",
+              Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams." },
             Quickmove: "Quick Move",
             Stop: "Stop" },
           Header: {
@@ -59,9 +64,9 @@
             LockedHelp: "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
             FilterSets: "Filter sets",
             AdvancedOptions: "Advanced Options",
-            Fast: "Fast",
-            Full: "Full",
             ProcessingMode: {
+              Fast: "Fast",
+              Full: "Full",
               ProcessingMode: "Processing mode",
               HelpFast: "Only looks at your best gear.",
               HelpFull: "Looks at more gear, but takes longer." },
@@ -78,7 +83,7 @@
             ShowConfigs: "Show configurations",
             HideAllConfigs: "Hide all configurations",
             HideConfigs: "Hide configurations",
-            Loading: "Loading best sets ({{percentage}}%)",
+            Loading: "Loading best sets",
             Vendor: "Include Vendor items",
             Exclude: "Excluded Items",
             ExcludeHelp: "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
@@ -159,6 +164,7 @@
           Stats: {
             Discipline: "Discipline",
             Intellect: "Intellect",
+            NoBonus: "No Bonus",
             Strength: "Strength",
             TierProgress: "{{progress}} for {{tier}}" },
           Tags: {
@@ -169,13 +175,19 @@
             Keep: "Keep" },
           Vendors: {
             Vendors: "Vendors",
+            All: "All",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",
             Consumables: "Consumables",
             Bounties: "Bounties",
             ShadersAndEmblems: "Shaders & Emblems",
-            Emotes: "Emotes" }
+            Emotes: "Emotes" },
+          TrialsCard: {
+            FiveWins: "5 Win Reward (Armor)",
+            SevenWins: "7 Win Reward (Weapon)",
+            Flawless: "Flawless"
+          }
         })
         .translations('it', {
           Level: "Livello",
@@ -185,6 +197,7 @@
             Postmaster: "Amministratrice",
             Progress: "Progesso",
             Reputation: "Reputazione",
+            Unknown: "Sconosciuto",
             Vault: "Depositi",
             Weapons: "Armi" },
           Cooldown: {
@@ -233,6 +246,7 @@
             Progress: "Fortschritt",
             Reputation: "Ruf",
             Show: "Zeige {{bucket}}",
+            Unknown: "Unbekannt",
             Vault: "Tresor",
             Vanguard: "Vorhut",
             Weapons: "Waffen" },
@@ -271,15 +285,15 @@
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
             HideGear: "Verstecke {{class}} Ausrüstung",
-            LockEquipped: "Lock Equipped",
-            ClearLocked: "Clear Locked",
+            LockEquipped: "Sperren Ausrüstung",
+            ClearLocked: "Klar Sperren",
             Locked: "Festgelegte Gegenstände",
             LockedHelp: "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn für die generierten Loadouts festzulegen. Mit Shift + Klick kannst du Gegenstände ignorieren.",
             FilterSets: "Sets filtern",
             AdvancedOptions: "Erweiterte Optionen",
-            Fast: "Schnelle",
-            Full: "Vollständige",
             ProcessingMode: {
+              Fast: "Schnelle",
+              Full: "Vollständige",
               ProcessingMode: "Berechnung",
               HelpFast: "Nur die beste Ausrüstung wird einbezogen.",
               HelpFull: "Bezieht die ganze Ausrüstung mit ein." },
@@ -296,7 +310,7 @@
             ShowConfigs: "Zeige Varianten",
             HideAllConfigs: "Verstecke alle Varianten",
             HideConfigs: "Verstecke Varianten",
-            Loading: "Lade die besten Sets ({{percentage}}%)",
+            Loading: "Lade die besten Sets",
             Vendor: "Gegenstände von Händlern einschließen",
             Exclude: "Ignorierte Gegenstände",
             ExcludeHelp: "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld) um Sets ohne diesen Gegenstand zu generieren.",
@@ -386,6 +400,7 @@
             Infuse: "Infundieren" },
           Vendors: {
             Vendors: "Händler",
+            All: "Alle",
             VendorsLoad: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
@@ -401,6 +416,7 @@
             Armor: "Armure",
             General: "Général",
             Postmaster: "Commis des postes",
+            Unknown: "Inconnu",
             Vault: "Coffres",
             Reputation: "Estime" },
           Cooldown: {
@@ -451,6 +467,7 @@
             Armor: "Armadura",
             Postmaster: "Administración",
             Progress: "Progreso",
+            Unknown: "Desconocido",
             Vault: "Depósito",
             Reputation: "Reputación" },
           Cooldown: {
@@ -498,6 +515,7 @@
             General: "全般",
             Postmaster: "ポストマスター",
             Vault: "装備",
+            Unknown: "未知の",
             Vanguard: "バンガード",
             Progress: "進捗",
             Reputation: "評価" },
@@ -541,6 +559,7 @@
             General: "Geral",
             Postmaster: "Chefe do Correio",
             Progress: "Progresso",
+            Unknown: "Desconhecido",
             Vault: "Cofre",
             Vanguard: "Vanguarda",
             Reputation: "Reputação" },

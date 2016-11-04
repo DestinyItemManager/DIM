@@ -45,7 +45,7 @@ Get your own API key:
 * Goto [Bungie](https://www.bungie.net/en/Application)
 * Open your extension in another tab, copy the url up to `/index.html`.
 * Paste your extension url into the `Origin Header` section on bungie.net
-* Copy your API-key from bungie.net into the `app/apiKey.js` file.
+* Copy your API-key from bungie.net into the `app/scripts/apiKey.js` file.
 
 Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/dev/CONTRIBUTING.md) for more tips.
 

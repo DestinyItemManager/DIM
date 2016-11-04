@@ -107,7 +107,10 @@
           // Equip if it's not equipped or it's on another character
           const equip = !item.equipped || item.owner !== active.id;
 
-          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
+          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount)
+            .then(function() {
+              return dimStoreService.updateCharacters();
+            });
         }
       });
 

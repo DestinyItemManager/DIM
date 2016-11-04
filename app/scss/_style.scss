@@ -377,10 +377,10 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 10px;
 
-  &:horizontal {
-    height: 3px;
+  &:horizontal{
+    height:10px;
   }
 }
 
@@ -1357,6 +1357,7 @@ g {
   i.collapse {
     outline: none;
     padding: 8px 7px 8px 10px;
+    align-self: flex-start;
   }
 }
 
@@ -2269,6 +2270,19 @@ dim-manifest-progress {
   z-index: 1000;
   border-top: 15px solid gold;
   border-right: 15px solid transparent;
+}
+
+.fa.fa-circle.trials {
+  font-size: 18px;
+  margin-right: 3px;
+  color: #b12e21;
+  opacity: 1;
+  &.wins {
+    color: #cfd92b;
+  }
+  &.incomplete {
+    opacity: .35;
+  }
 }
 
 .disabled {
