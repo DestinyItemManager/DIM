@@ -117,8 +117,8 @@
           Manifest: {
             Build: "Building Destiny info database",
             Download: "Downloading latest Destiny info from Bungie",
-            Error1: "Error loading Destiny info: ",
-            Error2: "Reload to retry.",
+            Error: "Error loading Destiny info: {{error}}. Reload to retry.",
+            BungieDown: "Bungie.net may be having trouble.",
             Load: "Loading saved Destiny info",
             Save: "Saving latest Destiny info",
             Unzip: "Unzipping latest Destiny info" },
@@ -347,8 +347,7 @@
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft." },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
-            Error1: "Fehler beim Laden von Informationen: ",
-            Error2: "App neu laden, um es nochmals zu versuchen.",
+            Error: "Fehler beim Laden von Informationen: {{error}}. App neu laden, um es nochmals zu versuchen.",
             Download: "Lade neueste Daten von Bungie herunter",
             Load: "Lade gespeicherte Daten",
             Unzip: "Entpacke neueste Daten",
