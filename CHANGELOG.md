@@ -3,6 +3,7 @@
 * Added detailed information to the Trials of Osiris popup card.
 * Added more detection for item years.
 * The collapse button now no longer takes up the whole bucket height.
+* About and Support pages are now translatable.
 
 # 3.13.0
 
