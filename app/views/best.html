@@ -63,7 +63,7 @@
   </div>
   <p>
   </p>
-  <div ng-show="normal.progress >= 1">
+  <div ng-show="normal.progress >= 1 && normal.hasSets">
     <p><span translate="LB.FilterSets"></span> (<span translate="Stats.Intellect"></span>/<span translate="Stats.Discipline"></span>/<span translate="Stats.Strength"></span>):
       <select ng-model='normal.activesets' ng-change="normal.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in normal.allSetTiers"></select>
       <span class="dim-button" ng-click='normal.showAdvanced=!normal.showAdvanced;normal.showHelp=false' translate="LB.AdvancedOptions"></span>
@@ -123,7 +123,7 @@
       </ul></span>
     </p>
   </div>
-  <div ng-show="!normal.highestsets">
+  <div ng-show="normal.progress >= 1 && !normal.hasSets">
     <p ng-show="!normal.showBlues" translate="LB.Missing1"></p>
     <p ng-show="normal.showBlues" translate="LB.Missing2"></p>
     <p>
@@ -133,7 +133,7 @@
       </label>
     </p>
   </div>
-  <div ng-show="normal.progress < 1 && normal.highestsets">
+  <div ng-show="normal.progress < 1 && normal.hasSets">
     <p><span translate="LB.Loading"></span> <span>({{normal.progress*100 | number:2}}%)</span></p>
   </div>
   <div ng-show="normal.progress >= 1">

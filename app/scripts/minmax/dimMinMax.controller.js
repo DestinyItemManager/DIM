@@ -243,6 +243,7 @@
         showExotics: true,
         showYear1: false,
         allSetTiers: [],
+        hasSets: true,
         highestsets: {},
         activeHighestSets: [],
         ranked: {},
@@ -465,6 +466,8 @@
             return null;
           }
 
+          vm.hasSets = false;
+
           function step(activeGuardian, h, g, c, l, ci, gh, ar, processedCount) {
             for (; h < helms.length; ++h) {
               for (; g < gaunts.length; ++g) {
@@ -500,6 +503,7 @@
                             setHash: 0
                           };
                           if (validSet(set.armor)) {
+                            vm.hasSets = true;
                             set.setHash = genSetHash(set.armor);
                             calcArmorStats(set);
                             var tiersString = Math.min(Math.floor(set.stats.STAT_INTELLECT.value / 60), 5) +
