@@ -129,36 +129,18 @@
       return function(e) {
         e.stopPropagation();
 
-        if (lang) {
-          lang = vm.settings.language + '/'; // set language
-        }
+        lang = lang ? vm.settings.language + '/' : ''; // set language
 
         if (result) {
           result.close();
         } else {
           ngDialog.closeAll();
-          if (lang) {
-            result = ngDialog.open({
-              template: 'views/' + lang + name + '.html',
-              className: name,
-              name: name,
-              appendClassName: 'modal-dialog'
-            });
-            /* Lang Fallback
-            result = ngDialog.open({
-              template: 'views/en/' + name + '.html',
-              className: name,
-              name: name,
-              appendClassName: 'modal-dialog'
-            }); */
-          } else {
-            result = ngDialog.open({
-              template: 'views/' + name + '.html',
-              className: name,
-              name: name,
-              appendClassName: 'modal-dialog'
-            });
-          }
+          result = ngDialog.open({
+            template: 'views/' + lang + name + '.html',
+            className: name,
+            name: name,
+            appendClassName: 'modal-dialog'
+          });
           result.closePromise.then(function() {
             result = null;
           });
@@ -171,7 +153,10 @@
         }
       };
     }
-    var lang = ' ';
+    var lang = ' '; // assign a value, vm.settings.language still equals 'en' here.
+    // by setting and passing lang in showPopupFunction we have a localized version of
+    // the popup in the appropriate directory.
+    // console.log(vm.settings.language);
     vm.showSetting = showPopupFunction('setting');
     vm.showAbout = showPopupFunction('about', lang);
     vm.showSupport = showPopupFunction('support', lang);
