@@ -56,7 +56,7 @@
       if (response.status === -1) {
         return $q.reject($translate.instant('BungieService.NotConnected'));
       }
-      if (response.status >= 500) {
+      if (response.status === 503 || response.status === 522 /* cloudflare */) {
         return $q.reject(new Error($translate.instant('BungieService.Down')));
       }
       if (response.status < 200 || response.status >= 400) {
@@ -74,14 +74,10 @@
       } else if (errorCode === 1618 &&
                  response.config.url.indexOf('/Account/') >= 0 &&
                  response.config.url.indexOf('/Character/') < 0) {
-<<<<<<< HEAD
-        return $q.reject(new Error('No Destiny account was found for this platform.'));
+        return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
         $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
-=======
-        return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
->>>>>>> Upgrade error handling, add i18n to error messages
       } else if (errorCode > 1) {
         if (response.data.Message) {
           const error = new Error(response.data.Message);

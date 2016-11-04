@@ -33,7 +33,9 @@
 
             // The manifest has updated!
             if (path !== service.version) {
-              toaster.pop('error', 'Outdated Destiny Info', "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.");
+              toaster.pop('error',
+                          $translate.instant('Manfiest.Outdated'),
+                          $translate.instant('Manfiest.OutdatedExplanation'));
             }
           });
       }, 10000, true),
