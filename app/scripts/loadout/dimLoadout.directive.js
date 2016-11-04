@@ -22,7 +22,7 @@
         '  <div class="loadout-content">',
         '    <div id="loadout-options">',
         '      <form name="vm.form">',
-        '        <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" translate-attr="{ placeholder: \'Loadouts.LoadoutName\' }" />',
+        '        <input class="dim-input" name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" translate-attr="{ placeholder: \'Loadouts.LoadoutName\' }" />',
         '        <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
         '        <button ng-disabled="vm.form.$invalid" ng-click="vm.save()" translate="Loadouts.Save"></button>',
         '        <button ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew()" translate="Loadouts.SaveAsNew"></button>',

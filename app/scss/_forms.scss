@@ -17,6 +17,21 @@
   }
 }
 
+.dim-input {
+  padding-left: 5px;
+  height: 22px;
+  background: rgb(46, 46, 46);
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+
+  &:hover, &:focus {
+    background: transparent;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+}
+
 .link {
   color: white;
   &:hover {
