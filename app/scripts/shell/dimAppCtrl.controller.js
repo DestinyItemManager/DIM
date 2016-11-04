@@ -124,12 +124,12 @@
      * Show a popup dialog containing the given template. Its class
      * will be based on the name.
      */
-    function showPopupFunction(name, lang) {
+    function showPopupFunction(name, translate) {
       var result;
       return function(e) {
         e.stopPropagation();
 
-        lang = lang ? vm.settings.language + '/' : ''; // set language
+        var lang = translate ? vm.settings.language + '/' : ''; // set language
 
         if (result) {
           result.close();
@@ -153,13 +153,9 @@
         }
       };
     }
-    var lang = ' '; // assign a value, vm.settings.language still equals 'en' here.
-    // by setting and passing lang in showPopupFunction we have a localized version of
-    // the popup in the appropriate directory.
-    // console.log(vm.settings.language);
     vm.showSetting = showPopupFunction('setting');
-    vm.showAbout = showPopupFunction('about', lang);
-    vm.showSupport = showPopupFunction('support', lang);
+    vm.showAbout = showPopupFunction('about', true);
+    vm.showSupport = showPopupFunction('support', true);
     vm.showFilters = showPopupFunction('filters');
     vm.showXur = showPopupFunction('xur');
     vm.showMatsExchange = showPopupFunction('mats-exchange');
