@@ -138,7 +138,6 @@
           result = ngDialog.open({
             template: 'views/' + lang + name + '.html',
             className: name,
-            name: name,
             appendClassName: 'modal-dialog'
           });
 
