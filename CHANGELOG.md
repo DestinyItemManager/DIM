@@ -1,13 +1,12 @@
 # Next
 * Added `is:sublime` filter
-
 * Added detailed information to the Trials of Osiris popup card.
 * Added more detection for item years.
 * The collapse button now no longer takes up the whole bucket height.
 * Fixed marking which characters had access to vendor items.
 * Fix duplicate ghosts in Vangaurd vendors.
 * Fix tracking new items when the new-item shine is disabled.
-* Added option to Farming Mode to not move weapons and armor to make space for engrams. 
+* Added option to Farming Mode to not move weapons and armor to make space for engrams.
 * About and Support pages are now translatable.
 
 # 3.13.0
