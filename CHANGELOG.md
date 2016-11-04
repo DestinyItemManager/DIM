@@ -7,6 +7,7 @@
 * Fixed marking which characters had access to vendor items.
 * Fix duplicate ghosts in Vangaurd vendors.
 * Fix tracking new items when the new-item shine is disabled.
+* Added option to Farming Mode to not move weapons and armor to make space for engrams. 
 
 # 3.13.0
 
