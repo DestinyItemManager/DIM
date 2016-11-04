@@ -16,6 +16,7 @@
     .value('dimFeatureFlags', {
       // Tags are off in release right now
       tagsEnabled: '$DIM_FLAVOR' !== 'release',
+      compareEnabled: '$DIM_FLAVOR' !== 'release',
       vendorsEnabled: true,
       qualityEnabled: true,
       // Additional debugging / item info tools
