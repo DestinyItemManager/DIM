@@ -287,10 +287,6 @@
       return _stores;
     }
 
-    function loadStores(activePlatform) {
-      return dimBungieService.getStores(activePlatform);
-    }
-
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
@@ -321,7 +317,7 @@
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
                               $translate(['Vault']),
-                              loadStores(activePlatform)])
+                              dimBungieService.getStores(activePlatform)])
         .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {

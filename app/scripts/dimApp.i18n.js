@@ -19,6 +19,20 @@
             Unknown: "Unknown",
             Vault: "Vault",
             Weapons: "Weapons" },
+          BungieService: {
+            Down: "Bungie.net is down.",
+            Difficulties: "The Bungie API is currently experiencing difficulties.",
+            NetworkError: "Network error - {{status}} {{statusText}}",
+            Throttled: 'Bungie API throttling limit exceeded. Please wait a bit and then retry.',
+            NotLoggedIn: 'Please log into Bungie.net in order to use this extension.',
+            Maintenance: "Bungie.net servers are down for maintenance.",
+            NoAccount: "No Destiny account was found for this platform. Do you have the right platform selected?",
+            NoAccountForPlatform: "Failed to find a Destiny account for you on {{platform}}.",
+            NotConnected: "You may not be connected to the internet.",
+            Twitter: "Get status updates on",
+            ItemUniqueness: "Item Uniqueness",
+            ItemUniquenessExplanation: "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one."
+          },
           Cooldown: {
             Grenade: "Grenade cooldown",
             Melee: "Melee cooldown",
@@ -117,7 +131,7 @@
           Manifest: {
             Build: "Building Destiny info database",
             Download: "Downloading latest Destiny info from Bungie",
-            Error: "Error loading Destiny info: {{error}}. Reload to retry.",
+            Error: "Error loading Destiny info:\n{{error}}\nReload to retry.",
             BungieDown: "Bungie.net may be having trouble.",
             Load: "Loading saved Destiny info",
             Save: "Saving latest Destiny info",
@@ -347,7 +361,7 @@
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft." },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
-            Error: "Fehler beim Laden von Informationen: {{error}}. App neu laden, um es nochmals zu versuchen.",
+            Error: "Fehler beim Laden von Informationen:\n{{error}}\nApp neu laden, um es nochmals zu versuchen.",
             Download: "Lade neueste Daten von Bungie herunter",
             Load: "Lade gespeicherte Daten",
             Unzip: "Entpacke neueste Daten",
