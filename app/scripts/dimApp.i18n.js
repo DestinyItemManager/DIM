@@ -264,6 +264,10 @@
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
               Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter." },
+            MakeRoom: {
+              Desc: "DIM verschiebt nur Engramme und Glimmer vom {{store}} zum Tresor oder anderen Charaktern, um zu verhindern, dass sie in der Poststelle landen.",
+              MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
+              Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen." },
             Quickmove: "Schnelles Verschieben",
             Stop: "Stop" },
           Header: {
@@ -324,6 +328,7 @@
             FromEquipped: "Ausrüstung",
             Edit: "Loadout bearbeiten",
             Delete: "Loadout löschen",
+            ConfirmDelete: "'{{name}}' wirklich löschen?",
             ApplySearch: "Gegenstand = \"{{query}}\"",
             MaximizeLight: "Licht maximieren",
             ItemLeveling: "Gegenstand aufwerten",
@@ -407,7 +412,12 @@
             Consumables: "Verbrauchsgegenstände",
             Bounties: "Beutezüge",
             ShadersAndEmblems: "Shader & Embleme",
-            Emotes: "Emotes" }
+            Emotes: "Emotes" },
+          TrialsCard: {
+            FiveWins: "5 Siege Belohnung (Rüstung)",
+            SevenWins: "7 Win Belohnung (Waffe)",
+            Flawless: "Flawless"
+          }
         })
         .translations('fr', {
           Level: "Niveau",
