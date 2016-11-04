@@ -68,6 +68,7 @@
   }
   .label {
     text-align: center;
+    overflow-wrap: break-word;
   }
   .other-configs {
     text-align: center;
@@ -242,6 +243,8 @@
     margin-right:20px;
     position:relative;
     float: left;
+    text-align: center;
+    width: calc(var(--item-size) + 15px);
 
     .empty-item {
       display: inline-block;
@@ -331,7 +334,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(((var(--item-size) + 20px) * 5) + 7px);
+  width: calc(((var(--item-size) + 20px) * 5) + 14px);
   min-height: var(--item-size);
   max-height: calc((var(--item-size) * 5) + 10px);
   overflow-y: auto;

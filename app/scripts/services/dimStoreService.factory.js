@@ -9,7 +9,6 @@
     '$q',
     'dimBungieService',
     'dimPlatformService',
-    'dimSettingsService',
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
@@ -28,7 +27,6 @@
     $q,
     dimBungieService,
     dimPlatformService,
-    dimSettingsService,
     dimCategory,
     dimDefinitions,
     dimBucketService,
@@ -444,6 +442,7 @@
                 powerLevel: character.characterBase.powerLevel,
                 stats: getStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
+                classType: character.characterBase.classType,
                 className: defs.Class[character.characterBase.classHash].className,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
@@ -740,7 +739,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
+        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
