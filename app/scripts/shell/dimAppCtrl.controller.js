@@ -141,6 +141,7 @@
             name: name,
             appendClassName: 'modal-dialog'
           });
+
           result.closePromise.then(function() {
             result = null;
           });
