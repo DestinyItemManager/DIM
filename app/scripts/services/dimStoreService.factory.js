@@ -442,6 +442,7 @@
                 powerLevel: character.characterBase.powerLevel,
                 stats: getStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
+                classType: character.characterBase.classType,
                 className: defs.Class[character.characterBase.classHash].className,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
