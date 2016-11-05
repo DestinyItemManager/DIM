@@ -32,9 +32,6 @@
   .vendor-col {
     margin-right: 20px;
   }
-  .vendor-timer {
-    float: right;
-  }
   .vendor-items {
     display: flex;
     flex-wrap: wrap;
@@ -86,10 +83,14 @@
   .vendor-headers {
     display: flex;
   }
-  .vendor-header {
-    .title {
-      padding: 0 8px;
-    }
+  .collapse-handle {
+    display: flex;
+    align-items: center;
+  }
+  .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
   .vendor-row {
     margin-bottom: 10px;
@@ -106,9 +107,7 @@
   .vendor-icon {
     width: 30px;
     height: 30px;
-    margin-top: 5px;
-    margin-right: 10px;
-    float:left;
+    margin: 5px 10px 5px 5px;
   }
   .currency img {
     height: 12px;

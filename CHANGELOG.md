@@ -10,6 +10,7 @@
 * Added option to Farming Mode to not move weapons and armor to make space for engrams.
 * About and Support pages are now translatable.
 * Improved error handling and error messages.
+* Vendors are collapsible.
 
 # 3.13.0
 
