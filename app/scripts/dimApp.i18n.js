@@ -33,6 +33,17 @@
             ItemUniqueness: "Item Uniqueness",
             ItemUniquenessExplanation: "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one."
           },
+          Compare: {
+            All: {
+              Singular: "Compare all {{type}}s ({{quantity}})",
+              Plural: "Compare all {{type}} ({{quantity}})" },
+            Archetype: "Compare in archetype ({{quantity}})",
+            Compare: "Compare",
+            Close: "Close",
+            Error: {
+              Class: "Can not compare this item as it is not for a {{class}}.",
+              Archetype: "Can not compare this item as it is not a {{type}}." },
+            Splits: "Compare similar splits ({{quantity}})" },
           Cooldown: {
             Grenade: "Grenade cooldown",
             Melee: "Melee cooldown",
