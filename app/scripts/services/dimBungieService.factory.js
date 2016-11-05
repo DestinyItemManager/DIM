@@ -54,7 +54,7 @@
 
     function handleErrors(response) {
       if (response.status === -1) {
-        return $q.reject($translate.instant('BungieService.NotConnected'));
+        return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
       }
       if (response.status === 503 || response.status === 522 /* cloudflare */) {
         return $q.reject(new Error($translate.instant('BungieService.Down')));
@@ -77,7 +77,7 @@
         return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
-        $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
+        return $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
       } else if (errorCode > 1) {
         if (response.data.Message) {
           const error = new Error(response.data.Message);
