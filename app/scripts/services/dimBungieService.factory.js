@@ -1,14 +1,18 @@
-/* global apikey: false */
 (function() {
   'use strict';
 
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', 'dimState', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', '$state', 'dimState', 'toaster'];
 
-  function BungieService($rootScope, $q, $timeout, $http, dimState, toaster) {
-    var apiKey = apikey;
+  function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster) {
+    var apiKey = localStorage.apiKey;
+    /* eslint no-constant-condition: 0*/
+    if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
+      apiKey = '$DIM_API_KEY';
+    }
+
     var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
@@ -68,6 +72,9 @@
                  response.config.url.indexOf('/Account/') >= 0 &&
                  response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error('No Destiny account was found for this platform.'));
+      } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
+        $state.go('developer');
+        $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
       } else if (errorCode > 1) {
         if (response.data.Message) {
           const error = new Error(response.data.Message);

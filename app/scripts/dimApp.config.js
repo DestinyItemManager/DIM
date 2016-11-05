@@ -156,6 +156,10 @@
         .state('debugItem', {
           url: "/debugItem/:itemId",
           templateUrl: "views/debugItem.html"
+        })
+        .state('developer', {
+          url: "/developer",
+          templateUrl: "scripts/developer/developer.html"
         });
     });
 })();

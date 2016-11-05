@@ -57,7 +57,7 @@
     "no-throw-literal": "error",
     "no-unmodified-loop-condition": "error",
     "no-unused-expressions": "error",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "(^e$|^_)", "apikey" }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "(^e$|^_)" }],
     "no-useless-call": "error",
     "no-useless-escape": "error",
     "no-void": "error",
