@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', '$state', 'dimState', 'toaster'];
+  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', '$state', 'dimState', 'toaster', '$translate'];
 
-  function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster) {
+  function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
     var apiKey = localStorage.apiKey;
     /* eslint no-constant-condition: 0*/
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
@@ -53,25 +53,28 @@
     }
 
     function handleErrors(response) {
-      if (response.status === 503) {
-        return $q.reject(new Error("Bungie.net is down."));
+      if (response.status === -1) {
+        return $q.reject($translate.instant('BungieService.NotConnected'));
+      }
+      if (response.status === 503 || response.status === 522 /* cloudflare */) {
+        return $q.reject(new Error($translate.instant('BungieService.Down')));
       }
       if (response.status < 200 || response.status >= 400) {
-        return $q.reject(new Error('Network error: ' + response.status));
+        return $q.reject(new Error($translate.instant('BungieService.NetworkError', { status: response.status, statusText: response.statusText })));
       }
 
       var errorCode = response.data.ErrorCode;
       if (errorCode === 36) {
-        return $q.reject(new Error('Bungie API throttling limit exceeded. Please wait a bit and then retry.'));
+        return $q.reject(new Error($translate.instant('BungieService.Throttled')));
       } else if (errorCode === 99) {
         openBungieNetTab();
-        return $q.reject(new Error('Please log into Bungie.net in order to use this extension.'));
+        return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
       } else if (errorCode === 5) {
-        return $q.reject(new Error('Bungie.net servers are down for maintenance.'));
+        return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
       } else if (errorCode === 1618 &&
                  response.config.url.indexOf('/Account/') >= 0 &&
                  response.config.url.indexOf('/Character/') < 0) {
-        return $q.reject(new Error('No Destiny account was found for this platform.'));
+        return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
         $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
@@ -82,7 +85,7 @@
           error.status = response.data.ErrorStatus;
           return $q.reject(error);
         } else {
-          return $q.reject(new Error('The Bungie API is currently experiencing difficulties.'));
+          return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
         }
       }
 
@@ -90,40 +93,36 @@
     }
 
     function retryOnThrottled(request) {
-      var a = $q(function(resolve, reject) {
-        var retries = 4;
-
-        function run() {
-          $http(request).then(function success(response) {
+      function run(retries) {
+        return $http(request)
+          .then(function success(response) {
             if (response.data.ErrorCode === 36) {
-              retries = retries - 1;
-
               if (retries <= 0) {
-                // debugger;
-                resolve(response);
+                return response;
               } else {
-                $timeout(run, Math.pow(2, 4 - retries) * 1000);
+                return $timeout(Math.pow(2, 4 - retries) * 1000).then(() => run(retries - 1));
               }
             } else {
-              resolve(response);
+              return response;
             }
-          }, function failure(response) {
-            // debugger;
-            if (response.data) {
-              reject(new Error(response.data.Message));
-            } else if (response.status === -1) {
-              reject(new Error("You may not be connected to the internet."));
-            } else {
-              console.error("Failed to make service call", response);
-              reject(new Error("Failed to make service call."));
-            }
-          });
-        }
+          })
+          .catch(handleErrors);
+      }
 
-        run();
+      return run(3);
+    }
+
+    function showErrorToaster(e) {
+      const twitterLink = '<a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
+      const twitter = `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`;
+
+      toaster.pop({
+        type: 'error',
+        bodyOutputType: 'trustedHtml',
+        title: 'Bungie.net Error',
+        body: e.message + twitter,
+        showCloseButton: false
       });
-
-      return a;
     }
 
     /************************************************************************************************************************************/
@@ -139,7 +138,7 @@
       .then(function(request) {
         return $http(request);
       })
-      .then(handleErrors)
+      .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response;
       });
@@ -169,18 +168,16 @@
     function getBungleToken() {
       tokenPromise = tokenPromise || getBnetCookies()
         .then(function(cookies) {
-          return $q(function(resolve, reject) {
-            var cookie = _.find(cookies, function(cookie) {
-              return cookie.name === 'bungled';
-            });
-
-            if (cookie) {
-              resolve(cookie.value);
-            } else {
-              openBungieNetTab();
-              reject(new Error('Please log into Bungie.net in order to use this extension.'));
-            }
+          const cookie = _.find(cookies, function(cookie) {
+            return cookie.name === 'bungled';
           });
+
+          if (cookie) {
+            return cookie.value;
+          } else {
+            openBungieNetTab();
+            throw new Error($translate.instant('BungieService.NotLoggedIn'));
+          }
         })
         .catch(function() {
           tokenPromise = null;
@@ -195,39 +192,25 @@
       platformPromise = platformPromise || getBungleToken()
         .then(getBnetPlatformsRequest)
         .then($http)
-        .then(handleErrors)
+        .then(handleErrors, handleErrors)
         .catch(function(e) {
-          var message = e.message;
-          if (e.status === -1) {
-            message = 'You may not be connected to the internet.';
-          }
-
-          var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
-
-          toaster.pop({
-            type: 'error',
-            bodyOutputType: 'trustedHtml',
-            title: 'Bungie.net Error',
-            body: message + twitter,
-            showCloseButton: false
-          });
-
+          showErrorToaster(e);
           return $q.reject(e);
         });
 
       return platformPromise;
-    }
 
-    function getBnetPlatformsRequest(token) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
+      function getBnetPlatformsRequest(token) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
+      }
     }
 
     /************************************************************************************************************************************/
@@ -236,7 +219,7 @@
       membershipPromise = membershipPromise || getBungleToken()
         .then(getBnetMembershipReqest)
         .then($http)
-        .then(handleErrors)
+        .then(handleErrors, handleErrors)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
         .catch(function(error) {
           membershipPromise = null;
@@ -259,17 +242,14 @@
 
       function processBnetMembershipRequest(response) {
         if (_.size(response.data.Response) === 0) {
-          return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
+          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
         }
 
         return $q.when(response.data.Response);
       }
 
-      function rejectBnetMembershipRequest(response) {
-        if (response.status === -1) {
-          return $q.reject(new Error('You may not be connected to the internet.'));
-        }
-        return $q.reject(new Error('Failed to find a Destiny account for you on ' + platform.label + '.'));
+      function rejectBnetMembershipRequest() {
+        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
       }
     }
 
@@ -292,37 +272,37 @@
           return getBnetCharactersRequest(data.token, platform, membershipId);
         })
         .then($http)
-        .then(handleErrors)
+        .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
 
       return charactersPromise;
-    }
 
-    function getBnetCharactersRequest(token, platform, membershipId) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function processBnetCharactersRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error('The membership id was not available.'));
+      function getBnetCharactersRequest(token, platform, membershipId) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
       }
 
-      return _.map(response.data.Response.data.characters, function(c) {
-        c.inventory = response.data.Response.data.inventory;
+      function processBnetCharactersRequest(response) {
+        if (_.size(response.data.Response) === 0) {
+          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+        }
 
-        return {
-          id: c.characterBase.characterId,
-          base: c
-        };
-      });
+        return _.map(response.data.Response.data.characters, function(c) {
+          c.inventory = response.data.Response.data.inventory;
+
+          return {
+            id: c.characterBase.characterId,
+            base: c
+          };
+        });
+      }
     }
 
 
@@ -339,7 +319,7 @@
       .then(function(request) {
         return $http(request);
       })
-      .then(handleErrors)
+      .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response.data;
       });
@@ -380,103 +360,76 @@
           });
         })
         .catch(function(e) {
-          var twitter = '<div>Get status updates on <a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a></div>';
-
-          toaster.pop({
-            type: 'error',
-            bodyOutputType: 'trustedHtml',
-            title: 'Bungie.net Error',
-            body: e.message + twitter,
-            showCloseButton: false
-          });
-
-          // toaster.pop('error', 'Bungie.net Error', e.message);
-
+          showErrorToaster(e);
           return $q.reject(e);
         });
 
       return promise;
+
+      function getGuardianInventoryRequest(token, platform, membershipId, character) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Inventory/?definitions=false',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
+      }
+
+      function getDestinyVaultRequest(token, platform) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Vault/?definitions=false',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
+      }
+
+      function processInventoryResponse(character, response) {
+        var payload = response.data.Response;
+
+        payload.id = character.id;
+        payload.character = character;
+
+        return payload;
+      }
+
+      function getDestinyInventories(token, platform, membershipId, characters) {
+        // Guardians
+        var promises = characters.map(function(character) {
+          var processPB = processInventoryResponse.bind(null, character);
+
+          return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
+            .then($http)
+            .then(handleErrors, handleErrors)
+            .then(processPB);
+        });
+
+        // Vault
+
+        var processPB = processInventoryResponse.bind(null, {
+          id: 'vault',
+          base: null
+        });
+
+        var promise = $q.when(getDestinyVaultRequest(token, platform))
+              .then($http)
+              .then(handleErrors, handleErrors)
+              .then(processPB);
+
+        promises.push(promise);
+
+        return $q.all(promises);
+      }
     }
 
-    function getGuardianInventoryRequest(token, platform, membershipId, character) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Inventory/?definitions=false',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function getDestinyVaultRequest(token, platform) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Vault/?definitions=false',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function processInventoryResponse(character, response) {
-      var payload = response.data.Response;
-
-      payload.id = character.id;
-      payload.character = character;
-
-      return payload;
-    }
-
-    function getDestinyInventories(token, platform, membershipId, characters) {
-      // Guardians
-      var promises = characters.map(function(character) {
-        var processPB = processInventoryResponse.bind(null, character);
-
-        return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
-          .then($http)
-          .then(handleErrors)
-          .then(processPB);
-      });
-
-      // Vault
-
-      var processPB = processInventoryResponse.bind(null, {
-        id: 'vault',
-        base: null
-      });
-
-      var promise = $q.when(getDestinyVaultRequest(token, platform))
-        .then($http)
-        .then(handleErrors)
-        .then(processPB);
-
-      promises.push(promise);
-
-      return $q.all(promises);
-    }
 
     /************************************************************************************************************************************/
-
-    function getGuardianProgressionRequest(token, platform, membershipId, character) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function processProgressionResponse(character, response) {
-      character.progression = response.data.Response.data;
-      return character;
-    }
 
     function getDestinyProgression(token, platform, membershipId, characters) {
       var promises = characters.map(function(character) {
@@ -484,31 +437,31 @@
 
         return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
           .then($http)
-          .then(handleErrors)
+          .then(handleErrors, handleErrors)
           .then(processPB);
       });
+
+      function getGuardianProgressionRequest(token, platform, membershipId, character) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
+      }
+
+      function processProgressionResponse(character, response) {
+        character.progression = response.data.Response.data;
+        return character;
+      }
 
       return $q.all(promises);
     }
 
     /************************************************************************************************************************************/
-
-    function getCharacterAdvisorsRequest(token, platform, membershipId, character) {
-      return {
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token
-        },
-        withCredentials: true
-      };
-    }
-
-    function processAdvisorsResponse(character, response) {
-      character.advisors = response.data.Response.data;
-      return character;
-    }
 
     function getDestinyAdvisors(token, platform, membershipId, characters) {
       var promises = characters.map(function(character) {
@@ -516,11 +469,28 @@
 
         return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
           .then($http)
-          .then(handleErrors)
+          .then(handleErrors, handleErrors)
           .then(processPB);
       });
 
       return $q.all(promises);
+
+      function getCharacterAdvisorsRequest(token, platform, membershipId, character) {
+        return {
+          method: 'GET',
+          url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token
+          },
+          withCredentials: true
+        };
+      }
+
+      function processAdvisorsResponse(character, response) {
+        character.advisors = response.data.Response.data;
+        return character;
+      }
     }
 
     /************************************************************************************************************************************/
@@ -548,7 +518,7 @@
           };
         })
         .then($http)
-        .then(handleErrors)
+        .then(handleErrors, handleErrors)
         .then((response) => response.data.Response.data);
     }
 
@@ -573,49 +543,49 @@
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
-        .then(function(response) {
-          return handleUniquenessViolation(response, item, store);
-        })
-        .then(handleErrors);
+        .then(handleErrors, handleErrors)
+        .catch(function(e) {
+          return handleUniquenessViolation(e, item, store);
+        });
 
       return promise;
-    }
 
-    // Handle "DestinyUniquenessViolation" (1648)
-    function handleUniquenessViolation(response, item, store) {
-      if (response && response.data && response.data.ErrorCode === 1648) {
-        toaster.pop('warning', 'Item Uniqueness', [
-          "You tried to move the '" + item.name + "'",
-          item.type.toLowerCase(),
-          "to your",
-          store.name,
-          "but that destination already has that item and is only allowed one."
-        ].join(' '));
-        return $q.reject(new Error('move-canceled'));
+      // Handle "DestinyUniquenessViolation" (1648)
+      function handleUniquenessViolation(e, item, store) {
+        if (e && e.code === 1648) {
+          toaster.pop('warning',
+                      $translate.instant('BungieService.ItemUniqueness'),
+                      $translate.instant('BungieService.ItemUniquenessExplanation', {
+                        name: item.name,
+                        type: item.type.toLowerCase(),
+                        character: store.name
+                      }));
+          return $q.reject(new Error('move-canceled'));
+        }
+        return $q.reject(e);
       }
-      return response;
-    }
 
-    function getTransferRequest(token, membershipType, item, store, amount) {
-      return {
-        method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token,
-          'content-type': 'application/json; charset=UTF-8;'
-        },
-        data: {
-          characterId: store.isVault ? item.owner : store.id,
-          membershipType: membershipType,
-          itemId: item.id,
-          itemReferenceHash: item.hash,
-          stackSize: amount || item.amount,
-          transferToVault: store.isVault
-        },
-        dataType: 'json',
-        withCredentials: true
-      };
+      function getTransferRequest(token, membershipType, item, store, amount) {
+        return {
+          method: 'POST',
+          url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token,
+            'content-type': 'application/json; charset=UTF-8;'
+          },
+          data: {
+            characterId: store.isVault ? item.owner : store.id,
+            membershipType: membershipType,
+            itemId: item.id,
+            itemReferenceHash: item.hash,
+            stackSize: amount || item.amount,
+            transferToVault: store.isVault
+          },
+          dataType: 'json',
+          withCredentials: true
+        };
+      }
     }
 
     /************************************************************************************************************************************/
@@ -639,28 +609,28 @@
           return getEquipRequest(data.token, platform.type, item);
         })
         .then(retryOnThrottled)
-        .then(handleErrors);
+        .then(handleErrors, handleErrors);
 
       return promise;
-    }
 
-    function getEquipRequest(token, membershipType, item) {
-      return {
-        method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token,
-          'content-type': 'application/json; charset=UTF-8;'
-        },
-        data: {
-          characterId: item.owner,
-          membershipType: membershipType,
-          itemId: item.id
-        },
-        dataType: 'json',
-        withCredentials: true
-      };
+      function getEquipRequest(token, membershipType, item) {
+        return {
+          method: 'POST',
+          url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token,
+            'content-type': 'application/json; charset=UTF-8;'
+          },
+          data: {
+            characterId: item.owner,
+            membershipType: membershipType,
+            itemId: item.id
+          },
+          dataType: 'json',
+          withCredentials: true
+        };
+      }
     }
 
     /************************************************************************************************************************************/
@@ -705,7 +675,7 @@
           };
         })
         .then(retryOnThrottled)
-        .then(handleErrors)
+        .then(handleErrors, handleErrors)
         .then(function(response) {
           var data = response.data.Response;
           store.updateCharacterInfoFromEquip(data.summary);
@@ -747,29 +717,29 @@
           return getSetItemStateRequest(data.token, platform.type, item, store, lockState, type);
         })
         .then(retryOnThrottled)
-        .then(handleErrors);
+        .then(handleErrors, handleErrors);
 
       return promise;
-    }
 
-    function getSetItemStateRequest(token, membershipType, item, store, lockState, type) {
-      return {
-        method: 'POST',
-        url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
-        headers: {
-          'X-API-Key': apiKey,
-          'x-csrf': token,
-          'content-type': 'application/json; charset=UTF-8;'
-        },
-        data: {
-          characterId: store.isVault ? item.owner : store.id,
-          membershipType: membershipType,
-          itemId: item.id,
-          state: lockState
-        },
-        dataType: 'json',
-        withCredentials: true
-      };
+      function getSetItemStateRequest(token, membershipType, item, store, lockState, type) {
+        return {
+          method: 'POST',
+          url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
+          headers: {
+            'X-API-Key': apiKey,
+            'x-csrf': token,
+            'content-type': 'application/json; charset=UTF-8;'
+          },
+          data: {
+            characterId: store.isVault ? item.owner : store.id,
+            membershipType: membershipType,
+            itemId: item.id,
+            state: lockState
+          },
+          dataType: 'json',
+          withCredentials: true
+        };
+      }
     }
   }
 })();
