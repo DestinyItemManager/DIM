@@ -57,6 +57,7 @@
             About: "About",
             Filters: "Filters",
             FilterHelp: "Search item/perk or is:arc",
+            MaterialsExchange: "Available faction ranks",
             Refresh: "Refresh Destiny Data",
             SupportDIM: "Support DIM" },
           Help: {
@@ -138,6 +139,14 @@
             Load: "Loading saved Destiny info",
             Save: "Saving latest Destiny info",
             Unzip: "Unzipping latest Destiny info" },
+          MaterialsExchange: {
+            MaterialsExchange: "Materials Exchange",
+            CurrentRank: "Current Rank",
+            CurrentRep: "Current Rep",
+            OnHand: "Materials on hand",
+            FromTrade: "Materials from trade",
+            NewRank: "New Rank",
+            NewRep: "New Rep" },
           Notes: {
             Error: "Error! Max 120 characters for notes.",
             Help: "Add notes to this item" },
