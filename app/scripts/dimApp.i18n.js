@@ -19,6 +19,20 @@
             Unknown: "Unknown",
             Vault: "Vault",
             Weapons: "Weapons" },
+          BungieService: {
+            Down: "Bungie.net is down.",
+            Difficulties: "The Bungie API is currently experiencing difficulties.",
+            NetworkError: "Network error - {{status}} {{statusText}}",
+            Throttled: 'Bungie API throttling limit exceeded. Please wait a bit and then retry.',
+            NotLoggedIn: 'Please log into Bungie.net in order to use this extension.',
+            Maintenance: "Bungie.net servers are down for maintenance.",
+            NoAccount: "No Destiny account was found for this platform. Do you have the right platform selected?",
+            NoAccountForPlatform: "Failed to find a Destiny account for you on {{platform}}.",
+            NotConnected: "You may not be connected to the internet.",
+            Twitter: "Get status updates on",
+            ItemUniqueness: "Item Uniqueness",
+            ItemUniquenessExplanation: "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one."
+          },
           Cooldown: {
             Grenade: "Grenade cooldown",
             Melee: "Melee cooldown",
@@ -33,6 +47,10 @@
             Greens: {
               Greens: "Move Uncommon/Green Items to Vault",
               Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character." },
+            MakeRoom: {
+              Desc: "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
+              MakeRoom: "Make room to pick up items by moving equipment",
+              Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams." },
             Quickmove: "Quick Move",
             Stop: "Stop" },
           Header: {
@@ -60,9 +78,9 @@
             LockedHelp: "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
             FilterSets: "Filter sets",
             AdvancedOptions: "Advanced Options",
-            Fast: "Fast",
-            Full: "Full",
             ProcessingMode: {
+              Fast: "Fast",
+              Full: "Full",
               ProcessingMode: "Processing mode",
               HelpFast: "Only looks at your best gear.",
               HelpFull: "Looks at more gear, but takes longer." },
@@ -79,7 +97,7 @@
             ShowConfigs: "Show configurations",
             HideAllConfigs: "Hide all configurations",
             HideConfigs: "Hide configurations",
-            Loading: "Loading best sets ({{percentage}}%)",
+            Loading: "Loading best sets",
             Vendor: "Include Vendor items",
             Exclude: "Excluded Items",
             ExcludeHelp: "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
@@ -113,8 +131,10 @@
           Manifest: {
             Build: "Building Destiny info database",
             Download: "Downloading latest Destiny info from Bungie",
-            Error1: "Error loading Destiny info: ",
-            Error2: "Reload to retry.",
+            Error: "Error loading Destiny info:\n{{error}}\nReload to retry.",
+            Outdated: "Outdated Destiny Info",
+            OutdatedExplanation: "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
+            BungieDown: "Bungie.net may be having trouble.",
             Load: "Loading saved Destiny info",
             Save: "Saving latest Destiny info",
             Unzip: "Unzipping latest Destiny info" },
@@ -160,6 +180,7 @@
           Stats: {
             Discipline: "Discipline",
             Intellect: "Intellect",
+            NoBonus: "No Bonus",
             Strength: "Strength",
             TierProgress: "{{progress}} for {{tier}}" },
           Tags: {
@@ -170,6 +191,7 @@
             Keep: "Keep" },
           Vendors: {
             Vendors: "Vendors",
+            All: "All",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",
@@ -258,6 +280,10 @@
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
               Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter." },
+            MakeRoom: {
+              Desc: "DIM verschiebt nur Engramme und Glimmer vom {{store}} zum Tresor oder anderen Charaktern, um zu verhindern, dass sie in der Poststelle landen.",
+              MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
+              Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen." },
             Quickmove: "Schnelles Verschieben",
             Stop: "Stop" },
           Header: {
@@ -279,15 +305,15 @@
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
             HideGear: "Verstecke {{class}} Ausrüstung",
-            LockEquipped: "Lock Equipped",
-            ClearLocked: "Clear Locked",
+            LockEquipped: "Sperren Ausrüstung",
+            ClearLocked: "Klar Sperren",
             Locked: "Festgelegte Gegenstände",
             LockedHelp: "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn für die generierten Loadouts festzulegen. Mit Shift + Klick kannst du Gegenstände ignorieren.",
             FilterSets: "Sets filtern",
             AdvancedOptions: "Erweiterte Optionen",
-            Fast: "Schnelle",
-            Full: "Vollständige",
             ProcessingMode: {
+              Fast: "Schnelle",
+              Full: "Vollständige",
               ProcessingMode: "Berechnung",
               HelpFast: "Nur die beste Ausrüstung wird einbezogen.",
               HelpFull: "Bezieht die ganze Ausrüstung mit ein." },
@@ -304,7 +330,7 @@
             ShowConfigs: "Zeige Varianten",
             HideAllConfigs: "Verstecke alle Varianten",
             HideConfigs: "Verstecke Varianten",
-            Loading: "Lade die besten Sets ({{percentage}}%)",
+            Loading: "Lade die besten Sets",
             Vendor: "Gegenstände von Händlern einschließen",
             Exclude: "Ignorierte Gegenstände",
             ExcludeHelp: "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld) um Sets ohne diesen Gegenstand zu generieren.",
@@ -318,6 +344,7 @@
             FromEquipped: "Ausrüstung",
             Edit: "Loadout bearbeiten",
             Delete: "Loadout löschen",
+            ConfirmDelete: "'{{name}}' wirklich löschen?",
             ApplySearch: "Gegenstand = \"{{query}}\"",
             MaximizeLight: "Licht maximieren",
             ItemLeveling: "Gegenstand aufwerten",
@@ -336,8 +363,7 @@
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft." },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
-            Error1: "Fehler beim Laden von Informationen: ",
-            Error2: "App neu laden, um es nochmals zu versuchen.",
+            Error: "Fehler beim Laden von Informationen:\n{{error}}\nApp neu laden, um es nochmals zu versuchen.",
             Download: "Lade neueste Daten von Bungie herunter",
             Load: "Lade gespeicherte Daten",
             Unzip: "Entpacke neueste Daten",
@@ -394,13 +420,19 @@
             Infuse: "Infundieren" },
           Vendors: {
             Vendors: "Händler",
+            All: "Alle",
             VendorsLoad: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
             Consumables: "Verbrauchsgegenstände",
             Bounties: "Beutezüge",
             ShadersAndEmblems: "Shader & Embleme",
-            Emotes: "Emotes" }
+            Emotes: "Emotes" },
+          TrialsCard: {
+            FiveWins: "5 Siege Belohnung (Rüstung)",
+            SevenWins: "7 Win Belohnung (Waffe)",
+            Flawless: "Flawless"
+          }
         })
         .translations('fr', {
           Level: "Niveau",

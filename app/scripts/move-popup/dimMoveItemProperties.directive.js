@@ -37,7 +37,7 @@
         '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
         '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
         '      </span>',
-        '      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }}',
+        '      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }} <i ng-if="vm.featureFlags.compareEnabled && vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="fa fa-clone" ng-click="vm.openCompare()"></i>',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
         '      <span ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
@@ -74,7 +74,7 @@
         '    </div>',
         '  </div>',
         '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
-        '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '    <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>',
         '  </div>',
         '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
         '    <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
@@ -116,6 +116,14 @@
       vm.itemDetails = !vm.itemDetails;
       vm.changeDetails();
     });
+
+    vm.openCompare = function() {
+      ngDialog.closeAll();
+      $rootScope.$broadcast('dim-store-item-compare', {
+        item: vm.item,
+        dupes: true
+      });
+    };
 
     vm.updateNote = function() {
       if (angular.isDefined(vm.item.dimInfo.notes)) {

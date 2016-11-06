@@ -23,9 +23,9 @@
     }]);
 
 
-  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', '$rootScope', 'dimActionQueue'];
+  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', 'dimCompareService', '$rootScope', 'dimActionQueue'];
 
-  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, $rootScope, dimActionQueue) {
+  function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
     var otherDialog = null;
     let firstItemTimed = false;
 
@@ -100,14 +100,17 @@
       }
 
       vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
-        if (!dimLoadoutService.dialogOpen) {
+        if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
           e.stopPropagation();
           const active = dimStoreService.getActiveStore();
 
           // Equip if it's not equipped or it's on another character
           const equip = !item.equipped || item.owner !== active.id;
 
-          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount);
+          dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount)
+            .then(function() {
+              return dimStoreService.updateCharacters();
+            });
         }
       });
 
@@ -135,6 +138,8 @@
           }
         } else if (dimLoadoutService.dialogOpen) {
           dimLoadoutService.addItemToLoadout(item, e);
+        } else if (dimCompareService.dialogOpen) {
+          dimCompareService.addItemToCompare(item, e);
         } else {
           dialogResult = ngDialog.open({
             template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',

@@ -124,18 +124,6 @@ div:focus, span:focus {
   width: 250px;
   margin-left: -10px;
   margin-bottom: 4px;
-  padding-left: 5px;
-  height: 22px;
-  background: rgb(46, 46, 46);
-  border: none;
-  border-bottom: 1px solid gray;
-  color: white;
-
-  &:hover, &:focus {
-    background: transparent;
-    outline: none;
-    border-bottom: 1px solid $orange;
-  }
 }
 
 dt {
@@ -1351,9 +1339,13 @@ g {
   cursor: pointer;
   font-size: 14px;
   color: $lightgray;
-  &:hover {
+  &:hover, .collapse-handle:hover & {
     color: $orange;
   }
+}
+
+.collapse-handle {
+  cursor: pointer;
 }
 
 .store-row {
@@ -1418,13 +1410,70 @@ g {
   width: 100%;
   z-index: 3;
   bottom: 0;
-  background: rgba(195, 188, 180, 0.9);
-  color: #1a1e24;
-  box-shadow: 0 -1px 30px 2px #000;
+  background: #434444;
+  color: #e0e0e0;
+  box-shadow: 0 -1px 6px 0px #222;
+}
+
+dim-compare {
+  #loadout-drawer {
+    padding-left: 1em;
+  }
 }
 
 .loadout-item {
   position: relative;
+}
+
+.compare-bucket {
+  white-space: nowrap;
+  overflow-x: scroll;
+  width: 100%;
+  display: flex;
+  margin-left: 100px;
+  .fixed-left {
+    border-left: none;
+    position: fixed;
+    left: 1em;
+    min-width: 100px;
+  }
+}
+
+.compare-item {
+  align-self: flex-start;
+  flex: 1;
+  position: relative;
+  min-width: 150px;
+  max-width: 150px;
+  border-left: 1px solid $lightgray;
+  div {
+    padding-left: 5px;
+  }
+  .highlight {
+    color: white !important;
+    background-color: gray;
+    cursor: pointer;
+  }
+  .sorted {
+    color: $orange;
+  }
+  .close {
+    top: 0px;
+    right: 6px;
+    padding-left: 0px;
+  }
+  .range {
+    font-size: .9em;
+  }
+  dim-item-tag {
+    display: block;
+    select {
+      background: transparent;
+      border: none;
+      color: white;
+      width: 125px;
+    }
+  }
 }
 
 .loadout-content {
@@ -2185,6 +2234,7 @@ dim-manifest-progress {
     padding: 1.5rem 1.5rem;
     background-color: #222;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+    white-space: pre-wrap;
 
     i {
       font-size: 2rem;
