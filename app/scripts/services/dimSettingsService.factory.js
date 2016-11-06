@@ -59,14 +59,6 @@
         // Whether to keep one slot per item type open
         makeRoomForItems: true
       },
-      // Predefined item tags. Maybe eventually allow to add more (also i18n?)
-      itemTags: [
-        { type: undefined, label: 'Tags.TagItem' },
-        { type: 'favorite', label: 'Tags.Favorite', hotkey: '!', icon: 'star' },
-        { type: 'keep', label: 'Tags.Keep', hotkey: '@', icon: 'tag' },
-        { type: 'junk', label: 'Tags.Junk', hotkey: '#', icon: 'ban' },
-        { type: 'infuse', label: 'Tags.Infuse', hotkey: '$', icon: 'bolt' }
-      ],
 
       language: defaultLanguage(),
 
@@ -97,7 +89,7 @@
 
       _loaded = true;
       $rootScope.$evalAsync(function() {
-        angular.extend(settings, savedSettings);
+        angular.merge(settings, savedSettings);
         $translate.use(settings.language);
         $translate.fallbackLanguage('en');
       });
