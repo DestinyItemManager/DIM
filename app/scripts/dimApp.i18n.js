@@ -277,6 +277,31 @@
             Vault: "Tresor",
             Vanguard: "Vorhut",
             Weapons: "Waffen" },
+          BungieService: {
+            Down: "Bungie.net ist nicht erreichbar.",
+            Difficulties: "Die Bungie API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
+            NetworkError: "Netzwerk Fehler - {{status}} {{statusText}}",
+            Throttled: 'Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.',
+            NotLoggedIn: 'Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen.',
+            Maintenance: "Bungie.net Server werden zur Zeit gewartet.",
+            NoAccount: "Es wurde kein Destiny Account für diese Platform gefunden. Hast du die richtige Platform gewählt?",
+            NoAccountForPlatform: "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
+            NotConnected: "Du bist eventuell nicht mit dem Internet verbunden.",
+            Twitter: "Bekomme Statusupdates auf",
+            ItemUniqueness: "Item Einzigartigkeit",
+            ItemUniquenessExplanation: "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
+          },
+          Compare: {
+            All: {
+              Singular: "Vergleiche alle {{type}} ({{quantity}})",
+              Plural: "Vergleiche alle {{type}} ({{quantity}})" },
+            Archetype: "Vergleiche im Urzustand ({{quantity}})",
+            Compare: "Vergleiche",
+            Close: "Schließen",
+            Error: {
+              Class: "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist.",
+              Archetype: "Kann dieses Item nicht vergleichen, da es kein {{type}} ist." },
+            Splits: "Vergleiche ähnliche Stats ({{quantity}})" },
           Cooldown: {
             Grenade: "Granaten Abklingzeit",
             Melee: "Nahkampf Abklingzeit",
@@ -374,8 +399,11 @@
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft." },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
-            Error: "Fehler beim Laden von Informationen:\n{{error}}\nApp neu laden, um es nochmals zu versuchen.",
             Download: "Lade neueste Daten von Bungie herunter",
+            Error: "Fehler beim Laden von Informationen:\n{{error}}\nApp neu laden, um es nochmals zu versuchen.",
+            Outdated: "Veraltete Destiny Infos",
+            OutdatedExplanation: "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreiten werden.",
+            BungieDown: "Bungie.net hat möglicherweise Probleme.",
             Load: "Lade gespeicherte Daten",
             Unzip: "Entpacke neueste Daten",
             Save: "Speichere neueste Daten" },
@@ -421,6 +449,7 @@
           Stats: {
             Intellect: "Intellekt",
             Discipline: "Disziplin",
+            NoBonus: "Kein Bonus",
             Strength: "Stärke",
             TierProgress: "{{progress}} für {{tier}}" },
           Tags: {
