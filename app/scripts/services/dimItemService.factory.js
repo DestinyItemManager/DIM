@@ -325,36 +325,50 @@
       }
     }
 
+    /**
+     * Choose another item that we can move out of "store" in order to
+     * make room for "item".
+     * @param store the store to choose a move aside item from.
+     * @param item the item we're making space for.
+     * @param moveContext a helper object that can answer questions about how much space is left.
+     */
     function chooseMoveAsideItem(store, item, moveContext) {
+      // Check whether an item cannot or should not be moved
+      function moveable(otherItem) {
+        return !otherItem.notransfer && !_.any(moveContext.excludes, { id: otherItem.id, hash: otherItem.hash });
+      }
+
       var moveAsideCandidates;
-      var stores = dimStoreService.getStores();
-      if (store.isVault && !_.any(stores, function(s) { return moveContext.spaceLeft(s, item); })) {
-        // If it's the vault, we can get rid of anything in the same sort category.
-        // Pick whatever we have the most space for on some guardian.
-        var bestType = _.max(dimCategory[item.bucket.sort], function(type) {
-          return _.max(stores.map(function(s) {
-            if (s.id === store.id) {
-              return 0;
-            }
+      var otherStores = _.reject(dimStoreService.getStores(), { id: store.id });
+      if (store.isVault && !_.any(otherStores, (s) => moveContext.spaceLeft(s, item))) {
+        // If we're trying to make room in the vault, and none of the
+        // other stores have space for the same type, we can still get
+        // rid of anything in the same sort category. Pick whatever
+        // we have the most space for on some other guardian.
+        const typesInCategory = dimCategory[item.bucket.sort];
+        var bestTypes = _.sortby(typesInCategory, (type) => {
+          return _.max(otherStores.map((otherStore) => {
             var vaultItem = _.find(store.items, { type: type });
-            return vaultItem ? moveContext.spaceLeft(s, vaultItem) : 0;
+            // TODO: reduce the value of the item's owner?
+            return vaultItem ? moveContext.spaceLeft(otherStore, vaultItem) : 0;
           }));
         });
 
-        moveAsideCandidates = _.filter(store.items, { type: bestType });
-      } else {
-        moveAsideCandidates = _.filter(store.items, function(i) {
-          return i.location.id === item.location.id;
+        _.any(bestTypes, (type) => {
+          moveAsideCandidates = _.filter(store.items, (otherItem) =>
+                                         otherItem.type === type &&
+                                         moveable(otherItem));
+          // Stop once we have actual candidates, otherwise try another type
+          return moveAsideCandidates.length > 0;
         });
+      } else {
+        moveAsideCandidates = _.filter(store.items, (otherItem) =>
+                                       otherItem.location.id === item.location.id &&
+                                       moveable(otherItem));
       }
 
-      // Don't move that which cannot be moved
-      moveAsideCandidates = _.reject(moveAsideCandidates, function(i) {
-        return i.notransfer || _.any(moveContext.excludes, { id: i.id, hash: i.hash });
-      });
-
       if (moveAsideCandidates.length === 0) {
-        throw new Error("There's nothing we can move aside to make room for " + item.name);
+        throw new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
       }
 
       // For the vault, try to move the highest-value item to a character. For a
@@ -387,27 +401,40 @@
       return moveAsideItem;
     }
 
+    /**
+     * Given an item we want to move, choose where to put it.
+     * @param store the store we're moving aside from (moveAsideItem's owner).
+     * @param item the item we're going to move.
+     * @param moveContext a helper object that can answer questions about how much space is left.
+     */
     function chooseMoveAsideTarget(store, moveAsideItem, moveContext) {
-      var target;
-      var stores = dimStoreService.getStores();
+      var moveAsideTarget;
+      var otherStores = _.reject(dimStoreService.getStores(), { id: store.id });
       if (store.isVault) {
         // Find the character with the most space
-        target = _.max(_.reject(stores, 'isVault'), function(s) { return moveContext.spaceLeft(s, moveAsideItem); });
+        moveAsideTarget = _.max(otherStores, (otherStore) => moveContext.spaceLeft(otherStore, moveAsideItem));
       } else {
         var vault = dimStoreService.getVault();
         // Prefer moving to the vault
         if (moveContext.spaceLeft(vault, moveAsideItem) > 0) {
-          target = vault;
+          moveAsideTarget = vault;
         } else {
-          target = _.max(stores, function(s) { return moveContext.spaceLeft(s, moveAsideItem); });
-        }
-        if (moveContext.spaceLeft(target, moveAsideItem) <= 0) {
-          target = vault;
+          moveAsideTarget = _.max(otherStores, (otherStore) => moveContext.spaceLeft(otherStore, moveAsideItem));
+          if (moveAsideTarget !== -Infinity && moveContext.spaceLeft(moveAsideTarget, moveAsideItem) <= 0) {
+            moveAsideTarget = vault;
+          }
         }
       }
-      return target === -Infinity ? undefined : target;
+      return moveAsideTarget === -Infinity ? undefined : moveAsideTarget;
     }
 
+    // TODO: maybe move this to store object
+    /**
+     * The number of slots/stacks that need to be free in order to
+     * move this item to the given store. In general this is just one,
+     * though for stacks we may be able to combine with an existing
+     * stack.
+     */
     function slotsNeededForTransferTo(store, item) {
       var slotsNeededForTransfer = 0;
 
@@ -428,20 +455,24 @@
         return $q.resolve(true);
       }
 
+      // TODO: can I reformulate the reservations to be in raw amounts vs. stacks??
+
       var stores = dimStoreService.getStores();
-      // How much space will be needed in the various stores in order to make the transfer?
+
+      // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
       var storeReservations = {};
       stores.forEach(function(s) {
-        storeReservations[s.id] = (s.id === store.id ? slotsNeededForTransferTo(s, item) : 0);
+        storeReservations[s.id] = (s.id === store.id ? item.amount : 0);
       });
+
       // guardian-to-guardian transfer will also need space in the vault
       if (item.owner !== 'vault' && !store.isVault) {
-        storeReservations.vault = slotsNeededForTransferTo(dimStoreService.getVault(), item);
+        storeReservations.vault = item.amount;
       }
 
-      // How many moves are needed from each
+      // How many moves (in amount, not stacks) are needed from each
       var movesNeeded = {};
-      dimStoreService.getStores().forEach(function(s) {
+      stores.forEach(function(s) {
         movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - s.spaceLeftForItem(item));
       });
 
@@ -463,20 +494,23 @@
         };
 
         // Move starting from the vault (which is always last)
-        var move = _.pairs(movesNeeded)
+        var moves = _.pairs(movesNeeded)
               .reverse()
-              .find(function(p) { return p[1] > 0; });
-        var source = dimStoreService.getStore(move[0]);
-        var moveAsideItem = chooseMoveAsideItem(source, item, moveContext);
-        var target = chooseMoveAsideTarget(source, moveAsideItem, moveContext);
+              .find(([_, moveAmount]) => moveAmount > 0);
+        var moveAsideSource = dimStoreService.getStore(moves[0]);
+        var moveAsideItem = chooseMoveAsideItem(moveAsideSource, item, moveContext);
+        var moveAsideTarget = chooseMoveAsideTarget(moveAsideSource, moveAsideItem, moveContext);
 
-        if (!target || (!target.isVault && target.spaceLeftForItem(moveAsideItem) <= 0)) {
-          return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
+        if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
+          const error = new Error(`There are too many '${(moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type)}' items in the ${moveAsideTarget.name}.`);
+          error.code = 'no-space';
+          return $q.reject(error);
         } else {
           // Make one move and start over!
-          return moveTo(moveAsideItem, target, false, moveAsideItem.amount, excludes).then(function() {
-            return canMoveToStore(item, store, triedFallback, excludes);
-          });
+          return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
+            .then(function() {
+              return canMoveToStore(item, store, triedFallback, excludes);
+            });
         }
       } else {
         // Refresh the stores to see if anything has changed

@@ -83,14 +83,19 @@
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
-      // Get the total amount of this item in the store, across all stacks,
-      // excluding stuff in the postmaster.
+      /**
+       * Get the total amount of this item in the store, across all stacks,
+       * excluding stuff in the postmaster.
+       */
       amountOfItem: function(item) {
         return sum(_.filter(this.items, function(i) {
           return i.hash === item.hash && !i.location.inPostmaster;
         }), 'amount');
       },
-      // How much of items like this item can fit in this store?
+      /**
+       * How much of items like this item can fit in this store? For
+       * stackables, this is in stacks, not individual pieces.
+       */
       capacityForItem: function(item) {
         if (!item.bucket) {
           console.error("item needs a 'bucket' field", item);
@@ -98,12 +103,24 @@
         }
         return item.bucket.capacity;
       },
-      // How many *more* items like this item can fit in this store?
+      /**
+       * How many *more* items like this item can fit in this store?
+       * This takes into account stackables, so the answer will be in
+       * terms of individual pieces.
+       */
       spaceLeftForItem: function(item) {
         if (!item.type) {
           throw new Error("item needs a 'type' field");
         }
-        return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
+        const openStacks = Math.max(0, this.capacityForItem(item) -
+                                    this.buckets[item.location.id].length);
+        const amount = item.amount || 1;
+        if (amount === 1) {
+          return openStacks;
+        } else {
+          const maxStackSize = item.maxStackSize || 1;
+          return (openStacks * maxStackSize) + (maxStackSize - (this.amountOfItem(item) % maxStackSize));
+        }
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
         dimDefinitions.then((defs) => this.updateCharacterInfo(defs, characterInfo));
@@ -380,16 +397,22 @@
                   return buckets[sort].capacity;
                 },
                 spaceLeftForItem: function(item) {
-                  var sort = item.sort;
+                  let sort = item.sort;
                   if (item.bucket) {
                     sort = item.bucket.sort;
                   }
                   if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
-                    return i.bucket.sort === sort;
-                  }));
+                  const openStacks = Math.max(0, this.capacityForItem(item) -
+                                              count(this.items, (i) => i.bucket.sort === sort));
+                  const amount = item.amount || 1;
+                  if (amount === 1) {
+                    return openStacks;
+                  } else {
+                    const maxStackSize = item.maxStackSize || 1;
+                    return (openStacks * maxStackSize) + (maxStackSize - (this.amountOfItem(item) % maxStackSize));
+                  }
                 },
                 removeItem: function(item) {
                   var result = StoreProto.removeItem.call(this, item);
