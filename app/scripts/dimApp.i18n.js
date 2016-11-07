@@ -73,7 +73,7 @@
             SupportDIM: "Support DIM" },
           Help: {
             BackToDIM: "Back to DIM",
-            Drag: "Hold shift or pause over drop zone to transfer a partial stack" },
+            Drag: "Hold shift or pause over drop zone to transfer a partial stack." },
           Hotkey: {
             StartSearch: "Start a search",
             RefreshInventory: "Refresh inventory",
@@ -544,7 +544,12 @@
           },
           Header: {
             About: "À propos",
-            SupportDIM: "Soutien DIM" },
+            SupportDIM: "Soutien DIM"
+          },
+          Help: {
+            BackToDIM: 'Retour sur DIM',
+            Drag: 'Maintenez shift ou stoppez au-dessus d\'une zone de dépôt pour transférer une partie de la pile.'
+          }
           Loadouts: {
             Create: "Créer Loadout",
             FromEquipped: "Equipé",
