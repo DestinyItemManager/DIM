@@ -266,7 +266,7 @@
     }
 
     function moveToStore(item, store, equip, amount) {
-      console.log('Move', amount, item.name, 'to', store.name);
+      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
       return dimBungieService.transfer(item, store, amount)
         .then(function() {
           var source = dimStoreService.getStore(item.owner);
