@@ -60,6 +60,15 @@
         makeRoomForItems: true
       },
 
+      // Predefined item tags. Maybe eventually allow to add more (also i18n?)
+      itemTags: [
+        { type: undefined, label: 'Tags.TagItem' },
+        { type: 'favorite', label: 'Tags.Favorite', hotkey: '!', icon: 'star' },
+        { type: 'keep', label: 'Tags.Keep', hotkey: '@', icon: 'tag' },
+        { type: 'junk', label: 'Tags.Junk', hotkey: '#', icon: 'ban' },
+        { type: 'infuse', label: 'Tags.Infuse', hotkey: '$', icon: 'bolt' }
+      ],
+
       language: defaultLanguage(),
 
       save: function() {
