@@ -608,6 +608,8 @@
      * @param equip true to equip the item, false to leave it unequipped.
      * @param amount how much of the item to move (for stacks). Can span more than one stack's worth.
      * @param excludes A list of {id, hash} objects representing items that should not be moved aside to make the move happen.
+     * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
+     * @return {Promise} A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
      */
     function moveTo(item, target, equip, amount, excludes, reservations) {
       return isValidTransfer(equip, target, item, excludes, reservations)
