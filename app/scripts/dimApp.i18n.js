@@ -284,7 +284,6 @@
             Show: "Zeige {{bucket}}",
             Unknown: "Unbekannt",
             Vault: "Tresor",
-            Vanguard: "Vorhut",
             Weapons: "Waffen" },
           BungieService: {
             Down: "Bungie.net ist nicht erreichbar.",
@@ -335,6 +334,7 @@
             About: "Über",
             Filters: "Filter",
             FilterHelp: "Suche nach Item/Perk oder is:arc",
+            MaterialsExchange: "Verfügbare Fraktionsränge",
             Refresh: "Aktualisiere Destiny Daten",
             SupportDIM: "DIM Unterstützen" },
           Help: {
@@ -416,6 +416,14 @@
             Load: "Lade gespeicherte Daten",
             Unzip: "Entpacke neueste Daten",
             Save: "Speichere neueste Daten" },
+          MaterialsExchange: {
+            MaterialsExchange: "Materialaustausch",
+            CurrentRank: "Aktueller Rang",
+            CurrentRep: "Aktueller Ruf",
+            OnHand: "Materialien in Besitz",
+            FromTrade: "Materialien aus dem Handel",
+            NewRank: "Neuer Rang",
+            NewRep: "Neuer Ruf" },
           Notes: {
             Error: "Fehler! Max 120 Zeichen für Notizen.",
             Help: "Notiz für diesen Artikel" },
