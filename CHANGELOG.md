@@ -11,6 +11,7 @@
 * About and Support pages are now translatable.
 * Improved error handling and error messages.
 * Vendors are collapsible.
+* Fix DIM hanging when you try to look at a record book or a complicated bounty or quest.
 
 # 3.13.0
 
