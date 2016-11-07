@@ -522,6 +522,26 @@
             Super: "Régénération du Super",
             Grenade: "Régénération de Grenade",
             Melee: "Régénération de Mêlée" },
+          Debug: {
+            Dump: 'Envoyer les infos sur la console',
+            View: 'Afficher les infos de débug de l\'article.'
+          },
+          FarmingMode: {
+            FarmingMode: "Mode Farming (transférer les articles)",
+            Desc: 'DIM est entrain de transférer des engrammes et articles pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d\'article afin d\'éviter que rien ne soit envoyé au commis des postes.',
+            Configuration: "Configuration",
+            Greens: {
+              Greens: 'Transférer les articles peu communs/verts aux coffres',
+              Tooltip: 'Si activé, DIM transfèrera aussi tous les articles peu communs (verts) aux coffres. Si désactivé, alors les articles verts resteront sur votre perso actif.',
+            },
+            MakeRoom: {
+              Desc: 'DIM est entrain de transférer uniquement les engrammes et articles pour Glimmer du {{store}} aux coffres ou autres persos afin d\'éviter que rien ne soit envoyé au commis des postes.',
+              MakeRoom: 'Faites de la place pour collecter des articles en déplaçant de l\'équipement',
+              Tooltip: 'Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes.'
+            },
+            Quickmove: 'Déplacement rapide',
+            Stop: "Stop"
+          },
           Header: {
             About: "À propos",
             SupportDIM: "Soutien DIM" },
