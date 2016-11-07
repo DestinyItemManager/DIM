@@ -327,65 +327,30 @@
 
     /**
      * Choose another item that we can move out of "store" in order to
-     * make room for "item".
+     * make room for "item". We already know when this function is
+     * called that store has no room for item.
+     *
      * @param store the store to choose a move aside item from.
      * @param item the item we're making space for.
      * @param moveContext a helper object that can answer questions about how much space is left.
+     * @return An object with item and target properties representing both the item and its destination. This won't ever be undefined.
+     * @throws {Error} An error if no move aside item could be chosen.
      */
     function chooseMoveAsideItem(store, item, moveContext) {
-
-      // TODO: for consumables, can we choose to combine stacks??
-
       // Check whether an item cannot or should not be moved
-      function moveable(otherItem) {
-        return !otherItem.notransfer && !_.any(moveContext.excludes, { id: otherItem.id, hash: otherItem.hash });
+      function movable(otherItem) {
+        return !otherItem.notransfer &&
+          !_.any(moveContext.excludes, { id: otherItem.id, hash: otherItem.hash });
       }
 
-      var moveAsideCandidates;
-      var otherStores = _.reject(dimStoreService.getStores(), { id: store.id });
-      console.log(otherStores);
-      if (store.isVault && !_.any(otherStores, (s) => moveContext.spaceLeft(s, item))) {
-        console.log(otherStores.map((s) => moveContext.spaceLeft(s, item)));
-        // If we're trying to make room in the vault, and none of the
-        // other stores have space for the same type, we can still get
-        // rid of anything in the same sort category. Pick whatever
-        // we have the most space for on some other guardian.
-        const typesInCategory = dimCategory[item.bucket.sort];
-        var bestTypes = _.sortBy(typesInCategory, (type) => {
-          return _.max(otherStores.map((otherStore) => {
-            var vaultItem = _.find(store.items, { type: type });
-            // TODO: reduce the value of the item's owner?
-            return vaultItem ? moveContext.spaceLeft(otherStore, vaultItem) : 0;
-          }));
-        });
-
-        console.log('bestTypes', bestTypes);
-
-        bestTypes.find((type) => {
-          moveAsideCandidates = _.filter(store.items, (otherItem) =>
-                                         otherItem.type === type &&
-                                         moveable(otherItem));
-          // Stop once we have actual candidates, otherwise try another type
-          return moveAsideCandidates.length > 0;
-        });
-      } else {
-        moveAsideCandidates = _.filter(store.items, (otherItem) =>
-                                       otherItem.location.id === item.location.id &&
-                                       moveable(otherItem));
-      }
-
-      if (moveAsideCandidates.length === 0) {
-        throw new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
-      }
-
-      // For the vault, try to move the highest-value item to a character. For a
-      // character, move the lowest-value item to the vault (or another character).
-      // We move the highest-value item out of the vault because it seems better
-      // not to gunk up characters with garbage or year 1 stuff.
-      var moveAsideItem = _[store.isVault ? 'max' : 'min'](moveAsideCandidates, function(i) {
+      // The value of an item to use for ranking which item to move
+      // aside. When moving from the vault we'll choose the
+      // highest-value item, while moving from a character to the
+      // vault (or another character) we'll use the lower value.
+      function itemValue(i) {
         // Lower means more likely to get moved away
         // Prefer not moving the equipped item
-        var value = i.equipped ? 10 : 0;
+        let value = i.equipped ? 10 : 0;
         // Prefer moving lower-tier
         value += {
           Common: 0,
@@ -402,10 +367,123 @@
         if (i.primStat) {
           value += i.primStat.value / 1000.0;
         }
+        // prefer same type over everything
+        if (i.type === item.type) {
+          value += 50;
+        }
         return value;
+      }
+
+      const stores = dimStoreService.getStores();
+      const otherStores = _.reject(stores, { id: store.id });
+
+      // Start with candidates of the same type (or sort if it's vault)
+      const allItems = store.isVault
+              ? _.filter(store.items, (i) => i.bucket.sort === item.bucket.sort)
+              : store.buckets[item.location.id];
+      let moveAsideCandidates = _.filter(allItems, movable);
+
+      // if there are no candidates at all, fail
+      if (moveAsideCandidates.length === 0) {
+        throw new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+      }
+
+      // Find any stackable that could be combined with another stack
+      // on a different store to form a single stack
+      if (item.maxStackSize > 1) {
+        let otherStore;
+        const stackable = moveAsideCandidates.find((i) => {
+          if (i.maxStackSize > 1) {
+            // Find another store that has an appropriate stackable
+            otherStore = otherStores.find(
+              (otherStore) => _.any(otherStore.items, (otherItem) =>
+                                    // Same basic item
+                                    otherItem.hash === i.hash &&
+                                    // Enough space to absorb this stack
+                                    (i.maxStackSize - otherItem.amount) >= i.amount));
+          }
+          return otherStore;
+        });
+        if (stackable) {
+          return {
+            item: stackable,
+            target: otherStore
+          };
+        }
+      }
+
+      // Sort all candidates
+      moveAsideCandidates = _.sortBy(moveAsideCandidates, itemValue);
+      if (store.isVault) {
+        moveAsideCandidates = moveAsideCandidates.reverse();
+      }
+
+      // A cached version of the space-left function
+      const cachedSpaceLeft = _.memoize((store, item) => {
+        return moveContext.spaceLeft(store, item);
+      }, (store, item) => {
+        // cache key
+        if (item.maxStackSize > 1) {
+          return store.id + item.hash;
+        } else {
+          return store.id + item.type;
+        }
       });
 
-      return moveAsideItem;
+      const vault = dimStoreService.getVault();
+      const moveAsideCandidate = moveAsideCandidates.find((candidate) => {
+        // Other, non-vault stores, with the item's current
+        // owner ranked last, but otherwise sorted by the
+        // available space for the candidate item.
+        const otherNonVaultStores = _.sortBy(
+          _.filter(otherStores, (s) => !s.isVault && s.id !== item.owner),
+          (s) => cachedSpaceLeft(s, candidate)).reverse();
+        otherNonVaultStores.push(dimStoreService.getStores(item.owner));
+        const otherCharacterWithSpace = _.find(otherNonVaultStores,
+                                               (s) => cachedSpaceLeft(s, candidate));
+
+        if (store.isVault) { // If we're moving from the vault
+          // If there's somewhere with space, put it there
+          if (otherCharacterWithSpace) {
+            return {
+              item: candidate,
+              target: otherCharacterWithSpace
+            };
+          }
+        } else { // If we're moving from a character
+          // If there's exactly one *slot* left on the vault, and
+          // we're not moving the original item *from* the vault, put
+          // the candidate on another character in order to avoid
+          // gumming up the vault.
+          if (item.owner !== 'vault') {
+            const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
+            if (openVaultSlots === 1) {
+              const otherCharacter = _.find(otherNonVaultStores,
+                                            (s) => cachedSpaceLeft(s, candidate));
+              if (otherCharacter) {
+                return {
+                  item: candidate,
+                  target: otherCharacter
+                };
+              }
+            }
+          }
+          // Otherwise just try to shove it in the vault, and we'll
+          // recursively squeeze something else out
+          return {
+            item: candidate,
+            target: vault
+          };
+        }
+
+        return undefined;
+      });
+
+      if (!moveAsideCandidate) {
+        throw new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+      }
+
+      return moveAsideCandidate;
     }
 
     /**
@@ -463,10 +541,7 @@
       var movesNeeded = {};
       stores.forEach(function(s) {
         movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - s.spaceLeftForItem(item));
-        console.log(item.name, 'has', s.spaceLeftForItem(item), 'left in', s.name);
       });
-
-      console.log(item.name, store.name, movesNeeded, storeReservations);
 
       if (!_.any(movesNeeded)) {
         return $q.resolve(true);
@@ -490,8 +565,7 @@
               .reverse()
               .find(([_, moveAmount]) => moveAmount > 0);
         var moveAsideSource = dimStoreService.getStore(moves[0]);
-        var moveAsideItem = chooseMoveAsideItem(moveAsideSource, item, moveContext);
-        var moveAsideTarget = chooseMoveAsideTarget(moveAsideSource, moveAsideItem, moveContext);
+        const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
         if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
           const error = new Error(`There are too many '${(moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type)}' items in the ${moveAsideTarget.name}.`);
@@ -500,8 +574,11 @@
         } else {
           // Make one move and start over!
           return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
-            .then(function() {
-              return canMoveToStore(item, store, triedFallback, excludes);
+            .then(() => canMoveToStore(item, store, triedFallback, excludes))
+            .catch((e) => {
+              excludes.push(moveAsideItem);
+              console.error(`Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`, e);
+              return canMoveToStore(item, store, true, excludes);
             });
         }
       } else {
