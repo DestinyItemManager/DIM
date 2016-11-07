@@ -81,9 +81,11 @@
                 const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
 
                 if (otherStoresWithSpace.length) {
+                  console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
                   return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                 }
               }
+              console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
               return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
             })
             .then(() => {
@@ -125,7 +127,7 @@
 
         var applicableItems = _.select(store.items, (i) =>
                                        !i.location.inPostmaster &&
-                                       !makeRoomTypes.has(i.type));
+                                       makeRoomTypes.has(i.type));
         var itemsByType = _.groupBy(applicableItems, 'type');
 
         // If any category is full, we'll move one aside
