@@ -266,6 +266,7 @@
     }
 
     function moveToStore(item, store, equip, amount) {
+      console.log('Move', amount, item.name, 'to', store.name);
       return dimBungieService.transfer(item, store, amount)
         .then(function() {
           var source = dimStoreService.getStore(item.owner);
@@ -430,53 +431,56 @@
         }
       });
 
+      let moveAsideCandidate;
+
       const vault = dimStoreService.getVault();
-      const moveAsideCandidate = moveAsideCandidates.find((candidate) => {
+      moveAsideCandidates.find((candidate) => {
         // Other, non-vault stores, with the item's current
         // owner ranked last, but otherwise sorted by the
         // available space for the candidate item.
         const otherNonVaultStores = _.sortBy(
           _.filter(otherStores, (s) => !s.isVault && s.id !== item.owner),
           (s) => cachedSpaceLeft(s, candidate)).reverse();
-        otherNonVaultStores.push(dimStoreService.getStores(item.owner));
+        otherNonVaultStores.push(dimStoreService.getStore(item.owner));
         const otherCharacterWithSpace = _.find(otherNonVaultStores,
                                                (s) => cachedSpaceLeft(s, candidate));
 
         if (store.isVault) { // If we're moving from the vault
           // If there's somewhere with space, put it there
           if (otherCharacterWithSpace) {
-            return {
+            moveAsideCandidate = {
               item: candidate,
               target: otherCharacterWithSpace
             };
+            return true;
           }
         } else { // If we're moving from a character
           // If there's exactly one *slot* left on the vault, and
           // we're not moving the original item *from* the vault, put
           // the candidate on another character in order to avoid
           // gumming up the vault.
-          if (item.owner !== 'vault') {
-            const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
-            if (openVaultSlots === 1) {
-              const otherCharacter = _.find(otherNonVaultStores,
-                                            (s) => cachedSpaceLeft(s, candidate));
-              if (otherCharacter) {
-                return {
-                  item: candidate,
-                  target: otherCharacter
-                };
-              }
+          const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
+          if (item.owner !== 'vault' && openVaultSlots === 1) {
+            if (otherCharacterWithSpace) {
+              moveAsideCandidate = {
+                item: candidate,
+                target: otherCharacterWithSpace
+              };
+              return true;
             }
           }
-          // Otherwise just try to shove it in the vault, and we'll
-          // recursively squeeze something else out
-          return {
-            item: candidate,
-            target: vault
-          };
+          if (openVaultSlots > 0 || otherCharacterWithSpace) {
+            // Otherwise just try to shove it in the vault, and we'll
+            // recursively squeeze something else out of the vault.
+            moveAsideCandidate = {
+              item: candidate,
+              target: vault
+            };
+            return true;
+          }
         }
 
-        return undefined;
+        return false;
       });
 
       if (!moveAsideCandidate) {
