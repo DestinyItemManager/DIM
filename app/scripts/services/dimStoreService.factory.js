@@ -114,12 +114,13 @@
         }
         const openStacks = Math.max(0, this.capacityForItem(item) -
                                     this.buckets[item.location.id].length);
-        const amount = item.amount || 1;
-        if (amount === 1) {
+        const maxStackSize = item.maxStackSize || 1;
+        if (maxStackSize === 1) {
           return openStacks;
         } else {
-          const maxStackSize = item.maxStackSize || 1;
-          return (openStacks * maxStackSize) + (maxStackSize - (this.amountOfItem(item) % maxStackSize));
+          const existingAmount = this.amountOfItem(item);
+          const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
+          return (openStacks * maxStackSize) + stackSpace;
         }
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
@@ -406,12 +407,13 @@
                   }
                   const openStacks = Math.max(0, this.capacityForItem(item) -
                                               count(this.items, (i) => i.bucket.sort === sort));
-                  const amount = item.amount || 1;
-                  if (amount === 1) {
+                  const maxStackSize = item.maxStackSize || 1;
+                  if (maxStackSize === 1) {
                     return openStacks;
                   } else {
-                    const maxStackSize = item.maxStackSize || 1;
-                    return (openStacks * maxStackSize) + (maxStackSize - (this.amountOfItem(item) % maxStackSize));
+                    const existingAmount = this.amountOfItem(item);
+                    const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
+                    return (openStacks * maxStackSize) + stackSpace;
                   }
                 },
                 removeItem: function(item) {

@@ -333,6 +333,9 @@
      * @param moveContext a helper object that can answer questions about how much space is left.
      */
     function chooseMoveAsideItem(store, item, moveContext) {
+
+      // TODO: for consumables, can we choose to combine stacks??
+
       // Check whether an item cannot or should not be moved
       function moveable(otherItem) {
         return !otherItem.notransfer && !_.any(moveContext.excludes, { id: otherItem.id, hash: otherItem.hash });
@@ -340,19 +343,23 @@
 
       var moveAsideCandidates;
       var otherStores = _.reject(dimStoreService.getStores(), { id: store.id });
+      console.log(otherStores);
       if (store.isVault && !_.any(otherStores, (s) => moveContext.spaceLeft(s, item))) {
+        console.log(otherStores.map((s) => moveContext.spaceLeft(s, item)));
         // If we're trying to make room in the vault, and none of the
         // other stores have space for the same type, we can still get
         // rid of anything in the same sort category. Pick whatever
         // we have the most space for on some other guardian.
         const typesInCategory = dimCategory[item.bucket.sort];
-        var bestTypes = _.sortby(typesInCategory, (type) => {
+        var bestTypes = _.sortBy(typesInCategory, (type) => {
           return _.max(otherStores.map((otherStore) => {
             var vaultItem = _.find(store.items, { type: type });
             // TODO: reduce the value of the item's owner?
             return vaultItem ? moveContext.spaceLeft(otherStore, vaultItem) : 0;
           }));
         });
+
+        console.log('bestTypes', bestTypes);
 
         bestTypes.find((type) => {
           moveAsideCandidates = _.filter(store.items, (otherItem) =>
@@ -433,7 +440,7 @@
      * data and/or move items aside in an attempt to make a move possible.
      * @return a promise that's either resolved if the move can proceed or rejected with an error.
      */
-    function canMoveToStore(item, store, triedFallback, excludes) {
+    function canMoveToStore(item, store, triedFallback, excludes = [], reservations = {}) {
       if (item.owner === store.id) {
         return $q.resolve(true);
       }
@@ -441,9 +448,10 @@
       var stores = dimStoreService.getStores();
 
       // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
-      var storeReservations = {};
+      var storeReservations = angular.copy(reservations);
       stores.forEach(function(s) {
-        storeReservations[s.id] = (s.id === store.id ? item.amount : 0);
+        storeReservations[s.id] = storeReservations[s.id] || 0;
+        storeReservations[s.id] += (s.id === store.id ? item.amount : 0);
       });
 
       // guardian-to-guardian transfer will also need space in the vault
@@ -455,7 +463,10 @@
       var movesNeeded = {};
       stores.forEach(function(s) {
         movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - s.spaceLeftForItem(item));
+        console.log(item.name, 'has', s.spaceLeftForItem(item), 'left in', s.name);
       });
+
+      console.log(item.name, store.name, movesNeeded, storeReservations);
 
       if (!_.any(movesNeeded)) {
         return $q.resolve(true);
@@ -464,7 +475,7 @@
         var moveContext = {
           reservations: storeReservations,
           originalItemType: item.type,
-          excludes: excludes || [],
+          excludes: excludes,
           spaceLeft: function(s, i) {
             var left = s.spaceLeftForItem(i);
             if (i.type === this.originalItemType) {
@@ -519,7 +530,7 @@
      * Check whether this transfer can happen. If necessary, make secondary inventory moves
      * in order to make the primary transfer possible, such as making room or dequipping exotics.
      */
-    function isValidTransfer(equip, store, item, excludes) {
+    function isValidTransfer(equip, store, item, excludes, reservations) {
       var promises = [];
 
       if (equip) {
@@ -529,7 +540,7 @@
         }
       }
 
-      promises.push(canMoveToStore(item, store, false, excludes));
+      promises.push(canMoveToStore(item, store, false, excludes, reservations));
 
       return $q.all(promises);
     }
@@ -542,11 +553,11 @@
      * @param amount how much of the item to move (for stacks). Can span more than one stack's worth.
      * @param excludes A list of {id, hash} objects representing items that should not be moved aside to make the move happen.
      */
-    function moveTo(item, target, equip, amount, excludes) {
-      return isValidTransfer(equip, target, item, excludes)
+    function moveTo(item, target, equip, amount, excludes, reservations) {
+      return isValidTransfer(equip, target, item, excludes, reservations)
         .then(function() {
           // Replace the target store - isValidTransfer may have reloaded it
-          const target = dimStoreService.getStore(target.id);
+          target = dimStoreService.getStore(target.id);
           const source = dimStoreService.getStore(item.owner);
 
           let promise = $q.when(item);
