@@ -114,7 +114,7 @@
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'https://www.bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'https://www.bungie.net/' + characterInfo.emblemPath;
-        this.stats = getStatsData(defs.Stat, characterInfo.characterBase);
+        this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
@@ -436,7 +436,7 @@
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
-                stats: getStatsData(defs.Stat, character.characterBase),
+                stats: getCharacterStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
                 classType: character.characterBase.classType,
                 className: defs.Class[character.characterBase.classHash].className,
@@ -1507,21 +1507,27 @@
       }
     }
 
-    function getStatsData(statDefs, data) {
-      var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
+    /**
+     * Compute character-level stats (int, dis, str).
+     */
+    function getCharacterStatsData(statDefs, data) {
+      const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
       var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
       var ret = {};
-      for (var s = 0; s < stats.length; s++) {
+      stats.forEach((statId) => {
         var statHash = {};
-        switch (stats[s]) {
+        statHash.id = statId;
+        switch (statId) {
         case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
         case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
         case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
 
-        const stat = data.stats[stats[s]];
+        statHash.icon = statHash.name ? `images/${statHash.name.toLowerCase()}.png` : undefined;
+
+        const stat = data.stats[statId];
         if (!stat) {
-          continue;
+          return;
         }
         statHash.value = stat.value;
         const statDef = statDefs[stat.statHash];
@@ -1529,7 +1535,7 @@
           statHash.name = statDef.statName; // localized name
         }
 
-        if (statsWithTiers.indexOf(stats[s]) > -1) {
+        if (statsWithTiers.has(statId)) {
           statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
           statHash.tier = Math.floor(statHash.normalized / 60);
           statHash.tiers = [];
@@ -1538,15 +1544,15 @@
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
           if (data.peerView) {
-            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, statId, statHash.tier);
           }
           statHash.percentage = Number(100 * statHash.normalized / 300).toFixed();
         } else {
           statHash.percentage = Number(100 * statHash.value / 10).toFixed();
         }
 
-        ret[stats[s]] = statHash;
-      }
+        ret[statId] = statHash;
+      });
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
