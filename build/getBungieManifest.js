@@ -25,7 +25,7 @@ function onManifestDownloaded() {
 
 request({
   headers: {
-    'X-API-Key': '57c5ff5864634503a0340ffdfbeb20c0'
+    'X-API-Key': process.env.API_KEY
   },
   uri: 'http://www.bungie.net/platform/Destiny/Manifest/',
   method: 'GET'
