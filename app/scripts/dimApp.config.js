@@ -69,8 +69,8 @@
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         if (dimFeatureFlags.changelogToaster) {
           dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-            title: 'DIM v$DIM_VERSION Released',
-            view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
+            title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated!',
+            view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
           });
         }
 
