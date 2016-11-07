@@ -491,33 +491,6 @@
     }
 
     /**
-     * Given an item we want to move, choose where to put it.
-     * @param store the store we're moving aside from (moveAsideItem's owner).
-     * @param item the item we're going to move.
-     * @param moveContext a helper object that can answer questions about how much space is left.
-     */
-    function chooseMoveAsideTarget(store, moveAsideItem, moveContext) {
-      var moveAsideTarget;
-      var otherStores = _.reject(dimStoreService.getStores(), { id: store.id });
-      if (store.isVault) {
-        // Find the character with the most space
-        moveAsideTarget = _.max(otherStores, (otherStore) => moveContext.spaceLeft(otherStore, moveAsideItem));
-      } else {
-        var vault = dimStoreService.getVault();
-        // Prefer moving to the vault
-        if (moveContext.spaceLeft(vault, moveAsideItem) > 0) {
-          moveAsideTarget = vault;
-        } else {
-          moveAsideTarget = _.max(otherStores, (otherStore) => moveContext.spaceLeft(otherStore, moveAsideItem));
-          if (moveAsideTarget !== -Infinity && moveContext.spaceLeft(moveAsideTarget, moveAsideItem) <= 0) {
-            moveAsideTarget = vault;
-          }
-        }
-      }
-      return moveAsideTarget === -Infinity ? undefined : moveAsideTarget;
-    }
-
-    /**
      * Is there anough space to move the given item into store? This will refresh
      * data and/or move items aside in an attempt to make a move possible.
      * @return a promise that's either resolved if the move can proceed or rejected with an error.
@@ -550,6 +523,8 @@
       if (!_.any(movesNeeded)) {
         return $q.resolve(true);
       } else if (store.isVault || triedFallback) {
+        // TODO: pass along the move context even more, and keep track of the original item and store
+
         // Move aside one of the items that's in the way
         var moveContext = {
           reservations: storeReservations,
