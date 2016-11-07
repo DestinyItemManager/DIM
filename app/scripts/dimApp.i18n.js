@@ -502,7 +502,22 @@
             Postmaster: "Commis des postes",
             Unknown: "Inconnu",
             Vault: "Coffres",
-            Reputation: "Estime" },
+            Reputation: "Estime"
+          },
+          BungieService: {
+            Down: 'Bungie.net est hors service.',
+            Difficulties: 'L\'API de Bungie rencontre actuellement des difficultés.',
+            NetworkError: 'Erreur de réseau - {{status}} {{statusText}}',
+            Throttled: 'La limite de connections à l\'API de Bungie a été atteinte. Veuillez réessayer plus tard.',
+            NotLoggedIn: 'Veuillez vous connecter sur Bungie.net pour utiliser cette extension.',
+            Maintenance: 'Les serveurs Bungie.net sont indisponibles pour cause de maintenance.',
+            NoAccount: 'Aucun compte Destiny n\'a été trouvé pour cette platforme. Avez-vous sélectionné la bonne platforme?',
+            NoAccountForPlatform: 'Nous n\'avons pas trouvé de compte Destiny pour vous sur {{platform}}.',
+            NotConnected: 'Vous n\'êtes probablement pas connecté à Internet.',
+            Twitter: 'Tenez-vous informer sur',
+            ItemUniqueness: "Unicité d'un article",
+            ItemUniquenessExplanation: 'Vous avez essayé de déplacer \'{{name}}\' {{type}} sur votre {{character}} mais cette destination a déjà cet article et n\'en autorise qu\'un.'
+          },
           Cooldown: {
             Super: "Régénération du Super",
             Grenade: "Régénération de Grenade",
