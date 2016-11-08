@@ -54,6 +54,10 @@
 
     const settings = dimSettingsService.farming;
 
+    const outOfSpaceWarning = _.throttle((store) => {
+      toaster.pop('info', `You're out of space to move items off of ${store.name}. Time to decrypt some engrams and clear out the trash!`);
+    }, 60000);
+
     return {
       active: false,
       store: null,
@@ -65,7 +69,10 @@
         const reservations = {};
         if (settings.makeRoomForItems) {
           // reserve one space in the active character
-          reservations[this.store.id] = 1;
+          reservations[this.store.id] = {};
+          makeRoomTypes.forEach((type) => {
+            reservations[this.store.id][type] = 1;
+          });
         }
 
         return _.reduce(items, (promise, item) => {
@@ -94,10 +101,12 @@
               }
             })
             .catch((e) => {
-              // No need to whine about being out of space
-              if (e.code !== 'no-space') {
+              if (e.code === 'no-space') {
+                outOfSpaceWarning(this.store);
+              } else {
                 toaster.pop('error', item.name, e.message);
               }
+              throw e;
             });
         }, $q.resolve());
       },

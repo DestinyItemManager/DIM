@@ -368,10 +368,16 @@
         if (i.primStat) {
           value += i.primStat.value / 1000.0;
         }
+        // Engrams prefer to be in the vault
+        if (i.isEngram()) {
+          value += 20;
+        }
+
         // prefer same type over everything
         if (i.type === item.type) {
           value += 50;
         }
+
         return value;
       }
 
@@ -386,7 +392,9 @@
 
       // if there are no candidates at all, fail
       if (moveAsideCandidates.length === 0) {
-        throw new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        const e = new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        e.code = 'no-space';
+        throw e;
       }
 
       // Find any stackable that could be combined with another stack
@@ -484,7 +492,9 @@
       });
 
       if (!moveAsideCandidate) {
-        throw new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        const e = new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        e.code = 'no-space';
+        throw e;
       }
 
       return moveAsideCandidate;
@@ -496,6 +506,19 @@
      * @return a promise that's either resolved if the move can proceed or rejected with an error.
      */
     function canMoveToStore(item, store, triedFallback, excludes = [], reservations = {}) {
+      function spaceLeftWithReservations(store, item) {
+        let left = store.spaceLeftForItem(item);
+        // minus any reservations
+        if (reservations[store.id] && reservations[store.id][item.type]) {
+          left -= reservations[store.id][item.type];
+        }
+        // but not counting the item that's moving
+        if (store.id === item.owner) {
+          left--;
+        }
+        return Math.max(0, left);
+      }
+
       if (item.owner === store.id) {
         return $q.resolve(true);
       }
@@ -503,11 +526,8 @@
       var stores = dimStoreService.getStores();
 
       // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
-      var storeReservations = angular.copy(reservations);
-      stores.forEach(function(s) {
-        storeReservations[s.id] = storeReservations[s.id] || 0;
-        storeReservations[s.id] += (s.id === store.id ? item.amount : 0);
-      });
+      var storeReservations = {};
+      storeReservations[store.id] = item.amount;
 
       // guardian-to-guardian transfer will also need space in the vault
       if (item.owner !== 'vault' && !store.isVault) {
@@ -517,7 +537,9 @@
       // How many moves (in amount, not stacks) are needed from each
       var movesNeeded = {};
       stores.forEach(function(s) {
-        movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - s.spaceLeftForItem(item));
+        movesNeeded[s.id] = Math.max(0,
+                                     (storeReservations[s.id] || 0) -
+                                     spaceLeftWithReservations(s, item));
       });
 
       if (!_.any(movesNeeded)) {
@@ -527,13 +549,12 @@
 
         // Move aside one of the items that's in the way
         var moveContext = {
-          reservations: storeReservations,
           originalItemType: item.type,
           excludes: excludes,
           spaceLeft: function(s, i) {
-            var left = s.spaceLeftForItem(i);
+            let left = spaceLeftWithReservations(s, i);
             if (i.type === this.originalItemType) {
-              left = left - this.reservations[s.id];
+              left = left - storeReservations[s.id];
             }
             return Math.max(0, left);
           }
