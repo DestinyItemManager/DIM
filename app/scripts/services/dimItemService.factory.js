@@ -374,7 +374,7 @@
           value += i.primStat.value / 1000.0;
         }
         // Engrams prefer to be in the vault
-        if (i.isEngram()) {
+        if (!i.isEngram()) {
           value += 20;
         }
 
