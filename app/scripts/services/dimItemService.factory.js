@@ -270,7 +270,12 @@
       return dimBungieService.transfer(item, store, amount)
         .then(function() {
           var source = dimStoreService.getStore(item.owner);
-          return updateItemModel(item, source, store, false, amount);
+          var newItem = updateItemModel(item, source, store, false, amount);
+          if ((newItem.owner !== 'vault') && equip) {
+            return equipItem(newItem);
+          } else {
+            return newItem;
+          }
         });
     }
 
@@ -641,18 +646,12 @@
           if (!source.isVault && !target.isVault) { // Guardian to Guardian
             if (source.id !== target.id) { // Different Guardian
               if (item.equipped) {
-                promise = promise.then(() => dequipItem(item));
+                promise = promise.then((item) => dequipItem(item));
               }
 
               promise = promise
-                .then(() => moveToVault(item, amount))
+                .then((item) => moveToVault(item, amount))
                 .then((item) => moveToStore(item, target, equip, amount));
-            }
-
-            if (equip) {
-              promise = promise.then(() => (item.equipped ? item : equipItem(item)));
-            } else if (!equip) {
-              promise = promise.then(() => (item.equipped ? dequipItem(item) : item));
             }
           } else if (source.isVault && target.isVault) { // Vault to Vault
             // Do Nothing.
