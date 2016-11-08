@@ -102,7 +102,7 @@
               LightMode: "Light mode",
               HelpScaled: "Calculates loadouts as if all items were 350 defense.",
               HelpCurrent: "Calculates loadouts at current defense levels." },
-            LBIncludeRare: "Include rare (blue) items",
+            IncludeRare: "Include rare (blue) items",
             Help: "Need help?",
             Equip: "Equip on Current Character",
             ShowAllConfigs: "Show all configurations",
