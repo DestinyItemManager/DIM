@@ -468,20 +468,17 @@
           // the candidate on another character in order to avoid
           // gumming up the vault.
           const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
-          if (item.owner !== 'vault' && openVaultSlots === 1) {
-            if (otherCharacterWithSpace) {
-              moveAsideCandidate = {
-                item: candidate,
-                target: otherCharacterWithSpace
-              };
-              return true;
-            }
-          }
-          if (openVaultSlots > 0 || otherCharacterWithSpace) {
+          if (openVaultSlots > 0 || !otherCharacterWithSpace) {
             // Otherwise just try to shove it in the vault, and we'll
             // recursively squeeze something else out of the vault.
             moveAsideCandidate = {
               item: candidate,
+              target: vault
+            };
+            return true;
+          } else {
+            moveAsideCandidate = {
+              item: otherCharacterWithSpace,
               target: vault
             };
             return true;
@@ -506,14 +503,14 @@
      * @return a promise that's either resolved if the move can proceed or rejected with an error.
      */
     function canMoveToStore(item, store, triedFallback, excludes = [], reservations = {}) {
-      function spaceLeftWithReservations(store, item) {
-        let left = store.spaceLeftForItem(item);
+      function spaceLeftWithReservations(s, i) {
+        let left = s.spaceLeftForItem(i);
         // minus any reservations
-        if (reservations[store.id] && reservations[store.id][item.type]) {
-          left -= reservations[store.id][item.type];
+        if (reservations[s.id] && reservations[s.id][i.type]) {
+          left -= reservations[s.id][i.type];
         }
-        // but not counting the item that's moving
-        if (store.id === item.owner) {
+        // but not counting the original item that's moving
+        if (s.id === item.owner && i.type === item.type) {
           left--;
         }
         return Math.max(0, left);
@@ -537,9 +534,9 @@
       // How many moves (in amount, not stacks) are needed from each
       var movesNeeded = {};
       stores.forEach(function(s) {
-        movesNeeded[s.id] = Math.max(0,
-                                     (storeReservations[s.id] || 0) -
-                                     spaceLeftWithReservations(s, item));
+        if (storeReservations[s.id]) {
+          movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - spaceLeftWithReservations(s, item));
+        }
       });
 
       if (!_.any(movesNeeded)) {
