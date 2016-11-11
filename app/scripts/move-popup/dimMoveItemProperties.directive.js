@@ -30,7 +30,7 @@
         '        </span>',
         '      </span>',
         '      <a target="_blank" rel="noopener noreferrer" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}#{{ vm.item.talentGrid.dtrPerks }}" class="item-title">',
-        '        {{vm.title}}',
+        '        {{vm.item.name}}',
         '      </a>',
         '    </div>',
         '    <div>',
@@ -174,7 +174,6 @@
       'is-void': false
     };
 
-    vm.title = $sce.trustAsHtml(vm.item.name);
     vm.light = '';
     vm.classType = '';
     vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
@@ -190,12 +189,13 @@
       if (vm.item.dmg) {
         vm.classes['is-' + vm.item.dmg] = true;
       }
-      if (vm.item.classTypeName !== 'unknown' &&
-          // These already include the class name
-          vm.item.type !== 'ClassItem' &&
-          vm.item.type !== 'Artifact') {
-        vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
-      }
+    }
+
+    if (vm.item.classTypeName !== 'unknown' &&
+        // These already include the class name
+        vm.item.type !== 'ClassItem' &&
+        vm.item.type !== 'Artifact') {
+      vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
     }
 
     function compareItems(item) {
