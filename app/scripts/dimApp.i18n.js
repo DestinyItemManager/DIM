@@ -611,11 +611,24 @@
             Applied: "Votre loadout de {{amount}} articles a été transféré à votre {{store}}",
             AppliedError: "Aucun des articles de votre loadout n'a pu être transféré.",
             AppliedWarn: "Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} articles ont échoué." },
+          Manifest: {
+            Build: "Base de données d'info de Destiny en cours de construction",
+            Download: "Téléchargement en cours des derniers infos Destiny de Bungie",
+            Error: "Erreur de chargement des infos Destiny:\n{{error}}\nRedémarrez pour rééssayer.",
+            Outdated: "Infos Destiny expirées",
+            OutdatedExplanation: "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
+            BungieDown: "Bungie.net rencontre des problèmes.",
+            Load: "Chargement des données sauvegardées de Destiny",
+            Save: "Sauvegard des dernières données de Destiny",
+            Unzip: "Désarchivage des dernières données de Destiny"
+          },
           Notes: {
+            Error: "Erreur! Max 120 charactères pour les notes.",
             Help: "Ajouter des notes à cet article" },
           Settings: {
             Settings: "Paramètres" },
           Stats: {
+            NoBonus: "Pas de Bonus",
             Intellect: "Intelligence",
             Discipline: "Discipline",
             Strength: "Force",
