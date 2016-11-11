@@ -619,7 +619,7 @@
             OutdatedExplanation: "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
             BungieDown: "Bungie.net rencontre des problèmes.",
             Load: "Chargement des données sauvegardées de Destiny",
-            Save: "Sauvegard des dernières données de Destiny",
+            Save: "Sauvegarde des dernières données de Destiny",
             Unzip: "Désarchivage des dernières données de Destiny"
           },
           Notes: {
