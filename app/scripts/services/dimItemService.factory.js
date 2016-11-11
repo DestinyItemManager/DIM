@@ -653,6 +653,12 @@
                 .then((item) => moveToVault(item, amount))
                 .then((item) => moveToStore(item, target, equip, amount));
             }
+
+            if (equip) {
+              promise = promise.then(() => (item.equipped ? item : equipItem(item)));
+            } else if (!equip) {
+              promise = promise.then(() => (item.equipped ? dequipItem(item) : item));
+            }
           } else if (source.isVault && target.isVault) { // Vault to Vault
             // Do Nothing.
           } else if (source.isVault || target.isVault) { // Guardian to Vault
