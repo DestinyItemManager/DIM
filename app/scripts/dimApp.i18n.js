@@ -676,7 +676,21 @@
             Junk: "Camelote",
             Infuse: "Infuser" },
           Vendors: {
-            Vendors: "Marchands" }
+            Vendors: "Marchands"
+            All: "Tous",
+            Load: "Chargement des Marchands",
+            ArmorAndWeapons: "Armure & Armes",
+            ShipsAndVehicles: "Vaisseaux & Véhicules",
+            Consumables: "Consommables",
+            Bounties: "Contrats",
+            ShadersAndEmblems: "Revêtements & Emblèmes",
+            Emotes: "Intéractions"
+          },
+          TrialsCard: {
+            FiveWins: "Récompense à 5 Victoires (Armure)",
+            SevenWins: "Récompense à 7 Victoires (Arme)",
+            Flawless: "Sans Défaite"
+          }
         })
         .translations('es', {
           Level: "Nivel",
