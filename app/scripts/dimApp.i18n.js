@@ -565,13 +565,15 @@
               Full: "Complet",
               ProcessingMode: "Mode de processing",
               HelpFast: "Ne se concentre que sur votre meilleur équipement.",
-              HelpFull: "Se concentre sur plus d'équipements, mais prend plus de temps." },
+              HelpFull: "Se concentre sur plus d'équipements, mais prend plus de temps."
+            },
             Scaled: "Échelonné",
             Current: "Actuel",
             LightMode: {
               LightMode: "Mode lumière",
               HelpScaled: 'Calcule les loadouts comme si tous les articles avaient 350 de défense.',
-              HelpCurrent: 'Calcule les loadouts à leur niveau de défense actuel.',
+              HelpCurrent: 'Calcule les loadouts à leur niveau de défense actuel.'
+            },
             LBIncludeRare: 'Inclure les articles rares (bleus)',
             Help: "Besoin d'aide?",
             Equip: "Équiper sur le perso actuel",
@@ -585,7 +587,7 @@
             ExcludeHelp: "Shift + cliquez un article (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
             LockPerk: "Verrouiller amélioration",
             Missing1: 'Pièces légendaires ou éxotiques manquantes pour construire un set complet!',
-            Missing2: 'Pièces légendaires ou éxotiques manquantes pour construire un set complet!',
+            Missing2: 'Pièces légendaires ou éxotiques manquantes pour construire un set complet!'
           },
           Loadouts: {
             Loadouts: "Loadouts",
@@ -676,7 +678,7 @@
             Junk: "Camelote",
             Infuse: "Infuser" },
           Vendors: {
-            Vendors: "Marchands"
+            Vendors: "Marchands",
             All: "Tous",
             Load: "Chargement des Marchands",
             ArmorAndWeapons: "Armure & Armes",
