@@ -774,6 +774,7 @@
             OutdatedExplanation: "A Bungie atualizou seu banco de dados de informações de Destny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
             BungieDown: "A Bungie.net parece estar passando por problemas.",
             Load: "Carregando informações salvas",
+            LoadCharInv: "Carregando personagens e inventário",
             Save: "Salvando últimas informações ",
             Unzip: "Descompactando últimas informações" },
           MaterialsExchange: {
