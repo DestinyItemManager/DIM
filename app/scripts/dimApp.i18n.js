@@ -735,6 +735,7 @@
           Stats: {
             Intellect: "Intelecto",
             Discipline: "Disciplina",
+            NoBonus: "Sin beneficio",
             Strength: "Fuerza",
             TierProgress: "{{progress}} por {{tier}}" },
           Tags: {
