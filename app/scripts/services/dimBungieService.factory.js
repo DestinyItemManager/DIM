@@ -560,7 +560,9 @@
                         type: item.type.toLowerCase(),
                         character: store.name
                       }));
-          return $q.reject(new Error('move-canceled'));
+          const error = new Error($translate.instant('BungieService.ItemUniqueness'));
+          error.code = e.code;
+          return $q.reject(error);
         }
         return $q.reject(e);
       }

@@ -156,7 +156,9 @@
 
         promise = dialogResult.closePromise.then(function(data) {
           if (typeof data.value === 'string') {
-            return $q.reject(new Error("move-canceled"));
+            const error = new Error("move-canceled");
+            error.code = "move-canceled";
+            return $q.reject(error);
           }
           var moveAmount = data.value;
           return moveAmount;

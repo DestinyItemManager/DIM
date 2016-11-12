@@ -433,13 +433,11 @@
           scope.successfulItems.push(item);
         })
         .catch(function(e) {
-          if (e.message !== 'move-canceled') {
-            const level = e.level || 'error';
-            if (level === 'error') {
-              scope.failed++;
-            }
-            toaster.pop(e.level || 'error', item.name, e.message);
+          const level = e.level || 'error';
+          if (level === 'error') {
+            scope.failed++;
           }
+          toaster.pop(e.level || 'error', item.name, e.message);
         })
         .finally(function() {
           // Keep going
