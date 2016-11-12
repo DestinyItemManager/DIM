@@ -683,6 +683,7 @@
             OutdatedExplanation: "Bungie ha actualizado su información de base de datos de Destiny. Recarga DIM para cargar la información nueva. Toma en cuenta que puede que DIM no funcione por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas.",
             BungieDown: "Bungie.net puede estar teniendo problemas.",
             Load: "Cargando información de Destiny guardada",
+            LoadCharInv: "Cargando personajes e inventario de Destiny",
             Save: "Guardando última información de Destiny",
             Unzip: "Descomprimiendo última información de Destiny" },
           MaterialsExchange: {
