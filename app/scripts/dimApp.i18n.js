@@ -148,6 +148,7 @@
             OutdatedExplanation: "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
             BungieDown: "Bungie.net may be having trouble.",
             Load: "Loading saved Destiny info",
+            LoadCharInv: "Loading Destiny characters and inventory",
             Save: "Saving latest Destiny info",
             Unzip: "Unzipping latest Destiny info" },
           MaterialsExchange: {

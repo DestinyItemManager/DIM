@@ -1425,7 +1425,7 @@
         itemInfoService])
         .then(function(args) {
           var result = [];
-          dimManifestService.statusText = 'Loading Destiny characters and inventory...';
+          dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
           _.each(items, function(item) {
             var createdItem = null;
             try {
