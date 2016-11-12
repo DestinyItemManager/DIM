@@ -740,7 +740,7 @@
           Tags: {
             TagItem: "Elemento de Etiqueta",
             Favorite: "Favorito",
-            Keep: "Guardar" ,
+            Keep: "Guardar",
             Junk: "Basura",
             Infuse: "Infundir" },
           Vendors: {
