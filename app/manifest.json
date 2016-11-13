@@ -14,10 +14,12 @@
       "extension-scripts/main.js"
     ]
   },
+  "web_accessible_resources": [
+    "input.html",
+    "return.html"
+  ],
   "permissions": [
     "storage",
-    "*://www.bungie.net/*",
-    "cookies",
     "identity"
   ],
   "oauth2": {

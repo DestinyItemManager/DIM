@@ -31,6 +31,10 @@
       });
     }, 60 * 1000, true);
 
+    $rootScope.$on('dim-no-token-found', function() {
+      window.location = "/login.html";
+    });
+
     var service = {
       getPlatforms: getPlatforms,
       getCharacters: getCharacters,
@@ -53,6 +57,7 @@
     }
 
     function handleErrors(response) {
+      return;
       if (response.status === -1) {
         return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
       }
@@ -138,6 +143,9 @@
       .then(function(request) {
         return $http(request);
       })
+      .catch(function(response) {
+        debugger;
+      })
       .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response;
@@ -149,16 +157,20 @@
 
     function getBnetCookies() {
       return $q(function(resolve, reject) {
-        chrome.cookies.getAll({
-          domain: 'www.bungie.net'
-        }, getAllCallback);
-
         function getAllCallback(cookies) {
           if (_.size(cookies) > 0) {
             resolve(cookies);
           } else {
             reject(new Error('No cookies found.'));
           }
+        }
+
+        try {
+          chrome.cookies.getAll({
+            domain: 'www.bungie.net'
+          }, getAllCallback);
+        } catch (e) {
+          reject("Missing cookies");
         }
       });
     }
@@ -186,13 +198,24 @@
       return tokenPromise;
     }
 
+
+
     /************************************************************************************************************************************/
 
     function getPlatforms() {
       platformPromise = platformPromise || getBungleToken()
         .then(getBnetPlatformsRequest)
         .then($http)
-        .then(handleErrors, handleErrors)
+        .then(function(response) {
+          if (response.status === 200) {
+            if (response.data && response.data.ErrorCode === 99) {
+              $rootScope.$broadcast('dim-no-token-found');
+              return $q.reject("no-token");
+            }
+          }
+          return response;
+        })
+        // .then(handleErrors, handleErrors)
         .catch(function(e) {
           showErrorToaster(e);
           return $q.reject(e);
@@ -319,7 +342,7 @@
       .then(function(request) {
         return $http(request);
       })
-      .then(handleErrors, handleErrors)
+      // .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response.data;
       });
