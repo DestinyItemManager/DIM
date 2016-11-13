@@ -496,13 +496,15 @@
         .translations('fr', {
           Level: "Niveau",
           Bucket: {
-            Weapons: "Armes",
             Armor: "Armure",
             General: "Général",
             Postmaster: "Commis des postes",
+            Progress: "Progrès",
+            Reputation: "Estime",
+            Show: "Afficher {{bucket}}",
             Unknown: "Inconnu",
             Vault: "Coffres",
-            Reputation: "Estime"
+            Weapons: "Armes"
           },
           BungieService: {
             Down: 'Bungie.net est hors service.',
@@ -527,7 +529,7 @@
             View: 'Afficher les infos de débug de l\'article.'
           },
           FarmingMode: {
-            FarmingMode: "Mode Farming (transférer les articles)",
+            FarmingMode: "Mode Farming (transfert d'articles)",
             Desc: 'DIM est entrain de transférer des engrammes et articles pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d\'article afin d\'éviter que rien ne soit envoyé au commis des postes.',
             Configuration: "Configuration",
             Greens: {
@@ -544,6 +546,10 @@
           },
           Header: {
             About: "À propos",
+            Filters: "Filtres",
+            FilterHelp: "Rechercher article/amélioration ou is:arc",
+            MaterialsExchange: "Rangs de faction disponibles",
+            Refresh: "Rafraîchir les données Destiny",
             SupportDIM: "Soutien DIM"
           },
           Help: {
@@ -574,7 +580,7 @@
               HelpScaled: 'Calcule les loadouts comme si tous les articles avaient 350 de défense.',
               HelpCurrent: 'Calcule les loadouts à leur niveau de défense actuel.'
             },
-            LBIncludeRare: 'Inclure les articles rares (bleus)',
+            IncludeRare: 'Inclure les articles rares (bleus)',
             Help: "Besoin d'aide?",
             Equip: "Équiper sur le perso actuel",
             ShowAllConfigs: "Afficher toutes les configurations",
@@ -587,7 +593,7 @@
             ExcludeHelp: "Shift + cliquez un article (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
             LockPerk: "Verrouiller amélioration",
             Missing1: 'Pièces légendaires ou éxotiques manquantes pour construire un set complet!',
-            Missing2: 'Pièces légendaires ou éxotiques manquantes pour construire un set complet!'
+            Missing2: 'Pièces rares, légendaires ou éxotiques manquantes pour construire un set complet!'
           },
           Loadouts: {
             Loadouts: "Loadouts",
@@ -600,7 +606,7 @@
             ApplySearch: "Articles = \"{{query}}\"",
             MaximizeLight: "Maximiser la Lumière",
             ItemLeveling: "Evolution d'article",
-            GatherEngrams: "Rassembler les Engrammes",
+            GatherEngrams: "Réunir les Engrammes",
             GatherEngramsExceptExotics: "Exotiques",
             RestoreAllItems: "Tous les Articles",
             LoadoutName: "Nom du loadout...",
@@ -621,6 +627,7 @@
             OutdatedExplanation: "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
             BungieDown: "Bungie.net rencontre des problèmes.",
             Load: "Chargement des données sauvegardées de Destiny",
+            LoadCharInv: "Chargement des persos et des inventaires de Destiny",
             Save: "Sauvegarde des dernières données de Destiny",
             Unzip: "Désarchivage des dernières données de Destiny"
           },
