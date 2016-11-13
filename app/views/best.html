@@ -99,9 +99,15 @@
         </p>
       </div></span>
       <span><ul ng-show="normal.showHelp">
-        <iframe src="/views/en/best-help.html" width="80%" height="320em" style="border:none;">
-
-        </iframe>
+        <iframe ng-show="normal.lang === 'en'" src="/views/en/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        <!--
+        <iframe ng-show="normal.lang === 'de'" src="/views/de/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        <iframe ng-show="normal.lang === 'es'" src="/views/es/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        <iframe ng-show="normal.lang === 'fr'" src="/views/fr/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        <iframe ng-show="normal.lang === 'it'" src="/views/it/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        <iframe ng-show="normal.lang === 'jp'" src="/views/jp/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        <iframe ng-show="normal.lang === 'pt-br'" src="/views/pt-br/best-help.html" width="80%" height="320em" style="border:none;" name="showHelp" id="showHelp"></iframe>
+        -->
       </ul></span>
     </p>
   </div>
