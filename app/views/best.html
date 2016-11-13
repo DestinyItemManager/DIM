@@ -98,7 +98,7 @@
           </label>
         </p>
       </div></span>
-      <span><ul ng-show="normal.showHelp">
+      <span><div ng-show="normal.showHelp">
         <iframe ng-show="normal.lang === 'en'" src="/views/en/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
         <iframe ng-show="normal.lang === 'de'" src="/views/de/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
         <iframe ng-show="normal.lang === 'es'" src="/views/es/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
@@ -106,7 +106,7 @@
         <iframe ng-show="normal.lang === 'it'" src="/views/it/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
         <iframe ng-show="normal.lang === 'jp'" src="/views/jp/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
         <iframe ng-show="normal.lang === 'pt-br'" src="/views/pt-br/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-      </ul></span>
+      </div></span>
     </p>
   </div>
   <div ng-show="normal.progress >= 1 && !normal.hasSets">
