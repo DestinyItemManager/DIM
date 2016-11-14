@@ -33,6 +33,7 @@
 
     $rootScope.$on('dim-no-token-found', function() {
       window.location = "/login.html";
+      // debugger;
     });
 
     var service = {
@@ -130,6 +131,23 @@
       });
     }
 
+    function getAuthoriztion() {
+      // debugger;
+      if (localStorage.authorization) {
+        try {
+          var authorization = JSON.parse(localStorage.authorization);
+
+          if (authorization.accessToken) {
+            return 'Bearer ' + authorization.accessToken.value;
+          } else {
+            return '';
+          }
+        } catch (e) {
+          return '';
+        }
+      }
+    }
+
     /************************************************************************************************************************************/
 
     function getManifest() {
@@ -137,16 +155,15 @@
         method: 'GET',
         url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
         headers: {
-          'X-API-Key': apiKey
+          'X-API-Key': apiKey,
+          Authorization: getAuthoriztion()
         }
       })
       .then(function(request) {
         return $http(request);
       })
-      .catch(function(response) {
-        debugger;
-      })
-      .then(handleErrors, handleErrors)
+      .then(hasAuthorization)
+      // .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response;
       });
@@ -198,23 +215,23 @@
       return tokenPromise;
     }
 
+    function hasAuthorization(response) {
+      if (response.status === 200) {
+        if (response.data && response.data.ErrorCode === 99) {
+          $rootScope.$broadcast('dim-no-token-found');
+          return $q.reject("no-token");
+        }
+      }
 
+      return response;
+    }
 
     /************************************************************************************************************************************/
 
     function getPlatforms() {
-      platformPromise = platformPromise || getBungleToken()
-        .then(getBnetPlatformsRequest)
+      platformPromise = platformPromise || $q.when(getBnetPlatformsRequest())
         .then($http)
-        .then(function(response) {
-          if (response.status === 200) {
-            if (response.data && response.data.ErrorCode === 99) {
-              $rootScope.$broadcast('dim-no-token-found');
-              return $q.reject("no-token");
-            }
-          }
-          return response;
-        })
+        .then(hasAuthorization)
         // .then(handleErrors, handleErrors)
         .catch(function(e) {
           showErrorToaster(e);
@@ -229,7 +246,7 @@
           url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -239,10 +256,9 @@
     /************************************************************************************************************************************/
 
     function getMembership(platform) {
-      membershipPromise = membershipPromise || getBungleToken()
-        .then(getBnetMembershipReqest)
+      membershipPromise = membershipPromise || $q.when(getBnetMembershipReqest())
         .then($http)
-        .then(handleErrors, handleErrors)
+        // .then(handleErrors, handleErrors)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
         .catch(function(error) {
           membershipPromise = null;
@@ -257,7 +273,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -285,17 +301,15 @@
         membershipId: null
       };
 
-      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      var charactersPromise = getBungleToken()
-        .then(addTokenToData)
-        .then(getMembershipPB)
+      var charactersPromise = getMembershipPB()
         .then(function(membershipId) {
-          return getBnetCharactersRequest(data.token, platform, membershipId);
+          return getBnetCharactersRequest('', platform, membershipId);
         })
         .then($http)
-        .then(handleErrors, handleErrors)
+        .then(hasAuthorization)
+        // .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
 
       return charactersPromise;
@@ -306,7 +320,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -342,6 +356,7 @@
       .then(function(request) {
         return $http(request);
       })
+      .then(hasAuthorization)
       // .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response.data;
@@ -356,25 +371,22 @@
         membershipId: null
       };
 
-      var addTokenToData = assignResultAndForward.bind(null, data, 'token');
       var addMembershipIdToData = assignResultAndForward.bind(null, data, 'membershipId');
       var addCharactersToData = assignResultAndForward.bind(null, data, 'characters');
       var getMembershipPB = getMembership.bind(null, platform);
       var getCharactersPB = getCharacters.bind(null, platform);
 
-      var promise = getBungleToken()
-        .then(addTokenToData)
-        .then(getMembershipPB)
+      var promise = getMembershipPB()
         .then(addMembershipIdToData)
         .then(getCharactersPB)
         .then(addCharactersToData)
         .then(function() {
           var promises = [
-            getDestinyInventories(data.token, platform, data.membershipId, data.characters),
-            getDestinyProgression(data.token, platform, data.membershipId, data.characters)
+            getDestinyInventories('', platform, data.membershipId, data.characters),
+            getDestinyProgression('', platform, data.membershipId, data.characters)
               // Don't let failure of progression fail other requests.
               .catch((e) => console.error("Failed to load character progression", e)),
-            getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
+            getDestinyAdvisors('', platform, data.membershipId, data.characters)
               // Don't let failure of advisors fail other requests.
               .catch((e) => console.error("Failed to load advisors", e))
           ];
@@ -395,7 +407,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Inventory/?definitions=false',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -407,7 +419,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Vault/?definitions=false',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -429,7 +441,8 @@
 
           return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
             .then($http)
-            .then(handleErrors, handleErrors)
+            .then(hasAuthorization)
+            // .then(handleErrors, handleErrors)
             .then(processPB);
         });
 
@@ -442,7 +455,8 @@
 
         var promise = $q.when(getDestinyVaultRequest(token, platform))
               .then($http)
-              .then(handleErrors, handleErrors)
+              .then(hasAuthorization)
+              // .then(handleErrors, handleErrors)
               .then(processPB);
 
         promises.push(promise);
@@ -460,7 +474,8 @@
 
         return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
           .then($http)
-          .then(handleErrors, handleErrors)
+          .then(hasAuthorization)
+          // .then(handleErrors, handleErrors)
           .then(processPB);
       });
 
@@ -470,7 +485,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -492,7 +507,8 @@
 
         return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
           .then($http)
-          .then(handleErrors, handleErrors)
+          .then(hasAuthorization)
+          // .then(handleErrors, handleErrors)
           .then(processPB);
       });
 
@@ -504,7 +520,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token
+            Authorization: getAuthoriztion()
           },
           withCredentials: true
         };
@@ -524,24 +540,24 @@
         token: null,
         membershipType: null
       };
-      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
+
       var getMembershipPB = getMembership.bind(null, platform);
-      return getBungleToken()
-        .then(addTokenToDataPB)
-        .then(getMembershipPB)
+
+      return getMembershipPB()
         .then(() => {
           return {
             method: 'GET',
             url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorHash + '/',
             headers: {
               'X-API-Key': apiKey,
-              'x-csrf': data.token
+              Authorization: getAuthoriztion()
             },
             withCredentials: true
           };
         })
         .then($http)
-        .then(handleErrors, handleErrors)
+        .then(hasAuthorization)
+        // .then(handleErrors, handleErrors)
         .then((response) => response.data.Response.data);
     }
 
@@ -554,19 +570,16 @@
         membershipType: null
       };
 
-      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
       var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      var promise = getBungleToken()
-        .then(addTokenToDataPB)
-        .then(getMembershipPB)
+      var promise = getMembershipPB()
         .then(addMembershipTypeToDataPB)
         .then(function() {
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
-        .then(handleErrors, handleErrors)
+        // .then(handleErrors, handleErrors)
         .catch(function(e) {
           return handleUniquenessViolation(e, item, store);
         });
@@ -594,8 +607,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token,
-            'content-type': 'application/json; charset=UTF-8;'
+            Authorization: getAuthoriztion()
           },
           data: {
             characterId: store.isVault ? item.owner : store.id,
@@ -620,19 +632,16 @@
         membershipType: null
       };
 
-      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
       var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      var promise = getBungleToken()
-        .then(addTokenToDataPB)
-        .then(getMembershipPB)
+      var promise = getMembershipPB()
         .then(addMembershipTypeToDataPB)
         .then(function() {
           return getEquipRequest(data.token, platform.type, item);
         })
-        .then(retryOnThrottled)
-        .then(handleErrors, handleErrors);
+        .then(retryOnThrottled);
+        // .then(handleErrors, handleErrors);
 
       return promise;
 
@@ -642,8 +651,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token,
-            'content-type': 'application/json; charset=UTF-8;'
+            Authorization: getAuthoriztion()
           },
           data: {
             characterId: item.owner,
@@ -671,13 +679,10 @@
         membershipType: null
       };
 
-      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
       var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      var promise = getBungleToken()
-        .then(addTokenToDataPB)
-        .then(getMembershipPB)
+      var promise = getMembershipPB()
         .then(addMembershipTypeToDataPB)
         .then(function() {
           return {
@@ -685,8 +690,7 @@
             url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
             headers: {
               'X-API-Key': apiKey,
-              'x-csrf': data.token,
-              'content-type': 'application/json; charset=UTF-8;'
+              Authorization: getAuthoriztion()
             },
             data: {
               characterId: store.id,
@@ -698,7 +702,7 @@
           };
         })
         .then(retryOnThrottled)
-        .then(handleErrors, handleErrors)
+        // .then(handleErrors, handleErrors)
         .then(function(response) {
           var data = response.data.Response;
           store.updateCharacterInfoFromEquip(data.summary);
@@ -725,13 +729,10 @@
         membershipType: null
       };
 
-      var addTokenToDataPB = assignResultAndForward.bind(null, data, 'token');
       var addMembershipTypeToDataPB = assignResultAndForward.bind(null, data, 'membershipType');
       var getMembershipPB = getMembership.bind(null, platform);
 
-      var promise = getBungleToken()
-        .then(addTokenToDataPB)
-        .then(getMembershipPB)
+      var promise = getMembershipPB()
         .then(addMembershipTypeToDataPB)
         .then(function() {
           return store;
@@ -739,8 +740,8 @@
         .then(function(store) {
           return getSetItemStateRequest(data.token, platform.type, item, store, lockState, type);
         })
-        .then(retryOnThrottled)
-        .then(handleErrors, handleErrors);
+        .then(retryOnThrottled);
+        // .then(handleErrors, handleErrors);
 
       return promise;
 
@@ -750,8 +751,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token,
-            'content-type': 'application/json; charset=UTF-8;'
+            Authorization: getAuthoriztion()
           },
           data: {
             characterId: store.isVault ? item.owner : store.id,

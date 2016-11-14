@@ -1,12 +1,12 @@
-(function () {
-  function ReturnController($http) {
+(function() {
+  function ReturnController($http, $q) {
     var ctrl = this;
 
     ctrl.code = "";
     ctrl.state = "";
     ctrl.authorized = false;
 
-    ctrl.$onInit = function () {
+    ctrl.$onInit = function() {
       const queryString = simpleQueryString.parse(window.location.href);
 
       ctrl.code = queryString.code;
@@ -24,12 +24,26 @@
         data: {
           code: ctrl.code
         }
-      }).then(console.log.bind(console));
+      })
+      .then((response) => {
+        if (response.data.ErrorCode === 1) {
+          const authorization = {
+            inception: new Date(),
+            accessToken: response.data.Response.accessToken,
+            refreshToken: response.data.Response.refreshToken,
+            scope: response.data.Response.scope
+          };
+
+          localStorage.authorization = JSON.stringify(authorization);
+
+          window.location = "/index.html";
+        }
+      });
     };
   }
 
   angular.module('dimLogin').component('dimReturn', {
-    controller: ['$http', ReturnController],
+    controller: ['$http', '$q', ReturnController],
     templateUrl: '/scripts/login/return.component.html'
   });
 })();
