@@ -59,50 +59,52 @@
       }
     });
 
-/* Add each hotkey manually until hotkeys can be translated.
-    _.each(dimSettingsService.itemTags, (tag) => {
-      if (tag.hotkey) {
-        hotkeys.add({
-          combo: [tag.hotkey],
-          description: "Mark item as '" + tag.label + "'",
-          callback: function() {
-            $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+    if (vm.featureFlags.tagsEnabled) {
+    /* Add each hotkey manually until hotkeys can be translated.
+        _.each(dimSettingsService.itemTags, (tag) => {
+          if (tag.hotkey) {
+            hotkeys.add({
+              combo: [tag.hotkey],
+              description: "Mark item as '" + tag.label + "'",
+              callback: function() {
+                $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+              }
+            });
           }
         });
-      }
-    });
-*/
-    hotkeys.add({
-      combo: ['!'],
-      description: "Mark item as 'Favorite'",
-      callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
-      }
-    });
+    */
+      hotkeys.add({
+        combo: ['!'],
+        description: "Mark item as 'Favorite'",
+        callback: function() {
+          $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
+        }
+      });
 
-    hotkeys.add({
-      combo: ['@'],
-      description: "Mark item as 'Keep'",
-      callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
-      }
-    });
+      hotkeys.add({
+        combo: ['@'],
+        description: "Mark item as 'Keep'",
+        callback: function() {
+          $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
+        }
+      });
 
-    hotkeys.add({
-      combo: ['#'],
-      description: "Mark item as 'Junk'",
-      callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
-      }
-    });
+      hotkeys.add({
+        combo: ['#'],
+        description: "Mark item as 'Junk'",
+        callback: function() {
+          $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
+        }
+      });
 
-    hotkeys.add({
-      combo: ['$'],
-      description: "Mark item as 'Infuse'",
-      callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
-      }
-    });
+      hotkeys.add({
+        combo: ['$'],
+        description: "Mark item as 'Infuse'",
+        callback: function() {
+          $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
+        }
+      });
+    }
 
     hotkeys.add({
       combo: ['x'],
