@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('dimApp')
-    .factory('dimStoreService', StoreService);
+        .factory('dimStoreService', StoreService);
 
   StoreService.$inject = [
     '$rootScope',
@@ -23,28 +23,28 @@
   ];
 
   function StoreService(
-    $rootScope,
-    $q,
-    dimBungieService,
-    dimPlatformService,
-    dimCategory,
-    dimDefinitions,
-    dimBucketService,
-    dimItemInfoService,
-    dimInfoService,
-    SyncService,
-    loadingTracker,
-    dimManifestService,
-    $translate,
-    uuid2,
-    dimFeatureFlags
-  ) {
+        $rootScope,
+        $q,
+        dimBungieService,
+        dimPlatformService,
+        dimCategory,
+        dimDefinitions,
+        dimBucketService,
+        dimItemInfoService,
+        dimInfoService,
+        SyncService,
+        loadingTracker,
+        dimManifestService,
+        $translate,
+        uuid2,
+        dimFeatureFlags
+    ) {
     var _stores = [];
     var _idTracker = {};
 
     var _removedNewItems = new Set();
 
-    // Label isn't used, but it helps us understand what each one is
+        // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
       529303302: { label: "Cryptarch", order: 0 },
       3233510749: { label: "Vanguard", order: 1 },
@@ -60,7 +60,7 @@
       2763619072: { label: "SRL", order: 11 }
     };
 
-    // Maps tierType to tierTypeName in English
+        // Maps tierType to tierTypeName in English
     const tiers = [
       'Unused 0',
       'Unused 1',
@@ -71,26 +71,26 @@
       'Exotic'
     ];
 
-    // A promise used to dedup parallel calls to reloadStores
+        // A promise used to dedup parallel calls to reloadStores
     var _reloadPromise;
 
-    // Cooldowns
+        // Cooldowns
     var cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
     var cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
     var cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
     var cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
-    // Prototype for Store objects - add methods to this to add them to all
-    // stores.
+        // Prototype for Store objects - add methods to this to add them to all
+        // stores.
     var StoreProto = {
-      // Get the total amount of this item in the store, across all stacks,
-      // excluding stuff in the postmaster.
+            // Get the total amount of this item in the store, across all stacks,
+            // excluding stuff in the postmaster.
       amountOfItem: function(item) {
         return sum(_.filter(this.items, function(i) {
           return i.hash === item.hash && !i.location.inPostmaster;
         }), 'amount');
       },
-      // How much of items like this item can fit in this store?
+            // How much of items like this item can fit in this store?
       capacityForItem: function(item) {
         if (!item.bucket) {
           console.error("item needs a 'bucket' field", item);
@@ -98,7 +98,7 @@
         }
         return item.bucket.capacity;
       },
-      // How many *more* items like this item can fit in this store?
+            // How many *more* items like this item can fit in this store?
       spaceLeftForItem: function(item) {
         if (!item.type) {
           throw new Error("item needs a 'type' field");
@@ -116,9 +116,9 @@
         this.icon = 'https://www.bungie.net/' + characterInfo.emblemPath;
         this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
       },
-      // Remove an item from this store. Returns whether it actually removed anything.
+            // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
-        // Completely remove the source item
+                // Completely remove the source item
         function match(i) { return item.index === i.index; }
         var sourceIndex = _.findIndex(this.items, match);
         if (sourceIndex >= 0) {
@@ -146,18 +146,18 @@
         }
         item.owner = this.id;
       },
-      // Create a loadout from this store's equipped items
+            // Create a loadout from this store's equipped items
       loadoutFromCurrentlyEquipped: function(name) {
         return {
           id: uuid2.newguid(),
           classType: -1,
           name: name,
           items: _(this.items)
-            .chain()
-            .select((item) => item.canBeInLoadout())
-            .map((i) => angular.copy(i))
-            .groupBy((i) => i.type.toLowerCase())
-            .value()
+                        .chain()
+                        .select((item) => item.canBeInLoadout())
+                        .map((i) => angular.copy(i))
+                        .groupBy((i) => i.type.toLowerCase())
+                        .value()
         };
       },
       factionAlignment: function() {
@@ -176,17 +176,17 @@
       }
     };
 
-    /**
-     * Check to see if this item has a node that restricts it to a
-     * certain faction, and if the character is aligned with that
-     * faction.
-     */
+        /**
+         * Check to see if this item has a node that restricts it to a
+         * certain faction, and if the character is aligned with that
+         * faction.
+         */
     function factionItemAligns(store, item) {
       if (!item.talentGrid) {
         return true;
       }
 
-      // Nodes that require matching faction alignment
+            // Nodes that require matching faction alignment
       const factionNodes = {
         652505621: 'New Monarchy',
         2669659850: 'Future War Cult',
@@ -201,24 +201,24 @@
       return factionNodes[factionNode.hash] === store.factionAlignment();
     }
 
-    // Prototype for Item objects - add methods to this to add them to all
-    // items.
+        // Prototype for Item objects - add methods to this to add them to all
+        // items.
     var ItemProto = {
-      // Can this item be equipped by the given store?
+            // Can this item be equipped by the given store?
       canBeEquippedBy: function(store) {
         if (store.isVault) {
           return false;
         }
 
         return this.equipment &&
-          // For the right class
-          (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
-          // nothing we are too low-level to equip
-          this.equipRequiredLevel <= store.level &&
-          // can be moved or is already here
-          (!this.notransfer || this.owner === store.id) &&
-          !this.location.inPostmaster &&
-          factionItemAligns(store, this);
+                    // For the right class
+                    (this.classTypeName === 'unknown' || this.classTypeName === store.class) &&
+                    // nothing we are too low-level to equip
+                    this.equipRequiredLevel <= store.level &&
+                    // can be moved or is already here
+                    (!this.notransfer || this.owner === store.id) &&
+                    !this.location.inPostmaster &&
+                    factionItemAligns(store, this);
       },
       inCategory: function(categoryName) {
         return _.contains(this.categories, categoryName);
@@ -229,7 +229,7 @@
       canBeInLoadout: function() {
         return this.equipment || this.type === 'Material' || this.type === 'Consumable';
       },
-      // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
+            // "The Life Exotic" Perk on Exotic Items means you can equip another exotic
       hasLifeExotic: function() {
         return this.isExotic && this.talentGrid && (_.find(this.talentGrid.nodes, { hash: 4044819214 }) !== undefined);
       }
@@ -247,6 +247,7 @@
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: processItems,
+      createItemFromHash: createItemFromHash,
       hasNewItems: false
     };
 
@@ -261,9 +262,9 @@
 
     return service;
 
-    // Update the high level character information for all the stores
-    // (level, light, int/dis/str, etc.). This does not update the
-    // items in the stores - to do that, call reloadStores.
+        // Update the high level character information for all the stores
+        // (level, light, int/dis/str, etc.). This does not update the
+        // items in the stores - to do that, call reloadStores.
     function updateCharacters() {
       return $q.all([
         dimDefinitions,
@@ -287,21 +288,21 @@
       return _stores;
     }
 
-    // Returns a promise for a fresh view of the stores and their items.
-    // If this is called while a reload is already happening, it'll return the promise
-    // for the ongoing reload rather than kicking off a new reload.
+        // Returns a promise for a fresh view of the stores and their items.
+        // If this is called while a reload is already happening, it'll return the promise
+        // for the ongoing reload rather than kicking off a new reload.
     function reloadStores() {
       const activePlatform = dimPlatformService.getActive();
       if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
         return _reloadPromise;
       }
 
-      // #786 Exiting early when finding no activePlatform.
+            // #786 Exiting early when finding no activePlatform.
       if (!activePlatform) {
         return $q.reject("Cannot find active platform.");
       }
 
-      // Save a snapshot of all the items before we update
+            // Save a snapshot of all the items before we update
       const previousItems = buildItemSet(_stores);
       const firstLoad = (previousItems.size === 0);
 
@@ -313,253 +314,253 @@
 
       console.time('Load stores (Bungie API)');
       _reloadPromise = $q.all([dimDefinitions,
-                              dimBucketService,
-                              loadNewItems(activePlatform),
-                              dimItemInfoService(activePlatform),
-                              $translate(['Vault']),
-                              dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
-          console.timeEnd('Load stores (Bungie API)');
-          if (activePlatform !== dimPlatformService.getActive()) {
-            throw new Error("Active platform mismatch");
-          }
-
-          const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
-            if (rawStore.id === 'vault') {
-              return memo;
-            }
-
-            const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
-
-            return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
-          }, null);
-
-          var glimmer;
-          var marks;
-          var silver;
-          _removedNewItems.forEach((id) => newItems.delete(id));
-          _removedNewItems.clear();
-          service.hasNewItems = (newItems.size !== 0);
-
-          return $q.all([newItems, itemInfoService, ...rawStores.map(function(raw) {
-            if (activePlatform !== dimPlatformService.getActive()) {
-              throw new Error("Active platform mismatch");
-            }
-            var store;
-            var items = [];
-            if (!raw) {
-              return undefined;
-            }
-
-            const character = raw.character.base;
-
-            if (raw.id === 'vault') {
-              store = angular.extend(Object.create(StoreProto), {
-                id: 'vault',
-                name: translations.Vault,
-                class: 'vault',
-                current: false,
-                className: translations.Vault,
-                lastPlayed: '2005-01-01T12:00:01Z',
-                icon: '/images/vault.png',
-                background: '/images/vault-background.png',
-                items: [],
-                legendaryMarks: marks,
-                glimmer: glimmer,
-                silver: silver,
-                isVault: true,
-                // Vault has different capacity rules
-                capacityForItem: function(item) {
-                  var sort = item.sort;
-                  if (item.bucket) {
-                    sort = item.bucket.sort;
+                dimBucketService,
+                loadNewItems(activePlatform),
+                dimItemInfoService(activePlatform),
+                $translate(['Vault']),
+                dimBungieService.getStores(activePlatform)])
+                .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
+                  console.timeEnd('Load stores (Bungie API)');
+                  if (activePlatform !== dimPlatformService.getActive()) {
+                    throw new Error("Active platform mismatch");
                   }
-                  if (!sort) {
-                    throw new Error("item needs a 'sort' field");
-                  }
-                  return buckets[sort].capacity;
-                },
-                spaceLeftForItem: function(item) {
-                  var sort = item.sort;
-                  if (item.bucket) {
-                    sort = item.bucket.sort;
-                  }
-                  if (!sort) {
-                    throw new Error("item needs a 'sort' field");
-                  }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
-                    return i.bucket.sort === sort;
-                  }));
-                },
-                removeItem: function(item) {
-                  var result = StoreProto.removeItem.call(this, item);
-                  this.vaultCounts[item.location.sort]--;
-                  return result;
-                },
-                addItem: function(item) {
-                  StoreProto.addItem.call(this, item);
-                  this.vaultCounts[item.location.sort]++;
-                }
-              });
 
-              _.each(raw.data.buckets, function(bucket) {
-                _.each(bucket.items, function(item) {
-                  item.bucket = bucket.bucketHash;
-                  fakeItemId(item);
-                });
-
-                items = _.union(items, bucket.items);
-              });
-            } else {
-              try {
-                glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
-                marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
-                silver = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2749350776; }).value;
-              } catch (e) {
-                glimmer = 0;
-                marks = 0;
-              }
-
-              const race = defs.Race[character.characterBase.raceHash];
-              let genderRace = "";
-              if (character.characterBase.genderType === 0) {
-                genderRace = race.raceNameMale;
-              } else {
-                genderRace = race.raceNameFemale;
-              }
-
-              store = angular.extend(Object.create(StoreProto), {
-                id: raw.id,
-                icon: 'https://www.bungie.net/' + character.emblemPath,
-                current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
-                lastPlayed: character.characterBase.dateLastPlayed,
-                background: 'https://bungie.net/' + character.backgroundPath,
-                level: character.characterLevel,
-                powerLevel: character.characterBase.powerLevel,
-                stats: getCharacterStatsData(defs.Stat, character.characterBase),
-                class: getClass(character.characterBase.classType),
-                classType: character.characterBase.classType,
-                className: defs.Class[character.characterBase.classHash].className,
-                genderRace: genderRace,
-                percentToNextLevel: character.percentToNextLevel / 100.0,
-                progression: raw.character.progression,
-                advisors: raw.character.advisors,
-                isVault: false
-              });
-
-              store.name = store.genderRace + ' ' + store.className;
-
-              if (store.progression) {
-                store.progression.progressions.forEach(function(prog) {
-                  angular.extend(prog, defs.Progression[prog.progressionHash], progressionMeta[prog.progressionHash]);
-                  const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
-                  if (faction) {
-                    prog.faction = faction;
-                  }
-                });
-              }
-
-              _.each(raw.data.buckets, function(bucket) {
-                _.each(bucket, function(pail) {
-                  _.each(pail.items, function(item) {
-                    item.bucket = pail.bucketHash;
-                    fakeItemId(item);
-                  });
-
-                  items = _.union(items, pail.items);
-                });
-              });
-
-              if (_.has(character.inventory.buckets, 'Invisible')) {
-                if (_.size(character.inventory.buckets.Invisible) > 0) {
-                  _.each(character.inventory.buckets.Invisible, function(pail) {
-                    _.each(pail.items, function(item) {
-                      item.bucket = pail.bucketHash;
-                      fakeItemId(item);
-                    });
-
-                    items = _.union(items, pail.items);
-                  });
-                }
-              }
-            }
-
-            return processItems(store, items, previousItems, newItems, itemInfoService).then(function(items) {
-              if (activePlatform !== dimPlatformService.getActive()) {
-                throw new Error("Active platform mismatch");
-              }
-
-              store.items = items;
-
-              // by type-bucket
-              store.buckets = _.groupBy(items, function(i) {
-                return i.location.id;
-              });
-
-              // Fill in any missing buckets
-              _.values(buckets.byType).forEach(function(bucket) {
-                if (!store.buckets[bucket.id]) {
-                  store.buckets[bucket.id] = [];
-                }
-              });
-
-              if (store.isVault) {
-                store.vaultCounts = {};
-                ['Weapons', 'Armor', 'General'].forEach(function(category) {
-                  store.vaultCounts[category] = 0;
-                  buckets.byCategory[category].forEach(function(bucket) {
-                    if (store.buckets[bucket.id]) {
-                      store.vaultCounts[category] += store.buckets[bucket.id].length;
+                  const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
+                    if (rawStore.id === 'vault') {
+                      return memo;
                     }
+
+                    const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
+
+                    return (memo) ? ((d1 >= memo) ? d1 : memo) : d1;
+                  }, null);
+
+                  var glimmer;
+                  var marks;
+                  var silver;
+                  _removedNewItems.forEach((id) => newItems.delete(id));
+                  _removedNewItems.clear();
+                  service.hasNewItems = (newItems.size !== 0);
+
+                  return $q.all([newItems, itemInfoService, ...rawStores.map(function(raw) {
+                    if (activePlatform !== dimPlatformService.getActive()) {
+                      throw new Error("Active platform mismatch");
+                    }
+                    var store;
+                    var items = [];
+                    if (!raw) {
+                      return undefined;
+                    }
+
+                    const character = raw.character.base;
+
+                    if (raw.id === 'vault') {
+                      store = angular.extend(Object.create(StoreProto), {
+                        id: 'vault',
+                        name: translations.Vault,
+                        class: 'vault',
+                        current: false,
+                        className: translations.Vault,
+                        lastPlayed: '2005-01-01T12:00:01Z',
+                        icon: '/images/vault.png',
+                        background: '/images/vault-background.png',
+                        items: [],
+                        legendaryMarks: marks,
+                        glimmer: glimmer,
+                        silver: silver,
+                        isVault: true,
+                                // Vault has different capacity rules
+                        capacityForItem: function(item) {
+                          var sort = item.sort;
+                          if (item.bucket) {
+                            sort = item.bucket.sort;
+                          }
+                          if (!sort) {
+                            throw new Error("item needs a 'sort' field");
+                          }
+                          return buckets[sort].capacity;
+                        },
+                        spaceLeftForItem: function(item) {
+                          var sort = item.sort;
+                          if (item.bucket) {
+                            sort = item.bucket.sort;
+                          }
+                          if (!sort) {
+                            throw new Error("item needs a 'sort' field");
+                          }
+                          return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
+                            return i.bucket.sort === sort;
+                          }));
+                        },
+                        removeItem: function(item) {
+                          var result = StoreProto.removeItem.call(this, item);
+                          this.vaultCounts[item.location.sort]--;
+                          return result;
+                        },
+                        addItem: function(item) {
+                          StoreProto.addItem.call(this, item);
+                          this.vaultCounts[item.location.sort]++;
+                        }
+                      });
+
+                      _.each(raw.data.buckets, function(bucket) {
+                        _.each(bucket.items, function(item) {
+                          item.bucket = bucket.bucketHash;
+                          fakeItemId(item);
+                        });
+
+                        items = _.union(items, bucket.items);
+                      });
+                    } else {
+                      try {
+                        glimmer = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 3159615086; }).value;
+                        marks = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2534352370; }).value;
+                        silver = _.find(character.inventory.currencies, function(cur) { return cur.itemHash === 2749350776; }).value;
+                      } catch (e) {
+                        glimmer = 0;
+                        marks = 0;
+                      }
+
+                      const race = defs.Race[character.characterBase.raceHash];
+                      let genderRace = "";
+                      if (character.characterBase.genderType === 0) {
+                        genderRace = race.raceNameMale;
+                      } else {
+                        genderRace = race.raceNameFemale;
+                      }
+
+                      store = angular.extend(Object.create(StoreProto), {
+                        id: raw.id,
+                        icon: 'https://www.bungie.net/' + character.emblemPath,
+                        current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
+                        lastPlayed: character.characterBase.dateLastPlayed,
+                        background: 'https://bungie.net/' + character.backgroundPath,
+                        level: character.characterLevel,
+                        powerLevel: character.characterBase.powerLevel,
+                        stats: getCharacterStatsData(defs.Stat, character.characterBase),
+                        class: getClass(character.characterBase.classType),
+                        classType: character.characterBase.classType,
+                        className: defs.Class[character.characterBase.classHash].className,
+                        genderRace: genderRace,
+                        percentToNextLevel: character.percentToNextLevel / 100.0,
+                        progression: raw.character.progression,
+                        advisors: raw.character.advisors,
+                        isVault: false
+                      });
+
+                      store.name = store.genderRace + ' ' + store.className;
+
+                      if (store.progression) {
+                        store.progression.progressions.forEach(function(prog) {
+                          angular.extend(prog, defs.Progression[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                          const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
+                          if (faction) {
+                            prog.faction = faction;
+                          }
+                        });
+                      }
+
+                      _.each(raw.data.buckets, function(bucket) {
+                        _.each(bucket, function(pail) {
+                          _.each(pail.items, function(item) {
+                            item.bucket = pail.bucketHash;
+                            fakeItemId(item);
+                          });
+
+                          items = _.union(items, pail.items);
+                        });
+                      });
+
+                      if (_.has(character.inventory.buckets, 'Invisible')) {
+                        if (_.size(character.inventory.buckets.Invisible) > 0) {
+                          _.each(character.inventory.buckets.Invisible, function(pail) {
+                            _.each(pail.items, function(item) {
+                              item.bucket = pail.bucketHash;
+                              fakeItemId(item);
+                            });
+
+                            items = _.union(items, pail.items);
+                          });
+                        }
+                      }
+                    }
+
+                    return processItems(store, items, previousItems, newItems, itemInfoService).then(function(items) {
+                      if (activePlatform !== dimPlatformService.getActive()) {
+                        throw new Error("Active platform mismatch");
+                      }
+
+                      store.items = items;
+
+                            // by type-bucket
+                      store.buckets = _.groupBy(items, function(i) {
+                        return i.location.id;
+                      });
+
+                            // Fill in any missing buckets
+                      _.values(buckets.byType).forEach(function(bucket) {
+                        if (!store.buckets[bucket.id]) {
+                          store.buckets[bucket.id] = [];
+                        }
+                      });
+
+                      if (store.isVault) {
+                        store.vaultCounts = {};
+                        ['Weapons', 'Armor', 'General'].forEach(function(category) {
+                          store.vaultCounts[category] = 0;
+                          buckets.byCategory[category].forEach(function(bucket) {
+                            if (store.buckets[bucket.id]) {
+                              store.vaultCounts[category] += store.buckets[bucket.id].length;
+                            }
+                          });
+                        });
+                      }
+
+                      return store;
+                    });
+                  })]);
+                })
+                .then(function([newItems, itemInfoService, ...stores]) {
+                  if (activePlatform !== dimPlatformService.getActive()) {
+                    throw new Error("Active platform mismatch");
+                  }
+
+                    // Save and notify about new items (but only if this wasn't the first load)
+                  if (!firstLoad) {
+                        // Save the list of new item IDs
+                    _removedNewItems.forEach((id) => newItems.delete(id));
+                    _removedNewItems.clear();
+                    saveNewItems(newItems);
+                    service.hasNewItems = (newItems.size !== 0);
+                  }
+
+                  _stores = stores;
+
+                  $rootScope.$broadcast('dim-stores-updated', {
+                    stores: stores
                   });
+
+                  itemInfoService.cleanInfos(stores);
+
+                    // Let our styling know how many characters there are
+                  document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
+
+                  return stores;
+                })
+                .catch(function(e) {
+                  if (e.message === 'Active platform mismatch') {
+                        // no problem, just canceling the request
+                    return null;
+                  }
+                  throw e;
+                })
+                .finally(function() {
+                    // Clear the reload promise so this can be called again
+                  if (_reloadPromise.activePlatform === activePlatform) {
+                    _reloadPromise = null;
+                  }
+                  dimManifestService.isLoaded = true;
                 });
-              }
-
-              return store;
-            });
-          })]);
-        })
-        .then(function([newItems, itemInfoService, ...stores]) {
-          if (activePlatform !== dimPlatformService.getActive()) {
-            throw new Error("Active platform mismatch");
-          }
-
-          // Save and notify about new items (but only if this wasn't the first load)
-          if (!firstLoad) {
-            // Save the list of new item IDs
-            _removedNewItems.forEach((id) => newItems.delete(id));
-            _removedNewItems.clear();
-            saveNewItems(newItems);
-            service.hasNewItems = (newItems.size !== 0);
-          }
-
-          _stores = stores;
-
-          $rootScope.$broadcast('dim-stores-updated', {
-            stores: stores
-          });
-
-          itemInfoService.cleanInfos(stores);
-
-          // Let our styling know how many characters there are
-          document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
-
-          return stores;
-        })
-        .catch(function(e) {
-          if (e.message === 'Active platform mismatch') {
-            // no problem, just canceling the request
-            return null;
-          }
-          throw e;
-        })
-        .finally(function() {
-          // Clear the reload promise so this can be called again
-          if (_reloadPromise.activePlatform === activePlatform) {
-            _reloadPromise = null;
-          }
-          dimManifestService.isLoaded = true;
-        });
 
       _reloadPromise.activePlatform = activePlatform;
       return _reloadPromise;
@@ -569,9 +570,9 @@
       return _.find(_stores, { id: id });
     }
 
-    // Set an ID for the item that should be unique across all items
+        // Set an ID for the item that should be unique across all items
     function createItemIndex(item) {
-      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+            // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
       var index = item.hash + '-';
       if (item.id === '0') {
         index = index + item.amount;
@@ -585,9 +586,9 @@
 
     function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
-      // Missing definition?
+            // Missing definition?
       if (!itemDef) {
-        // maybe it is redacted...
+                // maybe it is redacted...
         itemDef = {
           itemName: "Missing Item",
           redacted: true
@@ -615,7 +616,7 @@
         return null;
       }
 
-      // fix itemDef for defense items with missing nodes
+            // fix itemDef for defense items with missing nodes
       if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
         var defaultMinMax = _.find(itemDef.stats, function(stat) {
           return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
@@ -635,22 +636,22 @@
         }
       }
 
-      // def.bucketTypeHash is where it goes normally
+            // def.bucketTypeHash is where it goes normally
       var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
       if (!normalBucket) {
         currentBucket = normalBucket = buckets.unknown;
         buckets.setHasUnknown();
       }
 
-      // item.bucket is where it IS right now
+            // item.bucket is where it IS right now
       var currentBucket = buckets.byHash[item.bucket] || normalBucket;
 
-      // We cheat a bit for items in the vault, since we treat the
-      // vault as a character. So put them in the bucket they would
-      // have been in if they'd been on a character.
+            // We cheat a bit for items in the vault, since we treat the
+            // vault as a character. So put them in the bucket they would
+            // have been in if they'd been on a character.
       if (currentBucket.id.startsWith('BUCKET_VAULT')) {
-        // TODO: Remove this if Bungie ever returns bucket.id for classified
-        // items in the vault.
+                // TODO: Remove this if Bungie ever returns bucket.id for classified
+                // items in the vault.
         if (itemDef.classified) {
           if (currentBucket.id.endsWith('WEAPONS')) {
             currentBucket = buckets.byType.Heavy;
@@ -676,14 +677,14 @@
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
       var createdItem = angular.extend(Object.create(ItemProto), {
-        // figure out what year this item is probably from
+                // figure out what year this item is probably from
 
-        // The bucket the item is currently in
+                // The bucket the item is currently in
         location: currentBucket,
-        // The bucket the item normally resides in (even though it may be in the vault/postmaster)
+                // The bucket the item normally resides in (even though it may be in the vault/postmaster)
         bucket: normalBucket,
         hash: item.itemHash,
-        // This is the type of the item (see dimCategory/dimBucketService) regardless of location
+                // This is the type of the item (see dimCategory/dimBucketService) regardless of location
         type: itemType,
         categories: categories, // see defs.ItemCategory
         tier: tiers[itemDef.tierType] || 'Common',
@@ -701,12 +702,12 @@
         amount: item.stackSize,
         primStat: item.primaryStat,
         typeName: itemDef.itemTypeName,
-        // "perks" are the two or so talent grid items that are "featured" for an
-        // item in its popup in the game. We don't currently use these.
-        // perks: item.perks,
+                // "perks" are the two or so talent grid items that are "featured" for an
+                // item in its popup in the game. We don't currently use these.
+                // perks: item.perks,
         equipRequiredLevel: item.equipRequiredLevel,
         maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
-        // 0: titan, 1: hunter, 2: warlock, 3: any
+                // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),
         dmg: dmgName,
@@ -723,7 +724,7 @@
 
       createdItem.index = createItemIndex(createdItem);
 
-      // Moving rare masks destroys them
+            // Moving rare masks destroys them
       if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
         createdItem.notransfer = true;
       }
@@ -732,7 +733,7 @@
         createdItem.primStat.stat = defs.Stat[createdItem.primStat.statHash];
       }
 
-      // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
+            // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
         createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
@@ -777,7 +778,7 @@
 
       setItemYear(createdItem);
 
-      // More objectives properties
+            // More objectives properties
       if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
         try {
           const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
@@ -797,10 +798,10 @@
           }
 
           createdItem.complete = _.chain(recordBook.records)
-            .pluck('objectives')
-            .flatten()
-            .all('isComplete')
-            .value();
+                        .pluck('objectives')
+                        .flatten()
+                        .all('isComplete')
+                        .value();
         } catch (e) {
           console.error("Error building record book for " + createdItem.name, item, itemDef, e);
         }
@@ -814,12 +815,12 @@
         createdItem.complete = createdItem.talentGrid.complete;
       }
 
-      // In debug mode, keep the original JSON around
+            // In debug mode, keep the original JSON around
       if (dimFeatureFlags.debugMode) {
         createdItem.originalItem = item;
       }
 
-      // do specific things for specific items
+            // do specific things for specific items
       if (createdItem.hash === 491180618) { // Trials Cards
         createdItem.objectives = buildTrials(owner.advisors.activities.trials);
         var best = owner.advisors.activities.trials.extended.highestWinRank;
@@ -839,10 +840,10 @@
       var totalXP = item.progression.currentProgress;
       var totalLevel = item.progression.level; // Can be way over max
 
-      // progressSteps gives the XP needed to reach each level, with
-      // the last element repeating infinitely.
+            // progressSteps gives the XP needed to reach each level, with
+            // the last element repeating infinitely.
       var progressSteps = progressDefs[item.progression.progressionHash].steps;
-      // Total XP to get to specified level
+            // Total XP to get to specified level
       function xpToReachLevel(level) {
         if (level === 0) {
           return 0;
@@ -857,10 +858,10 @@
 
       var possibleNodes = talentGridDef.nodes;
 
-      // var featuredPerkNames = item.perks.map(function(perk) {
-      //   var perkDef = perkDefs[perk.perkHash];
-      //   return perkDef ? perkDef.displayName : 'Unknown';
-      // });
+            // var featuredPerkNames = item.perks.map(function(perk) {
+            //   var perkDef = perkDefs[perk.perkHash];
+            //   return perkDef ? perkDef.displayName : 'Unknown';
+            // });
 
       var gridNodes = item.nodes.map(function(node) {
         var talentNodeGroup = possibleNodes[node.nodeHash];
@@ -872,33 +873,33 @@
 
         var nodeName = talentNodeSelected.nodeStepName;
 
-        // Filter out some weird bogus nodes
+                // Filter out some weird bogus nodes
         if (!nodeName || nodeName.length === 0 || talentNodeGroup.column < 0) {
           return undefined;
         }
 
-        // Only one node in this column can be selected (scopes, etc)
+                // Only one node in this column can be selected (scopes, etc)
         var exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes &&
-                                 talentNodeGroup.exlusiveWithNodes.length > 0);
+                    talentNodeGroup.exlusiveWithNodes.length > 0);
 
-        // Unlocked is whether or not the material cost has been paid
-        // for the node
+                // Unlocked is whether or not the material cost has been paid
+                // for the node
         var unlocked = node.isActivated ||
-              talentNodeGroup.autoUnlocks ||
-              // If only one can be activated, the cost only needs to be
-              // paid once per row.
-              (exclusiveInColumn &&
-               _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
-                 return item.nodes[nodeIndex].isActivated;
-               }));
+                    talentNodeGroup.autoUnlocks ||
+                    // If only one can be activated, the cost only needs to be
+                    // paid once per row.
+                    (exclusiveInColumn &&
+                        _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
+                          return item.nodes[nodeIndex].isActivated;
+                        }));
 
-        // Calculate relative XP for just this node
+                // Calculate relative XP for just this node
         var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
         var activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
         var xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
         var xp = Math.max(0, Math.min(totalXP - startProgressionBarAtProgress, xpRequired));
 
-        // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
+                // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
         var dtrHash = null;
         if (node.isActivated || talentNodeGroup.isRandom) {
           dtrHash = node.nodeHash.toString(16);
@@ -914,72 +915,72 @@
           }
         }
 
-        // There's a lot more here, but we're taking just what we need
+                // There's a lot more here, but we're taking just what we need
         return {
           name: nodeName,
           hash: talentNodeSelected.nodeStepHash,
           description: talentNodeSelected.nodeStepDescription,
           icon: talentNodeSelected.icon,
-          // XP put into this node
+                    // XP put into this node
           xp: xp,
-          // XP needed for this node to unlock
+                    // XP needed for this node to unlock
           xpRequired: xpRequired,
-          // Position in the grid
+                    // Position in the grid
           column: talentNodeGroup.column,
           row: talentNodeGroup.row,
-          // Is the node selected (lit up in the grid)
+                    // Is the node selected (lit up in the grid)
           activated: node.isActivated,
-          // The item level at which this node can be unlocked
+                    // The item level at which this node can be unlocked
           activatedAtGridLevel: activatedAtGridLevel,
-          // Only one node in this column can be selected (scopes, etc)
+                    // Only one node in this column can be selected (scopes, etc)
           exclusiveInColumn: exclusiveInColumn,
-          // Whether there's enough XP in the item to buy the node
+                    // Whether there's enough XP in the item to buy the node
           xpRequirementMet: activatedAtGridLevel <= totalLevel,
-          // Whether or not the material cost has been paid for the node
+                    // Whether or not the material cost has been paid for the node
           unlocked: unlocked,
-          // Some nodes don't show up in the grid, like purchased ascend nodes
+                    // Some nodes don't show up in the grid, like purchased ascend nodes
           hidden: node.hidden,
 
           dtrHash: dtrHash
 
-          // Whether (and in which order) this perk should be
-          // "featured" on an abbreviated info panel, as in the
-          // game. 0 = not featured, positive numbers signify the
-          // order of the featured perks.
-          // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
+                    // Whether (and in which order) this perk should be
+                    // "featured" on an abbreviated info panel, as in the
+                    // game. 0 = not featured, positive numbers signify the
+                    // order of the featured perks.
+                    // featuredPerk: (featuredPerkNames.indexOf(nodeName) + 1)
 
-          // This list of material requirements to unlock the
-          // item are a mystery. These hashes don't exist anywhere in
-          // the manifest database. Also, the activationRequirement
-          // object doesn't say how much of the material is
-          // needed. There's got to be some missing DB somewhere with
-          // this info.
-          // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
+                    // This list of material requirements to unlock the
+                    // item are a mystery. These hashes don't exist anywhere in
+                    // the manifest database. Also, the activationRequirement
+                    // object doesn't say how much of the material is
+                    // needed. There's got to be some missing DB somewhere with
+                    // this info.
+                    // materialsNeeded: talentNodeSelected.activationRequirement.materialRequirementHashes
 
-          // These are useful for debugging or searching for new properties,
-          // but they don't need to be included in the result.
-          // talentNodeGroup: talentNodeGroup,
-          // talentNodeSelected: talentNodeSelected,
-          // itemNode: node
+                    // These are useful for debugging or searching for new properties,
+                    // but they don't need to be included in the result.
+                    // talentNodeGroup: talentNodeGroup,
+                    // talentNodeSelected: talentNodeSelected,
+                    // itemNode: node
         };
       });
 
-      // We need to unique-ify because Ornament nodes show up twice!
+            // We need to unique-ify because Ornament nodes show up twice!
       gridNodes = _.uniq(_.compact(gridNodes), false, 'hash');
 
       if (!gridNodes.length) {
         return undefined;
       }
 
-      // This can be handy for visualization/debugging
-      // var columns = _.groupBy(gridNodes, 'column');
+            // This can be handy for visualization/debugging
+            // var columns = _.groupBy(gridNodes, 'column');
 
       var maxLevelRequired = _.max(gridNodes, 'activatedAtGridLevel').activatedAtGridLevel;
       var totalXPRequired = xpToReachLevel(maxLevelRequired);
 
       var ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
-      // Fix for stuff that has nothing in early columns
+            // Fix for stuff that has nothing in early columns
       var minColumn = _.min(gridNodes, 'column').column;
       if (minColumn > 0) {
         gridNodes.forEach(function(node) { node.column -= minColumn; });
@@ -1087,12 +1088,12 @@
       };
     }
 
-    // thanks to bungie armory for the max-base stats
-    // thanks to /u/iihavetoes for rates + equation
-    // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
-    // TODO set a property on a bucket saying whether it can have quality rating, etc
+        // thanks to bungie armory for the max-base stats
+        // thanks to /u/iihavetoes for rates + equation
+        // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
+        // TODO set a property on a bucket saying whether it can have quality rating, etc
     function getQualityRating(stats, light, type) {
-      // For a quality property, return a range string (min-max percentage)
+            // For a quality property, return a range string (min-max percentage)
       function getQualityRange(light, quality) {
         if (!quality) {
           return '';
@@ -1103,8 +1104,8 @@
         }
 
         return ((quality.min === quality.max || light === 335)
-                ? quality.min
-                : (quality.min + "%-" + quality.max)) + '%';
+                    ? quality.min
+                    : (quality.min + "%-" + quality.max)) + '%';
       }
 
       if (!stats || !stats.length || !light || light.value < 280) {
@@ -1203,58 +1204,58 @@
       return quality;
     }
 
-    // thanks to /u/iihavetoes for the bonuses at each level
-    // thanks to /u/tehdaw for the spreadsheet with bonuses
-    // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
+        // thanks to /u/iihavetoes for the bonuses at each level
+        // thanks to /u/tehdaw for the spreadsheet with bonuses
+        // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
     function getBonus(light, type) {
       switch (type.toLowerCase()) {
       case 'helmet':
       case 'helmets':
         return light < 292 ? 15
-          : light < 307 ? 16
-          : light < 319 ? 17
-          : light < 332 ? 18
-          : 19;
+                        : light < 307 ? 16
+                            : light < 319 ? 17
+                                : light < 332 ? 18
+                                    : 19;
       case 'gauntlets':
         return light < 287 ? 13
-          : light < 305 ? 14
-          : light < 319 ? 15
-          : light < 333 ? 16
-          : 17;
+                        : light < 305 ? 14
+                            : light < 319 ? 15
+                                : light < 333 ? 16
+                                    : 17;
       case 'chest':
       case 'chest armor':
         return light < 287 ? 20
-          : light < 300 ? 21
-          : light < 310 ? 22
-          : light < 319 ? 23
-          : light < 328 ? 24
-          : 25;
+                        : light < 300 ? 21
+                            : light < 310 ? 22
+                                : light < 319 ? 23
+                                    : light < 328 ? 24
+                                        : 25;
       case 'leg':
       case 'leg armor':
         return light < 284 ? 18
-          : light < 298 ? 19
-          : light < 309 ? 20
-          : light < 319 ? 21
-          : light < 329 ? 22
-          : 23;
+                        : light < 298 ? 19
+                            : light < 309 ? 20
+                                : light < 319 ? 21
+                                    : light < 329 ? 22
+                                        : 23;
       case 'classitem':
       case 'class items':
       case 'ghost':
       case 'ghosts':
         return light < 295 ? 8
-          : light < 319 ? 9
-          : 10;
+                        : light < 319 ? 9
+                            : 10;
       case 'artifact':
       case 'artifacts':
         return light < 287 ? 34
-          : light < 295 ? 35
-          : light < 302 ? 36
-          : light < 308 ? 37
-          : light < 314 ? 38
-          : light < 319 ? 39
-          : light < 325 ? 40
-          : light < 330 ? 41
-          : 42;
+                        : light < 295 ? 35
+                            : light < 302 ? 36
+                                : light < 308 ? 37
+                                    : light < 314 ? 38
+                                        : light < 319 ? 39
+                                            : light < 325 ? 40
+                                                : light < 330 ? 41
+                                                    : 42;
       }
       console.warn('item bonus not found', type);
       return 0;
@@ -1284,7 +1285,7 @@
 
         const identifier = def.statIdentifier;
 
-        // Only include these hidden stats, in this order
+                // Only include these hidden stats, in this order
         var secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
         var secondaryIndex = -1;
 
@@ -1295,7 +1296,7 @@
           sort = 50 + secondaryIndex;
         } else {
           itemStat = item.stats[sort];
-          // Always at the end
+                    // Always at the end
           if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
             sort = 100;
           }
@@ -1316,14 +1317,14 @@
 
         if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
           if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
-             (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
-             (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
+                        (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
+                        (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
             bonus = getBonus(item.primaryStat.value, type);
 
             if (activeArmorNode &&
-                ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
-                 (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
-                 (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
+                            ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+                                (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+                                (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
               base = Math.max(0, val - bonus);
             }
           }
@@ -1342,7 +1343,7 @@
       })), 'sort');
     }
 
-    /** New Item Tracking **/
+        /** New Item Tracking **/
 
     function buildItemSet(stores) {
       var itemSet = new Set();
@@ -1354,8 +1355,8 @@
       return itemSet;
     }
 
-    // Should this item display as new? Note the check for previousItems size, so that
-    // we don't mark everything as new on the first load.
+        // Should this item display as new? Note the check for previousItems size, so that
+        // we don't mark everything as new on the first load.
     function isItemNew(id, previousItems, newItems) {
       let isNew = false;
       if (newItems.has(id)) {
@@ -1363,7 +1364,7 @@
       } else if (_removedNewItems.has(id)) {
         isNew = false;
       } else if (previousItems.size) {
-        // Zero id check is to ignore general items and consumables
+                // Zero id check is to ignore general items and consumables
         isNew = (id !== '0' && !previousItems.has(id));
         if (isNew) {
           newItems.add(id);
@@ -1423,23 +1424,23 @@
         previousItems,
         newItems,
         itemInfoService])
-        .then(function(args) {
-          var result = [];
-          dimManifestService.statusText = 'Loading Destiny characters and inventory...';
-          _.each(items, function(item) {
-            var createdItem = null;
-            try {
-              createdItem = processSingleItem(...args, item, owner);
-            } catch (e) {
-              console.error("Error processing item", item, e);
-            }
-            if (createdItem !== null) {
-              createdItem.owner = owner.id;
-              result.push(createdItem);
-            }
-          });
-          return result;
-        });
+                .then(function(args) {
+                  var result = [];
+                  dimManifestService.statusText = 'Loading Destiny characters and inventory...';
+                  _.each(items, function(item) {
+                    var createdItem = null;
+                    try {
+                      createdItem = processSingleItem(...args, item, owner);
+                    } catch (e) {
+                      console.error("Error processing item", item, e);
+                    }
+                    if (createdItem !== null) {
+                      createdItem.owner = owner.id;
+                      result.push(createdItem);
+                    }
+                  });
+                  return result;
+                });
     }
 
     function getClass(type) {
@@ -1454,7 +1455,7 @@
       return 'unknown';
     }
 
-    // following code is from https://github.com/DestinyTrialsReport
+        // following code is from https://github.com/DestinyTrialsReport
     function getAbilityCooldown(subclass, ability, tier) {
       if (ability === 'STAT_INTELLECT') {
         switch (subclass) {
@@ -1482,34 +1483,34 @@
     }
 
     function setItemYear(item) {
-      // determine what year this item came from based on sourceHash value
-      // items will hopefully be tagged as follows
-      // No value: Vanilla, Crota's End, House of Wolves
-      // The Taken King (year 2): 460228854
-      // Rise of Iron (year3): 24296771
+            // determine what year this item came from based on sourceHash value
+            // items will hopefully be tagged as follows
+            // No value: Vanilla, Crota's End, House of Wolves
+            // The Taken King (year 2): 460228854
+            // Rise of Iron (year3): 24296771
 
-      // This could be further refined for CE/HoW based on activity. See
-      // DestinyRewardSourceDefinition and filter on %SOURCE%
-      // if sourceHash doesn't contain these values, we assume they came from
-      // year 1
+            // This could be further refined for CE/HoW based on activity. See
+            // DestinyRewardSourceDefinition and filter on %SOURCE%
+            // if sourceHash doesn't contain these values, we assume they came from
+            // year 1
 
       item.year = 1;
       if (item.sourceHashes.includes(460228854) ||  // ttk
-          item.sourceHashes.includes(3523074641) || // variks
-          (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
-          item.sourceHashes.includes(3739898362) || // elders challenge
-          item.sourceHashes.includes(3551688287)) { // kings fall
+                item.sourceHashes.includes(3523074641) || // variks
+                (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
+                item.sourceHashes.includes(3739898362) || // elders challenge
+                item.sourceHashes.includes(3551688287)) { // kings fall
         item.year = 2;
       }
       if ((item.sourceHashes.includes(24296771) ||        // roi
-          !item.sourceHashes.length)) {                   // new items
+                !item.sourceHashes.length)) {                   // new items
         item.year = 3;
       }
     }
 
-    /**
-     * Compute character-level stats (int, dis, str).
-     */
+        /**
+         * Compute character-level stats (int, dis, str).
+         */
     function getCharacterStatsData(statDefs, data) {
       const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
       var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
@@ -1556,5 +1557,17 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
+
+    /**
+     * Returns a promise that should resolve with the item definition from the manifest of the hash param. If the item doesn't exist returns null'
+     * @param {Number} itemHash
+     * @returns {Promise.<Item>}
+    **/
+    function createItemFromHash(itemHash) {
+      return dimDefinitions
+        .then((defs) => {
+          return defs.InventoryItem[itemHash];
+        });
+    }
   }
 })();
