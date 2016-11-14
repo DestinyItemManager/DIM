@@ -32,9 +32,45 @@
     }, 60 * 1000, true);
 
     $rootScope.$on('dim-no-token-found', function() {
-      window.location = "/login.html";
+      // window.location = "/login.html";
       // debugger;
     });
+
+
+    function getRefreshToken() {
+      var authorization = null;
+
+      if (localStorage.authorization) {
+        try {
+          authorization = JSON.parse(localStorage.authorization);
+        } catch (e) {
+          authorization = null;
+        }
+      }
+
+      return $http({
+        method: 'POST',
+        url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
+        headers: {
+          'X-API-Key': localStorage.apiKey,
+        },
+        data: {
+          refreshToken: authorization.refreshToken.value
+        }
+      })
+      .then((response) => {
+        if (response.data.Response.accessToken) {
+          authorization = {
+            accessToken: response.data.Response.accessToken,
+            refreshToken: response.data.Response.refreshToken,
+            inception: new Date(),
+            scope: response.data.Response.scope
+          };
+
+          localStorage.authorization = JSON.stringify(authorization);
+        }
+      });
+    }
 
     var service = {
       getPlatforms: getPlatforms,
@@ -58,7 +94,7 @@
     }
 
     function handleErrors(response) {
-      return;
+      return response;
       if (response.status === -1) {
         return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
       }
@@ -218,8 +254,16 @@
     function hasAuthorization(response) {
       if (response.status === 200) {
         if (response.data && response.data.ErrorCode === 99) {
-          $rootScope.$broadcast('dim-no-token-found');
-          return $q.reject("no-token");
+
+            if (localStorage.authorization) {
+              return getRefreshToken()
+                .then(() => {
+                  return response;
+                });
+            } else {
+              $rootScope.$broadcast('dim-no-token-found');
+              return $q.reject("no-token");
+            }
         }
       }
 
@@ -232,6 +276,18 @@
       platformPromise = platformPromise || $q.when(getBnetPlatformsRequest())
         .then($http)
         .then(hasAuthorization)
+        .then((response) => {
+          if (response.data.ErrorCode === 99) {
+            if (localStorage.authorization) {
+              return getRefreshToken()
+                .then(() => {
+                  return response;
+                });
+            }
+          }
+
+          return response;
+        })
         // .then(handleErrors, handleErrors)
         .catch(function(e) {
           showErrorToaster(e);

@@ -34,8 +34,7 @@
             scope: response.data.Response.scope
           };
 
-          localStorage.authorization = JSON.stringify(authorization);
-
+          localStorage.authorization = JSON.stringify(authorizat
           window.location = "/index.html";
         }
       });
