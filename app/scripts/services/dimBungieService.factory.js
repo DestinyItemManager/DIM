@@ -13,12 +13,10 @@
       apiKey = '$DIM_API_KEY';
     }
 
-    var tokenPromise = null;
     var platformPromise = null;
     var membershipPromise = null;
 
     $rootScope.$on('dim-active-platform-updated', function() {
-      tokenPromise = null;
       platformPromise = null;
       membershipPromise = null;
     });
@@ -32,7 +30,7 @@
     }, 60 * 1000, true);
 
     $rootScope.$on('dim-no-token-found', function() {
-      // window.location = "/login.html";
+      window.location = "/login.html";
       // debugger;
     });
 
@@ -59,7 +57,7 @@
         }
       })
       .then((response) => {
-        if (response.data.Response.accessToken) {
+        if (response.data.Response && response.data.Response.accessToken) {
           authorization = {
             accessToken: response.data.Response.accessToken,
             refreshToken: response.data.Response.refreshToken,
@@ -94,7 +92,7 @@
     }
 
     function handleErrors(response) {
-      return response;
+      // return response;
       if (response.status === -1) {
         return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
       }
@@ -102,7 +100,10 @@
         return $q.reject(new Error($translate.instant('BungieService.Down')));
       }
       if (response.status < 200 || response.status >= 400) {
-        return $q.reject(new Error($translate.instant('BungieService.NetworkError', { status: response.status, statusText: response.statusText })));
+        return $q.reject(new Error($translate.instant('BungieService.NetworkError', {
+          status: response.status,
+          statusText: response.statusText
+        })));
       }
 
       var errorCode = response.data.ErrorCode;
@@ -114,8 +115,8 @@
       } else if (errorCode === 5) {
         return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
       } else if (errorCode === 1618 &&
-                 response.config.url.indexOf('/Account/') >= 0 &&
-                 response.config.url.indexOf('/Character/') < 0) {
+        response.config.url.indexOf('/Account/') >= 0 &&
+        response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
@@ -182,6 +183,8 @@
           return '';
         }
       }
+
+      return '';
     }
 
     /************************************************************************************************************************************/
@@ -195,11 +198,9 @@
           Authorization: getAuthoriztion()
         }
       })
-      .then(function(request) {
-        return $http(request);
-      })
+      .then($http)
       .then(hasAuthorization)
-      // .then(handleErrors, handleErrors)
+      .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response;
       });
@@ -208,62 +209,62 @@
 
     /************************************************************************************************************************************/
 
-    function getBnetCookies() {
-      return $q(function(resolve, reject) {
-        function getAllCallback(cookies) {
-          if (_.size(cookies) > 0) {
-            resolve(cookies);
-          } else {
-            reject(new Error('No cookies found.'));
-          }
-        }
+    // function getBnetCookies() {
+    //   return $q(function(resolve, reject) {
+    //     function getAllCallback(cookies) {
+    //       if (_.size(cookies) > 0) {
+    //         resolve(cookies);
+    //       } else {
+    //         reject(new Error('No cookies found.'));
+    //       }
+    //     }
 
-        try {
-          chrome.cookies.getAll({
-            domain: 'www.bungie.net'
-          }, getAllCallback);
-        } catch (e) {
-          reject("Missing cookies");
-        }
-      });
-    }
+    //     try {
+    //       chrome.cookies.getAll({
+    //         domain: 'www.bungie.net'
+    //       }, getAllCallback);
+    //     } catch (e) {
+    //       reject("Missing cookies");
+    //     }
+    //   });
+    // }
 
     /************************************************************************************************************************************/
 
-    function getBungleToken() {
-      tokenPromise = tokenPromise || getBnetCookies()
-        .then(function(cookies) {
-          const cookie = _.find(cookies, function(cookie) {
-            return cookie.name === 'bungled';
-          });
+    // function getBungleToken() {
+    //   tokenPromise = tokenPromise || getBnetCookies()
+    //     .then(function(cookies) {
+    //       const cookie = _.find(cookies, function(cookie) {
+    //         return cookie.name === 'bungled';
+    //       });
 
-          if (cookie) {
-            return cookie.value;
-          } else {
-            openBungieNetTab();
-            throw new Error($translate.instant('BungieService.NotLoggedIn'));
-          }
-        })
-        .catch(function() {
-          tokenPromise = null;
-        });
+    //       if (cookie) {
+    //         return cookie.value;
+    //       } else {
+    //         openBungieNetTab();
+    //         throw new Error($translate.instant('BungieService.NotLoggedIn'));
+    //       }
+    //     })
+    //     .catch(function() {
+    //       tokenPromise = null;
+    //     });
 
-      return tokenPromise;
-    }
+    //   return tokenPromise;
+    // }
 
     function hasAuthorization(response) {
       if (response.status === 200) {
         if (response.data && response.data.ErrorCode === 99) {
-
-            if (localStorage.authorization) {
-              return getRefreshToken()
-                .then(() => {
-                  return response;
-                });
-            } else {
-              $rootScope.$broadcast('dim-no-token-found');
-              return $q.reject("no-token");
-            }
+          if (localStorage.authorization) {
+            return $q.when(response);
+            // return getRefreshToken()
+            //   .then(() => {
+            //     return response;
+            //   });
+          } else {
+            $rootScope.$broadcast('dim-no-token-found');
+            return $q.reject("no-token");
+          }
         }
       }
 
@@ -288,7 +289,7 @@
 
           return response;
         })
-        // .then(handleErrors, handleErrors)
+        .then(handleErrors, handleErrors)
         .catch(function(e) {
           showErrorToaster(e);
           return $q.reject(e);
@@ -296,7 +297,7 @@
 
       return platformPromise;
 
-      function getBnetPlatformsRequest(token) {
+      function getBnetPlatformsRequest() {
         return {
           method: 'GET',
           url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
@@ -314,7 +315,7 @@
     function getMembership(platform) {
       membershipPromise = membershipPromise || $q.when(getBnetMembershipReqest())
         .then($http)
-        // .then(handleErrors, handleErrors)
+        .then(handleErrors, handleErrors)
         .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
         .catch(function(error) {
           membershipPromise = null;
@@ -323,7 +324,7 @@
 
       return membershipPromise;
 
-      function getBnetMembershipReqest(token) {
+      function getBnetMembershipReqest() {
         return {
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
@@ -337,14 +338,18 @@
 
       function processBnetMembershipRequest(response) {
         if (_.size(response.data.Response) === 0) {
-          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+            platform: platform.label
+          })));
         }
 
         return $q.when(response.data.Response);
       }
 
       function rejectBnetMembershipRequest() {
-        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+          platform: platform.label
+        })));
       }
     }
 
@@ -352,11 +357,6 @@
     /************************************************************************************************************************************/
 
     function getCharacters(platform) {
-      var data = {
-        token: null,
-        membershipId: null
-      };
-
       var getMembershipPB = getMembership.bind(null, platform);
 
       var charactersPromise = getMembershipPB()
@@ -365,7 +365,7 @@
         })
         .then($http)
         .then(hasAuthorization)
-        // .then(handleErrors, handleErrors)
+        .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
 
       return charactersPromise;
@@ -384,7 +384,9 @@
 
       function processBnetCharactersRequest(response) {
         if (_.size(response.data.Response) === 0) {
-          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+            platform: platform.label
+          })));
         }
 
         return _.map(response.data.Response.data.characters, function(c) {
@@ -413,7 +415,7 @@
         return $http(request);
       })
       .then(hasAuthorization)
-      // .then(handleErrors, handleErrors)
+      .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response.data;
       });
@@ -440,11 +442,11 @@
           var promises = [
             getDestinyInventories('', platform, data.membershipId, data.characters),
             getDestinyProgression('', platform, data.membershipId, data.characters)
-              // Don't let failure of progression fail other requests.
-              .catch((e) => console.error("Failed to load character progression", e)),
+            // Don't let failure of progression fail other requests.
+            .catch((e) => console.error("Failed to load character progression", e)),
             getDestinyAdvisors('', platform, data.membershipId, data.characters)
-              // Don't let failure of advisors fail other requests.
-              .catch((e) => console.error("Failed to load advisors", e))
+            // Don't let failure of advisors fail other requests.
+            .catch((e) => console.error("Failed to load advisors", e))
           ];
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
@@ -498,7 +500,7 @@
           return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
             .then($http)
             .then(hasAuthorization)
-            // .then(handleErrors, handleErrors)
+            .then(handleErrors, handleErrors)
             .then(processPB);
         });
 
@@ -510,10 +512,10 @@
         });
 
         var promise = $q.when(getDestinyVaultRequest(token, platform))
-              .then($http)
-              .then(hasAuthorization)
-              // .then(handleErrors, handleErrors)
-              .then(processPB);
+          .then($http)
+          .then(hasAuthorization)
+          .then(handleErrors, handleErrors)
+          .then(processPB);
 
         promises.push(promise);
 
@@ -531,7 +533,7 @@
         return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
           .then($http)
           .then(hasAuthorization)
-          // .then(handleErrors, handleErrors)
+          .then(handleErrors, handleErrors)
           .then(processPB);
       });
 
@@ -564,7 +566,7 @@
         return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
           .then($http)
           .then(hasAuthorization)
-          // .then(handleErrors, handleErrors)
+          .then(handleErrors, handleErrors)
           .then(processPB);
       });
 
@@ -592,10 +594,6 @@
 
     function getVendorForCharacter(character, vendorHash) {
       var platform = dimState.active;
-      var data = {
-        token: null,
-        membershipType: null
-      };
 
       var getMembershipPB = getMembership.bind(null, platform);
 
@@ -613,7 +611,7 @@
         })
         .then($http)
         .then(hasAuthorization)
-        // .then(handleErrors, handleErrors)
+        .then(handleErrors, handleErrors)
         .then((response) => response.data.Response.data);
     }
 
@@ -635,7 +633,7 @@
           return getTransferRequest(data.token, platform.type, item, store, amount);
         })
         .then(retryOnThrottled)
-        // .then(handleErrors, handleErrors)
+        .then(handleErrors, handleErrors)
         .catch(function(e) {
           return handleUniquenessViolation(e, item, store);
         });
@@ -646,12 +644,12 @@
       function handleUniquenessViolation(e, item, store) {
         if (e && e.code === 1648) {
           toaster.pop('warning',
-                      $translate.instant('BungieService.ItemUniqueness'),
-                      $translate.instant('BungieService.ItemUniquenessExplanation', {
-                        name: item.name,
-                        type: item.type.toLowerCase(),
-                        character: store.name
-                      }));
+            $translate.instant('BungieService.ItemUniqueness'),
+            $translate.instant('BungieService.ItemUniquenessExplanation', {
+              name: item.name,
+              type: item.type.toLowerCase(),
+              character: store.name
+            }));
           return $q.reject(new Error('move-canceled'));
         }
         return $q.reject(e);
@@ -696,8 +694,8 @@
         .then(function() {
           return getEquipRequest(data.token, platform.type, item);
         })
-        .then(retryOnThrottled);
-        // .then(handleErrors, handleErrors);
+        .then(retryOnThrottled)
+        .then(handleErrors, handleErrors);
 
       return promise;
 
@@ -758,12 +756,14 @@
           };
         })
         .then(retryOnThrottled)
-        // .then(handleErrors, handleErrors)
+        .then(handleErrors, handleErrors)
         .then(function(response) {
           var data = response.data.Response;
           store.updateCharacterInfoFromEquip(data.summary);
           return _.select(items, function(i) {
-            var item = _.find(data.equipResults, { itemInstanceId: i.id });
+            var item = _.find(data.equipResults, {
+              itemInstanceId: i.id
+            });
             return item && item.equipStatus === 1;
           });
         });
@@ -775,8 +775,12 @@
 
     function setItemState(item, store, lockState, type) {
       switch (type) {
-      case 'lock': type = 'SetLockState'; break;
-      case 'track': type = 'SetQuestTrackedState'; break;
+      case 'lock':
+        type = 'SetLockState';
+        break;
+      case 'track':
+        type = 'SetQuestTrackedState';
+        break;
       }
 
       var platform = dimState.active;
@@ -796,8 +800,8 @@
         .then(function(store) {
           return getSetItemStateRequest(data.token, platform.type, item, store, lockState, type);
         })
-        .then(retryOnThrottled);
-        // .then(handleErrors, handleErrors);
+        .then(retryOnThrottled)
+        .then(handleErrors, handleErrors);
 
       return promise;
 

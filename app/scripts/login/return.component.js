@@ -34,11 +34,13 @@
             scope: response.data.Response.scope
           };
 
-          localStorage.authorization = JSON.stringify(authorizat
+          localStorage.authorization = JSON.stringify(authorization);
+
           window.location = "/index.html";
         }
       });
     };
+
   }
 
   angular.module('dimLogin').component('dimReturn', {

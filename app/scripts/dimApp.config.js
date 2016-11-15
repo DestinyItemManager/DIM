@@ -133,6 +133,7 @@
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
+      $httpProvider.interceptors.push('http-refresh-token');
     }])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise("/inventory");
