@@ -415,6 +415,7 @@
             OutdatedExplanation: "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreiten werden.",
             BungieDown: "Bungie.net hat möglicherweise Probleme.",
             Load: "Lade gespeicherte Daten",
+            LoadCharInv: "Lade Destiny Charakter und Inventar",
             Unzip: "Entpacke neueste Daten",
             Save: "Speichere neueste Daten" },
           MaterialsExchange: {
