@@ -259,6 +259,30 @@
         } else if (term.indexOf('quality:') >= 0 || term.indexOf('percentage:') >= 0) {
           filter = term.replace('quality:', '').replace('percentage:', '');
           addPredicate("quality", filter);
+        } else if (term.indexOf('rof:') >= 0) {
+          filter = term.replace('rof:', '');
+          addPredicate("rof", filter);
+        } else if (term.indexOf('impact:') >= 0) {
+          filter = term.replace('impact:', '');
+          addPredicate("impact", filter);
+        } else if (term.indexOf('range:') >= 0) {
+          filter = term.replace('range:', '');
+          addPredicate("range", filter);
+        } else if (term.indexOf('stability:') >= 0) {
+          filter = term.replace('stability:', '');
+          addPredicate("stability", filter);
+        } else if (term.indexOf('reload:') >= 0) {
+          filter = term.replace('reload:', '');
+          addPredicate("reload", filter);
+        } else if (term.indexOf('magazine:') >= 0) {
+          filter = term.replace('magazine:', '');
+          addPredicate("magazine", filter);
+        } else if (term.indexOf('aimassist:') >= 0 || term.indexOf('aa:') >= 0) {
+          filter = term.replace('aimassist:', '').replace('aa:', '');
+          addPredicate("aimassist", filter);
+        } else if (term.indexOf('equipspeed:') >= 0) {
+          filter = term.replace('equipspeed:', '');
+          addPredicate("equipspeed", filter);
         } else if (!/^\s*$/.test(term)) {
           addPredicate("keyword", term);
         }
@@ -685,7 +709,116 @@
       },
       transferable: function(predicate, item) {
         return !item.notransfer;
+      },
+      rof: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'rof');
+      },
+      impact: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'impact');
+      },
+      range: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'range');
+      },
+      stability: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'stability');
+      },
+      reload: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'reload');
+      },
+      magazine: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'magazine');
+      },
+      aimassist: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'aa');
+      },
+      equipspeed: function(predicate, item) {
+        return filterByStats.do(predicate, item, 'equipspeed');
       }
     };
+
+    // This refactored method filters items by stats
+    //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
+    var filterByStats = {
+      do: function(predicate, item, statType) {
+        if (predicate.length === 0 || item.stats === undefined) {
+          return false;
+        }
+
+        var operands = ['<=', '>=', '=', '>', '<'];
+        var operand = 'none';
+        var result = false;
+        var statHash = 0;
+
+        operands.forEach(function(element) {
+          if (predicate.substring(0, element.length) === element) {
+            operand = element;
+            predicate = predicate.substring(element.length);
+            return false;
+          } else {
+            return true;
+          }
+        }, this);
+
+        switch (statType) {
+          case 'impact': // Impact
+            statHash = 4043523819;
+            break;
+          case 'range': // Range
+            statHash = 1240592695;
+            break;
+          case 'stability': // Stability
+            statHash = 155624089;
+            break;
+          case 'rof': // Rate of fire
+            statHash = 4284893193;
+            break;
+          case 'reload': // Reload
+            statHash = 4188031367;
+            break;
+          case 'magazine': // Magazine
+            statHash = 387123106;
+            break;
+          case 'aa': // Aim Assist
+            statHash = 1345609583;
+            break;
+          case 'equipspeed': // Equip Speed
+            statHash = 943549884
+            break;
+        }
+
+        item.stats.forEach(function(stat) {
+          if (stat.statHash === statHash) {
+            item.stats.value = stat.value;
+          }
+          else {
+            return false;
+          }
+        });
+
+        predicate = parseInt(predicate, 10);
+
+        switch (operand) {
+          case 'none':
+            result = (item.stats.value === predicate);
+            break;
+          case '=':
+            result = (item.stats.value === predicate);
+            break;
+          case '<':
+            result = (item.stats.value < predicate);
+            break;
+          case '<=':
+            result = (item.stats.value <= predicate);
+            break;
+          case '>':
+            result = (item.stats.value > predicate);
+            break;
+          case '>=':
+            result = (item.stats.value >= predicate);
+            break;
+        }
+        return result;
+      }
+    }
   }
 })();
