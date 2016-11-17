@@ -671,15 +671,15 @@
       },
       hasLight: function(predicate, item) {
         const lightBuckets = ["BUCKET_CHEST",
-                                 "BUCKET_LEGS",
-                                 "BUCKET_ARTIFACT",
-                                 "BUCKET_HEAVY_WEAPON",
-                                 "BUCKET_PRIMARY_WEAPON",
-                                 "BUCKET_CLASS_ITEMS",
-                                 "BUCKET_SPECIAL_WEAPON",
-                                 "BUCKET_HEAD",
-                                 "BUCKET_ARMS",
-                                 "BUCKET_GHOST"];
+          "BUCKET_LEGS",
+          "BUCKET_ARTIFACT",
+          "BUCKET_HEAVY_WEAPON",
+          "BUCKET_PRIMARY_WEAPON",
+          "BUCKET_CLASS_ITEMS",
+          "BUCKET_SPECIAL_WEAPON",
+          "BUCKET_HEAD",
+          "BUCKET_ARMS",
+          "BUCKET_GHOST"];
         return item.bucket && _.contains(lightBuckets, item.bucket.id);
       },
       weapon: function(predicate, item) {
@@ -690,12 +690,12 @@
       },
       cosmetic: function(predicate, item) {
         const cosmeticBuckets = ["BUCKET_SHADER",
-                                 "BUCKET_MODS",
-                                 "BUCKET_EMOTES",
-                                 "BUCKET_EMBLEM",
-                                 "BUCKET_VEHICLE",
-                                 "BUCKET_SHIP",
-                                 "BUCKET_HORN"];
+          "BUCKET_MODS",
+          "BUCKET_EMOTES",
+          "BUCKET_EMBLEM",
+          "BUCKET_VEHICLE",
+          "BUCKET_SHIP",
+          "BUCKET_HORN"];
         return item.bucket && _.contains(cosmeticBuckets, item.bucket.id);
       },
       equipment: function(predicate, item) {
@@ -760,35 +760,36 @@
         }, this);
 
         switch (statType) {
-          case 'impact': // Impact
-            statHash = 4043523819;
-            break;
-          case 'range': // Range
-            statHash = 1240592695;
-            break;
-          case 'stability': // Stability
-            statHash = 155624089;
-            break;
-          case 'rof': // Rate of fire
-            statHash = 4284893193;
-            break;
-          case 'reload': // Reload
-            statHash = 4188031367;
-            break;
-          case 'magazine': // Magazine
-            statHash = 387123106;
-            break;
-          case 'aa': // Aim Assist
-            statHash = 1345609583;
-            break;
-          case 'equipspeed': // Equip Speed
-            statHash = 943549884
-            break;
+        case 'impact': // Impact
+          statHash = 4043523819;
+          break;
+        case 'range': // Range
+          statHash = 1240592695;
+          break;
+        case 'stability': // Stability
+          statHash = 155624089;
+          break;
+        case 'rof': // Rate of fire
+          statHash = 4284893193;
+          break;
+        case 'reload': // Reload
+          statHash = 4188031367;
+          break;
+        case 'magazine': // Magazine
+          statHash = 387123106;
+          break;
+        case 'aa': // Aim Assist
+          statHash = 1345609583;
+          break;
+        case 'equipspeed': // Equip Speed
+          statHash = 943549884;
+          break;
         }
 
         item.stats.forEach(function(stat) {
           if (stat.statHash === statHash) {
             item.stats.value = stat.value;
+            return true;
           }
           else {
             return false;
