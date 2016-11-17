@@ -798,27 +798,27 @@
         predicate = parseInt(predicate, 10);
 
         switch (operand) {
-          case 'none':
-            result = (item.stats.value === predicate);
-            break;
-          case '=':
-            result = (item.stats.value === predicate);
-            break;
-          case '<':
-            result = (item.stats.value < predicate);
-            break;
-          case '<=':
-            result = (item.stats.value <= predicate);
-            break;
-          case '>':
-            result = (item.stats.value > predicate);
-            break;
-          case '>=':
-            result = (item.stats.value >= predicate);
-            break;
+        case 'none':
+          result = (item.stats.value === predicate);
+          break;
+        case '=':
+          result = (item.stats.value === predicate);
+          break;
+        case '<':
+          result = (item.stats.value < predicate);
+          break;
+        case '<=':
+          result = (item.stats.value <= predicate);
+          break;
+        case '>':
+          result = (item.stats.value > predicate);
+          break;
+        case '>=':
+          result = (item.stats.value >= predicate);
+          break;
         }
         return result;
       }
-    }
+    };
   }
 })();
