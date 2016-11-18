@@ -1454,6 +1454,10 @@ dim-compare {
     background-color: gray;
     cursor: pointer;
   }
+  .item-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
   .sorted {
     color: $orange;
   }
