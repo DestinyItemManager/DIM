@@ -253,11 +253,11 @@
             ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
           },
          Compare: {
-            All: {
+           All: {
               Singular: "Confronta tutti {{type}} ({{quantity}})",
               Plural: "Confronta tutti {{type}} ({{quantity}})" },
-            Archetype: "Confronta per archetipo ({{quantity}})",
-            Compare: "Confronta",
+           Archetype: "Confronta per archetipo ({{quantity}})",
+           Compare: "Confronta",
            Close: "Chiudi",
            Error: {
               Class: "Impossibile confrontare questo oggetto, poichè non è per {{class}}.",
@@ -271,19 +271,19 @@
             Help: "Aggiungere note a questa voce" },
           Loadouts: {
             Create: "Creare Loadout",
-           FromEquipped: "Equipaggiato",
+            FromEquipped: "Equipaggiato",
             Edit: "Modifica Loadout",
             Delete: "Cancellare Loadout",
             ApplySearch: "Elementi = \"{{query}}\"",
             MaximizeLight: "Massimizzare la Luce",
-           ItemLeveling: "Elementi da Livellare",
-           GatherEngrams: "Raccogliere Engrammi",
-           GatherEngramsExceptExotics: "Esotici",
+            ItemLeveling: "Elementi da Livellare",
+            GatherEngrams: "Raccogliere Engrammi",
+            GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Loadouts: "Loadouts" },
           Header: {
             About: "Chi siamo",
-           SupportDIM: "Supporta DIM" },
+            SupportDIM: "Supporta DIM" },
           Settings: {
             Settings: "Impostazioni" },
           Stats: {
