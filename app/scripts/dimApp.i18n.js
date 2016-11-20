@@ -242,20 +242,20 @@
             Down: "Bungie.net è offline.",
             Difficulties: "Al momento le API di Bungie hanno dei problemi.",
             NetworkError: "Errore Network - {{status}} {{statusText}}",
-            Throttled: 'Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.',
-            NotLoggedIn: 'Effettuare l accesso a Bungie.net per utilizzare questa estensione.',
-            Maintenance: "I server di Bungie.net sono offline per manutenzione.",
-            NoAccount: "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
-            NoAccountForPlatform: "Impossibile trovare un account Destiny per te su {{platform}}.",
-            NotConnected: "Potresti non essere connesso a internet.",
-            Twitter: "Ottieni informazioni sullo stato del servizio su",
-            ItemUniqueness: "Unicità dell elemento",
-            ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
-          },
-         Compare: {
+           Throttled: 'Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.',
+           NotLoggedIn: 'Effettuare l accesso a Bungie.net per utilizzare questa estensione.',
+           Maintenance: "I server di Bungie.net sono offline per manutenzione.",
+           NoAccount: "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
+           NoAccountForPlatform: "Impossibile trovare un account Destiny per te su {{platform}}.",
+           NotConnected: "Potresti non essere connesso a internet.",
+           Twitter: "Ottieni informazioni sullo stato del servizio su",
+           ItemUniqueness: "Unicità dell elemento",
+           ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
+         },
+          Compare: {
            All: {
-              Singular: "Confronta tutti {{type}} ({{quantity}})",
-              Plural: "Confronta tutti {{type}} ({{quantity}})" },
+             Singular: "Confronta tutti {{type}} ({{quantity}})",
+             Plural: "Confronta tutti {{type}} ({{quantity}})" },
            Archetype: "Confronta per archetipo ({{quantity}})",
            Compare: "Confronta",
            Close: "Chiudi",
@@ -267,7 +267,7 @@
             Super: "Super tempo di recupero",
             Grenade: "Granate tempo di recupero",
             Melee: "Corpo a corpo tempo di recupero" },
-           Notes: {
+          Notes: {
             Help: "Aggiungere note a questa voce" },
           Loadouts: {
             Create: "Creare Loadout",
@@ -276,9 +276,9 @@
             Delete: "Cancellare Loadout",
             ApplySearch: "Elementi = \"{{query}}\"",
             MaximizeLight: "Massimizzare la Luce",
-            ItemLeveling: "Elementi da Livellare",
-            GatherEngrams: "Raccogliere Engrammi",
-            GatherEngramsExceptExotics: "Esotici",
+           ItemLeveling: "Elementi da Livellare",
+           GatherEngrams: "Raccogliere Engrammi",
+           GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Loadouts: "Loadouts" },
           Header: {
