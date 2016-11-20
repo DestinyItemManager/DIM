@@ -252,7 +252,7 @@
             ItemUniqueness: "Unicità dell elemento",
             ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
           },
-        Compare: {
+         Compare: {
             All: {
               Singular: "Confronta tutti {{type}} ({{quantity}})",
               Plural: "Confronta tutti {{type}} ({{quantity}})" },
@@ -263,13 +263,13 @@
               Class: "Impossibile confrontare questo oggetto, poichè non è per {{class}}.",
               Archetype: "Impossibile confrontare questo oggetto, poichè non è un {{type}}." },
             Splits: "Confronta simili divisioni ({{quantity}})" },
-          Cooldown: {
+         Cooldown: {
             Super: "Super tempo di recupero",
             Grenade: "Granate tempo di recupero",
             Melee: "Corpo a corpo tempo di recupero" },
-          Notes: {
+         Notes: {
             Help: "Aggiungere note a questa voce" },
-          Loadouts: {
+         Loadouts: {
             Create: "Creare Loadout",
             FromEquipped: "Equipaggiato",
             Edit: "Modifica Loadout",
@@ -281,23 +281,23 @@
             GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Loadouts: "Loadouts" },
-          Header: {
+         Header: {
             About: "Chi siamo",
             SupportDIM: "Supporta DIM" },
-          Settings: {
+         Settings: {
             Settings: "Impostazioni" },
-          Stats: {
+         Stats: {
             Discipline: "Disciplina",
             Intellect: "Intelletto",
             Strength: "Forza",
             TierProgress: "{{progress}} per {{tier}}" },
-          Tags: {
+         Tags: {
             TagItem: "Elemento Tag",
             Favorite: "Preferito",
             Keep: "Tenere",
             Junk: "Giunca",
             Infuse: "Infondi" },
-          Vendors: {
+         Vendors: {
             Vendors: "Mercanti" }
         })
         .translations('de', {
