@@ -258,46 +258,46 @@
               Plural: "Confronta tutti {{type}} ({{quantity}})" },
             Archetype: "Confronta per archetipo ({{quantity}})",
             Compare: "Confronta",
-            Close: "Chiudi",
-            Error: {
+           Close: "Chiudi",
+           Error: {
               Class: "Impossibile confrontare questo oggetto, poichè non è per {{class}}.",
               Archetype: "Impossibile confrontare questo oggetto, poichè non è un {{type}}." },
-            Splits: "Confronta simili divisioni ({{quantity}})" },
-         Cooldown: {
+           Splits: "Confronta simili divisioni ({{quantity}})" },
+          Cooldown: {
             Super: "Super tempo di recupero",
             Grenade: "Granate tempo di recupero",
             Melee: "Corpo a corpo tempo di recupero" },
-         Notes: {
+           Notes: {
             Help: "Aggiungere note a questa voce" },
-         Loadouts: {
+          Loadouts: {
             Create: "Creare Loadout",
-            FromEquipped: "Equipaggiato",
+           FromEquipped: "Equipaggiato",
             Edit: "Modifica Loadout",
             Delete: "Cancellare Loadout",
             ApplySearch: "Elementi = \"{{query}}\"",
             MaximizeLight: "Massimizzare la Luce",
-            ItemLeveling: "Elementi da Livellare",
-            GatherEngrams: "Raccogliere Engrammi",
-            GatherEngramsExceptExotics: "Esotici",
+           ItemLeveling: "Elementi da Livellare",
+           GatherEngrams: "Raccogliere Engrammi",
+           GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Loadouts: "Loadouts" },
-         Header: {
+          Header: {
             About: "Chi siamo",
-            SupportDIM: "Supporta DIM" },
-         Settings: {
+           SupportDIM: "Supporta DIM" },
+          Settings: {
             Settings: "Impostazioni" },
-         Stats: {
+          Stats: {
             Discipline: "Disciplina",
             Intellect: "Intelletto",
             Strength: "Forza",
             TierProgress: "{{progress}} per {{tier}}" },
-         Tags: {
+          Tags: {
             TagItem: "Elemento Tag",
             Favorite: "Preferito",
             Keep: "Tenere",
             Junk: "Giunca",
             Infuse: "Infondi" },
-         Vendors: {
+          Vendors: {
             Vendors: "Mercanti" }
         })
         .translations('de', {
