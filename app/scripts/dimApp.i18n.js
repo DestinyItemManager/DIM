@@ -276,9 +276,9 @@
             Delete: "Cancellare Loadout",
             ApplySearch: "Elementi = \"{{query}}\"",
             MaximizeLight: "Massimizzare la Luce",
-           ItemLeveling: "Elementi da Livellare",
-           GatherEngrams: "Raccogliere Engrammi",
-           GatherEngramsExceptExotics: "Esotici",
+            ItemLeveling: "Elementi da Livellare",
+            GatherEngrams: "Raccogliere Engrammi",
+            GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Loadouts: "Loadouts" },
           Header: {
