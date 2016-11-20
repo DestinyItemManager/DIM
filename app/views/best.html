@@ -98,16 +98,14 @@
           </label>
         </p>
       </div></span>
-      <span><div ng-show="normal.showHelp">
-        <iframe ng-show="normal.lang === 'en'" src="/views/en/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-        <!--
-          <iframe ng-show="normal.lang === 'de'" src="/views/de/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-          <iframe ng-show="normal.lang === 'es'" src="/views/es/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-          <iframe ng-show="normal.lang === 'fr'" src="/views/fr/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-          <iframe ng-show="normal.lang === 'it'" src="/views/it/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-          <iframe ng-show="normal.lang === 'jp'" src="/views/jp/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-          <iframe ng-show="normal.lang === 'pt-br'" src="/views/pt-br/best-help.html" width="80%" height="280em" scrolling="no" style="border:none" name="showHelp" id="showHelp"></iframe>
-        -->
+      <span><div id="LB-Help" ng-show="normal.showHelp">
+        <span ng-show="normal.lang === 'en'" ng-include="'/views/en/best-help.html'"></span>
+        <span ng-show="normal.lang === 'de'" ng-include="'/views/de/best-help.html'"></span>
+        <span ng-show="normal.lang === 'es'" ng-include="'/views/es/best-help.html'"></span>
+        <span ng-show="normal.lang === 'fr'" ng-include="'/views/fr/best-help.html'"></span>
+        <span ng-show="normal.lang === 'it'" ng-include="'/views/it/best-help.html'"></span>
+        <span ng-show="normal.lang === 'jp'" ng-include="'/views/jp/best-help.html'"></span>
+        <span ng-show="normal.lang === 'pt-br'" ng-include="'/views/pt-br/best-help.html'"></span>
       </div></span>
     </p>
   </div>
