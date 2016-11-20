@@ -98,14 +98,8 @@
           </label>
         </p>
       </div></span>
-      <span><div id="LB-Help" ng-show="normal.showHelp">
-        <span ng-show="normal.lang === 'en'" ng-include="'/views/en/best-help.html'"></span>
-        <span ng-show="normal.lang === 'de'" ng-include="'/views/de/best-help.html'"></span>
-        <span ng-show="normal.lang === 'es'" ng-include="'/views/es/best-help.html'"></span>
-        <span ng-show="normal.lang === 'fr'" ng-include="'/views/fr/best-help.html'"></span>
-        <span ng-show="normal.lang === 'it'" ng-include="'/views/it/best-help.html'"></span>
-        <span ng-show="normal.lang === 'jp'" ng-include="'/views/jp/best-help.html'"></span>
-        <span ng-show="normal.lang === 'pt-br'" ng-include="'/views/pt-br/best-help.html'"></span>
+      <span><div ng-show="normal.showHelp">
+        <span ng-include="'/views/' + normal.lang + '/best-help.html'"></span>
       </div></span>
     </p>
   </div>
