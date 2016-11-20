@@ -238,10 +238,10 @@
             Unknown: "Sconosciuto",
             Vault: "Deposito",
             Weapons: "Armi" },
-         BungieService: {
-            Down: "Bungie.net è offline.",
-            Difficulties: "Al momento le API di Bungie hanno dei problemi.",
-            NetworkError: "Errore Network - {{status}} {{statusText}}",
+          BungieService: {
+           Down: "Bungie.net è offline.",
+           Difficulties: "Al momento le API di Bungie hanno dei problemi.",
+           NetworkError: "Errore Network - {{status}} {{statusText}}",
            Throttled: 'Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.',
            NotLoggedIn: 'Effettuare l accesso a Bungie.net per utilizzare questa estensione.',
            Maintenance: "I server di Bungie.net sono offline per manutenzione.",
@@ -256,13 +256,13 @@
            All: {
              Singular: "Confronta tutti {{type}} ({{quantity}})",
              Plural: "Confronta tutti {{type}} ({{quantity}})" },
-           Archetype: "Confronta per archetipo ({{quantity}})",
-           Compare: "Confronta",
-           Close: "Chiudi",
-           Error: {
+            Archetype: "Confronta per archetipo ({{quantity}})",
+            Compare: "Confronta",
+            Close: "Chiudi",
+            Error: {
               Class: "Impossibile confrontare questo oggetto, poichè non è per {{class}}.",
               Archetype: "Impossibile confrontare questo oggetto, poichè non è un {{type}}." },
-           Splits: "Confronta simili divisioni ({{quantity}})" },
+            Splits: "Confronta simili divisioni ({{quantity}})" },
           Cooldown: {
             Super: "Super tempo di recupero",
             Grenade: "Granate tempo di recupero",
@@ -276,9 +276,9 @@
             Delete: "Cancellare Loadout",
             ApplySearch: "Elementi = \"{{query}}\"",
             MaximizeLight: "Massimizzare la Luce",
-            ItemLeveling: "Elementi da Livellare",
-            GatherEngrams: "Raccogliere Engrammi",
-            GatherEngramsExceptExotics: "Esotici",
+           ItemLeveling: "Elementi da Livellare",
+           GatherEngrams: "Raccogliere Engrammi",
+           GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Loadouts: "Loadouts" },
           Header: {
