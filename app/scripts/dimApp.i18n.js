@@ -270,8 +270,8 @@
             Melee: "Corpo a corpo tempo di recupero" },
           Debug: {
             Dump: "Svuota informazioni nella console",
-            View: "Visualizza Item Debug Info"},
-          FarmingMode:{
+            View: "Visualizza Item Debug Info" },
+          FarmingMode: {
             FarmingMode: "Modalità Farming (sposta oggetti)",
             Desc: "DIM sposta Engrammi e consumabili per Lumen da {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
             Configuration: "Configurazione",
@@ -360,7 +360,7 @@
             Applied: "Il tuo loadout di {{amount}} oggetti è stato trasferito al tuo {{store}}.",
             AppliedItem: "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
-            AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito."},
+            AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito." },
           Notes: {
             Error: "Errore! Massimo 120 caratteri per nota.",
             Help: "Aggiungere note a questo oggetto" },
