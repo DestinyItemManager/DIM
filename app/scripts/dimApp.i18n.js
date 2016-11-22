@@ -362,7 +362,7 @@
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito." },
           Manifest: {
-            Build: "Carico il database di informazioni di Destiny",
+            Build: "Costruisco il database di informazioni di Destiny",
             Download: "Scarico le ultime informazioni riguardanti Destiny da Bungie",
             Error: "Errore caricando le informazioni su Destiny:\n{{error}}\nRicarica per riprovare.",
             Outdated: "Informazioni su Destiny datate",
