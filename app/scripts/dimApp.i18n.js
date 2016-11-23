@@ -581,6 +581,7 @@
             ClickToEquip: "Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren.",
             AppliedAuto: "Automatischer Loadout Builder",
             Applied: "Dein Loadout aus {{amount}} Gegenständen wurde zum {{store}} übertragen.",
+            Applied1Item: "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft." },
           Manifest: {
