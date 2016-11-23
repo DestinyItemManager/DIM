@@ -1008,6 +1008,7 @@
             ClickToEquip: "Click en un objeto para equipar.",
             AppliedAuto: "Crear automático de equipo",
             Applied: "Tu equipo de {{amount}} objetos han sido transferidos a tu {{store}}.",
+            Applied1Item: "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
             AppliedError: "Ninguno de los objetos en tu equipo pudo ser transferido.",
             AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores." },
           Manifest: {
