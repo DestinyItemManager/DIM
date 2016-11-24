@@ -203,6 +203,9 @@
             Discipline: "Discipline",
             Intellect: "Intellect",
             NoBonus: "No Bonus",
+            OfMaxRoll: "{{range}} of max roll",
+            PercentHelp: "Click for more information about what Stats Quality is.",
+            Quality: "Stats quality",
             Strength: "Strength",
             TierProgress: "{{progress}} for {{tier}}" },
           Tags: {
@@ -423,7 +426,7 @@
             Discipline: "Disciplina",
             Intellect: "Intelletto",
             NoBonus: "Nessun Bonus",
-            OfMaxRoll: "del roll massimo",
+            OfMaxRoll: "{{range}} del roll massimo",
             PercentHelp: "Clicca per maggiori informazioni riguarso la Qualità delle Statistiche.",
             Quality: "Qualità statistiche",
             Strength: "Forza",
