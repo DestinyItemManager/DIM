@@ -203,7 +203,7 @@
             Discipline: "Discipline",
             Intellect: "Intellect",
             NoBonus: "No Bonus",
-            OfMaxRoll: "of max roll",
+            OfMaxRoll: "{{range}} of max roll",
             PercentHelp: "Click for more information about what Stats Quality is.",
             Quality: "Stats quality",
             Strength: "Strength",
