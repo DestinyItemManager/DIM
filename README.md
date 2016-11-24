@@ -25,7 +25,7 @@ DIM is an extension that runs within the Chrome Desktop Web Browser.
 
 Clone the repo:
 
-* `git clone https://github.com/DestinyItemManager/DIM.`
+* `git clone https://github.com/DestinyItemManager/DIM.git`
 
 Install dependencies:
 

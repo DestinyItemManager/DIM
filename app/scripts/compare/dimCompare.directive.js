@@ -14,9 +14,9 @@
       template: `
         <div id="loadout-drawer" ng-if="vm.show">
           <p>
-            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')">{{ vm.compare.location.inWeapons ? 'Compare in archetype' : 'Compare similar splits' }} ({{ vm.archeTypes.length }})</label>
-            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()">Compare all {{ vm.compare.typeName }}{{ vm.compare.typeName === 'Gauntlets' ? '' : 's'}} ({{ vm.similarTypes.length }})</label>
-            <label class="dim-button" ng-click="vm.cancel()">Close Compare</label>
+            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')" translate="{{ vm.compare.location.inWeapons ? 'Compare.Archetype' : 'Compare.Splits'}}" translate-values="{ quantity:  vm.archeTypes.length }"></label>
+            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" translate="{{ vm.compare.typeName === 'Gauntlets' ? 'Compare.All.Plural' : 'Compare.All.Singular'}}" translate-values="{ type: vm.compare.typeName, quantity: vm.similarTypes.length}"></label>
+            <label class="dim-button" ng-click="vm.cancel()" translate>Compare.Close</label>
           </p>
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
             <span class="compare-item fixed-left">
@@ -26,7 +26,7 @@
             </span>
             <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
-              <div ng-bind="::item.name"></div>
+              <div ng-bind="::item.name" class="item-name"></div>
               <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
                 <span ng-bind="::stat.value"></span>
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
@@ -40,9 +40,9 @@
     };
   }
 
-  CompareCtrl.$inject = ['$scope', 'toaster', 'dimCompareService', 'dimItemService', 'dimFeatureFlags'];
+  CompareCtrl.$inject = ['$scope', 'toaster', 'dimCompareService', 'dimItemService', 'dimFeatureFlags', '$translate'];
 
-  function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeatureFlags) {
+  function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeatureFlags, $translate) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
     vm.show = dimCompareService.dialogOpen;
@@ -86,10 +86,10 @@
 
       if (vm.comparisons.length && vm.comparisons[0].typeName && args.item.typeName !== vm.comparisons[0].typeName) {
         if (vm.comparisons[0].classType && args.item.classType !== vm.comparisons[0].classType) {
-          toaster.pop('warning', args.item.name, 'Can not compare this item as it is not for a ' + vm.comparisons[0].classType + '.');
+          toaster.pop('warning', args.item.name, $translate.instant(Compare.Error.Class, vm.comparisons[0].classType));
           return;
         }
-        toaster.pop('warning', args.item.name, 'Can not compare this item as it is not a ' + vm.comparisons[0].typeName + '.');
+        toaster.pop('warning', args.item.name, $translate.instant(Compare.Error.Archetype, vm.comparisons[0].typeName));
         return;
       }
 

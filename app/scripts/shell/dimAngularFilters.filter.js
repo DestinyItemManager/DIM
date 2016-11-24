@@ -220,7 +220,7 @@
     };
   });
 
-  /*
+  /**
    * Filter to turn a number into an array so that we can use ng-repeat
    * over a number to loop N times.
    */
