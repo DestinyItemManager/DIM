@@ -1,19 +1,19 @@
 # Next
+
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
 * Added detailed information to the Trials of Osiris popup card.
 * Added more detection for item years.
 * The collapse button now no longer takes up the whole bucket height.
 * Fixed marking which characters had access to vendor items.
-* Fix duplicate ghosts in Vangaurd vendors.
 * Fix tracking new items when the new-item shine is disabled.
 * Added option to Farming Mode to not move weapons and armor to make space for engrams.
 * About and Support pages are now translatable.
 * Improved error handling and error messages.
 * Vendors are collapsible.
-* Fix DIM hanging when you try to look at a record book or a complicated bounty or quest.
 * All vendor items (including duplicates with different rolls) will now show up.
-* Added more french translations.
+* Added more translations.
+* If you have more than one Memory of Felwinter, they are all excluded from loadout builder.
 
 # 3.13.0
 
