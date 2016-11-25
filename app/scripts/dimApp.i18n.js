@@ -117,6 +117,7 @@
             Missing1: "Missing legendary or exotic pieces to build a full set!",
             Missing2: "Missing rare, legendary, or exotic pieces to build a full set!" },
           Loadouts: {
+            Any: "Any",
             Loadouts: "Loadouts",
             Before: "Before '{{name}}'",
             Create: "Create Loadout",
@@ -563,6 +564,7 @@
             Missing1: "Es fehlen legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!",
             Missing2: "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!" },
           Loadouts: {
+            Any: "ANNNY",
             Loadouts: "Loadouts",
             Before: "Zurück zu '{{name}}'",
             Create: "Loadout erstellen",
