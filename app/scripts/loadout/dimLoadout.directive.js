@@ -58,7 +58,7 @@
 
       scope.$on('dim-stores-updated', function(evt, data) {
         vm.classTypeValues = [{ label: $translate.instant('Loadouts.Any'), value: -1 }];
-        _.each(_.reject(data.stores, function(s) { return s.isVault; }), function(store) {
+        _.each(_.uniq(_.reject(data.stores, 'isVault'), false, function(store) { return store.classType; }), function(store) {
           vm.classTypeValues.push({ label: store.className, value: store.classType });
         });
       });
