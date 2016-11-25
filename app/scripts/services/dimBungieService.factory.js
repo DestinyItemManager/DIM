@@ -560,7 +560,7 @@
                         type: item.type.toLowerCase(),
                         character: store.name
                       }));
-          const error = new Error($translate.instant('BungieService.ItemUniqueness'));
+          const error = new Error($translate.instant('BungieService.ItemUniquenessExplanation'));
           error.code = e.code;
           return $q.reject(error);
         }
