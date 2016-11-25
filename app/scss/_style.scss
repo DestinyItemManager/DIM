@@ -2141,6 +2141,33 @@ button.toast-close-button {
     }
   }
 
+  .farm-description {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    img {
+      height: 16px;
+      width: 16px;
+    }
+  }
+
+  #report-block {
+    width: 100%;
+
+    .farm-report {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      p {
+        text-align: center;
+      }
+    }
+  }
+
   .item-details {
     display: flex;
     flex-direction: row;

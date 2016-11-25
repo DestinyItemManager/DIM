@@ -4,13 +4,13 @@
   angular.module('dimApp')
     .factory('dimFarmingService', FarmingService);
 
-  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService', 'dimSettingsService'];
+  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService', 'dimSettingsService', 'dimFarmingReportService'];
 
   /**
    * A service for "farming" items by moving them continuously off a character,
    * so that they don't go to the Postmaster.
    */
-  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService, dimSettingsService) {
+  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService, dimSettingsService, dimFarmingReportService) {
     var intervalId;
     var cancelReloadListener;
     var glimmerHashes = [
@@ -164,7 +164,9 @@
       },
       start: function(store) {
         var self = this;
+        dimFarmingReportService.start();
         function farm() {
+          dimFarmingReportService.farm();
           var consolidateHashes = [
             417308266, // three of coins
             211861343, // heavy ammo synth
@@ -223,6 +225,7 @@
         if (cancelReloadListener) {
           cancelReloadListener();
         }
+        dimFarmingReportService.stop();
         this.active = false;
       }
     };
