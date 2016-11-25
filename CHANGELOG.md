@@ -1,4 +1,5 @@
 # Next
+
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
 * Added detailed information to the Trials of Osiris popup card.
@@ -11,9 +12,9 @@
 * About and Support pages are now translatable.
 * Improved error handling and error messages.
 * Vendors are collapsible.
-* Fix DIM hanging when you try to look at a record book or a complicated bounty or quest.
 * All vendor items (including duplicates with different rolls) will now show up.
-* Added more french translations.
+* Added more translations.
+* If you have more than one Memory of Felwinter, they are all excluded from loadout builder.
 
 # 3.13.0
 
