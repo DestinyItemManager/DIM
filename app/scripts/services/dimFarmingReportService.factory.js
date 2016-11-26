@@ -122,6 +122,7 @@
             hash: hash
           }));
           if (ret) {
+            ret.farmReport = true;
             ret.amount = 0;
             dimStoreService.getStores().forEach(function(s) {
               ret.amount += s.amountOfItem(ret);
