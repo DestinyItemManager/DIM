@@ -103,6 +103,9 @@ module.exports = function(grunt) {
           from: '$DIM_FLAVOR',
           to: 'release'
         }, {
+          from: '$DIM_CHANGELOG'
+          to: 'https://github.com/DestinyItemManager/DIM/blob/master/CHANGELOG.md'
+        }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
         }]
@@ -124,6 +127,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_FLAVOR',
           to: 'beta'
+        }, {
+          from: '$DIM_CHANGELOG'
+          to: 'https://github.com/DestinyItemManager/DIM/blob/dev/CHANGELOG.md#next'          
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
