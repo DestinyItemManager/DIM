@@ -66,7 +66,7 @@
             Stop: "Stop",
             Report: {
               Summary: "Farming Summary",
-              Elapsed: "Elapsed: {{time}}" }},
+              Elapsed: "Elapsed: {{time}}" } },
           Header: {
             About: "About",
             Filters: "Filters",
