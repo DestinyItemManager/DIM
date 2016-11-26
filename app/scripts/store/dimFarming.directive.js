@@ -32,8 +32,8 @@
           </span>
           <span ng-show="vm.showReport" id="report-block">
             <div class="farm-description">              
-              <p>Farming Summary</p>
-              <p>Elapsed: {{vm.reportService.elapsed}}</p>  
+              <p translate="FarmingMode.Report.Summary"></p>
+              <p translate="FarmingMode.Report.Elapsed" translate-values="{time: vm.reportService.elapsed}"></p>  
               <p>{{vm.reportService.glimmer}} <img src="/images/glimmer.png"> / {{vm.reportService.marks}} <img src="/images/legendaryMarks.png"></p>
               <i class="fa fa-list-alt fa-2x link" ng-click="vm.toggleReport()"></i>
             </div>

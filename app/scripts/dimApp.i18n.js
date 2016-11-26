@@ -63,7 +63,10 @@
               MakeRoom: "Make room to pick up items by moving equipment",
               Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams." },
             Quickmove: "Quick Move",
-            Stop: "Stop" },
+            Stop: "Stop",
+            Report: {
+              Summary: "Farming Summary",
+              Elapsed: "Elapsed: {{time}}" }},
           Header: {
             About: "About",
             Filters: "Filters",
