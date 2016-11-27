@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('dimApp')
-    .directive('dimLoadoutPopup', LoadoutPopup);
+    .directive('dimLoadoutPopup', LoadoutPopup, '$translate');
 
   LoadoutPopup.$inject = [];
 
@@ -205,7 +205,7 @@
         return value;
       };
 
-      var loadout = optimalLoadout(applicableItems, bestItemFn, 'Item Leveling');
+      var loadout = optimalLoadout(applicableItems, bestItemFn, $translate.instant('Loadouts.ItemLeveling'));
       vm.applyLoadout(loadout, $event);
     };
 
@@ -250,7 +250,7 @@
         return value;
       };
 
-      var loadout = optimalLoadout(applicableItems, bestItemFn, 'Maximize Light');
+      var loadout = optimalLoadout(applicableItems, bestItemFn, $translate.instant('Loadouts.MaximizeLight'));
       if ($event) {
         vm.applyLoadout(loadout, $event);
       }
@@ -290,7 +290,7 @@
 
       var loadout = {
         classType: -1,
-        name: 'Gather Engrams',
+        name: $translate.instant('Loadouts.GatherEngrams'),
         items: finalItems
       };
       vm.applyLoadout(loadout, $event);
