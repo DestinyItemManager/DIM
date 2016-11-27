@@ -130,8 +130,8 @@
       farm: function() {
         var self = this;
 
-        self.glimmer = Math.max(dimStoreService.getVault().glimmer - self.baseGlimmer, 0) + 10000;
-        self.marks = Math.max(dimStoreService.getVault().legendaryMarks - self.baseMarks, 0) + 130;
+        self.glimmer = Math.max(dimStoreService.getVault().glimmer - self.baseGlimmer, 0);
+        self.marks = Math.max(dimStoreService.getVault().legendaryMarks - self.baseMarks, 0);
 
         self.report = reportHashes.map(function(hash) {
           var ret = angular.copy(dimItemService.getItem({
@@ -144,26 +144,23 @@
               ret.amount += s.amountOfItem(ret);
             });
             ret.amount -= self.baseReport[hash];
-            ret.amount += 20;
           }
           return ret;
         }).filter((item) => (!_.isUndefined(item) && (item.amount > 0)));
 
-        var vendorCount = 0;
         self.vendors = [];
         const store = dimStoreService.getStore(self.store.id);
         store.progression.progressions.forEach(function(rep) {
           if (rep.order && (rep.order >= 0)) {
             // NOTE: there's a bug if farming across the weekly reset. Do we care?
             const rankedUp = true;// rep.level > self.baseVendors[rep.hash].level;
-            const gain = rep.weeklyProgress - self.baseVendors[rep.hash].xp + (vendorCount < 3 ? 50 : 0);
+            const gain = rep.weeklyProgress - self.baseVendors[rep.hash].xp;
             if (gain > 0) {
               const item = angular.copy(rep);
               item.xpGain = gain;
               item.rankedUp = rankedUp;
               self.vendors.push(item);
             }
-            vendorCount++;
           }
         });
       },
