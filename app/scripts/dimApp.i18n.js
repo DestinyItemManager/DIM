@@ -269,6 +269,7 @@
             Weapons: "Armi"
           },
           BungieService: {
+            DevVersion: "Stai eseguendo una versione di DIM in via di sviluppo? Devi registrare la tua estensione per chrome con bungie.net.",
             Down: "Bungie.net è offline.",
             Difficulties: "Al momento le API di Bungie hanno dei problemi.",
             NetworkError: "Errore Network - {{status}} {{statusText}}",
@@ -277,6 +278,7 @@
             Maintenance: "I server di Bungie.net sono offline per manutenzione.",
             NoAccount: "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
             NoAccountForPlatform: "Impossibile trovare un account Destiny per te su {{platform}}.",
+            NoCookies: "Non è stato trovato nessun cookie.",
             NotConnected: "Potresti non essere connesso a internet.",
             Twitter: "Ottieni informazioni sullo stato del servizio su",
             ItemUniqueness: "Unicità dell elemento",
