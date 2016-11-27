@@ -44,7 +44,6 @@
             <div class="farm-report">
               <p>
                 <dim-farm-reputation ng-repeat="item in vm.reportService.vendors track by $index" item-data="item"></dim-farm-reputation>
-                <dim-farm-reputation ng-repeat="item in vm.reportService.vendors track by $index" item-data="item"></dim-farm-reputation>
                 <dim-farm-item ng-repeat="item in vm.reportService.report track by $index" item-data="item"></dim-farm-item>
               </p>
             </div>
