@@ -153,7 +153,7 @@
         store.progression.progressions.forEach(function(rep) {
           if (rep.order && (rep.order >= 0)) {
             // NOTE: there's a bug if farming across the weekly reset. Do we care?
-            const rankedUp = true;// rep.level > self.baseVendors[rep.hash].level;
+            const rankedUp = rep.level > self.baseVendors[rep.hash].level;
             const gain = rep.weeklyProgress - self.baseVendors[rep.hash].xp;
             if (gain > 0) {
               const item = angular.copy(rep);
