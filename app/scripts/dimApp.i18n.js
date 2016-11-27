@@ -324,7 +324,7 @@
           Header: {
             About: "Chi siamo",
             Filters: "Filtri",
-            FilterHelp: "Cerca oggetti/perk o is:arco",
+            FilterHelp: "Cerca oggetti/perk o is:arc",
             MaterialsExchange: "Livelli fazione disponibili",
             Refresh: "Aggiorna i Dati di Destiny",
             SupportDIM: "Supporta DIM"
