@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('dimApp')
-    .directive('dimLoadoutPopup', LoadoutPopup, '$translate');
+    .directive('dimLoadoutPopup', LoadoutPopup);
 
   LoadoutPopup.$inject = [];
 
