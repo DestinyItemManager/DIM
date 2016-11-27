@@ -22,7 +22,6 @@
       1932910919, // network keys
       3446457162, // resupply codes
       937555249, // motes of light
-      1738186005, // motes of light
       1542293174, // armor materials
       1898539128, // weapon parts
       434054402, // exotic primary engram
@@ -69,8 +68,11 @@
     }
 
     return {
-      start: function() {
+      store: null,
+      start: function(store) {
         var self = this;
+
+        self.store = store;
 
         self.elapsed = "00:00:00";
         startTime = new Date();
@@ -95,8 +97,17 @@
           self.elapsed = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
         }, 1000);
 
+        // set up all the starting values
         self.baseGlimmer = dimStoreService.getVault().glimmer;
         self.baseMarks = dimStoreService.getVault().legendaryMarks;
+
+        self.baseVendors = {};
+        self.store.progression.progressions.forEach(function(rep) {
+          if (rep.order && (rep.order >= 0)) {
+            self.baseVendors[rep.hash] = {level: rep.level, xp: rep.weeklyProgress};
+          }
+        });
+
         self.baseReport = {};
         reportHashes.forEach(function(hash) {
           self.baseReport[hash] = 0;
@@ -110,12 +121,17 @@
           }
         });
 
-        self.report = [];
+        // the items we'll be showing in the UI
         self.glimmer = self.baseGlimmer;
         self.marks = self.baseMarks;
+        self.report = [];
+        self.vendors = [];
       },
       farm: function() {
         var self = this;
+
+        self.glimmer = Math.max(dimStoreService.getVault().glimmer - self.baseGlimmer, 0) + 10000;
+        self.marks = Math.max(dimStoreService.getVault().legendaryMarks - self.baseMarks, 0) + 130;
 
         self.report = reportHashes.map(function(hash) {
           var ret = angular.copy(dimItemService.getItem({
@@ -128,12 +144,28 @@
               ret.amount += s.amountOfItem(ret);
             });
             ret.amount -= self.baseReport[hash];
+            ret.amount += 20;
           }
           return ret;
         }).filter((item) => (!_.isUndefined(item) && (item.amount > 0)));
 
-        self.glimmer = Math.max(dimStoreService.getVault().glimmer - self.baseGlimmer, 0);
-        self.marks = Math.max(dimStoreService.getVault().legendaryMarks - self.baseMarks, 0);
+        var vendorCount = 0;
+        self.vendors = [];
+        const store = dimStoreService.getStore(self.store.id);
+        store.progression.progressions.forEach(function(rep) {
+          if (rep.order && (rep.order >= 0)) {
+            // NOTE: there's a bug if farming across the weekly reset. Do we care?
+            const rankedUp = true;// rep.level > self.baseVendors[rep.hash].level;
+            const gain = rep.weeklyProgress - self.baseVendors[rep.hash].xp + (vendorCount < 3 ? 50 : 0);
+            if (gain > 0) {
+              let item = angular.copy(rep);
+              item.xpGain = gain;
+              item.rankedUp = rankedUp;
+              self.vendors.push(item);
+            }
+            vendorCount++;
+          }
+        });
       },
       stop: function() {
         if (intervalId) {

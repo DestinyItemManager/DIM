@@ -33,4 +33,24 @@
   function dimItemFarmCtrl() {
         // nothing to do here...only needed for bindToController
   }
+
+  var FarmReputation = {
+    controllerAs: 'vm',
+    bindings: {
+      item: '<itemData'
+    },
+    template: `
+      <div class="unequipped" ng-class="{'farm-rank-up': vm.item.rankedUp}">
+        <div class="item" title="{{vm.item.faction.factionName}}\n{{vm.item.progressToNextLevel}}/{{vm.item.nextLevelAt}}\n{{\'Level\' | translate}}: {{vm.item.level}}">
+          <svg width="48" height="48">
+            <image xlink:href="" ng-attr-xlink:href="{{vm.item.faction.factionIcon | bungieIcon}}" width="48" height="48" />
+            <polygon stroke-dasharray="121.622368" ng-if="vm.item.progressToNextLevel > 0" style="stroke-dashoffset:{{121.622368-(121.622368*vm.item.progressToNextLevel/vm.item.nextLevelAt)}}" fill-opacity="0" stroke="#FFF" stroke-width="3" points="24,2.5 45.5,24 24,45.5 2.5,24" stroke-linecap="butt"/>
+          </svg>
+          <div class="item-stat item-faction">+{{vm.item.xpGain}}</div>
+        </div>
+      </div>`
+  };
+
+  angular.module('dimApp')
+    .component('dimFarmReputation', FarmReputation);
 })();

@@ -164,7 +164,7 @@
       },
       start: function(store) {
         var self = this;
-        dimFarmingReportService.start();
+        dimFarmingReportService.start(store);
         function farm() {
           dimFarmingReportService.farm();
           var consolidateHashes = [

@@ -34,11 +34,19 @@
             <div class="farm-description">              
               <p translate="FarmingMode.Report.Summary"></p>
               <p translate="FarmingMode.Report.Elapsed" translate-values="{time: vm.reportService.elapsed}"></p>  
-              <p>{{vm.reportService.glimmer}} <img src="/images/glimmer.png"> / {{vm.reportService.marks}} <img src="/images/legendaryMarks.png"></p>
+              <p>
+                <div>{{vm.reportService.glimmer}} <img src="/images/glimmer.png"></div>
+                <div>/</div>
+                <div>{{vm.reportService.marks}} <img src="/images/legendaryMarks.png"></div>
+              </p>
               <i class="fa fa-list-alt fa-2x link" ng-click="vm.toggleReport()"></i>
             </div>
             <div class="farm-report">
-              <p><dim-farm-item ng-repeat="item in vm.reportService.report track by $index" item-data="item"></dim-farm-item></p>
+              <p>
+                <dim-farm-reputation ng-repeat="item in vm.reportService.vendors track by $index" item-data="item"></dim-farm-reputation>
+                <dim-farm-reputation ng-repeat="item in vm.reportService.vendors track by $index" item-data="item"></dim-farm-reputation>
+                <dim-farm-item ng-repeat="item in vm.reportService.report track by $index" item-data="item"></dim-farm-item>
+              </p>
             </div>
           </span>
           <span><button ng-click="vm.stop($event)" translate="FarmingMode.Stop"></button></span>

@@ -2136,6 +2136,7 @@ button.toast-close-button {
     text-align: center;
     font-size: 1.5em;
     transition: .3s background-color;
+    margin-left: 1em;
     &:hover, &:active {
       background-color: rgba(232, 165, 52, .8);
     }
@@ -2157,13 +2158,17 @@ button.toast-close-button {
     width: 100%;
 
     .farm-report {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
       margin: 0;
       p {
-        text-align: center;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .farm-rank-up {
+        background-color: rgba(232, 165, 52, .8);
       }
     }
   }
