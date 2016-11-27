@@ -104,7 +104,7 @@
         self.baseVendors = {};
         self.store.progression.progressions.forEach(function(rep) {
           if (rep.order && (rep.order >= 0)) {
-            self.baseVendors[rep.hash] = {level: rep.level, xp: rep.weeklyProgress};
+            self.baseVendors[rep.hash] = { level: rep.level, xp: rep.weeklyProgress };
           }
         });
 
@@ -158,7 +158,7 @@
             const rankedUp = true;// rep.level > self.baseVendors[rep.hash].level;
             const gain = rep.weeklyProgress - self.baseVendors[rep.hash].xp + (vendorCount < 3 ? 50 : 0);
             if (gain > 0) {
-              let item = angular.copy(rep);
+              const item = angular.copy(rep);
               item.xpGain = gain;
               item.rankedUp = rankedUp;
               self.vendors.push(item);
