@@ -45,8 +45,8 @@
             Compare: "Compare",
             Close: "Close",
             Error: {
-              Class: "Can not compare this item as it is not for a {{class}}.",
-              Archetype: "Can not compare this item as it is not a {{type}}."
+              Class: "Cannot compare this item as it is not for a {{class}}.",
+              Archetype: "Cannot compare this item as it is not a {{type}}."
             },
             Splits: "Compare similar splits ({{quantity}})"
           },
@@ -85,7 +85,8 @@
           },
           Help: {
             BackToDIM: "Back to DIM",
-            Drag: "Hold shift or pause over drop zone to transfer a partial stack."
+            Drag: "Hold shift or pause over drop zone to transfer a partial stack.",
+            UpgradeChrome: "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM."
           },
           Hotkey: {
             StartSearch: "Start a search",
