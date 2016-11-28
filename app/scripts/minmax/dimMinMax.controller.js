@@ -9,6 +9,7 @@
   function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
+    vm.lang = dimSettingsService.language;
 
     if (dimStoreService.getStores().length === 0) {
       $state.go('inventory');
