@@ -96,8 +96,9 @@
             ClearNewItems: "Clear new items"
           },
           Infusion: {
-            IFF: "Infusion Fuel Finder",
+            Infusion: "Infusion Fuel Finder",
             BringGear: "Will bring the gear to",
+            Calc: "Infusion calculator",
             InfuseItems: "Select item to infuse with:",
             LockedItems: "Include 'locked' items",
             NoItems: "No infusable items available.",
