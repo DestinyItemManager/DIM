@@ -394,7 +394,7 @@
             Missing2: "Manca un raro, un leggendario o un esotico per costruire un set completo"
           },
           Loadouts: {
-            Loadouts: "Loadout",
+            Loadouts: "Loadouts",
             Before: "Prima '{{name}}'",
             Create: "Creare Loadout",
             FromEquipped: "Equipaggiato",
