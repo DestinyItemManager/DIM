@@ -85,8 +85,7 @@
           },
           Help: {
             BackToDIM: "Back to DIM",
-            Drag: "Hold shift or pause over drop zone to transfer a partial stack.",
-            UpgradeChrome: "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM."
+            Drag: "Hold shift or pause over drop zone to transfer a partial stack."
           },
           Hotkey: {
             StartSearch: "Start a search",
