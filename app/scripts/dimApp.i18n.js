@@ -95,6 +95,16 @@
             MarkItemAs: "Mark item as '{{tag}}'",
             ClearNewItems: "Clear new items"
           },
+          Infusion: {
+            IFF: "Infusion Fuel Finder",
+            BringGear: "Will bring the gear to",
+            InfuseItems: "Select item to infuse with:",
+            LockedItems: "Include 'locked' items",
+            NoItems: "No infusable items available.",
+            ShowItems: "Show infusable items across all characters and vault",
+            TransferItems: "Transfer items",
+            Using3: "using 3"
+          },
           LB: {
             LB: "Loadout Builder",
             ShowGear: "Show {{class}} gear",
