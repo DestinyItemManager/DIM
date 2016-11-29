@@ -77,22 +77,22 @@
         self.elapsed = "00:00:00";
         startTime = new Date();
         intervalId = $interval(function() {
-          var endTime = new Date();
-          var timeDiff = endTime - startTime;
+          const endTime = new Date();
+          let timeDiff = endTime - startTime;
 
-            // strip the milliseconds
+          // strip the milliseconds
           timeDiff /= 1000;
 
-            // get seconds
-          var seconds = Math.round(timeDiff % 60);
+          // get seconds
+          const seconds = Math.round(timeDiff % 60);
           timeDiff = Math.floor(timeDiff / 60);
 
-            // get minutes
-          var minutes = Math.round(timeDiff % 60);
+          // get minutes
+          const minutes = Math.round(timeDiff % 60);
           timeDiff = Math.floor(timeDiff / 60);
 
-            // get hours
-          var hours = Math.round(timeDiff % 24);
+          // get hours
+          const hours = Math.round(timeDiff % 24);
 
           self.elapsed = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
         }, 1000);
@@ -101,17 +101,17 @@
         self.baseGlimmer = dimStoreService.getVault().glimmer;
         self.baseMarks = dimStoreService.getVault().legendaryMarks;
 
-        self.baseVendors = {};
+        self.baseRep = {};
         self.store.progression.progressions.forEach(function(rep) {
           if (rep.order && (rep.order >= 0)) {
-            self.baseVendors[rep.hash] = { level: rep.level, xp: rep.weeklyProgress };
+            self.baseRep[rep.hash] = { level: rep.level, xp: rep.weeklyProgress };
           }
         });
 
         self.baseReport = {};
         reportHashes.forEach(function(hash) {
           self.baseReport[hash] = 0;
-          var ret = angular.copy(dimItemService.getItem({
+          const ret = angular.copy(dimItemService.getItem({
             hash: hash
           }));
           if (ret) {
@@ -125,7 +125,8 @@
         self.glimmer = self.baseGlimmer;
         self.marks = self.baseMarks;
         self.report = [];
-        self.vendors = [];
+        self.reportCount = 0;
+        self.rep = [];
       },
       farm: function() {
         var self = this;
@@ -134,7 +135,7 @@
         self.marks = Math.max(dimStoreService.getVault().legendaryMarks - self.baseMarks, 0);
 
         self.report = reportHashes.map(function(hash) {
-          var ret = angular.copy(dimItemService.getItem({
+          const ret = angular.copy(dimItemService.getItem({
             hash: hash
           }));
           if (ret) {
@@ -148,18 +149,20 @@
           return ret;
         }).filter((item) => (!_.isUndefined(item) && (item.amount > 0)));
 
-        self.vendors = [];
+        self.reportCount = _.reduce(self.report, (memo, item) => (memo + item.amount), 0);
+
+        self.rep = [];
         const store = dimStoreService.getStore(self.store.id);
         store.progression.progressions.forEach(function(rep) {
           if (rep.order && (rep.order >= 0)) {
             // NOTE: there's a bug if farming across the weekly reset. Do we care?
-            const rankedUp = rep.level > self.baseVendors[rep.hash].level;
-            const gain = rep.weeklyProgress - self.baseVendors[rep.hash].xp;
+            const rankedUp = rep.level > self.baseRep[rep.hash].level || true;
+            const gain = rep.weeklyProgress - self.baseRep[rep.hash].xp;
             if (gain > 0) {
               const item = angular.copy(rep);
               item.xpGain = gain;
               item.rankedUp = rankedUp;
-              self.vendors.push(item);
+              self.rep.push(item);
             }
           }
         });
@@ -167,6 +170,15 @@
       stop: function() {
         if (intervalId) {
           $interval.cancel(intervalId);
+        }
+      },
+      repClicked: function(rep) {
+        var self = this;
+
+        // clear the rank up notification and update the base's level
+        if (rep.rankedUp) {
+          self.baseRep[rep.hash].level = rep.level;
+          rep.rankedUp = false;
         }
       }
     };

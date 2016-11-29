@@ -2142,33 +2142,63 @@ button.toast-close-button {
     }
   }
 
-  .farm-description {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
-    img {
-      height: 16px;
-      width: 16px;
-    }
-  }
-
-  #report-block {
+  #farm-report {
     width: 100%;
+    .farm-report-desc {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      img {
+        height: 16px;
+        width: 16px;
+      }
+    }
 
-    .farm-report {
+    .farm-report-block {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
       margin: 0;
-      p {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
+
+      .farm-report-rep {
+        flex: 1;
+        p {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+
+          .unequipped {
+            margin: 5px;
+            flex: 0;
+          }
+
+          .farm-rank-up {
+            box-shadow:0px 0px 0px 2px #DDD inset;
+            cursor: pointer;
+            background-color: rgba(232, 165, 52, .8);
+          }
+        }
       }
 
-      .farm-rank-up {
-        background-color: rgba(232, 165, 52, .8);
+      .farm-report-items {
+        flex: 3;
+        p {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+
+          .item {
+            margin-bottom: 2px;
+          }
+        }
       }
     }
   }
@@ -2190,6 +2220,7 @@ button.toast-close-button {
   .engram-icon {
     position: relative;
     margin-right: 1em;
+    cursor: pointer;
   }
 
   .item-count {

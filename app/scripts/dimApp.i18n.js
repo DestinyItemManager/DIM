@@ -65,7 +65,9 @@
             Quickmove: "Quick Move",
             Stop: "Stop",
             Report: {
-              Summary: "Farming Summary",
+              Show: "Show the detailed farming report screen",
+              Hide: "Return to the farming summary screen",
+              Summary: "Farming Report",
               Elapsed: "Elapsed: {{time}}" } },
           Header: {
             About: "About",
