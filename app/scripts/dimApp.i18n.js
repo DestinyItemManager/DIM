@@ -145,6 +145,7 @@
             Missing2: "Missing rare, legendary, or exotic pieces to build a full set!"
           },
           Loadouts: {
+            Any: "Any",
             Loadouts: "Loadouts",
             Before: "Before '{{name}}'",
             Create: "Create Loadout",
@@ -393,6 +394,7 @@
             Missing2: "Manca un raro, un leggendario o un esotico per costruire un set completo"
           },
           Loadouts: {
+            Any: "Qualsiasi",
             Loadouts: "Loadouts",
             Before: "Prima '{{name}}'",
             Create: "Creare Loadout",
@@ -639,6 +641,7 @@
             Missing2: "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!"
           },
           Loadouts: {
+            Any: "Irgendein",
             Loadouts: "Loadouts",
             Before: "Zurück zu '{{name}}'",
             Create: "Loadout erstellen",
@@ -861,6 +864,7 @@
             Missing2: "Pièces rares, légendaires ou éxotiques manquantes pour construire un set complet!"
           },
           Loadouts: {
+            Any: "Tout",
             Loadouts: "Loadouts",
             Before: "Avant '{{name}}'",
             Create: "Créer Loadout",
@@ -1094,6 +1098,7 @@
             Missing2: "Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!"
           },
           Loadouts: {
+            Any: "Alguna",
             Loadouts: "Equipos",
             Before: "Antes '{{name}}'",
             Create: "Crear Equipo",
@@ -1388,6 +1393,7 @@
             Missing2: "Faltam itens raros, lendários ou exóticos para construir um set completo!"
           },
           Loadouts: {
+            Any: "Qualquer",
             Loadouts: "Loadouts",
             Before: "Antes '{{name}}'",
             Create: "Criar set",
