@@ -161,7 +161,7 @@
             SaveAsNew: "Save As New",
             Cancel: "Cancel",
             ItemsWithIcon: "Items with this icon will be equipped.",
-            ClickToEquip: "Click on an item toggle to equip.",
+            ClickToEquip: "Click on an item to toggle equip.",
             AppliedAuto: "Automatic Loadout Builder",
             Applied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
             Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
