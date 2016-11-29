@@ -37,11 +37,8 @@
             ItemUniquenessExplanation: "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one."
           },
           Compare: {
-            All: {
-              Singular: "Compare all {{type}}s ({{quantity}})",
-              Plural: "Compare all {{type}} ({{quantity}})"
-            },
-            Archetype: "Compare in archetype ({{quantity}})",
+            All: "{{type}} comparisons ({{quantity}})",
+            Archetype: "Archetype comparisons ({{quantity}})",
             Compare: "Compare",
             Close: "Close",
             Error: {
@@ -297,11 +294,8 @@
             ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
           },
           Compare: {
-            All: {
-              Singular: "Confronta tutti i {{type}} ({{quantity}})",
-              Plural: "Confronta tutti i {{type}} ({{quantity}})"
-            },
-            Archetype: "Confronta per archetipo ({{quantity}})",
+            All: "Confronti {{type}} ({{quantity}})",
+            Archetype: "Confronti archetipo ({{quantity}})",
             Compare: "Confronta",
             Close: "Chiudi",
             Error: {
@@ -544,11 +538,8 @@
             ItemUniquenessExplanation: "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
           },
           Compare: {
-            All: {
-              Singular: "Vergleiche alle {{type}} ({{quantity}})",
-              Plural: "Vergleiche alle {{type}} ({{quantity}})"
-            },
-            Archetype: "Vergleiche im Urzustand ({{quantity}})",
+            All: "{{type}} vergleiche ({{quantity}})",
+            Archetype: "Urzustand vergleiche ({{quantity}})",
             Compare: "Vergleiche",
             Close: "Schließen",
             Error: {
@@ -1001,11 +992,8 @@
             ItemUniquenessExplanation: "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno."
           },
           Compare: {
-            All: {
-              Singular: "Comparar todos los {{type}}s ({{quantity}})",
-              Plural: "Comparar todo {{type}} ({{quantity}})"
-            },
-            Archetype: "Comparar como arquetipo ({{quantity}})",
+            All: "Comparaciones de {{type}} ({{quantity}})",
+            Archetype: "Comparaciones de arquetipo ({{quantity}})",
             Compare: "Comparar",
             Close: "Cerrar",
             Error: {
@@ -1296,11 +1284,8 @@
             ItemUniquenessExplanation: "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo."
           },
           Compare: {
-            All: {
-              Singular: "Comparar qualquer {{type}} ({{quantity}})",
-              Plural: "Comparar qualquer {{type}} ({{quantity}})"
-            },
-            Archetype: "Comparar todos do arquétipo ({{quantity}})",
+            All: "Comparações de {{type}} ({{quantity}})",
+            Archetype: "Comparações de arquétipo ({{quantity}})",
             Compare: "Comparar",
             Close: "Fechar",
             Error: {
