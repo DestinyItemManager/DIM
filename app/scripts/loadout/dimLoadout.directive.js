@@ -3,9 +3,9 @@
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService'];
+  Loadout.$inject = ['dimLoadoutService', '$translate'];
 
-  function Loadout(dimLoadoutService) {
+  function Loadout(dimLoadoutService, $translate) {
     return {
       controller: LoadoutCtrl,
       controllerAs: 'vm',
@@ -56,19 +56,12 @@
     function Link(scope) {
       var vm = scope.vm;
 
-      vm.classTypeValues = [{
-        label: 'Any',
-        value: -1
-      }, {
-        label: 'Warlock',
-        value: 0
-      }, {
-        label: 'Titan',
-        value: 1
-      }, {
-        label: 'Hunter',
-        value: 2
-      }];
+      scope.$on('dim-stores-updated', function(evt, data) {
+        vm.classTypeValues = [{ label: $translate.instant('Loadouts.Any'), value: -1 }];
+        _.each(_.uniq(_.reject(data.stores, 'isVault'), false, function(store) { return store.classType; }), function(store) {
+          vm.classTypeValues.push({ label: store.className, value: store.classType });
+        });
+      });
 
       scope.$on('dim-create-new-loadout', function() {
         vm.show = true;
