@@ -294,8 +294,8 @@
             ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
           },
           Compare: {
-            All: "Confronti {{type}} ({{quantity}})",
-            Archetype: "Confronti archetipo ({{quantity}})",
+            All: "Confronta ogni {{type}} ({{quantity}})",
+            Archetype: "Confronta per archetipo ({{quantity}})",
             Compare: "Confronta",
             Close: "Chiudi",
             Error: {
