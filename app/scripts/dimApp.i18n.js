@@ -524,6 +524,7 @@
             Weapons: "Waffen"
           },
           BungieService: {
+            DevVersion: "Benutzt du eine Entwickler-Version von DIM? Du musst die Chrome Erweiterung auf bungie.net registrieren.",
             Down: "Bungie.net ist nicht erreichbar.",
             Difficulties: "Die Bungie API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
             NetworkError: "Netzwerk Fehler - {{status}} {{statusText}}",
@@ -532,14 +533,15 @@
             Maintenance: "Bungie.net Server werden zur Zeit gewartet.",
             NoAccount: "Es wurde kein Destiny Account für diese Platform gefunden. Hast du die richtige Platform gewählt?",
             NoAccountForPlatform: "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
+            NoCookies: "Keine Cookies gefunden.",
             NotConnected: "Du bist eventuell nicht mit dem Internet verbunden.",
             Twitter: "Bekomme Statusupdates auf",
             ItemUniqueness: "Item Einzigartigkeit",
             ItemUniquenessExplanation: "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
           },
           Compare: {
-            All: "{{type}} vergleiche ({{quantity}})",
-            Archetype: "Urzustand vergleiche ({{quantity}})",
+            All: "{{type}} Vergleich ({{quantity}})",
+            Archetype: "Vergleiche im Urzustand ({{quantity}})",
             Compare: "Vergleiche",
             Close: "Schließen",
             Error: {
@@ -558,9 +560,9 @@
             View: "Zeige Item Debug Info"
           },
           FarmingMode: {
-            Configuration: "Konfiguration",
-            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
             FarmingMode: "Engramme zum Tresor",
+            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
+            Configuration: "Konfiguration",
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
               Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter."
@@ -586,11 +588,22 @@
             Drag: "Halte Shift oder pausiere über der Drop-Zone, um einen Teilstapel zu übertragen"
           },
           Hotkey: {
-            ClearNewItems: "Neue Elemente löschen",
-            MarkItemAs: "Markiere Element als '{{tag}}'",
-            RefreshInventory: "Aktualisiere Inventar",
             StartSearch: "Starte eine Suche",
-            ToggleDetails: "Schalter für vollständige Artikeldetails"
+            RefreshInventory: "Aktualisiere Inventar",
+            ToggleDetails: "Schalter für vollständige Artikeldetails",
+            MarkItemAs: "Markiere Element als '{{tag}}'",
+            ClearNewItems: "Neue Elemente löschen"
+          },
+          Infusion: {
+            Infusion: "Infusion Fuel Finder",
+            BringGear: "Bringt die Ausrüstung zu",
+            Calc: "Infusionsrechner",
+            InfuseItems: "Element auswählen zum Infundieren mit:",
+            LockedItems: "Beziehe 'gesperrte' Items ein",
+            NoItems: "Keine infundierbaren Items verfügbar.",
+            ShowItems: "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
+            TransferItems: "Übertrage Items",
+            Using3: "verwendet 3"
           },
           LB: {
             LB: "Loadout Builder",
@@ -667,8 +680,8 @@
             BungieDown: "Bungie.net hat möglicherweise Probleme.",
             Load: "Lade gespeicherte Daten",
             LoadCharInv: "Lade Destiny Charakter und Inventar",
-            Unzip: "Entpacke neueste Daten",
-            Save: "Speichere neueste Daten"
+            Save: "Speichere neueste Daten",
+            Unzip: "Entpacke neueste Daten"
           },
           MaterialsExchange: {
             MaterialsExchange: "Materialaustausch",
@@ -721,18 +734,21 @@
             DIMPopupsReset: "Zeige zuvor versteckte Info Tipps"
           },
           Stats: {
-            Intellect: "Intellekt",
             Discipline: "Disziplin",
+            Intellect: "Intellekt",
             NoBonus: "Kein Bonus",
+            OfMaxRoll: "{{range}} des max. Rolls",
+            PercentHelp: "Klicke für mehr Informationen über Stats Qualitäten.",
+            Quality: "Stats Qualität",
             Strength: "Stärke",
             TierProgress: "{{progress}} für {{tier}}"
           },
           Tags: {
             TagItem: "Item taggen",
             Favorite: "Favorit",
-            Keep: "Behalten",
             Junk: "Trödel",
-            Infuse: "Infundieren"
+            Infuse: "Infundieren",
+            Keep: "Behalten"
           },
           Vendors: {
             Vendors: "Händler",
