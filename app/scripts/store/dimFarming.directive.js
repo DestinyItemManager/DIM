@@ -30,7 +30,7 @@
             <div class="farm-report-desc">
               <i class="fa fa-arrow-circle-left fa-2x link" translate-attr="{title: 'FarmingMode.Report.Hide'}" title="FarmingMode.Report.Hide" ng-click="vm.toggleReport()"></i>
               <p translate="FarmingMode.Report.Summary"></p>
-              <p translate="FarmingMode.Report.Elapsed" translate-values="{time: vm.reportService.elapsed}"></p>  
+              <p><timer interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></p>
               <p>{{vm.reportService.glimmer}} <img src="/images/glimmer.png"></p>                
               <p>{{vm.reportService.marks}} <img src="/images/legendaryMarks.png"></p>              
             </div>

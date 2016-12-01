@@ -67,8 +67,7 @@
             Report: {
               Show: "Show the detailed farming report screen",
               Hide: "Return to the farming summary screen",
-              Summary: "Farming Report",
-              Elapsed: "Elapsed: {{time}}" } },
+              Summary: "Farming Report" } },
           Header: {
             About: "About",
             Filters: "Filters",

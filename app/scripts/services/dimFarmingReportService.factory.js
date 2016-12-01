@@ -4,14 +4,12 @@
   angular.module('dimApp')
     .factory('dimFarmingReportService', FarmingReportService);
 
-  FarmingReportService.$inject = ['dimItemService', 'dimStoreService', '$interval'];
+  FarmingReportService.$inject = ['dimItemService', 'dimStoreService'];
 
     /**
      * A service for tracking farming related things.
      */
-  function FarmingReportService(dimItemService, dimStoreService, $interval) {
-    var intervalId;
-    var startTime;
+  function FarmingReportService(dimItemService, dimStoreService) {
     var reportHashes = [
       269776572, // house banners
       3783295803, // ether seeds
@@ -63,39 +61,12 @@
       614056762 // skeleton key
     ];
 
-    function pad(val) {
-      return val > 9 ? val : "0" + val;
-    }
-
     return {
       store: null,
       start: function(store) {
         var self = this;
 
         self.store = store;
-
-        self.elapsed = "00:00:00";
-        startTime = new Date();
-        intervalId = $interval(function() {
-          const endTime = new Date();
-          let timeDiff = endTime - startTime;
-
-          // strip the milliseconds
-          timeDiff /= 1000;
-
-          // get seconds
-          const seconds = Math.round(timeDiff % 60);
-          timeDiff = Math.floor(timeDiff / 60);
-
-          // get minutes
-          const minutes = Math.round(timeDiff % 60);
-          timeDiff = Math.floor(timeDiff / 60);
-
-          // get hours
-          const hours = Math.round(timeDiff % 24);
-
-          self.elapsed = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
-        }, 1000);
 
         // set up all the starting values
         self.baseGlimmer = dimStoreService.getVault().glimmer;
@@ -168,9 +139,6 @@
         });
       },
       stop: function() {
-        if (intervalId) {
-          $interval.cancel(intervalId);
-        }
       },
       repClicked: function(rep) {
         var self = this;
