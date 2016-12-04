@@ -7,6 +7,7 @@
   BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', '$state', 'dimState', 'toaster', '$translate'];
 
   function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
+    localStorage.apiKey = 'a16976e9c1ec49c0b7673c10ce357393';
     var apiKey = localStorage.apiKey;
     /* eslint no-constant-condition: 0*/
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
@@ -21,54 +22,51 @@
       membershipPromise = null;
     });
 
-    // Don't open bungie tab more than once a minute
-    const openBungieNetTab = _.debounce(() => {
-      chrome.tabs.create({
-        url: 'https://bungie.net',
-        active: true
-      });
-    }, 60 * 1000, true);
-
-    $rootScope.$on('dim-no-token-found', function() {
-      window.location = "/login.html";
-      // debugger;
-    });
+    // $rootScope.$on('dim-no-token-found', function() {
+    //   window.location = "/login.html";
+    //   // debugger;
+    // });
 
 
-    function getRefreshToken() {
-      var authorization = null;
+    // function getRefreshToken() {
+    //   var authorization = null;
 
-      if (localStorage.authorization) {
-        try {
-          authorization = JSON.parse(localStorage.authorization);
-        } catch (e) {
-          authorization = null;
-        }
-      }
+    //   if (localStorage.authorization) {
+    //     try {
+    //       authorization = JSON.parse(localStorage.authorization);
+    //     } catch (e) {
+    //       authorization = null;
+    //     }
+    //   }
 
-      return $http({
-        method: 'POST',
-        url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
-        headers: {
-          'X-API-Key': localStorage.apiKey,
-        },
-        data: {
-          refreshToken: authorization.refreshToken.value
-        }
-      })
-      .then((response) => {
-        if (response.data.Response && response.data.Response.accessToken) {
-          authorization = {
-            accessToken: response.data.Response.accessToken,
-            refreshToken: response.data.Response.refreshToken,
-            inception: new Date(),
-            scope: response.data.Response.scope
-          };
+    //   return $http({
+    //     method: 'POST',
+    //     url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
+    //     headers: {
+    //       'X-API-Key': localStorage.apiKey,
+    //     },
+    //     data: {
+    //       refreshToken: authorization.refreshToken.value
+    //     }
+    //   })
+    //   .then((response) => {
+    //     if (response.data.Response && response.data.Response.accessToken) {
+    //       authorization = {
+    //         accessToken: response.data.Response.accessToken,
+    //         refreshToken: response.data.Response.refreshToken,
+    //         inception: new Date(),
+    //         scope: response.data.Response.scope
+    //       };
 
-          localStorage.authorization = JSON.stringify(authorization);
-        }
-      });
-    }
+    //       authorization.accessToken.name = 'access';
+    //       authorization.refreshToken = response.data.Response.refreshToken;
+    //       authorization.refreshToken.name = 'refresh';
+    //       authorization.refreshToken.inception = authorization.accessToken.inception = new Date();
+
+    //       localStorage.authorization = JSON.stringify(authorization);
+    //     }
+    //   });
+    // }
 
     var service = {
       getPlatforms: getPlatforms,
@@ -110,7 +108,6 @@
       if (errorCode === 36) {
         return $q.reject(new Error($translate.instant('BungieService.Throttled')));
       } else if (errorCode === 99) {
-        openBungieNetTab();
         return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
       } else if (errorCode === 5) {
         return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
@@ -168,25 +165,6 @@
       });
     }
 
-    function getAuthoriztion() {
-      // debugger;
-      if (localStorage.authorization) {
-        try {
-          var authorization = JSON.parse(localStorage.authorization);
-
-          if (authorization.accessToken) {
-            return 'Bearer ' + authorization.accessToken.value;
-          } else {
-            return '';
-          }
-        } catch (e) {
-          return '';
-        }
-      }
-
-      return '';
-    }
-
     /************************************************************************************************************************************/
 
     function getManifest() {
@@ -194,81 +172,14 @@
         method: 'GET',
         url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
         headers: {
-          'X-API-Key': apiKey,
-          Authorization: getAuthoriztion()
+          'X-API-Key': apiKey
         }
       })
       .then($http)
-      .then(hasAuthorization)
       .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response;
       });
-    }
-
-
-    /************************************************************************************************************************************/
-
-    // function getBnetCookies() {
-    //   return $q(function(resolve, reject) {
-    //     function getAllCallback(cookies) {
-    //       if (_.size(cookies) > 0) {
-    //         resolve(cookies);
-    //       } else {
-    //         reject(new Error('No cookies found.'));
-    //       }
-    //     }
-
-    //     try {
-    //       chrome.cookies.getAll({
-    //         domain: 'www.bungie.net'
-    //       }, getAllCallback);
-    //     } catch (e) {
-    //       reject("Missing cookies");
-    //     }
-    //   });
-    // }
-
-    /************************************************************************************************************************************/
-
-    // function getBungleToken() {
-    //   tokenPromise = tokenPromise || getBnetCookies()
-    //     .then(function(cookies) {
-    //       const cookie = _.find(cookies, function(cookie) {
-    //         return cookie.name === 'bungled';
-    //       });
-
-    //       if (cookie) {
-    //         return cookie.value;
-    //       } else {
-    //         openBungieNetTab();
-    //         throw new Error($translate.instant('BungieService.NotLoggedIn'));
-    //       }
-    //     })
-    //     .catch(function() {
-    //       tokenPromise = null;
-    //     });
-
-    //   return tokenPromise;
-    // }
-
-    function hasAuthorization(response) {
-      if (response.status === 200) {
-        if (response.data && response.data.ErrorCode === 99) {
-          if (localStorage.authorization) {
-            return $q.when(response);
-            // return getRefreshToken()
-            //   .then(() => {
-            //     return response;
-            //   });
-          } else {
-            $rootScope.$broadcast('dim-no-token-found');
-            return $q.reject("no-token");
-          }
-        }
-      }
-
-      return response;
     }
 
     /************************************************************************************************************************************/
@@ -276,19 +187,6 @@
     function getPlatforms() {
       platformPromise = platformPromise || $q.when(getBnetPlatformsRequest())
         .then($http)
-        .then(hasAuthorization)
-        .then((response) => {
-          if (response.data.ErrorCode === 99) {
-            if (localStorage.authorization) {
-              return getRefreshToken()
-                .then(() => {
-                  return response;
-                });
-            }
-          }
-
-          return response;
-        })
         .then(handleErrors, handleErrors)
         .catch(function(e) {
           showErrorToaster(e);
@@ -302,8 +200,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/User/GetBungieNetUser/',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -329,8 +226,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Stats/GetMembershipIdByDisplayName/' + platform.id + '/',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -364,7 +260,6 @@
           return getBnetCharactersRequest('', platform, membershipId);
         })
         .then($http)
-        .then(hasAuthorization)
         .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
 
@@ -375,8 +270,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/Tiger' + (platform.type === 1 ? 'Xbox' : 'PSN') + '/Account/' + membershipId + '/',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -414,7 +308,6 @@
       .then(function(request) {
         return $http(request);
       })
-      .then(hasAuthorization)
       .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response.data;
@@ -464,8 +357,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Inventory/?definitions=false',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -476,8 +368,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Vault/?definitions=false',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -499,7 +390,6 @@
 
           return $q.when(getGuardianInventoryRequest(token, platform, membershipId, character))
             .then($http)
-            .then(hasAuthorization)
             .then(handleErrors, handleErrors)
             .then(processPB);
         });
@@ -513,7 +403,6 @@
 
         var promise = $q.when(getDestinyVaultRequest(token, platform))
           .then($http)
-          .then(hasAuthorization)
           .then(handleErrors, handleErrors)
           .then(processPB);
 
@@ -532,7 +421,6 @@
 
         return $q.when(getGuardianProgressionRequest(token, platform, membershipId, character))
           .then($http)
-          .then(hasAuthorization)
           .then(handleErrors, handleErrors)
           .then(processPB);
       });
@@ -542,8 +430,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Progression/?definitions=false',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -565,7 +452,6 @@
 
         return $q.when(getCharacterAdvisorsRequest(token, platform, membershipId, character))
           .then($http)
-          .then(hasAuthorization)
           .then(handleErrors, handleErrors)
           .then(processPB);
       });
@@ -577,8 +463,7 @@
           method: 'GET',
           url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/Account/' + membershipId + '/Character/' + character.id + '/Advisors/V2/?definitions=false',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           withCredentials: true
         };
@@ -603,14 +488,12 @@
             method: 'GET',
             url: 'https://www.bungie.net/Platform/Destiny/' + platform.type + '/MyAccount/Character/' + character.id + '/Vendor/' + vendorHash + '/',
             headers: {
-              'X-API-Key': apiKey,
-              Authorization: getAuthoriztion()
+              'X-API-Key': apiKey
             },
             withCredentials: true
           };
         })
         .then($http)
-        .then(hasAuthorization)
         .then(handleErrors, handleErrors)
         .then((response) => response.data.Response.data);
     }
@@ -660,8 +543,7 @@
           method: 'POST',
           url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           data: {
             characterId: store.isVault ? item.owner : store.id,
@@ -704,8 +586,7 @@
           method: 'POST',
           url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           data: {
             characterId: item.owner,
@@ -743,8 +624,7 @@
             method: 'POST',
             url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
             headers: {
-              'X-API-Key': apiKey,
-              Authorization: getAuthoriztion()
+              'X-API-Key': apiKey
             },
             data: {
               characterId: store.id,
@@ -810,8 +690,7 @@
           method: 'POST',
           url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
           headers: {
-            'X-API-Key': apiKey,
-            Authorization: getAuthoriztion()
+            'X-API-Key': apiKey
           },
           data: {
             characterId: store.isVault ? item.owner : store.id,

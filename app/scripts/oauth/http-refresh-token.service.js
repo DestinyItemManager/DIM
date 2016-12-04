@@ -1,111 +1,115 @@
 (function() {
-  function HttpRefreshTokenService($q, $injector) {
-    var service = this;
+  function HttpRefreshTokenService($rootScope, $q, $injector, storage, OAuthService, OAuthTokenService) {
+    const service = this;
+    let cache = null;
+    const limiters = [/www\.bungie.net\/Platform\/User\/*/, /www\.bungie.net\/Platform\/Destiny\/*/];
 
-    var cache = {};
+    service.request = requestHandler;
+    service.response = responseHandler;
 
-    function getAuthorizationFromLS() {
-      var authorization = null;
+    function requestHandler(config) {
+      config.headers = config.headers || {};
 
-      if (localStorage.authorization) {
-        try {
-          authorization = JSON.parse(localStorage.authorization);
-        } catch (e) {
-          authorization = null;
+      const matched = limiters.findIndex((limiter) => {
+        return config.url.match(limiter);
+      });
+
+      if (matched >= 0) {
+        if (!config.headers.hasOwnProperty('Authorization')) {
+          if (OAuthService.isAuthenticated) {
+            let isValid = isTokenValid(OAuthTokenService.getAccessToken());
+
+            if (isValid) {
+              config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+            } else {
+              isValid = isTokenValid(OAuthTokenService.getRefreshToken());
+
+              if (isValid) {
+                if (!cache) {
+                  // var $http = $injector.get('$http');
+                  debugger;
+                  cache = OAuthService.refreshToken();
+                }
+
+                return cache.then(function(response) {
+                  config.headers.Authorization = 'Bearer ' + response.accessToken.value;
+
+                  return config;
+                })
+                .catch((error) => {
+                  OAuthTokenService.removeToken();
+                  $rootScope.$broadcast('dim-no-token-found');
+                });
+              } else {
+                OAuthTokenService.removeToken();
+                $rootScope.$broadcast('dim-no-token-found');
+              }
+            }
+          } else {
+            OAuthTokenService.removeToken();
+            $rootScope.$broadcast('dim-no-token-found');
+          }
         }
+
+        //  && OAuthTokenService.getAuthorizationHeader()) {
+        //   config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+        // }
       }
 
-      return authorization;
+      return config;
     }
 
-    service.request = (config) => {
-      return $q.when(config);
-    };
+    function isTokenValid(token) {
+      const expired = OAuthTokenService.hasTokenExpired(token);
+      const isReady = OAuthTokenService.isTokenReady(token);
 
-    service.requestError = (rejection) => {
-      return $q.reject(rejection);
-    };
+      return (!expired && isReady);
+    }
 
-    service.response = (response) => {
-      const limiters = [
-        /www\.bungie.net\/*/
-      ];
-
-      const matched = _.find(limiters, (limiter) => {
+    function responseHandler(response) {
+      const matched = limiters.findIndex((limiter) => {
         return response.config.url.match(limiter);
       });
 
-      if (matched && response.config.headers.Authorization) {
+      if ((matched >= 0) && response && response.data) {
         switch (response.data.ErrorCode) {
-        case 1:
-          {
-            // Do Nothing
-            break;
-          }
         case 99:
           {
-            const authorization = getAuthorizationFromLS();
+            if (OAuthTokenService.hasTokenExpired(OAuthTokenService.getAccessToken())) {
 
-            if (authorization) {
-              if (!cache[authorization.inception]) {
-                var $http = $injector.get('$http');
-
-                cache[authorization.inception] = $http({
-                  method: 'POST',
-                  url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
-                  headers: {
-                    'X-API-Key': localStorage.apiKey,
-                  },
-                  data: {
-                    refreshToken: authorization.refreshToken.value
-                  }
-                })
-                .then((refreshResponse) => {
-                  if (refreshResponse.data.ErrorCode === 1) {
-                    if (refreshResponse.data.Response && refreshResponse.data.Response.accessToken) {
-                      authorization.accessToken = refreshResponse.data.Response.accessToken;
-                      authorization.refreshToken = refreshResponse.data.Response.refreshToken;
-                      authorization.inception = new Date();
-                      authorization.scope = refreshResponse.data.Response.scope;
-
-                      localStorage.authorization = JSON.stringify(authorization);
-                    }
-                  } else {
-                    return $q.reject(response);
-                  }
-
-                  return response;
-                })
-                .then((response) => {
-                  response.config.headers.Authorization = 'Bearer ' + authorization.accessToken.value;
-                  return $http(response.config);
-                });
-              }
-
-              return cache[authorization.inception];
-            } else {
-              return $q.reject(response);
             }
-          }
-        case 2108:
-          {
-            break;
-          }
-        default:
-          {
+            // if (canRefreshAuthorization(response)) {
+            //   return refreshAuthorization(response);
+            // } else {
+            //   // Generate access token
+            // }
             break;
           }
         }
       }
-      return $q.when(response);
-    };
 
-    service.responseError = (rejection) => {
-      return $q.reject(rejection);
-    };
+      return $q.when(response);
+    }
+
+    function canRefreshAuthorization(response) {
+      const responseHasAuthorization = response.config && response.config.headers && response.config.headers.Authorization;
+
+      return responseHasAuthorization;
+    }
+
+    function replayRequest(config) {
+      const $http = $injector.get('$http');
+
+      return $http(config);
+    }
+
+    function refreshAuthorization(response) {
+          // response.config.headers.Authorization = 'Bearer ' + authorization.accessToken.value;
+          // return $injector.get('$http')(response.config);
+    }
   }
 
-  HttpRefreshTokenService.$inject = ['$q', '$injector'];
+  HttpRefreshTokenService.$inject = ['$rootScope', '$q', '$injector', 'localStorageService', 'OAuthService', 'OAuthTokenService'];
 
-  angular.module('dimApp').service('http-refresh-token', HttpRefreshTokenService);
+  angular.module('dim-oauth').service('http-refresh-token', HttpRefreshTokenService);
 })();

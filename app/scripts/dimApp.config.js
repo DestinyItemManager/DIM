@@ -4,6 +4,11 @@
   console.time('First item directive built');
 
   angular.module('dimApp')
+    .config((localStorageServiceProvider) => {
+      localStorageServiceProvider.setPrefix('');
+    });
+
+  angular.module('dimApp')
     .value('dimPlatformIds', {
       xbl: null,
       psn: null

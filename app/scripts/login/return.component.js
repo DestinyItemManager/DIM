@@ -27,10 +27,13 @@
       })
       .then((response) => {
         if (response.data.ErrorCode === 1) {
+          const inception = new Date().toISOString();
+
+          debugger;
+
           const authorization = {
-            inception: new Date(),
-            accessToken: response.data.Response.accessToken,
-            refreshToken: response.data.Response.refreshToken,
+            accessToken: angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: inception }),
+            refreshToken: angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: inception }),
             scope: response.data.Response.scope
           };
 
