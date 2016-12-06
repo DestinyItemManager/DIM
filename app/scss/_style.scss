@@ -1260,7 +1260,10 @@ rzslider {
   }
 }
 
-.talent-grid {
+.compare-bucket .talent-grid {
+  padding: 5px;
+  box-sizing: border-box;
+  width: 150px;
 }
 
 .talent-node-xp {
