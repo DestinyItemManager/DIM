@@ -86,7 +86,7 @@
         '      <div ng-switch-default class="objective-progress">',
         '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
         '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
-        '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
+        '        <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>',
         '      </div>',
         '    </div>',
         '  </div>',

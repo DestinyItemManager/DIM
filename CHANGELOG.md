@@ -1,4 +1,7 @@
 # Next
+* Update record books to properly display time instead of a large number. (#1051)
+
+# 3.14.0
 
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
