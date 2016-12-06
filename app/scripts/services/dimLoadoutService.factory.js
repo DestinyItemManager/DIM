@@ -419,11 +419,13 @@
           });
         }
 
-        if (item) {
+        if (item && item.canBeEquippedBy(store)) {
           // Pass in the list of items that shouldn't be moved away
           promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
         } else {
-          promise = $.reject(new Error(item.name + " doesn't exist in your account."));
+          if (pseudoItem.type !== 'Class') {
+            promise = $.reject(new Error(item.name + " doesn't exist in your account."));
+          }
         }
       }
 

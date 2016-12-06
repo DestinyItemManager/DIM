@@ -1,4 +1,7 @@
 # Next
+* Permit the same damage type of subclass in loadouts (#1067)
+
+# 3.14
 
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter

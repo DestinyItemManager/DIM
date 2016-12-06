@@ -175,12 +175,13 @@
           if (typeInventory.length < maxSlots) {
             clone.equipped = item.equipment && (typeInventory.length === 0);
 
-            // Only allow one subclass
+            // Only allow one subclass per burn
             if (clone.type === 'Class') {
-              if (_.has(vm.loadout.items, 'class')) {
+              var other = _.findWhere(vm.loadout.items, 'class');
+              if (other.length && other[0].dmg !== clone.dmg) {
                 vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
-                clone.equipped = true;
               }
+              clone.equipped = true;
             }
 
             typeInventory.push(clone);
