@@ -1034,7 +1034,7 @@
         var def = objectiveDef[record.objectives[0].objectiveHash];
 
         var display;
-        if(record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
+        if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
           display = record.objectives[0].displayValue;
         }
 
