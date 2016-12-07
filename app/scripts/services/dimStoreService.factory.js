@@ -9,7 +9,6 @@
     '$q',
     'dimBungieService',
     'dimPlatformService',
-    'dimSettingsService',
     'dimCategory',
     'dimDefinitions',
     'dimBucketService',
@@ -28,7 +27,6 @@
     $q,
     dimBungieService,
     dimPlatformService,
-    dimSettingsService,
     dimCategory,
     dimDefinitions,
     dimBucketService,
@@ -116,7 +114,7 @@
         this.powerLevel = characterInfo.characterBase.powerLevel;
         this.background = 'https://www.bungie.net/' + characterInfo.backgroundPath;
         this.icon = 'https://www.bungie.net/' + characterInfo.emblemPath;
-        this.stats = getStatsData(defs.Stat, characterInfo.characterBase);
+        this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
       },
       // Remove an item from this store. Returns whether it actually removed anything.
       removeItem: function(item) {
@@ -289,10 +287,6 @@
       return _stores;
     }
 
-    function loadStores(activePlatform) {
-      return dimBungieService.getStores(activePlatform);
-    }
-
     // Returns a promise for a fresh view of the stores and their items.
     // If this is called while a reload is already happening, it'll return the promise
     // for the ongoing reload rather than kicking off a new reload.
@@ -323,7 +317,7 @@
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
                               $translate(['Vault']),
-                              loadStores(activePlatform)])
+                              dimBungieService.getStores(activePlatform)])
         .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
@@ -428,10 +422,13 @@
 
               const race = defs.Race[character.characterBase.raceHash];
               let genderRace = "";
+              let className = "";
               if (character.characterBase.genderType === 0) {
                 genderRace = race.raceNameMale;
+                className = defs.Class[character.characterBase.classHash].classNameMale;
               } else {
                 genderRace = race.raceNameFemale;
+                className = defs.Class[character.characterBase.classHash].classNameFemale;
               }
 
               store = angular.extend(Object.create(StoreProto), {
@@ -442,9 +439,10 @@
                 background: 'https://bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
-                stats: getStatsData(defs.Stat, character.characterBase),
+                stats: getCharacterStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
-                className: defs.Class[character.characterBase.classHash].className,
+                classType: character.characterBase.classType,
+                className: className,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
@@ -678,25 +676,8 @@
 
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
-      // determine what year this item came from based on sourceHash value
-      // items will hopefully be tagged as follows
-      // No value: Vanilla, Crota's End, House of Wolves
-      // The Taken King (year 2): 460228854
-      // Rise of Iron (year3): 24296771
-
-      // This could be further refined for CE/HoW based on activity. See
-      // DestinyRewardSourceDefinition and filter on %SOURCE%
-      // if sourceHash doesn't contain these values, we assume they came from
-      // year 1
       itemDef.sourceHashes = itemDef.sourceHashes || [];
-      var itemYear = 1;
-      if (itemDef.sourceHashes.indexOf(460228854) >= 0) {
-        itemYear = 2;
-      }
-      if (itemDef.sourceHashes.indexOf(24296771) >= 0) {
-        itemYear = 3;
-      }
-      // console.log("Assigning " + itemYear + " to " + itemDef.itemName);
+
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
 
@@ -733,7 +714,6 @@
         classTypeName: getClass(itemDef.classType),
         dmg: dmgName,
         visible: true,
-        year: itemYear,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
         trackable: currentBucket.inProgress && currentBucket.hash !== 375726501,
@@ -758,7 +738,7 @@
       // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
       createdItem.isNew = false;
       try {
-        createdItem.isNew = dimSettingsService.showNewItems && isItemNew(createdItem.id, previousItems, newItems);
+        createdItem.isNew = isItemNew(createdItem.id, previousItems, newItems);
       } catch (e) {
         console.error("Error determining new-ness of " + createdItem.name, item, itemDef, e);
       }
@@ -797,6 +777,8 @@
           console.error("Error building quality rating for " + createdItem.name, item, itemDef, e);
         }
       }
+
+      setItemYear(createdItem);
 
       // More objectives properties
       if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
@@ -838,6 +820,14 @@
       // In debug mode, keep the original JSON around
       if (dimFeatureFlags.debugMode) {
         createdItem.originalItem = item;
+      }
+
+      // do specific things for specific items
+      if (createdItem.hash === 491180618) { // Trials Cards
+        createdItem.objectives = buildTrials(owner.advisors.activities.trials);
+        var best = owner.advisors.activities.trials.extended.highestWinRank;
+        createdItem.complete = owner.advisors.activities.trials.completion.success;
+        createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
       }
 
       return createdItem;
@@ -1010,6 +1000,29 @@
         dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
         complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
       };
+    }
+
+    function buildTrials(trials) {
+      var flawless = trials.completion.success;
+      trials = trials.extended;
+      function buildObjective(name, current, max, bool, style) {
+        return {
+          displayStyle: style,
+          displayName: $translate.instant('TrialsCard.' + name),
+          progress: current,
+          completionValue: max,
+          complete: bool ? current >= max : false,
+          boolean: bool
+        };
+      }
+
+      return [
+        buildObjective('Wins', trials.scoreCard.wins, trials.scoreCard.maxWins, false, 'trials'),
+        buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
+        buildObjective('FiveWins', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
+        buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
+        buildObjective('Flawless', flawless, 1, true),
+      ];
     }
 
     function buildRecords(recordBook, objectiveDef) {
@@ -1415,7 +1428,7 @@
         itemInfoService])
         .then(function(args) {
           var result = [];
-          dimManifestService.statusText = 'Loading Destiny characters and inventory...';
+          dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
           _.each(items, function(item) {
             var createdItem = null;
             try {
@@ -1471,21 +1484,53 @@
       }
     }
 
-    function getStatsData(statDefs, data) {
-      var statsWithTiers = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH'];
+    function setItemYear(item) {
+      // determine what year this item came from based on sourceHash value
+      // items will hopefully be tagged as follows
+      // No value: Vanilla, Crota's End, House of Wolves
+      // The Taken King (year 2): 460228854
+      // Rise of Iron (year3): 24296771
+
+      // This could be further refined for CE/HoW based on activity. See
+      // DestinyRewardSourceDefinition and filter on %SOURCE%
+      // if sourceHash doesn't contain these values, we assume they came from
+      // year 1
+
+      item.year = 1;
+      if (item.sourceHashes.includes(460228854) ||  // ttk
+          item.sourceHashes.includes(3523074641) || // variks
+          (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
+          item.sourceHashes.includes(3739898362) || // elders challenge
+          item.sourceHashes.includes(3551688287)) { // kings fall
+        item.year = 2;
+      }
+      if ((item.sourceHashes.includes(24296771) ||        // roi
+          !item.sourceHashes.length)) {                   // new items
+        item.year = 3;
+      }
+    }
+
+    /**
+     * Compute character-level stats (int, dis, str).
+     */
+    function getCharacterStatsData(statDefs, data) {
+      const statsWithTiers = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
       var stats = ['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH', 'STAT_ARMOR', 'STAT_RECOVERY', 'STAT_AGILITY'];
       var ret = {};
-      for (var s = 0; s < stats.length; s++) {
+      stats.forEach((statId) => {
         var statHash = {};
-        switch (stats[s]) {
+        statHash.id = statId;
+        switch (statId) {
         case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
         case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
         case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
         }
 
-        const stat = data.stats[stats[s]];
+        statHash.icon = statHash.name ? `images/${statHash.name.toLowerCase()}.png` : undefined;
+
+        const stat = data.stats[statId];
         if (!stat) {
-          continue;
+          return;
         }
         statHash.value = stat.value;
         const statDef = statDefs[stat.statHash];
@@ -1493,7 +1538,7 @@
           statHash.name = statDef.statName; // localized name
         }
 
-        if (statsWithTiers.indexOf(stats[s]) > -1) {
+        if (statsWithTiers.has(statId)) {
           statHash.normalized = statHash.value > 300 ? 300 : statHash.value;
           statHash.tier = Math.floor(statHash.normalized / 60);
           statHash.tiers = [];
@@ -1502,15 +1547,15 @@
             statHash.remaining -= statHash.tiers[t] = statHash.remaining > 60 ? 60 : statHash.remaining;
           }
           if (data.peerView) {
-            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stats[s], statHash.tier);
+            statHash.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, statId, statHash.tier);
           }
           statHash.percentage = Number(100 * statHash.normalized / 300).toFixed();
         } else {
           statHash.percentage = Number(100 * statHash.value / 10).toFixed();
         }
 
-        ret[stats[s]] = statHash;
-      }
+        ret[statId] = statHash;
+      });
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport

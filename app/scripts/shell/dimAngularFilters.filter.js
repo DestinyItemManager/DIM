@@ -221,6 +221,16 @@
   });
 
   /**
+   * Filter to turn a number into an array so that we can use ng-repeat
+   * over a number to loop N times.
+   */
+  mod.filter('range', function(){
+    return function(n) {
+      return new Array(n);
+    };
+  });
+
+  /**
    * inserts the evaluated value of the "svg-bind-viewbox" attribute
    * into the "viewBox" attribute, making sure to capitalize the "B",
    * as this SVG attribute name is case-sensitive.

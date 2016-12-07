@@ -3,9 +3,9 @@
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService'];
+  Loadout.$inject = ['dimLoadoutService', '$translate'];
 
-  function Loadout(dimLoadoutService) {
+  function Loadout(dimLoadoutService, $translate) {
     return {
       controller: LoadoutCtrl,
       controllerAs: 'vm',
@@ -22,7 +22,7 @@
         '  <div class="loadout-content">',
         '    <div id="loadout-options">',
         '      <form name="vm.form">',
-        '        <input name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" translate-attr="{ placeholder: \'Loadouts.LoadoutName\' }" />',
+        '        <input class="dim-input" name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" translate-attr="{ placeholder: \'Loadouts.LoadoutName\' }" />',
         '        <select name="classType" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>',
         '        <button ng-disabled="vm.form.$invalid" ng-click="vm.save()" translate="Loadouts.Save"></button>',
         '        <button ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew()" translate="Loadouts.SaveAsNew"></button>',
@@ -56,19 +56,12 @@
     function Link(scope) {
       var vm = scope.vm;
 
-      vm.classTypeValues = [{
-        label: 'Any',
-        value: -1
-      }, {
-        label: 'Warlock',
-        value: 0
-      }, {
-        label: 'Titan',
-        value: 1
-      }, {
-        label: 'Hunter',
-        value: 2
-      }];
+      scope.$on('dim-stores-updated', function(evt, data) {
+        vm.classTypeValues = [{ label: $translate.instant('Loadouts.Any'), value: -1 }];
+        _.each(_.uniq(_.reject(data.stores, 'isVault'), false, function(store) { return store.classType; }), function(store) {
+          vm.classTypeValues.push({ label: store.className, value: store.classType });
+        });
+      });
 
       scope.$on('dim-create-new-loadout', function() {
         vm.show = true;

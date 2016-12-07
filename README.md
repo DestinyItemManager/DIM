@@ -25,7 +25,7 @@ DIM is an extension that runs within the Chrome Desktop Web Browser.
 
 Clone the repo:
 
-* `git clone https://github.com/DestinyItemManager/DIM.`
+* `git clone https://github.com/DestinyItemManager/DIM.git`
 
 Install dependencies:
 
@@ -45,7 +45,7 @@ Get your own API key:
 * Goto [Bungie](https://www.bungie.net/en/Application)
 * Open your extension in another tab, copy the url up to `/index.html`.
 * Paste your extension url into the `Origin Header` section on bungie.net
-* Copy your API-key from bungie.net into the `app/apiKey.js` file.
+* Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.
 
 Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/dev/CONTRIBUTING.md) for more tips.
 

@@ -1,5 +1,21 @@
 # Next
 
+* Compare Weapons and Armor side-by-side.
+* Added `is:sublime` filter
+* Added detailed information to the Trials of Osiris popup card.
+* Added more detection for item years.
+* The collapse button now no longer takes up the whole bucket height.
+* Fixed marking which characters had access to vendor items.
+* Fix tracking new items when the new-item shine is disabled.
+* Added option to Farming Mode to not move weapons and armor to make space for engrams.
+* About and Support pages are now translatable.
+* Improved error handling and error messages.
+* Vendors are collapsible.
+* All vendor items (including duplicates with different rolls) will now show up.
+* Added more translations.
+* If you have more than one Memory of Felwinter, they are all excluded from loadout builder.
+* Export correct quality rating for items in CSV.
+
 # 3.13.0
 
 * The vendors page is back. It'll show all available vendors. It's now a lot faster, and combines vendor inventory across your characters. Consumables and Bounties are now shown. Item stats and quality will hopefully show up on 11/8.

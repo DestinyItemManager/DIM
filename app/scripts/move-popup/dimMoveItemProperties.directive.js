@@ -30,14 +30,14 @@
         '        </span>',
         '      </span>',
         '      <a target="_blank" rel="noopener noreferrer" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}#{{ vm.item.talentGrid.dtrPerks }}" class="item-title">',
-        '        {{vm.title}}',
+        '        {{vm.item.name}}',
         '      </a>',
         '    </div>',
         '    <div>',
         '      <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
         '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
         '      </span>',
-        '      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }}',
+        '      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }} <i ng-if="vm.featureFlags.compareEnabled && vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="fa fa-clone" ng-click="vm.openCompare()"></i>',
         '      <span ng-if="vm.item.objectives">({{ vm.item.percentComplete | percent }} Complete)</span>',
         '      <span ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
         '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
@@ -69,17 +69,21 @@
         '      </span>',
         '    </div>',
         '    <div class="stat-box-row" ng-if="vm.featureFlags.qualityEnabled && vm.item.quality && vm.item.quality.min">',
-        '      <span class="stat-box-text stat-box-cell">Stats quality</span>',
-        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'">{{ vm.item.quality.range }} of max roll <a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"><i class="fa fa-question-circle" title="Click for more information about what Stats Quality is."></i></a></span>',
+        '      <span class="stat-box-text stat-box-cell" translate="Stats.Quality"></span>',
+        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'" translate-values="{ range: vm.item.quality.range }" translate="Stats.OfMaxRoll"><a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"><i class="fa fa-question-circle" translate-attr="{ title: \'Stats.PercentHelp\'}"></i></a></span>',
         '    </div>',
         '  </div>',
         '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
-        '    <dim-talent-grid dim-talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"/>',
+        '    <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>',
         '  </div>',
         '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
-        '    <div class="objective-row" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
-        '      <div class="objective-checkbox"><div></div></div>',
-        '      <div class="objective-progress">',
+        '    <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
+        '      <div ng-switch-when="trials">',
+        '        <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
+        '        <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>',
+        '      </div>',
+        '      <div ng-switch-default class="objective-checkbox"><div></div></div>',
+        '      <div ng-switch-default class="objective-progress">',
         '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
         '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
         '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
@@ -114,6 +118,14 @@
       vm.itemDetails = !vm.itemDetails;
       vm.changeDetails();
     });
+
+    vm.openCompare = function() {
+      ngDialog.closeAll();
+      $rootScope.$broadcast('dim-store-item-compare', {
+        item: vm.item,
+        dupes: true
+      });
+    };
 
     vm.updateNote = function() {
       if (angular.isDefined(vm.item.dimInfo.notes)) {
@@ -162,7 +174,6 @@
       'is-void': false
     };
 
-    vm.title = $sce.trustAsHtml(vm.item.name);
     vm.light = '';
     vm.classType = '';
     vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
@@ -178,12 +189,13 @@
       if (vm.item.dmg) {
         vm.classes['is-' + vm.item.dmg] = true;
       }
-      if (vm.item.classTypeName !== 'unknown' &&
-          // These already include the class name
-          vm.item.type !== 'ClassItem' &&
-          vm.item.type !== 'Artifact') {
-        vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
-      }
+    }
+
+    if (vm.item.classTypeName !== 'unknown' &&
+        // These already include the class name
+        vm.item.type !== 'ClassItem' &&
+        vm.item.type !== 'Artifact') {
+      vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
     }
 
     function compareItems(item) {

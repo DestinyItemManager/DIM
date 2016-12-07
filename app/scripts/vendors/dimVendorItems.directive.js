@@ -10,9 +10,9 @@
     template: [
       '<div class="vendor-item">',
       '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
-      '  <dim-simple-item id="vendor-{{::$ctrl.saleItem.hash}}" item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
+      '  <dim-simple-item item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
       '  <div class="vendor-costs">',
-      '    <div ng-repeat="cost in $ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
+      '    <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
       '      {{::cost.value}}',
       '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
       '    </div>',
@@ -32,22 +32,23 @@
     },
     template: [
       '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
-      '   <div class="vendor-header">',
-      '     <div class="title">',
-      '     {{vendor.name}}',
-      '     <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
-      '     <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '     </div>',
-      '   </div>',
-      '   <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
-      '   <div class="vendor-row">',
-      '     <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
-      '        <h3 class="category-title">{{category.title}}</h3>',
-      '        <div class="vendor-items">',
-      '          <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '        </div>',
+      '  <div class="title">',
+      '    <div class="collapse-handle" ng-click="vm.toggleSection(vendorHash)">',
+      '      <i class="fa collapse" ng-class="vm.settings.collapsedSections[vendorHash] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i>',
+      '      <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
+      '      {{::vendor.name}}',
+      '    </div>',
+      '    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} day{{daysS}} {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '  </div>',
+      '  <div class="vendor-row" ng-if="!vm.settings.collapsedSections[vendorHash]">',
+      '    <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
+      '    <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
+      '      <h3 class="category-title">{{::category.title}}</h3>',
+      '      <div class="vendor-items">',
+      '        <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
       '      </div>',
       '    </div>',
+      '  </div>',
       '</div>'
     ].join('')
   };
@@ -57,7 +58,7 @@
     .component('dimVendorItems', VendorItems)
     .filter('vendorTab', function() {
       return function vendorTab(categories, prop) {
-        if (!prop) {
+        if (!prop || !prop.length) {
           return categories;
         }
         return _.filter(categories, prop);
@@ -65,7 +66,7 @@
     })
     .filter('vendorTabItems', function() {
       return function vendorTab(items, prop) {
-        if (!prop) {
+        if (!prop || !prop.length) {
           return items;
         }
         return _.filter(items, {
@@ -181,6 +182,10 @@
           dialogResult.close();
         }
         $scope.closeThisDialog();
+      },
+      toggleSection: function(id) {
+        vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
+        vm.settings.save();
       }
     });
   }

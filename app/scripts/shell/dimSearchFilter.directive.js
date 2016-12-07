@@ -32,6 +32,7 @@
       dmg: ['arc', 'solar', 'void', 'kinetic'],
       type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
       tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
+      sublime: ['sublime'],
       incomplete: ['incomplete'],
       complete: ['complete'],
       xpcomplete: ['xpcomplete'],
@@ -129,7 +130,7 @@
       bindToController: true,
       restrict: 'A',
       template: [
-        '<input id="filter-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
+        '<input id="filter-input" class="dim-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
       ].join('')
     };
   }
@@ -315,6 +316,21 @@
         };
         return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
       },
+      sublime: function(predicate, item) {
+        var sublimeEngrams = [
+          1986458096, // -gauntlet
+          2218811091,
+          2672986950, // -body-armor
+          779347563,
+          3497374572, // -class-item
+          808079385,
+          3592189221, // -leg-armor
+          738642122,
+          3797169075, // -helmet
+          838904328
+        ];
+        return sublimeEngrams.includes(item.hash);
+      },
       // Incomplete will show items that are not fully leveled.
       incomplete: function(predicate, item) {
         return item.talentGrid &&
@@ -350,7 +366,7 @@
           !item.talentGrid.ascended;
       },
       reforgeable: function(predicate, item) {
-        return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
+        return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
       },
       untracked: function(predicate, item) {
         return item.trackable &&
