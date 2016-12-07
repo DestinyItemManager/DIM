@@ -1,4 +1,4 @@
-# Next
+# 3.14.0
 
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
