@@ -135,6 +135,7 @@
             Save: "Save",
             SaveAsNew: "Save As New",
             Cancel: "Cancel",
+            ApplyNow: "Apply and close",
             ItemsWithIcon: "Items with this icon will be equipped.",
             ClickToEquip: "Click on an item toggle to equip.",
             AppliedAuto: "Automatic Loadout Builder",

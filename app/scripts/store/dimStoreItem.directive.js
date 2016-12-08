@@ -39,7 +39,9 @@
       scope: {
         store: '=storeData',
         item: '=itemData',
-        shiftClickCallback: '=shiftClickCallback'
+        shiftClickCallback: '=shiftClickCallback',
+        altClickCallback: '=altClickCallback',
+
       },
       template: [
         '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
@@ -116,6 +118,11 @@
 
       vm.clicked = function openPopup(item, e) {
         e.stopPropagation();
+
+        if (vm.altClickCallback && e.altKey) {
+          vm.altClickCallback(item, e);
+          return;
+        }
 
         if (vm.shiftClickCallback && e.shiftKey) {
           vm.shiftClickCallback(item);
