@@ -60,9 +60,9 @@
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
     vm.classTypeId = {
-      titan: 0,
-      hunter: 1,
-      warlock: 2
+      warlock: 0,
+      titan: 1,
+      hunter: 2
     }[vm.store.class];
     if (vm.classTypeId === undefined) {
       vm.classTypeId = -1;
