@@ -1,3 +1,8 @@
+# 3.14.1
+
+* Internationaliztion updates.
+* Fix for Loadout Class Type bug.
+
 # 3.14.0
 
 * Compare Weapons and Armor side-by-side.
