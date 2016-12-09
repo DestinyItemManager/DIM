@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimItemService', ItemService);
 
-  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimCategory', '$q'];
+  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimCategory', '$q', '$translate'];
 
-  function ItemService(dimStoreService, dimBungieService, dimCategory, $q) {
+  function ItemService(dimStoreService, dimBungieService, dimCategory, $q, $translate) {
     // We'll reload the stores to check if things have been
     // thrown away or moved and we just don't have up to date info. But let's
     // throttle these calls so we don't just keep refreshing over and over.
@@ -71,7 +71,7 @@
         while (removeAmount > 0) {
           var sourceItem = sourceItems.shift();
           if (!sourceItem) {
-            throw new Error("Looks like you requested to move more of this item than exists in the source!");
+            throw new Error($translate.instant('ItemService.TooMuch'));
           }
 
           var amountToRemove = Math.min(removeAmount, sourceItem.amount);
@@ -202,7 +202,7 @@
           if (otherExotic && !_.find(items, { type: otherExotic.type })) {
             const similarItem = getSimilarItem(otherExotic);
             if (!similarItem) {
-              return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + otherExotic.name));
+              return $q.reject(new Error('ItemService.Deequip', { itemname: otherExotic.name }));
             }
             const target = dimStoreService.getStore(similarItem.owner);
 
@@ -243,7 +243,7 @@
     function dequipItem(item) {
       const similarItem = getSimilarItem(item);
       if (!similarItem) {
-        return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + item.name));
+        return $q.reject(new Error($translate.instant('ItemService.Deequip', { itemname: item.name })));
       }
       const source = dimStoreService.getStore(item.owner);
       const target = dimStoreService.getStore(similarItem.owner);
@@ -285,7 +285,7 @@
         return dequipItem(otherExotic)
           .then(() => true)
           .catch(function() {
-            throw new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + otherExotic.type + ' slot cannot be unequipped.');
+            throw new Error($translate.instant('ItemService.ExoticError, { itemname: item.name, slot: otherExotic.type}'));
           });
       } else {
         return $q.resolve(true);
@@ -321,7 +321,7 @@
           return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
         });
       } else {
-        throw new Error("We don't know how you got more than 2 equipped exotics!");
+        throw new Error($translate.instant('ItemService.TwoExotics'));
       }
     }
 
@@ -354,7 +354,7 @@
       });
 
       if (moveAsideCandidates.length === 0) {
-        throw new Error("There's nothing we can move aside to make room for " + item.name);
+        throw new Error($translate.instant('ItemService.NotEnoughRoom', { itemname: item.name }));
       }
 
       // For the vault, try to move the highest-value item to a character. For a
@@ -471,7 +471,7 @@
         var target = chooseMoveAsideTarget(source, moveAsideItem, moveContext);
 
         if (!target || (!target.isVault && target.spaceLeftForItem(moveAsideItem) <= 0)) {
-          return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
+          return $q.reject(new Error($translate.instant('ItemService.BucketFull', { itemtype: (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), bucket: target.name })));
         } else {
           // Make one move and start over!
           return moveTo(moveAsideItem, target, false, moveAsideItem.amount, excludes).then(function() {
@@ -493,9 +493,9 @@
         if (item.canBeEquippedBy(store)) {
           resolve(true);
         } else if (item.classified) {
-          reject(new Error("This item is classified and can not be transferred at this time."));
+          reject(new Error($translate.instant('ItemService.Classified')));
         } else {
-          reject(new Error("This can only be equipped on " + (item.classTypeName === 'unknown' ? 'character' : item.classTypeName) + "s at or above level " + item.equipRequiredLevel + "."));
+          reject(new Error($translate.instant('ItemService.OnlyEquipped', { class: (item.classTypeName === 'unknown' ? 'character' : item.classTypeName), level: item.equipRequiredLevel })));
         }
       });
     }
