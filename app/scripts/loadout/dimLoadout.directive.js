@@ -58,8 +58,31 @@
 
       scope.$on('dim-stores-updated', function(evt, data) {
         vm.classTypeValues = [{ label: $translate.instant('Loadouts.Any'), value: -1 }];
+
+        /*
+        Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
+        These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
+        */
+
         _.each(_.uniq(_.reject(data.stores, 'isVault'), false, function(store) { return store.classType; }), function(store) {
-          vm.classTypeValues.push({ label: store.className, value: store.classType });
+          let classType = 0;
+
+          switch (parseInt(store.classType, 10)) {
+            case 0: {
+              classType = 1;
+              break;
+            }
+            case 1: {
+              classType = 2;
+              break;
+            }
+            case 2: {
+              classType = 0;
+              break;
+            }
+          }
+
+          vm.classTypeValues.push({ label: store.className, value: classType });
         });
       });
 
