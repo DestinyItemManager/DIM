@@ -7,11 +7,11 @@
   BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', '$state', 'dimState', 'toaster', '$translate'];
 
   function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
-    localStorage.apiKey = 'a16976e9c1ec49c0b7673c10ce357393';
+    localStorage.apiKey = 'f47f958078d04e1295bb37d09efbeb02';
     var apiKey = localStorage.apiKey;
     /* eslint no-constant-condition: 0*/
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
-      apiKey = '$DIM_API_KEY';
+      apiKey = 'f47f958078d04e1295bb37d09efbeb02';
     }
 
     var platformPromise = null;
