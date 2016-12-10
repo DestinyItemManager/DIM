@@ -21,6 +21,8 @@
       qualityEnabled: true,
       // Additional debugging / item info tools
       debugMode: false,
+      // Print debug info to console about item moves
+      debugMoves: false,
       // show changelog toaster
       changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
 

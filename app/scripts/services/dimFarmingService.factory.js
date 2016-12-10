@@ -4,15 +4,18 @@
   angular.module('dimApp')
     .factory('dimFarmingService', FarmingService);
 
-  FarmingService.$inject = ['$rootScope',
-                            '$q',
-                            'dimItemService',
-                            'dimStoreService',
-                            '$interval',
-                            'dimCategory',
-                            'toaster',
-                            'dimBucketService',
-                            'dimSettingsService'];
+  FarmingService.$inject = [
+    '$rootScope',
+    '$q',
+    'dimItemService',
+    'dimStoreService',
+    '$interval',
+    'dimCategory',
+    'toaster',
+    'dimBucketService',
+    'dimFeatureFlags',
+    'dimSettingsService'
+  ];
 
   /**
    * A service for "farming" items by moving them continuously off a character,
@@ -26,6 +29,7 @@
                           dimCategory,
                           toaster,
                           dimBucketService,
+                          dimFeatureFlags,
                           dimSettingsService) {
     let intervalId;
     let cancelReloadListener;
@@ -88,11 +92,15 @@
                 const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
 
                 if (otherStoresWithSpace.length) {
-                  console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
+                  if (dimFeatureFlags.debugMoves) {
+                    console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
+                  }
                   return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                 }
               }
-              console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
+              if (dimFeatureFlags.debugMoves) {
+                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
+              }
               return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
             })
             .then(() => {

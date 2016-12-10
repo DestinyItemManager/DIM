@@ -37,9 +37,34 @@
     };
   }
 
-  StoreBucketCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimInfoService'];
+  StoreBucketCtrl.$inject = [
+    '$scope',
+    'loadingTracker',
+    'dimStoreService',
+    'dimItemService',
+    '$q',
+    '$timeout',
+    'toaster',
+    'dimSettingsService',
+    'ngDialog',
+    '$rootScope',
+    'dimActionQueue',
+    'dimFeatureFlags',
+    'dimInfoService'];
 
-  function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimInfoService) {
+  function StoreBucketCtrl($scope,
+                           loadingTracker,
+                           dimStoreService,
+                           dimItemService,
+                           $q,
+                           $timeout,
+                           toaster,
+                           dimSettingsService,
+                           ngDialog,
+                           $rootScope,
+                           dimActionQueue,
+                           dimFeatureFlags,
+                           dimInfoService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -166,7 +191,9 @@
       }
 
       promise = promise.then(function(moveAmount) {
-        console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
+        if (dimFeatureFlags.debugMoves) {
+          console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
+        }
         var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
         var reload = item.equipped || equip;

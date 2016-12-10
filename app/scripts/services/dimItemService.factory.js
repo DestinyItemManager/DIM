@@ -4,9 +4,19 @@
   angular.module('dimApp')
     .factory('dimItemService', ItemService);
 
-  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimCategory', '$q'];
+  ItemService.$inject = [
+    'dimStoreService',
+    'dimBungieService',
+    'dimCategory',
+    'dimFeatureFlags',
+    '$q'
+  ];
 
-  function ItemService(dimStoreService, dimBungieService, dimCategory, $q) {
+  function ItemService(dimStoreService,
+                       dimBungieService,
+                       dimCategory,
+                       dimFeatureFlags,
+                       $q) {
     // We'll reload the stores to check if things have been
     // thrown away or moved and we just don't have up to date info. But let's
     // throttle these calls so we don't just keep refreshing over and over.
@@ -238,6 +248,9 @@
     }
 
     function equipItem(item) {
+      if (dimFeatureFlags.debugMoves) {
+        console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
+      }
       return dimBungieService.equip(item)
         .then(function() {
           const store = dimStoreService.getStore(item.owner);
@@ -268,7 +281,9 @@
     }
 
     function moveToStore(item, store, equip, amount) {
-      console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
+      if (dimFeatureFlags.debugMoves) {
+        console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
+      }
       return dimBungieService.transfer(item, store, amount)
         .then(function() {
           var source = dimStoreService.getStore(item.owner);
