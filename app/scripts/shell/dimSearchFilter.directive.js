@@ -5,8 +5,8 @@
     .factory('dimSearchService', SearchService)
     .directive('dimSearchFilter', SearchFilter);
 
-  SearchService.$inject = ['dimSettingsService', 'dimFeatureFlags'];
-  function SearchService(dimSettingsService, dimFeatureFlags) {
+  SearchService.$inject = ['dimSettingsService', 'dimFeatureFlags', 'dimBucketService'];
+  function SearchService(dimSettingsService, dimFeatureFlags, dimBucketService) {
     const categoryFilters = {
       pulserifle: ['CATEGORY_PULSE_RIFLE'],
       scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
@@ -93,11 +93,22 @@
       keywords.push('notes:');
     }
 
+    // a dictionary to track the amount of "visible" items per item category (weapons, armor, etc) when there is an active filter
+    // initialized by making use of the categories in the bucket service
+    // counts are reset, recounted, and sent to the dimStores directive via event broadcast each time a filter is applied
+    var filterCounts = {};
+    dimBucketService.then(function(buckets) {
+      _.each(_.keys(buckets.byCategory), function(category) {
+        filterCounts[category] = 0;
+      });
+    });
+
     return {
       query: '',
       filterTrans: filterTrans,
       keywords: keywords,
-      categoryFilters: categoryFilters
+      categoryFilters: categoryFilters,
+      filterCounts: filterCounts
     };
   }
 
@@ -135,9 +146,9 @@
     };
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
+  SearchFilterCtrl.$inject = ['$rootScope', '$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
 
-  function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
+  function SearchFilterCtrl($rootScope, $scope, dimStoreService, dimVendorService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -271,12 +282,18 @@
         });
       };
 
+      // reset the visible item counts
+      _.each(_.keys(vm.search.filterCounts), function(category) {
+        vm.search.filterCounts[category] = 0;
+      });
+
+      // mark items as visible based on filter and increment the counts in the dictionary as needed
       _.each(dimStoreService.getStores(), function(store) {
         _.each(store.items, function(item) {
           item.visible = (filters.length > 0) ? filterFn(item) : true;
+          if (item.visible) { vm.search.filterCounts[item.location.sort] ++; }
         });
       });
-
 
       // Filter vendor items
       _.each(dimVendorService.vendors, function(vendor) {
@@ -284,6 +301,9 @@
           saleItem.item.visible = (filters.length > 0) ? filterFn(saleItem.item) : true;
         });
       });
+
+      // broadcast an event for any controllers that need to know that a filter has been applied
+      $rootScope.$broadcast("dim-filtered");
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
@@ -647,15 +667,15 @@
       },
       hasLight: function(predicate, item) {
         const lightBuckets = ["BUCKET_CHEST",
-                                 "BUCKET_LEGS",
-                                 "BUCKET_ARTIFACT",
-                                 "BUCKET_HEAVY_WEAPON",
-                                 "BUCKET_PRIMARY_WEAPON",
-                                 "BUCKET_CLASS_ITEMS",
-                                 "BUCKET_SPECIAL_WEAPON",
-                                 "BUCKET_HEAD",
-                                 "BUCKET_ARMS",
-                                 "BUCKET_GHOST"];
+                              "BUCKET_LEGS",
+                              "BUCKET_ARTIFACT",
+                              "BUCKET_HEAVY_WEAPON",
+                              "BUCKET_PRIMARY_WEAPON",
+                              "BUCKET_CLASS_ITEMS",
+                              "BUCKET_SPECIAL_WEAPON",
+                              "BUCKET_HEAD",
+                              "BUCKET_ARMS",
+                              "BUCKET_GHOST"];
         return item.bucket && _.contains(lightBuckets, item.bucket.id);
       },
       weapon: function(predicate, item) {
