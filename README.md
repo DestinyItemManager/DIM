@@ -1,5 +1,4 @@
 # Destiny Item Manager
-[![Code Climate](https://codeclimate.com/github/DestinyItemManager/DIM/badges/gpa.svg)](https://codeclimate.com/github/DestinyItemManager/DIM)    [![Test Coverage](https://codeclimate.com/github/DestinyItemManager/DIM/badges/coverage.svg)](https://codeclimate.com/github/DestinyItemManager/DIM/coverage)    [![Issue Count](https://codeclimate.com/github/DestinyItemManager/DIM/badges/issue_count.svg)](https://codeclimate.com/github/DestinyItemManager/DIM)
 
 Destiny Item Manager (DIM) lets [Destiny](http://destinythegame.com/)  game players easily move items between their Guardians and the Vault. DIM's goal is to let players equip their guardians quickly. Our Loadouts feature accomplishes this by removing manual steps needed when transferring items.
 
