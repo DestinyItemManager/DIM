@@ -258,7 +258,9 @@
         p = moveTo(similarItem, source, true);
       }
 
-      return p.then(() => equipItem(similarItem));
+      return p
+        .then(() => equipItem(similarItem))
+        .then(() => item);
     }
 
     function moveToVault(item, amount) {
