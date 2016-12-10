@@ -1,5 +1,5 @@
 <div ng-controller="dimMaterialsExchangeCtrl as vm" class="materials-exchange">
-	<!--<a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i>Back to DIM</a>-->
+	<!--<a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i><span translate="Help.BackToDIM"></span></a>-->
 
 	<div class="stats-panel">
 
@@ -7,7 +7,7 @@
 
 	<div class="section">
 		<div class="title">
-		<span>Materials Exchange</span>
+		<span translate="MaterialsExchange"></span>
 	</div>
 
 <div class="stats-body">
@@ -36,10 +36,10 @@
 			</div>
 			<table>
 				<tr class="row">
-					<td class="col">Current Rank</td>
-					<td class="col">Current Rep</td>
-					<td class="col">New Rank</td>
-					<td class="col">New Rep</td>
+					<td class="col" translate="MaterialsExchange.CurrentRank"></td>
+					<td class="col" translate="MaterialsExchange.CurrentRep"></td>
+					<td class="col" translate="MaterialsExchange.NewRank"></td>
+					<td class="col" translate="MaterialsExchange.NewRep"></td>
 				</tr>
 				<tr class="row">
 					<td class="col">{{vm.activeFaction.level}}</td>
@@ -56,7 +56,7 @@
 	</div>
 
 	<div class="mats-panel">
-		<dim-collapsible-section title="Materials on hand">
+		<dim-collapsible-section translate-attr="{ title: 'MaterialsExchange.OnHand' }" title="MaterialsExchange.OnHand">
 			<table>
 				<tbody>
 					<tr>
@@ -89,7 +89,7 @@
 			</table>
 		</dim-collapsible-section>
 
-		<dim-collapsible-section title="Materials from trade" is-collapsed="true">
+		<dim-collapsible-section translate-attr="{ title: 'MaterialsExchange.FromTrade' }" is-collapsed="true" title="MaterialsExchange.FromTrade">
 			<table>
 				<tbody>
 					<tr>

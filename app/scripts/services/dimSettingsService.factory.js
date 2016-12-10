@@ -59,6 +59,7 @@
         // Whether to keep one slot per item type open
         makeRoomForItems: true
       },
+
       // Predefined item tags. Maybe eventually allow to add more (also i18n?)
       itemTags: [
         { type: undefined, label: 'Tags.TagItem' },
@@ -97,7 +98,7 @@
 
       _loaded = true;
       $rootScope.$evalAsync(function() {
-        angular.extend(settings, savedSettings);
+        angular.merge(settings, savedSettings);
         $translate.use(settings.language);
         $translate.fallbackLanguage('en');
       });

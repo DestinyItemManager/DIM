@@ -1260,10 +1260,10 @@ rzslider {
   }
 }
 
-.talent-grid {
-  max-width: 100%;
-  height: auto;
-  width: auto;
+.compare-bucket .talent-grid {
+  padding: 5px;
+  box-sizing: border-box;
+  width: 150px;
 }
 
 .talent-node-xp {
@@ -1407,7 +1407,6 @@ g {
   left: 0;
   right: 0;
   position: fixed;
-  width: 100%;
   z-index: 3;
   bottom: 0;
   background: #434444;
@@ -1418,6 +1417,7 @@ g {
 dim-compare {
   #loadout-drawer {
     padding-left: 1em;
+    padding-right: 1em;
   }
 }
 
@@ -1428,13 +1428,13 @@ dim-compare {
 .compare-bucket {
   white-space: nowrap;
   overflow-x: scroll;
-  width: 100%;
   display: flex;
   margin-left: 100px;
   .fixed-left {
     border-left: none;
     position: fixed;
     left: 1em;
+    margin-top: 1px;
     min-width: 100px;
   }
 }
@@ -1453,6 +1453,10 @@ dim-compare {
     color: white !important;
     background-color: gray;
     cursor: pointer;
+  }
+  .item-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   .sorted {
     color: $orange;
@@ -1856,6 +1860,10 @@ button.toast-close-button {
   li {
     margin-bottom: 2px;
   }
+}
+
+.toast-info {
+  width: 500px !important;
 }
 
 /*

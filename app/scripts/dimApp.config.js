@@ -11,12 +11,12 @@
     .value('dimState', {
       membershipType: -1,
       active: null,
-      debug: true
+      debug: false
     })
     .value('dimFeatureFlags', {
       // Tags are off in release right now
       tagsEnabled: '$DIM_FLAVOR' !== 'release',
-      compareEnabled: '$DIM_FLAVOR' !== 'release',
+      compareEnabled: true,
       vendorsEnabled: true,
       qualityEnabled: true,
       // Additional debugging / item info tools
@@ -68,9 +68,10 @@
 
         console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
         if (dimFeatureFlags.changelogToaster) {
+          /* eslint no-constant-condition: 0*/
           dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-            title: 'DIM v$DIM_VERSION Released',
-            view: 'views/changelog-toaster.html?v=v$DIM_VERSION'
+            title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION!',
+            view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
           });
         }
 

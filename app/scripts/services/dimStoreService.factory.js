@@ -447,10 +447,13 @@
 
               const race = defs.Race[character.characterBase.raceHash];
               let genderRace = "";
+              let className = "";
               if (character.characterBase.genderType === 0) {
                 genderRace = race.raceNameMale;
+                className = defs.Class[character.characterBase.classHash].classNameMale;
               } else {
                 genderRace = race.raceNameFemale;
+                className = defs.Class[character.characterBase.classHash].classNameFemale;
               }
 
               store = angular.extend(Object.create(StoreProto), {
@@ -464,7 +467,7 @@
                 stats: getCharacterStatsData(defs.Stat, character.characterBase),
                 class: getClass(character.characterBase.classType),
                 classType: character.characterBase.classType,
-                className: defs.Class[character.characterBase.classHash].className,
+                className: className,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
@@ -1450,7 +1453,7 @@
         itemInfoService])
         .then(function(args) {
           var result = [];
-          dimManifestService.statusText = 'Loading Destiny characters and inventory...';
+          dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
           _.each(items, function(item) {
             var createdItem = null;
             try {

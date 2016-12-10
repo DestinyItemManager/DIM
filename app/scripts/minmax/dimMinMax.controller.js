@@ -9,6 +9,7 @@
   function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
+    vm.lang = dimSettingsService.language;
 
     if (dimStoreService.getStores().length === 0) {
       $state.go('inventory');
@@ -69,6 +70,17 @@
              (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
     }
 
+    function fillTiers(stats) {
+      _.each(stats, function(stat) {
+        stat.tier = Math.min(Math.floor(stat.value / 60), 5);
+        stat.value = stat.value % 60;
+        stat.tiers = new Array(5).fill(0);
+        _.each([0, 1, 2, 3, 4], function(tier) {
+          stat.tiers[tier] = (tier <= stat.tier) ? ((tier === stat.tier) ? stat.value : 60) : 0;
+        });
+      });
+    }
+
     function calcArmorStats(set) {
       _.each(set.armor, function(armor) {
         var int = armor.item.normalStats[144602215];
@@ -87,6 +99,8 @@
         case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
         }
       });
+
+      fillTiers(set.stats);
     }
 
     function getBonusConfig(armor) {
@@ -489,15 +503,21 @@
                             stats: {
                               STAT_INTELLECT: {
                                 value: 0,
-                                name: 'Intellect'
+                                tier: 0,
+                                name: 'Intellect',
+                                icon: 'images/Intellect.png'
                               },
                               STAT_DISCIPLINE: {
                                 value: 0,
-                                name: 'Discipline'
+                                tier: 0,
+                                name: 'Discipline',
+                                icon: 'images/Discipline.png'
                               },
                               STAT_STRENGTH: {
                                 value: 0,
-                                name: 'Strength'
+                                tier: 0,
+                                name: 'Strength',
+                                icon: 'images/Strength.png'
                               }
                             },
                             setHash: 0
@@ -506,9 +526,9 @@
                             vm.hasSets = true;
                             set.setHash = genSetHash(set.armor);
                             calcArmorStats(set);
-                            var tiersString = Math.min(Math.floor(set.stats.STAT_INTELLECT.value / 60), 5) +
-                                '/' + Math.min(Math.floor(set.stats.STAT_DISCIPLINE.value / 60), 5) +
-                                '/' + Math.min(Math.floor(set.stats.STAT_STRENGTH.value / 60), 5);
+                            var tiersString = set.stats.STAT_INTELLECT.tier +
+                                '/' + set.stats.STAT_DISCIPLINE.tier +
+                                '/' + set.stats.STAT_STRENGTH.tier;
 
                             tiersSet.add(tiersString);
 
@@ -612,15 +632,13 @@
 
           var allItems = [];
           var vendorItems = [];
-          var hasFelwinter = false;
           _.each(stores, function(store) {
             var items = filterItems(store.items);
 
-            // Exclude felwinter if we have one
-            var felwinter = _.findWhere(items, { hash: 2672107540 });
-            if (!hasFelwinter && felwinter) {
-              hasFelwinter = true;
-              vm.excludeditems.push(felwinter);
+            // Exclude felwinters if we have them
+            var felwinters = _.filter(items, { hash: 2672107540 });
+            if (felwinters.length) {
+              vm.excludeditems.push(...felwinters);
             }
 
             allItems = allItems.concat(items);

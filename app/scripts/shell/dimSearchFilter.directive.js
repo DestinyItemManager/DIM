@@ -366,7 +366,7 @@
           !item.talentGrid.ascended;
       },
       reforgeable: function(predicate, item) {
-        return item.talentGrid && _.any(item.talentGrid.nodes, { name: 'Reforge Ready' });
+        return item.talentGrid && _.any(item.talentGrid.nodes, { hash: 617082448 });
       },
       untracked: function(predicate, item) {
         return item.trackable &&

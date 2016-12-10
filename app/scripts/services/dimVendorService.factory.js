@@ -183,11 +183,10 @@
 
     function mergeCategory(mergedCategory, otherCategory) {
       otherCategory.saleItems.forEach((saleItem) => {
-        const existingSaleItem = _.find(mergedCategory.saleItems, (existingSaleItem) =>
-                                        existingSaleItem.item.hash === saleItem.item.hash);
+        const existingSaleItem = _.find(mergedCategory.saleItems, { index: saleItem.index });
         if (existingSaleItem) {
           existingSaleItem.unlocked = existingSaleItem.unlocked || saleItem.unlocked;
-          if (existingSaleItem.unlocked) {
+          if (saleItem.unlocked) {
             existingSaleItem.unlockedByCharacter.push(saleItem.unlockedByCharacter[0]);
           }
         } else {
@@ -301,16 +300,20 @@
         faction: def.factionHash // TODO: show rep!
       };
 
-      const items = flatMap(vendor.saleItemCategories, (categoryData) => {
+      const saleItems = flatMap(vendor.saleItemCategories, (categoryData) => {
         return categoryData.saleItems;
       });
 
-      return dimStoreService.processItems({ id: null }, _.pluck(items, 'item'))
+      saleItems.forEach((saleItem) => {
+        saleItem.item.itemInstanceId = "vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex;
+      });
+
+      return dimStoreService.processItems({ id: null }, _.pluck(saleItems, 'item'))
         .then(function(items) {
-          const itemsByHash = _.indexBy(items, 'hash');
+          const itemsById = _.indexBy(items, 'id');
           const categories = _.map(vendor.saleItemCategories, (category) => {
-            // Uniquify these because Bungie sends down dups...
-            const categoryItems = _.uniq(category.saleItems.map((saleItem) => {
+            const categoryItems = category.saleItems.map((saleItem) => {
+              const unlocked = isSaleItemUnlocked(saleItem);
               return {
                 index: saleItem.vendorItemIndex,
                 costs: saleItem.costs.map((cost) => {
@@ -319,12 +322,12 @@
                     currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
                   };
                 }).filter((c) => c.value > 0),
-                item: itemsByHash[saleItem.item.itemHash],
+                item: itemsById["vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex],
                 // TODO: caveat, this won't update very often!
-                unlocked: isSaleItemUnlocked(saleItem),
-                unlockedByCharacter: [store.id]
+                unlocked: unlocked,
+                unlockedByCharacter: unlocked ? [store.id] : []
               };
-            }), (saleItem) => saleItem.item.hash);
+            });
 
             let hasArmorWeaps = false;
             let hasVehicles = false;
