@@ -14,7 +14,7 @@
     var vm = this;
     vm.repPool = {};
     vm.newRank = 0;
-    vm.newExperiance = 0;
+    vm.newExperience = 0;
 
     vm.factions = [
       // 174528503, eris breaks things atm
@@ -79,7 +79,7 @@
 
       var totalRank = total + vm.activeFaction.progressToNextLevel;
       vm.newRank = Math.floor((totalRank) / 2500) + vm.activeFaction.level;
-      vm.newExperiance = (totalRank % 2500);
+      vm.newExperience = (totalRank % 2500);
     }
 
 
