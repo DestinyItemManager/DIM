@@ -90,7 +90,7 @@
 		</dim-collapsible-section>
 
 		<dim-collapsible-section translate-attr="{ title: 'MaterialsExchange.FromTrade' }" is-collapsed="true" title="MaterialsExchange.FromTrade">
-			<table>
+			<table ng-show="vm.variksMats[0]">
 				<tbody>
 					<tr>
 						<td>
@@ -118,7 +118,7 @@
 				</tbody>
 			</table>
 
-			<table>
+			<table ng-show="vm.gunSmithMats[0]">
 				<tbody>
 					<tr>
 						<td>
@@ -142,7 +142,7 @@
 				</tbody>
 			</table>
 
-			<table>
+			<table ng-show="vm.xurMats[0] && vm.xurMats[1]">
 				<tbody>
 					<tr>
 						<td>
@@ -160,7 +160,7 @@
 				</tbody>
 			</table>
 
-			<table>
+			<table ng-show="vm.erisMats[0] && vm.erisMats[1]">
 				<tbody>
 					<tr>
 						<td>
