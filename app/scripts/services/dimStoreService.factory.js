@@ -318,6 +318,7 @@
                               dimItemInfoService(activePlatform),
                               $translate.instant('Bucket.Vault'),
                               dimBungieService.getStores(activePlatform)])
+        .then(function([defs, buckets, newItems, itemInfoService, translation, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -355,8 +356,10 @@
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
+                name: translation,
                 class: 'vault',
                 current: false,
+                className: translation,
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
                 background: '/images/vault-background.png',
