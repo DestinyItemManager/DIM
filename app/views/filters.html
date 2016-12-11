@@ -1,4 +1,4 @@
-<div id="filter-view">
+<div id="filter-view" ng-controller="dimSettingsCtrl as vm">
   <h1>Filters</h1>
   <div class="ngdialog-inner-content">
   <p>
@@ -30,20 +30,20 @@
     <tr>
       <td>
         <dim-filter-link filter="light:value"></dim-filter-link>
-        <dim-filter-link filter="light:&gt;=value"></dim-filter-link>
-        <dim-filter-link filter="light:&gt;value"></dim-filter-link>
-        <dim-filter-link filter="light:&lt;value"></dim-filter-link>
-        <dim-filter-link filter="light:&lt;=value"></dim-filter-link>
+        <dim-filter-link filter="light:>=value"></dim-filter-link>
+        <dim-filter-link filter="light:>value"></dim-filter-link>
+        <dim-filter-link filter="light:<value"></dim-filter-link>
+        <dim-filter-link filter="light:>=value"></dim-filter-link>
       </td>
       <td>Shows items based on their light level (Attack for Weapons; Defense for Armor). "level" is an alias for "light".</td>
     </tr>
     <tr>
       <td>
         <dim-filter-link filter="quality:value"></dim-filter-link>
-        <dim-filter-link filter="quality:&gt;=value"></dim-filter-link>
-        <dim-filter-link filter="quality:&gt;value"></dim-filter-link>
-        <dim-filter-link filter="quality:&lt;value"></dim-filter-link>
-        <dim-filter-link filter="quality:&lt;=value"></dim-filter-link>
+        <dim-filter-link filter="quality:>=value"></dim-filter-link>
+        <dim-filter-link filter="quality:>value"></dim-filter-link>
+        <dim-filter-link filter="quality:<value"></dim-filter-link>
+        <dim-filter-link filter="quality:<=value"></dim-filter-link>
       </td>
       <td>Shows items based on their total stat quality percentage. "percentage" is an alias for "quality".</td>
     </tr>
@@ -247,7 +247,8 @@
         <dim-filter-link filter="is:new"></dim-filter-link>
       </td>
       <td>Shows new items.</td>
-    </tr><tr ng-if="false">
+    </tr>
+    <tr ng-if="vm.featureFlags.tagsEnabled">
       <td>
         <dim-filter-link filter="tag:none"></dim-filter-link>
         <dim-filter-link filter="tag:favorite"></dim-filter-link>
@@ -263,7 +264,7 @@
         <li>Shows items you wish to eventually infuse.</li>
       </ul></td>
     </tr>
-    <tr ng-if="false">
+    <tr ng-if="vm.featureFlags.tagsEnabled">
       <td>
         <dim-filter-link filter="notes:value"></dim-filter-link>
       </td>
@@ -316,7 +317,7 @@
         <span>Item is available from vendor <i>Xur</i></span>
         <span>Item is available from vendor <i>Shaxx</i></span>
         <span>Item is available from vendor <i>Crucible Quartermaster</i></span>
-        <span>Item is available from vendor Eris Morn</span>
+        <span>Item is available from vendor <i>Eris Morn</i></span>
       </td>
     </tr>
     <tr>
