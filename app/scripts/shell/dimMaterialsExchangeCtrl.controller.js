@@ -145,7 +145,7 @@
 
     function mapXurItems(hashes) {
       var mappedItems = mapItems(hashes);
-      if (mappedItems[1] && mappedItems[0].amount) {
+      if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
         mappedItems[1].amount = mappedItems[0].amount * 3;
       }
       return mappedItems;
@@ -161,7 +161,7 @@
 
     function mapVariksItems(hashes) {
       var mappedItems = mapItems(hashes);
-      if (mappedItems[1] && mappedItems[0].amount) {
+      if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
         mappedItems[1].amount = mappedItems[0].amount;
       }
       return mappedItems;
@@ -169,7 +169,7 @@
 
     function mapErisItems(hashes) {
       var mappedItems = mapItems(hashes);
-      if (mappedItems[1] && mappedItems[0].amount) {
+      if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
         mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
       }
       return mappedItems;
