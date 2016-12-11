@@ -10,9 +10,7 @@
     'dimItemService',
     'dimStoreService',
     '$interval',
-    'dimCategory',
     'toaster',
-    'dimBucketService',
     'dimFeatureFlags',
     'dimSettingsService'
   ];
@@ -26,9 +24,7 @@
                           dimItemService,
                           dimStoreService,
                           $interval,
-                          dimCategory,
                           toaster,
-                          dimBucketService,
                           dimFeatureFlags,
                           dimSettingsService) {
     let intervalId;
@@ -41,20 +37,20 @@
     ]);
 
     // These are things you may pick up frequently out in the wild
-    const makeRoomTypes = new Set([
-      'Primary',
-      'Special',
-      'Heavy',
-      'Helmet',
-      'Gauntlets',
-      'Chest',
-      'Leg',
-      'ClassItem',
-      'Artifact',
-      'Ghost',
-      'Consumable',
-      'Material'
-    ]);
+    const makeRoomTypes = [
+      'BUCKET_PRIMARY_WEAPON',
+      'BUCKET_SPECIAL_WEAPON',
+      'BUCKET_HEAVY_WEAPON',
+      'BUCKET_HEAD',
+      'BUCKET_ARMS',
+      'BUCKET_CHEST',
+      'BUCKET_LEGS',
+      'BUCKET_CLASS_ITEMS',
+      'BUCKET_ARTIFACT',
+      'BUCKET_GHOST',
+      'BUCKET_CONSUMABLES',
+      'BUCKET_MATERIALS'
+    ];
 
     const settings = dimSettingsService.farming;
 
@@ -140,16 +136,12 @@
       // Ensure that there's one open space in each category that could
       // hold an item, so they don't go to the postmaster.
       makeRoomForItems: function() {
-        var store = dimStoreService.getStore(this.store.id);
-
-        var applicableItems = _.select(store.items, (i) =>
-                                       !i.location.inPostmaster &&
-                                       makeRoomTypes.has(i.type));
-        var itemsByType = _.groupBy(applicableItems, 'type');
+        const store = dimStoreService.getStore(this.store.id);
 
         // If any category is full, we'll move one aside
-        var itemsToMove = [];
-        _.each(itemsByType, (items) => {
+        const itemsToMove = [];
+        makeRoomTypes.forEach((makeRoomType) => {
+          const items = store.buckets[makeRoomType];
           if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
             // We'll move the lowest-value item to the vault.
             const itemToMove = _.min(_.select(items, { equipped: false, notransfer: false }), (i) => {
