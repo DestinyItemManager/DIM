@@ -758,12 +758,12 @@
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
             Consumables: "Verbrauchsgegenstände",
             Bounties: "Beutezüge",
-            ShadersAndEmblems: "Shader & Embleme",
-            Emotes: "Emotes"
+            ShadersAndEmblems: "Shader & Abzeichen",
+            Emotes: "Gesten"
           },
           TrialsCard: {
             FiveWins: "5 Siege Belohnung (Rüstung)",
-            SevenWins: "7 Win Belohnung (Waffe)",
+            SevenWins: "7 Siege Belohnung (Waffe)",
             Flawless: "Flawless"
           }
         })
@@ -1232,7 +1232,8 @@
             Unknown: "未知の",
             Vanguard: "バンガード",
             Progress: "進捗",
-            Reputation: "評価"
+            Reputation: "評価",
+            Show: "ショー{{bucket}}"
           },
           Header: {
             About: "紹介",
