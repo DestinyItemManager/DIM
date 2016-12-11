@@ -21,7 +21,7 @@
         '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
         '  <div class="interaction">',
         '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
-        '      <div class="move-button move-vault" translate-attr="{ title: \'Bucket.Vault\', alt: \'Bucket.Vault\' }" ',
+        '      <div class="move-button move-vault" alt="{{::store.name}}" title="{{::store.name}}" ',
         '        ng-if="vm.canShowVault(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
         '        data-type="item" data-character="{{::store.id}}">',
         '        <span>Vault</span>',
