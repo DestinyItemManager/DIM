@@ -1,4 +1,9 @@
-# Next
+# 3.14.1
+
+* Internationaliztion updates.
+* Fix for Loadout Class Type bug.
+
+# 3.14.0
 
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
@@ -14,6 +19,7 @@
 * All vendor items (including duplicates with different rolls) will now show up.
 * Added more translations.
 * If you have more than one Memory of Felwinter, they are all excluded from loadout builder.
+* Export correct quality rating for items in CSV.
 
 # 3.13.0
 

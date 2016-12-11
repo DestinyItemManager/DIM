@@ -54,7 +54,15 @@
           },
           Debug: {
             Dump: "Dump info to console",
-            View: "View Item Debug Info"
+            View: "View Item Debug Info" },
+          DidYouKnow: {
+            DidYouKnow: "Did you know?",
+            Collapse: "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
+            DontShowAgain: "Don't show this tip again",
+            DoubleClick: "If you're moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.",
+            DragAndDrop: "Items can be dragged and dropped between different characters/vault columns.",
+            Expand: "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
+            TryNext: "Try it out next time!"
           },
           FarmingMode: {
             FarmingMode: "Farming Mode (move items)",
@@ -156,6 +164,8 @@
             GatherEngrams: "Gather Engrams",
             GatherEngramsExceptExotics: "Exotics",
             RestoreAllItems: "All Items",
+            Random: "Random",
+            Randomize: "Randomize your equipped weapons, armor, ghost, and artifact?",
             LoadoutName: "Loadout Name...",
             Save: "Save",
             SaveAsNew: "Save As New",
@@ -402,6 +412,7 @@
             GatherEngrams: "Raccogliere Engrammi",
             GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
+            Random: "Casuale",
             LoadoutName: "Nome Loadout...",
             Save: "Salva",
             SaveAsNew: "Salva come nuovo",
@@ -660,6 +671,7 @@
             GatherEngramsExceptExotics: "Exotics",
             RestoreAllItems: "Alle Elemente",
             LoadoutName: "Loadout Name...",
+            Random: "Zufällig",
             Save: "Speichern",
             SaveAsNew: "Speichern als...",
             Cancel: "Abbrechen",
@@ -885,6 +897,7 @@
             GatherEngrams: "Réunir les Engrammes",
             GatherEngramsExceptExotics: "Exotiques",
             RestoreAllItems: "Tous les objets",
+            Random: "Aléatoire",
             LoadoutName: "Nom du loadout...",
             Save: "Sauvegarder",
             SaveAsNew: "Sauvegarder comme nouveau",
@@ -1116,6 +1129,7 @@
             GatherEngrams: "Juntar engramas",
             GatherEngramsExceptExotics: "Exóticos",
             RestoreAllItems: "Todos los objetos",
+            Random: "Aleatorio",
             LoadoutName: "Nombre de equipo...",
             Save: "Guardar",
             SaveAsNew: "Guardar como nuevo",
@@ -1250,8 +1264,8 @@
             GatherEngrams: "エングラムを収集",
             GatherEngramsExceptExotics: "エキゾチック",
             RestoreAllItems: "品揃え",
-            Loadouts: "Loadouts"
-          },
+            Random: "ランダム",
+            Loadouts: "Loadouts" },
           Notes: {
             Help: "このアイテムにメモを追加"
           },
@@ -1409,6 +1423,7 @@
             GatherEngrams: "Obter engramas",
             GatherEngramsExceptExotics: "Exóticos",
             RestoreAllItems: "Todos os itens",
+            Random: "Aleatória",
             LoadoutName: "Nome do set...",
             Save: "Salvar",
             SaveAsNew: "Salvar como novo",

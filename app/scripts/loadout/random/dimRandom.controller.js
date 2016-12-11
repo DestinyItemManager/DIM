@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimRandomCtrl', dimRandomCtrl);
 
-  dimRandomCtrl.$inject = ['$window', '$scope', '$q', 'dimStoreService', 'dimLoadoutService'];
+  dimRandomCtrl.$inject = ['$window', '$scope', '$q', 'dimStoreService', 'dimLoadoutService', '$translate'];
 
-  function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService) {
+  function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, $translate) {
     var vm = this;
 
     $scope.$on('dim-stores-updated', function() {
@@ -21,7 +21,7 @@
         return;
       }
 
-      if (!$window.confirm('Randomize your equipped weapons, armor, ghost, and artifact?')) {
+      if (!$window.confirm($translate.instant('Loadouts.Randomize'))) {
         return;
       }
 
@@ -91,7 +91,7 @@
 
             return dimLoadoutService.applyLoadout(store, {
               classType: -1,
-              name: 'random',
+              name: $translate.instant('Loadouts.Random'),
               items: items
             }, true);
           }
