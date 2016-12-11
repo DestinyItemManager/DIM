@@ -174,7 +174,7 @@
       }
 
       // TODO: unify this value function w/ the others!
-      var result = _.max(candidates, function(i) {
+      var sortedCandidates = _.sortBy(candidates, function(i) {
         var value = {
           Legendary: 4,
           Rare: 3,
@@ -182,27 +182,28 @@
           Common: 1,
           Exotic: 0
         }[i.tier];
+        if (item.isExotic && i.isExotic) {
+          value += 5;
+        }
         if (i.primStat) {
           value += i.primStat.value / 1000.0;
         }
         return value;
-      });
+      }).reverse();
 
-      if (result && result.isExotic) {
-        var prefix = _.filter(store.items, function(i) {
-          return i.equipped &&
-            i.bucket.sort === item.bucket.sort &&
-            i.isExotic;
-        });
-
-        if (prefix.length === 0) {
-          return result;
+      return sortedCandidates.find((result) => {
+        if (result.isExotic) {
+          const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
+          // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
+          if (!otherExotic || otherExotic.id === item.id) {
+            return true;
+          } else {
+            return false;
+          }
         } else {
-          return null;
+          return true;
         }
-      }
-
-      return result || null;
+      }) || null;
     }
 
     /**
