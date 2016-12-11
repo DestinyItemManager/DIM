@@ -51,6 +51,15 @@
           Debug: {
             Dump: "Dump info to console",
             View: "View Item Debug Info" },
+          DidYouKnow: {
+            DidYouKnow: "Did you know?",
+            Collapse: "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
+            DontShowAgain: "Don't show this tip again",
+            DoubleClick: "If you're moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.",
+            DragAndDrop: "Items can be dragged and dropped between different characters/vault columns.",
+            Expand: "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
+            TryNext: "Try it out next time!"
+          },
           FarmingMode: {
             FarmingMode: "Farming Mode (move items)",
             Desc: "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
