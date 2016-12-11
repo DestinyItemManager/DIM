@@ -4,16 +4,17 @@
   angular.module('dimApp')
     .factory('dimItemMoveService', ItemMoveService);
 
-  ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService'];
+  ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService', '$translate'];
 
-  function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService) {
+  function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
+    const didYouKnowTemplate = "<p>" + $translate.instant('DidYouKnow.DragAndDrop') + "</p>" +
+                               "<p>" + $translate.instant('DidYouKnow.TryNext') + "</p>";
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('movebox', {
-        title: 'Did you know?',
-        body: ['<p>Items can be dragged and dropped between different characters/vault columns.</p>',
-               '<p>Try it out next time!<p>'].join(''),
-        hide: 'Don\'t show this tip again'
+        title: $translate.instant('DidYouKnow'),
+        body: didYouKnowTemplate,
+        hide: $translate.instant('DidYouKnow.DontShowAgain')
       });
     });
 
