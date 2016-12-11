@@ -16,8 +16,7 @@
       template: [
         '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',
         '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.store.icon + \')\' }"></div>',
-        '  <div class="class" ng-if="::!vm.store.isVault">{{:: vm.store.className }}</div>',
-        '  <div class="class" ng-if="::!!vm.store.isVault"><span translate="Bucket.Vault"></span></div>',
+        '  <div class="class">{{:: vm.store.className }}</div>',
         '  <div class="race-gender" ng-if="::!vm.store.isVault">{{:: vm.store.genderRace }}</div>',
         '  <div class="level" ng-if="::!vm.store.isVault"><span translate="Level"></span> {{ vm.store.level }}</div>',
         '  <div class="level powerLevel" ng-if="!vm.store.isVault">{{ vm.store.powerLevel }}</div>',
