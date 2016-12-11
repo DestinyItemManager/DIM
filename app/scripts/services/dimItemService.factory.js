@@ -522,9 +522,18 @@
     /**
      * Is there anough space to move the given item into store? This will refresh
      * data and/or move items aside in an attempt to make a move possible.
+     * @param item The item we're trying to move.
+     * @param store The destination store.
+     * @param options.triedFallback True if we've already tried reloading stores
+     * @param options.excludes A list of items that should not be moved in
+     *                         order to make space for this move.
+     * @param options.reservations A map from store => type => number of spaces to leave open.
+     * @param options.numRetries A count of how many alternate items we've tried.
      * @return a promise that's either resolved if the move can proceed or rejected with an error.
      */
-    function canMoveToStore(item, store, triedFallback, excludes = [], reservations = {}) {
+    function canMoveToStore(item, store, options = {}) {
+      const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
+
       function spaceLeftWithReservations(s, i) {
         let left = s.spaceLeftForItem(i);
         // minus any reservations
@@ -564,8 +573,6 @@
       if (!_.any(movesNeeded)) {
         return $q.resolve(true);
       } else if (store.isVault || triedFallback) {
-        // TODO: pass along the move context even more, and keep track of the original item and store
-
         // Move aside one of the items that's in the way
         var moveContext = {
           originalItemType: item.type,
@@ -593,11 +600,18 @@
         } else {
           // Make one move and start over!
           return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
-            .then(() => canMoveToStore(item, store, triedFallback, excludes))
+            .then(() => canMoveToStore(item, options))
             .catch((e) => {
-              excludes.push(moveAsideItem);
-              console.error(`Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`, e);
-              return canMoveToStore(item, store, true, excludes);
+              if (numRetries < 3) {
+                // Exclude this item and try again so we pick another
+                excludes.push(moveAsideItem);
+                options.excludes = excludes;
+                options.numRetries = numRetries + 1;
+                console.error(`Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`, e);
+                return canMoveToStore(item, store, options);
+              } else {
+                throw e;
+              }
             });
         }
       } else {
@@ -605,7 +619,8 @@
         var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
         return reloadPromise.then(function(stores) {
           store = _.find(stores, { id: store.id });
-          return canMoveToStore(item, store, true, excludes);
+          options.triedFallback = true;
+          return canMoveToStore(item, store, options);
         });
       }
     }
@@ -636,7 +651,7 @@
         }
       }
 
-      promises.push(canMoveToStore(item, store, false, excludes, reservations));
+      promises.push(canMoveToStore(item, store, { excludes, reservations }));
 
       return $q.all(promises);
     }

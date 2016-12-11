@@ -553,14 +553,11 @@
       // Handle "DestinyUniquenessViolation" (1648)
       function handleUniquenessViolation(e, item, store) {
         if (e && e.code === 1648) {
-          toaster.pop('warning',
-                      $translate.instant('BungieService.ItemUniqueness'),
-                      $translate.instant('BungieService.ItemUniquenessExplanation', {
-                        name: item.name,
-                        type: item.type.toLowerCase(),
-                        character: store.name
-                      }));
-          const error = new Error($translate.instant('BungieService.ItemUniquenessExplanation'));
+          const error = new Error($translate.instant('BungieService.ItemUniquenessExplanation', {
+            name: item.name,
+            type: item.type.toLowerCase(),
+            character: store.name
+          }));
           error.code = e.code;
           return $q.reject(error);
         }
