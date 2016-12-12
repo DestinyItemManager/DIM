@@ -37,9 +37,36 @@
     };
   }
 
-  StoreBucketCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimInfoService', '$translate'];
+  StoreBucketCtrl.$inject = [
+    '$scope',
+    'loadingTracker',
+    'dimStoreService',
+    'dimItemService',
+    '$q',
+    '$timeout',
+    'toaster',
+    'dimSettingsService',
+    'ngDialog',
+    '$rootScope',
+    'dimActionQueue',
+    'dimFeatureFlags',
+    'dimInfoService',
+    '$translate'];
 
-  function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimInfoService, $translate) {
+  function StoreBucketCtrl($scope,
+                           loadingTracker,
+                           dimStoreService,
+                           dimItemService,
+                           $q,
+                           $timeout,
+                           toaster,
+                           dimSettingsService,
+                           ngDialog,
+                           $rootScope,
+                           dimActionQueue,
+                           dimFeatureFlags,
+                           dimInfoService,
+                           $translate) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -156,7 +183,9 @@
 
         promise = dialogResult.closePromise.then(function(data) {
           if (typeof data.value === 'string') {
-            return $q.reject(new Error("move-canceled"));
+            const error = new Error("move-canceled");
+            error.code = "move-canceled";
+            return $q.reject(error);
           }
           var moveAmount = data.value;
           return moveAmount;
@@ -164,6 +193,9 @@
       }
 
       promise = promise.then(function(moveAmount) {
+        if (dimFeatureFlags.debugMoves) {
+          console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
+        }
         var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
         var reload = item.equipped || equip;

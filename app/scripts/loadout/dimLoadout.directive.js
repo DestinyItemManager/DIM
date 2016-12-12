@@ -68,18 +68,18 @@
           let classType = 0;
 
           switch (parseInt(store.classType, 10)) {
-            case 0: {
-              classType = 1;
-              break;
-            }
-            case 1: {
-              classType = 2;
-              break;
-            }
-            case 2: {
-              classType = 0;
-              break;
-            }
+          case 0: {
+            classType = 1;
+            break;
+          }
+          case 1: {
+            classType = 2;
+            break;
+          }
+          case 2: {
+            classType = 0;
+            break;
+          }
           }
 
           vm.classTypeValues.push({ label: store.className, value: classType });
