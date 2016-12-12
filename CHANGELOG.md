@@ -11,6 +11,7 @@
 * When making space in the "General" category or in Materials/Consumables buckets, we'll choose to move aside an item that can be combined with another stack somewhere without increasing the total number of stacks. This trends towards consolidation and can help free up a full vault, as well as getting rid of stray stacks.
 * We swapped in "special ammo synth" and "primary ammo synth" instead of "motes of light" and "strange coins" for the farming mode quick gather buttons. They seemed more useful in the heat of battle.
 * When dequipping an item, we try harder to find a good item to equip in its place. We also prefer replacing exotics with other exotics, and correctly handle The Life Exotic perk.
+* Lots of new translations and localized strings.
 
 # 3.14.1
 
