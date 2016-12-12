@@ -223,6 +223,11 @@
       }, 0)) / 10).toFixed(1);
     }
 
+    /**
+     * Apply a loadout - a collection of items to be moved and possibly equipped all at once.
+     * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
+     * @return a promise for the completion of the whole loadout operation.
+     */
     function applyLoadout(store, loadout, allowUndo = false) {
       return dimActionQueue.queueAction(function() {
         if (allowUndo) {
@@ -432,13 +437,11 @@
           scope.successfulItems.push(item);
         })
         .catch(function(e) {
-          if (e.message !== 'move-canceled') {
-            const level = e.level || 'error';
-            if (level === 'error') {
-              scope.failed++;
-            }
-            toaster.pop(e.level || 'error', item.name, e.message);
+          const level = e.level || 'error';
+          if (level === 'error') {
+            scope.failed++;
           }
+          toaster.pop(e.level || 'error', item.name, e.message);
         })
         .finally(function() {
           // Keep going
