@@ -32,6 +32,7 @@
 
                 return cache.then(function() {
                   config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+                  return config;
                 })
                 .catch(() => {
                   OAuthTokenService.removeToken();
