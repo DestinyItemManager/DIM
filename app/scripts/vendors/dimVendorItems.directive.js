@@ -142,7 +142,7 @@
               '  </div>',
               '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
               '  <div class="item-details">',
-              '    <div translate="Vendors.Avail">:</div>',
+              '    <div translate="Vendors.Available">:</div>',
               '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
               '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
               '      {{store.name}}',
