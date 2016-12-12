@@ -95,8 +95,24 @@
       service.vendorsLoaded = false;
     });
 
+    $rootScope.$on('dim-new-manifest', function() {
+      service.vendors = {};
+      service.vendorsLoaded = false;
+      deleteCachedVendors();
+    });
+
     return service;
 
+    function deleteCachedVendors() {
+      // Everything's in one table, so we can't just clear
+      idbKeyval.keys().then((keys) => {
+        keys.forEach((key) => {
+          if (key.startsWith('vendor')) {
+            idbKeyval.delete(key);
+          }
+        });
+      });
+    }
 
     function reloadVendors(stores) {
       const activePlatform = dimPlatformService.getActive();
@@ -151,9 +167,6 @@
       _reloadPromise.activePlatform = activePlatform;
       return _reloadPromise;
     }
-
-    // TODO: loadVendor (loads appropriate chars)
-
 
     function mergeVendors([firstVendor, ...otherVendors]) {
       const mergedVendor = angular.copy(firstVendor);
@@ -217,6 +230,42 @@
         });
     }
 
+    /**
+     * Get this character's level for the given faction.
+     */
+    function factionLevel(store, factionHash) {
+      const rep = store.progression.progressions.find((rep) => {
+        return rep.faction && rep.faction.factionHash === factionHash;
+      });
+      return (rep && rep.level) || 0;
+    }
+
+    /**
+     * Whether or not this character is aligned with the given faction.
+     */
+    function factionAligned(store, factionHash) {
+      const factionsByHash = {
+        489342053: 'Future War Cult',
+        2397602219: 'Dead Orbit',
+        3197190122: 'New Monarchy'
+      };
+      const factionAlignment = store.factionAlignment();
+
+      return factionAlignment === factionsByHash[factionHash];
+    }
+
+    /**
+     * A cached vendor is only usable if it's not expired, and this character hasn't
+     * changed level for the faction associated with this vendor (or changed whether
+     * they're aligned with that faction).
+     */
+    function cachedVendorUpToDate(vendor, store, vendorDef) {
+      return vendor &&
+        vendor.expires > Date.now() &&
+        vendor.factionLevel === factionLevel(store, vendorDef.summary.factionHash) &&
+        vendor.factionAligned === factionAligned(store, vendorDef.summary.factionHash);
+    }
+
     function loadVendor(store, vendorDef, defs) {
       const vendorHash = vendorDef.hash;
 
@@ -224,19 +273,20 @@
       return idbKeyval
         .get(key)
         .then((vendor) => {
-          if (vendor && vendor.expires > Date.now()) {
-            // console.log("loaded local", key, vendor);
+          if (cachedVendorUpToDate(vendor, store, vendorDef)) {
+            // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
             if (vendor.failed) {
-              // TODO: delete from cache
               throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
             }
             return vendor;
           } else {
-            // console.log("load remote", key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
+            // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
             return dimBungieService
               .getVendorForCharacter(store, vendorHash)
               .then((vendor) => {
                 vendor.expires = calculateExpiration(vendor.nextRefreshDate);
+                vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
+                vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
                 return idbKeyval
                   .set(key, vendor)
                   .then(() => vendor);
@@ -248,7 +298,9 @@
                     failed: true,
                     code: e.code,
                     status: e.status,
-                    expires: Date.now() + (60 * 60 * 1000) + ((Math.random() - 0.5) * (60 * 60 * 1000))
+                    expires: Date.now() + (60 * 60 * 1000) + ((Math.random() - 0.5) * (60 * 60 * 1000)),
+                    factionLevel: factionLevel(store, vendorDef.summary.factionHash),
+                    factionAligned: factionAligned(store, vendorDef.summary.factionHash)
                   };
 
                   return idbKeyval
