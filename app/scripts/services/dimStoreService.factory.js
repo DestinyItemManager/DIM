@@ -624,6 +624,7 @@
 
       if (!itemDef.icon && !itemDef.action) {
         itemDef.classified = true;
+        itemDef.classType = 3;
       }
 
       if (!itemDef.icon) {
