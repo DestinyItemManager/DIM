@@ -162,7 +162,7 @@
       });
 
       promise = promise.then(function() {
-        toaster.pop('success', $translate.instant('ItemMove.Distributed'));
+        toaster.pop('success', $translate.instant('ItemMove.Distributed', { name: actionableItem.name }));
       })
       .catch(function(a) {
         toaster.pop('error', actionableItem.name, a.message);

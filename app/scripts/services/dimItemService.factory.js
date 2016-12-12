@@ -635,7 +635,13 @@
         } else if (item.classified) {
           reject(new Error($translate.instant('ItemService.Classified')));
         } else {
-          reject(new Error($translate.instant('ItemService.OnlyEquipped', { class: (item.classTypeName === 'unknown' ? 'character' : item.classTypeName), level: item.equipRequiredLevel })));
+          var message;
+          if (item.classTypeName === 'unknown') {
+            message = $translate.instant('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
+          } else {
+            message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeName, level: item.equipRequiredLevel });
+          }
+          reject(new Error(message));
         }
       });
     }
