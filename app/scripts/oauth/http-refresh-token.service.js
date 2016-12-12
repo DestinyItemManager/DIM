@@ -26,17 +26,14 @@
 
               if (isValid) {
                 if (!cache) {
-                  // var $http = $injector.get('$http');
                   debugger;
                   cache = OAuthService.refreshToken();
                 }
 
-                return cache.then(function(response) {
-                  config.headers.Authorization = 'Bearer ' + response.accessToken.value;
-
-                  return config;
+                return cache.then(function() {
+                  config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
                 })
-                .catch((error) => {
+                .catch(() => {
                   OAuthTokenService.removeToken();
                   $rootScope.$broadcast('dim-no-token-found');
                 });

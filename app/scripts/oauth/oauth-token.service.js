@@ -5,7 +5,7 @@
     }
 
     function setToken(token) {
-      storage.set('authorization', JSON.stringify(token));
+      storage.set('authorization', token);
     }
 
     function getAccessToken() {
@@ -38,8 +38,11 @@
     }
 
     function hasTokenExpired(token) {
-      const expires = getTokenDate(token, 'expires', -300000).valueOf();
+      const expires = getTokenDate(token, 'expires', -1800000).valueOf();
       const now = (new Date()).valueOf();
+
+      if (token)
+        console.log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60));
 
       return (expires <= now);
     }
@@ -47,6 +50,9 @@
     function isTokenReady(token) {
       const readyIn = getTokenDate(token, 'readyin').valueOf();
       const now = (new Date()).valueOf();
+
+      if (token)
+        console.log("ReadyIn: " + token.name + " " + (readyIn <= now) + " " + ((readyIn - now) / 1000 / 60));
 
       return (readyIn <= now);
     }

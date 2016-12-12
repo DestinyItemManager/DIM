@@ -105,6 +105,29 @@
       }
 
       var errorCode = response.data.ErrorCode;
+
+      switch (errorCode) {
+      case 1: {
+        return response;
+      }
+      case 1627: {
+        return $q.reject("Vendor data is unavailable.");
+      }
+      case 2108: {
+        return $q.reject("DIM does not have permission to perform this action.");
+      }
+      case 5:
+      case 36:
+      case 99:
+      case 1618:
+      case 2101:
+      case 2102:
+      case 2107:
+      // default: {
+      //   return response;
+      // }
+      }
+
       if (errorCode === 36) {
         return $q.reject(new Error($translate.instant('BungieService.Throttled')));
       } else if (errorCode === 99) {

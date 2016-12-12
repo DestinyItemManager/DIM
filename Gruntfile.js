@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
+
   var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
   var firefoxBrowserSupport = {
     "gecko": {
@@ -10,7 +11,14 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: pkg,
-
+    uglify: {
+      my_target: {
+        files: {
+          'dist/sripts/vendor.min.js': ['src/input1.js', 'src/input2.js'],
+          'dist/sripts/app.min.js': ['src/input1.js', 'src/input2.js']
+        }
+      }
+    },
     sync: {
       chrome: {
         files: [{
@@ -226,6 +234,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-sync');
   grunt.loadNpmTasks("grunt-eslint");
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('css', ['sass', 'postcss']);
 
