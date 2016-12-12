@@ -175,10 +175,6 @@
       service.statusText = $translate.instant('Manifest.Load') + '...';
       var currentManifestVersion = localStorage.getItem('manifest-version');
       if (currentManifestVersion === version) {
-        // One version of this used chrome.storage.local with a
-        // base64-encoded string, which is a bit slower. We may need
-        // to do that again if the requestFileSystem API gets
-        // removed.
         return idbKeyval.get('dimManifest').then((typedArray) => {
           if (!typedArray) {
             throw new Error("Empty cached manifest file");
