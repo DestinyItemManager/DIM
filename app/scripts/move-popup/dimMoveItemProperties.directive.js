@@ -194,7 +194,8 @@
     if (vm.item.classTypeName !== 'unknown' &&
         // These already include the class name
         vm.item.type !== 'ClassItem' &&
-        vm.item.type !== 'Artifact') {
+        vm.item.type !== 'Artifact' &&
+        vm.item.type !== 'Class') {
       vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
     }
 

@@ -50,7 +50,8 @@
     '$rootScope',
     'dimActionQueue',
     'dimFeatureFlags',
-    'dimInfoService'];
+    'dimInfoService',
+    '$translate'];
 
   function StoreBucketCtrl($scope,
                            loadingTracker,
@@ -64,7 +65,8 @@
                            $rootScope,
                            dimActionQueue,
                            dimFeatureFlags,
-                           dimInfoService) {
+                           dimInfoService,
+                           $translate) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -105,14 +107,14 @@
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
     };
-
+    const didYouKnowTemplate = "<p>" + $translate.instant('DidYouKnow.DoubleClick') + "</p>" +
+                               "<p>" + $translate.instant('DidYouKnow.TryNext') + "</p>";
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('doubleclick', {
-        title: 'Did you know?',
-        body: ['<p>If you\'re moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.</p>',
-               '<p>Try it out next time!<p>'].join(''),
-        hide: 'Don\'t show this tip again'
+        title: $translate.instant('DidYouKnow'),
+        body: didYouKnowTemplate,
+        hide: $translate.instant('DidYouKnow.DontShowAgain')
       });
     });
 

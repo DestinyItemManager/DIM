@@ -55,19 +55,18 @@
     }
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService', 'dimInfoService'];
+  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService', 'dimInfoService', '$translate'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService) {
+  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
     var vm = this;
-
+    const didYouKnowTemplate = "<p>" + $translate.instant('DidYouKnow.Collapse') + "</p>" +
+                               "<p>" + $translate.instant('DidYouKnow.Expand') + "</p>";
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('collapsed', {
-        title: 'Did you know?',
-        body: [
-          '<p>You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don\'t need to normally use.</p>',
-          '<p>To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.<p>'].join(''),
-        hide: 'Don\'t show this tip again'
+        title: $translate.instant('DidYouKnow'),
+        body: didYouKnowTemplate,
+        hide: $translate.instant('DidYouKnow.DontShowAgain')
       });
     });
 

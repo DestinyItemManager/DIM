@@ -18,68 +18,98 @@
             Show: "Show {{bucket}}",
             Unknown: "Unknown",
             Vault: "Vault",
-            Weapons: "Weapons" },
+            Weapons: "Weapons"
+          },
           BungieService: {
+            DevVersion: "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
             Down: "Bungie.net is down.",
             Difficulties: "The Bungie API is currently experiencing difficulties.",
             NetworkError: "Network error - {{status}} {{statusText}}",
-            Throttled: 'Bungie API throttling limit exceeded. Please wait a bit and then retry.',
-            NotLoggedIn: 'Please log into Bungie.net in order to use this extension.',
+            Throttled: "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
+            NotLoggedIn: "Please log into Bungie.net in order to use this extension.",
             Maintenance: "Bungie.net servers are down for maintenance.",
             NoAccount: "No Destiny account was found for this platform. Do you have the right platform selected?",
             NoAccountForPlatform: "Failed to find a Destiny account for you on {{platform}}.",
+            NoCookies: "No cookies found.",
             NotConnected: "You may not be connected to the internet.",
             Twitter: "Get status updates on",
             ItemUniqueness: "Item Uniqueness",
             ItemUniquenessExplanation: "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one."
           },
           Compare: {
-            All: {
-              Singular: "Compare all {{type}}s ({{quantity}})",
-              Plural: "Compare all {{type}} ({{quantity}})" },
-            Archetype: "Compare in archetype ({{quantity}})",
+            All: "{{type}} comparisons ({{quantity}})",
+            Archetype: "Archetype comparisons ({{quantity}})",
             Compare: "Compare",
             Close: "Close",
             Error: {
-              Class: "Can not compare this item as it is not for a {{class}}.",
-              Archetype: "Can not compare this item as it is not a {{type}}." },
-            Splits: "Compare similar splits ({{quantity}})" },
+              Class: "Cannot compare this item as it is not for a {{class}}.",
+              Archetype: "Cannot compare this item as it is not a {{type}}."
+            },
+            Splits: "Compare similar splits ({{quantity}})"
+          },
           Cooldown: {
             Grenade: "Grenade cooldown",
             Melee: "Melee cooldown",
-            Super: "Super cooldown" },
+            Super: "Super cooldown"
+          },
           Debug: {
             Dump: "Dump info to console",
             View: "View Item Debug Info" },
+          DidYouKnow: {
+            DidYouKnow: "Did you know?",
+            Collapse: "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
+            DontShowAgain: "Don't show this tip again",
+            DoubleClick: "If you're moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.",
+            DragAndDrop: "Items can be dragged and dropped between different characters/vault columns.",
+            Expand: "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
+            TryNext: "Try it out next time!"
+          },
           FarmingMode: {
             FarmingMode: "Farming Mode (move items)",
             Desc: "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
             Configuration: "Configuration",
             Greens: {
               Greens: "Move Uncommon/Green Items to Vault",
-              Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character." },
+              Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character."
+            },
             MakeRoom: {
               Desc: "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
               MakeRoom: "Make room to pick up items by moving equipment",
-              Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams." },
+              Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
+            },
             Quickmove: "Quick Move",
-            Stop: "Stop" },
+            Stop: "Stop"
+          },
           Header: {
             About: "About",
             Filters: "Filters",
             FilterHelp: "Search item/perk or is:arc",
             MaterialsExchange: "Available faction ranks",
             Refresh: "Refresh Destiny Data",
-            SupportDIM: "Support DIM" },
+            SupportDIM: "Support DIM"
+          },
           Help: {
             BackToDIM: "Back to DIM",
-            Drag: "Hold shift or pause over drop zone to transfer a partial stack." },
+            Drag: "Hold shift or pause over drop zone to transfer a partial stack."
+          },
           Hotkey: {
             StartSearch: "Start a search",
             RefreshInventory: "Refresh inventory",
             ToggleDetails: "Toggle showing full item details",
             MarkItemAs: "Mark item as '{{tag}}'",
-            ClearNewItems: "Clear new items" },
+            ClearNewItems: "Clear new items"
+          },
+          Infusion: {
+            Infusion: "Infusion Fuel Finder",
+            BringGear: "Will bring the gear to",
+            Calc: "Infusion calculator",
+            InfuseItems: "Select item to infuse with:",
+            LockedItems: "Include 'locked' items",
+            NoItems: "No infusable items available.",
+            ShowItems: "Show infusable items across all characters and vault",
+            TransferItems: "Transfer items",
+            Using3: "using 3"
+          },
           LB: {
             LB: "Loadout Builder",
             ShowGear: "Show {{class}} gear",
@@ -95,13 +125,15 @@
               Full: "Full",
               ProcessingMode: "Processing mode",
               HelpFast: "Only looks at your best gear.",
-              HelpFull: "Looks at more gear, but takes longer." },
+              HelpFull: "Looks at more gear, but takes longer."
+            },
             Scaled: "Scaled",
             Current: "Current",
             LightMode: {
               LightMode: "Light mode",
               HelpScaled: "Calculates loadouts as if all items were 350 defense.",
-              HelpCurrent: "Calculates loadouts at current defense levels." },
+              HelpCurrent: "Calculates loadouts at current defense levels."
+            },
             IncludeRare: "Include rare (blue) items",
             Help: "Need help?",
             Equip: "Equip on Current Character",
@@ -115,7 +147,8 @@
             ExcludeHelp: "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
             LockPerk: "Lock perk",
             Missing1: "Missing legendary or exotic pieces to build a full set!",
-            Missing2: "Missing rare, legendary, or exotic pieces to build a full set!" },
+            Missing2: "Missing rare, legendary, or exotic pieces to build a full set!"
+          },
           Loadouts: {
             Any: "Any",
             Loadouts: "Loadouts",
@@ -131,17 +164,20 @@
             GatherEngrams: "Gather Engrams",
             GatherEngramsExceptExotics: "Exotics",
             RestoreAllItems: "All Items",
+            Random: "Random",
+            Randomize: "Randomize your equipped weapons, armor, ghost, and artifact?",
             LoadoutName: "Loadout Name...",
             Save: "Save",
             SaveAsNew: "Save As New",
             Cancel: "Cancel",
             ItemsWithIcon: "Items with this icon will be equipped.",
-            ClickToEquip: "Click on an item toggle to equip.",
+            ClickToEquip: "Click on an item to toggle equip.",
             AppliedAuto: "Automatic Loadout Builder",
             Applied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
             Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
             AppliedError: "None of the items in your loadout could be transferred.",
-            AppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors." },
+            AppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors."
+          },
           Manifest: {
             Build: "Building Destiny info database",
             Download: "Downloading latest Destiny info from Bungie",
@@ -152,7 +188,8 @@
             Load: "Loading saved Destiny info",
             LoadCharInv: "Loading Destiny characters and inventory",
             Save: "Saving latest Destiny info",
-            Unzip: "Unzipping latest Destiny info" },
+            Unzip: "Unzipping latest Destiny info"
+          },
           MaterialsExchange: {
             MaterialsExchange: "Materials Exchange",
             CurrentRank: "Current Rank",
@@ -160,10 +197,12 @@
             OnHand: "Materials on hand",
             FromTrade: "Materials from trade",
             NewRank: "New Rank",
-            NewRep: "New Rep" },
+            NewRep: "New Rep"
+          },
           Notes: {
             Error: "Error! Max 120 characters for notes.",
-            Help: "Add notes to this item" },
+            Help: "Add notes to this item"
+          },
           Settings: {
             Settings: "Settings",
             Language: "Language (reload DIM to take effect)",
@@ -199,7 +238,8 @@
             ExportSS: "Download Spreadsheets",
             ExportSSHelp: "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
             DIMPopups: "DIM Info Popups",
-            DIMPopupsReset: "Reset previously hidden info tips" },
+            DIMPopupsReset: "Reset previously hidden info tips"
+          },
           Stats: {
             Discipline: "Discipline",
             Intellect: "Intellect",
@@ -208,13 +248,15 @@
             PercentHelp: "Click for more information about what Stats Quality is.",
             Quality: "Stats quality",
             Strength: "Strength",
-            TierProgress: "{{progress}} for {{tier}}" },
+            TierProgress: "{{progress}} for {{tier}}"
+          },
           Tags: {
             TagItem: "Tag Item",
             Favorite: "Favorite",
             Junk: "Junk",
             Infuse: "Infuse",
-            Keep: "Keep" },
+            Keep: "Keep"
+          },
           Vendors: {
             Vendors: "Vendors",
             All: "All",
@@ -224,7 +266,8 @@
             Consumables: "Consumables",
             Bounties: "Bounties",
             ShadersAndEmblems: "Shaders & Emblems",
-            Emotes: "Emotes" },
+            Emotes: "Emotes"
+          },
           TrialsCard: {
             FiveWins: "5 Win Reward (Armor)",
             SevenWins: "7 Win Reward (Weapon)",
@@ -242,68 +285,79 @@
             Show: "Mostra {{bucket}}",
             Unknown: "Sconosciuto",
             Vault: "Deposito",
-            Weapons: "Armi" },
+            Weapons: "Armi"
+          },
           BungieService: {
+            DevVersion: "Stai eseguendo una versione di DIM in via di sviluppo? Devi registrare la tua estensione per chrome con bungie.net.",
             Down: "Bungie.net è offline.",
             Difficulties: "Al momento le API di Bungie hanno dei problemi.",
             NetworkError: "Errore Network - {{status}} {{statusText}}",
-            Throttled: 'Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.',
-            NotLoggedIn: 'Effettuare l accesso a Bungie.net per utilizzare questa estensione.',
+            Throttled: "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
+            NotLoggedIn: "Effettuare l accesso a Bungie.net per utilizzare questa estensione.",
             Maintenance: "I server di Bungie.net sono offline per manutenzione.",
             NoAccount: "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
             NoAccountForPlatform: "Impossibile trovare un account Destiny per te su {{platform}}.",
+            NoCookies: "Non è stato trovato nessun cookie.",
             NotConnected: "Potresti non essere connesso a internet.",
             Twitter: "Ottieni informazioni sullo stato del servizio su",
             ItemUniqueness: "Unicità dell elemento",
             ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
           },
           Compare: {
-            All: {
-              Singular: "Confronta tutti i {{type}} ({{quantity}})",
-              Plural: "Confronta tutti i {{type}} ({{quantity}})" },
+            All: "Confronta ogni {{type}} ({{quantity}})",
             Archetype: "Confronta per archetipo ({{quantity}})",
             Compare: "Confronta",
             Close: "Chiudi",
             Error: {
               Class: "Impossibile confrontare questo oggetto, poichè non è per {{class}}.",
-              Archetype: "Impossibile confrontare questo oggetto, poichè non è un {{type}}." },
-            Splits: "Confronta simili suddivisioni ({{quantity}})" },
+              Archetype: "Impossibile confrontare questo oggetto, poichè non è un {{type}}."
+            },
+            Splits: "Confronta simili suddivisioni ({{quantity}})"
+          },
           Cooldown: {
             Super: "Super tempo di recupero",
             Grenade: "Granate tempo di recupero",
-            Melee: "Corpo a corpo tempo di recupero" },
+            Melee: "Corpo a corpo tempo di recupero"
+          },
           Debug: {
             Dump: "Svuota informazioni nella console",
-            View: "Visualizza Item Debug Info" },
+            View: "Visualizza Item Debug Info"
+          },
           FarmingMode: {
             FarmingMode: "Modalità Farming (sposta oggetti)",
             Desc: "DIM sposta Engrammi e consumabili per Lumen da {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
             Configuration: "Configurazione",
             Greens: {
               Greens: "Sposta oggetti Non Comuni/Verdi al deposito",
-              Tooltip: "Se selezionato, DIM trasferirà anche tutti gli oggetti non comuni (verdi) al deposito. Se non viene selezionato, gli oggetti verdi rimarranno sul tuo personaggio attivo." },
+              Tooltip: "Se selezionato, DIM trasferirà anche tutti gli oggetti non comuni (verdi) al deposito. Se non viene selezionato, gli oggetti verdi rimarranno sul tuo personaggio attivo."
+            },
             MakeRoom: {
               Desc: "DIM sposta solo gli Engrammi e i consumabili per i Lumen da {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
               MakeRoom: "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
-              Tooltip: "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito." },
+              Tooltip: "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
+            },
             Quickmove: "Spostamento Rapido",
-            Stop: "Stop" },
+            Stop: "Stop"
+          },
           Header: {
             About: "Chi siamo",
             Filters: "Filtri",
-            FilterHelp: "Cerca oggetti/perk o is:arco",
+            FilterHelp: "Cerca oggetti/perk o is:arc",
             MaterialsExchange: "Livelli fazione disponibili",
             Refresh: "Aggiorna i Dati di Destiny",
-            SupportDIM: "Supporta DIM" },
+            SupportDIM: "Supporta DIM"
+          },
           Help: {
             BackToDIM: "Torna a DIM",
-            Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità" },
+            Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità"
+          },
           Hotkey: {
             StartSearch: "Inizia una ricerca",
             RefreshInventory: "Aggiorna l'inventario",
             ToggleDetails: "Bottone per mostrare o meno tutti i dettagli dell'oggetto",
             MarkItemAs: "Contrassegna oggetto come '{{tag}}'",
-            ClearNewItems: "Pulisci nuovi oggetti" },
+            ClearNewItems: "Pulisci nuovi oggetti"
+          },
           LB: {
             LB: "Costruttore di Loadout",
             ShowGear: "Mostra equipaggiamento {{class}}",
@@ -319,13 +373,15 @@
               Full: "Completa",
               ProcessingMode: "Procedura",
               HelpFast: "Controlla solo tra il tuo equipaggiamento migliore.",
-              HelpFull: "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo." },
+              HelpFull: "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo."
+            },
             Scaled: "In Scala",
             Current: "Corrente",
             LightMode: {
               LightMode: "Modalità Luce",
               HelpScaled: "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
-              HelpCurrent: "Calcola i loadout con i livelli di difesa correnti." },
+              HelpCurrent: "Calcola i loadout con i livelli di difesa correnti."
+            },
             IncludeRare: "Includi oggetti rari (blu)",
             Help: "Hai bisogno di aiuto?",
             Equip: "Equipaggia sul personaggio corrente",
@@ -339,10 +395,11 @@
             ExcludeHelp: "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
             LockPerk: "Blocca perk",
             Missing1: "Manca un leggendario o un esotico per costruire un set completo!",
-            Missing2: "Manca un raro, un leggendario o un esotico per costruire un set completo" },
+            Missing2: "Manca un raro, un leggendario o un esotico per costruire un set completo"
+          },
           Loadouts: {
             Any: "Qualsiasi",
-            Loadouts: "Loadout",
+            Loadouts: "Loadouts",
             Before: "Prima '{{name}}'",
             Create: "Creare Loadout",
             FromEquipped: "Equipaggiato",
@@ -355,6 +412,7 @@
             GatherEngrams: "Raccogliere Engrammi",
             GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
+            Random: "Casuale",
             LoadoutName: "Nome Loadout...",
             Save: "Salva",
             SaveAsNew: "Salva come nuovo",
@@ -365,7 +423,8 @@
             Applied: "Il tuo loadout di {{amount}} oggetti è stato trasferito al tuo {{store}}.",
             AppliedItem: "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
-            AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito." },
+            AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito."
+          },
           Manifest: {
             Build: "Costruisco il database di informazioni di Destiny",
             Download: "Scarico le ultime informazioni riguardanti Destiny da Bungie",
@@ -376,7 +435,8 @@
             Load: "Carico le informazioni su Destiny salvate",
             LoadCharInv: "Carico i personaggi e l'inventario di Destiny",
             Save: "Salvo le ultime informazioni su Destiny",
-            Unzip: "Decomprimo le ultime informazioni su Destiny" },
+            Unzip: "Decomprimo le ultime informazioni su Destiny"
+          },
           MaterialsExchange: {
             MaterialsExchange: "Scambio Materiali",
             CurrentRank: "Grado Attuale",
@@ -384,10 +444,12 @@
             OnHand: "Materiali disponibili",
             FromTrade: "Materiali da scambi",
             NewRank: "Nuovo Grado",
-            NewRep: "Nuova Reputazione" },
+            NewRep: "Nuova Reputazione"
+          },
           Notes: {
             Error: "Errore! Massimo 120 caratteri per nota.",
-            Help: "Aggiungere note a questo oggetto" },
+            Help: "Aggiungere note a questo oggetto"
+          },
           Settings: {
             Settings: "Impostazioni",
             Language: "Lingua (ricarica DIM per apportare la modifica)",
@@ -423,7 +485,8 @@
             ExportSS: "Scarica il foglio elettronico",
             ExportSSHelp: "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
             DIMPopups: "Popup informativi di DIM ",
-            DIMPopupsReset: "Ripristina i consigli precedentemente nascosti" },
+            DIMPopupsReset: "Ripristina i consigli precedentemente nascosti"
+          },
           Stats: {
             Discipline: "Disciplina",
             Intellect: "Intelletto",
@@ -432,13 +495,15 @@
             PercentHelp: "Clicca per maggiori informazioni riguarso la Qualità delle Statistiche.",
             Quality: "Qualità statistiche",
             Strength: "Forza",
-            TierProgress: "{{progress}} per {{tier}}" },
+            TierProgress: "{{progress}} per {{tier}}"
+          },
           Tags: {
             TagItem: "Contrassegna Elemento",
             Favorite: "Preferito",
             Keep: "Tieni",
             Junk: "Smantella",
-            Infuse: "Infondi" },
+            Infuse: "Infondi"
+          },
           Vendors: {
             Vendors: "Mercanti",
             All: "Tutto",
@@ -448,7 +513,8 @@
             Consumables: "Consumabili",
             Bounties: "Taglie",
             ShadersAndEmblems: "Shader & Emblemi",
-            Emotes: "Emotes" },
+            Emotes: "Emotes"
+          },
           TrialsCard: {
             FiveWins: "Ricompensa 5 Vittorie (Armatura)",
             SevenWins: "Ricompensa 7 Vittorie (Arma)",
@@ -466,68 +532,90 @@
             Show: "Zeige {{bucket}}",
             Unknown: "Unbekannt",
             Vault: "Tresor",
-            Weapons: "Waffen" },
+            Weapons: "Waffen"
+          },
           BungieService: {
+            DevVersion: "Benutzt du eine Entwickler-Version von DIM? Du musst die Chrome Erweiterung auf bungie.net registrieren.",
             Down: "Bungie.net ist nicht erreichbar.",
             Difficulties: "Die Bungie API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
             NetworkError: "Netzwerk Fehler - {{status}} {{statusText}}",
-            Throttled: 'Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.',
-            NotLoggedIn: 'Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen.',
+            Throttled: "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
+            NotLoggedIn: "Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen.",
             Maintenance: "Bungie.net Server werden zur Zeit gewartet.",
             NoAccount: "Es wurde kein Destiny Account für diese Platform gefunden. Hast du die richtige Platform gewählt?",
             NoAccountForPlatform: "Konnte auf {{platform}} keinen Destiny Account für dich finden.",
+            NoCookies: "Keine Cookies gefunden.",
             NotConnected: "Du bist eventuell nicht mit dem Internet verbunden.",
             Twitter: "Bekomme Statusupdates auf",
             ItemUniqueness: "Item Einzigartigkeit",
             ItemUniquenessExplanation: "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
           },
           Compare: {
-            All: {
-              Singular: "Vergleiche alle {{type}} ({{quantity}})",
-              Plural: "Vergleiche alle {{type}} ({{quantity}})" },
+            All: "{{type}} Vergleich ({{quantity}})",
             Archetype: "Vergleiche im Urzustand ({{quantity}})",
             Compare: "Vergleiche",
             Close: "Schließen",
             Error: {
               Class: "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist.",
-              Archetype: "Kann dieses Item nicht vergleichen, da es kein {{type}} ist." },
-            Splits: "Vergleiche ähnliche Stats ({{quantity}})" },
+              Archetype: "Kann dieses Item nicht vergleichen, da es kein {{type}} ist."
+            },
+            Splits: "Vergleiche ähnliche Stats ({{quantity}})"
+          },
           Cooldown: {
             Grenade: "Granaten Abklingzeit",
             Melee: "Nahkampf Abklingzeit",
-            Super: "Super Abklingzeit" },
+            Super: "Super Abklingzeit"
+          },
           Debug: {
             Dump: "Info in Konsole ausgeben",
-            View: "Zeige Item Debug Info" },
+            View: "Zeige Item Debug Info"
+          },
           FarmingMode: {
-            Configuration: "Konfiguration",
-            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
             FarmingMode: "Engramme zum Tresor",
+            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
+            Configuration: "Konfiguration",
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
-              Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter." },
+              Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter."
+            },
             MakeRoom: {
               Desc: "DIM verschiebt nur Engramme und Glimmer vom {{store}} zum Tresor oder anderen Charaktern, um zu verhindern, dass sie in der Poststelle landen.",
               MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
-              Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen." },
+              Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen."
+            },
             Quickmove: "Schnelles Verschieben",
-            Stop: "Stop" },
+            Stop: "Stop"
+          },
           Header: {
             About: "Über",
             Filters: "Filter",
             FilterHelp: "Suche nach Item/Perk oder is:arc",
             MaterialsExchange: "Verfügbare Fraktionsränge",
             Refresh: "Aktualisiere Destiny Daten",
-            SupportDIM: "DIM Unterstützen" },
+            SupportDIM: "DIM Unterstützen"
+          },
           Help: {
             BackToDIM: "Zurück zu DIM",
-            Drag: "Halte Shift oder pausiere über der Drop-Zone, um einen Teilstapel zu übertragen" },
+            Drag: "Halte Shift oder pausiere über der Drop-Zone, um einen Teilstapel zu übertragen"
+          },
           Hotkey: {
-            ClearNewItems: "Neue Elemente löschen",
-            MarkItemAs: "Markiere Element als '{{tag}}'",
-            RefreshInventory: "Aktualisiere Inventar",
             StartSearch: "Starte eine Suche",
-            ToggleDetails: "Schalter für vollständige Artikeldetails" },
+            RefreshInventory: "Aktualisiere Inventar",
+            ToggleDetails: "Schalter für vollständige Artikeldetails",
+            MarkItemAs: "Markiere Element als '{{tag}}'",
+            ClearNewItems: "Neue Elemente löschen"
+          },
+          Infusion: {
+            Infusion: "Infusion Fuel Finder",
+            BringGear: "Bringt die Ausrüstung zu",
+            Calc: "Infusionsrechner",
+            InfuseItems: "Element auswählen zum Infundieren mit:",
+            LockedItems: "Beziehe 'gesperrte' Items ein",
+            NoItems: "Keine infundierbaren Items verfügbar.",
+            ShowItems: "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
+            TransferItems: "Übertrage Items",
+            Using3: "verwendet 3"
+          },
           LB: {
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
@@ -543,13 +631,15 @@
               Full: "Vollständige",
               ProcessingMode: "Berechnung",
               HelpFast: "Nur die beste Ausrüstung wird einbezogen.",
-              HelpFull: "Bezieht die ganze Ausrüstung mit ein." },
+              HelpFull: "Bezieht die ganze Ausrüstung mit ein."
+            },
             Scaled: "Skaliertes",
             Current: "Aktuelles",
             LightMode: {
               LightMode: "Lichtlevel",
               HelpScaled: "Berechnet Loadouts, bei denen alle Gegenstände Lichtlevel 350 besitzen.",
-              HelpCurrent: "Berechnet Loadouts mit dem aktuellen Lichtlevel der Gegenstände." },
+              HelpCurrent: "Berechnet Loadouts mit dem aktuellen Lichtlevel der Gegenstände."
+            },
             IncludeRare: "Seltene (blaue) Gegenstände einbeziehen",
             Help: "Brauchst du Hilfe?",
             Equip: "Am aktuellen Charakter anlegen.",
@@ -563,7 +653,8 @@
             ExcludeHelp: "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld) um Sets ohne diesen Gegenstand zu generieren.",
             LockPerk: "Perk festlegen",
             Missing1: "Es fehlen legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!",
-            Missing2: "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!" },
+            Missing2: "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!"
+          },
           Loadouts: {
             Any: "Irgendein",
             Loadouts: "Loadouts",
@@ -580,6 +671,7 @@
             GatherEngramsExceptExotics: "Exotics",
             RestoreAllItems: "Alle Elemente",
             LoadoutName: "Loadout Name...",
+            Random: "Zufällig",
             Save: "Speichern",
             SaveAsNew: "Speichern als...",
             Cancel: "Abbrechen",
@@ -589,7 +681,8 @@
             Applied: "Dein Loadout aus {{amount}} Gegenständen wurde zum {{store}} übertragen.",
             Applied1Item: "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
-            AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft." },
+            AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft."
+          },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
             Download: "Lade neueste Daten von Bungie herunter",
@@ -599,8 +692,9 @@
             BungieDown: "Bungie.net hat möglicherweise Probleme.",
             Load: "Lade gespeicherte Daten",
             LoadCharInv: "Lade Destiny Charakter und Inventar",
-            Unzip: "Entpacke neueste Daten",
-            Save: "Speichere neueste Daten" },
+            Save: "Speichere neueste Daten",
+            Unzip: "Entpacke neueste Daten"
+          },
           MaterialsExchange: {
             MaterialsExchange: "Materialaustausch",
             CurrentRank: "Aktueller Rang",
@@ -608,10 +702,12 @@
             OnHand: "Materialien in Besitz",
             FromTrade: "Materialien aus dem Handel",
             NewRank: "Neuer Rang",
-            NewRep: "Neuer Ruf" },
+            NewRep: "Neuer Ruf"
+          },
           Notes: {
             Error: "Fehler! Max 120 Zeichen für Notizen.",
-            Help: "Notiz für diesen Artikel" },
+            Help: "Notiz für diesen Artikel"
+          },
           Settings: {
             Settings: "Einstellungen",
             Language: "Sprache (lade DIM neu zum Übernehmnen)",
@@ -647,19 +743,25 @@
             ExportSS: "Lade Tabelle herunter",
             ExportSSHelp: "Lade eine CSV-Tabelle von deinen Gegenständen, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
             DIMPopups: "DIM Info Popups",
-            DIMPopupsReset: "Zeige zuvor versteckte Info Tipps" },
+            DIMPopupsReset: "Zeige zuvor versteckte Info Tipps"
+          },
           Stats: {
-            Intellect: "Intellekt",
             Discipline: "Disziplin",
+            Intellect: "Intellekt",
             NoBonus: "Kein Bonus",
+            OfMaxRoll: "{{range}} des max. Rolls",
+            PercentHelp: "Klicke für mehr Informationen über Stats Qualitäten.",
+            Quality: "Stats Qualität",
             Strength: "Stärke",
-            TierProgress: "{{progress}} für {{tier}}" },
+            TierProgress: "{{progress}} für {{tier}}"
+          },
           Tags: {
             TagItem: "Item taggen",
             Favorite: "Favorit",
-            Keep: "Behalten",
             Junk: "Trödel",
-            Infuse: "Infundieren" },
+            Infuse: "Infundieren",
+            Keep: "Behalten"
+          },
           Vendors: {
             Vendors: "Händler",
             All: "Alle",
@@ -668,11 +770,12 @@
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
             Consumables: "Verbrauchsgegenstände",
             Bounties: "Beutezüge",
-            ShadersAndEmblems: "Shader & Embleme",
-            Emotes: "Emotes" },
+            ShadersAndEmblems: "Shader & Abzeichen",
+            Emotes: "Gesten"
+          },
           TrialsCard: {
             FiveWins: "5 Siege Belohnung (Rüstung)",
-            SevenWins: "7 Win Belohnung (Waffe)",
+            SevenWins: "7 Siege Belohnung (Waffe)",
             Flawless: "Flawless"
           }
         })
@@ -690,41 +793,42 @@
             Weapons: "Armes"
           },
           BungieService: {
-            Down: 'Bungie.net est hors service.',
-            Difficulties: 'L\'API de Bungie rencontre actuellement des difficultés.',
-            NetworkError: 'Erreur de réseau - {{status}} {{statusText}}',
-            Throttled: 'La limite de connections à l\'API de Bungie a été atteinte. Veuillez réessayer plus tard.',
-            NotLoggedIn: 'Veuillez vous connecter sur Bungie.net pour utiliser cette extension.',
-            Maintenance: 'Les serveurs Bungie.net sont indisponibles pour cause de maintenance.',
-            NoAccount: 'Aucun compte Destiny n\'a été trouvé pour cette platforme. Avez-vous sélectionné la bonne platforme?',
-            NoAccountForPlatform: 'Nous n\'avons pas trouvé de compte Destiny pour vous sur {{platform}}.',
-            NotConnected: 'Vous n\'êtes probablement pas connecté à Internet.',
-            Twitter: 'Tenez-vous informer sur',
+            Down: "Bungie.net est hors service.",
+            Difficulties: "L'API de Bungie rencontre actuellement des difficultés.",
+            NetworkError: "Erreur de réseau - {{status}} {{statusText}}",
+            Throttled: "La limite de connections à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
+            NotLoggedIn: "Veuillez vous connecter sur Bungie.net pour utiliser cette extension.",
+            Maintenance: "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
+            NoAccount: "Aucun compte Destiny n'a été trouvé pour cette platforme. Avez-vous sélectionné la bonne platforme?",
+            NoAccountForPlatform: "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}.",
+            NotConnected: "Vous n'êtes probablement pas connecté à Internet.",
+            Twitter: "Tenez-vous informer sur",
             ItemUniqueness: "Unicité d'un objet",
-            ItemUniquenessExplanation: 'Vous avez essayé de déplacer \'{{name}}\' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n\'en autorise qu\'un.'
+            ItemUniquenessExplanation: "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un."
           },
           Cooldown: {
             Super: "Régénération du Super",
             Grenade: "Régénération de Grenade",
-            Melee: "Régénération de Mêlée" },
+            Melee: "Régénération de Mêlée"
+          },
           Debug: {
-            Dump: 'Envoyer les infos sur la console',
-            View: 'Afficher les infos de débug de l\'objet.'
+            Dump: "Envoyer les infos sur la console",
+            View: "Afficher les infos de débug de l'objet."
           },
           FarmingMode: {
             FarmingMode: "Mode Farming (transfert d'objets)",
-            Desc: 'DIM est entrain de transférer des engrammes et objets pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d\'objet afin d\'éviter que rien ne soit envoyé au commis des postes.',
+            Desc: "DIM est entrain de transférer des engrammes et objets pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
             Configuration: "Configuration",
             Greens: {
-              Greens: 'Transférer les objets peu communs/verts aux coffres',
-              Tooltip: 'Si activé, DIM transfèrera aussi tous les objets peu communs (verts) aux coffres. Si désactivé, alors les objets verts resteront sur votre perso actif.',
+              Greens: "Transférer les objets peu communs/verts aux coffres",
+              Tooltip: "Si activé, DIM transfèrera aussi tous les objets peu communs (verts) aux coffres. Si désactivé, alors les objets verts resteront sur votre perso actif.",
             },
             MakeRoom: {
-              Desc: 'DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {{store}} aux coffres ou autres persos afin d\'éviter que rien ne soit envoyé au commis des postes.',
-              MakeRoom: 'Faites de la place pour collecter des objets en déplaçant de l\'équipement',
-              Tooltip: 'Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes.'
+              Desc: "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {{store}} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
+              MakeRoom: "Faites de la place pour collecter des objets en déplaçant de l'équipement",
+              Tooltip: "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
             },
-            Quickmove: 'Déplacement rapide',
+            Quickmove: "Déplacement rapide",
             Stop: "Stop"
           },
           Header: {
@@ -736,8 +840,8 @@
             SupportDIM: "Soutien DIM"
           },
           Help: {
-            BackToDIM: 'Retour sur DIM',
-            Drag: 'Maintenez shift ou stoppez au-dessus d\'une zone de dépôt pour transférer une partie de la pile.'
+            BackToDIM: "Retour sur DIM",
+            Drag: "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
           },
           LB: {
             LB: "Constructeur de Loadout",
@@ -746,7 +850,7 @@
             LockEquipped: "Verrouiller équipé",
             ClearLocked: "Enlever verrouillés",
             Locked: "Objets verrouillés",
-            LockedHelp: 'Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets',
+            LockedHelp: "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets",
             FilterSets: "Filtrer les sets",
             AdvancedOptions: "Options avancées",
             ProcessingMode: {
@@ -760,10 +864,10 @@
             Current: "Actuel",
             LightMode: {
               LightMode: "Mode lumière",
-              HelpScaled: 'Calcule les loadouts comme si tous les objets avaient 350 de défense.',
-              HelpCurrent: 'Calcule les loadouts à leur niveau de défense actuel.'
+              HelpScaled: "Calcule les loadouts comme si tous les objets avaient 350 de défense.",
+              HelpCurrent: "Calcule les loadouts à leur niveau de défense actuel."
             },
-            IncludeRare: 'Inclure les objets rares (bleus)',
+            IncludeRare: "Inclure les objets rares (bleus)",
             Help: "Besoin d'aide?",
             Equip: "Équiper sur le perso actuel",
             ShowAllConfigs: "Afficher toutes les configurations",
@@ -775,13 +879,13 @@
             Exclude: "Objets exclus",
             ExcludeHelp: "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
             LockPerk: "Verrouiller amélioration",
-            Missing1: 'Pièces légendaires ou éxotiques manquantes pour construire un set complet!',
-            Missing2: 'Pièces rares, légendaires ou éxotiques manquantes pour construire un set complet!'
+            Missing1: "Pièces légendaires ou éxotiques manquantes pour construire un set complet!",
+            Missing2: "Pièces rares, légendaires ou éxotiques manquantes pour construire un set complet!"
           },
           Loadouts: {
             Any: "Tout",
             Loadouts: "Loadouts",
-            Before: 'Avant \'{{name}}\'',
+            Before: "Avant '{{name}}'",
             Create: "Créer Loadout",
             FromEquipped: "Equipé",
             Edit: "Modifier Loadout",
@@ -793,6 +897,7 @@
             GatherEngrams: "Réunir les Engrammes",
             GatherEngramsExceptExotics: "Exotiques",
             RestoreAllItems: "Tous les objets",
+            Random: "Aléatoire",
             LoadoutName: "Nom du loadout...",
             Save: "Sauvegarder",
             SaveAsNew: "Sauvegarder comme nouveau",
@@ -802,7 +907,8 @@
             AppliedAuto: "Constructeur de Loadout automatique",
             Applied: "Votre loadout de {{amount}} objets a été transféré à votre {{store}}",
             AppliedError: "Aucun des objets de votre loadout n'a pu être transféré.",
-            AppliedWarn: "Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} objets ont échoué." },
+            AppliedWarn: "Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} objets ont échoué."
+          },
           Manifest: {
             Build: "Base de données d'info de Destiny en cours de construction",
             Download: "Téléchargement en cours des derniers infos Destiny de Bungie",
@@ -861,13 +967,15 @@
             Intellect: "Intelligence",
             Discipline: "Discipline",
             Strength: "Force",
-            TierProgress: "{{progress}} pour {{tier}}" },
+            TierProgress: "{{progress}} pour {{tier}}"
+          },
           Tags: {
             TagItem: "Tagger Objet",
             Favorite: "Préféré",
             Keep: "Garder",
             Junk: "Camelote",
-            Infuse: "Infuser" },
+            Infuse: "Infuser"
+          },
           Vendors: {
             Vendors: "Marchands",
             All: "Tous",
@@ -896,13 +1004,14 @@
             Show: "Muestra {{bucket}}",
             Unknown: "Desconocido",
             Vault: "Depósito",
-            Weapons: "Armas" },
+            Weapons: "Armas"
+          },
           BungieService: {
             Down: "Bungie.net no esta disponible.",
             Difficulties: "La API de Bungie esta teniendo dificultades.",
             NetworkError: "Error de red - {{status}} {{statusText}}",
-            Throttled: 'El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelva a intentarlo.',
-            NotLoggedIn: 'Por favor inicie sesión en Bungie.net para poder usar esta extensión.',
+            Throttled: "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelva a intentarlo.",
+            NotLoggedIn: "Por favor inicie sesión en Bungie.net para poder usar esta extensión.",
             Maintenance: "Los servidores de Bungie.net se encuentran en mantenimiento.",
             NoAccount: "No se encontró una cuenta de Destiny para esta plataforma. Has elegido la plataforma correcta?",
             NoAccountForPlatform: "No encontramos una cuenta de Destiny para {{platform}}.",
@@ -912,52 +1021,60 @@
             ItemUniquenessExplanation: "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno."
           },
           Compare: {
-            All: {
-              Singular: "Comparar todos los {{type}}s ({{quantity}})",
-              Plural: "Comparar todo {{type}} ({{quantity}})" },
-            Archetype: "Comparar como arquetipo ({{quantity}})",
+            All: "Comparaciones de {{type}} ({{quantity}})",
+            Archetype: "Comparaciones de arquetipo ({{quantity}})",
             Compare: "Comparar",
             Close: "Cerrar",
             Error: {
               Class: "No se puede comparar este objeto ya que no es para {{class}}.",
-              Archetype: "No se puede comparar este objeto ya que no es {{type}}." },
-            Splits: "Comparar partes similares ({{quantity}})" },
+              Archetype: "No se puede comparar este objeto ya que no es {{type}}."
+            },
+            Splits: "Comparar partes similares ({{quantity}})"
+          },
           Cooldown: {
             Super: "Tiempo para Super",
             Grenade: "Tiempo para Granada",
-            Melee: "Tiempo para Cuerpo a cuerpo" },
+            Melee: "Tiempo para Cuerpo a cuerpo"
+          },
           Debug: {
             Dump: "Tirar información a la consola",
-            View: "Ver información de depuración de objeto" },
+            View: "Ver información de depuración de objeto"
+          },
           FarmingMode: {
             FarmingMode: "Modo recolector (mover objetos)",
             Desc: "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
             Configuration: "Configuración",
             Greens: {
               Greens: "Mover objetos poco comúnes/verdes al Depósito",
-              Tooltip: "Si está marcado, DIM también va a transferir todos los objetos poco comúnes (verde) al depósito. Si no está marcado, todos los objetos verdes se quedarán en tu personaje." },
+              Tooltip: "Si está marcado, DIM también va a transferir todos los objetos poco comúnes (verde) al depósito. Si no está marcado, todos los objetos verdes se quedarán en tu personaje."
+            },
             MakeRoom: {
               Desc: "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
               MakeRoom: "Hacer espacio para coger objetos moviendo equipamiento",
-              Tooltip: "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas." },
+              Tooltip: "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
+            },
             Quickmove: "Movimiento rápido",
-            Stop: "Detener" },
+            Stop: "Detener"
+          },
           Header: {
             About: "Acerca de",
             Filters: "Filtros",
             FilterHelp: "Buscar objeto/beneficio o is:arc",
             MaterialsExchange: "Rangos de facción disponible",
             Refresh: "Actualizar datos de Destiny",
-            SupportDIM: "Apoyo DIM" },
+            SupportDIM: "Apoyo DIM"
+          },
           Help: {
             BackToDIM: "Regresar a DIM",
-            Drag: "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial" },
+            Drag: "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial"
+          },
           Hotkey: {
             StartSearch: "Empezar una búsqueda",
             RefreshInventory: "Actualizar inventario",
             ToggleDetails: "Mostrar detalles completos de objeto",
             MarkItemAs: "Marcar objeto como '{{tag}}'",
-            ClearNewItems: "Despejar objetos nuevos" },
+            ClearNewItems: "Despejar objetos nuevos"
+          },
           LB: {
             LB: "Creador de equipo",
             ShowGear: "Mostrar equipo de {{class}}",
@@ -973,13 +1090,15 @@
               Full: "Completo",
               ProcessingMode: "Modo de procesamiento",
               HelpFast: "Solo ve tu mejor equipo.",
-              HelpFull: "Ve más equipo, pero tarda más." },
+              HelpFull: "Ve más equipo, pero tarda más."
+            },
             Scaled: "Escalado",
             Current: "Actual",
             LightMode: {
               LightMode: "Modo ligero",
               HelpScaled: "Calcula los equipos como si todos los objetos tuvieran 350 de defensa.",
-              HelpCurrent: "Calcula los equipos con los nieveles de defensa actuales." },
+              HelpCurrent: "Calcula los equipos con los nieveles de defensa actuales."
+            },
             IncludeRare: "Incluir objetos raros (azules)",
             Help: "Necesitas ayuda?",
             Equip: "Equipar al personaje actual",
@@ -993,7 +1112,8 @@
             ExcludeHelp: "Shift + click en un objeto (o arrástralo y suéltalo en esta cubeta) para crear un conjunto sin equipo específico.",
             LockPerk: "Bloquear mejora",
             Missing1: "Faltan piezas legendarias o exóticas para crear un conjunto completo!",
-            Missing2: "Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!" },
+            Missing2: "Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!"
+          },
           Loadouts: {
             Any: "Alguna",
             Loadouts: "Equipos",
@@ -1009,6 +1129,7 @@
             GatherEngrams: "Juntar engramas",
             GatherEngramsExceptExotics: "Exóticos",
             RestoreAllItems: "Todos los objetos",
+            Random: "Aleatorio",
             LoadoutName: "Nombre de equipo...",
             Save: "Guardar",
             SaveAsNew: "Guardar como nuevo",
@@ -1019,7 +1140,8 @@
             Applied: "Tu equipo de {{amount}} objetos han sido transferidos a tu {{store}}.",
             Applied1Item: "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
             AppliedError: "Ninguno de los objetos en tu equipo pudo ser transferido.",
-            AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores." },
+            AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores."
+          },
           Manifest: {
             Build: "Creando información de la base de datos de Destiny",
             Download: "Descargando información más actualizada de Destiny desde Bungie",
@@ -1030,7 +1152,8 @@
             Load: "Cargando información de Destiny guardada",
             LoadCharInv: "Cargando personajes e inventario de Destiny",
             Save: "Guardando última información de Destiny",
-            Unzip: "Descomprimiendo última información de Destiny" },
+            Unzip: "Descomprimiendo última información de Destiny"
+          },
           MaterialsExchange: {
             MaterialsExchange: "Intercambio de materiales",
             CurrentRank: "Rango actual",
@@ -1038,10 +1161,12 @@
             OnHand: "Materiales a la mano",
             FromTrade: "Materiales de intercambio",
             NewRank: "Nuevo rango",
-            NewRep: "Nueva reputación" },
+            NewRep: "Nueva reputación"
+          },
           Notes: {
             Error: "Error! Máximo 120 caracteres por notas.",
-            Help: "Agregar notas a este artículo" },
+            Help: "Agregar notas a este artículo"
+          },
           Settings: {
             Settings: "Configuración",
             Language: "Lenguaje (recarga DIM para que se apliquen los cambios)",
@@ -1077,19 +1202,22 @@
             ExportSS: "Descargar hojas de cálculo",
             ExportSSHelp: "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
             DIMPopups: "Ventanas emergentes de información de DIM",
-            DIMPopupsReset: "Reestablecer tips de información anteriormente escondidos" },
+            DIMPopupsReset: "Reestablecer tips de información anteriormente escondidos"
+          },
           Stats: {
             Intellect: "Intelecto",
             Discipline: "Disciplina",
             NoBonus: "Sin beneficio",
             Strength: "Fuerza",
-            TierProgress: "{{progress}} por {{tier}}" },
+            TierProgress: "{{progress}} por {{tier}}"
+          },
           Tags: {
             TagItem: "Elemento de Etiqueta",
             Favorite: "Favorito",
             Keep: "Guardar",
             Junk: "Basura",
-            Infuse: "Infundir" },
+            Infuse: "Infundir"
+          },
           Vendors: {
             Vendors: "Comerciantes",
             All: "Todo",
@@ -1099,7 +1227,8 @@
             Consumables: "Consumíbles",
             Bounties: "Contratos",
             ShadersAndEmblems: "Shaders & Emblemas",
-            Emotes: "Gestos" },
+            Emotes: "Gestos"
+          },
           TrialsCard: {
             FiveWins: "Recompensa de 5 victorias (Armadura)",
             SevenWins: "Recompensa de 7 victorias (Arma)",
@@ -1117,10 +1246,13 @@
             Unknown: "未知の",
             Vanguard: "バンガード",
             Progress: "進捗",
-            Reputation: "評価" },
+            Reputation: "評価",
+            Show: "ショー{{bucket}}"
+          },
           Header: {
             About: "紹介",
-            SupportDIM: "サポート DIM" },
+            SupportDIM: "サポート DIM"
+          },
           Loadouts: {
             Create: "作る Loadout",
             FromEquipped: "備える",
@@ -1132,21 +1264,26 @@
             GatherEngrams: "エングラムを収集",
             GatherEngramsExceptExotics: "エキゾチック",
             RestoreAllItems: "品揃え",
+            Random: "ランダム",
             Loadouts: "Loadouts" },
           Notes: {
-            Help: "このアイテムにメモを追加" },
+            Help: "このアイテムにメモを追加"
+          },
           Settings: {
-            Settings: "設定" },
+            Settings: "設定"
+          },
           Stats: {
             Intellect: "知性",
             Discipline: "鍛錬",
-            Strength: "腕力" },
+            Strength: "腕力"
+          },
           Tags: {
             TagItem: "タグアイテム",
             Favorite: "本命",
             Keep: "保つ",
             Junk: "ジャンク",
-            Infuse: "煎じる" },
+            Infuse: "煎じる"
+          },
           Vendors: {
             Vendors: "ベンダー" }
         })
@@ -1161,13 +1298,14 @@
             Show: "Exibir {{bucket}}",
             Unknown: "Desconhecido",
             Vault: "Cofre",
-            Weapons: "Armas" },
+            Weapons: "Armas"
+          },
           BungieService: {
             Down: "Bungie.net está fora do ar.",
             Difficulties: "A API da Bungie está atualmente passando por dificuldades.",
             NetworkError: "Erro de rede - {{status}} {{statusText}}",
-            Throttled: 'Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.',
-            NotLoggedIn: 'Por favor, faça seu login no Bungie.net para utilizar esta extensão.',
+            Throttled: "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
+            NotLoggedIn: "Por favor, faça seu login no Bungie.net para utilizar esta extensão.",
             Maintenance: "Servidores Bungie.net estão fora do ar para manutenção.",
             NoAccount: "Nenhuma conta de Destiny foi encontrada para esta plataforma. Você selecionou a plataforma correta?",
             NoAccountForPlatform: "Incapaz de encontrar uma conta de Destiny no {{platform}}.",
@@ -1177,52 +1315,60 @@
             ItemUniquenessExplanation: "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo."
           },
           Compare: {
-            All: {
-              Singular: "Comparar qualquer {{type}} ({{quantity}})",
-              Plural: "Comparar qualquer {{type}} ({{quantity}})" },
-            Archetype: "Comparar todos do arquétipo ({{quantity}})",
+            All: "Comparações de {{type}} ({{quantity}})",
+            Archetype: "Comparações de arquétipo ({{quantity}})",
             Compare: "Comparar",
             Close: "Fechar",
             Error: {
               Class: "Incapaz de comparar o item, pois não é um item de {{class}}.",
-              Archetype: "Incapaz de comaprar o item, pois não é um {{type}}." },
-            Splits: "Compare com atributos similares ({{quantity}})" },
+              Archetype: "Incapaz de comaprar o item, pois não é um {{type}}."
+            },
+            Splits: "Compare com atributos similares ({{quantity}})"
+          },
           Cooldown: {
             Grenade: "Tempo de carga da granada",
             Melee: "Tempo de carga do corpo-a-corpo",
-            Super: "Tempo de carga da Super" },
+            Super: "Tempo de carga da Super"
+          },
           Debug: {
             Dump: "Enviar informação ao console",
-            View: "Visualizar informações de Debug do item" },
+            View: "Visualizar informações de Debug do item"
+          },
           FarmingMode: {
             FarmingMode: "Modo Farm (mover itens)",
             Desc: "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
             Configuration: "Configuração",
             Greens: {
               Greens: "Mover itens Incomuns (verdes) para o cofre",
-              Tooltip: "Se selecionado, o DIM também irá transferir todos os itens Incomuns (verdes) para o cofre. Deixe desmarcado para manter estes itens em seu personagem." },
+              Tooltip: "Se selecionado, o DIM também irá transferir todos os itens Incomuns (verdes) para o cofre. Deixe desmarcado para manter estes itens em seu personagem."
+            },
             MakeRoom: {
               Desc: "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
               MakeRoom: "Abrir espaço para novos itens movendo equipamentos",
-              Tooltip: "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas." },
+              Tooltip: "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
+            },
             Quickmove: "Mover rapidamente",
-            Stop: "Parar" },
+            Stop: "Parar"
+          },
           Header: {
             About: "Sobre",
             Filters: "Filtros",
             FilterHelp: "Buscar por item/perk ou is:arc",
             MaterialsExchange: "Ranks de facção disponíveis",
             Refresh: "Atualizar dados do Destiny",
-            SupportDIM: "Apoie o DIM" },
+            SupportDIM: "Apoie o DIM"
+          },
           Help: {
             BackToDIM: "Voltar para o DIM",
-            Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente." },
+            Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente."
+          },
           Hotkey: {
             StartSearch: "Iniciar uma busca",
             RefreshInventory: "Atualizar inventário",
             ToggleDetails: "Toggle showing full item details",
             MarkItemAs: "Marcar item como '{{tag}}'",
-            ClearNewItems: "Limpar novos itens" },
+            ClearNewItems: "Limpar novos itens"
+          },
           LB: {
             LB: "Construtor de Loadouts",
             ShowGear: "Exibir itens de {{class}}",
@@ -1238,13 +1384,15 @@
               Full: "Completo",
               ProcessingMode: "Modo de processamento",
               HelpFast: "Busca apenas pelos seus melhores itens.",
-              HelpFull: "Busca por todos os itens, mas leva mais tempo." },
+              HelpFull: "Busca por todos os itens, mas leva mais tempo."
+            },
             Scaled: "Nivelado",
             Current: "Atual",
             LightMode: {
               LightMode: "Modo de luz",
               HelpScaled: "Calcular set como se todo os itens fossem 350 de defesa.",
-              HelpCurrent: "Calcular set com os níveis de defesa reais." },
+              HelpCurrent: "Calcular set com os níveis de defesa reais."
+            },
             IncludeRare: "Incluir itens raros (azuis)",
             Help: "Precisa de ajuda?",
             Equip: "Equipar no personagem atual",
@@ -1258,7 +1406,8 @@
             ExcludeHelp: "SHIFT+Clique em um item (ou arraste e solte no quadro abaixo) para construir sets ignorando itens específicos.",
             LockPerk: "Por perk",
             Missing1: "Faltam itens lendários ou exóticos para construir um set completo!",
-            Missing2: "Faltam itens raros, lendários ou exóticos para construir um set completo!" },
+            Missing2: "Faltam itens raros, lendários ou exóticos para construir um set completo!"
+          },
           Loadouts: {
             Any: "Qualquer",
             Loadouts: "Loadouts",
@@ -1274,6 +1423,7 @@
             GatherEngrams: "Obter engramas",
             GatherEngramsExceptExotics: "Exóticos",
             RestoreAllItems: "Todos os itens",
+            Random: "Aleatória",
             LoadoutName: "Nome do set...",
             Save: "Salvar",
             SaveAsNew: "Salvar como novo",
@@ -1283,7 +1433,8 @@
             AppliedAuto: "Construtor automático de sets",
             Applied: "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
             AppliedError: "Nenhum dos itens do seu set pode ser transferido.",
-            AppliedWarn: "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros." },
+            AppliedWarn: "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros."
+          },
           Manifest: {
             Build: "Construindo banco de dados de informações",
             Download: "Baixando últimas informações da Bungie",
@@ -1294,7 +1445,8 @@
             Load: "Carregando informações salvas",
             LoadCharInv: "Carregando personagens e inventário",
             Save: "Salvando últimas informações ",
-            Unzip: "Descompactando últimas informações" },
+            Unzip: "Descompactando últimas informações"
+          },
           MaterialsExchange: {
             MaterialsExchange: "Troca de materiais",
             CurrentRank: "Rank atual",
@@ -1302,10 +1454,12 @@
             OnHand: "Materiais disponíveis",
             FromTrade: "Materiais para troca",
             NewRank: "Novo rank",
-            NewRep: "Nova reputação" },
+            NewRep: "Nova reputação"
+          },
           Notes: {
             Error: "Erro! Anotações devem ter até 120 caracteres.",
-            Help: "Adicione anotações à este item" },
+            Help: "Adicione anotações à este item"
+          },
           Settings: {
             Settings: "Configurações",
             Language: "Idioma (reinicie o DIM para aplicar)",
@@ -1341,19 +1495,22 @@
             ExportSS: "Baixar planilha",
             ExportSSHelp: "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
             DIMPopups: "Alertas do DIM",
-            DIMPopupsReset: "Resetar todos os alertas ocultos" },
+            DIMPopupsReset: "Resetar todos os alertas ocultos"
+          },
           Stats: {
             Discipline: "Disciplina",
             Intellect: "Intelecto",
             NoBonus: "Sem bônus",
             Strength: "Força",
-            TierProgress: "{{progress}} para {{tier}}" },
+            TierProgress: "{{progress}} para {{tier}}"
+          },
           Tags: {
             TagItem: "Marcar item",
             Favorite: "Favorito",
             Junk: "Lixo",
             Infuse: "Infundir",
-            Keep: "Manter" },
+            Keep: "Manter"
+          },
           Vendors: {
             Vendors: "Vendedores",
             All: "Todos",
@@ -1363,7 +1520,8 @@
             Consumables: "Consumíveis",
             Bounties: "Contratos",
             ShadersAndEmblems: "Tonalizadores & Emblemas",
-            Emotes: "Gestos" },
+            Emotes: "Gestos"
+          },
           TrialsCard: {
             FiveWins: "Recompensa de 5 vitórias (armadura)",
             SevenWins: "Recompensa de 7 vitórias (arma)",

@@ -14,7 +14,7 @@
     var vm = this;
     vm.repPool = {};
     vm.newRank = 0;
-    vm.newExperiance = 0;
+    vm.newExperience = 0;
 
     vm.factions = [
       // 174528503, eris breaks things atm
@@ -79,7 +79,7 @@
 
       var totalRank = total + vm.activeFaction.progressToNextLevel;
       vm.newRank = Math.floor((totalRank) / 2500) + vm.activeFaction.level;
-      vm.newExperiance = (totalRank % 2500);
+      vm.newExperience = (totalRank % 2500);
     }
 
 
@@ -145,51 +145,61 @@
 
     function mapXurItems(hashes) {
       var mappedItems = mapItems(hashes);
-      mappedItems[1].amount = mappedItems[0].amount * 3;
+      if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
+        mappedItems[1].amount = mappedItems[0].amount * 3;
+      }
       return mappedItems;
     }
 
     function mapGunsmithItems(hashes) {
       var mappedItems = mapItems(hashes);
-      mappedItems[0].amount = Math.floor(vm.glimmer / 1250) * 25;
+      if (mappedItems[0]) {
+        mappedItems[0].amount = Math.floor(vm.glimmer / 1250) * 25;
+      }
       return mappedItems;
     }
 
     function mapVariksItems(hashes) {
       var mappedItems = mapItems(hashes);
-      mappedItems[1].amount = mappedItems[0].amount;
+      if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
+        mappedItems[1].amount = mappedItems[0].amount;
+      }
       return mappedItems;
     }
 
     function mapErisItems(hashes) {
       var mappedItems = mapItems(hashes);
-      mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
+      if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
+        mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
+      }
       return mappedItems;
     }
 
     vm.calculateRep = function(item) {
       var rep = 0;
-      switch (item.hash) {
-      case 211861343:
-        rep = Math.floor(item.amount * 25);
-        break;       // heavy ammo synth
-      case 937555249:
-        rep = Math.floor(item.amount / 5) * 100;  // motes of light
-        break;
-      case 928169143:
-        rep = Math.floor(item.amount / 4) * 25;   // special ammo synth
-        break;
-      case 1542293174: // armor materials
-      case 1898539128: // weapon parts
-      case 1797491610: // Helium Filaments
-      case 2882093969: // Spin Metal
-      case 3242866270: // Relic Iron
-      case 2254123540: // Spirit Bloom
-      case 3164836592: // Wormspore
-        rep = Math.floor(item.amount / 25) * 50;
-        break;
-      default:
-        return '?';
+      if (item && item.hash) {
+        switch (item.hash) {
+        case 211861343:
+          rep = Math.floor(item.amount * 25);
+          break;       // heavy ammo synth
+        case 937555249:
+          rep = Math.floor(item.amount / 5) * 100;  // motes of light
+          break;
+        case 928169143:
+          rep = Math.floor(item.amount / 4) * 25;   // special ammo synth
+          break;
+        case 1542293174: // armor materials
+        case 1898539128: // weapon parts
+        case 1797491610: // Helium Filaments
+        case 2882093969: // Spin Metal
+        case 3242866270: // Relic Iron
+        case 2254123540: // Spirit Bloom
+        case 3164836592: // Wormspore
+          rep = Math.floor(item.amount / 25) * 50;
+          break;
+        default:
+          return '?';
+        }
       }
       return rep;
     };
