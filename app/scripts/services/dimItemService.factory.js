@@ -4,9 +4,19 @@
   angular.module('dimApp')
     .factory('dimItemService', ItemService);
 
-  ItemService.$inject = ['dimStoreService', 'dimBungieService', 'dimCategory', '$q'];
+  ItemService.$inject = [
+    'dimStoreService',
+    'dimBungieService',
+    'dimCategory',
+    'dimFeatureFlags',
+    '$q'
+  ];
 
-  function ItemService(dimStoreService, dimBungieService, dimCategory, $q) {
+  function ItemService(dimStoreService,
+                       dimBungieService,
+                       dimCategory,
+                       dimFeatureFlags,
+                       $q) {
     // We'll reload the stores to check if things have been
     // thrown away or moved and we just don't have up to date info. But let's
     // throttle these calls so we don't just keep refreshing over and over.
@@ -26,13 +36,13 @@
 
     function setItemState(item, store, lockState, type) {
       return dimBungieService.setItemState(item, store, lockState, type)
-        .then(function() {
-          return lockState;
-        });
+        .then(() => lockState);
     }
 
-
-    // Returns the new or updated item (it may create a new item!)
+    /**
+     * Update our item and store models after an item has been moved (or equipped/dequipped).
+     * @return the new or updated item (it may create a new item!)
+     */
     function updateItemModel(item, source, target, equip, amount) {
       // Refresh all the items - they may have been reloaded!
       source = dimStoreService.getStore(source.id);
@@ -42,8 +52,7 @@
       // If we've moved to a new place
       if (source.id !== target.id) {
         // We handle moving stackable and nonstackable items almost exactly the same!
-        var stackable = item.maxStackSize >
-            1;
+        var stackable = item.maxStackSize > 1;
         // Items to be decremented
         var sourceItems = stackable
               ? _.sortBy(_.select(source.items, function(i) {
@@ -142,8 +151,11 @@
       return result;
     }
 
-    // Find an item in store like "item", excluding the exclusions, to be equipped
-    // on target.
+    /**
+     * Find an item in store like "item", excluding the exclusions, to be equipped
+     * on target.
+     * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
+     */
     function searchForSimilarItem(item, store, exclusions, target) {
       exclusions = exclusions || [];
 
@@ -161,7 +173,8 @@
         return null;
       }
 
-      var result = _.max(candidates, function(i) {
+      // TODO: unify this value function w/ the others!
+      var sortedCandidates = _.sortBy(candidates, function(i) {
         var value = {
           Legendary: 4,
           Rare: 3,
@@ -169,30 +182,33 @@
           Common: 1,
           Exotic: 0
         }[i.tier];
+        if (item.isExotic && i.isExotic) {
+          value += 5;
+        }
         if (i.primStat) {
           value += i.primStat.value / 1000.0;
         }
         return value;
-      });
+      }).reverse();
 
-      if (result && result.isExotic) {
-        var prefix = _.filter(store.items, function(i) {
-          return i.equipped &&
-            i.bucket.sort === item.bucket.sort &&
-            i.isExotic;
-        });
-
-        if (prefix.length === 0) {
-          return result;
+      return sortedCandidates.find((result) => {
+        if (result.isExotic) {
+          const otherExotic = getOtherExoticThatNeedsDequipping(result, store);
+          // If there aren't other exotics equipped, or the equipped one is the one we're dequipping, we're good
+          if (!otherExotic || otherExotic.id === item.id) {
+            return true;
+          } else {
+            return false;
+          }
         } else {
-          return null;
+          return true;
         }
-      }
-
-      return result || null;
+      }) || null;
     }
 
-    // Bulk equip items. Only use for multiple equips at once.
+    /**
+     * Bulk equip items. Only use for multiple equips at once.
+     */
     function equipItems(store, items) {
       // Check for (and move aside) exotics
       const extraItemsToEquip = _.compact(items.map((i) => {
@@ -233,6 +249,9 @@
     }
 
     function equipItem(item) {
+      if (dimFeatureFlags.debugMoves) {
+        console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
+      }
       return dimBungieService.equip(item)
         .then(function() {
           const store = dimStoreService.getStore(item.owner);
@@ -253,7 +272,9 @@
         p = moveTo(similarItem, source, true);
       }
 
-      return p.then(() => equipItem(similarItem));
+      return p
+        .then(() => equipItem(similarItem))
+        .then(() => item);
     }
 
     function moveToVault(item, amount) {
@@ -261,6 +282,9 @@
     }
 
     function moveToStore(item, store, equip, amount) {
+      if (dimFeatureFlags.debugMoves) {
+        console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
+      }
       return dimBungieService.transfer(item, store, amount)
         .then(function() {
           var source = dimStoreService.getStore(item.owner);
@@ -325,46 +349,32 @@
       }
     }
 
+    /**
+     * Choose another item that we can move out of "store" in order to
+     * make room for "item". We already know when this function is
+     * called that store has no room for item.
+     *
+     * @param store the store to choose a move aside item from.
+     * @param item the item we're making space for.
+     * @param moveContext a helper object that can answer questions about how much space is left.
+     * @return An object with item and target properties representing both the item and its destination. This won't ever be undefined.
+     * @throws {Error} An error if no move aside item could be chosen.
+     */
     function chooseMoveAsideItem(store, item, moveContext) {
-      var moveAsideCandidates;
-      var stores = dimStoreService.getStores();
-      if (store.isVault && !_.any(stores, function(s) { return moveContext.spaceLeft(s, item); })) {
-        // If it's the vault, we can get rid of anything in the same sort category.
-        // Pick whatever we have the most space for on some guardian.
-        var bestType = _.max(dimCategory[item.bucket.sort], function(type) {
-          return _.max(stores.map(function(s) {
-            if (s.id === store.id) {
-              return 0;
-            }
-            var vaultItem = _.find(store.items, { type: type });
-            return vaultItem ? moveContext.spaceLeft(s, vaultItem) : 0;
-          }));
-        });
-
-        moveAsideCandidates = _.filter(store.items, { type: bestType });
-      } else {
-        moveAsideCandidates = _.filter(store.items, function(i) {
-          return i.location.id === item.location.id;
-        });
+      // Check whether an item cannot or should not be moved
+      function movable(otherItem) {
+        return !otherItem.notransfer &&
+          !_.any(moveContext.excludes, { id: otherItem.id, hash: otherItem.hash });
       }
 
-      // Don't move that which cannot be moved
-      moveAsideCandidates = _.reject(moveAsideCandidates, function(i) {
-        return i.notransfer || _.any(moveContext.excludes, { id: i.id, hash: i.hash });
-      });
-
-      if (moveAsideCandidates.length === 0) {
-        throw new Error("There's nothing we can move aside to make room for " + item.name);
-      }
-
-      // For the vault, try to move the highest-value item to a character. For a
-      // character, move the lowest-value item to the vault (or another character).
-      // We move the highest-value item out of the vault because it seems better
-      // not to gunk up characters with garbage or year 1 stuff.
-      var moveAsideItem = _[store.isVault ? 'max' : 'min'](moveAsideCandidates, function(i) {
+      // The value of an item to use for ranking which item to move
+      // aside. When moving from the vault we'll choose the
+      // highest-value item, while moving from a character to the
+      // vault (or another character) we'll use the lower value.
+      function itemValue(i) {
         // Lower means more likely to get moved away
         // Prefer not moving the equipped item
-        var value = i.equipped ? 10 : 0;
+        let value = i.equipped ? 10 : 0;
         // Prefer moving lower-tier
         value += {
           Common: 0,
@@ -381,68 +391,184 @@
         if (i.primStat) {
           value += i.primStat.value / 1000.0;
         }
+        // Engrams prefer to be in the vault
+        if (!i.isEngram()) {
+          value += 20;
+        }
+
+        // prefer same type over everything
+        if (i.type === item.type) {
+          value += 50;
+        }
+
         return value;
+      }
+
+      const stores = dimStoreService.getStores();
+      const otherStores = _.reject(stores, { id: store.id });
+
+      // Start with candidates of the same type (or sort if it's vault)
+      const allItems = store.isVault
+              ? _.filter(store.items, (i) => i.bucket.sort === item.bucket.sort)
+              : store.buckets[item.location.id];
+      let moveAsideCandidates = _.filter(allItems, movable);
+
+      // if there are no candidates at all, fail
+      if (moveAsideCandidates.length === 0) {
+        const e = new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        e.code = 'no-space';
+        throw e;
+      }
+
+      // Find any stackable that could be combined with another stack
+      // on a different store to form a single stack
+      if (item.maxStackSize > 1) {
+        let otherStore;
+        const stackable = moveAsideCandidates.find((i) => {
+          if (i.maxStackSize > 1) {
+            // Find another store that has an appropriate stackable
+            otherStore = otherStores.find(
+              (otherStore) => _.any(otherStore.items, (otherItem) =>
+                                    // Same basic item
+                                    otherItem.hash === i.hash &&
+                                    // Enough space to absorb this stack
+                                    (i.maxStackSize - otherItem.amount) >= i.amount));
+          }
+          return otherStore;
+        });
+        if (stackable) {
+          return {
+            item: stackable,
+            target: otherStore
+          };
+        }
+      }
+
+      // Sort all candidates
+      moveAsideCandidates = _.sortBy(moveAsideCandidates, itemValue);
+      if (store.isVault) {
+        moveAsideCandidates = moveAsideCandidates.reverse();
+      }
+
+      // A cached version of the space-left function
+      const cachedSpaceLeft = _.memoize((store, item) => {
+        return moveContext.spaceLeft(store, item);
+      }, (store, item) => {
+        // cache key
+        if (item.maxStackSize > 1) {
+          return store.id + item.hash;
+        } else {
+          return store.id + item.type;
+        }
       });
 
-      return moveAsideItem;
-    }
+      let moveAsideCandidate;
 
-    function chooseMoveAsideTarget(store, moveAsideItem, moveContext) {
-      var target;
-      var stores = dimStoreService.getStores();
-      if (store.isVault) {
-        // Find the character with the most space
-        target = _.max(_.reject(stores, 'isVault'), function(s) { return moveContext.spaceLeft(s, moveAsideItem); });
-      } else {
-        var vault = dimStoreService.getVault();
-        // Prefer moving to the vault
-        if (moveContext.spaceLeft(vault, moveAsideItem) > 0) {
-          target = vault;
-        } else {
-          target = _.max(stores, function(s) { return moveContext.spaceLeft(s, moveAsideItem); });
+      const vault = dimStoreService.getVault();
+      moveAsideCandidates.find((candidate) => {
+        // Other, non-vault stores, with the item's current
+        // owner ranked last, but otherwise sorted by the
+        // available space for the candidate item.
+        const otherNonVaultStores = _.sortBy(
+          _.filter(otherStores, (s) => !s.isVault && s.id !== item.owner),
+          (s) => cachedSpaceLeft(s, candidate)).reverse();
+        otherNonVaultStores.push(dimStoreService.getStore(item.owner));
+        const otherCharacterWithSpace = _.find(otherNonVaultStores,
+                                               (s) => cachedSpaceLeft(s, candidate));
+
+        if (store.isVault) { // If we're moving from the vault
+          // If there's somewhere with space, put it there
+          if (otherCharacterWithSpace) {
+            moveAsideCandidate = {
+              item: candidate,
+              target: otherCharacterWithSpace
+            };
+            return true;
+          }
+        } else { // If we're moving from a character
+          // If there's exactly one *slot* left on the vault, and
+          // we're not moving the original item *from* the vault, put
+          // the candidate on another character in order to avoid
+          // gumming up the vault.
+          const openVaultSlots = Math.floor(cachedSpaceLeft(vault, candidate) / candidate.maxStackSize);
+          if (openVaultSlots > 0 || !otherCharacterWithSpace) {
+            // Otherwise just try to shove it in the vault, and we'll
+            // recursively squeeze something else out of the vault.
+            moveAsideCandidate = {
+              item: candidate,
+              target: vault
+            };
+            return true;
+          } else {
+            moveAsideCandidate = {
+              item: otherCharacterWithSpace,
+              target: vault
+            };
+            return true;
+          }
         }
-        if (moveContext.spaceLeft(target, moveAsideItem) <= 0) {
-          target = vault;
+
+        return false;
+      });
+
+      if (!moveAsideCandidate) {
+        const e = new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        e.code = 'no-space';
+        throw e;
+      }
+
+      return moveAsideCandidate;
+    }
+
+    /**
+     * Is there anough space to move the given item into store? This will refresh
+     * data and/or move items aside in an attempt to make a move possible.
+     * @param item The item we're trying to move.
+     * @param store The destination store.
+     * @param options.triedFallback True if we've already tried reloading stores
+     * @param options.excludes A list of items that should not be moved in
+     *                         order to make space for this move.
+     * @param options.reservations A map from store => type => number of spaces to leave open.
+     * @param options.numRetries A count of how many alternate items we've tried.
+     * @return a promise that's either resolved if the move can proceed or rejected with an error.
+     */
+    function canMoveToStore(item, store, options = {}) {
+      const { triedFallback = false, excludes = [], reservations = {}, numRetries = 0 } = options;
+
+      function spaceLeftWithReservations(s, i) {
+        let left = s.spaceLeftForItem(i);
+        // minus any reservations
+        if (reservations[s.id] && reservations[s.id][i.type]) {
+          left -= reservations[s.id][i.type];
         }
-      }
-      return target === -Infinity ? undefined : target;
-    }
-
-    function slotsNeededForTransferTo(store, item) {
-      var slotsNeededForTransfer = 0;
-
-      if (item.maxStackSize > 1) {
-        var stackAmount = store.amountOfItem(item);
-        slotsNeededForTransfer = Math.ceil((stackAmount + item.amount) / item.maxStackSize) - Math.ceil((stackAmount) / item.maxStackSize);
-      } else {
-        slotsNeededForTransfer = 1;
+        // but not counting the original item that's moving
+        if (s.id === item.owner && i.type === item.type) {
+          left--;
+        }
+        return Math.max(0, left);
       }
 
-      return slotsNeededForTransfer;
-    }
-
-    // Is there anough space to move the given item into store? This will refresh
-    // data and/or move items aside in an attempt to make a move possible.
-    function canMoveToStore(item, store, triedFallback, excludes) {
       if (item.owner === store.id) {
         return $q.resolve(true);
       }
 
       var stores = dimStoreService.getStores();
-      // How much space will be needed in the various stores in order to make the transfer?
+
+      // How much space will be needed (in amount, not stacks) in the target store in order to make the transfer?
       var storeReservations = {};
-      stores.forEach(function(s) {
-        storeReservations[s.id] = (s.id === store.id ? slotsNeededForTransferTo(s, item) : 0);
-      });
+      storeReservations[store.id] = item.amount;
+
       // guardian-to-guardian transfer will also need space in the vault
       if (item.owner !== 'vault' && !store.isVault) {
-        storeReservations.vault = slotsNeededForTransferTo(dimStoreService.getVault(), item);
+        storeReservations.vault = item.amount;
       }
 
-      // How many moves are needed from each
+      // How many moves (in amount, not stacks) are needed from each
       var movesNeeded = {};
-      dimStoreService.getStores().forEach(function(s) {
-        movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - s.spaceLeftForItem(item));
+      stores.forEach(function(s) {
+        if (storeReservations[s.id]) {
+          movesNeeded[s.id] = Math.max(0, storeReservations[s.id] - spaceLeftWithReservations(s, item));
+        }
       });
 
       if (!_.any(movesNeeded)) {
@@ -450,40 +576,52 @@
       } else if (store.isVault || triedFallback) {
         // Move aside one of the items that's in the way
         var moveContext = {
-          reservations: storeReservations,
           originalItemType: item.type,
-          excludes: excludes || [],
+          excludes: excludes,
           spaceLeft: function(s, i) {
-            var left = s.spaceLeftForItem(i);
+            let left = spaceLeftWithReservations(s, i);
             if (i.type === this.originalItemType) {
-              left = left - this.reservations[s.id];
+              left = left - storeReservations[s.id];
             }
             return Math.max(0, left);
           }
         };
 
         // Move starting from the vault (which is always last)
-        var move = _.pairs(movesNeeded)
+        var moves = _.pairs(movesNeeded)
               .reverse()
-              .find(function(p) { return p[1] > 0; });
-        var source = dimStoreService.getStore(move[0]);
-        var moveAsideItem = chooseMoveAsideItem(source, item, moveContext);
-        var target = chooseMoveAsideTarget(source, moveAsideItem, moveContext);
+              .find(([_, moveAmount]) => moveAmount > 0);
+        var moveAsideSource = dimStoreService.getStore(moves[0]);
+        const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
-        if (!target || (!target.isVault && target.spaceLeftForItem(moveAsideItem) <= 0)) {
-          return $q.reject(new Error('There are too many \'' + (target.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type) + '\' items in the ' + target.name + '.'));
+        if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
+          const error = new Error(`There are too many '${(moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type)}' items in the ${moveAsideTarget.name}.`);
+          error.code = 'no-space';
+          return $q.reject(error);
         } else {
           // Make one move and start over!
-          return moveTo(moveAsideItem, target, false, moveAsideItem.amount, excludes).then(function() {
-            return canMoveToStore(item, store, triedFallback, excludes);
-          });
+          return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
+            .then(() => canMoveToStore(item, options))
+            .catch((e) => {
+              if (numRetries < 3) {
+                // Exclude this item and try again so we pick another
+                excludes.push(moveAsideItem);
+                options.excludes = excludes;
+                options.numRetries = numRetries + 1;
+                console.error(`Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`, e);
+                return canMoveToStore(item, store, options);
+              } else {
+                throw e;
+              }
+            });
         }
       } else {
         // Refresh the stores to see if anything has changed
         var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
         return reloadPromise.then(function(stores) {
           store = _.find(stores, { id: store.id });
-          return canMoveToStore(item, store, true, excludes);
+          options.triedFallback = true;
+          return canMoveToStore(item, store, options);
         });
       }
     }
@@ -500,93 +638,72 @@
       });
     }
 
-    function isValidTransfer(equip, store, item, excludes) {
+    /**
+     * Check whether this transfer can happen. If necessary, make secondary inventory moves
+     * in order to make the primary transfer possible, such as making room or dequipping exotics.
+     */
+    function isValidTransfer(equip, store, item, excludes, reservations) {
       var promises = [];
-
-      promises.push(canMoveToStore(item, store, false, excludes));
 
       if (equip) {
         promises.push(canEquip(item, store));
+        if (item.isExotic) {
+          promises.push(canEquipExotic(item, store));
+        }
       }
 
-      if ((item.isExotic) && equip) {
-        promises.push(canEquipExotic(item, store));
-      }
+      promises.push(canMoveToStore(item, store, { excludes, reservations }));
 
       return $q.all(promises);
     }
 
-    function moveTo(item, target, equip, amount, excludes) {
-      var data = {
-        item: item,
-        source: dimStoreService.getStore(item.owner),
-        target: target,
-        isVault: {
-          source: item.owner === 'vault',
-          target: target.isVault
-        }
-      };
+    /**
+     * Move item to target store, optionally equipping it.
+     * @param item the item to move.
+     * @param target the store to move it to.
+     * @param equip true to equip the item, false to leave it unequipped.
+     * @param amount how much of the item to move (for stacks). Can span more than one stack's worth.
+     * @param excludes A list of {id, hash} objects representing items that should not be moved aside to make the move happen.
+     * @param reservations A map of store id to the amount of space to reserve in it for items like "item".
+     * @return {Promise} A promise for the completion of the whole sequence of moves, or a rejection if the move cannot complete.
+     */
+    function moveTo(item, target, equip, amount, excludes, reservations) {
+      return isValidTransfer(equip, target, item, excludes, reservations)
+        .then(function() {
+          // Replace the target store - isValidTransfer may have reloaded it
+          target = dimStoreService.getStore(target.id);
+          const source = dimStoreService.getStore(item.owner);
 
-      var movePlan = isValidTransfer(equip, target, item, excludes)
-            .then(function() {
-              // Replace the target store - isValidTransfer may have replaced it
-              data.target = dimStoreService.getStore(target.id);
-            })
-            .then(function() {
-              var promise = $q.when(item);
+          let promise = $q.when(item);
 
-              if (!data.isVault.source && !data.isVault.target) { // Guardian to Guardian
-                if (data.source.id !== data.target.id) { // Different Guardian
-                  if (item.equipped) {
-                    promise = promise.then(function() {
-                      return dequipItem(item);
-                    });
-                  }
-
-                  promise = promise
-                    .then(function() {
-                      return moveToVault(item, amount);
-                    })
-                    .then(function(item) {
-                      return moveToStore(item, data.target, equip, amount);
-                    });
-                }
-
-                if (equip) {
-                  promise = promise.then(function() {
-                    if (item.equipped) {
-                      return $q.when(item);
-                    } else {
-                      return equipItem(item);
-                    }
-                  });
-                } else if (!equip) {
-                  promise = promise.then(function() {
-                    if (item.equipped) {
-                      return dequipItem(item);
-                    } else {
-                      return $q.when(item);
-                    }
-                  });
-                }
-              } else if (data.isVault.source && data.isVault.target) { // Vault to Vault
-                // Do Nothing.
-              } else if (data.isVault.source || data.isVault.target) { // Guardian to Vault
-                if (item.equipped) {
-                  promise = promise.then(function() {
-                    return dequipItem(item);
-                  });
-                }
-
-                promise = promise.then(function() {
-                  return moveToStore(item, data.target, equip, amount);
-                });
+          if (!source.isVault && !target.isVault) { // Guardian to Guardian
+            if (source.id !== target.id) { // Different Guardian
+              if (item.equipped) {
+                promise = promise.then((item) => dequipItem(item));
               }
 
-              return promise;
-            });
+              promise = promise
+                .then((item) => moveToVault(item, amount))
+                .then((item) => moveToStore(item, target, equip, amount));
+            }
 
-      return movePlan;
+            if (equip) {
+              promise = promise.then(() => (item.equipped ? item : equipItem(item)));
+            } else if (!equip) {
+              promise = promise.then(() => (item.equipped ? dequipItem(item) : item));
+            }
+          } else if (source.isVault && target.isVault) { // Vault to Vault
+            // Do Nothing.
+          } else if (source.isVault || target.isVault) { // Guardian to Vault
+            if (item.equipped) {
+              promise = promise.then(() => dequipItem(item));
+            }
+
+            promise = promise.then(() => moveToStore(item, target, equip, amount));
+          }
+
+          return promise;
+        });
     }
 
     function getItems() {
