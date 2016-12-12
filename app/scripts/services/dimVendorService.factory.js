@@ -136,7 +136,10 @@
             }
 
             if (service.vendors[vendorDef.hash] &&
-                service.vendors[vendorDef.hash].expires > Date.now()) {
+                _.all(stores, (store) =>
+                      cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys,
+                                           store,
+                                           vendorDef))) {
               service.loadedVendors++;
               return service.vendors[vendorDef.hash];
             } else {
@@ -172,6 +175,8 @@
       const mergedVendor = angular.copy(firstVendor);
 
       otherVendors.forEach((vendor) => {
+        angular.extend(firstVendor.cacheKeys, vendor.cacheKeys);
+
         vendor.categories.forEach((category) => {
           const existingCategory = _.find(mergedVendor.categories, { title: category.title });
           if (existingCategory) {
@@ -346,7 +351,13 @@
         name: def.vendorName,
         icon: def.factionIcon || def.vendorIcon,
         nextRefreshDate: vendor.nextRefreshDate,
-        expires: calculateExpiration(vendor.nextRefreshDate),
+        cacheKeys: {
+          [store.id]: {
+            expires: vendor.expires,
+            factionLevel: vendor.factionLevel,
+            factionAligned: vendor.factionAligned
+          }
+        },
         eventVendor: def.mapSectionIdentifier === 'EVENT',
         vendorOrder: (def.mapSectionOrder * 1000) + def.vendorOrder,
         faction: def.factionHash // TODO: show rep!
