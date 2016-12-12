@@ -417,7 +417,7 @@
 
       // if there are no candidates at all, fail
       if (moveAsideCandidates.length === 0) {
-        const e = new Error($translate.instant('ItemService.NotEnoughRoom', { itemname: item.name }));
+        const e = new Error($translate.instant('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
         e.code = 'no-space';
         throw e;
       }
@@ -514,7 +514,7 @@
       });
 
       if (!moveAsideCandidate) {
-        const e = new Error($translate.instant('ItemService.NotEnoughRoom', { itemname: item.name }));
+        const e = new Error($translate.instant('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
         e.code = 'no-space';
         throw e;
       }

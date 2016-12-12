@@ -132,7 +132,7 @@
             Classified: "This item is classified and cannot be transferred at this time.",
             Deequip: "Cannot find another item to equip in order to dequip {{itemname}}",
             ExoticError: "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped.",
-            NotEnoughRoom: "There's nothing we can move aside to make room for {{itemname}}",
+            NotEnoughRoom: "There's nothing we can move out of {{store}} to make room for {{itemname}}",
             OnlyEquipped: "This can only be equipped on {{class}} at or above level {{level}}.",
             TooMuch: "Looks like you requested to move more of this item than exists in the source!",
             TwoExotics: "We don't know how you got more than 2 equipped exotics!",
