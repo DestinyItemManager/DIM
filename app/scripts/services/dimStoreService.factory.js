@@ -1057,10 +1057,16 @@
       let processRecord = (recordBook, record) => {
         var def = objectiveDef[record.objectives[0].objectiveHash];
 
+        var display;
+        if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
+          display = record.objectives[0].displayValue;
+        }
+
         return {
           description: record.description,
           displayName: record.displayName,
           progress: record.objectives[0].progress,
+          display: display,
           completionValue: def.completionValue,
           complete: record.objectives[0].isComplete,
           boolean: def.completionValue === 1
