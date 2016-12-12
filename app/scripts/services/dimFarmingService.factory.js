@@ -12,7 +12,8 @@
     '$interval',
     'toaster',
     'dimFeatureFlags',
-    'dimSettingsService'
+    'dimSettingsService',
+    '$translate'
   ];
 
   /**
@@ -26,7 +27,8 @@
                           $interval,
                           toaster,
                           dimFeatureFlags,
-                          dimSettingsService) {
+                          dimSettingsService,
+                          $translate) {
     let intervalId;
     let cancelReloadListener;
     const glimmerHashes = new Set([
@@ -55,7 +57,7 @@
     const settings = dimSettingsService.farming;
 
     const outOfSpaceWarning = _.throttle((store) => {
-      toaster.pop('info', `You're out of space to move items off of ${store.name}. Time to decrypt some engrams and clear out the trash!`);
+      toaster.pop('info', $translate.instant('FarmingMode.OutOfRoom', { character: store.name }));
     }, 60000);
 
     return {

@@ -107,8 +107,8 @@
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
     };
-    const didYouKnowTemplate = "<p>" + $translate.instant('DidYouKnow.DoubleClick') + "</p>" +
-                               "<p>" + $translate.instant('DidYouKnow.TryNext') + "</p>";
+    const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DoubleClick')}</p>` +
+                               `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('doubleclick', {
@@ -126,7 +126,7 @@
       }
 
       if (item.notransfer && item.owner !== target.id) {
-        return $q.reject(new Error('Cannot move that item off this character.'));
+        return $q.reject(new Error($translate.instant('Help.CannotMove')));
       }
 
       if (item.owner === vm.store.id) {

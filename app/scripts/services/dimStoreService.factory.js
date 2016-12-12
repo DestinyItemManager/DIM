@@ -157,9 +157,9 @@
         if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
           dimInfoService.show('lostitems', {
             type: 'warning',
-            title: 'Postmaster Limit',
-            body: 'There are 20 lost items at the Postmaster on your ' + this.name + '. Any new items will overwrite the existing.',
-            hide: 'Never show me this type of warning again.'
+            title: $translate.instant('Postmaster.Limit'),
+            body: $translate.instant('Postmaster.Desc', { store: this.name }),
+            hide: $translate.instant('Help.NeverShow')
           });
         }
         item.owner = this.id;

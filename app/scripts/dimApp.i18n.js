@@ -77,8 +77,13 @@
               MakeRoom: "Make room to pick up items by moving equipment",
               Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
             },
+            OutOfRoom: "You're out of space to move items off of {{character}}. Time to decrypt some engrams and clear out the trash!",
             Quickmove: "Quick Move",
             Stop: "Stop"
+          },
+          Filter: {
+            EnterName: "Enter an item name:",
+            EnterNote: "Enter notes text:"
           },
           Header: {
             About: "About",
@@ -90,7 +95,12 @@
           },
           Help: {
             BackToDIM: "Back to DIM",
-            Drag: "Hold shift or pause over drop zone to transfer a partial stack."
+            CannotMove: "Cannot move that item off this character.",
+            Drag: "Hold shift or pause over drop zone to transfer a partial stack.",
+            ChangingPerks: "Changing Perks Not Supported",
+            ChangingPerksInfo: "Sorry, there's no way to change perks outside the game. We wish we could!",
+            NeverShow: "Never show me this again.",
+            Xur: "Xûr is Here"
           },
           Hotkey: {
             StartSearch: "Start a search",
@@ -106,9 +116,26 @@
             InfuseItems: "Select item to infuse with:",
             LockedItems: "Include 'locked' items",
             NoItems: "No infusable items available.",
+            NoTransfer: "Transfer infusion material\n {{target}} cannot be moved.",
             ShowItems: "Show infusable items across all characters and vault",
             TransferItems: "Transfer items",
             Using3: "using 3"
+          },
+          ItemMove: {
+            Consolidate: "Consolidated {{name}}",
+            Distributed: "Distributed {{name}}\n {{name}} is now equally divided between characters.",
+            ToVault: "All {{name}} are now in your vault.",
+            ToStore: "All {{name}} are now on your {{store}}."
+          },
+          ItemService: {
+            BucketFull: "There are too many '{{itemtype}}' items in the {{bucket}}.",
+            Classified: "This item is classified and cannot be transferred at this time.",
+            Deequip: "Cannot find another item to equip in order to dequip {{itemname}}",
+            ExoticError: "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped.",
+            NotEnoughRoom: "There's nothing we can move aside to make room for {{itemname}}",
+            OnlyEquipped: "This can only be equipped on {{class}} at or above level {{level}}.",
+            TooMuch: "Looks like you requested to move more of this item than exists in the source!",
+            TwoExotics: "We don't know how you got more than 2 equipped exotics!",
           },
           LB: {
             LB: "Loadout Builder",
@@ -166,12 +193,22 @@
             RestoreAllItems: "All Items",
             Random: "Random",
             Randomize: "Randomize your equipped weapons, armor, ghost, and artifact?",
+            VendorsCannotEquip: "These vendor items cannot be equipped",
+            VendorsCanEquip: "These items can be equipped",
+            MaxSlots: "You can only have {{slots}} of that kind of item in a loadout.",
+            OnlyItems: "Only equippable items, materials, and consumables can be added to a loadout.",
+            FilteredItems: "Filtered Items",
+            NoEngrams: "No non-exotic engrams are available to transfer.",
+            NoExotics: "No engrams are available to transfer.",
             LoadoutName: "Loadout Name...",
             Save: "Save",
             SaveAsNew: "Save As New",
             Cancel: "Cancel",
             ItemsWithIcon: "Items with this icon will be equipped.",
             ClickToEquip: "Click on an item to toggle equip.",
+            CouldNotEquip: "Could not equip {{itemname}}",
+            TooManyRequested: "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
+            DoesNotExist: "{{itemname}} doesn't exist in your account.",
             AppliedAuto: "Automatic Loadout Builder",
             Applied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
             Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
@@ -202,6 +239,10 @@
           Notes: {
             Error: "Error! Max 120 characters for notes.",
             Help: "Add notes to this item"
+          },
+          Postmaster: {
+            Limit: "Postmaster Limit",
+            Desc: "There are 20 lost items at the Postmaster on your {{store}}. Any new items will overwrite the existing."
           },
           Settings: {
             Settings: "Settings",
