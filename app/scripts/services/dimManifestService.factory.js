@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimManifestService', ManifestService);
 
-  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService', '$translate'];
+  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService', '$translate', '$rootScope'];
 
-  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate) {
+  function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate, $rootScope) {
     // Testing flags
     const alwaysLoadRemote = false;
 
@@ -136,6 +136,7 @@
             })
             .catch((e) => console.error('Error saving manifest file', e));
 
+          $rootScope.$broadcast('dim-new-manifest');
           return typedArray;
         });
     }

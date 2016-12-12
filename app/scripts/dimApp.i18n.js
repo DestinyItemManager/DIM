@@ -260,6 +260,8 @@
           Vendors: {
             Vendors: "Vendors",
             All: "All",
+            Available: "Available on",
+            Compare: "Compare with what you already have",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",

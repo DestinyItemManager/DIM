@@ -1,4 +1,7 @@
 # Next
+* Update record books to properly display time instead of a large number. (#1051)
+
+# 3.14.0
 
 * Moving an item into a full vault but an empty bucket (such as full General but the vault contains no Consumables) now works.
 * Stacks of items are properly accounted for. They'll now combine as things are moved to make space - previously even a stack of 1 consumable would count as taking up the whole slot and would prevent a move of 2 more of that consumable.
@@ -12,6 +15,7 @@
 * We swapped in "special ammo synth" and "primary ammo synth" instead of "motes of light" and "strange coins" for the farming mode quick gather buttons. They seemed more useful in the heat of battle.
 * When dequipping an item, we try harder to find a good item to equip in its place. We also prefer replacing exotics with other exotics, and correctly handle The Life Exotic perk.
 * Lots of new translations and localized strings.
+* Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
 
 # 3.14.1
 
