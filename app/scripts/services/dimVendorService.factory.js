@@ -95,8 +95,24 @@
       service.vendorsLoaded = false;
     });
 
+    $rootScope.$on('dim-new-manifest', function() {
+      service.vendors = {};
+      service.vendorsLoaded = false;
+      deleteCachedVendors();
+    });
+
     return service;
 
+    function deleteCachedVendors() {
+      // Everything's in one table, so we can't just clear
+      idbKeyval.keys().then((keys) => {
+        keys.forEach((key) => {
+          if (key.startsWith('vendor')) {
+            idbKeyval.delete(key);
+          }
+        });
+      });
+    }
 
     function reloadVendors(stores) {
       const activePlatform = dimPlatformService.getActive();

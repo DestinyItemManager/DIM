@@ -1,3 +1,7 @@
+# Next
+
+* Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
+
 # 3.14.1
 
 * Internationaliztion updates.
