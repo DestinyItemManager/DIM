@@ -2,6 +2,30 @@
 * Permit the same damage type of subclass in loadouts (#1067)
 
 # 3.14
+* Update record books to properly display time instead of a large number. (#1051)
+
+# 3.14.0
+
+* Moving an item into a full vault but an empty bucket (such as full General but the vault contains no Consumables) now works.
+* Stacks of items are properly accounted for. They'll now combine as things are moved to make space - previously even a stack of 1 consumable would count as taking up the whole slot and would prevent a move of 2 more of that consumable.
+* We now catch errors trying to move aside items and retry with a different item. You should see fewer failed moves!
+* "Thrashing" in farming mode is fixed. When farming mode can't proceed (because moving anything off the character would result in something else being moved back on, because you're out of space), we now show a friendly info message. This message is throttled to show up no more than once a minute.
+* Fixed a bug where a full vault would prevent farming mode from moving things to other characters.
+* The move aside logic strongly prefers putting things on characters other than the original item's owner. This makes it much easier to move a bunch of stuff off of a character without other things bouncing right back in.
+* Prefer putting engrams in the vault and not taking them out when choosing items to move aside.
+* Farming mode now makes room to pick up artifacts, materials, and consumables.
+* When making space in the "General" category or in Materials/Consumables buckets, we'll choose to move aside an item that can be combined with another stack somewhere without increasing the total number of stacks. This trends towards consolidation and can help free up a full vault, as well as getting rid of stray stacks.
+* We swapped in "special ammo synth" and "primary ammo synth" instead of "motes of light" and "strange coins" for the farming mode quick gather buttons. They seemed more useful in the heat of battle.
+* When dequipping an item, we try harder to find a good item to equip in its place. We also prefer replacing exotics with other exotics, and correctly handle The Life Exotic perk.
+* Lots of new translations and localized strings.
+* Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
+
+# 3.14.1
+
+* Internationaliztion updates.
+* Fix for Loadout Class Type bug.
+
+# 3.14.0
 
 * Compare Weapons and Armor side-by-side.
 * Added `is:sublime` filter
