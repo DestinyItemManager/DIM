@@ -7,8 +7,9 @@
   ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService', '$translate'];
 
   function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
-    const didYouKnowTemplate = "<p>" + $translate.instant('DidYouKnow.DragAndDrop') + "</p>" +
-                               "<p>" + $translate.instant('DidYouKnow.TryNext') + "</p>";
+// `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`
+    const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DragAndDrop')}</p>` +
+                               `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('movebox', {
@@ -79,11 +80,11 @@
       promise = promise.then(function() {
         var message;
         if (store.isVault) {
-          message = 'All ' + actionableItem.name + ' are now in your vault.';
+          message = $translate.instant('ItemMove.ToVault', { name: actionableItem.name });
         } else {
-          message = 'All ' + actionableItem.name + ' are now on your ' + store.name + ".";
+          message = $translate.instant('ItemMove.ToStore', { name: actionableItem.name, store: store.name });
         }
-        toaster.pop('success', 'Consolidated ' + actionableItem.name, message);
+        toaster.pop('success', $translate.instant('ItemMove.Consolidate', { name: actionableItem.name }), message);
       })
       .catch(function(a) {
         toaster.pop('error', actionableItem.name, a.message);
@@ -161,7 +162,7 @@
       });
 
       promise = promise.then(function() {
-        toaster.pop('success', 'Distributed ' + actionableItem.name, actionableItem.name + ' is now equally divided between characters.');
+        toaster.pop('success', $translate.instant('ItemMove.Distributed', { name: actionableItem.name }));
       })
       .catch(function(a) {
         toaster.pop('error', actionableItem.name, a.message);
