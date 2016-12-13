@@ -682,38 +682,6 @@
           normalBucket = buckets.byHash[1469714392];
           // itemDef.icon = '/img/misc/box_of_raisins.png';
           break;
-        case 194424268:
-          itemDef.itemName = "Sparklepony";
-          itemDef.itemDescription = "Equip this shader to change the color of your armor.";
-          itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/sparklepony.png';
-          normalBucket = buckets.byHash[2973005342];
-          break;
-        case 194424267:
-          itemDef.itemName = "Barrier Ethos";
-          itemDef.itemDescription = "Equip this shader to change the color of your armor.";
-          itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/barrier_ethos.png';
-          normalBucket = buckets.byHash[2973005342];
-          break;
-        case 1759332263:
-          itemDef.itemName = "Stolen Chalice";
-          itemDef.itemDescription = "Equip this shader to change the color of your armor.";
-          itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/stolen_chalice.png';
-          normalBucket = buckets.byHash[2973005342];
-          break;
-        case 194424269:
-          itemDef.itemName = "The Ointment";
-          itemDef.itemDescription = "Equip this shader to change the color of your armor.";
-          itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/the_ointment.png';
-          normalBucket = buckets.byHash[2973005342];
-          break;
         case 640697284: // warlock siva engine (Charged)
           itemDef.itemName = "SIVA Engine Replica (Charged)";
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
