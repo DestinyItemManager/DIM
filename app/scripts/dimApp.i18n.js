@@ -134,7 +134,7 @@
             ExoticError: "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped.",
             NotEnoughRoom: "There's nothing we can move out of {{store}} to make room for {{itemname}}",
             OnlyEquippedLevel: "This can only be equipped on characters at or above level {{level}}.",
-            OnlyEquippedClassLevel: "This can only be equipped on {{class}} at or above level {{level}}.",
+            OnlyEquippedClassLevel: "This can only be equipped on a {{class}} at or above level {{level}}.",
             TooMuch: "Looks like you requested to move more of this item than exists in the source!",
             TwoExotics: "We don't know how you got more than 2 equipped exotics!",
           },
