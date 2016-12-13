@@ -673,21 +673,21 @@
           itemDef.itemDescription = "It's slightly wilted.";
           itemDef.itemTypeName = "Sweets";
           normalBucket = buckets.byHash[1469714392];
-          itemDef.icon = '/img/misc/celery.png';
+          // itemDef.icon = '/img/misc/celery.png';
           break;
         case 320629370:
           itemDef.itemName = "Tiny Box of Raisins";
           itemDef.itemDescription = "What? Why...?";
           itemDef.itemTypeName = "Sweets";
           normalBucket = buckets.byHash[1469714392];
-          itemDef.icon = '/img/misc/box_of_raisins.png';
+          // itemDef.icon = '/img/misc/box_of_raisins.png';
           break;
         case 194424268:
           itemDef.itemName = "Sparklepony";
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/sparklepony.png';
+          // itemDef.icon = '/img/misc/sparklepony.png';
           normalBucket = buckets.byHash[2973005342];
           break;
         case 194424267:
@@ -695,7 +695,7 @@
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/barrier_ethos.png';
+          // itemDef.icon = '/img/misc/barrier_ethos.png';
           normalBucket = buckets.byHash[2973005342];
           break;
         case 1759332263:
@@ -703,7 +703,7 @@
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/stolen_chalice.png';
+          // itemDef.icon = '/img/misc/stolen_chalice.png';
           normalBucket = buckets.byHash[2973005342];
           break;
         case 194424269:
@@ -711,7 +711,7 @@
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/the_ointment.png';
+          // itemDef.icon = '/img/misc/the_ointment.png';
           normalBucket = buckets.byHash[2973005342];
           break;
         case 640697284: // warlock siva engine (Charged)
@@ -719,7 +719,7 @@
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/siva_engine.png';
+          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 2;
           break;
@@ -728,7 +728,7 @@
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/siva_engine.png';
+          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 2;
           break;
@@ -737,7 +737,7 @@
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/siva_engine.png';
+          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 1;
           break;
@@ -746,7 +746,7 @@
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/siva_engine.png';
+          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 1;
           break;
@@ -755,7 +755,7 @@
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/siva_engine.png';
+          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
@@ -764,7 +764,7 @@
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          itemDef.icon = '/img/misc/siva_engine.png';
+          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
