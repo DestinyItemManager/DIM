@@ -38,16 +38,6 @@
              "itemName":"Talo de Salsão",
              "itemDescription":"Está um pouco murcho",
              "itemTypeName":"Doces"
-           },
-           "ja", {
-             "itemName":"Tiny Box of Raisins",
-             "itemDescription":"What? Why...?",
-             "itemTypeName":"Sweets"
-           },
-           "pt-br", {
-             "itemName":"Caixinha de Passas",
-             "itemDescription":"O qué? Por qué...?",
-             "itemTypeName":"Doces"
            }
          ]
       },
@@ -79,6 +69,16 @@
              "itemName":"Scatolina di Uvetta",
              "itemDescription":"Cosa? Perché...?",
              "itemTypeName":"Dolci"
+           },
+           "ja", {
+             "itemName":"Tiny Box of Raisins",
+             "itemDescription":"What? Why...?",
+             "itemTypeName":"Sweets"
+           },
+           "pt-br", {
+            "itemName":"Caixinha de Passas",
+            "itemDescription":"O qué? Por qué...?",
+            "itemTypeName":"Doces",
            }
          ]
       },
