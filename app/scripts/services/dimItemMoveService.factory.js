@@ -4,16 +4,18 @@
   angular.module('dimApp')
     .factory('dimItemMoveService', ItemMoveService);
 
-  ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService'];
+  ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService', '$translate'];
 
-  function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService) {
+  function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
+// `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`
+    const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DragAndDrop')}</p>` +
+                               `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('movebox', {
-        title: 'Did you know?',
-        body: ['<p>Items can be dragged and dropped between different characters/vault columns.</p>',
-               '<p>Try it out next time!<p>'].join(''),
-        hide: 'Don\'t show this tip again'
+        title: $translate.instant('DidYouKnow'),
+        body: didYouKnowTemplate,
+        hide: $translate.instant('DidYouKnow.DontShowAgain')
       });
     });
 
@@ -78,11 +80,11 @@
       promise = promise.then(function() {
         var message;
         if (store.isVault) {
-          message = 'All ' + actionableItem.name + ' are now in your vault.';
+          message = $translate.instant('ItemMove.ToVault', { name: actionableItem.name });
         } else {
-          message = 'All ' + actionableItem.name + ' are now on your ' + store.name + ".";
+          message = $translate.instant('ItemMove.ToStore', { name: actionableItem.name, store: store.name });
         }
-        toaster.pop('success', 'Consolidated ' + actionableItem.name, message);
+        toaster.pop('success', $translate.instant('ItemMove.Consolidate', { name: actionableItem.name }), message);
       })
       .catch(function(a) {
         toaster.pop('error', actionableItem.name, a.message);
@@ -160,7 +162,7 @@
       });
 
       promise = promise.then(function() {
-        toaster.pop('success', 'Distributed ' + actionableItem.name, actionableItem.name + ' is now equally divided between characters.');
+        toaster.pop('success', $translate.instant('ItemMove.Distributed', { name: actionableItem.name }));
       })
       .catch(function(a) {
         toaster.pop('error', actionableItem.name, a.message);

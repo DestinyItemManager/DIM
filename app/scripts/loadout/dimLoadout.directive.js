@@ -35,14 +35,15 @@
         '        <button ng-click="vm.applyNow()" translate="Loadouts.ApplyNow"></button>',
         '    </p>',
         '    <p id="loadout-error"></p>',
-        '    <p ng-if="vm.loadout.warnitems.length">These vendor items cannot be equipped:</p>',
+
+        '    <p ng-if="vm.loadout.warnitems.length" translate="Loadouts.VendorsCannotEquip">:</p>',
         '    <div ng-if="vm.loadout.warnitems.length" class="loadout-contents">',
         '      <div ng-repeat="item in vm.loadout.warnitems" id="loadout-warn-item-{{:: $index }}" class="loadout-item">',
         '        <dim-simple-item item-data="item"></dim-simple-item>',
         '        <div class="fa warn"></div>',
         '      </div>',
         '    </div>',
-        '    <p ng-if="vm.loadout.warnitems.length" >These items can be equipped:</p>',
+        '    <p ng-if="vm.loadout.warnitems.length" translate="Loadouts.VendorsCanEquip">:</p>',
         '    <div id="loadout-contents" class="loadout-contents">',
         '      <div ng-repeat="value in vm.types track by value" class="loadout-{{ value }} loadout-bucket" ng-if="vm.loadout.items[value].length">',
         '        <div ng-repeat="item in vm.loadout.items[value] | sortItems:vm.settings.itemSort track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="loadout-item">',
@@ -62,8 +63,31 @@
 
       scope.$on('dim-stores-updated', function(evt, data) {
         vm.classTypeValues = [{ label: $translate.instant('Loadouts.Any'), value: -1 }];
+
+        /*
+        Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
+        These changes broke loadouts.  Next time, you have to map values between new and old values to preserve backwards compatability.
+        */
+
         _.each(_.uniq(_.reject(data.stores, 'isVault'), false, function(store) { return store.classType; }), function(store) {
-          vm.classTypeValues.push({ label: store.className, value: store.classType });
+          let classType = 0;
+
+          switch (parseInt(store.classType, 10)) {
+          case 0: {
+            classType = 1;
+            break;
+          }
+          case 1: {
+            classType = 2;
+            break;
+          }
+          case 2: {
+            classType = 0;
+            break;
+          }
+          }
+
+          vm.classTypeValues.push({ label: store.className, value: classType });
         });
       });
 
@@ -116,9 +140,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['$scope', 'dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService', 'dimStoreService'];
+  LoadoutCtrl.$inject = ['$scope', '$translate', 'dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService', 'dimStoreService'];
 
-  function LoadoutCtrl($scope, dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, dimStoreService) {
+  function LoadoutCtrl($scope, $translate, dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, dimStoreService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -201,7 +225,7 @@
 
             typeInventory.push(clone);
           } else {
-            toaster.pop('warning', '', 'You can only have ' + maxSlots + ' of that kind of item in a loadout.');
+            toaster.pop('warning', '', $translate.instant('Loadouts.MaxSlots', { slots: maxSlots }));
           }
         } else if (dupe && clone.maxStackSize > 1) {
           var increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
@@ -209,7 +233,7 @@
           // TODO: handle stack splits
         }
       } else {
-        toaster.pop('warning', '', 'Only equippable items, materials, and consumables can be added to a loadout.');
+        toaster.pop('warning', '', $translate.instant('Loadouts.OnlyItems'));
       }
     };
 

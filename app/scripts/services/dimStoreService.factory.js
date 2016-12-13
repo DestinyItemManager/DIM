@@ -83,14 +83,19 @@
     // Prototype for Store objects - add methods to this to add them to all
     // stores.
     var StoreProto = {
-      // Get the total amount of this item in the store, across all stacks,
-      // excluding stuff in the postmaster.
+      /**
+       * Get the total amount of this item in the store, across all stacks,
+       * excluding stuff in the postmaster.
+       */
       amountOfItem: function(item) {
         return sum(_.filter(this.items, function(i) {
           return i.hash === item.hash && !i.location.inPostmaster;
         }), 'amount');
       },
-      // How much of items like this item can fit in this store?
+      /**
+       * How much of items like this item can fit in this store? For
+       * stackables, this is in stacks, not individual pieces.
+       */
       capacityForItem: function(item) {
         if (!item.bucket) {
           console.error("item needs a 'bucket' field", item);
@@ -98,12 +103,25 @@
         }
         return item.bucket.capacity;
       },
-      // How many *more* items like this item can fit in this store?
+      /**
+       * How many *more* items like this item can fit in this store?
+       * This takes into account stackables, so the answer will be in
+       * terms of individual pieces.
+       */
       spaceLeftForItem: function(item) {
         if (!item.type) {
           throw new Error("item needs a 'type' field");
         }
-        return Math.max(0, this.capacityForItem(item) - this.buckets[item.location.id].length);
+        const openStacks = Math.max(0, this.capacityForItem(item) -
+                                    this.buckets[item.location.id].length);
+        const maxStackSize = item.maxStackSize || 1;
+        if (maxStackSize === 1) {
+          return openStacks;
+        } else {
+          const existingAmount = this.amountOfItem(item);
+          const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
+          return (openStacks * maxStackSize) + stackSpace;
+        }
       },
       updateCharacterInfoFromEquip: function(characterInfo) {
         dimDefinitions.then((defs) => this.updateCharacterInfo(defs, characterInfo));
@@ -139,9 +157,9 @@
         if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
           dimInfoService.show('lostitems', {
             type: 'warning',
-            title: 'Postmaster Limit',
-            body: 'There are 20 lost items at the Postmaster on your ' + this.name + '. Any new items will overwrite the existing.',
-            hide: 'Never show me this type of warning again.'
+            title: $translate.instant('Postmaster.Limit'),
+            body: $translate.instant('Postmaster.Desc', { store: this.name }),
+            hide: $translate.instant('Help.NeverShow')
           });
         }
         item.owner = this.id;
@@ -316,9 +334,8 @@
                               dimBucketService,
                               loadNewItems(activePlatform),
                               dimItemInfoService(activePlatform),
-                              $translate(['Vault']),
                               dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, newItems, itemInfoService, translations, rawStores]) {
+        .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
@@ -356,10 +373,10 @@
             if (raw.id === 'vault') {
               store = angular.extend(Object.create(StoreProto), {
                 id: 'vault',
-                name: translations.Vault,
+                name: $translate.instant('Bucket.Vault'),
                 class: 'vault',
                 current: false,
-                className: translations.Vault,
+                className: $translate.instant('Bucket.Vault'),
                 lastPlayed: '2005-01-01T12:00:01Z',
                 icon: '/images/vault.png',
                 background: '/images/vault-background.png',
@@ -380,16 +397,23 @@
                   return buckets[sort].capacity;
                 },
                 spaceLeftForItem: function(item) {
-                  var sort = item.sort;
+                  let sort = item.sort;
                   if (item.bucket) {
                     sort = item.bucket.sort;
                   }
                   if (!sort) {
                     throw new Error("item needs a 'sort' field");
                   }
-                  return Math.max(0, this.capacityForItem(item) - count(this.items, function(i) {
-                    return i.bucket.sort === sort;
-                  }));
+                  const openStacks = Math.max(0, this.capacityForItem(item) -
+                                              count(this.items, (i) => i.bucket.sort === sort));
+                  const maxStackSize = item.maxStackSize || 1;
+                  if (maxStackSize === 1) {
+                    return openStacks;
+                  } else {
+                    const existingAmount = this.amountOfItem(item);
+                    const stackSpace = existingAmount > 0 ? (maxStackSize - (existingAmount % maxStackSize)) : 0;
+                    return (openStacks * maxStackSize) + stackSpace;
+                  }
                 },
                 removeItem: function(item) {
                   var result = StoreProto.removeItem.call(this, item);
@@ -1033,10 +1057,16 @@
       let processRecord = (recordBook, record) => {
         var def = objectiveDef[record.objectives[0].objectiveHash];
 
+        var display;
+        if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
+          display = record.objectives[0].displayValue;
+        }
+
         return {
           description: record.description,
           displayName: record.displayName,
           progress: record.objectives[0].progress,
+          display: display,
           completionValue: def.completionValue,
           complete: record.objectives[0].isComplete,
           boolean: def.completionValue === 1
