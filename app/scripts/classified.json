@@ -6,7 +6,7 @@
          "itemName":"Piece of Celery",
          "itemDescription":"It's slightly wilted.",
          "itemTypeName":"Sweets",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -14,7 +14,7 @@
          "itemName":"Tiny Box of Raisins",
          "itemDescription":"What? Why...?",
          "itemTypeName":"Sweets",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
@@ -22,7 +22,7 @@
          "itemName":"Sparklepony",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -31,7 +31,7 @@
          "itemName":"Barrier Ethos",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -40,7 +40,7 @@
          "itemName":"The Ointment",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -49,7 +49,7 @@
          "itemName":"Stolen Chalice",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -58,7 +58,7 @@
          "itemName":"SIVA Engine Replica (Charged)",
          "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -68,7 +68,7 @@
          "itemName":"SIVA Engine Replica (Charged)",
          "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -78,7 +78,7 @@
          "itemName":"SIVA Engine Replica (Charged)",
          "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -88,7 +88,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -98,7 +98,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -108,7 +108,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -119,7 +119,7 @@
          "itemName":"Stück Sellerie",
          "itemDescription":"Es ist leicht verwelkt.",
          "itemTypeName":"Süßigkeiten",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -127,7 +127,7 @@
          "itemName":"Klitzekleine Schachtel mit Rosinen",
          "itemDescription":"Was? Warum...?",
          "itemTypeName":"Süßigkeiten",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
@@ -135,7 +135,7 @@
          "itemName":"Barrierenethos",
          "itemDescription":"Verändere mit  diesem Shader die Farbe deiner Rüstung.",
          "itemTypeName":"Rüstung-Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -144,7 +144,7 @@
          "itemName":"Glitzerpony",
          "itemDescription":"Verändere mit  diesem Shader die Farbe deiner Rüstung.",
          "itemTypeName":"Rüstung-Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -153,7 +153,7 @@
          "itemName":"Die Salbe",
          "itemDescription":"Verändere mit  diesem Shader die Farbe deiner Rüstung.",
          "itemTypeName":"Rüstung-Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -162,7 +162,7 @@
          "itemName":"Gestohlenenr Kelch",
          "itemDescription":"Verändere mit  diesem Shader die Farbe deiner Rüstung.",
          "itemTypeName":"Rüstung-Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -171,7 +171,7 @@
          "itemName":"SIVA-Triebwerk-Replik (Aufgeladen)",
          "itemDescription":"Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
          "itemTypeName":"SIVA-Triebwerks",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -181,7 +181,7 @@
          "itemName":"SIVA-Triebwerk-Replik (Aufgeladen)",
          "itemDescription":"Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
          "itemTypeName":"SIVA-Triebwerks",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -191,7 +191,7 @@
          "itemName":"SIVA-Triebwerk-Replik (Aufgeladen)",
          "itemDescription":"Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
          "itemTypeName":"SIVA-Triebwerks",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -201,7 +201,7 @@
          "itemName":"SIVA-Triebwerk-Replik (Instabil)",
          "itemDescription":"Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
          "itemTypeName":"SIVA-Triebwerks",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -211,7 +211,7 @@
          "itemName":"SIVA-Triebwerk-Replik (Instabil)",
          "itemDescription":"Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
          "itemTypeName":"SIVA-Triebwerks",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -221,7 +221,7 @@
          "itemName":"SIVA-Triebwerk-Replik (Instabil)",
          "itemDescription":"Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
          "itemTypeName":"SIVA-Triebwerks",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -232,7 +232,7 @@
          "itemName":"Branche de Céleri",
          "itemDescription":"Elle est flétrie",
          "itemTypeName":"Bonbons",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -240,15 +240,15 @@
          "itemName":"Petite Boîte de Raisins secs",
          "itemDescription":"Quoi? Mais... pourquoi?",
          "itemTypeName":"Bonbons",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
          "itemHash":"194424267",
          "itemName":"Les limites de l'Ethos",
          "itemDescription":"Équipez-vous de ce revétement pour modifier la couleur de votre armure.",
-         "itemTypeName":"Revétement d'armur",
-         "bucketType":"Revétement d'armure",
+         "itemTypeName":"Revêtement d'armure",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -256,8 +256,8 @@
          "itemHash":"194424268",
          "itemName":"Poney Scintillant",
          "itemDescription":"Équipez-vous de ce revétement pour modifier la couleur de votre armure.",
-         "itemTypeName":"Revétement d'armur",
-         "bucketType":"Revétement d'armure",
+         "itemTypeName":"Revêtement d'armure",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -265,8 +265,8 @@
          "itemHash":"194424269",
          "itemName":"Le Baume",
          "itemDescription":"Équipez-vous de ce revétement pour modifier la couleur de votre armure.",
-         "itemTypeName":"Revétement d'armure",
-         "bucketType":"Shader",
+         "itemTypeName":"Revêtement d'armure",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -274,8 +274,8 @@
          "itemHash":"1759332263",
          "itemName":"Coupe Dérobée",
          "itemDescription":"Équipez-vous de ce revétement pour modifier la couleur de votre armure.",
-         "itemTypeName":"Revétement d'armur",
-         "bucketType":"Revétement d'armure",
+         "itemTypeName":"Revêtement d'armure",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -284,7 +284,7 @@
          "itemName":"Copie du générateur d'ARIA (Chargé)",
          "itemDescription":"Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
          "itemTypeName":"générateur d'ARIA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -294,7 +294,7 @@
          "itemName":"Copie du générateur d'ARIA (Chargé)",
          "itemDescription":"Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
          "itemTypeName":"générateur d'ARIA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -304,7 +304,7 @@
          "itemName":"Copie du générateur d'ARIA (Chargé)",
          "itemDescription":"Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
          "itemTypeName":"générateur d'ARIA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -314,7 +314,7 @@
          "itemName":"Copie du générateur d'ARIA (Instable)",
          "itemDescription":"Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
          "itemTypeName":"générateur d'ARIA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -324,7 +324,7 @@
          "itemName":"Copie du générateur d'ARIA (Instable)",
          "itemDescription":"Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
          "itemTypeName":"générateur d'ARIA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -334,7 +334,7 @@
          "itemName":"Copie du générateur d'ARIA (Instable)",
          "itemDescription":"Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
          "itemTypeName":"générateur d'ARIA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -345,7 +345,7 @@
          "itemName":"Tronco de Apio",
          "itemDescription":"Se ha marchitado un poco.",
          "itemTypeName":"Golosinas",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -353,7 +353,7 @@
          "itemName":"Diminuta Caja de Pasas",
          "itemDescription":"¿Qué? ¿Por qué...?",
          "itemTypeName":"Golosinas",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
@@ -361,7 +361,7 @@
          "itemName":"Comportamiento Obstaculizador",
          "itemDescription":"Equipa este shader para cambiar el color de tu armadura.",
          "itemTypeName":"Shader de armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -370,7 +370,7 @@
          "itemName":"Poni Centelleante",
          "itemDescription":"Equipa este shader para cambiar el color de tu armadura.",
          "itemTypeName":"Shader de armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -379,7 +379,7 @@
          "itemName":"El Ungüento",
          "itemDescription":"Equipa este shader para cambiar el color de tu armadura.",
          "itemTypeName":"Shader de armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -388,7 +388,7 @@
          "itemName":"Cáliz Robado",
          "itemDescription":"Equipa este shader para cambiar el color de tu armadura.",
          "itemTypeName":"Shader de armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -397,7 +397,7 @@
          "itemName":"Réplica del Motor de SIVA (Cargada)",
          "itemDescription":"Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -407,7 +407,7 @@
          "itemName":"Réplica del Motor de SIVA (Cargada)",
          "itemDescription":"Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -417,7 +417,7 @@
          "itemName":"Réplica del Motor de SIVA (Cargada)",
          "itemDescription":"Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -427,7 +427,7 @@
          "itemName":"Réplica del Motor de SIVA (Inestable)",
          "itemDescription":"Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -437,7 +437,7 @@
          "itemName":"Réplica del Motor de SIVA (Inestable)",
          "itemDescription":"Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -447,7 +447,7 @@
          "itemName":"Réplica del Motor de SIVA (Inestable)",
          "itemDescription":"Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -458,7 +458,7 @@
          "itemName":"Gambo di Sedano",
          "itemDescription":"É un po' appassito",
          "itemTypeName":"Dolci",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -466,7 +466,7 @@
          "itemName":"Scatolina di Uvetta",
          "itemDescription":"Cosa? Perché...?",
          "itemTypeName":"Dolci",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
@@ -474,7 +474,7 @@
          "itemName":"Barriera dell'Ethos",
          "itemDescription":"Equipaggia questo shader per cambiare il colore della tua armatura.",
          "itemTypeName":"Shader per armatura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -483,7 +483,7 @@
          "itemName":"Pony Luccicante",
          "itemDescription":"Equipaggia questo shader per cambiare il colore della tua armatura.",
          "itemTypeName":"Shader per armatura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -492,7 +492,7 @@
          "itemName":"L'Unguento",
          "itemDescription":"Equipaggia questo shader per cambiare il colore della tua armatura.",
          "itemTypeName":"Shader per armatura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -501,7 +501,7 @@
          "itemName":"Calice Rubato",
          "itemDescription":"Equipaggia questo shader per cambiare il colore della tua armatura.",
          "itemTypeName":"Shader per armatura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -510,7 +510,7 @@
          "itemName":"Copia del Motore della SIVA (Carcicata)",
          "itemDescription":"Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.",
          "itemTypeName":"Motore della SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -520,7 +520,7 @@
          "itemName":"Copia del Motore della SIVA (Carcicata)",
          "itemDescription":"Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.",
          "itemTypeName":"Motore della SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -530,7 +530,7 @@
          "itemName":"Copia del Motore della SIVA (Carcicata)",
          "itemDescription":"Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.",
          "itemTypeName":"Motore della SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -540,7 +540,7 @@
          "itemName":"Copia del Motore della SIVA (Instabile)",
          "itemDescription":"Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.",
          "itemTypeName":"Motore della SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -550,7 +550,7 @@
          "itemName":"Copia del Motore della SIVA (Instabile)",
          "itemDescription":"Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.",
          "itemTypeName":"Motore della SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -560,7 +560,7 @@
          "itemName":"Copia del Motore della SIVA (Instabile)",
          "itemDescription":"Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.",
          "itemTypeName":"Motore della SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -571,7 +571,7 @@
          "itemName":"Piece of Celery",
          "itemDescription":"It's slightly wilted.",
          "itemTypeName":"Sweets",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -579,7 +579,7 @@
          "itemName":"Tiny Box of Raisins",
          "itemDescription":"What? Why...?",
          "itemTypeName":"Sweets",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
@@ -587,7 +587,7 @@
          "itemName":"Barrier Ethos",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -596,7 +596,7 @@
          "itemName":"Sparklepony",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -605,7 +605,7 @@
          "itemName":"The Ointment",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -614,7 +614,7 @@
          "itemName":"Stolen Chalice",
          "itemDescription":"Equip this shader to change the color of your armor.",
          "itemTypeName":"Armor Shader",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -623,7 +623,7 @@
          "itemName":"SIVA Engine Replica (Charged)",
          "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -633,7 +633,7 @@
          "itemName":"SIVA Engine Replica (Charged)",
          "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -643,7 +643,7 @@
          "itemName":"SIVA Engine Replica (Charged)",
          "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -653,7 +653,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -663,7 +663,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -673,7 +673,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
          "itemTypeName":"SIVA Engine",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -684,7 +684,7 @@
          "itemName":"Talo de Salsão",
          "itemDescription":"Está um pouco murcho",
          "itemTypeName":"Doces",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png"
       },
       {
@@ -692,7 +692,7 @@
          "itemName":"Caixinha de Passas",
          "itemDescription":"O qué? Por qué...?",
          "itemTypeName":"Doces",
-         "bucketType":"Consumable",
+         "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png"
       },
       {
@@ -700,7 +700,7 @@
          "itemName":"Barreira Ethos",
          "itemDescription":"Equipe este tonalizador para mudar a cor da sua armadura.",
          "itemTypeName":"Tonalizador de Armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/barrier_ethos.png"
       },
@@ -709,7 +709,7 @@
          "itemName":"Pônei Reluzente",
          "itemDescription":"Equipe este tonalizador para mudar a cor da sua armadura.",
          "itemTypeName":"Tonalizador de Armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/sparklepony.png"
       },
@@ -718,7 +718,7 @@
          "itemName":"A Pomada",
          "itemDescription":"Equipe este tonalizador para mudar a cor da sua armadura.",
          "itemTypeName":"Tonalizador de Armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/the_ointment.png"
       },
@@ -727,7 +727,7 @@
          "itemName":"Cálice Roubado",
          "itemDescription":"Equipe este tonalizador para mudar a cor da sua armadura.",
          "itemTypeName":"Tonalizador de Armadura",
-         "bucketType":"Shader",
+         "bucketHash":"2973005342",
          "tierType":5,
          "icon":"/img/misc/stolen_chalice.png"
       },
@@ -736,7 +736,7 @@
          "itemName":"Réplica do Motor de SIVA (Carregado)",
          "itemDescription":"A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -746,7 +746,7 @@
          "itemName":"Réplica do Motor de SIVA (Carregado)",
          "itemDescription":"A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -756,7 +756,7 @@
          "itemName":"Réplica do Motor de SIVA (Carregado)",
          "itemDescription":"A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"
@@ -766,7 +766,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
          "icon":"/img/misc/siva_engine.png"
@@ -776,7 +776,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
          "icon":"/img/misc/siva_engine.png"
@@ -786,7 +786,7 @@
          "itemName":"SIVA Engine Replica (Unstable)",
          "itemDescription":"Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
          "itemTypeName":"Motor de SIVA",
-         "bucketType":"Missions",
+         "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
          "icon":"/img/misc/siva_engine.png"

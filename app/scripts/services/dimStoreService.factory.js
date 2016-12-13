@@ -672,14 +672,14 @@
           itemDef.itemName = "Piece of Celery";
           itemDef.itemDescription = "It's slightly wilted.";
           itemDef.itemTypeName = "Sweets";
-          normalBucket = buckets.byType.Consumable;
+          normalBucket = buckets.byHash[1469714392];
           itemDef.icon = '/img/misc/celery.png';
           break;
         case 320629370:
           itemDef.itemName = "Tiny Box of Raisins";
           itemDef.itemDescription = "What? Why...?";
           itemDef.itemTypeName = "Sweets";
-          normalBucket = buckets.byType.Consumable;
+          normalBucket = buckets.byHash[1469714392];
           itemDef.icon = '/img/misc/box_of_raisins.png';
           break;
         case 194424268:
@@ -688,7 +688,7 @@
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/sparklepony.png';
-          normalBucket = buckets.byType.Shader;
+          normalBucket = buckets.byHash[2973005342];
           break;
         case 194424267:
           itemDef.itemName = "Barrier Ethos";
@@ -696,7 +696,7 @@
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/barrier_ethos.png';
-          normalBucket = buckets.byType.Shader;
+          normalBucket = buckets.byHash[2973005342];
           break;
         case 1759332263:
           itemDef.itemName = "Stolen Chalice";
@@ -704,7 +704,7 @@
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/stolen_chalice.png';
-          normalBucket = buckets.byType.Shader;
+          normalBucket = buckets.byHash[2973005342];
           break;
         case 194424269:
           itemDef.itemName = "The Ointment";
@@ -712,7 +712,7 @@
           itemDef.itemTypeName = "Armor Shader";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/the_ointment.png';
-          normalBucket = buckets.byType.Shader;
+          normalBucket = buckets.byHash[2973005342];
           break;
         case 640697284: // warlock siva engine (Charged)
           itemDef.itemName = "SIVA Engine Replica (Charged)";
@@ -720,7 +720,7 @@
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
-          normalBucket = buckets.byType.Missions;
+          normalBucket = buckets.byHash[375726501];
           itemDef.classType = 2;
           break;
         case 2621635855: // warlock siva engine (Unstable)
@@ -729,7 +729,7 @@
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
-          normalBucket = buckets.byType.Missions;
+          normalBucket = buckets.byHash[375726501];
           itemDef.classType = 2;
           break;
         case 1518021613: // hunter siva engine (Charged)
@@ -738,7 +738,7 @@
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
-          normalBucket = buckets.byType.Missions;
+          normalBucket = buckets.byHash[375726501];
           itemDef.classType = 1;
           break;
         case 4088336240: // hunter siva engine (Unstable)
@@ -747,7 +747,7 @@
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
-          normalBucket = buckets.byType.Missions;
+          normalBucket = buckets.byHash[375726501];
           itemDef.classType = 1;
           break;
         case 2196813905: // titan sive engine (Charged)
@@ -756,7 +756,7 @@
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
-          normalBucket = buckets.byType.Missions;
+          normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
         case 562302206: // titan siva engine (Unstable)
@@ -765,7 +765,7 @@
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
-          normalBucket = buckets.byType.Missions;
+          normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
         }
