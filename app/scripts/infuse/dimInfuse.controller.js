@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .controller('dimInfuseCtrl', dimInfuseCtrl);
 
-  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService', 'toaster', '$q'];
+  dimInfuseCtrl.$inject = ['$scope', 'dimStoreService', 'dimItemService', 'ngDialog', 'dimLoadoutService', 'toaster', '$q', '$translate'];
 
-  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster, $q) {
+  function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster, $q, $translate) {
     var vm = this;
 
     if (_gaq) {
@@ -92,7 +92,7 @@
 
       transferItems: function() {
         if (vm.target.notransfer) {
-          toaster.pop('error', 'Transfer infusion material', vm.target.name + " can't be moved.");
+          toaster.pop('error', $translate.instant('Infusion.NoTransfer', { target: vm.target.name }));
           return $q.resolve();
         }
         var store = dimStoreService.getStore(vm.source.owner);

@@ -330,7 +330,7 @@
               });
               failedItems.forEach(function(item) {
                 scope.failed++;
-                toaster.pop('error', loadout.name, 'Could not equip ' + item.name);
+                toaster.pop('error', loadout.name, $translate.instant('Loadouts.CouldNotEquip', { itemname: item.name }));
               });
             }
           })
@@ -403,7 +403,7 @@
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(function() {
-                const error = new Error("You have " + totalAmount + " " + item.name + ", but your loadout asks for " + pseudoItem.amount + ". We transfered all you had.");
+                const error = new Error($translate.instant('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
                 error.level = 'warn';
                 return $q.reject(error);
               });
@@ -428,7 +428,7 @@
           // Pass in the list of items that shouldn't be moved away
           promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
         } else {
-          promise = $.reject(new Error(item.name + " doesn't exist in your account."));
+          promise = $.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
         }
       }
 

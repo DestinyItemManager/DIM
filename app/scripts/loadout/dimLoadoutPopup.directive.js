@@ -265,7 +265,11 @@
       });
 
       if (engrams.length === 0) {
-        toaster.pop('warning', 'Gather Engrams', 'No ' + (options.exotics ? '' : 'non-exotic ') + 'engrams are available to transfer.');
+        var engramWarning = $translate.instant('Loadouts.NoEngrams');
+        if (options.exotics) {
+          engramWarning = $translate.instant('Loadouts.NoExotics');
+        }
+        toaster.pop('warning', $translate.instant('Loadouts.GatherEngrams'), engramWarning);
         return;
       }
 
@@ -320,7 +324,7 @@
 
       var loadout = {
         classType: -1,
-        name: 'Filtered Items',
+        name: $translate.instant('Loadouts.FilteredItems'),
         items: finalItems
       };
       vm.applyLoadout(loadout, $event);
