@@ -67,7 +67,7 @@
                            dimActionQueue,
                            dimFeatureFlags,
                            dimInfoService,
-                           dimLoadoutService
+                           dimLoadoutService,
                            $translate) {
     var vm = this;
 
