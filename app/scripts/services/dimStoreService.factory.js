@@ -686,7 +686,7 @@
           itemDef.itemName = "Sparklepony";
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/sparklepony.png';
           normalBucket = buckets.byType.Shader;
           break;
@@ -694,7 +694,7 @@
           itemDef.itemName = "Barrier Ethos";
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/barrier_ethos.png';
           normalBucket = buckets.byType.Shader;
           break;
@@ -702,7 +702,7 @@
           itemDef.itemName = "Stolen Chalice";
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/stolen_chalice.png';
           normalBucket = buckets.byType.Shader;
           break;
@@ -710,7 +710,7 @@
           itemDef.itemName = "The Ointment";
           itemDef.itemDescription = "Equip this shader to change the color of your armor.";
           itemDef.itemTypeName = "Armor Shader";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/the_ointment.png';
           normalBucket = buckets.byType.Shader;
           break;
@@ -718,7 +718,7 @@
           itemDef.itemName = "SIVA Engine Replica (Charged)";
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byType.Missions;
           itemDef.classType = 2;
@@ -727,7 +727,7 @@
           itemDef.itemName = "SIVA Engine Replica (Unstable)";
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byType.Missions;
           itemDef.classType = 2;
@@ -736,7 +736,7 @@
           itemDef.itemName = "SIVA Engine Replica (Charged)";
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byType.Missions;
           itemDef.classType = 1;
@@ -745,7 +745,7 @@
           itemDef.itemName = "SIVA Engine Replica (Unstable)";
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byType.Missions;
           itemDef.classType = 1;
@@ -754,7 +754,7 @@
           itemDef.itemName = "SIVA Engine Replica (Charged)";
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byType.Missions;
           itemDef.classType = 0;
@@ -763,7 +763,7 @@
           itemDef.itemName = "SIVA Engine Replica (Unstable)";
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = "Legendary";
+          itemDef.tierType = 5;
           itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byType.Missions;
           itemDef.classType = 0;
