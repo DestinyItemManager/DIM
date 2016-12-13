@@ -247,6 +247,10 @@
         }
 
         var items = angular.copy(_.flatten(_.values(loadout.items)));
+        // filter out to only include items for that class
+        items = items.filter(function(item) {
+          return item.classType === -1 || item.classType > 2 || item.classType === store.classType;
+        });
         var totalItems = items.length;
 
         var loadoutItemIds = items.map(function(i) {
