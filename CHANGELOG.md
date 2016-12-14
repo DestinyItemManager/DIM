@@ -1,7 +1,10 @@
 # Next
+
 * Permit the same damage type of subclass in loadouts (#1067)
+* Removed farming option to keep greens since they're disassembled by default now.
 
 # 3.14
+
 * Update record books to properly display time instead of a large number. (#1051)
 
 # 3.14.0

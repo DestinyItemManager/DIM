@@ -19,7 +19,6 @@
             <p translate="{{vm.settings.farming.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc'}}" translate-values="{ store: vm.service.store.name }"></p>
             <div class="item-details"><span>
               <p translate="FarmingMode.Configuration"></p>
-              <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate="FarmingMode.Greens"></p>
               <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" translate-attr="{title: 'FarmingMode.MakeRoom.Tooltip'}" translate="FarmingMode.MakeRoom"></label></p>
             </span><span>
               <p translate="FarmingMode.Quickmove"></p>

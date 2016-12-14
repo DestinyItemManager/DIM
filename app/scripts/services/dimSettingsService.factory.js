@@ -55,7 +55,6 @@
       collapsedSections: {},
       // What settings for farming mode
       farming: {
-        farmGreens: true,
         // Whether to keep one slot per item type open
         makeRoomForItems: true
       },
