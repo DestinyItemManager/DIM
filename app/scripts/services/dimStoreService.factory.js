@@ -740,7 +740,7 @@
         visible: true,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-        trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597) || false,
+        trackable: (currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)) || false,
         tracked: item.state === 2,
         locked: item.locked,
         redacted: itemDef.redacted,
