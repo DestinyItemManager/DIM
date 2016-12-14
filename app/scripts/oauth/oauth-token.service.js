@@ -42,7 +42,7 @@
       const now = (new Date()).valueOf();
 
       if (token)
-        console.log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60));
+        { console.log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60)); }
 
       return (expires <= now);
     }
@@ -52,7 +52,7 @@
       const now = (new Date()).valueOf();
 
       if (token)
-        console.log("ReadyIn: " + token.name + " " + (readyIn <= now) + " " + ((readyIn - now) / 1000 / 60));
+        { console.log("ReadyIn: " + token.name + " " + (readyIn <= now) + " " + ((readyIn - now) / 1000 / 60)); }
 
       return (readyIn <= now);
     }

@@ -116,6 +116,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
+        }, {
+          from: '$DIM_APP_URL',
+          to: process.env.$DIM_APP_URL
         }]
       },
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
@@ -141,6 +144,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
+        }, {
+          from: '$DIM_APP_URL',
+          to: process.env.APP_URL
         }]
       }
     },

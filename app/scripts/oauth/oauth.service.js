@@ -51,7 +51,7 @@
     };
   }
 
-  OAuthService.$inject = ['$q', '$injector', 'localStorageService', 'OAuthTokenService']
+  OAuthService.$inject = ['$q', '$injector', 'localStorageService', 'OAuthTokenService'];
 
   angular.module('dim-oauth')
     .service('OAuthService', OAuthService);

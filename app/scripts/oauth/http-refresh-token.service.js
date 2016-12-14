@@ -74,7 +74,7 @@
         case 99:
           {
             if (OAuthTokenService.hasTokenExpired(OAuthTokenService.getAccessToken())) {
-
+              $rootScope.$broadcast('dim-no-token-found');
             }
             // if (canRefreshAuthorization(response)) {
             //   return refreshAuthorization(response);
@@ -89,22 +89,22 @@
       return $q.when(response);
     }
 
-    function canRefreshAuthorization(response) {
-      const responseHasAuthorization = response.config && response.config.headers && response.config.headers.Authorization;
-
-      return responseHasAuthorization;
-    }
-
-    function replayRequest(config) {
-      const $http = $injector.get('$http');
-
-      return $http(config);
-    }
-
-    function refreshAuthorization(response) {
-          // response.config.headers.Authorization = 'Bearer ' + authorization.accessToken.value;
-          // return $injector.get('$http')(response.config);
-    }
+//    function canRefreshAuthorization(response) {
+//      const responseHasAuthorization = response.config && response.config.headers && response.config.headers.Authorization;
+//
+//      return responseHasAuthorization;
+//    }
+//
+//    function replayRequest(config) {
+//      const $http = $injector.get('$http');
+//
+//      return $http(config);
+//    }
+//
+//    function refreshAuthorization(response) {
+//          // response.config.headers.Authorization = 'Bearer ' + authorization.accessToken.value;
+//          // return $injector.get('$http')(response.config);
+//    }
   }
 
   HttpRefreshTokenService.$inject = ['$rootScope', '$q', '$injector', 'localStorageService', 'OAuthService', 'OAuthTokenService'];

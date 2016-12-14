@@ -1,5 +1,5 @@
 (function() {
-  function ReturnController($http, $q) {
+  function ReturnController($http) {
     var ctrl = this;
 
     ctrl.code = "";
@@ -28,9 +28,6 @@
       .then((response) => {
         if (response.data.ErrorCode === 1) {
           const inception = new Date().toISOString();
-
-          debugger;
-
           const authorization = {
             accessToken: angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: inception }),
             refreshToken: angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: inception }),
@@ -43,7 +40,6 @@
         }
       });
     };
-
   }
 
   angular.module('dimLogin').component('dimReturn', {
