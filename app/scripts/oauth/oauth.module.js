@@ -2,10 +2,10 @@
   angular.module('dim-oauth', ['LocalStorageModule'])
     .run(['$rootScope', '$state', ($rootScope, $state) => {
       $rootScope.$on('dim-no-token-found', function() {
-        if (!localStorage.apiKey) {
+        if (!localStorage.apiKey || !localStorage.authorizationURL) {
           $state.go('developer');
         } else {
-          window.location = "/login.html";
+          $state.go('login');
         }
       });
     }]);

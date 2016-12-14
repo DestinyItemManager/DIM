@@ -76,6 +76,7 @@
         return $q.reject("Vendor data is unavailable.");
       }
       case 2108: {
+        $rootScope.$broadcast('dim-no-token-found');
         return $q.reject("DIM does not have permission to perform this action.");
       }
       case 5:

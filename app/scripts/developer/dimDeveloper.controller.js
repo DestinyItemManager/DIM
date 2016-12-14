@@ -21,6 +21,7 @@
 
     vm.save = function() {
       localStorage.apiKey = vm.apiKey;
+      localStorage.authorizationURL = vm.authorizationURL;
       window.location = window.location.origin + '/index.html';
     };
   }
