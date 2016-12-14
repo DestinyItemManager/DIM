@@ -9,14 +9,16 @@
     'dimBungieService',
     'dimCategory',
     'dimFeatureFlags',
-    '$q'
+    '$q',
+    '$translate'
   ];
 
   function ItemService(dimStoreService,
                        dimBungieService,
                        dimCategory,
                        dimFeatureFlags,
-                       $q) {
+                       $q,
+                       $translate) {
     // We'll reload the stores to check if things have been
     // thrown away or moved and we just don't have up to date info. But let's
     // throttle these calls so we don't just keep refreshing over and over.
@@ -80,7 +82,7 @@
         while (removeAmount > 0) {
           var sourceItem = sourceItems.shift();
           if (!sourceItem) {
-            throw new Error("Looks like you requested to move more of this item than exists in the source!");
+            throw new Error($translate.instant('ItemService.TooMany'));
           }
 
           var amountToRemove = Math.min(removeAmount, sourceItem.amount);
@@ -218,7 +220,7 @@
           if (otherExotic && !_.find(items, { type: otherExotic.type })) {
             const similarItem = getSimilarItem(otherExotic);
             if (!similarItem) {
-              return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + otherExotic.name));
+              return $q.reject(new Error($translate.instant('ItemService.Deequip', { itemname: otherExotic.name })));
             }
             const target = dimStoreService.getStore(similarItem.owner);
 
@@ -262,7 +264,7 @@
     function dequipItem(item) {
       const similarItem = getSimilarItem(item);
       if (!similarItem) {
-        return $q.reject(new Error('Cannot find another item to equip in order to dequip ' + item.name));
+        return $q.reject(new Error($translate.instant('ItemService.Deequip', { itemname: item.name })));
       }
       const source = dimStoreService.getStore(item.owner);
       const target = dimStoreService.getStore(similarItem.owner);
@@ -309,7 +311,7 @@
         return dequipItem(otherExotic)
           .then(() => true)
           .catch(function() {
-            throw new Error('\'' + item.name + '\' cannot be equipped because the exotic in the ' + otherExotic.type + ' slot cannot be unequipped.');
+            throw new Error($translate.instant('ItemService.ExoticError, { itemname: item.name, slot: otherExotic.type}'));
           });
       } else {
         return $q.resolve(true);
@@ -345,7 +347,7 @@
           return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
         });
       } else {
-        throw new Error("We don't know how you got more than 2 equipped exotics!");
+        throw new Error($translate.instant('ItemService.TwoExotics'));
       }
     }
 
@@ -415,7 +417,7 @@
 
       // if there are no candidates at all, fail
       if (moveAsideCandidates.length === 0) {
-        const e = new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        const e = new Error($translate.instant('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
         e.code = 'no-space';
         throw e;
       }
@@ -512,7 +514,7 @@
       });
 
       if (!moveAsideCandidate) {
-        const e = new Error(`There's nothing we can move out of ${store.name} to make room for ${item.name}`);
+        const e = new Error($translate.instant('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
         e.code = 'no-space';
         throw e;
       }
@@ -595,7 +597,7 @@
         const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
         if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-          const error = new Error(`There are too many '${(moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type)}' items in the ${moveAsideTarget.name}.`);
+          const error = new Error($translate.instant('ItemService.BucketFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), bucket: moveAsideTarget.name }));
           error.code = 'no-space';
           return $q.reject(error);
         } else {
@@ -631,9 +633,15 @@
         if (item.canBeEquippedBy(store)) {
           resolve(true);
         } else if (item.classified) {
-          reject(new Error("This item is classified and can not be transferred at this time."));
+          reject(new Error($translate.instant('ItemService.Classified')));
         } else {
-          reject(new Error("This can only be equipped on " + (item.classTypeName === 'unknown' ? 'character' : item.classTypeName) + "s at or above level " + item.equipRequiredLevel + "."));
+          var message;
+          if (item.classTypeName === 'unknown') {
+            message = $translate.instant('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
+          } else {
+            message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeName, level: item.equipRequiredLevel });
+          }
+          reject(new Error(message));
         }
       });
     }

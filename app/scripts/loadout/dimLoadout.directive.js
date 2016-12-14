@@ -31,14 +31,14 @@
         '        <p id="loadout-error"></p>',
         '      </form>',
         '    </div>',
-        '    <p ng-if="vm.loadout.warnitems.length">These vendor items cannot be equipped:</p>',
+        '    <p ng-if="vm.loadout.warnitems.length" translate="Loadouts.VendorsCannotEquip">:</p>',
         '    <div ng-if="vm.loadout.warnitems.length" class="loadout-contents">',
         '      <div ng-repeat="item in vm.loadout.warnitems" id="loadout-warn-item-{{:: $index }}" class="loadout-item">',
         '        <dim-simple-item item-data="item"></dim-simple-item>',
         '        <div class="fa warn"></div>',
         '      </div>',
         '    </div>',
-        '    <p ng-if="vm.loadout.warnitems.length" >These items can be equipped:</p>',
+        '    <p ng-if="vm.loadout.warnitems.length" translate="Loadouts.VendorsCanEquip">:</p>',
         '    <div id="loadout-contents" class="loadout-contents">',
         '      <div ng-repeat="value in vm.types track by value" class="loadout-{{ value }} loadout-bucket" ng-if="vm.loadout.items[value].length">',
         '        <div ng-repeat="item in vm.loadout.items[value] | sortItems:vm.settings.itemSort track by item.index" ng-click="vm.equip(item)" id="loadout-item-{{:: $id }}" class="loadout-item">',
@@ -135,9 +135,9 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService'];
+  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService', '$translate'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService) {
+  function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -198,17 +198,18 @@
           if (typeInventory.length < maxSlots) {
             clone.equipped = item.equipment && (typeInventory.length === 0);
 
-            // Only allow one subclass
+            // Only allow one subclass per burn
             if (clone.type === 'Class') {
-              if (_.has(vm.loadout.items, 'class')) {
+              var other = _.findWhere(vm.loadout.items, 'class');
+              if (other.length && other[0].dmg !== clone.dmg) {
                 vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
-                clone.equipped = true;
               }
+              clone.equipped = true;
             }
 
             typeInventory.push(clone);
           } else {
-            toaster.pop('warning', '', 'You can only have ' + maxSlots + ' of that kind of item in a loadout.');
+            toaster.pop('warning', '', $translate.instant('Loadouts.MaxSlots', { slots: maxSlots }));
           }
         } else if (dupe && clone.maxStackSize > 1) {
           var increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
@@ -216,7 +217,7 @@
           // TODO: handle stack splits
         }
       } else {
-        toaster.pop('warning', '', 'Only equippable items, materials, and consumables can be added to a loadout.');
+        toaster.pop('warning', '', $translate.instant('Loadouts.OnlyItems'));
       }
     };
 

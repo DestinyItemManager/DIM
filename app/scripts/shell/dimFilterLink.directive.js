@@ -14,20 +14,20 @@
       }
     });
 
-  FilterLinkCtrl.$inject = ['dimSearchService', '$window'];
-  function FilterLinkCtrl(dimSearchService, $window) {
+  FilterLinkCtrl.$inject = ['dimSearchService', '$window', '$translate'];
+  function FilterLinkCtrl(dimSearchService, $window, $translate) {
     this.addFilter = function(filter) {
       var itemNameFilter = false;
 
       if (filter === 'item name') {
         itemNameFilter = true;
-        filter = $window.prompt("Enter an item name:");
+        filter = $window.prompt($translate.instant('Filter.EnterName'));
         filter = filter.trim();
       }
 
       if (filter === 'notes:value') {
         itemNameFilter = true;
-        filter = $window.prompt("Enter notes text:");
+        filter = $window.prompt($translate.instant('Filter.EnterNote'));
         filter = 'notes:"' + filter.trim() + '"';
       }
 

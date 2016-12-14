@@ -59,8 +59,8 @@
 
   function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
     var vm = this;
-    const didYouKnowTemplate = "<p>" + $translate.instant('DidYouKnow.Collapse') + "</p>" +
-                               "<p>" + $translate.instant('DidYouKnow.Expand') + "</p>";
+    const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>` +
+                               `<p>${$translate.instant('DidYouKnow.Expand')}</p>`;
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('collapsed', {
