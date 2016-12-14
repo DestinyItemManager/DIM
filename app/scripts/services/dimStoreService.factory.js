@@ -624,6 +624,8 @@
 
       if (!itemDef.icon && !itemDef.action) {
         itemDef.classified = true;
+      } else {
+        itemDef.classified = false;
       }
 
       if (!itemDef.icon) {
@@ -702,6 +704,12 @@
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
+      if (currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)) {
+        itemDef.trackable = true;
+      } else {
+        itemDef.trackable = false;
+      }
+
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
 
@@ -740,7 +748,7 @@
         visible: true,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-        trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
+        trackable: itemDef.trackable,
         tracked: item.state === 2,
         locked: item.locked,
         redacted: itemDef.redacted,
@@ -839,6 +847,10 @@
       } else if (createdItem.talentGrid) {
         createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
         createdItem.complete = createdItem.talentGrid.complete;
+      }
+
+      if (!createdItem.objectives) {
+        createdItem.objectives = null;
       }
 
       // In debug mode, keep the original JSON around
