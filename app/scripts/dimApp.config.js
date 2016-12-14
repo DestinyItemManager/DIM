@@ -4,6 +4,11 @@
   console.time('First item directive built');
 
   angular.module('dimApp')
+    .config((localStorageServiceProvider) => {
+      localStorageServiceProvider.setPrefix('');
+    });
+
+  angular.module('dimApp')
     .value('dimPlatformIds', {
       xbl: null,
       psn: null
@@ -137,6 +142,9 @@
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
+      if (!window.chrome || !window.chrome.extension) {
+        $httpProvider.interceptors.push('http-refresh-token');
+      }
     }])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise("/inventory");

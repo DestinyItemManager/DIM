@@ -8,14 +8,14 @@
     const vm = this;
 
     vm.apiKey = localStorage.apiKey;
-    vm.chromeURL = chrome.extension.getURL('');
+    vm.URL = window.chrome && window.chrome.extension ? chrome.extension.getURL('') : window.location.host;
 
     // could allow feature toggle through this page, as an example.
     vm.features = dimFeatureFlags;
 
     vm.save = function() {
       localStorage.apiKey = vm.apiKey;
-      window.location = vm.chromeURL + 'index.html';
+      window.location = vm.URL + '/index.html';
     };
   }
 })();
