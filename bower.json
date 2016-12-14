@@ -32,7 +32,8 @@
     "zip.js": "*",
     "sql.js": "*",
     "angular-translate": "^2.11.1",
-    "idb-keyval": "*"
+    "idb-keyval": "*",
+    "drag-drop-webkit-mobile": "ios-html5-drag-drop-shim#^1.2.0"
   },
   "resolutions": {
     "humanize-duration": "~3.9.1",
