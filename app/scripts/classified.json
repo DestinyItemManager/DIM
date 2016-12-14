@@ -386,6 +386,7 @@
          "bucketHash":"2025709351",
          "tierType":5,
          "icon":"/img/misc/lysanders_cry.png",
+         "primaryBaseStatHash": "1501155019",
          "stats":{
             "1501155019":{
                "value":160,
