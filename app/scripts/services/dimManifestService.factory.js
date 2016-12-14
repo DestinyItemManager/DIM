@@ -144,6 +144,9 @@
     function getLocalManifestFile() {
       return $q((resolve, reject) => {
         const requestFileSystem = (window.requestFileSystem || window.webkitRequestFileSystem);
+        if (!requestFileSystem) {
+          reject("No requestFileSystem");
+        }
         // Ask for 60MB of temporary space. If Chrome gets rid of it we can always redownload.
         requestFileSystem(window.TEMPORARY, 60 * 1024 * 1024, (fs) => {
           fs.root.getFile('dimManifest', { create: true, exclusive: false }, (f) => resolve(f), (e) => reject(e));
