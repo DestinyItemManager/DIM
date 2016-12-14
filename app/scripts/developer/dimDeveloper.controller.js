@@ -9,7 +9,12 @@
 
     vm.apiKey = localStorage.apiKey;
     vm.isExtension = window.chrome && window.chrome.extension;
-    vm.URL = vm.isExtension ? chrome.extension.getURL('') : window.location.origin + '/return.html';
+    vm.URL = window.location.origin;
+    vm.URLRet = vm.URL + '/return.html';
+
+    if (!vm.isExtension && window.location.protocol === 'http:') {
+      vm.warning = 'Bungie.net will not accept the http protocol. Serve over https:// and try again.';
+    }
 
     // could allow feature toggle through this page, as an example.
     vm.features = dimFeatureFlags;
