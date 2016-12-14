@@ -11,7 +11,6 @@
           Level: "Level",
           Bucket: {
             Armor: "Armor",
-            FilterCount: "matching current filter",
             General: "General",
             Postmaster: "Postmaster",
             Progress: "Progress",
@@ -98,6 +97,7 @@
             BackToDIM: "Back to DIM",
             CannotMove: "Cannot move that item off this character.",
             Drag: "Hold shift or pause over drop zone to transfer a partial stack.",
+            FilterCount: "{{amount}} matching current filter",
             ChangingPerks: "Changing Perks Not Supported",
             ChangingPerksInfo: "Sorry, there's no way to change perks outside the game. We wish we could!",
             NeverShow: "Never show me this again.",
