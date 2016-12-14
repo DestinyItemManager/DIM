@@ -17,3 +17,5 @@ _gaq.push(['_trackPageview']);
   ga.src = 'https://www.google-analytics.com/ga.js';
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
+
+var iosDragDropShim = { enableEnterLeave: true };
