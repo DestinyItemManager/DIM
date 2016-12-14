@@ -339,6 +339,55 @@
                "itemTypeName":"Motor de SIVA"
             }
          }
+      },
+      "4083935122":{
+        "bucketHash":"2025709351",
+        "tierType": 5,
+        "icon":"/img/misc/lysanders_cry.png",
+        "stats":{
+          "1501155019":{
+            "value":160,
+            "mix":160,
+            "max":160
+          }
+        },
+        "i18n":{
+          "en":{
+            "itemName":"Lysander's Cry",
+            "itemDescription":"You've recreated the fall of the Concordat, and something answered.",
+            "itemTypeName":"Vehicle"
+          },
+          "de":{
+            "itemName":"Lysanders Ruf",
+            "itemDescription":"Du hast den Fall des Konkordats nachgestelt und eine Antwort erhalten.",
+            "itemTypeName":"Transportmittel"
+          },
+          "fr":{
+            "itemName":"Cri de Lysandre",
+            "itemDescription":"Vous avez recrée la chute du Concordat et quelque chose est apparu.",
+            "itemTypeName":"Véhicule"
+          },
+          "es":{
+            "itemName":"Grito de Lysander",
+            "itemDescription":"Has  recreado la caída del Concordato, y algo te ha respondido.",
+            "itemTypeName":"Vehículo"
+          },
+          "it":{
+            "itemName":"Grido di Lysander",
+            "itemDescription":"Da quando avete inscenato la caduta del Concordato, qualcose si è destato.",
+            "itemTypeName":"Veicolo"
+          },
+          "ja":{
+            "itemName":"Lysander's Cry",
+            "itemDescription":"You've recreated the fall of the Concordat, and something answered.",
+            "itemTypeName":"Vehicle"
+          },
+          "pt-br":{
+            "itemName":"Choro de Lysander",
+            "itemDescription":"Você ercriou a queda da Concordata, e alguma coisa respondeu.",
+            "itemTypeName":"Veículo"
+          }
+        }
       }
    }
 }

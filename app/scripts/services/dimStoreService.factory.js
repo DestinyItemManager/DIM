@@ -736,6 +736,16 @@
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
+          // 'The Dawning' Classified Items
+        case 4083935122:
+          itemDef.itemName = "Lysander's Cry";
+          itemDef.itemDescription = "You've recreated the fall of the Concordat, and something answered.";
+          itemDef.itemTypeName = "Vehicle";
+          itemDef.tierType = 5;
+          item.primaryStat.statHash = 1501155019
+          item.primaryStat.value = 160;
+          normalBucket = buckets.byHash[2025709351];
+          break;
         }
       }
 
