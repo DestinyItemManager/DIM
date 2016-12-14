@@ -1,12 +1,6 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
   var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
-  var firefoxBrowserSupport = {
-    "gecko": {
-      "id": "firefox@destinyitemmanager.com",
-      "strict_min_version": "46.*"
-    }
-  };
 
   grunt.initConfig({
     pkg: pkg,
@@ -25,29 +19,10 @@ module.exports = function(grunt) {
           dest: 'dist/chrome'
         }]
       },
-      firefox: {
-        files: [{
-          cwd: 'app/',
-          src: [
-            '**',
-            '!vendor/angular/angular.js',
-            '!vendor/sql.js/c/**/*',
-            '!vendor/sql.js/js/sql-memory-growth.js',
-            '!vendor/sql.js/js/sql-debug.js'
-          ],
-          dest: 'dist/firefox'
-        }]
-      }
     },
 
     copy: {
       // Copy all files to a staging directory
-      beta_icons_firefox: {
-        cwd: 'icons/beta/',
-        src: '**',
-        dest: 'dist/firefox/',
-        expand: true
-      },
       beta_icons_chrome: {
         cwd: 'icons/beta/',
         src: '**',
@@ -57,19 +32,6 @@ module.exports = function(grunt) {
     },
 
     compress: {
-      // Zip up the extension
-      firefox: {
-        options: {
-          archive: 'dist/firefox.zip'
-        },
-        files: [{
-          expand: true,
-          cwd: 'dist/firefox',
-          src: ['**'],
-          dest: '/',
-          filter: 'isFile'
-        }, ]
-      },
       // Zip up the extension
       chrome: {
         options: {
@@ -152,6 +114,7 @@ module.exports = function(grunt) {
       options: {
         map: true,
         processors: [
+
           require('autoprefixer')()
         ]
       },
@@ -237,26 +200,13 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['eslint', 'build', 'watch']);
 
-  grunt.registerTask('build', ['clean','css', 'sync', 'update_firefox_manifest']);
-
-  grunt.registerTask('update_firefox_manifest', function() {
-    var manifest = grunt.file.readJSON('dist/firefox/manifest.json');
-    manifest.applications = firefoxBrowserSupport;
-    grunt.file.write('dist/firefox/manifest.json', JSON.stringify(manifest, null, '\t'));
-  });
+  grunt.registerTask('build', ['clean','css', 'sync']);
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('dist/chrome/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
     grunt.file.write('dist/extension/chrome/manifest.json', JSON.stringify(manifest));
-  });
-
-  grunt.registerTask('update_firefox_beta_manifest', function() {
-    var manifest = grunt.file.readJSON('dist/extension/firefox/manifest.json');
-    manifest.name = manifest.name + " Beta";
-    manifest.version = betaVersion;
-    grunt.file.write('dist/extension/firefox/manifest.json', JSON.stringify(manifest));
   });
 
   grunt.registerTask('publish_chrome_beta', [
@@ -268,16 +218,7 @@ module.exports = function(grunt) {
     'log_beta_version'
   ]);
 
-  grunt.registerTask('publish_firefox_beta', [
-    'build',
-    'copy:beta_icons_firefox',
-    'replace:beta_version',
-    'compress:firefox'
-  ]);
-
-
   // Aliases for local dev to mirror README examples
-  grunt.registerTask('dev-firefox', ['default']);
   grunt.registerTask('dev-chrome', ['default']);
 
 
@@ -286,7 +227,6 @@ module.exports = function(grunt) {
     'build',
     'replace:main_version',
     'compress:chrome',
-    'compress:firefox',
   ]);
 
   grunt.registerTask('log_beta_version', function() {
