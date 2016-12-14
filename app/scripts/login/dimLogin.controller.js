@@ -11,7 +11,7 @@
 
     /* eslint no-constant-condition: 0*/
     if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
-      vm.authorizationURL = '$DIM_APP_URL';
+      vm.authorizationURL = '$DIM_AUTH_URL';
     }
   }
 })();

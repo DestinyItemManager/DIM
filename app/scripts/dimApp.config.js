@@ -173,6 +173,10 @@
         .state('developer', {
           url: "/developer",
           templateUrl: "scripts/developer/developer.html"
+        })
+        .state('login', {
+          url: "/login",
+          templateUrl: "scripts/login/login.html"
         });
     });
 })();
