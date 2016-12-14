@@ -26,7 +26,6 @@
 
               if (isValid) {
                 if (!cache) {
-                  debugger;
                   cache = OAuthService.refreshToken();
                 }
 
