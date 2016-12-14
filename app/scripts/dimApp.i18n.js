@@ -11,6 +11,7 @@
           Level: "Level",
           Bucket: {
             Armor: "Armor",
+            FilterCount: "matching current filter",
             General: "General",
             Postmaster: "Postmaster",
             Progress: "Progress",

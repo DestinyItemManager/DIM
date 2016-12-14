@@ -22,7 +22,7 @@
         '    <div class="title">',
         '      <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="Bucket.{{::category}}"></span></span>',
         //     if the user has input a search query, display the amount of items that match the query
-        '      <span ng-hide="vm.search.query === \'\'" class="filter-count">({{ vm.search.filterCounts[category] }} matching current filter)</span>',
+        '      <span ng-hide="vm.search.query === \'\'" class="filter-count">({{ vm.search.filterCounts[category] }} <span translate="Bucket.FilterCount"></span>)</span>',
         '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
         '    </div>',
         '    <div class="store-row items" ng-if="!vm.settings.collapsedSections[category]" ng-repeat="bucket in ::buckets track by bucket.id" ng-repeat="bucket in ::buckets track by bucket.id"><i ng-click="vm.toggleSection(bucket.id)" class="fa collapse" ng-class="vm.settings.collapsedSections[bucket.id] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i>',
@@ -89,13 +89,6 @@
     $scope.$on('dim-stores-updated', function(e, stores) {
       vm.stores = stores.stores;
       vm.vault = dimStoreService.getVault();
-    });
-
-    // Update the search service when a filter has been applied. We will need this to:
-    //   A) see if there is an active filter (non-empty query string)
-    //   B) populate the item count for each category
-    $scope.$on('dim-filtered', function(e) {
-      vm.search = dimSearchService;
     });
 
     if (!vm.stores.length && dimPlatformService.getActive()) {

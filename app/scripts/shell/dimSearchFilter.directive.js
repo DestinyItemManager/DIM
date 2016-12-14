@@ -95,10 +95,10 @@
 
     // a dictionary to track the amount of "visible" items per item category (weapons, armor, etc) when there is an active filter
     // initialized by making use of the categories in the bucket service
-    // counts are reset, recounted, and sent to the dimStores directive via event broadcast each time a filter is applied
+    // counts are reset and recounted each time a filter is applied
     var filterCounts = {};
     dimBucketService.then(function(buckets) {
-      _.each(_.keys(buckets.byCategory), function(category) {
+      _.each(buckets.byCategory, (_, category) => {
         filterCounts[category] = 0;
       });
     });
@@ -146,9 +146,9 @@
     };
   }
 
-  SearchFilterCtrl.$inject = ['$rootScope', '$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
+  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
 
-  function SearchFilterCtrl($rootScope, $scope, dimStoreService, dimVendorService, dimSearchService) {
+  function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
     var vm = this;
     var filterInputSelector = '#filter-input';
     var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -283,15 +283,17 @@
       };
 
       // reset the visible item counts
-      _.each(_.keys(vm.search.filterCounts), function(category) {
+      _.each(vm.search.filterCounts, (_, category) => {
         vm.search.filterCounts[category] = 0;
       });
 
       // mark items as visible based on filter and increment the counts in the dictionary as needed
-      _.each(dimStoreService.getStores(), function(store) {
-        _.each(store.items, function(item) {
+      _.each(dimStoreService.getStores(), (store) => {
+        _.each(store.items, (item) => {
           item.visible = (filters.length > 0) ? filterFn(item) : true;
-          if (item.visible) { vm.search.filterCounts[item.location.sort] ++; }
+          if (item.visible) {
+            vm.search.filterCounts[item.location.sort]++;
+          }
         });
       });
 
@@ -301,9 +303,6 @@
           saleItem.item.visible = (filters.length > 0) ? filterFn(saleItem.item) : true;
         });
       });
-
-      // broadcast an event for any controllers that need to know that a filter has been applied
-      $rootScope.$broadcast("dim-filtered");
     };
 
     // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
