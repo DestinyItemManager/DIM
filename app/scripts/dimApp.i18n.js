@@ -305,6 +305,8 @@
             All: "All",
             Available: "Available on",
             Compare: "Compare with what you already have",
+            Day: "Day",
+            Days: "Days",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",
@@ -552,6 +554,8 @@
           Vendors: {
             Vendors: "Mercanti",
             All: "Tutto",
+            Day: "Giorno",
+            Days: "Giorni",
             Load: "Caricamento Mercanti",
             ArmorAndWeapons: "Equipaggiamento & Armi",
             ShipsAndVehicles: "Navi & Veicoli",
@@ -810,6 +814,8 @@
           Vendors: {
             Vendors: "Händler",
             All: "Alle",
+            Day: "Tag",
+            Days: "Tage",
             VendorsLoad: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
@@ -1024,6 +1030,8 @@
           Vendors: {
             Vendors: "Marchands",
             All: "Tous",
+            Day: "Journée",
+            Days: "Journées",
             Load: "Chargement des Marchands",
             ArmorAndWeapons: "Armure & Armes",
             ShipsAndVehicles: "Vaisseaux & Véhicules",
@@ -1266,6 +1274,8 @@
           Vendors: {
             Vendors: "Comerciantes",
             All: "Todo",
+            Day: "Día",
+            Days: "Días",
             Load: "Cargando comerciantes",
             ArmorAndWeapons: "Armadura y armas",
             ShipsAndVehicles: "Naves y vehículos",
@@ -1330,7 +1340,10 @@
             Infuse: "煎じる"
           },
           Vendors: {
-            Vendors: "ベンダー" }
+            Vendors: "ベンダー",
+            Day: "日",
+            Days: "日々"
+          }
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -1559,6 +1572,8 @@
           Vendors: {
             Vendors: "Vendedores",
             All: "Todos",
+            Day: "Dia",
+            Days: "Dias",
             Load: "Carregando vendedores",
             ArmorAndWeapons: "Armaduras & Armas",
             ShipsAndVehicles: "Naves & Veículos",
