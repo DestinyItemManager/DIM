@@ -34,8 +34,8 @@
             // The manifest has updated!
             if (path !== service.version) {
               toaster.pop('error',
-                          $translate.instant('Manfiest.Outdated'),
-                          $translate.instant('Manfiest.OutdatedExplanation'));
+                          $translate.instant('Manifest.Outdated'),
+                          $translate.instant('Manifest.OutdatedExplanation'));
             }
           });
       }, 10000, true),
