@@ -741,6 +741,7 @@
           itemDef.itemDescription = "You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.";
           itemDef.itemTypeName = "Curio";
           itemDef.tierType = 6;
+          // itemDef.icon = '/img/misc/thorn_bounty.png';
           normalBucket = buckets.byHash[375726501];
           break;
           // 'The Dawning' Classified Items
@@ -749,6 +750,7 @@
           itemDef.itemDescription = "You've recreated the fall of the Concordat, and something answered.";
           itemDef.itemTypeName = "Vehicle";
           itemDef.tierType = 5;
+          // itemDef.icon = '/img/misc/lysanders_cry.png';
           item.primaryStat.statHash = 1501155019;
           item.primaryStat.value = 160;
           normalBucket = buckets.byHash[2025709351];
