@@ -340,6 +340,48 @@
             }
          }
       },
+      "246897089":{
+        "bucketHash":"375726501",
+        "tierType": 6,
+        "icon": "/img/misc/thorn_bounty.png",
+        "i18n":{
+          "en":{
+            "itemName":"Depleted Hand Cannon",
+            "itemDescription":"You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.",
+            "itemTypeName":"Curio"
+          },
+          "de":{
+            "itemName":"Erschöpfte Handfeuerwaffe",
+            "itemDescription":"Die wurde eine gebrauchte Handfeuerwaffe und seitenlanges kryptisches Gekritzel über eine der Waffen des Leids überreicht.",
+            "itemTypeName":"Kuriosität"
+          },
+          "fr":{
+            "itemName":"Revolver Appauvri",
+            "itemDescription":"Vous avez reçu un revolver usé et des pages couvertes d'écrits énigmatiques concernant une des Armes du malheur.",
+            "itemTypeName":"Curiosité"
+          },
+          "es":{
+            "itemName":"Cañón de Mano Agotado",
+            "itemDescription":"Te han dado un cañón de mano usado y varias páginas crípticas sobres una de las Armas del Dolor.",
+            "itemTypeName":"Curiosidad"
+          },
+          "it":{
+            "itemName":"Cannone poratile Esaurito",
+            "itemDescription":"Hai ricevuto un cannone portatile logoro e delle pagine dalle scritture enigmatiche riguardo una delle Armi del Dolore.",
+            "itemTypeName":"Curiosità"
+          },
+          "ja":{
+            "itemName":"Depleted Hand Cannon",
+            "itemDescription":"You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.",
+            "itemTypeName":"Curio"
+          },
+          "pt-br":{
+            "itemName":"Canhão de Mão Descarregado",
+            "itemDescription":"Você recebeu um canhão de mão usado e páginas de uma escrita críptica pertencente a uma das Armas do Desalento.",
+            "itemTypeName":"Raridade"
+          }
+        }
+      },
       "4083935122":{
         "bucketHash":"2025709351",
         "tierType": 5,

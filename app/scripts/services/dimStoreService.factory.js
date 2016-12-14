@@ -736,6 +736,13 @@
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
+        case 246897089:
+          itemDef.itemName = "Depleted Hand Cannon";
+          itemDef.itemDescription = "You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.";
+          itemDef.itemTypeName = "Curio";
+          itemDef.tierType = 6;
+          normalBucket = buckets.byHash[375726501];
+          break;
           // 'The Dawning' Classified Items
         case 4083935122:
           itemDef.itemName = "Lysander's Cry";
