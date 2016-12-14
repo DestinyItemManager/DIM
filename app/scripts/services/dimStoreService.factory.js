@@ -624,8 +624,6 @@
 
       if (!itemDef.icon && !itemDef.action) {
         itemDef.classified = true;
-      } else {
-        itemDef.classified = false;
       }
 
       if (!itemDef.icon) {
@@ -704,12 +702,6 @@
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
-      if (currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)) {
-        itemDef.trackable = true;
-      } else {
-        itemDef.trackable = false;
-      }
-
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
 
@@ -748,11 +740,11 @@
         visible: true,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-        trackable: itemDef.trackable,
+        trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597) || false,
         tracked: item.state === 2,
         locked: item.locked,
         redacted: itemDef.redacted,
-        classified: itemDef.classified,
+        classified: itemDef.classified || false,
         isInLoadout: false
       });
 
