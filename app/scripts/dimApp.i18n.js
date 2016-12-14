@@ -130,6 +130,7 @@
           ItemService: {
             BucketFull: "There are too many '{{itemtype}}' items in the {{bucket}}.",
             Classified: "This item is classified and cannot be transferred at this time.",
+            Classified2: "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
             Deequip: "Cannot find another item to equip in order to dequip {{itemname}}",
             ExoticError: "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped.",
             NotEnoughRoom: "There's nothing we can move out of {{store}} to make room for {{itemname}}",
