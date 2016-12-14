@@ -26,12 +26,12 @@
 
               if (isValid) {
                 if (!cache) {
-                  debugger;
                   cache = OAuthService.refreshToken();
                 }
 
                 return cache.then(function() {
                   config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+
                   return config;
                 })
                 .catch(() => {
