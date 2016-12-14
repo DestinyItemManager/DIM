@@ -1,8 +1,12 @@
 (function() {
   angular.module('dim-oauth', ['LocalStorageModule'])
-    .run(['$rootScope', ($rootScope) => {
+    .run(['$rootScope', '$state', ($rootScope, $state) => {
       $rootScope.$on('dim-no-token-found', function() {
-        window.location = "/login.html";
+        if (!localStorage.apiKey) {
+          $state.go('developer');
+        } else {
+          window.location = "/login.html";
+        }
       });
     }]);
 })();

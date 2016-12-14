@@ -4,7 +4,8 @@
   <ol>
     <li>Visit <a href="https://www.bungie.net/en/Application/Create" target="_blank">https://www.bungie.net/en/Application/Create</a></li>
     <li>Copy <input type="text" ng-value="vm.URL" /></li>
-    <li>Paste URL into the "Origin Header" section.</li>
+    <li ng-hide="isExtension">Paste URL into the "Redirect URL" section under "App Authentication".</li>
+    <li ng-show="isExtension">Paste URL into the "Origin Header" section under "Browser Based Apps".</li>
     <li>After saving, copy the "API Key" here <input type="text" ng-change="vm.update()" ng-model="vm.apiKey"/></li>
     <li><input type="button" ng-click="vm.save()" value="Save" /></li>
   </ol>

@@ -192,6 +192,9 @@
     /************************************************************************************************************************************/
 
     function getBungleToken() {
+      if (!window.chrome || !chrome.extension) {
+        return $q.resolve();
+      }
       tokenPromise = tokenPromise || getBnetCookies()
         .then(function(cookies) {
           const cookie = _.find(cookies, function(cookie) {
