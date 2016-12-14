@@ -673,21 +673,18 @@
           itemDef.itemDescription = "It's slightly wilted.";
           itemDef.itemTypeName = "Sweets";
           normalBucket = buckets.byHash[1469714392];
-          // itemDef.icon = '/img/misc/celery.png';
           break;
         case 320629370:
           itemDef.itemName = "Tiny Box of Raisins";
           itemDef.itemDescription = "What? Why...?";
           itemDef.itemTypeName = "Sweets";
           normalBucket = buckets.byHash[1469714392];
-          // itemDef.icon = '/img/misc/box_of_raisins.png';
           break;
         case 640697284: // warlock siva engine (Charged)
           itemDef.itemName = "SIVA Engine Replica (Charged)";
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 2;
           break;
@@ -696,7 +693,6 @@
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 2;
           break;
@@ -705,7 +701,6 @@
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 1;
           break;
@@ -714,7 +709,6 @@
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 1;
           break;
@@ -723,7 +717,6 @@
           itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
@@ -732,7 +725,6 @@
           itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
           itemDef.itemTypeName = "SIVA Engine";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/siva_engine.png';
           normalBucket = buckets.byHash[375726501];
           itemDef.classType = 0;
           break;
@@ -741,7 +733,6 @@
           itemDef.itemDescription = "You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.";
           itemDef.itemTypeName = "Curio";
           itemDef.tierType = 6;
-          // itemDef.icon = '/img/misc/thorn_bounty.png';
           normalBucket = buckets.byHash[375726501];
           break;
           // 'The Dawning' Classified Items
@@ -750,7 +741,6 @@
           itemDef.itemDescription = "You've recreated the fall of the Concordat, and something answered.";
           itemDef.itemTypeName = "Vehicle";
           itemDef.tierType = 5;
-          // itemDef.icon = '/img/misc/lysanders_cry.png';
           item.primaryStat.statHash = 1501155019;
           item.primaryStat.value = 160;
           normalBucket = buckets.byHash[2025709351];
