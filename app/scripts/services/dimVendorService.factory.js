@@ -422,7 +422,7 @@
 
             return {
               index: category.categoryIndex,
-              title: category.categoryTitle,
+              title: vendorDef.categories[category.categoryIndex].displayTitle,
               saleItems: categoryItems,
               hasArmorWeaps: hasArmorWeaps,
               hasVehicles: hasVehicles,
