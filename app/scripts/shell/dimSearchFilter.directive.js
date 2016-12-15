@@ -259,30 +259,9 @@
         } else if (term.indexOf('quality:') >= 0 || term.indexOf('percentage:') >= 0) {
           filter = term.replace('quality:', '').replace('percentage:', '');
           addPredicate("quality", filter);
-        } else if (term.indexOf('rof:') >= 0) {
-          filter = term.replace('rof:', '');
-          addPredicate("rof", filter);
-        } else if (term.indexOf('impact:') >= 0) {
-          filter = term.replace('impact:', '');
-          addPredicate("impact", filter);
-        } else if (term.indexOf('range:') >= 0) {
-          filter = term.replace('range:', '');
-          addPredicate("range", filter);
-        } else if (term.indexOf('stability:') >= 0) {
-          filter = term.replace('stability:', '');
-          addPredicate("stability", filter);
-        } else if (term.indexOf('reload:') >= 0) {
-          filter = term.replace('reload:', '');
-          addPredicate("reload", filter);
-        } else if (term.indexOf('magazine:') >= 0) {
-          filter = term.replace('magazine:', '');
-          addPredicate("magazine", filter);
-        } else if (term.indexOf('aimassist:') >= 0 || term.indexOf('aa:') >= 0) {
-          filter = term.replace('aimassist:', '').replace('aa:', '');
-          addPredicate("aimassist", filter);
-        } else if (term.indexOf('equipspeed:') >= 0) {
-          filter = term.replace('equipspeed:', '');
-          addPredicate("equipspeed", filter);
+        } else if (term.indexOf('stat:') >= 0) {
+          filter = term.split(':')[1];
+          addPredicate(filter, term.split(':')[2]);
         } else if (!/^\s*$/.test(term)) {
           addPredicate("keyword", term);
         }
@@ -744,10 +723,11 @@
           return false;
         }
 
+        var foundStatHash;
         var operands = ['<=', '>=', '=', '>', '<'];
         var operand = 'none';
         var result = false;
-        var statHash = 0;
+        var statHash = {};
 
         operands.forEach(function(element) {
           if (predicate.substring(0, element.length) === element) {
@@ -759,63 +739,43 @@
           }
         }, this);
 
-        switch (statType) {
-        case 'impact': // Impact
-          statHash = 4043523819;
-          break;
-        case 'range': // Range
-          statHash = 1240592695;
-          break;
-        case 'stability': // Stability
-          statHash = 155624089;
-          break;
-        case 'rof': // Rate of fire
-          statHash = 4284893193;
-          break;
-        case 'reload': // Reload
-          statHash = 4188031367;
-          break;
-        case 'magazine': // Magazine
-          statHash = 387123106;
-          break;
-        case 'aa': // Aim Assist
-          statHash = 1345609583;
-          break;
-        case 'equipspeed': // Equip Speed
-          statHash = 943549884;
-          break;
-        }
+        statHash = {
+          impact: 4043523819,
+          range: 1240592695,
+          stability: 155624089,
+          rof: 4284893193,
+          reload: 4188031367,
+          magazine: 387123106,
+          aa: 1345609583,
+          equipspeed: 943549884
+        }[statType];
 
-        item.stats.forEach(function(stat) {
-          if (stat.statHash === statHash) {
-            item.stats.value = stat.value;
-            return true;
-          }
-          else {
-            return false;
-          }
-        });
+        foundStatHash = _.find(item.stats, { statHash });
+
+        if(typeof foundStatHash === 'undefined') {
+          return false;
+        }
 
         predicate = parseInt(predicate, 10);
 
         switch (operand) {
         case 'none':
-          result = (item.stats.value === predicate);
+          result = (foundStatHash.value === predicate);
           break;
         case '=':
-          result = (item.stats.value === predicate);
+          result = (foundStatHash.value === predicate);
           break;
         case '<':
-          result = (item.stats.value < predicate);
+          result = (foundStatHash.value < predicate);
           break;
         case '<=':
-          result = (item.stats.value <= predicate);
+          result = (foundStatHash.value <= predicate);
           break;
         case '>':
-          result = (item.stats.value > predicate);
+          result = (foundStatHash.value > predicate);
           break;
         case '>=':
-          result = (item.stats.value >= predicate);
+          result = (foundStatHash.value >= predicate);
           break;
         }
         return result;
