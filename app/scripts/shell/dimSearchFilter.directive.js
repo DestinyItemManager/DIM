@@ -752,7 +752,7 @@
 
         foundStatHash = _.find(item.stats, { statHash });
 
-        if(typeof foundStatHash === 'undefined') {
+        if (typeof foundStatHash === 'undefined') {
           return false;
         }
 
