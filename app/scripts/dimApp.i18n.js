@@ -554,8 +554,6 @@
           Vendors: {
             Vendors: "Mercanti",
             All: "Tutto",
-            Day: "Giorno",
-            Days: "Giorni",
             Load: "Caricamento Mercanti",
             ArmorAndWeapons: "Equipaggiamento & Armi",
             ShipsAndVehicles: "Navi & Veicoli",
