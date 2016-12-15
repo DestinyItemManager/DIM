@@ -376,7 +376,7 @@
             DragAndDrop: "Gli oggetti possono essere trascinati e rilasciati tra le colonne dei personaggi e del deposito.",
             Expand: "Per riaprire una sezione, clicca sul 'più' sulla parte sinistra della categoria che hai chiuso.",
             TryNext: "Provaci la prossima volta!"
-          },        
+          },
           FarmingMode: {
             FarmingMode: "Modalità Farming (sposta oggetti)",
             Desc: "DIM sposta Engrammi e consumabili per Lumen da {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
@@ -390,14 +390,14 @@
               MakeRoom: "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
               Tooltip: "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
             },
-            OutOfRoom: "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",            
+            OutOfRoom: "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
             Quickmove: "Spostamento Rapido",
             Stop: "Stop"
           },
           Filter: {
             EnterName: "Inserisci il nome di un oggetto:",
             EnterNote: "Inserisci delle note:"
-          },        
+          },
           Header: {
             About: "Chi siamo",
             Filters: "Filtri",
@@ -408,12 +408,12 @@
           },
           Help: {
             BackToDIM: "Torna a DIM",
-            CannotMove: "Non posso spostare quell'oggetto da questo personaggio.",            
+            CannotMove: "Non posso spostare quell'oggetto da questo personaggio.",
             Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità",
             ChangingPerks: "Selezione dei Perk non supportata",
             ChangingPerksInfo: "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
             NeverShow: "Non mostrarmi più questo messaggio.",
-            Xur: "Xûr è arrivato"            
+            Xur: "Xûr è arrivato"
           },
           Hotkey: {
             StartSearch: "Inizia una ricerca",
@@ -429,7 +429,7 @@
             InfuseItems: "Seleziona oggetto da infondere con:",
             LockedItems: "Include oggetti 'bloccati'",
             NoItems: "Non è disponibile nessun oggetto per l'infusione.",
-            NoTransfer: "Trasferimento maperiale per infusione\n {{target}} non può essere spostato.",   
+            NoTransfer: "Trasferimento maperiale per infusione\n {{target}} non può essere spostato.",
             ShowItems: "Mostra gli oggetti infondibili di tutti i personaggi e del deposito",
             TransferItems: "Trasferisci oggetti",
             Using3: "usa 3"
@@ -452,7 +452,7 @@
             PercentComplete: "({{percent}}% Completato)",
             TooMuch: "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
             TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
-          },        
+          },
           LB: {
             LB: "Costruttore di Loadout",
             ShowGear: "Mostra equipaggiamento {{class}}",
@@ -515,7 +515,7 @@
             OnlyItems: "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
             FilteredItems: "Oggetti Filtrati",
             NoEngrams: "Non ci sono engrammi non-esotici da trasferire.",
-            NoExotics: "Non ci sono engrammi da trasferire.",            
+            NoExotics: "Non ci sono engrammi da trasferire.",
             LoadoutName: "Nome Loadout...",
             Save: "Salva",
             SaveAsNew: "Salva come nuovo",
@@ -524,7 +524,7 @@
             ClickToEquip: "Clicca su un oggetto per scegliere se equipaggiarli o meno.",
             CouldNotEquip: "Impossibile equipaggiare {{itemname}}",
             TooManyRequested: "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
-            DoesNotExist: "{{itemname}} non esiste sul tuo account.",            
+            DoesNotExist: "{{itemname}} non esiste sul tuo account.",
             AppliedAuto: "Costruttore Automatico di Loadout",
             Applied: "Il tuo loadout di {{amount}} oggetti è stato trasferito al tuo {{store}}.",
             AppliedItem: "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
@@ -559,7 +559,7 @@
           Postmaster: {
             Limit: "Limite Amministratore",
             Desc: "Sul tuo {{store}} ci sono 20 oggetti persi dall'amministratore. Qualsiasi nuovo oggetto sovrascriverà uno degli esistenti."
-          },        
+          },
           Settings: {
             Settings: "Impostazioni",
             Language: "Lingua (ricarica DIM per apportare la modifica)",
@@ -634,7 +634,7 @@
             SevenWins: "Ricompensa 7 Vittorie (Arma)",
             Flawless: "Vittoria Impeccabile"
           }
-        })      
+        })
         .translations('de', {
           Level: "Level",
           Bucket: {
