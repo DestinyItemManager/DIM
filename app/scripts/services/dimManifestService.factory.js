@@ -34,8 +34,8 @@
             // The manifest has updated!
             if (path !== service.version) {
               toaster.pop('error',
-                          $translate.instant('Manfiest.Outdated'),
-                          $translate.instant('Manfiest.OutdatedExplanation'));
+                          $translate.instant('Manifest.Outdated'),
+                          $translate.instant('Manifest.OutdatedExplanation'));
             }
           });
       }, 10000, true),
@@ -46,6 +46,11 @@
         }
 
         service.isLoaded = false;
+
+        // Clear out the old manifest file now that we use
+        // indexedDB. We can remove this after a few releases, but we
+        // want to save disk for our users.
+        deleteOldManifestFile();
 
         manifestPromise = dimBungieService.getManifest()
           .then(function(data) {
@@ -77,7 +82,8 @@
             service.statusText = $translate.instant('Manifest.Error', { error: message });
             manifestPromise = null;
             service.isError = true;
-            return deleteManifestFile().finally(() => $q.reject(e));
+            deleteManifestFile();
+            throw e;
           });
 
         return manifestPromise;
@@ -122,30 +128,15 @@
         .then(function(arraybuffer) {
           service.statusText = $translate.instant('Manifest.Save') + '...';
 
-          getLocalManifestFile()
-            .then((fileEntry) => {
-              fileEntry.createWriter((fileWriter) => {
-                fileWriter.onwriteend = function(e) {
-                  if (fileWriter.length === 0) { // truncate finished
-                    fileWriter.write(new Blob([arraybuffer], { type: "application/octet-stream" }));
-                  } else { // blob write finished
-                    localStorage.setItem('manifest-version', version);
-                    console.log("Sucessfully stored " + fileWriter.length + " byte manifest file.");
-                    _gaq.push(['_trackEvent', 'Manifest', 'Downloaded']);
-                  }
-                };
-
-                fileWriter.onerror = function(e) {
-                  console.error('Write of manifest file failed', e);
-                };
-
-                fileWriter.truncate(0); // clear it out first
-              });
+          var typedArray = new Uint8Array(arraybuffer);
+          idbKeyval.set('dimManifest', typedArray)
+            .then(() => {
+              console.log("Sucessfully stored " + typedArray.length + " byte manifest file.");
+              localStorage.setItem('manifest-version', version);
             })
-            .catch((e) => console.log('Error saving manifest file', e));
+            .catch((e) => console.error('Error saving manifest file', e));
 
           $rootScope.$broadcast('dim-new-manifest');
-          var typedArray = new Uint8Array(arraybuffer);
           return typedArray;
         });
     }
@@ -153,6 +144,9 @@
     function getLocalManifestFile() {
       return $q((resolve, reject) => {
         const requestFileSystem = (window.requestFileSystem || window.webkitRequestFileSystem);
+        if (!requestFileSystem) {
+          reject("No requestFileSystem");
+        }
         // Ask for 60MB of temporary space. If Chrome gets rid of it we can always redownload.
         requestFileSystem(window.TEMPORARY, 60 * 1024 * 1024, (fs) => {
           fs.root.getFile('dimManifest', { create: true, exclusive: false }, (f) => resolve(f), (e) => reject(e));
@@ -160,13 +154,17 @@
       });
     }
 
-    function deleteManifestFile() {
-      localStorage.removeItem('manifest-version');
+    function deleteOldManifestFile() {
       return getLocalManifestFile().then((fileEntry) => {
         return $q((resolve, reject) => {
           fileEntry.remove(resolve, reject);
         });
       });
+    }
+
+    function deleteManifestFile() {
+      localStorage.removeItem('manifest-version');
+      idbKeyval.delete('dimManifest');
     }
 
     /**
@@ -181,28 +179,12 @@
       service.statusText = $translate.instant('Manifest.Load') + '...';
       var currentManifestVersion = localStorage.getItem('manifest-version');
       if (currentManifestVersion === version) {
-        // One version of this used chrome.storage.local with a
-        // base64-encoded string, which is a bit slower. We may need
-        // to do that again if the requestFileSystem API gets
-        // removed.
-        return getLocalManifestFile()
-          .then((fileEntry) => {
-            return $q((resolve, reject) => {
-              fileEntry.file((file) => {
-                var reader = new FileReader();
-                reader.addEventListener("error", (e) => { reject(e); });
-                reader.addEventListener("load", () => {
-                  var typedArray = new Uint8Array(reader.result);
-                  if (typedArray.length) {
-                    resolve(typedArray);
-                  } else {
-                    reject(new Error("Empty cached manifest file"));
-                  }
-                });
-                reader.readAsArrayBuffer(file);
-              }, (e) => reject(e));
-            });
-          });
+        return idbKeyval.get('dimManifest').then((typedArray) => {
+          if (!typedArray) {
+            throw new Error("Empty cached manifest file");
+          }
+          return typedArray;
+        });
       } else {
         _gaq.push(['_trackEvent', 'Manifest', 'Need New Manifest']);
         return $q.reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
