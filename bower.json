@@ -1,7 +1,7 @@
 {
   "name": "dim",
   "description": "An item manager for Destiny.",
-  "version": "3.13.0",
+  "version": "3.14.1",
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "repository": {
     "type": "git",
@@ -10,7 +10,7 @@
   "dependencies": {
     "Angular.uuid2": "https://github.com/MBehtemam/angular-uuid.git",
     "AngularJS-Toaster": "https://github.com/DestinyItemManager/AngularJS-Toaster.git#master",
-    "angular": "~1.5.8",
+    "angular": "~1.6.0",
     "angular-moment": "~0.10.3",
     "angular-timer": "~1.3.4",
     "angular-chrome-storage": "infomofo/angular-chrome-storage",
@@ -18,7 +18,7 @@
     "angular-messages": "~1.3.x",
     "angular-native-dragdrop": "https://github.com/angular-dragdrop/angular-dragdrop.git",
     "angular-promise-tracker": "~2.1.0",
-    "angular-ui-router": "~0.2.x",
+    "angular-ui-router": "~0.3.2",
     "components-font-awesome": "~4.4.0",
     "humanize-duration": "~3.9.1",
     "jquery": "~2",
@@ -32,10 +32,11 @@
     "zip.js": "*",
     "sql.js": "*",
     "angular-translate": "^2.11.1",
-    "idb-keyval": "*"
+    "idb-keyval": "*",
+    "drag-drop-webkit-mobile": "ios-html5-drag-drop-shim#^1.2.0"
   },
   "resolutions": {
-    "angular": "~1.5.8",
-    "humanize-duration": "~3.9.1"
+    "humanize-duration": "~3.9.1",
+    "angular": "1.6.0"
   }
 }

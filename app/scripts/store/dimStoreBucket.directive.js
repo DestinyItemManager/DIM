@@ -37,9 +37,36 @@
     };
   }
 
-  StoreBucketCtrl.$inject = ['$scope', 'loadingTracker', 'dimStoreService', 'dimItemService', '$q', '$timeout', 'toaster', 'dimSettingsService', 'ngDialog', '$rootScope', 'dimActionQueue', 'dimInfoService'];
+  StoreBucketCtrl.$inject = [
+    '$scope',
+    'loadingTracker',
+    'dimStoreService',
+    'dimItemService',
+    '$q',
+    '$timeout',
+    'toaster',
+    'dimSettingsService',
+    'ngDialog',
+    '$rootScope',
+    'dimActionQueue',
+    'dimFeatureFlags',
+    'dimInfoService',
+    '$translate'];
 
-  function StoreBucketCtrl($scope, loadingTracker, dimStoreService, dimItemService, $q, $timeout, toaster, dimSettingsService, ngDialog, $rootScope, dimActionQueue, dimInfoService) {
+  function StoreBucketCtrl($scope,
+                           loadingTracker,
+                           dimStoreService,
+                           dimItemService,
+                           $q,
+                           $timeout,
+                           toaster,
+                           dimSettingsService,
+                           ngDialog,
+                           $rootScope,
+                           dimActionQueue,
+                           dimFeatureFlags,
+                           dimInfoService,
+                           $translate) {
     var vm = this;
 
     vm.settings = dimSettingsService;
@@ -80,14 +107,14 @@
       dragHelp.classList.remove('drag-dwell-activated');
       $timeout.cancel(dragTimer);
     };
-
+    const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DoubleClick')}</p>` +
+                               `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
     // Only show this once per session
     const didYouKnow = _.once(() => {
       dimInfoService.show('doubleclick', {
-        title: 'Did you know?',
-        body: ['<p>If you\'re moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.</p>',
-               '<p>Try it out next time!<p>'].join(''),
-        hide: 'Don\'t show this tip again'
+        title: $translate.instant('DidYouKnow'),
+        body: didYouKnowTemplate,
+        hide: $translate.instant('DidYouKnow.DontShowAgain')
       });
     });
 
@@ -99,7 +126,7 @@
       }
 
       if (item.notransfer && item.owner !== target.id) {
-        return $q.reject(new Error('Cannot move that item off this character.'));
+        return $q.reject(new Error($translate.instant('Help.CannotMove')));
       }
 
       if (item.owner === vm.store.id) {
@@ -156,7 +183,9 @@
 
         promise = dialogResult.closePromise.then(function(data) {
           if (typeof data.value === 'string') {
-            return $q.reject(new Error("move-canceled"));
+            const error = new Error("move-canceled");
+            error.code = "move-canceled";
+            return $q.reject(error);
           }
           var moveAmount = data.value;
           return moveAmount;
@@ -164,6 +193,9 @@
       }
 
       promise = promise.then(function(moveAmount) {
+        if (dimFeatureFlags.debugMoves) {
+          console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
+        }
         var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
         var reload = item.equipped || equip;

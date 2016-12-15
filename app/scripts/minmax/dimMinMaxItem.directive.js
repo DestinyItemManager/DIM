@@ -73,7 +73,7 @@
               '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
               '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
               '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-              '    <div>Compare with what you already have:</div>',
+              '    <div translate="Vendors.Compare">:</div>',
               '    <div class="compare-items">',
               '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
               '    </div>',

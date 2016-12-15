@@ -52,7 +52,7 @@
         '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
         '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
         '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
-        '  <div class="item-details" ng-if="vm.item.classified">Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.</div>',
+        '  <div class="item-details" ng-if="vm.item.classified" translate="ItemService.Classified2"></div>',
         '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
         '    <div class="stat-box-row" ng-repeat="stat in vm.item.stats track by $index">',
         '      <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>',
@@ -70,7 +70,7 @@
         '    </div>',
         '    <div class="stat-box-row" ng-if="vm.featureFlags.qualityEnabled && vm.item.quality && vm.item.quality.min">',
         '      <span class="stat-box-text stat-box-cell" translate="Stats.Quality"></span>',
-        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'" translate-values="{ range: vm.item.quality.range }" translate="Stats.OfMaxRoll"><a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"><i class="fa fa-question-circle" translate-attr="{ title: \'Stats.PercentHelp\'}"></i></a></span>',
+        '      <span class="stat-box-cell" ng-style="vm.item.quality.min | qualityColor:\'color\'" translate-values="{ range: vm.item.quality.range }" translate="Stats.OfMaxRoll"></span><span><a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is" target="_blank"><i class="fa fa-question-circle" translate-attr="{ title: \'Stats.PercentHelp\'}"></i></a></span>',
         '    </div>',
         '  </div>',
         '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
@@ -86,7 +86,7 @@
         '      <div ng-switch-default class="objective-progress">',
         '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
         '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
-        '        <div class="objective-text">{{ objective.progress }} / {{ objective.completionValue }}</div>',
+        '        <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>',
         '      </div>',
         '    </div>',
         '  </div>',
@@ -194,7 +194,8 @@
     if (vm.item.classTypeName !== 'unknown' &&
         // These already include the class name
         vm.item.type !== 'ClassItem' &&
-        vm.item.type !== 'Artifact') {
+        vm.item.type !== 'Artifact' &&
+        vm.item.type !== 'Class') {
       vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
     }
 
