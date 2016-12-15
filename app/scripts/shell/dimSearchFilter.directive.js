@@ -260,8 +260,11 @@
           filter = term.replace('quality:', '').replace('percentage:', '');
           addPredicate("quality", filter);
         } else if (term.indexOf('stat:') >= 0) {
-          filter = term.split(':')[1];
-          addPredicate(filter, term.split(':')[2]);
+          // Avoid console.error by checking if all parameters are typed
+          if (term.split(':').length === 3) {
+            filter = term.split(':')[1];
+            addPredicate(filter, term.split(':')[2]);
+          }
         } else if (!/^\s*$/.test(term)) {
           addPredicate("keyword", term);
         }
