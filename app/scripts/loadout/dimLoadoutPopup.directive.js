@@ -213,15 +213,15 @@
     vm.maxLightLoadout = function maxLightLoadout($event) {
       // These types contribute to light level
       var lightTypes = ['Primary',
-                        'Special',
-                        'Heavy',
-                        'Helmet',
-                        'Gauntlets',
-                        'Chest',
-                        'Leg',
-                        'ClassItem',
-                        'Artifact',
-                        'Ghost'];
+        'Special',
+        'Heavy',
+        'Helmet',
+        'Gauntlets',
+        'Chest',
+        'Leg',
+        'ClassItem',
+        'Artifact',
+        'Ghost'];
 
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.canBeEquippedBy(vm.store) &&
