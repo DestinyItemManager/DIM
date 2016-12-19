@@ -213,8 +213,8 @@
             TooManyRequested: "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
             DoesNotExist: "{{itemname}} doesn't exist in your account.",
             AppliedAuto: "Automatic Loadout Builder",
-            Applied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
-            Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
+            Applied: "Your {amount, plural, =1{single item loadout has}, other{loadout of # items have}} been transferred to your {store}.",
+            // Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
             AppliedError: "None of the items in your loadout could be transferred.",
             AppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors."
           },
