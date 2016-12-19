@@ -447,6 +447,7 @@
               const race = defs.Race[character.characterBase.raceHash];
               let genderRace = "";
               let className = "";
+              let gender = "";
               if (character.characterBase.genderType === 0) {
                 gender = 'male';
                 genderRace = race.raceNameMale;
