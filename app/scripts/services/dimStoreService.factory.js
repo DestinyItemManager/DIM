@@ -448,9 +448,11 @@
               let genderRace = "";
               let className = "";
               if (character.characterBase.genderType === 0) {
+                gender = 'male';
                 genderRace = race.raceNameMale;
                 className = defs.Class[character.characterBase.classHash].classNameMale;
               } else {
+                gender = 'female';
                 genderRace = race.raceNameFemale;
                 className = defs.Class[character.characterBase.classHash].classNameFemale;
               }
@@ -467,6 +469,7 @@
                 class: getClass(character.characterBase.classType),
                 classType: character.characterBase.classType,
                 className: className,
+                gender: gender,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,
