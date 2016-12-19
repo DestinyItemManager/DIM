@@ -38,7 +38,7 @@
       '      <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
       '      {{::vendor.name}}',
       '    </div>',
-      '    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} <span ng-if="days === 1" translate="Vendors.Day"></span><span ng-if="days !== 1" translate="Vendors.Days"></span> {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+      '    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} <span translate="Vendors.Day" translate-values="{ numDays: days }" translate-interpolation="messageformat"></span> {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
       '  </div>',
       '  <div class="vendor-row" ng-if="!vm.settings.collapsedSections[vendorHash]">',
       '    <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',

@@ -213,8 +213,7 @@
             TooManyRequested: "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
             DoesNotExist: "{{itemname}} doesn't exist in your account.",
             AppliedAuto: "Automatic Loadout Builder",
-            Applied: "Your {amount, plural, =1{single item loadout has}, other{loadout of # items have}} been transferred to your {store}.",
-            // Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
+            Applied: "Your {amount, plural, =1{single item loadout has} other{loadout of # items have}} been transferred to your {store}.",
             AppliedError: "None of the items in your loadout could be transferred.",
             AppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors."
           },
@@ -306,8 +305,7 @@
             All: "All",
             Available: "Available on",
             Compare: "Compare with what you already have",
-            Day: "Day",
-            Days: "Days",
+            Day: "{numDays, plural, =1{Day} other{Days}}",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",
@@ -468,8 +466,7 @@
             ItemsWithIcon: "Gli oggetti con questa icona verranno equipaggiati.",
             ClickToEquip: "Clicca su un oggetto per scegliere se equipaggiarli o meno.",
             AppliedAuto: "Costruttore Automatico di Loadout",
-            Applied: "Il tuo loadout di {{amount}} oggetti è stato trasferito al tuo {{store}}.",
-            AppliedItem: "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
+            Applied: "Il tuo loadout di {amount, plural, =1{un} other{#}} oggetti è stato trasferito al tuo {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito."
           },
@@ -726,8 +723,7 @@
             ItemsWithIcon: "Gegenstände mit diesem Symbol werden angelegt.",
             ClickToEquip: "Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren.",
             AppliedAuto: "Automatischer Loadout Builder",
-            Applied: "Dein Loadout aus {{amount}} Gegenständen wurde zum {{store}} übertragen.",
-            Applied1Item: "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
+            Applied: "Dein {amount, plural, =1{Ein-Item Loadout} other{Loadout aus # Gegenständen} wurde zum {store} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft."
           },
@@ -813,8 +809,7 @@
           Vendors: {
             Vendors: "Händler",
             All: "Alle",
-            Day: "Tag",
-            Days: "Tage",
+            Day: "{numDays, plural, =1{Tag} other{Tage}}",
             VendorsLoad: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
@@ -955,7 +950,7 @@
             ItemsWithIcon: "Les objets avec cet icone seront équipés.",
             ClickToEquip: "Cliquez sur un bouton d'objet pour l'équiper.",
             AppliedAuto: "Constructeur de Loadout automatique",
-            Applied: "Votre loadout de {{amount}} objets a été transféré à votre {{store}}",
+            Applied: "Votre loadout de {amount} objets a été transféré à votre {store}",
             AppliedError: "Aucun des objets de votre loadout n'a pu être transféré.",
             AppliedWarn: "Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} objets ont échoué."
           },
@@ -1029,8 +1024,7 @@
           Vendors: {
             Vendors: "Marchands",
             All: "Tous",
-            Day: "Journée",
-            Days: "Journées",
+            Day: "{numDays, plural, =1{Journée} other{Journées}}",
             Load: "Chargement des Marchands",
             ArmorAndWeapons: "Armure & Armes",
             ShipsAndVehicles: "Vaisseaux & Véhicules",
@@ -1189,8 +1183,7 @@
             ItemsWithIcon: "Objetos con éste ícono van a ser equipados.",
             ClickToEquip: "Click en un objeto para equipar.",
             AppliedAuto: "Crear automático de equipo",
-            Applied: "Tu equipo de {{amount}} objetos han sido transferidos a tu {{store}}.",
-            Applied1Item: "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
+            Applied: "Tu equipo de {amount, plural, =1{un objeto ha sido transferido} other{# objetos han sido transferidos}} a tu {store}.",
             AppliedError: "Ninguno de los objetos en tu equipo pudo ser transferido.",
             AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores."
           },
@@ -1273,8 +1266,7 @@
           Vendors: {
             Vendors: "Comerciantes",
             All: "Todo",
-            Day: "Día",
-            Days: "Días",
+            Day: "{numDays, plural, =1{Día} other{Días}}",
             Load: "Cargando comerciantes",
             ArmorAndWeapons: "Armadura y armas",
             ShipsAndVehicles: "Naves y vehículos",
@@ -1340,8 +1332,7 @@
           },
           Vendors: {
             Vendors: "ベンダー",
-            Day: "日",
-            Days: "日々"
+            Day: "{numDays, plural, =1{日} other{日々}}",
           }
         })
         .translations('pt-br', {
@@ -1488,7 +1479,7 @@
             ItemsWithIcon: "Itens com este ícone serão equipados.",
             ClickToEquip: "Clicar em um item alterna a equipagem.",
             AppliedAuto: "Construtor automático de sets",
-            Applied: "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+            Applied: "Seu set de {amount} itens foi transferido para seu {store}.",
             AppliedError: "Nenhum dos itens do seu set pode ser transferido.",
             AppliedWarn: "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros."
           },
@@ -1571,8 +1562,7 @@
           Vendors: {
             Vendors: "Vendedores",
             All: "Todos",
-            Day: "Dia",
-            Days: "Dias",
+            Day: "{numDays, plural, =1{Dia} other{Dias}}",
             Load: "Carregando vendedores",
             ArmorAndWeapons: "Armaduras & Armas",
             ShipsAndVehicles: "Naves & Veículos",
