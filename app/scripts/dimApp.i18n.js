@@ -369,6 +369,15 @@
             Dump: "Svuota informazioni nella console",
             View: "Visualizza Item Debug Info"
           },
+          DidYouKnow: {
+            DidYouKnow: "Lo sapevi?",
+            Collapse: "Hai appena chiuso una sezione in DIM! Questo può essere utile per nascondere parti di DIM che non utilizzi solitamente.",
+            DontShowAgain: "Non mostrare questo consiglio nuovamente",
+            DoubleClick: "Se stai spostando un oggetto al personaggio attualmente attivo (ultimo utilizzato), puoi semplicemente fare doppio click su quell'oggetto per equipaggiarlo immediatamente.",
+            DragAndDrop: "Gli oggetti possono essere trascinati e rilasciati tra le colonne dei personaggi e del deposito.",
+            Expand: "Per riaprire una sezione, clicca sul 'più' sulla parte sinistra della categoria che hai chiuso.",
+            TryNext: "Provaci la prossima volta!"
+          },
           FarmingMode: {
             FarmingMode: "Modalità Farming (sposta oggetti)",
             Desc: "DIM sposta Engrammi e consumabili per Lumen da {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
@@ -382,8 +391,13 @@
               MakeRoom: "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
               Tooltip: "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
             },
+            OutOfRoom: "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
             Quickmove: "Spostamento Rapido",
             Stop: "Stop"
+          },
+          Filter: {
+            EnterName: "Inserisci il nome di un oggetto:",
+            EnterNote: "Inserisci delle note:"
           },
           Header: {
             About: "Chi siamo",
@@ -395,7 +409,12 @@
           },
           Help: {
             BackToDIM: "Torna a DIM",
-            Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità"
+            CannotMove: "Non posso spostare quell'oggetto da questo personaggio.",
+            Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità",
+            ChangingPerks: "Selezione dei Perk non supportata",
+            ChangingPerksInfo: "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
+            NeverShow: "Non mostrarmi più questo messaggio.",
+            Xur: "Xûr è arrivato"
           },
           Hotkey: {
             StartSearch: "Inizia una ricerca",
@@ -403,6 +422,37 @@
             ToggleDetails: "Bottone per mostrare o meno tutti i dettagli dell'oggetto",
             MarkItemAs: "Contrassegna oggetto come '{{tag}}'",
             ClearNewItems: "Pulisci nuovi oggetti"
+          },
+          Infusion: {
+            Infusion: "Finder di Oggetti per Infusione",
+            BringGear: "Porterà l'oggetto a:",
+            Calc: "Calcolatrice per Infusione",
+            InfuseItems: "Seleziona oggetto da infondere con:",
+            LockedItems: "Include oggetti 'bloccati'",
+            NoItems: "Non è disponibile nessun oggetto per l'infusione.",
+            NoTransfer: "Trasferimento maperiale per infusione\n {{target}} non può essere spostato.",
+            ShowItems: "Mostra gli oggetti infondibili di tutti i personaggi e del deposito",
+            TransferItems: "Trasferisci oggetti",
+            Using3: "usa 3"
+          },
+          ItemMove: {
+            Consolidate: "{{name}} consolidati",
+            Distributed: "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
+            ToVault: "Tutti i {{name}} sono ora nel deposito.",
+            ToStore: "Tutti i {{name}} sono ora sul tuo {{store}}."
+          },
+          ItemService: {
+            BucketFull: "Ci sono troppe '{{itemtype}}' nel {{bucket}}.",
+            Classified: "Questo oggetto è classificato e non può essere trasferito attualemente.",
+            Classified2: "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
+            Deequip: "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
+            ExoticError: "'{{itemname}}' non può essere equipaggiato, poichè l'esotico nello slot {{slot}} non può essere rimosso.",
+            NotEnoughRoom: "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
+            OnlyEquippedLevel: "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
+            OnlyEquippedClassLevel: "Questo oggetto può essere equipaggaito solo su un {{class}} al livello {{level}} o superiore.",
+            PercentComplete: "({{percent}}% Completato)",
+            TooMuch: "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
+            TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
           },
           LB: {
             LB: "Costruttore di Loadout",
@@ -459,12 +509,23 @@
             GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Random: "Casuale",
+            Randomize: "Vuoi selezionare casualmente armi, armature, spettro e artefatto?",
+            VendorsCannotEquip: "Questi oggetti dei venditori non possono essere equipaggiati",
+            VendorsCanEquip: "Questi oggetti possono essere equipaggiati",
+            MaxSlots: "Puoi avere solo {{slots}} tipi di quell'oggetto in un loadout.",
+            OnlyItems: "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
+            FilteredItems: "Oggetti Filtrati",
+            NoEngrams: "Non ci sono engrammi non-esotici da trasferire.",
+            NoExotics: "Non ci sono engrammi da trasferire.",
             LoadoutName: "Nome Loadout...",
             Save: "Salva",
             SaveAsNew: "Salva come nuovo",
             Cancel: "Cancella",
             ItemsWithIcon: "Gli oggetti con questa icona verranno equipaggiati.",
             ClickToEquip: "Clicca su un oggetto per scegliere se equipaggiarli o meno.",
+            CouldNotEquip: "Impossibile equipaggiare {{itemname}}",
+            TooManyRequested: "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
+            DoesNotExist: "{{itemname}} non esiste sul tuo account.",
             AppliedAuto: "Costruttore Automatico di Loadout",
             Applied: "Il tuo loadout di {amount, plural, =1{un} other{#}} oggetti è stato trasferito al tuo {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
@@ -494,6 +555,10 @@
           Notes: {
             Error: "Errore! Massimo 120 caratteri per nota.",
             Help: "Aggiungere note a questo oggetto"
+          },
+          Postmaster: {
+            Limit: "Limite Amministratore",
+            Desc: "Sul tuo {{store}} ci sono 20 oggetti persi dall'amministratore. Qualsiasi nuovo oggetto sovrascriverà uno degli esistenti."
           },
           Settings: {
             Settings: "Impostazioni",
@@ -552,6 +617,10 @@
           Vendors: {
             Vendors: "Mercanti",
             All: "Tutto",
+            Available: "Disponibile da",
+            Compare: "Confronta con quello che hai già",
+            Day: "Giorno",
+            Days: "Giorni",
             Load: "Caricamento Mercanti",
             ArmorAndWeapons: "Equipaggiamento & Armi",
             ShipsAndVehicles: "Navi & Veicoli",
