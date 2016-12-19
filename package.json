@@ -5,7 +5,6 @@
   "main": "app/index.html",
   "scripts": {
     "dev-chrome": "./node_modules/.bin/grunt dev-chrome",
-    "dev-firefox": "./node_modules/.bin/grunt dev-firefox",
     "generate-css": "./node_modules/.bin/grunt css",
     "lint": "./node_modules/.bin/grunt eslint",
     "postinstall": "./node_modules/.bin/bower install",
