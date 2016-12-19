@@ -5,6 +5,7 @@
   angular.module('dimApp')
     .config(['$translateProvider', function($translateProvider) {
       $translateProvider.useSanitizeValueStrategy('escape');
+      $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
       $translateProvider
         .translations('en', {

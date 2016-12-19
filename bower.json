@@ -32,6 +32,7 @@
     "zip.js": "*",
     "sql.js": "*",
     "angular-translate": "^2.11.1",
+    "angular-translate-interpolation-messageformat":"2.13.1",
     "idb-keyval": "*",
     "drag-drop-webkit-mobile": "ios-html5-drag-drop-shim#^1.2.0"
   },
