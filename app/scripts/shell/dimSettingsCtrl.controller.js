@@ -19,13 +19,13 @@
     vm.vaultColOptions.unshift({ id: 999, name: 'Auto' });
 
     vm.languageOptions = {
-      en: 'English',
       de: 'Deutsch',
-      fr: 'Français',
+      en: 'English',
       es: 'Español',
+      fr: 'Français',
       it: 'Italiano',
-      ja: '日本語',
-      'pt-br': 'Português do Brasil'
+      'pt-br': 'Português (Brasil)',
+      ja: '日本語'
     };
 
     vm.settings = settings;
