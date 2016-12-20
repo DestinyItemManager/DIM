@@ -57,7 +57,7 @@
       807090922: { label: "Queen's Wrath", order: 8 },
       3641985238: { label: "House of Judgment", order: 9 },
       2335631936: { label: "Gunsmith", order: 10 },
-      2763619072: { label: "SRL", order: 11 }
+      2576753410: { label: "SRL", order: 11 }
     };
 
     // Maps tierType to tierTypeName in English
@@ -447,10 +447,13 @@
               const race = defs.Race[character.characterBase.raceHash];
               let genderRace = "";
               let className = "";
+              let gender = "";
               if (character.characterBase.genderType === 0) {
+                gender = 'male';
                 genderRace = race.raceNameMale;
                 className = defs.Class[character.characterBase.classHash].classNameMale;
               } else {
+                gender = 'female';
                 genderRace = race.raceNameFemale;
                 className = defs.Class[character.characterBase.classHash].classNameFemale;
               }
@@ -467,6 +470,7 @@
                 class: getClass(character.characterBase.classType),
                 classType: character.characterBase.classType,
                 className: className,
+                gender: gender,
                 genderRace: genderRace,
                 percentToNextLevel: character.percentToNextLevel / 100.0,
                 progression: raw.character.progression,

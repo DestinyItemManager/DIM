@@ -32,6 +32,7 @@
     "zip.js": "*",
     "sql.js": "*",
     "angular-translate": "^2.11.1",
+    "angular-translate-interpolation-messageformat":"2.13.1",
     "idb-keyval": "*",
     "query-string": "https://github.com/sindresorhus/query-string.git#^4.2.3",
     "simple-query-string": "^1.3.0",

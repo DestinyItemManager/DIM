@@ -223,14 +223,15 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter);
           } else {
-            for (const key in dimSearchService.filterTrans) {
-              if (dimSearchService.filterTrans.hasOwnProperty(key) && dimSearchService.filterTrans[key].indexOf(filter) > -1) {
+            _.find(dimSearchService.filterTrans, (value, key) => {
+              if (value.indexOf(filter) >= 0) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter);
-                break;
+                return true;
               }
-            }
+              return false;
+            });
           }
         } else if (term.indexOf('not:') >= 0) {
           filter = term.replace('not:', '');
@@ -238,14 +239,15 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter, true);
           } else {
-            for (const key in dimSearchService.filterTrans) {
-              if (dimSearchService.filterTrans.hasOwnProperty(key) && dimSearchService.filterTrans[key].indexOf(filter) > -1) {
+            _.find(dimSearchService.filterTrans, (value, key) => {
+              if (value.indexOf(filter >= 0)) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter, true);
-                break;
+                return true;
               }
-            }
+              return false;
+            });
           }
         } else if (term.indexOf('tag:') >= 0) {
           filter = term.replace('tag:', '');
