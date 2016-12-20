@@ -137,6 +137,7 @@
             NotEnoughRoom: "There's nothing we can move out of {{store}} to make room for {{itemname}}",
             OnlyEquippedLevel: "This can only be equipped on characters at or above level {{level}}.",
             OnlyEquippedClassLevel: "This can only be equipped on a {{class}} at or above level {{level}}.",
+            PercentComplete: "({{ percent | percent }} Complete)",
             TooMuch: "Looks like you requested to move more of this item than exists in the source!",
             TwoExotics: "We don't know how you got more than 2 equipped exotics!",
           },
@@ -450,7 +451,7 @@
             NotEnoughRoom: "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
             OnlyEquippedLevel: "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
             OnlyEquippedClassLevel: "Questo oggetto può essere equipaggaito solo su un {{class}} al livello {{level}} o superiore.",
-            PercentComplete: "({{percent}}% Completato)",
+            PercentComplete: "({{ percent | percent }} Completato)",
             TooMuch: "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
             TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
           },
@@ -729,6 +730,9 @@
             TransferItems: "Übertrage Items",
             Using3: "verwendet 3"
           },
+          ItemService: {
+            PercentComplete: "({{ percent | percent }} Komplett)"
+          },
           LB: {
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
@@ -955,6 +959,9 @@
           Help: {
             BackToDIM: "Retour sur DIM",
             Drag: "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
+          },
+          ItemSevice: {
+            PercentComplete: "({{ percent | percent }} Achevée)"
           },
           LB: {
             LB: "Constructeur de Loadout",
@@ -1189,6 +1196,9 @@
             MarkItemAs: "Marcar objeto como '{{tag}}'",
             ClearNewItems: "Despejar objetos nuevos"
           },
+          ItemService: {
+            PercentComplete: "({{ percent | percent}} Completar)"
+          },
           LB: {
             LB: "Creador de equipo",
             ShowGear: "Mostrar equipo de {{class}}",
@@ -1367,6 +1377,9 @@
             About: "紹介",
             SupportDIM: "サポート DIM"
           },
+          ItemService: {
+            PercentComplete: "({{ percent | percent }} コンプリート)"
+          },
           Loadouts: {
             Create: "作る Loadout",
             FromEquipped: "備える",
@@ -1484,6 +1497,9 @@
             ToggleDetails: "Toggle showing full item details",
             MarkItemAs: "Marcar item como '{{tag}}'",
             ClearNewItems: "Limpar novos itens"
+          },
+          ItemService: {
+            PercentComplete: "({{ percent | percent }} Completo)"
           },
           LB: {
             LB: "Construtor de Loadouts",
