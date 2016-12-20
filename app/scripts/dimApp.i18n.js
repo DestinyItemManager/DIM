@@ -450,7 +450,7 @@
             NotEnoughRoom: "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
             OnlyEquippedLevel: "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
             OnlyEquippedClassLevel: "Questo oggetto può essere equipaggaito solo su un {{class}} al livello {{level}} o superiore.",
-            PercentComplete: "({{percent}}% Completato)",
+            PercentComplete: "({{percent | percent}} Completato)",
             TooMuch: "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
             TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
           },
