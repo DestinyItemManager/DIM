@@ -795,7 +795,7 @@
             ItemsWithIcon: "Gegenstände mit diesem Symbol werden angelegt.",
             ClickToEquip: "Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren.",
             AppliedAuto: "Automatischer Loadout Builder",
-            Applied: "Dein {amount, plural, =1{Ein-Item Loadout} other{Loadout aus # Gegenständen} wurde zum {store} übertragen.",
+            Applied: "Dein {amount, plural, =1{Ein-Item Loadout} other{Loadout aus # Gegenständen}} wurde zum {store} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft."
           },
