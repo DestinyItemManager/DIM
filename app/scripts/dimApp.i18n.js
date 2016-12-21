@@ -528,7 +528,7 @@
             TooManyRequested: "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
             DoesNotExist: "{{itemname}} non esiste sul tuo account.",
             AppliedAuto: "Costruttore Automatico di Loadout",
-            Applied: "Il tuo loadout di {amount, plural, =1{un} other{#}} oggetti è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
+            Applied: "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito."
           },
