@@ -41,7 +41,8 @@
           <li class="link fa fa-search" ng-click="app.showSearch(true)" translate-attr="{ title: 'Search'}"></li>
         </ul>
         <span class="logo" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
-        <span class="link toggle" ng-click="app.moreOptions = !app.moreOptions">{{ !app.moreOptions ? "Menu" : "Close" }}</span>
+        <span class="link toggle" ng-click="app.moreOptions = !app.moreOptions" translate>{{ !app.moreOptions ? "Header.Menu" : "Compare.Close" }}</span>
+
 
         <ul ng-show="app.moreOptions" class="header-text">
           <li class="link" ng-click="app.showAbout($event)" translate="Header.About"></li>

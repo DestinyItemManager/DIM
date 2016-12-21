@@ -88,6 +88,7 @@
           },
           Header: {
             About: "About",
+            Menu: "Menu",
             Filters: "Filters",
             FilterHelp: "Search item/perk or is:arc",
             MaterialsExchange: "Available faction ranks",
