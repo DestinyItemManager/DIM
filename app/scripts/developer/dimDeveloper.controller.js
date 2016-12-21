@@ -4,11 +4,13 @@
   angular.module('dimApp')
     .controller('dimDeveloperCtrl', dimDeveloperCtrl);
 
-  function dimDeveloperCtrl(dimGlobalFlags, dimFeatureFlags) {
+  function dimDeveloperCtrl(dimFeatureFlags) {
     const vm = this;
 
+    vm.features = dimFeatureFlags;
+
     vm.apiKey = localStorage.apiKey;
-    vm.isExtension = dimGlobalFlags.isExtension;
+    vm.isExtension = vm.features.isExtension;
     vm.URL = window.location.origin;
     vm.URLRet = vm.URL + '/return.html';
 
@@ -16,8 +18,6 @@
       vm.warning = 'Bungie.net will not accept the http protocol. Serve over https:// and try again.';
     }
 
-    // could allow feature toggle through this page, as an example.
-    vm.features = dimFeatureFlags;
 
     vm.save = function() {
       localStorage.apiKey = vm.apiKey;

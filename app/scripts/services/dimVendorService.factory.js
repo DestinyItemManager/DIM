@@ -10,7 +10,6 @@
     'dimStoreService',
     'dimDefinitions',
     'dimFeatureFlags',
-    'dimGlobalFlags',
     'dimPlatformService',
     '$q'
   ];
@@ -21,7 +20,6 @@
     dimStoreService,
     dimDefinitions,
     dimFeatureFlags,
-    dimGlobalFlags,
     dimPlatformService,
     $q
   ) {
@@ -316,7 +314,7 @@
                       throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
                     });
                 }
-                if (dimGlobalFlags.isExtension) {
+                if (dimFeatureFlags.isExtension) {
                   throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
                 }
                 return $.reject();
