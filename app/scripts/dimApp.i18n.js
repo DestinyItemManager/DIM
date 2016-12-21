@@ -249,6 +249,7 @@
           },
           Settings: {
             Settings: "Settings",
+            Account: "Account",
             Language: "Language (reload DIM to take effect)",
             HideUnfiltered: "Hide Unfiltered Items while Filtering",
             HideUnfilteredHelp: "Items that do not match filter criteria will be hidden.",

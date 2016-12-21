@@ -2,8 +2,17 @@
   <h1 translate="Settings"></h1>
   <div class="ngdialog-inner-content">
 <!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
+
   <form class="settings">
     <table>
+      <tr>
+        <td>
+          <label for="account" translate="Settings.Account"></label>
+        </td>
+        <td>
+          <div dim-platform-choice></div>
+        </td>
+      </tr>
       <tr>
         <td>
           <label for="language" translate="Settings.Language"></label>
