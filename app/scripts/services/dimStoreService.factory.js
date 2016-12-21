@@ -265,6 +265,7 @@
       dropNewItem: dropNewItem,
       createItemIndex: createItemIndex,
       processItems: processItems,
+      createItemFromHash: createItemFromHash,
       hasNewItems: false
     };
 
@@ -1593,5 +1594,16 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
+     /**
+      * Returns a promise that should resolve with the item definition from the manifest of the hash param. If the item doesn't exist returns null'
+      * @param {Number} itemHash
+      * @returns {Promise.<Item>}
+     **/
+    function createItemFromHash(itemHash) {
+      return dimDefinitions
+        .then((defs) => {
+          return defs.InventoryItem[itemHash];
+        });
+    }
   }
 })();
