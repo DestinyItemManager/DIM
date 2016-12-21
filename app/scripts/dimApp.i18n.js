@@ -35,7 +35,7 @@
             NotConnected: "You may not be connected to the internet.",
             Twitter: "Get status updates on",
             ItemUniqueness: "Item Uniqueness",
-            ItemUniquenessExplanation: "You tried to move the '{{name}}' {{type}} to your {{character}} but that destination already has that item and is only allowed one."
+            ItemUniquenessExplanation: "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one."
           },
           Compare: {
             All: "{{type}} comparisons ({{quantity}})",
@@ -67,14 +67,14 @@
           },
           FarmingMode: {
             FarmingMode: "Farming Mode (move items)",
-            Desc: "DIM is moving Engram and Glimmer items from {{store}} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
+            Desc: "DIM is moving Engram and Glimmer items from {store} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
             Configuration: "Configuration",
             Greens: {
               Greens: "Move Uncommon/Green Items to Vault",
               Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character."
             },
             MakeRoom: {
-              Desc: "DIM is moving only Engram and Glimmer items from {{store}} to the vault or other characters to prevent anything from going to the Postmaster.",
+              Desc: "DIM is moving only Engram and Glimmer items from {store} to the vault or other characters to prevent anything from going to the Postmaster.",
               MakeRoom: "Make room to pick up items by moving equipment",
               Tooltip: "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
             },
@@ -348,7 +348,7 @@
             NotConnected: "Potresti non essere connesso a internet.",
             Twitter: "Ottieni informazioni sullo stato del servizio su",
             ItemUniqueness: "Unicità dell elemento",
-            ItemUniquenessExplanation: "Hai provato a spostare il '{{name}}' {{type}} al/alla tuo/tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa."
+            ItemUniquenessExplanation: "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa."
           },
           Compare: {
             All: "Confronta ogni {{type}} ({{quantity}})",
@@ -381,14 +381,14 @@
           },
           FarmingMode: {
             FarmingMode: "Modalità Farming (sposta oggetti)",
-            Desc: "DIM sposta Engrammi e consumabili per Lumen da {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
+            Desc: "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} female{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
             Configuration: "Configurazione",
             Greens: {
               Greens: "Sposta oggetti Non Comuni/Verdi al deposito",
               Tooltip: "Se selezionato, DIM trasferirà anche tutti gli oggetti non comuni (verdi) al deposito. Se non viene selezionato, gli oggetti verdi rimarranno sul tuo personaggio attivo."
             },
             MakeRoom: {
-              Desc: "DIM sposta solo gli Engrammi e i consumabili per i Lumen da {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
+              Desc: "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} female{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
               MakeRoom: "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
               Tooltip: "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
             },
@@ -528,7 +528,7 @@
             TooManyRequested: "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
             DoesNotExist: "{{itemname}} non esiste sul tuo account.",
             AppliedAuto: "Costruttore Automatico di Loadout",
-            Applied: "Il tuo loadout di {amount, plural, =1{un} other{#}} oggetti è stato trasferito al tuo {store}.",
+            Applied: "Il tuo loadout di {amount, plural, =1{un} other{#}} oggetti è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito."
           },
@@ -662,7 +662,7 @@
             NotConnected: "Du bist eventuell nicht mit dem Internet verbunden.",
             Twitter: "Bekomme Statusupdates auf",
             ItemUniqueness: "Item Einzigartigkeit",
-            ItemUniquenessExplanation: "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
+            ItemUniquenessExplanation: "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
           },
           Compare: {
             All: "{{type}} Vergleich ({{quantity}})",
@@ -686,14 +686,14 @@
           },
           FarmingMode: {
             FarmingMode: "Engramme zum Tresor",
-            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
+            Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {store} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
             Configuration: "Konfiguration",
             Greens: {
               Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
               Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter."
             },
             MakeRoom: {
-              Desc: "DIM verschiebt nur Engramme und Glimmer vom {{store}} zum Tresor oder anderen Charaktern, um zu verhindern, dass sie in der Poststelle landen.",
+              Desc: "DIM verschiebt nur Engramme und Glimmer vom {store} zum Tresor oder anderen Charaktern, um zu verhindern, dass sie in der Poststelle landen.",
               MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
               Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen."
             },
@@ -921,7 +921,7 @@
             NotConnected: "Vous n'êtes probablement pas connecté à Internet.",
             Twitter: "Tenez-vous informer sur",
             ItemUniqueness: "Unicité d'un objet",
-            ItemUniquenessExplanation: "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un."
+            ItemUniquenessExplanation: "Vous avez essayé de déplacer '{name}' {type} sur votre {character} mais cette destination a déjà cet objet et n'en autorise qu'un."
           },
           Cooldown: {
             Super: "Régénération du Super",
@@ -934,14 +934,14 @@
           },
           FarmingMode: {
             FarmingMode: "Mode Farming (transfert d'objets)",
-            Desc: "DIM est entrain de transférer des engrammes et objets pour Glimmer du {{store}} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+            Desc: "DIM est entrain de transférer des engrammes et objets pour Glimmer du {store} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
             Configuration: "Configuration",
             Greens: {
               Greens: "Transférer les objets peu communs/verts aux coffres",
               Tooltip: "Si activé, DIM transfèrera aussi tous les objets peu communs (verts) aux coffres. Si désactivé, alors les objets verts resteront sur votre perso actif.",
             },
             MakeRoom: {
-              Desc: "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {{store}} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
+              Desc: "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {store} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
               MakeRoom: "Faites de la place pour collecter des objets en déplaçant de l'équipement",
               Tooltip: "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
             },
@@ -1139,7 +1139,7 @@
             NotConnected: "Es posible que no tengas conexión a Internet.",
             Twitter: "Entérate de los estados de actualizaciones",
             ItemUniqueness: "Unicidad de objeto",
-            ItemUniquenessExplanation: "Intentáste mover el '{{name}}' {{type}} a tu {{character}} pero ese destino ya cuenta con ese objeto y solo puede tener uno."
+            ItemUniquenessExplanation: "Intentáste mover el '{name}' {type} a tu {character} pero ese destino ya cuenta con ese objeto y solo puede tener uno."
           },
           Compare: {
             All: "Comparaciones de {{type}} ({{quantity}})",
@@ -1163,14 +1163,14 @@
           },
           FarmingMode: {
             FarmingMode: "Modo recolector (mover objetos)",
-            Desc: "DIM esta moviendo Engramas y objetos de Lúmen desde {{store}} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
+            Desc: "DIM esta moviendo Engramas y objetos de Lúmen desde {store} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
             Configuration: "Configuración",
             Greens: {
               Greens: "Mover objetos poco comúnes/verdes al Depósito",
               Tooltip: "Si está marcado, DIM también va a transferir todos los objetos poco comúnes (verde) al depósito. Si no está marcado, todos los objetos verdes se quedarán en tu personaje."
             },
             MakeRoom: {
-              Desc: "DIM esta moviendo solo Engramas y objetos de Lúmen desde {{store}} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
+              Desc: "DIM esta moviendo solo Engramas y objetos de Lúmen desde {store} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
               MakeRoom: "Hacer espacio para coger objetos moviendo equipamiento",
               Tooltip: "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
             },
@@ -1441,7 +1441,7 @@
             NotConnected: "Você deverá estar sem conexão com a Internet.",
             Twitter: "Veja atualizações em",
             ItemUniqueness: "Unicidade de itens",
-            ItemUniquenessExplanation: "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui um item do tipo."
+            ItemUniquenessExplanation: "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo."
           },
           Compare: {
             All: "Comparações de {{type}} ({{quantity}})",
@@ -1465,14 +1465,14 @@
           },
           FarmingMode: {
             FarmingMode: "Modo Farm (mover itens)",
-            Desc: "O DIM estará movendo engramas e consumíveis do {{store}} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
+            Desc: "O DIM estará movendo engramas e consumíveis do {store} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
             Configuration: "Configuração",
             Greens: {
               Greens: "Mover itens Incomuns (verdes) para o cofre",
               Tooltip: "Se selecionado, o DIM também irá transferir todos os itens Incomuns (verdes) para o cofre. Deixe desmarcado para manter estes itens em seu personagem."
             },
             MakeRoom: {
-              Desc: "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+              Desc: "O DIM está movendo apenas engramas e consumíveis do {store} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
               MakeRoom: "Abrir espaço para novos itens movendo equipamentos",
               Tooltip: "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
             },

@@ -556,8 +556,9 @@
           const error = new Error($translate.instant('BungieService.ItemUniquenessExplanation', {
             name: item.name,
             type: item.type.toLowerCase(),
-            character: store.name
-          }));
+            character: store.name,
+            gender: store.gender
+          }, 'messageformat'));
           error.code = e.code;
           return $q.reject(error);
         }
