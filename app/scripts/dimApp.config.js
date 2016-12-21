@@ -18,6 +18,9 @@
       active: null,
       debug: false
     })
+    .value('dimGlobalFlags', {
+      isExtension: window.chrome && window.chrome.extension
+    })
     .value('dimFeatureFlags', {
       // Tags are off in release right now
       tagsEnabled: '$DIM_FLAVOR' !== 'release',

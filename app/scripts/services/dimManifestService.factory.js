@@ -121,7 +121,7 @@
     function loadManifestRemote(version, language, path) {
       service.statusText = $translate.instant('Manifest.Download') + '...';
 
-      return $http.get("https://www.bungie.net" + path + "?" + (new Date()), { responseType: "blob" })
+      return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
         .then(function(response) {
           service.statusText = $translate.instant('Manifest.Unzip') + '...';
           return unzipManifest(response.data);

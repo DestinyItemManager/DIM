@@ -4,11 +4,11 @@
   angular.module('dimApp')
     .controller('dimDeveloperCtrl', dimDeveloperCtrl);
 
-  function dimDeveloperCtrl(dimFeatureFlags) {
+  function dimDeveloperCtrl(dimGlobalFlags, dimFeatureFlags) {
     const vm = this;
 
     vm.apiKey = localStorage.apiKey;
-    vm.isExtension = window.chrome && window.chrome.extension;
+    vm.isExtension = dimGlobalFlags.isExtension;
     vm.URL = window.location.origin;
     vm.URLRet = vm.URL + '/return.html';
 
