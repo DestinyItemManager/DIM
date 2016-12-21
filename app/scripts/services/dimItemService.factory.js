@@ -132,7 +132,7 @@
       return item;
     }
 
-    function getSimilarItem(item, exclusions) {
+    function getSimilarItem(item, exclusions, excludeExotic = false) {
       var target = dimStoreService.getStore(item.owner);
       var sortedStores = _.sortBy(dimStoreService.getStores(), function(store) {
         if (target.id === store.id) {
@@ -146,7 +146,7 @@
 
       var result = null;
       sortedStores.find(function(store) {
-        result = searchForSimilarItem(item, store, exclusions, target);
+        result = searchForSimilarItem(item, store, exclusions, target, excludeExotic);
         return result !== null;
       });
 
@@ -158,7 +158,7 @@
      * on target.
      * @param exclusions a list of {id, hash} objects that won't be considered for equipping.
      */
-    function searchForSimilarItem(item, store, exclusions, target) {
+    function searchForSimilarItem(item, store, exclusions, target, excludeExotic) {
       exclusions = exclusions || [];
 
       var candidates = _.filter(store.items, function(i) {
@@ -173,6 +173,10 @@
 
       if (!candidates.length) {
         return null;
+      }
+
+      if (excludeExotic) {
+        candidates = _.reject(candidates, 'isExotic');
       }
 
       // TODO: unify this value function w/ the others!
@@ -261,8 +265,8 @@
         });
     }
 
-    function dequipItem(item) {
-      const similarItem = getSimilarItem(item);
+    function dequipItem(item, excludeExotic = false) {
+      const similarItem = getSimilarItem(item, [], excludeExotic);
       if (!similarItem) {
         return $q.reject(new Error($translate.instant('ItemService.Deequip', { itemname: item.name })));
       }
@@ -308,10 +312,10 @@
     function canEquipExotic(item, store) {
       const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
       if (otherExotic) {
-        return dequipItem(otherExotic)
+        return dequipItem(otherExotic, true)
           .then(() => true)
-          .catch(function() {
-            throw new Error($translate.instant('ItemService.ExoticError, { itemname: item.name, slot: otherExotic.type}'));
+          .catch(function(e) {
+            throw new Error($translate.instant('ItemService.ExoticError', { itemname: item.name, slot: otherExotic.type, error: e.message }));
           });
       } else {
         return $q.resolve(true);
