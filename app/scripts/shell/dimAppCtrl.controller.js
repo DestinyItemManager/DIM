@@ -160,7 +160,7 @@
       if (show) {
         $rootScope.$broadcast('dim-focus-filter-input');
       }
-    }
+    };
     vm.showSetting = showPopupFunction('setting');
     vm.showAbout = showPopupFunction('about', true);
     vm.showSupport = showPopupFunction('support', true);
