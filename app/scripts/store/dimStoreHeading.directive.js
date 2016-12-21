@@ -16,8 +16,7 @@
       template: [
         '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',
         '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.store.icon + \')\' }"></div>',
-        '  <div class="class" ng-if="::!vm.store.isVault">{{:: vm.store.className }}</div>',
-        '  <div class="class" ng-if="::!!vm.store.isVault"><span translate="Bucket.Vault"></span></div>',
+        '  <div class="class">{{:: vm.store.className }}</div>',
         '  <div class="race-gender" ng-if="::!vm.store.isVault">{{:: vm.store.genderRace }}</div>',
         '  <div class="level" ng-if="::!vm.store.isVault"><span translate="Level"></span> {{ vm.store.level }}</div>',
         '  <div class="level powerLevel" ng-if="!vm.store.isVault">{{ vm.store.powerLevel }}</div>',
@@ -31,7 +30,7 @@
         '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
         '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',
         '<div ng-if="vm.store.isVault" class="vault-capacity">',
-        '  <div class="vault-bucket" translate-attr="{ title: \'{{bucket | translate}}: {{size}}/{{::capacity}}\' }" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort}); bucket = \'Bucket.\' + sort">',
+        '  <div class="vault-bucket" title="{{bucket | translate}}: {{size}}/{{::capacity}}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort}); bucket = \'Bucket.\' + sort">',
         '    <div class="vault-bucket-tag">{{::bucket | translate | firstLetter}}</div>',
         '    <div class="vault-fill-bar">',
         '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',

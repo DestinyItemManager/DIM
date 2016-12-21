@@ -205,7 +205,7 @@
         return value;
       };
 
-      var loadout = optimalLoadout(applicableItems, bestItemFn, 'Item Leveling');
+      var loadout = optimalLoadout(applicableItems, bestItemFn, $translate.instant('Loadouts.ItemLeveling'));
       vm.applyLoadout(loadout, $event);
     };
 
@@ -213,15 +213,15 @@
     vm.maxLightLoadout = function maxLightLoadout($event) {
       // These types contribute to light level
       var lightTypes = ['Primary',
-                        'Special',
-                        'Heavy',
-                        'Helmet',
-                        'Gauntlets',
-                        'Chest',
-                        'Leg',
-                        'ClassItem',
-                        'Artifact',
-                        'Ghost'];
+        'Special',
+        'Heavy',
+        'Helmet',
+        'Gauntlets',
+        'Chest',
+        'Leg',
+        'ClassItem',
+        'Artifact',
+        'Ghost'];
 
       var applicableItems = _.select(dimItemService.getItems(), function(i) {
         return i.canBeEquippedBy(vm.store) &&
@@ -250,7 +250,7 @@
         return value;
       };
 
-      var loadout = optimalLoadout(applicableItems, bestItemFn, 'Maximize Light');
+      var loadout = optimalLoadout(applicableItems, bestItemFn, $translate.instant('Loadouts.MaximizeLight'));
       if ($event) {
         vm.applyLoadout(loadout, $event);
       }
@@ -265,7 +265,11 @@
       });
 
       if (engrams.length === 0) {
-        toaster.pop('warning', 'Gather Engrams', 'No ' + (options.exotics ? '' : 'non-exotic ') + 'engrams are available to transfer.');
+        var engramWarning = $translate.instant('Loadouts.NoEngrams');
+        if (options.exotics) {
+          engramWarning = $translate.instant('Loadouts.NoExotics');
+        }
+        toaster.pop('warning', $translate.instant('Loadouts.GatherEngrams'), engramWarning);
         return;
       }
 
@@ -290,7 +294,7 @@
 
       var loadout = {
         classType: -1,
-        name: 'Gather Engrams',
+        name: $translate.instant('Loadouts.GatherEngrams'),
         items: finalItems
       };
       vm.applyLoadout(loadout, $event);
@@ -320,7 +324,7 @@
 
       var loadout = {
         classType: -1,
-        name: 'Filtered Items',
+        name: $translate.instant('Loadouts.FilteredItems'),
         items: finalItems
       };
       vm.applyLoadout(loadout, $event);

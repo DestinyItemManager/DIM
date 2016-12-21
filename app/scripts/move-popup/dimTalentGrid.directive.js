@@ -39,9 +39,9 @@
     };
   }
 
-  TalentGridCtrl.$inject = ['dimInfoService'];
+  TalentGridCtrl.$inject = ['dimInfoService', '$translate'];
 
-  function TalentGridCtrl(dimInfoService) {
+  function TalentGridCtrl(dimInfoService, $translate) {
     const infuseHash = 1270552711;
     var vm = this;
     vm.nodeSize = 34;
@@ -56,9 +56,9 @@
         // popup warning
         dimInfoService.show('lostitems', {
           type: 'warning',
-          title: 'Changing Perks Not Supported',
-          body: "Sorry, there's no way to change perks outside the game. We wish we could!",
-          hide: 'Never show me this again.'
+          title: $translate.instant('Help.ChangingPerks'),
+          body: $translate.instant('Help.ChangingPerksInfo'),
+          hide: $translate.instant('Help.NeverShow')
         });
       }
     };

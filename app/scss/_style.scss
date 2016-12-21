@@ -16,6 +16,10 @@ div:focus, span:focus {
   outline-width: 0;
 }
 
+#DTRTooltip {
+  display: none;
+}
+
 /**
   New Item overlay area
 **/
@@ -1472,7 +1476,7 @@ dim-compare {
   dim-item-tag {
     display: block;
     select {
-      background: transparent;
+      background: gray;
       border: none;
       color: white;
       width: 125px;

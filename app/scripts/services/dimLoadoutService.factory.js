@@ -223,6 +223,11 @@
       }, 0)) / 10).toFixed(1);
     }
 
+    /**
+     * Apply a loadout - a collection of items to be moved and possibly equipped all at once.
+     * @param allowUndo whether to include this loadout in the "undo loadout" menu stack.
+     * @return a promise for the completion of the whole loadout operation.
+     */
     function applyLoadout(store, loadout, allowUndo = false) {
       return dimActionQueue.queueAction(function() {
         if (allowUndo) {
@@ -242,6 +247,10 @@
         }
 
         var items = angular.copy(_.flatten(_.values(loadout.items)));
+        // filter out to only include items for that class
+        items = items.filter(function(item) {
+          return item.classType === -1 || item.classType > 2 || item.classType === store.classType;
+        });
         var totalItems = items.length;
 
         var loadoutItemIds = items.map(function(i) {
@@ -325,7 +334,7 @@
               });
               failedItems.forEach(function(item) {
                 scope.failed++;
-                toaster.pop('error', loadout.name, 'Could not equip ' + item.name);
+                toaster.pop('error', loadout.name, $translate.instant('Loadouts.CouldNotEquip', { itemname: item.name }));
               });
             }
           })
@@ -340,11 +349,7 @@
           .then(function() {
             var value = 'success';
 
-            var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name });
-
-            if (scope.total === 1) {
-              message = $translate.instant('Loadouts.Applied1Item', { store: store.name });
-            }
+            var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name }, 'messageformat');
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {
@@ -398,7 +403,7 @@
 
             if (amountToMove === 0 || !sourceItem) {
               promise = promise.then(function() {
-                const error = new Error("You have " + totalAmount + " " + item.name + ", but your loadout asks for " + pseudoItem.amount + ". We transfered all you had.");
+                const error = new Error($translate.instant('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
                 error.level = 'warn';
                 return $q.reject(error);
               });
@@ -423,7 +428,7 @@
           // Pass in the list of items that shouldn't be moved away
           promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
         } else {
-          promise = $.reject(new Error(item.name + " doesn't exist in your account."));
+          promise = $.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
         }
       }
 
@@ -432,13 +437,11 @@
           scope.successfulItems.push(item);
         })
         .catch(function(e) {
-          if (e.message !== 'move-canceled') {
-            const level = e.level || 'error';
-            if (level === 'error') {
-              scope.failed++;
-            }
-            toaster.pop(e.level || 'error', item.name, e.message);
+          const level = e.level || 'error';
+          if (level === 'error') {
+            scope.failed++;
           }
+          toaster.pop(e.level || 'error', item.name, e.message);
         })
         .finally(function() {
           // Keep going

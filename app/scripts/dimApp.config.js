@@ -21,6 +21,8 @@
       qualityEnabled: true,
       // Additional debugging / item info tools
       debugMode: false,
+      // Print debug info to console about item moves
+      debugMoves: false,
       // show changelog toaster
       changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
 
@@ -119,6 +121,8 @@
     .config([
       '$compileProvider',
       function($compileProvider) {
+        // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
+        $compileProvider.preAssignBindingsEnabled(true);
         // Allow chrome-extension: URLs in ng-src
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*((https?|chrome-extension):|data:image\/)/);
       }

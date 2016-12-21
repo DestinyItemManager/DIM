@@ -77,7 +77,7 @@
         return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
-        return $q.reject(new Error('Are you running a development version of DIM? You must register your chrome extension with bungie.net.'));
+        return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
       } else if (errorCode > 1) {
         if (response.data.Message) {
           const error = new Error(response.data.Message);
@@ -157,7 +157,7 @@
           if (_.size(cookies) > 0) {
             resolve(cookies);
           } else {
-            reject(new Error('No cookies found.'));
+            reject(new Error($translate.instant('BungieService.NoCookies')));
           }
         }
       });
@@ -553,14 +553,13 @@
       // Handle "DestinyUniquenessViolation" (1648)
       function handleUniquenessViolation(e, item, store) {
         if (e && e.code === 1648) {
-          toaster.pop('warning',
-                      $translate.instant('BungieService.ItemUniqueness'),
-                      $translate.instant('BungieService.ItemUniquenessExplanation', {
-                        name: item.name,
-                        type: item.type.toLowerCase(),
-                        character: store.name
-                      }));
-          return $q.reject(new Error('move-canceled'));
+          const error = new Error($translate.instant('BungieService.ItemUniquenessExplanation', {
+            name: item.name,
+            type: item.type.toLowerCase(),
+            character: store.name
+          }));
+          error.code = e.code;
+          return $q.reject(error);
         }
         return $q.reject(e);
       }

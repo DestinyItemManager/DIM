@@ -4,23 +4,63 @@
   angular.module('dimApp')
     .factory('dimFarmingService', FarmingService);
 
-  FarmingService.$inject = ['$rootScope', '$q', 'dimItemService', 'dimStoreService', '$interval', 'dimCategory', 'toaster', 'dimBucketService', 'dimSettingsService'];
+  FarmingService.$inject = [
+    '$rootScope',
+    '$q',
+    'dimItemService',
+    'dimStoreService',
+    '$interval',
+    'toaster',
+    'dimFeatureFlags',
+    'dimSettingsService',
+    '$translate',
+    'dimBucketService'
+  ];
 
   /**
    * A service for "farming" items by moving them continuously off a character,
    * so that they don't go to the Postmaster.
    */
-  function FarmingService($rootScope, $q, dimItemService, dimStoreService, $interval, dimCategory, toaster, dimBucketService, dimSettingsService) {
-    var intervalId;
-    var cancelReloadListener;
-    var glimmerHashes = [
+  function FarmingService($rootScope,
+                          $q,
+                          dimItemService,
+                          dimStoreService,
+                          $interval,
+                          toaster,
+                          dimFeatureFlags,
+                          dimSettingsService,
+                          $translate,
+                          dimBucketService) {
+    let intervalId;
+    let cancelReloadListener;
+    const glimmerHashes = new Set([
       269776572, // -house-banners
       3632619276, // -silken-codex
       2904517731, // -axiomatic-beads
       1932910919 // -network-keys
+    ]);
+
+    // These are things you may pick up frequently out in the wild
+    const makeRoomTypes = [
+      'BUCKET_PRIMARY_WEAPON',
+      'BUCKET_SPECIAL_WEAPON',
+      'BUCKET_HEAVY_WEAPON',
+      'BUCKET_HEAD',
+      'BUCKET_ARMS',
+      'BUCKET_CHEST',
+      'BUCKET_LEGS',
+      'BUCKET_CLASS_ITEMS',
+      'BUCKET_ARTIFACT',
+      'BUCKET_GHOST',
+      'BUCKET_CONSUMABLES',
+      'BUCKET_MATERIALS'
     ];
 
-    var settings = dimSettingsService.farming;
+    const settings = dimSettingsService.farming;
+
+    const outOfSpaceWarning = _.throttle((store) => {
+      toaster.pop('info', $translate.instant('FarmingMode.OutOfRoom', { character: store.name }));
+    }, 60000);
 
     return {
       active: false,
@@ -30,111 +70,87 @@
       makingRoom: false,
       // Move all items on the selected character to the vault.
       moveItemsToVault: function(items, incrementCounter) {
-        var self = this;
-        var nospace = "No space left!";
-        return dimBucketService
-          .then(function(buckets) {
-            return _.reduce(items, function(promise, item) {
-              return promise
-                .then(function() {
-                  var vault = dimStoreService.getVault();
-                  var vaultSpaceLeft = vault.spaceLeftForItem(item);
-                  if (vaultSpaceLeft <= 1) {
-                    // If we're down to one space, try putting it on other characters
-                    var otherStores = _.select(dimStoreService.getStores(), function(store) {
-                      return !store.isVault && store.id !== self.store.id;
-                    });
+        return dimBucketService.then((buckets) => {
+          const reservations = {};
+          if (settings.makeRoomForItems) {
+            // reserve one space in the active character
+            reservations[this.store.id] = {};
+            makeRoomTypes.forEach((type) => {
+              reservations[this.store.id][buckets.byId[type].type] = 1;
+            });
+          }
 
-                    var otherStoresWithSpace = _.select(otherStores, function(store) {
-                      return store.spaceLeftForItem(item) > 0;
-                    });
-                    if (otherStoresWithSpace.length) {
-                      return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items);
-                    } else if ((vaultSpaceLeft === 1) && !settings.makeRoomForItems) {
-                      // Still allow transfers through the Vault to other characters.
-                      return $q.reject(new Error(nospace));
-                    } else if (vaultSpaceLeft === 0) {
-                      // If there's no room on other characters to move out of the vault,
-                      // give up entirely.
-                      if (!_.any(otherStores, function(store) {
-                        return _.any(dimCategory[item.bucket.sort], function(category) {
-                          return store.spaceLeftForItem({ type: category, location: buckets.byType[category], bucket: buckets.byType[category] }) > 0;
-                        });
-                      }) || (!settings.makeRoomForItems)) {
-                        return $q.reject(new Error(nospace));
-                      }
+          return _.reduce(items, (promise, item) => {
+            // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
+            return promise
+              .then(() => {
+                const vault = dimStoreService.getVault();
+                const vaultSpaceLeft = vault.spaceLeftForItem(item);
+                if (vaultSpaceLeft <= 1) {
+                  // If we're down to one space, try putting it on other characters
+                  const otherStores = _.select(dimStoreService.getStores(),
+                                               (store) => !store.isVault && store.id !== this.store.id);
+                  const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
+
+                  if (otherStoresWithSpace.length) {
+                    if (dimFeatureFlags.debugMoves) {
+                      console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
                     }
+                    return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                   }
-                  return dimItemService.moveTo(item, vault, false, item.amount, items);
-                })
-                .then(function() {
-                  if (incrementCounter) {
-                    self.itemsMoved++;
-                  }
-                })
-                .catch(function(e) {
-                  // No need to whine about being out of space
-                  if (e.message !== nospace) {
-                    toaster.pop('error', item.name, e.message);
-                  }
-                });
-            }, $q.resolve());
-          });
+                }
+                if (dimFeatureFlags.debugMoves) {
+                  console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
+                }
+                return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+              })
+              .then(() => {
+                if (incrementCounter) {
+                  this.itemsMoved++;
+                }
+              })
+              .catch((e) => {
+                if (e.code === 'no-space') {
+                  outOfSpaceWarning(this.store);
+                } else {
+                  toaster.pop('error', item.name, e.message);
+                }
+                throw e;
+              });
+          }, $q.resolve());
+        });
       },
       farmItems: function() {
-        var self = this;
-        var store = dimStoreService.getStore(self.store.id);
-        var toMove = _.select(store.items, function(i) {
-          return !i.location.inPostmaster && (
+        const store = dimStoreService.getStore(this.store.id);
+        const toMove = _.select(store.items, (i) => {
+          return !i.notransfer && (
             i.isEngram() ||
-            (settings.farmGreens && i.type === 'Uncommon') ||
-            glimmerHashes.includes(i.hash));
+            (i.equipment && settings.farmGreens && i.type === 'Uncommon') ||
+            glimmerHashes.has(i.hash));
         });
 
         if (toMove.length === 0) {
           return $q.resolve();
         }
 
-        self.movingItems = true;
-        return self.moveItemsToVault(toMove, true)
-          .finally(function() {
-            self.movingItems = false;
+        this.movingItems = true;
+        return this.moveItemsToVault(toMove, true)
+          .finally(() => {
+            this.movingItems = false;
           });
       },
       // Ensure that there's one open space in each category that could
-      // hold an engram, so they don't go to the postmaster.
+      // hold an item, so they don't go to the postmaster.
       makeRoomForItems: function() {
-        var self = this;
-
-        var store = dimStoreService.getStore(self.store.id);
-        // TODO: this'll be easier with buckets
-        // These types can have engrams
-        var engramTypes = ['Primary',
-                          'Special',
-                          'Heavy',
-                          'Helmet',
-                          'Gauntlets',
-                          'Chest',
-                          'Leg',
-                          'ClassItem',
-                          'Ghost',
-                          'Consumables',
-                          'Materials'];
-
-        var applicableItems = _.select(store.items, function(i) {
-          return !i.equipped &&
-            !i.location.inPostmaster &&
-            _.contains(engramTypes, i.type);
-        });
-        var itemsByType = _.groupBy(applicableItems, 'type');
+        const store = dimStoreService.getStore(this.store.id);
 
         // If any category is full, we'll move one aside
-        var itemsToMove = [];
-        _.each(itemsByType, function(items) {
-          // subtract 1 from capacity because we excluded the equipped item
-          if (items.length > 0 && items.length >= (store.capacityForItem(items[0]) - 1)) {
+        const itemsToMove = [];
+        makeRoomTypes.forEach((makeRoomType) => {
+          const items = store.buckets[makeRoomType];
+          if (items.length > 0 && items.length >= store.capacityForItem(items[0])) {
             // We'll move the lowest-value item to the vault.
-            itemsToMove.push(_.min(_.select(items, { notransfer: false }), function(i) {
+            const itemToMove = _.min(_.select(items, { equipped: false, notransfer: false }), (i) => {
               var value = {
                 // we can assume if someone isn't farming greens they want to keep them on their character to dismantle
                 Common: 0,
@@ -148,7 +164,10 @@
                 value += i.primStat.value / 1000.0;
               }
               return value;
-            }));
+            });
+            if (itemToMove !== Infinity) {
+              itemsToMove.push(itemToMove);
+            }
           }
         });
 
@@ -156,10 +175,10 @@
           return $q.resolve();
         }
 
-        self.makingRoom = true;
-        return self.moveItemsToVault(itemsToMove, false)
-          .finally(function() {
-            self.makingRoom = false;
+        this.makingRoom = true;
+        return this.moveItemsToVault(itemsToMove, false)
+          .finally(() => {
+            this.makingRoom = false;
           });
       },
       start: function(store) {
@@ -168,24 +187,23 @@
           var consolidateHashes = [
             417308266, // three of coins
             211861343, // heavy ammo synth
-            937555249, // motes of light
-            1738186005 // motes of light
+            928169143, // special ammo synth
+            2180254632 // primary ammo synth
+//            937555249, // motes of light
+//            1738186005 // strange coins
 //            1542293174, // armor materials
 //            1898539128, // weapon parts
           ];
 
-          self.consolidate = consolidateHashes.map(function(hash) {
+          self.consolidate = _.compact(consolidateHashes.map(function(hash) {
             var ret = angular.copy(dimItemService.getItem({
               hash: hash
             }));
             if (ret) {
-              ret.amount = 0;
-              dimStoreService.getStores().forEach(function(s) {
-                ret.amount += s.amountOfItem(ret);
-              });
+              ret.amount = sum(dimStoreService.getStores(), (s) => s.amountOfItem(ret));
             }
             return ret;
-          }).filter((item) => !_.isUndefined(item));
+          }));
 
           self.farmItems().then(function() {
             if (settings.makeRoomForItems) {
