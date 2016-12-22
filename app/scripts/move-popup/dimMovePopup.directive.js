@@ -96,7 +96,7 @@
       if (vm.item.amount > 1) {
         var store = dimStoreService.getStore(vm.item.owner);
         vm.maximum = store.amountOfItem(vm.item);
-        vm.moveAmount = vm.maximum;
+        vm.moveAmount = vm.item.amount;
       }
     });
 
