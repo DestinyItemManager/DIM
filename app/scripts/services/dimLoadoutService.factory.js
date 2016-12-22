@@ -349,7 +349,7 @@
           .then(function() {
             var value = 'success';
 
-            var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender }, 'messageformat');
+            var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
 
             if (scope.failed > 0) {
               if (scope.failed === scope.total) {

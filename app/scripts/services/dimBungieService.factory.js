@@ -558,7 +558,7 @@
             type: item.type.toLowerCase(),
             character: store.name,
             gender: store.gender
-          }, 'messageformat'));
+          }));
           error.code = e.code;
           return $q.reject(error);
         }
