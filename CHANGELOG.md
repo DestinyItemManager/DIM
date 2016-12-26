@@ -1,4 +1,4 @@
-# Next
+# 3.15.0
 
 * Permit the same damage type of subclass in loadouts (#1067)
 * Update record books to properly display time instead of a large number. (#1051)

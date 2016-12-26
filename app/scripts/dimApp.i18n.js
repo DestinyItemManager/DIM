@@ -5,6 +5,7 @@
   angular.module('dimApp')
     .config(['$translateProvider', function($translateProvider) {
       $translateProvider.useSanitizeValueStrategy('escape');
+      $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
       $translateProvider
         .translations('en', {
@@ -132,10 +133,11 @@
             Classified: "This item is classified and cannot be transferred at this time.",
             Classified2: "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
             Deequip: "Cannot find another item to equip in order to dequip {{itemname}}",
-            ExoticError: "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped.",
+            ExoticError: "'{{itemname}}' cannot be equipped because the exotic in the {{slot}} slot cannot be unequipped. ({{error}})",
             NotEnoughRoom: "There's nothing we can move out of {{store}} to make room for {{itemname}}",
             OnlyEquippedLevel: "This can only be equipped on characters at or above level {{level}}.",
             OnlyEquippedClassLevel: "This can only be equipped on a {{class}} at or above level {{level}}.",
+            PercentComplete: "({{ percent | percent }} Complete)",
             TooMuch: "Looks like you requested to move more of this item than exists in the source!",
             TwoExotics: "We don't know how you got more than 2 equipped exotics!",
           },
@@ -212,8 +214,7 @@
             TooManyRequested: "You have {{total}} {{itemname}} but your loadout asks for {{requested}} We transfered all you had.",
             DoesNotExist: "{{itemname}} doesn't exist in your account.",
             AppliedAuto: "Automatic Loadout Builder",
-            Applied: "Your loadout of {{amount}} items have been transferred to your {{store}}.",
-            Applied1Item: "Your single item loadout has been transferred to your {{store}}.",
+            Applied: "Your {amount, plural, =1{single item loadout has} other{loadout of # items have}} been transferred to your {store}.",
             AppliedError: "None of the items in your loadout could be transferred.",
             AppliedWarn: "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors."
           },
@@ -305,6 +306,7 @@
             All: "All",
             Available: "Available on",
             Compare: "Compare with what you already have",
+            Day: "{numDays, plural, =1{Day} other{Days}}",
             Load: "Loading Vendors",
             ArmorAndWeapons: "Armor & Weapons",
             ShipsAndVehicles: "Ships & Vehicles",
@@ -368,6 +370,15 @@
             Dump: "Svuota informazioni nella console",
             View: "Visualizza Item Debug Info"
           },
+          DidYouKnow: {
+            DidYouKnow: "Lo sapevi?",
+            Collapse: "Hai appena chiuso una sezione in DIM! Questo può essere utile per nascondere parti di DIM che non utilizzi solitamente.",
+            DontShowAgain: "Non mostrare questo consiglio nuovamente",
+            DoubleClick: "Se stai spostando un oggetto al personaggio attualmente attivo (ultimo utilizzato), puoi semplicemente fare doppio click su quell'oggetto per equipaggiarlo immediatamente.",
+            DragAndDrop: "Gli oggetti possono essere trascinati e rilasciati tra le colonne dei personaggi e del deposito.",
+            Expand: "Per riaprire una sezione, clicca sul 'più' sulla parte sinistra della categoria che hai chiuso.",
+            TryNext: "Provaci la prossima volta!"
+          },
           FarmingMode: {
             FarmingMode: "Modalità Farming (sposta oggetti)",
             Desc: "DIM sposta Engrammi e consumabili per Lumen da {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
@@ -381,8 +392,13 @@
               MakeRoom: "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
               Tooltip: "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
             },
+            OutOfRoom: "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
             Quickmove: "Spostamento Rapido",
             Stop: "Stop"
+          },
+          Filter: {
+            EnterName: "Inserisci il nome di un oggetto:",
+            EnterNote: "Inserisci delle note:"
           },
           Header: {
             About: "Chi siamo",
@@ -394,7 +410,12 @@
           },
           Help: {
             BackToDIM: "Torna a DIM",
-            Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità"
+            CannotMove: "Non posso spostare quell'oggetto da questo personaggio.",
+            Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità",
+            ChangingPerks: "Selezione dei Perk non supportata",
+            ChangingPerksInfo: "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
+            NeverShow: "Non mostrarmi più questo messaggio.",
+            Xur: "Xûr è arrivato"
           },
           Hotkey: {
             StartSearch: "Inizia una ricerca",
@@ -402,6 +423,37 @@
             ToggleDetails: "Bottone per mostrare o meno tutti i dettagli dell'oggetto",
             MarkItemAs: "Contrassegna oggetto come '{{tag}}'",
             ClearNewItems: "Pulisci nuovi oggetti"
+          },
+          Infusion: {
+            Infusion: "Finder di Oggetti per Infusione",
+            BringGear: "Porterà l'oggetto a:",
+            Calc: "Calcolatrice per Infusione",
+            InfuseItems: "Seleziona oggetto da infondere con:",
+            LockedItems: "Include oggetti 'bloccati'",
+            NoItems: "Non è disponibile nessun oggetto per l'infusione.",
+            NoTransfer: "Trasferimento maperiale per infusione\n {{target}} non può essere spostato.",
+            ShowItems: "Mostra gli oggetti infondibili di tutti i personaggi e del deposito",
+            TransferItems: "Trasferisci oggetti",
+            Using3: "usa 3"
+          },
+          ItemMove: {
+            Consolidate: "{{name}} consolidati",
+            Distributed: "{{name}} distribuiti\n {{name}} sono ora suddivisi in modo equo tra i personaggi.",
+            ToVault: "Tutti i {{name}} sono ora nel deposito.",
+            ToStore: "Tutti i {{name}} sono ora sul tuo {{store}}."
+          },
+          ItemService: {
+            BucketFull: "Ci sono troppe '{{itemtype}}' nel {{bucket}}.",
+            Classified: "Questo oggetto è classificato e non può essere trasferito attualemente.",
+            Classified2: "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
+            Deequip: "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
+            ExoticError: "'{{itemname}}' non può essere equipaggiato, poichè l'esotico nello slot {{slot}} non può essere rimosso. ({{error}})",
+            NotEnoughRoom: "Non c'è nulla che possiamo spostare dal {{store}} per fare spazio per {{itemname}}",
+            OnlyEquippedLevel: "Questo oggetto può essere equipaggiato solamente su personaggi al livello {{level}} o superiore.",
+            OnlyEquippedClassLevel: "Questo oggetto può essere equipaggaito solo su un {{class}} al livello {{level}} o superiore.",
+            PercentComplete: "({{ percent | percent }} Completato)",
+            TooMuch: "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
+            TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
           },
           LB: {
             LB: "Costruttore di Loadout",
@@ -458,15 +510,25 @@
             GatherEngramsExceptExotics: "Esotici",
             RestoreAllItems: "Tutti gli Elementi",
             Random: "Casuale",
+            Randomize: "Vuoi selezionare casualmente armi, armature, spettro e artefatto?",
+            VendorsCannotEquip: "Questi oggetti dei venditori non possono essere equipaggiati",
+            VendorsCanEquip: "Questi oggetti possono essere equipaggiati",
+            MaxSlots: "Puoi avere solo {{slots}} tipi di quell'oggetto in un loadout.",
+            OnlyItems: "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere a un loadout.",
+            FilteredItems: "Oggetti Filtrati",
+            NoEngrams: "Non ci sono engrammi non-esotici da trasferire.",
+            NoExotics: "Non ci sono engrammi da trasferire.",
             LoadoutName: "Nome Loadout...",
             Save: "Salva",
             SaveAsNew: "Salva come nuovo",
             Cancel: "Cancella",
             ItemsWithIcon: "Gli oggetti con questa icona verranno equipaggiati.",
             ClickToEquip: "Clicca su un oggetto per scegliere se equipaggiarli o meno.",
+            CouldNotEquip: "Impossibile equipaggiare {{itemname}}",
+            TooManyRequested: "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
+            DoesNotExist: "{{itemname}} non esiste sul tuo account.",
             AppliedAuto: "Costruttore Automatico di Loadout",
-            Applied: "Il tuo loadout di {{amount}} oggetti è stato trasferito al tuo {{store}}.",
-            AppliedItem: "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
+            Applied: "Il tuo loadout di {amount, plural, =1{un} other{#}} oggetti è stato trasferito al tuo {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito."
           },
@@ -494,6 +556,10 @@
           Notes: {
             Error: "Errore! Massimo 120 caratteri per nota.",
             Help: "Aggiungere note a questo oggetto"
+          },
+          Postmaster: {
+            Limit: "Limite Amministratore",
+            Desc: "Sul tuo {{store}} ci sono 20 oggetti persi dall'amministratore. Qualsiasi nuovo oggetto sovrascriverà uno degli esistenti."
           },
           Settings: {
             Settings: "Impostazioni",
@@ -552,6 +618,9 @@
           Vendors: {
             Vendors: "Mercanti",
             All: "Tutto",
+            Available: "Disponibile da",
+            Compare: "Confronta con quello che hai già",
+            Day: "{numDays, plural, =1{Giorno} other{Giorni}}",
             Load: "Caricamento Mercanti",
             ArmorAndWeapons: "Equipaggiamento & Armi",
             ShipsAndVehicles: "Navi & Veicoli",
@@ -661,6 +730,9 @@
             TransferItems: "Übertrage Items",
             Using3: "verwendet 3"
           },
+          ItemService: {
+            PercentComplete: "({{ percent | percent }} Komplett)"
+          },
           LB: {
             LB: "Loadout Builder",
             ShowGear: "Zeige {{class}} Ausrüstung",
@@ -723,8 +795,7 @@
             ItemsWithIcon: "Gegenstände mit diesem Symbol werden angelegt.",
             ClickToEquip: "Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren.",
             AppliedAuto: "Automatischer Loadout Builder",
-            Applied: "Dein Loadout aus {{amount}} Gegenständen wurde zum {{store}} übertragen.",
-            Applied1Item: "Dein Ein-Item Loadout wurde zum {{store}} übertragen.",
+            Applied: "Dein {amount, plural, =1{Ein-Item Loadout} other{Loadout aus # Gegenständen} wurde zum {store} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
             AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {{failed}} von {{total}} Gegenständen waren fehlerhaft."
           },
@@ -810,6 +881,7 @@
           Vendors: {
             Vendors: "Händler",
             All: "Alle",
+            Day: "{numDays, plural, =1{Tag} other{Tage}}",
             VendorsLoad: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
@@ -888,6 +960,9 @@
             BackToDIM: "Retour sur DIM",
             Drag: "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
           },
+          ItemSevice: {
+            PercentComplete: "({{ percent | percent }} Achevée)"
+          },
           LB: {
             LB: "Constructeur de Loadout",
             ShowGear: "Afficher équipement de {{class}}",
@@ -950,7 +1025,7 @@
             ItemsWithIcon: "Les objets avec cet icone seront équipés.",
             ClickToEquip: "Cliquez sur un bouton d'objet pour l'équiper.",
             AppliedAuto: "Constructeur de Loadout automatique",
-            Applied: "Votre loadout de {{amount}} objets a été transféré à votre {{store}}",
+            Applied: "Votre loadout de {amount} objets a été transféré à votre {store}",
             AppliedError: "Aucun des objets de votre loadout n'a pu être transféré.",
             AppliedWarn: "Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} objets ont échoué."
           },
@@ -1024,6 +1099,7 @@
           Vendors: {
             Vendors: "Marchands",
             All: "Tous",
+            Day: "{numDays, plural, =1{Journée} other{Journées}}",
             Load: "Chargement des Marchands",
             ArmorAndWeapons: "Armure & Armes",
             ShipsAndVehicles: "Vaisseaux & Véhicules",
@@ -1120,6 +1196,9 @@
             MarkItemAs: "Marcar objeto como '{{tag}}'",
             ClearNewItems: "Despejar objetos nuevos"
           },
+          ItemService: {
+            PercentComplete: "({{ percent | percent}} Completar)"
+          },
           LB: {
             LB: "Creador de equipo",
             ShowGear: "Mostrar equipo de {{class}}",
@@ -1182,8 +1261,7 @@
             ItemsWithIcon: "Objetos con éste ícono van a ser equipados.",
             ClickToEquip: "Click en un objeto para equipar.",
             AppliedAuto: "Crear automático de equipo",
-            Applied: "Tu equipo de {{amount}} objetos han sido transferidos a tu {{store}}.",
-            Applied1Item: "Tu equipo de un objeto ha sido transferido a tu {{store}}.",
+            Applied: "Tu equipo de {amount, plural, =1{un objeto ha sido transferido} other{# objetos han sido transferidos}} a tu {store}.",
             AppliedError: "Ninguno de los objetos en tu equipo pudo ser transferido.",
             AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {{failed}} de {{total}} objetos tuvieron errores."
           },
@@ -1266,6 +1344,7 @@
           Vendors: {
             Vendors: "Comerciantes",
             All: "Todo",
+            Day: "{numDays, plural, =1{Día} other{Días}}",
             Load: "Cargando comerciantes",
             ArmorAndWeapons: "Armadura y armas",
             ShipsAndVehicles: "Naves y vehículos",
@@ -1297,6 +1376,9 @@
           Header: {
             About: "紹介",
             SupportDIM: "サポート DIM"
+          },
+          ItemService: {
+            PercentComplete: "({{ percent | percent }} コンプリート)"
           },
           Loadouts: {
             Create: "作る Loadout",
@@ -1330,7 +1412,9 @@
             Infuse: "煎じる"
           },
           Vendors: {
-            Vendors: "ベンダー" }
+            Vendors: "ベンダー",
+            Day: "{numDays, plural, =1{日} other{日々}}",
+          }
         })
         .translations('pt-br', {
           Level: "Nível",
@@ -1414,6 +1498,9 @@
             MarkItemAs: "Marcar item como '{{tag}}'",
             ClearNewItems: "Limpar novos itens"
           },
+          ItemService: {
+            PercentComplete: "({{ percent | percent }} Completo)"
+          },
           LB: {
             LB: "Construtor de Loadouts",
             ShowGear: "Exibir itens de {{class}}",
@@ -1476,7 +1563,7 @@
             ItemsWithIcon: "Itens com este ícone serão equipados.",
             ClickToEquip: "Clicar em um item alterna a equipagem.",
             AppliedAuto: "Construtor automático de sets",
-            Applied: "Seu set de {{amount}} itens foi transferido para seu {{store}}.",
+            Applied: "Seu set de {amount} itens foi transferido para seu {store}.",
             AppliedError: "Nenhum dos itens do seu set pode ser transferido.",
             AppliedWarn: "Seu set foi parcialmente transferido, mas {{failed}} de {{total}} itens retornaram erros."
           },
@@ -1559,6 +1646,7 @@
           Vendors: {
             Vendors: "Vendedores",
             All: "Todos",
+            Day: "{numDays, plural, =1{Dia} other{Dias}}",
             Load: "Carregando vendedores",
             ArmorAndWeapons: "Armaduras & Armas",
             ShipsAndVehicles: "Naves & Veículos",

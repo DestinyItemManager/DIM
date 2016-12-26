@@ -32,12 +32,12 @@ Install dependencies:
 
 Generate CSS
 * `npm run generate-css`
-* `npm run dev-chrome` or `npm run dev-firefox` (This will watch the scss files for any changes and generate a new style.css)
+* `npm run dev-chrome` (This will watch the scss files for any changes and generate a new style.css)
 
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder, or by installing [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) and [loading the extension from disk](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Packaging_and_Installation#Loading_from_disk).
+You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
 
 Get your own API key:
 
