@@ -340,6 +340,48 @@
             }
          }
       },
+      "246897088":{
+        "bucketHash":"375726501",
+        "tierType":6,
+        "icon":"/img/misc/thorn_bounty.png",
+        "i18n":{
+          "en":{
+            "itemName":"Jagged Purpose",
+            "itemDescription":"A jagged and angry shard. It seeths with a festering sickness. Faint, yet deadly. Eris may have interest in such a vile thing.",
+            "itemTypeName":"Curio"
+          },
+          "de":{
+            "itemName":"Zerklüftete Bestimmung",
+            "itemDescription":"Ein gekerbtes und wütendes Bruchstück. Es kocht voller schwarender Krankheit. Schwach, doch todlich. Eris hatte vielleicht Interesse an so eniem abscheulichen Ding.",
+            "itemTypeName":"Kuriosität"
+          },
+          "fr":{
+            "itemName":"Finalité Tranchante",
+            "itemDescription":"Un éclat tranchant et furieux. Il bouillonne d'un mal virulent. Faible, presque mortel. Eris puorrait être intéressée par une telle abomination.",
+            "itemTypeName":"Curiosité"
+          },
+          "es":{
+            "itemName":"Áspero Propósito",
+            "itemDescription":"Un fragmento áspero y furioso. Supura enfermedad. Débil, pero mortal. Eris podría estar interesada en esta cosa vil.",
+            "itemTypeName":"Curiosidad"
+          },
+          "it":{
+            "itemName":"Apparenza Acuminata",
+            "itemDescription":"Un frammento acuminato che ribolle di un male putrido, fievole, ma letale. Eris potrebbe essere interessata in un oggetto così disgustoso.",
+            "itemTypeName":"Curiosità"
+          },
+          "ja":{
+            "itemName":"Jagged Purpose",
+            "itemDescription":"A jagged and angry shard. It seeths with a festering sickness. Faint, yet deadly. Eris may have interest in such a vile thing.",
+            "itemTypeName":"Curio"
+          },
+          "pt-br":{
+            "itemName":"Propósito Espinhoso",
+            "itemDescription":"Um fragmento espinhoso e irritado. Ele ferve com uma moléstia pútrida. Fraca, mas mortal. A Eris pode estar interessada em coisas tão perversas.",
+            "itemTypeName":"Raridade"
+          }
+        }
+      },
       "246897089":{
          "bucketHash":"375726501",
          "tierType":6,
