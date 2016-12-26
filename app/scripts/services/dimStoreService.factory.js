@@ -752,6 +752,7 @@
           itemDef.itemDescription = "You've recreated the fall of the Concordat, and something answered.";
           itemDef.itemTypeName = "Vehicle";
           itemDef.tierType = 5;
+          item.primaryStat = [];
           item.primaryStat.statHash = 1501155019;
           item.primaryStat.value = 160;
           normalBucket = buckets.byHash[2025709351];
