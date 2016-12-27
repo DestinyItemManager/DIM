@@ -424,6 +424,90 @@
             }
          }
       },
+      "103584948":{
+        "bucketHash":"1469714392",
+        "tierType":0,
+        "icon":"/img/misc/paper_fortunes.png",
+        "i18n":{
+          "en":{
+            "itemName":"Paper Fortune",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Consumable"
+          },
+          "de":{
+            "itemName":"Schicksalszettel",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Verbrauchsgegenstand"
+          },
+          "fr":{
+            "itemName":"Note Prémonitoire",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Objet à usage unique"
+          },
+          "es":{
+            "itemName":"Papelito de la Suerte",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Consumible"
+          },
+          "it":{
+            "itemName":"Bigliettino della Fortuna",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Bene di consumo"
+          },
+          "ja":{
+            "itemName":"Paper Fortune",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Consumable"
+          },
+          "pt-br":{
+            "itemName":"Sorte em Papel",
+            "itemDescription":"You are not alone. The Tower stands with you. The City stands behind you, cautiously.",
+            itemTypeName:"Consumível"
+          }
+        }
+      },
+      "103584958":{
+        "bucketHash":"1469714392",
+        "tierType":0,
+        "icon":"/img/misc/paper_fortunes.png",
+        "i18n":{
+          "en":{
+            "itemName":"Paper Fortune",
+            "itemDescription":"Compassion burns brighter than the greatest Light.",
+            itemTypeName:"Consumable"
+          },
+          "de":{
+            "itemName":"Schicksalszettel",
+            "itemDescription":"Mitgefühl scheint heller als das hellste Licht.",
+            itemTypeName:"Verbrauchsgegenstand"
+          },
+          "fr":{
+            "itemName":"Note Prémonitoire",
+            "itemDescription":"La compassion éclaire encore plus que la plus puissante des Lumières.",
+            itemTypeName:"Objet à usage unique"
+          },
+          "es":{
+            "itemName":"Papelito de la Suerte",
+            "itemDescription":"La compassion ilumina más que la Luz.",
+            itemTypeName:"Consumible"
+          },
+          "it":{
+            "itemName":"Bigliettino della Fortuna",
+            "itemDescription":"La compassione arde più della Luce.",
+            itemTypeName:"Bene di consumo"
+          },
+          "ja":{
+            "itemName":"Paper Fortune",
+            "itemDescription":"Compassion burns brighter than the greatest Light.",
+            itemTypeName:"Consumable"
+          },
+          "pt-br":{
+            "itemName":"Sorte em Papel",
+            "itemDescription":"A compaixão brilha mais forte do que a maior Luz.",
+            itemTypeName:"Consumível"
+          }
+        }
+      },
       "4083935122":{
          "bucketHash":"2025709351",
          "tierType":5,
