@@ -757,6 +757,20 @@
           item.primaryStat.value = 160;
           normalBucket = buckets.byHash[2025709351];
           break;
+        case 103584948:
+          itemDef.itemName = "Paper Fortune";
+          itemDef.itemDescription = "You are not alone. The Tower stands with you. The City stands behind you, cautiously.";
+          itemDef.itemTypeName = "Consumable";
+          itemDef.tierType = 0;
+          normalBucket = buckets.byHash[1469714392];
+          break;
+        case 103584958:
+          itemDef.itemName = "Paper Fortune";
+          itemDef.itemDescription = "Compassion burns brighter than the greatest Light.";
+          itemDef.itemTypeName = "Consumable";
+          itemDef.tierType = 0;
+          normalBucket = buckets.byHash[1469714392];
+          break;
         }
       }
 
