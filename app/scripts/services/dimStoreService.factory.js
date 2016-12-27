@@ -19,7 +19,8 @@
     'dimManifestService',
     '$translate',
     'uuid2',
-    'dimFeatureFlags'
+    'dimFeatureFlags',
+    'dimSettingsService'
   ];
 
   function StoreService(
@@ -37,12 +38,15 @@
     dimManifestService,
     $translate,
     uuid2,
-    dimFeatureFlags
+    dimFeatureFlags,
+    dimSettingsService
   ) {
     var _stores = [];
     var _idTracker = {};
 
     var _removedNewItems = new Set();
+
+    const language = dimSettingsService.language;
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -671,106 +675,10 @@
       var normalBucket = buckets.byHash[itemDef.bucketTypeHash];
 
       if (itemDef.classified) {
-        switch (itemDef.hash) {
-        case 1458765388:
-          itemDef.itemName = "Piece of Celery";
-          itemDef.itemDescription = "It's slightly wilted.";
-          itemDef.itemTypeName = "Sweets";
-          normalBucket = buckets.byHash[1469714392];
-          break;
-        case 320629370:
-          itemDef.itemName = "Tiny Box of Raisins";
-          itemDef.itemDescription = "What? Why...?";
-          itemDef.itemTypeName = "Sweets";
-          normalBucket = buckets.byHash[1469714392];
-          break;
-        case 640697284: // warlock siva engine (Charged)
-          itemDef.itemName = "SIVA Engine Replica (Charged)";
-          itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
-          itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = 5;
-          normalBucket = buckets.byHash[375726501];
-          itemDef.classType = 2;
-          break;
-        case 2621635855: // warlock siva engine (Unstable)
-          itemDef.itemName = "SIVA Engine Replica (Unstable)";
-          itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
-          itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = 5;
-          normalBucket = buckets.byHash[375726501];
-          itemDef.classType = 2;
-          break;
-        case 1518021613: // hunter siva engine (Charged)
-          itemDef.itemName = "SIVA Engine Replica (Charged)";
-          itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
-          itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = 5;
-          normalBucket = buckets.byHash[375726501];
-          itemDef.classType = 1;
-          break;
-        case 4088336240: // hunter siva engine (Unstable)
-          itemDef.itemName = "SIVA Engine Replica (Unstable)";
-          itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
-          itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = 5;
-          normalBucket = buckets.byHash[375726501];
-          itemDef.classType = 1;
-          break;
-        case 2196813905: // titan sive engine (Charged)
-          itemDef.itemName = "SIVA Engine Replica (Charged)";
-          itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
-          itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = 5;
-          normalBucket = buckets.byHash[375726501];
-          itemDef.classType = 0;
-          break;
-        case 562302206: // titan siva engine (Unstable)
-          itemDef.itemName = "SIVA Engine Replica (Unstable)";
-          itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
-          itemDef.itemTypeName = "SIVA Engine";
-          itemDef.tierType = 5;
-          normalBucket = buckets.byHash[375726501];
-          itemDef.classType = 0;
-          break;
-        case 246897088:
-          itemDef.itemName = "Jagged Purpose";
-          itemDef.itemDescription = "A jagged and angry shard. It seeths with a festering sickness. Faint, yet deadly. Eris may have interest in such a vile thing.";
-          itemDef.itemTypeName = "Curio";
-          itemDef.tierType = 6;
-          normalBucket = buckets.byHash[375726501];
-          break;
-        case 246897089:
-          itemDef.itemName = "Depleted Hand Cannon";
-          itemDef.itemDescription = "You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.";
-          itemDef.itemTypeName = "Curio";
-          itemDef.tierType = 6;
-          normalBucket = buckets.byHash[375726501];
-          break;
-          // 'The Dawning' Classified Items
-        case 4083935122:
-          itemDef.itemName = "Lysander's Cry";
-          itemDef.itemDescription = "You've recreated the fall of the Concordat, and something answered.";
-          itemDef.itemTypeName = "Vehicle";
-          itemDef.tierType = 5;
-          item.primaryStat = [];
-          item.primaryStat.statHash = 1501155019;
-          item.primaryStat.value = 160;
-          normalBucket = buckets.byHash[2025709351];
-          break;
-        case 103584948:
-          itemDef.itemName = "Paper Fortune";
-          itemDef.itemDescription = "You are not alone. The Tower stands with you. The City stands behind you, cautiously.";
-          itemDef.itemTypeName = "Consumable";
-          itemDef.tierType = 0;
-          normalBucket = buckets.byHash[1469714392];
-          break;
-        case 103584958:
-          itemDef.itemName = "Paper Fortune";
-          itemDef.itemDescription = "Compassion burns brighter than the greatest Light.";
-          itemDef.itemTypeName = "Consumable";
-          itemDef.tierType = 0;
-          normalBucket = buckets.byHash[1469714392];
-          break;
+        declassify(itemDef, buckets, language);
+        normalBucket = itemDef.bucket;
+        if (itemDef.primaryStat) {
+          item.primaryStat = itemDef.primaryStat;
         }
       }
 
@@ -1699,5 +1607,366 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
+
+    // code below is hand-maintained for declassification purposes
+    function declassify(itemDef, buckets, language) {
+      switch (itemDef.hash) {
+      case 1458765388:
+        // itemDef.icon = "/img/misc/celery.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "Piece of Celery";
+          itemDef.itemDescription = "It's slightly wilted.";
+          itemDef.itemTypeName = "Sweets";
+          break;
+        case 'de':
+          itemDef.itemName = "Stück Sellerie";
+          itemDef.itemDescription = "Es ist leicht verwelkt.";
+          itemDef.itemTypeName = "Süßigkeiten";
+          break;
+        case 'fr':
+          itemDef.itemName = "Branche de Céleri";
+          itemDef.itemDescription = "Elle est flétrie";
+          itemDef.itemTypeName = "Bonbons";
+          break;
+        case 'es':
+          itemDef.itemName = "Tronco de Apio";
+          itemDef.itemDescription = "Se ha marchitado un poco.";
+          itemDef.itemTypeName = "Golosinas";
+          break;
+        case 'it':
+          itemDef.itemName = "Gambo di Sedano";
+          itemDef.itemDescription = "É un po' appassito";
+          itemDef.itemTypeName = "Dolci";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "Talo de Salsão";
+          itemDef.itemDescription = "Está um pouco murcho";
+          itemDef.itemTypeName = "Doces";
+          break;
+        }
+        itemDef.bucket = buckets.byHash[1469714392];
+        break;
+      case 320629370:
+        // itemDef.icon = "/img/misc/box_of_raisins.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "Tiny Box of Raisins";
+          itemDef.itemDescription = "What? Why...?";
+          itemDef.itemTypeName = "Sweets";
+          break;
+        case 'de':
+          itemDef.itemName = "Klitzekleine Schachtel mit Rosinen";
+          itemDef.itemDescription = "Was? Warum...?";
+          itemDef.itemTypeName = "Süßigkeiten";
+          break;
+        case 'fr':
+          itemDef.itemName = "Petite Boîte de Raisins secs";
+          itemDef.itemDescription = "Quoi? Mais... pourquoi?";
+          itemDef.itemTypeName = "Bonbons";
+          break;
+        case 'es':
+          itemDef.itemName = "Diminuta Caja de Pasas";
+          itemDef.itemDescription = "¿Qué? ¿Por qué...?";
+          itemDef.itemTypeName = "Golosinas";
+          break;
+        case 'it':
+          itemDef.itemName = "Scatolina di Uvetta";
+          itemDef.itemDescription = "Cosa? Perché...?";
+          itemDef.itemTypeName = "Dolci";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "Caixinha de Passas";
+          itemDef.itemDescription = "O qué? Por qué...?";
+          itemDef.itemTypeName = "Doces";
+          break;
+        }
+        itemDef.bucket = buckets.byHash[1469714392];
+        break;
+      case 2196813905: // titan sive engine (Charged) type = 0
+      case 1518021613: // hunter siva engine (Charged) type = 1
+      case 640697284: // warlock siva engine (Charged) type = 2
+        // itemDef.icon = "/img/misc/siva_engine.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "SIVA Engine Replica (Charged)";
+          itemDef.itemDescription = "This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.";
+          itemDef.itemTypeName = "SIVA Engine";
+          break;
+        case 'de':
+          itemDef.itemName = "SIVA-Triebwerk-Replik (Aufgeladen)";
+          itemDef.itemDescription = "Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.";
+          itemDef.itemTypeName = "SIVA-Triebwerks";
+          break;
+        case 'fr':
+          itemDef.itemName = "Copie du générateur d'ARIA (Chargé)";
+          itemDef.itemDescription = "Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.";
+          itemDef.itemTypeName = "générateur d'ARIA";
+          break;
+        case 'es':
+          itemDef.itemName = "Réplica del Motor de SIVA (Cargada)";
+          itemDef.itemDescription = "Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.";
+          itemDef.itemTypeName = "Motor de SIVA";
+          break;
+        case 'it':
+          itemDef.itemName = "Copia del Motore della SIVA (Carcicata)";
+          itemDef.itemDescription = "Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.";
+          itemDef.itemTypeName = "Motore della SIVA";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "Réplica do Motor de SIVA (Carregado)";
+          itemDef.itemDescription = "A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.";
+          itemDef.itemTypeName = "Motor de SIVA";
+          break;
+        }
+        itemDef.tierType = 5;
+        itemDef.bucket = buckets.byHash[375726501];
+        switch (itemDef.hash) {
+        case 2196813905:
+          itemDef.classType = 0;
+          break;
+        case 1518021613:
+          itemDef.classType = 1;
+          break;
+        case 640697284:
+          itemDef.classType = 2;
+          break;
+        }
+        break;
+      case 562302206: // titan siva engine (Unstable) type = 0
+      case 4088336240: // hunter siva engine (Unstable) type = 1
+      case 2621635855: // warlock siva engine (Unstable) type = 2
+        // itemDef.icon = "/img/misc/siva_engine.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "SIVA Engine Replica (Unstable)";
+          itemDef.itemDescription = "This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.";
+          itemDef.itemTypeName = "SIVA Engine";
+          break;
+        case 'de':
+          itemDef.itemName = "SIVA-Triebwerk-Replik (Instabil)";
+          itemDef.itemDescription = "Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.";
+          itemDef.itemTypeName = "SIVA-Triebwerks";
+          break;
+        case 'fr':
+          itemDef.itemName = "Copie du générateur d'ARIA (Instable)";
+          itemDef.itemDescription = "Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.";
+          itemDef.itemTypeName = "générateur d'ARIA";
+          break;
+        case 'es':
+          itemDef.itemName = "Réplica del Motor de SIVA (Inestable)";
+          itemDef.itemDescription = "Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.";
+          itemDef.itemTypeName = "Motor de SIVA";
+          break;
+        case 'it':
+          itemDef.itemName = "Copia del Motore della SIVA (Instabile)";
+          itemDef.itemDescription = "Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.";
+          itemDef.itemTypeName = "Motore della SIVA";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "SIVA Engine Replica (Unstable)";
+          itemDef.itemDescription = "Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.";
+          itemDef.itemTypeName = "Motor de SIVA";
+          break;
+        }
+        itemDef.tierType = 5;
+        itemDef.bucket = buckets.byHash[375726501];
+        switch (itemDef.hash) {
+        case 562302206:
+          itemDef.classType = 0;
+          break;
+        case 4088336240:
+          itemDef.classType = 1;
+          break;
+        case 2621635855:
+          itemDef.classType = 2;
+          break;
+        }
+        break;
+      case 246897088:
+        // itemDef.icon = "/img/misc/thorn_bounty.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "Jagged Purpose";
+          itemDef.itemDescription = "A jagged and angry shard. It seeths with a festering sickness. Faint, yet deadly. Eris may have interest in such a vile thing.";
+          itemDef.itemTypeName = "Curio";
+          break;
+        case 'de':
+          itemDef.itemName = "Zerklüftete Bestimmung";
+          itemDef.itemDescription = "Ein gekerbtes und wütendes Bruchstück. Es kocht voller schwarender Krankheit. Schwach, doch todlich. Eris hatte vielleicht Interesse an so eniem abscheulichen Ding.";
+          itemDef.itemTypeName = "Kuriosität";
+          break;
+        case 'fr':
+          itemDef.itemName = "Finalité Tranchante";
+          itemDef.itemDescription = "Un éclat tranchant et furieux. Il bouillonne d'un mal virulent. Faible, presque mortel. Eris puorrait être intéressée par une telle abomination.";
+          itemDef.itemTypeName = "Curiosité";
+          break;
+        case 'es':
+          itemDef.itemName = "Áspero Propósito";
+          itemDef.itemDescription = "Un fragmento áspero y furioso. Supura enfermedad. Débil, pero mortal. Eris podría estar interesada en esta cosa vil.";
+          itemDef.itemTypeName = "Curiosidad";
+          break;
+        case 'it':
+          itemDef.itemName = "Apparenza Acuminata";
+          itemDef.itemDescription = "Un frammento acuminato che ribolle di un male putrido, fievole, ma letale. Eris potrebbe essere interessata in un oggetto così disgustoso.";
+          itemDef.itemTypeName = "Curiosità";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "Propósito Espinhoso";
+          itemDef.itemDescription = "Um fragmento espinhoso e irritado. Ele ferve com uma moléstia pútrida. Fraca, mas mortal. A Eris pode estar interessada em coisas tão perversas.";
+          itemDef.itemTypeName = "Raridade";
+          break;
+        }
+        itemDef.tierType = 6;
+        itemDef.bucket = buckets.byHash[375726501];
+        break;
+      case 246897089:
+        // itemDef.icon = "/img/misc/thorn_bounty.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "Depleted Hand Cannon";
+          itemDef.itemDescription = "You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.";
+          itemDef.itemTypeName = "Curio";
+          break;
+        case 'de':
+          itemDef.itemName = "Erschöpfte Handfeuerwaffe";
+          itemDef.itemDescription = "Die wurde eine gebrauchte Handfeuerwaffe und seitenlanges kryptisches Gekritzel über eine der Waffen des Leids überreicht.";
+          itemDef.itemTypeName = "Kuriosität";
+          break;
+        case 'fr':
+          itemDef.itemName = "Revolver Appauvri";
+          itemDef.itemDescription = "Vous avez reçu un revolver usé et des pages couvertes d'écrits énigmatiques concernant une des Armes du malheur.";
+          itemDef.itemTypeName = "Curiosité";
+          break;
+        case 'es':
+          itemDef.itemName = "Cañón de Mano Agotado";
+          itemDef.itemDescription = "Te han dado un cañón de mano usado y varias páginas crípticas sobres una de las Armas del Dolor.";
+          itemDef.itemTypeName = "Curiosidad";
+          break;
+        case 'it':
+          itemDef.itemName = "Cannone poratile Esaurito";
+          itemDef.itemDescription = "Hai ricevuto un cannone portatile logoro e delle pagine dalle scritture enigmatiche riguardo una delle Armi del Dolore.";
+          itemDef.itemTypeName = "Curiosità";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "Canhão de Mão Descarregado";
+          itemDef.itemDescription = "Você recebeu um canhão de mão usado e páginas de uma escrita críptica pertencente a uma das Armas do Desalento.";
+          itemDef.itemTypeName = "Raridade";
+          break;
+        }
+        itemDef.tierType = 6;
+        itemDef.bucket = buckets.byHash[375726501];
+        break;
+        // 'The Dawning' Classified Items
+      case 4083935122:
+        // itemDef.icon = "/img/misc/lysanders_cry.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "Lysander's Cry";
+          itemDef.itemDescription = "You've recreated the fall of the Concordat, and something answered.";
+          itemDef.itemTypeName = "Vehicle";
+          break;
+        case "de":
+          itemDef.itemName = "Lysanders Ruf";
+          itemDef.itemDescription = "Du hast den Fall des Konkordats nachgestelt und eine Antwort erhalten.";
+          itemDef.itemTypeName = "Transportmittel";
+          break;
+        case "fr":
+          itemDef.itemName = "Cri de Lysandre";
+          itemDef.itemDescription = "Vous avez recrée la chute du Concordat et quelque chose est apparu.";
+          itemDef.itemTypeName = "Véhicule";
+          break;
+        case "es":
+          itemDef.itemName = "Grito de Lysander";
+          itemDef.itemDescription = "Has  recreado la caída del Concordato, y algo te ha respondido.";
+          itemDef.itemTypeName = "Vehículo";
+          break;
+        case "it":
+          itemDef.itemName = "Grido di Lysander";
+          itemDef.itemDescription = "Da quando avete inscenato la caduta del Concordato, qualcose si è destato.";
+          itemDef.itemTypeName = "Veicolo";
+          break;
+        case "pt-br":
+          itemDef.itemName = "Choro de Lysander";
+          itemDef.itemDescription = "Você ercriou a queda da Concordata, e alguma coisa respondeu.";
+          itemDef.itemTypeName = "Veículo";
+          break;
+        }
+        itemDef.tierType = 5;
+        itemDef.primaryStat = [];
+        itemDef.primaryStat.statHash = 1501155019;
+        itemDef.primaryStat.value = 160;
+        itemDef.bucket = buckets.byHash[2025709351];
+        break;
+      case 103584948:
+      case 103584958:
+        // itemDef.icon = "/img/misc/paper_fortunes.png";
+        switch (language) {
+        case 'ja':
+        case 'en':
+          itemDef.itemName = "Paper Fortune";
+          itemDef.itemTypeName = "Consumable";
+          break;
+        case 'de':
+          itemDef.itemName = "Schicksalszettel";
+          itemDef.itemTypeName = "Verbrauchsgegenstand";
+          break;
+        case 'fr':
+          itemDef.itemName = "Note Prémonitoire";
+          itemDef.itemTypeName = "Objet à usage unique";
+          break;
+        case 'es':
+          itemDef.itemName = "Papelito de la Suerte";
+          itemDef.itemTypeName = "Consumible";
+          break;
+        case 'it':
+          itemDef.itemName = "Bigliettino della Fortuna";
+          itemDef.itemTypeName = "Bene di consumo";
+          break;
+        case 'pt-br':
+          itemDef.itemName = "Sorte em Papel";
+          itemDef.itemTypeName = "Consumível";
+          break;
+        }
+        itemDef.tierType = 0;
+        itemDef.bucket = buckets.byHash[1469714392];
+        switch (itemDef.hash) {
+        case 103584948:
+          itemDef.itemDescription = "You are not alone. The Tower stands with you. The City stands behind you, cautiously.";
+          break;
+        case 103584958:
+          switch (language) {
+          case 'ja':
+          case 'en':
+            itemDef.itemDescription = "Compassion burns brighter than the greatest Light.";
+            break;
+          case 'de':
+            itemDef.itemDescription = "Mitgefühl scheint heller als das hellste Licht.";
+            break;
+          case 'fr':
+            itemDef.itemDescription = "La compassion éclaire encore plus que la plus puissante des Lumières.";
+            break;
+          case 'es':
+            itemDef.itemDescription = "La compassion ilumina más que la Luz.";
+            break;
+          case 'it':
+            itemDef.itemDescription = "La compassione arde più della Luce.";
+            break;
+          case 'pt-br':
+            itemDef.itemDescription = "A compaixão brilha mais forte do que a maior Luz.";
+            break;
+          }
+          break;
+        }
+        break;
+      }
+    }
   }
 })();
