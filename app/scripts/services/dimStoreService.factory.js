@@ -7,6 +7,8 @@
   StoreService.$inject = [
     '$rootScope',
     '$q',
+    '$http',
+    '$translate',
     'dimBungieService',
     'dimPlatformService',
     'dimCategory',
@@ -17,14 +19,16 @@
     'SyncService',
     'loadingTracker',
     'dimManifestService',
-    '$translate',
     'uuid2',
-    'dimFeatureFlags'
+    'dimFeatureFlags',
+    'dimSettingsService'
   ];
 
   function StoreService(
     $rootScope,
     $q,
+    $http,
+    $translate,
     dimBungieService,
     dimPlatformService,
     dimCategory,
@@ -35,14 +39,16 @@
     SyncService,
     loadingTracker,
     dimManifestService,
-    $translate,
     uuid2,
-    dimFeatureFlags
+    dimFeatureFlags,
+    dimSettingsService
   ) {
     var _stores = [];
     var _idTracker = {};
 
     var _removedNewItems = new Set();
+
+    const classifiedData = getClassifiedData();
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -463,7 +469,7 @@
                 icon: 'https://www.bungie.net/' + character.emblemPath,
                 current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
-                background: 'https://bungie.net/' + character.backgroundPath,
+                background: 'https://www.bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
                 stats: getCharacterStatsData(defs.Stat, character.characterBase),
@@ -646,6 +652,14 @@
         return null;
       }
 
+      if (itemDef.classified) {
+        itemDef.classType = 3;
+        declassify(itemDef, dimSettingsService.language, classifiedData);
+        if (itemDef.primaryStat) {
+          item.primaryStat = itemDef.primaryStat;
+        }
+      }
+
       // fix itemDef for defense items with missing nodes
       if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
         var defaultMinMax = _.find(itemDef.stats, function(stat) {
@@ -682,7 +696,7 @@
       if (currentBucket.id.startsWith('BUCKET_VAULT')) {
         // TODO: Remove this if Bungie ever returns bucket.id for classified
         // items in the vault.
-        if (itemDef.classified) {
+        if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
           if (currentBucket.id.endsWith('WEAPONS')) {
             currentBucket = buckets.byType.Heavy;
           } else if (currentBucket.id.endsWith('ARMOR')) {
@@ -1593,5 +1607,34 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
+
+    // code below is for declassifying items
+    function getClassifiedData() {
+      return $http.get('scripts/classified.json')
+        .then(function(json) {
+          return json.data.itemHash;
+        });
+    }
+
+    function declassify(itemDef, language, classifiedData) {
+      itemDef.itemName = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemName;
+      itemDef.itemDescription = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemDescription;
+      itemDef.itemTypeName = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemTypeName;
+      // itemDef.icon = classifiedData.$$state.value[itemDef.itemHash].icon;
+      itemDef.bucketTypeHash = classifiedData.$$state.value[itemDef.itemHash].bucketHash;
+      itemDef.tierType = classifiedData.$$state.value[itemDef.itemHash].tierType;
+      if (classifiedData.$$state.value[itemDef.itemHash].classType) {
+        itemDef.classType = classifiedData.$$state.value[itemDef.itemHash].classType;
+      }
+      if (classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash) {
+        itemDef.primaryStat = [];
+        itemDef.primaryStat.statHash = classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash;
+        itemDef.primaryStat.value = classifiedData.$$state.value[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+      }
+      if (classifiedData.$$state.value[itemDef.itemHash].stats) {
+        console.log(classifiedData.$$state.value[itemDef.itemHash].stats);
+        itemDef.stats = classifiedData.$$state.value[itemDef.itemHash].stats;
+      }
+    }
   }
 })();
