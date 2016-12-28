@@ -9,12 +9,7 @@
       totalCoins: '<',
       propertyFilter: '<'
     },
-    template: [
-      '<div class="vendor-currency" ng-repeat="currency in vm.currencies track by currency.itemHash">',
-      '  {{vm.totalCoins[currency.itemHash]}}',
-      '  <img ng-src="{{::currency.icon | bungieIcon}}" title="{{::currency.itemName}}"/>',
-      '</div>'
-    ].join('')
+    templateUrl: 'scripts/vendors/dimVendorCurrencies.directive.html'
   };
 
   angular.module('dimApp')

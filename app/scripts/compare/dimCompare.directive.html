@@ -1,0 +1,26 @@
+
+        <div id="loadout-drawer" ng-if="vm.show">
+          <p>
+            <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')" translate="{{ vm.compare.location.inWeapons ? 'Compare.Archetype' : 'Compare.Splits'}}" translate-values="{ quantity:  vm.archeTypes.length }"></label>
+            <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" translate="Compare.All" translate-values="{ type: vm.compare.typeName, quantity: vm.similarTypes.length}"></label>
+            <label class="dim-button" ng-click="vm.cancel()" translate>Compare.Close</label>
+          </p>
+          <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
+            <span class="compare-item fixed-left">
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by $index" ng-bind="::stat.name"></div>
+            </span>
+            <span ng-repeat="item in vm.comparisons track by item.index" class="compare-item">
+              <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
+              <div ng-bind="::item.name" class="item-name"></div>
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
+                <span ng-bind="::stat.value"></span>
+                <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
+              </div>
+              <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
+              <div class="close" ng-click="vm.remove(item);"></div>
+            </span>
+          </div>
+        </div>
+      

@@ -13,10 +13,7 @@
       bindToController: true,
       scope: {},
       restrict: 'A',
-      template: [
-        '<select id="system" ng-if="vm.platforms.length > 1" ng-options="platform.label for platform in vm.platforms" ng-model="vm.active" ng-change="vm.update()"></select>',
-        '<i ng-if="vm.active" class="fa fa-user"></i> <span id="user" class="header-right">{{ vm.active.id }}</span>'
-      ].join('')
+      templateUrl: 'scripts/shell/dimPlatformChoice.directive.html'
     };
   }
 

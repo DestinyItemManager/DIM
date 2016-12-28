@@ -129,9 +129,7 @@
       },
       bindToController: true,
       restrict: 'A',
-      template: [
-        '<input id="filter-input" class="dim-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
-      ].join('')
+      templateUrl: 'scripts/shell/dimSearchFilter.directive.html'
     };
   }
 

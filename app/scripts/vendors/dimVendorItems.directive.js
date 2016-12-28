@@ -7,18 +7,7 @@
       totalCoins: '<',
       itemClicked: '&'
     },
-    template: [
-      '<div class="vendor-item">',
-      '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
-      '  <dim-simple-item item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
-      '  <div class="vendor-costs">',
-      '    <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
-      '      {{::cost.value}}',
-      '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    templateUrl: 'scripts/vendors/dimVendorItems.directive.html'
   };
 
   var VendorItems = {
@@ -30,27 +19,7 @@
       totalCoins: '<',
       activeTab: '<'
     },
-    template: [
-      '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
-      '  <div class="title">',
-      '    <div class="collapse-handle" ng-click="vm.toggleSection(vendorHash)">',
-      '      <i class="fa collapse" ng-class="vm.settings.collapsedSections[vendorHash] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i>',
-      '      <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
-      '      {{::vendor.name}}',
-      '    </div>',
-      '    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} <span translate="Vendors.Day" translate-values="{ numDays: days }" translate-interpolation="messageformat"></span> {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
-      '  </div>',
-      '  <div class="vendor-row" ng-if="!vm.settings.collapsedSections[vendorHash]">',
-      '    <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
-      '    <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
-      '      <h3 class="category-title">{{::category.title}}</h3>',
-      '      <div class="vendor-items">',
-      '        <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    templateUrl: 'scripts/vendors/dimVendorItems.directive-2.html'
   };
 
   angular.module('dimApp')
@@ -131,31 +100,16 @@
           var compareItemCount = sum(compareItems, 'amount');
 
           dialogResult = ngDialog.open({
-            template: [
-              '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-              '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
-              '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-              '    <div translate="Vendors.Compare">:</div>',
-              '    <div class="compare-items">',
-              '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
-              '    </div>',
-              '  </div>',
-              '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-              '  <div class="item-details">',
-              '    <div translate="Vendors.Available">:</div>',
-              '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
-              '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
-              '      {{store.name}}',
-              '    </div>',
-              '  </div>',
-              '</div>'].join(''),
-            plain: true,
+            template: 'scripts/vendors/dimVendorItems.directive-3.html',
             overlay: false,
             className: 'move-popup vendor-move-popup',
             showClose: false,
+
             scope: angular.extend($scope.$new(true), {
             }),
+
             controllerAs: 'vm',
+
             controller: [function() {
               var innerVm = this;
               angular.extend(innerVm, {
@@ -170,9 +124,11 @@
                 }
               });
             }],
+
             // Setting these focus options prevents the page from
             // jumping as dialogs are shown/hidden
             trapFocus: false,
+
             preserveFocus: false
           });
         }

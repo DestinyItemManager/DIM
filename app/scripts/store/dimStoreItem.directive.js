@@ -41,31 +41,7 @@
         item: '=itemData',
         shiftClickCallback: '=shiftClickCallback'
       },
-      template: [
-        '<div ui-draggable="{{ ::vm.draggable }}" id="{{ ::vm.item.index }}" drag-channel="{{ ::vm.dragChannel }}" ',
-        '  title="{{vm.item.primStat.value}} {{::vm.item.name}}" ',
-        '  drag="::vm.item.index"',
-        '  class="item"',
-        '  ng-class="{',
-        "    'search-hidden': !vm.item.visible",
-        '  }">',
-        '  <div class="item-elem" ng-class="{',
-        "    'complete': vm.item.complete",
-        '  }">',
-        '    <div class="item-xp-bar item-xp-bar-small" ng-if="vm.item.percentComplete && !vm.item.complete">',
-        '      <div dim-percent-width="vm.item.percentComplete"></div>',
-        '    </div>',
-        '    <div class="img" ng-style="::vm.item.icon | bungieBackground" ng-click="vm.clicked(vm.item, $event)" ng-dblclick="vm.doubleClicked(vm.item, $event)">',
-        '    <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',
-        '    <img class="element" ng-if=":: vm.item.dmg && vm.item.dmg !== \'kinetic\'" ng-src="/images/{{::vm.item.dmg}}.png"/>',
-        '    <span ng-class="vm.item.dimInfo.tag | tagIcon"></span>',
-        '    <div ng-if="vm.item.isNew" class="new_overlay_overflow">',
-        '      <img class="new_overlay" src="/images/overlay.svg" height="44" width="44"/>',
-        '    </div>',
-        '    <div ng-class="vm.badgeClassNames" ng-if="vm.showBadge">{{ vm.badgeCount }}</div>',
-        '  </div>',
-        '</div>'
-      ].join('')
+      templateUrl: 'scripts/store/dimStoreItem.directive.html'
     };
 
     function Link(scope, element) {
@@ -142,16 +118,17 @@
           dimCompareService.addItemToCompare(item, e);
         } else {
           dialogResult = ngDialog.open({
-            template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
-            plain: true,
+            template: 'scripts/store/dimStoreItem.directive-2.html',
             overlay: false,
             className: 'move-popup-dialog',
             showClose: false,
             data: element,
             scope: scope,
+
             // Setting these focus options prevents the page from
             // jumping as dialogs are shown/hidden
             trapFocus: false,
+
             preserveFocus: false
           });
           otherDialog = dialogResult;
