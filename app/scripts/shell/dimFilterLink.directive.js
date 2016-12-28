@@ -7,7 +7,7 @@
    */
   angular.module('dimApp')
     .component('dimFilterLink', {
-      template: "<span ng-click='$ctrl.addFilter($ctrl.filter)' ng-bind='$ctrl.filter'></span>",
+      templateUrl: 'scripts/shell/dimFilterLink.directive.html',
       controller: FilterLinkCtrl,
       bindings: {
         filter: '@'

@@ -78,24 +78,16 @@
           var compareItemCount = sum(compareItems, 'amount');
 
           dialogResult = ngDialog.open({
-            template: [
-              '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-              '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
-              '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-              '    <div>Compare with what you already have:</div>',
-              '    <div class="compare-items">',
-              '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
-              '    </div>',
-              '  </div>',
-              '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-              '</div>'].join(''),
-            plain: true,
+            template: 'scripts/xur/dimXur.controller.html',
             overlay: false,
             className: 'move-popup xur-move-popup',
             showClose: false,
+
             scope: angular.extend($scope.$new(true), {
             }),
+
             controllerAs: 'vm',
+
             controller: [function() {
               var vm = this;
               angular.extend(vm, {

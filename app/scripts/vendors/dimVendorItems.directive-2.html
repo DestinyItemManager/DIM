@@ -1,0 +1,18 @@
+<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:['-eventVendor','vendorOrder'] track by vendor.hash">
+  <div class="title">
+    <div class="collapse-handle" ng-click="vm.toggleSection(vendorHash)">
+      <i class="fa collapse" ng-class="vm.settings.collapsedSections[vendorHash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+      <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" /> {{::vendor.name}}
+    </div>
+    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== '9'" end-time="vendor.nextRefreshDate" max-time-unit="'day'" interval="1000">{{days}} <span translate="Vendors.Day" translate-values="{ numDays: days }" translate-interpolation="messageformat"></span> {{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+  </div>
+  <div class="vendor-row" ng-if="!vm.settings.collapsedSections[vendorHash]">
+    <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>
+    <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">
+      <h3 class="category-title">{{::category.title}}</h3>
+      <div class="vendor-items">
+        <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>
+      </div>
+    </div>
+  </div>
+</div>

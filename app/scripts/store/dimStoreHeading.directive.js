@@ -13,31 +13,7 @@
         store: '=storeData'
       },
       restrict: 'E',
-      template: [
-        '<div class="character-box" ng-style="{ \'background-image\': \'url(\' + vm.store.background + \')\' }">',
-        '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.store.icon + \')\' }"></div>',
-        '  <div class="class">{{:: vm.store.className }}</div>',
-        '  <div class="race-gender" ng-if="::!vm.store.isVault">{{:: vm.store.genderRace }}</div>',
-        '  <div class="level" ng-if="::!vm.store.isVault"><span translate="Level"></span> {{ vm.store.level }}</div>',
-        '  <div class="level powerLevel" ng-if="!vm.store.isVault">{{ vm.store.powerLevel }}</div>',
-        '  <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="/images/glimmer.png"></div>',
-        '  <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img src="/images/legendaryMarks.png"></div>',
-        '  <div class="levelBar" ng-class="{ moteProgress: !vm.store.percentToNextLevel }" ng-if="::!vm.store.isVault" title="{{vm.xpTillMote}}">',
-        '    <div class="barFill" dim-percent-width="vm.levelBar"></div>',
-        '  </div>',
-        '  <div class="loadout-button" translate-attr="{ title: \'Loadouts\' }" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>',
-        '</div>',
-        '<div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>',
-        '<dim-stats stats="vm.store.stats" ng-if="!vm.store.isVault"></dim-stats>',
-        '<div ng-if="vm.store.isVault" class="vault-capacity">',
-        '  <div class="vault-bucket" title="{{bucket | translate}}: {{size}}/{{::capacity}}" ng-repeat="(sort, size) in vm.store.vaultCounts" ng-init="capacity = vm.store.capacityForItem({sort: sort}); bucket = \'Bucket.\' + sort">',
-        '    <div class="vault-bucket-tag">{{::bucket | translate | firstLetter}}</div>',
-        '    <div class="vault-fill-bar">',
-        '      <div class="fill-bar" ng-class="{ \'vault-full\': size == capacity }" dim-percent-width="size / capacity"></div>',
-        '    </div>',
-        '  </div>',
-        '</div>'
-      ].join('')
+      templateUrl: 'scripts/store/dimStoreHeading.directive.html'
     };
   }
 
@@ -77,8 +53,7 @@
         ngDialog.closeAll();
 
         dialogResult = ngDialog.open({
-          template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-loadout-popup="vm.store"></div>',
-          plain: true,
+          template: 'scripts/store/dimStoreHeading.directive-2.html',
           appendTo: 'div[loadout-id="' + vm.store.id + '"]',
           overlay: false,
           className: 'loadout-popup',

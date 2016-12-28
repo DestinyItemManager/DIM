@@ -16,24 +16,7 @@
         items: '=bucketItems',
         bucket: '=bucket'
       },
-      template: [
-        '<div class="sub-section"',
-        '     ng-class="[\'sort-\' + vm.bucket.id, { empty: !vm.items.length }]"',
-        '     ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
-        '     drop-channel="{{::vm.dropChannel}}">',
-        '  <div class="equipped sub-bucket" ng-repeat="item in vm.items | equipped:true track by item.index"',
-        '       ng-if="!vm.store.isVault"',
-        '       ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
-        '       drop-channel="{{::vm.dropChannel}}">',
-        '    <dim-store-item store-data="vm.store" item-data="item"></dim-store-item>',
-        '  </div>',
-        '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
-        '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
-        '      drop-channel="{{::vm.dropChannel}}">',
-        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
-        '  </div>',
-        '</div>'
-      ].join('')
+      templateUrl: 'scripts/store/dimStoreBucket.directive.html'
     };
   }
 
@@ -141,24 +124,11 @@
         ngDialog.closeAll();
         var dialogResult = ngDialog.open({
           // TODO: break this out into a separate service/directive?
-          template: [
-            '<div>',
-            '  <h1>',
-            '    <dim-simple-item item-data="vm.item"></dim-simple-item>',
-            '    How much {{vm.item.name}} to move?',
-            '  </h1>',
-            '  <div class="ngdialog-inner-content">',
-            '    <form ng-submit="vm.finish()">',
-            '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
-            '    </form>',
-            '    <div class="buttons">' +
-            '      <button ng-click="vm.finish()">Move</button>',
-            '      <button ng-click="vm.stacksWorthClick()" ng-show="vm.stacksWorth > 0">Fill Stack ({{vm.stacksWorth}})</button>',
-            '    </div>',
-            '  </div>',
-            '</div>'].join(''),
+          template: 'scripts/store/dimStoreBucket.directive-2.html',
+
           scope: $scope,
           controllerAs: 'vm',
+
           controller: ['$scope', function($scope) {
             var vm = this;
             vm.item = $scope.ngDialogData;
@@ -173,7 +143,7 @@
               $scope.closeThisDialog(vm.moveAmount);
             };
           }],
-          plain: true,
+
           data: item,
           appendTo: 'body',
           overlay: true,

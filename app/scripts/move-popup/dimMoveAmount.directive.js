@@ -17,16 +17,7 @@
         maximum: '=maximum'
       },
       replace: true,
-      template: [
-        '<div class="move-amount">',
-        '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()">&#9664;</span>',
-        '  <input ng-model="vm.amount" type="text" ng-blur="vm.constrain()"/>',
-        '  <div class="move-amount-slider">',
-        '    <rzslider rz-slider-model="vm.amount" rz-slider-options="{ floor: 1, ceil: vm.maximum, showSelectionBar: true, hideLimitLabels: true }"></rzslider>',
-        '  </div>',
-        '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.increment()">&#9654;</span>',
-        '</div>'
-      ].join(''),
+      templateUrl: 'scripts/move-popup/dimMoveAmount.directive.html',
       link: function(scope, element) {
         $timeout(function() {
           scope.$broadcast('rzSliderForceRender');
