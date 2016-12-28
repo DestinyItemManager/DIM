@@ -69,10 +69,6 @@
             FarmingMode: "Farming Mode (move items)",
             Desc: "DIM is moving Engram and Glimmer items from {store} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
             Configuration: "Configuration",
-            Greens: {
-              Greens: "Move Uncommon/Green Items to Vault",
-              Tooltip: "If checked, DIM will also transfer all uncommon (green) items to the vault. If it's not checked, then green items will stay on your active character."
-            },
             MakeRoom: {
               Desc: "DIM is moving only Engram and Glimmer items from {store} to the vault or other characters to prevent anything from going to the Postmaster.",
               MakeRoom: "Make room to pick up items by moving equipment",
@@ -383,10 +379,6 @@
             FarmingMode: "Modalità Farming (sposta oggetti)",
             Desc: "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} female{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
             Configuration: "Configurazione",
-            Greens: {
-              Greens: "Sposta oggetti Non Comuni/Verdi al deposito",
-              Tooltip: "Se selezionato, DIM trasferirà anche tutti gli oggetti non comuni (verdi) al deposito. Se non viene selezionato, gli oggetti verdi rimarranno sul tuo personaggio attivo."
-            },
             MakeRoom: {
               Desc: "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} female{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
               MakeRoom: "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
@@ -688,10 +680,6 @@
             FarmingMode: "Engramme zum Tresor",
             Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {store} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
             Configuration: "Konfiguration",
-            Greens: {
-              Greens: "Verschiebe ungewöhnliche/grüne Gegenstände in den Tresor",
-              Tooltip: "Wenn aktiviert, verschiebt DIM auch alle ungewöhnlichen/grünen Gegenstände in den Tresor. Andernfalls bleiben diese Gegenstände auf dem aktiven Charakter."
-            },
             MakeRoom: {
               Desc: "DIM verschiebt nur Engramme und Glimmer vom {store} zum Tresor oder anderen Charaktern, um zu verhindern, dass sie in der Poststelle landen.",
               MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
@@ -936,10 +924,6 @@
             FarmingMode: "Mode Farming (transfert d'objets)",
             Desc: "DIM est entrain de transférer des engrammes et objets pour Glimmer du {store} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
             Configuration: "Configuration",
-            Greens: {
-              Greens: "Transférer les objets peu communs/verts aux coffres",
-              Tooltip: "Si activé, DIM transfèrera aussi tous les objets peu communs (verts) aux coffres. Si désactivé, alors les objets verts resteront sur votre perso actif.",
-            },
             MakeRoom: {
               Desc: "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {store} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
               MakeRoom: "Faites de la place pour collecter des objets en déplaçant de l'équipement",
@@ -1165,10 +1149,6 @@
             FarmingMode: "Modo recolector (mover objetos)",
             Desc: "DIM esta moviendo Engramas y objetos de Lúmen desde {store} hacia el depísoto y dejando un espacio abierto por cada tipo de objeto para prevenir que cualquier cosa se vaya a la Administración.",
             Configuration: "Configuración",
-            Greens: {
-              Greens: "Mover objetos poco comúnes/verdes al Depósito",
-              Tooltip: "Si está marcado, DIM también va a transferir todos los objetos poco comúnes (verde) al depósito. Si no está marcado, todos los objetos verdes se quedarán en tu personaje."
-            },
             MakeRoom: {
               Desc: "DIM esta moviendo solo Engramas y objetos de Lúmen desde {store} al depósito o a otros personajes para prevenir que se vayan a la Administración.",
               MakeRoom: "Hacer espacio para coger objetos moviendo equipamiento",
@@ -1467,10 +1447,6 @@
             FarmingMode: "Modo Farm (mover itens)",
             Desc: "O DIM estará movendo engramas e consumíveis do {store} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
             Configuration: "Configuração",
-            Greens: {
-              Greens: "Mover itens Incomuns (verdes) para o cofre",
-              Tooltip: "Se selecionado, o DIM também irá transferir todos os itens Incomuns (verdes) para o cofre. Deixe desmarcado para manter estes itens em seu personagem."
-            },
             MakeRoom: {
               Desc: "O DIM está movendo apenas engramas e consumíveis do {store} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
               MakeRoom: "Abrir espaço para novos itens movendo equipamentos",

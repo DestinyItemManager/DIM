@@ -1,3 +1,7 @@
+# Next
+
+* Removed farming option to keep greens since they're disassembled by default now.
+
 # 3.15.0
 
 * Permit the same damage type of subclass in loadouts (#1067)

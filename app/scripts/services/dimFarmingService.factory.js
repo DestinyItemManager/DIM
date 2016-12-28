@@ -125,7 +125,7 @@
         const toMove = _.select(store.items, (i) => {
           return !i.notransfer && (
             i.isEngram() ||
-            (i.equipment && settings.farmGreens && i.type === 'Uncommon') ||
+            (i.equipment && i.type === 'Uncommon') ||
             glimmerHashes.has(i.hash));
         });
 
@@ -152,9 +152,8 @@
             // We'll move the lowest-value item to the vault.
             const itemToMove = _.min(_.select(items, { equipped: false, notransfer: false }), (i) => {
               var value = {
-                // we can assume if someone isn't farming greens they want to keep them on their character to dismantle
                 Common: 0,
-                Uncommon: settings.farmGreens ? 1 : 9,
+                Uncommon: 1,
                 Rare: 2,
                 Legendary: 3,
                 Exotic: 4
