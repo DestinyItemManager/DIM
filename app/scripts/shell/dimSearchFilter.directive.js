@@ -693,96 +693,94 @@
         return !item.notransfer;
       },
       rof: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'rof');
+        return filterByStats(predicate, item, 'rof');
       },
       impact: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'impact');
+        return filterByStats(predicate, item, 'impact');
       },
       range: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'range');
+        return filterByStats(predicate, item, 'range');
       },
       stability: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'stability');
+        return filterByStats(predicate, item, 'stability');
       },
       reload: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'reload');
+        return filterByStats(predicate, item, 'reload');
       },
       magazine: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'magazine');
+        return filterByStats(predicate, item, 'magazine');
       },
       aimassist: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'aa');
+        return filterByStats(predicate, item, 'aa');
       },
       equipspeed: function(predicate, item) {
-        return filterByStats.do(predicate, item, 'equipspeed');
+        return filterByStats(predicate, item, 'equipspeed');
       }
     };
 
     // This refactored method filters items by stats
     //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
-    var filterByStats = {
-      do: function(predicate, item, statType) {
-        if (predicate.length === 0 || item.stats === undefined) {
-          return false;
-        }
-
-        var foundStatHash;
-        var operands = ['<=', '>=', '=', '>', '<'];
-        var operand = 'none';
-        var result = false;
-        var statHash = {};
-
-        operands.forEach(function(element) {
-          if (predicate.substring(0, element.length) === element) {
-            operand = element;
-            predicate = predicate.substring(element.length);
-            return false;
-          } else {
-            return true;
-          }
-        }, this);
-
-        statHash = {
-          impact: 4043523819,
-          range: 1240592695,
-          stability: 155624089,
-          rof: 4284893193,
-          reload: 4188031367,
-          magazine: 387123106,
-          aa: 1345609583,
-          equipspeed: 943549884
-        }[statType];
-
-        foundStatHash = _.find(item.stats, { statHash });
-
-        if (typeof foundStatHash === 'undefined') {
-          return false;
-        }
-
-        predicate = parseInt(predicate, 10);
-
-        switch (operand) {
-        case 'none':
-          result = (foundStatHash.value === predicate);
-          break;
-        case '=':
-          result = (foundStatHash.value === predicate);
-          break;
-        case '<':
-          result = (foundStatHash.value < predicate);
-          break;
-        case '<=':
-          result = (foundStatHash.value <= predicate);
-          break;
-        case '>':
-          result = (foundStatHash.value > predicate);
-          break;
-        case '>=':
-          result = (foundStatHash.value >= predicate);
-          break;
-        }
-        return result;
+    var filterByStats = function(predicate, item, statType) {
+      if (predicate.length === 0 || item.stats === undefined) {
+        return false;
       }
+
+      var foundStatHash;
+      var operands = ['<=', '>=', '=', '>', '<'];
+      var operand = 'none';
+      var result = false;
+      var statHash = {};
+
+      operands.forEach(function(element) {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      statHash = {
+        impact: 4043523819,
+        range: 1240592695,
+        stability: 155624089,
+        rof: 4284893193,
+        reload: 4188031367,
+        magazine: 387123106,
+        aa: 1345609583,
+        equipspeed: 943549884
+      }[statType];
+
+      foundStatHash = _.find(item.stats, { statHash });
+
+      if (typeof foundStatHash === 'undefined') {
+        return false;
+      }
+
+      predicate = parseInt(predicate, 10);
+
+      switch (operand) {
+      case 'none':
+        result = (foundStatHash.value === predicate);
+        break;
+      case '=':
+        result = (foundStatHash.value === predicate);
+        break;
+      case '<':
+        result = (foundStatHash.value < predicate);
+        break;
+      case '<=':
+        result = (foundStatHash.value <= predicate);
+        break;
+      case '>':
+        result = (foundStatHash.value > predicate);
+        break;
+      case '>=':
+        result = (foundStatHash.value >= predicate);
+        break;
+      }
+      return result;
     };
   }
 })();
