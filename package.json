@@ -8,7 +8,8 @@
     "generate-css": "./node_modules/.bin/grunt css",
     "lint": "./node_modules/.bin/grunt eslint",
     "postinstall": "./node_modules/.bin/bower install",
-    "test": "echo \"No tests\""
+    "test": "echo \"No tests\"",
+    "start": "webpack --config ./config/webpack.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,11 @@
   "homepage": "https://github.com/DestinyItemManager/DIM",
   "devDependencies": {
     "autoprefixer": "^6.3.7",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
     "bower": "^1.7.9",
+    "exports-loader": "^0.6.3",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-compress": "^1.3.0",
@@ -42,6 +47,15 @@
     "request": "^2.73.0",
     "sqlite3": "^3.1.4",
     "uglify-js": "^2.7.0",
-    "unzip": "^0.1.11"
+    "unzip": "^0.1.11",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "angular": "^1.6.1",
+    "angular-ui-router": "^0.3.2",
+    "babel-polyfill": "^6.20.0",
+    "jquery": "^3.1.1",
+    "lodash": "^4.17.3",
+    "underscore": "^1.8.3"
   }
 }
