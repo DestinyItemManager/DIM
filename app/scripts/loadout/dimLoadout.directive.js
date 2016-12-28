@@ -28,9 +28,14 @@
         '        <button ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew()" translate="Loadouts.SaveAsNew"></button>',
         '        <button ng-click="vm.cancel()" translate="Loadouts.Cancel"></button>',
         '        <span><img src="images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> <span translate="Loadouts.ItemsWithIcon"></span>  <span translate="Loadouts.ClickToEquip"></span></span>',
-        '        <p id="loadout-error"></p>',
         '      </form>',
         '    </div>',
+        '    <p>',
+        '        <select name="classType" ng-model="vm.selectedStore" ng-options="store as store.name for store in vm.stores | sortStores:vm.settings.characterOrder track by store.id"></select>',
+        '        <button ng-click="vm.applyNow()" translate="Loadouts.ApplyNow"></button>',
+        '    </p>',
+        '    <p id="loadout-error"></p>',
+
         '    <p ng-if="vm.loadout.warnitems.length" translate="Loadouts.VendorsCannotEquip">:</p>',
         '    <div ng-if="vm.loadout.warnitems.length" class="loadout-contents">',
         '      <div ng-repeat="item in vm.loadout.warnitems" id="loadout-warn-item-{{:: $index }}" class="loadout-item">',
@@ -135,12 +140,18 @@
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService', '$translate'];
+  LoadoutCtrl.$inject = ['$scope', '$translate', 'dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService', 'dimStoreService'];
 
-  function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate) {
+  function LoadoutCtrl($scope, $translate, dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, dimStoreService) {
     var vm = this;
 
     vm.settings = dimSettingsService;
+
+
+    $scope.$on('dim-stores-updated', function(e) {
+      vm.stores = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
+      vm.selectedStore = dimStoreService.getActiveStore();
+    });
 
     vm.types = _.chain(dimCategory)
       .values()
@@ -168,6 +179,12 @@
     vm.saveAsNew = function saveAsNew() {
       delete vm.loadout.id; // Let it be a new ID
       vm.save();
+    };
+
+    vm.applyNow = function applyNow() {
+      vm.loadout.name = 'Bulk transfer';
+      dimLoadoutService.applyLoadout(vm.selectedStore, vm.loadout, true);
+      vm.cancel();
     };
 
     vm.cancel = function cancel() {

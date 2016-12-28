@@ -25,12 +25,12 @@
         '       ng-if="!vm.store.isVault"',
         '       ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
         '       drop-channel="{{::vm.dropChannel}}">',
-        '    <dim-store-item store-data="vm.store" item-data="item"></dim-store-item>',
+        '    <dim-store-item alt-click-callback="vm.altClickCallback" store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
         '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
         '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
         '      drop-channel="{{::vm.dropChannel}}">',
-        '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
+        '    <dim-store-item alt-click-callback="vm.altClickCallback" ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
         '  </div>',
         '</div>'
       ].join('')
@@ -51,6 +51,7 @@
     'dimActionQueue',
     'dimFeatureFlags',
     'dimInfoService',
+    'dimLoadoutService',
     '$translate'];
 
   function StoreBucketCtrl($scope,
@@ -66,10 +67,19 @@
                            dimActionQueue,
                            dimFeatureFlags,
                            dimInfoService,
+                           dimLoadoutService,
                            $translate) {
     var vm = this;
 
     vm.settings = dimSettingsService;
+
+    vm.altClickCallback = function(item, $event) {
+      ngDialog.closeAll();
+      if (!dimLoadoutService.dialogOpen) {
+        $rootScope.$broadcast('dim-create-new-loadout', { });
+      }
+      dimLoadoutService.addItemToLoadout(item, $event);
+    };
 
     vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
 
