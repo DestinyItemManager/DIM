@@ -16,7 +16,7 @@
             <img class="engram" ng-class="{ active: (vm.service.movingItems || vm.service.makingRoom) }" src="/images/engram.svg" height="60" width="60"/>
           </span>
           <span>
-            <p translate="{{vm.settings.farming.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc'}}" translate-values="{ store: vm.service.store.name }"></p>
+            <p translate="{{vm.settings.farming.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc'}}" translate-values="{ store: vm.service.store.name, gender: vm.service.store.gender }"></p>
             <div class="item-details"><span>
               <p translate="FarmingMode.Configuration"></p>
               <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" translate-attr="{title: 'FarmingMode.MakeRoom.Tooltip'}" translate="FarmingMode.MakeRoom"></label></p>

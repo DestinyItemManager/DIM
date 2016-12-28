@@ -1,11 +1,10 @@
 {
   "name": "dim",
-  "version": "3.14.1",
+  "version": "3.15.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "scripts": {
     "dev-chrome": "./node_modules/.bin/grunt dev-chrome",
-    "dev-firefox": "./node_modules/.bin/grunt dev-firefox",
     "generate-css": "./node_modules/.bin/grunt css",
     "lint": "./node_modules/.bin/grunt eslint",
     "postinstall": "./node_modules/.bin/bower install",

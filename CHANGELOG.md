@@ -1,14 +1,11 @@
 # Next
 
-* Permit the same damage type of subclass in loadouts (#1067)
 * Removed farming option to keep greens since they're disassembled by default now.
 
-# 3.14
+# 3.15.0
 
+* Permit the same damage type of subclass in loadouts (#1067)
 * Update record books to properly display time instead of a large number. (#1051)
-
-# 3.14.0
-
 * Moving an item into a full vault but an empty bucket (such as full General but the vault contains no Consumables) now works.
 * Stacks of items are properly accounted for. They'll now combine as things are moved to make space - previously even a stack of 1 consumable would count as taking up the whole slot and would prevent a move of 2 more of that consumable.
 * We now catch errors trying to move aside items and retry with a different item. You should see fewer failed moves!

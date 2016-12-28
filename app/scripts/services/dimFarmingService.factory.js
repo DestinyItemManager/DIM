@@ -13,7 +13,8 @@
     'toaster',
     'dimFeatureFlags',
     'dimSettingsService',
-    '$translate'
+    '$translate',
+    'dimBucketService'
   ];
 
   /**
@@ -28,7 +29,8 @@
                           toaster,
                           dimFeatureFlags,
                           dimSettingsService,
-                          $translate) {
+                          $translate,
+                          dimBucketService) {
     let intervalId;
     let cancelReloadListener;
     const glimmerHashes = new Set([
@@ -68,53 +70,55 @@
       makingRoom: false,
       // Move all items on the selected character to the vault.
       moveItemsToVault: function(items, incrementCounter) {
-        const reservations = {};
-        if (settings.makeRoomForItems) {
-          // reserve one space in the active character
-          reservations[this.store.id] = {};
-          makeRoomTypes.forEach((type) => {
-            reservations[this.store.id][type] = 1;
-          });
-        }
-
-        return _.reduce(items, (promise, item) => {
-          // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
-          return promise
-            .then(() => {
-              const vault = dimStoreService.getVault();
-              const vaultSpaceLeft = vault.spaceLeftForItem(item);
-              if (vaultSpaceLeft <= 1) {
-                // If we're down to one space, try putting it on other characters
-                const otherStores = _.select(dimStoreService.getStores(),
-                                           (store) => !store.isVault && store.id !== this.store.id);
-                const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
-
-                if (otherStoresWithSpace.length) {
-                  if (dimFeatureFlags.debugMoves) {
-                    console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
-                  }
-                  return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
-                }
-              }
-              if (dimFeatureFlags.debugMoves) {
-                console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
-              }
-              return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
-            })
-            .then(() => {
-              if (incrementCounter) {
-                this.itemsMoved++;
-              }
-            })
-            .catch((e) => {
-              if (e.code === 'no-space') {
-                outOfSpaceWarning(this.store);
-              } else {
-                toaster.pop('error', item.name, e.message);
-              }
-              throw e;
+        return dimBucketService.then((buckets) => {
+          const reservations = {};
+          if (settings.makeRoomForItems) {
+            // reserve one space in the active character
+            reservations[this.store.id] = {};
+            makeRoomTypes.forEach((type) => {
+              reservations[this.store.id][buckets.byId[type].type] = 1;
             });
-        }, $q.resolve());
+          }
+
+          return _.reduce(items, (promise, item) => {
+            // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
+            return promise
+              .then(() => {
+                const vault = dimStoreService.getVault();
+                const vaultSpaceLeft = vault.spaceLeftForItem(item);
+                if (vaultSpaceLeft <= 1) {
+                  // If we're down to one space, try putting it on other characters
+                  const otherStores = _.select(dimStoreService.getStores(),
+                                               (store) => !store.isVault && store.id !== this.store.id);
+                  const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
+
+                  if (otherStoresWithSpace.length) {
+                    if (dimFeatureFlags.debugMoves) {
+                      console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
+                    }
+                    return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+                  }
+                }
+                if (dimFeatureFlags.debugMoves) {
+                  console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
+                }
+                return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+              })
+              .then(() => {
+                if (incrementCounter) {
+                  this.itemsMoved++;
+                }
+              })
+              .catch((e) => {
+                if (e.code === 'no-space') {
+                  outOfSpaceWarning(this.store);
+                } else {
+                  toaster.pop('error', item.name, e.message);
+                }
+                throw e;
+              });
+          }, $q.resolve());
+        });
       },
       farmItems: function() {
         const store = dimStoreService.getStore(this.store.id);
