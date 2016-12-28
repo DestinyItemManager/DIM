@@ -1,4 +1,3 @@
-
 <div>
   <div class="item-header" ng-class="vm.classes">
     <div>
@@ -6,7 +5,7 @@
         <span ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, 'lock')" title="{{!vm.item.locked ? 'Lock':'Unlock'}} {{::vm.item.typeName}}">
           <i class="lock fa" ng-class="{'fa-lock': vm.item.locked, 'fa-unlock-alt': !vm.item.locked, 'is-locking': vm.locking }"></i>
         </span>
-        <span ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" title="{{!vm.item.tracked ? 'Track':'Untrack'}} {{::vm.item.typeName}}">
+      <span ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" title="{{!vm.item.tracked ? 'Track':'Untrack'}} {{::vm.item.typeName}}">
           <i class="lock fa" ng-class="{'fa-star': vm.item.tracked, 'fa-star-o': !vm.item.tracked, 'is-locking': vm.locking }"></i>
         </span>
       </span>
@@ -17,14 +16,13 @@
     <div>
       <span ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">
         <img ng-if="vm.item.dmg && vm.item.dmg !== 'kinetic'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>
-      </span>
-      {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }} <i ng-if="vm.featureFlags.compareEnabled && vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="fa fa-clone" ng-click="vm.openCompare()"></i>
+      </span> {{ vm.light }} {{ vm.classType }} {{ vm.item.typeName }} <i ng-if="vm.featureFlags.compareEnabled && vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="fa fa-clone" ng-click="vm.openCompare()"></i>
       <span ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></span>
       <span ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">
         <i class="info fa" ng-class="{ 'fa-chevron-circle-up': vm.itemDetails, 'fa-chevron-circle-down': !vm.itemDetails }">
         </i>
       </span>
-    <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>
+      <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>
     </div>
   </div>
   <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">
@@ -39,11 +37,11 @@
       <span class="stat-box-text stat-box-cell"> {{ stat.name }} </span>
       <span class="stat-box-outer">
         <span ng-if="stat.bar && stat.value && (stat.value === stat.equippedStatsValue || !stat.comparable)" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
-        <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
-        <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>
-        <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.equippedStatsValue / stat.maximumValue"></span>
-        <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>
-        <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue), 'lower-stats': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>
+      <span ng-if="stat.bar && stat.value && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.value / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value < stat.equippedStatsValue && stat.comparable" class="stat-box-inner lower-stats" dim-percent-width="(stat.equippedStatsValue - stat.value) / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner" dim-percent-width="stat.equippedStatsValue / stat.maximumValue"></span>
+      <span ng-if="stat.bar && stat.value > stat.equippedStatsValue && stat.comparable" class="stat-box-inner higher-stats" dim-percent-width="(stat.value - stat.equippedStatsValue) / stat.maximumValue"></span>
+      <span ng-if="!stat.bar && (!stat.equippedStatsName || stat.comparable)" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue), 'lower-stats': (stat.value < stat.equippedStatsValue)}">{{ stat.value }}</span>
       </span>
       <span class="stat-box-val stat-box-cell" ng-class="{ 'higher-stats': (stat.value > stat.equippedStatsValue && stat.comparable), 'lower-stats': (stat.value < stat.equippedStatsValue && stat.comparable)}" ng-show="{{ stat.bar }}">{{ stat.value }}
         <span ng-if="stat.bar && vm.featureFlags.qualityEnabled && vm.settings.itemQuality && stat.qualityPercentage.min" ng-style="stat.qualityPercentage.min | qualityColor:'color'">({{ stat.qualityPercentage.range }})</span>
@@ -63,7 +61,9 @@
         <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{'incomplete': $index >= objective.progress, 'wins': objective.completionValue === 9}"></i>
         <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>
       </div>
-      <div ng-switch-default class="objective-checkbox"><div></div></div>
+      <div ng-switch-default class="objective-checkbox">
+        <div></div>
+      </div>
       <div ng-switch-default class="objective-progress">
         <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>
         <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? 'Complete' : 'Incomplete') }}</div>

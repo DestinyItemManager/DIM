@@ -1,4 +1,3 @@
-
 <div ng-repeat="(type, lockeditem) in vm.lockedItems">
   <div class="locked-item" ng-switch="lockeditem" ui-on-drop="vm.onDrop({$data: $data, type: type})" drag-channel="{{type}}" drop-channel="{{type}}" drop-validate="vm.lockedItemsValid({$data: $data, type: type})">
     <div ng-switch-when="null" class="empty-item">
