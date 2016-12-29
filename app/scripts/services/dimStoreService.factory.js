@@ -658,6 +658,9 @@
         if (itemDef.primaryStat) {
           item.primaryStat = itemDef.primaryStat;
         }
+        if (itemDef.stats) {
+          item.stats = itemDef.stats;
+        }
       }
 
       // fix itemDef for defense items with missing nodes
@@ -737,7 +740,7 @@
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         equipment: item.isEquipment,
@@ -1627,12 +1630,12 @@
         itemDef.classType = classifiedData.$$state.value[itemDef.itemHash].classType;
       }
       if (classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash) {
+        itemDef.primaryBaseStatHash = classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash;
         itemDef.primaryStat = [];
-        itemDef.primaryStat.statHash = classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash;
+        itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
         itemDef.primaryStat.value = classifiedData.$$state.value[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
       }
       if (classifiedData.$$state.value[itemDef.itemHash].stats) {
-        console.log(classifiedData.$$state.value[itemDef.itemHash].stats);
         itemDef.stats = classifiedData.$$state.value[itemDef.itemHash].stats;
       }
     }
