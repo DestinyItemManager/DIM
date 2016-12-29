@@ -7,6 +7,7 @@
   StoreService.$inject = [
     '$rootScope',
     '$q',
+    '$http',
     'dimBungieService',
     'dimPlatformService',
     'dimCategory',
@@ -25,6 +26,7 @@
   function StoreService(
     $rootScope,
     $q,
+    $http,
     dimBungieService,
     dimPlatformService,
     dimCategory,
@@ -43,6 +45,8 @@
     var _idTracker = {};
 
     var _removedNewItems = new Set();
+
+    const missingSources = loadMissingSources();
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -705,6 +709,7 @@
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
+      itemDef.sourceHashes += getMissingSourceHashes(itemDef.hash, missingSources);
 
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
@@ -1593,5 +1598,20 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
+
+    function loadMissingSources() {
+      return $http.get('scripts/sources.json')
+               .then(function(json) {
+                 return json.data.itemHash;
+               });
+    }
+
+    function getMissingSourceHashes(itemHash, missingSources) {
+      var source = [];
+      if (missingSources.$$state.value[itemHash]) {
+        source = missingSources.$$state.value[itemHash].sourceHashes;
+      }
+      return source;
+    }
   }
 })();
