@@ -57,7 +57,7 @@
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
       year: ['year1', 'year2', 'year3'],
       vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris'],
-      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af'],
+      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning'],
       hasLight: ['light', 'haslight'],
       weapon: ['weapon'],
       armor: ['armor'],
@@ -630,7 +630,8 @@
           wotm: 3147905712,
           poe: 36493462,
           coe: 3739898362,
-          af: 1389125983
+          af: 1389125983,
+          dawning: 4153390200
         };
         if (!item) {
           return false;
