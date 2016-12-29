@@ -1611,8 +1611,9 @@
     }
 
     function getMissingSourceHashes(itemHash, missingSources) {
-      if (missingSources.$$state.value[itemHash]) {
-        return missingSources.$$state.value[itemHash].sourceHashes;
+      missingSources = missingSources.$$state.value;
+      if (missingSources[itemHash]) {
+        return missingSources[itemHash].sourceHashes;
       }
       return false;
     }
