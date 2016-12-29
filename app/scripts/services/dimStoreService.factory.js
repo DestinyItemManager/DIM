@@ -709,6 +709,7 @@
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
+
       var missingSource = getMissingSourceHashes(itemDef.hash, missingSources);
       if (missingSource) {
         itemDef.sourceHashes[itemDef.sourceHashes.length] = missingSource;
