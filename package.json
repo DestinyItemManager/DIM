@@ -9,7 +9,11 @@
     "lint": "./node_modules/.bin/grunt eslint",
     "postinstall": "./node_modules/.bin/bower install",
     "test": "echo \"No tests\"",
-    "start": "webpack --config ./config/webpack.js"
+    "start": "webpack --config ./config/webpack.js",
+    "install": "napa"
+  },
+  "napa": {
+    "angular-chrome-storage": "https://github.com/infomofo/angular-chrome-storage"
   },
   "repository": {
     "type": "git",
@@ -43,6 +47,7 @@
     "jpm": "^1.1.1",
     "jshint": "^2.9.2",
     "load-grunt-tasks": "^3.5.0",
+    "napa": "^2.3.0",
     "node-sass": "^3.8.0",
     "request": "^2.73.0",
     "sqlite3": "^3.1.4",
@@ -53,12 +58,14 @@
   "dependencies": {
     "angular": "^1.6.1",
     "angular-aria": "^1.6.1",
+    "angular-moment": "^1.0.1",
     "angular-timer": "^1.3.3",
     "angular-ui-router": "^0.3.2",
     "babel-polyfill": "^6.20.0",
     "jquery": "^3.1.1",
+    "jquery-ui": "^1.12.1",
     "lodash": "^4.17.3",
-    "moment": "^2.9.0",
+    "moment": "^2.17.1",
     "underscore": "^1.8.3"
   }
 }
