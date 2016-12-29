@@ -1620,23 +1620,24 @@
     }
 
     function declassify(itemDef, language, classifiedData) {
-      // itemDef.icon = classifiedData.$$state.value[itemDef.itemHash].icon;
-      itemDef.itemName = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemName;
-      itemDef.itemDescription = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemDescription;
-      itemDef.itemTypeName = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemTypeName;
-      itemDef.bucketTypeHash = classifiedData.$$state.value[itemDef.itemHash].bucketHash;
-      itemDef.tierType = classifiedData.$$state.value[itemDef.itemHash].tierType;
-      if (classifiedData.$$state.value[itemDef.itemHash].classType) {
-        itemDef.classType = classifiedData.$$state.value[itemDef.itemHash].classType;
+      classifiedData = classifiedData.$$state.value;
+      // itemDef.icon = classifiedData[itemDef.itemHash].icon;
+      itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
+      itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
+      itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+      itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
+      itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
+      if (classifiedData[itemDef.itemHash].classType) {
+        itemDef.classType = classifiedData[itemDef.itemHash].classType;
       }
-      if (classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash) {
-        itemDef.primaryBaseStatHash = classifiedData.$$state.value[itemDef.itemHash].primaryBaseStatHash;
+      if (classifiedData[itemDef.itemHash].primaryBaseStatHash) {
+        itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
         itemDef.primaryStat = [];
         itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
-        itemDef.primaryStat.value = classifiedData.$$state.value[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+        itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
       }
-      if (classifiedData.$$state.value[itemDef.itemHash].stats) {
-        itemDef.stats = classifiedData.$$state.value[itemDef.itemHash].stats;
+      if (classifiedData[itemDef.itemHash].stats) {
+        itemDef.stats = classifiedData[itemDef.itemHash].stats;
       }
     }
   }
