@@ -46,7 +46,7 @@
 
     var _removedNewItems = new Set();
 
-    const missingSources = loadMissingSources();
+    const missingSources = loadJSON('scripts/sources.json');
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -1603,8 +1603,8 @@
     }
     // code above is from https://github.com/DestinyTrialsReport
 
-    function loadMissingSources() {
-      return $http.get('scripts/sources.json')
+    function loadJSON(file) {
+      return $http.get(file)
                .then(function(json) {
                  return json.data.itemHash;
                });
