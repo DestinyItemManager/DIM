@@ -48,7 +48,7 @@
 
     var _removedNewItems = new Set();
 
-    const classifiedData = getClassifiedData();
+    const classifiedData = loadJSON('scripts/classified.json');
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -1612,18 +1612,18 @@
     // code above is from https://github.com/DestinyTrialsReport
 
     // code below is for declassifying items
-    function getClassifiedData() {
-      return $http.get('scripts/classified.json')
+    function loadJSON(file) {
+      return $http.get(file)
         .then(function(json) {
           return json.data.itemHash;
         });
     }
 
     function declassify(itemDef, language, classifiedData) {
+      // itemDef.icon = classifiedData.$$state.value[itemDef.itemHash].icon;
       itemDef.itemName = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemName;
       itemDef.itemDescription = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemDescription;
       itemDef.itemTypeName = classifiedData.$$state.value[itemDef.itemHash].i18n[language].itemTypeName;
-      // itemDef.icon = classifiedData.$$state.value[itemDef.itemHash].icon;
       itemDef.bucketTypeHash = classifiedData.$$state.value[itemDef.itemHash].bucketHash;
       itemDef.tierType = classifiedData.$$state.value[itemDef.itemHash].tierType;
       if (classifiedData.$$state.value[itemDef.itemHash].classType) {
