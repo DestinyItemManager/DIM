@@ -709,7 +709,10 @@
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
-      itemDef.sourceHashes[itemDef.sourceHashes.length] = getMissingSourceHashes(itemDef.hash, missingSources);
+      var missingSource = getMissingSourceHashes(itemDef.hash, missingSources);
+      if (missingSource) {
+        itemDef.sourceHashes[itemDef.sourceHashes.length] = missingSource;
+      }
 
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
@@ -1607,11 +1610,10 @@
     }
 
     function getMissingSourceHashes(itemHash, missingSources) {
-      var source = [];
       if (missingSources.$$state.value[itemHash]) {
-        source = missingSources.$$state.value[itemHash].sourceHashes;
+        return missingSources.$$state.value[itemHash].sourceHashes;
       }
-      return source;
+      return false;
     }
   }
 })();
