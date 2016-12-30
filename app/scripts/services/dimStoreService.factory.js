@@ -46,7 +46,7 @@
 
     var _removedNewItems = new Set();
 
-    const missingSources = fullyLoadJSON('scripts/sources.json');
+    const missingSources = loadJSON('scripts/sources.json');
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -1610,13 +1610,10 @@
                });
     }
 
-    function fullyLoadJSON(file) {
-      return loadJSON(file).then(function(data) {
-        return data;
-      });
-    }
-
     function getMissingSourceHashes(itemHash, missingSources) {
+      if (missingSources.$$state.value) {
+        missingSources = missingSources.$$state.value;
+      }
       if (missingSources[itemHash]) {
         return missingSources[itemHash].sourceHashes;
       }
