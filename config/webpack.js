@@ -47,7 +47,7 @@ module.exports = (options = {}) => {
     },
 
     plugins: [
-      new ExtractTextPlugin('styles.css'),
+      new ExtractTextPlugin('styles-[hash].css'),
 
       new HtmlWebpackPlugin({
         template: 'app/index.html',
