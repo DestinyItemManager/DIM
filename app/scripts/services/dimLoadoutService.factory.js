@@ -1,5 +1,5 @@
 const angular = require('angular');
-const _ = require('lodash');
+const _ = require('underscore');
 
 (function() {
   'use strict';

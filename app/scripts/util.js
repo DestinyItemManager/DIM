@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require('underscore');
 
 // Some utility functions missing from underscore
 window.sum = function sum(list, summer) {
