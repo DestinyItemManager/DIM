@@ -69,6 +69,7 @@
     "style-loader": "^0.13.1",
     "uglify-js": "^2.7.0",
     "unzip": "^0.1.11",
+    "url-loader": "^0.5.7",
     "webpack": "^2.2.0-rc.0"
   },
   "dependencies": {

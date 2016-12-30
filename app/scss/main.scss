@@ -12,4 +12,6 @@
 @import 'loadout-builder';
 @import 'vendors';
 @import 'debug';
-@import './shell/materials-exchange'
+@import './shell/materials-exchange';
+@import './../vendor/components-font-awesome/css/font-awesome.css';
+@import './../vendor/angular-hotkeys/build/hotkeys.css'
