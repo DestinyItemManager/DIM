@@ -1620,24 +1620,32 @@
     }
 
     function declassify(itemDef, language, classifiedData) {
-      classifiedData = classifiedData.$$state.value;
-      // itemDef.icon = classifiedData[itemDef.itemHash].icon;
-      itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
-      itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
-      itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
-      itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
-      itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
-      if (classifiedData[itemDef.itemHash].classType) {
-        itemDef.classType = classifiedData[itemDef.itemHash].classType;
+      if (classifiedData.$$state.value) {
+        classifiedData = classifiedData.$$state.value;
       }
-      if (classifiedData[itemDef.itemHash].primaryBaseStatHash) {
-        itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
-        itemDef.primaryStat = [];
-        itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
-        itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
-      }
-      if (classifiedData[itemDef.itemHash].stats) {
-        itemDef.stats = classifiedData[itemDef.itemHash].stats;
+
+      if (classifiedData[itemDef.itemHash]) {
+        // itemDef.icon = classifiedData[itemDef.itemHash].icon;
+        itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
+        itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
+        itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+        itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
+        itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
+
+        if (classifiedData[itemDef.itemHash].classType) {
+          itemDef.classType = classifiedData[itemDef.itemHash].classType;
+        }
+
+        if (classifiedData[itemDef.itemHash].primaryBaseStatHash) {
+          itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
+          itemDef.primaryStat = [];
+          itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
+          itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+        }
+
+        if (classifiedData[itemDef.itemHash].stats) {
+          itemDef.stats = classifiedData[itemDef.itemHash].stats;
+        }
       }
     }
   }
