@@ -15,7 +15,7 @@
       template: [
         '<div id="loadout-drawer" ng-if="vm.show" class="loadout-create">',
         '  <div ng-messages="vm.form.name.$error" ng-if="vm.form.$submitted || vm.form.name.$touched">',
-        '    <div ng-message="required">A name is required.</div>',
+        '    <div ng-message="required"><span translate="Loadouts.NameRequired"></span></div>',
         '    <div ng-message="minlength">...</div>',
         '    <div ng-message="maxlength">...</div>',
         '  </div>',
@@ -27,7 +27,7 @@
         '        <button ng-disabled="vm.form.$invalid" ng-click="vm.save()" translate="Loadouts.Save"></button>',
         '        <button ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew()" translate="Loadouts.SaveAsNew"></button>',
         '        <button ng-click="vm.cancel()" translate="Loadouts.Cancel"></button>',
-        '        <span><img src="images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> <span translate="Loadouts.ItemsWithIcon"></span>  <span translate="Loadouts.ClickToEquip"></span></span>',
+        '        <span><img src="images/spartan.png" style="border: 1px solid #333; background-color: #f00; margin: 0 2px; width: 16px; height: 16px;  vertical-align: text-bottom;"> <span translate="Loadouts.ItemsWithIcon"></span></span>',
         '        <p id="loadout-error"></p>',
         '      </form>',
         '    </div>',
