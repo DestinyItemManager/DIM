@@ -144,27 +144,27 @@
       $stateProvider
         .state('inventory', {
           url: "/inventory",
-          templateUrl: require("file-loader!../views/inventory.html"),
+          templateUrl: require("!file-loader!../views/inventory.html"),
         })
         .state('best', {
           url: "/best",
-          templateUrl: require("file-loader!../views/best.html"),
+          templateUrl: require("!file-loader!../views/best.html"),
         })
         .state('vendors', {
           url: "/vendors",
-          templateUrl: require("file-loader!../views/vendors.html"),
+          templateUrl: require("!file-loader!../views/vendors.html"),
         })
         .state('materials-exchange', {
           url: "/materials-exchange",
-          templateUrl: require("file-loader!../views/mats-exchange.html"),
+          templateUrl: require("!file-loader!../views/mats-exchange.html"),
         })
         .state('debugItem', {
           url: "/debugItem/:itemId",
-          templateUrl: require("file-loader!../views/debugItem.html"),
+          templateUrl: require("!file-loader!../views/debugItem.html"),
         })
         .state('developer', {
           url: "/developer",
-          templateUrl: require("file-loader!../scripts/developer/developer.html"),
+          templateUrl: require("!file-loader!../scripts/developer/developer.html"),
         });
     });
 })();

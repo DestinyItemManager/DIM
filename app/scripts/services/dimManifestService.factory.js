@@ -200,7 +200,7 @@ const _ = require('underscore');
     function unzipManifest(blob) {
       return $q(function(resolve, reject) {
         zip.useWebWorkers = true;
-        zip.workerScriptsPath = "vendor/zip.js/WebContent/";
+        zip.workerScriptsPath = 'zipjs/';
         zip.createReader(new zip.BlobReader(blob), function(zipReader) {
           // get all entries from the zip
           zipReader.getEntries(function(entries) {

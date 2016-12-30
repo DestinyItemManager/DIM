@@ -1,8 +1,9 @@
-// const webpack = require('webpack');
+const webpack = require('webpack');
 
 // const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = (options = {}) => {
@@ -26,9 +27,18 @@ module.exports = (options = {}) => {
           test: /\.json$/,
           loader: 'json-loader'
         }, {
+          test: /\.png$/,
+          loader: 'file-loader'
+        }, {
           test: /\.html$/,
           loader: 'html-loader'
-        },
+        }, {
+          test: /\.scss$/,
+          loader: ExtractTextPlugin.extract({
+            fallbackLoader: 'style-loader',
+            loader: 'css-loader!sass-loader',
+          }),
+        }
       ],
     },
 
@@ -37,6 +47,8 @@ module.exports = (options = {}) => {
     },
 
     plugins: [
+      new ExtractTextPlugin('styles.css'),
+
       new HtmlWebpackPlugin({
         template: 'app/index.html',
       }),
@@ -47,11 +59,6 @@ module.exports = (options = {}) => {
           to: 'zipjs'
         }
       ]),
-
-      // new webpack.optimize.UglifyJsPlugin({
-      //   mangle: false,
-      //   compress: false
-      // })
     ],
 
     node: {
@@ -60,6 +67,13 @@ module.exports = (options = {}) => {
       tls: 'empty'
     },
   };
+
+  if (options.prod) {
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+      mangle: false,
+      compress: false
+    }));
+  }
 
   return config;
 };
