@@ -13,7 +13,7 @@ module.exports = (options = {}) => {
 
     output: {
       path: './app/generated',
-      filename: 'bundle-[chunkhash].js',
+      filename: 'bundle-[chunkhash:6].js',
     },
 
     devtool: 'cheap-module-source-map',
@@ -28,14 +28,15 @@ module.exports = (options = {}) => {
           test: /\.json$/,
           loader: 'json-loader'
         }, {
-          test: /\.png$/,
-          loader: 'file-loader'
-        }, {
           test: /\.html$/,
           loader: 'html-loader'
         }, {
-          test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-          loader: 'url-loader'
+          test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          loader: 'url-loader',
+          query: {
+            limit: 5 * 1024, // only inline if less than 5kb
+            name: '[name]-[hash:6].[ext]'
+          },
         }, {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
@@ -47,7 +48,11 @@ module.exports = (options = {}) => {
     },
 
     resolve: {
-      extensions: ['.js', '.json']
+      extensions: ['.js', '.json'],
+
+      alias: {
+        app: path.resolve('./app'),
+      }
     },
 
     plugins: [
@@ -55,7 +60,7 @@ module.exports = (options = {}) => {
         root: path.resolve('./'),
       }),
 
-      new ExtractTextPlugin('styles-[hash].css'),
+      new ExtractTextPlugin('styles-[hash:6].css'),
 
       new HtmlWebpackPlugin({
         template: 'app/index.html',
