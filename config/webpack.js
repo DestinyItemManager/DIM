@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-module.exports = (options) => {
+module.exports = (options = {}) => {
   const config = {
     entry: './app/index.js',
 
@@ -68,7 +68,7 @@ module.exports = (options) => {
     },
   };
 
-  if (options && options.prod) {
+  if (options.prod) {
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       mangle: false,
       compress: false
