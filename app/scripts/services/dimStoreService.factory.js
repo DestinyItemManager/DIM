@@ -711,8 +711,8 @@
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
       var missingSource = getMissingSourceHashes(itemDef.hash, missingSources);
-      if (missingSource) {
-        itemDef.sourceHashes[itemDef.sourceHashes.length] = missingSource;
+      if (missingSource.length) {
+        itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
       }
 
       var createdItem = angular.extend(Object.create(ItemProto), {
