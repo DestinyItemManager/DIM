@@ -240,7 +240,7 @@
             addPredicate(predicate, filter, true);
           } else {
             _.find(dimSearchService.filterTrans, (value, key) => {
-              if (value.indexOf(filter >= 0)) {
+              if (value.indexOf(filter) >= 0) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter, true);
