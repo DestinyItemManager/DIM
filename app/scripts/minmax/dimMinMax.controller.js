@@ -508,23 +508,24 @@ const _ = require('underscore');
                                 value: 0,
                                 tier: 0,
                                 name: 'Intellect',
-                                icon: 'images/Intellect.png'
+                                icon: require('app/images/Intellect.png'),
                               },
                               STAT_DISCIPLINE: {
                                 value: 0,
                                 tier: 0,
                                 name: 'Discipline',
-                                icon: 'images/Discipline.png'
+                                icon: require('app/images/Discipline.png'),
                               },
                               STAT_STRENGTH: {
                                 value: 0,
                                 tier: 0,
                                 name: 'Strength',
-                                icon: 'images/Strength.png'
+                                icon: require('app/images/Strength.png'),
                               }
                             },
                             setHash: 0
                           };
+
                           if (validSet(set.armor)) {
                             vm.hasSets = true;
                             set.setHash = genSetHash(set.armor);
