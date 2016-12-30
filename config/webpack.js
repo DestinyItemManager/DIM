@@ -1,34 +1,51 @@
-var webpack = require('webpack');
+// const webpack = require('webpack');
 
-module.exports = {
-  entry: './app/index.js',
-  output: {
-    path: './app/generated',
-    filename: 'index.js'
-  },
-  module: {
-    loaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader'
-    }, {
-      test: /\.json$/,
-      loader: 'json-loader'
-    }]
-  },
-  resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.js']
-  },
-  node: {
-    console: 'empty',
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty'
-  },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: false,
-      compress: false
-    })
-  ]
-}
+// const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+module.exports = (options = {}) => {
+  const config = {
+    entry: './app/index.js',
+
+    output: {
+      path: './app/generated',
+      filename: 'bundle-[chunkhash].js',
+    },
+
+    devtool: 'cheap-module-source-map',
+
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        }, {
+          test: /\.json$/,
+          loader: 'json-loader'
+        }, {
+          test: /\.html$/,
+          loader: 'html-loader'
+        },
+      ],
+    },
+
+    resolve: {
+      extensions: ['.js', '.json']
+    },
+
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: 'app/index.html',
+      }),
+
+      // new webpack.optimize.UglifyJsPlugin({
+      //   mangle: false,
+      //   compress: false
+      // })
+    ],
+  };
+
+  return config;
+};

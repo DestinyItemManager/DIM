@@ -1,3 +1,6 @@
+const angular = require('angular');
+const _ = require('lodash');
+
 (function() {
   'use strict';
   angular.module('dimApp')
