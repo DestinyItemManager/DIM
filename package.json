@@ -66,7 +66,7 @@
     "style-loader": "^0.13.1",
     "uglify-js": "^2.7.0",
     "unzip": "^0.1.11",
-    "webpack": "^2.2.0-rc.3"
+    "webpack": "^2.1.0-beta.19"
   },
   "dependencies": {
     "angular": "^1.6.1",
