@@ -34,6 +34,9 @@ module.exports = (options = {}) => {
           test: /\.html$/,
           loader: 'html-loader'
         }, {
+          test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          loader: 'url-loader'
+        }, {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
             fallbackLoader: 'style-loader',
