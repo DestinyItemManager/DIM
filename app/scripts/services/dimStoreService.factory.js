@@ -1531,16 +1531,20 @@
       // year 1
 
       item.year = 1;
-      if (item.sourceHashes.includes(460228854) ||  // ttk
-          item.sourceHashes.includes(3523074641) || // variks
-          (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
-          item.sourceHashes.includes(3739898362) || // elders challenge
-          item.sourceHashes.includes(3551688287)) { // kings fall
+      var infusable = (item.talentGrid && item.talentGrid.infusable);
+      var sourceHashes = [];// tTK       Variks        CoE         FoTL    Kings Fall
+      sourceHashes.year2 = [460228854, 32533074641, 3739898362, 907422371, 3551688287];
+                           // RoI       WoTM         FoTl       Dawning
+      sourceHashes.year3 = [24296771, 3147905712, 907422371, 4153390200];
+      if (_.intersection(sourceHashes.year2, item.sourceHashes).length || infusable) {
         item.year = 2;
       }
-      if ((item.sourceHashes.includes(24296771) ||        // roi
-          !item.sourceHashes.length)) {                   // new items
-        item.year = 3;
+      if (_.intersection(sourceHashes.year3, item.sourceHashes).length || !item.sourceHashes.length) {
+        if (item.sourceHashes.includes(460228854)) { // if it was available during tTK it is not year3
+          item.year = 2;
+        } else {
+          item.year = 3;
+        }
       }
     }
 
