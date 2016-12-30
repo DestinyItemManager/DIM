@@ -71,7 +71,14 @@ const _ = require('underscore');
               })
               .then(function(typedArray) {
                 service.statusText = $translate.instant('Manifest.Build') + '...';
-                const db = new SQL.Database(typedArray);
+
+                return Promise.all([
+                  typedArray,
+                  System.import('sql.js') // load sql.js async
+                ]);
+              })
+              .then(function([typedArray, SQLLib]) {
+                const db = new SQLLib.Database(typedArray);
                 // do a small request, just to test it out
                 service.getAllRecords(db, 'DestinyRaceDefinition');
                 return db;

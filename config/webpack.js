@@ -1,10 +1,11 @@
 const webpack = require('webpack');
 
-// const path = require('path');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 module.exports = (options = {}) => {
   const config = {
@@ -50,6 +51,10 @@ module.exports = (options = {}) => {
     },
 
     plugins: [
+      new CleanWebpackPlugin(['app/generated'], {
+        root: path.resolve('./'),
+      }),
+
       new ExtractTextPlugin('styles-[hash].css'),
 
       new HtmlWebpackPlugin({
@@ -62,6 +67,8 @@ module.exports = (options = {}) => {
           to: 'zipjs'
         }
       ]),
+
+      new Visualizer(),
     ],
 
     node: {
@@ -73,8 +80,13 @@ module.exports = (options = {}) => {
 
   if (options.prod) {
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      mangle: false,
-      compress: false
+      compress: {
+        warnings: false,
+      },
+      output: {
+        comments: false,
+      },
+      sourceMap: false,
     }));
   }
 
