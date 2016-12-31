@@ -141,7 +141,7 @@ const _ = require('underscore');
         } else {
           ngDialog.closeAll();
           result = ngDialog.open({
-            template: 'views/' + lang + name + '.html',
+            template: require('app/views/' + lang + name + '.template.html'),
             className: name,
             appendClassName: 'modal-dialog'
           });
