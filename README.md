@@ -30,14 +30,13 @@ Install dependencies:
 
 * `npm install`
 
-Generate CSS
-* `npm run generate-css`
-* `npm run dev-chrome` (This will watch the scss files for any changes and generate a new style.css)
+Build in dev mode
+* `npm start`. This will bundle and copy all the assets, as well as watch for changes.
 
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app/` folder.
+You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app` folder.
 
 Get your own API key:
 

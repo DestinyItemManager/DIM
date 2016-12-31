@@ -7,6 +7,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 
+const NotifyPlugin = require('notify-webpack-plugin');
+
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 module.exports = (options = {}) => {
@@ -19,6 +21,12 @@ module.exports = (options = {}) => {
     },
 
     devtool: 'cheap-module-source-map',
+
+    stats: 'errors-only',
+
+    performance: {
+      hints: false
+    },
 
     module: {
       rules: [
@@ -72,6 +80,8 @@ module.exports = (options = {}) => {
         root: path.resolve('./'),
       }),
 
+      new NotifyPlugin('DIM', options.prod),
+
       new ExtractTextPlugin('styles-[hash:6].css'),
 
       new HtmlWebpackPlugin({
@@ -81,7 +91,8 @@ module.exports = (options = {}) => {
       new CopyWebpackPlugin([
         {
           from: './node_modules/zip-js/WebContent',
-          to: 'static/zipjs'
+          to: 'static/zipjs',
+          ignore: ['tests/**/*'],
         },
       ]),
 
@@ -96,6 +107,10 @@ module.exports = (options = {}) => {
   };
 
   if (options.prod) {
+    // Bail and fail hard on first error
+    config.bail = true;
+    config.stats = 'verbose';
+
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,

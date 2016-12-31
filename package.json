@@ -7,12 +7,13 @@
     "node": "6.9.2"
   },
   "scripts": {
-    "dev-chrome": "./node_modules/.bin/grunt dev-chrome",
-    "generate-css": "./node_modules/.bin/grunt css",
-    "lint": "./node_modules/.bin/grunt eslint",
-    "_postinstall": "npm-run-all bower build-vendors",
     "test": "echo \"No tests\"",
-    "start": "webpack --config ./config/webpack.js",
+    "dev-chrome": "npm start -s",
+    "generate-css": "echo \"No need to run this any more. Just run 'npm start'!\n\"",
+    "lint": "./node_modules/.bin/grunt eslint",
+    "bundle": "webpack --config ./config/webpack.js --hide-modules",
+    "start": "npm run bundle -s -- --watch",
+    "build": "npm run bundle -s -- --env.prod=true",
     "install": "napa"
   },
   "napa": {
@@ -37,6 +38,7 @@
     "babel-preset-env": "^1.1.4",
     "babel-preset-es2015": "^6.18.0",
     "bower": "^1.7.9",
+    "chalk": "^1.1.3",
     "clean-webpack-plugin": "^0.1.14",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
@@ -63,6 +65,7 @@
     "load-grunt-tasks": "^3.5.0",
     "napa": "^2.3.0",
     "node-sass": "^3.13.1",
+    "notify-webpack-plugin": "^1.0.0",
     "npm-run-all": "^3.1.2",
     "request": "^2.73.0",
     "sass-loader": "^4.1.1",
