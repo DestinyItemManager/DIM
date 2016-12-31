@@ -7,6 +7,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 
+const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
+
 module.exports = (options = {}) => {
   const config = {
     entry: './app/index.js',
@@ -29,16 +31,23 @@ module.exports = (options = {}) => {
           loader: 'json-loader'
         }, {
           test: /\.template\.html$/,
-          use: ['file-loader', 'extract-loader', 'html-loader']
+          use: [
+            {
+              loader: 'file-loader',
+              options: { name: ASSET_NAME_PATTERN },
+            },
+            'extract-loader',
+            'html-loader'
+          ],
         }, {
           test: /^(?!.*template\.html$).*\.html$/, // for html files, excluding .template.html
           loader: 'html-loader'
         }, {
           test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
-          query: {
+          options: {
             limit: 5 * 1024, // only inline if less than 5kb
-            name: '[name]-[hash:6].[ext]'
+            name: ASSET_NAME_PATTERN
           },
         }, {
           test: /\.scss$/,
@@ -72,8 +81,8 @@ module.exports = (options = {}) => {
       new CopyWebpackPlugin([
         {
           from: './node_modules/zip-js/WebContent',
-          to: 'zipjs'
-        }
+          to: 'static/zipjs'
+        },
       ]),
 
       new Visualizer(),
