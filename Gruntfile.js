@@ -99,43 +99,6 @@ module.exports = function(grunt) {
       }
     },
 
-    sass: {
-      options: {
-        sourceMap: true
-      },
-      dist: {
-        files: {
-          'app/styles/main.css': 'app/scss/main.scss'
-        }
-      }
-    },
-
-    postcss: {
-      options: {
-        map: true,
-        processors: [
-
-          require('autoprefixer')()
-        ]
-      },
-      dist: {
-        src: 'app/styles/main.css',
-        dest: 'app/styles/main.css'
-      }
-    },
-
-    watch: {
-      sass: {
-        files:['app/scss/**/*.scss'],
-        tasks:['css','sync'],
-        options: { spawn: false }
-      },
-      dist: {
-        files: ['app/**/*.{js,html}'],
-        tasks: ['sync']
-      }
-    },
-
     // See https://github.com/c301/grunt-webstore-upload
     webstore_upload: {
       accounts: {
@@ -174,33 +137,16 @@ module.exports = function(grunt) {
         }
       }
     },
-
-    eslint: {
-      target: ["app/scripts/**/*.js"],
-      options: {
-        fix: true
-      }
-    }
   });
-
-
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-postcss');
-  grunt.loadNpmTasks('grunt-sass');
-  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-sync');
-  grunt.loadNpmTasks("grunt-eslint");
 
-  grunt.registerTask('css', ['sass', 'postcss']);
-
-  grunt.registerTask('default', ['eslint', 'build', 'watch']);
-
-  grunt.registerTask('build', ['clean','css', 'sync']);
+  grunt.registerTask('build', ['clean', 'sync']);
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('dist/chrome/manifest.json');
