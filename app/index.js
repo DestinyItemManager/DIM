@@ -13,7 +13,6 @@ window.JSZip = require('jszip');
 window.LZString = require('lz-string');
 window.MessageFormat = require('messageformat');
 window.moment = require('moment');
-window.SQL = require('sql.js');
 require('imports-loader?this=>window!zip-js/WebContent/zip.js');
 window.angular = require('angular');
 

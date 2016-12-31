@@ -1,5 +1,6 @@
 {
   "env": {
+    "es6": true,
     "browser": true,
     "jquery": true,
     "node": true,
@@ -14,25 +15,15 @@
     }
   },
   "globals": {
-    "_angular": true,
-    _"$": true,
-    "__": true,
-    "__gaq": true,
-    "_chrome": true,
-    "_sum": true,
-    "_count": true,
-    "_flatMap": true,
-    "_gapi": true,
-    "_Set": true,
-    "_base64js": true,
-    "_SQL": true,
-    "_zip": true,
-    "_Uint8Array": true,
-    "_Int32Array": true,
-    "_DataView": true,
-    "_Proxy": true,
-    "_ga": true,
-    "_idbKeyval": true
+    "angular": true,
+    "_gaq": true,
+    "chrome": true,
+    "sum": true,
+    "count": true,
+    "flatMap": true,
+    "gapi": true,
+    "Set": true,
+    "idbKeyval": true
   },
   "rules": {
     "array-callback-return": "error",

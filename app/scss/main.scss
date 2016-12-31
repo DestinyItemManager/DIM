@@ -12,4 +12,8 @@
 @import 'loadout-builder';
 @import 'vendors';
 @import 'debug';
-@import './shell/materials-exchange'
+@import './shell/materials-exchange';
+
+// Load stylesheets from external dependencies from node_modules
+@import '~components-font-awesome/css/font-awesome.css';
+@import '~angular-hotkeys/build/hotkeys.css'
