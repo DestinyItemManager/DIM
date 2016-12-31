@@ -1,3 +1,6 @@
+const angular = require('angular');
+const _ = require('underscore');
+
 (function() {
   'use strict';
 
@@ -1555,12 +1558,22 @@
         var statHash = {};
         statHash.id = statId;
         switch (statId) {
-        case 'STAT_INTELLECT': statHash.name = 'Intellect'; statHash.effect = 'Super'; break;
-        case 'STAT_DISCIPLINE': statHash.name = 'Discipline'; statHash.effect = 'Grenade'; break;
-        case 'STAT_STRENGTH': statHash.name = 'Strength'; statHash.effect = 'Melee'; break;
+        case 'STAT_INTELLECT':
+          statHash.name = 'Intellect';
+          statHash.effect = 'Super';
+          statHash.icon = require('app/images/intellect.png');
+          break;
+        case 'STAT_DISCIPLINE':
+          statHash.name = 'Discipline';
+          statHash.effect = 'Grenade';
+          statHash.icon = require('app/images/discipline.png');
+          break;
+        case 'STAT_STRENGTH':
+          statHash.name = 'Strength';
+          statHash.effect = 'Melee';
+          statHash.icon = require('app/images/strength.png');
+          break;
         }
-
-        statHash.icon = statHash.name ? `images/${statHash.name.toLowerCase()}.png` : undefined;
 
         const stat = data.stats[statId];
         if (!stat) {

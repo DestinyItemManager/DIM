@@ -1,3 +1,8 @@
+/* global zip */
+
+const angular = require('angular');
+const _ = require('underscore');
+
 (function() {
   'use strict';
 
@@ -68,7 +73,14 @@
               })
               .then(function(typedArray) {
                 service.statusText = $translate.instant('Manifest.Build') + '...';
-                const db = new SQL.Database(typedArray);
+
+                return Promise.all([
+                  typedArray,
+                  System.import('sql.js') // load sql.js async
+                ]);
+              })
+              .then(function([typedArray, SQLLib]) {
+                const db = new SQLLib.Database(typedArray);
                 // do a small request, just to test it out
                 service.getAllRecords(db, 'DestinyRaceDefinition');
                 return db;
@@ -197,7 +209,7 @@
     function unzipManifest(blob) {
       return $q(function(resolve, reject) {
         zip.useWebWorkers = true;
-        zip.workerScriptsPath = "vendor/zip.js/WebContent/";
+        zip.workerScriptsPath = 'static/zipjs/';
         zip.createReader(new zip.BlobReader(blob), function(zipReader) {
           // get all entries from the zip
           zipReader.getEntries(function(entries) {

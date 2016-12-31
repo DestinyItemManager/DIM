@@ -1,3 +1,6 @@
+const angular = require('angular');
+const _ = require('underscore');
+
 (function() {
   'use strict';
 

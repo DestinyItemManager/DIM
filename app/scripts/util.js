@@ -1,3 +1,5 @@
+const _ = require('underscore');
+
 // Some utility functions missing from underscore
 window.sum = function sum(list, summer) {
   const fn = _.iteratee(summer);
