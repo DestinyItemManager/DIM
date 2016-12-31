@@ -41,6 +41,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
     "exports-loader": "^0.6.3",
+    "extract-loader": "^0.1.0",
     "extract-text-webpack-plugin": "github:webpack/extract-text-webpack-plugin",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",

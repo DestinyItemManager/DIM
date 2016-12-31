@@ -28,7 +28,10 @@ module.exports = (options = {}) => {
           test: /\.json$/,
           loader: 'json-loader'
         }, {
-          test: /\.html$/,
+          test: /\.template\.html$/,
+          use: ['file-loader', 'extract-loader', 'html-loader']
+        }, {
+          test: /^(?!.*template\.html$).*\.html$/, // for html files, excluding .template.html
           loader: 'html-loader'
         }, {
           test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
