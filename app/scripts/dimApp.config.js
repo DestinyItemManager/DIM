@@ -143,28 +143,28 @@
 
       $stateProvider
         .state('inventory', {
-          url: "/inventory",
-          templateUrl: require("!file-loader!../views/inventory.html"),
+          url: '/inventory',
+          templateUrl: require('app/views/inventory.template.html'),
         })
         .state('best', {
-          url: "/best",
-          templateUrl: require("!file-loader!../views/best.html"),
+          url: '/best',
+          templateUrl: require('app/views/best.template.html'),
         })
         .state('vendors', {
-          url: "/vendors",
-          templateUrl: require("!file-loader!../views/vendors.html"),
+          url: '/vendors',
+          templateUrl: require('app/views/vendors.template.html'),
         })
         .state('materials-exchange', {
-          url: "/materials-exchange",
-          templateUrl: require("!file-loader!../views/mats-exchange.html"),
+          url: '/materials-exchange',
+          templateUrl: require('app/views/mats-exchange.template.html'),
         })
         .state('debugItem', {
-          url: "/debugItem/:itemId",
-          templateUrl: require("!file-loader!../views/debugItem.html"),
+          url: '/debugItem/:itemId',
+          templateUrl: require('app/views/debugItem.template.html'),
         })
         .state('developer', {
-          url: "/developer",
-          templateUrl: require("!file-loader!../scripts/developer/developer.html"),
+          url: '/developer',
+          templateUrl: require('app/scripts/developer/developer.template.html'),
         });
     });
 })();
