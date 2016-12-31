@@ -1,5 +1,9 @@
 # Next
 
+* Removed farming option to keep greens since they're disassembled by default now.
+
+# 3.15.0
+
 * Permit the same damage type of subclass in loadouts (#1067)
 * Update record books to properly display time instead of a large number. (#1051)
 * Moving an item into a full vault but an empty bucket (such as full General but the vault contains no Consumables) now works.

@@ -223,14 +223,15 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter);
           } else {
-            for (const key in dimSearchService.filterTrans) {
-              if (dimSearchService.filterTrans.hasOwnProperty(key) && dimSearchService.filterTrans[key].indexOf(filter) > -1) {
+            _.find(dimSearchService.filterTrans, (value, key) => {
+              if (value.indexOf(filter) >= 0) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter);
-                break;
+                return true;
               }
-            }
+              return false;
+            });
           }
         } else if (term.indexOf('not:') >= 0) {
           filter = term.replace('not:', '');
@@ -238,14 +239,15 @@
             predicate = _cachedFilters[filter];
             addPredicate(predicate, filter, true);
           } else {
-            for (const key in dimSearchService.filterTrans) {
-              if (dimSearchService.filterTrans.hasOwnProperty(key) && dimSearchService.filterTrans[key].indexOf(filter) > -1) {
+            _.find(dimSearchService.filterTrans, (value, key) => {
+              if (value.indexOf(filter) >= 0) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter, true);
-                break;
+                return true;
               }
-            }
+              return false;
+            });
           }
         } else if (term.indexOf('tag:') >= 0) {
           filter = term.replace('tag:', '');
@@ -647,15 +649,15 @@
       },
       hasLight: function(predicate, item) {
         const lightBuckets = ["BUCKET_CHEST",
-                                 "BUCKET_LEGS",
-                                 "BUCKET_ARTIFACT",
-                                 "BUCKET_HEAVY_WEAPON",
-                                 "BUCKET_PRIMARY_WEAPON",
-                                 "BUCKET_CLASS_ITEMS",
-                                 "BUCKET_SPECIAL_WEAPON",
-                                 "BUCKET_HEAD",
-                                 "BUCKET_ARMS",
-                                 "BUCKET_GHOST"];
+          "BUCKET_LEGS",
+          "BUCKET_ARTIFACT",
+          "BUCKET_HEAVY_WEAPON",
+          "BUCKET_PRIMARY_WEAPON",
+          "BUCKET_CLASS_ITEMS",
+          "BUCKET_SPECIAL_WEAPON",
+          "BUCKET_HEAD",
+          "BUCKET_ARMS",
+          "BUCKET_GHOST"];
         return item.bucket && _.contains(lightBuckets, item.bucket.id);
       },
       weapon: function(predicate, item) {
@@ -666,12 +668,12 @@
       },
       cosmetic: function(predicate, item) {
         const cosmeticBuckets = ["BUCKET_SHADER",
-                                 "BUCKET_MODS",
-                                 "BUCKET_EMOTES",
-                                 "BUCKET_EMBLEM",
-                                 "BUCKET_VEHICLE",
-                                 "BUCKET_SHIP",
-                                 "BUCKET_HORN"];
+          "BUCKET_MODS",
+          "BUCKET_EMOTES",
+          "BUCKET_EMBLEM",
+          "BUCKET_VEHICLE",
+          "BUCKET_SHIP",
+          "BUCKET_HORN"];
         return item.bucket && _.contains(cosmeticBuckets, item.bucket.id);
       },
       equipment: function(predicate, item) {
