@@ -1,3 +1,5 @@
+/* global zip */
+
 const angular = require('angular');
 const _ = require('underscore');
 
