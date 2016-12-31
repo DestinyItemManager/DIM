@@ -508,19 +508,19 @@ const _ = require('underscore');
                                 value: 0,
                                 tier: 0,
                                 name: 'Intellect',
-                                icon: require('app/images/Intellect.png'),
+                                icon: require('app/images/intellect.png'),
                               },
                               STAT_DISCIPLINE: {
                                 value: 0,
                                 tier: 0,
                                 name: 'Discipline',
-                                icon: require('app/images/Discipline.png'),
+                                icon: require('app/images/discipline.png'),
                               },
                               STAT_STRENGTH: {
                                 value: 0,
                                 tier: 0,
                                 name: 'Strength',
-                                icon: require('app/images/Strength.png'),
+                                icon: require('app/images/strength.png'),
                               }
                             },
                             setHash: 0
