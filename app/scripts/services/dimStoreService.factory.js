@@ -44,8 +44,10 @@
 
     var _removedNewItems = new Set();
     const yearHashes = {
-      year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287], // tTK       Variks        CoE         FoTL    Kings Fall
-      year3: [24296771, 3147905712, 907422371, 4153390200]                // RoI       WoTM         FoTl       Dawning
+      //         tTK       Variks        CoE         FoTL    Kings Fall
+      year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
+      //         RoI       WoTM         FoTl       Dawning
+      year3: [24296771, 3147905712, 907422371, 4153390200]
     };
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
