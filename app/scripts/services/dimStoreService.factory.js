@@ -1612,7 +1612,7 @@
 
     function getMissingSourceHashes(itemHash, missingSources) {
       if (missingSources[itemHash]) {
-        return missingSources[itemHash][0];
+        return missingSources[itemHash];
       }
       return false;
     }
