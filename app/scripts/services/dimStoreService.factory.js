@@ -1542,7 +1542,7 @@
       if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
         item.year = 2;
       }
-      if (!ttk && (roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
+      if (!ttk && (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
         item.year = 3;
       }
     }
