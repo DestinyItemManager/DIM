@@ -46,7 +46,7 @@
 
     var _removedNewItems = new Set();
 
-    const missingSources = loadJSON('scripts/sources.json');
+    var dimMissingSources = loadJSON('scripts/sources.json');
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -336,15 +336,16 @@
       console.time('Load stores (Bungie API)');
       _reloadPromise = $q.all([dimDefinitions,
         dimBucketService,
+        dimMissingSources,
         loadNewItems(activePlatform),
         dimItemInfoService(activePlatform),
         dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
+        .then(function([defs, buckets, missingSources, newItems, itemInfoService, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
-
+          dimMissingSources = missingSources;
           const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
             if (rawStore.id === 'vault') {
               return memo;
@@ -710,7 +711,7 @@
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
-      var missingSource = getMissingSourceHashes(itemDef.hash, missingSources);
+      var missingSource = getMissingSourceHashes(itemDef.hash, dimMissingSources);
       if (missingSource.length) {
         itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
       }
@@ -1610,9 +1611,10 @@
                });
     }
 
-    function getMissingSourceHashes(itemHash, missingSources) {
-      if (missingSources[itemHash]) {
-        return missingSources[itemHash];
+    function getMissingSourceHashes(itemHash, dimMissingSources) {
+      if (dimMissingSources[itemHash]) {
+        console.log(dimMissingSources[itemHash]);
+        return dimMissingSources[itemHash];
       }
       return false;
     }
