@@ -134,14 +134,21 @@ const _ = require('underscore');
       return function(e) {
         e.stopPropagation();
 
-        var lang = translate ? vm.settings.language + '/' : ''; // set language
+        var language = translate ? vm.settings.language + '/' : ''; // set language
+
+        var file;
+        try {
+          file = require('app/views/' + language + name + '.template.html');
+        } catch (e) {
+          file = require('app/views/en/' + name + '.template.html');
+        }
 
         if (result) {
           result.close();
         } else {
           ngDialog.closeAll();
           result = ngDialog.open({
-            template: require('app/views/' + lang + name + '.template.html'),
+            template: file,
             className: name,
             appendClassName: 'modal-dialog'
           });
