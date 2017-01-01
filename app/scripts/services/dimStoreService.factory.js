@@ -1537,15 +1537,11 @@
 
       item.year = 1;
       var infusable = (item.talentGrid && item.talentGrid.infusable);
-      if (infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
+      var ttk = item.sourceHashes.includes(460228854);
+      if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
         item.year = 2;
-      }
-      if (!item.sourceHashes.length || _.intersection(yearHashes.year3, item.sourceHashes).length) {
-        if (item.sourceHashes.includes(460228854)) { // if it was available during tTK it is not year3
-          item.year = 2;
-        } else {
-          item.year = 3;
-        }
+      } else if (!ttk || !item.sourceHashes.length || _.intersection(yearHashes.year3, item.sourceHashes).length) {
+        item.year = 3;
       }
     }
 
