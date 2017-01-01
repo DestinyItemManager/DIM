@@ -565,8 +565,8 @@ const _ = require('underscore');
                           }
                         } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
-            var tiers = _.each(_.groupBy([...tiersSet.keys()], function(tierString) {
-              return _.reduce(tierString.toString().split('/'), function(memo, num){
+            var tiers = _.each(_.groupBy(Array.from(tiersSet.keys()), function(tierString) {
+              return _.reduce(tierString.split('/'), function(memo, num){
                 return memo + parseInt(num, 10);
               }, 0);
             }), function(tier) {
