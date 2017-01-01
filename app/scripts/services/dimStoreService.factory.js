@@ -1537,7 +1537,7 @@
 
       item.year = 1;
       var infusable = (item.talentGrid && item.talentGrid.infusable);
-      var ttk = item.sourceHashes.includes(460228854);
+      var ttk = item.sourceHashes.includes(yearHashes.year2[0]);
       if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
         item.year = 2;
       } else if (!ttk || !item.sourceHashes.length || _.intersection(yearHashes.year3, item.sourceHashes).length) {
