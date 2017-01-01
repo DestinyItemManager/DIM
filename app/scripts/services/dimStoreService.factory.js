@@ -1528,7 +1528,7 @@
       // items will hopefully be tagged as follows
       // No value: Vanilla, Crota's End, House of Wolves
       // The Taken King (year 2): 460228854
-      // Rise of Iron (year3): 24296771
+      // Rise of Iron (year 3): 24296771
 
       // This could be further refined for CE/HoW based on activity. See
       // DestinyRewardSourceDefinition and filter on %SOURCE%
@@ -1537,12 +1537,12 @@
 
       item.year = 1;
       var infusable = (item.talentGrid && item.talentGrid.infusable);
-      var noSource = !item.sourceHashes.length;
       var ttk = item.sourceHashes.includes(yearHashes.year2[0]);
+      var roi = item.sourceHashes.includes(yearHashes.year3[0]);
       if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
         item.year = 2;
       }
-      if (!ttk && (noSource || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
+      if (!ttk && (roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
         item.year = 3;
       }
     }
