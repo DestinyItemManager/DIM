@@ -13,10 +13,10 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 module.exports = (options = {}) => {
   const config = {
-    entry: './app/index.js',
+    entry: './src/index.js',
 
     output: {
-      path: './app/generated',
+      path: './app',
       filename: 'bundle-[chunkhash:6].js',
     },
 
@@ -71,12 +71,12 @@ module.exports = (options = {}) => {
       extensions: ['.js', '.json'],
 
       alias: {
-        app: path.resolve('./app'),
+        app: path.resolve('./src'),
       }
     },
 
     plugins: [
-      new CleanWebpackPlugin(['app/generated'], {
+      new CleanWebpackPlugin(['app'], {
         root: path.resolve('./'),
       }),
 
@@ -85,7 +85,7 @@ module.exports = (options = {}) => {
       new ExtractTextPlugin('styles-[hash:6].css'),
 
       new HtmlWebpackPlugin({
-        template: 'app/index.html',
+        template: 'src/index.html',
       }),
 
       new CopyWebpackPlugin([
@@ -94,6 +94,22 @@ module.exports = (options = {}) => {
           to: 'static/zipjs',
           ignore: ['tests/**/*'],
         },
+
+        { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
+        { from: './src/manifest.json' },
+        { from: './icons/icon128.png' },
+        { from: './icons/icon16.png' },
+        { from: './icons/icon19.png' },
+        { from: './icons/icon38.png' },
+        { from: './icons/icon48.png' },
+        { from: './icons/favicon-16x16.png' },
+        { from: './icons/favicon-32x32.png' },
+        { from: './icons/favicon-96x96.png' },
+
+        // TODO: Quick hack to get elemental damage icon for StoreItem
+        { from: './src/images/arc.png', to: 'images' },
+        { from: './src/images/solar.png', to: 'images' },
+        { from: './src/images/void.png', to: 'images' },
       ]),
 
       new Visualizer(),
