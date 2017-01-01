@@ -43,7 +43,10 @@
     var _idTracker = {};
 
     var _removedNewItems = new Set();
-
+    const yearHashes = {
+      year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287], // tTK       Variks        CoE         FoTL    Kings Fall
+      year3: [24296771, 3147905712, 907422371, 4153390200]                // RoI       WoTM         FoTl       Dawning
+    };
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
       529303302: { label: "Cryptarch", order: 0 },
@@ -1532,14 +1535,10 @@
 
       item.year = 1;
       var infusable = (item.talentGrid && item.talentGrid.infusable);
-      var sourceHashes = [];// tTK       Variks        CoE         FoTL    Kings Fall
-      sourceHashes.year2 = [460228854, 32533074641, 3739898362, 907422371, 3551688287];
-                           // RoI       WoTM         FoTl       Dawning
-      sourceHashes.year3 = [24296771, 3147905712, 907422371, 4153390200];
-      if (infusable || _.intersection(sourceHashes.year2, item.sourceHashes).length) {
+      if (infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
         item.year = 2;
       }
-      if (!item.sourceHashes.length || _.intersection(sourceHashes.year3, item.sourceHashes).length) {
+      if (!item.sourceHashes.length || _.intersection(yearHashes.year3, item.sourceHashes).length) {
         if (item.sourceHashes.includes(460228854)) { // if it was available during tTK it is not year3
           item.year = 2;
         } else {
