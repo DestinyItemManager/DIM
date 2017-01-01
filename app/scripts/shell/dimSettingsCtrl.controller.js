@@ -7,13 +7,13 @@ const _ = require('underscore');
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
 
-  function SettingsController(settings, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags) {
+  function SettingsController(dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags) {
     var vm = this;
 
     vm.featureFlags = dimFeatureFlags;
 
     $scope.$watchCollection('vm.settings', function() {
-      settings.save();
+      dimSettingsService.save();
     });
 
     vm.charColOptions = _.range(3, 6).map((num) => ({ id: num, name: num }));
@@ -30,7 +30,7 @@ const _ = require('underscore');
       ja: '日本語'
     };
 
-    vm.settings = settings;
+    vm.settings = dimSettingsService;
 
     vm.showSync = function() {
       return SyncService.drive();

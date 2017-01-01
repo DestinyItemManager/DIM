@@ -103,7 +103,7 @@ const _ = require('underscore');
   }
 
 
-  function MoveItemPropertiesCtrl($sce, $q, storeService, itemService, settings, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
+  function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
     var vm = this;
 
     vm.featureFlags = dimFeatureFlags;
@@ -142,9 +142,9 @@ const _ = require('underscore');
 
       var store;
       if (item.owner === 'vault') {
-        store = storeService.getStores()[0];
+        store = dimStoreService.getStores()[0];
       } else {
-        store = storeService.getStore(item.owner);
+        store = dimStoreService.getStore(item.owner);
       }
 
       vm.locking = true;
@@ -156,7 +156,7 @@ const _ = require('underscore');
         state = !item.tracked;
       }
 
-      itemService.setItemState(item, store, state, type)
+      dimItemService.setItemState(item, store, state, type)
         .then(function(lockState) {
           if (type === 'lock') {
             item.locked = lockState;
@@ -180,7 +180,7 @@ const _ = require('underscore');
     vm.classType = '';
     vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
     vm.itemDetails = vm.showDetailsByDefault;
-    vm.settings = settings;
+    vm.settings = dimSettingsService;
     $scope.$watch('vm.settings.itemDetails', function(show) {
       vm.itemDetails = vm.itemDetails || show;
     });
