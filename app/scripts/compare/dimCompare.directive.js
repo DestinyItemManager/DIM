@@ -6,7 +6,6 @@ const _ = require('underscore');
 
   angular.module('dimApp').directive('dimCompare', Compare);
 
-  Compare.$inject = [];
 
   function Compare() {
     return {
@@ -43,7 +42,6 @@ const _ = require('underscore');
     };
   }
 
-  CompareCtrl.$inject = ['$scope', 'toaster', 'dimCompareService', 'dimItemService', 'dimFeatureFlags', '$translate'];
 
   function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeatureFlags, $translate) {
     var vm = this;

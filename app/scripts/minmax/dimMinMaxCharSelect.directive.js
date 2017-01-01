@@ -44,7 +44,6 @@
     .component('dimMinMaxCharSelect', MinMaxCharSelect)
     .component('dimMinMaxCharPopup', MinMaxCharPopup);
 
-  MinMaxCharSelectCtrl.$inject = ['$scope', 'ngDialog'];
 
   function MinMaxCharSelectCtrl($scope, ngDialog) {
     var vm = this;

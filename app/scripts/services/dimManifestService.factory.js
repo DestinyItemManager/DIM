@@ -9,7 +9,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimManifestService', ManifestService);
 
-  ManifestService.$inject = ['$q', 'dimBungieService', '$http', 'toaster', 'dimSettingsService', '$translate', '$rootScope'];
 
   function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate, $rootScope) {
     // Testing flags

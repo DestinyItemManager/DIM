@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimSettingsService', SettingsService);
 
-  SettingsService.$inject = ['$rootScope', 'SyncService', '$window', '$translate'];
 
   /**
    * The settings service provides a settings object which contains

@@ -42,7 +42,6 @@ const _ = require('underscore');
     };
   }
 
-  TalentGridCtrl.$inject = ['dimInfoService', '$translate'];
 
   function TalentGridCtrl(dimInfoService, $translate) {
     const infuseHash = 1270552711;

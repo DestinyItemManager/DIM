@@ -44,7 +44,6 @@ const _ = require('underscore');
     };
   }
 
-  StoreHeadingCtrl.$inject = ['$scope', 'ngDialog'];
 
   function StoreHeadingCtrl($scope, ngDialog) {
     var vm = this;

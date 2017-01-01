@@ -2,7 +2,6 @@
   angular.module('dimApp')
     .directive('dimClickAnywhereButHere', ClickAnywhereButHere);
 
-  ClickAnywhereButHere.$inject = ['$document'];
 
   function ClickAnywhereButHere($document) {
     return {

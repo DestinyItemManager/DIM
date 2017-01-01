@@ -28,7 +28,6 @@
     };
   }
 
-  dimItemSimpleCtrl.$inject = [];
 
   function dimItemSimpleCtrl() {
     // nothing to do here...only needed for bindToController

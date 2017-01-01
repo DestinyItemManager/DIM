@@ -30,7 +30,6 @@
     };
   }
 
-  FarmingCtrl.$inject = ['dimFarmingService', 'dimItemMoveService', 'dimSettingsService'];
 
   function FarmingCtrl(dimFarmingService, dimItemMoveService, dimSettingsService) {
     var vm = this;

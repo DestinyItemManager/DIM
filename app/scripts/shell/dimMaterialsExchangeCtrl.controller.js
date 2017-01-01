@@ -6,7 +6,6 @@ const _ = require('underscore');
 
   angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
-  MaterialsController.$inject = ['$scope', 'dimItemService', 'dimStoreService', '$state', 'dimFeatureFlags'];
 
   function MaterialsController($scope, dimItemService, dimStoreService, $state, dimFeatureFlags) {
     if (!dimFeatureFlags.materialsExchangeEnabled) {

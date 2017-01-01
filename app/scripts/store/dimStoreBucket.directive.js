@@ -40,22 +40,6 @@ const _ = require('underscore');
     };
   }
 
-  StoreBucketCtrl.$inject = [
-    '$scope',
-    'loadingTracker',
-    'dimStoreService',
-    'dimItemService',
-    '$q',
-    '$timeout',
-    'toaster',
-    'dimSettingsService',
-    'ngDialog',
-    '$rootScope',
-    'dimActionQueue',
-    'dimFeatureFlags',
-    'dimInfoService',
-    '$translate'];
-
   function StoreBucketCtrl($scope,
                            loadingTracker,
                            dimStoreService,

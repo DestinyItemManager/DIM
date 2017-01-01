@@ -14,7 +14,6 @@
       }
     });
 
-  FilterLinkCtrl.$inject = ['dimSearchService', '$window', '$translate'];
   function FilterLinkCtrl(dimSearchService, $window, $translate) {
     this.addFilter = function(filter) {
       var itemNameFilter = false;

@@ -7,15 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimItemService', ItemService);
 
-  ItemService.$inject = [
-    'dimStoreService',
-    'dimBungieService',
-    'dimCategory',
-    'dimFeatureFlags',
-    '$q',
-    '$translate'
-  ];
-
   function ItemService(dimStoreService,
                        dimBungieService,
                        dimCategory,

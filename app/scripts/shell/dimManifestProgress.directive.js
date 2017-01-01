@@ -15,7 +15,6 @@
       controller: ManifestProgressCtrl
     });
 
-  ManifestProgressCtrl.$inject = ['dimManifestService'];
   function ManifestProgressCtrl(dimManifestService) {
     this.manifest = dimManifestService;
   }

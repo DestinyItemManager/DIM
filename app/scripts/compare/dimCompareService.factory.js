@@ -4,7 +4,6 @@
   angular.module('dimApp')
     .factory('dimCompareService', CompareService);
 
-  CompareService.$inject = ['$rootScope'];
   function CompareService($rootScope) {
     return {
       dialogOpen: false,

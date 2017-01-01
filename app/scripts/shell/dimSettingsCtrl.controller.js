@@ -6,7 +6,6 @@ const _ = require('underscore');
 
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-  SettingsController.$inject = ['dimSettingsService', '$scope', 'SyncService', 'dimCsvService', 'dimStoreService', 'dimInfoService', 'dimFeatureFlags'];
 
   function SettingsController(settings, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags) {
     var vm = this;

@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
-  BungieService.$inject = ['$rootScope', '$q', '$timeout', '$http', '$state', 'dimState', 'toaster', '$translate'];
 
   function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
     var apiKey = localStorage.apiKey;
