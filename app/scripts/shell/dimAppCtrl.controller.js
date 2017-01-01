@@ -166,7 +166,7 @@ const _ = require('underscore');
       };
     }
 
-    vm.showSetting = showPopupFunction('setting');
+    vm.showSetting = showPopupFunction('settings');
     vm.showAbout = showPopupFunction('about', true);
     vm.showSupport = showPopupFunction('support', true);
     vm.showFilters = showPopupFunction('filters');
