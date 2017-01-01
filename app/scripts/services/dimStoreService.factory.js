@@ -1606,16 +1606,13 @@
     function loadJSON(file) {
       return $http.get(file)
                .then(function(json) {
-                 return json.data.itemHash;
+                 return json.data;
                });
     }
 
     function getMissingSourceHashes(itemHash, missingSources) {
-      if (missingSources.$$state.value) {
-        missingSources = missingSources.$$state.value;
-      }
       if (missingSources[itemHash]) {
-        return missingSources[itemHash].sourceHashes;
+        return missingSources[itemHash][0];
       }
       return false;
     }
