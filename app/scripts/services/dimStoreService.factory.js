@@ -48,7 +48,7 @@
 
     var _removedNewItems = new Set();
 
-    const classifiedData = loadJSON('scripts/classified.json');
+    var dimClassifiedData = loadJSON('scripts/classified.json');
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -338,14 +338,17 @@
       console.time('Load stores (Bungie API)');
       _reloadPromise = $q.all([dimDefinitions,
         dimBucketService,
+        dimClassifiedData,
         loadNewItems(activePlatform),
         dimItemInfoService(activePlatform),
         dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
+        .then(function([defs, buckets, classifiedData, newItems, itemInfoService, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
+
+          dimClassifiedData = classifiedData;
 
           const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
             if (rawStore.id === 'vault') {
@@ -654,7 +657,7 @@
 
       if (itemDef.classified) {
         itemDef.classType = 3;
-        declassify(itemDef, dimSettingsService.language, classifiedData);
+        declassify(itemDef, dimSettingsService.language, dimClassifiedData);
         if (itemDef.primaryStat) {
           item.primaryStat = itemDef.primaryStat;
         }
@@ -1619,32 +1622,28 @@
         });
     }
 
-    function declassify(itemDef, language, classifiedData) {
-      if (classifiedData.$$state.value) {
-        classifiedData = classifiedData.$$state.value;
-      }
+    function declassify(itemDef, language, dimClassifiedData) {
+      if (dimClassifiedData[itemDef.itemHash]) {
+        // itemDef.icon = dimClassifiedData[itemDef.itemHash].icon;
+        itemDef.itemName = dimClassifiedData[itemDef.itemHash].i18n[language].itemName;
+        itemDef.itemDescription = dimClassifiedData[itemDef.itemHash].i18n[language].itemDescription;
+        itemDef.itemTypeName = dimClassifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+        itemDef.bucketTypeHash = dimClassifiedData[itemDef.itemHash].bucketHash;
+        itemDef.tierType = dimClassifiedData[itemDef.itemHash].tierType;
 
-      if (classifiedData[itemDef.itemHash]) {
-        // itemDef.icon = classifiedData[itemDef.itemHash].icon;
-        itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
-        itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
-        itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
-        itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
-        itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
-
-        if (classifiedData[itemDef.itemHash].classType) {
-          itemDef.classType = classifiedData[itemDef.itemHash].classType;
+        if (dimClassifiedData[itemDef.itemHash].classType) {
+          itemDef.classType = dimClassifiedData[itemDef.itemHash].classType;
         }
 
-        if (classifiedData[itemDef.itemHash].primaryBaseStatHash) {
-          itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
+        if (dimClassifiedData[itemDef.itemHash].primaryBaseStatHash) {
+          itemDef.primaryBaseStatHash = dimClassifiedData[itemDef.itemHash].primaryBaseStatHash;
           itemDef.primaryStat = [];
           itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
-          itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+          itemDef.primaryStat.value = dimClassifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
         }
 
-        if (classifiedData[itemDef.itemHash].stats) {
-          itemDef.stats = classifiedData[itemDef.itemHash].stats;
+        if (dimClassifiedData[itemDef.itemHash].stats) {
+          itemDef.stats = dimClassifiedData[itemDef.itemHash].stats;
         }
       }
     }
