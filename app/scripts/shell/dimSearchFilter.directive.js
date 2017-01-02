@@ -83,9 +83,21 @@
     }
 
     // Filters that operate on ranges (>, <, >=, <=)
+    const comparisons = [":<", ":>", ":<=", ":>=", ":"];
+
+    const stats = ['rof', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
+    stats.forEach(function(word) {
+      const filter = 'stat:' + word;
+      comparisons.forEach((comparison) => {
+        keywords.push(filter + comparison);
+      });
+    });
+
     var ranges = ['light', 'level', 'quality', 'percentage'];
     ranges.forEach(function(range) {
-      keywords.push(range + ":<", range + ":>", range + ":<=", range + ":>=");
+      comparisons.forEach((comparison) => {
+        keywords.push(range + comparison);
+      });
     });
 
     // free form notes on items
@@ -111,7 +123,7 @@
         element.find('input').textcomplete([
           {
             words: dimSearchService.keywords,
-            match: /\b((li|le|qu|pe|is:|not:|tag:|notes:)\w*)$/,
+            match: /\b((li|le|qu|pe|is:|not:|tag:|notes:|stat:)\w*)$/,
             search: function(term, callback) {
               callback($.map(this.words, function(word) {
                 return word.indexOf(term) === 0 ? word : null;
@@ -217,7 +229,7 @@
       _.each(searchTerms, function(term) {
         term = term.replace(/'/g, '').replace(/"/g, '');
 
-        if (term.indexOf('is:') >= 0) {
+        if (term.startsWith('is:')) {
           filter = term.replace('is:', '');
           if (_cachedFilters[filter]) {
             predicate = _cachedFilters[filter];
@@ -233,7 +245,7 @@
               return false;
             });
           }
-        } else if (term.indexOf('not:') >= 0) {
+        } else if (term.startsWith('not:')) {
           filter = term.replace('not:', '');
           if (_cachedFilters[filter]) {
             predicate = _cachedFilters[filter];
@@ -249,18 +261,25 @@
               return false;
             });
           }
-        } else if (term.indexOf('tag:') >= 0) {
+        } else if (term.startsWith('tag:')) {
           filter = term.replace('tag:', '');
           addPredicate("itemtags", filter);
-        } else if (term.indexOf('notes:') >= 0) {
+        } else if (term.startsWith('notes:')) {
           filter = term.replace('notes:', '');
           addPredicate("notes", filter);
-        } else if (term.indexOf('light:') >= 0 || term.indexOf('level:') >= 0) {
+        } else if (term.startsWith('light:') || term.startsWith('level:')) {
           filter = term.replace('light:', '').replace('level:', '');
           addPredicate("light", filter);
-        } else if (term.indexOf('quality:') >= 0 || term.indexOf('percentage:') >= 0) {
+        } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
           filter = term.replace('quality:', '').replace('percentage:', '');
           addPredicate("quality", filter);
+        } else if (term.startsWith('stat:')) {
+          // Avoid console.error by checking if all parameters are typed
+          var pieces = term.split(':');
+          if (pieces.length === 3) {
+            filter = pieces[1];
+            addPredicate(filter, pieces[2]);
+          }
         } else if (!/^\s*$/.test(term)) {
           addPredicate("keyword", term);
         }
@@ -687,7 +706,96 @@
       },
       transferable: function(predicate, item) {
         return !item.notransfer;
+      },
+      rof: function(predicate, item) {
+        return filterByStats(predicate, item, 'rof');
+      },
+      impact: function(predicate, item) {
+        return filterByStats(predicate, item, 'impact');
+      },
+      range: function(predicate, item) {
+        return filterByStats(predicate, item, 'range');
+      },
+      stability: function(predicate, item) {
+        return filterByStats(predicate, item, 'stability');
+      },
+      reload: function(predicate, item) {
+        return filterByStats(predicate, item, 'reload');
+      },
+      magazine: function(predicate, item) {
+        return filterByStats(predicate, item, 'magazine');
+      },
+      aimassist: function(predicate, item) {
+        return filterByStats(predicate, item, 'aimassist');
+      },
+      equipspeed: function(predicate, item) {
+        return filterByStats(predicate, item, 'equipspeed');
       }
+    };
+
+    // This refactored method filters items by stats
+    //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
+    var filterByStats = function(predicate, item, statType) {
+      if (predicate.length === 0 || item.stats === undefined) {
+        return false;
+      }
+
+      var foundStatHash;
+      var operands = ['<=', '>=', '=', '>', '<'];
+      var operand = 'none';
+      var result = false;
+      var statHash = {};
+
+      operands.forEach(function(element) {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      statHash = {
+        impact: 4043523819,
+        range: 1240592695,
+        stability: 155624089,
+        rof: 4284893193,
+        reload: 4188031367,
+        magazine: 387123106,
+        aimassist: 1345609583,
+        equipspeed: 943549884
+      }[statType];
+
+      foundStatHash = _.find(item.stats, { statHash });
+
+      if (typeof foundStatHash === 'undefined') {
+        return false;
+      }
+
+      predicate = parseInt(predicate, 10);
+
+      switch (operand) {
+      case 'none':
+        result = (foundStatHash.value === predicate);
+        break;
+      case '=':
+        result = (foundStatHash.value === predicate);
+        break;
+      case '<':
+        result = (foundStatHash.value < predicate);
+        break;
+      case '<=':
+        result = (foundStatHash.value <= predicate);
+        break;
+      case '>':
+        result = (foundStatHash.value > predicate);
+        break;
+      case '>=':
+        result = (foundStatHash.value >= predicate);
+        break;
+      }
+      return result;
     };
   }
 })();

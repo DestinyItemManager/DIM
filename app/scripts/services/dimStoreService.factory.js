@@ -51,6 +51,13 @@
                                 return json.data;
                               });
 
+    const yearHashes = {
+      //         tTK       Variks        CoE         FoTL    Kings Fall
+      year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
+      //         RoI       WoTM         FoTl       Dawning
+      year3: [24296771, 3147905712, 907422371, 4153390200]
+    };
+
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
       529303302: { label: "Cryptarch", order: 0 },
@@ -1536,7 +1543,7 @@
       // items will hopefully be tagged as follows
       // No value: Vanilla, Crota's End, House of Wolves
       // The Taken King (year 2): 460228854
-      // Rise of Iron (year3): 24296771
+      // Rise of Iron (year 3): 24296771
 
       // This could be further refined for CE/HoW based on activity. See
       // DestinyRewardSourceDefinition and filter on %SOURCE%
@@ -1544,15 +1551,13 @@
       // year 1
 
       item.year = 1;
-      if (item.sourceHashes.includes(460228854) ||  // ttk
-          item.sourceHashes.includes(3523074641) || // variks
-          (item.talentGrid && item.talentGrid.infusable) || // no year1 item is infusable...
-          item.sourceHashes.includes(3739898362) || // elders challenge
-          item.sourceHashes.includes(3551688287)) { // kings fall
+      var infusable = (item.talentGrid && item.talentGrid.infusable);
+      var ttk = item.sourceHashes.includes(yearHashes.year2[0]);
+      var roi = item.sourceHashes.includes(yearHashes.year3[0]);
+      if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
         item.year = 2;
       }
-      if ((item.sourceHashes.includes(24296771) ||        // roi
-          !item.sourceHashes.length)) {                   // new items
+      if (!ttk && (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
         item.year = 3;
       }
     }

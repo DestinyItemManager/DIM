@@ -32,7 +32,11 @@
       "38": "icon38.png"
     }
   },
-  "options_page": "index.html",
+  "options_ui": {
+    "page": "index.html",
+    "chrome_style": false,
+    "open_in_tab": true
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false
