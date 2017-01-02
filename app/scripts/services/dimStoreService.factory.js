@@ -46,7 +46,7 @@
 
     var _removedNewItems = new Set();
 
-    const dimMissingSources = $http.get('scripts/sources.json')
+    const dimMissingSources = $http.get('scripts/missing_sources.json')
                               .then(function(json) {
                                 return json.data;
                               });
