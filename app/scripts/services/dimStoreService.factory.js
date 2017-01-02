@@ -46,8 +46,8 @@
 
     var _removedNewItems = new Set();
 
-    var dimMissingSources = loadJSON('scripts/sources.json');
-
+    const dimMissingSources = loadJSON('scripts/sources.json');
+    var missingSources;
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
       529303302: { label: "Cryptarch", order: 0 },
@@ -340,12 +340,12 @@
         loadNewItems(activePlatform),
         dimItemInfoService(activePlatform),
         dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, missingSources, newItems, itemInfoService, rawStores]) {
+        .then(function([defs, buckets, missing, newItems, itemInfoService, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
-          dimMissingSources = missingSources;
+          missingSources = missing;
           const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
             if (rawStore.id === 'vault') {
               return memo;
@@ -711,7 +711,7 @@
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
-      var missingSource = getMissingSourceHashes(itemDef.hash, dimMissingSources);
+      var missingSource = getMissingSourceHashes(itemDef.hash, missingSources);
       if (missingSource.length) {
         itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
       }
