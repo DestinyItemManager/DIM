@@ -656,9 +656,27 @@
       }
 
       if (itemDef.classified) {
-        declassify(itemDef, dimSettingsService.language, classifiedData);
-        item.primaryStat = itemDef.primaryStat || [];
-        item.stats = itemDef.stats || [];
+        var language = dimSettingsService.language;
+        if (classifiedData[itemDef.itemHash]) { // do we have declassification info for item?
+          // itemDef.icon = classifiedData[itemDef.itemHash].icon;
+          itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
+          itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
+          itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+          itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
+          itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
+          itemDef.classType = classifiedData[itemDef.itemHash].classType || 3; // set to all if not set
+          if (classifiedData[itemDef.itemHash].primaryBaseStatHash) {
+            itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
+            itemDef.primaryStat = [];
+            // console.log(itemDef.primaryBaseStatHash);
+            itemDef.primaryStat.statHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
+            itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+            item.primaryStat = itemDef.primaryStat;
+          }
+          if (classifiedData[itemDef.itemHash].stats) {
+            item.stats = classifiedData[itemDef.itemHash].stats || [];
+          }
+        }
       }
 
       // fix itemDef for defense items with missing nodes
@@ -1609,23 +1627,5 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
-
-    // code below is for declassifying items
-    function declassify(itemDef, language, classifiedData) {
-      if (classifiedData[itemDef.itemHash]) {
-        // itemDef.icon = classifiedData[itemDef.itemHash].icon;
-        itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
-        itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
-        itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
-        itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
-        itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
-        itemDef.classType = classifiedData[itemDef.itemHash].classType || 3; // set to all if not set
-        itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash || [];
-        itemDef.primaryStat = [];
-        itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash || [];
-        itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value || [];
-        itemDef.stats = classifiedData[itemDef.itemHash].stats || [];
-      }
-    }
   }
 })();
