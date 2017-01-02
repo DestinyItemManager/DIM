@@ -7,6 +7,7 @@
   StoreService.$inject = [
     '$rootScope',
     '$q',
+    '$http',
     'dimBungieService',
     'dimPlatformService',
     'dimCategory',
@@ -25,6 +26,7 @@
   function StoreService(
     $rootScope,
     $q,
+    $http,
     dimBungieService,
     dimPlatformService,
     dimCategory,
@@ -43,12 +45,19 @@
     var _idTracker = {};
 
     var _removedNewItems = new Set();
+
+    const dimMissingSources = $http.get('scripts/missing_sources.json')
+                              .then(function(json) {
+                                return json.data;
+                              });
+
     const yearHashes = {
       //         tTK       Variks        CoE         FoTL    Kings Fall
       year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
       //         RoI       WoTM         FoTl       Dawning
       year3: [24296771, 3147905712, 907422371, 4153390200]
     };
+
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
       529303302: { label: "Cryptarch", order: 0 },
@@ -619,7 +628,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, missingSources, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -710,6 +719,11 @@
       var dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
+
+      const missingSource = missingSources[itemDef.hash] || [];
+      if (missingSource.length) {
+        itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
+      }
 
       var createdItem = angular.extend(Object.create(ItemProto), {
         // figure out what year this item is probably from
@@ -1462,6 +1476,7 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
+        dimMissingSources,
         previousItems,
         newItems,
         itemInfoService])
