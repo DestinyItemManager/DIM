@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .controller('dimXurCtrl', dimXurCtrl);
 
-  dimXurCtrl.$inject = ['$scope', 'dimXurService', 'ngDialog', 'dimStoreService'];
 
   function dimXurCtrl($scope, dimXurService, ngDialog, dimStoreService) {
     var vm = this;

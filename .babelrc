@@ -9,5 +9,6 @@
       "modules": false,
       "loose": true
     }]
-  ]
+  ],
+  "plugins": ["angularjs-annotate"]
 }

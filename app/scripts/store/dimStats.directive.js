@@ -4,7 +4,6 @@
   angular.module('dimApp')
     .directive('dimStats', Stats);
 
-  Stats.$inject = [];
 
   function Stats() {
     return {
@@ -27,7 +26,6 @@
     };
   }
 
-  StatsCtrl.$inject = ['$scope', '$translate'];
 
   function StatsCtrl($scope, $translate) {
     var vm = this;

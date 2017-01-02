@@ -7,19 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimFarmingService', FarmingService);
 
-  FarmingService.$inject = [
-    '$rootScope',
-    '$q',
-    'dimItemService',
-    'dimStoreService',
-    '$interval',
-    'toaster',
-    'dimFeatureFlags',
-    'dimSettingsService',
-    '$translate',
-    'dimBucketService'
-  ];
-
   /**
    * A service for "farming" items by moving them continuously off a character,
    * so that they don't go to the Postmaster.

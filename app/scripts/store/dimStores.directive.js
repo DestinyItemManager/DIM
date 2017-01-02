@@ -58,9 +58,8 @@ const _ = require('underscore');
     }
   }
 
-  StoresCtrl.$inject = ['dimSettingsService', '$scope', 'dimStoreService', 'dimPlatformService', 'loadingTracker', 'dimBucketService', 'dimInfoService', '$translate'];
 
-  function StoresCtrl(settings, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
+  function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
     var vm = this;
     const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>` +
                                `<p>${$translate.instant('DidYouKnow.Expand')}</p>`;
@@ -73,7 +72,7 @@ const _ = require('underscore');
       });
     });
 
-    vm.settings = settings;
+    vm.settings = dimSettingsService;
     vm.stores = dimStoreService.getStores();
     vm.vault = dimStoreService.getVault();
     vm.buckets = null;

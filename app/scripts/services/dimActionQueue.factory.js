@@ -4,7 +4,6 @@
   angular.module('dimApp')
     .factory('dimActionQueue', ActionQueue);
 
-  ActionQueue.$inject = ['$q'];
 
   // A queue of actions that will execute one after the other
   function ActionQueue($q) {

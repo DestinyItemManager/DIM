@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService', 'dimDefinitions', 'dimVendorService'];
 
   function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
     var vm = this;

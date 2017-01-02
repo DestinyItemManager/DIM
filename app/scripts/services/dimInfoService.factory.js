@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimInfoService', InfoService);
 
-  InfoService.$inject = ['toaster', '$http', 'SyncService'];
 
   function InfoService(toaster, $http, SyncService) {
     return {

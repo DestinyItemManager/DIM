@@ -54,7 +54,6 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'dimStoreService', 'ngDialog', '$timeout', 'dimSettingsService', 'dimItemMoveService'];
 
   function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
     var vm = this;

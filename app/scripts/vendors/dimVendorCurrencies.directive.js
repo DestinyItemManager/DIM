@@ -20,7 +20,6 @@
   angular.module('dimApp')
     .component('dimVendorCurrencies', VendorCurrencies);
 
-  VendorCurrenciesCtrl.$inject = ['$scope', '$filter'];
 
   function VendorCurrenciesCtrl($scope, $filter) {
     const vm = this;

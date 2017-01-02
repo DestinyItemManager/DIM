@@ -4,7 +4,6 @@
   angular.module('dimApp')
     .factory('SyncService', SyncService);
 
-  SyncService.$inject = ['$q', '$window'];
 
   function SyncService($q, $window) {
     var cached; // cached is the data in memory,

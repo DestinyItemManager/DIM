@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .controller('dimRandomCtrl', dimRandomCtrl);
 
-  dimRandomCtrl.$inject = ['$window', '$scope', '$q', 'dimStoreService', 'dimLoadoutService', '$translate'];
 
   function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, $translate) {
     var vm = this;

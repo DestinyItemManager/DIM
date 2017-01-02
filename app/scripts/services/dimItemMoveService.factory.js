@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimItemMoveService', ItemMoveService);
 
-  ItemMoveService.$inject = ['$q', 'loadingTracker', 'toaster', 'dimStoreService', 'dimActionQueue', 'dimItemService', 'dimInfoService', '$translate'];
 
   function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
 // `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`

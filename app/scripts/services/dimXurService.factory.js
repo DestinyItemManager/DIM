@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimXurService', XurService);
 
-  XurService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimDefinitions', 'dimStoreService', '$http'];
 
   function XurService($rootScope, $q, dimBungieService, dimDefinitions, dimStoreService, $http) {
     var xurTest = false; // set this to true when you want to test but Xur's not around

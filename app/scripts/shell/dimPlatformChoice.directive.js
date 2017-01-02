@@ -4,7 +4,6 @@
   angular.module('dimApp')
     .directive('dimPlatformChoice', PlatformChoice);
 
-  PlatformChoice.$inject = [];
 
   function PlatformChoice() {
     return {
@@ -20,7 +19,6 @@
     };
   }
 
-  PlatformChoiceCtrl.$inject = ['$scope', 'dimPlatformService', 'dimState', 'loadingTracker'];
 
   function PlatformChoiceCtrl($scope, dimPlatformService, dimState, loadingTracker) {
     var vm = this;

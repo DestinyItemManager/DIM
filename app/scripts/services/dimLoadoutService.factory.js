@@ -8,7 +8,6 @@ const _ = require('underscore');
     .factory('dimLoadoutService', LoadoutService);
 
 
-  LoadoutService.$inject = ['$q', '$rootScope', '$translate', 'uuid2', 'dimItemService', 'dimStoreService', 'toaster', 'loadingTracker', 'dimPlatformService', 'SyncService', 'dimActionQueue'];
   function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
     var _loadouts = [];
     var _previousLoadouts = {}; // by character ID
