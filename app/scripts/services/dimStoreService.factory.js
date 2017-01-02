@@ -46,7 +46,10 @@
 
     var _removedNewItems = new Set();
 
-    const dimMissingSources = loadJSON('scripts/sources.json');
+    const dimMissingSources = $http.get('scripts/sources.json')
+                              .then(function(json) {
+                                return json.data;
+                              });
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -710,7 +713,7 @@
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
-      var missingSource = getMissingSourceHashes(itemDef.hash, missingSources);
+      const missingSource = missingSources[itemDef.hash] || [];
       if (missingSource.length) {
         itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
       }
@@ -1603,19 +1606,5 @@
       return ret;
     }
     // code above is from https://github.com/DestinyTrialsReport
-
-    function loadJSON(file) {
-      return $http.get(file)
-               .then(function(json) {
-                 return json.data;
-               });
-    }
-
-    function getMissingSourceHashes(itemHash, missingSources) {
-      if (missingSources[itemHash]) {
-        return missingSources[itemHash];
-      }
-      return false;
-    }
   }
 })();
