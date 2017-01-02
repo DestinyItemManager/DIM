@@ -47,7 +47,7 @@
     var _removedNewItems = new Set();
 
     const dimMissingSources = loadJSON('scripts/sources.json');
-    var missingSources;
+
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
       529303302: { label: "Cryptarch", order: 0 },
@@ -336,16 +336,15 @@
       console.time('Load stores (Bungie API)');
       _reloadPromise = $q.all([dimDefinitions,
         dimBucketService,
-        dimMissingSources,
         loadNewItems(activePlatform),
         dimItemInfoService(activePlatform),
         dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, missing, newItems, itemInfoService, rawStores]) {
+        .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
-          missingSources = missing;
+
           const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
             if (rawStore.id === 'vault') {
               return memo;
@@ -619,7 +618,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, missingSources, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -1467,6 +1466,7 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
+        dimMissingSources,
         previousItems,
         newItems,
         itemInfoService])
@@ -1611,10 +1611,9 @@
                });
     }
 
-    function getMissingSourceHashes(itemHash, dimMissingSources) {
-      if (dimMissingSources[itemHash]) {
-        console.log(dimMissingSources[itemHash]);
-        return dimMissingSources[itemHash];
+    function getMissingSourceHashes(itemHash, missingSources) {
+      if (missingSources[itemHash]) {
+        return missingSources[itemHash];
       }
       return false;
     }
