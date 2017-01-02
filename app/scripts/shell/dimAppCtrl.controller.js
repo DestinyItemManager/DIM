@@ -134,14 +134,21 @@ const _ = require('underscore');
       return function(e) {
         e.stopPropagation();
 
-        var lang = translate ? vm.settings.language + '/' : ''; // set language
+        var language = translate ? vm.settings.language + '/' : ''; // set language
+
+        var file;
+        try {
+          file = require('app/views/' + language + name + '.template.html');
+        } catch (e) {
+          file = require('app/views/en/' + name + '.template.html');
+        }
 
         if (result) {
           result.close();
         } else {
           ngDialog.closeAll();
           result = ngDialog.open({
-            template: 'views/' + lang + name + '.html',
+            template: file,
             className: name,
             appendClassName: 'modal-dialog'
           });
@@ -159,7 +166,7 @@ const _ = require('underscore');
       };
     }
 
-    vm.showSetting = showPopupFunction('setting');
+    vm.showSetting = showPopupFunction('settings');
     vm.showAbout = showPopupFunction('about', true);
     vm.showSupport = showPopupFunction('support', true);
     vm.showFilters = showPopupFunction('filters');

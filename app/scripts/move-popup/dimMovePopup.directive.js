@@ -112,7 +112,7 @@
 
       // Open the infuse window
       ngDialog.open({
-        template: 'views/infuse.html',
+        template: require('app/views/infuse.template.html'),
         className: 'app-settings',
         appendClassName: 'modal-dialog',
         data: item
