@@ -3,6 +3,7 @@
       "1458765388":{
          "bucketHash":"1469714392",
          "icon":"/img/misc/celery.png",
+         "tierType":3,
          "i18n":{
             "en":{
                "itemName":"Piece of Celery",
@@ -44,6 +45,7 @@
       "320629370":{
          "bucketHash":"1469714392",
          "icon":"/img/misc/box_of_raisins.png",
+         "tierType":3,
          "i18n":{
             "en":{
                "itemName":"Tiny Box of Raisins",
@@ -426,7 +428,7 @@
       },
       "103584948":{
         "bucketHash":"1469714392",
-        "tierType":0,
+        "tierType":3,
         "icon":"/img/misc/paper_fortunes.png",
         "i18n":{
           "en":{
@@ -468,7 +470,7 @@
       },
       "103584958":{
         "bucketHash":"1469714392",
-        "tierType":0,
+        "tierType":3,
         "icon":"/img/misc/paper_fortunes.png",
         "i18n":{
           "en":{
