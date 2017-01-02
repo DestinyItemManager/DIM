@@ -656,14 +656,9 @@
       }
 
       if (itemDef.classified) {
-        itemDef.classType = 3;
         declassify(itemDef, dimSettingsService.language, classifiedData);
-        if (itemDef.primaryStat) {
-          item.primaryStat = itemDef.primaryStat;
-        }
-        if (itemDef.stats) {
-          item.stats = itemDef.stats;
-        }
+        item.primaryStat = itemDef.primaryStat || [];
+        item.stats = itemDef.stats || [];
       }
 
       // fix itemDef for defense items with missing nodes
