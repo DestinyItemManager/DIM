@@ -674,7 +674,7 @@
             item.primaryStat = itemDef.primaryStat;
           }
           if (classifiedData[itemDef.itemHash].stats) {
-            item.stats = classifiedData[itemDef.itemHash].stats || [];
+            item.stats = classifiedData[itemDef.itemHash].stats;
           }
         }
       }
