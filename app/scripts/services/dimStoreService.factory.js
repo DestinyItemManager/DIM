@@ -669,7 +669,7 @@
             itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
             itemDef.primaryStat = [];
             // console.log(itemDef.primaryBaseStatHash);
-            itemDef.primaryStat.statHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
+            itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
             itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
             item.primaryStat = itemDef.primaryStat;
           }
