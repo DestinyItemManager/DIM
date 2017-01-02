@@ -48,7 +48,10 @@
 
     var _removedNewItems = new Set();
 
-    var dimClassifiedData = loadJSON('scripts/classified.json');
+    const dimClassifiedData = $http.get('scripts/classified.json')
+                              .then(function(json) {
+                                return json.data.itemHash;
+                              });
 
     // Label isn't used, but it helps us understand what each one is
     const progressionMeta = {
@@ -338,17 +341,14 @@
       console.time('Load stores (Bungie API)');
       _reloadPromise = $q.all([dimDefinitions,
         dimBucketService,
-        dimClassifiedData,
         loadNewItems(activePlatform),
         dimItemInfoService(activePlatform),
         dimBungieService.getStores(activePlatform)])
-        .then(function([defs, buckets, classifiedData, newItems, itemInfoService, rawStores]) {
+        .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
           console.timeEnd('Load stores (Bungie API)');
           if (activePlatform !== dimPlatformService.getActive()) {
             throw new Error("Active platform mismatch");
           }
-
-          dimClassifiedData = classifiedData;
 
           const lastPlayedDate = _.reduce(rawStores, (memo, rawStore) => {
             if (rawStore.id === 'vault') {
@@ -623,7 +623,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, classifiedData, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -657,7 +657,7 @@
 
       if (itemDef.classified) {
         itemDef.classType = 3;
-        declassify(itemDef, dimSettingsService.language, dimClassifiedData);
+        declassify(itemDef, dimSettingsService.language, classifiedData);
         if (itemDef.primaryStat) {
           item.primaryStat = itemDef.primaryStat;
         }
@@ -1477,6 +1477,7 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
+        dimClassifiedData,
         previousItems,
         newItems,
         itemInfoService])
@@ -1615,36 +1616,20 @@
     // code above is from https://github.com/DestinyTrialsReport
 
     // code below is for declassifying items
-    function loadJSON(file) {
-      return $http.get(file)
-        .then(function(json) {
-          return json.data.itemHash;
-        });
-    }
-
-    function declassify(itemDef, language, dimClassifiedData) {
-      if (dimClassifiedData[itemDef.itemHash]) {
-        // itemDef.icon = dimClassifiedData[itemDef.itemHash].icon;
-        itemDef.itemName = dimClassifiedData[itemDef.itemHash].i18n[language].itemName;
-        itemDef.itemDescription = dimClassifiedData[itemDef.itemHash].i18n[language].itemDescription;
-        itemDef.itemTypeName = dimClassifiedData[itemDef.itemHash].i18n[language].itemTypeName;
-        itemDef.bucketTypeHash = dimClassifiedData[itemDef.itemHash].bucketHash;
-        itemDef.tierType = dimClassifiedData[itemDef.itemHash].tierType;
-
-        if (dimClassifiedData[itemDef.itemHash].classType) {
-          itemDef.classType = dimClassifiedData[itemDef.itemHash].classType;
-        }
-
-        if (dimClassifiedData[itemDef.itemHash].primaryBaseStatHash) {
-          itemDef.primaryBaseStatHash = dimClassifiedData[itemDef.itemHash].primaryBaseStatHash;
-          itemDef.primaryStat = [];
-          itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
-          itemDef.primaryStat.value = dimClassifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
-        }
-
-        if (dimClassifiedData[itemDef.itemHash].stats) {
-          itemDef.stats = dimClassifiedData[itemDef.itemHash].stats;
-        }
+    function declassify(itemDef, language, classifiedData) {
+      if (classifiedData[itemDef.itemHash]) {
+        // itemDef.icon = classifiedData[itemDef.itemHash].icon;
+        itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
+        itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
+        itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+        itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
+        itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
+        itemDef.classType = classifiedData[itemDef.itemHash].classType || 3; // set to all if not set
+        itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash || [];
+        itemDef.primaryStat = [];
+        itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash || [];
+        itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value || [];
+        itemDef.stats = classifiedData[itemDef.itemHash].stats || [];
       }
     }
   }
