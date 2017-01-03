@@ -601,7 +601,7 @@
         const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
         if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-          const error = new Error($translate.instant('ItemService.BucketFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), bucket: moveAsideTarget.name }));
+          const error = new Error($translate.instant('ItemService.StoreFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), store: moveAsideTarget.name, isVault: moveAsideTarget.isVault }));
           error.code = 'no-space';
           return $q.reject(error);
         } else {
