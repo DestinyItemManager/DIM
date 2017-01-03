@@ -1,6 +1,8 @@
 # Next
 
 * Removed farming option to keep greens since they're disassembled by default now.
+* Added stat search, for example: "stat:rof:>= 22"
+* Fixed formatting for search loadouts when the search terms contain angle brackets.
 
 # 3.15.0
 

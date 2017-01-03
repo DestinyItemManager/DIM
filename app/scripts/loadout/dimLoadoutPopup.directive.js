@@ -28,7 +28,7 @@
         '      <span translate-attr="{ title: \'Loadouts.Edit\' }" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="vm.search.query">',
-        '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> {{ \'Loadouts.ApplySearch\' | translate:{ query: vm.search.query } }}</span>',
+        '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> <span translate="Loadouts.ApplySearch" translate-values="{ query: vm.search.query }"></span></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> <span translate="Loadouts.MaximizeLight"></span> <span class="light" ng-bind="::vm.maxLightValue"></span></span>',
