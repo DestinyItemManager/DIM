@@ -214,7 +214,10 @@
             Applied: "Your {amount, plural, =1{single item loadout has} other{loadout of # items have}} been transferred to your {store}.",
             AppliedError: "None of the items in your loadout could be transferred.",
             AppliedWarn: "Your loadout has been partially transferred, but {failed} of {total} items had errors.",
-            NameRequired: "A name is required."
+            NameRequired: "A name is required.",
+            MakeRoom: "Make Room for Postmaster",
+            MakeRoomDone: "Finished making room for {postmasterNum, plural, =1{1 Postmaster item} other{# Postmaster items}} by moving {movedNum, plural, =1{1 item} other{# items}} off of {store}.",
+            MakeRoomError: "Unable to make room for all Postmaster items: {error}."
           },
           Manifest: {
             Build: "Building Destiny info database",
