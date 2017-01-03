@@ -763,11 +763,11 @@
         visible: true,
         sourceHashes: itemDef.sourceHashes,
         lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-        trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
+        trackable: (currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)) || false,
         tracked: item.state === 2,
         locked: item.locked,
         redacted: itemDef.redacted,
-        classified: itemDef.classified,
+        classified: itemDef.classified || false,
         isInLoadout: false
       });
 
@@ -862,6 +862,10 @@
       } else if (createdItem.talentGrid) {
         createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
         createdItem.complete = createdItem.talentGrid.complete;
+      }
+
+      if (!createdItem.objectives) {
+        createdItem.objectives = null;
       }
 
       // In debug mode, keep the original JSON around
