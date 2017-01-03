@@ -56,8 +56,8 @@
       new: ['new'],
       glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
       year: ['year1', 'year2', 'year3'],
-      vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris'],
-      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af'],
+      vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev'],
+      activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning'],
       hasLight: ['light', 'haslight'],
       weapon: ['weapon'],
       armor: ['armor'],
@@ -598,6 +598,7 @@
       //   * Shaxx: (shaxx)
       //   * Crucible Quartermaster (cq)
       //   * Eris Morn (eris)
+      //   * Eververse (ev)
       vendor: function(predicate, item) {
         var vendorHashes = {
           fwc: 2859308742,
@@ -611,7 +612,8 @@
           xur: 941581325,
           shaxx: 1257353826,
           cq: 1587918730,
-          eris: 1662396737
+          eris: 1662396737,
+          ev: 2155337848
         };
         if (!item) {
           return false;
@@ -649,7 +651,8 @@
           wotm: 3147905712,
           poe: 36493462,
           coe: 3739898362,
-          af: 1389125983
+          af: 1389125983,
+          dawning: 4153390200
         };
         if (!item) {
           return false;
