@@ -1496,7 +1496,7 @@
             Stop: "停止"
           },
           Filter: {
-            EnterName: "アイテム名を入力してください。",
+            EnterName: "アイテム名を入力してください。"
           },
           Header: {
             About: "紹介",
@@ -1504,7 +1504,7 @@
             SupportDIM: "サポート DIM"
           },
           ItemService: {
-            PercentComplete: "({ percent | percent } コンプリート)",
+            PercentComplete: "({ percent | percent } コンプリート)"
           },
           Loadouts: {
             Create: "作る Loadout",
@@ -1517,18 +1517,18 @@
             GatherEngrams: "エングラムを収集",
             GatherEngramsExceptExotics: "エキゾチック",
             RestoreAllItems: "品揃え",
-            Random: "ランダム",
+            Random: "ランダム"
           },
           Notes: {
             Help: "このアイテムにメモを追加"
           },
           Settings: {
-            Settings: "設定",
+            Settings: "設定"
           },
           Stats: {
             Discipline: "鍛錬",
             Intellect: "知性",
-            Strength: "腕力",
+            Strength: "腕力"
           },
           Tags: {
             TagItem: "タグアイテム",
@@ -1539,7 +1539,7 @@
           },
           Vendors: {
             Vendors: "ベンダー",
-            Day: "{numDays, plural, =1{日} other{日々}}",
+            Day: "{numDays, plural, =1{日} other{日々}}"
           }
         })
         .translations('pt-br', {
