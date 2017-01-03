@@ -360,9 +360,9 @@
             Splits: "Confronta simili suddivisioni ({quantity})"
           },
           Cooldown: {
-            Super: "Super tempo di recupero",
             Grenade: "Granate tempo di recupero",
-            Melee: "Corpo a corpo tempo di recupero"
+            Melee: "Corpo a corpo tempo di recupero",
+            Super: "Super tempo di recupero"
           },
           Debug: {
             Dump: "Svuota informazioni nella console",
@@ -447,7 +447,7 @@
             OnlyEquippedClassLevel: "Questo oggetto può essere equipaggaito solo su un {class} al livello {level} o superiore.",
             PercentComplete: "({ percent | percent } Completato)",
             TooMuch: "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
-            TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
+            TwoExotics: "Non sappiamo come tu abbia equipaggiati più di 2 esotici!"
           },
           LB: {
             LB: "Costruttore di Loadout",
@@ -523,7 +523,8 @@
             AppliedAuto: "Costruttore Automatico di Loadout",
             Applied: "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
-            AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito."
+            AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito.",
+            NameRequired: "E' richiesto un nome."
           },
           Manifest: {
             Build: "Costruisco il database di informazioni di Destiny",
@@ -604,9 +605,9 @@
           Tags: {
             TagItem: "Contrassegna Elemento",
             Favorite: "Preferito",
-            Keep: "Tieni",
             Junk: "Smantella",
-            Infuse: "Infondi"
+            Infuse: "Infondi",
+            Keep: "Tieni"
           },
           Vendors: {
             Vendors: "Mercanti",
@@ -642,9 +643,9 @@
             Weapons: "Waffen"
           },
           BungieService: {
-            DevVersion: "Benutzt du eine Entwickler-Version von DIM? Du musst die Chrome Erweiterung auf bungie.net registrieren.",
+            DevVersion: "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren.",
             Down: "Bungie.net ist nicht erreichbar.",
-            Difficulties: "Die Bungie API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
+            Difficulties: "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen.",
             NetworkError: "Netzwerk Fehler - {status} {statusText}",
             Throttled: "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
             NotLoggedIn: "Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen.",
@@ -677,6 +678,15 @@
             Dump: "Info in Konsole ausgeben",
             View: "Zeige Item Debug Info"
           },
+          DidYouKnow: {
+            DidYouKnow: "Wusstest du schon?",
+            Collapse: "Du hast gerade eine Sektion in DIM eingeklappt! Das kann nützlich sein um Teile von DIM zu verstecken, die du normalerweise nicht verwendest.",
+            DontShowAgain: "Diesen Tipp nicht erneut zeigen",
+            DoubleClick: "Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, kannst du es stattdessen doppelt anklicken um es sofort auszurüsten.",
+            DragAndDrop: "Gegenstände können zwischen verschiedenen Charackteren und dem Tresor per \"Drag and Drop\" verschoben werden",
+            Expand: "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie um diese wieder aufzuklappen.",
+            TryNext: "Probiere es das nächste Mal aus!"
+          },
           FarmingMode: {
             FarmingMode: "Engramme zum Tresor",
             Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {store} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass Engramme zur Poststelle geschickt werden.",
@@ -686,8 +696,13 @@
               MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
               Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen."
             },
+            OutOfRoom: "Dir ist der Platz ausgegangen um Gegenstände von {character} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren.",
             Quickmove: "Schnelles Verschieben",
             Stop: "Stop"
+          },
+          Filter: {
+            EnterName: "Trage einen Namen ein:",
+            EnterNote: "Trage eine Beschreibung ein:"
           },
           Header: {
             About: "Über",
@@ -699,7 +714,12 @@
           },
           Help: {
             BackToDIM: "Zurück zu DIM",
-            Drag: "Halte Shift oder pausiere über der Drop-Zone, um einen Teilstapel zu übertragen"
+            CannotMove: "Item kann nicht von diesem Charakter wegbewegt werden.",
+            Drag: "Halte Shift oder pausiere über der Drop-Zone, um einen Teilstapel zu übertragen",
+            ChangingPerks: "Verändern der Perks wird nicht unterstützt",
+            ChangingPerksInfo: "Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu verändern. Wir würden es nur zu gern!",
+            NeverShow: "Diesen Tipp nicht erneut zeigen",
+            Xur: "Xûr ist da"
           },
           Hotkey: {
             StartSearch: "Starte eine Suche",
@@ -715,12 +735,29 @@
             InfuseItems: "Element auswählen zum Infundieren mit:",
             LockedItems: "Beziehe 'gesperrte' Items ein",
             NoItems: "Keine infundierbaren Items verfügbar.",
+            NoTransfer: "Transfer Infundiermaterial\n{target} kann nicht verschoben werden.",
             ShowItems: "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
             TransferItems: "Übertrage Items",
             Using3: "verwendet 3"
           },
+          ItemMove: {
+            Consolidate: "{name} zusammengefasst",
+            Distributed: "{name} verteilt\n{name} ist gleichermaßen zwischen Charakteren verteilt",
+            ToVault: "Alle {name} sind nun in deinem Tresor.",
+            ToStore: "Alle {name} sind nun in deinem {store}."
+          },
           ItemService: {
-            PercentComplete: "({ percent | percent } Komplett)"
+            BucketFull: "Es sind viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar von}} {store}.",
+            Classified: "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
+            Classified2: "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar.",
+            Deequip: "Kann keinen weiteren ausrüstbaren Gegenstand finden um {itemname} abzulegen.",
+            ExoticError: "'{itemname}' kann nicht ausgerüstet werden, da der exotische Gegenstand im {slot} Slot nicht abgelegt werden kann. ({error})",
+            NotEnoughRoom: "Es gibt nichts was wir aus {store} wegbewegen könnten um Platz für {itemname} zu schaffen",
+            OnlyEquippedLevel: "Das kann nur von Charakteren ab einem Level von {level} oder drüber ausgerüstet werden.",
+            OnlyEquippedClassLevel: "Das kann nur von einem {class} ab einem Level von {level} oder drüber ausgerüstet werden.",
+            PercentComplete: "({ percent | percent } Komplett)",
+            TooMuch: "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!",
+            TwoExotics: "Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Gegenstände auszurüsten!"
           },
           LB: {
             LB: "Loadout Builder",
@@ -776,16 +813,28 @@
             GatherEngrams: "Engramme sammeln",
             GatherEngramsExceptExotics: "Exotics",
             RestoreAllItems: "Alle Elemente",
-            LoadoutName: "Loadout Name...",
             Random: "Zufällig",
+            Randomize: "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?",
+            VendorsCannotEquip: "Diese Händler-Gegenstände können nicht ausgerüstet werden",
+            VendorsCanEquip: "Diese Gegenstände können ausgerüstet werden",
+            MaxSlots: "Du kannst nur {slots} Gegenstände dieser Art in einem Loadout haben.",
+            OnlyItems: "Es können nur ausrüstbare Gegenstände, Materialien und Verbrauchsgegenstände zu einem Loadout hinzugefügt werden.",
+            FilteredItems: "Gefilterte Items",
+            NoEngrams: "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
+            NoExotics: "Es sind keine Engramme zum Transfer verfügbar.",
+            LoadoutName: "Loadout Name...",
             Save: "Speichern",
             SaveAsNew: "Speichern als...",
             Cancel: "Abbrechen",
             ItemsWithIcon: "Gegenstände mit diesem Symbol werden angelegt. Klicke auf einen Gegenstand um das Anlegen zu aktivieren bzw. zu deaktivieren.",
+            CouldNotEquip: "{itemname} konnte nicht ausgerüstet werden",
+            TooManyRequested: "Du hast {total} {itemname}. Dein Loadout verlangt jedoch {requested}. Wir haben alles übertragen, was da war.",
+            DoesNotExist: "{itemname} existiert nicht auf deinem Account.",
             AppliedAuto: "Automatischer Loadout Builder",
             Applied: "Dein {amount, plural, =1{Ein-Item Loadout} other{Loadout aus # Gegenständen}} wurde zum {store} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
-            AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {failed} von {total} Gegenständen waren fehlerhaft."
+            AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {failed} von {total} Gegenständen waren fehlerhaft.",
+            NameRequired: "Ein Name ist erforderlich."
           },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
@@ -811,6 +860,10 @@
           Notes: {
             Error: "Fehler! Max 120 Zeichen für Notizen.",
             Help: "Notiz für diesen Artikel"
+          },
+          Postmaster: {
+            Limit: "Poststellenlimit",
+            Desc: "Es sind 20 verlorene Gegenstände in der Poststelle deines {store}. Jeder neue Gegenstand wird bereits vorhandene überschreiben."
           },
           Settings: {
             Settings: "Einstellungen",
@@ -869,8 +922,10 @@
           Vendors: {
             Vendors: "Händler",
             All: "Alle",
+            Available: "Verfügbar auf",
+            Compare: "Vergleiche mit dem was du bereits hast",
             Day: "{numDays, plural, =1{Tag} other{Tage}}",
-            VendorsLoad: "Lade Händler",
+            Load: "Lade Händler",
             ArmorAndWeapons: "Panzerung & Waffen",
             ShipsAndVehicles: "Schiffe & Fahrzeuge",
             Consumables: "Verbrauchsgegenstände",
@@ -1111,6 +1166,7 @@
             Weapons: "Armas"
           },
           BungieService: {
+            DevVersion: "¿Estás corriendo una versión de desarrollo de DIM? Debes primero registrar tu extensión de Chrome con Bungie.net.",
             Down: "Bungie.net no esta disponible.",
             Difficulties: "La API de Bungie esta teniendo dificultades.",
             NetworkError: "Error de red - {status} {statusText}",
@@ -1119,6 +1175,7 @@
             Maintenance: "Los servidores de Bungie.net se encuentran en mantenimiento.",
             NoAccount: "No se encontró una cuenta de Destiny para esta plataforma. Has elegido la plataforma correcta?",
             NoAccountForPlatform: "No encontramos una cuenta de Destiny para {platform}.",
+            NoCookies: "No se encontraron cookies.",
             NotConnected: "Es posible que no tengas conexión a Internet.",
             Twitter: "Entérate de los estados de actualizaciones",
             ItemUniqueness: "Unicidad de objeto",
@@ -1136,13 +1193,22 @@
             Splits: "Comparar partes similares ({quantity})"
           },
           Cooldown: {
-            Super: "Tiempo para Super",
             Grenade: "Tiempo para Granada",
-            Melee: "Tiempo para Cuerpo a cuerpo"
+            Melee: "Tiempo para Cuerpo a cuerpo",
+            Super: "Tiempo para Super"
           },
           Debug: {
             Dump: "Tirar información a la consola",
             View: "Ver información de depuración de objeto"
+          },
+          DidYouKnow: {
+            DidYouKnow: "¿Sabias que?",
+            Collapse: "Acabas de colapsar una seccion en DIM!. Esto puede ser util para ocultar partes de DIM que no necesitas usar normalmente.",
+            DontShowAgain: "No muestres este consejo de vuelta",
+            DoubleClick: "Si estas moviendo un objeto a tu personaje activo (último al que iniciaste sesión), puedes darle doble click al objeto para equiparlo instantáneamente.",
+            DragAndDrop: "Los objetos pueden ser arrastrados y soltados entre diferentes columnas de personajes o bóveda.",
+            Expand: "Para expandir de nuevo una sección, simplemente da click en el símbolo de más a la izquierda de la categoría que colapsaste.",
+            TryNext: "¡Pruébalo la próxima vez!"
           },
           FarmingMode: {
             FarmingMode: "Modo recolector (mover objetos)",
@@ -1153,8 +1219,13 @@
               MakeRoom: "Hacer espacio para coger objetos moviendo equipamiento",
               Tooltip: "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
             },
+            OutOfRoom: "Ya no hay espacio para mover objetos fuera de tu  {character}. ¡Es hora de desencriptar algunos engramas y limpiar la basura!",
             Quickmove: "Movimiento rápido",
             Stop: "Detener"
+          },
+          Filter: {
+            EnterName: "Escribe el nombre de un objeto:",
+            EnterNote: "Escribe texto de las notas:"
           },
           Header: {
             About: "Acerca de",
@@ -1166,7 +1237,12 @@
           },
           Help: {
             BackToDIM: "Regresar a DIM",
-            Drag: "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial"
+            CannotMove: "No puedes mover este objeto de este personaje.",
+            Drag: "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial",
+            ChangingPerks: "Cambio de beneficios no soportado",
+            ChangingPerksInfo: "Lo sentimos, no hay forma de cambiar beneficios afuera del juego. ¡Quisiéramos poder hacerlo!",
+            NeverShow: "Nunca mostrar esto de nuevo.",
+            Xur: "Xûr esta aquí."
           },
           Hotkey: {
             StartSearch: "Empezar una búsqueda",
@@ -1175,8 +1251,35 @@
             MarkItemAs: "Marcar objeto como '{tag}'",
             ClearNewItems: "Despejar objetos nuevos"
           },
+          Infusion: {
+            Infusion: "Buscador de Combustible de Infusión.",
+            BringGear: "Traerá el equipo a",
+            Calc: "Calculador de Infusión",
+            InfuseItems: "Selecciona un objeto para infusionar:",
+            LockedItems: "Incluir objetos 'bloqueados'",
+            NoItems: "No hay objetos disponibles para infusionar.",
+            NoTransfer: "Material de infusión\n{target} no puede ser movido.",
+            ShowItems: "Mostrar objetos infundibles en el Depósito y todos los personajes",
+            TransferItems: "Transferir objetos",
+            Using3: "Usando 3"
+          },
+          ItemMove: {
+            Consolidate: "Consolidado {name} ",
+            Distributed: "{name} distribuidos. Ahora {name} se encuentra dividido entre los personajes de manera equitativa.",
+            ToVault: "Todos los {name} ahora están en tu Depósito",
+            ToStore: "Todos los {name} ahora están en tu {store}"
+          },
           ItemService: {
-            PercentComplete: "({ percent | percent } Completar)"
+            Classified: "Este objeto es \"clasificado\" y no puede transferirse en este momento",
+            Classified2: "Objeto \"clasificado\". Bungie no a entregado información acerca de este objeto.  Este objeto todavía no es transferible.",
+            Deequip: "Cannot find another item to equip in order to dequip {itemname}",
+            ExoticError: "'{itemname}' cannot be equipped because the exotic in the {slot} slot cannot be unequipped. ({error})",
+            NotEnoughRoom: "No hay nada que podamos sacar fuera de {store} para hacerle espacio a {itemname}",
+            OnlyEquippedLevel: "Esto solo puede equiparse en personajes de nivel igual o superior a {level}",
+            OnlyEquippedClassLevel: "Esto solo puede equiparse en un {class} de nivel igual o superior a {level}",
+            PercentComplete: "({ percent | percent } Completar)",
+            TooMuch: "Parece que pediste mover más objetos de los que existen en la fuente!",
+            TwoExotics: "No sabemos cómo conseguiste equipar más de 2 exóticas!"
           },
           LB: {
             LB: "Creador de equipo",
@@ -1233,15 +1336,27 @@
             GatherEngramsExceptExotics: "Exóticos",
             RestoreAllItems: "Todos los objetos",
             Random: "Aleatorio",
+            Randomize: "Aleatorizar las armas, armaduras, carcasa y artefacto equipados?",
+            VendorsCannotEquip: "Estos objetos de vendedores no pueden equiparse",
+            VendorsCanEquip: "Estos objetos pueden equiparse",
+            MaxSlots: "Solo puedes tener {slots} objetos de ese tipo en una configuración",
+            OnlyItems: "Solo objetos equipables, materiales, y consumibles pueden añadirse a una configuración",
+            FilteredItems: "Objetos filtrados",
+            NoEngrams: "No hay engramas no exóticos disponibles para transferir",
+            NoExotics: "No hay engramas disponibles para transferir",
             LoadoutName: "Nombre de equipo...",
             Save: "Guardar",
             SaveAsNew: "Guardar como nuevo",
             Cancel: "Cancelar",
             ItemsWithIcon: "Objetos con éste ícono van a ser equipados. Click en un objeto para equipar.",
+            CouldNotEquip: "No se pudo equipar {itemname}",
+            TooManyRequested: "Tu tienes {total} {itemname} pero tu configuración pregunta por {requested}. Transferimos todo lo que tenías.",
+            DoesNotExist: "{itemname} no existe en tu cuenta.",
             AppliedAuto: "Crear automático de equipo",
             Applied: "Tu equipo de {amount, plural, =1{un objeto ha sido transferido} other{# objetos han sido transferidos}} a tu {store}.",
             AppliedError: "Ninguno de los objetos en tu equipo pudo ser transferido.",
-            AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {failed} de {total} objetos tuvieron errores."
+            AppliedWarn: "Tu equipo ha sido parcialmente transferido, pero {failed} de {total} objetos tuvieron errores.",
+            NameRequired: "Se necesita un nombre"
           },
           Manifest: {
             Build: "Creando información de la base de datos de Destiny",
@@ -1267,6 +1382,10 @@
           Notes: {
             Error: "Error! Máximo 120 caracteres por notas.",
             Help: "Agregar notas a este artículo"
+          },
+          Postmaster: {
+            Limit: "Límite de Administración",
+            Desc: "Hay 20 objetos perdidos en la Administración en tu {store}. Nuevos objetos reemplazarán los ya existentes"
           },
           Settings: {
             Settings: "Configuración",
@@ -1306,22 +1425,26 @@
             DIMPopupsReset: "Reestablecer tips de información anteriormente escondidos"
           },
           Stats: {
-            Intellect: "Intelecto",
             Discipline: "Disciplina",
+            Intellect: "Intelecto",
             NoBonus: "Sin beneficio",
+            PercentHelp: "Haz click para más información acerca de su calidad estadística.",
+            Quality: "Calidad Estadística",
             Strength: "Fuerza",
             TierProgress: "{progress} por {tier}"
           },
           Tags: {
             TagItem: "Elemento de Etiqueta",
             Favorite: "Favorito",
-            Keep: "Guardar",
             Junk: "Basura",
-            Infuse: "Infundir"
+            Infuse: "Infundir",
+            Keep: "Guardar"
           },
           Vendors: {
             Vendors: "Comerciantes",
             All: "Todo",
+            Available: "Disponible en",
+            Compare: "Comparar con lo que ya tienes",
             Day: "{numDays, plural, =1{Día} other{Días}}",
             Load: "Cargando comerciantes",
             ArmorAndWeapons: "Armadura y armas",
@@ -1340,23 +1463,48 @@
         .translations('ja', {
           Level: "レベル",
           Bucket: {
-            Weapons: "武器",
             Armor: "よろい",
             General: "全般",
             Postmaster: "ポストマスター",
-            Vault: "装備",
-            Unknown: "未知の",
-            Vanguard: "バンガード",
             Progress: "進捗",
             Reputation: "評価",
-            Show: "ショー{bucket}"
+            Show: "ショー{bucket}",
+            Unknown: "未知の",
+            Vault: "装備",
+            Weapons: "武器"
+          },
+          BungieService: {
+            Down: "Bungie.net に接続不可。",
+            NetworkError: "ネットワークエラー。{status} {statusText}",
+            NotLoggedIn: "この拡張を利用するためには、Bungie.net にログインしてください。",
+            Maintenance: "Bungie.net サーバーがメンテナンス中。",
+            NotConnected: "インターネットに接続してない可能性あります。",
+            ItemUniquenessExplanation: "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。"
+          },
+          Compare: {
+            Compare: "比較",
+            Close: "終了",
+            Error: {
+              Class: "このアイテム {class} 用のため、比較できません。",
+              Archetype: "このアイテムは {type} ではないため、比較できません。"
+            },
+          },
+          DidYouKnow: {
+            TryNext: "今度お試しください。"
+          },
+          FarmingMode: {
+            Stop: "停止"
+          },
+          Filter: {
+            EnterName: "アイテム名を入力してください。",
           },
           Header: {
             About: "紹介",
+            Filters: "フィルター",
             SupportDIM: "サポート DIM"
           },
           ItemService: {
-            PercentComplete: "({ percent | percent } コンプリート)"
+            PercentComplete: "({ percent | percent } コンプリート)",
           },
           Loadouts: {
             Create: "作る Loadout",
@@ -1370,24 +1518,24 @@
             GatherEngramsExceptExotics: "エキゾチック",
             RestoreAllItems: "品揃え",
             Random: "ランダム",
-            Loadouts: "Loadouts" },
+          },
           Notes: {
             Help: "このアイテムにメモを追加"
           },
           Settings: {
-            Settings: "設定"
+            Settings: "設定",
           },
           Stats: {
-            Intellect: "知性",
             Discipline: "鍛錬",
-            Strength: "腕力"
+            Intellect: "知性",
+            Strength: "腕力",
           },
           Tags: {
             TagItem: "タグアイテム",
             Favorite: "本命",
-            Keep: "保つ",
             Junk: "ジャンク",
-            Infuse: "煎じる"
+            Infuse: "煎じる",
+            Keep: "保つ"
           },
           Vendors: {
             Vendors: "ベンダー",
@@ -1463,12 +1611,11 @@
           },
           Help: {
             BackToDIM: "Voltar para o DIM",
-            Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente."
+            Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
           },
           Hotkey: {
             StartSearch: "Iniciar uma busca",
             RefreshInventory: "Atualizar inventário",
-            ToggleDetails: "Toggle showing full item details",
             MarkItemAs: "Marcar item como '{tag}'",
             ClearNewItems: "Limpar novos itens"
           },
@@ -1516,7 +1663,6 @@
           },
           Loadouts: {
             Any: "Qualquer",
-            Loadouts: "Loadouts",
             Before: "Antes '{name}'",
             Create: "Criar set",
             FromEquipped: "Equipado",
@@ -1535,6 +1681,7 @@
             SaveAsNew: "Salvar como novo",
             Cancel: "Cancelar",
             ItemsWithIcon: "Itens com este ícone serão equipados. Clicar em um item alterna a equipagem.",
+            CouldNotEquip: "Could not equip {itemname}",
             AppliedAuto: "Construtor automático de sets",
             Applied: "Seu set de {amount} itens foi transferido para seu {store}.",
             AppliedError: "Nenhum dos itens do seu set pode ser transferido.",
