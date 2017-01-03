@@ -6,6 +6,7 @@
     .config(['$translateProvider', function($translateProvider) {
       $translateProvider.useSanitizeValueStrategy('escape');
       $translateProvider.useMessageFormatInterpolation();
+      $translateProvider.preferredLanguage('en');
 
       $translateProvider
         .translations('en', {
