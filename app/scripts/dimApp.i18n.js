@@ -127,7 +127,7 @@
             ToStore: "All {name} are now on your {store}."
           },
           ItemService: {
-            StoreFull: "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
+            BucketFull: "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
             Classified: "This item is classified and cannot be transferred at this time.",
             Classified2: "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
             Deequip: "Cannot find another item to equip in order to dequip {itemname}",
@@ -437,7 +437,7 @@
             ToStore: "Tutti i {name} sono ora sul tuo {store}."
           },
           ItemService: {
-            StoreFull: "Ci sono troppe '{itemtype}' nel {store}.",
+            BucketFull: "Ci sono troppe '{itemtype}' nel {store}.",
             Classified: "Questo oggetto è classificato e non può essere trasferito attualemente.",
             Classified2: "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
             Deequip: "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {itemname}",
