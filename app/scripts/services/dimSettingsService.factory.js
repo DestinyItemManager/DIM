@@ -84,6 +84,8 @@
 
     // Load settings async
     SyncService.get().then(function(data) {
+      data = data || {};
+
       var savedSettings = data['settings-v1.0'] || {};
 
       // for now just override itemTags. eventually let users create own?

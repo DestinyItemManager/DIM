@@ -4,6 +4,11 @@
   console.time('First item directive built');
 
   angular.module('dimApp')
+    .config((localStorageServiceProvider) => {
+      localStorageServiceProvider.setPrefix('');
+    });
+
+  angular.module('dimApp')
     .value('dimPlatformIds', {
       xbl: null,
       psn: null
@@ -14,6 +19,7 @@
       debug: false
     })
     .value('dimFeatureFlags', {
+      isExtension: window.chrome && window.chrome.extension,
       // Tags are off in release right now
       tagsEnabled: '$DIM_FLAVOR' !== 'release',
       compareEnabled: true,
@@ -137,6 +143,9 @@
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
+      if (!window.chrome || !window.chrome.extension) {
+        $httpProvider.interceptors.push('http-refresh-token');
+      }
     }])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise("/inventory");
@@ -165,6 +174,10 @@
         .state('developer', {
           url: "/developer",
           templateUrl: "scripts/developer/developer.html"
+        })
+        .state('login', {
+          url: "/login",
+          templateUrl: "scripts/login/login.html"
         });
     });
 })();
