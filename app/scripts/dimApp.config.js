@@ -78,7 +78,7 @@
         if (dimFeatureFlags.changelogToaster) {
           /* eslint no-constant-condition: 0*/
           dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-            title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION!',
+            title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION',
             view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
           });
         }
