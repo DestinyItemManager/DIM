@@ -127,7 +127,7 @@
             ToStore: "All {name} are now on your {store}."
           },
           ItemService: {
-            BucketFull: "There are too many '{itemtype}' items in the {bucket}.",
+            BucketFull: "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
             Classified: "This item is classified and cannot be transferred at this time.",
             Classified2: "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
             Deequip: "Cannot find another item to equip in order to dequip {itemname}",
@@ -214,7 +214,10 @@
             Applied: "Your {amount, plural, =1{single item loadout has} other{loadout of # items have}} been transferred to your {store}.",
             AppliedError: "None of the items in your loadout could be transferred.",
             AppliedWarn: "Your loadout has been partially transferred, but {failed} of {total} items had errors.",
-            NameRequired: "A name is required."
+            NameRequired: "A name is required.",
+            MakeRoom: "Make Room for Postmaster",
+            MakeRoomDone: "Finished making room for {postmasterNum, plural, =1{1 Postmaster item} other{# Postmaster items}} by moving {movedNum, plural, =1{1 item} other{# items}} off of {store}.",
+            MakeRoomError: "Unable to make room for all Postmaster items: {error}."
           },
           Manifest: {
             Build: "Building Destiny info database",
@@ -437,7 +440,7 @@
             ToStore: "Tutti i {name} sono ora sul tuo {store}."
           },
           ItemService: {
-            BucketFull: "Ci sono troppe '{itemtype}' nel {bucket}.",
+            BucketFull: "Ci sono troppe '{itemtype}' nel {store}.",
             Classified: "Questo oggetto è classificato e non può essere trasferito attualemente.",
             Classified2: "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
             Deequip: "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {itemname}",
