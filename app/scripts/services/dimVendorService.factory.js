@@ -126,7 +126,6 @@
         .then((defs) => {
           // Narrow down to only visible vendors (not packages and such)
           const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
-
           service.totalVendors = characters.length * (vendorList.length - vendorBlackList.length);
           service.loadedVendors = 0;
 
@@ -438,6 +437,7 @@
 
           items.forEach((item) => {
             item.vendorIcon = createdVendor.icon;
+            item = getItem(item, defs, createdVendor);
           });
 
           createdVendor.allItems = items;
@@ -456,6 +456,85 @@
 
     function isSaleItemUnlocked(saleItem) {
       return _.every(saleItem.unlockStatuses, 'isSet');
+    }
+
+    function getItem(itemByHash, defs, createdVendor) {
+      var item = itemByHash;
+      var itemDef = defs.InventoryItem[item.hash];
+      var hash = null;
+
+      if (itemDef.stats && itemDef.stats[3897883278]) {
+        hash = 3897883278;
+      } else if (itemDef.stats && itemDef.stats[368428387]) {
+        hash = 368428387;
+      }
+
+      if (hash) {
+        item.primStat = itemDef.stats[hash];
+        item.primStat.stat = defs.Stat[hash];
+        item.year = getItemYear(item);
+        setItemPrimStat(item, createdVendor);
+        item.quality = dimStoreService.getQualityRating(item.stats, item.primStat, item.bucket.type);
+      }
+      return item;
+    }
+
+    function getItemYear(itemDef) {
+      itemDef.sourceHashes = itemDef.sourceHashes || [];
+      var itemYear = 1;
+      if (itemDef.sourceHashes.includes(460228854) ||  // ttk
+          itemDef.sourceHashes.includes(3523074641) || // variks
+          itemDef.sourceHashes.includes(3551688287) || // kings fall
+          itemDef.hash === 3688594188) {      // boolean gemini
+        itemYear = 2;
+      }
+      if ((itemDef.sourceHashes.includes(24296771) ||        // roi
+          !itemDef.sourceHashes.length) &&          // new items
+          !(itemDef.primStat.minimum === 170) &&    // ttk CE exotic class items
+          !(itemDef.hash === 3688594188)) {         // boolean gemini
+        itemYear = 3;
+      }
+      return itemYear;
+    }
+
+    function setItemPrimStat(item, createdVendor) {
+      if (item.isExotic) {
+        switch (createdVendor.hash) {
+        case 2796397637: // fixes xur exotics
+          item.primStat.value = 350;
+          break;
+        case 1460182514:  // fix exotics in
+        case 3902439767:  // kiosks
+          if (item.year === 2) {  // year 2
+            item.primStat.value = 280;
+          }
+          if (item.year === 3 || item.primStat.value === 3) {
+            item.primStat.value = 320;
+          }
+          if (item.year === 1) {
+            if (item.primStat.minimum <= 145) {
+              item.primStat.value = 160;
+            }
+            if (item.primStat.minimum === 155) {
+              item.primStat.value = 170;
+            }
+            switch (item.hash) {
+            case 346443849: // vex mythoclast
+              item.primStat.value = 162;
+              break;
+            case 2344494718:  // 4th horseman
+              item.primStat.value = 155;
+              break;
+            case 2809229973:   // necrochasm
+              item.primStat.value = 172;
+              break;
+            case 3705198528:  // dragon's breath
+              item.primStat.value = 167;
+              break;
+            }
+          }
+        }
+      }
     }
   }
 })();
