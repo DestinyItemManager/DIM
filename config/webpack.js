@@ -16,7 +16,7 @@ module.exports = (options = {}) => {
     entry: './src/index.js',
 
     output: {
-      path: './app',
+      path: './dist',
       filename: 'bundle-[chunkhash:6].js',
     },
 
@@ -76,7 +76,7 @@ module.exports = (options = {}) => {
     },
 
     plugins: [
-      new CleanWebpackPlugin(['app'], {
+      new CleanWebpackPlugin(['dist'], {
         root: path.resolve('./'),
       }),
 
