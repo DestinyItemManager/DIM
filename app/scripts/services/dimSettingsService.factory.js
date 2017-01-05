@@ -98,10 +98,12 @@
       ];
 
       _loaded = true;
+
       $rootScope.$evalAsync(function() {
         angular.merge(settings, savedSettings);
         $translate.use(settings.language);
         $translate.fallbackLanguage('en');
+        $rootScope.$emit('dim-settings-loaded', {});
       });
     });
 
