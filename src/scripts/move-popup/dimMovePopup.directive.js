@@ -54,7 +54,6 @@
     };
   }
 
-  MovePopupController.$inject = ['$scope', 'dimStoreService', 'ngDialog', '$timeout', 'dimSettingsService', 'dimItemMoveService'];
 
   function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
     var vm = this;
@@ -112,7 +111,7 @@
 
       // Open the infuse window
       ngDialog.open({
-        template: 'views/infuse.html',
+        template: require('app/views/infuse.template.html'),
         className: 'app-settings',
         appendClassName: 'modal-dialog',
         data: item

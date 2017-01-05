@@ -6,7 +6,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .directive('dimLoadoutPopup', LoadoutPopup);
 
-  LoadoutPopup.$inject = [];
 
   function LoadoutPopup() {
     return {
@@ -22,7 +21,6 @@ const _ = require('underscore');
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimFarmingService', '$window', 'dimSearchService', 'dimPlatformService', '$translate'];
 
   function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $translate) {
     var vm = this;

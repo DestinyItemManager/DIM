@@ -7,24 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimStoreService', StoreService);
 
-  StoreService.$inject = [
-    '$rootScope',
-    '$q',
-    'dimBungieService',
-    'dimPlatformService',
-    'dimCategory',
-    'dimDefinitions',
-    'dimBucketService',
-    'dimItemInfoService',
-    'dimInfoService',
-    'SyncService',
-    'loadingTracker',
-    'dimManifestService',
-    '$translate',
-    'uuid2',
-    'dimFeatureFlags'
-  ];
-
   function StoreService(
     $rootScope,
     $q,

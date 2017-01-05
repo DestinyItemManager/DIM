@@ -14,7 +14,6 @@
       controller: ClearNewItemsCtrl
     });
 
-  ClearNewItemsCtrl.$inject = ['dimStoreService', 'dimSettingsService'];
   function ClearNewItemsCtrl(dimStoreService, dimSettingsService) {
     this.storeService = dimStoreService;
     this.settings = dimSettingsService;

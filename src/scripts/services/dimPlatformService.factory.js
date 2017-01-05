@@ -6,7 +6,6 @@ const _ = require('underscore');
 
   angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
-  PlatformService.$inject = ['$rootScope', '$q', 'dimBungieService', 'SyncService'];
 
   function PlatformService($rootScope, $q, dimBungieService, SyncService) {
     var _platforms = [];

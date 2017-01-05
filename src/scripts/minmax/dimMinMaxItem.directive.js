@@ -26,7 +26,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .component('dimMinMaxItem', MinMaxItem);
 
-  MinMaxItemCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService'];
 
   function MinMaxItemCtrl($scope, ngDialog, dimStoreService) {
     var vm = this;

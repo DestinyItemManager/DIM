@@ -23,7 +23,6 @@
     }]);
 
 
-  StoreItem.$inject = ['dimItemService', 'dimStoreService', 'ngDialog', 'dimLoadoutService', 'dimCompareService', '$rootScope', 'dimActionQueue'];
 
   function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
     var otherDialog = null;
@@ -201,7 +200,6 @@
     }
   }
 
-  StoreItemCtrl.$inject = [];
 
   function StoreItemCtrl() {
     var vm = this;

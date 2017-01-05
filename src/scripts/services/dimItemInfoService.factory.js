@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimItemInfoService', ItemInfoService);
 
-  ItemInfoService.$inject = ['dimPlatformService', 'SyncService'];
 
   /**
    * The item info service maintains a map of extra, DIM-specific, synced data about items (per platform).

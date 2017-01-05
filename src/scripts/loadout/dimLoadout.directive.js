@@ -6,7 +6,6 @@ const _ = require('underscore');
 
   angular.module('dimApp').directive('dimLoadout', Loadout);
 
-  Loadout.$inject = ['dimLoadoutService', '$translate'];
 
   function Loadout(dimLoadoutService, $translate) {
     return {
@@ -100,7 +99,6 @@ const _ = require('underscore');
     }
   }
 
-  LoadoutCtrl.$inject = ['dimLoadoutService', 'dimCategory', 'toaster', 'dimPlatformService', 'dimSettingsService', '$translate'];
 
   function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate) {
     var vm = this;

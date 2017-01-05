@@ -8,7 +8,6 @@ const _ = require('underscore');
     .factory('dimSearchService', SearchService)
     .directive('dimSearchFilter', SearchFilter);
 
-  SearchService.$inject = ['dimSettingsService', 'dimFeatureFlags'];
   function SearchService(dimSettingsService, dimFeatureFlags) {
     const categoryFilters = {
       pulserifle: ['CATEGORY_PULSE_RIFLE'],
@@ -104,7 +103,6 @@ const _ = require('underscore');
     };
   }
 
-  SearchFilter.$inject = ['dimSearchService'];
 
   function SearchFilter(dimSearchService) {
     return {
@@ -138,7 +136,6 @@ const _ = require('underscore');
     };
   }
 
-  SearchFilterCtrl.$inject = ['$scope', 'dimStoreService', 'dimVendorService', 'dimSearchService'];
 
   function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
     var vm = this;
@@ -243,7 +240,7 @@ const _ = require('underscore');
             addPredicate(predicate, filter, true);
           } else {
             _.find(dimSearchService.filterTrans, (value, key) => {
-              if (value.indexOf(filter >= 0)) {
+              if (value.indexOf(filter) >= 0) {
                 predicate = key;
                 _cachedFilters[filter] = key;
                 addPredicate(predicate, filter, true);

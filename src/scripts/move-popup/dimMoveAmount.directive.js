@@ -4,7 +4,6 @@
   angular.module('dimApp')
     .directive('dimMoveAmount', MoveAmount);
 
-  MoveAmount.$inject = ['$timeout'];
 
   function MoveAmount($timeout) {
     return {
@@ -38,7 +37,6 @@
     };
   }
 
-  MoveAmountController.$inject = [];
 
   function MoveAmountController() {
     var vm = this;

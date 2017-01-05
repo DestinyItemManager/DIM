@@ -48,7 +48,6 @@ const _ = require('underscore');
       ]
     });
 
-  BucketService.$inject = ['dimDefinitions', 'dimCategory'];
 
   function BucketService(dimDefinitions, dimCategory) {
     // A mapping from the bucket names to DIM item types

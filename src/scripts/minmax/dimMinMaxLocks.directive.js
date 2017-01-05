@@ -47,7 +47,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .component('dimMinMaxLocks', MinMaxLocks);
 
-  MinMaxLocksCtrl.$inject = ['$scope', 'hotkeys', 'ngDialog'];
 
   function MinMaxLocksCtrl($scope, hotkeys, ngDialog) {
     var vm = this;

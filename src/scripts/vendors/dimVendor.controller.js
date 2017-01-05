@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .controller('dimVendorCtrl', dimVendorCtrl);
 
-  dimVendorCtrl.$inject = ['$scope', '$state', '$q', 'dimStoreService', 'dimSettingsService', 'dimVendorService'];
 
   function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
     var vm = this;

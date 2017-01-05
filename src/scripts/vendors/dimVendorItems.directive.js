@@ -90,7 +90,6 @@ const _ = require('underscore');
 
   // TODO: separate out class-specific stuff?
 
-  VendorItemsCtrl.$inject = ['$scope', 'ngDialog', 'dimStoreService', 'dimSettingsService'];
 
   function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) {
     var vm = this;

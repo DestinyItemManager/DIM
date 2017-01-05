@@ -7,7 +7,6 @@ const _ = require('underscore');
   angular.module('dimApp')
     .controller('dimMinMaxCtrl', dimMinMaxCtrl);
 
-  dimMinMaxCtrl.$inject = ['$scope', '$rootScope', '$state', '$q', '$timeout', '$location', '$translate', 'dimSettingsService', 'dimStoreService', 'ngDialog', 'dimFeatureFlags', 'dimLoadoutService', 'dimDefinitions', 'dimVendorService'];
 
   function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
     var vm = this;
@@ -565,7 +564,7 @@ const _ = require('underscore');
                           }
                         } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
-            var tiers = _.each(_.groupBy([...tiersSet.keys()], function(tierString) {
+            var tiers = _.each(_.groupBy(Array.from(tiersSet.keys()), function(tierString) {
               return _.reduce(tierString.split('/'), function(memo, num){
                 return memo + parseInt(num, 10);
               }, 0);

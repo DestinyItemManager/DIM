@@ -14,7 +14,6 @@ const _ = require('underscore');
     `
   });
 
-  ItemTagController.$inject = ['$scope', '$rootScope', 'dimSettingsService'];
 
   function ItemTagController($scope, $rootScope, dimSettingsService) {
     var vm = this;
