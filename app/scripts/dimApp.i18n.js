@@ -417,6 +417,11 @@
             ChangingPerks: "Selezione dei Perk non supportata",
             ChangingPerksInfo: "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
             NeverShow: "Non mostrarmi più questo messaggio.",
+            UpgradeChrome: "Prego aggiornare Chrome",
+            Version: {
+              Beta: "La Beta è stata aggiornata alla versione $DIM_VERSION",
+              Stable: "Rilasciata la versione $DIM_VERSION di DIM"
+            },
             Xur: "Xûr è arrivato"
           },
           Hotkey: {
@@ -730,6 +735,11 @@
             ChangingPerks: "Verändern der Perks wird nicht unterstützt",
             ChangingPerksInfo: "Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu verändern. Wir würden es nur zu gern!",
             NeverShow: "Diesen Tipp nicht erneut zeigen",
+            UpgradeChrome: "Bitte aktualisiere Chrome",
+            Version: {
+              Beta: "Beta wurde auf v$DIM_VERSION aktualisiert",
+              Stable: "DIM v$DIM_VERSION veröffentlicht"
+            },
             Xur: "Xûr ist da"
           },
           Hotkey: {
