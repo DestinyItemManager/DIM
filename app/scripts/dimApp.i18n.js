@@ -99,6 +99,11 @@
             ChangingPerks: "Changing Perks Not Supported",
             ChangingPerksInfo: "Sorry, there's no way to change perks outside the game. We wish we could!",
             NeverShow: "Never show me this again.",
+            UpgradeChrome: "Please Upgrade Chrome",
+            Version: {
+              Beta: "Beta has been updated to v$DIM_VERSION",
+              Stable: "DIM v$DIM_VERSION Released"
+            },
             Xur: "Xûr is Here"
           },
           Hotkey: {
@@ -527,7 +532,10 @@
             Applied: "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
             AppliedError: "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito.",
-            NameRequired: "E' richiesto un nome."
+            NameRequired: "E' richiesto un nome.",
+            MakeRoom: "Crea spazio per l'Amministratore",
+            MakeRoomDone: "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}}  {gender, select, male{dal} female{dalla}} {store}.",
+            MakeRoomError: "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}."
           },
           Manifest: {
             Build: "Costruisco il database di informazioni di Destiny",
@@ -606,7 +614,7 @@
             TierProgress: "{progress} per {tier}"
           },
           Tags: {
-            TagItem: "Segna El.",
+            TagItem: "Segna Oggetto",
             Favorite: "Preferito",
             Junk: "Smantella",
             Infuse: "Infondi",
@@ -670,7 +678,7 @@
               Class: "Kann dieses Item nicht vergleichen, da es nicht für einen {class} ist.",
               Archetype: "Kann dieses Item nicht vergleichen, da es kein {type} ist."
             },
-            Splits: "Vergleiche ähnliche Stats ({quantity})"
+            Splits: "Vergleiche mit selben Werten ({quantity})"
           },
           Cooldown: {
             Grenade: "Granaten Abklingzeit",
@@ -687,17 +695,17 @@
             DontShowAgain: "Diesen Tipp nicht erneut zeigen",
             DoubleClick: "Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, kannst du es stattdessen doppelt anklicken um es sofort auszurüsten.",
             DragAndDrop: "Gegenstände können zwischen verschiedenen Charackteren und dem Tresor per \"Drag and Drop\" verschoben werden",
-            Expand: "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie um diese wieder aufzuklappen.",
+            Expand: "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie an, um diese wieder aufzuklappen.",
             TryNext: "Probiere es das nächste Mal aus!"
           },
           FarmingMode: {
             FarmingMode: "Farm Modus (verschickt Items)",
             Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {store} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-            Configuration: "Konfiguration",
+            Configuration: "Einstellungen",
             MakeRoom: {
               Desc: "DIM verschiebt Engramme und Glimmergegenstände vom {store} zum Tresor oder anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
-              MakeRoom: "Mache Platz durch verschieben von Equipment, um Items aufnehmen zu können",
-              Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen."
+              MakeRoom: "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können",
+              Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
             },
             OutOfRoom: "Dir ist der Platz ausgegangen um Gegenstände von {character} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren.",
             Quickmove: "Schnelles Verschieben",
@@ -728,8 +736,8 @@
             StartSearch: "Starte eine Suche",
             RefreshInventory: "Aktualisiere Inventar",
             ToggleDetails: "Zeige/verstecke vollständige Gegenstanddetails",
-            MarkItemAs: "Markiere Element als '{tag}'",
-            ClearNewItems: "Neue Elemente löschen"
+            MarkItemAs: "Markiere Gegenstand als '{tag}'",
+            ClearNewItems: "Markierung von neuen Items entfernen"
           },
           Infusion: {
             Infusion: "Finde Infusions-Material",
@@ -738,7 +746,7 @@
             InfuseItems: "Item auswählen zum Infundieren mit:",
             LockedItems: "Beziehe 'gesperrte' Items ein",
             NoItems: "Keine infundierbaren Items verfügbar.",
-            NoTransfer: "Transfer Infundiermaterial\n{target} kann nicht verschoben werden.",
+            NoTransfer: "Transfer des Infundiermaterials \n{target} kann nicht verschoben werden.",
             ShowItems: "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
             TransferItems: "Übertrage Items",
             Using3: "verwendet 3"
@@ -747,10 +755,10 @@
             Consolidate: "{name} zusammengefasst",
             Distributed: "{name} verteilt\n{name} ist gleichermaßen zwischen Charakteren verteilt",
             ToVault: "Alle {name} sind nun in deinem Tresor.",
-            ToStore: "Alle {name} sind nun in deinem {store}."
+            ToStore: "Alle {name} sind nun bei deinem {store}."
           },
           ItemService: {
-            BucketFull: "Es sind viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar von}} {store}.",
+            BucketFull: "Es sind zu viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar vom}} {store}.",
             Classified: "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
             Classified2: "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar.",
             Deequip: "Kann keinen weiteren ausrüstbaren Gegenstand finden um {itemname} abzulegen.",
@@ -758,7 +766,7 @@
             NotEnoughRoom: "Es gibt nichts was wir aus {store} wegbewegen könnten um Platz für {itemname} zu schaffen",
             OnlyEquippedLevel: "Das kann nur von Charakteren ab einem Level von {level} oder drüber ausgerüstet werden.",
             OnlyEquippedClassLevel: "Das kann nur von einem {class} ab einem Level von {level} oder drüber ausgerüstet werden.",
-            PercentComplete: "({ percent | percent } Komplett)",
+            PercentComplete: "({ percent | percent } fertig)",
             TooMuch: "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!",
             TwoExotics: "Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Gegenstände auszurüsten!"
           },
@@ -770,7 +778,7 @@
             ClearLocked: "Gesperrte entfernen",
             Locked: "Gesperrte Gegenstände",
             LockedHelp: "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn in den Loadouts zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
-            FilterSets: "Sets filtern",
+            FilterSets: "Filter setzen",
             AdvancedOptions: "Erweiterte Optionen",
             ProcessingMode: {
               Fast: "Schnell",
@@ -814,8 +822,8 @@
             MaximizeLight: "Licht maximieren",
             ItemLeveling: "Gegenstand aufwerten",
             GatherEngrams: "Engramme sammeln",
-            GatherEngramsExceptExotics: "Exotics",
-            RestoreAllItems: "Alle Elemente",
+            GatherEngramsExceptExotics: "Exo",
+            RestoreAllItems: "Alle Gegenstände",
             Random: "Zufällig",
             Randomize: "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?",
             VendorsCannotEquip: "Diese Händler-Gegenstände können nicht ausgerüstet werden",
@@ -834,19 +842,19 @@
             TooManyRequested: "Du hast {total} {itemname}. Dein Loadout verlangt jedoch {requested}. Wir haben alles übertragen, was da war.",
             DoesNotExist: "{itemname} existiert nicht auf deinem Account.",
             AppliedAuto: "Automatischer Loadout Builder",
-            Applied: "Dein {amount, plural, =1{Ein-Item Loadout} other{Loadout aus # Gegenständen}} wurde zum {store} übertragen.",
+            Applied: "{amount, plural, =1{Dein Ein-Item Loadout} other{Loadout aus # Gegenständen}} wurde zum {store} übertragen.",
             AppliedError: "Keiner der Gegenstände in deinem Loadout konnte übertragen werden.",
-            AppliedWarn: "Dein Loadout wurde teilweise angewendet, aber {failed} von {total} Gegenständen waren fehlerhaft.",
+            AppliedWarn: "Dein Loadout wurde teilweise übertragen, aber {failed} von {total} Gegenständen hatten Fehler.",
             NameRequired: "Ein Name ist erforderlich.",
             MakeRoom: "Schaffe Platz für Posstellenitems",
-            MakeRoomDone: "{movedNum, plural, =1{1 Gegenstand} other{# Gegenstände}}  vom {store} entfernt, um Platz für Poststellengegenstände zu schaffen.",
-            MakeRoomError: "Es kann kein Platz für Posstellengegenstände geschaffen werden: {error}."
+            MakeRoomDone: "Platz für  {postmasterNum, plural, =1{1 Poststellenitem} other{# Poststellenitems}} durch verschieben von {movedNum, plural, =1{1 Item} other{# Items}}  vom {store} geschaffen.",
+            MakeRoomError: "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {error}."
           },
           Manifest: {
             Build: "Lege Destiny Datenbank an",
             Download: "Lade neueste Daten von Bungie herunter",
-            Error: "Fehler beim Laden von Informationen:\n{error}\nApp neu laden, um es nochmals zu versuchen.",
-            Outdated: "Veraltete Destiny Infos",
+            Error: "Fehler beim Laden von Destiny Daten:\n{error}\nApp neu laden, um es nochmals zu versuchen.",
+            Outdated: "Veraltete Destiny Daten",
             OutdatedExplanation: "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreiten werden.",
             BungieDown: "Bungie.net hat möglicherweise Probleme.",
             Load: "Lade gespeicherte Daten",
@@ -859,25 +867,25 @@
             CurrentRank: "Aktueller Rang",
             CurrentRep: "Aktueller Ruf",
             OnHand: "Materialien in Besitz",
-            FromTrade: "Materialien aus dem Handel",
+            FromTrade: "Materialien vom Tausch",
             NewRank: "Neuer Rang",
             NewRep: "Neuer Ruf"
           },
           Notes: {
             Error: "Fehler! Max 120 Zeichen für Notizen.",
-            Help: "Notiz für diesen Artikel"
+            Help: "Notiz für dieses Item hinzufügen"
           },
           Postmaster: {
             Limit: "Poststellenlimit",
-            Desc: "Es sind 20 verlorene Gegenstände in der Poststelle deines {store}. Jeder neue Gegenstand wird bereits vorhandene überschreiben."
+            Desc: "Es sind 20 verlorene Gegenstände in der Poststelle deines {store}. Jedes neue Item wird bereits vorhandene überschreiben."
           },
           Settings: {
             Settings: "Einstellungen",
             Language: "Sprache (lade DIM neu zum Übernehmnen)",
-            HideUnfiltered: "Zeige nur die Suchergebnisse beim Filtern",
-            HideUnfilteredHelp: "Gegenstände, die nicht zum Filter passen, werden ausgeblendet.",
-            AlwaysShowDetails: "Zeige immer Details der Gegenstände",
-            AlwaysShowDetailsHelp: "Ein Klick auf einen Gegenstand öffnet ein Popup, welches erweitert werden kann, um Details zu Statistiken und Perks zu zeigen. Diese Option wird immer diese Details zeigen, wenn du auf einen Gegenstand klickst.",
+            HideUnfiltered: "Blende ungefilterte Gegenstände beim Filtern aus",
+            HideUnfilteredHelp: "Items welche die Filterkriterien nicht erfüllen, werden ausgeblendet.",
+            AlwaysShowDetails: "Zeige immer Gegenstand Details",
+            AlwaysShowDetailsHelp: "Ein Klick auf einen Gegenstand öffnet ein Popup, welches erweitert werden kann, um Details zu Statistiken und Perks anzuzeigen. Diese Option wird immer diese Details zeigen, wenn du auf einen Gegenstand klickst.",
             EnableAdvancedStats: "Aktivieren der erweiterten Vergleichsfunktion für die Qualität der Werte",
             EnableAdvancedStatsHelp: "Ermöglicht erweiterte Min/Max-Funktionen im Verschieben-Dialog und aktiviert die Rüstungsvergleichsansicht.",
             ShowOverlay: "Zeige neue Gegenstände mit einem Overlay",
@@ -888,9 +896,9 @@
             ShowElementalHelp: "Zeigt den Elementarschaden bei Waffen an.",
             SetSort: "Sortiere Gegenstände nach:",
             SetSortHelp: "Sortieren von Gegenständen nach Seltenheit oder ihrem primären Statuswert.",
-            SortPrimary: "Primären Stat",
+            SortPrimary: "Primärer Wert",
             SortRarity: "Seltenheit",
-            SortRoll: "Stat-Roll Prozent",
+            SortRoll: "Roll-Wert Prozent",
             InventoryColumns: "Charakter Inventar Spalten",
             InventoryColumnsHelp: "Wähle die Anzahl der Spalten für das Charakter Inventar.",
             VaultColumns: "Maximale Anzahl von Spalten des Tresors",
@@ -901,10 +909,10 @@
             CharacterOrder: "Charakter Reihenfolge",
             CharacterOrderHelp: "Charakter können nach dem letzten Login oder ihrem Erstelldatum sortiert werden.",
             CharacterOrderRecent: "Nach zuletzt aktivem Charakter",
-            CharacterOrderReversed: "Nach zuletzt aktivem Charakter (umgedreht)",
+            CharacterOrderReversed: "Nach zuletzt aktivem Charakter (umgekehrt)",
             CharacterOrderFixed: "Fest (Nach Alter des Charakters)",
             ExportSS: "Lade Tabelle herunter",
-            ExportSSHelp: "Lade eine CSV-Tabelle von deinen Gegenständen, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
+            ExportSSHelp: "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
             DIMPopups: "DIM Info Popups",
             DIMPopupsReset: "Zeige zuvor versteckte Info Tipps"
           },
@@ -913,15 +921,15 @@
             Intellect: "Intellekt",
             NoBonus: "Kein Bonus",
             OfMaxRoll: "{range} des max. Rolls",
-            PercentHelp: "Klicke für mehr Informationen über Stats Qualitäten.",
-            Quality: "Stats Qualität",
+            PercentHelp: "Klicke für mehr Informationen über die Qualität der Werte.",
+            Quality: "Qualität der Werte",
             Strength: "Stärke",
             TierProgress: "{progress} für {tier}"
           },
           Tags: {
-            TagItem: "Item taggen",
+            TagItem: "Item markieren",
             Favorite: "Favorit",
-            Junk: "Trödel",
+            Junk: "Müll",
             Infuse: "Infundieren",
             Keep: "Behalten"
           },
@@ -1584,6 +1592,7 @@
             Weapons: "Armas"
           },
           BungieService: {
+            DevVersion: "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
             Down: "Bungie.net está fora do ar.",
             Difficulties: "A API da Bungie está atualmente passando por dificuldades.",
             NetworkError: "Erro de rede - {status} {statusText}",
@@ -1592,6 +1601,7 @@
             Maintenance: "Servidores Bungie.net estão fora do ar para manutenção.",
             NoAccount: "Nenhuma conta de Destiny foi encontrada para esta plataforma. Você selecionou a plataforma correta?",
             NoAccountForPlatform: "Incapaz de encontrar uma conta de Destiny no {platform}.",
+            NoCookies: "Nenhum cookie encontrado.",
             NotConnected: "Você deverá estar sem conexão com a Internet.",
             Twitter: "Veja atualizações em",
             ItemUniqueness: "Unicidade de itens",
@@ -1617,6 +1627,15 @@
             Dump: "Enviar informação ao console",
             View: "Visualizar informações de Debug do item"
           },
+          DidYouKnow: {
+            DidYouKnow: "Você sabia?",
+            Collapse: "Você ocultou uma seção no DIM! Isso pode ser útil para esconder partes do DIM que você normalmente não usa.",
+            DontShowAgain: "Não exibir esta dica novamente.",
+            DoubleClick: "Se você está movendo um item para o seu personagem ativo atualmente (último logado), você pode dar um duplo clique para equipá-lo instantaneamente.",
+            DragAndDrop: "Itens podem ser arrastados e soltados entre diferentes colunas de personagens/cofre.",
+            Expand: "Para re-expandir uma seção simplesmente clique no sinal de mais, no lado esquerdo da categoria que você ocultou.",
+            TryNext: "Tente na próxima vez!"
+          },
           FarmingMode: {
             FarmingMode: "Modo Farm (mover itens)",
             Desc: "O DIM estará movendo engramas e consumíveis do {store} para o cofre e deixando um espaço livre por item para evitar que seus itens vão para o Chefe dos Correios.",
@@ -1626,8 +1645,13 @@
               MakeRoom: "Abrir espaço para novos itens movendo equipamentos",
               Tooltip: "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
             },
+            OutOfRoom: "Você está sem espaço para mover itens do {character}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
             Quickmove: "Mover rapidamente",
             Stop: "Parar"
+          },
+          Filter: {
+            EnterName: "Digite um nome de item:",
+            EnterNote: "Digite a anotação:"
           },
           Header: {
             About: "Sobre",
@@ -1639,19 +1663,53 @@
           },
           Help: {
             BackToDIM: "Voltar para o DIM",
+            CannotMove: "Não é possível mover o item para fora deste personagem.",
             Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
+            ChangingPerks: "Mudança de perks não é suportado.",
+            ChangingPerksInfo: "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
+            NeverShow: "Não mostre isso novamente.",
+            Xur: "Xûr chegou"
           },
           Hotkey: {
             StartSearch: "Iniciar uma busca",
             RefreshInventory: "Atualizar inventário",
+            ToggleDetails: "Toggle showing full item details",
             MarkItemAs: "Marcar item como '{tag}'",
             ClearNewItems: "Limpar novos itens"
           },
+          Infusion: {
+            Infusion: "Buscador de Item para Infusão",
+            BringGear: "Elevará o item para",
+            Calc: "Calculadora de infusões",
+            InfuseItems: "Selecione um item para infundir:",
+            LockedItems: "Incluir itens travados",
+            NoItems: "Nenhum item para infusão encontrado.",
+            NoTransfer: "Transferência de materia para infusão\n {target} não pôde ser movido.",
+            ShowItems: "Exibir itens infundíveis de outros personagens e cofre",
+            TransferItems: "Transferir itens",
+            Using3: "usando 3"
+          },
+          ItemMove: {
+            Consolidate: "{name} consolidado",
+            Distributed: "{name} distribuído\n{name} está agora dividido por igual entre os personagens.",
+            ToVault: "Todos os {name} estão agora no seu cofre.",
+            ToStore: "Todos os {name} estão agora no seu {store}."
+          },
           ItemService: {
-            PercentComplete: "({ percent | percent } Completo)"
+            BucketFull: "Há muitos '{itemtype}' {isVault, select, true{no} false{em seu}} {store}.",
+            Classified: "Este item é confidencial e não pode ser transferido no momento.",
+            Classified2: "Item confidencial. A Bungie não fornece informações sobre este item. Este item ainda não é transferível.",
+            Deequip: "Não foi possível encontrar outro item para equipar no lugar de {itemname}",
+            ExoticError: "'{itemname}' não pode ser equipado porque o exótico no slot de {slot} não pode ser removido. ({error})",
+            NotEnoughRoom: "Não há nada que possamos mover do {store} para abrir espaço para {itemname}",
+            OnlyEquippedLevel: "Este item só pode ser equipado em personagens igual ou acima do nível {level}.",
+            OnlyEquippedClassLevel: "Este item só pode ser equipado em um {class} igual ou acima do nível {level}.",
+            PercentComplete: "({ percent | percent } Completo)",
+            TooMuch: "Parece que você quis mover mais deste item do que ele existe!",
+            TwoExotics: "Nós não sabemos como você conseguiu equipar mais de 2 equipamentos exóticos!"
           },
           LB: {
-            LB: "Construtor de Loadouts",
+            LB: "Construtor de Sets",
             ShowGear: "Exibir itens de {class}",
             HideGear: "Ocultar itens de {class}",
             LockEquipped: "Travar itens equipados",
@@ -1691,6 +1749,7 @@
           },
           Loadouts: {
             Any: "Qualquer",
+            Loadouts: "Sets",
             Before: "Antes '{name}'",
             Create: "Criar set",
             FromEquipped: "Equipado",
@@ -1704,16 +1763,30 @@
             GatherEngramsExceptExotics: "Exóticos",
             RestoreAllItems: "Todos os itens",
             Random: "Aleatória",
+            Randomize: "Embaralhar suas armas equipadas, armadura, fantasma e artefato?",
+            VendorsCannotEquip: "Estes itens de vendedores não podem ser equipados",
+            VendorsCanEquip: "Estes itens não podem ser equipados",
+            MaxSlots: "Você só pode ter {slots} desde tipo de item em seu set.",
+            OnlyItems: "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
+            FilteredItems: "Itens filtrados",
+            NoEngrams: "Nenhum engrama não-exótico disponível para transferir.",
+            NoExotics: "Nenhum engrama disponível para transferir.",
             LoadoutName: "Nome do set...",
             Save: "Salvar",
             SaveAsNew: "Salvar como novo",
             Cancel: "Cancelar",
             ItemsWithIcon: "Itens com este ícone serão equipados. Clicar em um item alterna a equipagem.",
-            CouldNotEquip: "Could not equip {itemname}",
+            CouldNotEquip: "Não foi possível equipar {itemname}",
+            TooManyRequested: "Você tem {total} {itemname} mas o seu set de itens busca por {requested}. Nós transferimos tudo o que você tem.",
+            DoesNotExist: "{itemname} não existe em sua conta.",
             AppliedAuto: "Construtor automático de sets",
             Applied: "Seu set de {amount} itens foi transferido para seu {store}.",
             AppliedError: "Nenhum dos itens do seu set pode ser transferido.",
-            AppliedWarn: "Seu set foi parcialmente transferido, mas {failed} de {total} itens retornaram erros."
+            AppliedWarn: "Seu set foi parcialmente transferido, mas {failed} de {total} itens retornaram erros.",
+            NameRequired: "Um nome é obrigatório.",
+            MakeRoom: "Abrir espaço para itens do Correio",
+            MakeRoomDone: "Foi aberto espaço para {postmasterNum, plural, =1{1 item de Correio} other{# itens de Correio}} movendo {movedNum, plural, =1{1 item} other{# itens}} do {store}.",
+            MakeRoomError: "Incapaz de abrir espaço para todos os itens do Correio: {error}."
           },
           Manifest: {
             Build: "Construindo banco de dados de informações",
@@ -1739,6 +1812,10 @@
           Notes: {
             Error: "Erro! Anotações devem ter até 120 caracteres.",
             Help: "Adicione anotações à este item"
+          },
+          Postmaster: {
+            Limit: "Limite do Chefe de Correio",
+            Desc: "Há 20 itens perdidos em seu Correio com seu {store}. Quaisquer novos itens irão substituir os existentes."
           },
           Settings: {
             Settings: "Configurações",
@@ -1781,6 +1858,9 @@
             Discipline: "Disciplina",
             Intellect: "Intelecto",
             NoBonus: "Sem bônus",
+            OfMaxRoll: "{range} do valor máximo",
+            PercentHelp: "Clique para mais informações sobre Níveis de Qualidade.",
+            Quality: "Níveis de qualidade",
             Strength: "Força",
             TierProgress: "{progress} para {tier}"
           },
@@ -1794,6 +1874,8 @@
           Vendors: {
             Vendors: "Vendedores",
             All: "Todos",
+            Available: "Disponível em",
+            Compare: "Compare com o que você já possui",
             Day: "{numDays, plural, =1{Dia} other{Dias}}",
             Load: "Carregando vendedores",
             ArmorAndWeapons: "Armaduras & Armas",
