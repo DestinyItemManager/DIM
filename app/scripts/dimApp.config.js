@@ -68,8 +68,6 @@
         var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
 
         $rootScope.$on('dim-settings-loaded', function() {
-          alert(dimSettingsService.language);
-
           if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
             dimInfoService.show('old-chrome', {
               title: 'Please Upgrade Chrome',
