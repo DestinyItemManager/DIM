@@ -746,7 +746,7 @@
             InfuseItems: "Item auswählen zum Infundieren mit:",
             LockedItems: "Beziehe 'gesperrte' Items ein",
             NoItems: "Keine infundierbaren Items verfügbar.",
-            NoTransfer: "Transfer des Infundiermaterials \n{target} kann nicht verschoben werden.",
+            NoTransfer: "Transfer des Infundiermaterials\n{target} kann nicht verschoben werden.",
             ShowItems: "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
             TransferItems: "Übertrage Items",
             Using3: "verwendet 3"
@@ -847,7 +847,7 @@
             AppliedWarn: "Dein Loadout wurde teilweise übertragen, aber {failed} von {total} Gegenständen hatten Fehler.",
             NameRequired: "Ein Name ist erforderlich.",
             MakeRoom: "Schaffe Platz für Posstellenitems",
-            MakeRoomDone: "Platz für  {postmasterNum, plural, =1{1 Poststellenitem} other{# Poststellenitems}} durch verschieben von {movedNum, plural, =1{1 Item} other{# Items}}  vom {store} geschaffen.",
+            MakeRoomDone: "Platz für {postmasterNum, plural, =1{1 Poststellenitem} other{# Poststellenitems}} durch verschieben von {movedNum, plural, =1{1 Item} other{# Items}} vom {store} geschaffen.",
             MakeRoomError: "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {error}."
           },
           Manifest: {
@@ -1673,7 +1673,6 @@
           Hotkey: {
             StartSearch: "Iniciar uma busca",
             RefreshInventory: "Atualizar inventário",
-            ToggleDetails: "Toggle showing full item details",
             MarkItemAs: "Marcar item como '{tag}'",
             ClearNewItems: "Limpar novos itens"
           },
