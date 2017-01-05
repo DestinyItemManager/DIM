@@ -50,7 +50,7 @@ If you just apply a comment stating something is wrong, the only way someone wou
 | Italian (it)       | [simonefranza](https://www.transifex.com/user/profile/simonefranza/)     | |
 | Japanese (ja)      | [omar_senpai](https://www.transifex.com/user/profile/omar_senpai/)      | [bakaboy182](https://www.transifex.com/user/profile/bakaboy182/), [chickenmer]((https://www.transifex.com/user/profile/chickenmer/)) |
 | Portuguese (pt-br) | [brunnopleffken](https://www.transifex.com/user/profile/brunnopleffken/)   | [bakaboy182](https://www.transifex.com/user/profile/bakaboy182/) |
-| Spanish (es)       | [JaviG1105](https://www.transifex.com/user/profile/JaviG1105/)        | [Bec04015](https://www.transifex.com/user/profile/Bec04015/), [Jakio](https://www.transifex.com/user/profile/Jakio/), [tsps_03](https://www.transifex.com/user/profile/tsps_03/) |
+| Spanish (es)       | [JaviG1105](https://www.transifex.com/user/profile/JaviG1105/)        | [Bec04015](https://www.transifex.com/user/profile/Bec04015/), [Jakio](https://www.transifex.com/user/profile/Jakio/), [Pochev](https://www.transifex.com/user/profile/Pochev/), [tsps_03](https://www.transifex.com/user/profile/tsps_03/) |
 
 Translation Coordinator
 
