@@ -60,20 +60,49 @@
         return $q.reject(new Error($translate.instant('BungieService.Down')));
       }
       if (response.status < 200 || response.status >= 400) {
-        return $q.reject(new Error($translate.instant('BungieService.NetworkError', { status: response.status, statusText: response.statusText })));
+        return $q.reject(new Error($translate.instant('BungieService.NetworkError', {
+          status: response.status,
+          statusText: response.statusText
+        })));
       }
 
       var errorCode = response.data.ErrorCode;
+
+      switch (errorCode) {
+      case 1: {
+        return response;
+      }
+      case 1627: {
+        return $q.reject("Vendor data is unavailable.");
+      }
+      case 2108: {
+        $rootScope.$broadcast('dim-no-token-found');
+        return $q.reject("DIM does not have permission to perform this action.");
+      }
+      case 5:
+      case 36:
+      case 99:
+      case 1618:
+      case 2101:
+      case 2102:
+      case 2107:
+      // default: {
+      //   return response;
+      // }
+      }
+
       if (errorCode === 36) {
         return $q.reject(new Error($translate.instant('BungieService.Throttled')));
       } else if (errorCode === 99) {
-        openBungieNetTab();
+        if (window.chrome && window.chrome.extension) {
+          openBungieNetTab();
+        }
         return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
       } else if (errorCode === 5) {
         return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
       } else if (errorCode === 1618 &&
-                 response.config.url.indexOf('/Account/') >= 0 &&
-                 response.config.url.indexOf('/Character/') < 0) {
+        response.config.url.indexOf('/Account/') >= 0 &&
+        response.config.url.indexOf('/Character/') < 0) {
         return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
       } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
         $state.go('developer');
@@ -135,9 +164,7 @@
           'X-API-Key': apiKey
         }
       })
-      .then(function(request) {
-        return $http(request);
-      })
+      .then($http)
       .then(handleErrors, handleErrors)
       .then(function(response) {
         return response.data.Response;
@@ -166,6 +193,9 @@
     /************************************************************************************************************************************/
 
     function getBungleToken() {
+      if (!window.chrome || !chrome.extension) {
+        return $q.resolve();
+      }
       tokenPromise = tokenPromise || getBnetCookies()
         .then(function(cookies) {
           const cookie = _.find(cookies, function(cookie) {
@@ -242,14 +272,18 @@
 
       function processBnetMembershipRequest(response) {
         if (_.size(response.data.Response) === 0) {
-          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+            platform: platform.label
+          })));
         }
 
         return $q.when(response.data.Response);
       }
 
       function rejectBnetMembershipRequest() {
-        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+          platform: platform.label
+        })));
       }
     }
 
@@ -291,7 +325,9 @@
 
       function processBnetCharactersRequest(response) {
         if (_.size(response.data.Response) === 0) {
-          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', { platform: platform.label })));
+          return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+            platform: platform.label
+          })));
         }
 
         return _.map(response.data.Response.data.characters, function(c) {
@@ -349,11 +385,11 @@
           var promises = [
             getDestinyInventories(data.token, platform, data.membershipId, data.characters),
             getDestinyProgression(data.token, platform, data.membershipId, data.characters)
-              // Don't let failure of progression fail other requests.
-              .catch((e) => console.error("Failed to load character progression", e)),
+            // Don't let failure of progression fail other requests.
+            .catch((e) => console.error("Failed to load character progression", e)),
             getDestinyAdvisors(data.token, platform, data.membershipId, data.characters)
-              // Don't let failure of advisors fail other requests.
-              .catch((e) => console.error("Failed to load advisors", e))
+            // Don't let failure of advisors fail other requests.
+            .catch((e) => console.error("Failed to load advisors", e))
           ];
           return $q.all(promises).then(function(data) {
             return $q.resolve(data[0]);
@@ -418,9 +454,9 @@
         });
 
         var promise = $q.when(getDestinyVaultRequest(token, platform))
-              .then($http)
-              .then(handleErrors, handleErrors)
-              .then(processPB);
+          .then($http)
+          .then(handleErrors, handleErrors)
+          .then(processPB);
 
         promises.push(promise);
 
@@ -553,10 +589,11 @@
       // Handle "DestinyUniquenessViolation" (1648)
       function handleUniquenessViolation(e, item, store) {
         if (e && e.code === 1648) {
-          const error = new Error($translate.instant('BungieService.ItemUniquenessExplanation', {
+          const error = Error($translate.instant('BungieService.ItemUniquenessExplanation', {
             name: item.name,
             type: item.type.toLowerCase(),
-            character: store.name
+            character: store.name,
+            gender: store.gender
           }));
           error.code = e.code;
           return $q.reject(error);
@@ -570,8 +607,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/TransferItem/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token,
-            'content-type': 'application/json; charset=UTF-8;'
+            'x-csrf': token
           },
           data: {
             characterId: store.isVault ? item.owner : store.id,
@@ -618,8 +654,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/EquipItem/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token,
-            'content-type': 'application/json; charset=UTF-8;'
+            'x-csrf': token
           },
           data: {
             characterId: item.owner,
@@ -661,8 +696,7 @@
             url: 'https://www.bungie.net/Platform/Destiny/EquipItems/',
             headers: {
               'X-API-Key': apiKey,
-              'x-csrf': data.token,
-              'content-type': 'application/json; charset=UTF-8;'
+              'x-csrf': data.token
             },
             data: {
               characterId: store.id,
@@ -679,7 +713,9 @@
           var data = response.data.Response;
           store.updateCharacterInfoFromEquip(data.summary);
           return _.select(items, function(i) {
-            var item = _.find(data.equipResults, { itemInstanceId: i.id });
+            var item = _.find(data.equipResults, {
+              itemInstanceId: i.id
+            });
             return item && item.equipStatus === 1;
           });
         });
@@ -691,8 +727,12 @@
 
     function setItemState(item, store, lockState, type) {
       switch (type) {
-      case 'lock': type = 'SetLockState'; break;
-      case 'track': type = 'SetQuestTrackedState'; break;
+      case 'lock':
+        type = 'SetLockState';
+        break;
+      case 'track':
+        type = 'SetQuestTrackedState';
+        break;
       }
 
       var platform = dimState.active;
@@ -726,8 +766,7 @@
           url: 'https://www.bungie.net/Platform/Destiny/' + type + '/',
           headers: {
             'X-API-Key': apiKey,
-            'x-csrf': token,
-            'content-type': 'application/json; charset=UTF-8;'
+            'x-csrf': token
           },
           data: {
             characterId: store.isVault ? item.owner : store.id,

@@ -30,7 +30,8 @@
     "DataView": true,
     "Proxy": true,
     "ga": true,
-    "idbKeyval": true
+    "idbKeyval": true,
+    "simpleQueryString": true
   },
   "rules": {
     "array-callback-return": "error",

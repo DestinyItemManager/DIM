@@ -28,13 +28,16 @@
         '      <span translate-attr="{ title: \'Loadouts.Edit\' }" ng-click="vm.editLoadout(loadout, $event)"><i class="fa fa-pencil"></i></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="vm.search.query">',
-        '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> {{ \'Loadouts.ApplySearch\' | translate:{ query: vm.search.query } }}</span>',
+        '      <span ng-click="vm.searchLoadout($event)"><i class="fa fa-search"></i> <span translate="Loadouts.ApplySearch" translate-values="{ query: vm.search.query }"></span></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.maxLightLoadout($event)"><i class="fa fa-star"></i> <span translate="Loadouts.MaximizeLight"></span> <span class="light" ng-bind="::vm.maxLightValue"></span></span>',
         '    </li>',
         '    <li class="loadout-set" ng-if="!vm.store.isVault">',
         '      <span ng-click="vm.itemLevelingLoadout($event)"><i class="fa fa-level-up"></i> <span translate="Loadouts.ItemLeveling"></span></span>',
+        '    </li>',
+        '    <li class="loadout-set" ng-if="!vm.store.isVault">',
+        '      <span ng-click="vm.makeRoomForPostmaster($event)"><i class="fa fa-envelope"></i> <span translate="Loadouts.MakeRoom"></span></span>',
         '    </li>',
         '    <li class="loadout-set">',
         '      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: true  } )"><img class="fa" src="/images/engram.svg" height="12" width="12"/> <span translate="Loadouts.GatherEngrams"></span></span>',
@@ -53,9 +56,9 @@
     };
   }
 
-  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimFarmingService', '$window', 'dimSearchService', 'dimPlatformService', '$translate'];
+  LoadoutPopupCtrl.$inject = ['$rootScope', 'ngDialog', 'dimLoadoutService', 'dimItemService', 'toaster', 'dimFarmingService', '$window', 'dimSearchService', 'dimPlatformService', '$translate', 'dimBucketService', '$q', 'dimStoreService'];
 
-  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $translate) {
+  function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $translate, dimBucketService, $q, dimStoreService) {
     var vm = this;
     vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -136,6 +139,8 @@
       });
       return filteredLoadout;
     }
+
+    // TODO: move all these fancy loadouts to a new service
 
     vm.applyLoadout = function applyLoadout(loadout, $event, filterToEquipped) {
       ngDialog.closeAll();
@@ -329,6 +334,86 @@
       };
       vm.applyLoadout(loadout, $event);
     };
+
+    vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
+      ngDialog.closeAll();
+
+      dimBucketService.then((buckets) => {
+        const postmasterItems = flatMap(buckets.byCategory.Postmaster,
+                                        (bucket) => vm.store.buckets[bucket.id]);
+        const postmasterItemCountsByType = _.countBy(postmasterItems,
+                                                     (i) => i.bucket.id);
+
+        // If any category is full, we'll move enough aside
+        const itemsToMove = [];
+        _.each(postmasterItemCountsByType, (count, bucket) => {
+          if (count > 0) {
+            const items = vm.store.buckets[bucket];
+            const capacity = vm.store.capacityForItem(items[0]);
+            const numNeededToMove = Math.max(0, count + items.length - capacity);
+            if (numNeededToMove > 0) {
+              // We'll move the lowest-value item to the vault.
+              const candidates = _.sortBy(_.select(items, { equipped: false, notransfer: false }), (i) => {
+                var value = {
+                  Common: 0,
+                  Uncommon: 1,
+                  Rare: 2,
+                  Legendary: 3,
+                  Exotic: 4
+                }[i.tier];
+                // And low-stat
+                if (i.primStat) {
+                  value += i.primStat.value / 1000.0;
+                }
+                return value;
+              });
+              itemsToMove.push(..._.first(candidates, numNeededToMove));
+            }
+          }
+        });
+
+        // TODO: it'd be nice if this were a loadout option
+        return moveItemsToVault(itemsToMove, buckets)
+          .then(() => {
+            toaster.pop('success',
+                        $translate.instant('Loadouts.MakeRoom'),
+                        $translate.instant('Loadouts.MakeRoomDone', { postmasterNum: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name }));
+            return $q.resolve();
+          })
+          .catch((e) => {
+            toaster.pop('error',
+                        $translate.instant('Loadouts.MakeRoom'),
+                        $translate.instant('Loadouts.MakeRoomError', { error: e.message }));
+          });
+      });
+    };
+
+    // cribbed from dimFarmingService, but modified
+    function moveItemsToVault(items) {
+      const reservations = {};
+      // reserve space for all move-asides
+      reservations[vm.store.id] = _.countBy(items, 'type');
+
+      return _.reduce(items, (promise, item) => {
+        // Move a single item. We do this as a chain of promises so we can reevaluate the situation after each move.
+        return promise
+          .then(() => {
+            const vault = dimStoreService.getVault();
+            const vaultSpaceLeft = vault.spaceLeftForItem(item);
+            if (vaultSpaceLeft <= 1) {
+              // If we're down to one space, try putting it on other characters
+              const otherStores = _.select(dimStoreService.getStores(),
+                                           (store) => !store.isVault && store.id !== vm.store.id);
+              const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
+
+              if (otherStoresWithSpace.length) {
+                return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
+              }
+            }
+            return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);
+          });
+      }, $q.resolve());
+    }
 
     vm.startFarming = function startFarming() {
       ngDialog.closeAll();

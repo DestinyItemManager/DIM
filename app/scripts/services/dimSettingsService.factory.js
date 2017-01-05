@@ -55,7 +55,6 @@
       collapsedSections: {},
       // What settings for farming mode
       farming: {
-        farmGreens: true,
         // Whether to keep one slot per item type open
         makeRoomForItems: true
       },
@@ -85,6 +84,8 @@
 
     // Load settings async
     SyncService.get().then(function(data) {
+      data = data || {};
+
       var savedSettings = data['settings-v1.0'] || {};
 
       // for now just override itemTags. eventually let users create own?
@@ -97,10 +98,12 @@
       ];
 
       _loaded = true;
+
       $rootScope.$evalAsync(function() {
         angular.merge(settings, savedSettings);
         $translate.use(settings.language);
         $translate.fallbackLanguage('en');
+        $rootScope.$emit('dim-settings-loaded', {});
       });
     });
 

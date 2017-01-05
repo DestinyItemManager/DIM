@@ -14,6 +14,8 @@
     'cfp.hotkeys',
     'rzModule',
     'ngHttpRateLimiter',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'dim-oauth',
+    'LocalStorageModule'
   ]);
 })();
