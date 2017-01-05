@@ -30,10 +30,8 @@ const _ = require('underscore');
 
     var _removedNewItems = new Set();
 
-    const dimMissingSources = $http.get('scripts/missing_sources.json')
-                              .then(function(json) {
-                                return json.data;
-                              });
+    // TODO: Refactor to remove the need for wrapping this in a resolved promise
+    const dimMissingSources = Promise.resolve(require('app/scripts/missing_sources.json'));
 
     const yearHashes = {
       //         tTK       Variks        CoE         FoTL    Kings Fall
