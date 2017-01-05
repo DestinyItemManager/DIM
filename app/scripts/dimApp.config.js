@@ -30,7 +30,7 @@
       // Print debug info to console about item moves
       debugMoves: false,
       // show changelog toaster
-      changelogToaster: true, // '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
+      changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
 
       materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release'
     })
