@@ -1,10 +1,18 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
+
   var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
 
   grunt.initConfig({
     pkg: pkg,
-
+    uglify: {
+      my_target: {
+        files: {
+          'dist/sripts/vendor.min.js': ['src/input1.js', 'src/input2.js'],
+          'dist/sripts/app.min.js': ['src/input1.js', 'src/input2.js']
+        }
+      }
+    },
     sync: {
       chrome: {
         files: [{
@@ -70,6 +78,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
+        }, {
+          from: '$DIM_AUTH_URL',
+          to: process.env.AUTH_URL
         }]
       },
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
@@ -95,6 +106,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
+        }, {
+          from: '$DIM_AUTH_URL',
+          to: process.env.AUTH_URL
         }]
       }
     },

@@ -76,7 +76,7 @@ const _ = require('underscore');
         while (removeAmount > 0) {
           var sourceItem = sourceItems.shift();
           if (!sourceItem) {
-            throw new Error($translate.instant('ItemService.TooMany'));
+            throw new Error($translate.instant('ItemService.TooMuch'));
           }
 
           var amountToRemove = Math.min(removeAmount, sourceItem.amount);
@@ -595,7 +595,7 @@ const _ = require('underscore');
         const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
         if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-          const error = new Error($translate.instant('ItemService.BucketFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), bucket: moveAsideTarget.name }));
+          const error = new Error($translate.instant('ItemService.BucketFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), store: moveAsideTarget.name, isVault: moveAsideTarget.isVault, gender: moveAsideTarget.gender }));
           error.code = 'no-space';
           return $q.reject(error);
         } else {
@@ -619,7 +619,7 @@ const _ = require('underscore');
         // Refresh the stores to see if anything has changed
         var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
         return reloadPromise.then(function(stores) {
-          store = _.find(stores, { id: store.id });
+          var store = _.find(stores, { id: store.id });
           options.triedFallback = true;
           return canMoveToStore(item, store, options);
         });

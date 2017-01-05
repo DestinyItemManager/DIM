@@ -17,6 +17,7 @@ require('angularjs-slider');
 require('angularjs-toaster');
 require('ng-dialog');
 require('ng-http-rate-limiter');
+require('angular-local-storage');
 
 angular.module('dimApp', [
   'ui.router',
@@ -31,5 +32,7 @@ angular.module('dimApp', [
   'cfp.hotkeys',
   'rzModule',
   'ngHttpRateLimiter',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+  'dim-oauth',
+  'LocalStorageModule'
 ]);

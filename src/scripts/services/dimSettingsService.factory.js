@@ -86,6 +86,8 @@ const _ = require('underscore');
 
     // Load settings async
     SyncService.get().then(function(data) {
+      data = data || {};
+
       var savedSettings = data['settings-v1.0'] || {};
 
       // for now just override itemTags. eventually let users create own?
@@ -98,10 +100,12 @@ const _ = require('underscore');
       ];
 
       _loaded = true;
+
       $rootScope.$evalAsync(function() {
         angular.merge(settings, savedSettings);
         $translate.use(settings.language);
         $translate.fallbackLanguage('en');
+        $rootScope.$emit('dim-settings-loaded', {});
       });
     });
 

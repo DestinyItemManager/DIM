@@ -18,6 +18,14 @@ window.angular = require('angular');
 
 require('./scripts/util'); // TODO: make these not global and instead import where needed
 
+require('./scripts/oauth/oauth.module');
+require('./scripts/oauth/http-refresh-token.service');
+require('./scripts/oauth/oauth.service');
+require('./scripts/oauth/oauth.service');
+require('./scripts/oauth/oauth-token.service');
+
+
+// Initialize the main DIM app
 require('./scripts/dimApp.module');
 require('./scripts/dimApp.config');
 require('./scripts/dimApp.i18n');
@@ -82,5 +90,6 @@ require('./scripts/minmax/dimMinMaxCharSelect.directive');
 require('./scripts/debug/dimDebugItem.controller');
 require('./scripts/developer/dimDeveloper.controller');
 require('./scripts/materials-exchange/dimCollapsible.directive');
+require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');

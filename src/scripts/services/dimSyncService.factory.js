@@ -89,7 +89,7 @@
       var deferred = $q.defer();
 
       // we're a chrome app so we do this
-      if (chrome.identity) {
+      if (window.chrome && chrome.identity) {
         chrome.identity.getAuthToken({
           interactive: true
         }, function(token) {
@@ -145,7 +145,7 @@
       localStorage.setItem('DIM', JSON.stringify(cached));
 
       // save to chrome sync
-      if (chrome.storage && chrome.storage.sync) {
+      if (window.chrome && chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.set(cached, function() {
           if (chrome.runtime.lastError) {
             //            console.log('error with chrome sync.')
@@ -216,7 +216,7 @@
           });
         });
       } // else get from chrome sync
-      else if (chrome.storage && chrome.storage.sync) {
+      else if (window.chrome && chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.get(null, function(data) {
           cached = data;
           deferred.resolve(cached);
