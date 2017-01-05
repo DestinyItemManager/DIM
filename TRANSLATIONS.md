@@ -7,7 +7,7 @@ Due to what information is provided by Bungie about item names and descriptions 
   - Japanese
   - Portuguese (BR)
   - Spanish
- 
+
 
 #Translating DIM
 
@@ -22,7 +22,7 @@ There are two different roles available per language
 
 | Role 	| Responsibilities |
 |-------|------------------|
-| Translators | Provide Translations | 
+| Translators | Provide Translations |
 | Reviewers   | Provide Translations and verify translations of others |
 
 #Translators
@@ -46,7 +46,7 @@ If you just apply a comment stating something is wrong, the only way someone wou
 | French (fr)        | yannickguillemot |  [omarabdelghany](https://www.transifex.com/user/profile/omarabdelghany/) |
 | Italian (it)       | [simonefranza](https://www.transifex.com/user/profile/simonefranza/)     | |
 | Japanese (ja)      | [omar_senpai](https://www.transifex.com/user/profile/omar_senpai/)      | [bakaboy182](https://www.transifex.com/user/profile/bakaboy182/), [chickenmer]((https://www.transifex.com/user/profile/chickenmer/)) |
-| Portuguese (pt-br) | brunnopleffken   | [bakaboy182](https://www.transifex.com/user/profile/bakaboy182/) |
+| Portuguese (pt-br) | [brunnopleffken](https://www.transifex.com/user/profile/brunnopleffken/)   | [bakaboy182](https://www.transifex.com/user/profile/bakaboy182/) |
 | Spanish (es)       | [JaviG1105](https://www.transifex.com/user/profile/JaviG1105/)        | [Bec04015](https://www.transifex.com/user/profile/Bec04015/), [Jakio](https://www.transifex.com/user/profile/Jakio/), [tsps_03](https://www.transifex.com/user/profile/tsps_03/) |
 
 Translation Coordinator
