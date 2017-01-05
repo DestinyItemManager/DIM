@@ -534,7 +534,7 @@
             AppliedWarn: "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito.",
             NameRequired: "E' richiesto un nome.",
             MakeRoom: "Crea spazio per l'Amministratore",
-            MakeRoomDone: "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}}  {gender, select, male{dal} female{dalla}} {store}.",
+            MakeRoomDone: "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} female{dalla}} {store}.",
             MakeRoomError: "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}."
           },
           Manifest: {
