@@ -40,8 +40,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', 'dimFeatureFlags', 'dimSettingsService',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, dimFeatureFlags, dimSettingsService) {
+    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', 'dimFeatureFlags',
+      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, dimFeatureFlags) {
         $rootScope.loadingTracker = loadingTracker;
 
         // 1 Hour
@@ -77,8 +77,8 @@
           }
 
           console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-          if (dimFeatureFlags.changelogToaster) {
 
+          if (dimFeatureFlags.changelogToaster) {
             /* eslint no-constant-condition: 0*/
             dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
               title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION',
