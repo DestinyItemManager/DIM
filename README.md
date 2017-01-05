@@ -36,7 +36,7 @@ Build in dev mode
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app` folder.
+You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `dist` folder.
 
 Get your own API key:
 
