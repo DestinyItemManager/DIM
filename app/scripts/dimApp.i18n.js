@@ -1678,11 +1678,17 @@
             ChangingPerks: "Mudança de perks não é suportado.",
             ChangingPerksInfo: "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
             NeverShow: "Não mostre isso novamente.",
+            UpgradeChrome: "Por favor, atualizar o Chrome.",
+            Version: {
+              Beta: "Beta foi atualizado para v$DIM_VERSION",
+              Stable: "DIM v$DIM_VERSION lançado"
+            },
             Xur: "Xûr chegou"
           },
           Hotkey: {
             StartSearch: "Iniciar uma busca",
             RefreshInventory: "Atualizar inventário",
+            ToggleDetails: "Mostrar todos os detalhes do item",
             MarkItemAs: "Marcar item como '{tag}'",
             ClearNewItems: "Limpar novos itens"
           },
