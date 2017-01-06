@@ -22,6 +22,7 @@
 * When dequipping an item, we try harder to find a good item to equip in its place. We also prefer replacing exotics with other exotics, and correctly handle The Life Exotic perk.
 * Lots of new translations and localized strings.
 * Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
+* Display a count of items matching the active filter next to the bucket category name (weapons, armor, etc.).
 
 # 3.14.1
 

@@ -5,8 +5,8 @@
     .factory('dimSearchService', SearchService)
     .directive('dimSearchFilter', SearchFilter);
 
-  SearchService.$inject = ['dimSettingsService', 'dimFeatureFlags'];
-  function SearchService(dimSettingsService, dimFeatureFlags) {
+  SearchService.$inject = ['dimSettingsService', 'dimFeatureFlags', 'dimBucketService'];
+  function SearchService(dimSettingsService, dimFeatureFlags, dimBucketService) {
     const categoryFilters = {
       pulserifle: ['CATEGORY_PULSE_RIFLE'],
       scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
@@ -105,11 +105,22 @@
       keywords.push('notes:');
     }
 
+    // a dictionary to track the amount of "visible" items per item category (weapons, armor, etc) when there is an active filter
+    // initialized by making use of the categories in the bucket service
+    // counts are reset and recounted each time a filter is applied
+    var filterCounts = {};
+    dimBucketService.then(function(buckets) {
+      _.each(buckets.byCategory, (_, category) => {
+        filterCounts[category] = 0;
+      });
+    });
+
     return {
       query: '',
       filterTrans: filterTrans,
       keywords: keywords,
-      categoryFilters: categoryFilters
+      categoryFilters: categoryFilters,
+      filterCounts: filterCounts
     };
   }
 
@@ -292,12 +303,20 @@
         });
       };
 
-      _.each(dimStoreService.getStores(), function(store) {
-        _.each(store.items, function(item) {
-          item.visible = (filters.length > 0) ? filterFn(item) : true;
-        });
+      // reset the visible item counts
+      _.each(vm.search.filterCounts, (_, category) => {
+        vm.search.filterCounts[category] = 0;
       });
 
+      // mark items as visible based on filter and increment the counts in the dictionary as needed
+      _.each(dimStoreService.getStores(), (store) => {
+        _.each(store.items, (item) => {
+          item.visible = (filters.length > 0) ? filterFn(item) : true;
+          if (item.visible) {
+            vm.search.filterCounts[item.location.sort]++;
+          }
+        });
+      });
 
       // Filter vendor items
       _.each(dimVendorService.vendors, function(vendor) {
