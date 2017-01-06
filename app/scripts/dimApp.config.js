@@ -4,6 +4,11 @@
   console.time('First item directive built');
 
   angular.module('dimApp')
+    .config((localStorageServiceProvider) => {
+      localStorageServiceProvider.setPrefix('');
+    });
+
+  angular.module('dimApp')
     .value('dimPlatformIds', {
       xbl: null,
       psn: null
@@ -14,6 +19,7 @@
       debug: false
     })
     .value('dimFeatureFlags', {
+      isExtension: window.chrome && window.chrome.extension,
       // Tags are off in release right now
       tagsEnabled: '$DIM_FLAVOR' !== 'release',
       compareEnabled: true,
@@ -60,22 +66,26 @@
         };
 
         var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
-        if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
-          dimInfoService.show('old-chrome', {
-            title: 'Please Upgrade Chrome',
-            view: 'views/upgrade-chrome.html?v=$DIM_VERSION',
-            type: 'error'
-          }, 0);
-        }
 
-        console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
-        if (dimFeatureFlags.changelogToaster) {
-          /* eslint no-constant-condition: 0*/
-          dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-            title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION',
-            view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
-          });
-        }
+        $rootScope.$on('dim-settings-loaded', function() {
+          if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
+            dimInfoService.show('old-chrome', {
+              title: 'Please Upgrade Chrome',
+              view: 'views/upgrade-chrome.html?v=$DIM_VERSION',
+              type: 'error'
+            }, 0);
+          }
+
+          console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+
+          if (dimFeatureFlags.changelogToaster) {
+            /* eslint no-constant-condition: 0*/
+            dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
+              title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION',
+              view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
+            });
+          }
+        });
 
         // http://www.arnaldocapo.com/blog/post/google-analytics-and-angularjs-with-ui-router/72
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/single-page-applications
@@ -137,6 +147,9 @@
     }])
     .config(["$httpProvider", function($httpProvider) {
       $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
+      if (!window.chrome || !window.chrome.extension) {
+        $httpProvider.interceptors.push('http-refresh-token');
+      }
     }])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise("/inventory");
@@ -165,6 +178,10 @@
         .state('developer', {
           url: "/developer",
           templateUrl: "scripts/developer/developer.html"
+        })
+        .state('login', {
+          url: "/login",
+          templateUrl: "scripts/login/login.html"
         });
     });
 })();

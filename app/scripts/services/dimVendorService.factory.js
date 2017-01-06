@@ -314,7 +314,10 @@
                       throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
                     });
                 }
-                throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
+                if (dimFeatureFlags.isExtension) {
+                  throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
+                }
+                return $.reject();
               });
           }
         })
