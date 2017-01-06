@@ -19,12 +19,14 @@
       replace: true,
       template: [
         '<div class="move-amount">',
+        '  <i class="move-amount-arrow fa fa-fast-backward min" tabindex="-1" ng-click="vm.min()"></i>',
         '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()">&#9664;</span>',
         '  <input ng-model="vm.amount" type="text" ng-blur="vm.constrain()"/>',
         '  <div class="move-amount-slider">',
         '    <rzslider rz-slider-model="vm.amount" rz-slider-options="{ floor: 1, ceil: vm.maximum, showSelectionBar: true, hideLimitLabels: true }"></rzslider>',
         '  </div>',
         '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.increment()">&#9654;</span>',
+        '  <i class="move-amount-arrow fa fa-fast-forward max" tabindex="-1" ng-click="vm.max()"></i>',
         '</div>'
       ].join(''),
       link: function(scope, element) {
@@ -47,8 +49,16 @@
       vm.amount = Math.min(vm.amount + 1, vm.maximum);
     };
 
+    vm.max = function() {
+      vm.amount = vm.maximum;
+    };
+
     vm.decrement = function() {
       vm.amount = Math.max(vm.amount - 1, 1);
+    };
+
+    vm.min = function() {
+      vm.amount = 1;
     };
 
     vm.constrain = function() {
