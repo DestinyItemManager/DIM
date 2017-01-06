@@ -50,7 +50,11 @@
         '  </div>',
         '  </div>',
         '</div>'
-      ].join('')
+      ].join(''),
+      link: function(scope, element, attrs) {
+        var vm = scope.vm;
+        vm.shiftKey = !angular.isUndefined(attrs.dimShiftKey);
+      }
     };
   }
 
@@ -96,7 +100,7 @@
       if (vm.item.amount > 1) {
         var store = dimStoreService.getStore(vm.item.owner);
         vm.maximum = store.amountOfItem(vm.item);
-        vm.moveAmount = vm.item.amount;
+        vm.moveAmount = vm.shiftKey ? vm.maximum : vm.item.amount;
       }
     });
 
