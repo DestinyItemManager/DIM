@@ -98,6 +98,7 @@
             Drag: "Hold shift or pause over drop zone to transfer a partial stack.",
             ChangingPerks: "Changing Perks Not Supported",
             ChangingPerksInfo: "Sorry, there's no way to change perks outside the game. We wish we could!",
+            HidePopup: "Hide This Popup",
             NeverShow: "Never show me this again.",
             UpgradeChrome: "Please Upgrade Chrome",
             Version: {
@@ -118,6 +119,7 @@
             BringGear: "Will bring the gear to",
             Calc: "Infusion calculator",
             InfuseItems: "Select item to infuse with:",
+            InfusionMaterials: "Infusion Materials",
             LockedItems: "Include 'locked' items",
             NoItems: "No infusable items available.",
             NoTransfer: "Transfer infusion material\n {target} cannot be moved.",
@@ -146,6 +148,7 @@
           },
           LB: {
             LB: "Loadout Builder",
+            Guardians: "Guardians",
             ShowGear: "Show {class} gear",
             HideGear: "Hide {class} gear",
             LockEquipped: "Lock Equipped",
@@ -200,8 +203,8 @@
             RestoreAllItems: "All Items",
             Random: "Random",
             Randomize: "Randomize your equipped weapons, armor, ghost, and artifact?",
-            VendorsCannotEquip: "These vendor items cannot be equipped",
-            VendorsCanEquip: "These items can be equipped",
+            VendorsCannotEquip: "These vendor items cannot be equipped:",
+            VendorsCanEquip: "These items can be equipped:",
             MaxSlots: "You can only have {slots} of that kind of item in a loadout.",
             OnlyItems: "Only equippable items, materials, and consumables can be added to a loadout.",
             FilteredItems: "Filtered Items",
@@ -244,6 +247,13 @@
             FromTrade: "Materials from trade",
             NewRank: "New Rank",
             NewRep: "New Rep"
+          },
+          MovePopup: {
+            Vault: "Vault",
+            Equip: "Equip",
+            Store: "Store",
+            Take: "Take",
+            Split: "Split"
           },
           Notes: {
             Error: "Error! Max 120 characters for notes.",
@@ -299,6 +309,11 @@
             Quality: "Stats quality",
             Strength: "Strength",
             TierProgress: "{progress} for {tier}"
+          },
+          StoreBucket: {
+            FillStack: "Fill Stack ({amount})",
+            HowMuch: "How much {itemname} to move?",
+            Move: "Move"
           },
           Tags: {
             TagItem: "Tag Item",
