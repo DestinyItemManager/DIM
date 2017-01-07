@@ -29,6 +29,7 @@
         '      <div class="move-button move-equip" alt="{{::store.name}}" title="{{::store.name}}" ',
         '        ng-if="!(vm.item.owner == store.id && vm.item.equipped) && vm.item.canBeEquippedBy(store)" ng-click="vm.moveItemTo(store, true)" ',
         '        data-type="equip" data-character="{{::store.id}}" style="background-image: url({{::store.icon}})">',
+        '        <span translate="MovePopup.Equip"></span>',
         '      </div>',
         '      <div class="move-button move-store" alt="{{::store.name}}" title="{{::store.name}}" ',
         '        ng-if="vm.canShowStore(vm.item, vm.store, store)" ng-click="vm.moveItemTo(store)" ',
