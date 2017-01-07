@@ -253,7 +253,9 @@
             Equip: "Equip",
             Store: "Store",
             Take: "Take",
-            Split: "Split"
+            Split: "Split",
+            Consolidate: "Consolidate",
+            DistributeEvenly: "Distribute Evenly"
           },
           Notes: {
             Error: "Error! Max 120 characters for notes.",
