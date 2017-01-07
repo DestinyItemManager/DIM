@@ -1266,6 +1266,11 @@
             ChangingPerks: "Cambio de beneficios no soportado",
             ChangingPerksInfo: "Lo sentimos, no hay forma de cambiar beneficios afuera del juego. ¡Quisiéramos poder hacerlo!",
             NeverShow: "Nunca mostrar esto de nuevo.",
+            UpgradeChrome: "Por favor actualice Chrome",
+            Version: {
+              Beta: "La Beta ha sido actualizada a la v$DIM_VERSION",
+              Stable: "DIM v$DIM_VERSION ha sido Publicado"
+            },
             Xur: "Xûr esta aquí."
           },
           Hotkey: {
