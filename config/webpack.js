@@ -12,6 +12,8 @@ const NotifyPlugin = require('notify-webpack-plugin');
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 module.exports = (options = {}) => {
+  const iconFlavor = options.isProd ? 'prod' : 'beta';
+
   const config = {
     entry: {
       main: './src/index.js',
@@ -21,6 +23,7 @@ module.exports = (options = {}) => {
     output: {
       path: './dist',
       filename: '[name]-[chunkhash:6].js',
+      chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
     },
 
     devtool: 'cheap-module-source-map',
@@ -105,14 +108,14 @@ module.exports = (options = {}) => {
 
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
-        { from: './icons/icon128.png' },
-        { from: './icons/icon16.png' },
-        { from: './icons/icon19.png' },
-        { from: './icons/icon38.png' },
-        { from: './icons/icon48.png' },
-        { from: './icons/favicon-16x16.png' },
-        { from: './icons/favicon-32x32.png' },
-        { from: './icons/favicon-96x96.png' },
+        { from: `./icons/${iconFlavor}/icon128.png` },
+        { from: `./icons/${iconFlavor}/icon16.png` },
+        { from: `./icons/${iconFlavor}/icon19.png` },
+        { from: `./icons/${iconFlavor}/icon38.png` },
+        { from: `./icons/${iconFlavor}/icon48.png` },
+        { from: `./icons/${iconFlavor}/favicon-16x16.png` },
+        { from: `./icons/${iconFlavor}/favicon-32x32.png` },
+        { from: `./icons/${iconFlavor}/favicon-96x96.png` },
 
         // TODO: Quick hack to get elemental damage icon for StoreItem
         { from: './src/images/arc.png', to: 'images' },
@@ -135,14 +138,21 @@ module.exports = (options = {}) => {
     config.bail = true;
     config.stats = 'verbose';
 
+    // The sql.js library doesnt work at all (reports no tables) when minified,
+    // so we exclude it from the regular minification
+    // FYI, uglification runs on final chunks rather than individual modules
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-      },
-      output: {
-        comments: false,
-      },
-      sourceMap: false,
+      exclude: /-sqlLib-/, // ensure the sqlLib chunk doesnt get minifed
+      compress: { warnings: false, },
+      output: { comments: false, },
+      sourceMap: true,
+    }));
+
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+      test: /-sqlLib-/, // run only for the sql.js chunk
+      compress: false,
+      output: { comments: false, },
+      sourceMap: true,
     }));
   }
 
