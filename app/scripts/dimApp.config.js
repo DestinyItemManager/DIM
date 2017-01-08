@@ -40,8 +40,8 @@
 
 
   angular.module('dimApp')
-    .run(['$window', '$rootScope', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', 'dimFeatureFlags',
-      function($window, $rootScope, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, dimFeatureFlags) {
+    .run(['$window', '$rootScope', '$translate', 'loadingTracker', '$timeout', 'toaster', '$http', 'SyncService', 'dimInfoService', 'dimFeatureFlags', 'dimSettingsService',
+      function($window, $rootScope, $translate, loadingTracker, $timeout, toaster, $http, SyncService, dimInfoService, dimFeatureFlags, dimSettingsService) {
         $rootScope.loadingTracker = loadingTracker;
 
         // 1 Hour
@@ -68,10 +68,11 @@
         var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
 
         $rootScope.$on('dim-settings-loaded', function() {
+          var language = dimSettingsService.language;
           if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
             dimInfoService.show('old-chrome', {
-              title: 'Please Upgrade Chrome',
-              view: 'views/upgrade-chrome.html?v=$DIM_VERSION',
+              title: $translate.instant('Help.UpgradeChrome'),
+              view: 'views/' + language + '/upgrade-chrome.html?v=$DIM_VERSION',
               type: 'error'
             }, 0);
           }
@@ -81,8 +82,8 @@
           if (dimFeatureFlags.changelogToaster) {
             /* eslint no-constant-condition: 0*/
             dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-              title: '$DIM_FLAVOR' === 'release' ? 'DIM v$DIM_VERSION Released' : 'Beta has been updated to v$DIM_VERSION',
-              view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
+              title: '$DIM_FLAVOR' === 'release' ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
+              view: 'views/' + language + '/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
             });
           }
         });
