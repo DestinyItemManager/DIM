@@ -4,9 +4,9 @@
   angular.module('dimApp')
     .factory('dimInfoService', InfoService);
 
-  InfoService.$inject = ['toaster', '$http', 'SyncService'];
+  InfoService.$inject = ['toaster', '$http', '$translate', 'SyncService'];
 
-  function InfoService(toaster, $http, SyncService) {
+  function InfoService(toaster, $http, $translate, SyncService) {
     return {
       show: function(id, content, timeout) {
         timeout = timeout || 0;
@@ -14,7 +14,7 @@
         content.type = content.type || 'info';
         content.title = content.title || '';
         content.body = content.body || '';
-        content.hide = content.hide || 'Hide This Popup';
+        content.hide = content.hide || $translate.instant('Help.HidePopup');
         content.func = content.func || function() {};
 
         function showToaster(body, save, timeout) {
@@ -70,4 +70,3 @@
     };
   }
 })();
-
