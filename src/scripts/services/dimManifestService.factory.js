@@ -3,6 +3,18 @@
 const angular = require('angular');
 const _ = require('underscore');
 
+// require.ensure splits up the sql library so the user only loads it
+// if they need it. So we can minify sql.js specifically (as explained
+// in the Webpack config, we need to explicitly name this chunk, which
+// can only be done using the require.ensure method
+function requireSqlLib() {
+  return new Promise((resolve) => {
+    require.ensure('sql.js', (require) => {
+      resolve(require('sql.js'));
+    }, 'sqlLib');
+  });
+}
+
 (function() {
   'use strict';
 
@@ -75,7 +87,7 @@ const _ = require('underscore');
 
                 return Promise.all([
                   typedArray,
-                  System.import('sql.js') // load sql.js async
+                  requireSqlLib(), // load in the sql.js library
                 ]);
               })
               .then(function([typedArray, SQLLib]) {
