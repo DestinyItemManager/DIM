@@ -339,7 +339,7 @@
       const date = new Date(nextRefreshDate).getTime();
 
       // If the expiration is too far in the future, replace it with +8h
-      if (date > 7 * 24 * 60 * 60 * 1000) {
+      if (date - Date.now() > 7 * 24 * 60 * 60 * 1000) {
         return Date.now() + (8 * 60 * 60 * 1000);
       }
 
