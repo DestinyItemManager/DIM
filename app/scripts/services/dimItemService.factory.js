@@ -624,8 +624,9 @@
       } else {
         // Refresh the stores to see if anything has changed
         var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
-        return reloadPromise.then(function(stores) {
-          var store = _.find(stores, { id: store.id });
+        const storeId = store.id;
+        return reloadPromise.then((stores) => {
+          var store = _.find(stores, { id: storeId });
           options.triedFallback = true;
           return canMoveToStore(item, store, options);
         });
