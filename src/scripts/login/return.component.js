@@ -1,3 +1,4 @@
+const angular = require('angular');
 const simpleQueryString = require('simple-query-string');
 
 function ReturnController($http) {
@@ -44,6 +45,6 @@ function ReturnController($http) {
 }
 
 angular.module('dimLogin').component('dimReturn', {
-  controller: ['$http', '$q', ReturnController],
-  templateUrl: '/scripts/login/return.component.html'
+  controller: ['$http', ReturnController],
+  templateUrl: require('app/scripts/login/return.component.template.html')
 });

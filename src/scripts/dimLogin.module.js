@@ -1,5 +1,2 @@
-(function() {
-  'use strict';
-
-  angular.module('dimLogin', []);
-})();
+const angular = require('angular');
+angular.module('dimLogin', []);

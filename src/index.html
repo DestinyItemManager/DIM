@@ -20,6 +20,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    {{#each htmlWebpackPlugin.files.chunks.main.css}}
+      <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
+    {{/each}}
+
   </head>
 
   <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.featureFlags.qualityEnabled && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
@@ -53,6 +58,8 @@
         <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
       </div>
     </div>
+
+    <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.main.entry}}"></script>
   </body>
 
 </html>

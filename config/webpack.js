@@ -13,11 +13,14 @@ const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 module.exports = (options = {}) => {
   const config = {
-    entry: './src/index.js',
+    entry: {
+      main: './src/index.js',
+      authReturn: './src/authReturn.js',
+    },
 
     output: {
       path: './dist',
-      filename: 'bundle-[chunkhash:6].js',
+      filename: '[name]-[chunkhash:6].js',
     },
 
     devtool: 'cheap-module-source-map',
@@ -38,7 +41,7 @@ module.exports = (options = {}) => {
           test: /\.json$/,
           loader: 'json-loader'
         }, {
-          test: /\.template\.html$/,
+          test: /\.html$/,
           use: [
             {
               loader: 'file-loader',
@@ -47,9 +50,6 @@ module.exports = (options = {}) => {
             'extract-loader',
             'html-loader'
           ],
-        }, {
-          test: /^(?!.*template\.html$).*\.html$/, // for html files, excluding .template.html
-          loader: 'html-loader'
         }, {
           test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
@@ -85,7 +85,15 @@ module.exports = (options = {}) => {
       new ExtractTextPlugin('styles-[hash:6].css'),
 
       new HtmlWebpackPlugin({
-        template: 'src/index.html',
+        inject: false,
+        filename: 'index.html',
+        template: '!handlebars-loader!src/index.html',
+      }),
+
+      new HtmlWebpackPlugin({
+        inject: false,
+        filename: 'return.html',
+        template: '!handlebars-loader!src/return.html',
       }),
 
       new CopyWebpackPlugin([
