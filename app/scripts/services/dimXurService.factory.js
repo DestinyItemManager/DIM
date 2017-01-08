@@ -4,58 +4,59 @@
   angular.module('dimApp')
     .factory('dimXurService', XurService);
 
-  XurService.$inject = ['$rootScope', '$q', 'dimBungieService', 'dimDefinitions', 'dimStoreService', '$http'];
+  XurService.$inject = ['$rootScope', 'dimVendorService', 'dimStoreService'];
 
-  function XurService($rootScope, $q, dimBungieService, dimDefinitions, dimStoreService, $http) {
-    var xurTest = false; // set this to true when you want to test but Xur's not around
-    function xurTestData() {
-      return $http.get('scripts/xur/xur.json')
-        .then(function(json) {
-          return json.data.Response.data;
-        });
+  function XurService($rootScope, dimVendorService, dimStoreService) {
+    const service = {
+      available: false,
+      totalCoins: {}
+    };
+
+    $rootScope.$on('dim-vendors-updated', () => {
+      // To fake Xur when he's not around, substitute another vendor's ID
+      const xurVendor = dimVendorService.vendors[2796397637];
+      service.available = Boolean(xurVendor);
+      service.vendors = [xurVendor];
+    });
+
+
+    $rootScope.$on('dim-stores-updated', function(e, args) {
+      const stores = _.reject(args.stores, (s) => s.isVault);
+      countCurrencies(stores);
+    });
+
+    // TODO: Stolen from dimVendor.controller.js - move this to vendor service
+    function countCurrencies(stores) {
+      var currencies = _.chain(service.vendors)
+            .values()
+            .pluck('categories')
+            .flatten()
+            .pluck('saleItems')
+            .flatten()
+            .pluck('costs')
+            .flatten()
+            .pluck('currency')
+            .pluck('itemHash')
+            .unique()
+            .value();
+      service.totalCoins = {};
+      currencies.forEach(function(currencyHash) {
+        // Legendary marks and glimmer are special cases
+        if (currencyHash === 2534352370) {
+          service.totalCoins[currencyHash] = dimStoreService.getVault().legendaryMarks;
+        } else if (currencyHash === 3159615086) {
+          service.totalCoins[currencyHash] = dimStoreService.getVault().glimmer;
+        } else if (currencyHash === 2749350776) {
+          service.totalCoins[currencyHash] = dimStoreService.getVault().silver;
+        } else {
+          service.totalCoins[currencyHash] = sum(stores, function(store) {
+            return store.amountOfItem({ hash: currencyHash });
+          });
+        }
+      });
+      console.log(service.totalCoins);
     }
 
-    return {
-      available: false,
-      itemCategories: {},
-      updateXur: function() {
-        var self = this;
-        var xurPromise = xurTest ? xurTestData() : dimBungieService.getXur();
-
-        return xurPromise.then(function(xurData) {
-          self.available = xurData && xurData.enabled && xurData.saleItemCategories;
-
-          if (self.available) {
-            dimDefinitions.then(function(defs) {
-              self.itemCategories = {};
-              var rawItems = [];
-              xurData.saleItemCategories.forEach(function(categoryData) {
-                var wares = categoryData.saleItems.map(function(saleItem) {
-                  rawItems.push(saleItem.item);
-                  return {
-                    cost: saleItem.costs[0].value,
-                    currency: _.pick(defs.InventoryItem[saleItem.costs[0].itemHash], 'itemName', 'icon', 'itemHash'),
-                    itemHash: saleItem.item.itemHash
-                  };
-                });
-                self.itemCategories[categoryData.categoryTitle] = wares;
-              });
-              return dimStoreService.processItems({ id: null }, rawItems).then(function(items) {
-                var itemsByHash = _.indexBy(items, 'hash');
-                _.each(self.itemCategories, function(saleItems) {
-                  saleItems.forEach(function(saleItem) {
-                    saleItem.item = itemsByHash[saleItem.itemHash];
-                    delete saleItem.itemHash;
-                  });
-                });
-              });
-            });
-          }
-        }, function() {
-          self.available = false;
-          self.itemCategories = {};
-        });
-      }
-    };
+    return service;
   }
 })();
