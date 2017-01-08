@@ -182,7 +182,6 @@
         if (dialogResult) {
           dialogResult.close();
         }
-        $scope.closeThisDialog();
       },
       toggleSection: function(id) {
         vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];

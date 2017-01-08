@@ -79,7 +79,8 @@
       // By hash
       vendors: {},
       totalVendors: 0,
-      loadedVendors: 0
+      loadedVendors: 0,
+      countCurrencies: countCurrencies
       // TODO: expose getVendor promise, idempotently?
     };
 
@@ -456,6 +457,45 @@
 
     function isSaleItemUnlocked(saleItem) {
       return _.every(saleItem.unlockStatuses, 'isSet');
+    }
+
+    /**
+     * Calculates a count of how many of each type of currency you
+     * have on all characters, limited to only currencies required to
+     * buy items from the provided vendors.
+     */
+    function countCurrencies(stores, vendors) {
+      if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
+        return {};
+      }
+      var currencies = _.chain(vendors)
+            .values()
+            .pluck('categories')
+            .flatten()
+            .pluck('saleItems')
+            .flatten()
+            .pluck('costs')
+            .flatten()
+            .pluck('currency')
+            .pluck('itemHash')
+            .unique()
+            .value();
+      const totalCoins = {};
+      currencies.forEach(function(currencyHash) {
+        // Legendary marks and glimmer are special cases
+        if (currencyHash === 2534352370) {
+          totalCoins[currencyHash] = dimStoreService.getVault().legendaryMarks;
+        } else if (currencyHash === 3159615086) {
+          totalCoins[currencyHash] = dimStoreService.getVault().glimmer;
+        } else if (currencyHash === 2749350776) {
+          totalCoins[currencyHash] = dimStoreService.getVault().silver;
+        } else {
+          totalCoins[currencyHash] = sum(stores, function(store) {
+            return store.amountOfItem({ hash: currencyHash });
+          });
+        }
+      });
+      return totalCoins;
     }
   }
 })();
