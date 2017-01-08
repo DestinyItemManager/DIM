@@ -249,13 +249,13 @@
             NewRep: "New Rep"
           },
           MovePopup: {
-            Vault: "Vault",
+            Consolidate: "Consolidate",
+            DistributeEvenly: "Distribute Evenly",
             Equip: "Equip",
+            Split: "Split",
             Store: "Store",
             Take: "Take",
-            Split: "Split",
-            Consolidate: "Consolidate",
-            DistributeEvenly: "Distribute Evenly"
+            Vault: "Vault"
           },
           Notes: {
             Error: "Error! Max 120 characters for notes.",
