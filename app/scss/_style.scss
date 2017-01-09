@@ -1462,6 +1462,7 @@ dim-compare {
   .item-name {
     text-overflow: ellipsis;
     overflow: hidden;
+    cursor: pointer;
   }
   .sorted {
     color: $orange;
@@ -1483,6 +1484,14 @@ dim-compare {
       width: 125px;
     }
   }
+}
+
+@keyframes pop {
+  to { transform: scale(1.5) }
+}
+.item-pop {
+  animation: .25s linear 2 alternate pop;
+  z-index: 1;
 }
 
 .loadout-content {

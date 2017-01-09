@@ -42,7 +42,7 @@
             </span>
             <span ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
-              <div ng-bind="::item.name" class="item-name"></div>
+              <div ng-bind="::item.name" class="item-name" ng-click="vm.itemClick(item)"></div>
               <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-click="vm.sort(item.primStat.statHash)" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="item.primStat.value"></span>
               </div>
@@ -151,6 +151,18 @@
         vm.cancel();
         return;
       }
+    };
+
+    vm.itemClick = function itemClick(item) {
+      const element = angular.element('#' + item.hash + '-' + item.id);
+      const elementRect = element[0].getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.pageYOffset;
+      const middle = absoluteElementTop - (window.innerHeight / 2);
+      window.scrollTo(0, middle);
+      element.addClass('item-pop');
+      element.on('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
+        element.removeClass('item-pop');
+      });
     };
 
     $scope.$watch('vm.comparisons', function() {
