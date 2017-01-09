@@ -391,7 +391,8 @@
                 item: itemsById["vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex],
                 // TODO: caveat, this won't update very often!
                 unlocked: unlocked,
-                unlockedByCharacter: unlocked ? [store.id] : []
+                unlockedByCharacter: unlocked ? [store.id] : [],
+                failureStrings: saleItem.failureIndexes.map((i) => vendorDef.failureStrings[i]).join('. ')
               };
             });
 
