@@ -42,10 +42,7 @@
             <div ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
               <div class="close" ng-click="vm.remove(item);"></div>
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
-              <div class="item-name" ng-click="vm.itemClick(item)">
-                <img ng-if="item.dmg && item.dmg !== \'kinetic\'" class="elemental" ng-src="/images/{{::item.dmg}}.png"/>
-                {{::item.name}}
-              </div>
+              <div class="item-name" ng-click="vm.itemClick(item)" ng-bind="::item.name"></div>
               <dim-simple-item item-data="item"></dim-simple-item>
               <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="item.primStat.value"></span>
