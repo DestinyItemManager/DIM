@@ -4,6 +4,7 @@
 * Added stat search, for example: "stat:rof:>= 22"
 * Fixed formatting for search loadouts when the search terms contain angle brackets.
 * A new "Make room for Postmaster items" auto layout will clear out enough space on your character to pick up all the stuff you've accumulated at the Postmaster.
+* Xur looks like the other vendors, and correctly displays both heavies now.
 
 # 3.15.0
 
