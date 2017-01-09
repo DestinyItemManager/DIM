@@ -18,10 +18,8 @@
             <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" translate="Compare.All" translate-values="{ type: vm.compare.typeName, quantity: vm.similarTypes.length}"></label>
             <label class="dim-button" ng-click="vm.cancel()" translate>Compare.Close</label>
           </p>
-          <!-- TODO: css hover -->
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
             <span class="compare-item fixed-left">
-              <!-- TODO: get rid of this, use a table! -->
               <div>&nbsp;</div>
               <div>&nbsp;</div>
               <div ng-class="{highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash}" ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName"></div>
