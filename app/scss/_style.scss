@@ -1439,9 +1439,12 @@ dim-compare {
     border-left: none;
     position: fixed;
     left: 1em;
-    margin-top: 1px;
     min-width: 100px;
   }
+}
+
+.compare-options {
+  margin: 1em 0;
 }
 
 .compare-item {
@@ -1451,8 +1454,9 @@ dim-compare {
   min-width: 150px;
   max-width: 150px;
   border-left: 1px solid $lightgray;
-  div {
-    padding-left: 5px;
+  > div {
+    padding-left: 4px;
+    height: 16px;
   }
   .highlight {
     color: white !important;
@@ -1463,25 +1467,40 @@ dim-compare {
     text-overflow: ellipsis;
     overflow: hidden;
     cursor: pointer;
+    margin-bottom: 2px;
+
+    .elemental {
+      vertical-align: bottom;
+      margin: 0;
+    }
   }
   .sorted {
     color: $orange;
   }
   .close {
-    top: 0px;
-    right: 6px;
+    position: static;
+    float: right;
+    margin: 0 4px;
     padding-left: 0px;
   }
   .range {
     font-size: .9em;
   }
   dim-item-tag {
+    height: 20px;
+    margin-left: 5px;
     display: block;
     select {
       background: gray;
       border: none;
       color: white;
-      width: 125px;
+      width: 120px;
+    }
+  }
+  .spacer {
+    height: 18px;
+    &.withTags {
+      height: 38px;
     }
   }
 }

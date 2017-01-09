@@ -6,12 +6,12 @@
     .filter('statRange', function() {
       return function(stat, statRanges) {
         const statRange = statRanges[stat.statHash];
-        if (!statRange.enabled) {
-          return -1;
-        }
-
         if (stat.qualityPercentage) {
           return stat.qualityPercentage.min;
+        }
+
+        if (!statRange.enabled) {
+          return -1;
         }
 
         return 100 * (stat.value - statRange.min) / (statRange.max - statRange.min);
@@ -28,21 +28,24 @@
       scope: {},
       template: `
         <div id="loadout-drawer" ng-if="vm.show">
-          <p>
+          <div class="compare-options">
             <label ng-if="vm.archeTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar('archetype')" translate="{{ vm.compare.location.inWeapons ? 'Compare.Archetype' : 'Compare.Splits'}}" translate-values="{ quantity:  vm.archeTypes.length }"></label>
             <label ng-if="vm.similarTypes.length > 1" class="dim-button" ng-click="vm.compareSimilar()" translate="Compare.All" translate-values="{ type: vm.compare.typeName, quantity: vm.similarTypes.length}"></label>
             <label class="dim-button" ng-click="vm.cancel()" translate>Compare.Close</label>
-          </p>
+          </div>
           <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
-            <span class="compare-item fixed-left">
-              <div>&nbsp;</div>
-              <div>&nbsp;</div>
+            <div class="compare-item fixed-left">
+              <div class="spacer" ng-class="{withTags: vm.featureFlags.tagsEnabled}"></div>
               <div ng-class="{highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash}" ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName"></div>
               <div ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by stat.statHash" ng-bind="::stat.name"></div>
-            </span>
-            <span ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
+            </div>
+            <div ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
+              <div class="close" ng-click="vm.remove(item);"></div>
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
-              <div ng-bind="::item.name" class="item-name" ng-click="vm.itemClick(item)"></div>
+              <div class="item-name" ng-click="vm.itemClick(item)">
+                <img ng-if="item.dmg && item.dmg !== \'kinetic\'" class="elemental" ng-src="/images/{{::item.dmg}}.png"/>
+                {{::item.name}}
+              </div>
               <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-click="vm.sort(item.primStat.statHash)" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="item.primStat.value"></span>
               </div>
@@ -51,8 +54,7 @@
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
               </div>
               <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
-              <div class="close" ng-click="vm.remove(item);"></div>
-            </span>
+            </div>
           </div>
         </div>
       `
