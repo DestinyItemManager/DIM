@@ -1,7 +1,22 @@
 (function() {
   'use strict';
 
-  angular.module('dimApp').directive('dimCompare', Compare);
+  angular.module('dimApp')
+    .directive('dimCompare', Compare)
+    .filter('statRange', function() {
+      return function(stat, statRanges) {
+        const statRange = statRanges[stat.statHash];
+        if (!statRange.enabled) {
+          return -1;
+        }
+
+        if (stat.qualityPercentage) {
+          return stat.qualityPercentage.min;
+        }
+
+        return 100 * (stat.value - statRange.min) / (statRange.max - statRange.min);
+      };
+    });
 
   Compare.$inject = [];
 
@@ -28,10 +43,10 @@
             <span ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
               <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
               <div ng-bind="::item.name" class="item-name"></div>
-              <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-click="vm.sort(item.primStat.statHash)">
+              <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-click="vm.sort(item.primStat.statHash)" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="item.primStat.value"></span>
               </div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.statRanges[stat.statHash].enabled ? vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) : -1 | qualityColor:'color'">
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="stat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="::stat.value"></span>
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
               </div>
@@ -79,7 +94,8 @@
     vm.sort = function(statHash) {
       vm.sortedHash = statHash;
       vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), function(item) {
-        return _.findWhere(item.stats, { statHash: statHash }).value;
+        const stat = _.find(item.stats, { statHash: statHash }) || item.primStat;
+        return stat.value;
       }).reverse();
     };
 
@@ -140,10 +156,13 @@
     $scope.$watch('vm.comparisons', function() {
       var statBuckets = {};
 
-      _.each(vm.comparisons, function(item) {
-        _.each(item.stats, function(stat) {
-          (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
-        });
+      function bucketStat(stat) {
+        (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
+      }
+
+      vm.comparisons.forEach(function(item) {
+        item.stats.forEach(bucketStat);
+        bucketStat(item.primStat);
       });
 
       vm.statRanges = {};
@@ -155,6 +174,6 @@
         statRange.enabled = statRange.min !== statRange.max;
         vm.statRanges[hash] = statRange;
       });
-    }
+    }, true);
   }
 })();
