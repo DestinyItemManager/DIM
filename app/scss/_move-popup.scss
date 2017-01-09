@@ -91,37 +91,3 @@
     background-image: url(/images/arrows-in.png);
   }
 }
-/*
-.move-popup-right {
-  right: 0;
-}
-
-.move-popup-bottom {
-  top: 50px;
-}
-*/
-
-.ngdialog.xur-move-popup {
-  position: fixed;
-  z-index: 10000;
-
-  .compare-items {
-    margin-top: 0;
-    display: flex;
-    flex-direction: row;
-  }
-  .more-item-details {
-    margin-top: 0;
-  }
-  .item {
-    opacity: 0.2;
-  }
-  .selected {
-    opacity: 1.0;
-  }
-  a {
-    outline: 0;
-  }
-}
-
-

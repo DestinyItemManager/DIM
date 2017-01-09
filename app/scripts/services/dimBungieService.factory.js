@@ -39,7 +39,6 @@
       equip: equip,
       equipItems: equipItems,
       setItemState: setItemState,
-      getXur: getXur,
       getManifest: getManifest,
       getVendorForCharacter: getVendorForCharacter
     };
@@ -341,25 +340,6 @@
       }
     }
 
-
-    /************************************************************************************************************************************/
-
-    function getXur() {
-      return $q.when({
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/Advisors/Xur/',
-        headers: {
-          'X-API-Key': apiKey
-        }
-      })
-      .then(function(request) {
-        return $http(request);
-      })
-      .then(handleErrors, handleErrors)
-      .then(function(response) {
-        return response.data.Response.data;
-      });
-    }
 
     /************************************************************************************************************************************/
 

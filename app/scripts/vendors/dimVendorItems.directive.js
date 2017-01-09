@@ -28,7 +28,8 @@
       vendors: '=vendorsData',
       types: '<displayTypes',
       totalCoins: '<',
-      activeTab: '<'
+      activeTab: '<',
+      extraMovePopupClass: '<'
     },
     template: [
       '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
@@ -151,7 +152,7 @@
               '</div>'].join(''),
             plain: true,
             overlay: false,
-            className: 'move-popup vendor-move-popup',
+            className: 'move-popup vendor-move-popup ' + (vm.extraMovePopupClass || ''),
             showClose: false,
             scope: angular.extend($scope.$new(true), {
             }),
@@ -177,11 +178,10 @@
           });
         }
       },
-      close: function() {
+      $onDestroy: function() {
         if (dialogResult) {
           dialogResult.close();
         }
-        $scope.closeThisDialog();
       },
       toggleSection: function(id) {
         vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
