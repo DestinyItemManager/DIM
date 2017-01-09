@@ -46,10 +46,11 @@
                 <img ng-if="item.dmg && item.dmg !== \'kinetic\'" class="elemental" ng-src="/images/{{::item.dmg}}.png"/>
                 {{::item.name}}
               </div>
-              <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-click="vm.sort(item.primStat.statHash)" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
+              <dim-simple-item item-data="item"></dim-simple-item>
+              <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="item.primStat.value"></span>
               </div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="stat | statRange:vm.statRanges | qualityColor:'color'">
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-repeat="stat in item.stats track by $index" ng-style="stat | statRange:vm.statRanges | qualityColor:'color'">
                 <span ng-bind="::stat.value"></span>
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
               </div>
@@ -159,8 +160,7 @@
       const element = angular.element('#' + item.hash + '-' + item.id);
       const elementRect = element[0].getBoundingClientRect();
       const absoluteElementTop = elementRect.top + window.pageYOffset;
-      const middle = absoluteElementTop - (window.innerHeight / 2);
-      window.scrollTo(0, middle);
+      window.scrollTo(0, absoluteElementTop - 150);
       element.addClass('item-pop');
       element.on('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
         element.removeClass('item-pop');

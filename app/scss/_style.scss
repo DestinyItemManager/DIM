@@ -1454,20 +1454,28 @@ dim-compare {
   min-width: 150px;
   max-width: 150px;
   border-left: 1px solid $lightgray;
+
+  .item {
+    float: right;
+    margin: 0 4px 0 0;
+    z-index: -10;
+    .item-stat {
+      display: none;
+    }
+  }
   > div {
     padding-left: 4px;
     height: 16px;
   }
   .highlight {
-    color: white !important;
-    background-color: gray;
+    background-color: rgba(128, 128, 128, .25);
     cursor: pointer;
   }
   .item-name {
     text-overflow: ellipsis;
     overflow: hidden;
     cursor: pointer;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 
     .elemental {
       vertical-align: bottom;
@@ -1498,9 +1506,9 @@ dim-compare {
     }
   }
   .spacer {
-    height: 18px;
+    height: 20px;
     &.withTags {
-      height: 38px;
+      height: 40px;
     }
   }
 }
