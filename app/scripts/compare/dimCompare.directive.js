@@ -31,13 +31,11 @@
               <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-click="vm.sort(item.primStat.statHash)">
                 <span ng-bind="item.primStat.value"></span>
               </div>
-              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.statRanges[stat.statHash].max == vm.statRanges[stat.statHash].min ? -1 : vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) | qualityColor:'color'">
+              <div ng-class="{highlight: vm.highlight === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in item.stats track by $index" ng-style="vm.statRanges[stat.statHash].enabled ? vm.compare.location.inWeapons ? (stat.value === vm.statRanges[stat.statHash].max ? 100 : (100 * stat.value - vm.statRanges[stat.statHash].min) / vm.statRanges[stat.statHash].max) : (stat.qualityPercentage.min) : -1 | qualityColor:'color'">
                 <span ng-bind="::stat.value"></span>
                 <span ng-if="stat.value && stat.qualityPercentage.range" class="range">({{::stat.qualityPercentage.range}})</span>
               </div>
-              <div ng-repeat="node in vm.talentGrids[item.id].nodes" title="{{node.description}}">
-               {{node.name}}
-              </div>
+              <dim-talent-grid ng-if="item.talentGrid" talent-grid="item.talentGrid"></dim-talent-grid>
               <div class="close" ng-click="vm.remove(item);"></div>
             </span>
           </div>
@@ -157,39 +155,6 @@
         statRange.enabled = statRange.min !== statRange.max;
         vm.statRanges[hash] = statRange;
       });
-
-      const nodeCounts = {};
-      vm.talentGrids = {};
-      _.each(vm.comparisons, (item) => {
-        _.each(item.talentGrid.nodes, (node) => {
-          if (!nodeCounts[node.hash]) {
-            nodeCounts[node.hash] = 0;
-          }
-          nodeCounts[node.hash]++;
-        });
-      });
-
-      const commonNodes = new Set();
-      _.each(nodeCounts, (count, hash) => {
-        if (count === vm.comparisons.length) {
-          commonNodes.add(hash);
-        }
-      });
-
-      vm.talentGrids = {};
-      _.each(vm.comparisons, (item) => {
-        vm.talentGrids[item.id] = trimTalentGrid(item.talentGrid, commonNodes, nodeCounts);
-      });
-    }, true);
-
-    function trimTalentGrid(talentGrid, commonNodes, nodeCounts) {
-      const trimmedGrid = angular.copy(talentGrid);
-      trimmedGrid.nodes = _.reject(trimmedGrid.nodes, (n) => commonNodes.has(n.hash.toString()));
-      if (trimmedGrid.nodes.length) {
-        return trimmedGrid;
-      } else {
-        return null;
-      }
     }
   }
 })();
