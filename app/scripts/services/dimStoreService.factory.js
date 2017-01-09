@@ -759,6 +759,7 @@
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),
+        classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
         dmg: dmgName,
         visible: true,
         sourceHashes: itemDef.sourceHashes,
@@ -1509,6 +1510,15 @@
         return 'warlock';
       }
       return 'unknown';
+    }
+
+    function getClassTypeNameLocalized(defs, type) {
+      const klass = _.find(_.values(defs.Class), { classType: type });
+      if (klass) {
+        return klass.className;
+      } else {
+        return $translate.instant('Loadouts.Any');
+      }
     }
 
     // following code is from https://github.com/DestinyTrialsReport

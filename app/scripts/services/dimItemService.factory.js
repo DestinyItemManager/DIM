@@ -644,7 +644,7 @@
           if (item.classTypeName === 'unknown') {
             message = $translate.instant('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
           } else {
-            message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeName, level: item.equipRequiredLevel });
+            message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
           }
           reject(new Error(message));
         }
