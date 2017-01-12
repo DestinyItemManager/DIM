@@ -189,7 +189,7 @@
         });
       }
 
-      return null;
+      return $q.when();
     }
 
     // get DIM saved data
