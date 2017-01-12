@@ -248,8 +248,14 @@
     // remove something from DIM by key
     function remove(key) {
       // just delete that key, maybe someday save to an undo array?
-      delete cached[key];
 
+      if (_.isArray(key)) {
+        _.each(key, (k) => {
+          delete cached[k];
+        });
+      } else {
+        delete cached[key];
+      }
 
       // if we have drive sync enabled, get from google drive
       if (fileId || (cached && cached.fileId)) {

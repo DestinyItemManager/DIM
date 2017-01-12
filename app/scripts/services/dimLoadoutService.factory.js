@@ -32,6 +32,16 @@
       });
     }
 
+    function isGuid(stringToTest) {
+      if (stringToTest[0] === "{") {
+        stringToTest = stringToTest.substring(1, stringToTest.length - 1);
+      }
+
+      var regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
+
+      return regexGuid.test(stringToTest);
+    }
+
     function processLoadout(data, version) {
       if (data) {
         if (version === 'v3.0') {
@@ -62,6 +72,22 @@
             // Add id to loadout.
             _loadouts.push(hydrate(primitive));
           });
+        }
+
+        var objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
+        var hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
+        var loadoutGuids = _.pluck(_loadouts, 'id');
+        var containsLoadoutGuids = (loadoutGuid, item) => !_.contains(loadoutGuid, item.id);
+
+        var orphanIds = _.chain(data)
+          .filter(objectTest)
+          .filter(hasGuid)
+          .filter(containsLoadoutGuids.bind(this, loadoutGuids))
+          .pluck('id')
+          .value();
+
+        if (orphanIds.length > 0) {
+          SyncService.remove(orphanIds);
         }
       } else {
         _loadouts = _loadouts.splice(0);
