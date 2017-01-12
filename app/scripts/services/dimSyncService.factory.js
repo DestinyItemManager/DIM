@@ -188,6 +188,8 @@
           }
         });
       }
+
+      return null;
     }
 
     // get DIM saved data
