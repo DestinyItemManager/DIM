@@ -1,6 +1,9 @@
 # Next
 
 * Removed farming option to keep greens since they're disassembled by default now.
+* Added stat search, for example: "stat:rof:>= 22"
+* Fixed formatting for search loadouts when the search terms contain angle brackets.
+* A new "Make room for Postmaster items" auto layout will clear out enough space on your character to pick up all the stuff you've accumulated at the Postmaster.
 
 # 3.15.0
 

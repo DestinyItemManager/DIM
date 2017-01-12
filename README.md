@@ -14,7 +14,7 @@ To beta test new features in DIM, download the beta extension from the [Chrome S
 
 ## Translation
 
-If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portugese), a great way to help with DIM development is to provide translations. This can be done from the GitHub UI without JavaScript development experience. See [the Translation wiki](https://github.com/DestinyItemManager/DIM/wiki/Translations) for more info on how to help.
+If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portugese), a great way to help with DIM development is to provide translations. This can be done from the GitHub UI without JavaScript development experience. See [the Translation guide](https://github.com/DestinyItemManager/DIM/blob/dev/TRANSLATIONS.md) for more info on how to help.
 
 
 ##Requirements
@@ -36,7 +36,7 @@ Build in dev mode
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
-You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `app` folder.
+You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `dist` folder.
 
 Get your own API key:
 

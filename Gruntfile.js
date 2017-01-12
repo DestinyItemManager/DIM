@@ -1,33 +1,16 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
+
   var betaVersion = pkg.version.toString() + "." + process.env.TRAVIS_BUILD_NUMBER;
 
   grunt.initConfig({
     pkg: pkg,
-
-    sync: {
-      chrome: {
-        files: [{
-          cwd: 'app/',
-          src: [
-            '**',
-            '!vendor/angular/angular.js',
-            '!vendor/sql.js/c/**/*',
-            '!vendor/sql.js/js/sql-memory-growth.js',
-            '!vendor/sql.js/js/sql-debug.js'
-          ],
-          dest: 'dist/chrome'
-        }]
-      },
-    },
-
-    copy: {
-      // Copy all files to a staging directory
-      beta_icons_chrome: {
-        cwd: 'icons/beta/',
-        src: '**',
-        dest: 'dist/chrome/',
-        expand: true
+    uglify: {
+      my_target: {
+        files: {
+          'dist/sripts/vendor.min.js': ['src/input1.js', 'src/input2.js'],
+          'dist/sripts/app.min.js': ['src/input1.js', 'src/input2.js']
+        }
       }
     },
 
@@ -39,8 +22,11 @@ module.exports = function(grunt) {
         },
         files: [{
           expand: true,
-          cwd: 'dist/chrome',
-          src: ['**'],
+          cwd: 'dist',
+          src: [
+            '**',
+            '!chrome.zip'
+          ],
           dest: '/',
           filter: 'isFile'
         }, ]
@@ -55,7 +41,6 @@ module.exports = function(grunt) {
       main_version: {
         src: [
           'dist/**/*.{json,html,js}',
-          '!dist/**/vendor/**/*'
         ],
         overwrite: true,
         replacements: [{
@@ -70,6 +55,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
+        }, {
+          from: '$DIM_AUTH_URL',
+          to: process.env.AUTH_URL
         }]
       },
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
@@ -77,7 +65,6 @@ module.exports = function(grunt) {
       beta_version: {
         src: [
           'dist/**/*.{json,html,js}',
-          '!dist/**/vendor/**/*'
         ],
         overwrite: true,
         replacements: [{
@@ -95,6 +82,9 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_API_KEY',
           to: process.env.API_KEY
+        }, {
+          from: '$DIM_AUTH_URL',
+          to: process.env.AUTH_URL
         }]
       }
     },
@@ -146,8 +136,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sync');
 
-  grunt.registerTask('build', ['clean', 'sync']);
-
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('dist/chrome/manifest.json');
     manifest.name = manifest.name + " Beta";
@@ -156,8 +144,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('publish_chrome_beta', [
-    'build',
-    'copy:beta_icons_chrome',
     'replace:beta_version',
     'compress:chrome',
     'webstore_upload:beta',
@@ -170,7 +156,6 @@ module.exports = function(grunt) {
 
   // Builds release-able extensions in dist/
   grunt.registerTask('build_extension', [
-    'build',
     'replace:main_version',
     'compress:chrome',
   ]);
