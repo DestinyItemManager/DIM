@@ -74,19 +74,20 @@
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        SyncService.get().then(function(data) {
-          if (_.has(data, 'loadouts-v3.0')) {
-            processLoadout(data, 'v3.0');
-          } else if (_.has(data, 'loadouts-v2.0')) {
-            processLoadout(data['loadouts-v2.0'], 'v2.0');
+        SyncService.get()
+          .then((data) => {
+            if (_.has(data, 'loadouts-v3.0')) {
+              processLoadout(data, 'v3.0');
+            } else if (_.has(data, 'loadouts-v2.0')) {
+              processLoadout(data['loadouts-v2.0'], 'v2.0');
 
-            saveLoadouts(_loadouts);
-          } else {
-            processLoadout(undefined);
-          }
+              saveLoadouts(_loadouts);
+            } else {
+              processLoadout();
+            }
 
-          deferred.resolve(_loadouts);
-        });
+            deferred.resolve(_loadouts);
+          });
       } else {
         result = $q.when(_loadouts);
       }
@@ -140,9 +141,9 @@
             loadouts.splice(index, 1);
           }
 
-          SyncService.remove(loadout.id.toString());
-
-          return (loadouts);
+          return SyncService.remove(loadout.id.toString()).then(() => {
+            return loadouts;
+          });
         })
         .then(function(_loadouts) {
           return saveLoadouts(_loadouts);

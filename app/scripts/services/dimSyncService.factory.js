@@ -147,11 +147,17 @@
 
       // save to chrome sync
       if (window.chrome && chrome.storage && chrome.storage.sync) {
-        chrome.storage.sync.set(cached, function() {
+        var deferred = $q.defer();
+
+        chrome.storage.sync.set(cached, () => {
           if (chrome.runtime.lastError) {
-            //            console.log('error with chrome sync.')
+            deferred.reject(chrome.runtime.lastError);
+          } else {
+            deferred.resolve();
           }
         });
+
+        return deferred.promise;
       }
       // else if(chrome.storage && chrome.storage.local) {
       //   chrome.storage.local.set(cached, function() {
@@ -244,8 +250,21 @@
       // just delete that key, maybe someday save to an undo array?
       delete cached[key];
 
-      // sync to data storage
-      set(cached, true);
+
+      // if we have drive sync enabled, get from google drive
+      if (fileId || (cached && cached.fileId)) {
+        return set(cached, true);
+      }
+
+      return $q((resolve, reject) => {
+        chrome.storage.sync.remove(key, () => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        });
+      });
     }
 
     return {
