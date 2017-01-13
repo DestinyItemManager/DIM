@@ -192,7 +192,9 @@
     return function getColor(value, property) {
       property = property || 'background-color';
       var color = 0;
-      if (value <= 85) {
+      if (value < 0) {
+        return { [property]: 'white' };
+      } else if (value <= 85) {
         color = 0;
       } else if (value <= 90) {
         color = 20;
@@ -202,8 +204,6 @@
         color = 120;
       } else if (value >= 100) {
         color = 190;
-      } else {
-        return 'white';
       }
       var result = {};
       result[property] = 'hsl(' + color + ',85%,60%)';

@@ -1230,9 +1230,10 @@ rzslider {
 }
 
 .compare-bucket .talent-grid {
-  padding: 5px;
+  padding: 4px 2px 0 2px;
   box-sizing: border-box;
   width: 150px;
+  height: auto;
 }
 
 .talent-node-xp {
@@ -1403,9 +1404,12 @@ dim-compare {
     border-left: none;
     position: fixed;
     left: 1em;
-    margin-top: 1px;
     min-width: 100px;
   }
+}
+
+.compare-options {
+  margin: 1em 0;
 }
 
 .compare-item {
@@ -1415,38 +1419,72 @@ dim-compare {
   min-width: 150px;
   max-width: 150px;
   border-left: 1px solid $lightgray;
-  div {
-    padding-left: 5px;
+
+  .item {
+    float: right;
+    margin: 0 4px 0 0;
+    z-index: -10;
+    .item-stat {
+      display: none;
+    }
+  }
+  > div {
+    padding-left: 4px;
+    height: 16px;
   }
   .highlight {
-    color: white !important;
-    background-color: gray;
+    background-color: rgba(128, 128, 128, .25);
     cursor: pointer;
   }
   .item-name {
     text-overflow: ellipsis;
     overflow: hidden;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-bottom: 2px;
+
+    .elemental {
+      vertical-align: bottom;
+      margin: 0;
+    }
   }
   .sorted {
     color: $orange;
   }
   .close {
-    top: 0px;
-    right: 6px;
+    position: static;
+    float: right;
+    margin: 1px 4px;
     padding-left: 0px;
   }
   .range {
     font-size: .9em;
   }
   dim-item-tag {
+    height: 20px;
+    margin-left: 5px;
     display: block;
     select {
       background: gray;
       border: none;
       color: white;
-      width: 125px;
+      width: 120px;
     }
   }
+  .spacer {
+    height: 20px;
+    &.withTags {
+      height: 40px;
+    }
+  }
+}
+
+@keyframes pop {
+  to { transform: scale(1.5) }
+}
+.item-pop {
+  animation: .25s linear 2 alternate pop;
+  z-index: 1;
 }
 
 .loadout-content {
