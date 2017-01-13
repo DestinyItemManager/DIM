@@ -6,6 +6,11 @@
 * A new "Make room for Postmaster items" auto layout will clear out enough space on your character to pick up all the stuff you've accumulated at the Postmaster.
 * Vendor items now explain what you need to do to get them.
 * Xur looks like the other vendors, and correctly displays both heavies now.
+* Compare tool styling updates.
+* Compare tool shows attack/defense.
+* In the compare tool, stats that are the same across all items are white instead of blue.
+* There's now a picture of each item in the compare tool.
+* Clicking the title of an item in the compare tool will scroll to that item and "pop" it so you know which one it is.
 
 # 3.15.0
 
