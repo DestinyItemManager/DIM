@@ -32,6 +32,16 @@
       });
     }
 
+    function isGuid(stringToTest) {
+      if (stringToTest[0] === "{") {
+        stringToTest = stringToTest.substring(1, stringToTest.length - 1);
+      }
+
+      var regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(\}){0,1}$/gi;
+
+      return regexGuid.test(stringToTest);
+    }
+
     function processLoadout(data, version) {
       if (data) {
         if (version === 'v3.0') {
@@ -63,6 +73,22 @@
             _loadouts.push(hydrate(primitive));
           });
         }
+
+        var objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
+        var hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
+        var loadoutGuids = _.pluck(_loadouts, 'id');
+        var containsLoadoutGuids = (loadoutGuid, item) => !_.contains(loadoutGuid, item.id);
+
+        var orphanIds = _.chain(data)
+          .filter(objectTest)
+          .filter(hasGuid)
+          .filter(containsLoadoutGuids.bind(this, loadoutGuids))
+          .pluck('id')
+          .value();
+
+        if (orphanIds.length > 0) {
+          SyncService.remove(orphanIds);
+        }
       } else {
         _loadouts = _loadouts.splice(0);
       }
@@ -74,19 +100,20 @@
 
       // Avoids the hit going to data store if we have data already.
       if (getLatest || _.size(_loadouts) === 0) {
-        SyncService.get().then(function(data) {
-          if (_.has(data, 'loadouts-v3.0')) {
-            processLoadout(data, 'v3.0');
-          } else if (_.has(data, 'loadouts-v2.0')) {
-            processLoadout(data['loadouts-v2.0'], 'v2.0');
+        SyncService.get()
+          .then((data) => {
+            if (_.has(data, 'loadouts-v3.0')) {
+              processLoadout(data, 'v3.0');
+            } else if (_.has(data, 'loadouts-v2.0')) {
+              processLoadout(data['loadouts-v2.0'], 'v2.0');
 
-            saveLoadouts(_loadouts);
-          } else {
-            processLoadout(undefined);
-          }
+              saveLoadouts(_loadouts);
+            } else {
+              processLoadout();
+            }
 
-          deferred.resolve(_loadouts);
-        });
+            deferred.resolve(_loadouts);
+          });
       } else {
         result = $q.when(_loadouts);
       }
@@ -140,9 +167,9 @@
             loadouts.splice(index, 1);
           }
 
-          SyncService.remove(loadout.id.toString());
-
-          return (loadouts);
+          return SyncService.remove(loadout.id.toString()).then(() => {
+            return loadouts;
+          });
         })
         .then(function(_loadouts) {
           return saveLoadouts(_loadouts);
