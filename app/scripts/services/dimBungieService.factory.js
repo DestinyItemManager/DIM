@@ -26,7 +26,7 @@
     // Don't open bungie tab more than once a minute
     const openBungieNetTab = _.debounce(() => {
       chrome.tabs.create({
-        url: 'https://bungie.net',
+        url: 'https://www.bungie.net',
         active: true
       });
     }, 60 * 1000, true);
