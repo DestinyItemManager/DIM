@@ -84,7 +84,25 @@
         data += stats.Intellect ? stats.Intellect.value + "," : "0,";
         data += stats.Discipline ? stats.Discipline.value + "," : "0,";
         data += stats.Strength ? stats.Strength.value + "," : "0,";
-        data += ((item.dimInfo && item.dimInfo.notes) || '') + ",";
+
+        // the Notes column may need CSV escaping, as it's user-supplied input.
+        if (item.dimInfo && item.dimInfo.notes) {
+          // if any of these four characters are present, we have to escape it.
+          if (/[",\r\n]/.test(item.dimInfo.notes)) {
+            var notes = item.dimInfo.notes;
+            // emit the escaped data, wrapped in double quotes.
+            // any instances of " need to be changed to "" per RFC 4180.
+            // everything else is fine, as long as it's in double quotes.
+            data += '"' + notes.replace(/"/g, '""') + '",';
+          } else {
+            // no escaping required, append it as-is.
+            data += item.dimInfo.notes + ",";
+          }
+        } else {
+          // terminate the empty Notes column with a comma and continue.
+          data += ",";
+        }
+
         // if DB is out of date this can be null, can't hurt to be careful
         if (item.talentGrid) {
           data += buildNodeString(item.talentGrid.nodes);
