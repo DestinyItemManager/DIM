@@ -477,7 +477,7 @@
                 icon: 'https://www.bungie.net/' + character.emblemPath,
                 current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
-                background: 'https://bungie.net/' + character.backgroundPath,
+                background: 'https://www.bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
                 stats: getCharacterStatsData(defs.Stat, character.characterBase),
