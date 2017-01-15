@@ -35,21 +35,21 @@
         if (node.activated){
           data += "*";
         }
-        data += ", ";
+        data += ",";
       });
 
       return data;
     }
 
     function downloadArmor(items, nameMap) {
-      var header = "Name, Tag, Tier, Type, Equippable, Light, Owner, % Leveled, Locked, Equipped, Year, " +
-        "% Quality, % IntQ, % DiscQ, % StrQ, Int, Disc, Str, Notes, Perks\n";
+      var header = "Name,Tag,Tier,Type,Equippable,Light,Owner,% Leveled,Locked,Equipped,Year," +
+        "% Quality,% IntQ,% DiscQ,% StrQ,Int,Disc,Str,Notes,Perks\n";
       var data = "";
       items.forEach(function(item) {
-        data += item.name + ", ";
-        data += (item.dimInfo.tag || '') + ", ";
-        data += item.tier + ", ";
-        data += item.typeName + ", ";
+        data += item.name + ",";
+        data += (item.dimInfo.tag || '') + ",";
+        data += item.tier + ",";
+        data += item.typeName + ",";
         var equippable = item.classTypeName;
         if (!equippable || equippable === "unknown") {
           equippable = "Any";
@@ -57,14 +57,14 @@
         else {
           equippable = capitalizeFirstLetter(equippable);
         }
-        data += equippable + ", ";
-        data += item.primStat.value + ", ";
-        data += nameMap[item.owner] + ", ";
-        data += (item.percentComplete * 100).toFixed(0) + ", ";
-        data += item.locked + ", ";
-        data += item.equipped + ", ";
-        data += item.year + ", ";
-        data += item.quality ? item.quality.min + ", " : "0, ";
+        data += equippable + ",";
+        data += item.primStat.value + ",";
+        data += nameMap[item.owner] + ",";
+        data += (item.percentComplete * 100).toFixed(0) + ",";
+        data += item.locked + ",";
+        data += item.equipped + ",";
+        data += item.year + ",";
+        data += item.quality ? item.quality.min + "," : "0,";
         var stats = {};
         if (item.stats) {
           item.stats.forEach(function(stat) {
@@ -78,13 +78,13 @@
             };
           });
         }
-        data += stats.Intellect ? stats.Intellect.pct + ", " : "0, ";
-        data += stats.Discipline ? stats.Discipline.pct + ", " : "0, ";
-        data += stats.Strength ? stats.Strength.pct + ", " : "0, ";
-        data += stats.Intellect ? stats.Intellect.value + ", " : "0, ";
-        data += stats.Discipline ? stats.Discipline.value + ", " : "0, ";
-        data += stats.Strength ? stats.Strength.value + ", " : "0, ";
-        data += ((item.dimInfo && item.dimInfo.notes) || '') + ", ";
+        data += stats.Intellect ? stats.Intellect.pct + "," : "0,";
+        data += stats.Discipline ? stats.Discipline.pct + "," : "0,";
+        data += stats.Strength ? stats.Strength.pct + "," : "0,";
+        data += stats.Intellect ? stats.Intellect.value + "," : "0,";
+        data += stats.Discipline ? stats.Discipline.value + "," : "0,";
+        data += stats.Strength ? stats.Strength.value + "," : "0,";
+        data += ((item.dimInfo && item.dimInfo.notes) || '') + ",";
         // if DB is out of date this can be null, can't hurt to be careful
         if (item.talentGrid) {
           data += buildNodeString(item.talentGrid.nodes);
@@ -95,27 +95,27 @@
     }
 
     function downloadWeapons(guns, nameMap) {
-      var header = "Name, Tag, Tier, Type, Light, Dmg, Owner, % Leveled, Locked, Equipped, Year," +
-        "AA, Impact, Range, Stability, ROF, Reload, Mag, Equip, " +
-        "Notes, Nodes\n";
+      var header = "Name,Tag,Tier,Type,Light,Dmg,Owner,% Leveled,Locked,Equipped,Year," +
+        "AA,Impact,Range,Stability,ROF,Reload,Mag,Equip," +
+        "Notes,Nodes\n";
       var data = "";
       guns.forEach(function(gun) {
-        data += gun.name + ", ";
-        data += (gun.dimInfo.tag || '') + ", ";
-        data += gun.tier + ", ";
-        data += gun.typeName + ", ";
-        data += gun.primStat.value + ", ";
+        data += gun.name + ",";
+        data += (gun.dimInfo.tag || '') + ",";
+        data += gun.tier + ",";
+        data += gun.typeName + ",";
+        data += gun.primStat.value + ",";
         if (gun.dmg) {
-          data += capitalizeFirstLetter(gun.dmg) + ", ";
+          data += capitalizeFirstLetter(gun.dmg) + ",";
         }
         else {
-          data += "Kinetic, ";
+          data += "Kinetic,";
         }
-        data += nameMap[gun.owner] + ", ";
-        data += (gun.percentComplete * 100).toFixed(0) + ", ";
-        data += gun.locked + ", ";
-        data += gun.equipped + ", ";
-        data += gun.year + ", ";
+        data += nameMap[gun.owner] + ",";
+        data += (gun.percentComplete * 100).toFixed(0) + ",";
+        data += gun.locked + ",";
+        data += gun.equipped + ",";
+        data += gun.year + ",";
         var stats = {
           aa: 0,
           impact: 0,
@@ -155,15 +155,15 @@
             break;
           }
         });
-        data += stats.aa + ", ";
-        data += stats.impact + ", ";
-        data += stats.range + ", ";
-        data += stats.stability + ", ";
-        data += stats.rof + ", ";
-        data += stats.reload + ", ";
-        data += stats.magazine + ", ";
-        data += stats.equipSpeed + ", ";
-        data += ((gun.dimInfo && gun.dimInfo.notes) || '') + ", ";
+        data += stats.aa + ",";
+        data += stats.impact + ",";
+        data += stats.range + ",";
+        data += stats.stability + ",";
+        data += stats.rof + ",";
+        data += stats.reload + ",";
+        data += stats.magazine + ",";
+        data += stats.equipSpeed + ",";
+        data += ((gun.dimInfo && gun.dimInfo.notes) || '') + ",";
         // haven't seen this null yet, but can't hurt to check since we saw it on armor above
         if (gun.talentGrid) {
           data += buildNodeString(gun.talentGrid.nodes);
