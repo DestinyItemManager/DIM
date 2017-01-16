@@ -1111,6 +1111,9 @@ rzslider {
     margin-bottom: 4px;
     display: table-row;
   }
+  .stat-box-wrap {
+    white-space: normal !important;
+  }
   .stat-box-cell {
     display: table-cell;
     line-height: 14px;
