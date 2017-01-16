@@ -1469,7 +1469,7 @@
             Split: "Partir",
             Store: "Meter",
             Take: "Tomar",
-            Vault: "Baúl"
+            Vault: "Bóveda"
           },
           Notes: {
             Error: "Error! Máximo 120 caracteres por notas.",
