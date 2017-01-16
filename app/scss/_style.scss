@@ -59,49 +59,11 @@ div:focus, span:focus {
   width: 17px;
 }
 
-.logo {
-  background: url('../logo.png') no-repeat;
-  background-position: left center;
-  background-size: 24px;
-  height: 24px;
-  padding-left: 32px;
-  color: #999;
-  font-size: 16px !important;
-  font-weight: bold;
-  color: $orange !important;
-}
 
-#header {
-  #user {
-    color: white;
-  }
-  .fa {
-    font-size: 15px;
-    color: #fafafa;
-  }
-  .content span {
-    vertical-align: middle;
-    margin: 0 8px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 13px;
-    line-height: 25px;
-    text-align: center;
-    -webkit-touch-callout: none;
-    user-select: none;
-  }
-}
 
-#actions {
-  margin-top: 1px;
-  .fa {
-    font-size: 20px;
-    &:hover {
-      color: $orange;
-      cursor: pointer;
-    }
-  }
-}
+
+
+
 
 .pull-right {
   float: right;
@@ -122,12 +84,6 @@ div:focus, span:focus {
   background-size: 16px;
   right: 0;
   box-shadow: inset 0 0 10px 0px #B84;
-}
-
-#filter-input {
-  width: 250px;
-  margin-left: -10px;
-  margin-bottom: 4px;
 }
 
 dt {
@@ -408,20 +364,7 @@ input, select, option {
   font-family: 'Open Sans', sans-serif;
 }
 
-#header {
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background-color: #222;
-  border-bottom: solid 1px #6D6D6D;
-  .header-right {
-    cursor: default;
-    float: right;
-  }
-}
+
 
 #system {
   float: right;
@@ -1278,17 +1221,7 @@ g {
   max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
 }
 
-#header {
-  .content {
-    margin: 0 auto;
-    padding: 12px 2em;
-    > {
-      .link, .header-right {
-        margin-top: 1px;
-      }
-    }
-  }
-}
+
 
 .stores {
   display: block;
@@ -1933,7 +1866,7 @@ button.toast-close-button {
 .sticky-header-background {
   left: 0;
   right: 0;
-  top: 50px;
+  top: 49px;
   background-color: #434444;
   height: 90px;
   position: fixed;

@@ -28,25 +28,28 @@
   <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.featureFlags.qualityEnabled && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
     <div class="ng-cloak" ng-click="trackActivity()">
       <div id="header">
-        <div class="content">
-          <span class="header-right">
-            <div dim-platform-choice class="header-right"></div>
-            <div class="header-right" id="actions">
+        <span ng-show="app.showingSearch && !app.moreOptions" class="pull-right" title="Search">
+          <span focus-on="clicked" dim-search-filter=""></span>
+          <span class="link fa fa-close" ng-click="app.showSearch()" translate-attr="{ title: 'Header.Close'}"></span>
+        </span>
+        <ul ng-hide="app.showingSearch || app.moreOptions" class="pull-right">
+          <li class="link fa fa-refresh" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}" ng-class="{'fa-spin': loadingTracker.active()}"></li>
+          <li class="link fa fa-bar-chart" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"></li>
+          <li class="link fa fa-list-alt" ng-if="app.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"></li>
+          <li class="link fa fa-cog" ng-click="app.showSetting($event)" translate-attr="{ title: 'Settings'}"></li>
+          <li class="link fa fa-filter" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"></li>
+          <li class="link fa fa-search" ng-click="app.showSearch(true)" translate-attr="{ title: 'Search'}"></li>
+        </ul>
+        <span class="logo" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
+        <span class="link toggle" ng-click="app.moreOptions = !app.moreOptions" translate>{{ !app.moreOptions ? "Header.Menu" : "Compare.Close" }}</span>
 
-              <span class="link" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-              <span class="link" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
-              <span class="link" ng-if="app.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"><i class="fa fa-list-alt"></i></span>
-              <span class="link" ng-click="app.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
-              <span class="link" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-filter"></i></span>
-              <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
-            </div>
-          </span>
-          <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
-          <span class="link" ng-click="app.showAbout($event)" translate="Header.About"></span>
-          <span class="link" ng-click="app.showSupport($event)" translate="Header.SupportDIM"></span>
-          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
-          <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
-        </div>
+
+        <ul ng-show="app.moreOptions" class="header-text">
+          <li class="link" ng-click="app.showAbout($event)" translate="Header.About"></li>
+          <li class="link" ng-click="app.showSupport($event)" translate="Header.SupportDIM"></li>
+          <li class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></li>
+          <li class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</li>
+        </ul>
       </div>
       <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
       <div id="content" class="content" ui-view></div>
@@ -55,6 +58,7 @@
       <div class="random-loadout" ng-controller="dimRandomCtrl as random">
         <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
       </div>
+      <div ng-show="false" dim-platform-choice></div>
     </div>
 
     <script src="scripts/google.js?v=$DIM_VERSION"></script>
