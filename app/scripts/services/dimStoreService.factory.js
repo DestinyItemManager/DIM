@@ -1031,7 +1031,7 @@
       var ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
       // Fix for stuff that has nothing in early columns
-      var minColumn = _.min(gridNodes, 'column').column;
+      var minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
       if (minColumn > 0) {
         gridNodes.forEach(function(node) { node.column -= minColumn; });
       }
