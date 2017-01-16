@@ -11,6 +11,7 @@
 * In the compare tool, stats that are the same across all items are white instead of blue.
 * There's now a picture of each item in the compare tool.
 * Clicking the title of an item in the compare tool will scroll to that item and "pop" it so you know which one it is.
+* Empty space around talent grids has been eliminated.
 
 # 3.15.0
 
