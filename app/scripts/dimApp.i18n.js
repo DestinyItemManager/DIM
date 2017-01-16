@@ -712,6 +712,7 @@
           Compare: {
             All: "{type} Vergleich ({quantity})",
             Archetype: "Vergleiche im Urzustand ({quantity})",
+            ButtonHelp: "Gegenstände vergleichen",
             Compare: "Vergleiche",
             Close: "Schließen",
             Error: {
