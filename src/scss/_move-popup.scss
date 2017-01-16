@@ -59,6 +59,12 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: #4887ba;
+    &.Weapons {
+      background-image: url('../images/Weapons.png');
+    }
+    &.Armor {
+      background-image: url('../images/Armor.png');
+    }
   }
 
   .locations {
@@ -79,13 +85,13 @@
 
 .move-button {
   &.move-vault {
-    background-image: url(/images/vault.png);
+    background-image: url('../images/vault.png');
   }
   &.move-distribute {
-    background-image: url(/images/arrows-out.png);
+    background-image: url('../images/arrows-out.png');
   }
   &.move-consolidate {
-    background-image: url(/images/arrows-in.png);
+    background-image: url('../images/arrows-in.png');
   }
 }
 
