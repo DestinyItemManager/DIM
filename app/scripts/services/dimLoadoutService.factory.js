@@ -274,11 +274,6 @@
         }
 
         var items = angular.copy(_.flatten(_.values(loadout.items)));
-        // filter out to only include items for that class
-        items = items.filter(function(item) {
-          return item.classType === -1 || item.classType > 2 || item.classType === store.classType;
-        });
-        var totalItems = items.length;
 
         var loadoutItemIds = items.map(function(i) {
           return {
@@ -295,6 +290,13 @@
             item.owner !== store.id ||
             item.equipped !== pseudoItem.equipped;
         });
+
+        // only try to equip subclasses that are equippable, since we allow multiple in a loadout
+        items = items.filter(function(item) {
+          return item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+        });
+        var totalItems = items.length;
+
 
         // vault can't equip
         if (store.isVault) {
