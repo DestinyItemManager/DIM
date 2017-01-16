@@ -46,7 +46,7 @@ If you just apply a comment stating something is wrong, the only way someone wou
 ##Translation Team
 | Language           | Reviewers        | Translators |
 |--------------------|------------------|-------------|
-| German (de)        | [Korben85](https://www.transifex.com/user/profile/Korben85/) [StefanGose](https://www.transifex.com/user/profile/StefanGose/) | [dleising](https://www.transifex.com/user/profile/dleising/), [itspick](https://www.transifex.com/user/profile/itspick/) |
+| German (de)        | [Korben85](https://www.transifex.com/user/profile/Korben85/), [StefanGose](https://www.transifex.com/user/profile/StefanGose/) | [dleising](https://www.transifex.com/user/profile/dleising/), [itspick](https://www.transifex.com/user/profile/itspick/) |
 | French (fr)        | yannickguillemot |  [omarabdelghany](https://www.transifex.com/user/profile/omarabdelghany/) |
 | Italian (it)       | [simonefranza](https://www.transifex.com/user/profile/simonefranza/)     | |
 | Japanese (ja)      | [omar_senpai](https://www.transifex.com/user/profile/omar_senpai/)      | [bakaboy182](https://www.transifex.com/user/profile/bakaboy182/), [chickenmer](https://www.transifex.com/user/profile/chickenmer/) |
