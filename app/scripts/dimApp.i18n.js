@@ -39,6 +39,7 @@
             ItemUniquenessExplanation: "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one."
           },
           Compare: {
+            ButtonHelp: "Compare Items",
             All: "{type} comparisons ({quantity})",
             Archetype: "Archetype comparisons ({quantity})",
             Compare: "Compare",
