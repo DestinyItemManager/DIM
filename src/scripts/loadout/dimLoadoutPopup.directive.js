@@ -340,7 +340,7 @@ const _ = require('underscore');
           .then(() => {
             toaster.pop('success',
                         $translate.instant('Loadouts.MakeRoom'),
-                        $translate.instant('Loadouts.MakeRoomDone', { postmasterNum: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name }));
+                        $translate.instant('Loadouts.MakeRoomDone', { postmasterNum: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name, gender: vm.store.gender }));
             return $q.resolve();
           })
           .catch((e) => {

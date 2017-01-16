@@ -31,7 +31,8 @@ const _ = require('underscore');
       vendors: '=vendorsData',
       types: '<displayTypes',
       totalCoins: '<',
-      activeTab: '<'
+      activeTab: '<',
+      extraMovePopupClass: '<'
     },
     template: [
       '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
@@ -142,8 +143,9 @@ const _ = require('underscore');
               '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
               '    </div>',
               '  </div>',
-              '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-              '  <div class="item-details">',
+              '  <div class="item-description" ng-if="!vm.item.equipment && vm.compareItemCount">You have {{vm.compareItemCount}} of these.</div>',
+              '  <div class="item-details" ng-if="vm.saleItem.failureStrings">{{vm.saleItem.failureStrings}}</div>',
+              '  <div class="item-details" ng-if="vm.unlockStores.length">',
               '    <div translate="Vendors.Available">:</div>',
               '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
               '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
@@ -153,7 +155,7 @@ const _ = require('underscore');
               '</div>'].join(''),
             plain: true,
             overlay: false,
-            className: 'move-popup vendor-move-popup',
+            className: 'move-popup vendor-move-popup ' + (vm.extraMovePopupClass || ''),
             showClose: false,
             scope: angular.extend($scope.$new(true), {
             }),
@@ -163,6 +165,7 @@ const _ = require('underscore');
               angular.extend(innerVm, {
                 settings: innerVm.settings,
                 item: item,
+                saleItem: saleItem,
                 unlockStores: saleItem.unlockedByCharacter.map((id) => _.find(dimStoreService.getStores(), { id })),
                 compareItems: compareItems,
                 compareItem: _.first(compareItems),
@@ -179,11 +182,10 @@ const _ = require('underscore');
           });
         }
       },
-      close: function() {
+      $onDestroy: function() {
         if (dialogResult) {
           dialogResult.close();
         }
-        $scope.closeThisDialog();
       },
       toggleSection: function(id) {
         vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];

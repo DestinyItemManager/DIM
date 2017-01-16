@@ -618,8 +618,9 @@ const _ = require('underscore');
       } else {
         // Refresh the stores to see if anything has changed
         var reloadPromise = throttledReloadStores() || $q.when(dimStoreService.getStores());
-        return reloadPromise.then(function(stores) {
-          var store = _.find(stores, { id: store.id });
+        const storeId = store.id;
+        return reloadPromise.then((stores) => {
+          var store = _.find(stores, { id: storeId });
           options.triedFallback = true;
           return canMoveToStore(item, store, options);
         });
@@ -637,7 +638,7 @@ const _ = require('underscore');
           if (item.classTypeName === 'unknown') {
             message = $translate.instant('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
           } else {
-            message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeName, level: item.equipRequiredLevel });
+            message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
           }
           reject(new Error(message));
         }

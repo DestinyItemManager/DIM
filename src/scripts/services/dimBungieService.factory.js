@@ -28,7 +28,7 @@ const _ = require('underscore');
     // Don't open bungie tab more than once a minute
     const openBungieNetTab = _.debounce(() => {
       chrome.tabs.create({
-        url: 'https://bungie.net',
+        url: 'https://www.bungie.net',
         active: true
       });
     }, 60 * 1000, true);
@@ -41,7 +41,6 @@ const _ = require('underscore');
       equip: equip,
       equipItems: equipItems,
       setItemState: setItemState,
-      getXur: getXur,
       getManifest: getManifest,
       getVendorForCharacter: getVendorForCharacter
     };
@@ -343,25 +342,6 @@ const _ = require('underscore');
       }
     }
 
-
-    /************************************************************************************************************************************/
-
-    function getXur() {
-      return $q.when({
-        method: 'GET',
-        url: 'https://www.bungie.net/Platform/Destiny/Advisors/Xur/',
-        headers: {
-          'X-API-Key': apiKey
-        }
-      })
-      .then(function(request) {
-        return $http(request);
-      })
-      .then(handleErrors, handleErrors)
-      .then(function(response) {
-        return response.data.Response.data;
-      });
-    }
 
     /************************************************************************************************************************************/
 

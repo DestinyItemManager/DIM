@@ -459,7 +459,7 @@ const _ = require('underscore');
                 icon: 'https://www.bungie.net/' + character.emblemPath,
                 current: lastPlayedDate.getTime() === (new Date(character.characterBase.dateLastPlayed)).getTime(),
                 lastPlayed: character.characterBase.dateLastPlayed,
-                background: 'https://bungie.net/' + character.backgroundPath,
+                background: 'https://www.bungie.net/' + character.backgroundPath,
                 level: character.characterLevel,
                 powerLevel: character.characterBase.powerLevel,
                 stats: getCharacterStatsData(defs.Stat, character.characterBase),
@@ -741,6 +741,7 @@ const _ = require('underscore');
         // 0: titan, 1: hunter, 2: warlock, 3: any
         classType: itemDef.classType,
         classTypeName: getClass(itemDef.classType),
+        classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
         dmg: dmgName,
         visible: true,
         sourceHashes: itemDef.sourceHashes,
@@ -1012,7 +1013,7 @@ const _ = require('underscore');
       var ascendNode = _.find(gridNodes, { hash: 1920788875 });
 
       // Fix for stuff that has nothing in early columns
-      var minColumn = _.min(gridNodes, 'column').column;
+      var minColumn = _.min(_.reject(gridNodes, 'hidden'), 'column').column;
       if (minColumn > 0) {
         gridNodes.forEach(function(node) { node.column -= minColumn; });
       }
@@ -1491,6 +1492,15 @@ const _ = require('underscore');
         return 'warlock';
       }
       return 'unknown';
+    }
+
+    function getClassTypeNameLocalized(defs, type) {
+      const klass = _.find(_.values(defs.Class), { classType: type });
+      if (klass) {
+        return klass.className;
+      } else {
+        return $translate.instant('Loadouts.Any');
+      }
     }
 
     // following code is from https://github.com/DestinyTrialsReport

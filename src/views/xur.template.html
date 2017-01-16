@@ -1,16 +1,8 @@
 <div class="xurDialog" ng-controller="dimXurCtrl as vm">
   <h1 translate="Help.Xur"></h1>
-  <div class="ngdialog-inner-content">
-    <div ng-repeat="category in vm.categoryOrder">
-      <h2 ng-bind="category"></h2>
-      <div class="items">
-        <div class="xurItem" ng-repeat="saleItem in vm.itemCategories[category] track by saleItem.item.index">
-          <dim-simple-item id="xur-{{::saleItem.item.index}}" item-data="saleItem.item" ng-click="vm.itemClicked(saleItem.item, $event)"></dim-simple-item>
-          <div class="cost" ng-class="{notenough: (vm.totalCoins[saleItem.currency.itemHash] < saleItem.cost)}">
-            {{::saleItem.cost}}/{{vm.totalCoins[saleItem.currency.itemHash]}}
-            <span class="currency"><img src="/img/destiny_content/items/strangecoin.png" title="{{::saleItem.currency.name}}"></span>
-        </div>
-      </div>
+  <div class="ngdialog-inner-content vendor">
+    <div class="vendors">
+      <dim-vendor-items vendors-data="vm.xurService.vendors" total-coins="vm.xurService.totalCoins" extra-move-popup-class="'xur-move-popup'"></dim-vendor-items>
     </div>
   </div>
 </div>

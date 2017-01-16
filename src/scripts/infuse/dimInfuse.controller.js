@@ -145,7 +145,7 @@ const _ = require('underscore');
 
         var loadout = {
           classType: -1,
-          name: 'Infusion Materials',
+          name: $translate.instant('Infusion.InfusionMaterials'),
           items: items
         };
 

@@ -180,12 +180,10 @@ const _ = require('underscore');
       $state.go($state.is('vendors') ? 'inventory' : 'vendors');
     };
 
-    dimXurService.updateXur();
     vm.xur = dimXurService;
 
     vm.refresh = function refresh() {
       loadingTracker.addPromise(dimStoreService.reloadStores());
-      dimXurService.updateXur();
     };
 
     // Don't refresh more than once a minute

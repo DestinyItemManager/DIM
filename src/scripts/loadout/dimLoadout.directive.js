@@ -14,7 +14,7 @@ const _ = require('underscore');
       bindToController: true,
       link: Link,
       scope: {},
-      templateUrl: require('./dimLoadout.directive.template.html'),
+      templateUrl: require('./dimLoadout.directive.template.html')
     };
 
     function Link(scope) {
@@ -163,8 +163,8 @@ const _ = require('underscore');
 
             // Only allow one subclass per burn
             if (clone.type === 'Class') {
-              var other = _.findWhere(vm.loadout.items, 'class');
-              if (other.length && other[0].dmg !== clone.dmg) {
+              var other = vm.loadout.items.class;
+              if (other && other.length && other[0].dmg !== clone.dmg) {
                 vm.loadout.items.class.splice(0, vm.loadout.items.class.length);
               }
               clone.equipped = true;

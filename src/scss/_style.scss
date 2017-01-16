@@ -149,7 +149,7 @@ dd {
   width: 100%;
   height: 100%;
   color: #fff;
-  z-index: 10000;
+  z-index: 1000;
   font-size: 13px;
   background: transparent;
   display: flex;
@@ -933,41 +933,6 @@ dim-store-heading {
   cursor: pointer;
 }
 
-.ngdialog.xur {
-  .ngdialog-content {
-    height: fit-content !important;
-    max-height: 100% !important;
-  }
-  h2 {
-    margin: 0;
-  }
-  .items {
-    margin: .25em 0 .75em 0;
-    display: flex;
-    flex-direction: row;
-  }
-  .xurItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 8px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-  .currency img {
-    height: 12px;
-    width: 12px;
-  }
-  .cost {
-    margin-top: 6px;
-    font-size: 10px;
-  }
-  .notenough {
-    color: #CC5C58;
-  }
-}
-
 .move-amount {
   display: flex;
   flex-direction: row;
@@ -1146,6 +1111,9 @@ rzslider {
     margin-bottom: 4px;
     display: table-row;
   }
+  .stat-box-wrap {
+    white-space: normal !important;
+  }
   .stat-box-cell {
     display: table-cell;
     line-height: 14px;
@@ -1174,6 +1142,11 @@ rzslider {
     line-height: 14px;
     background-color: #333;
     width: 100%;
+  }
+  .stat-box-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
   }
   .stat-box-inner {
     display: block;
@@ -1265,9 +1238,10 @@ rzslider {
 }
 
 .compare-bucket .talent-grid {
-  padding: 5px;
+  padding: 4px 2px 0 2px;
   box-sizing: border-box;
   width: 150px;
+  height: auto;
 }
 
 .talent-node-xp {
@@ -1438,9 +1412,12 @@ dim-compare {
     border-left: none;
     position: fixed;
     left: 1em;
-    margin-top: 1px;
     min-width: 100px;
   }
+}
+
+.compare-options {
+  margin: 1em 0;
 }
 
 .compare-item {
@@ -1450,38 +1427,72 @@ dim-compare {
   min-width: 150px;
   max-width: 150px;
   border-left: 1px solid $lightgray;
-  div {
-    padding-left: 5px;
+
+  .item {
+    float: right;
+    margin: 0 4px 0 0;
+    z-index: -10;
+    .item-stat {
+      display: none;
+    }
+  }
+  > div {
+    padding-left: 4px;
+    height: 16px;
   }
   .highlight {
-    color: white !important;
-    background-color: gray;
+    background-color: rgba(128, 128, 128, .25);
     cursor: pointer;
   }
   .item-name {
     text-overflow: ellipsis;
     overflow: hidden;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-bottom: 2px;
+
+    .elemental {
+      vertical-align: bottom;
+      margin: 0;
+    }
   }
   .sorted {
     color: $orange;
   }
   .close {
-    top: 0px;
-    right: 6px;
+    position: static;
+    float: right;
+    margin: 1px 4px;
     padding-left: 0px;
   }
   .range {
     font-size: .9em;
   }
   dim-item-tag {
+    height: 20px;
+    margin-left: 5px;
     display: block;
     select {
       background: gray;
       border: none;
       color: white;
-      width: 125px;
+      width: 120px;
     }
   }
+  .spacer {
+    height: 20px;
+    &.withTags {
+      height: 40px;
+    }
+  }
+}
+
+@keyframes pop {
+  to { transform: scale(1.5) }
+}
+.item-pop {
+  animation: .25s linear 2 alternate pop;
+  z-index: 1;
 }
 
 .loadout-content {

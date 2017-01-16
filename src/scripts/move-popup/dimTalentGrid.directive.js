@@ -76,8 +76,9 @@ const _ = require('underscore');
     }
 
     if (vm.talentGrid) {
-      vm.numColumns = _.max(vm.talentGrid.nodes, 'column').column + 1 - vm.hiddenColumns;
-      vm.numRows = vm.perksOnly ? 2 : (_.max(vm.talentGrid.nodes, 'row').row + 1);
+      const visibleNodes = _.reject(vm.talentGrid.nodes, 'hidden');
+      vm.numColumns = _.max(visibleNodes, 'column').column + 1 - vm.hiddenColumns;
+      vm.numRows = vm.perksOnly ? 2 : (_.max(visibleNodes, 'row').row + 1);
     }
   }
 })();

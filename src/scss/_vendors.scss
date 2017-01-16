@@ -29,6 +29,9 @@
       display: none;
     }
   }
+  .vendor-char-items {
+    position: relative;
+  }
   .vendor-col {
     margin-right: 20px;
   }
@@ -159,7 +162,7 @@
 
 .ngdialog.vendor-move-popup {
   position: absolute;
-  z-index: 4;
+  z-index: 10000;
   height: fit-content;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
   .compare-items {
@@ -171,7 +174,7 @@
     margin-top: 0;
   }
   .item {
-    opacity: 0.2;
+    opacity: 0.5;
   }
   .selected {
     opacity: 1.0;
@@ -200,5 +203,34 @@ dim-vendor-currencies {
       height: 16px;
       width: 16px;
     }
+  }
+}
+
+.xurDialog {
+  .title {
+    display: none;
+  }
+
+  .vendors, .vendor-row {
+    margin: 0;
+  }
+
+  .vendor-items {
+    flex-wrap: none;
+  }
+
+  dim-vendor-currencies {
+    margin-top: 0;
+  }
+}
+
+.ngdialog.vendor-move-popup.xur-move-popup {
+  position: fixed;
+}
+
+.ngdialog.modal-dialog.xur {
+  align-items: flex-start;
+  .ngdialog-content {
+    margin-top: 2em;
   }
 }

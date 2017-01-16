@@ -16,7 +16,7 @@
       '  <div class="race-gender">{{ vm.activeCharacters[vm.selectedCharacter].genderRace }}</div>',
       '  <div class="level"><span translate="Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>',
       '  <div class="level powerLevel">{{ vm.activeCharacters[vm.selectedCharacter].powerLevel }}</div>',
-      '  <div class="minmax-select-button" title="{{ \'Characters\' | translate }}" ng-click="vm.openCharSelectPopup($event)"><i class="fa fa-chevron-down"></i></div>',
+      '  <div class="minmax-select-button" translate-attr="{ title: \'LB.Guardians\' }" ng-click="vm.openCharSelectPopup($event)"><i class="fa fa-chevron-down"></i></div>',
       '</div>',
       '<div id="char-select"></div>'
     ].join('')
