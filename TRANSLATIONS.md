@@ -16,6 +16,8 @@ We use [Angular translate](https://angular-translate.github.io/docs/#/guide/02_g
 #Join the translation team @ Transifex
 [Transifex](https://www.transifex.com/destiny-item-manager/destiny-item-manager/)
 
+![current-translation-values](https://www.transifex.com/projects/p/destiny-item-manager/resource/dim/chart/image_png)
+![transifex-logo-small](https://tx-assets.scdn5.secure.raxcdn.com/static/charts/images/tx-logo-micro.c5603f91c780.png)
 
 There are two different roles available per language
 
