@@ -21,7 +21,6 @@ require('./scripts/util'); // TODO: make these not global and instead import whe
 require('./scripts/oauth/oauth.module');
 require('./scripts/oauth/http-refresh-token.service');
 require('./scripts/oauth/oauth.service');
-require('./scripts/oauth/oauth.service');
 require('./scripts/oauth/oauth-token.service');
 
 
