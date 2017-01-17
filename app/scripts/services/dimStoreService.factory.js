@@ -8,6 +8,7 @@
     '$rootScope',
     '$q',
     '$http',
+    '$translate',
     'dimBungieService',
     'dimPlatformService',
     'dimCategory',
@@ -18,15 +19,16 @@
     'SyncService',
     'loadingTracker',
     'dimManifestService',
-    '$translate',
     'uuid2',
-    'dimFeatureFlags'
+    'dimFeatureFlags',
+    'dimSettingsService'
   ];
 
   function StoreService(
     $rootScope,
     $q,
     $http,
+    $translate,
     dimBungieService,
     dimPlatformService,
     dimCategory,
@@ -37,14 +39,19 @@
     SyncService,
     loadingTracker,
     dimManifestService,
-    $translate,
     uuid2,
-    dimFeatureFlags
+    dimFeatureFlags,
+    dimSettingsService
   ) {
     var _stores = [];
     var _idTracker = {};
 
     var _removedNewItems = new Set();
+
+    const dimClassifiedData = $http.get('scripts/classified.json')
+                              .then(function(json) {
+                                return json.data.itemHash;
+                              });
 
     const dimMissingSources = $http.get('scripts/missing_sources.json')
                               .then(function(json) {
@@ -628,7 +635,7 @@
       return index;
     }
 
-    function processSingleItem(defs, buckets, missingSources, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, classifiedData, missingSources, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -658,6 +665,30 @@
 
       if (!itemDef.itemName) {
         return null;
+      }
+
+      if (itemDef.classified) {
+        var language = dimSettingsService.language;
+        if (classifiedData[itemDef.itemHash]) { // do we have declassification info for item?
+          // itemDef.icon = classifiedData[itemDef.itemHash].icon;
+          itemDef.itemName = classifiedData[itemDef.itemHash].i18n[language].itemName;
+          itemDef.itemDescription = classifiedData[itemDef.itemHash].i18n[language].itemDescription;
+          itemDef.itemTypeName = classifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+          itemDef.bucketTypeHash = classifiedData[itemDef.itemHash].bucketHash;
+          itemDef.tierType = classifiedData[itemDef.itemHash].tierType;
+          itemDef.classType = classifiedData[itemDef.itemHash].classType || 3; // set to all if not set
+          if (classifiedData[itemDef.itemHash].primaryBaseStatHash) {
+            itemDef.primaryBaseStatHash = classifiedData[itemDef.itemHash].primaryBaseStatHash;
+            itemDef.primaryStat = [];
+            // console.log(itemDef.primaryBaseStatHash);
+            itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
+            itemDef.primaryStat.value = classifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+            item.primaryStat = itemDef.primaryStat;
+          }
+          if (classifiedData[itemDef.itemHash].stats) {
+            item.stats = classifiedData[itemDef.itemHash].stats;
+          }
+        }
       }
 
       // fix itemDef for defense items with missing nodes
@@ -696,7 +727,7 @@
       if (currentBucket.id.startsWith('BUCKET_VAULT')) {
         // TODO: Remove this if Bungie ever returns bucket.id for classified
         // items in the vault.
-        if (itemDef.classified) {
+        if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
           if (currentBucket.id.endsWith('WEAPONS')) {
             currentBucket = buckets.byType.Heavy;
           } else if (currentBucket.id.endsWith('ARMOR')) {
@@ -742,7 +773,7 @@
         name: itemDef.itemName,
         description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
         icon: itemDef.icon,
-        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
+        notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
         id: item.itemInstanceId,
         equipped: item.isEquipped,
         equipment: item.isEquipment,
@@ -1477,6 +1508,7 @@
       return $q.all([
         dimDefinitions,
         dimBucketService,
+        dimClassifiedData,
         dimMissingSources,
         previousItems,
         newItems,
