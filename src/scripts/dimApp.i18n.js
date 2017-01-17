@@ -301,7 +301,10 @@
             ExportSS: "Download Spreadsheets",
             ExportSSHelp: "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
             DIMPopups: "DIM Info Popups",
-            DIMPopupsReset: "Reset previously hidden info tips"
+            DIMPopupsReset: "Reset previously hidden info tips",
+            ImportExport: "Import/Export settings and data",
+            Export: "Export DIM Data",
+            Import: "Import DIM Data"
           },
           Stats: {
             Discipline: "Discipline",

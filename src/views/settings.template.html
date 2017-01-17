@@ -133,6 +133,18 @@
           <button ng-click="vm.resetHiddenInfos()" translate="Settings.DIMPopupsReset"></button>
         </td>
       </tr>
+      <tr ng-if="vm.featureFlags.importExport">
+        <td>
+          <label for="exportButtons" translate="Settings.ImportExport"></label>
+        </td>
+        <td>
+          <div id="exportButtons">
+            <button ng-click="vm.exportData()" translate="Settings.Export"></button>
+            <button ng-click="vm.importData()" translate="Settings.Import"></button>
+            <input type="file" id="importFile">
+          </div>
+        </td>
+      </tr>
     </table>
   </form>
   </div>

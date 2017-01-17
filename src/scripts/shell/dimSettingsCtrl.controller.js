@@ -7,7 +7,7 @@ const _ = require('underscore');
   angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
 
-  function SettingsController(dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags) {
+  function SettingsController(dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
     var vm = this;
 
     vm.featureFlags = dimFeatureFlags;
@@ -52,6 +52,38 @@ const _ = require('underscore');
 
     vm.resetHiddenInfos = function() {
       dimInfoService.resetHiddenInfos();
+    };
+
+    vm.exportData = function() {
+      // Function to download data to a file
+      function download(data, filename, type) {
+        var a = document.createElement("a");
+        var file = new Blob([data], { type: type });
+        var url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        $timeout(function() {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        });
+      }
+
+      SyncService.get().then((data) => {
+        download(JSON.stringify(data), 'dim-data.json', 'application/json');
+      });
+    };
+
+    vm.importData = function() {
+      var reader = new FileReader();
+      reader.onload = function() {
+        // TODO: we're kinda trusting that this is the right data here, no validation!
+        SyncService.set(JSON.parse(reader.result), true);
+        $window.alert("Imported DIM data!");
+        $scope.$apply();
+      };
+      reader.readAsText(angular.element('#importFile')[0].files[0]);
     };
   }
 })();
