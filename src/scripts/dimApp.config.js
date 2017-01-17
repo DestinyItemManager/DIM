@@ -8,6 +8,11 @@
       localStorageServiceProvider.setPrefix('');
     });
 
+  // Putting this comparison in a function defeats a constant-folding optimization
+  function compare(a, b) {
+    return a === b;
+  }
+
   angular.module('dimApp')
     .value('dimPlatformIds', {
       xbl: null,
@@ -21,7 +26,7 @@
     .value('dimFeatureFlags', {
       isExtension: window.chrome && window.chrome.extension,
       // Tags are off in release right now
-      tagsEnabled: '$DIM_FLAVOR' !== 'release',
+      tagsEnabled: !compare('$DIM_FLAVOR', 'release'),
       compareEnabled: true,
       vendorsEnabled: true,
       qualityEnabled: true,
@@ -30,11 +35,11 @@
       // Print debug info to console about item moves
       debugMoves: false,
       // show changelog toaster
-      changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
+      changelogToaster: compare('$DIM_FLAVOR', 'release') || compare('$DIM_FLAVOR', 'beta'),
 
-      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release',
+      materialsExchangeEnabled: !compare('$DIM_FLAVOR', 'release'),
       // allow importing and exporting your DIM data to JSON
-      importExport: '$DIM_FLAVOR' !== 'release'
+      importExport: compare('$DIM_FLAVOR', 'release')
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
@@ -81,11 +86,10 @@
 
           console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-          if (dimFeatureFlags.changelogToaster && '$DIM_FLAVOR' === 'release') {
-            /* eslint no-constant-condition: 0*/
+          if (dimFeatureFlags.changelogToaster && compare('$DIM_FLAVOR', 'release')) {
             dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
               title: '$DIM_FLAVOR' === 'release' ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
-              view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
+              view: 'views/changelog-toaster' + (compare('$DIM_FLAVOR', 'release') ? '' : '-beta') + '.html?v=v$DIM_VERSION'
             });
           }
         });
