@@ -13,10 +13,10 @@
       <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">
         {{ loadout.name }}
       </span>
-      <span translate-attr="{ title: \'Loadouts.Delete\' }" ng-click="vm.deleteLoadout(loadout, $event)">
+      <span translate-attr="{ title: 'Loadouts.Delete' }" ng-click="vm.deleteLoadout(loadout, $event)">
         <i class="fa fa-trash-o"></i>
       </span>
-      <span translate-attr="{ title: \'Loadouts.Edit\' }" ng-click="vm.editLoadout(loadout, $event)">
+      <span translate-attr="{ title: 'Loadouts.Edit' }" ng-click="vm.editLoadout(loadout, $event)">
         <i class="fa fa-pencil"></i>
       </span>
     </li>
@@ -43,7 +43,7 @@
       </span>
     </li>
 
-    <li class="loadout-set" ng-if="!vm.store.isVault">'
+    <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.makeRoomForPostmaster($event)">
         <i class="fa fa-envelope"></i>
         <span translate="Loadouts.MakeRoom"></span>
