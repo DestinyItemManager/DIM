@@ -13,7 +13,7 @@
     "lint": "eslint app/scripts",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
     "start": "npm run bundle -s -- --watch",
-    "build": "npm run bundle -s -- --env.prod=true",
+    "build": "npm run bundle -s",
     "publish-chrome-beta": "npm run build -s && grunt publish_chrome_beta",
     "install": "napa"
   },
