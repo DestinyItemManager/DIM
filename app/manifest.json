@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "DIM's Old Dev Path",
-  "version": "3.15.1",
+  "version": "3.16.0",
   "description": "Outdated path for DIM.",
   "icons": {
     "16": "icon16.png"

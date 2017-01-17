@@ -81,11 +81,11 @@
 
           console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-          if (dimFeatureFlags.changelogToaster) {
+          if (dimFeatureFlags.changelogToaster && '$DIM_FLAVOR' === 'release') {
             /* eslint no-constant-condition: 0*/
             dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
               title: '$DIM_FLAVOR' === 'release' ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
-              view: 'views/' + language + '/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
+              view: 'views/changelog-toaster' + ('$DIM_FLAVOR' === 'release' ? '' : '-beta') + '.html?v=v$DIM_VERSION'
             });
           }
         });
