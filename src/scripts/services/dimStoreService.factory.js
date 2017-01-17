@@ -29,7 +29,7 @@ const _ = require('underscore');
 
     var _removedNewItems = new Set();
 
-    const dimMissingSources = require('../missing_sources.json');
+    const dimMissingSources = require('app/data/missing_sources.json');
 
     const yearHashes = {
       //         tTK       Variks        CoE         FoTL    Kings Fall
