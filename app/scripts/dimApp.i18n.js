@@ -1695,6 +1695,7 @@
           Compare: {
             All: "Comparações de {type} ({quantity})",
             Archetype: "Comparações de arquétipo ({quantity})",
+            ButtonHelp: "Comparar itens",
             Compare: "Comparar",
             Close: "Fechar",
             Error: {
@@ -1752,6 +1753,7 @@
             Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
             ChangingPerks: "Mudança de perks não é suportado.",
             ChangingPerksInfo: "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
+            HidePopup: "Esconder este Popup",
             NeverShow: "Não mostre isso novamente.",
             UpgradeChrome: "Por favor, atualizar o Chrome.",
             Version: {
@@ -1772,6 +1774,7 @@
             BringGear: "Elevará o item para",
             Calc: "Calculadora de infusões",
             InfuseItems: "Selecione um item para infundir:",
+            InfusionMaterials: "Materiais de infusão",
             LockedItems: "Incluir itens travados",
             NoItems: "Nenhum item para infusão encontrado.",
             NoTransfer: "Transferência de materia para infusão\n {target} não pôde ser movido.",
@@ -1800,6 +1803,7 @@
           },
           LB: {
             LB: "Construtor de Sets",
+            Guardians: "Guardiões",
             ShowGear: "Exibir itens de {class}",
             HideGear: "Ocultar itens de {class}",
             LockEquipped: "Travar itens equipados",
@@ -1899,6 +1903,15 @@
             NewRank: "Novo rank",
             NewRep: "Nova reputação"
           },
+          MovePopup: {
+            Consolidate: "Consolidar",
+            DistributeEvenly: "Distribuir igualmente",
+            Equip: "Equip",
+            Split: "Dividir",
+            Store: "Mover",
+            Take: "Tomar",
+            Vault: "Cofre"
+          },
           Notes: {
             Error: "Erro! Anotações devem ter até 120 caracteres.",
             Help: "Adicione anotações à este item"
@@ -1953,6 +1966,11 @@
             Quality: "Níveis de qualidade",
             Strength: "Força",
             TierProgress: "{progress} para {tier}"
+          },
+          StoreBucket: {
+            FillStack: "Encher Pilha ({amount})",
+            HowMuch: "Quantos {itemname} para transferir?",
+            Move: "Transferir"
           },
           Tags: {
             TagItem: "Marcar item",
