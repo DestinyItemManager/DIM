@@ -10,7 +10,6 @@ const _ = require('underscore');
   function StoreService(
     $rootScope,
     $q,
-    $http,
     dimBungieService,
     dimPlatformService,
     dimCategory,
