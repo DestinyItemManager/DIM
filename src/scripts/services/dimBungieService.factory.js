@@ -7,11 +7,19 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimBungieService', BungieService);
 
+  // Try to trick Babel into not eliding constant comparison
+  function trickyCompare(a, b) {
+    return a.split('')
+      .reverse()
+      .join('') === b.split('')
+      .reverse()
+      .join('');
+  }
 
   function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
     var apiKey = localStorage.apiKey;
     /* eslint no-constant-condition: 0*/
-    if ('$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta') {
+    if (trickyCompare('$DIM_FLAVOR', 'release') || trickyCompare('$DIM_FLAVOR', 'beta')) {
       apiKey = '$DIM_API_KEY';
     }
 

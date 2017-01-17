@@ -8,7 +8,6 @@
       },
       "modules": false,
       "loose": true,
-      "exclude": ["constant-folding"],
       "debug": true
     }]
   ],
