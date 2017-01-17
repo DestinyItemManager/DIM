@@ -1,170 +1,54 @@
-<!doctype html>
-<html lang="" ng-app="dimApp" ng-csp>
-
+<html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>DIM</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        min-height: 100vh;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      }
 
-    <link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
-    <link href='https://www.bungie.net' rel='preconnect'>
-    <link href='https://apis.google.com' rel='preconnect'>
-    <link href='https://ssl.google-analytics.com' rel='preconnect'>
-    <link href='https://www.google-analytics.com' rel='preconnect'>
-    <link href='https://accounts.google.com' rel='preconnect'>
-    <link href='https://ssl.gstatic.com' rel='preconnect'>
+      .msg {
+        width: 100%;
+        max-width: 600px;
+        line-height: 1.4;
+      }
 
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="stylesheet" href="vendor/components-font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="vendor/angular-hotkeys/build/hotkeys.css">
-    <link rel="stylesheet" href="styles/main.css?v=$DIM_VERSION">
+      code {
+        padding: 0.1em 0.3em;
+        font-size: 85%;
+        background-color: rgba(0,0,0,0.04);
+        border-radius: 3px;
+      }
+    </style>
   </head>
 
-  <body ng-app="dimApp" ng-strict-di ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.featureFlags.qualityEnabled && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
-    <div class="ng-cloak" ng-click="trackActivity()">
-      <div id="header">
-        <div class="content">
-          <span class="header-right">
-            <div dim-platform-choice class="header-right"></div>
-            <div class="header-right" id="actions">
+  <body>
+    <div class="msg">
+      <h1>You need readd this extension</h1>
+      <p>
+        Changes to the source code structure of DIM require this unpacked extension to be removed and re-added.
+      </p>
 
-              <span class="link" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
-              <span class="link" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
-              <span class="link" ng-if="app.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"><i class="fa fa-list-alt"></i></span>
-              <span class="link" ng-click="app.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
-              <span class="link" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-filter"></i></span>
-              <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
-            </div>
-          </span>
-          <span class="logo link" ui-sref="inventory" title="v$DIM_VERSION">DIM</span>
-          <span class="link" ng-click="app.showAbout($event)" translate="Header.About"></span>
-          <span class="link" ng-click="app.showSupport($event)" translate="Header.SupportDIM"></span>
-          <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
-          <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
-        </div>
-      </div>
-      <toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
-      <div id="content" class="content" ui-view></div>
-      <div class="store-bounds"></div>
-      <dim-manifest-progress></dim-manifest-progress>
-      <div class="random-loadout" ng-controller="dimRandomCtrl as random">
-        <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
-      </div>
+      <ol>
+        <li>Ensure all dependencies are installed with <code>npm install</code></li>
+        <li>Start DIM development mode with <code>npm start</code></li>
+        <li>In Chrome, remove this version of the unpacked DIM extension</li>
+        <li>Add the new one from the <code>dist/</code> directory.</li>
+      </ol>
+
+      <p>
+        See the readme for more details.
+      </p>
+
+      <p>
+        <button id="download-button">Export your settings and data</button>
+      </p>
     </div>
-
-    <script src="scripts/google.js?v=$DIM_VERSION"></script>
-
-    <!-- begin vendor scripts -->
-    <script src="vendor/drag-drop-webkit-mobile/ios-drag-drop.js?v=$DIM_VERSION"></script>
-    <script src="vendor/jquery/dist/jquery.min.js?v=$DIM_VERSION"></script>
-    <script src="scripts/jquery-ui.position.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular/angular.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-ui-router/release/angular-ui-router.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-aria/angular-aria.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/moment/moment.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-moment/angular-moment.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/humanize-duration/humanize-duration.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-timer/dist/angular-timer.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/AngularJS-Toaster/toaster.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-native-dragdrop/draganddrop.js?v=$DIM_VERSION"></script>
-    <script src="vendor/ngDialog/js/ngDialog.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/Angular.uuid2/dist/angular-uuid2.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/underscore/underscore-min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/lz-string/libs/lz-string.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-chrome-storage/angular-chrome-storage.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-messages/angular-messages.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-promise-tracker/promise-tracker.js?v=$DIM_VERSION"></script>
-    <script src="vendor/jquery-textcomplete/dist/jquery.textcomplete.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angularjs-slider/dist/rzslider.js?v=$DIM_VERSION"></script>
-    <script src="vendor/ng-http-rate-limiter/dist/ng-http-rate-limiter.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-translate/angular-translate.min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/idb-keyval/dist/idb-keyval-min.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-local-storage/dist/angular-local-storage.min.js"></script>
-    <script src="vendor/angular-chrome-storage/angular-chrome-storage.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-hotkeys/build/hotkeys.js?v=$DIM_VERSION"></script>
-    <script src="vendor/zip.js/WebContent/zip.js?v=$DIM_VERSION"></script>
-    <script src="vendor/sql.js/js/sql.js?v=$DIM_VERSION"></script>
-    <script src="vendor/messageformat/messageformat.js?v=$DIM_VERSION"></script>
-    <script src="vendor/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js?v=$DIM_VERSION"></script>
-    <!-- end vendor scripts -->
-
-    <!-- begin app scripts -->
-    <script src="scripts/util.js?v=$DIM_VERSION"></script>
-    <script src="scripts/dimApp.module.js?v=$DIM_VERSION"></script>
-    <script src="scripts/dimApp.config.js?v=$DIM_VERSION"></script>
-    <script src="scripts/dimApp.i18n.js?v=$DIM_VERSION"></script>
-    <script src="scripts/oauth/oauth.module.js"></script>
-    <script src="scripts/oauth/http-refresh-token.service.js"></script>
-    <script src="scripts/oauth/oauth.service.js"></script>
-    <script src="scripts/oauth/oauth-token.service.js"></script>
-    <script src="scripts/services/dimActionQueue.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimBungieService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimDefinitions.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimManifestService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimBucketService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimInfoService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimPlatformService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimLoadoutService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimSettingsService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimStoreService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimVendorService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimXurService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimCsvService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimItemService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimItemMoveService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimItemInfoService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimFarmingService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/services/dimSyncService.factory.js?v=$DIM_VERSION"></script>
-    <script src="scripts/loadout/dimLoadout.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/loadout/dimLoadoutPopup.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/loadout/random/dimRandom.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/compare/dimCompare.directive.js"></script>
-    <script src="scripts/compare/dimCompareService.factory.js"></script>
-    <script src="scripts/shell/dimAngularFilters.filter.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimMaterialsExchangeCtrl.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimAppCtrl.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimSettingsCtrl.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimPlatformChoice.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimSearchFilter.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimClickAnywhereButHere.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimFilterLink.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/shell/dimManifestProgress.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimPercentWidth.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimStores.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimStoreBucket.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimStoreReputation.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimStoreItem.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimStoreHeading.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimSimpleItem.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimStats.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimFarming.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/store/dimClearNewItems.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/move-popup/dimMoveAmount.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/move-popup/dimMovePopup.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/move-popup/dimTalentGrid.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/move-popup/dimMoveItemProperties.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/move-popup/dimItemTag.directive.js"></script>
-    <script src="scripts/infuse/dimInfuse.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/xur/dimXur.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/vendors/dimVendor.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/vendors/dimVendorItems.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/vendors/dimVendorCurrencies.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/minmax/dimMinMax.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/minmax/dimMinMaxItem.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/minmax/dimMinMaxLocks.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/minmax/dimMinMaxCharSelect.directive.js?v=$DIM_VERSION"></script>
-    <script src="scripts/debug/dimDebugItem.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/developer/dimDeveloper.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/login/dimLogin.controller.js?v=$DIM_VERSION"></script>
-    <script src="scripts/materials-exchange/dimCollapsible.directive.js?v=$DIM_VERSION"></script>
-    <!-- end app scripts -->
-
-    <!-- <script src="scripts/scripts.min.js?v=$DIM_VERSION"></script> -->
   </body>
 
+  <script type="text/javascript" src="index.js"></script>
 </html>

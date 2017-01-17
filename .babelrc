@@ -1,0 +1,14 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": [
+          "last 2 versions"
+        ]
+      },
+      "modules": false,
+      "loose": true
+    }]
+  ],
+  "plugins": ["angularjs-annotate"]
+}
