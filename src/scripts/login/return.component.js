@@ -43,7 +43,9 @@ function ReturnController($http) {
 
         localStorage.authorization = JSON.stringify(authorization);
 
-        window.location = "/index.html";
+        window.location = "/";
+      } else {
+        console.error(response.data.Message, response);
       }
     });
   };
