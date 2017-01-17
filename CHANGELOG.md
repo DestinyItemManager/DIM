@@ -1,4 +1,4 @@
-# Next
+# v3.16.0
 
 * Removed farming option to keep greens since they're disassembled by default now.
 * Added stat search, for example: "stat:rof:>= 22"
