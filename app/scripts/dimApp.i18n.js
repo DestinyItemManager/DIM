@@ -39,9 +39,9 @@
             ItemUniquenessExplanation: "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one."
           },
           Compare: {
-            ButtonHelp: "Compare Items",
             All: "{type} comparisons ({quantity})",
             Archetype: "Archetype comparisons ({quantity})",
+            ButtonHelp: "Compare Items",
             Compare: "Compare",
             Close: "Close",
             Error: {
@@ -434,6 +434,7 @@
             Drag: "Tieni premuto shift o fermati su una zona di rilascio per trasferire solo una certa qauntità",
             ChangingPerks: "Selezione dei Perk non supportata",
             ChangingPerksInfo: "Scusa, non è possibile cambiare i perk dall'esterno del gioco. Ci piacerebbe poterlo fare!",
+            HidePopup: "Nascondi Questo Popup",
             NeverShow: "Non mostrarmi più questo messaggio.",
             UpgradeChrome: "Prego aggiornare Chrome",
             Version: {
@@ -454,6 +455,7 @@
             BringGear: "Porterà l'oggetto a:",
             Calc: "Calcolatrice per Infusione",
             InfuseItems: "Seleziona oggetto da infondere con:",
+            InfusionMaterials: "Materiali da Infusione",
             LockedItems: "Include oggetti 'bloccati'",
             NoItems: "Non è disponibile nessun oggetto per l'infusione.",
             NoTransfer: "Trasferimento maperiale per infusione\n {target} non può essere spostato.",
@@ -482,6 +484,7 @@
           },
           LB: {
             LB: "Costruttore di Loadout",
+            Guardians: "Guardiani",
             ShowGear: "Mostra equipaggiamento {class}",
             HideGear: "Nascondi equipaggiamento {class}",
             LockEquipped: "Blocca Equipaggiati",
@@ -581,6 +584,15 @@
             NewRank: "Nuovo Grado",
             NewRep: "Nuova Reputazione"
           },
+          MovePopup: {
+            Consolidate: "Consolida",
+            DistributeEvenly: "Distribuisci Equamente",
+            Equip: "Usa",
+            Split: "Dividi",
+            Store: "Mouvi",
+            Take: "Prendi",
+            Vault: "Depos"
+          },
           Notes: {
             Error: "Errore! Massimo 120 caratteri per nota.",
             Help: "Aggiungere note a questo oggetto"
@@ -635,6 +647,11 @@
             Quality: "Qualità statistiche",
             Strength: "Forza",
             TierProgress: "{progress} per {tier}"
+          },
+          StoreBucket: {
+            FillStack: "Riempi Stack ({amount})",
+            HowMuch: "Quanti {itemname} vuoi spostare?",
+            Move: "Sposta"
           },
           Tags: {
             TagItem: "Segna Oggetto",
@@ -695,6 +712,7 @@
           Compare: {
             All: "{type} Vergleich ({quantity})",
             Archetype: "Vergleiche im Urzustand ({quantity})",
+            ButtonHelp: "Gegenstände vergleichen",
             Compare: "Vergleiche",
             Close: "Schließen",
             Error: {
@@ -752,6 +770,7 @@
             Drag: "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen",
             ChangingPerks: "Verändern der Perks wird nicht unterstützt",
             ChangingPerksInfo: "Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu verändern. Wir würden es nur zu gern!",
+            HidePopup: "Dieses Fenster ausblenden",
             NeverShow: "Diesen Tipp nicht erneut zeigen",
             UpgradeChrome: "Bitte aktualisiere Chrome",
             Version: {
@@ -772,6 +791,7 @@
             BringGear: "Bringt die Ausrüstung zu",
             Calc: "Infusionsrechner",
             InfuseItems: "Item auswählen zum Infundieren mit:",
+            InfusionMaterials: "Infusions Material",
             LockedItems: "Beziehe 'gesperrte' Items ein",
             NoItems: "Keine infundierbaren Items verfügbar.",
             NoTransfer: "Transfer des Infundiermaterials\n{target} kann nicht verschoben werden.",
@@ -800,6 +820,7 @@
           },
           LB: {
             LB: "Loadout Builder",
+            Guardians: "Hüter",
             ShowGear: "Zeige {class} Ausrüstung",
             HideGear: "Verstecke {class} Ausrüstung",
             LockEquipped: "Ausgerüstetes sperren",
@@ -854,8 +875,8 @@
             RestoreAllItems: "Alle Gegenstände",
             Random: "Zufällig",
             Randomize: "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?",
-            VendorsCannotEquip: "Diese Händler-Gegenstände können nicht ausgerüstet werden:",
-            VendorsCanEquip: "Diese Gegenstände können ausgerüstet werden:",
+            VendorsCannotEquip: "Folgende Händler-Gegenstände können nicht ausgerüstet werden:",
+            VendorsCanEquip: "Folgende Gegenstände können ausgerüstet werden:",
             MaxSlots: "Du kannst nur {slots} Gegenstände dieser Art in einem Loadout haben.",
             OnlyItems: "Es können nur ausrüstbare Gegenstände, Materialien und Verbrauchsgegenstände zu einem Loadout hinzugefügt werden.",
             FilteredItems: "Gefilterte Items",
@@ -898,6 +919,10 @@
             FromTrade: "Materialien vom Tausch",
             NewRank: "Neuer Rang",
             NewRep: "Neuer Ruf"
+          },
+          MovePopup: {
+            Consolidate: "Zusammenführen",
+            DistributeEvenly: "Gleichmäßig verteilen",
           },
           Notes: {
             Error: "Fehler! Max 120 Zeichen für Notizen.",
@@ -954,6 +979,11 @@
             Strength: "Stärke",
             TierProgress: "{progress} für {tier}"
           },
+          StoreBucket: {
+            FillStack: "Stapel auffüllen ({amount})",
+            HowMuch: "Wie viele {itemname} sollen verschoben werden?",
+            Move: "Verschieben"
+          },
           Tags: {
             TagItem: "Item markieren",
             Favorite: "Favorit",
@@ -1009,9 +1039,9 @@
             ItemUniquenessExplanation: "Vous avez essayé de déplacer '{name}' {type} sur votre {character} mais cette destination a déjà cet objet et n'en autorise qu'un."
           },
           Cooldown: {
-            Super: "Régénération du Super",
             Grenade: "Régénération de Grenade",
-            Melee: "Régénération de Mêlée"
+            Melee: "Régénération de Mêlée",
+            Super: "Régénération du Super"
           },
           Debug: {
             Dump: "Envoyer les infos sur la console",
@@ -1041,7 +1071,7 @@
             BackToDIM: "Retour sur DIM",
             Drag: "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
           },
-          ItemSevice: {
+          ItemService: {
             PercentComplete: "({ percent | percent } Achevée)"
           },
           LB: {
@@ -1163,18 +1193,18 @@
             DIMPopupsReset: "Réinitialiser les astuces cachées précédentes"
           },
           Stats: {
-            NoBonus: "Pas de Bonus",
-            Intellect: "Intelligence",
             Discipline: "Discipline",
+            Intellect: "Intelligence",
+            NoBonus: "Pas de Bonus",
             Strength: "Force",
             TierProgress: "{progress} pour {tier}"
           },
           Tags: {
             TagItem: "Tagger Objet",
             Favorite: "Préféré",
-            Keep: "Garder",
             Junk: "Camelote",
-            Infuse: "Infuser"
+            Infuse: "Infuser",
+            Keep: "Garder"
           },
           Vendors: {
             Vendors: "Marchands",
@@ -1226,6 +1256,7 @@
           Compare: {
             All: "Comparaciones de {type} ({quantity})",
             Archetype: "Comparaciones de arquetipo ({quantity})",
+            ButtonHelp: "Compara Elementos",
             Compare: "Comparar",
             Close: "Cerrar",
             Error: {
@@ -1283,6 +1314,7 @@
             Drag: "Mantén presionado Shift o pausa sobre la zona de soltar para transferir un montón parcial",
             ChangingPerks: "Cambio de beneficios no soportado",
             ChangingPerksInfo: "Lo sentimos, no hay forma de cambiar beneficios afuera del juego. ¡Quisiéramos poder hacerlo!",
+            HidePopup: "Esconde Esta Ventana",
             NeverShow: "Nunca mostrar esto de nuevo.",
             UpgradeChrome: "Por favor actualice Chrome",
             Version: {
@@ -1303,6 +1335,7 @@
             BringGear: "Traerá el equipo a",
             Calc: "Calculador de Infusión",
             InfuseItems: "Selecciona un objeto para infusionar:",
+            InfusionMaterials: "Materiales para Infusionar",
             LockedItems: "Incluir objetos 'bloqueados'",
             NoItems: "No hay objetos disponibles para infusionar.",
             NoTransfer: "El material para infusionar\n{target} no puede ser movido.",
@@ -1324,13 +1357,14 @@
             ExoticError: "'{itemname}' no puede ser equipado porque el objeto exótico en el espacio {slot} no puede ser desequipado. ({error})",
             NotEnoughRoom: "No hay nada que podamos sacar fuera de {store} para hacerle espacio a {itemname}",
             OnlyEquippedLevel: "Esto solo puede equiparse en personajes de nivel igual o superior a {level}",
-            OnlyEquippedClassLevel: "Esto solo puede equiparse en un {class} de nivel igual o superior a {level}",
+            OnlyEquippedClassLevel: "Esto solo puede equiparse en un {class} de nivel igual o superior a {level}.",
             PercentComplete: "({ percent | percent } Completar)",
             TooMuch: "Parece que pediste mover más objetos de los que existen en la fuente!",
             TwoExotics: "No sabemos cómo conseguiste equipar más de 2 exóticas!"
           },
           LB: {
             LB: "Creador de equipo",
+            Guardians: " Guardianes",
             ShowGear: "Mostrar equipo de {class}",
             HideGear: "Ocultar equipo de {class}",
             LockEquipped: "Bloquear equipado",
@@ -1430,6 +1464,15 @@
             NewRank: "Nuevo rango",
             NewRep: "Nueva reputación"
           },
+          MovePopup: {
+            Consolidate: "Consolida",
+            DistributeEvenly: "Distribuye Equitativamente",
+            Equip: "Poner",
+            Split: "Partir",
+            Store: "Meter",
+            Take: "Tomar",
+            Vault: "Bóveda"
+          },
           Notes: {
             Error: "Error! Máximo 120 caracteres por notas.",
             Help: "Agregar notas a este artículo"
@@ -1485,6 +1528,11 @@
             Strength: "Fuerza",
             TierProgress: "{progress} por {tier}"
           },
+          StoreBucket: {
+            FillStack: "Llena la pila ({amount})",
+            HowMuch: "Cuántos {itemname} quieres mover?",
+            Move: "Mover"
+          },
           Tags: {
             TagItem: "Elemento de Etiqueta",
             Favorite: "Favorito",
@@ -1515,17 +1563,18 @@
         .translations('ja', {
           Level: "レベル",
           Bucket: {
-            Armor: "体力",
+            Armor: "生命力",
             General: "全般",
             Postmaster: "ポストマスター",
             Progress: "進行状況",
+            Reputation: "ランク",
             Show: "表示 {bucket}",
             Unknown: "不明",
             Vault: "保管庫",
             Weapons: "武器"
           },
           BungieService: {
-            DevVersion: "あなたはDIMの開発版を実行していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
+            DevVersion: "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
             Down: "Bungie.net に接続不可。",
             Difficulties: "Bungie APIは今困難を経験します。",
             NetworkError: "ネットワークエラー。{status} {statusText}",
@@ -1544,7 +1593,7 @@
             }
           },
           DidYouKnow: {
-            DidYouKnow: "知ってますか？",
+            DidYouKnow: "知っていますか？",
             DontShowAgain: "このヒントをもう一度表示しない",
             TryNext: "今度お試しください。"
           },
@@ -1565,7 +1614,6 @@
             PercentComplete: "({ percent | percent } 完了)"
           },
           Loadouts: {
-            Any: "Any",
             Loadouts: "ロードアウト",
             Create: "ロードアウトを作成",
             FromEquipped: "装備している",
@@ -1582,6 +1630,9 @@
             SaveAsNew: "新規で保存",
             Cancel: "キャンセル"
           },
+          MovePopup: {
+            Vault: "保管庫"
+          },
           Notes: {
             Help: "このアイテムにメモを追加"
           },
@@ -1597,7 +1648,9 @@
           Tags: {
             TagItem: "アイテムをタグする",
             Favorite: "お気に入り",
-            Infuse: "融合する"
+            Junk: "不要",
+            Infuse: "融合する",
+            Keep: "保管"
           },
           Vendors: {
             Vendors: "ベンダー",
@@ -1643,6 +1696,7 @@
           Compare: {
             All: "Comparações de {type} ({quantity})",
             Archetype: "Comparações de arquétipo ({quantity})",
+            ButtonHelp: "Comparar itens",
             Compare: "Comparar",
             Close: "Fechar",
             Error: {
@@ -1700,6 +1754,7 @@
             Drag: "Segure SHIFT ou mantenha o cursor sobre o inventário para mover parcialmente.",
             ChangingPerks: "Mudança de perks não é suportado.",
             ChangingPerksInfo: "Desculpe, não há maneira de alterar perks fora do jogo. Bem que gostaríamos!",
+            HidePopup: "Esconder este Popup",
             NeverShow: "Não mostre isso novamente.",
             UpgradeChrome: "Por favor, atualizar o Chrome.",
             Version: {
@@ -1720,6 +1775,7 @@
             BringGear: "Elevará o item para",
             Calc: "Calculadora de infusões",
             InfuseItems: "Selecione um item para infundir:",
+            InfusionMaterials: "Materiais de infusão",
             LockedItems: "Incluir itens travados",
             NoItems: "Nenhum item para infusão encontrado.",
             NoTransfer: "Transferência de materia para infusão\n {target} não pôde ser movido.",
@@ -1748,6 +1804,7 @@
           },
           LB: {
             LB: "Construtor de Sets",
+            Guardians: "Guardiões",
             ShowGear: "Exibir itens de {class}",
             HideGear: "Ocultar itens de {class}",
             LockEquipped: "Travar itens equipados",
@@ -1847,6 +1904,15 @@
             NewRank: "Novo rank",
             NewRep: "Nova reputação"
           },
+          MovePopup: {
+            Consolidate: "Consolidar",
+            DistributeEvenly: "Distribuir igualmente",
+            Equip: "Equip",
+            Split: "Dividir",
+            Store: "Mover",
+            Take: "Tomar",
+            Vault: "Cofre"
+          },
           Notes: {
             Error: "Erro! Anotações devem ter até 120 caracteres.",
             Help: "Adicione anotações à este item"
@@ -1901,6 +1967,11 @@
             Quality: "Níveis de qualidade",
             Strength: "Força",
             TierProgress: "{progress} para {tier}"
+          },
+          StoreBucket: {
+            FillStack: "Encher Pilha ({amount})",
+            HowMuch: "Quantos {itemname} para transferir?",
+            Move: "Transferir"
           },
           Tags: {
             TagItem: "Marcar item",
