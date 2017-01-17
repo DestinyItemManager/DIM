@@ -33,7 +33,7 @@ const _ = require('underscore');
 
     // TODO: Refactor to remove the need for wrapping this in a resolved promise
     const dimMissingSources = Promise.resolve(require('app/scripts/missing_sources.json'));
-    const dimClassifiedData = require('../classified.json');
+    const dimClassifiedData = require('app/data/classified.json');
 
     const yearHashes = {
       //         tTK       Variks        CoE         FoTL    Kings Fall
