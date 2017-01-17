@@ -7,7 +7,8 @@
         ]
       },
       "modules": false,
-      "loose": true
+      "loose": true,
+      exclude: ["constant-folding"]
     }]
   ],
   "plugins": ["angularjs-annotate"]
