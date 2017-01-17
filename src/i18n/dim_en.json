@@ -1,0 +1,339 @@
+{
+   "Level": "Level",
+   "Bucket": {
+      "Armor": "Armor",
+      "General": "General",
+      "Postmaster": "Postmaster",
+      "Progress": "Progress",
+      "Reputation": "Reputation",
+      "Show": "Show {bucket}",
+      "Unknown": "Unknown",
+      "Vault": "Vault",
+      "Weapons": "Weapons"
+   },
+   "BungieService": {
+      "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
+      "Down": "Bungie.net is down.",
+      "Difficulties": "The Bungie API is currently experiencing difficulties.",
+      "NetworkError": "Network error - {status} {statusText}",
+      "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
+      "NotLoggedIn": "Please log into Bungie.net in order to use this extension.",
+      "Maintenance": "Bungie.net servers are down for maintenance.",
+      "NoAccount": "No Destiny account was found for this platform. Do you have the right platform selected?",
+      "NoAccountForPlatform": "Failed to find a Destiny account for you on {platform}.",
+      "NoCookies": "No cookies found.",
+      "NotConnected": "You may not be connected to the internet.",
+      "Twitter": "Get status updates on",
+      "ItemUniqueness": "Item Uniqueness",
+      "ItemUniquenessExplanation": "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one."
+   },
+   "Compare": {
+      "ButtonHelp": "Compare Items",
+      "All": "{type} comparisons ({quantity})",
+      "Archetype": "Archetype comparisons ({quantity})",
+      "Compare": "Compare",
+      "Close": "Close",
+      "Error": {
+         "Class": "Cannot compare this item as it is not for a {class}.",
+         "Archetype": "Cannot compare this item as it is not a {type}."
+      },
+      "Splits": "Compare similar splits ({quantity})"
+   },
+   "Cooldown": {
+      "Grenade": "Grenade cooldown",
+      "Melee": "Melee cooldown",
+      "Super": "Super cooldown"
+   },
+   "Debug": {
+      "Dump": "Dump info to console",
+      "View": "View Item Debug Info"
+   },
+   "DidYouKnow": {
+      "DidYouKnow": "Did you know?",
+      "Collapse": "You just collapsed a section in DIM! This might be useful to hide parts of DIM that you don't need to normally use.",
+      "DontShowAgain": "Don't show this tip again",
+      "DoubleClick": "If you're moving an item to your currently active (last logged in) character, you can instead double click that item to instantly equip it.",
+      "DragAndDrop": "Items can be dragged and dropped between different characters/vault columns.",
+      "Expand": "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
+      "TryNext": "Try it out next time!"
+   },
+   "FarmingMode": {
+      "FarmingMode": "Farming Mode (move items)",
+      "Desc": "DIM is moving Engram and Glimmer items from {store} to the vault and leaving one space open per item type to prevent anything from going to the Postmaster.",
+      "Configuration": "Configuration",
+      "MakeRoom": {
+         "Desc": "DIM is moving only Engram and Glimmer items from {store} to the vault or other characters to prevent anything from going to the Postmaster.",
+         "MakeRoom": "Make room to pick up items by moving equipment",
+         "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
+      },
+      "OutOfRoom": "You're out of space to move items off of {character}. Time to decrypt some engrams and clear out the trash!",
+      "Quickmove": "Quick Move",
+      "Stop": "Stop"
+   },
+   "Filter": {
+      "EnterName": "Enter an item name:",
+      "EnterNote": "Enter notes text:"
+   },
+   "Header": {
+      "About": "About",
+      "Filters": "Filters",
+      "FilterHelp": "Search item/perk or is:arc",
+      "MaterialsExchange": "Available faction ranks",
+      "Refresh": "Refresh Destiny Data",
+      "SupportDIM": "Support DIM"
+   },
+   "Help": {
+      "BackToDIM": "Back to DIM",
+      "CannotMove": "Cannot move that item off this character.",
+      "Drag": "Hold shift or pause over drop zone to transfer a partial stack.",
+      "ChangingPerks": "Changing Perks Not Supported",
+      "ChangingPerksInfo": "Sorry, there's no way to change perks outside the game. We wish we could!",
+      "HidePopup": "Hide This Popup",
+      "NeverShow": "Never show me this again.",
+      "UpgradeChrome": "Please Upgrade Chrome",
+      "Version": {
+         "Beta": "Beta has been updated to v$DIM_VERSION",
+         "Stable": "DIM v$DIM_VERSION Released"
+      },
+      "Xur": "Xûr is Here"
+   },
+   "Hotkey": {
+      "StartSearch": "Start a search",
+      "RefreshInventory": "Refresh inventory",
+      "ToggleDetails": "Toggle showing full item details",
+      "MarkItemAs": "Mark item as '{tag}'",
+      "ClearNewItems": "Clear new items"
+   },
+   "Infusion": {
+      "Infusion": "Infusion Fuel Finder",
+      "BringGear": "Will bring the gear to",
+      "Calc": "Infusion calculator",
+      "InfuseItems": "Select item to infuse with:",
+      "InfusionMaterials": "Infusion Materials",
+      "LockedItems": "Include 'locked' items",
+      "NoItems": "No infusable items available.",
+      "NoTransfer": "Transfer infusion material\n {target} cannot be moved.",
+      "ShowItems": "Show infusable items across all characters and vault",
+      "TransferItems": "Transfer items",
+      "Using3": "using 3"
+   },
+   "ItemMove": {
+      "Consolidate": "Consolidated {name}",
+      "Distributed": "Distributed {name}\n {name} is now equally divided between characters.",
+      "ToVault": "All {name} are now in your vault.",
+      "ToStore": "All {name} are now on your {store}."
+   },
+   "ItemService": {
+      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
+      "Classified": "This item is classified and cannot be transferred at this time.",
+      "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
+      "Deequip": "Cannot find another item to equip in order to dequip {itemname}",
+      "ExoticError": "'{itemname}' cannot be equipped because the exotic in the {slot} slot cannot be unequipped. ({error})",
+      "NotEnoughRoom": "There's nothing we can move out of {store} to make room for {itemname}",
+      "OnlyEquippedLevel": "This can only be equipped on characters at or above level {level}.",
+      "OnlyEquippedClassLevel": "This can only be equipped on a {class} at or above level {level}.",
+      "PercentComplete": "({ percent | percent } Complete)",
+      "TooMuch": "Looks like you requested to move more of this item than exists in the source!",
+      "TwoExotics": "We don't know how you got more than 2 equipped exotics!"
+   },
+   "LB": {
+      "LB": "Loadout Builder",
+      "Guardians": "Guardians",
+      "ShowGear": "Show {class} gear",
+      "HideGear": "Hide {class} gear",
+      "LockEquipped": "Lock Equipped",
+      "ClearLocked": "Clear Locked",
+      "Locked": "Locked Items",
+      "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
+      "FilterSets": "Filter sets",
+      "AdvancedOptions": "Advanced Options",
+      "ProcessingMode": {
+         "Fast": "Fast",
+         "Full": "Full",
+         "ProcessingMode": "Processing mode",
+         "HelpFast": "Only looks at your best gear.",
+         "HelpFull": "Looks at more gear, but takes longer."
+      },
+      "Scaled": "Scaled",
+      "Current": "Current",
+      "LightMode": {
+         "LightMode": "Light mode",
+         "HelpScaled": "Calculates loadouts as if all items were 350 defense.",
+         "HelpCurrent": "Calculates loadouts at current defense levels."
+      },
+      "IncludeRare": "Include rare (blue) items",
+      "Help": "Need help?",
+      "Equip": "Equip on Current Character",
+      "ShowAllConfigs": "Show all configurations",
+      "ShowConfigs": "Show configurations",
+      "HideAllConfigs": "Hide all configurations",
+      "HideConfigs": "Hide configurations",
+      "Loading": "Loading best sets",
+      "Vendor": "Include Vendor items",
+      "Exclude": "Excluded Items",
+      "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
+      "LockPerk": "Lock perk",
+      "Missing1": "Missing legendary or exotic pieces to build a full set!",
+      "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!"
+   },
+   "Loadouts": {
+      "Any": "Any",
+      "Loadouts": "Loadouts",
+      "Before": "Before '{name}'",
+      "Create": "Create Loadout",
+      "FromEquipped": "Equipped",
+      "Edit": "Edit Loadout",
+      "Delete": "Delete Loadout",
+      "ConfirmDelete": "Are you sure you want to delete '{name}'?",
+      "ApplySearch": "Items = \"{query}\"",
+      "MaximizeLight": "Maximize Light",
+      "ItemLeveling": "Item Leveling",
+      "GatherEngrams": "Gather Engrams",
+      "GatherEngramsExceptExotics": "Exotics",
+      "RestoreAllItems": "All Items",
+      "Random": "Random",
+      "Randomize": "Randomize your equipped weapons, armor, ghost, and artifact?",
+      "VendorsCannotEquip": "These vendor items cannot be equipped:",
+      "VendorsCanEquip": "These items can be equipped:",
+      "MaxSlots": "You can only have {slots} of that kind of item in a loadout.",
+      "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
+      "FilteredItems": "Filtered Items",
+      "NoEngrams": "No non-exotic engrams are available to transfer.",
+      "NoExotics": "No engrams are available to transfer.",
+      "LoadoutName": "Loadout Name...",
+      "Save": "Save",
+      "SaveAsNew": "Save As New",
+      "Cancel": "Cancel",
+      "ItemsWithIcon": "Items with this icon will be equipped. Click on an item to toggle equip.",
+      "CouldNotEquip": "Could not equip {itemname}",
+      "TooManyRequested": "You have {total} {itemname} but your loadout asks for {requested} We transfered all you had.",
+      "DoesNotExist": "{itemname} doesn't exist in your account.",
+      "AppliedAuto": "Automatic Loadout Builder",
+      "Applied": "Your {amount, plural, =1{single item loadout has} other{loadout of # items have}} been transferred to your {store}.",
+      "AppliedError": "None of the items in your loadout could be transferred.",
+      "AppliedWarn": "Your loadout has been partially transferred, but {failed} of {total} items had errors.",
+      "NameRequired": "A name is required.",
+      "MakeRoom": "Make Room for Postmaster",
+      "MakeRoomDone": "Finished making room for {postmasterNum, plural, =1{1 Postmaster item} other{# Postmaster items}} by moving {movedNum, plural, =1{1 item} other{# items}} off of {store}.",
+      "MakeRoomError": "Unable to make room for all Postmaster items: {error}."
+   },
+   "Manifest": {
+      "Build": "Building Destiny info database",
+      "Download": "Downloading latest Destiny info from Bungie",
+      "Error": "Error loading Destiny info:\n{error}\nReload to retry.",
+      "Outdated": "Outdated Destiny Info",
+      "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
+      "BungieDown": "Bungie.net may be having trouble.",
+      "Load": "Loading saved Destiny info",
+      "LoadCharInv": "Loading Destiny characters and inventory",
+      "Save": "Saving latest Destiny info",
+      "Unzip": "Unzipping latest Destiny info"
+   },
+   "MaterialsExchange": {
+      "MaterialsExchange": "Materials Exchange",
+      "CurrentRank": "Current Rank",
+      "CurrentRep": "Current Rep",
+      "OnHand": "Materials on hand",
+      "FromTrade": "Materials from trade",
+      "NewRank": "New Rank",
+      "NewRep": "New Rep"
+   },
+   "MovePopup": {
+      "Consolidate": "Consolidate",
+      "DistributeEvenly": "Distribute Evenly",
+      "Equip": "Equip",
+      "Split": "Split",
+      "Store": "Store",
+      "Take": "Take",
+      "Vault": "Vault"
+   },
+   "Notes": {
+      "Error": "Error! Max 120 characters for notes.",
+      "Help": "Add notes to this item"
+   },
+   "Postmaster": {
+      "Limit": "Postmaster Limit",
+      "Desc": "There are 20 lost items at the Postmaster on your {store}. Any new items will overwrite the existing."
+   },
+   "Settings": {
+      "Settings": "Settings",
+      "Language": "Language (reload DIM to take effect)",
+      "HideUnfiltered": "Hide Unfiltered Items while Filtering",
+      "HideUnfilteredHelp": "Items that do not match filter criteria will be hidden.",
+      "AlwaysShowDetails": "Always Show Item Details",
+      "AlwaysShowDetailsHelp": "Clicking on an item will show a popup that can be expanded to show perk and stat details.  This option will always show that detail when you click on an item.",
+      "EnableAdvancedStats": "Enable advanced stat quality comparison features",
+      "EnableAdvancedStatsHelp": "Will enable advanced min/max features on the move dialog and enable the armor comparison view.",
+      "ShowOverlay": "Show new items with an overlay",
+      "ShowOverlayHelp": "Will show new items with an overlay.",
+      "ShowAnimations": "Show new item overlay animations on new items.",
+      "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
+      "ShowElemental": "Show elemental damage icons on weapons",
+      "ShowElementalHelp": "Show elemental damage icons on weapons.",
+      "SetSort": "Sort Items by:",
+      "SetSortHelp": "Sort items by rarity or their primary stat value.",
+      "SortPrimary": "Primary stat",
+      "SortRarity": "Rarity",
+      "SortRoll": "Stat roll percent",
+      "InventoryColumns": "Character Inventory Columns",
+      "InventoryColumnsHelp": "Select the number of columns for character inventory.",
+      "VaultColumns": "Vault Maximum Inventory Columns",
+      "VaultColumnsHelp": "Select the maximum number of columns for vault.",
+      "SizeItem": "Item Size",
+      "SizeItemHelp": "How big should items be?",
+      "ResetToDefault": "Reset to Default",
+      "CharacterOrder": "Character Order",
+      "CharacterOrderHelp": "Characters can be ordered by last login or based on their creation date.",
+      "CharacterOrderRecent": "By Most Recent Character",
+      "CharacterOrderReversed": "By Most Recent Character (Reversed)",
+      "CharacterOrderFixed": "Fixed (By Character Age)",
+      "ExportSS": "Download Spreadsheets",
+      "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
+      "DIMPopups": "DIM Info Popups",
+      "DIMPopupsReset": "Reset previously hidden info tips",
+      "ImportExport": "Import/Export settings and data",
+      "Export": "Export DIM Data",
+      "Import": "Import DIM Data"
+   },
+   "Stats": {
+      "Discipline": "Discipline",
+      "Intellect": "Intellect",
+      "NoBonus": "No Bonus",
+      "OfMaxRoll": "{range} of max roll",
+      "PercentHelp": "Click for more information about what Stats Quality is.",
+      "Quality": "Stats quality",
+      "Strength": "Strength",
+      "TierProgress": "{progress} for {tier}"
+   },
+   "StoreBucket": {
+      "FillStack": "Fill Stack ({amount})",
+      "HowMuch": "How much {itemname} to move?",
+      "Move": "Move"
+   },
+   "Tags": {
+      "TagItem": "Tag Item",
+      "Favorite": "Favorite",
+      "Junk": "Junk",
+      "Infuse": "Infuse",
+      "Keep": "Keep"
+   },
+   "Vendors": {
+      "Vendors": "Vendors",
+      "All": "All",
+      "Available": "Available on",
+      "Compare": "Compare with what you already have",
+      "Day": "{numDays, plural, =1{Day} other{Days}}",
+      "Load": "Loading Vendors",
+      "ArmorAndWeapons": "Armor & Weapons",
+      "ShipsAndVehicles": "Ships & Vehicles",
+      "Consumables": "Consumables",
+      "Bounties": "Bounties",
+      "ShadersAndEmblems": "Shaders & Emblems",
+      "Emotes": "Emotes"
+   },
+   "TrialsCard": {
+      "FiveWins": "5 Win Reward (Armor)",
+      "SevenWins": "7 Win Reward (Weapon)",
+      "Flawless": "Flawless"
+   }
+}

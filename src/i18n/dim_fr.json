@@ -1,0 +1,214 @@
+{
+   "Level": "Niveau",
+   "Bucket": {
+      "Armor": "Armure",
+      "General": "Général",
+      "Postmaster": "Commis des postes",
+      "Progress": "Progrès",
+      "Reputation": "Estime",
+      "Show": "Afficher {bucket}",
+      "Unknown": "Inconnu",
+      "Vault": "Coffres",
+      "Weapons": "Armes"
+   },
+   "BungieService": {
+      "Down": "Bungie.net est hors service.",
+      "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
+      "NetworkError": "Erreur de réseau - {status} {statusText}",
+      "Throttled": "La limite de connections à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
+      "NotLoggedIn": "Veuillez vous connecter sur Bungie.net pour utiliser cette extension.",
+      "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
+      "NoAccount": "Aucun compte Destiny n'a été trouvé pour cette platforme. Avez-vous sélectionné la bonne platforme?",
+      "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {platform}.",
+      "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
+      "Twitter": "Tenez-vous informer sur",
+      "ItemUniqueness": "Unicité d'un objet",
+      "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{name}' {type} sur votre {character} mais cette destination a déjà cet objet et n'en autorise qu'un."
+   },
+   "Cooldown": {
+      "Grenade": "Régénération de Grenade",
+      "Melee": "Régénération de Mêlée",
+      "Super": "Régénération du Super"
+   },
+   "Debug": {
+      "Dump": "Envoyer les infos sur la console",
+      "View": "Afficher les infos de débug de l'objet."
+   },
+   "FarmingMode": {
+      "FarmingMode": "Mode Farming (transfert d'objets)",
+      "Desc": "DIM est entrain de transférer des engrammes et objets pour Glimmer du {store} aux coffres et laisse un espace disponible pour chaque type d'objet afin d'éviter que rien ne soit envoyé au commis des postes.",
+      "Configuration": "Configuration",
+      "MakeRoom": {
+         "Desc": "DIM est entrain de transférer uniquement les engrammes et objets pour Glimmer du {store} aux coffres ou autres persos afin d'éviter que rien ne soit envoyé au commis des postes.",
+         "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
+         "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
+      },
+      "Quickmove": "Déplacement rapide",
+      "Stop": "Stop"
+   },
+   "Header": {
+      "About": "À propos",
+      "Filters": "Filtres",
+      "FilterHelp": "Rechercher objet/amélioration ou is:arc",
+      "MaterialsExchange": "Rangs de faction disponibles",
+      "Refresh": "Rafraîchir les données Destiny",
+      "SupportDIM": "Soutien DIM"
+   },
+   "Help": {
+      "BackToDIM": "Retour sur DIM",
+      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
+   },
+   "ItemService": {
+      "PercentComplete": "({ percent | percent } Achevée)"
+   },
+   "LB": {
+      "LB": "Constructeur de Loadout",
+      "ShowGear": "Afficher équipement de {class}",
+      "HideGear": "Cacher équipement de {class}",
+      "LockEquipped": "Verrouiller équipé",
+      "ClearLocked": "Enlever verrouillés",
+      "Locked": "Objets verrouillés",
+      "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets",
+      "FilterSets": "Filtrer les sets",
+      "AdvancedOptions": "Options avancées",
+      "ProcessingMode": {
+         "Fast": "Rapide",
+         "Full": "Complet",
+         "ProcessingMode": "Mode de processing",
+         "HelpFast": "Ne se concentre que sur votre meilleur équipement.",
+         "HelpFull": "Se concentre sur plus d'équipements, mais prend plus de temps."
+      },
+      "Scaled": "Échelonné",
+      "Current": "Actuel",
+      "LightMode": {
+         "LightMode": "Mode lumière",
+         "HelpScaled": "Calcule les loadouts comme si tous les objets avaient 350 de défense.",
+         "HelpCurrent": "Calcule les loadouts à leur niveau de défense actuel."
+      },
+      "IncludeRare": "Inclure les objets rares (bleus)",
+      "Help": "Besoin d'aide?",
+      "Equip": "Équiper sur le perso actuel",
+      "ShowAllConfigs": "Afficher toutes les configurations",
+      "ShowConfigs": "Afficher les configurations",
+      "HideAllConfigs": "Cacher toutes les configurations",
+      "HideConfigs": "Cacher les configurations",
+      "Loading": "Chargement des meilleurs sets",
+      "Vendor": "Inclure objets de marchands",
+      "Exclude": "Objets exclus",
+      "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
+      "LockPerk": "Verrouiller amélioration",
+      "Missing1": "Pièces légendaires ou éxotiques manquantes pour construire un set complet!",
+      "Missing2": "Pièces rares, légendaires ou éxotiques manquantes pour construire un set complet!"
+   },
+   "Loadouts": {
+      "Any": "Tout",
+      "Loadouts": "Loadouts",
+      "Before": "Avant '{name}'",
+      "Create": "Créer Loadout",
+      "FromEquipped": "Equipé",
+      "Edit": "Modifier Loadout",
+      "Delete": "Effacer Loadout",
+      "ConfirmDelete": "Êtes-vous sûr de vouloir supprimer '{name}'?",
+      "ApplySearch": "Objets = \"{query}\"",
+      "MaximizeLight": "Maximiser la Lumière",
+      "ItemLeveling": "Evolution d'objet",
+      "GatherEngrams": "Réunir les Engrammes",
+      "GatherEngramsExceptExotics": "Exotiques",
+      "RestoreAllItems": "Tous les objets",
+      "Random": "Aléatoire",
+      "LoadoutName": "Nom du loadout...",
+      "Save": "Sauvegarder",
+      "SaveAsNew": "Sauvegarder comme nouveau",
+      "Cancel": "Annuler",
+      "ItemsWithIcon": "Les objets avec cet icone seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
+      "CouldNotEquip": "Could not equip {itemname}",
+      "AppliedAuto": "Constructeur de Loadout automatique",
+      "Applied": "Votre loadout de {amount} objets a été transféré à votre {store}",
+      "AppliedError": "Aucun des objets de votre loadout n'a pu être transféré.",
+      "AppliedWarn": "Votre loadout a été partiellement transféré, mais {failed} sur {total} objets ont échoué."
+   },
+   "Manifest": {
+      "Build": "Base de données d'info de Destiny en cours de construction",
+      "Download": "Téléchargement en cours des derniers infos Destiny de Bungie",
+      "Error": "Erreur de chargement des infos Destiny:\n{error}\nRedémarrez pour rééssayer.",
+      "Outdated": "Infos Destiny expirées",
+      "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
+      "BungieDown": "Bungie.net rencontre des problèmes.",
+      "Load": "Chargement des données sauvegardées de Destiny",
+      "LoadCharInv": "Chargement des persos et des inventaires de Destiny",
+      "Save": "Sauvegarde des dernières données de Destiny",
+      "Unzip": "Désarchivage des dernières données de Destiny"
+   },
+   "Notes": {
+      "Error": "Erreur! Max 120 charactères pour les notes.",
+      "Help": "Ajouter des notes à cet objet"
+   },
+   "Settings": {
+      "Settings": "Paramètres",
+      "Language": "Langue (redémarrez DIM pour prendre effet)",
+      "HideUnfiltered": "Cacher les objets non filtrés pendant le filtrage",
+      "HideUnfilteredHelp": "Les objets qui ne correspondent pas aux critères de filtrage seront cachés.",
+      "AlwaysShowDetails": "Toujours afficher les détails de l'objet",
+      "AlwaysShowDetailsHelp": "Cliquer sur un objet affichera toujours un popup pouvant être agrandi pour afficher les stats et améliorations. Cette option les affichera toujours quand vous cliquerez sur un objet.",
+      "EnableAdvancedStats": "Activer les fonctionalités de comparaison de qualité de stat avancée",
+      "EnableAdvancedStatsHelp": "Activera les fonctionalités avancées de min/max dans le dialogue de déplacement et activera la vue de comparaison d'armure.",
+      "ShowOverlay": "Afficher les nouveaux objets avec un indicateur",
+      "ShowOverlayHelp": "Afficher les nouveaux objets avec un indicateur.",
+      "ShowAnimations": "Afficher les animations pour les nouveaux objets",
+      "ShowAnimationsHelp": "Affichera les animations pour les nouveaux objets. Désactiver cette option peut améliorer les performances du CPU.",
+      "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
+      "ShowElementalHelp": "Afficher les icônes d'élément de dégât sur les armes.",
+      "SetSort": "Ordonner les objets par:",
+      "SetSortHelp": "Ordonner les objets par rareté ou par la valeur de leur stat première.",
+      "SortPrimary": "Stat première",
+      "SortRarity": "Rareté",
+      "SortRoll": "Pourcentage de roulement de stat",
+      "InventoryColumns": "Colonnes d'Inventaire de Perso",
+      "InventoryColumnsHelp": "Sélectionner le nombre de colonnes pour l'inventaire de votre perso.",
+      "VaultColumns": "Maximum de Colonnes de l'Inventaire des Coffres",
+      "VaultColumnsHelp": "Sélectionner le nombre maximum de colonnes pour l'inventaire des Coffres.",
+      "SizeItem": "Taille d'un objet",
+      "SizeItemHelp": "Quelle taille devrait être les objets?",
+      "ResetToDefault": "Réinitialiser par défaut",
+      "CharacterOrder": "Ordre de Perso",
+      "CharacterOrderHelp": "Les persos peuvent être ordonnés par dernière connexion ou par leur date de création.",
+      "CharacterOrderRecent": "Par le Plus Récent",
+      "CharacterOrderReversed": "Par le Plus Récent (Inversé)",
+      "CharacterOrderFixed": "Fixe (Par Age du Perso)",
+      "ExportSS": "Télécharger le Tableur",
+      "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
+      "DIMPopups": "Popups d'Info de DIM",
+      "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
+   },
+   "Stats": {
+      "Discipline": "Discipline",
+      "Intellect": "Intelligence",
+      "NoBonus": "Pas de Bonus",
+      "Strength": "Force",
+      "TierProgress": "{progress} pour {tier}"
+   },
+   "Tags": {
+      "TagItem": "Tagger Objet",
+      "Favorite": "Préféré",
+      "Junk": "Camelote",
+      "Infuse": "Infuser",
+      "Keep": "Garder"
+   },
+   "Vendors": {
+      "Vendors": "Marchands",
+      "All": "Tous",
+      "Day": "{numDays, plural, =1{Journée} other{Journées}}",
+      "Load": "Chargement des Marchands",
+      "ArmorAndWeapons": "Armure & Armes",
+      "ShipsAndVehicles": "Vaisseaux & Véhicules",
+      "Consumables": "Consommables",
+      "Bounties": "Contrats",
+      "ShadersAndEmblems": "Revêtements & Emblèmes",
+      "Emotes": "Intéractions"
+   },
+   "TrialsCard": {
+      "FiveWins": "Récompense à 5 Victoires (Armure)",
+      "SevenWins": "Récompense à 7 Victoires (Arme)",
+      "Flawless": "Sans Défaite"
+   }
+}
