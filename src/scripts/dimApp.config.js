@@ -32,7 +32,9 @@
       // show changelog toaster
       changelogToaster: '$DIM_FLAVOR' === 'release' || '$DIM_FLAVOR' === 'beta',
 
-      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release'
+      materialsExchangeEnabled: '$DIM_FLAVOR' !== 'release',
+      // allow importing and exporting your DIM data to JSON
+      importExport: '$DIM_FLAVOR' !== 'release'
     })
     .factory('loadingTracker', ['promiseTracker', function(promiseTracker) {
       return promiseTracker();
