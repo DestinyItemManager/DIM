@@ -12,7 +12,8 @@ const NotifyPlugin = require('notify-webpack-plugin');
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 module.exports = (options = {}) => {
-  const iconFlavor = options.isProd ? 'prod' : 'beta';
+  // TODO: we need a way of specifying the actual prod config!
+  const iconFlavor = options.isProd ? 'beta' : 'dev';
 
   const config = {
     entry: {
