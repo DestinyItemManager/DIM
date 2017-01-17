@@ -1256,6 +1256,7 @@
           Compare: {
             All: "Comparaciones de {type} ({quantity})",
             Archetype: "Comparaciones de arquetipo ({quantity})",
+            ButtonHelp: "Compara Elementos",
             Compare: "Comparar",
             Close: "Cerrar",
             Error: {
