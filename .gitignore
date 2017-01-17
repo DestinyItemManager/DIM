@@ -1,6 +1,4 @@
-app/vendor/
 dist/
-app/styles
 .settings/
 .idea/
 .vscode/
@@ -17,9 +15,6 @@ build/*.zip
 !build/itemHashes.json
 !build/progressionMeta.json
 !build/img/misc/missing_icon.png
-
-build/extension
-build/dim-extension.zip
 
 .brackets.json
 .npmrc
