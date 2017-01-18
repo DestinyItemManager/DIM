@@ -1237,13 +1237,6 @@ rzslider, .rzslider {
   }
 }
 
-.compare-bucket .talent-grid {
-  padding: 4px 2px 0 2px;
-  box-sizing: border-box;
-  width: 150px;
-  height: auto;
-}
-
 .talent-node-xp {
   fill: rgba(255, 255, 255, 0.1);
   stroke: none;
@@ -1408,11 +1401,23 @@ dim-compare {
   overflow-x: scroll;
   display: flex;
   margin-left: 100px;
+  flex-direction: row;
+  justify-content: flex-start;
   .fixed-left {
     border-left: none;
     position: fixed;
     left: 1em;
-    min-width: 100px;
+    width: 100px;
+  }
+  .compare-stat-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .talent-grid {
+    padding: 4px 2px 0 2px;
+    box-sizing: border-box;
+    width: 150px;
+    height: auto;
   }
 }
 
@@ -1421,16 +1426,12 @@ dim-compare {
 }
 
 .compare-item {
-  align-self: flex-start;
-  flex: 1;
-  position: relative;
-  min-width: 150px;
-  max-width: 150px;
   border-left: 1px solid $lightgray;
+  width: 150px;
 
   .item {
     float: right;
-    margin: 0 4px 0 0;
+    padding: 0 4px 0 0;
     z-index: -10;
     .item-stat {
       display: none;
