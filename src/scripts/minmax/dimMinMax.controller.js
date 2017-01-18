@@ -11,7 +11,7 @@ const _ = require('underscore');
   function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
     var vm = this;
     vm.featureFlags = dimFeatureFlags;
-    vm.lang = dimSettingsService.language;
+    vm.bestHelpTemplateUrl = require('app/views/' + dimSettingsService.language + '/best-help.template.html');
 
     if (dimStoreService.getStores().length === 0) {
       $state.go('inventory');
