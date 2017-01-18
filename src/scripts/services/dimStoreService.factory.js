@@ -10,7 +10,6 @@ const _ = require('underscore');
   function StoreService(
     $rootScope,
     $q,
-    $http,
     dimBungieService,
     dimPlatformService,
     dimCategory,
@@ -31,9 +30,8 @@ const _ = require('underscore');
 
     var _removedNewItems = new Set();
 
-    // TODO: Refactor to remove the need for wrapping this in a resolved promise
-    const dimMissingSources = Promise.resolve(require('app/scripts/missing_sources.json'));
     const dimClassifiedData = require('app/data/classified.json');
+    const dimMissingSources = require('app/data/missing_sources.json');
 
     const yearHashes = {
       //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -612,7 +610,7 @@ const _ = require('underscore');
       return index;
     }
 
-    function processSingleItem(defs, buckets, missingSources, previousItems, newItems, itemInfoService, item, owner) {
+    function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
       var itemDef = defs.InventoryItem[item.itemHash];
       // Missing definition?
       if (!itemDef) {
@@ -728,7 +726,7 @@ const _ = require('underscore');
 
       itemDef.sourceHashes = itemDef.sourceHashes || [];
 
-      const missingSource = missingSources[itemDef.hash] || [];
+      const missingSource = dimMissingSources[itemDef.hash] || [];
       if (missingSource.length) {
         itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
       }
@@ -1485,7 +1483,6 @@ const _ = require('underscore');
       return $q.all([
         dimDefinitions,
         dimBucketService,
-        dimMissingSources,
         previousItems,
         newItems,
         itemInfoService])
