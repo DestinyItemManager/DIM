@@ -3,7 +3,7 @@
     "es6": true,
     "browser": true,
     "jquery": true,
-    "node": true,
+    "node": true
   },
   "extends": "eslint:recommended",
   "root": true,
@@ -15,15 +15,9 @@
     }
   },
   "globals": {
-    "angular": true,
     "_gaq": true,
     "chrome": true,
-    "sum": true,
-    "count": true,
-    "flatMap": true,
     "gapi": true,
-    "Set": true,
-    "idbKeyval": true
   },
   "rules": {
     "array-callback-return": "error",
