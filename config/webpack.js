@@ -12,7 +12,7 @@ const NotifyPlugin = require('notify-webpack-plugin');
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 module.exports = (env) => {
-  const isProd = env === 'prod';
+  const isDev = env === 'dev';
 
   const config = {
     entry: {
@@ -83,7 +83,7 @@ module.exports = (env) => {
         root: path.resolve('./'),
       }),
 
-      new NotifyPlugin('DIM', isProd),
+      new NotifyPlugin('DIM', !isDev),
 
       new ExtractTextPlugin('styles-[hash:6].css'),
 
@@ -133,7 +133,7 @@ module.exports = (env) => {
     },
   };
 
-  if (isProd) {
+  if (!isDev) {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
