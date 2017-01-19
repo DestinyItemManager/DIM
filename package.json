@@ -12,9 +12,11 @@
     "generate-css": "echo \"No need to run this any more. Just run 'npm start'!\n\"",
     "lint": "eslint app/scripts",
     "bundle": "webpack --config ./config/webpack.js --hide-modules",
-    "start": "npm run bundle -s -- --watch",
-    "build": "npm run bundle -s",
-    "publish-chrome-beta": "npm run build -s && grunt publish_chrome_beta",
+    "build-prod": "npm run bundle -s -- --env=prod",
+    "build-beta": "npm run bundle -s -- --env=beta",
+    "build-dev": "npm run bundle -s -- --env=dev --watch",
+    "start": "npm run build-dev -s",
+    "publish-chrome-beta": "npm run build-beta -s && grunt publish_chrome_beta",
     "install": "napa"
   },
   "napa": {
