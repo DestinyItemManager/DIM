@@ -290,7 +290,10 @@
       "ExportSS": "Descargar hojas de cálculo",
       "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
       "DIMPopups": "Ventanas emergentes de información de DIM",
-      "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos"
+      "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos",
+      "ImportExport": "Importa/Exporta configuraciones y data",
+      "Export": "Exporta Data DIM",
+      "Import": "Importa Data DIM"
    },
    "Stats": {
       "Discipline": "Disciplina",
