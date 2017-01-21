@@ -1,6 +1,6 @@
 function config($compileProvider, $httpProvider, $translateProvider, hotkeysProvider,
   localStorageServiceProvider, ngHttpRateLimiterConfigProvider) {
-  "ngInject";
+  'ngInject';
 
   // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
   $compileProvider.preAssignBindingsEnabled(true);
