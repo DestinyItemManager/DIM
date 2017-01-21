@@ -39,7 +39,10 @@ module.exports = (options = {}) => {
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
+          use: [
+            'ng-annotate-loader',
+            'babel-loader'
+          ],
         }, {
           test: /\.json$/,
           loader: 'json-loader'
