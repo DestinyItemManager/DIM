@@ -16,15 +16,13 @@ engines:
       rest-spread-spacing:
         enabled: false
     config:
-      config: ./.codeclimate.eslintrc
+      config: ./.eslintrc
     enabled: true
   fixme:
     enabled: true
 exclude_paths:
-  - "**/vendor"
+  - "**/dist"
   - "**/jquery-ui.position.js"
-  - "**/build"
-  - "app/scripts/dimApp.i18n.js"
 ratings:
   paths:
     - "**.js"
