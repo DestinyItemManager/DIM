@@ -26,8 +26,6 @@ require('./scripts/oauth/oauth-token.service');
 
 // Initialize the main DIM app
 require('./scripts/dimApp.module');
-require('./scripts/dimApp.config');
-require('./scripts/dimApp.i18n');
 
 require('./scripts/services/dimActionQueue.factory');
 require('./scripts/services/dimBungieService.factory');

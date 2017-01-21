@@ -1,11 +1,14 @@
-import * as angular from 'angular';
+import angular from 'angular';
 
-import { compiler } from './dimApp.complier.config';
-import { hotkeys } from './dimApp.hotkeys.config';
-import { http } from './dimApp.http.config';
-import { localstorage } from './dimApp.local-storage.config';
-import { ratelimiter } from './dimApp.rate-limiter.config';
-import { routes } from './dimApp.routes.config';
+import config from './dimApp.config';
+import routes from './dimApp.routes';
+
+import run from './dimApp.run';
+
+import featureFlags from './feature-flags';
+import state from './state';
+
+import loadingTracker from './services/dimLoadingTracker.factory';
 
 // Declare all of the external angular dependencies first
 require('angular-aria');
@@ -43,9 +46,9 @@ angular.module('dimApp', [
   'dim-oauth',
   'LocalStorageModule'
 ])
-  .config(compiler)
-  .config(hotkeys)
-  .config(http)
-  .config(localstorage)
-  .config(ratelimiter)
-  .config(routes);
+  .config(config)
+  .config(routes)
+  .run(run)
+  .value('dimFeatureFlags', featureFlags)
+  .value('dimState', state)
+  .factory('loadingTracker', loadingTracker);

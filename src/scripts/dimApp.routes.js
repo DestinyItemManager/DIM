@@ -1,4 +1,4 @@
-export function routes($stateProvider, $urlRouterProvider) {
+export default function routes($stateProvider, $urlRouterProvider) {
   "ngInject";
 
   $urlRouterProvider.otherwise("/inventory");
