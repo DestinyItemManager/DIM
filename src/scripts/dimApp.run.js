@@ -4,7 +4,7 @@ import {
 
 function run($window, $rootScope, $translate, loadingTracker, $timeout,
   toaster, SyncService, dimInfoService, dimFeatureFlags, dimSettingsService) {
-  "ngInject";
+  'ngInject';
 
   $rootScope.loadingTracker = loadingTracker;
 

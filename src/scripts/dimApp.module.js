@@ -29,23 +29,24 @@ require('ng-dialog');
 require('ng-http-rate-limiter');
 require('angular-local-storage');
 
-angular.module('dimApp', [
-  'ui.router',
-  'timer',
-  'ngAria',
-  'ngDialog',
-  'ngMessages',
-  'ang-drag-drop',
-  'angularUUID2',
-  'toaster',
-  'ajoslin.promise-tracker',
-  'cfp.hotkeys',
-  'rzModule',
-  'ngHttpRateLimiter',
-  'pascalprecht.translate',
-  'dim-oauth',
-  'LocalStorageModule'
-])
+angular
+  .module('dimApp', [
+    'ui.router',
+    'timer',
+    'ngAria',
+    'ngDialog',
+    'ngMessages',
+    'ang-drag-drop',
+    'angularUUID2',
+    'toaster',
+    'ajoslin.promise-tracker',
+    'cfp.hotkeys',
+    'rzModule',
+    'ngHttpRateLimiter',
+    'pascalprecht.translate',
+    'dim-oauth',
+    'LocalStorageModule'
+  ])
   .config(config)
   .config(routes)
   .run(run)

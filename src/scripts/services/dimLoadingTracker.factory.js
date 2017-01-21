@@ -1,5 +1,5 @@
 function loadingTracker(promiseTracker) {
-  "ngInject";
+  'ngInject';
 
   return promiseTracker();
 }
