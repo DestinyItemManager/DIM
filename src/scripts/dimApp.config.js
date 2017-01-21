@@ -7,11 +7,8 @@ function config($compileProvider, $httpProvider, $translateProvider, hotkeysProv
   // Allow chrome-extension: URLs in ng-src
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*((https?|chrome-extension):|data:image\/)/);
 
-  $httpProvider.interceptors.push("ngHttpRateLimiterInterceptor");
-
-  if (!window.chrome || !window.chrome.extension) {
-    $httpProvider.interceptors.push('http-refresh-token');
-  }
+  $httpProvider.interceptors.push('ngHttpRateLimiterInterceptor');
+  $httpProvider.interceptors.push('http-refresh-token');
 
   // See https://angular-translate.github.io/docs/#/guide
   $translateProvider.useSanitizeValueStrategy('escape');

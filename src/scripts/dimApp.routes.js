@@ -1,7 +1,7 @@
 export default function routes($stateProvider, $urlRouterProvider) {
   'ngInject';
 
-  $urlRouterProvider.otherwise("/inventory");
+  $urlRouterProvider.otherwise('/inventory');
 
   $stateProvider
     .state('inventory', {
