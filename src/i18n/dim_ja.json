@@ -49,7 +49,7 @@
       "SupportDIM": "DIMを支援する"
    },
    "ItemService": {
-      "PercentComplete": "({ percent | percent } 完了)"
+      "PercentComplete": "({ percent, number, percent } 完了)"
    },
    "Loadouts": {
       "Loadouts": "ロードアウト",

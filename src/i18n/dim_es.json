@@ -132,7 +132,7 @@
       "NotEnoughRoom": "No hay nada que podamos sacar fuera de {store} para hacerle espacio a {itemname}",
       "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {level}",
       "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {class} de nivel igual o superior a {level}.",
-      "PercentComplete": "({ percent | percent } Completar)",
+      "PercentComplete": "({ percent, number, percent } Completar)",
       "TooMuch": "Parece que pediste mover más objetos de los que existen en la fuente!",
       "TwoExotics": "No sabemos cómo conseguiste equipar más de 2 exóticas!"
    },
