@@ -31,7 +31,7 @@
       "All": "{type} comparisons ({quantity})",
       "Archetype": "Archetype comparisons ({quantity})",
       "Compare": "Comparer",
-      "Close": "Fermer",
+      "Close": "Fermer"
    },
    "Cooldown": {
       "Grenade": "Régénération de Grenade",
@@ -73,7 +73,7 @@
    "Help": {
       "BackToDIM": "Retour sur DIM",
       "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
-      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
+      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
    },
    "ItemService": {
       "PercentComplete": "({ percent, number, percent } Achevée)"
