@@ -1,35 +1,61 @@
-export default function routes($stateProvider, $urlRouterProvider) {
+import inventory from 'app/views/inventory.template.html';
+import best from 'app/views/best.template.html';
+import vendors from 'app/views/vendors.template.html';
+import materialExchange from 'app/views/mats-exchange.template.html';
+import debugItem from 'app/views/debugItem.template.html';
+import developer from 'app/scripts/developer/developer.template.html';
+import login from 'app/scripts/login/login.template.html';
+
+function routes(routerHelper) {
   'ngInject';
 
-  $urlRouterProvider.otherwise('/inventory');
-
-  $stateProvider
-    .state('inventory', {
-      url: '/inventory',
-      templateUrl: require('app/views/inventory.template.html'),
-    })
-    .state('best', {
-      url: '/best',
-      templateUrl: require('app/views/best.template.html'),
-    })
-    .state('vendors', {
-      url: '/vendors',
-      templateUrl: require('app/views/vendors.template.html'),
-    })
-    .state('materials-exchange', {
-      url: '/materials-exchange',
-      templateUrl: require('app/views/mats-exchange.template.html'),
-    })
-    .state('debugItem', {
-      url: '/debugItem/:itemId',
-      templateUrl: require('app/views/debugItem.template.html'),
-    })
-    .state('developer', {
-      url: '/developer',
-      templateUrl: require('app/scripts/developer/developer.template.html'),
-    })
-    .state('login', {
-      url: '/login',
-      templateUrl: require('app/scripts/login/login.template.html'),
-    });
+  routerHelper.configureStates(getStates(), '/inventory');
 }
+
+function getStates() {
+  return [{
+    state: 'inventory',
+    config: {
+      templateUrl: inventory,
+      url: '/inventory'
+    }
+  }, {
+    state: 'best',
+    config: {
+      templateUrl: best,
+      url: '/best'
+    }
+  }, {
+    state: 'vendors',
+    config: {
+      templateUrl: vendors,
+      url: '/vendors'
+    }
+  }, {
+    state: 'materials-exchange',
+    config: {
+      url: '/materials-exchange',
+      templateUrl: materialExchange,
+    }
+  }, {
+    state: 'debugItem',
+    config: {
+      url: '/debugItem/:itemId',
+      templateUrl: debugItem,
+    }
+  }, {
+    state: 'developer',
+    config: {
+      url: '/developer',
+      templateUrl: developer,
+    }
+  }, {
+    state: 'login',
+    config: {
+      url: '/login',
+      templateUrl: login,
+    }
+  }];
+}
+
+export default routes;

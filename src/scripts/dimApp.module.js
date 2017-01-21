@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+import router from './blocks/router/router.module';
+
 import config from './dimApp.config';
 import routes from './dimApp.routes';
 
@@ -45,10 +47,11 @@ angular
     'ngHttpRateLimiter',
     'pascalprecht.translate',
     'dim-oauth',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    router
   ])
   .config(config)
-  .config(routes)
+  .run(routes)
   .run(run)
   .value('dimFeatureFlags', featureFlags)
   .value('dimState', state)
