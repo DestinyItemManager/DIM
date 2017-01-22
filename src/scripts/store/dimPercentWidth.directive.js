@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 function percent(val) {
   return Math.min(100.0, Math.floor(100.0 * val)) + '%';

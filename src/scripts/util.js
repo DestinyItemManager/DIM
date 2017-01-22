@@ -1,4 +1,4 @@
-const _ = require('underscore');
+import _ from 'underscore';
 
 // Some utility functions missing from underscore
 function sum(list, summer) {
