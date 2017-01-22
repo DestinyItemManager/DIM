@@ -33,4 +33,4 @@ function flatMap(list, fx) {
   return res;
 }
 
-module.exports = { sum, count, flatMap };
+export { sum, count, flatMap };
