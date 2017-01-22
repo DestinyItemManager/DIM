@@ -31,6 +31,7 @@ module.exports = (options = {}) => {
       publicPath: '/',
       https: true,
       host: '0.0.0.0',
+      hot: false,
       //headers: { "X-Custom-Header": "yes" }
     },
 
