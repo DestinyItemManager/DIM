@@ -2,10 +2,14 @@ const angular = require('angular');
 
 // See https://angular-translate.github.io/docs/#/guide
 angular.module('dimApp')
-  .config(function($translateProvider) {
+  .config(function($translateProvider, $translateMessageFormatInterpolationProvider) {
     $translateProvider.useSanitizeValueStrategy('escape');
     $translateProvider.useMessageFormatInterpolation();
     $translateProvider.preferredLanguage('en');
+
+    $translateMessageFormatInterpolationProvider.messageFormatConfigurer(function(mf) {
+      mf.setIntlSupport(true);
+    });
 
     $translateProvider
       .translations('en', require('../i18n/dim_en.json'))
@@ -17,4 +21,3 @@ angular.module('dimApp')
       .translations('pt-br', require('../i18n/dim_pt_BR.json'))
       .fallbackLanguage('en');
   });
-
