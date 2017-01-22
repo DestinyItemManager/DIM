@@ -3,7 +3,7 @@ const angular = require('angular');
 angular.module('dim-oauth')
   .service('OAuthService', OAuthService);
 
-function OAuthService($q, $injector, storage, OAuthTokenService) {
+function OAuthService($q, $injector, localStorageService, OAuthTokenService) {
   function isAuthenticated() {
     return Boolean(OAuthTokenService.getToken());
   }
@@ -19,7 +19,7 @@ function OAuthService($q, $injector, storage, OAuthTokenService) {
       method: 'POST',
       url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
       headers: {
-        'X-API-Key': storage.get('apiKey')
+        'X-API-Key': localStorageService.get('apiKey')
       },
       data: {
         refreshToken: OAuthTokenService.getRefreshToken().value
