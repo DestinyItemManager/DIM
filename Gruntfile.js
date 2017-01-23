@@ -37,29 +37,15 @@ module.exports = function(grunt) {
     clean: ['dist'],
 
     replace: {
-      // Replace all instances of $DIM_VERSION with the version number from package.json
-      main_version: {
-        src: [
-          'dist/**/*.{json,html,js}',
-        ],
-        overwrite: true,
-        replacements: [{
-          from: '$DIM_VERSION',
-          to: pkg.version.toString()
-        }]
-      },
-      // Replace all instances of $DIM_VERSION or the current version number (from package.json)
-      // with a beta version based on the current time.
+      // Replace the current version number (from package.json)
+      // with a beta version based on the build number.
       beta_version: {
         src: [
-          'dist/**/*.{json,html,js}',
+          'dist/manifest.json',
         ],
         overwrite: true,
         replacements: [{
           from: pkg.version.toString(),
-          to: betaVersion
-        }, {
-          from: '$DIM_VERSION',
           to: betaVersion
         }]
       }
@@ -132,7 +118,6 @@ module.exports = function(grunt) {
 
   // Builds release-able extensions in dist/
   grunt.registerTask('build_extension', [
-    'replace:main_version',
     'compress:chrome',
   ]);
 
