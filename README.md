@@ -1,5 +1,7 @@
 # Destiny Item Manager
 
+[![Build Status](https://travis-ci.org/DestinyItemManager/DIM.svg?branch=master)](https://travis-ci.org/DestinyItemManager/DIM)
+
 Destiny Item Manager (DIM) lets [Destiny](http://destinythegame.com/)  game players easily move items between their Guardians and the Vault. DIM's goal is to let players equip their guardians quickly. Our Loadouts feature accomplishes this by removing manual steps needed when transferring items.
 
 Loadouts give players the ability to define sets of items that they want on their Guardians. When a loadout is selected, DIM will move all of the items referenced by the Loadout to a Guardian. If the item was equipped by another guardian, the Loadouts feature will replace that item with a similar item, if possible, to allow the Loadout referenced item to be transferred. With a single click of a button, you can have a PVP, PVE, or Raid-ready guardian.

@@ -3,20 +3,12 @@ require('babel-polyfill');
 require('./scripts/google');
 
 // TODO: remove this globals and instead require where needed
-window._ = require('underscore');
 window.$ = window.jQuery = require('jquery');
 require('jquery-textcomplete');
 require('jquery-ui/ui/position');
 window.humanizeDuration = require('humanize-duration');
-require('imports-loader?define=>false,module=>false,self=>window!idb-keyval');
-window.JSZip = require('jszip');
-window.LZString = require('lz-string');
 window.MessageFormat = require('messageformat');
 window.moment = require('moment');
-require('imports-loader?this=>window!zip-js/WebContent/zip.js');
-window.angular = require('angular');
-
-require('./scripts/util'); // TODO: make these not global and instead import where needed
 
 require('./scripts/oauth/oauth.module');
 require('./scripts/oauth/http-refresh-token.service');

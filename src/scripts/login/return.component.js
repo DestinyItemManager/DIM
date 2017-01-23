@@ -1,5 +1,10 @@
-const angular = require('angular');
-const simpleQueryString = require('simple-query-string');
+import angular from 'angular';
+import simpleQueryString from 'simple-query-string';
+
+angular.module('dimLogin').component('dimReturn', {
+  controller: ReturnController,
+  templateUrl: require('app/scripts/login/return.component.template.html')
+});
 
 function ReturnController($http) {
   var ctrl = this;
@@ -43,8 +48,3 @@ function ReturnController($http) {
     });
   };
 }
-
-angular.module('dimLogin').component('dimReturn', {
-  controller: ['$http', ReturnController],
-  templateUrl: require('app/scripts/login/return.component.template.html')
-});

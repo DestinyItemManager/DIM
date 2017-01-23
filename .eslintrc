@@ -15,15 +15,9 @@
     "sourceType": "module"
   },
   "globals": {
-    "angular": true,
     "_gaq": true,
     "chrome": true,
-    "sum": true,
-    "count": true,
-    "flatMap": true,
-    "gapi": true,
-    "Set": true,
-    "idbKeyval": true
+    "gapi": true
   },
   "rules": {
     "array-callback-return": "error",
