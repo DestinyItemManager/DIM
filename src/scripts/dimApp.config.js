@@ -84,17 +84,17 @@ angular.module('dimApp')
       if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
         dimInfoService.show('old-chrome', {
           title: $translate.instant('Help.UpgradeChrome'),
-          view: 'views/' + language + '/upgrade-chrome.html?v=$DIM_VERSION',
+          view: require('app/views/' + language + '/upgrade-chrome.html'),
           type: 'error'
         }, 0);
       }
 
       console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-      if (dimFeatureFlags.changelogToaster && compare('$DIM_FLAVOR', 'release')) {
+      if (dimFeatureFlags.changelogToaster) {
         dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
           title: compare('$DIM_FLAVOR', 'release') ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
-          view: 'views/changelog-toaster' + (compare('$DIM_FLAVOR', 'release') ? '' : '-beta') + '.html?v=v$DIM_VERSION'
+          view: require('app/views/changelog-toaster-' + ('$DIM_FLAVOR') + '.html')
         });
       }
     });
