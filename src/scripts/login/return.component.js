@@ -1,5 +1,5 @@
-const angular = require('angular');
-const simpleQueryString = require('simple-query-string');
+import angular from 'angular';
+import simpleQueryString from 'simple-query-string';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,

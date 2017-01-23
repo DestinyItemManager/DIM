@@ -1,5 +1,5 @@
-const angular = require('angular');
-const { flatMap } = require('../util');
+import angular from 'angular';
+import { flatMap } from '../util';
 
 var VendorCurrencies = {
   controller: VendorCurrenciesCtrl,

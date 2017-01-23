@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 /**
  * A button that marks all new items as "seen".

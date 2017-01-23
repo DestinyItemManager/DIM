@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 // Declare all of the external angular dependencies first
 require('angular-aria');

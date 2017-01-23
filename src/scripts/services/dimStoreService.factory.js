@@ -1,6 +1,6 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum, count } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum, count } from '../util';
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService);

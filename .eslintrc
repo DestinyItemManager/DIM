@@ -7,12 +7,12 @@
   },
   "extends": "eslint:recommended",
   "root": true,
-  "sourceType": "module",
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
-    }
+    },
+    "sourceType": "module",
   },
   "globals": {
     "_gaq": true,

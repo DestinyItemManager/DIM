@@ -1,6 +1,6 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum, flatMap } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum, flatMap } from '../util';
 
 angular.module('dimApp')
   .directive('dimLoadoutPopup', LoadoutPopup);

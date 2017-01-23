@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 // See https://angular-translate.github.io/docs/#/guide
 angular.module('dimApp')
