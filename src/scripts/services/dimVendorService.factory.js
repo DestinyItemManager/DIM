@@ -1,7 +1,7 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum, flatMap } = require('../util');
-const idbKeyval = require('idb-keyval');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum, flatMap } from '../util';
+import idbKeyval from 'idb-keyval';
 
 angular.module('dimApp')
   .factory('dimVendorService', VendorService);

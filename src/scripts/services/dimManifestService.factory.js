@@ -1,8 +1,8 @@
 /* global zip */
 
-const angular = require('angular');
-const _ = require('underscore');
-const idbKeyval = require('idb-keyval');
+import angular from 'angular';
+import _ from 'underscore';
+import idbKeyval from 'idb-keyval';
 
 // For zip
 window.JSZip = require('jszip');

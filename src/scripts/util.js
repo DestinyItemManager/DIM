@@ -1,4 +1,4 @@
-const _ = require('underscore');
+import _ from 'underscore';
 
 // Some utility functions missing from underscore
 function sum(list, summer) {
@@ -33,4 +33,4 @@ function flatMap(list, fx) {
   return res;
 }
 
-module.exports = { sum, count, flatMap };
+export { sum, count, flatMap };

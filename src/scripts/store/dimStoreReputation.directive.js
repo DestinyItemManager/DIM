@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 var StoreReputation = {
   controllerAs: 'vm',

@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 /**
  * A dialog that shows the progress of loading the manifest.
