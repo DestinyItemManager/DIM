@@ -2,6 +2,26 @@ import {
   compare
 } from './utils';
 
+import changelog from '../views/changelog-toaster-release.html';
+
+import upgradeChromeEN from '../views/en/upgrade-chrome.html';
+import upgradeChromeIT from '../views/it/upgrade-chrome.html';
+import upgradeChromeDE from '../views/de/upgrade-chrome.html';
+import upgradeChromeFR from '../views/fr/upgrade-chrome.html';
+import upgradeChromeES from '../views/es/upgrade-chrome.html';
+import upgradeChromeJA from '../views/ja/upgrade-chrome.html';
+import upgradeChromePTBR from '../views/pt-br/upgrade-chrome.html';
+
+const upgradeChrome = {
+  en: upgradeChromeEN,
+  it: upgradeChromeIT,
+  de: upgradeChromeDE,
+  fr: upgradeChromeFR,
+  es: upgradeChromeES,
+  ja: upgradeChromeJA,
+  "pt-br": upgradeChromePTBR
+};
+
 function run($window, $rootScope, $translate, loadingTracker, $timeout,
   toaster, SyncService, dimInfoService, dimFeatureFlags, dimSettingsService) {
   'ngInject';
@@ -36,17 +56,17 @@ function run($window, $rootScope, $translate, loadingTracker, $timeout,
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
       dimInfoService.show('old-chrome', {
         title: $translate.instant('Help.UpgradeChrome'),
-        view: require('app/views/' + language + '/upgrade-chrome.html'),
+        view: upgradeChrome[language],
         type: 'error'
       }, 0);
     }
 
     console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-    if (dimFeatureFlags.changelogToaster) {
+    if (dimFeatureFlags.changelogToaster && compare('$DIM_FLAVOR', 'release')) {
       dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
         title: compare('$DIM_FLAVOR', 'release') ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
-        view: require('app/views/changelog-toaster-' + ('$DIM_FLAVOR') + '.html')
+        view: changelog
       });
     }
   });

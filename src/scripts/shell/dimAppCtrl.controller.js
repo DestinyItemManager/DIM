@@ -6,6 +6,8 @@ angular.module('dimApp')
 
 
 function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+  'ngInject';
+
   var vm = this;
 
   vm.settings = dimSettingsService;

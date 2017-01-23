@@ -3,7 +3,9 @@ import angular from 'angular';
 angular.module('dim-oauth')
   .service('http-refresh-token', HttpRefreshTokenService);
 
-function HttpRefreshTokenService($rootScope, $q, $injector, storage, OAuthService, OAuthTokenService) {
+function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthTokenService) {
+  'ngInject';
+
   const service = this;
   let cache = null;
   const limiters = [

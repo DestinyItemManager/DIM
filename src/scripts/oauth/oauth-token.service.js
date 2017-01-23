@@ -3,13 +3,13 @@ import angular from 'angular';
 angular.module('dim-oauth')
   .service('OAuthTokenService', OAuthTokenService);
 
-function OAuthTokenService(storage) {
+function OAuthTokenService(localStorageService) {
   function getToken() {
-    return storage.get('authorization');
+    return localStorageService.get('authorization');
   }
 
   function setToken(token) {
-    storage.set('authorization', token);
+    localStorageService.set('authorization', token);
   }
 
   function getAccessToken() {
@@ -29,7 +29,7 @@ function OAuthTokenService(storage) {
   }
 
   function removeToken() {
-    storage.remove('authorization');
+    localStorageService.remove('authorization');
   }
 
   function getTokenDate(token, property, offset = 0) {
