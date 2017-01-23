@@ -1,6 +1,6 @@
 import {
   compare
-} from './utils';
+} from './util';
 
 import changelog from '../views/changelog-toaster-release.html';
 

@@ -6,8 +6,8 @@ import es from '../i18n/dim_es.json';
 import ja from '../i18n/dim_ja.json';
 import ptBr from '../i18n/dim_pt_BR.json';
 
-function config($compileProvider, $httpProvider, $translateProvider, hotkeysProvider,
-  localStorageServiceProvider, ngHttpRateLimiterConfigProvider) {
+function config($compileProvider, $httpProvider, $translateProvider, $translateMessageFormatInterpolationProvider,
+  hotkeysProvider, localStorageServiceProvider, ngHttpRateLimiterConfigProvider) {
   'ngInject';
 
   // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
@@ -22,6 +22,10 @@ function config($compileProvider, $httpProvider, $translateProvider, hotkeysProv
   $translateProvider.useSanitizeValueStrategy('escape');
   $translateProvider.useMessageFormatInterpolation();
   $translateProvider.preferredLanguage('en');
+
+  $translateMessageFormatInterpolationProvider.messageFormatConfigurer(function(mf) {
+    mf.setIntlSupport(true);
+  });
 
   $translateProvider
     .translations('en', en)

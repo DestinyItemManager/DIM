@@ -10,6 +10,14 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
 
   var vm = this;
 
+  vm.platforms = [{
+    name: 'Xbox',
+    id: 1
+  }, {
+    name: 'PlayStation',
+    id: 2
+  }];
+
   vm.settings = dimSettingsService;
   $scope.$watch('app.settings.itemSize', function(size) {
     document.querySelector('html').style.setProperty("--item-size", size + 'px');

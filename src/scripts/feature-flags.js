@@ -1,6 +1,6 @@
 import {
   compare
-} from './utils';
+} from './util';
 
 const featureFlag = {
   isExtension: window.chrome && window.chrome.extension,
