@@ -18,6 +18,9 @@
     "_gaq": true,
     "chrome": true,
     "gapi": true,
+    "$DIM_FLAVOR": true,
+    "$DIM_VERSION": true,
+    "$DIM_API_KEY": true,
   },
   "rules": {
     "array-callback-return": "error",

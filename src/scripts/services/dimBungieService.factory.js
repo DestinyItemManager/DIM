@@ -4,16 +4,12 @@ const _ = require('underscore');
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-// Putting this comparison in a function defeats a constant-folding optimization
-function compare(a, b) {
-  return a === b;
-}
-
 function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
-  var apiKey = localStorage.apiKey;
-  /* eslint no-constant-condition: 0*/
-  if (compare('$DIM_FLAVOR', 'release') || compare('$DIM_FLAVOR', 'beta')) {
-    apiKey = '$DIM_API_KEY';
+  var apiKey;
+  if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+    apiKey = $DIM_API_KEY;
+  } else {
+    apiKey = localStorage.apiKey;
   }
 
   var tokenPromise = null;
