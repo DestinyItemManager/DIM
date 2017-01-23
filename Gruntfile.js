@@ -5,14 +5,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: pkg,
-    uglify: {
-      my_target: {
-        files: {
-          'dist/sripts/vendor.min.js': ['src/input1.js', 'src/input2.js'],
-          'dist/sripts/app.min.js': ['src/input1.js', 'src/input2.js']
-        }
-      }
-    },
 
     compress: {
       // Zip up the extension
@@ -30,24 +22,6 @@ module.exports = function(grunt) {
           dest: '/',
           filter: 'isFile'
         }, ]
-      }
-    },
-
-    // Clean out generated extension files
-    clean: ['dist'],
-
-    replace: {
-      // Replace the current version number (from package.json)
-      // with a beta version based on the build number.
-      beta_version: {
-        src: [
-          'dist/manifest.json',
-        ],
-        overwrite: true,
-        replacements: [{
-          from: pkg.version.toString(),
-          to: betaVersion
-        }]
       }
     },
 
@@ -78,7 +52,7 @@ module.exports = function(grunt) {
         }
       },
       extensions: {
-        DIM: {
+        release: {
           appID: "apghicjnekejhfancbkahkhdckhdagna",
           publish: false,
           zip: "dist/chrome.zip"
@@ -88,40 +62,32 @@ module.exports = function(grunt) {
           zip: "dist/chrome.zip"
         }
       }
-    },
+    }
   });
 
   grunt.loadNpmTasks('grunt-webstore-upload');
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-compress');
-  grunt.loadNpmTasks('grunt-text-replace');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-sync');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
-    var manifest = grunt.file.readJSON('dist/chrome/manifest.json');
+    var manifest = grunt.file.readJSON('dist/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
-    grunt.file.write('dist/extension/chrome/manifest.json', JSON.stringify(manifest));
+    grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
 
   grunt.registerTask('publish_chrome_beta', [
-    'replace:beta_version',
+    'update_chrome_beta_manifest',
     'compress:chrome',
     'webstore_upload:beta',
     'log_beta_version'
   ]);
 
-  // Aliases for local dev to mirror README examples
-  grunt.registerTask('dev-chrome', ['default']);
-
-
-  // Builds release-able extensions in dist/
-  grunt.registerTask('build_extension', [
+  grunt.registerTask('publish_chrome_release', [
     'compress:chrome',
+    'webstore_upload:release'
   ]);
 
   grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
   });
-}
+};
