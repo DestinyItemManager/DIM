@@ -92,8 +92,8 @@
       "NeverShow": "Não mostre isso novamente.",
       "UpgradeChrome": "Por favor, atualizar o Chrome.",
       "Version": {
-         "Beta": "Beta foi atualizado para v$DIM_VERSION",
-         "Stable": "DIM v$DIM_VERSION lançado"
+         "Beta": "Beta foi atualizado para v{version}",
+         "Stable": "DIM v{version} lançado"
       },
       "Xur": "Xûr chegou"
    },
