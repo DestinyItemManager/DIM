@@ -1,7 +1,7 @@
 const angular = require('angular');
 const _ = require('underscore');
 
-(function() {
+(function () {
   'use strict';
 
   angular.module('dimApp')
@@ -11,15 +11,23 @@ const _ = require('underscore');
   function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
     var vm = this;
 
+    vm.platforms = [{
+      name: 'Xbox',
+      id: 1
+    }, {
+      name: 'Playstation',
+      id: 2
+    }];
+
     vm.settings = dimSettingsService;
-    $scope.$watch('app.settings.itemSize', function(size) {
+    $scope.$watch('app.settings.itemSize', function (size) {
       document.querySelector('html').style.setProperty("--item-size", size + 'px');
     });
-    $scope.$watch('app.settings.charCol', function(cols) {
+    $scope.$watch('app.settings.charCol', function (cols) {
       document.querySelector('html').style.setProperty("--character-columns", cols);
     });
 
-    $scope.$watch('app.settings.vaultMaxCol', function(cols) {
+    $scope.$watch('app.settings.vaultMaxCol', function (cols) {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
@@ -29,7 +37,7 @@ const _ = require('underscore');
     hotkeys.add({
       combo: ['f'],
       description: 'Start a search',
-      callback: function(event) {
+      callback: function (event) {
         $rootScope.$broadcast('dim-focus-filter-input');
 
         event.preventDefault();
@@ -40,7 +48,7 @@ const _ = require('underscore');
     hotkeys.add({
       combo: ['esc'],
       allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-      callback: function() {
+      callback: function () {
         $rootScope.$broadcast('dim-escape-filter-input');
       }
     });
@@ -48,7 +56,7 @@ const _ = require('underscore');
     hotkeys.add({
       combo: ['r'],
       description: "Refresh inventory",
-      callback: function() {
+      callback: function () {
         vm.refresh();
       }
     });
@@ -56,54 +64,62 @@ const _ = require('underscore');
     hotkeys.add({
       combo: ['i'],
       description: "Toggle showing full item details",
-      callback: function() {
+      callback: function () {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
     });
 
     if (vm.featureFlags.tagsEnabled) {
-    /* Add each hotkey manually until hotkeys can be translated.
-        _.each(dimSettingsService.itemTags, (tag) => {
-          if (tag.hotkey) {
-            hotkeys.add({
-              combo: [tag.hotkey],
-              description: "Mark item as '" + tag.label + "'",
-              callback: function() {
-                $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
-              }
-            });
-          }
-        });
-    */
+      /* Add each hotkey manually until hotkeys can be translated.
+          _.each(dimSettingsService.itemTags, (tag) => {
+            if (tag.hotkey) {
+              hotkeys.add({
+                combo: [tag.hotkey],
+                description: "Mark item as '" + tag.label + "'",
+                callback: function() {
+                  $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+                }
+              });
+            }
+          });
+      */
       hotkeys.add({
         combo: ['!'],
         description: "Mark item as 'Favorite'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
+        callback: function () {
+          $rootScope.$broadcast('dim-item-tag', {
+            tag: 'favorite'
+          });
         }
       });
 
       hotkeys.add({
         combo: ['@'],
         description: "Mark item as 'Keep'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
+        callback: function () {
+          $rootScope.$broadcast('dim-item-tag', {
+            tag: 'keep'
+          });
         }
       });
 
       hotkeys.add({
         combo: ['#'],
         description: "Mark item as 'Junk'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
+        callback: function () {
+          $rootScope.$broadcast('dim-item-tag', {
+            tag: 'junk'
+          });
         }
       });
 
       hotkeys.add({
         combo: ['$'],
         description: "Mark item as 'Infuse'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
+        callback: function () {
+          $rootScope.$broadcast('dim-item-tag', {
+            tag: 'infuse'
+          });
         }
       });
     }
@@ -111,14 +127,14 @@ const _ = require('underscore');
     hotkeys.add({
       combo: ['x'],
       description: "Clear new items",
-      callback: function() {
+      callback: function () {
         dimStoreService.clearNewItems();
       }
     });
 
     hotkeys.add({
       combo: ['ctrl+alt+shift+d'],
-      callback: function() {
+      callback: function () {
         dimFeatureFlags.debugMode = true;
         console.log("***** DIM DEBUG MODE ENABLED *****");
       }
@@ -130,7 +146,7 @@ const _ = require('underscore');
      */
     function showPopupFunction(name, translate) {
       var result;
-      return function(e) {
+      return function (e) {
         e.stopPropagation();
 
         var language = translate ? vm.settings.language + '/' : ''; // set language
@@ -152,14 +168,14 @@ const _ = require('underscore');
             appendClassName: 'modal-dialog'
           });
 
-          result.closePromise.then(function() {
+          result.closePromise.then(function () {
             result = null;
           });
 
           // if (ga) {
-            // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
-            // Send a virtual pageview event, even though this is a popup
-            // ga('send', 'pageview', { page: '/' + name });
+          // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
+          // Send a virtual pageview event, even though this is a popup
+          // ga('send', 'pageview', { page: '/' + name });
           // }
         }
       };
@@ -172,11 +188,11 @@ const _ = require('underscore');
     vm.showXur = showPopupFunction('xur');
     vm.showMatsExchange = showPopupFunction('mats-exchange');
 
-    vm.toggleMinMax = function(e) {
+    vm.toggleMinMax = function (e) {
       $state.go($state.is('best') ? 'inventory' : 'best');
     };
 
-    vm.toggleVendors = function(e) {
+    vm.toggleVendors = function (e) {
       $state.go($state.is('vendors') ? 'inventory' : 'vendors');
     };
 
@@ -189,10 +205,10 @@ const _ = require('underscore');
     // Don't refresh more than once a minute
     var refresh = _.throttle(vm.refresh, 60 * 1000);
 
-    vm.startAutoRefreshTimer = function() {
+    vm.startAutoRefreshTimer = function () {
       var secondsToWait = 360;
 
-      $rootScope.autoRefreshTimer = $interval(function() {
+      $rootScope.autoRefreshTimer = $interval(function () {
         // Only Refresh If We're Not Already Doing Something
         // And We're Not Inactive
         if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
@@ -204,7 +220,7 @@ const _ = require('underscore');
     vm.startAutoRefreshTimer();
 
     // Refresh when the user comes back to the page
-    document.addEventListener("visibilitychange", function() {
+    document.addEventListener("visibilitychange", function () {
       if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
         refresh();
       }

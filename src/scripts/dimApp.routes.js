@@ -14,6 +14,13 @@ function routes(routerHelper) {
 
 function getStates() {
   return [{
+    state: 'root',
+    config: {
+      abstract: true,
+      templateUrl: inventory,
+      url: ''
+    }
+  }, {
     state: 'inventory',
     config: {
       templateUrl: inventory,

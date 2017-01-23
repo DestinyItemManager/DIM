@@ -55,7 +55,6 @@ require('./scripts/shell/dimAngularFilters.filter');
 require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
 require('./scripts/shell/dimAppCtrl.controller');
 require('./scripts/shell/dimSettingsCtrl.controller');
-require('./scripts/shell/dimPlatformChoice.directive');
 require('./scripts/shell/dimSearchFilter.directive');
 require('./scripts/shell/dimClickAnywhereButHere.directive');
 require('./scripts/shell/dimFilterLink.directive');

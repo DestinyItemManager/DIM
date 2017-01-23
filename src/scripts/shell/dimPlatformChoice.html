@@ -1,0 +1,6 @@
+<div ng-repeat="platform in $ctrl.platforms track by platform.id">
+  <div>{{ platform.name }}</div>
+</div>
+<span ng-if="$ctrl.currentUser">
+  {{ $ctrl.currentUser.displayName }}
+</span>

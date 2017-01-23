@@ -1,3 +1,11 @@
+import en from '../i18n/dim_en.json';
+import it from '../i18n/dim_it.json';
+import de from '../i18n/dim_de.json';
+import fr from '../i18n/dim_fr.json';
+import es from '../i18n/dim_es.json';
+import ja from '../i18n/dim_ja.json';
+import ptBr from '../i18n/dim_pt_BR.json';
+
 function config($compileProvider, $httpProvider, $translateProvider, hotkeysProvider,
   localStorageServiceProvider, ngHttpRateLimiterConfigProvider) {
   'ngInject';
@@ -16,13 +24,13 @@ function config($compileProvider, $httpProvider, $translateProvider, hotkeysProv
   $translateProvider.preferredLanguage('en');
 
   $translateProvider
-    .translations('en', require('../i18n/dim_en.json'))
-    .translations('it', require('../i18n/dim_it.json'))
-    .translations('de', require('../i18n/dim_de.json'))
-    .translations('fr', require('../i18n/dim_fr.json'))
-    .translations('es', require('../i18n/dim_es.json'))
-    .translations('ja', require('../i18n/dim_ja.json'))
-    .translations('pt-br', require('../i18n/dim_pt_BR.json'))
+    .translations('en', en)
+    .translations('it', it)
+    .translations('de', de)
+    .translations('fr', fr)
+    .translations('es', es)
+    .translations('ja', ja)
+    .translations('pt-br', ptBr)
     .fallbackLanguage('en');
 
   hotkeysProvider.includeCheatSheet = true;
