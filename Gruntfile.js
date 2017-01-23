@@ -46,9 +46,6 @@ module.exports = function(grunt) {
         replacements: [{
           from: '$DIM_VERSION',
           to: pkg.version.toString()
-        }, {
-          from: '$DIM_CHANGELOG',
-          to: 'https://github.com/DestinyItemManager/DIM/blob/master/CHANGELOG.md'
         }]
       },
       // Replace all instances of $DIM_VERSION or the current version number (from package.json)
@@ -64,9 +61,6 @@ module.exports = function(grunt) {
         }, {
           from: '$DIM_VERSION',
           to: betaVersion
-        }, {
-          from: '$DIM_CHANGELOG',
-          to: 'https://github.com/DestinyItemManager/DIM/blob/dev/CHANGELOG.md#next'
         }]
       }
     },

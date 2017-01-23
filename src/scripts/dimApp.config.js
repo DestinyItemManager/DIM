@@ -49,6 +49,11 @@ angular.module('dimApp')
                 dimInfoService,
                 dimFeatureFlags,
                 dimSettingsService) {
+    // Copy over some constants for templates
+    $rootScope.$DIM_VERSION = $DIM_VERSION;
+    $rootScope.$DIM_FLAVOR = $DIM_FLAVOR;
+    $rootScope.$DIM_CHANGELOG = $DIM_CHANGELOG;
+
     $rootScope.loadingTracker = loadingTracker;
 
     // 1 Hour
