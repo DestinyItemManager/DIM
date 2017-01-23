@@ -11,8 +11,8 @@ const NotifyPlugin = require('notify-webpack-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
-module.exports = (options = {}) => {
-  const iconFlavor = options.isProd ? 'prod' : 'beta';
+module.exports = (env) => {
+  const isDev = env === 'dev';
 
   const config = {
     entry: {
@@ -83,7 +83,7 @@ module.exports = (options = {}) => {
         root: path.resolve('./'),
       }),
 
-      new NotifyPlugin('DIM', options.prod),
+      new NotifyPlugin('DIM', !isDev),
 
       new ExtractTextPlugin('styles-[hash:6].css'),
 
@@ -108,14 +108,14 @@ module.exports = (options = {}) => {
 
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
-        { from: `./icons/${iconFlavor}/icon128.png` },
-        { from: `./icons/${iconFlavor}/icon16.png` },
-        { from: `./icons/${iconFlavor}/icon19.png` },
-        { from: `./icons/${iconFlavor}/icon38.png` },
-        { from: `./icons/${iconFlavor}/icon48.png` },
-        { from: `./icons/${iconFlavor}/favicon-16x16.png` },
-        { from: `./icons/${iconFlavor}/favicon-32x32.png` },
-        { from: `./icons/${iconFlavor}/favicon-96x96.png` },
+        { from: `./icons/${env}/icon128.png` },
+        { from: `./icons/${env}/icon16.png` },
+        { from: `./icons/${env}/icon19.png` },
+        { from: `./icons/${env}/icon38.png` },
+        { from: `./icons/${env}/icon48.png` },
+        { from: `./icons/${env}/favicon-16x16.png` },
+        { from: `./icons/${env}/favicon-32x32.png` },
+        { from: `./icons/${env}/favicon-96x96.png` },
 
         // TODO: Quick hack to get elemental damage icon for StoreItem
         { from: './src/images/arc.png', to: 'images' },
@@ -133,7 +133,7 @@ module.exports = (options = {}) => {
     },
   };
 
-  if (options.prod) {
+  if (!isDev) {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';
