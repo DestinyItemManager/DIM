@@ -1,6 +1,6 @@
-<div ng-repeat="platform in $ctrl.platforms track by platform.id">
-  <div>{{ platform.name }}</div>
+<div class="platform-choice">
+  <span ng-if="$ctrl.currentPlatform" id="user">
+    <i class="fa fa-user"></i> {{ $ctrl.currentPlatform.id }}
+  </span>
+  <select id="system" ng-if="$ctrl.platforms.length > 1" ng-options="platform.label for platform in $ctrl.platforms track by platform.type" ng-model="$ctrl.currentPlatform" ng-change="$ctrl.onPlatformChangeHandler($ctrl.currentPlatform)"></select>
 </div>
-<span ng-if="$ctrl.currentUser">
-  {{ $ctrl.currentUser.displayName }}
-</span>

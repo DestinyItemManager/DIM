@@ -5,18 +5,27 @@ angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
 
-function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+function DimApp(dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   'ngInject';
 
   var vm = this;
 
-  vm.platforms = [{
-    name: 'Xbox',
-    id: 1
-  }, {
-    name: 'PlayStation',
-    id: 2
-  }];
+  vm.platforms = [];
+
+  vm.platformChange = function platformChange(platform) {
+    loadingTracker.addPromise(dimPlatformService.setActive(platform));
+  };
+
+  $scope.$on('dim-platforms-updated', function(e, args) {
+    vm.platforms = args.platforms;
+    vm.currentPlatform = (vm.currentPlatform.length > 0) ? vm.currentPlatform[0] : null;
+  });
+
+  $scope.$on('dim-active-platform-updated', function(e, args) {
+    dimState.active = vm.currentPlatform = args.platform;
+  });
+
+  loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
   vm.settings = dimSettingsService;
   $scope.$watch('app.settings.itemSize', function(size) {

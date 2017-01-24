@@ -2,3 +2,11 @@ dim-platform-choice {
   display: block;
   color: white;
 }
+
+.platform-choice {
+  display: flex;
+
+  .fa {
+    margin-right: .375rem
+  }
+}
