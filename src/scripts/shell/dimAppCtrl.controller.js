@@ -18,7 +18,6 @@ function DimApp(dimState, ngDialog, $rootScope, loadingTracker, dimPlatformServi
 
   $scope.$on('dim-platforms-updated', function(e, args) {
     vm.platforms = args.platforms;
-    vm.currentPlatform = (vm.currentPlatform.length > 0) ? vm.currentPlatform[0] : null;
   });
 
   $scope.$on('dim-active-platform-updated', function(e, args) {
