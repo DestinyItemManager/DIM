@@ -11,11 +11,11 @@ const NotifyPlugin = require('notify-webpack-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
-const package = require('../package.json');
+const packageJson = require('../package.json');
 
 module.exports = (env) => {
   const isDev = env === 'dev';
-  let version = package.version.toString();
+  let version = packageJson.version.toString();
   if (process.env.TRAVIS_BUILD_NUMBER) {
     version += "." + process.env.TRAVIS_BUILD_NUMBER;
   }
