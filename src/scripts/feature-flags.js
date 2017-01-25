@@ -1,11 +1,7 @@
-import {
-  compare
-} from './util';
-
 const featureFlag = {
   isExtension: window.chrome && window.chrome.extension,
   // Tags are off in release right now
-  tagsEnabled: !compare('$DIM_FLAVOR', 'release'),
+  tagsEnabled: $DIM_FLAVOR !== 'release',
   compareEnabled: true,
   vendorsEnabled: true,
   qualityEnabled: true,
@@ -14,11 +10,11 @@ const featureFlag = {
   // Print debug info to console about item moves
   debugMoves: false,
   // show changelog toaster
-  changelogToaster: compare('$DIM_FLAVOR', 'release') || compare('$DIM_FLAVOR', 'beta'),
+  changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
 
-  materialsExchangeEnabled: !compare('$DIM_FLAVOR', 'release'),
+  materialsExchangeEnabled: $DIM_FLAVOR !== 'release',
   // allow importing and exporting your DIM data to JSON
-  importExport: compare('$DIM_FLAVOR', 'release')
+  importExport: $DIM_FLAVOR !== 'release'
 };
 
 export default featureFlag;

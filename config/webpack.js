@@ -40,7 +40,6 @@ module.exports = (env) => {
           test: /\.js$/,
           exclude: /node_modules/,
           use: [
-            'ng-annotate-loader',
             'babel-loader'
           ],
         }, {

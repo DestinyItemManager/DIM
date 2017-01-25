@@ -13,7 +13,7 @@ const PlatformChoice = {
     self.currentPlatform = null;
     self.platforms = [];
 
-    self.$onChanges = (changes) => { // eslint-disable-line no-unused-vars
+    self.$onChanges = (changes) => {
       if (changes.platforms) {
         self.platforms = changes.platforms.currentValue;
       }
@@ -23,7 +23,7 @@ const PlatformChoice = {
       }
     };
 
-    self.onPlatformChangeHandler = function onPlatformChangeHandler(platform) { // eslint-disable-line no-unused-vars
+    self.onPlatformChangeHandler = function onPlatformChangeHandler(platform) {
       if (platform && (typeof self.onPlatformChange === 'function')) {
         self.onPlatformChange({ platform: platform });
       }

@@ -33,9 +33,4 @@ function flatMap(list, fx) {
   return res;
 }
 
-// Putting this comparison in a function defeats a constant-folding optimization
-function compare(a, b) {
-  return a === b;
-}
-
-export { sum, compare, count, flatMap };
+export { sum, count, flatMap };

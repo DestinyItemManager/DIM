@@ -1,7 +1,3 @@
-import {
-  compare
-} from './util';
-
 import changelog from '../views/changelog-toaster-release.html';
 
 import upgradeChromeEN from '../views/en/upgrade-chrome.html';
@@ -63,9 +59,9 @@ function run($window, $rootScope, $translate, loadingTracker, $timeout,
 
     console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-    if (dimFeatureFlags.changelogToaster && compare('$DIM_FLAVOR', 'release')) {
-      dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-        title: compare('$DIM_FLAVOR', 'release') ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
+    if (dimFeatureFlags.changelogToaster && ($DIM_FLAVOR === 'release')) {
+      dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
+        title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', { version: $DIM_VERSION }) : $translate.instant('Help.Version.Beta', { version: $DIM_VERSION }),
         view: changelog
       });
     }
