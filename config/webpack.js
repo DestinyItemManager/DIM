@@ -21,9 +21,18 @@ module.exports = (env) => {
     },
 
     output: {
-      path: './dist',
+      path: path.resolve(__dirname, './dist'),
       filename: '[name]-[chunkhash:6].js',
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
+    },
+
+    devServer: {
+      contentBase: path.resolve(__dirname, './src'),
+      publicPath: '/',
+      https: true,
+      host: '0.0.0.0',
+      hot: false,
+      //headers: { "X-Custom-Header": "yes" }
     },
 
     devtool: 'cheap-module-source-map',
