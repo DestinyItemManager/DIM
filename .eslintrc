@@ -17,7 +17,11 @@
   "globals": {
     "_gaq": true,
     "chrome": true,
-    "gapi": true
+    "gapi": true,
+    "$DIM_FLAVOR": true,
+    "$DIM_CHANGELOG": true,
+    "$DIM_VERSION": true,
+    "$DIM_API_KEY": true
   },
   "rules": {
     "array-callback-return": "error",

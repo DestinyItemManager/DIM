@@ -6,15 +6,10 @@ angular.module('dimApp')
 function dimLoginCtrl() {
   const vm = this;
 
-  vm.authorizationURL = localStorage.authorizationURL;
-
-  // Putting this comparison in a function defeats a constant-folding optimization
-  function compare(a, b) {
-    return a === b;
-  }
-
-  if (compare('$DIM_FLAVOR', 'release') || compare('$DIM_FLAVOR', 'beta')) {
+  if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
     vm.authorizationURL = '$DIM_AUTH_URL';
+  } else {
+    vm.authorizationURL = localStorage.authorizationURL;
   }
 }
 

@@ -11,8 +11,14 @@ const NotifyPlugin = require('notify-webpack-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
+const packageJson = require('../package.json');
+
 module.exports = (env) => {
   const isDev = env === 'dev';
+  let version = packageJson.version.toString();
+  if (process.env.TRAVIS_BUILD_NUMBER) {
+    version += "." + process.env.TRAVIS_BUILD_NUMBER;
+  }
 
   const config = {
     entry: {
@@ -21,9 +27,18 @@ module.exports = (env) => {
     },
 
     output: {
-      path: './dist',
+      path: path.resolve(__dirname, './dist'),
       filename: '[name]-[chunkhash:6].js',
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
+    },
+
+    devServer: {
+      contentBase: path.resolve(__dirname, './src'),
+      publicPath: '/',
+      https: true,
+      host: '0.0.0.0',
+      hot: false,
+      //headers: { "X-Custom-Header": "yes" }
     },
 
     devtool: 'cheap-module-source-map',
@@ -124,6 +139,14 @@ module.exports = (env) => {
         { from: './src/images/solar.png', to: 'images' },
         { from: './src/images/void.png', to: 'images' },
       ]),
+
+      new webpack.DefinePlugin({
+        $DIM_VERSION: JSON.stringify(version),
+        $DIM_FLAVOR: JSON.stringify(env),
+        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
+        $DIM_API_KEY: JSON.stringify(process.env.API_KEY),
+        $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL)
+      }),
 
       new Visualizer(),
     ],
