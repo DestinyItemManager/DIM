@@ -7,11 +7,6 @@ angular.module('dimApp')
     localStorageServiceProvider.setPrefix('');
   });
 
-// Putting this comparison in a function defeats a constant-folding optimization
-function compare(a, b) {
-  return a === b;
-}
-
 angular.module('dimApp')
   .value('dimPlatformIds', {
     xbl: null,
@@ -25,7 +20,7 @@ angular.module('dimApp')
   .value('dimFeatureFlags', {
     isExtension: window.chrome && window.chrome.extension,
     // Tags are off in release right now
-    tagsEnabled: !compare('$DIM_FLAVOR', 'release'),
+    tagsEnabled: $DIM_FLAVOR !== 'release',
     compareEnabled: true,
     vendorsEnabled: true,
     qualityEnabled: true,
@@ -34,11 +29,11 @@ angular.module('dimApp')
     // Print debug info to console about item moves
     debugMoves: false,
     // show changelog toaster
-    changelogToaster: compare('$DIM_FLAVOR', 'release') || compare('$DIM_FLAVOR', 'beta'),
+    changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
 
-    materialsExchangeEnabled: !compare('$DIM_FLAVOR', 'release'),
+    materialsExchangeEnabled: $DIM_FLAVOR !== 'release',
     // allow importing and exporting your DIM data to JSON
-    importExport: compare('$DIM_FLAVOR', 'release')
+    importExport: $DIM_FLAVOR !== 'release'
   })
   .factory('loadingTracker', function(promiseTracker) {
     return promiseTracker();
@@ -54,6 +49,11 @@ angular.module('dimApp')
                 dimInfoService,
                 dimFeatureFlags,
                 dimSettingsService) {
+    // Copy over some constants for templates
+    $rootScope.$DIM_VERSION = $DIM_VERSION;
+    $rootScope.$DIM_FLAVOR = $DIM_FLAVOR;
+    $rootScope.$DIM_CHANGELOG = $DIM_CHANGELOG;
+
     $rootScope.loadingTracker = loadingTracker;
 
     // 1 Hour
@@ -89,12 +89,12 @@ angular.module('dimApp')
         }, 0);
       }
 
-      console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+      console.log('DIM v' + $DIM_VERSION + ' (' + $DIM_FLAVOR + ') - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
       if (dimFeatureFlags.changelogToaster) {
-        dimInfoService.show('changelogv$DIM_VERSION'.replace(/\./gi, ''), {
-          title: compare('$DIM_FLAVOR', 'release') ? $translate.instant('Help.Version.Stable') : $translate.instant('Help.Version.Beta'),
-          view: require('app/views/changelog-toaster-' + ('$DIM_FLAVOR') + '.html')
+        dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
+          title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', { version: $DIM_VERSION }) : $translate.instant('Help.Version.Beta', { version: $DIM_VERSION }),
+          view: require('app/views/changelog-toaster-' + $DIM_FLAVOR + '.html')
         });
       }
     });

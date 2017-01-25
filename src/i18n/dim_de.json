@@ -92,8 +92,8 @@
       "NeverShow": "Diesen Tipp nicht erneut zeigen",
       "UpgradeChrome": "Bitte aktualisiere Chrome",
       "Version": {
-         "Beta": "Beta wurde auf v$DIM_VERSION aktualisiert",
-         "Stable": "DIM v$DIM_VERSION veröffentlicht"
+         "Beta": "Beta wurde auf v{version} aktualisiert",
+         "Stable": "DIM v{version} veröffentlicht"
       },
       "Xur": "Xûr ist da"
    },
