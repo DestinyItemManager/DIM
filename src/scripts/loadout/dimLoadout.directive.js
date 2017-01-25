@@ -121,7 +121,14 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
   vm.save = function save() {
     var platform = dimPlatformService.getActive();
     vm.loadout.platform = platform.label; // Playstation or Xbox
-    dimLoadoutService.saveLoadout(vm.loadout);
+    dimLoadoutService
+      .saveLoadout(vm.loadout)
+      .catch((e) => {
+        toaster.pop('error',
+                    $translate.instant('Loadouts.SaveErrorTitle'),
+                    $translate.instant('Loadouts.SaveErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+        console.error(e);
+      });
     vm.cancel();
   };
 
