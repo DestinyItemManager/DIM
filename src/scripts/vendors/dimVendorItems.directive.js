@@ -1,6 +1,6 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum } from '../util';
 
 var VendorItem = {
   bindings: {

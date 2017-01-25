@@ -1,4 +1,6 @@
-const angular = require('angular');
+import angular from 'angular';
+
+require('angular-local-storage');
 
 angular.module('dim-oauth', ['LocalStorageModule'])
   .run(function($rootScope, $state) {

@@ -1,5 +1,5 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 // This file defines Angular filters for DIM that may be shared among
 // different parts of DIM.

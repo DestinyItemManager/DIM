@@ -1,6 +1,6 @@
 console.time('First item directive built');
 
-const angular = require('angular');
+import angular from 'angular';
 
 angular.module('dimApp')
   .config((localStorageServiceProvider) => {

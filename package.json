@@ -18,6 +18,7 @@
     "start": "npm run build-dev -s",
     "publish-chrome-beta": "npm run build-beta -s && grunt publish_chrome_beta",
     "publish-chrome-release": "npm run build-release -s && grunt publish_chrome_release",
+    "server": "webpack-dev-server --config ./config/webpack.js",
     "install": "napa"
   },
   "napa": {
@@ -72,6 +73,7 @@
     "unzip": "^0.1.11",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.0-rc.0",
+    "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-visualizer-plugin": "^0.1.6"
   },
   "dependencies": {

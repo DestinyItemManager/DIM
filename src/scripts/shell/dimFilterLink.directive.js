@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
