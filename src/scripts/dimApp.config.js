@@ -47,8 +47,7 @@ angular.module('dimApp')
                 loadingTracker,
                 SyncService,
                 dimInfoService,
-                dimFeatureFlags,
-                dimSettingsService) {
+                dimFeatureFlags) {
     // Copy over some constants for templates
     $rootScope.$DIM_VERSION = $DIM_VERSION;
     $rootScope.$DIM_FLAVOR = $DIM_FLAVOR;
@@ -80,11 +79,10 @@ angular.module('dimApp')
     var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
 
     $rootScope.$on('dim-settings-loaded', function() {
-      var language = dimSettingsService.language;
       if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
         dimInfoService.show('old-chrome', {
           title: $translate.instant('Help.UpgradeChrome'),
-          view: require('app/views/' + language + '/upgrade-chrome.html'),
+          view: require('app/views/upgrade-chrome.html'),
           type: 'error'
         }, 0);
       }
@@ -167,4 +165,3 @@ angular.module('dimApp')
         templateUrl: require('app/scripts/login/login.template.html'),
       });
   });
-

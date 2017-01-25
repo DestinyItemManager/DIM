@@ -1,5 +1,4 @@
 {
-   "Level": "Niveau",
    "Bucket": {
       "Armor": "Armure",
       "General": "Général",
@@ -103,7 +102,9 @@
          "HelpCurrent": "Calcule les loadouts à leur niveau de défense actuel."
       },
       "IncludeRare": "Inclure les objets rares (bleus)",
-      "Help": "Besoin d'aide?",
+      "Help": {
+        "Help": "Besoin d'aide?"
+      },
       "Equip": "Équiper sur le perso actuel",
       "ShowAllConfigs": "Afficher toutes les configurations",
       "ShowConfigs": "Afficher les configurations",
@@ -199,6 +200,7 @@
    "Stats": {
       "Discipline": "Discipline",
       "Intellect": "Intelligence",
+      "Level": "Niveau",
       "NoBonus": "Pas de Bonus",
       "Strength": "Force",
       "TierProgress": "{progress} pour {tier}"
@@ -221,6 +223,33 @@
       "Bounties": "Contrats",
       "ShadersAndEmblems": "Revêtements & Emblèmes",
       "Emotes": "Intéractions"
+   },
+   "Views": {
+     "About":{
+       "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
+       "ContactUs":"Nous Contacter",
+       "FAQ": "FAQ",
+       "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
+       "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous êtes attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo and mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
+       "FAQDupeGally": "Hey, DIM a dupliqué mon Gjallahorn!",
+       "FAQDupeGallyAnswer": "Non, non. Promis.",
+       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
+       "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
+       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
+       "FAQLogoutAnswer": "Votre session est liée à Bungie.net. Si vous vous déconnnectez de Bungie.net, vous vous déconnectez de DIM.",
+       "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
+       "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
+       "GitHub": "GitHub",
+       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
+       "GitHubRepo": "DIM Git Repo",
+       "Header": "À propos de Destiny Item Manager (DIM)",
+       "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de vos coffres sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
+       "Reddit": "Reddit",
+       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
+       "Twitter": "Twitter",
+       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
+       "Version": "Version"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Récompense à 5 Victoires (Armure)",

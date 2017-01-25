@@ -83,4 +83,3 @@ function SettingsController(dimSettingsService, $scope, SyncService, dimCsvServi
     reader.readAsText(angular.element('#importFile')[0].files[0]);
   };
 }
-
