@@ -1,0 +1,121 @@
+{
+   "Level": "レベル",
+   "Bucket": {
+      "Armor": "生命力",
+      "General": "全般",
+      "Postmaster": "ポストマスター",
+      "Progress": "進行状況",
+      "Reputation": "ランク",
+      "Show": "表示 {bucket}",
+      "Unknown": "不明",
+      "Vault": "保管庫",
+      "Weapons": "武器"
+   },
+   "BungieService": {
+      "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
+      "Down": "Bungie.net に接続不可。",
+      "Difficulties": "Bungie APIは今困難を経験します。",
+      "NetworkError": "ネットワークエラー。{status} {statusText}",
+      "NotLoggedIn": "この拡張を利用するためには、Bungie.net にログインしてください。",
+      "Maintenance": "Bungie.net サーバーがメンテナンス中。",
+      "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
+      "NotConnected": "インターネットに接続してない可能性あります。",
+      "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。"
+   },
+   "Compare": {
+      "Compare": "比較",
+      "Close": "終了",
+      "Error": {
+         "Class": "このアイテム {class} 用のため、比較できません。",
+         "Archetype": "このアイテムは {type} ではないため、比較できません。"
+      }
+   },
+   "Cooldown": {
+      "Grenade": "グレネードのクールダウン",
+      "Melee": "近接チャージのクールダウン",
+      "Super": "スーパースキルのクールダウン"
+   },
+   "DidYouKnow": {
+      "DidYouKnow": "知っていますか？",
+      "DontShowAgain": "このヒントをもう一度表示しない",
+      "TryNext": "今度お試しください。"
+   },
+   "FarmingMode": {
+      "FarmingMode": "アイテム収集モード (アイテム移動)",
+      "Quickmove": "素早く移動",
+      "Stop": "停止"
+   },
+   "Filter": {
+      "EnterName": "アイテム名を入力してください。"
+   },
+   "Header": {
+      "About": "情報",
+      "Filters": "フィルター",
+      "SupportDIM": "DIMを支援する"
+   },
+   "ItemService": {
+      "PercentComplete": "({ percent, number, percent } 完了)"
+   },
+   "Loadouts": {
+      "Loadouts": "ロードアウト",
+      "Create": "ロードアウトを作成",
+      "FromEquipped": "装備している",
+      "Edit": "ロードアウトを編集",
+      "Delete": "ロードアウトを削除",
+      "ApplySearch": "アイテム = \"{query}\"",
+      "MaximizeLight": "光レベルを最大化",
+      "ItemLeveling": "アイテムのレベルアップ",
+      "GatherEngrams": "エングラム収集",
+      "GatherEngramsExceptExotics": "エキゾチック",
+      "RestoreAllItems": "全アイテム",
+      "Random": "ランダム",
+      "Save": "保存",
+      "SaveAsNew": "新規で保存",
+      "Cancel": "キャンセル"
+   },
+   "MovePopup": {
+      "Equip": "装備する",
+      "Store": "保管する",
+      "Take": "Take",
+      "Vault": "保管庫"
+   },
+   "Notes": {
+      "Help": "このアイテムにメモを追加"
+   },
+   "Settings": {
+      "Settings": "設定",
+      "SortRarity": "レア度"
+   },
+   "Stats": {
+      "Discipline": "鍛錬",
+      "Intellect": "知性",
+      "Strength": "腕力"
+   },
+   "StoreBucket": {
+      "Move": "移動"
+   },
+   "Tags": {
+      "TagItem": "アイテムをタグする",
+      "Favorite": "お気に入り",
+      "Junk": "不要",
+      "Infuse": "融合する",
+      "Keep": "保管"
+   },
+   "Vendors": {
+      "Vendors": "ベンダー",
+      "All": "全て",
+      "Day": "日間",
+      "Load": "ローディングベンダー",
+      "ArmorAndWeapons": "アーマーとウェポン",
+      "ShipsAndVehicles": "船とビークル",
+      "Consumables": "消費アイテム",
+      "Bounties": "バウンティ",
+      "ShadersAndEmblems": "シェーダーとエンブレム",
+      "Emotes": "感情表現"
+   },
+   "TrialsCard": {
+      "FiveWins": "5勝目の報酬 (防具)",
+      "SevenWins": "7勝目の報酬 (武器)",
+      "Flawless": "完全勝利"
+   }
+}

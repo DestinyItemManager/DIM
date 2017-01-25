@@ -1,5 +1,4 @@
-app/scripts/jquery-ui.position.js
-app/vendor/
+src/scripts/jquery-ui.position.js
 build/
 dist/
 Gruntfile.js
