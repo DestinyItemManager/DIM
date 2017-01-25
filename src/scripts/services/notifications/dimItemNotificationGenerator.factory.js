@@ -7,6 +7,7 @@ const _ = require('underscore');
   angular.module('dimApp')
     .factory('dimItemNotificationGenerator', ItemNotificationGenerator)
     .run(['dimItemNotificationGenerator', (dimItemNotificationGenerator) => {
+      //Assuming on for prototype
       dimItemNotificationGenerator.start();
     }]);
 
@@ -39,9 +40,6 @@ const _ = require('underscore');
 
         if (!this.active) {
           this.active = true;
-
-          // Whenever the store is reloaded, run the farming algo
-          // That way folks can reload manually too
           cancelReloadListener = $rootScope.$on('dim-stores-updated', function(e, data) {
             if (self.active) {
               checkForNewStuff(_.find(data.stores, function(store) { 
