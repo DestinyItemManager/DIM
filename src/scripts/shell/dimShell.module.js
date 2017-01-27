@@ -1,8 +1,12 @@
 import angular from 'angular';
-import PlatformChoice from './dimPlatformChoice.component';
+import {
+  PlatformChoiceComponent,
+  PlatformChoiceController
+} from './platform-choice/index';
 
 angular
   .module('dimShell', [])
-  .component('dimPlatformChoice', PlatformChoice);
+  .controller('dimPlatformChoiceCtrl', PlatformChoiceController)
+  .component('dimPlatformChoice', PlatformChoiceComponent);
 
 export default 'dimShell';
