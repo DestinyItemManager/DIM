@@ -1,16 +1,14 @@
 import angular from 'angular';
-// import {
-//   AppController
-// } from './dimAppCtrl.controller';
 import {
-  PlatformChoiceComponent,
-  PlatformChoiceController
-} from './platform-choice/index';
+  ActivityTrackerService
+} from './activity-tracker.service';
+import {
+  PlatformChoiceComponent
+} from './platform-choice';
 
 angular
   .module('dimShell', [])
-  // .controller('dimAppCtrl', AppController)
   .component('dimPlatformChoice', PlatformChoiceComponent)
-  .controller('dimPlatformChoiceCtrl', PlatformChoiceController);
+  .service('dimActivityTracker', ActivityTrackerService);
 
 export default 'dimShell';

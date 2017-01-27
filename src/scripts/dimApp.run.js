@@ -18,28 +18,8 @@ const upgradeChrome = {
   "pt-br": upgradeChromePTBR
 };
 
-function run($window, $rootScope, $translate, loadingTracker, $timeout,
-  toaster, SyncService, dimInfoService, dimFeatureFlags, dimSettingsService) {
+function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFeatureFlags, dimSettingsService) {
   'ngInject';
-
-  $rootScope.loadingTracker = loadingTracker;
-
-  // 1 Hour
-  $rootScope.inactivityLength = 60 * 60 * 1000;
-
-  $rootScope.isUserInactive = () => {
-    var currentTime = Date.now();
-
-    // Has This User Been Inactive For More Than An Hour
-    return ((currentTime) - $rootScope.lastActivity) > $rootScope.inactivityLength;
-  };
-
-  $rootScope.trackActivity = () => {
-    $rootScope.lastActivity = Date.now();
-  };
-
-  // Track Our Initial Activity of Starting the App
-  $rootScope.trackActivity();
 
   $window.initgapi = () => {
     SyncService.init();
@@ -61,7 +41,11 @@ function run($window, $rootScope, $translate, loadingTracker, $timeout,
 
     if (dimFeatureFlags.changelogToaster && ($DIM_FLAVOR === 'release')) {
       dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
-        title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', { version: $DIM_VERSION }) : $translate.instant('Help.Version.Beta', { version: $DIM_VERSION }),
+        title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', {
+          version: $DIM_VERSION
+        }) : $translate.instant('Help.Version.Beta', {
+          version: $DIM_VERSION
+        }),
         view: changelog
       });
     }

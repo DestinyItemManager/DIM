@@ -2,7 +2,7 @@ import isFunction from 'lodash/isFunction';
 import templateUrl from './platform-choice.html';
 import './platform-choice.scss';
 
-export class PlatformChoiceController {
+class PlatformChoiceController {
   constructor() {
     this.current = null;
     this.onChange = null;
@@ -34,6 +34,6 @@ export const PlatformChoiceComponent = {
     onPlatformChange: '&',
     platforms: '<'
   },
-  controller: 'dimPlatformChoiceCtrl as $ctrl',
+  controller: PlatformChoiceController,
   templateUrl: templateUrl
 };

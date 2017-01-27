@@ -4,12 +4,12 @@ import _ from 'lodash';
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
-
-function DimApp(dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   'ngInject';
 
   var vm = this;
 
+  vm.loadingTracker = loadingTracker;
   vm.platforms = [];
 
   vm.platformChange = function platformChange(platform) {
@@ -205,13 +205,17 @@ function DimApp(dimState, ngDialog, $rootScope, loadingTracker, dimPlatformServi
   // Don't refresh more than once a minute
   var refresh = _.throttle(vm.refresh, 60 * 1000);
 
+  const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
+  const activeWithinLastHour = dimActivityTracker.activeWithinTimespan.bind(dimActivityTracker, HOUR_IN_MILLISECONDS);
+
+  vm.trackActivity = dimActivityTracker.track.bind(dimActivityTracker);
   vm.startAutoRefreshTimer = function() {
     var secondsToWait = 360;
 
     $rootScope.autoRefreshTimer = $interval(function() {
       // Only Refresh If We're Not Already Doing Something
       // And We're Not Inactive
-      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
+      if (!loadingTracker.active() && activeWithinLastHour() && document.visibilityState === 'visible') {
         refresh();
       }
     }, secondsToWait * 1000);
@@ -221,7 +225,7 @@ function DimApp(dimState, ngDialog, $rootScope, loadingTracker, dimPlatformServi
 
   // Refresh when the user comes back to the page
   document.addEventListener("visibilitychange", function() {
-    if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
+    if (!loadingTracker.active() && activeWithinLastHour() && document.visibilityState === 'visible') {
       refresh();
     }
   }, false);

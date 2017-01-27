@@ -120,8 +120,8 @@
         </td>
         <td>
           <div id="spreadsheetLinks">
-            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Weapons"></span></button>
-            <button ng-click="vm.downloadArmorCsv()" ng-disabled="loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Armor"></span></button>
+            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Weapons"></span></button>
+            <button ng-click="vm.downloadArmorCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Armor"></span></button>
           </div>
         </td>
       </tr>
