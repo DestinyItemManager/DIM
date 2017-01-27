@@ -36,7 +36,6 @@ function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $
     let partitionCount = 0;
     let partitionSize = 0;
     _.each(infos, (v, k) => {
-      console.log(v, k);
       partition[k] = v;
       partitionSize++;
       if (partitionSize >= 50) {
