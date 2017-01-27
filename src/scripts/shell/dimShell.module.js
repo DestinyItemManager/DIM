@@ -1,4 +1,7 @@
 import angular from 'angular';
+// import {
+//   AppController
+// } from './dimAppCtrl.controller';
 import {
   PlatformChoiceComponent,
   PlatformChoiceController
@@ -6,7 +9,8 @@ import {
 
 angular
   .module('dimShell', [])
-  .controller('dimPlatformChoiceCtrl', PlatformChoiceController)
-  .component('dimPlatformChoice', PlatformChoiceComponent);
+  // .controller('dimAppCtrl', AppController)
+  .component('dimPlatformChoice', PlatformChoiceComponent)
+  .controller('dimPlatformChoiceCtrl', PlatformChoiceController);
 
 export default 'dimShell';

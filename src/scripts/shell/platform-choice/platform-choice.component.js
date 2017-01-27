@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import isFunction from 'lodash/isFunction';
 import templateUrl from './platform-choice.html';
 import './platform-choice.scss';
 
@@ -18,8 +18,9 @@ export class PlatformChoiceController {
     }
   }
 
-  changePlatform(platform) {
-    if (_.isFunction(self.onChange)) {
+  change(platform) {
+    debugger;
+    if (platform && isFunction(self.onChange)) {
       self.onChange({
         platform: platform
       });
@@ -33,6 +34,6 @@ export const PlatformChoiceComponent = {
     onChange: '&',
     platforms: '<'
   },
-  controller: 'dimPlatformChoiceCtrl',
+  controller: 'dimPlatformChoiceCtrl as $ctrl',
   templateUrl: templateUrl
 };
