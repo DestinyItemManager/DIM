@@ -1,10 +1,9 @@
 import angular from 'angular';
-import ActivityTrackerService from './activity-tracker.service';
-import PlatformChoiceComponent from './platform-choice/platform-choice.component';
+import { ActivityTrackerService } from './activity-tracker.service';
+import { PlatformChoiceComponent } from './platform-choice/platform-choice.component';
 
-angular
+export const ShellModule = angular
   .module('dimShell', [])
   .component('dimPlatformChoice', PlatformChoiceComponent)
-  .service('dimActivityTracker', ActivityTrackerService);
-
-export default 'dimShell';
+  .service('dimActivityTracker', ActivityTrackerService)
+  .name;

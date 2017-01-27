@@ -1,4 +1,4 @@
-export default class ActivityTrackerService {
+export class ActivityTrackerService {
   constructor() {
     this.track();
   }
