@@ -5,23 +5,23 @@ import './platform-choice.scss';
 export class PlatformChoiceController {
   constructor() {
     this.current = null;
+    this.onChange = null;
     this.platforms = [];
   }
 
   $onChanges(changes) {
     if (changes.platforms) {
-      self.platforms = changes.platforms.currentValue;
+      this.platforms = changes.platforms.currentValue;
     }
 
     if (changes.current) {
-      self.current = changes.current.currentValue;
+      this.current = changes.current.currentValue;
     }
   }
 
   change(platform) {
-    debugger;
-    if (platform && isFunction(self.onChange)) {
-      self.onChange({
+    if (platform && isFunction(this.onPlatformChange)) {
+      this.onPlatformChange({
         platform: platform
       });
     }
@@ -31,7 +31,7 @@ export class PlatformChoiceController {
 export const PlatformChoiceComponent = {
   bindings: {
     current: '<',
-    onChange: '&',
+    onPlatformChange: '&',
     platforms: '<'
   },
   controller: 'dimPlatformChoiceCtrl as $ctrl',

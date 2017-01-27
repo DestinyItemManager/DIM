@@ -32,7 +32,7 @@
       <div id="header">
         <div class="content">
           <span class="header-right">
-            <dim-platform-choice platforms="app.platforms" current="app.currentPlatform" on-change="app.platformChange(platform)" class="header-right"></dim-platform-choice>
+            <dim-platform-choice platforms="app.platforms" current="app.currentPlatform" on-platform-change="app.platformChange(platform)" class="header-right"></dim-platform-choice>
             <div class="header-right" id="actions">
 
               <span class="link" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': loadingTracker.active()}" class="fa fa-refresh"></i></span>
