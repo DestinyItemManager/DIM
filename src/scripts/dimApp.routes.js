@@ -1,3 +1,4 @@
+import content from 'app/views/content.html';
 import inventory from 'app/views/inventory.template.html';
 import best from 'app/views/best.template.html';
 import vendors from 'app/views/vendors.template.html';
@@ -17,12 +18,13 @@ function getStates() {
     state: 'root',
     config: {
       abstract: true,
-      templateUrl: inventory,
+      templateUrl: content,
       url: ''
     }
   }, {
     state: 'inventory',
     config: {
+      parent: 'root',
       templateUrl: inventory,
       url: '/inventory'
     }
