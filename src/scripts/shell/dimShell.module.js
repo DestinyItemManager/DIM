@@ -1,10 +1,6 @@
 import angular from 'angular';
-import {
-  ActivityTrackerService
-} from './activity-tracker.service';
-import {
-  PlatformChoiceComponent
-} from './platform-choice';
+import ActivityTrackerService from './activity-tracker.service';
+import PlatformChoiceComponent from './platform-choice/platform-choice.component';
 
 angular
   .module('dimShell', [])

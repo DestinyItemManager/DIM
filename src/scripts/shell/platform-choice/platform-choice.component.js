@@ -28,7 +28,7 @@ class PlatformChoiceController {
   }
 }
 
-export const PlatformChoiceComponent = {
+export default {
   bindings: {
     current: '<',
     onPlatformChange: '&',
