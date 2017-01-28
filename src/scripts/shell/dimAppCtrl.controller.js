@@ -1,5 +1,5 @@
 import angular from 'angular';
-import _ from 'lodash';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
