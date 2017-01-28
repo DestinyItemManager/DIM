@@ -4,9 +4,27 @@ import _ from 'underscore';
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
+function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+  'ngInject';
 
-function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   var vm = this;
+
+  vm.loadingTracker = loadingTracker;
+  vm.platforms = [];
+
+  vm.platformChange = function platformChange(platform) {
+    loadingTracker.addPromise(dimPlatformService.setActive(platform));
+  };
+
+  $scope.$on('dim-platforms-updated', function(e, args) {
+    vm.platforms = args.platforms;
+  });
+
+  $scope.$on('dim-active-platform-updated', function(e, args) {
+    dimState.active = vm.currentPlatform = args.platform;
+  });
+
+  loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
   vm.settings = dimSettingsService;
   $scope.$watch('app.settings.itemSize', function(size) {
@@ -59,24 +77,26 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
   });
 
   if (vm.featureFlags.tagsEnabled) {
-  /* Add each hotkey manually until hotkeys can be translated.
-      _.each(dimSettingsService.itemTags, (tag) => {
-        if (tag.hotkey) {
-          hotkeys.add({
-            combo: [tag.hotkey],
-            description: "Mark item as '" + tag.label + "'",
-            callback: function() {
-              $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
-            }
-          });
-        }
-      });
-  */
+    /* Add each hotkey manually until hotkeys can be translated.
+        _.each(dimSettingsService.itemTags, (tag) => {
+          if (tag.hotkey) {
+            hotkeys.add({
+              combo: [tag.hotkey],
+              description: "Mark item as '" + tag.label + "'",
+              callback: function() {
+                $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+              }
+            });
+          }
+        });
+    */
     hotkeys.add({
       combo: ['!'],
       description: "Mark item as 'Favorite'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'favorite'
+        });
       }
     });
 
@@ -84,7 +104,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
       combo: ['@'],
       description: "Mark item as 'Keep'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'keep'
+        });
       }
     });
 
@@ -92,7 +114,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
       combo: ['#'],
       description: "Mark item as 'Junk'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'junk'
+        });
       }
     });
 
@@ -100,7 +124,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
       combo: ['$'],
       description: "Mark item as 'Infuse'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'infuse'
+        });
       }
     });
   }
@@ -147,9 +173,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
         });
 
         // if (ga) {
-          // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
-          // Send a virtual pageview event, even though this is a popup
-          // ga('send', 'pageview', { page: '/' + name });
+        // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
+        // Send a virtual pageview event, even though this is a popup
+        // ga('send', 'pageview', { page: '/' + name });
         // }
       }
     };
@@ -179,13 +205,17 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
   // Don't refresh more than once a minute
   var refresh = _.throttle(vm.refresh, 60 * 1000);
 
+  const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
+  const activeWithinLastHour = dimActivityTracker.activeWithinTimespan.bind(dimActivityTracker, HOUR_IN_MILLISECONDS);
+
+  vm.trackActivity = dimActivityTracker.track.bind(dimActivityTracker);
   vm.startAutoRefreshTimer = function() {
     var secondsToWait = 360;
 
     $rootScope.autoRefreshTimer = $interval(function() {
       // Only Refresh If We're Not Already Doing Something
       // And We're Not Inactive
-      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
+      if (!loadingTracker.active() && activeWithinLastHour() && document.visibilityState === 'visible') {
         refresh();
       }
     }, secondsToWait * 1000);
@@ -195,7 +225,7 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
 
   // Refresh when the user comes back to the page
   document.addEventListener("visibilitychange", function() {
-    if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
+    if (!loadingTracker.active() && activeWithinLastHour() && document.visibilityState === 'visible') {
       refresh();
     }
   }, false);
