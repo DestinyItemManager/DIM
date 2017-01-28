@@ -1,12 +1,9 @@
 import angular from 'angular';
 import routerHelperProvider from './router-helper.provider';
 
-const name = 'blocks.router';
-
-angular
-  .module(name, [
+export const RouterBlockModule = angular
+  .module('blocks.router', [
     'ui.router'
   ])
-  .provider('routerHelper', routerHelperProvider);
-
-export default name;
+  .provider('routerHelper', routerHelperProvider)
+  .name;
