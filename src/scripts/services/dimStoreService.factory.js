@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { sum, count } from '../util';
+import idbKeyval from 'idb-keyval';
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService);
@@ -1435,15 +1436,16 @@ function StoreService(
 
   function loadNewItems(activePlatform) {
     if (activePlatform) {
-      return SyncService.get().then(function processCachedNewItems(data) {
-        return new Set(data[newItemsKey()]);
-      });
+      const key = newItemsKey();
+      // Clean out old new-items from the Sync Service, we store in IndexedDB now.
+      SyncService.remove(key);
+      return idbKeyval.get(key).then((v) => v || new Set());
     }
     return $q.resolve(new Set());
   }
 
   function saveNewItems(newItems) {
-    SyncService.set({ [newItemsKey()]: [...newItems] });
+    return idbKeyval.set(newItemsKey(), newItems);
   }
 
   function newItemsKey() {

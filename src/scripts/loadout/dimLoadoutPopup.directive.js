@@ -82,7 +82,13 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
 
   vm.deleteLoadout = function deleteLoadout(loadout) {
     if ($window.confirm($translate.instant('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      dimLoadoutService.deleteLoadout(loadout);
+      dimLoadoutService.deleteLoadout(loadout)
+        .catch((e) => {
+          toaster.pop('error',
+                      $translate.instant('Loadouts.DeleteErrorTitle'),
+                      $translate.instant('Loadouts.DeleteErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+          console.error(e);
+        });
     }
   };
 

@@ -5,7 +5,7 @@ angular.module('dimApp')
   .factory('SyncService', SyncService);
 
 
-function SyncService($q, $window) {
+function SyncService($q) {
   var cached; // cached is the data in memory,
   var fileId; // reference to the file in drive
   var membershipId; // logged in bungie user id
@@ -34,90 +34,84 @@ function SyncService($q, $window) {
       return $q.resolve();
     }
 
-    var deferred = $q.defer();
-
-    // load the drive client.
-    gapi.client.load('drive', 'v2', function() {
-      // grab all of the list files
-      gapi.client.drive.files.list().execute(function(list) {
-        if (list.code === 401) {
-          $window.alert('To re-authorize google drive, must restart your browser.');
-          deferred.resolve();
-          return deferred.promise;
-        }
-
-        // look for the saved file.
-        for (var i = list.items.length - 1; i > 0; i--) {
-          if (list.items[i].title === 'DIM-' + membershipId) {
-            fileId = list.items[i].id;
-            get(true).then(function(data) {
-              set(data, true);
-              deferred.resolve();
-            });
-            return deferred.promise;
+    return new $q((resolve, reject) => {
+      // load the drive client.
+      gapi.client.load('drive', 'v2', function() {
+        // grab all of the list files
+        gapi.client.drive.files.list().execute(function(list) {
+          if (list.code === 401) {
+            reject(new Error('To re-authorize google drive, must restart your browser.'));
+            return;
           }
-        }
 
-        // couldn't find the file, lets create a new one.
-        gapi.client.request({
-          path: '/drive/v2/files',
-          method: 'POST',
-          body: {
-            title: 'DIM-' + membershipId,
-            mimeType: 'application/json',
-            parents: [{
-              id: 'appfolder'
-            }]
+          // look for the saved file.
+          for (var i = list.items.length - 1; i > 0; i--) {
+            if (list.items[i].title === 'DIM-' + membershipId) {
+              fileId = list.items[i].id;
+              get(true).then(function(data) {
+                set(data, true);
+                resolve();
+              });
+              return;
+            }
           }
-        }).execute(function(file) {
-          fileId = file.id;
-          set({
-            fileId: fileId
+
+          // couldn't find the file, lets create a new one.
+          gapi.client.request({
+            path: '/drive/v2/files',
+            method: 'POST',
+            body: {
+              title: 'DIM-' + membershipId,
+              mimeType: 'application/json',
+              parents: [{
+                id: 'appfolder'
+              }]
+            }
+          }).execute(function(file) {
+            fileId = file.id;
+            set({
+              fileId: fileId
+            }).then(resolve);
           });
-          deferred.resolve();
-        });
 
-        return deferred.promise;
+          return;
+        });
       });
     });
-
-    return deferred.promise;
   }
 
   // check if the user is authorized with google drive
   function authorize() {
-    var deferred = $q.defer();
-
-    // we're a chrome app so we do this
-    if (window.chrome && chrome.identity) {
-      chrome.identity.getAuthToken({
-        interactive: true
-      }, function(token) {
-        if (chrome.runtime.lastError) {
-          revokeDrive();
-          return;
-        }
-        gapi.auth.setToken({
-          access_token: token
+    return new $q((resolve, reject) => {
+      // we're a chrome app so we do this
+      if (window.chrome && chrome.identity) {
+        chrome.identity.getAuthToken({
+          interactive: true
+        }, function(token) {
+          if (chrome.runtime.lastError) {
+            revokeDrive();
+            return;
+          }
+          gapi.auth.setToken({
+            access_token: token
+          });
+          getFileId().then(resolve);
         });
-        getFileId().then(deferred.resolve);
-      });
-    } else { // otherwise we do the normal auth flow
-      gapi.auth.authorize(drive, function(result) {
-        // if no errors, we're good to sync!
-        drive.immediate = result && !result.error;
+      } else { // otherwise we do the normal auth flow
+        gapi.auth.authorize(drive, function(result) {
+          // if no errors, we're good to sync!
+          drive.immediate = result && !result.error;
 
-        // resolve promise for errors
-        if (!result || result.error) {
-          deferred.reject(result);
-          return;
-        }
+          // resolve promise for errors
+          if (!result || result.error) {
+            reject(new Error(result));
+            return;
+          }
 
-        getFileId().then(deferred.resolve);
-      });
-    }
-
-    return deferred.promise;
+          getFileId().then(resolve);
+        });
+      }
+    });
   }
 
   // save data {key: value}
@@ -146,45 +140,41 @@ function SyncService($q, $window) {
 
     // save to chrome sync
     if (window.chrome && chrome.storage && chrome.storage.sync) {
-      var deferred = $q.defer();
-
-      chrome.storage.sync.set(cached, () => {
-        if (chrome.runtime.lastError) {
-          deferred.reject(chrome.runtime.lastError);
-        } else {
-          deferred.resolve();
-        }
+      return new $q((resolve, reject) => {
+        chrome.storage.sync.set(cached, () => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError));
+          } else {
+            resolve();
+          }
+        });
       });
-
-      return deferred.promise;
     }
-    // else if(chrome.storage && chrome.storage.local) {
-    //   chrome.storage.local.set(cached, function() {
-    //     console.log('saved to chrome local.', cached);
-    //     if (chrome.runtime.lastError) {
-    //       console.log('error with chrome local.')
-    //     }
-    //   });
-    // }
 
+
+    // TODO: Do we want to save to both sync and drive?
     fileId = cached.fileId;
 
     // save to google drive
     if (fileId) {
-      gapi.client.request({
-        path: '/upload/drive/v2/files/' + fileId,
-        method: 'PUT',
-        params: {
-          uploadType: 'media',
-          alt: 'json'
-        },
-        body: cached
-      }).execute(function(resp) {
-        if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
-          console.log('error saving. revoking drive.');
-          revokeDrive();
-          return;
-        }
+      return new $q((resolve, reject) => {
+        gapi.client.request({
+          path: '/upload/drive/v2/files/' + fileId,
+          method: 'PUT',
+          params: {
+            uploadType: 'media',
+            alt: 'json'
+          },
+          body: cached
+        }).execute(function(resp) {
+          if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
+            revokeDrive();
+            reject(new Error('error saving. revoking drive: ' + resp.error));
+            return;
+          } else {
+            resolve();
+          }
+        });
       });
     }
 
@@ -198,8 +188,6 @@ function SyncService($q, $window) {
       return $q.resolve(cached);
     }
 
-    var deferred = $q.defer();
-
     // grab from localStorage first
     cached = JSON.parse(localStorage.getItem('DIM'));
 
@@ -207,27 +195,30 @@ function SyncService($q, $window) {
     if (fileId || (cached && cached.fileId)) {
       fileId = fileId || cached.fileId;
 
-      ready.promise.then(authorize).then(function() {
-        gapi.client.load('drive', 'v2', function() {
-          gapi.client.drive.files.get({
-            fileId: fileId,
-            alt: 'media'
-          }).execute(function(resp) {
-            if (resp.code === 401 || resp.code === 404) {
-              revokeDrive();
-              return;
-            }
-            cached = resp;
-            deferred.resolve(cached);
-            return;
+      return ready.promise.then(authorize).then(function() {
+        return new $q((resolve) => {
+          gapi.client.load('drive', 'v2', function() {
+            gapi.client.drive.files.get({
+              fileId: fileId,
+              alt: 'media'
+            }).execute(function(resp) {
+              if (resp.code === 401 || resp.code === 404) {
+                revokeDrive();
+                return;
+              }
+              cached = resp;
+              resolve(cached);
+            });
           });
         });
       });
     } // else get from chrome sync
     else if (window.chrome && chrome.storage && chrome.storage.sync) {
-      chrome.storage.sync.get(null, function(data) {
-        cached = data;
-        deferred.resolve(cached);
+      return new $q((resolve) => {
+        chrome.storage.sync.get(null, function(data) {
+          cached = data;
+          resolve(cached);
+        });
       });
     } // else get from chrome local
     // else if(chrome.storage && chrome.storage.local) {
@@ -240,10 +231,8 @@ function SyncService($q, $window) {
 
     // otherwise, just use local storage
     else {
-      deferred.resolve(cached);
+      return $q.when(cached);
     }
-
-    return deferred.promise;
   }
 
   // remove something from DIM by key
