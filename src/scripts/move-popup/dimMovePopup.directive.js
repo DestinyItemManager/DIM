@@ -56,6 +56,7 @@ function MovePopup() {
 
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
   var vm = this;
+  vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
 
   var shown = false;
@@ -88,15 +89,6 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
       });
     }
   };
-
-  // TODO: cache this, instead?
-  $scope.$watch('vm.item', function() {
-    if (vm.item.amount > 1) {
-      var store = dimStoreService.getStore(vm.item.owner);
-      vm.maximum = store.amountOfItem(vm.item);
-      vm.moveAmount = vm.item.amount;
-    }
-  });
 
   /*
   * Open up the dialog for infusion by passing
