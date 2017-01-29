@@ -59,6 +59,11 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
 
+  if (vm.item.amount > 1) {
+    var store = dimStoreService.getStore(vm.item.owner);
+    vm.maximum = store.amountOfItem(vm.item);
+  }
+
   var shown = false;
 
   // Capture the dialog element
