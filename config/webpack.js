@@ -23,7 +23,7 @@ module.exports = (env) => {
   const config = {
     entry: {
       main: './src/index.js',
-      authReturn: './src/authReturn.js',
+      authReturn: './src/authReturn.js'
     },
 
     output: {
@@ -37,8 +37,8 @@ module.exports = (env) => {
       publicPath: '/',
       https: true,
       host: '0.0.0.0',
-      hot: false,
-      //headers: { "X-Custom-Header": "yes" }
+      hot: false
+      // headers: { "X-Custom-Header": "yes" }
     },
 
     devtool: 'cheap-module-source-map',
@@ -65,39 +65,39 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: { name: ASSET_NAME_PATTERN },
+              options: { name: ASSET_NAME_PATTERN }
             },
             'extract-loader',
             'html-loader'
-          ],
+          ]
         }, {
           test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
             name: ASSET_NAME_PATTERN
-          },
+          }
         }, {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
             fallbackLoader: 'style-loader',
-            loader: 'css-loader!sass-loader',
-          }),
+            loader: 'css-loader!sass-loader'
+          })
         }
-      ],
+      ]
     },
 
     resolve: {
       extensions: ['.js', '.json'],
 
       alias: {
-        app: path.resolve('./src'),
+        app: path.resolve('./src')
       }
     },
 
     plugins: [
       new CleanWebpackPlugin(['dist'], {
-        root: path.resolve('./'),
+        root: path.resolve('./')
       }),
 
       new NotifyPlugin('DIM', !isDev),
@@ -107,20 +107,20 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'index.html',
-        template: '!handlebars-loader!src/index.html',
+        template: '!handlebars-loader!src/index.html'
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'return.html',
-        template: '!handlebars-loader!src/return.html',
+        template: '!handlebars-loader!src/return.html'
       }),
 
       new CopyWebpackPlugin([
         {
           from: './node_modules/zip-js/WebContent',
           to: 'static/zipjs',
-          ignore: ['tests/**/*'],
+          ignore: ['tests/**/*']
         },
 
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
@@ -137,7 +137,7 @@ module.exports = (env) => {
         // TODO: Quick hack to get elemental damage icon for StoreItem
         { from: './src/images/arc.png', to: 'images' },
         { from: './src/images/solar.png', to: 'images' },
-        { from: './src/images/void.png', to: 'images' },
+        { from: './src/images/void.png', to: 'images' }
       ]),
 
       new webpack.DefinePlugin({
@@ -148,14 +148,14 @@ module.exports = (env) => {
         $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL)
       }),
 
-      new Visualizer(),
+      new Visualizer()
     ],
 
     node: {
       fs: 'empty',
       net: 'empty',
       tls: 'empty'
-    },
+    }
   };
 
   if (!isDev) {
@@ -168,16 +168,16 @@ module.exports = (env) => {
     // FYI, uglification runs on final chunks rather than individual modules
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       exclude: /-sqlLib-/, // ensure the sqlLib chunk doesnt get minifed
-      compress: { warnings: false, },
-      output: { comments: false, },
-      sourceMap: true,
+      compress: { warnings: false },
+      output: { comments: false },
+      sourceMap: true
     }));
 
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       test: /-sqlLib-/, // run only for the sql.js chunk
       compress: false,
-      output: { comments: false, },
-      sourceMap: true,
+      output: { comments: false },
+      sourceMap: true
     }));
   }
 
