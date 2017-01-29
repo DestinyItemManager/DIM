@@ -31,36 +31,42 @@ function getStates() {
   }, {
     state: 'best',
     config: {
+      parent: 'root',
       templateUrl: best,
       url: '/best'
     }
   }, {
     state: 'vendors',
     config: {
+      parent: 'root',
       templateUrl: vendors,
       url: '/vendors'
     }
   }, {
     state: 'materials-exchange',
     config: {
+      parent: 'root',
       url: '/materials-exchange',
       templateUrl: materialExchange,
     }
   }, {
     state: 'debugItem',
     config: {
+      parent: 'root',
       url: '/debugItem/:itemId',
       templateUrl: debugItem,
     }
   }, {
     state: 'developer',
     config: {
+      parent: 'root',
       url: '/developer',
       templateUrl: developer,
     }
   }, {
     state: 'login',
     config: {
+      parent: 'root',
       url: '/login',
       templateUrl: login,
     }
