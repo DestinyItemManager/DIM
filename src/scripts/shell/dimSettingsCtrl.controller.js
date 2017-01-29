@@ -4,10 +4,11 @@ import _ from 'underscore';
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
 
-function SettingsController(dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
+function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
   var vm = this;
 
   vm.featureFlags = dimFeatureFlags;
+  vm.loadingTracker = loadingTracker;
 
   $scope.$watchCollection('vm.settings', function() {
     dimSettingsService.save();

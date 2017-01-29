@@ -116,6 +116,10 @@
       "TransferItems": "Transfer items",
       "Using3": "using 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Error saving item info",
+     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {error}."
+   },
    "ItemMove": {
       "Consolidate": "Consolidated {name}",
       "Distributed": "Distributed {name}\n {name} is now equally divided between characters.",
@@ -231,7 +235,11 @@
       "NameRequired": "A name is required.",
       "MakeRoom": "Make Room for Postmaster",
       "MakeRoomDone": "Finished making room for {postmasterNum, plural, =1{1 Postmaster item} other{# Postmaster items}} by moving {movedNum, plural, =1{1 item} other{# items}} off of {store}.",
-      "MakeRoomError": "Unable to make room for all Postmaster items: {error}."
+      "MakeRoomError": "Unable to make room for all Postmaster items: {error}.",
+      "SaveErrorTitle": "Error saving loadout",
+      "SaveErrorDescription": "Unable to save loadout {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Error deleting loadout",
+      "DeleteErrorDescription": "Unable to delete loadout {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Building Destiny info database",

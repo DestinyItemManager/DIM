@@ -1,3 +1,7 @@
+# Next
+
+* Significantly increased the storage limit for tags and notes. It's still possible to go over (especially with long notes) but it should happen far less frequently - and it should notify you when it happens.
+
 # v3.16.0
 
 * Removed farming option to keep greens since they're disassembled by default now.
