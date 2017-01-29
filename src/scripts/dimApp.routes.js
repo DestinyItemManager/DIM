@@ -7,70 +7,59 @@ import debugItem from 'app/views/debugItem.template.html';
 import developer from 'app/scripts/developer/developer.template.html';
 import login from 'app/scripts/login/login.template.html';
 
-function routes(routerHelper) {
+function routes($stateProvider, $urlRouterProvider) {
   'ngInject';
 
-  routerHelper.configureStates(getStates(), '/inventory');
-}
-
-function getStates() {
-  return [{
-    state: 'root',
-    config: {
-      abstract: true,
-      templateUrl: content,
-      url: ''
-    }
+  const states = [{
+    name: 'root',
+    abstract: true
   }, {
-    state: 'inventory',
-    config: {
-      parent: 'root',
-      templateUrl: inventory,
-      url: '/inventory'
-    }
+    name: 'content',
+    parent: 'shell',
+    abstract: true,
+    templateUrl: content
   }, {
-    state: 'best',
-    config: {
-      parent: 'root',
-      templateUrl: best,
-      url: '/best'
-    }
+    name: 'inventory',
+    parent: 'content',
+    templateUrl: inventory,
+    url: '/inventory'
   }, {
-    state: 'vendors',
-    config: {
-      parent: 'root',
-      templateUrl: vendors,
-      url: '/vendors'
-    }
+    name: 'best',
+    parent: 'content',
+    templateUrl: best,
+    url: '/best'
   }, {
-    state: 'materials-exchange',
-    config: {
-      parent: 'root',
-      url: '/materials-exchange',
-      templateUrl: materialExchange,
-    }
+    name: 'vendors',
+    parent: 'content',
+    templateUrl: vendors,
+    url: '/vendors'
   }, {
-    state: 'debugItem',
-    config: {
-      parent: 'root',
-      url: '/debugItem/:itemId',
-      templateUrl: debugItem,
-    }
+    name: 'materials-exchange',
+    parent: 'content',
+    url: '/materials-exchange',
+    templateUrl: materialExchange
   }, {
-    state: 'developer',
-    config: {
-      parent: 'root',
-      url: '/developer',
-      templateUrl: developer,
-    }
+    name: 'debugItem',
+    parent: 'content',
+    url: '/debugItem/:itemId',
+    templateUrl: debugItem
   }, {
-    state: 'login',
-    config: {
-      parent: 'root',
-      url: '/login',
-      templateUrl: login,
-    }
+    name: 'developer',
+    parent: 'content',
+    url: '/developer',
+    templateUrl: developer
+  }, {
+    name: 'login',
+    parent: 'content',
+    url: '/login',
+    templateUrl: login
   }];
+
+  states.forEach((state) => {
+    $stateProvider.state(state);
+  });
+
+  $urlRouterProvider.otherwise('/inventory');
 }
 
 export default routes;
