@@ -262,7 +262,7 @@ function SyncService($q) {
           }
         });
       } else {
-        reject('Chrome storage object is not available.');
+        return set(cached, true);
       }
     });
   }
