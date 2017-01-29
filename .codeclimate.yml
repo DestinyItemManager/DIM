@@ -15,8 +15,6 @@ engines:
         enabled: false
       rest-spread-spacing:
         enabled: false
-      comma-dangle:
-        enabled: false
     config:
       config: ./.eslintrc
     enabled: true
