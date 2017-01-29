@@ -31,6 +31,7 @@ Clone the repo:
 Install dependencies:
 
 * `npm install`
+* Windows-based developers should refer to issue #1439 for [pre-requisit build tools](https://github.com/DestinyItemManager/DIM/issues/1439#issuecomment-275896668).
 
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
