@@ -253,13 +253,17 @@ function SyncService($q) {
     }
 
     return $q((resolve, reject) => {
-      chrome.storage.sync.remove(key, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      });
+      if (chrome.storage && chrome.storage.sync) {
+        chrome.storage.sync.remove(key, () => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        reject('Chrome storage object is not available.');
+      }
     });
   }
 
