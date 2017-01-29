@@ -90,7 +90,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
 
               return Promise.all([
                 typedArray,
-                requireSqlLib(), // load in the sql.js library
+                requireSqlLib() // load in the sql.js library
               ]);
             })
             .then(function([typedArray, SQLLib]) {
@@ -247,4 +247,3 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
     });
   }
 }
-

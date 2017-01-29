@@ -1048,7 +1048,7 @@ function StoreService(
       buildObjective('Losses', trials.scoreCard.losses, trials.scoreCard.maxLosses, false, 'trials'),
       buildObjective('FiveWins', trials.highestWinRank, trials.winRewardDetails[0].winCount, true),
       buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
-      buildObjective('Flawless', flawless, 1, true),
+      buildObjective('Flawless', flawless, 1, true)
     ];
   }
 
@@ -1611,4 +1611,3 @@ function StoreService(
   }
   // code above is from https://github.com/DestinyTrialsReport
 }
-

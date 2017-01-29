@@ -504,19 +504,19 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
                               value: 0,
                               tier: 0,
                               name: 'Intellect',
-                              icon: require('app/images/intellect.png'),
+                              icon: require('app/images/intellect.png')
                             },
                             STAT_DISCIPLINE: {
                               value: 0,
                               tier: 0,
                               name: 'Discipline',
-                              icon: require('app/images/discipline.png'),
+                              icon: require('app/images/discipline.png')
                             },
                             STAT_STRENGTH: {
                               value: 0,
                               tier: 0,
                               name: 'Strength',
-                              icon: require('app/images/strength.png'),
+                              icon: require('app/images/strength.png')
                             }
                           },
                           setHash: 0
@@ -755,4 +755,3 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
     vm.getItems();
   });
 }
-
