@@ -1,4 +1,4 @@
-engines: 
+engines:
   duplication:
     config:
       languages:
@@ -14,6 +14,8 @@ engines:
       no-mixed-operators:
         enabled: false
       rest-spread-spacing:
+        enabled: false
+      comma-dangle:
         enabled: false
     config:
       config: ./.eslintrc
