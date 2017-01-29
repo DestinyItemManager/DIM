@@ -7,7 +7,6 @@
     <p translate="{{vm.settings.farming.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc'}}" translate-values="{ store: vm.service.store.name }"></p>
     <div class="item-details"><span>
       <p translate="FarmingMode.Configuration"></p>
-      <p><input id="farm-greens" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.farmGreens' /><label for="farm-greens" translate-attr="{ title: 'FarmingMode.Greens.Tooltip'}" translate="FarmingMode.Greens"></p>
       <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" translate-attr="{title: 'FarmingMode.MakeRoom.Tooltip'}" translate="FarmingMode.MakeRoom"></label></p>
     </span><span>
       <p translate="FarmingMode.Quickmove"></p>
@@ -19,8 +18,8 @@
       <i class="fa fa-arrow-circle-left fa-2x link" translate-attr="{title: 'FarmingMode.Report.Hide'}" title="FarmingMode.Report.Hide" ng-click="vm.toggleReport()"></i>
       <p translate="FarmingMode.Report.Summary"></p>
       <p><timer interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></p>
-      <p>{{vm.reportService.glimmer}} <img src="/images/glimmer.png"></p>
-      <p>{{vm.reportService.marks}} <img src="/images/legendaryMarks.png"></p>
+      <p>{{vm.reportService.glimmer}} <img src="~app/images/glimmer.png"></p>
+      <p>{{vm.reportService.marks}} <img src="~app/images/legendaryMarks.png"></p>
     </div>
     <div class="farm-report-block">
       <span class="farm-report-rep" ng-show="vm.reportService.rep.length">
