@@ -399,12 +399,7 @@
             },
             OutOfRoom: "Non hai più spazio per trasferire oggetti dal {{character}}. E' il momento di decriptare degli engrammi e pulire il cestino!",
             Quickmove: "Spostamento Rapido",
-            Stop: "Stop",
-            Report: {
-              Show: "Show the detailed farming report screen",
-              Hide: "Return to the farming summary screen",
-              Summary: "Farming Report"
-            }
+            Stop: "Stop"
           },
           Filter: {
             EnterName: "Inserisci il nome di un oggetto:",
@@ -708,12 +703,7 @@
               Tooltip: "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um Platz im Tresor für Engramme zu machen."
             },
             Quickmove: "Schnelles Verschieben",
-            Stop: "Stop",
-            Report: {
-              Show: "Show the detailed farming report screen",
-              Hide: "Return to the farming summary screen",
-              Summary: "Farming Report"
-            }
+            Stop: "Stop"
           },
           Header: {
             About: "Über",
@@ -961,12 +951,7 @@
               Tooltip: "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
             },
             Quickmove: "Déplacement rapide",
-            Stop: "Stop",
-            Report: {
-              Show: "Show the detailed farming report screen",
-              Hide: "Return to the farming summary screen",
-              Summary: "Farming Report"
-            }
+            Stop: "Stop"
           },
           Header: {
             About: "À propos",
@@ -1195,12 +1180,7 @@
               Tooltip: "Si esta marcado, DIM va a mover armas y armadura para hacer espacio en el depósito para Engramas."
             },
             Quickmove: "Movimiento rápido",
-            Stop: "Detener",
-            Report: {
-              Show: "Show the detailed farming report screen",
-              Hide: "Return to the farming summary screen",
-              Summary: "Farming Report"
-            }
+            Stop: "Detener"
           },
           Header: {
             About: "Acerca de",
@@ -1502,12 +1482,7 @@
               Tooltip: "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
             },
             Quickmove: "Mover rapidamente",
-            Stop: "Parar",
-            Report: {
-              Show: "Show the detailed farming report screen",
-              Hide: "Return to the farming summary screen",
-              Summary: "Farming Report"
-            }
+            Stop: "Parar"
           },
           Header: {
             About: "Sobre",
