@@ -13,8 +13,8 @@ RUN npm install --quiet
 COPY . /usr/src/app
 
 # Generate CSS
-RUN npm run generate-css
+RUN npm start
 
 EXPOSE 8080
 # Run Sass watcher for Chrome
-CMD [ "npm", "run", "dev-chrome" ]
+CMD [ "npm", "start" ]

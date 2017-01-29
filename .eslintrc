@@ -1,10 +1,13 @@
 {
   "env": {
+    "es6": true,
     "browser": true,
-    "jquery": true
+    "jquery": true,
+    "node": true
   },
   "extends": "eslint:recommended",
   "root": true,
+  "sourceType": "module",
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
@@ -12,25 +15,9 @@
     }
   },
   "globals": {
-    "angular": true,
-    "$": true,
-    "_": true,
     "_gaq": true,
     "chrome": true,
-    "sum": true,
-    "count": true,
-    "flatMap": true,
     "gapi": true,
-    "Set": true,
-    "base64js": true,
-    "SQL": true,
-    "zip": true,
-    "Uint8Array": true,
-    "Int32Array": true,
-    "DataView": true,
-    "Proxy": true,
-    "ga": true,
-    "idbKeyval": true
   },
   "rules": {
     "array-callback-return": "error",
