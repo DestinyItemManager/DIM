@@ -21,13 +21,15 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags
+  dimFeatureFlags,
+  dimSettingsService
 ) {
   var _stores = [];
   var _idTracker = {};
 
   var _removedNewItems = new Set();
 
+  const dimClassifiedData = require('app/data/classified.json');
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {
@@ -621,6 +623,7 @@ function StoreService(
 
     if (!itemDef.icon && !itemDef.action) {
       itemDef.classified = true;
+      itemDef.classType = 3;
     }
 
     if (!itemDef.icon) {
@@ -637,6 +640,29 @@ function StoreService(
 
     if (!itemDef.itemName) {
       return null;
+    }
+
+    if (itemDef.classified) {
+      var language = dimSettingsService.language;
+      if (dimClassifiedData[itemDef.itemHash]) { // do we have declassification info for item?
+         // itemDef.icon = dimClassifiedData[itemDef.itemHash].icon;
+        itemDef.itemName = dimClassifiedData[itemDef.itemHash].i18n[language].itemName;
+        itemDef.itemDescription = dimClassifiedData[itemDef.itemHash].i18n[language].itemDescription;
+        itemDef.itemTypeName = dimClassifiedData[itemDef.itemHash].i18n[language].itemTypeName;
+        itemDef.bucketTypeHash = dimClassifiedData[itemDef.itemHash].bucketHash;
+        itemDef.tierType = dimClassifiedData[itemDef.itemHash].tierType;
+        itemDef.classType = dimClassifiedData[itemDef.itemHash].classType;
+        if (dimClassifiedData[itemDef.itemHash].primaryBaseStatHash) {
+          itemDef.primaryBaseStatHash = dimClassifiedData[itemDef.itemHash].primaryBaseStatHash;
+          itemDef.primaryStat = [];
+          itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
+          itemDef.primaryStat.value = dimClassifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
+          item.primaryStat = itemDef.primaryStat;
+        }
+        if (dimClassifiedData[itemDef.itemHash].stats) {
+          item.stats = dimClassifiedData[itemDef.itemHash].stats;
+        }
+      }
     }
 
     // fix itemDef for defense items with missing nodes
@@ -675,7 +701,7 @@ function StoreService(
     if (currentBucket.id.startsWith('BUCKET_VAULT')) {
       // TODO: Remove this if Bungie ever returns bucket.id for classified
       // items in the vault.
-      if (itemDef.classified) {
+      if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
         if (currentBucket.id.endsWith('WEAPONS')) {
           currentBucket = buckets.byType.Heavy;
         } else if (currentBucket.id.endsWith('ARMOR')) {
@@ -721,7 +747,7 @@ function StoreService(
       name: itemDef.itemName,
       description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
       icon: itemDef.icon,
-      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
+      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
       id: item.itemInstanceId,
       equipped: item.isEquipped,
       equipment: item.isEquipment,
@@ -1611,4 +1637,3 @@ function StoreService(
   }
   // code above is from https://github.com/DestinyTrialsReport
 }
-
