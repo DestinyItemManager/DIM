@@ -16,7 +16,9 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*((https?|chrome-extension):|data:image\/)/);
 
   $httpProvider.interceptors.push('ngHttpRateLimiterInterceptor');
-  $httpProvider.interceptors.push('http-refresh-token');
+  if (!window.chrome || !window.chrome.extension) {
+    $httpProvider.interceptors.push('http-refresh-token');
+  }
 
   // See https://angular-translate.github.io/docs/#/guide
   $translateProvider.useSanitizeValueStrategy('escape');
