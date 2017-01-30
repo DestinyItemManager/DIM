@@ -21,7 +21,8 @@
     "$DIM_FLAVOR": true,
     "$DIM_CHANGELOG": true,
     "$DIM_VERSION": true,
-    "$DIM_API_KEY": true
+    "$DIM_API_KEY": true,
+    "$DIM_AUTH_URL": true,
   },
   "rules": {
     "array-callback-return": "error",
