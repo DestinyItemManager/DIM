@@ -20,8 +20,6 @@ module.exports = (env) => {
     version += "." + process.env.TRAVIS_BUILD_NUMBER;
   }
 
-  console.log(env, JSON.stringify(process.env.API_KEY), JSON.stringify(process.env.AUTH_URL));
-
   const config = {
     entry: {
       main: './src/index.js',
