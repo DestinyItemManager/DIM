@@ -37,7 +37,7 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFe
       }, 0);
     }
 
-    console.log('DIM v$DIM_VERSION - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
+    console.log('DIM v' + $DIM_VERSION + ' (' + $DIM_FLAVOR + ') - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
     if (dimFeatureFlags.changelogToaster && ($DIM_FLAVOR === 'release')) {
       dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {

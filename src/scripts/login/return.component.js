@@ -20,7 +20,13 @@ function ReturnController($http) {
     ctrl.state = queryString.state;
     ctrl.authorized = (ctrl.code.length > 0);
 
-    const apiKey = $DIM_API_KEY || localStorage.apiKey;
+    var apiKey;
+
+    if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+      apiKey = $DIM_API_KEY;
+    } else {
+      apiKey = localStorage.apiKey;
+    }
 
     $http({
       method: 'POST',
