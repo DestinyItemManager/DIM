@@ -22,14 +22,27 @@ function StoreService(
   $translate,
   uuid2,
   dimFeatureFlags,
-  dimSettingsService
+  dimSettingsService,
+  $http
 ) {
   var _stores = [];
   var _idTracker = {};
 
   var _removedNewItems = new Set();
 
-  const dimClassifiedData = $DIM_FLAVOR === 'dev' ? require('app/data/classified.json') : require('http://beta.destinyitemmanger.com/classified.json');
+  var dimClassifiedData;
+  var dimClassifiedDataPromise;
+
+  if ($DIM_FLAVOR === 'dev') {
+    dimClassifiedData = require('app/data/classified.json');
+  } else {
+    dimClassifiedDataPromise = $http.get('https://beta.destinyitemmanager.com/classified.json')
+      .then(function(json) {
+        return json.data.itemHash;
+      });
+  }
+  console.log(dimClassifiedDataPromise);
+
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {

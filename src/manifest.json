@@ -21,6 +21,7 @@
   "permissions": [
     "storage",
     "*://www.bungie.net/*",
+    "*://*.destinyitemmanager.com/*",
     "cookies",
     "identity"
   ],
