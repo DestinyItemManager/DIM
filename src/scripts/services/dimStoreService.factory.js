@@ -29,7 +29,7 @@ function StoreService(
 
   var _removedNewItems = new Set();
 
-  const dimClassifiedData = require('app/data/classified.json');
+  const dimClassifiedData = $DIM_FLAVOR === 'dev' ? require('app/data/classified.json') : require('http://www.destinyitemmanger.com/classified.json');
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {
