@@ -39,7 +39,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
-    templateUrl: require('./dimStoreItem.directive.template.html'),
+    templateUrl: require('./dimStoreItem.directive.template.html')
   };
 
   function Link(scope, element) {
@@ -206,4 +206,3 @@ function StoreItemCtrl() {
   vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
   vm.draggable = (vm.item.equipment || vm.item.location.hasTransferDestination) && !vm.item.location.inPostmaster;
 }
-

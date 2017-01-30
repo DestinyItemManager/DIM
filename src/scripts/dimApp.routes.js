@@ -18,51 +18,51 @@ function getStates() {
     state: 'root',
     config: {
       abstract: true,
-      templateUrl: content,
-      url: ''
+      url: '',
+      templateUrl: content
     }
   }, {
     state: 'inventory',
     config: {
       parent: 'root',
-      templateUrl: inventory,
-      url: '/inventory'
+      url: '/inventory',
+      templateUrl: inventory
     }
   }, {
     state: 'best',
     config: {
-      templateUrl: best,
-      url: '/best'
+      url: '/best',
+      templateUrl: best
     }
   }, {
     state: 'vendors',
     config: {
-      templateUrl: vendors,
-      url: '/vendors'
+      url: '/vendors',
+      templateUrl: vendors
     }
   }, {
     state: 'materials-exchange',
     config: {
       url: '/materials-exchange',
-      templateUrl: materialExchange,
+      templateUrl: materialExchange
     }
   }, {
     state: 'debugItem',
     config: {
       url: '/debugItem/:itemId',
-      templateUrl: debugItem,
+      templateUrl: debugItem
     }
   }, {
     state: 'developer',
     config: {
       url: '/developer',
-      templateUrl: developer,
+      templateUrl: developer
     }
   }, {
     state: 'login',
     config: {
       url: '/login',
-      templateUrl: login,
+      templateUrl: login
     }
   }];
 }
