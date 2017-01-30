@@ -20,7 +20,7 @@ function ReturnController($http) {
     ctrl.state = queryString.state;
     ctrl.authorized = (ctrl.code.length > 0);
 
-    const apiKey = localStorage.apiKey;
+    const apiKey = $DIM_API_KEY || localStorage.apiKey;
 
     $http({
       method: 'POST',
