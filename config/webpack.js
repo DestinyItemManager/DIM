@@ -11,8 +11,14 @@ const NotifyPlugin = require('notify-webpack-plugin');
 
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
-module.exports = (options = {}) => {
-  const iconFlavor = options.isProd ? 'prod' : 'beta';
+const packageJson = require('../package.json');
+
+module.exports = (env) => {
+  const isDev = env === 'dev';
+  let version = packageJson.version.toString();
+  if (process.env.TRAVIS_BUILD_NUMBER) {
+    version += "." + process.env.TRAVIS_BUILD_NUMBER;
+  }
 
   const config = {
     entry: {
@@ -21,9 +27,18 @@ module.exports = (options = {}) => {
     },
 
     output: {
-      path: './dist',
+      path: path.resolve('./dist'),
       filename: '[name]-[chunkhash:6].js',
       chunkFilename: 'chunk-[id]-[name]-[chunkhash:6].js'
+    },
+
+    devServer: {
+      contentBase: path.resolve(__dirname, './src'),
+      publicPath: '/',
+      https: true,
+      host: '0.0.0.0',
+      hot: false,
+      //headers: { "X-Custom-Header": "yes" }
     },
 
     devtool: 'cheap-module-source-map',
@@ -39,7 +54,9 @@ module.exports = (options = {}) => {
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
+          use: [
+            'babel-loader'
+          ],
         }, {
           test: /\.json$/,
           loader: 'json-loader'
@@ -83,7 +100,7 @@ module.exports = (options = {}) => {
         root: path.resolve('./'),
       }),
 
-      new NotifyPlugin('DIM', options.prod),
+      new NotifyPlugin('DIM', !isDev),
 
       new ExtractTextPlugin('styles-[hash:6].css'),
 
@@ -108,20 +125,28 @@ module.exports = (options = {}) => {
 
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
-        { from: `./icons/${iconFlavor}/icon128.png` },
-        { from: `./icons/${iconFlavor}/icon16.png` },
-        { from: `./icons/${iconFlavor}/icon19.png` },
-        { from: `./icons/${iconFlavor}/icon38.png` },
-        { from: `./icons/${iconFlavor}/icon48.png` },
-        { from: `./icons/${iconFlavor}/favicon-16x16.png` },
-        { from: `./icons/${iconFlavor}/favicon-32x32.png` },
-        { from: `./icons/${iconFlavor}/favicon-96x96.png` },
+        { from: `./icons/${env}/icon128.png` },
+        { from: `./icons/${env}/icon16.png` },
+        { from: `./icons/${env}/icon19.png` },
+        { from: `./icons/${env}/icon38.png` },
+        { from: `./icons/${env}/icon48.png` },
+        { from: `./icons/${env}/favicon-16x16.png` },
+        { from: `./icons/${env}/favicon-32x32.png` },
+        { from: `./icons/${env}/favicon-96x96.png` },
 
         // TODO: Quick hack to get elemental damage icon for StoreItem
         { from: './src/images/arc.png', to: 'images' },
         { from: './src/images/solar.png', to: 'images' },
         { from: './src/images/void.png', to: 'images' },
       ]),
+
+      new webpack.DefinePlugin({
+        $DIM_VERSION: JSON.stringify(version),
+        $DIM_FLAVOR: JSON.stringify(env),
+        $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
+        $DIM_API_KEY: JSON.stringify(process.env.API_KEY),
+        $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL)
+      }),
 
       new Visualizer(),
     ],
@@ -133,7 +158,7 @@ module.exports = (options = {}) => {
     },
   };
 
-  if (options.prod) {
+  if (!isDev) {
     // Bail and fail hard on first error
     config.bail = true;
     config.stats = 'verbose';

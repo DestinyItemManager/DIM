@@ -30,6 +30,11 @@
          "Archetype": "このアイテムは {type} ではないため、比較できません。"
       }
    },
+   "Cooldown": {
+      "Grenade": "グレネードのクールダウン",
+      "Melee": "近接チャージのクールダウン",
+      "Super": "スーパースキルのクールダウン"
+   },
    "DidYouKnow": {
       "DidYouKnow": "知っていますか？",
       "DontShowAgain": "このヒントをもう一度表示しない",
@@ -49,7 +54,7 @@
       "SupportDIM": "DIMを支援する"
    },
    "ItemService": {
-      "PercentComplete": "({ percent | percent } 完了)"
+      "PercentComplete": "({ percent, number, percent } 完了)"
    },
    "Loadouts": {
       "Loadouts": "ロードアウト",
@@ -69,6 +74,9 @@
       "Cancel": "キャンセル"
    },
    "MovePopup": {
+      "Equip": "装備する",
+      "Store": "保管する",
+      "Take": "Take",
       "Vault": "保管庫"
    },
    "Notes": {
@@ -83,6 +91,9 @@
       "Intellect": "知性",
       "Strength": "腕力"
    },
+   "StoreBucket": {
+      "Move": "移動"
+   },
    "Tags": {
       "TagItem": "アイテムをタグする",
       "Favorite": "お気に入り",
@@ -92,6 +103,7 @@
    },
    "Vendors": {
       "Vendors": "ベンダー",
+      "All": "全て",
       "Day": "日間",
       "Load": "ローディングベンダー",
       "ArmorAndWeapons": "アーマーとウェポン",
@@ -100,5 +112,10 @@
       "Bounties": "バウンティ",
       "ShadersAndEmblems": "シェーダーとエンブレム",
       "Emotes": "感情表現"
+   },
+   "TrialsCard": {
+      "FiveWins": "5勝目の報酬 (防具)",
+      "SevenWins": "7勝目の報酬 (武器)",
+      "Flawless": "完全勝利"
    }
 }

@@ -92,8 +92,8 @@
       "NeverShow": "Nunca mostrar esto de nuevo.",
       "UpgradeChrome": "Por favor actualice Chrome",
       "Version": {
-         "Beta": "La Beta ha sido actualizada a la v$DIM_VERSION",
-         "Stable": "DIM v$DIM_VERSION ha sido Publicado"
+         "Beta": "La Beta ha sido actualizada a la v{version}",
+         "Stable": "DIM v{version} ha sido Publicado"
       },
       "Xur": "Xûr esta aquí."
    },
@@ -132,7 +132,7 @@
       "NotEnoughRoom": "No hay nada que podamos sacar fuera de {store} para hacerle espacio a {itemname}",
       "OnlyEquippedLevel": "Esto solo puede equiparse en personajes de nivel igual o superior a {level}",
       "OnlyEquippedClassLevel": "Esto solo puede equiparse en un {class} de nivel igual o superior a {level}.",
-      "PercentComplete": "({ percent | percent } Completar)",
+      "PercentComplete": "({ percent, number, percent } Completar)",
       "TooMuch": "Parece que pediste mover más objetos de los que existen en la fuente!",
       "TwoExotics": "No sabemos cómo conseguiste equipar más de 2 exóticas!"
    },
@@ -290,7 +290,10 @@
       "ExportSS": "Descargar hojas de cálculo",
       "ExportSSHelp": "Descargar una lista CSV de tus objetos que puede ser vista fácilmente en una aplicación de hojas de cálculo de tu preferencia.",
       "DIMPopups": "Ventanas emergentes de información de DIM",
-      "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos"
+      "DIMPopupsReset": "Reestablecer tips de información anteriormente escondidos",
+      "ImportExport": "Importa/Exporta configuraciones y data",
+      "Export": "Exporta Data DIM",
+      "Import": "Importa Data DIM"
    },
    "Stats": {
       "Discipline": "Disciplina",

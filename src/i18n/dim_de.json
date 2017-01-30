@@ -92,8 +92,8 @@
       "NeverShow": "Diesen Tipp nicht erneut zeigen",
       "UpgradeChrome": "Bitte aktualisiere Chrome",
       "Version": {
-         "Beta": "Beta wurde auf v$DIM_VERSION aktualisiert",
-         "Stable": "DIM v$DIM_VERSION veröffentlicht"
+         "Beta": "Beta wurde auf v{version} aktualisiert",
+         "Stable": "DIM v{version} veröffentlicht"
       },
       "Xur": "Xûr ist da"
    },
@@ -132,7 +132,7 @@
       "NotEnoughRoom": "Es gibt nichts was wir aus {store} wegbewegen könnten um Platz für {itemname} zu schaffen",
       "OnlyEquippedLevel": "Das kann nur von Charakteren ab einem Level von {level} oder drüber ausgerüstet werden.",
       "OnlyEquippedClassLevel": "Das kann nur von einem {class} ab einem Level von {level} oder drüber ausgerüstet werden.",
-      "PercentComplete": "({ percent | percent } fertig)",
+      "PercentComplete": "({ percent, number, percent } Fertig)",
       "TooMuch": "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!",
       "TwoExotics": "Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Gegenstände auszurüsten!"
    },
@@ -241,7 +241,11 @@
    "MovePopup": {
       "Consolidate": "Zusammenführen",
       "DistributeEvenly": "Gleichmäßig verteilen",
-      "Vault": "Tresor"
+      "Equip": "Equip",
+      "Split": "Split",
+      "Store": "Store",
+      "Take": "Take",
+      "Vault": "Vault"
    },
    "Notes": {
       "Error": "Fehler! Max 120 Zeichen für Notizen.",
@@ -286,7 +290,10 @@
       "ExportSS": "Lade Tabelle herunter",
       "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
       "DIMPopups": "DIM Info Popups",
-      "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps"
+      "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps",
+      "ImportExport": "Einstellungen und Daten importieren/exportieren",
+      "Export": "DIM Daten exportieren",
+      "Import": "DIM Daten importieren"
    },
    "Stats": {
       "Discipline": "Disziplin",

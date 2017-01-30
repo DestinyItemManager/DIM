@@ -92,8 +92,8 @@
       "NeverShow": "Never show me this again.",
       "UpgradeChrome": "Please Upgrade Chrome",
       "Version": {
-         "Beta": "Beta has been updated to v$DIM_VERSION",
-         "Stable": "DIM v$DIM_VERSION Released"
+         "Beta": "Beta has been updated to v{version}",
+         "Stable": "DIM v{version} Released"
       },
       "Xur": "Xûr is Here"
    },
@@ -117,6 +117,10 @@
       "TransferItems": "Transfer items",
       "Using3": "using 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Error saving item info",
+     "SaveInfoErrorDescription": "There's been a problem saving DIM-specific info for an item. One problem is that there is a limit on how much data can be stored - this is why tags and notes have not yet been allowed out of the Beta version. The error was: {error}."
+   },
    "ItemMove": {
       "Consolidate": "Consolidated {name}",
       "Distributed": "Distributed {name}\n {name} is now equally divided between characters.",
@@ -132,7 +136,7 @@
       "NotEnoughRoom": "There's nothing we can move out of {store} to make room for {itemname}",
       "OnlyEquippedLevel": "This can only be equipped on characters at or above level {level}.",
       "OnlyEquippedClassLevel": "This can only be equipped on a {class} at or above level {level}.",
-      "PercentComplete": "({ percent | percent } Complete)",
+      "PercentComplete": "({ percent, number, percent } Complete)",
       "TooMuch": "Looks like you requested to move more of this item than exists in the source!",
       "TwoExotics": "We don't know how you got more than 2 equipped exotics!"
    },
@@ -215,7 +219,11 @@
       "NameRequired": "A name is required.",
       "MakeRoom": "Make Room for Postmaster",
       "MakeRoomDone": "Finished making room for {postmasterNum, plural, =1{1 Postmaster item} other{# Postmaster items}} by moving {movedNum, plural, =1{1 item} other{# items}} off of {store}.",
-      "MakeRoomError": "Unable to make room for all Postmaster items: {error}."
+      "MakeRoomError": "Unable to make room for all Postmaster items: {error}.",
+      "SaveErrorTitle": "Error saving loadout",
+      "SaveErrorDescription": "Unable to save loadout {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Error deleting loadout",
+      "DeleteErrorDescription": "Unable to delete loadout {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Building Destiny info database",

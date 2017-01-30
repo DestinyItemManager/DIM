@@ -7,9 +7,10 @@
   head.appendChild(script);
 })();
 
-var _gaq = _gaq || [];
+window._gaq = window._gaq || [];
+var _gaq = window._gaq;
 _gaq.push(['_setAccount', 'UA-60316581-1']);
-_gaq.push(['_setCustomVar', 1, 'DIMVersion', '$DIM_VERSION', 3]);
+_gaq.push(['_setCustomVar', 1, 'DIMVersion', $DIM_VERSION, 3]);
 _gaq.push(['_trackPageview']);
 
 (function() {
