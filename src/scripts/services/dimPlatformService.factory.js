@@ -70,12 +70,11 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
 
     $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
 
-    getActivePlatform()
+    return getActivePlatform()
       .then(function(activePlatform) {
-        setActive(activePlatform);
-      });
-
-    return _platforms;
+        return setActive(activePlatform);
+      })
+      .then(() => _platforms);
   }
 
   function getActivePlatform() {

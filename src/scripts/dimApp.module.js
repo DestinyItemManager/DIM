@@ -17,8 +17,6 @@ import 'angular-promise-tracker';
 import 'angular-timer';
 import 'angular-uuid2/dist/angular-uuid2.js';
 
-import { ShellModule } from './shell/shell.module';
-
 import config from './dimApp.config';
 import routes from './dimApp.routes';
 import run from './dimApp.run';
@@ -35,7 +33,6 @@ export const DimAppModule = angular
     MessagesModule,
     MomentModule,
     RateLimiterModule,
-    ShellModule,
     SliderModule,
     ToasterModule,
     TranslateModule,
