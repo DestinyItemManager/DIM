@@ -1,9 +1,10 @@
+import { createSelector } from 'reselect';
 import { actionTypes as platformActionTypes } from './platform.actions';
 
 const initialPlatformsState = {
   ids: [],
   platforms: {},
-  selected: null,
+  selectedId: null,
   loaded: false
 };
 
@@ -22,7 +23,7 @@ const reducer = (state = initialPlatformsState, { type, payload }) => {
       return state;
     case platformActionTypes.SET_SELECTED:
       if (payload.label) {
-        return Object.assign({}, state, { selected: payload.type });
+        return Object.assign({}, state, { selectedId: payload.type });
       }
 
       return state;
@@ -30,5 +31,19 @@ const reducer = (state = initialPlatformsState, { type, payload }) => {
       return state;
   }
 };
+
+export const getPlatforms = (state) => state.platforms;
+
+export const getIds = (state) => state.ids;
+
+export const getSelectedId = (state) => state.selectedId;
+
+export const getSelected = createSelector(getPlatforms, getSelectedId, (platforms, selectedId) => {
+  return platforms[selectedId];
+});
+
+export const getAll = createSelector(getPlatforms, getIds, (platforms, ids) => {
+  return ids.map((id) => platforms[id]);
+});
 
 export default reducer;

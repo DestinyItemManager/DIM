@@ -2,13 +2,13 @@ const LOAD = '[Platform] Load';
 const ADD = '[Platform] Add';
 const SET_SELECTED = '[Platform] Set Selected';
 
-const actionTypes = {
+export const actionTypes = {
   LOAD,
   ADD,
   SET_SELECTED
 };
 
-const platformActions = (dimPlatformService, loadingTracker) => {
+export const platformActions = (dimPlatformService, loadingTracker) => {
   'ngInject';
 
   const loadPlatforms = () => {
@@ -59,11 +59,6 @@ const platformActions = (dimPlatformService, loadingTracker) => {
     addPlatform,
     setSelectedPlatform
   };
-};
-
-export {
-  actionTypes,
-  platformActions
 };
 
 export default platformActions;

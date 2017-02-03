@@ -1,3 +1,5 @@
+import { getAll, getSelected } from '../platform/platform.reducers';
+
 class ShellController {
   constructor($ngRedux, PlatformsActions) {
     'ngInject';
@@ -17,21 +19,9 @@ class ShellController {
   }
 
   mapStateToThis(state) {
-    let platforms = [];
-    let selected = null;
-    const platformState = state.platform;
-
-    if (platformState.ids.length > 0) {
-      platforms = platformState.ids.map((id) => platformState.platforms[id]);
-    }
-
-    if (platformState.selected > -1) {
-      selected = platformState.platforms[platformState.selected];
-    }
-
     return {
-      platforms,
-      selected
+      platforms: getAll(state.platform),
+      selected: getSelected(state.platform)
     };
   }
 
