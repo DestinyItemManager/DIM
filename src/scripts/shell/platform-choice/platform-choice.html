@@ -1,8 +1,8 @@
 <div class="platform-choice">
-  <span ng-if="$ctrl.current" id="user">
-    <i class="fa fa-user"></i> {{ $ctrl.current.id }}
+  <span ng-if="platformChoiceCtrl.current" id="user">
+    <i class="fa fa-user"></i> {{ platformChoiceCtrl.current.id }}
   </span>
-  <select id="system" ng-if="$ctrl.platforms.length > 1" ng-model="$ctrl.current"
-    ng-options="platform.label for platform in $ctrl.platforms track by platform.type"
-    ng-change="$ctrl.change($ctrl.current)"></select>
+  <select id="system" ng-if="platformChoiceCtrl.platforms.length > 1" ng-model="platformChoiceCtrl.current"
+    ng-options="platform.label for platform in platformChoiceCtrl.platforms track by platform.type"
+    ng-change="platformChoiceCtrl.selected({ platform: platformChoiceCtrl.current })"></select>
 </div>

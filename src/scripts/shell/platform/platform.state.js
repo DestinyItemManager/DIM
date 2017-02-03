@@ -3,12 +3,11 @@ export const CREATE_PLATFORM = 'CREATE_PLATFORM';
 export const UPDATE_PLATFORM = 'UPDATE_PLATFORM';
 export const DELETE_PLATFORM = 'DELETE_PLATFORM';
 export const GET_SELECTED_PLATFORM = 'GET_SELECTED_PLATFORM';
+export const SET_SELECTED_PLATFORM = 'SET_SELECTED_PLATFORM';
 export const RESET_SELECTED_PLATFORM = 'RESET_SELECTED_PLATFORM';
 
 export const PlatformsActions = ($ngRedux, $q, dimPlatformService, loadingTracker) => {
   'ngInject';
-
-  // const extract = (result) => result.data;
 
   const getPlatforms = () => {
     return (dispatch, getState) => {
@@ -24,7 +23,7 @@ export const PlatformsActions = ($ngRedux, $q, dimPlatformService, loadingTracke
           })
           .then(() => dimPlatformService.getActive())
           .then((platform) => {
-            dispatch({ type: GET_SELECTED_PLATFORM, payload: platform });
+            dispatch({ type: SET_SELECTED_PLATFORM, payload: platform });
           });
 
         loadingTracker.addPromise(platformPromise);
@@ -34,24 +33,22 @@ export const PlatformsActions = ($ngRedux, $q, dimPlatformService, loadingTracke
     };
   };
 
-  const selectPlatform = (platform = initialPlatform) => {
+  const getPlatform = (platform = initialPlatform) => {
     return { type: GET_SELECTED_PLATFORM, payload: platform };
   };
 
-  // const savePlatform = platform => {
-  //   const hasId = !!platform.id;
-  //   const type = hasId ? UPDATE_PLATFORM : CREATE_PLATFORM;
+  const setPlatform = (platform) => {
+    return (dispatch) => {
+      const platformPromise = dimPlatformService.setActive(platform)
+        .then(() => {
+          dispatch({ type: SET_SELECTED_PLATFORM, payload: platform });
+        });
 
-  //   if (!hasId) {
-  //     platform.id = uniqueId(100); // simulating backend
-  //   }
+      loadingTracker.addPromise(platformPromise);
 
-  //   return { type, payload: platform };
-  // };
-
-  // const deletePlatform = (platform) => {
-  //   return { type: DELETE_PLATFORM, payload: platform };
-  // };
+      return platformPromise;
+    };
+  };
 
   const resetSelectedPlatform = () => {
     return { type: RESET_SELECTED_PLATFORM };
@@ -59,9 +56,8 @@ export const PlatformsActions = ($ngRedux, $q, dimPlatformService, loadingTracke
 
   return {
     getPlatforms,
-    selectPlatform,
-    // savePlatform,
-    // deletePlatform,
+    getPlatform,
+    setPlatform,
     resetSelectedPlatform
   };
 };
@@ -70,12 +66,6 @@ export const platforms = (state = [], { type, payload }) => {
   switch (type) {
     case GET_PLATFORMS:
       return payload || state;
-      // case CREATE_BOOKMARK:
-      //   return [...state, payload];
-      // case UPDATE_BOOKMARK:
-      //   return state.map(bookmark => bookmark.id === payload.id ? payload : bookmark);
-      // case DELETE_BOOKMARK:
-      //   return reject(state, bookmark => bookmark.id === payload.id);
     default:
       return state;
   }
@@ -87,6 +77,8 @@ export const platform = (state = initialPlatform, { type, payload }) => {
   switch (type) {
     case GET_SELECTED_PLATFORM:
       return payload || state;
+    case SET_SELECTED_PLATFORM:
+      return payload;
     case RESET_SELECTED_PLATFORM:
       return initialPlatform;
     default:

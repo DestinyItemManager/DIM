@@ -26,12 +26,12 @@ class ShellController {
   mapStateToThis(state) {
     return {
       platforms: state.platforms,
-      currentPlatform: state.platform
+      platform: state.platform
     };
   }
 
   platformChange(platform) {
-    this.selectPlatform(platform);
+    this.setPlatform(platform);
   }
 
   // $scope.$on('dim-platforms-updated', function(e, args) {
