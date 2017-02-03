@@ -22,8 +22,15 @@
       <p>{{vm.reportService.marks}} <img src="~app/images/legendaryMarks.png"></p>
     </div>
     <div class="farm-report-block">
-      <span class="farm-report-rep" ng-show="vm.reportService.rep.length">
-        <p><dim-farm-reputation ng-repeat="item in vm.reportService.rep track by $index" item-data="item"></dim-farm-reputation></p>
+      <span class="rep-toggle-right" ng-show="!vm.reportService.repExpanded" ng-click="vm.reportService.toggleRep()">
+        <i class="fa fa-caret-square-o-right"></i>
+      </span>
+      <span class="farm-report-rep" ng-show="vm.reportService.repExpanded">
+        <span class="rep-toggle-left" ng-show="vm.reportService.repExpanded" ng-click="vm.reportService.toggleRep()">
+          <i class="fa fa-caret-square-o-left"></i>
+        </span>
+        <p ng-show="vm.reportService.rep.length"><dim-farm-reputation ng-repeat="item in vm.reportService.rep track by $index" item-data="item"></dim-farm-reputation></p>
+        <p id="no-rep" ng-show="!(vm.reportService.rep.length)">Complete something that gives faction reputation to see data here.</p>
       </span>
       <span class="farm-report-items">
         <p><dim-simple-item ng-repeat="item in vm.reportService.report track by $index" item-data="item"></dim-simple-item></p>

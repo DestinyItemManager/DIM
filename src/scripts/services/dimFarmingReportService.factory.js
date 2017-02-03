@@ -67,6 +67,7 @@ function FarmingReportService(dimItemService, dimStoreService) {
       var self = this;
 
       self.store = store;
+      self.repExpanded = false;
 
       // set up all the starting values
       self.baseGlimmer = dimStoreService.getVault().glimmer;
@@ -148,6 +149,10 @@ function FarmingReportService(dimItemService, dimStoreService) {
         self.baseRep[rep.hash].level = rep.level;
         rep.rankedUp = false;
       }
+    },
+    toggleRep: function() {
+      var self = this;
+      self.repExpanded = !self.repExpanded;
     }
   };
 }

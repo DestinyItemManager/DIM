@@ -2184,9 +2184,33 @@ button.toast-close-button {
       justify-content: center;
       align-items: center;
       margin: 0;
+      position: relative;
+
+      .rep-toggle-left, .rep-toggle-right {
+        position: absolute;
+        top: 50%;
+        z-index: 100;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.9);
+
+        i {
+          &:hover {
+            background-color: rgba(232, 165, 52, .8);
+          }
+        }
+      }
+      .rep-toggle-right {
+        left: 0px;
+        padding-right: 3px;
+      }
+      .rep-toggle-left {
+        padding-left: 3px;
+        right: 0px;
+      }
 
       .farm-report-rep {
         flex: 1;
+        position: relative;
         p {
           display: flex;
           flex-direction: row;
@@ -2204,6 +2228,10 @@ button.toast-close-button {
             cursor: pointer;
             background-color: rgba(232, 165, 52, .8);
           }
+        }
+        #no-rep {
+          text-align: center;
+          padding: 0 10px 0 10px;
         }
       }
 
