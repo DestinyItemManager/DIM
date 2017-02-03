@@ -1,4 +1,4 @@
-export class ActivityTrackerService {
+class ActivityTrackerService {
   constructor() {
     this.track();
   }
@@ -15,3 +15,5 @@ export class ActivityTrackerService {
     return (Date.now() - this.timestamp) <= timespan;
   }
 }
+
+export default ActivityTrackerService;

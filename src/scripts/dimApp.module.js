@@ -1,17 +1,17 @@
 import angular from 'angular';
 
-import AriaModule from 'angular-aria';
-import DialogModule from 'ng-dialog';
-import DragAndDropModule from 'angular-native-dragdrop';
-import LocalStorageModule from 'angular-local-storage';
-import MessagesModule from 'angular-messages';
-import MomentModule from 'angular-moment';
-import RateLimiterModule from 'ng-http-rate-limiter';
-import SliderModule from 'angularjs-slider';
-import ToasterModule from 'angularjs-toaster';
-import TranslateModule from 'angular-translate';
-import TranslateMessageFormatModule from 'angular-translate-interpolation-messageformat';
-import UIRouterModule from 'angular-ui-router';
+import ariaModule from 'angular-aria';
+import dialogModule from 'ng-dialog';
+import dragAndDropModule from 'angular-native-dragdrop';
+import localStorageModule from 'angular-local-storage';
+import messagesModule from 'angular-messages';
+import momentModule from 'angular-moment';
+import rateLimiterModule from 'ng-http-rate-limiter';
+import sliderModule from 'angularjs-slider';
+import toasterModule from 'angularjs-toaster';
+import translateModule from 'angular-translate';
+import translateMessageFormatModule from 'angular-translate-interpolation-messageformat';
+import uiRouterModule from 'angular-ui-router';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 import 'angular-timer';
@@ -24,20 +24,20 @@ import featureFlags from './feature-flags';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
-export const DimAppModule = angular
+const dimAppModule = angular
   .module('dimApp', [
-    AriaModule,
-    DialogModule,
-    DragAndDropModule,
-    LocalStorageModule,
-    MessagesModule,
-    MomentModule,
-    RateLimiterModule,
-    SliderModule,
-    ToasterModule,
-    TranslateModule,
-    TranslateMessageFormatModule,
-    UIRouterModule,
+    ariaModule,
+    dialogModule,
+    dragAndDropModule,
+    localStorageModule,
+    messagesModule,
+    momentModule,
+    rateLimiterModule,
+    sliderModule,
+    toasterModule,
+    translateModule,
+    translateMessageFormatModule,
+    uiRouterModule,
     'timer',
     'angularUUID2',
     'ajoslin.promise-tracker',
@@ -51,3 +51,5 @@ export const DimAppModule = angular
   .value('dimState', state)
   .factory('loadingTracker', loadingTracker)
   .name;
+
+export default dimAppModule;

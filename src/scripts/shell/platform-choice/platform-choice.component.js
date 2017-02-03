@@ -1,7 +1,7 @@
 import templateUrl from './platform-choice.html';
 import './platform-choice.scss';
 
-export const PlatformChoiceComponent = {
+const platformChoiceComponent = {
   bindings: {
     current: '<',
     selected: '&',
@@ -10,3 +10,5 @@ export const PlatformChoiceComponent = {
   templateUrl,
   controllerAs: 'platformChoiceCtrl'
 };
+
+export default platformChoiceComponent

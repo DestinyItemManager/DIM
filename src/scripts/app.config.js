@@ -1,14 +1,15 @@
 import { combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { platforms, platform } from './shell/platform/platform.state';
+import platform from './shell/platform/platform.reducers';
 
 const rootReducer = combineReducers({
-  platforms,
   platform
 });
 
-export const config = function config($ngReduxProvider) {
+const config = function config($ngReduxProvider) {
   'ngInject';
 
   $ngReduxProvider.createStoreWith(rootReducer, [thunk]);
 };
+
+export default config;

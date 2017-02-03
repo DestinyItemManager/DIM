@@ -2,7 +2,7 @@
   <div id="header">
     <div class="content">
       <span class="header-right">
-        <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.platform" selected="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
+        <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.selected" selected="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
         <div class="header-right" id="actions">
           <span class="link" ng-click="app.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': app.loadingTracker.active()}" class="fa fa-refresh"></i></span>
           <span class="link" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
