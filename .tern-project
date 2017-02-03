@@ -10,6 +10,10 @@
   ],
   "plugins": {
     "angular": {},
-    "chrome-extension": {}
+    "chrome-extension": {},
+    "es_modules": {},
+    "webpack": {
+      "configPath": "./config/webpack.js",
+    }
   }
 }
