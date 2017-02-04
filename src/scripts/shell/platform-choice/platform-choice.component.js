@@ -11,4 +11,4 @@ const platformChoiceComponent = {
   controllerAs: 'platformChoiceCtrl'
 };
 
-export default platformChoiceComponent
+export default platformChoiceComponent;

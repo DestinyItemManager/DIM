@@ -311,7 +311,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           var equipItems = _.compact(realItemsToDequip.map(function(i) {
             return dimItemService.getSimilarItem(i, loadoutItemIds);
           }));
-          return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems);
+          return dimItemService.equipItems(dimStoreService.getStore(owner), equipItems, dimPlatformService.getActive());
         });
         promise = $q.all(dequips);
       }
@@ -330,7 +330,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
               return getLoadoutItem(i, store);
             });
 
-            return dimItemService.equipItems(store, realItemsToEquip);
+            return dimItemService.equipItems(store, realItemsToEquip, dimPlatformService.getActive());
           } else {
             return itemsToEquip;
           }

@@ -3,6 +3,8 @@ import _ from 'underscore';
 import { sum, count } from '../util';
 import idbKeyval from 'idb-keyval';
 
+import { getAll, getSelected } from '../shell/platform/platform.reducers';
+
 angular.module('dimApp')
   .factory('dimStoreService', StoreService);
 
@@ -21,8 +23,19 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags
+  dimFeatureFlags,
+  $ngRedux,
+  PlatformsActions
 ) {
+  'ngInject';
+
+  function mapStateToThis(state) {
+    return {
+      platforms: getAll(state.platform),
+      selected: getSelected(state.platform)
+    };
+  }
+
   var _stores = [];
   var _idTracker = {};
 
@@ -31,10 +44,19 @@ function StoreService(
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {
-    //         tTK       Variks        CoE         FoTL    Kings Fall
-    year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
-    //         RoI       WoTM         FoTl       Dawning
-    year3: [24296771, 3147905712, 907422371, 4153390200]
+    year2: [
+      460228854, // tTK
+      32533074641, // Variks
+      3739898362, // CoE
+      907422371, // FoTL
+      3551688287 // Kings Fall
+    ],
+    year3: [
+      24296771, // RoI
+      3147905712, // WoTM
+      907422371, // FoTl
+      4153390200 // Dawning
+    ]
   };
 
   // Label isn't used, but it helps us understand what each one is
@@ -261,6 +283,8 @@ function StoreService(
     hasNewItems: false
   };
 
+  $ngRedux.connect(mapStateToThis, PlatformsActions)(service);
+
   $rootScope.$on('dim-active-platform-updated', function() {
     _stores = [];
     service.hasNewItems = false;
@@ -276,9 +300,11 @@ function StoreService(
   // (level, light, int/dis/str, etc.). This does not update the
   // items in the stores - to do that, call reloadStores.
   function updateCharacters() {
+    var self = this;
+
     return $q.all([
       dimDefinitions,
-      dimBungieService.getCharacters(dimPlatformService.getActive())
+      dimBungieService.getCharacters(self.selected)
     ]).then(function([defs, bungieStores]) {
       _.each(_stores, function(dStore) {
         if (!dStore.isVault) {

@@ -1,10 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { getAll, getSelected } from '../shell/platform/platform.reducers';
 
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
+function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $translate) {
+  'ngInject';
+
   var apiKey;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
     apiKey = $DIM_API_KEY;
@@ -510,8 +513,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
   /************************************************************************************************************************************/
 
-  function getVendorForCharacter(character, vendorHash) {
-    var platform = dimState.active;
+  function getVendorForCharacter(character, vendorHash, platform) {
     var data = {
       token: null,
       membershipType: null
@@ -539,8 +541,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
   /************************************************************************************************************************************/
 
-  function transfer(item, store, amount) {
-    var platform = dimState.active;
+  function transfer(item, store, amount, platform) {
     var data = {
       token: null,
       membershipType: null
@@ -604,8 +605,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
   /************************************************************************************************************************************/
 
-  function equip(item) {
-    var platform = dimState.active;
+  function equip(item, platform) {
     var data = {
       token: null,
       membershipType: null
@@ -649,13 +649,12 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   /************************************************************************************************************************************/
 
   // Returns a list of items that were successfully equipped
-  function equipItems(store, items) {
+  function equipItems(store, items, platform) {
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, function(i) {
       return i.isExotic ? 1 : 0;
     });
 
-    var platform = dimState.active;
     var data = {
       token: null,
       membershipType: null
@@ -704,7 +703,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
   /************************************************************************************************************************************/
 
-  function setItemState(item, store, lockState, type) {
+  function setItemState(item, store, lockState, type, platform) {
     switch (type) {
     case 'lock':
       type = 'SetLockState';
@@ -714,7 +713,6 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       break;
     }
 
-    var platform = dimState.active;
     var data = {
       token: null,
       membershipType: null

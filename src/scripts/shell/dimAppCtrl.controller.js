@@ -3,7 +3,7 @@ import angular from 'angular';
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
-function DimApp($ngRedux, dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadingTracker, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   'ngInject';
 
   var vm = this;

@@ -1,14 +1,14 @@
 import { createSelector } from 'reselect';
 import { actionTypes as platformActionTypes } from './platform.actions';
 
-const initialPlatformsState = {
+const initialState = {
   ids: [],
   platforms: {},
   selectedId: null,
   loaded: false
 };
 
-const reducer = (state = initialPlatformsState, { type, payload }) => {
+const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case platformActionTypes.LOAD:
       return Object.assign({}, state, { loaded: true });

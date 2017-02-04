@@ -21,7 +21,6 @@ import config from './dimApp.config';
 import routes from './dimApp.routes';
 import run from './dimApp.run';
 import featureFlags from './feature-flags';
-import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
 const dimAppModule = angular
@@ -48,7 +47,6 @@ const dimAppModule = angular
   .config(routes)
   .run(run)
   .value('dimFeatureFlags', featureFlags)
-  .value('dimState', state)
   .factory('loadingTracker', loadingTracker)
   .name;
 
