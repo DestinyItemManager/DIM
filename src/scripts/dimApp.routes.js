@@ -59,7 +59,7 @@ function routes($stateProvider, $urlRouterProvider) {
     $stateProvider.state(state);
   });
 
-  $urlRouterProvider.otherwise('/inventory');
+  $urlRouterProvider.otherwise('/welcome');
 }
 
 export default routes;
