@@ -3,7 +3,10 @@ import _ from 'underscore';
 import { sum, count } from '../util';
 import idbKeyval from 'idb-keyval';
 
-import { getAll, getSelected } from '../shell/platform/platform.reducers';
+import * as platformReducers from '../shell/platform/platform.reducers';
+
+import storeActions from '../store/store.actions';
+import * as storeReducers from '../store/store.reducers';
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService);
@@ -25,14 +28,16 @@ function StoreService(
   uuid2,
   dimFeatureFlags,
   $ngRedux,
-  PlatformsActions
+  StoreActions
 ) {
   'ngInject';
 
   function mapStateToThis(state) {
     return {
-      platforms: getAll(state.platform),
-      selected: getSelected(state.platform)
+      platforms: platformReducers.getAll(state.platform),
+      selectedPlatfrom: platformReducers.getSelected(state.platform),
+      stores: storeReducers.getAll(state.store),
+      selectedStore: storeReducers.getSelected(state.store)
     };
   }
 
@@ -128,7 +133,7 @@ function StoreService(
         throw new Error("item needs a 'type' field");
       }
       const openStacks = Math.max(0, this.capacityForItem(item) -
-                                  this.buckets[item.location.id].length);
+        this.buckets[item.location.id].length);
       const maxStackSize = item.maxStackSize || 1;
       if (maxStackSize === 1) {
         return openStacks;
@@ -283,10 +288,11 @@ function StoreService(
     hasNewItems: false
   };
 
-  $ngRedux.connect(mapStateToThis, PlatformsActions)(service);
+  $ngRedux.connect(mapStateToThis, StoreActions)(service);
 
   $rootScope.$on('dim-active-platform-updated', function() {
     _stores = [];
+    service.removeAllStores();
     service.hasNewItems = false;
     $rootScope.$broadcast('dim-stores-updated', {
       stores: _stores
@@ -304,7 +310,7 @@ function StoreService(
 
     return $q.all([
       dimDefinitions,
-      dimBungieService.getCharacters(self.selected)
+      dimBungieService.getCharacters(self.selectedPlatfrom)
     ]).then(function([defs, bungieStores]) {
       _.each(_stores, function(dStore) {
         if (!dStore.isVault) {
@@ -328,6 +334,8 @@ function StoreService(
   // If this is called while a reload is already happening, it'll return the promise
   // for the ongoing reload rather than kicking off a new reload.
   function reloadStores() {
+    var self = this;
+
     const activePlatform = dimPlatformService.getActive();
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
       return _reloadPromise;
@@ -348,12 +356,13 @@ function StoreService(
       }
     }
 
-    console.time('Load stores (Bungie API)');
-    _reloadPromise = $q.all([dimDefinitions,
+    _reloadPromise = $q.all([
+      dimDefinitions,
       dimBucketService,
       loadNewItems(activePlatform),
       dimItemInfoService(activePlatform),
-      dimBungieService.getStores(activePlatform)])
+      dimBungieService.getStores(activePlatform)
+    ])
       .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
         console.timeEnd('Load stores (Bungie API)');
         if (activePlatform !== dimPlatformService.getActive()) {
@@ -424,7 +433,7 @@ function StoreService(
                   throw new Error("item needs a 'sort' field");
                 }
                 const openStacks = Math.max(0, this.capacityForItem(item) -
-                                            count(this.items, (i) => i.bucket.sort === sort));
+                  count(this.items, (i) => i.bucket.sort === sort));
                 const maxStackSize = item.maxStackSize || 1;
                 if (maxStackSize === 1) {
                   return openStacks;
@@ -584,6 +593,8 @@ function StoreService(
         }
 
         _stores = stores;
+
+        service.addStores(stores);
 
         $rootScope.$broadcast('dim-stores-updated', {
           stores: stores
@@ -935,18 +946,18 @@ function StoreService(
 
       // Only one node in this column can be selected (scopes, etc)
       var exclusiveInColumn = Boolean(talentNodeGroup.exlusiveWithNodes &&
-                               talentNodeGroup.exlusiveWithNodes.length > 0);
+        talentNodeGroup.exlusiveWithNodes.length > 0);
 
       // Unlocked is whether or not the material cost has been paid
       // for the node
       var unlocked = node.isActivated ||
-            talentNodeGroup.autoUnlocks ||
-            // If only one can be activated, the cost only needs to be
-            // paid once per row.
-            (exclusiveInColumn &&
-             _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
-               return item.nodes[nodeIndex].isActivated;
-             }));
+        talentNodeGroup.autoUnlocks ||
+        // If only one can be activated, the cost only needs to be
+        // paid once per row.
+        (exclusiveInColumn &&
+          _.any(talentNodeGroup.exlusiveWithNodes, function(nodeIndex) {
+            return item.nodes[nodeIndex].isActivated;
+          }));
 
       // Calculate relative XP for just this node
       var startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
@@ -1058,6 +1069,7 @@ function StoreService(
   function buildTrials(trials) {
     var flawless = trials.completion.success;
     trials = trials.extended;
+
     function buildObjective(name, current, max, bool, style) {
       return {
         displayStyle: style,
@@ -1129,7 +1141,8 @@ function StoreService(
   function fitValue(light) {
     if (light > 300) {
       return (0.2546 * light) - 23.825;
-    } if (light > 200) {
+    }
+    if (light > 200) {
       return (0.1801 * light) - 1.4612;
     } else {
       return -1;
@@ -1164,9 +1177,9 @@ function StoreService(
         light = 335;
       }
 
-      return ((quality.min === quality.max || light === 335)
-              ? quality.min
-              : (quality.min + "%-" + quality.max)) + '%';
+      return ((quality.min === quality.max || light === 335) ?
+        quality.min :
+        (quality.min + "%-" + quality.max)) + '%';
     }
 
     if (!stats || !stats.length || !light || light.value < 280) {
@@ -1175,27 +1188,27 @@ function StoreService(
 
     var split = 0;
     switch (type.toLowerCase()) {
-    case 'helmet':
-      split = 46; // bungie reports 48, but i've only seen 46
-      break;
-    case 'gauntlets':
-      split = 41; // bungie reports 43, but i've only seen 41
-      break;
-    case 'chest':
-      split = 61;
-      break;
-    case 'leg':
-      split = 56;
-      break;
-    case 'classitem':
-    case 'ghost':
-      split = 25;
-      break;
-    case 'artifact':
-      split = 38;
-      break;
-    default:
-      return null;
+      case 'helmet':
+        split = 46; // bungie reports 48, but i've only seen 46
+        break;
+      case 'gauntlets':
+        split = 41; // bungie reports 43, but i've only seen 41
+        break;
+      case 'chest':
+        split = 61;
+        break;
+      case 'leg':
+        split = 56;
+        break;
+      case 'classitem':
+      case 'ghost':
+        split = 25;
+        break;
+      case 'artifact':
+        split = 38;
+        break;
+      default:
+        return null;
     }
 
     var ret = {
@@ -1270,53 +1283,53 @@ function StoreService(
   // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
   function getBonus(light, type) {
     switch (type.toLowerCase()) {
-    case 'helmet':
-    case 'helmets':
-      return light < 292 ? 15
-        : light < 307 ? 16
-        : light < 319 ? 17
-        : light < 332 ? 18
-        : 19;
-    case 'gauntlets':
-      return light < 287 ? 13
-        : light < 305 ? 14
-        : light < 319 ? 15
-        : light < 333 ? 16
-        : 17;
-    case 'chest':
-    case 'chest armor':
-      return light < 287 ? 20
-        : light < 300 ? 21
-        : light < 310 ? 22
-        : light < 319 ? 23
-        : light < 328 ? 24
-        : 25;
-    case 'leg':
-    case 'leg armor':
-      return light < 284 ? 18
-        : light < 298 ? 19
-        : light < 309 ? 20
-        : light < 319 ? 21
-        : light < 329 ? 22
-        : 23;
-    case 'classitem':
-    case 'class items':
-    case 'ghost':
-    case 'ghosts':
-      return light < 295 ? 8
-        : light < 319 ? 9
-        : 10;
-    case 'artifact':
-    case 'artifacts':
-      return light < 287 ? 34
-        : light < 295 ? 35
-        : light < 302 ? 36
-        : light < 308 ? 37
-        : light < 314 ? 38
-        : light < 319 ? 39
-        : light < 325 ? 40
-        : light < 330 ? 41
-        : 42;
+      case 'helmet':
+      case 'helmets':
+        return light < 292 ? 15 :
+          light < 307 ? 16 :
+          light < 319 ? 17 :
+          light < 332 ? 18 :
+          19;
+      case 'gauntlets':
+        return light < 287 ? 13 :
+          light < 305 ? 14 :
+          light < 319 ? 15 :
+          light < 333 ? 16 :
+          17;
+      case 'chest':
+      case 'chest armor':
+        return light < 287 ? 20 :
+          light < 300 ? 21 :
+          light < 310 ? 22 :
+          light < 319 ? 23 :
+          light < 328 ? 24 :
+          25;
+      case 'leg':
+      case 'leg armor':
+        return light < 284 ? 18 :
+          light < 298 ? 19 :
+          light < 309 ? 20 :
+          light < 319 ? 21 :
+          light < 329 ? 22 :
+          23;
+      case 'classitem':
+      case 'class items':
+      case 'ghost':
+      case 'ghosts':
+        return light < 295 ? 8 :
+          light < 319 ? 9 :
+          10;
+      case 'artifact':
+      case 'artifacts':
+        return light < 287 ? 34 :
+          light < 295 ? 35 :
+          light < 302 ? 36 :
+          light < 308 ? 37 :
+          light < 314 ? 38 :
+          light < 319 ? 39 :
+          light < 325 ? 40 :
+          light < 330 ? 41 :
+          42;
     }
     console.warn('item bonus not found', type);
     return 0;
@@ -1378,14 +1391,14 @@ function StoreService(
 
       if (item.primaryStat && item.primaryStat.stat.statIdentifier === 'STAT_DEFENSE') {
         if ((identifier === 'STAT_INTELLECT' && _.find(armorNodes, { hash: 1034209669 /* Increase Intellect */ })) ||
-           (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
-           (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
+          (identifier === 'STAT_DISCIPLINE' && _.find(armorNodes, { hash: 1263323987 /* Increase Discipline */ })) ||
+          (identifier === 'STAT_STRENGTH' && _.find(armorNodes, { hash: 193091484 /* Increase Strength */ }))) {
           bonus = getBonus(item.primaryStat.value, type);
 
           if (activeArmorNode &&
-              ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
-               (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
-               (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
+            ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+              (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+              (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))) {
             base = Math.max(0, val - bonus);
           }
         }
@@ -1481,11 +1494,12 @@ function StoreService(
 
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
     return $q.all([
-      dimDefinitions,
-      dimBucketService,
-      previousItems,
-      newItems,
-      itemInfoService])
+        dimDefinitions,
+        dimBucketService,
+        previousItems,
+        newItems,
+        itemInfoService
+      ])
       .then(function(args) {
         var result = [];
         dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
@@ -1507,12 +1521,12 @@ function StoreService(
 
   function getClass(type) {
     switch (type) {
-    case 0:
-      return 'titan';
-    case 1:
-      return 'hunter';
-    case 2:
-      return 'warlock';
+      case 0:
+        return 'titan';
+      case 1:
+        return 'hunter';
+      case 2:
+        return 'warlock';
     }
     return 'unknown';
   }
@@ -1530,23 +1544,23 @@ function StoreService(
   function getAbilityCooldown(subclass, ability, tier) {
     if (ability === 'STAT_INTELLECT') {
       switch (subclass) {
-      case 2007186000: // Defender
-      case 4143670656: // Nightstalker
-      case 2455559914: // Striker
-      case 3658182170: // Sunsinger
-        return cooldownsSuperA[tier];
-      default:
-        return cooldownsSuperB[tier];
+        case 2007186000: // Defender
+        case 4143670656: // Nightstalker
+        case 2455559914: // Striker
+        case 3658182170: // Sunsinger
+          return cooldownsSuperA[tier];
+        default:
+          return cooldownsSuperB[tier];
       }
     } else if (ability === 'STAT_DISCIPLINE') {
       return cooldownsGrenade[tier];
     } else if (ability === 'STAT_STRENGTH') {
       switch (subclass) {
-      case 4143670656: // Nightstalker
-      case 1716862031: // Gunslinger
-        return cooldownsMelee[tier];
-      default:
-        return cooldownsGrenade[tier];
+        case 4143670656: // Nightstalker
+        case 1716862031: // Gunslinger
+          return cooldownsMelee[tier];
+        default:
+          return cooldownsGrenade[tier];
       }
     } else {
       return '-:--';
@@ -1588,21 +1602,21 @@ function StoreService(
       var statHash = {};
       statHash.id = statId;
       switch (statId) {
-      case 'STAT_INTELLECT':
-        statHash.name = 'Intellect';
-        statHash.effect = 'Super';
-        statHash.icon = require('app/images/intellect.png');
-        break;
-      case 'STAT_DISCIPLINE':
-        statHash.name = 'Discipline';
-        statHash.effect = 'Grenade';
-        statHash.icon = require('app/images/discipline.png');
-        break;
-      case 'STAT_STRENGTH':
-        statHash.name = 'Strength';
-        statHash.effect = 'Melee';
-        statHash.icon = require('app/images/strength.png');
-        break;
+        case 'STAT_INTELLECT':
+          statHash.name = 'Intellect';
+          statHash.effect = 'Super';
+          statHash.icon = require('app/images/intellect.png');
+          break;
+        case 'STAT_DISCIPLINE':
+          statHash.name = 'Discipline';
+          statHash.effect = 'Grenade';
+          statHash.icon = require('app/images/discipline.png');
+          break;
+        case 'STAT_STRENGTH':
+          statHash.name = 'Strength';
+          statHash.effect = 'Melee';
+          statHash.icon = require('app/images/strength.png');
+          break;
       }
 
       const stat = data.stats[statId];
@@ -1637,4 +1651,3 @@ function StoreService(
   }
   // code above is from https://github.com/DestinyTrialsReport
 }
-

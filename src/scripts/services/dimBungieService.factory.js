@@ -5,8 +5,14 @@ import { getAll, getSelected } from '../shell/platform/platform.reducers';
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $translate) {
+function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaster, $translate) {
   'ngInject';
+
+  function mapStateToThis(state) {
+    return {
+      selected: getSelected(state.platform)
+    };
+  }
 
   var apiKey;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
@@ -44,6 +50,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $transl
     getManifest: getManifest,
     getVendorForCharacter: getVendorForCharacter
   };
+
+  $ngRedux.connect(mapStateToThis)(service);
 
   return service;
 
@@ -513,7 +521,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $transl
 
   /************************************************************************************************************************************/
 
-  function getVendorForCharacter(character, vendorHash, platform) {
+  function getVendorForCharacter(character, vendorHash) {
+    let platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -541,7 +550,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $transl
 
   /************************************************************************************************************************************/
 
-  function transfer(item, store, amount, platform) {
+  function transfer(item, store, amount) {
+    let platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -605,7 +615,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $transl
 
   /************************************************************************************************************************************/
 
-  function equip(item, platform) {
+  function equip(item) {
+    let platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -649,7 +660,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $transl
   /************************************************************************************************************************************/
 
   // Returns a list of items that were successfully equipped
-  function equipItems(store, items, platform) {
+  function equipItems(store, items) {
+    let platform = this.selected;
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, function(i) {
       return i.isExotic ? 1 : 0;
@@ -703,7 +715,9 @@ function BungieService($rootScope, $q, $timeout, $http, $state, toaster, $transl
 
   /************************************************************************************************************************************/
 
-  function setItemState(item, store, lockState, type, platform) {
+  function setItemState(item, store, lockState, type) {
+    let platform = this.selected;
+    
     switch (type) {
     case 'lock':
       type = 'SetLockState';

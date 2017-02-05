@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp')
   .directive('dimMoveItemProperties', MoveItemProperties);
 
-function MoveItemProperties(dimPlatformService) {
+function MoveItemProperties() {
   return {
     bindToController: true,
     controller: MoveItemPropertiesCtrl,
@@ -156,7 +156,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       state = !item.tracked;
     }
 
-    dimItemService.setItemState(item, store, state, type, dimPlatformService.getActive())
+    dimItemService.setItemState(item, store, state, type)
       .then(function(lockState) {
         if (type === 'lock') {
           item.locked = lockState;
