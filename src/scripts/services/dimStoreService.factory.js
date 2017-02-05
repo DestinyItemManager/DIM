@@ -594,6 +594,7 @@ function StoreService(
 
         _stores = stores;
 
+        service.removeAllStores();
         service.addStores(stores);
 
         $rootScope.$broadcast('dim-stores-updated', {
