@@ -25,6 +25,14 @@ function CsvService() {
     pom.click();
   }
 
+  function downloadJson(filename, json) {
+    filename = filename + ".csv";
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:application.json;charset=utf-8,' + JSON.stringify(json));
+    pom.setAttribute('download', filename);
+    pom.click();
+  }
+
   function buildNodeString(nodes) {
     var data = "";
     nodes.forEach(function(node) {
@@ -110,6 +118,51 @@ function CsvService() {
       data += "\n";
     });
     downloadCsv("destinyArmor", header + data);
+  }
+
+  function downloadWeaponsJson(guns) {
+    var newList = [];
+
+    guns.forEach(function(gun) {
+      if(isKnownGun(newList, gun)) {
+        newList.forEach(function(listGun) {
+          if(listGun.hash == gun.hash) {
+            var newPerk = {
+              talentPerk: gun.talentGrid.dtrPerks
+            };
+
+            listGun.talentPerks.push(newPerk);
+            return true;
+          }
+        });
+      } else {
+        var perk = {
+          talentPerk: gun.talentGrid.dtrPerks
+        };
+
+        var listGun = {
+          hash: gun.hash,
+          talentPerks: [ perk ] 
+        };
+
+        newList.push(listGun);
+      }
+    });
+
+    downloadJson("weaponJson", newList);
+  }
+
+  function isKnownGun(list, gun) {
+    var foundGun = false;
+
+    list.forEach(function(listGun) {
+      if(listGun.hash == gun.hash) {
+        foundGun = true;
+        return true;
+      }
+    });
+
+    return foundGun;
   }
 
   function downloadWeapons(guns, nameMap) {
@@ -212,7 +265,7 @@ function CsvService() {
       if (!item.primStat) {
         return;
       }
-      if (type === "Weapons") {
+      if ((type === "Weapons") || (type === "WeaponsJson")) {
         if (item.primStat.statHash === 368428387) {
           items.push(item);
         }
@@ -225,6 +278,9 @@ function CsvService() {
     });
     if (type === "Weapons") {
       downloadWeapons(items, nameMap);
+    }
+    else if (type === "WeaponsJson") {
+      downloadWeaponsJson(items);
     }
     else {
       downloadArmor(items, nameMap);
