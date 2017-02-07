@@ -128,7 +128,8 @@ function CsvService() {
         newList.forEach(function(listGun) {
           if(listGun.hash == gun.hash) {
             var newPerk = {
-              talentPerk: gun.talentGrid.dtrPerks
+              talentPerk: gun.talentGrid.dtrPerks,
+              id: gun.id
             };
 
             listGun.talentPerks.push(newPerk);
@@ -137,7 +138,8 @@ function CsvService() {
         });
       } else {
         var perk = {
-          talentPerk: gun.talentGrid.dtrPerks
+          talentPerk: gun.talentGrid.dtrPerks,
+          id: gun.id
         };
 
         var listGun = {
