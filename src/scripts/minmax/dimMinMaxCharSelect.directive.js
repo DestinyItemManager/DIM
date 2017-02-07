@@ -13,7 +13,7 @@ var MinMaxCharSelect = {
     '  <div class="emblem" ng-style="{ \'background-image\': \'url(\' + vm.activeCharacters[vm.selectedCharacter].icon + \')\' }"></div>',
     '  <div class="class">{{ vm.activeCharacters[vm.selectedCharacter].className }}</div>',
     '  <div class="race-gender">{{ vm.activeCharacters[vm.selectedCharacter].genderRace }}</div>',
-    '  <div class="level"><span translate="Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>',
+    '  <div class="level"><span translate="Stats.Level"></span> {{ vm.activeCharacters[vm.selectedCharacter].level }}</div>',
     '  <div class="level powerLevel">{{ vm.activeCharacters[vm.selectedCharacter].powerLevel }}</div>',
     '  <div class="minmax-select-button" translate-attr="{ title: \'LB.Guardians\' }" ng-click="vm.openCharSelectPopup($event)"><i class="fa fa-chevron-down"></i></div>',
     '</div>',
@@ -83,4 +83,3 @@ function MinMaxCharSelectCtrl($scope, ngDialog) {
     }
   };
 }
-

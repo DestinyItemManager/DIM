@@ -151,19 +151,17 @@ function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTrack
    * Show a popup dialog containing the given template. Its class
    * will be based on the name.
    */
-  function showPopupFunction(name, translate) {
+  function showPopupFunction(name) {
     var result;
     return function(e) {
       e.stopPropagation();
-
-      var language = translate ? vm.settings.language + '/' : ''; // set language
 
       if (result) {
         result.close();
       } else {
         ngDialog.closeAll();
         result = ngDialog.open({
-          template: require('app/views/' + language + name + '.template.html'),
+          template: require('app/views/' + name + '.template.html'),
           className: name,
           appendClassName: 'modal-dialog'
         });
@@ -182,8 +180,8 @@ function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTrack
   }
 
   vm.showSetting = showPopupFunction('settings');
-  vm.showAbout = showPopupFunction('about', true);
-  vm.showSupport = showPopupFunction('support', true);
+  vm.showAbout = showPopupFunction('about');
+  vm.showSupport = showPopupFunction('support');
   vm.showFilters = showPopupFunction('filters');
   vm.showXur = showPopupFunction('xur');
   vm.showMatsExchange = showPopupFunction('mats-exchange');
