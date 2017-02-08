@@ -21,7 +21,8 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags
+  dimFeatureFlags,
+  dimDestinyTrackerService
 ) {
   var _stores = [];
   var _idTracker = {};

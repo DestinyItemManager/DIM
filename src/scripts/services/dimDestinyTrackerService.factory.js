@@ -4,10 +4,12 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
-function DestinyTrackerService($q, $http, dimStoreService) {
+function DestinyTrackerService($q,
+                               $http) {
     //todo: save/restore JWT from session storage
     var _remoteJwt = {};
-    var _gunListBuilder = _gunListBuilder(dimStoreService);
+    var _dimStoreService = {};
+    var _gunListBuilder = {};
 
     function getBulkWeaponData(weaponList) {
       return {
@@ -23,6 +25,10 @@ function DestinyTrackerService($q, $http, dimStoreService) {
     }
 
     return {
+        init: function(dimStoreService) {
+            _dimStoreService = dimStoreService;
+            _gunListBuilder = _gunListBuilder(dimStoreService);
+        },
         authenticate: function() {  
         },
         bulkFetch: function() {
