@@ -17,11 +17,11 @@ function StoreHeading() {
   };
 }
 
-function StoreHeadingCtrl($scope, ngDialog) {
+function StoreHeadingCtrl($scope, ngDialog, $translate) {
   var vm = this;
   var dialogResult = null;
 
-  function getLevelBar($translate) {
+  function getLevelBar() {
     if (vm.store.percentToNextLevel) {
       return vm.store.percentToNextLevel;
     }
