@@ -17,7 +17,7 @@ function StoreHeading() {
   };
 }
 
-function StoreHeadingCtrl($scope, ngDialog) {
+function StoreHeadingCtrl($scope, ngDialog, $translate) {
   var vm = this;
   var dialogResult = null;
 
@@ -29,9 +29,10 @@ function StoreHeadingCtrl($scope, ngDialog) {
       var prestige = _.findWhere(vm.store.progression.progressions, {
         progressionHash: 2030054750
       });
-      vm.xpTillMote = 'Prestige level: ' + prestige.level + '\n' +
-        (prestige.nextLevelAt - prestige.progressToNextLevel) +
-        'xp until 5 motes of light';
+      vm.xpTillMote = $translate.instant('Stats.Prestige', {
+        level: prestige.level,
+        exp: (prestige.nextLevelAt - prestige.progressToNextLevel)
+      });
       return prestige.progressToNextLevel / prestige.nextLevelAt;
     }
     return 0;

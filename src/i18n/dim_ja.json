@@ -1,5 +1,4 @@
 {
-   "Level": "レベル",
    "Bucket": {
       "Armor": "生命力",
       "General": "全般",
@@ -14,15 +13,18 @@
    "BungieService": {
       "DevVersion": "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。",
       "Down": "Bungie.net に接続不可。",
-      "Difficulties": "Bungie APIは今困難を経験します。",
+      "Difficulties": "Bungie APIに問題が発生しています。",
       "NetworkError": "ネットワークエラー。{status} {statusText}",
       "NotLoggedIn": "この拡張を利用するためには、Bungie.net にログインしてください。",
       "Maintenance": "Bungie.net サーバーがメンテナンス中。",
+      "NoAccount": "選択されたプラットフォームではDestinyアカウントが見つかりませんでした。正しいプラットフォームが選択されていますか？",
       "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
+      "NoCookies": "クッキーが見つかりませんでした。",
       "NotConnected": "インターネットに接続してない可能性あります。",
       "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。"
    },
    "Compare": {
+      "ButtonHelp": "アイテムを比較する",
       "Compare": "比較",
       "Close": "終了",
       "Error": {
@@ -37,11 +39,13 @@
    },
    "DidYouKnow": {
       "DidYouKnow": "知っていますか？",
-      "DontShowAgain": "このヒントをもう一度表示しない",
+      "DontShowAgain": "このヒントをこれ以降表示しない",
+      "DoubleClick": "今使用中のキャラクター(最後にログインしたキャラクター)にアイテムを移動する時はダブルクリックで即座に装備出来ます。",
       "TryNext": "今度お試しください。"
    },
    "FarmingMode": {
       "FarmingMode": "アイテム収集モード (アイテム移動)",
+      "Configuration": "設定",
       "Quickmove": "素早く移動",
       "Stop": "停止"
    },
@@ -53,8 +57,32 @@
       "Filters": "フィルター",
       "SupportDIM": "DIMを支援する"
    },
+   "Help": {
+      "BackToDIM": "DIMに戻る",
+      "CannotMove": "キャラクターからこのアイテムを外せません",
+      "ChangingPerks": "パーク変更は対応していません",
+      "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
+      "HidePopup": "ポップアップを非表示にする",
+      "NeverShow": "二度と表示しない",
+      "UpgradeChrome": "クロームをアップデートしてください",
+      "Version": {
+         "Beta": "ベータがv{version}にアップデートされました",
+         "Stable": "DIM v{version} がリリースされました"
+      }
+   },
+   "Infusion": {
+      "TransferItems": "アイテムの転送"
+    },
    "ItemService": {
       "PercentComplete": "({ percent, number, percent } 完了)"
+   },
+   "LB": {
+      "Guardians": "ガーディアン",
+      "Help": {
+        "Intellect": "知性はスーパースキルのクールダウン時間を短縮する",
+        "Discipline": "鍛錬はグレネードのクールダウン時間を短縮する",
+        "Strength": "腕力は近接スキルのクールダウン時間を短縮する"
+      }
    },
    "Loadouts": {
       "Loadouts": "ロードアウト",
@@ -89,6 +117,7 @@
    "Stats": {
       "Discipline": "鍛錬",
       "Intellect": "知性",
+      "Level": "レベル",
       "Strength": "腕力"
    },
    "StoreBucket": {
@@ -112,6 +141,49 @@
       "Bounties": "バウンティ",
       "ShadersAndEmblems": "シェーダーとエンブレム",
       "Emotes": "感情表現"
+   },
+   "Views": {
+     "About":{
+       "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
+       "ContactUs":"お問い合わせ",
+       "FAQ": "よくある質問",
+       "FAQAccess": "DIMはどのようにデスティニーのデータを入手しますか？",
+       "FAQAccessAnswer": "どのクロームエクステンションでもあなたのコンピューターにセーブしてあるウェブサイトのデータを使う許可を得ることが出来ます。Bungie.netにログインする時、個人別のトークン(クッキー)が作られます。このトークンを使ってあなたのコンピューターとBungieが安全に情報交換が出来る様になります。毎回ログインする度にアカウント名とパスワードを入力するより、このトークンを使ったほうが個人情報がより安全だからです。DIMもこのトークンを使ってあなたの代わりにBungieと通信します。",
+       "FAQDupeGally": "ちょっと、DIMが私のギャラルホルンを複製しました！",
+       "FAQDupeGallyAnswer": "いいえ、こちらでは何もしていません。 約束します。",
+       "FAQKeyboard": "DIMではキーボードのショートカットを使えますか？",
+       "FAQKeyboardAnswer": "使えます！使用可能なショートカットリストを表示するには「？」を押してください。",
+       "FAQLogout": "どうやったらDIMからログアウト出来ますか？",
+       "FAQLogoutAnswer": "あなたのセッションはBungie.netと繋がっています。Bungie.netからログアウトするとDIMからもログアウトする事になります。",
+       "FAQLostItem": "このツールを使っている間にアイテムを紛失してしまった！",
+       "FAQLostItemAnswer": "アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。DIMで検索してみて下さい。もし見つからないなら、ブラウザーの更新を。(F5かCommand+R) それでも見つからない場合は、Bungie.net かゲームで直接、探してみてください。どこかに必ず在るはずです。",
+       "GitHub": "ギットハブ",
+       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクからGitHubへ。",
+       "GitHubRepo": "DIM Git Repo",
+       "Header": "デスティニー・アイテム・マネージャー「DIM」 について",
+       "HowItsMade": "DIMはBungie.netとDestinyコンパニオンアプリが使っている同じサービスを素にして作られたクロームエクステンションです。DIMはPlayStationとXboxのアカウント両方対応で、キャラクターや保管庫に入っているアイテムにアクセスすることができます。アイテムはドラッグアンドドロップで自由自在に移動できます。",
+       "Reddit": "レディット",
+       "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
+       "Twitter": "ツイッター",
+       "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
+       "Version": "バージョン"
+     },
+     "Support": {
+       "Support": "DIMを支援する",
+       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
+       "Fans": "私たちはデスティニーの大ファンです。DIMは何時間ものゲームプレイ中にキャラクター間のギア伝達が難しいと感じたため作成されました。1つのアイテムを忘れたり、タワーに何度も行ったり、ストライクをしてアイテムを毎回保管するのは面倒です。DIMは、より多くのゲーム時間を得るのに役立つツールです。",
+       "Contribute": "私はどのように貢献できますか？",
+       "Paypal":"DIMにチップを贈る！",
+       "PaypalText": "私達はチップの受け取りにPayPalを使用しています。 DIMがあなたのゲーム時間をより楽しくするなら、プロジェクトに取り組むチームをサポートすることを検討してください。",
+       "Transifex": "翻訳チームに参加してください！",
+       "TransifexText": "私達はTransifexを使用して翻訳しています。 あなたの言語にローカライズされたDIMを見たい場合は、チームに参加してください。",
+       "Share": "あなたの友達とDIMを共有してください。",
+       "ShareText": "ロードアウトを装備するのがいかに簡単か経験したら、決して止められないでしょう。 あなたの友人と楽しく共有しましょう！",
+       "Reddit": "DIMへのアイデアはありますか？",
+       "RedditText": "DIMのホームページ /r/destinyitemmanager であなたのアイデアを聞かせてください。DIMの周りのコミュニティだけでなく、私たちからもお聞きします。アイデアの反復と改善に最適な方法です。",
+       "GitHub": "私はデベロッパーかデザイナーか熱狂者です。 ソースに貢献したいと思っています。"
+     },
+     "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。"
    },
    "TrialsCard": {
       "FiveWins": "5勝目の報酬 (防具)",
