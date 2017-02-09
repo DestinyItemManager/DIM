@@ -68,9 +68,10 @@
       "Version": {
          "Beta": "ベータがv{version}にアップデートされました",
          "Stable": "DIM v{version} がリリースされました"
-      },
+      }
+   },
    "Infusion": {
-      "TransferItems": "アイテムの転送",
+      "TransferItems": "アイテムの転送"
     },
    "ItemService": {
       "PercentComplete": "({ percent, number, percent } 完了)"
