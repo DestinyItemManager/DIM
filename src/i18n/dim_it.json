@@ -314,8 +314,8 @@
    "Stats": {
       "Discipline": "Disciplina",
       "Intellect": "Intelletto",
-      "NoBonus": "Nessun Bonus",
       "Level": "Livello",
+      "NoBonus": "Nessun Bonus",
       "OfMaxRoll": "{range} del roll massimo",
       "PercentHelp": "Clicca per maggiori informazioni riguarso la Qualità delle Statistiche.",
       "Quality": "Qualità statistiche",

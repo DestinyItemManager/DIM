@@ -116,6 +116,10 @@
       "TransferItems": "Übertrage Items",
       "Using3": "verwendet 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Fehler beim Speichern der Item-Infos",
+     "SaveInfoErrorDescription": "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gepeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {error}."
+   },
    "ItemMove": {
       "Consolidate": "{name} zusammengefasst",
       "Distributed": "{name} verteilt\n{name} ist gleichermaßen zwischen Charakteren verteilt",
@@ -163,9 +167,9 @@
       "IncludeRare": "Seltene (blaue) Gegenstände einbeziehen",
       "Help": {
         "Help": "Brauchst du Hilfe?",
-        "Lock": "Sperre eine bestimmte Art von Gegenstand, indem du auf sein Feld klickst und den Gegenstand auswählst",
+        "Lock": "Sperre eine bestimmte Art von Perk, indem du auf sein Feld klickst und das Perk auswählst",
         "NoPerk": "Wenn ein Perk nicht auftaucht besitzt du keinen Gegenstand mit diesem Perk",
-        "MultiPerk":"Um Rüstung mit mehreren Perks zu nutzen, klicke mit Shift+Klick auf die Perks",
+        "MultiPerk":"Um Rüstung mit mehreren Perks zu nutzen, klicke mit Shift+Klick auf die gewünschten Perks",
         "Or": "Rüstung mit irgendeinem dieser Perks wird benutzt (\"oder\")",
         "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
         "DragAndDrop": "Klicke und ziehe Items in die Felder um Sets aus nur dieser Ausrüstung zu erstellen",
@@ -174,10 +178,10 @@
         "Tier11Example": "4/5/2 (ein Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = Stufe 11)",
         "Intellect": "Intellekt beschleunigt die Super Abklingzeit",
         "Discipline": "Disziplin  beschleunigt die Granaten Aufladezeit",
-        "Strength": "Stärke  beschleunigt die Nahkampf Aufladezeit",
+        "Strength": "Stärke beschleunigt die Nahkampf Aufladezeit",
         "Synergy": "Versuche Rüstung zu finden, welche dir mehr Munition für Waffenklassen geben, die du benutzt.",
         "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
-        "StatsIncrease": "Wenn der Verteidigungswert für ein Rüstungsteil ansteigt, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
+        "StatsIncrease": "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
       },
       "Equip": "Beim aktuellen Charakter anlegen.",
       "ShowAllConfigs": "Zeige alle Einstellungen",
@@ -231,7 +235,11 @@
       "NameRequired": "Ein Name ist erforderlich.",
       "MakeRoom": "Schaffe Platz für Posstellenitems",
       "MakeRoomDone": "Platz für {postmasterNum, plural, =1{1 Poststellenitem} other{# Poststellenitems}} durch verschieben von {movedNum, plural, =1{1 Item} other{# Items}} vom {store} geschaffen.",
-      "MakeRoomError": "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {error}."
+      "MakeRoomError": "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {error}.",
+      "SaveErrorTitle": "Fehler beim Speichern des Loadouts",
+      "SaveErrorDescription": "Speichern des Loadouts {loadoutName} nicht möglich: {error}.",
+      "DeleteErrorTitle": "Fehler beim Löschen des Loadouts",
+      "DeleteErrorDescription": "Löschen des Loadouts {loadoutName} nicht möglich: {error}."
    },
    "Manifest": {
       "Build": "Lege Destiny Datenbank an",
@@ -350,7 +358,7 @@
    },
    "Views": {
      "About":{
-       "BungieCopyright": "Alle Bilder und Inhalte sind Eigentum von Bungie. Tritt bitte mit uns in Verbindung, wenn es irgendwelche Probleme gibt.",
+       "BungieCopyright": "Alle Bilder und Inhalte sind Eigentum von Bungie. Bitte kontaktiere uns, wenn es irgendwelche Probleme gibt.",
        "ContactUs":"Kontaktiere uns",
        "FAQ": "FAQ",
        "FAQAccess": "Wie bekommt DIM Zugriff auf meine Destiny-Daten?",
@@ -361,7 +369,7 @@
        "FAQKeyboardAnswer": "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen.",
        "FAQLogout": "Wie kann ich mich von DIM abmelden?",
        "FAQLogoutAnswer": "Deine Sitzung ist an Bungie.net gebunden. Wenn du dich auf Bungie.net abmeldest, wirst du auch von DIM abgemeldet.",
-       "FAQLostItem": "Ich habe einen Gegenstand verloren durch eure Erweiterung verloren!",
+       "FAQLostItem": "Ich habe durch euer Tool einen Gegenstand verloren!",
        "FAQLostItemAnswer": "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf Bungie.net oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da.",
        "GitHub": "GitHub",
        "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf GitHub.",
@@ -375,7 +383,7 @@
        "Version": "Version"
      },
      "Support": {
-       "Support": "Unterstütze DIM<",
+       "Support": "Unterstütze DIM",
        "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
        "Fans": "Wir sind alle große Fans von Destiny. DIM erwachte in den Stunden des Gameplays zum Leben, in denen wir den Schmerz fühlten, als wir bei der Übertragung von Gegenständen zwischen den Charaktern ausgerechnet diesen einen Gegenstand vergessen hatten oder bei den vielen Flüge zum Turm bei denen wir unsere Engramme aus den Strikes entladen haben. DIM ist das Tool, das dir hilft, mehr Spielzeit zu bekommen.",
        "Contribute": "Wie kann ich mich am Projekt beteiligen?",
@@ -386,11 +394,11 @@
        "Share": "Teile DIM mit deinen Freunden.",
        "ShareText": "Sobald du erlebt hast, wie einfach es ist ein Loadout zu anzulegen, wirst du überwältigt sein. Teile den Spaß mit deinen Freunden!",
        "Reddit": "Hast du eine Idee für DIM?",
-       "RedditText": "Besuche uns auf /r/destinyitemmanager und lass uns von deiner Idee wissen. Du wirst von uns hören, sowie auch von der Community rund um DIM, was ein großartiger Weg ist, um die Idee zu iterieren und zu verbessern.",
+       "RedditText": "Besuche uns auf /r/destinyitemmanager und lass uns von deiner Idee wissen. Du wirst von uns hören, sowie auch von der Community rund um DIM, was ein großartiger Weg ist, um eine Idee aufzugreifen und zu verbessern.",
        "GitHub": "Ich bin ein Entwickler/Designer/Enthusiast und ich möchte gerne etwas beitragen.",
        "GitHubText": "Besuche uns auf GitHub und sende einem der beitragenden Personen eine Nachricht. Wir sind mehr als glücklich Pull Requests zu akzeptieren. Tritt uns als Unterstützer bei nehme an unseren Treffen teil, bei denen wir über die nächste Version, zukünftige Updates oder Bugs zu zerschmettern."
      },
-     "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM nutzen zu können."
+     "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
    },
    "TrialsCard": {
       "FiveWins": "5 Siege Belohnung (Rüstung)",
