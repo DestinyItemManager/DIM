@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import { getAll, getSelected } from '../shell/platform/platform.reducers';
+import { getSelected } from '../shell/platform/platform.reducers';
 
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
@@ -78,26 +78,26 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     var errorCode = response.data.ErrorCode;
 
     switch (errorCode) {
-    case 1: {
-      return response;
-    }
-    case 1627: {
-      return $q.reject("Vendor data is unavailable.");
-    }
-    case 2108: {
-      $rootScope.$broadcast('dim-no-token-found');
-      return $q.reject("DIM does not have permission to perform this action.");
-    }
-    case 5:
-    case 36:
-    case 99:
-    case 1618:
-    case 2101:
-    case 2102:
-    case 2107:
-    // default: {
-    //   return response;
-    // }
+      case 1: {
+        return response;
+      }
+      case 1627: {
+        return $q.reject("Vendor data is unavailable.");
+      }
+      case 2108: {
+        $rootScope.$broadcast('dim-no-token-found');
+        return $q.reject("DIM does not have permission to perform this action.");
+      }
+      case 5:
+      case 36:
+      case 99:
+      case 1618:
+      case 2101:
+      case 2102:
+      case 2107:
+      // default: {
+      //   return response;
+      // }
     }
 
     if (errorCode === 36) {
@@ -522,7 +522,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
   /************************************************************************************************************************************/
 
   function getVendorForCharacter(character, vendorHash) {
-    let platform = this.selected;
+    const platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -551,7 +551,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
   /************************************************************************************************************************************/
 
   function transfer(item, store, amount) {
-    let platform = this.selected;
+    const platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -616,7 +616,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
   /************************************************************************************************************************************/
 
   function equip(item) {
-    let platform = this.selected;
+    const platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -661,7 +661,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
 
   // Returns a list of items that were successfully equipped
   function equipItems(store, items) {
-    let platform = this.selected;
+    const platform = this.selected;
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, function(i) {
       return i.isExotic ? 1 : 0;
@@ -716,15 +716,15 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
   /************************************************************************************************************************************/
 
   function setItemState(item, store, lockState, type) {
-    let platform = this.selected;
-    
+    const platform = this.selected;
+
     switch (type) {
-    case 'lock':
-      type = 'SetLockState';
-      break;
-    case 'track':
-      type = 'SetQuestTrackedState';
-      break;
+      case 'lock':
+        type = 'SetLockState';
+        break;
+      case 'track':
+        type = 'SetQuestTrackedState';
+        break;
     }
 
     var data = {
