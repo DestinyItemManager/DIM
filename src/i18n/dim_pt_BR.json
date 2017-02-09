@@ -116,6 +116,10 @@
       "TransferItems": "Transferir itens",
       "Using3": "usando 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Erro salvando informação de item.",
+     "SaveInfoErrorDescription": "Houve um problema salvando Informação specifica de DIM sobre um item. Um problema é há um limite de data que podem salvado - este é porque tags e notas não são permitido fora de versão Beta. O erro era: {error}."
+   },
    "ItemMove": {
       "Consolidate": "{name} consolidado",
       "Distributed": "{name} distribuído\n{name} está agora dividido por igual entre os personagens.",
@@ -231,7 +235,11 @@
       "NameRequired": "Um nome é obrigatório.",
       "MakeRoom": "Abrir espaço para itens do Correio",
       "MakeRoomDone": "Foi aberto espaço para {postmasterNum, plural, =1{1 item de Correio} other{# itens de Correio}} movendo {movedNum, plural, =1{1 item} other{# itens}} do {store}.",
-      "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}."
+      "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}.",
+      "SaveErrorTitle": "Erro salvando set",
+      "SaveErrorDescription": "Incapaz de salvar set {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Erro deletando set",
+      "DeleteErrorDescription": "Incapaz de deletar set {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Construindo banco de dados de informações",
