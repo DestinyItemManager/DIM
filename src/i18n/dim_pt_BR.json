@@ -79,7 +79,7 @@
       "FilterHelp": "Buscar por item/perk ou is:arc",
       "MaterialsExchange": "Ranks de facção disponíveis",
       "Refresh": "Atualizar dados do Destiny",
-      "SupportDIM": "Apoie o DIM"
+      "SupportDIM": "Apoie"
    },
    "Help": {
       "BackToDIM": "Voltar para o DIM",
@@ -372,23 +372,9 @@
        "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
        "Twitter": "Twitter",
        "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-       "Version": "Versão"
-     },
-     "Support": {
-       "Support": "Apoie o DIM",
-       "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa.",
-       "Fans": "Somos todos grandes fãs de Destiny. O DIM tomou forma nessas horas de gameplay porque sentimos uma enorme dificuldade em transferir itens entre personagens, esquecer de um item, voltar para a Torre, mover itens para o cofre, trocar novamente de personagem. O DIM é a ferramenta que irá te ajudar a ganhar mais tempo no jogo.",
-       "Contribute": "Como posso ajudar?",
-       "Paypal":"Faça uma doação!",
-       "PaypalText": "Nós usamos o PayPal para receber doações. Se o DIM fez diferença nas suas horas de jogo, dê seu suporte à equipe que trabalha no projeto.",
+       "Version": "Versão",
        "Transifex": "Junte-se à equipe de tradução!",
-       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você quer ver o DIM traduzido para o seu idioma, junte-se à equipe.",
-       "Share": "Compartilhe o DIM com seus amigos.",
-       "ShareText": "Uma vez que tenha visto o quão fácil é transferir e equipar seus itens usando o DIM, você não vai mais conseguir largar. Compartilhe essa facilidade com seus amigos!",
-       "Reddit": "Você tem uma ideia nova para o DIM?",
-       "RedditText": "Visite nossa página em /r/destinyitemmanager (em inglês) e conte-nos sobre sua ideia. Você irá interagir conosco e com o resto da comunidade do DIM, uma excelente forma de debater e aprimorar uma ideia nova.",
-       "GitHub": "Eu sou desenvolvedor/designer/entusiasta e quero contribuir com o código-fonte.",
-       "GitHubText": "Visite nosso GitHub e envie uma mensagem aos colaboradores. Ficaremos felizes em aceitar novos pull requests. Junte-se a nós como colaborador e faça parte de nossas discussões sobre próximas versões, atualizações, correções de bugs."
+       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você quer ver o DIM traduzido para o seu idioma, junte-se à equipe."
      },
      "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM."
    },
