@@ -2,15 +2,15 @@ engines:
   duplication:
     config:
       languages:
-        - javascript
-        - php
+        javascript:
+          mass_threshold: 170
+        php: ~
     enabled: true
   eslint:
     channel: eslint-2
     checks:
       complexity:
         enabled: true
-      # fix for errored code climate linters.
       no-mixed-operators:
         enabled: false
       rest-spread-spacing:
