@@ -70,6 +70,19 @@
          "Stable": "DIM v{version} がリリースされました"
       }
    },
+   "Help": {
+      "BackToDIM": "DIMに戻る",
+      "CannotMove": "キャラクターからこのアイテムを外せません",
+      "ChangingPerks": "パーク変更は対応していません",
+      "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
+      "HidePopup": "ポップアップを非表示にする",
+      "NeverShow": "二度と表示しない",
+      "UpgradeChrome": "クロームをアップデートしてください",
+      "Version": {
+         "Beta": "ベータがv{version}にアップデートされました",
+         "Stable": "DIM v{version} がリリースされました"
+      }
+   },
    "Infusion": {
       "TransferItems": "アイテムの転送"
     },
