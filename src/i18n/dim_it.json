@@ -376,6 +376,10 @@
        "Transifex": "Unisciti al Team Traduzione!",
        "TransifexText": "Utilizziamo Transifex per facilitare le traduzioni. Se vuoi vedere DIM nella tua lingua, unisciti al team."
      },
+     "Support": {
+       "Support": "Supportare DIM",
+       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine."
+     },
      "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM."
    },
    "TrialsCard": {

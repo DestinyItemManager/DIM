@@ -181,6 +181,7 @@ function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTrack
 
   vm.showSetting = showPopupFunction('settings');
   vm.showAbout = showPopupFunction('about');
+  vm.showSupport = showPopupFunction('support');
   vm.showFilters = showPopupFunction('filters');
   vm.showXur = showPopupFunction('xur');
   vm.showMatsExchange = showPopupFunction('mats-exchange');
