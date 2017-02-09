@@ -1,5 +1,4 @@
 {
-   "Level": "Nível",
    "Bucket": {
       "Armor": "Armaduras",
       "General": "Geral",
@@ -117,6 +116,10 @@
       "TransferItems": "Transferir itens",
       "Using3": "usando 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Erro salvando informação de item.",
+     "SaveInfoErrorDescription": "Houve um problema salvando Informação specifica de DIM sobre um item. Um problema é há um limite de data que podem salvado - este é porque tags e notas não são permitido fora de versão Beta. O erro era: {error}."
+   },
    "ItemMove": {
       "Consolidate": "{name} consolidado",
       "Distributed": "{name} distribuído\n{name} está agora dividido por igual entre os personagens.",
@@ -162,7 +165,24 @@
          "HelpCurrent": "Calcular set com os níveis de defesa reais."
       },
       "IncludeRare": "Incluir itens raros (azuis)",
-      "Help": "Precisa de ajuda?",
+      "Help": {
+        "Help": "Precisa de ajuda?",
+        "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks.",
+        "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk.",
+        "MultiPerk":"Se você quiser usar vários perks em uma armadura, Shift+clique nos perks desejados.",
+        "Or": "Armadura com qualquer um destes perks será usada (\"ou\")",
+        "And": "Armadura com todos esses perks será usada (\"e\")",
+        "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento.",
+        "ShiftClick": "Shift+clique em um item para construir sets sem aquele equipamento",
+        "HigherTiers": "Tiers mais altos são melhores",
+        "Tier11Example": "4/5/2 (um set Tier 11) significa 4 Intelecto, 5 Disciplina, 2 Força (4+5+2 = Tier 11)",
+        "Intellect": "Intelecto acelera o tempo de recarga da Super.",
+        "Discipline": "Disciplina acelera o tempo de recarga de granadas.",
+        "Strength": "Força acelera o tempo de recarga do corpo-a-corpo.",
+        "Synergy": "Tente encontrar uma armadura com perks que aumentem a quantidade de munição das armas que você mais usa.",
+        "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada Loadout.",
+        "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumenta."
+      },
       "Equip": "Equipar no personagem atual",
       "ShowAllConfigs": "Exibir todas as configurações",
       "ShowConfigs": "Exibir configurações",
@@ -215,7 +235,11 @@
       "NameRequired": "Um nome é obrigatório.",
       "MakeRoom": "Abrir espaço para itens do Correio",
       "MakeRoomDone": "Foi aberto espaço para {postmasterNum, plural, =1{1 item de Correio} other{# itens de Correio}} movendo {movedNum, plural, =1{1 item} other{# itens}} do {store}.",
-      "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}."
+      "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}.",
+      "SaveErrorTitle": "Erro salvando set",
+      "SaveErrorDescription": "Incapaz de salvar set {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Erro deletando set",
+      "DeleteErrorDescription": "Incapaz de deletar set {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Construindo banco de dados de informações",
@@ -298,6 +322,7 @@
    "Stats": {
       "Discipline": "Disciplina",
       "Intellect": "Intelecto",
+      "Level": "Nível",
       "NoBonus": "Sem bônus",
       "OfMaxRoll": "{range} do valor máximo",
       "PercentHelp": "Clique para mais informações sobre Níveis de Qualidade.",
@@ -330,6 +355,50 @@
       "Bounties": "Contratos",
       "ShadersAndEmblems": "Tonalizadores & Emblemas",
       "Emotes": "Gestos"
+   },
+   "Views": {
+     "About":{
+       "BungieCopyright": "Todo o conteúdo e imagens são propriedade da Bungie. Por favor, contate-nos no caso de qualquer problema.",
+       "ContactUs":"Fale Conosco",
+       "FAQ": "FAQ",
+       "FAQAccess": "Como o DIM obtém acesso aos meus dados do Destiny?",
+       "FAQAccessAnswer": "Qualquer extensão do Chrome pode solicitar acesso às informações armazenadas em seu computador. Quando você faz seu login no Bungie.net você é solicitado a armazenar um token (um cookie) que é gerado exclusivamente para a sua conta. Você usa esse token para se identificar com segurança com os servidores da Bungie, pois usar este token é muito mais seguro do que enviar seu usuário e senha a cada requisição. O DIM usa esse token para se comunicar com a Bungie e obter informações dos seus personagens e itens.",
+       "FAQDupeGally": "Ei, o DIM duplicou minha Gjallarhorn!",
+       "FAQDupeGallyAnswer": "Não, não duplicamos. Temos certeza disso.",
+       "FAQKeyboard": "O DIM suporta teclas de atalhos?",
+       "FAQKeyboardAnswer": "Sim! Pressione \"?\" para ver a lista de teclas de atalhos disponíveis.",
+       "FAQLogout": "Como posso fazer logout do DIM?",
+       "FAQLogoutAnswer": "Sua sessão está vinculada ao Bungie.net. Se você fizer logout do Bungie.net automaticamente você fará logout do DIM também.",
+       "FAQLostItem": "Eu perdi um item usando a ferramenta de vocês!",
+       "FAQLostItemAnswer": "Muito provavelmente sua transferência falhou e seu item está no Cofre ou em outro personagem. Você pode usar o campo de busca para encontrá-lo. Caso não encontre, pressione F5 para atualizar a página. Verifique no Bungie.net ou no próprio jogo se o item realmente existe. Temos plena certeza que ele está em algum lugar.",
+       "GitHub": "GitHub",
+       "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no GitHub.",
+       "GitHubRepo": "Repositório no GitHub",
+       "Header": "Sobre o Destiny Item Manager (DIM)",
+       "HowItsMade": "O DIM tem como base os mesmos serviços do Bungie.net e o aplicativo Destiny Companion. O DIM pode acessar os itens em seu inventário e cofre em ambas as plataformas PlayStation e Xbox. Você pode então arrastar e soltar os itens para qualquer personagem ou local que deseja mover.",
+       "Reddit": "Reddit",
+       "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
+       "Twitter": "Twitter",
+       "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
+       "Version": "Versão"
+     },
+     "Support": {
+       "Support": "Apoie o DIM",
+       "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa.",
+       "Fans": "Somos todos grandes fãs de Destiny. O DIM tomou forma nessas horas de gameplay porque sentimos uma enorme dificuldade em transferir itens entre personagens, esquecer de um item, voltar para a Torre, mover itens para o cofre, trocar novamente de personagem. O DIM é a ferramenta que irá te ajudar a ganhar mais tempo no jogo.",
+       "Contribute": "Como posso ajudar?",
+       "Paypal":"Faça uma doação!",
+       "PaypalText": "Nós usamos o PayPal para receber doações. Se o DIM fez diferença nas suas horas de jogo, dê seu suporte à equipe que trabalha no projeto.",
+       "Transifex": "Junte-se à equipe de tradução!",
+       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você quer ver o DIM traduzido para o seu idioma, junte-se à equipe.",
+       "Share": "Compartilhe o DIM com seus amigos.",
+       "ShareText": "Uma vez que tenha visto o quão fácil é transferir e equipar seus itens usando o DIM, você não vai mais conseguir largar. Compartilhe essa facilidade com seus amigos!",
+       "Reddit": "Você tem uma ideia nova para o DIM?",
+       "RedditText": "Visite nossa página em /r/destinyitemmanager (em inglês) e conte-nos sobre sua ideia. Você irá interagir conosco e com o resto da comunidade do DIM, uma excelente forma de debater e aprimorar uma ideia nova.",
+       "GitHub": "Eu sou desenvolvedor/designer/entusiasta e quero contribuir com o código-fonte.",
+       "GitHubText": "Visite nosso GitHub e envie uma mensagem aos colaboradores. Ficaremos felizes em aceitar novos pull requests. Junte-se a nós como colaborador e faça parte de nossas discussões sobre próximas versões, atualizações, correções de bugs."
+     },
+     "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM."
    },
    "TrialsCard": {
       "FiveWins": "Recompensa de 5 vitórias (armadura)",

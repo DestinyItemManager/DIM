@@ -1,4 +1,5 @@
 import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
@@ -31,6 +32,7 @@ function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadi
     callback: function(event) {
       $rootScope.$broadcast('dim-focus-filter-input');
 
+
       event.preventDefault();
       event.stopPropagation();
     }
@@ -41,14 +43,6 @@ function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadi
     allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
     callback: function() {
       $rootScope.$broadcast('dim-escape-filter-input');
-    }
-  });
-
-  hotkeys.add({
-    combo: ['r'],
-    description: "Refresh inventory",
-    callback: function() {
-      vm.refresh();
     }
   });
 
@@ -175,8 +169,4 @@ function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadi
   };
 
   vm.xur = dimXurService;
-
-  vm.refresh = function refresh() {
-    loadingTracker.addPromise(dimStoreService.reloadStores());
-  };
 }
