@@ -122,7 +122,7 @@ function VendorService(
 
   function reloadVendors(stores) {
     var self = this;
-    
+
     const activePlatform = self.selected;
 
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {

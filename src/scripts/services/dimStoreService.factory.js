@@ -4,8 +4,6 @@ import { sum, count } from '../util';
 import idbKeyval from 'idb-keyval';
 
 import * as platformReducers from '../shell/platform/platform.reducers';
-
-import storeActions from '../store/store.actions';
 import * as storeReducers from '../store/store.reducers';
 
 angular.module('dimApp')
@@ -334,8 +332,6 @@ function StoreService(
   // If this is called while a reload is already happening, it'll return the promise
   // for the ongoing reload rather than kicking off a new reload.
   function reloadStores() {
-    var self = this;
-
     const activePlatform = dimPlatformService.getActive();
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
       return _reloadPromise;
@@ -1178,9 +1174,7 @@ function StoreService(
         light = 335;
       }
 
-      return ((quality.min === quality.max || light === 335) ?
-        quality.min :
-        (quality.min + "%-" + quality.max)) + '%';
+      return ((quality.min === quality.max || light === 335) ? quality.min : (quality.min + "%-" + quality.max)) + '%';
     }
 
     if (!stats || !stats.length || !light || light.value < 280) {
@@ -1286,51 +1280,23 @@ function StoreService(
     switch (type.toLowerCase()) {
       case 'helmet':
       case 'helmets':
-        return light < 292 ? 15 :
-          light < 307 ? 16 :
-          light < 319 ? 17 :
-          light < 332 ? 18 :
-          19;
+        return light < 292 ? 15 : light < 307 ? 16 : light < 319 ? 17 : light < 332 ? 18 : 19;
       case 'gauntlets':
-        return light < 287 ? 13 :
-          light < 305 ? 14 :
-          light < 319 ? 15 :
-          light < 333 ? 16 :
-          17;
+        return light < 287 ? 13 : light < 305 ? 14 : light < 319 ? 15 : light < 333 ? 16 : 17;
       case 'chest':
       case 'chest armor':
-        return light < 287 ? 20 :
-          light < 300 ? 21 :
-          light < 310 ? 22 :
-          light < 319 ? 23 :
-          light < 328 ? 24 :
-          25;
+        return light < 287 ? 20 : light < 300 ? 21 : light < 310 ? 22 : light < 319 ? 23 : light < 328 ? 24 : 25;
       case 'leg':
       case 'leg armor':
-        return light < 284 ? 18 :
-          light < 298 ? 19 :
-          light < 309 ? 20 :
-          light < 319 ? 21 :
-          light < 329 ? 22 :
-          23;
+        return light < 284 ? 18 : light < 298 ? 19 : light < 309 ? 20 : light < 319 ? 21 : light < 329 ? 22 : 23;
       case 'classitem':
       case 'class items':
       case 'ghost':
       case 'ghosts':
-        return light < 295 ? 8 :
-          light < 319 ? 9 :
-          10;
+        return light < 295 ? 8 : light < 319 ? 9 : 10;
       case 'artifact':
       case 'artifacts':
-        return light < 287 ? 34 :
-          light < 295 ? 35 :
-          light < 302 ? 36 :
-          light < 308 ? 37 :
-          light < 314 ? 38 :
-          light < 319 ? 39 :
-          light < 325 ? 40 :
-          light < 330 ? 41 :
-          42;
+        return light < 287 ? 34 : light < 295 ? 35 : light < 302 ? 36 : light < 308 ? 37 : light < 314 ? 38 : light < 319 ? 39 : light < 325 ? 40 : light < 330 ? 41 : 42;
     }
     console.warn('item bonus not found', type);
     return 0;
@@ -1495,29 +1461,29 @@ function StoreService(
 
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
     return $q.all([
-        dimDefinitions,
-        dimBucketService,
-        previousItems,
-        newItems,
-        itemInfoService
-      ])
-      .then(function(args) {
-        var result = [];
-        dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
-        _.each(items, function(item) {
-          var createdItem = null;
-          try {
-            createdItem = processSingleItem(...args, item, owner);
-          } catch (e) {
-            console.error("Error processing item", item, e);
-          }
-          if (createdItem !== null) {
-            createdItem.owner = owner.id;
-            result.push(createdItem);
-          }
-        });
-        return result;
+      dimDefinitions,
+      dimBucketService,
+      previousItems,
+      newItems,
+      itemInfoService
+    ])
+    .then(function(args) {
+      var result = [];
+      dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
+      _.each(items, function(item) {
+        var createdItem = null;
+        try {
+          createdItem = processSingleItem(...args, item, owner);
+        } catch (e) {
+          console.error("Error processing item", item, e);
+        }
+        if (createdItem !== null) {
+          createdItem.owner = owner.id;
+          result.push(createdItem);
+        }
       });
+      return result;
+    });
   }
 
   function getClass(type) {
