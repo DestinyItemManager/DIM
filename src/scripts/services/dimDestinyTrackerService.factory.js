@@ -31,8 +31,8 @@ function DestinyTrackerService($q,
         },
         authenticate: function() {  
         },
-        bulkFetch: function() {
-            var weaponList = _gunListBuilder.getWeaponList();
+        bulkFetch: function(stores) {
+            var weaponList = _gunListBuilder.getWeaponList(stores);
 
             var promise = $q.resolve()
                 .then(getBulkWeaponData(weaponList))
@@ -45,13 +45,11 @@ function DestinyTrackerService($q,
     }
 }
 
-function _gunListBuilder(dimStoreService) {
-    function getGuns() {
-        var allItems = dimStoreService.getStores();
-
+function _gunListBuilder() {
+    function getGuns(stores) {
         var items = [];
 
-        allItems.forEach(function(item) {
+        stores.forEach(function(item) {
             if (!item.primStat) {
                 return;
             }
@@ -64,8 +62,8 @@ function _gunListBuilder(dimStoreService) {
         return items;
     }
 
-    function getWeaponList() {
-        var guns = getGuns();
+    function getWeaponList(stores) {
+        var guns = getGuns(stores);
 
         var newList = [];
 

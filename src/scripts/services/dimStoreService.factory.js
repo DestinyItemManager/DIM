@@ -507,6 +507,8 @@ function StoreService(
                 });
               }
             }
+
+            dimDestinyTrackerService.bulkFetch(getStores());
           }
 
           return processItems(store, items, previousItems, newItems, itemInfoService).then(function(items) {
