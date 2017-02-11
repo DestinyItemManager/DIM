@@ -326,6 +326,7 @@
       "NoBonus": "No Bonus",
       "OfMaxRoll": "{range} of max roll",
       "PercentHelp": "Click for more information about what Stats Quality is.",
+      "Prestige": "Prestige Level: {level}\n{exp}xp until 5 motes of light.",
       "Quality": "Stats quality",
       "Strength": "Strength",
       "TierProgress": "{progress} for {tier}"

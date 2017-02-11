@@ -116,6 +116,10 @@
       "TransferItems": "Transferir objetos",
       "Using3": "usando 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Error al salvar información del objeto",
+     "SaveInfoErrorDescription": "Ha habido un problema al guardar información específica de DIM para un objeto.\nUn problema es del límite de datos que pueden ser guardados - es por esto que etiquetas y notas no han salido de la versión Beta. El error fue: {error}."
+   },
    "ItemMove": {
       "Consolidate": "Consolidado {name} ",
       "Distributed": "{name} distribuidos. Ahora {name} se encuentra dividido entre los personajes de manera equitativa.",
@@ -163,21 +167,21 @@
       "IncludeRare": "Incluir objetos raros (azules)",
       "Help": {
         "Help": "Necesitas ayuda?",
-        "Lock": "Fija un conjunto de mejoras dando clicl al botón de fijar y seleccionando las mejoras",
+        "Lock": "Fija un conjunto de mejoras dando click al botón de fijar y seleccionando las mejoras",
         "NoPerk": "Si una mejora no aparece, quiere decir que no tienes armadura que cuente con esa mejora",
         "MultiPerk":"Para usar armadura con múltiples mejoras juntas, presiona shift+click en las mejoras deseadas",
         "Or": "Armadura con cualquiera de éstas mejoras será usada (\"o\")",
         "And": "Armadura con todas éstas mejoras será usada (\"y\")",
-        "DragAndDrop": "Arrastra y suelta objetos en las cajas fijas para crear conjuntos con solo ese equipo",
+        "DragAndDrop": "Arrastra y suelta objetos en las cajas fijas para crear conjuntos con ese equipo solamente",
         "ShiftClick": "Shift click en un objeto para crear conjuntos sin ese equipo",
         "HigherTiers": "Niveles altos son mejores",
-        "Tier11Example": "4/5/2 (equipo nivel 11) es 4 de Intelecto, 5 de Disciplina y 2 de Fuerza (4+5+2 = Nivel 11)",
+        "Tier11Example": "4/5/2 (equipo Nivel 11) es 4 de Intelecto, 5 de Disciplina y 2 de Fuerza (4+5+2 = Nivel 11)",
         "Intellect": "El Intelecto acelera la recarga de tiempo del Súper",
         "Discipline": "La Disciplina acelera la recarga de tiempo de la Granada",
-        "Strength": "La fuerza acelera la recarga de tiempo de el Cuerpo a Cuerpo",
+        "Strength": "La Fuerza acelera la recarga de tiempo de el Cuerpo a Cuerpo",
         "Synergy": "Intenta encontrar armadura que tenga mejoras de incremento de munición para el tipo de armas que frecuentemente usas.",
         "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
-        "StatsIncrease": "Mientras el nivel de defensa de los objetos incremente, las estadísticas en ese objeto (int/dis/fuer) tambien incrementan."
+        "StatsIncrease": "Mientras el nivel de defensa de los objetos incremente, las estadísticas en ese objeto (int/dis/fuer) también incrementan."
       },
       "Equip": "Equipar al personaje actual",
       "ShowAllConfigs": "Mostrar todas las configuraciones",
@@ -231,7 +235,11 @@
       "NameRequired": "Se necesita un nombre",
       "MakeRoom": "Hacer espacio en la Administración",
       "MakeRoomDone": "Se terminó de hacer espacio para {postmasterNum, plural, =1{1 objeto de la Administración} other{# objetos de la Administración}} al mover {movedNum, plural, =1{1 objeto} other{# objetos}} fuera de {store}.",
-      "MakeRoomError": "Imposible hacer espacio para todos los objetos en la Administración: {error}."
+      "MakeRoomError": "Imposible hacer espacio para todos los objetos en la Administración: {error}.",
+      "SaveErrorTitle": "Error al guardar equipo",
+      "SaveErrorDescription": "Incapaz de guardar equipo {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Error al borrar equipo",
+      "DeleteErrorDescription": "Incapaz de borrar equipo {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Creando información de la base de datos de Destiny",
@@ -350,12 +358,12 @@
    },
    "Views": {
      "About":{
-       "BungieCopyright": "Todas las imagenes y contenido son propiedad de Bungie. Por favor contáctanos si hay algún problema.",
+       "BungieCopyright": "Todas las imágenes y contenido son propiedad de Bungie. Por favor contáctanos si hay algún problema.",
        "ContactUs":"Contáctanos",
        "FAQ": "Preguntas Frecuentes",
        "FAQAccess": "¿Cómo accede DIM a mis datos de Destiny?",
        "FAQAccessAnswer": "Cualquier extensión de Chrome puede pedir acceso a los datos que una página web guarda en tu computadora. Cuando inicias sesión en Bungie.net, se te proporciona un  token (una cookie) que es generada únicamente para tu cuenta. Utilizas este token para comunicarte con Bungie de manera segura. El token es mas seguro que estar enviando tus credenciales con cada requisito hecho a los servidores de Bungie. DIM utiliza este token para comunicarse con Bungie por ti.",
-       "FAQDupeGally": "Hey, DIM duplicó mi Gjallarhorn!",
+       "FAQDupeGally": "Oye, DIM duplicó mi Gjallarhorn!",
        "FAQDupeGallyAnswer": "No, no lo hicimos. Lo prometo.",
        "FAQKeyboard": "¿Cuenta DIM con soporte para atajos de teclado (shortcuts)?",
        "FAQKeyboardAnswer": "Sí! Presiona la tecla \"?\" para ver una lista de los atajos disponibles.",
@@ -367,7 +375,7 @@
        "GitHubHelp": "Si estas interesado en contribuir al proyecto, visíta la página del proyecto en GitHub.",
        "GitHubRepo": "DIM Git Repo",
        "Header": "Acerca de Destiny Item Manager (DIM)",
-       "HowItsMade": "DIM esta construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede accesar los artículos dentro de el Inventario de tus Guardianes y el Depósito para ambos Xbox y PlayStation. Después puedes arrastrar y soltar los objetos a donde gustes moverlos.",
+       "HowItsMade": "DIM fue construido sobre los mismos servicios que utiliza Bungie.net y la Aplicación complementaria de Destiny. DIM puede accesar los artículos dentro de el Inventario de tus Guardianes y el Depósito para ambos Xbox y PlayStation. Después puedes arrastrar y soltar los objetos a donde gustes moverlos.",
        "Reddit": "Reddit",
        "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
        "Twitter": "Twitter",
@@ -377,7 +385,7 @@
      "Support": {
        "Support": "Apoyando DIM",
        "FreeToDownload": "DIM es un producto gratis para descargar y usar. El código fuente de DIM es de fuente abierta, y libre para que cualquiera pueda mejorar. Nunca verás anuncios en DIM. Ese es nuestro compromiso.",
-       "Fans": "Todos somos grandes fans de Destiny. DIM se hizo realidad entre horas de juego porque sentimos ese dolor al transferir objetos entre nuestros personajes y olvidar un solo artículo, o viajes a la Torre para descargar nuestras recompensas de asaltos ROC. DIM es la herramienta que te permitirá conseguir más tiempo en el juego.",
+       "Fans": "Todos somos grandes fans de Destiny. DIM se hizo realidad entre horas de juego porque sentimos el dolor de transferir objetos entre nuestros personajes y olvidar un solo artículo, o viajes a la Torre para descargar nuestras recompensas de asaltos ROC. DIM es la herramienta que te permitirá conseguir más tiempo en el juego.",
        "Contribute": "¿Cómo puedo contribuir?",
        "Paypal":"Dale una propina a DIM!",
        "PaypalText": "Utilizamos PayPal para aceptar propinas. Si DIM ha hecho una diferencia en tu experiencia en el juego, considera apoyar al equipo trabajando en el proyecto.",
