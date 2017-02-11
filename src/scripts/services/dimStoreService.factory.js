@@ -573,8 +573,8 @@ function StoreService(
 
         return stores;
       })
-      .then(function(stores) {
-        dimDestinyTrackerService.bulkFetch(stores);
+      .then(function() {
+        dimDestinyTrackerService.bulkFetch(_stores);
       })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
