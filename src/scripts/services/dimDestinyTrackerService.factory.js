@@ -14,7 +14,7 @@ function DestinyTrackerService($q,
       return {
         method: 'POST',
         url: 'https://www.destinytracker.com/api/weaponChecker/fetch',
-        data: weaponList,
+        data: { weaponList },
         dataType: 'json'
       };
     }
