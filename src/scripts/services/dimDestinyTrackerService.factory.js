@@ -10,11 +10,11 @@ function DestinyTrackerService($q,
     var _remoteJwt = {};
     var _gunListBuilder = {};
 
-    function getBulkWeaponData(weaponList) {
+    function getBulkWeaponData(gunList) {
       return {
         method: 'POST',
         url: 'https://www.destinytracker.com/api/weaponChecker/fetch',
-        data: { weaponList },
+        data: { weaponList: gunList },
         dataType: 'json'
       };
     }
@@ -32,8 +32,8 @@ function DestinyTrackerService($q,
         bulkFetch: function(stores) {
             var weaponList = _gunListBuilder.getWeaponList(stores);
 
-            var promise = $q.resolve()
-                .then(getBulkWeaponData(weaponList))
+            var promise = $q
+                .when(getBulkWeaponData(weaponList))
                 .then($http)
                 .then(handleErrors, handleErrors)
                 .then((response) => response.data.Response.data);
@@ -46,20 +46,32 @@ function DestinyTrackerService($q,
 function gunListBuilder() {
     var glb = {};
 
-    function getGuns(stores) {
-        var items = [];
+    function getAllItems(stores) {
+        var allItems = [];
 
-        stores.forEach(function(item) {
+        stores.forEach(function(store) {
+            allItems = allItems.concat(store.items);
+        });
+
+        return allItems;
+    }
+
+    function getGuns(stores) {
+        var allItems = getAllItems(stores);
+
+        var guns = [];
+
+        allItems.forEach(function(item) {
             if (!item.primStat) {
                 return;
             }
 
             if (item.primStat.statHash === 368428387) {
-                items.push(item);
+                guns.push(item);
             }
         });
         
-        return items;
+        return guns;
     }
 
     glb.getWeaponList = function(stores) {
@@ -72,8 +84,8 @@ function gunListBuilder() {
             newList.forEach(function(listGun) {
             if(listGun.hash == gun.hash) {
                 var newPerk = {
-                talentPerk: gun.talentGrid.dtrPerks,
-                id: gun.id
+                    talentPerk: gun.talentGrid.dtrPerks,
+                    id: gun.id
                 };
 
                 listGun.talentPerks.push(newPerk);
@@ -82,13 +94,13 @@ function gunListBuilder() {
             });
         } else {
             var perk = {
-            talentPerk: gun.talentGrid.dtrPerks,
-            id: gun.id
+                talentPerk: gun.talentGrid.dtrPerks,
+                id: gun.id
             };
 
             var listGun = {
-            hash: gun.hash,
-            talentPerks: [ perk ] 
+                hash: gun.hash,
+                talentPerks: [ perk ] 
             };
 
             newList.push(listGun);
