@@ -8,7 +8,6 @@ function DestinyTrackerService($q,
                                $http) {
     //todo: save/restore JWT from session storage
     var _remoteJwt = {};
-    var _dimStoreService = {};
     var _gunListBuilder = {};
 
     function getBulkWeaponData(weaponList) {
@@ -25,9 +24,8 @@ function DestinyTrackerService($q,
     }
 
     return {
-        init: function(dimStoreService) {
-            _dimStoreService = dimStoreService;
-            _gunListBuilder = _gunListBuilder(dimStoreService);
+        init: function() {
+            _gunListBuilder = gunListBuilder();
         },
         authenticate: function() {  
         },
@@ -45,7 +43,9 @@ function DestinyTrackerService($q,
     }
 }
 
-function _gunListBuilder() {
+function gunListBuilder() {
+    var glb = {};
+
     function getGuns(stores) {
         var items = [];
 
@@ -62,7 +62,7 @@ function _gunListBuilder() {
         return items;
     }
 
-    function getWeaponList(stores) {
+    glb.getWeaponList = function(stores) {
         var guns = getGuns(stores);
 
         var newList = [];
@@ -95,7 +95,7 @@ function _gunListBuilder() {
         }
         });
 
-        downloadJson("weaponJson", newList);
+        return newList;        
     }
 
     function isKnownGun(list, gun) {
@@ -110,4 +110,6 @@ function _gunListBuilder() {
 
         return foundGun;
     }
+
+    return glb;
 }

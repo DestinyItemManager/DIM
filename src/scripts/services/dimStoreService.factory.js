@@ -31,6 +31,8 @@ function StoreService(
 
   const dimMissingSources = require('app/data/missing_sources.json');
 
+  dimDestinyTrackerService.init();
+
   const yearHashes = {
     //         tTK       Variks        CoE         FoTL    Kings Fall
     year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
@@ -507,8 +509,6 @@ function StoreService(
                 });
               }
             }
-
-            dimDestinyTrackerService.bulkFetch(getStores());
           }
 
           return processItems(store, items, previousItems, newItems, itemInfoService).then(function(items) {
@@ -572,6 +572,9 @@ function StoreService(
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
 
         return stores;
+      })
+      .then(function(stores) {
+        dimDestinyTrackerService.bulkFetch(stores);
       })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
