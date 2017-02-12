@@ -5,7 +5,7 @@ angular.module('dimApp')
   .factory('SyncService', SyncService);
 
 
-function SyncService($q) {
+function SyncService($q, $translate) {
   var cached; // cached is the data in memory,
   var fileId; // reference to the file in drive
   var membershipId; // logged in bungie user id
@@ -40,7 +40,7 @@ function SyncService($q) {
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
           if (list.code === 401) {
-            reject(new Error('To re-authorize google drive, must restart your browser.'));
+            reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
             return;
           }
 
@@ -163,9 +163,9 @@ function SyncService($q) {
           if (chrome.runtime.lastError) {
             const message = chrome.runtime.lastError.message;
             if (message.indexOf('QUOTA_BYTES_PER_ITEM') > -1) {
-              reject(new Error('Your save file has an item that is too large. Most likely a saved loadout has too many items.'));
+              reject(new Error($translate.instant('SyncService.OneItemTooLarge')));
             } else if (message.indexOf('QUOTA_BYTES') > -1) {
-              reject(new Error('Your save file is too large.  Remove saved loadouts.'));
+              reject(new Error($translate.instant('SyncService.SaveTooLarge')));
             } else {
               reject(new Error(message));
             }
@@ -303,4 +303,3 @@ function SyncService($q) {
     }
   };
 }
-
