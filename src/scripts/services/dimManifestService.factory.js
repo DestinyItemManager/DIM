@@ -147,7 +147,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
   function loadManifestRemote(version, language, path) {
     service.statusText = $translate.instant('Manifest.Download') + '...';
 
-    return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
+    return $http.get("https://www.bungie.net" + path + '?host=' + window.location.hostname, { responseType: "blob" })
       .then(function(response) {
         service.statusText = $translate.instant('Manifest.Unzip') + '...';
         return unzipManifest(response.data);
