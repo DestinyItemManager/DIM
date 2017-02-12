@@ -144,6 +144,7 @@ function StoreBucketCtrl($scope,
         scope: $scope,
         controllerAs: 'vm',
         controller: function($scope) {
+          'ngInject';
           var vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;
