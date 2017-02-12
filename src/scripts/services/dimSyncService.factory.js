@@ -143,7 +143,14 @@ function SyncService($q) {
       return new $q((resolve, reject) => {
         chrome.storage.sync.set(cached, () => {
           if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError));
+            const message = chrome.runtime.lastError.message;
+            if (message.indexOf('QUOTA_BYTES_PER_ITEM') > -1) {
+              reject(new Error('Your save file has an item that is too large. Most likely a saved loadout has too many items.'));
+            } else if (message.indexOf('QUOTA_BYTES') > -1) {
+              reject(new Error('Your save file is too large.  Remove saved loadouts.'));
+            } else {
+              reject(new Error(message));
+            }
           } else {
             resolve();
           }
