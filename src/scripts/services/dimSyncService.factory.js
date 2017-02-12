@@ -114,6 +114,24 @@ function SyncService($q) {
     });
   }
 
+  // function byteLength(str) {
+  //   // returns the byte length of an utf8 string
+  //   var s = str.length;
+  //   for (var i = str.length - 1; i >= 0; i--) {
+  //     var code = str.charCodeAt(i);
+  //     if (code > 0x7f && code <= 0x7ff) {
+  //       s++;
+  //     } else if (code > 0x7ff && code <= 0xffff) {
+  //       s += 2;
+  //     }
+
+  //     if (code >= 0xDC00 && code <= 0xDFFF) {
+  //       i--; // trail surrogate
+  //     }
+  //   }
+  //   return s;
+  // }
+
   // save data {key: value}
   function set(value, PUT) {
     //----
@@ -143,7 +161,14 @@ function SyncService($q) {
       return new $q((resolve, reject) => {
         chrome.storage.sync.set(cached, () => {
           if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError));
+            const message = chrome.runtime.lastError.message;
+            if (message.indexOf('QUOTA_BYTES_PER_ITEM') > -1) {
+              reject(new Error('Your save file has an item that is too large. Most likely a saved loadout has too many items.'));
+            } else if (message.indexOf('QUOTA_BYTES') > -1) {
+              reject(new Error('Your save file is too large.  Remove saved loadouts.'));
+            } else {
+              reject(new Error(message));
+            }
           } else {
             resolve();
           }
