@@ -1,3 +1,7 @@
+# next
+
+* Fixed the perk selection in Loadout Builder. #1453
+
 # 3.16.1
 
 * Significantly increased the storage limit for tags and notes. It's still possible to go over (especially with long notes) but it should happen far less frequently - and it should notify you when it happens.
