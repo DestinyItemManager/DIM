@@ -1,5 +1,4 @@
 {
-   "Level": "Livello",
    "Bucket": {
       "Armor": "Armatura",
       "General": "Generale",
@@ -117,6 +116,10 @@
       "TransferItems": "Trasferisci oggetti",
       "Using3": "usa 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Si è presentato un errore salvando le informazioni dell'oggetto",
+     "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo i tag e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {error}."
+   },
    "ItemMove": {
       "Consolidate": "{name} consolidati",
       "Distributed": "{name} distribuiti\n {name} sono ora suddivisi in modo equo tra i personaggi.",
@@ -162,7 +165,24 @@
          "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti."
       },
       "IncludeRare": "Includi oggetti rari (blu)",
-      "Help": "Hai bisogno di aiuto?",
+      "Help": {
+        "Help": "Hai bisogno di aiuto?",
+        "Lock": "Per costruire un loadout basato su uno specifico set di perk clicca su uno dei riquadri soprastanti e seleziona i perk desiderati",
+        "NoPerk": "Se un perk non è visibile, significa che non possiedi alcuna armatura con quel perk",
+        "MultiPerk":"Per utilizzare un'armatura con più perk fai shift+click sui perk desiderati",
+        "Or": "Verranno utilizzate armature, che presentano almeno uno dei perk selezionati",
+        "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
+        "DragAndDrop": "Trascina e rilascia un oggetto nel suo riquadro per costruire un set con quella specifica armatura",
+        "ShiftClick": "Shift+click per escludere un oggetto dal set",
+        "HigherTiers": "Utilizzare Tier più alte è meglio",
+        "Tier11Example": "4/5/2 (una build Tier 11) corrisponde a 4 Intelletto, 5 Disciplina, 2 Forza (4+5+2 = Tier 11)",
+        "Intellect": "L'Intelletto riduce il tempo di ricarica della Super",
+        "Discipline": "La Disciplina riduce il tempo di ricarica delle Granate",
+        "Strength": "La Forza riduce il tempo di ricarica del Corpo a Corpo",
+        "Synergy": "Cerca di trovare armature con perk, che aumentino le munizioni per i tipi di armi che vuoi utilizzare.",
+        "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
+        "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
+      },
       "Equip": "Equipaggia sul personaggio corrente",
       "ShowAllConfigs": "Mostra tutte le configurazioni",
       "ShowConfigs": "Mostra configurazioni",
@@ -215,7 +235,11 @@
       "NameRequired": "E' richiesto un nome.",
       "MakeRoom": "Crea spazio per l'Amministratore",
       "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} female{dalla}} {store}.",
-      "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}."
+      "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}.",
+      "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
+      "SaveErrorDescription": "Impossibile salvare il loadout {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Si è presentato un errore cancellando un loadout",
+      "DeleteErrorDescription": "Impossibile cancellare il loadout {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Costruisco il database di informazioni di Destiny",
@@ -298,9 +322,11 @@
    "Stats": {
       "Discipline": "Disciplina",
       "Intellect": "Intelletto",
+      "Level": "Livello",
       "NoBonus": "Nessun Bonus",
       "OfMaxRoll": "{range} del roll massimo",
       "PercentHelp": "Clicca per maggiori informazioni riguarso la Qualità delle Statistiche.",
+      "Prestige": "Livello Prestigio: {level}\n{exp}xp fino alle 5 particelle di luce",
       "Quality": "Qualità statistiche",
       "Strength": "Forza",
       "TierProgress": "{progress} per {tier}"
@@ -330,6 +356,50 @@
       "Bounties": "Taglie",
       "ShadersAndEmblems": "Shader & Emblemi",
       "Emotes": "Emotes"
+   },
+   "Views": {
+     "About":{
+       "BungieCopyright": "Tutte le immagini e i contenuti sono proprietà di Bungie. Contattaci se ci dovessero essere problemi.",
+       "ContactUs":"Contattaci",
+       "FAQ": "FAQ",
+       "FAQAccess": "Come fa DIM ad avere accesso ai miei dati di Destiny?",
+       "FAQAccessAnswer": "Qualsiasi estensione di Chrome può richiedere i dati, che un sito web salva sul tuo computer. Quando effettui l'accesso su Bungie.net, ti viene dato un gettone (un cookie), che viene generato unicamente per il tuo account. Si usa questo gettone per comunicare con Bungie in modo sicuro. Questo gettone è più sicuro rispetto al mandare il tuo nome utente e la tua password allegati a ogni richiesta ai server di Bungie. DIM usa questo gettone per comunicare con Bungie a tuo nome.",
+       "FAQDupeGally": "Hey, DIM ha duplicato il mio Gjallarhorn!",
+       "FAQDupeGallyAnswer": "No, non è vero. Giuro.",
+       "FAQKeyboard": "Su DIM funzionano le scelte rapide da tastiera (scorciatoie)?",
+       "FAQKeyboardAnswer": "Sì! Premi \"?\" per vedere una lista delle scelte rapide disponibili.",
+       "FAQLogout": "Come posso effettuare il log out da DIM?",
+       "FAQLogoutAnswer": "La tua sessione è legata a Bungie.net. Se effettui il log out da Bungie.net, ti disconnetti anche da DIM.",
+       "FAQLostItem": "Ho perso un mio oggetto utilizzando DIM!",
+       "FAQLostItemAnswer": "Molto probabilmente un trasferimento fallito, che ha lasciato il tuo oggetto nel deposito o a un altro personaggio. Puoi cercare quell'oggetto. Se ciò non dovesse funzionare, aggiorna l'applicazione premendo F5. Controlla su Bungie.net oppure nel gioco per vedere se il tuo oggetto esiste ancora. Siamo sicuri che è ancora lì.",
+       "GitHub": "GitHub",
+       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su GitHub.",
+       "GitHubRepo": "DIM Git Repo",
+       "Header": "Riguardo Destiny Item Manager (DIM)",
+       "HowItsMade": "DIM si basa sui servizi usati da Bungie.net e dalla Destiny Companion App. DIM può accedere agli oggetti all'interno dell'inventario e del deposito del tuo Guardiano, sia su Playstation che su Xbox. Tu puoi trascinarli e rilasciarli ovunque tu voglia muoverli.",
+       "Reddit": "Reddit",
+       "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
+       "Twitter": "Twitter",
+       "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
+       "Version": "Versione"
+     },
+     "Support": {
+       "Support": "Supportare DIM",
+       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
+       "Fans": "Siamo tutti grandissimi fan di Destiny. DIM è nato durante le ore di gioco, poiché conoscevamo il dolore di trasferire oggetti tra i personaggi, dimenticandone uno, o i viaggi alla torre per svuotare i propri ROC degli assalti. DIM è lo strumento che ti aiuterà a risparmiare tempo nel gioco.",
+       "Contribute": "Come posso contribuire?",
+       "Paypal":"Fai una donazione a DIM!",
+       "PaypalText": "Accettiamo donazioni su PayPal. Se DIM ti ha aiutato a riasparmiare tempo mentre giochi, supporta il team, che lavora al progetto.",
+       "Transifex": "Unisciti al Team Traduzione!",
+       "TransifexText": "Utilizziamo Transifex per facilitare le traduzioni. Se vuoi vedere DIM nella tua lingua, unisciti al team.",
+       "Share": "Condividi DIM con i tuoi amici.",
+       "ShareText": "Una volta provato quanto è facile equipaggiare un loadout, non potrai tornare indietro. Condividi il divertimento con i tuoi amici!",
+       "Reddit": "Hai qualche idea per DIM?",
+       "RedditText": "Vieni a trovarci su /r/destinyitemmanager e facci sapere della tua idea. Scoprirai con noi e con la community di DIM come iterare e migliorare un'idea nel migliore dei modi.",
+       "GitHub": "Sono uno sviluppatore/designer/entusiasta e sto cercando di contibruire al codice sorgente.",
+       "GitHubText": "Vieni a trovarci su GitHub e invia un messaggio a uno dei collaboratori. Siamo più che felici di accettare \"pull requests\". Unisciti a noi come collaboratore e prendi parte ai nostri incontri, dove parliamo di nuove versioni, particolari aggiornamenti o bug."
+     },
+     "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM."
    },
    "TrialsCard": {
       "FiveWins": "Ricompensa 5 Vittorie (Armatura)",

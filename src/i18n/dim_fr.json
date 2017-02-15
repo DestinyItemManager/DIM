@@ -1,5 +1,4 @@
 {
-   "Level": "Niveau",
    "Bucket": {
       "Armor": "Armure",
       "General": "Général",
@@ -12,6 +11,7 @@
       "Weapons": "Armes"
    },
    "BungieService": {
+      "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
       "Down": "Bungie.net est hors service.",
       "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
       "NetworkError": "Erreur de réseau - {status} {statusText}",
@@ -31,7 +31,12 @@
       "All": "{type} comparisons ({quantity})",
       "Archetype": "Archetype comparisons ({quantity})",
       "Compare": "Comparer",
-      "Close": "Fermer"
+      "Close": "Fermer",
+      "Error": {
+         "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {class}.",
+         "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {type}."
+      },
+      "Splits": "Comparer des parts similaires ({quantity})"
    },
    "Cooldown": {
       "Grenade": "Régénération de Grenade",
@@ -44,7 +49,11 @@
    },
    "DidYouKnow": {
       "DidYouKnow": "Le saviez-vous?",
+      "Collapse": "Vous venez de réduire une section dans DIM! Il peut être utile de cache des parties de DIM que vous n'avez pas besoin d'utiliser normalement.",
       "DontShowAgain": "Ne plus jamais afficher cette astuce",
+      "DoubleClick": "Si vous déplacez un objet vers votre perso actuellement actif (dernière connexion), vous pouvez double-cliquer cet objet pour l'équiper instantanément.",
+      "DragAndDrop": "Les objets peuvent être glissés et déposés entre différentes colonnes de persos/coffres.",
+      "Expand": "Pour re-élargir une section, cliquez simplement l'icône \"plus\" sur la gauche de la catégorie vous avez réduite.",
       "TryNext": "Essayez ultérieurement"
    },
    "FarmingMode": {
@@ -56,11 +65,13 @@
          "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
          "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
       },
+      "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {character}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
       "Quickmove": "Déplacement rapide",
       "Stop": "Stop"
    },
    "Filter": {
-      "EnterName": "Entrez un nom d'objet:"
+      "EnterName": "Entrez un nom d'objet:",
+      "EnterNote": "Entrez vos notes:"
    },
    "Header": {
       "About": "À propos",
@@ -73,7 +84,42 @@
    "Help": {
       "BackToDIM": "Retour sur DIM",
       "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
-      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
+      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
+      "ChangingPerks": "Changement d'Abilités Non Supporté",
+      "ChangingPerksInfo": "Désolé, ce n'est pas possible de changer d'abilités en dehors du jeu. On aurait aimé!",
+      "HidePopup": "Cacher Ce Popup",
+      "NeverShow": "Ne plus jamais afficher.",
+      "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
+      "Version": {
+         "Beta": "Beta a été mis à jour à v{version} ",
+         "Stable": "DIM v{version} Publiée"
+      },
+      "Xur": "Xûr est Là"
+   },
+   "Hotkey": {
+      "StartSearch": "Commencer une recherche",
+      "RefreshInventory": "Rafraîchir l'inventaire",
+      "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet",
+      "MarkItemAs": "Marquer objet comme '{tag}'",
+      "ClearNewItems": "Effacer les nouveaux objets"
+   },
+   "Infusion": {
+      "Infusion": "Chercheur de Fuel à Infusion",
+      "Calc": "Calculateur d'infusion",
+      "InfuseItems": "Sélectionner un objet avec lequel infuser:",
+      "InfusionMaterials": "Matériels d'Infusion",
+      "LockedItems": "Inclure objets \"verrouillés\"",
+      "NoItems": "Pas d'objets infusables disponibles",
+      "NoTransfer": "Transférer matériel d'infusion\n{target} ne peut pas être déplacé.",
+      "ShowItems": "Afficher les objets infusables sur tous les persos et dans tous les coffres ",
+      "TransferItems": "Transférer objets",
+      "Using3": "utilisant 3"
+   },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet"
+   },
+   "ItemMove": {
+      "Consolidate": "{name} consolidé"
    },
    "ItemService": {
       "PercentComplete": "({ percent, number, percent } Achevée)"
@@ -103,7 +149,9 @@
          "HelpCurrent": "Calcule les loadouts à leur niveau de défense actuel."
       },
       "IncludeRare": "Inclure les objets rares (bleus)",
-      "Help": "Besoin d'aide?",
+      "Help": {
+        "Help": "Besoin d'aide?"
+      },
       "Equip": "Équiper sur le perso actuel",
       "ShowAllConfigs": "Afficher toutes les configurations",
       "ShowConfigs": "Afficher les configurations",
@@ -199,6 +247,7 @@
    "Stats": {
       "Discipline": "Discipline",
       "Intellect": "Intelligence",
+      "Level": "Niveau",
       "NoBonus": "Pas de Bonus",
       "Strength": "Force",
       "TierProgress": "{progress} pour {tier}"
@@ -221,6 +270,33 @@
       "Bounties": "Contrats",
       "ShadersAndEmblems": "Revêtements & Emblèmes",
       "Emotes": "Intéractions"
+   },
+   "Views": {
+     "About":{
+       "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
+       "ContactUs":"Nous Contacter",
+       "FAQ": "FAQ",
+       "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
+       "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous êtes attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo and mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
+       "FAQDupeGally": "Hey, DIM a dupliqué mon Gjallahorn!",
+       "FAQDupeGallyAnswer": "Non, non. Promis.",
+       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
+       "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
+       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
+       "FAQLogoutAnswer": "Votre session est liée à Bungie.net. Si vous vous déconnnectez de Bungie.net, vous vous déconnectez de DIM.",
+       "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
+       "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
+       "GitHub": "GitHub",
+       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
+       "GitHubRepo": "DIM Git Repo",
+       "Header": "À propos de Destiny Item Manager (DIM)",
+       "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de vos coffres sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
+       "Reddit": "Reddit",
+       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
+       "Twitter": "Twitter",
+       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
+       "Version": "Version"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Récompense à 5 Victoires (Armure)",
