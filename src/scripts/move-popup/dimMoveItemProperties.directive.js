@@ -46,7 +46,7 @@ function MoveItemProperties() {
       '      </div>',
       '      <div class="item-type-info">{{vm.light}} {{::vm.classType}} {{::vm.item.typeName}}</div>',
       '      <div ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></div>',
-      '      <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>',
+      '      <dim-item-tag ng-if="vm.featureFlags.tagsEnabled && vm.item.lockable && !vm.item.isEngram" item="vm.item"></dim-item-tag>',
       '    </div>',
       '  </div>',
       '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
@@ -245,4 +245,3 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     });
   };
 }
-
