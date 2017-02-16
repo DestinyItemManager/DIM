@@ -1290,7 +1290,8 @@ function StoreService(
         : light < 319 ? 39
         : light < 325 ? 40
         : light < 330 ? 41
-        : 42;
+        : light < 336 ? 42
+        : 43;
     }
     console.warn('item bonus not found', type);
     return 0;
@@ -1611,4 +1612,3 @@ function StoreService(
   }
   // code above is from https://github.com/DestinyTrialsReport
 }
-
