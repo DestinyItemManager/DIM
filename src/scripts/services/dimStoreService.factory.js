@@ -743,6 +743,7 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
+      taggable: item.lockable && !item.isEngram,
       trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
       tracked: item.state === 2,
       locked: item.locked,
@@ -1611,4 +1612,3 @@ function StoreService(
   }
   // code above is from https://github.com/DestinyTrialsReport
 }
-
