@@ -743,7 +743,7 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-      taggable: item.lockable && (itemDef.itemCategoryHashes[0] !== 34),
+      taggable: item.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'),
       trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
       tracked: item.state === 2,
       locked: item.locked,
