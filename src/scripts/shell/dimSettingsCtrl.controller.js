@@ -3,6 +3,7 @@ import _ from 'underscore';
 
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
+
 function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
   var vm = this;
 
@@ -47,6 +48,11 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
     _gaq.push(['_trackEvent', 'Download CSV', 'Armor']);
   };
 
+  vm.downloadWeaponJson = function() {
+    dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "WeaponsJson");
+    _gaq.push(['_trackEvent', 'Download JSON', 'Weapons']);
+  };
+
   vm.resetHiddenInfos = function() {
     dimInfoService.resetHiddenInfos();
   };
@@ -83,3 +89,4 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
     reader.readAsText(angular.element('#importFile')[0].files[0]);
   };
 }
+

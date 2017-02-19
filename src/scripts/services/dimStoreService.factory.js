@@ -21,7 +21,8 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags
+  dimFeatureFlags,
+  dimDestinyTrackerService
 ) {
   var _stores = [];
   var _idTracker = {};
@@ -29,6 +30,8 @@ function StoreService(
   var _removedNewItems = new Set();
 
   const dimMissingSources = require('app/data/missing_sources.json');
+
+  dimDestinyTrackerService.init();
 
   const yearHashes = {
     //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -569,6 +572,9 @@ function StoreService(
         document.querySelector('html').style.setProperty("--num-characters", _stores.length - 1);
 
         return stores;
+      })
+      .then(function() {
+        dimDestinyTrackerService.bulkFetch(_stores);
       })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {

@@ -18,7 +18,7 @@
     "start": "npm run build-dev -s",
     "publish-chrome-beta": "npm run build-beta -s && grunt publish_chrome_beta",
     "publish-chrome-release": "npm run build-release -s && grunt publish_chrome_release",
-    "server": "webpack-dev-server --config ./config/webpack.js",
+    "server": "webpack-dev-server --env=dev --config ./config/webpack.js",
     "install": "napa"
   },
   "napa": {

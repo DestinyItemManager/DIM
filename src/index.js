@@ -32,6 +32,7 @@ require('./scripts/services/dimStoreService.factory');
 require('./scripts/services/dimVendorService.factory');
 require('./scripts/services/dimXurService.factory');
 require('./scripts/services/dimCsvService.factory');
+require('./scripts/services/dimDestinyTrackerService.factory');
 require('./scripts/services/dimItemService.factory');
 require('./scripts/services/dimItemMoveService.factory');
 require('./scripts/services/dimItemInfoService.factory');
