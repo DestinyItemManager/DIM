@@ -77,7 +77,7 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
       }
       $rootScope.$evalAsync(function() {
         SyncService.set({
-          'settings-v1.0': _.omit(settings, 'save')
+          'settings-v1.0': _.omit(settings, 'save', 'itemTags')
         });
       });
     }
