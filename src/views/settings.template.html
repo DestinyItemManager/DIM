@@ -1,7 +1,7 @@
 <div ng-controller="dimSettingsCtrl as vm">
   <h1 translate="Settings"></h1>
   <div class="ngdialog-inner-content">
-<!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
+    <button ng-if='vm.featureFlags.gdrive' class='btn' ng-click='vm.driveSync()'>Sync with Drive</button>
   <form class="settings">
     <table>
       <tr>

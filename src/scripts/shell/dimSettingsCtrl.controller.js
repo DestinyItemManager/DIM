@@ -32,12 +32,8 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
-  vm.showSync = function() {
-    return SyncService.drive();
-  };
-
   vm.driveSync = function() {
-    SyncService.authorize();
+    SyncService.authorizeGdrive();
   };
 
   vm.downloadWeaponCsv = function() {

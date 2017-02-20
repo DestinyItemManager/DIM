@@ -16,7 +16,10 @@ const featureFlag = {
 
   materialsExchangeEnabled: false,
   // allow importing and exporting your DIM data to JSON
-  importExport: $DIM_FLAVOR !== 'release'
+  importExport: $DIM_FLAVOR !== 'release',
+
+  // Sync data over gdrive
+  gdrive: $DIM_FLAVOR !== 'release'
 };
 
 export default featureFlag;

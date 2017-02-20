@@ -5,48 +5,8 @@ import idbKeyval from 'idb-keyval';
 angular.module('dimApp')
   .factory('SyncService', SyncService);
 
-function SyncService($q, $translate, dimBungieService, dimState) {
+function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags) {
   var cached; // cached is the data in memory,
-  var fileId; // reference to the file in drive
-  var membershipId; // logged in bungie user id
-  var ready = $q.defer();
-
-  // In-memory cached storage
-  const MemoryStorage = {
-    cached: null,
-
-    get: function(force) {
-      if (this.cached && !force) {
-        return $q.resolve(this.cached);
-      }
-      return $q.resolve(null);
-    },
-
-    set: function(value, PUT) {
-      // use replace to override the data. normally we're doing a PATCH
-      if (PUT || !this.cached) { // update our data
-        this.cached = value;
-      } else if (this.cached) {
-        angular.extend(this.cached, value);
-      }
-      return $q.resolve(this.cached);
-    },
-
-    remove: function(key) {
-      // just delete that key, maybe someday save to an undo array?
-      if (_.isArray(key)) {
-        _.each(key, (k) => {
-          delete this.cached[k];
-        });
-      } else {
-        delete this.cached[key];
-      }
-      return $q.resolve(this.cached);
-    },
-
-    enabled: true,
-    name: 'MemoryStorage'
-  };
 
   const LocalStorage = {
     get: function() {
@@ -56,10 +16,6 @@ function SyncService($q, $translate, dimBungieService, dimState) {
     set: function(value) {
       localStorage.setItem('DIM', JSON.stringify(value));
       return $q.resolve(value);
-    },
-
-    remove: function(key) {
-      // ??? load/delete/save?
     },
 
     // TODO: disable if indexedDB is on
@@ -74,10 +30,6 @@ function SyncService($q, $translate, dimBungieService, dimState) {
 
     set: function(value) {
       return idbKeyval.set('DIM-data', value);
-    },
-
-    remove: function(key) {
-      // ??? load/delete/save?
     },
 
     enabled: true,
@@ -133,13 +85,6 @@ function SyncService($q, $translate, dimBungieService, dimState) {
     name: 'ChromeSyncStorage'
   };
 
-  function revokeDrive() {
-    if (fileId || cached.fileId) {
-      fileId = undefined;
-      remove('fileId');
-    }
-  }
-
   const GoogleDriveStorage = {
     drive: { // drive api data
       client_id: '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
@@ -154,11 +99,11 @@ function SyncService($q, $translate, dimBungieService, dimState) {
         return new $q((resolve) => {
           gapi.client.load('drive', 'v2', function() {
             gapi.client.drive.files.get({
-              fileId: fileId,
+              fileId: this.fileId,
               alt: 'media'
             }).execute((resp) => {
               if (resp.code === 401 || resp.code === 404) {
-                revokeDrive();
+                this.revokeDrive();
                 return;
               }
               cached = resp;
@@ -182,7 +127,7 @@ function SyncService($q, $translate, dimBungieService, dimState) {
           body: value
         }).execute((resp) => {
           if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
-            revokeDrive();
+            this.revokeDrive();
             reject(new Error('error saving. revoking drive: ' + resp.error));
             return;
           } else {
@@ -192,34 +137,41 @@ function SyncService($q, $translate, dimBungieService, dimState) {
       });
     },
 
-    remove: function(key) {
-      // ??? load/delete/save?
+    init: function() {
+      console.log("gdrive init");
+      this.ready.resolve();
     },
 
-    init: function() {
-      ready.resolve();
-    },
+    // TODO: need to store gdrive file id in local storage
 
     // TODO: don't redo this?
     // check if the user is authorized with google drive
     authorize: function() {
       // TODO: first time we do this we should probably merge data? do we need timestamps on everything?
       return new $q((resolve, reject) => {
+        console.log('authorizing');
         // we're a chrome app so we do this
         if (window.chrome && chrome.identity) {
+          console.log("auth with crhome");
           chrome.identity.getAuthToken({
             interactive: true
           }, function(token) {
+            console.log('token', token);
             if (chrome.runtime.lastError) {
-              revokeDrive();
+              // TODO: use an error
+              console.log(chrome.runtime.lastError);
+              this.revokeDrive();
               return;
             }
+
+            console.log("Authed");
             gapi.auth.setToken({
               access_token: token
             });
             this.getFileId().then(resolve);
           });
         } else { // otherwise we do the normal auth flow
+          console.log("normal auth");
           gapi.auth.authorize(this.drive, function(result) {
             // if no errors, we're good to sync!
             this.drive.immediate = result && !result.error;
@@ -230,26 +182,44 @@ function SyncService($q, $translate, dimBungieService, dimState) {
               return;
             }
 
+            console.log("Authed");
+
             this.getFileId().then(resolve);
           });
         }
-      });
+      })
+        .then((fileId) => {
+          this.enabled = true;
+          // TODO: cache authorized??
+          return fileId;
+        });
+    },
+
+    getFileName: function() {
+      return dimBungieService.getMembership(dimState.active)
+        .then((membershipId) => 'DIM-' + $DIM_FLAVOR + '-' + membershipId);
     },
 
     // load the file from google drive
     getFileId: function() {
+      // TODO: need a file per membership?
       // if we already have the fileId, just return.
       if (this.fileId) {
         return $q.resolve(this.fileId);
       }
 
-      return dimBungieService.getMembership(dimState.active)
-        .then((membershipId) => {
+      this.fileId = localStorage.getItem('gdrive-fileid');
+      if (this.fileId) {
+        return $q.resolve(this.fileId);
+      }
+
+      return this.getFileName()
+        .then((fileName) => {
           return new $q((resolve, reject) => {
             // load the drive client.
-            gapi.client.load('drive', 'v2', function() {
+            gapi.client.load('drive', 'v2', () => {
               // grab all of the list files
-              gapi.client.drive.files.list().execute(function(list) {
+              gapi.client.drive.files.list().execute((list) => {
                 if (list.code === 401) {
                   reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
                   return;
@@ -257,12 +227,9 @@ function SyncService($q, $translate, dimBungieService, dimState) {
 
                 // look for the saved file.
                 for (var i = list.items.length - 1; i > 0; i--) {
-                  if (list.items[i].title === 'DIM-' + membershipId) {
-                    fileId = list.items[i].id;
-                    get(true).then(function(data) {
-                      set(data, true);
-                      resolve();
-                    });
+                  if (list.items[i].title === fileName) {
+                    this.fileId = list.items[i].id;
+                    resolve(this.fileId);
                     return;
                   }
                 }
@@ -272,27 +239,37 @@ function SyncService($q, $translate, dimBungieService, dimState) {
                   path: '/drive/v2/files',
                   method: 'POST',
                   body: {
-                    title: 'DIM-' + membershipId,
+                    title: fileName,
                     mimeType: 'application/json',
                     parents: [{
                       id: 'appfolder'
                     }]
                   }
-                }).execute(function(file) {
-                  fileId = file.id;
-                  set({
-                    fileId: fileId
-                  }).then(resolve);
+                }).execute((file) => {
+                  this.fileId = file.id;
+                  resolve(this.fileId);
                 });
-
-                return;
               });
             });
           });
+        })
+        .then((fileId) => {
+          console.log("fileid", fileId);
+          localStorage.setItem('gdrive-fileid', fileId);
+          return fileId;
         });
     },
 
-    enabled: false,
+    revokeDrive: function() {
+      console.log("revoke drive");
+      if (this.fileId) {
+        this.fileId = undefined;
+        this.enabled = false;
+        localStorage.removeItem('gdrive-fileid');
+      }
+    },
+
+    enabled: dimFeatureFlags.gdrive && Boolean(localStorage.getItem('gdrive-fileid')),
     name: 'GoogleDriveStorage'
   };
 
@@ -358,7 +335,7 @@ function SyncService($q, $translate, dimBungieService, dimState) {
             console.log('getting', adapter.name);
             return adapter.get();
           });
-          // TODO: catch?
+          // TODO: catch, set status
         }
         return promise;
       }, $q.when())
@@ -379,8 +356,17 @@ function SyncService($q, $translate, dimBungieService, dimState) {
     } else {
       delete cached[key];
     }
-
     // TODO: remove where possible, get/set elsewhere?
+    return adapters.reduce((promise, adapter) => {
+      if (adapter.enabled) {
+        if (adapter.remove) {
+          return promise.then(() => adapter.remove(key));
+        }
+        return promise.then(() => adapter.set(cached));
+        // TODO: catch?
+      }
+      return promise;
+    }, $q.when());
   }
 
   function init() {
@@ -389,13 +375,13 @@ function SyncService($q, $translate, dimBungieService, dimState) {
 
 
   return {
+    authorizeGdrive: function() {
+      return GoogleDriveStorage.authorize();
+    },
     get: get,
     set: set,
     remove: remove,
     init: init,
-    adapters: adapters,
-    drive: function() {
-      return fileId === undefined;
-    }
+    adapters: adapters
   };
 }
