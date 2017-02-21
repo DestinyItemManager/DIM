@@ -127,11 +127,6 @@ module.exports = (env) => {
         { from: './src/manifest.json' },
         { from: './src/manifest-webapp.json' },
         { from: `./icons/${env}/` },
-
-        // TODO: Quick hack to get elemental damage icon for StoreItem
-        { from: './src/images/arc.png', to: 'images' },
-        { from: './src/images/solar.png', to: 'images' },
-        { from: './src/images/void.png', to: 'images' },
       ]),
 
       new webpack.DefinePlugin({
