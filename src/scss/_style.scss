@@ -2161,8 +2161,100 @@ button.toast-close-button {
     text-align: center;
     font-size: 1.5em;
     transition: .3s background-color;
+    margin-left: 1em;
     &:hover, &:active {
       background-color: rgba(232, 165, 52, .8);
+    }
+  }
+
+  #farm-report {
+    width: 100%;
+    .farm-report-desc {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      img {
+        height: 16px;
+        width: 16px;
+        padding-left: 4px;
+        vertical-align: text-bottom;
+      }
+    }
+
+    .farm-report-block {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      position: relative;
+
+      .rep-toggle-left, .rep-toggle-right {
+        position: absolute;
+        top: 50%;
+        z-index: 100;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.9);
+
+        i {
+          &:hover {
+            background-color: rgba(232, 165, 52, .8);
+          }
+        }
+      }
+      .rep-toggle-right {
+        left: 0px;
+        padding-right: 3px;
+      }
+      .rep-toggle-left {
+        padding-left: 3px;
+        right: 0px;
+      }
+
+      .farm-report-rep {
+        flex: 1;
+        position: relative;
+        p {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+
+          .unequipped {
+            margin: 5px;
+            flex: 0;
+          }
+
+          .farm-rank-up {
+            box-shadow:0px 0px 0px 2px #DDD inset;
+            cursor: pointer;
+            background-color: rgba(232, 165, 52, .8);
+          }
+        }
+        #no-rep {
+          text-align: center;
+          padding: 0 10px 0 10px;
+        }
+      }
+
+      .farm-report-items {
+        flex: 3;
+        p {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+
+          .item {
+            margin-bottom: 2px;
+          }
+        }
+      }
     }
   }
 
@@ -2183,6 +2275,7 @@ button.toast-close-button {
   .engram-icon {
     position: relative;
     margin-right: 1em;
+    cursor: pointer;
   }
 
   .item-count {

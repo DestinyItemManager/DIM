@@ -36,6 +36,7 @@ require('./scripts/services/dimItemService.factory');
 require('./scripts/services/dimItemMoveService.factory');
 require('./scripts/services/dimItemInfoService.factory');
 require('./scripts/services/dimFarmingService.factory');
+require('./scripts/services/dimFarmingReportService.factory');
 require('./scripts/services/dimSyncService.factory');
 
 require('./scripts/loadout/dimLoadout.directive');
@@ -58,6 +59,7 @@ require('./scripts/store/dimStoreReputation.directive');
 require('./scripts/store/dimStoreItem.directive');
 require('./scripts/store/dimStoreHeading.directive');
 require('./scripts/store/dimSimpleItem.directive');
+require('./scripts/store/dimFarmItem.directive');
 require('./scripts/store/dimStats.directive');
 require('./scripts/store/dimFarming.directive');
 require('./scripts/store/dimClearNewItems.directive');

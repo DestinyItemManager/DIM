@@ -132,6 +132,10 @@ module.exports = (env) => {
         { from: './src/images/arc.png', to: 'images' },
         { from: './src/images/solar.png', to: 'images' },
         { from: './src/images/void.png', to: 'images' },
+
+        // TODO: Quick hack to get engram images for dimFarmingReportService
+        { from: './src/images/engram.svg', to: 'images' },
+        { from: './src/images/engram_hover.svg', to: 'images' },
       ]),
 
       new webpack.DefinePlugin({

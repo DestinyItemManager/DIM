@@ -67,7 +67,12 @@
       },
       "OutOfRoom": "You're out of space to move items off of {character}. Time to decrypt some engrams and clear out the trash!",
       "Quickmove": "Quick Move",
-      "Stop": "Stop"
+      "Stop": "Stop",
+      "Report": {
+         "Show": "Show the detailed farming report screen",
+         "Hide": "Return to the farming summary screen",
+         "Summary": "Farming Report"
+      }
    },
    "Filter": {
       "EnterName": "Enter an item name:",

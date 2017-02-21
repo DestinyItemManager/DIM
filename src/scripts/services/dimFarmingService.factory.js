@@ -18,7 +18,8 @@ function FarmingService($rootScope,
                         dimFeatureFlags,
                         dimSettingsService,
                         $translate,
-                        dimBucketService) {
+                        dimBucketService,
+                        dimFarmingReportService) {
   let intervalId;
   let cancelReloadListener;
   const glimmerHashes = new Set([
@@ -170,7 +171,9 @@ function FarmingService($rootScope,
     },
     start: function(store) {
       var self = this;
+      dimFarmingReportService.start(store);
       function farm() {
+        dimFarmingReportService.farm();
         var consolidateHashes = [
           417308266, // three of coins
           211861343, // heavy ammo synth
@@ -224,6 +227,7 @@ function FarmingService($rootScope,
       if (cancelReloadListener) {
         cancelReloadListener();
       }
+      dimFarmingReportService.stop();
       this.active = false;
     }
   };
