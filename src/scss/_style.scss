@@ -69,6 +69,7 @@ div:focus, span:focus {
   font-size: 16px !important;
   font-weight: bold;
   color: $orange !important;
+  font-weight: 400;
   &.dev {
     filter: grayscale(100%);
   }
@@ -163,16 +164,20 @@ dd {
   justify-content: center;
 
   .ngdialog-content {
-    max-height: fit-content;
-    max-width: 50%;
     background-color: #222;
-    border: solid 1px #3e3e3e;
-    height: 70%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    min-width: 570px;
+    max-width: 50%;
+    transition: 2s;
+    animation: ngdialog-slidein .3s;
   }
 }
 
 a {
-  color: #68a0b7;
+  color: $blue;
   font-size: 13px;
 }
 
@@ -199,7 +204,8 @@ a {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   flex: 1;
-  padding: 15px;
+  padding: 0 15px;
+  padding-bottom: 15px;
 }
 
 .ngdialog-close {
@@ -239,6 +245,32 @@ a {
   }
 }
 
+@keyframes ngdialog-slidein {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.ngdialog * {
+  box-sizing: inherit;
+  &:before, &:after {
+    box-sizing: inherit;
+  }
+}
+
+@keyframes ngdialog-slideout {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
 
 .ngdialog * {
   box-sizing: inherit;
@@ -249,18 +281,23 @@ a {
 
 .ngdialog-overlay {
   position: fixed;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.30);
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadein 0s;
 }
 
-.ngdialog.ngdialog-closing .ngdialog-overlay {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
+.ngdialog.ngdialog-closing {
+  .ngdialog-overlay {
+    -webkit-backface-visibility: hidden;
+    display: none;
+  }
+
+  .ngdialog-content {
+    animation: ngdialog-slideout .3s;
+  }
 }
 
 .ngdialog-content {
@@ -270,8 +307,6 @@ a {
   z-index: 100;
   > div > {
     h1, h2, h3, p, table, dl {
-      padding-left: 25px;
-      padding-right: 25px;
     }
   }
   form {
@@ -281,32 +316,32 @@ a {
     flex-shrink: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 15px 25px;
-    background-color: #101010;
-    border-bottom: solid 1px #3e3e3e;
+    padding: 15px;
+    font-weight: 200;
   }
   h2 {
-    margin-top: 0;
+    margin-top: 20px;
+    margin-bottom: 0;
   }
   > p {
     margin: 5px 0;
   }
   dl {
     background-color: #2F2F2F;
-    border-radius: 6px;
-    padding: 5px 15px;
-    margin: 0 25px;
     margin-bottom: 10px;
+    padding: 15px;
   }
   dt {
     font-style: normal;
     font-weight: 400;
     font-size: 1.1em;
-    margin-top: 10px;
+    margin-top: 0;
     color: $orange;
   }
   dd {
-    margin: 10px 10px 15px 10px;
+    margin: 10px;
+    margin-bottom: 0;
+    margin-left: 0;
   }
   table {
     padding: 0;
@@ -347,7 +382,7 @@ a {
 
 #filter-view td span.ng-binding {
   &:hover {
-    color: #68a0b7;
+    color: $blue;
     cursor: pointer;
   }
 }
@@ -359,11 +394,6 @@ h2, h3 {
 
 .ngdialog-inner-content > p {
   margin: 5px 0;
-}
-
-.ngdialog.ngdialog-closing .ngdialog-content {
-  -webkit-backface-visibility: hidden;
-  animation: ngdialog-fadeout 0s;
 }
 
 .ngdialog-close:before {
@@ -422,7 +452,6 @@ input, select, option {
   right: 0;
   height: 50px;
   background-color: #222;
-  border-bottom: solid 1px #6D6D6D;
   .header-right {
     cursor: default;
     float: right;
@@ -474,6 +503,10 @@ img {
   margin-bottom: 10px;
 }
 
+.title-wrapper {
+  margin-bottom: 1px;
+}
+
 .title {
   flex: 1;
   padding: 0 16px;
@@ -484,9 +517,12 @@ img {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 14px;
-  border-bottom: solid 1px #6D6D6D;
-  border-top: solid 1px #2B2B2B;
-  border-left: solid 1px #2b2b2b;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #2f2f2f;
+  }
+
   span[role="button"] {
     cursor: pointer;
   }
@@ -539,9 +575,6 @@ img {
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
-  &.on-drag-hover {
-    box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
-  }
 }
 
 #drag-help {
@@ -727,8 +760,7 @@ dim-store-heading {
   position: relative;
   height: 50px;
   padding: 0 30px 0 44px;
-  /* background: rgba(30, 36, 43, .5); */
-  text-shadow: 1px 1px 1px #000000;
+  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.87);
   color: #f5f5f5;
   text-decoration: none;
   background-size: cover;
@@ -910,12 +942,10 @@ dim-store-heading {
   font-size: 15px;
   line-height: 41px;
   padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   cursor: pointer;
   &:hover {
     background-color: rgba(160, 160, 160, 0.8);
-    border: 1px solid rgba(32, 32, 32, 0);
     color: rgba(245, 245, 245, 1);
   }
   .active {
@@ -945,8 +975,6 @@ dim-store-heading {
   bottom: initial;
   margin: 0;
   padding: 0;
-  border: solid 1px #131313;
-  border-top: none;
   color: rgba(245, 245, 245, 0.6);
   margin-bottom: 10px;
   cursor: pointer;
@@ -982,7 +1010,6 @@ dim-store-heading {
   .ngdialog-content {
     width: 40em;
     background-color: #222;
-    border: solid 1px #3e3e3e;
     height: fit-content !important;
   }
   .ngdialog-inner-content {
@@ -1288,7 +1315,7 @@ g {
 #content {
   margin: 15px auto;
   padding: 0 2em;
-  margin-top: 15px;
+  margin-top: 25px;
   user-select: none;
 }
 
@@ -1312,8 +1339,8 @@ g {
 
 .stores {
   display: block;
-  // 90px margin to make room for the fixed header
-  margin-top: 90px;
+  // 100px margin to make room for the fixed header
+  margin-top: 100px;
 }
 
 .store-bounds {
@@ -1570,13 +1597,14 @@ dim-compare {
   flex-direction: row;
   padding-left: 0px;
   overflow: hidden;
-  border-top: solid 1px #383838;
-  border-bottom: solid 1px #111;
   background-color: #222;
+
+  &:last-of-type {
+      border: 0;
+  }
 
   &:hover {
     background-color: #151515;
-    border-top: solid 1px #151515;
   }
 
   > span:first-child {
@@ -1603,8 +1631,12 @@ dim-compare {
       font-size: 1.2em;
     }
     &:hover {
-      background-color: #68a0b7;
+      background-color: $blue;
       color: #222;
+
+      &:delete {
+        background-color: #ff9294;
+      }
     }
   }
 
@@ -1803,11 +1835,9 @@ button.toast-close-button {
       border-radius: 3px 3px 3px 3px;
       background-position: 15px 15px;
       background-repeat: no-repeat;
-      box-shadow: 0 0 12px #999999;
       color: white;
     }
     :hover {
-      box-shadow: 0 0 12px #000000;
       cursor: pointer;
     }
     .toast-info {
@@ -2275,7 +2305,6 @@ dim-manifest-progress {
     font-size: 1rem;
     padding: 1.5rem 1.5rem;
     background-color: #222;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
     white-space: pre-wrap;
 
     i {

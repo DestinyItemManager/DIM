@@ -18,8 +18,8 @@ function Stores() {
       '      <dim-store-heading class="character" ng-class="{ current: store.current }" store-data="store"></dim-store-heading>',
       '    </div>',
       '  </div>',
-      '  <div ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
-      '    <div class="title">',
+      '  <div class="title-wrapper" ng-repeat="(category, buckets) in ::vm.buckets.byCategory track by category" class="section" ng-class="::category | lowercase">',
+      '    <div class="title" ng-click="vm.toggleSection(category)">',
       '      <span class="collapse-handle" ng-click="vm.toggleSection(category)"><i class="fa collapse" ng-class="vm.settings.collapsedSections[category] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="Bucket.{{::category}}"></span></span>',
       '      <span ng-if="::vm.vault.vaultCounts[category] !== undefined" class="bucket-count">{{ vm.vault.vaultCounts[category] }}/{{::vm.vault.capacityForItem({sort: category})}}</span>',
       '    </div>',
@@ -91,4 +91,3 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     loadingTracker.addPromise(dimStoreService.reloadStores());
   }
 }
-
