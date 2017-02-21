@@ -17,7 +17,8 @@ module.exports = function(grunt) {
           cwd: 'dist',
           src: [
             '**',
-            '!chrome.zip'
+            '!chrome.zip',
+            '!.htaccess'
           ],
           dest: '/',
           filter: 'isFile'
