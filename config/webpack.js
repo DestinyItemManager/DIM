@@ -125,8 +125,14 @@ module.exports = (env) => {
 
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
-        { from: './src/manifest-webapp.json' },
-        { from: `./icons/${env}/` },
+        { from: `./icons/${env}/icon128.png` },
+        { from: `./icons/${env}/icon16.png` },
+        { from: `./icons/${env}/icon19.png` },
+        { from: `./icons/${env}/icon38.png` },
+        { from: `./icons/${env}/icon48.png` },
+        { from: `./icons/${env}/favicon-16x16.png` },
+        { from: `./icons/${env}/favicon-32x32.png` },
+        { from: `./icons/${env}/favicon-96x96.png` },
 
         // TODO: Quick hack to get elemental damage icon for StoreItem
         { from: './src/images/arc.png', to: 'images' },
