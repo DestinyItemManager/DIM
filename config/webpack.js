@@ -133,11 +133,6 @@ module.exports = (env) => {
         { from: `./icons/${env}/favicon-16x16.png` },
         { from: `./icons/${env}/favicon-32x32.png` },
         { from: `./icons/${env}/favicon-96x96.png` },
-
-        // TODO: Quick hack to get elemental damage icon for StoreItem
-        { from: './src/images/arc.png', to: 'images' },
-        { from: './src/images/solar.png', to: 'images' },
-        { from: './src/images/void.png', to: 'images' },
       ]),
 
       new webpack.DefinePlugin({
