@@ -69,6 +69,12 @@ div:focus, span:focus {
   font-size: 16px !important;
   font-weight: bold;
   color: $orange !important;
+  &.dev {
+    filter: grayscale(100%);
+  }
+  &.beta {
+    filter: hue-rotate(153deg);
+  }
 }
 
 #header {
