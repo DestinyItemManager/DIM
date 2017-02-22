@@ -1,7 +1,7 @@
 language: node_js
 node_js: node
 install: npm install
-before_script: npm run publish-chrome-beta
+before_script: npm run publish-beta
 branches:
   only:
   - dev
