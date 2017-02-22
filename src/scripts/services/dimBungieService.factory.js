@@ -94,6 +94,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     } else if (errorCode === 99) {
       if (window.chrome && window.chrome.extension) {
         openBungieNetTab();
+      } else {
+        $rootScope.$broadcast('dim-no-token-found');
       }
       return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
     } else if (errorCode === 5) {
