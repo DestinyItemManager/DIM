@@ -395,8 +395,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         item.tracked;
     },
     unlocked: function(predicate, item) {
-      return item.lockable &&
-        !item.locked;
+      return (item.lockable &&
+        !item.locked) || !item.lockable;
     },
     locked: function(predicate, item) {
       return item.lockable &&
