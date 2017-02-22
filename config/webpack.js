@@ -41,7 +41,7 @@ module.exports = (env) => {
       //headers: { "X-Custom-Header": "yes" }
     },
 
-    devtool: 'cheap-module-source-map',
+    devtool: 'source-map',
 
     stats: 'errors-only',
 
