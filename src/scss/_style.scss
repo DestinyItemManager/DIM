@@ -259,8 +259,8 @@ a {
 }
 
 .ngdialog.ngdialog-closing .ngdialog-overlay {
-   -webkit-backface-visibility: hidden;
-   animation: ngdialog-fadeout 0s;
+  -webkit-backface-visibility: hidden;
+  animation: ngdialog-fadeout 0s;
 }
 
 .ngdialog-content {
