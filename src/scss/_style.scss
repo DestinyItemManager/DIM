@@ -191,7 +191,7 @@ a {
 .ngdialog-content > div {
   display: flex;
   flex-direction: column;
-  height: fit-content;
+  height: 90%;
   max-height: 100%;
 }
 
@@ -436,6 +436,10 @@ input, select, option {
   option {
     cursor: pointer;
   }
+}
+
+input[type="search"] {
+  -webkit-appearance: textfield;
 }
 
 #filter-view ul {
