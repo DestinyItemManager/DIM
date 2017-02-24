@@ -278,7 +278,7 @@ function SyncService($q, $translate) {
     }
 
     return $q((resolve, reject) => {
-      if (chrome.storage && chrome.storage.sync) {
+      if (window.chrome && chrome.storage && chrome.storage.sync) {
         chrome.storage.sync.remove(key, () => {
           if (chrome.runtime.lastError) {
             reject(chrome.runtime.lastError);
