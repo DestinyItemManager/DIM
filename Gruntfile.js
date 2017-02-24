@@ -108,7 +108,7 @@ module.exports = function(grunt) {
     'update_chrome_beta_manifest',
     'compress:chrome',
     'log_beta_version',
-    //'webstore_upload:beta',
+    'webstore_upload:beta',
     'rsync:beta'
   ]);
 
