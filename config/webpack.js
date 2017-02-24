@@ -80,8 +80,12 @@ module.exports = (env) => {
         }, {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: 'css-loader!sass-loader',
+            use: [
+              'css-loader',
+              'postcss-loader',
+              'sass-loader'
+            ],
+            fallback: 'style-loader'
           }),
         }
       ],
