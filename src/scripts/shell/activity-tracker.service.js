@@ -12,7 +12,6 @@ export class ActivityTrackerService {
   }
 
   activeWithinTimespan(timespan) {
-    console.log(Date.now() - this.timestamp, (Date.now() - this.timestamp) <= timespan);
     return (Date.now() - this.timestamp) <= timespan;
   }
 }
