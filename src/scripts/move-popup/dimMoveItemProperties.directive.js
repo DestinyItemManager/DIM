@@ -42,7 +42,7 @@ function MoveItemProperties() {
       '    </div>',
       '    <div class="item-subtitle">',
       '      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
-      '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
+      '        <div ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-class="::vm.item.dmg"></div>',
       '      </div>',
       '      <div class="item-type-info">{{vm.light}} {{::vm.classType}} {{::vm.item.typeName}}</div>',
       '      <div ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></div>',
