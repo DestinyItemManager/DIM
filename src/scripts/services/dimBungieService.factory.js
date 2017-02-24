@@ -104,10 +104,10 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
     } else if (errorCode === 5) {
       return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
-    } else if (errorCode === 1618 &&
+    } else if ((errorCode === 1618 || errorCode === 1601) &&
       response.config.url.indexOf('/Account/') >= 0 &&
       response.config.url.indexOf('/Character/') < 0) {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
+      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
     } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
       $state.go('developer');
       return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
