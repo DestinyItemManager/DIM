@@ -135,6 +135,8 @@ div:focus, span:focus {
   width: 250px;
   margin-left: -10px;
   margin-bottom: 4px;
+  border-radius: 0;
+  -webkit-appearance: none;
 }
 
 dt {
