@@ -68,7 +68,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       })));
     }
 
-    var errorCode = response.data.ErrorCode;
+    var errorCode = response.data ? response.data.ErrorCode : -1;
 
     switch (errorCode) {
     case 1: {
@@ -77,6 +77,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     case 1627: {
       return $q.reject("Vendor data is unavailable.");
     }
+    case 2106:
     case 2108: {
       $rootScope.$broadcast('dim-no-token-found');
       return $q.reject("DIM does not have permission to perform this action.");
