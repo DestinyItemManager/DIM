@@ -106,6 +106,7 @@ div:focus, span:focus {
     text-align: center;
     -webkit-touch-callout: none;
     user-select: none;
+    outline: none;
   }
 }
 
@@ -145,6 +146,8 @@ div:focus, span:focus {
   width: 250px;
   margin-left: -10px;
   margin-bottom: 4px;
+  border-radius: 0;
+  -webkit-appearance: none;
 }
 
 dt {
@@ -202,7 +205,7 @@ a {
 .ngdialog-content > div {
   display: flex;
   flex-direction: column;
-  height: fit-content;
+  height: 90%;
   max-height: 100%;
 }
 
@@ -449,6 +452,10 @@ input, select, option {
   }
 }
 
+input[type="search"] {
+  -webkit-appearance: textfield;
+}
+
 #filter-view ul {
   padding-left: 2em;
 }
@@ -500,6 +507,7 @@ img {
   border-left: solid 1px #2b2b2b;
   span[role="button"] {
     cursor: pointer;
+    outline: none;
   }
   .bucket-count {
     float: right;
@@ -926,6 +934,7 @@ dim-store-heading {
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   cursor: pointer;
+  outline: none;
   &:hover {
     background-color: rgba(160, 160, 160, 0.8);
     border: 1px solid rgba(32, 32, 32, 0);
@@ -945,6 +954,9 @@ dim-store-heading {
 
 .loadout-menu {
   position: relative;
+  [role="button"] {
+    outline: none;
+  }
 }
 
 .ngdialog.loadout-popup {
