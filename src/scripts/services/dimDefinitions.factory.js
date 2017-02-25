@@ -38,10 +38,6 @@ function Definitions($q, dimManifestService) {
         const table = `Destiny${tableShort}Definition`;
         defs[tableShort] = new Proxy({}, {
           get: function(target, name) {
-            if (name === 'then') {
-              return undefined;
-            }
-
             if (this.hasOwnProperty(name)) {
               return this[name];
             }

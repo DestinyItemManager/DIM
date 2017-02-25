@@ -378,7 +378,7 @@ function VendorService(
               costs: saleItem.costs.map((cost) => {
                 return {
                   value: cost.value,
-                  currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
+                  currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash')
                 };
               }).filter((c) => c.value > 0),
               item: itemsById["vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex],

@@ -15,7 +15,7 @@ function dimDebugItemCtrl($scope, $state, dimStoreService, dimItemService, dimDe
       }
       vm.item = angular.copy(vm.fullItem);
       vm.originalItem = vm.item.originalItem;
-      vm.definition = defs.InventoryItem[vm.item.hash];
+      vm.definition = defs.InventoryItem.get(vm.item.hash);
       delete vm.item.originalItem;
 
       vm.store = dimStoreService.getStore(vm.item.owner);
