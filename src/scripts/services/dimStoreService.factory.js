@@ -36,7 +36,7 @@ function StoreService(
   if ($DIM_FLAVOR === 'dev') {
     dimClassifiedData = require('app/data/classified.json');
   } else {
-    dimClassifiedDataPromise = $http.get('https://beta.destinyitemmanager.com/classified.json')
+    dimClassifiedDataPromise = $http.get('https://beta.destinyitemmanager.com/data/classified.json')
       .then(function(json) {
         return json.data.itemHash;
       });
