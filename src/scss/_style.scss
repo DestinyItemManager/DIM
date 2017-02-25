@@ -11,6 +11,19 @@
   --vault-max-columns: 999;
 }
 
+@mixin item-size {
+  width: 44px;
+  height: 44px;
+  width: var(--item-size);
+  height: var(--item-size);
+}
+
+@mixin item-size-padded {
+  width: 48px;
+  height: 48px;
+  width: var(--item-size + 4px);
+  height: var(--item-size + 4px);
+}
 
 div:focus, span:focus {
   outline-width: 0;
@@ -30,8 +43,7 @@ div:focus, span:focus {
 }
 
 .new_overlay {
-  width: var(--item-size);
-  height: var(--item-size);
+  @include item-size;
   pointer-events: none;
   .new-item-animated & {
     will-change: transform;
@@ -43,8 +55,7 @@ div:focus, span:focus {
   display: none;
   .show-new-items & {
     display: block;
-    width: var(--item-size);
-    height: var(--item-size);
+    @include item-size;
     overflow: hidden;
   }
 }
@@ -502,6 +513,7 @@ img {
 }
 
 .equipped {
+  width: 56px;
   width: calc(var(--item-size) + 8px);
   margin-right: 12px;
 }
@@ -534,7 +546,9 @@ img {
 }
 
 .sub-bucket {
+  min-height: 48px;
   min-height: calc(var(--item-size) + 4px);
+  background-size: 44px;
   background-size: var(--item-size);
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
@@ -645,8 +659,7 @@ img {
   border: 2px solid #DDD;
   > {
     .img, img {
-      width: var(--item-size);
-      height: var(--item-size);
+      @include item-size;
       background-size: cover;
       display: block;
       &:focus {
@@ -1294,6 +1307,8 @@ g {
 
 .content {
   // This assumes 3 characters
+  min-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 39px + 44px + (3 * (44px + 8px)));
+  max-width: calc((52px + 44px + (3 * (44px + 8px))) * 3 + 20px + (999 * (44px+ 8px)));
   min-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 39px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
   max-width: calc((52px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px))) * var(--num-characters) + 20px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
 }
@@ -1359,9 +1374,11 @@ g {
   flex-shrink: 0;
   display: flex;
   margin-right: 12px;
+  width: calc(40px + 44px + (3 * (44px + 8px)));
   width: calc(40px + var(--item-size) + (var(--character-columns) * (var(--item-size) + 8px)));
 
   &.vault {
+    max-width: calc(8px + (999 * (44px + 8px)));
     max-width: calc(8px + (var(--vault-max-columns) * (var(--item-size) + 8px)));
     background-color: rgba(245, 245, 245, 0.25);
     padding: 0 12px 1px;
@@ -1766,8 +1783,7 @@ h2, h3, h4 {
     line-height: 1em;
   }
   .infuseSourceItem {
-    width: calc(var(--item-size) + 4px);
-    height: calc(var(--item-size) + 4px);
+    @include item-size-padded;
   }
   .infuseSourceDetailsRow {
     margin-left: 1rem;
@@ -1820,14 +1836,12 @@ h2, h3, h4 {
   .item {
     float: left;
     margin: 3px 3px;
-    width: calc(var(--item-size) + 4px);
-    height: calc(var(--item-size) + 4px);
+    @include item-size-padded;
   }
   .infusedItem {
     float: left;
     margin: 3px 10px 3px 3px;
-    width: calc(var(--item-size) + 4px);
-    height: calc(var(--item-size) + 4px);
+    @include item-size-padded;
   }
   .plusSeparator {
     float: left;
