@@ -131,6 +131,7 @@ module.exports = (env) => {
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
         { from: './src/manifest-webapp.json' },
+        { from: './src/data', to: 'data/' },
         { from: `./icons/${env}/` },
       ]),
 
