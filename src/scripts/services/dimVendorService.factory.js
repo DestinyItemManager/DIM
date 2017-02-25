@@ -115,7 +115,7 @@ function VendorService(
 
     const characters = _.reject(stores, 'isVault');
 
-    _reloadPromise = dimDefinitions
+    _reloadPromise = dimDefinitions.getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);

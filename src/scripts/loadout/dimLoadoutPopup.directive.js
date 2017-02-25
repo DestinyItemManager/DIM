@@ -305,7 +305,7 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
   vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
     ngDialog.closeAll();
 
-    dimBucketService.then((buckets) => {
+    dimBucketService.getBuckets().then((buckets) => {
       const postmasterItems = flatMap(buckets.byCategory.Postmaster,
                                       (bucket) => vm.store.buckets[bucket.id]);
       const postmasterItemCountsByType = _.countBy(postmasterItems,
