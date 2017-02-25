@@ -41,7 +41,7 @@
     "last 2 ChromeAndroid versions",
     "last 2 Firefox versions",
     "last 1 Safari versions",
-    "last 1 iOS versions",
+    "iOS >= 9",
     "last 2 Edge versions"
   ],
   "devDependencies": {
@@ -107,6 +107,7 @@
     "file-loader": "^0.9.0",
     "humanize-duration": "^3.10.0",
     "idb-keyval": "^2.3.0",
+    "indexeddbshim": "^2.2.1",
     "jquery": "^3.1.1",
     "jquery-textcomplete": "^1.8.0",
     "jquery-ui": "^1.12.1",
