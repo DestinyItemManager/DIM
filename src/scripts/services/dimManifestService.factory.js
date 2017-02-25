@@ -66,11 +66,6 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
 
       service.isLoaded = false;
 
-      // Clear out the old manifest file now that we use
-      // indexedDB. We can remove this after a few releases, but we
-      // want to save disk for our users.
-      deleteOldManifestFile();
-
       manifestPromise = dimBungieService.getManifest()
         .then(function(data) {
           const language = dimSettingsService.language;
@@ -147,7 +142,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
   function loadManifestRemote(version, language, path) {
     service.statusText = $translate.instant('Manifest.Download') + '...';
 
-    return $http.get("https://www.bungie.net" + path, { responseType: "blob" })
+    return $http.get("https://www.bungie.net" + path + '?host=' + window.location.hostname, { responseType: "blob" })
       .then(function(response) {
         service.statusText = $translate.instant('Manifest.Unzip') + '...';
         return unzipManifest(response.data);
@@ -166,27 +161,6 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
         $rootScope.$broadcast('dim-new-manifest');
         return typedArray;
       });
-  }
-
-  function getLocalManifestFile() {
-    return $q((resolve, reject) => {
-      const requestFileSystem = (window.requestFileSystem || window.webkitRequestFileSystem);
-      if (!requestFileSystem) {
-        reject("No requestFileSystem");
-      }
-      // Ask for 60MB of temporary space. If Chrome gets rid of it we can always redownload.
-      requestFileSystem(window.TEMPORARY, 60 * 1024 * 1024, (fs) => {
-        fs.root.getFile('dimManifest', { create: true, exclusive: false }, (f) => resolve(f), (e) => reject(e));
-      }, (e) => reject(e));
-    });
-  }
-
-  function deleteOldManifestFile() {
-    return getLocalManifestFile().then((fileEntry) => {
-      return $q((resolve, reject) => {
-        fileEntry.remove(resolve, reject);
-      });
-    });
   }
 
   function deleteManifestFile() {

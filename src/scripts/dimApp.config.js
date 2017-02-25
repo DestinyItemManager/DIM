@@ -7,7 +7,7 @@ import ja from '../i18n/dim_ja.json';
 import ptBr from '../i18n/dim_pt_BR.json';
 
 function config($compileProvider, $httpProvider, $translateProvider, $translateMessageFormatInterpolationProvider,
-  hotkeysProvider, localStorageServiceProvider, ngHttpRateLimiterConfigProvider) {
+                hotkeysProvider, localStorageServiceProvider, ngHttpRateLimiterConfigProvider, ngDialogProvider) {
   'ngInject';
 
   // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
@@ -49,6 +49,11 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   // what I assume is clock skew between Bungie's hosts when they calculate a global rate limit.
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1100);
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1100);
+
+  // https://github.com/likeastore/ngDialog/issues/327
+  ngDialogProvider.setDefaults({
+    disableAnimation: true
+  });
 }
 
 export default config;
