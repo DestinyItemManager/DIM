@@ -23,7 +23,11 @@ function ReturnController($http) {
     var apiKey;
 
     if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-      apiKey = $DIM_API_KEY;
+      if (window.chrome && window.chrome.extension) {
+        apiKey = $DIM_API_KEY;
+      } else {
+        apiKey = $DIM_WEB_API_KEY;
+      }
     } else {
       apiKey = localStorage.apiKey;
     }

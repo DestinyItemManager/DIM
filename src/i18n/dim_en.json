@@ -18,7 +18,7 @@
       "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
       "NotLoggedIn": "Please log into Bungie.net in order to use this extension.",
       "Maintenance": "Bungie.net servers are down for maintenance.",
-      "NoAccount": "No Destiny account was found for this platform. Do you have the right platform selected?",
+      "NoAccount": "No Destiny account was found on {platform}. Do you have the right platform selected?",
       "NoAccountForPlatform": "Failed to find a Destiny account for you on {platform}.",
       "NoCookies": "No cookies found.",
       "NotConnected": "You may not be connected to the internet.",
@@ -335,6 +335,11 @@
       "FillStack": "Fill Stack ({amount})",
       "HowMuch": "How much {itemname} to move?",
       "Move": "Move"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "To re-authorize google drive, must restart your browser.",
+     "OneItemTooLarge": "Your save file has an item that is too large. Most likely a saved loadout has too many items.",
+     "SaveTooLarge": "Your save file is too large.  Remove saved loadouts."
    },
    "Tags": {
       "TagItem": "Tag Item",

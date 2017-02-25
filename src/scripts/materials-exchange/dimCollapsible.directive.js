@@ -34,4 +34,3 @@ function SectionCtrl() {
     vm.collapsed = !vm.collapsed;
   };
 }
-

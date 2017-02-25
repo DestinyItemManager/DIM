@@ -91,6 +91,7 @@ function MinMaxLocksCtrl($scope, hotkeys, ngDialog) {
         scope: angular.extend($scope.$new(true), {}),
         controllerAs: 'vmd',
         controller: function($document) {
+          'ngInject';
           var vmd = this;
 
           $document.keyup(function(e) {
