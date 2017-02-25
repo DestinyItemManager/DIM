@@ -782,6 +782,7 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
+      taggable: item.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'),
       trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
       tracked: item.state === 2,
       locked: item.locked,
@@ -1329,7 +1330,8 @@ function StoreService(
         : light < 319 ? 39
         : light < 325 ? 40
         : light < 330 ? 41
-        : 42;
+        : light < 336 ? 42
+        : 43;
     }
     console.warn('item bonus not found', type);
     return 0;

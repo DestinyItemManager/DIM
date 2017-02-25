@@ -14,6 +14,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   vm.repPool = {};
   vm.newRank = 0;
   vm.newExperience = 0;
+  vm.GlimmerIcon = require('../../images/glimmer.png');
 
   vm.factions = [
     // 174528503, eris breaks things atm
@@ -203,4 +204,3 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
     return rep;
   };
 }
-

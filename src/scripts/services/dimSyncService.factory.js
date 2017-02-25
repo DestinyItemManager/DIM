@@ -277,8 +277,8 @@ function SyncService($q, $translate) {
       return set(cached, true);
     }
 
-    return $q((resolve, reject) => {
-      if (chrome.storage && chrome.storage.sync) {
+    if (window.chrome && chrome.storage && chrome.storage.sync) {
+      return $q((resolve, reject) => {
         chrome.storage.sync.remove(key, () => {
           if (chrome.runtime.lastError) {
             reject(chrome.runtime.lastError);
@@ -286,10 +286,10 @@ function SyncService($q, $translate) {
             resolve();
           }
         });
-      } else {
-        return set(cached, true);
-      }
-    });
+      });
+    } else {
+      return set(cached, true);
+    }
   }
 
   return {
