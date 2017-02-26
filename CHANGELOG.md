@@ -1,6 +1,17 @@
 # next
 
 * Fixed the perk selection in Loadout Builder. #1453
+* Fixed the logic for artifact bonuses to compute the right number. #1477
+* Restore some missing images from our build system changes.
+* Don't allow engrams to be tagged. #1478
+* Add home screen icons (and Safari tab icons, and Windows tile icons) for the website.
+* Fixed "is:locked" filters to be consistent for engrams. #1489
+* The Beta website is now updated automatically for every PR.
+* If you're not logged in to the website, we show the login screen.
+* Better error messages for when you have the wrong platform selected, plus the error doesn't cover the platform selector.
+* Improved website compatibility with Firefox, Safari, and Edge.
+* Many style fixes for Safari.
+* Drag and drop is now supported on touch devices. Press and hold an item to drag it. #1499
 
 # 3.16.1
 
