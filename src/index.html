@@ -4,6 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <title>DIM</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,7 +40,7 @@
         <div ui-view></div>
       </div>
     </div>
-
+    <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.vendor.entry}}"></script>
     <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.main.entry}}"></script>
   </body>
 

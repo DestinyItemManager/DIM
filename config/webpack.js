@@ -104,6 +104,13 @@ module.exports = (env) => {
         root: path.resolve('./'),
       }),
 
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: function(module) {
+          return module.context && module.context.indexOf('node_modules') !== -1;
+        },
+      }),
+
       new NotifyPlugin('DIM', !isDev),
 
       new ExtractTextPlugin('styles-[hash:6].css'),
