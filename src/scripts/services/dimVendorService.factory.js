@@ -59,8 +59,7 @@ function VendorService(
   // Vendors we don't want to load by default
   const vendorBlackList = [
     2021251983, // Postmaster,
-    4269570979, // Cryptarch (Tower)
-    1303406887 // Cryptarch (Reef)
+  ];
 
   // Hashes for 'Decode Engram'
   const categoryBlacklist = [
@@ -347,7 +346,7 @@ function VendorService(
   }
 
   function processVendor(vendor, vendorDef, defs, store) {
-    var def = vendorDef.summary;
+    const def = vendorDef.summary;
     const createdVendor = {
       def: vendorDef,
       hash: vendorDef.hash,
@@ -361,9 +360,9 @@ function VendorService(
           factionAligned: vendor.factionAligned
         }
       },
-      eventVendor: def.mapSectionIdentifier === 'EVENT',
-      vendorOrder: (def.mapSectionOrder * 1000) + def.vendorOrder,
-      faction: def.factionHash // TODO: show rep!
+      vendorOrder: def.vendorSubcategoryHash + def.vendorOrder,
+      faction: def.factionHash, // TODO: show rep!
+      location: defs.VendorCategory[def.vendorCategoryHash].categoryName
     };
 
     const saleItems = flatMap(vendor.saleItemCategories, (categoryData) => {
