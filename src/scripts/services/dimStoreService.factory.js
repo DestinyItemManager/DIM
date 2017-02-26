@@ -30,19 +30,7 @@ function StoreService(
 
   var _removedNewItems = new Set();
 
-  var dimClassifiedData;
-  var dimClassifiedDataPromise;
-
-  if ($DIM_FLAVOR === 'dev') {
-    dimClassifiedData = require('app/data/classified.json');
-  } else {
-    dimClassifiedDataPromise = $http.get('https://beta.destinyitemmanager.com/data/classified.json')
-      .then(function(json) {
-        return json.data.itemHash;
-      });
-  }
-  console.log(dimClassifiedDataPromise);
-
+  const dimClassifiedDataPromiseURL = $DIM_FLAVOR === 'dev' ? '~app/data/classified.json' : 'https://beta.destinyitemmanager.com/data/classified.json';
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {
@@ -656,26 +644,7 @@ function StoreService(
     }
 
     if (itemDef.classified) {
-      var language = dimSettingsService.language;
-      if (dimClassifiedData[itemDef.itemHash]) { // do we have declassification info for item?
-         // itemDef.icon = dimClassifiedData[itemDef.itemHash].icon;
-        itemDef.itemName = dimClassifiedData[itemDef.itemHash].i18n[language].itemName;
-        itemDef.itemDescription = dimClassifiedData[itemDef.itemHash].i18n[language].itemDescription;
-        itemDef.itemTypeName = dimClassifiedData[itemDef.itemHash].i18n[language].itemTypeName;
-        itemDef.bucketTypeHash = dimClassifiedData[itemDef.itemHash].bucketHash;
-        itemDef.tierType = dimClassifiedData[itemDef.itemHash].tierType;
-        itemDef.classType = dimClassifiedData[itemDef.itemHash].classType;
-        if (dimClassifiedData[itemDef.itemHash].primaryBaseStatHash) {
-          itemDef.primaryBaseStatHash = dimClassifiedData[itemDef.itemHash].primaryBaseStatHash;
-          itemDef.primaryStat = [];
-          itemDef.primaryStat.statHash = itemDef.primaryBaseStatHash;
-          itemDef.primaryStat.value = dimClassifiedData[itemDef.itemHash].stats[itemDef.primaryStat.statHash].value;
-          item.primaryStat = itemDef.primaryStat;
-        }
-        if (dimClassifiedData[itemDef.itemHash].stats) {
-          item.stats = dimClassifiedData[itemDef.itemHash].stats;
-        }
-      }
+      itemDef = getClassifiedData(dimClassifiedData, itemDef.hash);
     }
 
     // fix itemDef for defense items with missing nodes
@@ -1651,4 +1620,27 @@ function StoreService(
     return ret;
   }
   // code above is from https://github.com/DestinyTrialsReport
+  function getClassifiedData(dimClassifiedData, hash) {
+    var language = dimSettingsService.language;
+    var classifiedItem = null;
+    if (dimClassifiedData[hash]) { // do we have declassification info for item?
+       // classifiedItem.icon = dimClassifiedData[hash].icon;
+      classifiedItem.itemName = dimClassifiedData[hash].i18n[language].itemName;
+      classifiedItem.itemDescription = dimClassifiedData[hash].i18n[language].itemDescription;
+      classifiedItem.itemTypeName = dimClassifiedData[hash].i18n[language].itemTypeName;
+      classifiedItem.bucketTypeHash = dimClassifiedData[hash].bucketHash;
+      classifiedItem.tierType = dimClassifiedData[hash].tierType;
+      classifiedItem.classType = dimClassifiedData[hash].classType;
+      if (dimClassifiedData[hash].primaryBaseStatHash) {
+        classifiedItem.primaryBaseStatHash = dimClassifiedData[hash].primaryBaseStatHash;
+        classifiedItem.primaryStat = [];
+        classifiedItem.primaryStat.statHash = classifiedItem.primaryBaseStatHash;
+        classifiedItem.primaryStat.value = dimClassifiedData[hash].stats[classifiedItem.primaryStat.statHash].value;
+      }
+      if (dimClassifiedData[hash].stats) {
+        classifiedItem.stats = dimClassifiedData[hash].stats;
+      }
+    }
+    return classifiedItem;
+  }
 }
