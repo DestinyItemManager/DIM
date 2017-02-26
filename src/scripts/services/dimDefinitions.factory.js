@@ -29,14 +29,14 @@ mod.factory('dimDefinitions', Definitions);
  * above (defs.TalentGrid, etc.).
  */
 function Definitions($q, dimManifestService) {
-  return dimManifestService.getManifest()
+  return dimManifestService
     .then(function(db) {
       const defs = {};
 
       // Load objects that lazily load their properties from the sqlite DB.
       lazyTables.forEach(function(tableShort) {
         const table = `Destiny${tableShort}Definition`;
-        defs[tableShort] = new Proxy({}, {
+        defs[tableShort] = {
           get: function(target, name) {
             if (this.hasOwnProperty(name)) {
               return this[name];
@@ -45,7 +45,7 @@ function Definitions($q, dimManifestService) {
             this[name] = val;
             return val;
           }
-        });
+        };
       });
 
       // Resources that need to be fully loaded (because they're iterated over)
