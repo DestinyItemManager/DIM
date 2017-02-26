@@ -660,6 +660,12 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
           var vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
           vendorItems = vendorItems.concat(vendItems);
 
+          // Exclude felwinters if we have them
+          var felwinters = _.filter(vendorItems, { hash: 2672107540 });
+          if (felwinters.length) {
+            vm.excludeditems.push(...felwinters);
+          }
+
           // Build a map of perks
           _.each(vendItems, function(item) {
             if (item.classType === 3) {
