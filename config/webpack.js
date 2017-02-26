@@ -41,7 +41,7 @@ module.exports = (env) => {
       //headers: { "X-Custom-Header": "yes" }
     },
 
-    devtool: 'cheap-module-source-map',
+    devtool: 'source-map',
 
     stats: 'errors-only',
 
@@ -80,8 +80,12 @@ module.exports = (env) => {
         }, {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: 'css-loader!sass-loader',
+            use: [
+              'css-loader',
+              'postcss-loader',
+              'sass-loader'
+            ],
+            fallback: 'style-loader'
           }),
         }
       ],
@@ -123,9 +127,11 @@ module.exports = (env) => {
           ignore: ['tests/**/*'],
         },
 
+        { from: './src/.htaccess' },
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
         { from: './src/manifest-webapp.json' },
+        { from: './src/data', to: 'data/' },
         { from: `./icons/${env}/` },
       ]),
 
@@ -133,8 +139,12 @@ module.exports = (env) => {
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env),
         $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
+        // These are set from the Travis repo settings instead of .travis.yml
         $DIM_API_KEY: JSON.stringify(process.env.API_KEY),
-        $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL)
+        $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL),
+        // Website and extension have different keys
+        $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
+        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL)
       }),
 
       new Visualizer(),

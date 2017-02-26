@@ -1,4 +1,4 @@
-src/scripts/jquery-ui.position.js
+src/scripts/ios-drag-drop.js
 build/
 dist/
 Gruntfile.js

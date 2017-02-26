@@ -18,7 +18,7 @@
       "Throttled": "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
       "NotLoggedIn": "Effettuare l accesso a Bungie.net per utilizzare questa estensione.",
       "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
-      "NoAccount": "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
+      "NoAccount": "Non è stato trovato alcun account di Destiny su {platform}. Hai selezionato la piattaforma corretta?",
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
@@ -335,6 +335,11 @@
       "FillStack": "Riempi Stack ({amount})",
       "HowMuch": "Quanti {itemname} vuoi spostare?",
       "Move": "Sposta"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
+     "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
+     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
    },
    "Tags": {
       "TagItem": "Segna Oggetto",
