@@ -322,14 +322,12 @@ function StoreService(
       }
     }
 
-    console.time('Load stores (Bungie API)');
     _reloadPromise = $q.all([dimDefinitions,
       dimBucketService,
       loadNewItems(activePlatform),
       dimItemInfoService(activePlatform),
       dimBungieService.getStores(activePlatform)])
       .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
-        console.timeEnd('Load stores (Bungie API)');
         if (activePlatform !== dimPlatformService.getActive()) {
           throw new Error("Active platform mismatch");
         }
