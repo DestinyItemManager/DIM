@@ -29,7 +29,7 @@ mod.factory('dimDefinitions', Definitions);
  * above (defs.TalentGrid, etc.).
  */
 function Definitions($q, dimManifestService) {
-  return dimManifestService
+  return dimManifestService.getManifest()
     .then(function(db) {
       const defs = {};
 
@@ -37,7 +37,7 @@ function Definitions($q, dimManifestService) {
       lazyTables.forEach(function(tableShort) {
         const table = `Destiny${tableShort}Definition`;
         defs[tableShort] = {
-          get: function(target, name) {
+          get: function(name) {
             if (this.hasOwnProperty(name)) {
               return this[name];
             }
