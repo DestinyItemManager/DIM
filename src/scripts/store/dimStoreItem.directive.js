@@ -44,7 +44,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
 
   function Link(scope, element) {
     if (!firstItemTimed) {
-      console.timeEnd('First item directive built');
       firstItemTimed = true;
     }
 

@@ -587,9 +587,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
           // Finish progress
           vm.progress = processedCount / combos;
           console.log('processed', combos, 'combinations.');
-          console.timeEnd('elapsed');
         }
-        console.time('elapsed');
         vm.lockedchanged = false;
         vm.excludedchanged = false;
         vm.perkschanged = false;
