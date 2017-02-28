@@ -23,6 +23,8 @@
     "$DIM_VERSION": true,
     "$DIM_API_KEY": true,
     "$DIM_AUTH_URL": true,
+    "$DIM_WEB_API_KEY": true,
+    "$DIM_WEB_AUTH_URL": true,
   },
   "rules": {
     "array-callback-return": "error",
@@ -66,6 +68,7 @@
     "camelcase": ["error", {
       "properties": "never"
     }],
+    "comma-dangle": ["error", "only-multiline"],
     "comma-spacing": "error",
     "comma-style": "error",
     "key-spacing": "error",

@@ -42,17 +42,17 @@ function MoveItemProperties() {
       '    </div>',
       '    <div class="item-subtitle">',
       '      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
-      '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
+      '        <div ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-class="::vm.item.dmg"></div>',
       '      </div>',
       '      <div class="item-type-info">{{vm.light}} {{::vm.classType}} {{::vm.item.typeName}}</div>',
       '      <div ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></div>',
-      '      <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>',
+      '      <dim-item-tag ng-if="vm.featureFlags.tagsEnabled && vm.item.taggable" item="vm.item"></dim-item-tag>',
       '    </div>',
       '  </div>',
       '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
       '    <div dim-percent-width="vm.item.percentComplete"></div>',
       '  </div>',
-      '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
+      '  <form ng-if="vm.featureFlags.tagsEnabled && vm.item.taggable" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
       '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
       '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
       '  <div class="item-details" ng-if="vm.item.classified" translate="ItemService.Classified2"></div>',
@@ -245,4 +245,3 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     });
   };
 }
-

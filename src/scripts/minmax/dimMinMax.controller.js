@@ -6,6 +6,7 @@ angular.module('dimApp')
 
 
 function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
+
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
 
@@ -586,9 +587,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
           // Finish progress
           vm.progress = processedCount / combos;
           console.log('processed', combos, 'combinations.');
-          console.timeEnd('elapsed');
         }
-        console.time('elapsed');
         vm.lockedchanged = false;
         vm.excludedchanged = false;
         vm.perkschanged = false;
@@ -658,6 +657,12 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
         _.each(dimVendorService.vendors, function(vendor) {
           var vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
           vendorItems = vendorItems.concat(vendItems);
+
+          // Exclude felwinters if we have them
+          var felwinters = _.filter(vendorItems, { hash: 2672107540 });
+          if (felwinters.length) {
+            vm.excludeditems.push(...felwinters);
+          }
 
           // Build a map of perks
           _.each(vendItems, function(item) {

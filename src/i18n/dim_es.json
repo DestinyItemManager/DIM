@@ -18,7 +18,7 @@
       "Throttled": "El límite de saturación de la API de Bungie se ha excedido. Por favor espere un poco y vuelva a intentarlo.",
       "NotLoggedIn": "Por favor inicie sesión en Bungie.net para poder usar esta extensión.",
       "Maintenance": "Los servidores de Bungie.net se encuentran en mantenimiento.",
-      "NoAccount": "No se encontró una cuenta de Destiny para esta plataforma. Has elegido la plataforma correcta?",
+      "NoAccount": "No se encontró una cuenta de Destiny para {platform}. Seleccionaste la plataforma correcta?",
       "NoAccountForPlatform": "No encontramos una cuenta de Destiny para {platform}.",
       "NoCookies": "No se encontraron cookies.",
       "NotConnected": "Es posible que no tengas conexión a Internet.",
@@ -326,6 +326,7 @@
       "NoBonus": "Sin beneficio",
       "OfMaxRoll": "{range} del máximo posible de estadísticas",
       "PercentHelp": "Haz click para más información acerca de su calidad estadística.",
+      "Prestige": "Nivel de Prestigio: {level}\n{exp}xp para 5 motas de luz.",
       "Quality": "Calidad Estadística",
       "Strength": "Fuerza",
       "TierProgress": "{progress} por {tier}"
@@ -334,6 +335,11 @@
       "FillStack": "Llena la pila ({amount})",
       "HowMuch": "Cuántos {itemname} quieres mover?",
       "Move": "Mover"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Para re-autorizar google drive, debe reiniciar su navegador",
+     "OneItemTooLarge": "Su archivo de guardado tiene un elemento muy grande. Probablemente un equipo guardado tiene demasiados elementos.",
+     "SaveTooLarge": "Su archivo de guardado es muy grande. Elimine equipos guardados."
    },
    "Tags": {
       "TagItem": "Elemento de Etiqueta",

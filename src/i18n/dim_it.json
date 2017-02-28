@@ -18,7 +18,7 @@
       "Throttled": "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
       "NotLoggedIn": "Effettuare l accesso a Bungie.net per utilizzare questa estensione.",
       "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
-      "NoAccount": "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
+      "NoAccount": "Non è stato trovato alcun account di Destiny su {platform}. Hai selezionato la piattaforma corretta?",
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
@@ -116,6 +116,10 @@
       "TransferItems": "Trasferisci oggetti",
       "Using3": "usa 3"
    },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Si è presentato un errore salvando le informazioni dell'oggetto",
+     "SaveInfoErrorDescription": "Si è presentato un problema salvando informazioni specifiche di DIM riguardo un oggetto. Un problema è dato dal fatto che è presente un limite sul numero di dati che possono essere conservati. Per questo motivo i tag e le note non sono ancora state consentite al di fuori della versione Beta. L'errore era: {error}."
+   },
    "ItemMove": {
       "Consolidate": "{name} consolidati",
       "Distributed": "{name} distribuiti\n {name} sono ora suddivisi in modo equo tra i personaggi.",
@@ -167,7 +171,7 @@
         "NoPerk": "Se un perk non è visibile, significa che non possiedi alcuna armatura con quel perk",
         "MultiPerk":"Per utilizzare un'armatura con più perk fai shift+click sui perk desiderati",
         "Or": "Verranno utilizzate armature, che presentano almeno uno dei perk selezionati",
-        "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati)",
+        "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
         "DragAndDrop": "Trascina e rilascia un oggetto nel suo riquadro per costruire un set con quella specifica armatura",
         "ShiftClick": "Shift+click per escludere un oggetto dal set",
         "HigherTiers": "Utilizzare Tier più alte è meglio",
@@ -176,7 +180,7 @@
         "Discipline": "La Disciplina riduce il tempo di ricarica delle Granate",
         "Strength": "La Forza riduce il tempo di ricarica del Corpo a Corpo",
         "Synergy": "Cerca di trovare armature con perk, che aumentino le munizioni per i tipi di armi che vuoi utilizzare.",
-        "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per creare ogni loadout.",
+        "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
         "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
       },
       "Equip": "Equipaggia sul personaggio corrente",
@@ -231,7 +235,11 @@
       "NameRequired": "E' richiesto un nome.",
       "MakeRoom": "Crea spazio per l'Amministratore",
       "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} female{dalla}} {store}.",
-      "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}."
+      "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}.",
+      "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
+      "SaveErrorDescription": "Impossibile salvare il loadout {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Si è presentato un errore cancellando un loadout",
+      "DeleteErrorDescription": "Impossibile cancellare il loadout {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Costruisco il database di informazioni di Destiny",
@@ -318,6 +326,7 @@
       "NoBonus": "Nessun Bonus",
       "OfMaxRoll": "{range} del roll massimo",
       "PercentHelp": "Clicca per maggiori informazioni riguarso la Qualità delle Statistiche.",
+      "Prestige": "Livello Prestigio: {level}\n{exp}xp fino alle 5 particelle di luce",
       "Quality": "Qualità statistiche",
       "Strength": "Forza",
       "TierProgress": "{progress} per {tier}"
@@ -326,6 +335,11 @@
       "FillStack": "Riempi Stack ({amount})",
       "HowMuch": "Quanti {itemname} vuoi spostare?",
       "Move": "Sposta"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
+     "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
+     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
    },
    "Tags": {
       "TagItem": "Segna Oggetto",
