@@ -33,6 +33,7 @@ Clone the repo:
 Install dependencies:
 
 * `npm install`
+* Windows-based developers will need to install `windows-build-tools` (`npm install --global windows-build-tools`) globally prior to running `npm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
 
 Check code Style
 * `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).

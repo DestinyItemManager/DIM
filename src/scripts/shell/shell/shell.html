@@ -1,0 +1,3 @@
+<div ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.featureFlags.qualityEnabled && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
+  <ui-view></ui-view>
+</div>

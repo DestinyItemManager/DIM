@@ -17,8 +17,7 @@ import 'angular-promise-tracker';
 import 'angular-timer';
 import 'angular-uuid2/dist/angular-uuid2.js';
 
-import { RouterBlockModule } from './blocks/router/router.module';
-import { ShellModule } from './shell/dimShell.module';
+import { ShellModule } from './shell/shell.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -36,7 +35,6 @@ export const DimAppModule = angular
     MessagesModule,
     MomentModule,
     RateLimiterModule,
-    RouterBlockModule,
     ShellModule,
     SliderModule,
     ToasterModule,
@@ -50,7 +48,7 @@ export const DimAppModule = angular
     'dim-oauth'
   ])
   .config(config)
-  .run(routes)
+  .config(routes)
   .run(run)
   .value('dimFeatureFlags', featureFlags)
   .value('dimState', state)

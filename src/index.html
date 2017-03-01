@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="" ng-app="dimApp" ng-csp>
+<html lang="" ng-app="app" ng-csp>
 
   <head>
     <meta charset="utf-8">
@@ -34,12 +34,7 @@
   </head>
 
   <body ng-strict-di>
-    <div ng-controller="dimAppCtrl as app" ng-class="{ 'show-elements': app.settings.showElements, itemQuality: app.featureFlags.qualityEnabled && app.settings.itemQuality, 'show-new-items': app.settings.showNewItems, 'new-item-animated': app.settings.showNewAnimation }">
-      <div class="ng-cloak" ng-click="app.trackActivity()">
-        <div ui-view></div>
-      </div>
-    </div>
-
+    <app></app>
     <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.main.entry}}"></script>
   </body>
 
