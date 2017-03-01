@@ -362,7 +362,7 @@ function VendorService(
       },
       vendorOrder: def.vendorSubcategoryHash + def.vendorOrder,
       faction: def.factionHash, // TODO: show rep!
-      location: defs.VendorCategory[def.vendorCategoryHash].categoryName
+      location: defs.VendorCategory.get(def.vendorCategoryHash).categoryName
     };
 
     const saleItems = flatMap(vendor.saleItemCategories, (categoryData) => {
