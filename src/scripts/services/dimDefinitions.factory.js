@@ -36,7 +36,7 @@ function Definitions($q, dimManifestService) {
       return dimManifestService.getManifest()
         .then(function(db) {
           const defs = {};
-        
+
           // Load objects that lazily load their properties from the sqlite DB.
           lazyTables.forEach(function(tableShort) {
             const table = `Destiny${tableShort}Definition`;
