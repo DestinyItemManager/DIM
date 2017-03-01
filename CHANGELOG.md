@@ -12,6 +12,10 @@
 * Improved website compatibility with Firefox, Safari, and Edge.
 * Many style fixes for Safari.
 * Drag and drop is now supported on touch devices. Press and hold an item to drag it. #1499
+* Armsday packages can no longer be dragged. #1512
+* Add tags and notes to items! This has been in Beta forever but now it's official. Hit ? to see the keyboard shortcuts, and use "tag:" searches to find your tagged gear.
+* Remove Materials Exchange from the beta.
+* Vendors now show where they are, and are sorted better. All the cryptarchs now appear. Engrams waiting to be decrypted aren't shown in the vendor screen.
 
 # 3.16.1
 
