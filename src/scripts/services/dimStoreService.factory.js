@@ -21,13 +21,16 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags
+  dimFeatureFlags,
+  dimSettingsService,
+  $http
 ) {
   var _stores = [];
   var _idTracker = {};
 
   var _removedNewItems = new Set();
 
+  const dimClassifiedDataPromiseURL = $DIM_FLAVOR === 'dev' ? '~app/data/classified.json' : 'https://beta.destinyitemmanager.com/data/classified.json';
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {
@@ -620,6 +623,7 @@ function StoreService(
 
     if (!itemDef.icon && !itemDef.action) {
       itemDef.classified = true;
+      itemDef.classType = 3;
     }
 
     if (!itemDef.icon) {
@@ -636,6 +640,10 @@ function StoreService(
 
     if (!itemDef.itemName) {
       return null;
+    }
+
+    if (itemDef.classified) {
+      itemDef = getClassifiedData(dimClassifiedData, itemDef.hash);
     }
 
     // fix itemDef for defense items with missing nodes
@@ -674,7 +682,7 @@ function StoreService(
     if (currentBucket.id.startsWith('BUCKET_VAULT')) {
       // TODO: Remove this if Bungie ever returns bucket.id for classified
       // items in the vault.
-      if (itemDef.classified) {
+      if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
         if (currentBucket.id.endsWith('WEAPONS')) {
           currentBucket = buckets.byType.Heavy;
         } else if (currentBucket.id.endsWith('ARMOR')) {
@@ -720,7 +728,7 @@ function StoreService(
       name: itemDef.itemName,
       description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
       icon: itemDef.icon,
-      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
+      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
       id: item.itemInstanceId,
       equipped: item.isEquipped,
       equipment: item.isEquipment,
@@ -1611,4 +1619,27 @@ function StoreService(
     return ret;
   }
   // code above is from https://github.com/DestinyTrialsReport
+  function getClassifiedData(dimClassifiedData, hash) {
+    var language = dimSettingsService.language;
+    var classifiedItem = null;
+    if (dimClassifiedData[hash]) { // do we have declassification info for item?
+       // classifiedItem.icon = dimClassifiedData[hash].icon;
+      classifiedItem.itemName = dimClassifiedData[hash].i18n[language].itemName;
+      classifiedItem.itemDescription = dimClassifiedData[hash].i18n[language].itemDescription;
+      classifiedItem.itemTypeName = dimClassifiedData[hash].i18n[language].itemTypeName;
+      classifiedItem.bucketTypeHash = dimClassifiedData[hash].bucketHash;
+      classifiedItem.tierType = dimClassifiedData[hash].tierType;
+      classifiedItem.classType = dimClassifiedData[hash].classType;
+      if (dimClassifiedData[hash].primaryBaseStatHash) {
+        classifiedItem.primaryBaseStatHash = dimClassifiedData[hash].primaryBaseStatHash;
+        classifiedItem.primaryStat = [];
+        classifiedItem.primaryStat.statHash = classifiedItem.primaryBaseStatHash;
+        classifiedItem.primaryStat.value = dimClassifiedData[hash].stats[classifiedItem.primaryStat.statHash].value;
+      }
+      if (dimClassifiedData[hash].stats) {
+        classifiedItem.stats = dimClassifiedData[hash].stats;
+      }
+    }
+    return classifiedItem;
+  }
 }
