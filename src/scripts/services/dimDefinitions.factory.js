@@ -9,7 +9,8 @@ const lazyTables = [
   'TalentGrid',
   'Progression',
   'Record',
-  'ItemCategory'
+  'ItemCategory',
+  'VendorCategory'
 ];
 
 const eagerTables = [

@@ -5,8 +5,6 @@ import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
 // For zip
-window.JSZip = require('jszip');
-window.LZString = require('lz-string');
 require('imports-loader?this=>window!zip-js/WebContent/zip.js');
 
 // require.ensure splits up the sql library so the user only loads it
