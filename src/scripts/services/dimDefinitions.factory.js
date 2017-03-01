@@ -1,4 +1,5 @@
 import angular from 'angular';
+import _ from 'underscore';
 
 const lazyTables = [
   'InventoryItem',
@@ -30,40 +31,44 @@ mod.factory('dimDefinitions', Definitions);
  * above (defs.TalentGrid, etc.).
  */
 function Definitions($q, dimManifestService) {
-  return dimManifestService.getManifest()
-    .then(function(db) {
-      const defs = {};
+  return {
+    getDefinitions: _.memoize(function getDefinitions() {
+      return dimManifestService.getManifest()
+        .then(function(db) {
+          const defs = {};
 
-      // Load objects that lazily load their properties from the sqlite DB.
-      lazyTables.forEach(function(tableShort) {
-        const table = `Destiny${tableShort}Definition`;
-        defs[tableShort] = new Proxy({}, {
-          get: function(target, name) {
-            if (name === 'then') {
-              return undefined;
-            }
+          // Load objects that lazily load their properties from the sqlite DB.
+          lazyTables.forEach(function(tableShort) {
+            const table = `Destiny${tableShort}Definition`;
+            defs[tableShort] = new Proxy({}, {
+              get: function(target, name) {
+                if (name === 'then') {
+                  return undefined;
+                }
 
-            if (this.hasOwnProperty(name)) {
-              return this[name];
-            }
-            const val = dimManifestService.getRecord(db, table, name);
-            this[name] = val;
-            return val;
-          }
+                if (this.hasOwnProperty(name)) {
+                  return this[name];
+                }
+                const val = dimManifestService.getRecord(db, table, name);
+                this[name] = val;
+                return val;
+              }
+            });
+          });
+
+          // Resources that need to be fully loaded (because they're iterated over)
+          eagerTables.forEach(function(tableShort) {
+            const table = `Destiny${tableShort}Definition`;
+            defs[tableShort] = dimManifestService.getAllRecords(db, table);
+          });
+
+          return defs;
+        })
+        .catch(function(e) {
+          console.error(e);
+          return $q.reject(e);
         });
-      });
-
-      // Resources that need to be fully loaded (because they're iterated over)
-      eagerTables.forEach(function(tableShort) {
-        const table = `Destiny${tableShort}Definition`;
-        defs[tableShort] = dimManifestService.getAllRecords(db, table);
-      });
-
-      return defs;
     })
-    .catch(function(e) {
-      console.error(e);
-      return $q.reject(e);
-    });
+  };
 }
 
