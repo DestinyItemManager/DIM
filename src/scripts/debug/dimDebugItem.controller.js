@@ -8,7 +8,7 @@ function dimDebugItemCtrl($scope, $state, dimStoreService, dimItemService, dimDe
   dimFeatureFlags.debugMode = true; // if you got here, turn on debug mode
 
   function init() {
-    dimDefinitions.then((defs) => {
+    dimDefinitions.getDefinitions().then((defs) => {
       vm.fullItem = dimItemService.getItem({ id: $stateParams.itemId });
       if (!vm.fullItem) {
         return;

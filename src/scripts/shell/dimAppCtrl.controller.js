@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
-function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+function DimApp(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   'ngInject';
 
   var vm = this;
@@ -169,12 +169,6 @@ function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTrack
         result.closePromise.then(function() {
           result = null;
         });
-
-        // if (ga) {
-        // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
-        // Send a virtual pageview event, even though this is a popup
-        // ga('send', 'pageview', { page: '/' + name });
-        // }
       }
     };
   }
@@ -199,32 +193,4 @@ function DimApp(dimActivityTracker, dimState, ngDialog, $rootScope, loadingTrack
   vm.refresh = function refresh() {
     loadingTracker.addPromise(dimStoreService.reloadStores());
   };
-
-  // Don't refresh more than once a minute
-  var refresh = _.throttle(vm.refresh, 60 * 1000);
-
-  const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
-  const activeWithinLastHour = dimActivityTracker.activeWithinTimespan.bind(dimActivityTracker, HOUR_IN_MILLISECONDS);
-
-  vm.trackActivity = dimActivityTracker.track.bind(dimActivityTracker);
-  vm.startAutoRefreshTimer = function() {
-    var secondsToWait = 360;
-
-    $rootScope.autoRefreshTimer = $interval(function() {
-      // Only Refresh If We're Not Already Doing Something
-      // And We're Not Inactive
-      if (!loadingTracker.active() && activeWithinLastHour() && document.visibilityState === 'visible') {
-        refresh();
-      }
-    }, secondsToWait * 1000);
-  };
-
-  vm.startAutoRefreshTimer();
-
-  // Refresh when the user comes back to the page
-  document.addEventListener("visibilitychange", function() {
-    if (!loadingTracker.active() && activeWithinLastHour() && document.visibilityState === 'visible') {
-      refresh();
-    }
-  }, false);
 }
