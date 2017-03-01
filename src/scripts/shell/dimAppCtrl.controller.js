@@ -9,6 +9,11 @@ function DimApp(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadi
 
   var vm = this;
 
+  // Variables for templates that webpack does not automatically correct.
+  vm.$DIM_VERSION = $DIM_VERSION;
+  vm.$DIM_FLAVOR = $DIM_FLAVOR;
+  vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
+
   vm.loadingTracker = loadingTracker;
   vm.platforms = [];
 
