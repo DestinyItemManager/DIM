@@ -575,7 +575,11 @@ function StoreService(
       })
       .then(function() {
         try {
-          $q.all(dimDestinyTrackerService.bulkFetch(_stores))
+          var platform = dimPlatformService.getActive();
+          var membershipType = null;
+          var membershipId = null;
+
+          $q.all(dimDestinyTrackerService.bulkFetch(membershipType, membershipId, _stores))
           .then((bulkRankings) => attachRankings(bulkRankings));
         }
         catch (e) {
