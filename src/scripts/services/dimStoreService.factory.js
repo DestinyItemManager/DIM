@@ -574,9 +574,14 @@ function StoreService(
         return stores;
       })
       .then(function() {
-        var bulkRankings = $q.all(dimDestinyTrackerService.bulkFetch(_stores));
+        try {
+          var bulkRankings = $q.all(dimDestinyTrackerService.bulkFetch(_stores));
         
-        attachRankings(bulkRankings);
+          attachRankings(bulkRankings);
+        }
+        catch (e) {
+          console.error("Failed to call Destiny Tracker service - " + JSON.stringify(e);
+        }
       })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
