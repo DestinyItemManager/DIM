@@ -574,7 +574,9 @@ function StoreService(
         return stores;
       })
       .then(function() {
-        dimDestinyTrackerService.bulkFetch(_stores);
+        var bulkRankings = $q.all(dimDestinyTrackerService.bulkFetch(_stores));
+        
+        attachRankings(bulkRankings);
       })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
@@ -597,6 +599,17 @@ function StoreService(
 
   function getStore(id) {
     return _.find(_stores, { id: id });
+  }
+
+  function attachRankings(bulkRankings) {
+    bulkRankings.forEach(function(bulkRanking) {
+      _stores.forEach(function(storeItem) {
+        if(storeItem.hash == bulkRanking.hash) {
+          //bugbug: what's the actual propery?
+          storeItem.ranking = bulkRanking.ranking;
+        }
+      });
+    });
   }
 
   // Set an ID for the item that should be unique across all items
