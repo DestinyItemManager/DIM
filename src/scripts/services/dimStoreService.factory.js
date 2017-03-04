@@ -575,12 +575,11 @@ function StoreService(
       })
       .then(function() {
         try {
-          var bulkRankings = $q.all(dimDestinyTrackerService.bulkFetch(_stores));
-        
-          attachRankings(bulkRankings);
+          $q.all(dimDestinyTrackerService.bulkFetch(_stores))
+          .then((bulkRankings) => attachRankings(bulkRankings));
         }
         catch (e) {
-          console.error("Failed to call Destiny Tracker service - " + JSON.stringify(e);
+          console.error("Failed to call Destiny Tracker service - " + e.stack);
         }
       })
       .catch(function(e) {
@@ -607,6 +606,10 @@ function StoreService(
   }
 
   function attachRankings(bulkRankings) {
+    if(!bulkRankings) {
+      return;
+    }
+
     bulkRankings.forEach(function(bulkRanking) {
       _stores.forEach(function(storeItem) {
         if(storeItem.hash == bulkRanking.hash) {
