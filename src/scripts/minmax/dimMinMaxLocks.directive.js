@@ -1,5 +1,5 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 var MinMaxLocks = {
   controller: MinMaxLocksCtrl,
@@ -91,6 +91,7 @@ function MinMaxLocksCtrl($scope, hotkeys, ngDialog) {
         scope: angular.extend($scope.$new(true), {}),
         controllerAs: 'vmd',
         controller: function($document) {
+          'ngInject';
           var vmd = this;
 
           $document.keyup(function(e) {

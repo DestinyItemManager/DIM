@@ -1,13 +1,13 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-
-function SettingsController(dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
+function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
   var vm = this;
 
   vm.featureFlags = dimFeatureFlags;
+  vm.loadingTracker = loadingTracker;
 
   $scope.$watchCollection('vm.settings', function() {
     dimSettingsService.save();
@@ -28,6 +28,9 @@ function SettingsController(dimSettingsService, $scope, SyncService, dimCsvServi
   };
 
   vm.settings = dimSettingsService;
+
+  // Edge doesn't support these
+  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('--fake-var', 0);
 
   vm.showSync = function() {
     return SyncService.drive();
@@ -83,4 +86,3 @@ function SettingsController(dimSettingsService, $scope, SyncService, dimCsvServi
     reader.readAsText(angular.element('#importFile')[0].files[0]);
   };
 }
-

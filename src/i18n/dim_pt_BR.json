@@ -1,5 +1,4 @@
 {
-   "Level": "Nível",
    "Bucket": {
       "Armor": "Armaduras",
       "General": "Geral",
@@ -19,7 +18,7 @@
       "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
       "NotLoggedIn": "Por favor, faça seu login no Bungie.net para utilizar esta extensão.",
       "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
-      "NoAccount": "Nenhuma conta de Destiny foi encontrada para esta plataforma. Você selecionou a plataforma correta?",
+      "NoAccount": "Nenhuma conta de Destiny foi encontrada no {platform}. Você selecionou a plataforma correta?",
       "NoAccountForPlatform": "Incapaz de encontrar uma conta de Destiny no {platform}.",
       "NoCookies": "Nenhum cookie encontrado.",
       "NotConnected": "Você deverá estar sem conexão com a Internet.",
@@ -80,7 +79,7 @@
       "FilterHelp": "Buscar por item/perk ou is:arc",
       "MaterialsExchange": "Ranks de facção disponíveis",
       "Refresh": "Atualizar dados do Destiny",
-      "SupportDIM": "Apoie o DIM"
+      "SupportDIM": "Apoie"
    },
    "Help": {
       "BackToDIM": "Voltar para o DIM",
@@ -92,8 +91,8 @@
       "NeverShow": "Não mostre isso novamente.",
       "UpgradeChrome": "Por favor, atualizar o Chrome.",
       "Version": {
-         "Beta": "Beta foi atualizado para v$DIM_VERSION",
-         "Stable": "DIM v$DIM_VERSION lançado"
+         "Beta": "Beta foi atualizado para v{version}",
+         "Stable": "DIM v{version} lançado"
       },
       "Xur": "Xûr chegou"
    },
@@ -116,6 +115,10 @@
       "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
       "TransferItems": "Transferir itens",
       "Using3": "usando 3"
+   },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Erro salvando informação de item.",
+     "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro era: {error}."
    },
    "ItemMove": {
       "Consolidate": "{name} consolidado",
@@ -162,7 +165,24 @@
          "HelpCurrent": "Calcular set com os níveis de defesa reais."
       },
       "IncludeRare": "Incluir itens raros (azuis)",
-      "Help": "Precisa de ajuda?",
+      "Help": {
+        "Help": "Precisa de ajuda?",
+        "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks.",
+        "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk.",
+        "MultiPerk":"Se você quiser usar uma armadura com múltiplos perks juntos, Shift+clique nos perks desejados.",
+        "Or": "Armadura com qualquer um destes perks será usada (\"ou\")",
+        "And": "Armadura com todos esses perks será usada (\"e\")",
+        "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento.",
+        "ShiftClick": "Shift+clique em um item para construir sets sem aquele equipamento",
+        "HigherTiers": "Tiers mais altos são melhores",
+        "Tier11Example": "4/5/2 (um set Tier 11) significa 4 Intelecto, 5 Disciplina, 2 Força (4+5+2 = Tier 11)",
+        "Intellect": "Intelecto acelera o tempo de recarga da Super.",
+        "Discipline": "Disciplina acelera o tempo de recarga de granadas.",
+        "Strength": "Força acelera o tempo de recarga do corpo-a-corpo.",
+        "Synergy": "Tente encontrar uma armadura com perks que aumentem a quantidade de munição das armas que você mais usa.",
+        "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
+        "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumentam."
+      },
       "Equip": "Equipar no personagem atual",
       "ShowAllConfigs": "Exibir todas as configurações",
       "ShowConfigs": "Exibir configurações",
@@ -215,7 +235,11 @@
       "NameRequired": "Um nome é obrigatório.",
       "MakeRoom": "Abrir espaço para itens do Correio",
       "MakeRoomDone": "Foi aberto espaço para {postmasterNum, plural, =1{1 item de Correio} other{# itens de Correio}} movendo {movedNum, plural, =1{1 item} other{# itens}} do {store}.",
-      "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}."
+      "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}.",
+      "SaveErrorTitle": "Erro ao salvar o set",
+      "SaveErrorDescription": "Incapaz de salvar o set {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Erro ao deletar o set set",
+      "DeleteErrorDescription": "Incapaz de deletar o set {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Construindo banco de dados de informações",
@@ -298,9 +322,11 @@
    "Stats": {
       "Discipline": "Disciplina",
       "Intellect": "Intelecto",
+      "Level": "Nível",
       "NoBonus": "Sem bônus",
       "OfMaxRoll": "{range} do valor máximo",
       "PercentHelp": "Clique para mais informações sobre Níveis de Qualidade.",
+      "Prestige": "Nível de prestígio: {level}\n{exp}xp para 5 fragmentos de luz.",
       "Quality": "Níveis de qualidade",
       "Strength": "Força",
       "TierProgress": "{progress} para {tier}"
@@ -309,6 +335,11 @@
       "FillStack": "Encher Pilha ({amount})",
       "HowMuch": "Quantos {itemname} para transferir?",
       "Move": "Transferir"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Para reautorizar o Google Drive você deverá reiniciar seu navegador.",
+     "OneItemTooLarge": "Seu arquivo salvo possui algum item que é muito grande. Muito provavelmente um set salvo possui muitos itens.",
+     "SaveTooLarge": "Seu arquivo salvo é muito grande. Remova alguns sets salvos."
    },
    "Tags": {
       "TagItem": "Marcar item",
@@ -330,6 +361,40 @@
       "Bounties": "Contratos",
       "ShadersAndEmblems": "Tonalizadores & Emblemas",
       "Emotes": "Gestos"
+   },
+   "Views": {
+     "About":{
+       "BungieCopyright": "Todo o conteúdo e imagens são propriedade da Bungie. Por favor, contate-nos no caso de qualquer problema.",
+       "ContactUs":"Fale Conosco",
+       "FAQ": "FAQ",
+       "FAQAccess": "Como o DIM obtém acesso aos meus dados do Destiny?",
+       "FAQAccessAnswer": "Qualquer extensão do Chrome pode solicitar acesso às informações armazenadas em seu computador. Quando você faz seu login no Bungie.net você é solicitado a armazenar um token (um cookie) que é gerado exclusivamente para a sua conta. Você usa esse token para se identificar com segurança com os servidores da Bungie, pois usar este token é muito mais seguro do que enviar seu usuário e senha a cada requisição. O DIM usa esse token para se comunicar com a Bungie e obter informações dos seus personagens e itens.",
+       "FAQDupeGally": "Ei, o DIM duplicou minha Gjallarhorn!",
+       "FAQDupeGallyAnswer": "Não, não duplicamos. Temos certeza disso.",
+       "FAQKeyboard": "O DIM suporta teclas de atalhos?",
+       "FAQKeyboardAnswer": "Sim! Pressione \"?\" para ver a lista de teclas de atalhos disponíveis.",
+       "FAQLogout": "Como posso fazer logout do DIM?",
+       "FAQLogoutAnswer": "Sua sessão está vinculada ao Bungie.net. Se você fizer logout do Bungie.net automaticamente você fará logout do DIM também.",
+       "FAQLostItem": "Eu perdi um item usando a ferramenta de vocês!",
+       "FAQLostItemAnswer": "Muito provavelmente sua transferência falhou e seu item está no Cofre ou em outro personagem. Você pode usar o campo de busca para encontrá-lo. Caso não encontre, pressione F5 para atualizar a página. Verifique no Bungie.net ou no próprio jogo se o item realmente existe. Temos plena certeza que ele está em algum lugar.",
+       "GitHub": "GitHub",
+       "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no GitHub.",
+       "GitHubRepo": "Repositório no GitHub",
+       "Header": "Sobre o Destiny Item Manager (DIM)",
+       "HowItsMade": "O DIM tem como base os mesmos serviços do Bungie.net e o aplicativo Destiny Companion. O DIM pode acessar os itens em seu inventário e cofre em ambas as plataformas PlayStation e Xbox. Você pode então arrastar e soltar os itens para qualquer personagem ou local que deseja mover.",
+       "Reddit": "Reddit",
+       "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
+       "Twitter": "Twitter",
+       "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
+       "Version": "Versão",
+       "Transifex": "Junte-se à equipe de tradução!",
+       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você quer ver o DIM traduzido para o seu idioma, junte-se à equipe."
+     },
+     "Support": {
+       "Support": "Apoie o DIM",
+       "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa."
+     },
+     "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM."
    },
    "TrialsCard": {
       "FiveWins": "Recompensa de 5 vitórias (armadura)",

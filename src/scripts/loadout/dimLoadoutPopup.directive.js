@@ -1,6 +1,6 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum, flatMap } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum, flatMap } from '../util';
 
 angular.module('dimApp')
   .directive('dimLoadoutPopup', LoadoutPopup);
@@ -82,7 +82,13 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
 
   vm.deleteLoadout = function deleteLoadout(loadout) {
     if ($window.confirm($translate.instant('Loadouts.ConfirmDelete', { name: loadout.name }))) {
-      dimLoadoutService.deleteLoadout(loadout);
+      dimLoadoutService.deleteLoadout(loadout)
+        .catch((e) => {
+          toaster.pop('error',
+                      $translate.instant('Loadouts.DeleteErrorTitle'),
+                      $translate.instant('Loadouts.DeleteErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+          console.error(e);
+        });
     }
   };
 
@@ -299,7 +305,7 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
   vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
     ngDialog.closeAll();
 
-    dimBucketService.then((buckets) => {
+    dimBucketService.getBuckets().then((buckets) => {
       const postmasterItems = flatMap(buckets.byCategory.Postmaster,
                                       (bucket) => vm.store.buckets[bucket.id]);
       const postmasterItemCountsByType = _.countBy(postmasterItems,

@@ -1,15 +1,15 @@
-const angular = require('angular');
+import angular from 'angular';
 
 angular.module('dim-oauth')
   .service('OAuthTokenService', OAuthTokenService);
 
-function OAuthTokenService(storage) {
+function OAuthTokenService(localStorageService) {
   function getToken() {
-    return storage.get('authorization');
+    return localStorageService.get('authorization');
   }
 
   function setToken(token) {
-    storage.set('authorization', token);
+    localStorageService.set('authorization', token);
   }
 
   function getAccessToken() {
@@ -29,7 +29,7 @@ function OAuthTokenService(storage) {
   }
 
   function removeToken() {
-    storage.remove('authorization');
+    localStorageService.remove('authorization');
   }
 
   function getTokenDate(token, property, offset = 0) {
@@ -45,8 +45,8 @@ function OAuthTokenService(storage) {
     const expires = getTokenDate(token, 'expires', -1800000).valueOf();
     const now = (new Date()).valueOf();
 
-    if (token)
-      { console.log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60)); }
+    // if (token)
+    //   { console.log("Expires: " + token.name + " " + ((expires <= now)) + " " + ((expires - now) / 1000 / 60)); }
 
     return (expires <= now);
   }
@@ -55,8 +55,8 @@ function OAuthTokenService(storage) {
     const readyIn = getTokenDate(token, 'readyin').valueOf();
     const now = (new Date()).valueOf();
 
-    if (token)
-      { console.log("ReadyIn: " + token.name + " " + (readyIn <= now) + " " + ((readyIn - now) / 1000 / 60)); }
+    // if (token)
+    //   { console.log("ReadyIn: " + token.name + " " + (readyIn <= now) + " " + ((readyIn - now) / 1000 / 60)); }
 
     return (readyIn <= now);
   }

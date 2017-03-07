@@ -1,6 +1,7 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum, count } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum, count } from '../util';
+import idbKeyval from 'idb-keyval';
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService);
@@ -116,7 +117,7 @@ function StoreService(
       }
     },
     updateCharacterInfoFromEquip: function(characterInfo) {
-      dimDefinitions.then((defs) => this.updateCharacterInfo(defs, characterInfo));
+      dimDefinitions.getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
     },
     updateCharacterInfo: function(defs, characterInfo) {
       this.level = characterInfo.characterLevel;
@@ -276,7 +277,7 @@ function StoreService(
   // items in the stores - to do that, call reloadStores.
   function updateCharacters() {
     return $q.all([
-      dimDefinitions,
+      dimDefinitions.getDefinitions(),
       dimBungieService.getCharacters(dimPlatformService.getActive())
     ]).then(function([defs, bungieStores]) {
       _.each(_stores, function(dStore) {
@@ -321,14 +322,13 @@ function StoreService(
       }
     }
 
-    console.time('Load stores (Bungie API)');
-    _reloadPromise = $q.all([dimDefinitions,
-      dimBucketService,
+    _reloadPromise = $q.all([
+      dimDefinitions.getDefinitions(),
+      dimBucketService.getBuckets(),
       loadNewItems(activePlatform),
       dimItemInfoService(activePlatform),
       dimBungieService.getStores(activePlatform)])
       .then(function([defs, buckets, newItems, itemInfoService, rawStores]) {
-        console.timeEnd('Load stores (Bungie API)');
         if (activePlatform !== dimPlatformService.getActive()) {
           throw new Error("Active platform mismatch");
         }
@@ -474,7 +474,7 @@ function StoreService(
 
             if (store.progression) {
               store.progression.progressions.forEach(function(prog) {
-                angular.extend(prog, defs.Progression[prog.progressionHash], progressionMeta[prog.progressionHash]);
+                angular.extend(prog, defs.Progression.get(prog.progressionHash), progressionMeta[prog.progressionHash]);
                 const faction = _.find(defs.Faction, { progressionHash: prog.progressionHash });
                 if (faction) {
                   prog.faction = faction;
@@ -607,7 +607,7 @@ function StoreService(
   }
 
   function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
-    var itemDef = defs.InventoryItem[item.itemHash];
+    var itemDef = defs.InventoryItem.get(item.itemHash);
     // Missing definition?
     if (!itemDef) {
       // maybe it is redacted...
@@ -690,7 +690,7 @@ function StoreService(
     var itemType = normalBucket.type || 'Unknown';
 
     const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-      const category = defs.ItemCategory[c];
+      const category = defs.ItemCategory.get(c);
       return category ? category.identifier : null;
     })) : [];
 
@@ -742,6 +742,7 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
+      taggable: item.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'),
       trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
       tracked: item.state === 2,
       locked: item.locked,
@@ -758,7 +759,7 @@ function StoreService(
     }
 
     if (createdItem.primStat) {
-      createdItem.primStat.stat = defs.Stat[createdItem.primStat.statHash];
+      createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
     }
 
     // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
@@ -811,12 +812,12 @@ function StoreService(
       try {
         const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
 
-        recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(defs.Record[record.recordHash], record));
+        recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(defs.Record.get(record.recordHash), record));
 
         createdItem.objectives = buildRecords(recordBook, defs.Objective);
 
         if (recordBook.progression) {
-          recordBook.progression = angular.extend(recordBook.progression, defs.Progression[recordBook.progression.progressionHash]);
+          recordBook.progression = angular.extend(recordBook.progression, defs.Progression.get(recordBook.progression.progressionHash));
           createdItem.progress = recordBook.progression;
           createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step.progressTotal, 0);
         } else {
@@ -860,8 +861,8 @@ function StoreService(
   }
 
   function buildTalentGrid(item, talentDefs, progressDefs) {
-    var talentGridDef = talentDefs[item.talentGridHash];
-    if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length || !progressDefs[item.progression.progressionHash]) {
+    var talentGridDef = talentDefs.get(item.talentGridHash);
+    if (!item.progression || !talentGridDef || !item.nodes || !item.nodes.length || !progressDefs.get(item.progression.progressionHash)) {
       return undefined;
     }
 
@@ -870,7 +871,7 @@ function StoreService(
 
     // progressSteps gives the XP needed to reach each level, with
     // the last element repeating infinitely.
-    var progressSteps = progressDefs[item.progression.progressionHash].steps;
+    var progressSteps = progressDefs.get(item.progression.progressionHash).steps;
     // Total XP to get to specified level
     function xpToReachLevel(level) {
       if (level === 0) {
@@ -887,7 +888,7 @@ function StoreService(
     var possibleNodes = talentGridDef.nodes;
 
     // var featuredPerkNames = item.perks.map(function(perk) {
-    //   var perkDef = perkDefs[perk.perkHash];
+    //   var perkDef = perkDefs.get(perk.perkHash);
     //   return perkDef ? perkDef.displayName : 'Unknown';
     // });
 
@@ -1051,13 +1052,13 @@ function StoreService(
     ];
   }
 
-  function buildRecords(recordBook, objectiveDef) {
+  function buildRecords(recordBook, objectiveDefs) {
     if (!recordBook.records || !recordBook.records.length) {
       return undefined;
     }
 
     let processRecord = (recordBook, record) => {
-      var def = objectiveDef[record.objectives[0].objectiveHash];
+      var def = objectiveDefs.get(record.objectives[0].objectiveHash);
 
       var display;
       if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
@@ -1080,13 +1081,13 @@ function StoreService(
     return _.map(recordBook.records, processRecord);
   }
 
-  function buildObjectives(objectives, objectiveDef) {
+  function buildObjectives(objectives, objectiveDefs) {
     if (!objectives || !objectives.length) {
       return undefined;
     }
 
     return objectives.map(function(objective) {
-      var def = objectiveDef[objective.objectiveHash];
+      var def = objectiveDefs.get(objective.objectiveHash);
 
       return {
         description: '',
@@ -1289,13 +1290,14 @@ function StoreService(
         : light < 319 ? 39
         : light < 325 ? 40
         : light < 330 ? 41
-        : 42;
+        : light < 336 ? 42
+        : 43;
     }
     console.warn('item bonus not found', type);
     return 0;
   }
 
-  function buildStats(item, itemDef, statDef, grid, type) {
+  function buildStats(item, itemDef, statDefs, grid, type) {
     if (!item.stats || !item.stats.length || !itemDef.stats) {
       return undefined;
     }
@@ -1312,7 +1314,7 @@ function StoreService(
     }
 
     return _.sortBy(_.compact(_.map(itemDef.stats, function(stat) {
-      var def = statDef[stat.statHash];
+      var def = statDefs.get(stat.statHash);
       if (!def) {
         return undefined;
       }
@@ -1435,15 +1437,16 @@ function StoreService(
 
   function loadNewItems(activePlatform) {
     if (activePlatform) {
-      return SyncService.get().then(function processCachedNewItems(data) {
-        return new Set(data[newItemsKey()]);
-      });
+      const key = newItemsKey();
+      // Clean out old new-items from the Sync Service, we store in IndexedDB now.
+      SyncService.remove(key);
+      return idbKeyval.get(key).then((v) => v || new Set());
     }
     return $q.resolve(new Set());
   }
 
   function saveNewItems(newItems) {
-    SyncService.set({ [newItemsKey()]: [...newItems] });
+    return idbKeyval.set(newItemsKey(), newItems);
   }
 
   function newItemsKey() {
@@ -1453,8 +1456,8 @@ function StoreService(
 
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
     return $q.all([
-      dimDefinitions,
-      dimBucketService,
+      dimDefinitions.getDefinitions(),
+      dimBucketService.getBuckets(),
       previousItems,
       newItems,
       itemInfoService])
@@ -1582,7 +1585,7 @@ function StoreService(
         return;
       }
       statHash.value = stat.value;
-      const statDef = statDefs[stat.statHash];
+      const statDef = statDefs.get(stat.statHash);
       if (statDef) {
         statHash.name = statDef.statName; // localized name
       }
@@ -1609,4 +1612,3 @@ function StoreService(
   }
   // code above is from https://github.com/DestinyTrialsReport
 }
-

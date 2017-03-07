@@ -1,1 +1,7 @@
+# Default core.autocrlf on
+* text=auto
+
 CHANGELOG.md merge=union
+
+*.png binary
+*.jpg binary

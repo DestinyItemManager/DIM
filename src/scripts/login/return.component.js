@@ -1,5 +1,5 @@
-const angular = require('angular');
-const simpleQueryString = require('simple-query-string');
+import angular from 'angular';
+import simpleQueryString from 'simple-query-string';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,
@@ -20,7 +20,17 @@ function ReturnController($http) {
     ctrl.state = queryString.state;
     ctrl.authorized = (ctrl.code.length > 0);
 
-    const apiKey = localStorage.apiKey;
+    var apiKey;
+
+    if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+      if (window.chrome && window.chrome.extension) {
+        apiKey = $DIM_API_KEY;
+      } else {
+        apiKey = $DIM_WEB_API_KEY;
+      }
+    } else {
+      apiKey = localStorage.apiKey;
+    }
 
     $http({
       method: 'POST',
@@ -43,7 +53,9 @@ function ReturnController($http) {
 
         localStorage.authorization = JSON.stringify(authorization);
 
-        window.location = "/index.html";
+        window.location = "/";
+      } else {
+        console.error(response.data.Message, response);
       }
     });
   };

@@ -1,12 +1,35 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
+function DimApp(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+  'ngInject';
 
-function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   var vm = this;
+
+  // Variables for templates that webpack does not automatically correct.
+  vm.$DIM_VERSION = $DIM_VERSION;
+  vm.$DIM_FLAVOR = $DIM_FLAVOR;
+  vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
+
+  vm.loadingTracker = loadingTracker;
+  vm.platforms = [];
+
+  vm.platformChange = function platformChange(platform) {
+    loadingTracker.addPromise(dimPlatformService.setActive(platform));
+  };
+
+  $scope.$on('dim-platforms-updated', function(e, args) {
+    vm.platforms = args.platforms;
+  });
+
+  $scope.$on('dim-active-platform-updated', function(e, args) {
+    dimState.active = vm.currentPlatform = args.platform;
+  });
+
+  loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
   vm.settings = dimSettingsService;
   $scope.$watch('app.settings.itemSize', function(size) {
@@ -59,24 +82,26 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
   });
 
   if (vm.featureFlags.tagsEnabled) {
-  /* Add each hotkey manually until hotkeys can be translated.
-      _.each(dimSettingsService.itemTags, (tag) => {
-        if (tag.hotkey) {
-          hotkeys.add({
-            combo: [tag.hotkey],
-            description: "Mark item as '" + tag.label + "'",
-            callback: function() {
-              $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
-            }
-          });
-        }
-      });
-  */
+    /* Add each hotkey manually until hotkeys can be translated.
+        _.each(dimSettingsService.itemTags, (tag) => {
+          if (tag.hotkey) {
+            hotkeys.add({
+              combo: [tag.hotkey],
+              description: "Mark item as '" + tag.label + "'",
+              callback: function() {
+                $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
+              }
+            });
+          }
+        });
+    */
     hotkeys.add({
       combo: ['!'],
       description: "Mark item as 'Favorite'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'favorite' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'favorite'
+        });
       }
     });
 
@@ -84,7 +109,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
       combo: ['@'],
       description: "Mark item as 'Keep'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'keep' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'keep'
+        });
       }
     });
 
@@ -92,7 +119,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
       combo: ['#'],
       description: "Mark item as 'Junk'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'junk' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'junk'
+        });
       }
     });
 
@@ -100,7 +129,9 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
       combo: ['$'],
       description: "Mark item as 'Infuse'",
       callback: function() {
-        $rootScope.$broadcast('dim-item-tag', { tag: 'infuse' });
+        $rootScope.$broadcast('dim-item-tag', {
+          tag: 'infuse'
+        });
       }
     });
   }
@@ -125,19 +156,17 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
    * Show a popup dialog containing the given template. Its class
    * will be based on the name.
    */
-  function showPopupFunction(name, translate) {
+  function showPopupFunction(name) {
     var result;
     return function(e) {
       e.stopPropagation();
-
-      var language = translate ? vm.settings.language + '/' : ''; // set language
 
       if (result) {
         result.close();
       } else {
         ngDialog.closeAll();
         result = ngDialog.open({
-          template: require('app/views/' + language + name + '.template.html'),
+          template: require('app/views/' + name + '.template.html'),
           className: name,
           appendClassName: 'modal-dialog'
         });
@@ -145,19 +174,13 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
         result.closePromise.then(function() {
           result = null;
         });
-
-        // if (ga) {
-          // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
-          // Send a virtual pageview event, even though this is a popup
-          // ga('send', 'pageview', { page: '/' + name });
-        // }
       }
     };
   }
 
   vm.showSetting = showPopupFunction('settings');
-  vm.showAbout = showPopupFunction('about', true);
-  vm.showSupport = showPopupFunction('support', true);
+  vm.showAbout = showPopupFunction('about');
+  vm.showSupport = showPopupFunction('support');
   vm.showFilters = showPopupFunction('filters');
   vm.showXur = showPopupFunction('xur');
   vm.showMatsExchange = showPopupFunction('mats-exchange');
@@ -175,28 +198,4 @@ function DimApp(ngDialog, $rootScope, loadingTracker, dimPlatformService, $inter
   vm.refresh = function refresh() {
     loadingTracker.addPromise(dimStoreService.reloadStores());
   };
-
-  // Don't refresh more than once a minute
-  var refresh = _.throttle(vm.refresh, 60 * 1000);
-
-  vm.startAutoRefreshTimer = function() {
-    var secondsToWait = 360;
-
-    $rootScope.autoRefreshTimer = $interval(function() {
-      // Only Refresh If We're Not Already Doing Something
-      // And We're Not Inactive
-      if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
-        refresh();
-      }
-    }, secondsToWait * 1000);
-  };
-
-  vm.startAutoRefreshTimer();
-
-  // Refresh when the user comes back to the page
-  document.addEventListener("visibilitychange", function() {
-    if (!loadingTracker.active() && !$rootScope.isUserInactive() && document.visibilityState === 'visible') {
-      refresh();
-    }
-  }, false);
 }

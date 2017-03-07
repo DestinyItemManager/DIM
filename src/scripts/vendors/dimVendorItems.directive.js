@@ -1,6 +1,6 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum } from '../util';
 
 var VendorItem = {
   bindings: {
@@ -33,12 +33,13 @@ var VendorItems = {
     extraMovePopupClass: '<'
   },
   template: [
-    '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'-eventVendor\',\'vendorOrder\'] track by vendor.hash">',
+    '<div class="vendor-char-items" ng-repeat="(vendorHash, vendor) in vm.vendors | values | vendorTab:vm.activeTab | orderBy:[\'vendorOrder\'] track by vendor.hash">',
     '  <div class="title">',
     '    <div class="collapse-handle" ng-click="vm.toggleSection(vendorHash)">',
     '      <i class="fa collapse" ng-class="vm.settings.collapsedSections[vendorHash] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i>',
     '      <img class="vendor-icon" ng-src="{{::vendor.icon | bungieIcon}}" />',
     '      {{::vendor.name}}',
+    '      <span class="vendor-location">{{::vendor.location}}</span>',
     '    </div>',
     '    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} <span translate="Vendors.Day" translate-values="{ numDays: days }"></span> {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
     '  </div>',

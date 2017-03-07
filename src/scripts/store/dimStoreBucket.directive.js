@@ -1,5 +1,5 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .directive('dimStoreBucket', StoreBucket);
@@ -144,6 +144,7 @@ function StoreBucketCtrl($scope,
         scope: $scope,
         controllerAs: 'vm',
         controller: function($scope) {
+          'ngInject';
           var vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;

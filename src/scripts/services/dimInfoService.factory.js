@@ -1,5 +1,5 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimInfoService', InfoService);
@@ -62,7 +62,7 @@ function InfoService(toaster, $http, $translate, SyncService) {
     // Remove prefs for "don't show this again"
     resetHiddenInfos: function() {
       SyncService.get().then(function(data) {
-        SyncService.set(_.omit(data, (v, k) => k.startsWith('info.')), true);
+        SyncService.remove(_.filter(_.keys(data), (k) => k.startsWith('info.')));
       });
     }
   };

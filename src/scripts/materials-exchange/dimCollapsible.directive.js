@@ -1,4 +1,4 @@
-const angular = require('angular');
+import angular from 'angular';
 
 angular.module('dimApp').directive('dimCollapsibleSection', Section);
 
@@ -34,4 +34,3 @@ function SectionCtrl() {
     vm.collapsed = !vm.collapsed;
   };
 }
-

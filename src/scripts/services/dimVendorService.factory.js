@@ -1,7 +1,7 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum, flatMap } = require('../util');
-const idbKeyval = require('idb-keyval');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum, flatMap } from '../util';
+import idbKeyval from 'idb-keyval';
 
 angular.module('dimApp')
   .factory('dimVendorService', VendorService);
@@ -59,8 +59,14 @@ function VendorService(
   // Vendors we don't want to load by default
   const vendorBlackList = [
     2021251983, // Postmaster,
-    4269570979, // Cryptarch (Tower)
-    1303406887 // Cryptarch (Reef)
+  ];
+
+  // Hashes for 'Decode Engram'
+  const categoryBlacklist = [
+    3574600435,
+    3612261728,
+    1333567905,
+    2634310414
   ];
 
   let _reloadPromise = null;
@@ -115,7 +121,7 @@ function VendorService(
 
     const characters = _.reject(stores, 'isVault');
 
-    _reloadPromise = dimDefinitions
+    _reloadPromise = dimDefinitions.getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
@@ -340,7 +346,7 @@ function VendorService(
   }
 
   function processVendor(vendor, vendorDef, defs, store) {
-    var def = vendorDef.summary;
+    const def = vendorDef.summary;
     const createdVendor = {
       def: vendorDef,
       hash: vendorDef.hash,
@@ -354,9 +360,9 @@ function VendorService(
           factionAligned: vendor.factionAligned
         }
       },
-      eventVendor: def.mapSectionIdentifier === 'EVENT',
-      vendorOrder: (def.mapSectionOrder * 1000) + def.vendorOrder,
-      faction: def.factionHash // TODO: show rep!
+      vendorOrder: def.vendorSubcategoryHash + def.vendorOrder,
+      faction: def.factionHash, // TODO: show rep!
+      location: defs.VendorCategory.get(def.vendorCategoryHash).categoryName
     };
 
     const saleItems = flatMap(vendor.saleItemCategories, (categoryData) => {
@@ -370,7 +376,12 @@ function VendorService(
     return dimStoreService.processItems({ id: null }, _.pluck(saleItems, 'item'))
       .then(function(items) {
         const itemsById = _.indexBy(items, 'id');
-        const categories = _.map(vendor.saleItemCategories, (category) => {
+        const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {
+          const categoryInfo = vendorDef.categories[category.categoryIndex];
+          if (_.contains(categoryBlacklist, categoryInfo.categoryHash)) {
+            return null;
+          }
+
           const categoryItems = category.saleItems.map((saleItem) => {
             const unlocked = isSaleItemUnlocked(saleItem);
             return {
@@ -378,7 +389,7 @@ function VendorService(
               costs: saleItem.costs.map((cost) => {
                 return {
                   value: cost.value,
-                  currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
+                  currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash')
                 };
               }).filter((c) => c.value > 0),
               item: itemsById["vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex],
@@ -419,7 +430,7 @@ function VendorService(
 
           return {
             index: category.categoryIndex,
-            title: vendorDef.categories[category.categoryIndex].displayTitle,
+            title: categoryInfo.displayTitle,
             saleItems: categoryItems,
             hasArmorWeaps: hasArmorWeaps,
             hasVehicles: hasVehicles,
@@ -428,7 +439,7 @@ function VendorService(
             hasConsumables: hasConsumables,
             hasBounties: hasBounties
           };
-        });
+        }));
 
         items.forEach((item) => {
           item.vendorIcon = createdVendor.icon;

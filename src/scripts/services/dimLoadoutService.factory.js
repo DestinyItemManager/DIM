@@ -1,5 +1,5 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimLoadoutService', LoadoutService);
@@ -76,67 +76,54 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       var objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
       var hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
       var loadoutGuids = _.pluck(_loadouts, 'id');
-      var containsLoadoutGuids = (loadoutGuid, item) => !_.contains(loadoutGuid, item.id);
+      var containsLoadoutGuids = (item) => !_.contains(loadoutGuids, item.id);
 
       var orphanIds = _.chain(data)
         .filter(objectTest)
         .filter(hasGuid)
-        .filter(containsLoadoutGuids.bind(this, loadoutGuids))
+        .filter(containsLoadoutGuids)
         .pluck('id')
         .value();
 
       if (orphanIds.length > 0) {
-        SyncService.remove(orphanIds);
+        return SyncService.remove(orphanIds);
       }
     } else {
       _loadouts = _loadouts.splice(0);
     }
+    return $q.when();
   }
 
   function getLoadouts(getLatest) {
-    var deferred = $q.defer();
-    var result = deferred.promise;
-
     // Avoids the hit going to data store if we have data already.
     if (getLatest || _.size(_loadouts) === 0) {
-      SyncService.get()
+      return SyncService.get()
         .then((data) => {
           if (_.has(data, 'loadouts-v3.0')) {
-            processLoadout(data, 'v3.0');
+            return processLoadout(data, 'v3.0');
           } else if (_.has(data, 'loadouts-v2.0')) {
-            processLoadout(data['loadouts-v2.0'], 'v2.0');
-
-            saveLoadouts(_loadouts);
+            return processLoadout(data['loadouts-v2.0'], 'v2.0')
+              .then(() => {
+                saveLoadouts(_loadouts);
+              });
           } else {
-            processLoadout();
+            return processLoadout();
           }
-
-          deferred.resolve(_loadouts);
+        })
+        .then(() => {
+          return _loadouts;
         });
     } else {
-      result = $q.when(_loadouts);
+      return $q.when(_loadouts);
     }
-
-    return result;
   }
 
   function saveLoadouts(loadouts) {
-    var deferred = $q.defer();
-    var result;
-
-    if (loadouts) {
-      result = $q.when(loadouts);
-    } else {
-      result = getLoadouts();
-    }
-
-    return result
+    return $q.when(loadouts || getLoadouts())
       .then(function(loadouts) {
         _loadouts = loadouts;
 
-        var loadoutPrimitives = _.map(loadouts, function(loadout) {
-          return dehydrate(loadout);
-        });
+        var loadoutPrimitives = _.map(loadouts, dehydrate);
 
         var data = {
           'loadouts-v3.0': []
@@ -147,21 +134,14 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           data[l.id] = l;
         });
 
-        SyncService.set(data);
-
-        deferred.resolve(loadoutPrimitives);
-
-        return deferred.promise;
+        return SyncService.set(data).then(() => loadoutPrimitives);
       });
   }
 
   function deleteLoadout(loadout) {
     return getLoadouts()
       .then(function(loadouts) {
-        var index = _.findIndex(loadouts, function(l) {
-          return (l.id === loadout.id);
-        });
-
+        var index = _.findIndex(loadouts, { id: loadout.id });
         if (index >= 0) {
           loadouts.splice(index, 1);
         }
@@ -170,15 +150,15 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           return loadouts;
         });
       })
-      .then(function(_loadouts) {
-        return saveLoadouts(_loadouts);
+      .then(function(loadouts) {
+        return saveLoadouts(loadouts);
       })
       .then(function(loadouts) {
         $rootScope.$broadcast('dim-delete-loadout', {
           loadout: loadout
         });
 
-        return (loadouts);
+        return loadouts;
       });
   }
 
@@ -205,7 +185,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           loadout: loadout
         });
 
-        return (loadouts);
+        return loadouts;
       });
   }
 

@@ -1,6 +1,6 @@
-const angular = require('angular');
-const _ = require('underscore');
-const { sum } = require('../util');
+import angular from 'angular';
+import _ from 'underscore';
+import { sum } from '../util';
 
 angular.module('dimApp')
   .factory('dimFarmingService', FarmingService);
@@ -58,7 +58,7 @@ function FarmingService($rootScope,
     makingRoom: false,
     // Move all items on the selected character to the vault.
     moveItemsToVault: function(items, incrementCounter) {
-      return dimBucketService.then((buckets) => {
+      return dimBucketService.getBuckets().then((buckets) => {
         const reservations = {};
         if (settings.makeRoomForItems) {
           // reserve one space in the active character

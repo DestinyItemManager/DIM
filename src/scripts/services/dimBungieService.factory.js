@@ -1,19 +1,19 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-// Putting this comparison in a function defeats a constant-folding optimization
-function compare(a, b) {
-  return a === b;
-}
-
 function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
-  var apiKey = localStorage.apiKey;
-  /* eslint no-constant-condition: 0*/
-  if (compare('$DIM_FLAVOR', 'release') || compare('$DIM_FLAVOR', 'beta')) {
-    apiKey = '$DIM_API_KEY';
+  var apiKey;
+  if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+    if (window.chrome && window.chrome.extension) {
+      apiKey = $DIM_API_KEY;
+    } else {
+      apiKey = $DIM_WEB_API_KEY;
+    }
+  } else {
+    apiKey = localStorage.apiKey;
   }
 
   var tokenPromise = null;
@@ -68,7 +68,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       })));
     }
 
-    var errorCode = response.data.ErrorCode;
+    var errorCode = response.data ? response.data.ErrorCode : -1;
 
     switch (errorCode) {
     case 1: {
@@ -77,6 +77,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     case 1627: {
       return $q.reject("Vendor data is unavailable.");
     }
+    case 2106:
     case 2108: {
       $rootScope.$broadcast('dim-no-token-found');
       return $q.reject("DIM does not have permission to perform this action.");
@@ -98,14 +99,16 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     } else if (errorCode === 99) {
       if (window.chrome && window.chrome.extension) {
         openBungieNetTab();
+      } else {
+        $rootScope.$broadcast('dim-no-token-found');
       }
       return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
     } else if (errorCode === 5) {
       return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
-    } else if (errorCode === 1618 &&
+    } else if ((errorCode === 1618 || errorCode === 1601) &&
       response.config.url.indexOf('/Account/') >= 0 &&
       response.config.url.indexOf('/Character/') < 0) {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
+      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
     } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
       $state.go('developer');
       return $q.reject(new Error($translate.instant('BungieService.DevVersion')));

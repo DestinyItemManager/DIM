@@ -1,5 +1,5 @@
-const angular = require('angular');
-const _ = require('underscore');
+import angular from 'angular';
+import _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
@@ -395,8 +395,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         item.tracked;
     },
     unlocked: function(predicate, item) {
-      return item.lockable &&
-        !item.locked;
+      return (item.lockable &&
+        !item.locked) || !item.lockable;
     },
     locked: function(predicate, item) {
       return item.lockable &&

@@ -2,6 +2,19 @@ require('babel-polyfill');
 
 require('./scripts/google');
 
+// Drag and drop
+window.iosDragDropShim = {
+  enableEnterLeave: true,
+  holdToDrag: 300
+};
+// Use our forked version until https://github.com/timruffles/ios-html5-drag-drop-shim/pull/85 is merged
+// require('drag-drop-webkit-mobile');
+require('./scripts/ios-drag-drop.js');
+window.addEventListener('touchmove', function() {});
+
+// Shim IndexedDB using WebSQL for iOS 9
+require('indexeddbshim');
+
 // TODO: remove this globals and instead require where needed
 window.$ = window.jQuery = require('jquery');
 require('jquery-textcomplete');
@@ -15,11 +28,8 @@ require('./scripts/oauth/http-refresh-token.service');
 require('./scripts/oauth/oauth.service');
 require('./scripts/oauth/oauth-token.service');
 
-
 // Initialize the main DIM app
-require('./scripts/dimApp.module');
-require('./scripts/dimApp.config');
-require('./scripts/dimApp.i18n');
+require('./scripts/app.module');
 
 require('./scripts/services/dimActionQueue.factory');
 require('./scripts/services/dimBungieService.factory');
@@ -49,7 +59,6 @@ require('./scripts/shell/dimAngularFilters.filter');
 require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
 require('./scripts/shell/dimAppCtrl.controller');
 require('./scripts/shell/dimSettingsCtrl.controller');
-require('./scripts/shell/dimPlatformChoice.directive');
 require('./scripts/shell/dimSearchFilter.directive');
 require('./scripts/shell/dimClickAnywhereButHere.directive');
 require('./scripts/shell/dimFilterLink.directive');
