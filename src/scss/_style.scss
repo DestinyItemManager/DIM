@@ -754,96 +754,123 @@ dim-store-heading {
   flex: 1;
   margin-bottom: 10px;
   height: 70px;
+  width: 100%;
 }
 
 .character-box {
   position: relative;
-  height: 50px;
-  padding: 0 30px 0 44px;
-  /* background: rgba(30, 36, 43, .5); */
-  text-shadow: 1px 1px 1px #000000;
-  color: #f5f5f5;
-  text-decoration: none;
-  background-size: cover;
-  .emblem {
+  border-bottom: 2px solid #888;
+  height: 46px;
+  cursor: pointer;
+
+  * {
+    //box-sizing: border-box;
+  }
+
+  .details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4px 6px 4px 8px;
+  }
+
+  .background {
     position: absolute;
-    top: 3px;
-    left: 1px;
-    width: 38px;
-    height: 38px;
+    width: 100%;
+    height: 100%;
+    filter: brightness(60%);
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
+
+  .overlay {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: .1;
+    background-color: white;
+  }
+
+  &:hover, &:active {
+    .overlay {
+      display: block;
+    }
+  }
+
+  .character-text {
+    font-family: Roboto, 'Open Sans', sans-serif;
+    flex: 1;
+    text-shadow: 1px 1px 1px rgba(0,0,0,.5), 0px 0px 10px rgba(0,0,0,.5);
+  }
+
+  .top, .bottom {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 300;
+  }
+  .top {
+    font-size: 20px;
+    font-weight: 300;
+    height: 24px;
+  }
+  .bottom {
+    font-size: 12px;
+    color: #bbb;
+    letter-spacing: .125px;
+    height: 14px;
+  }
+  .emblem {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
     background-color: rgba(0, 0, 0, 0.2);
     background-size: cover;
   }
-  .class {
+  .class, .race-gender {
     text-transform: capitalize;
-    position: relative;
-    display: block;
-    top: 5px;
-    font-size: 16px;
-    font-weight: 400;
-  }
-}
-
-.character-box {
-  .race-gender {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9em;
-    top: 1px;
-    position: relative;
+    flex: 1;
+    text-overflow: ellipsis;
   }
   .level {
-    position: absolute;
-    top: 5px;
-    right: 35px;
-    font-weight: 200;
-    font-size: 14px;
+    margin-right: 1px;
+  }
+  .powerLevel {
+    color: #f5dc56;
+    &:before {
+      content: "\2726";
+      display: inline-block;
+      vertical-align: 25%;
+      font-size: 50%;
+    }
+  }
+  .currencies {
+    text-align: right;
   }
   .currency {
-    position: absolute;
-    top: 4px;
-    right: 40px;
     font-weight: 200;
     font-size: 14px;
-  }
-  .legendaryMarks {
-    position: absolute;
-    top: 23px;
-    right: 40px;
-  }
-  .level.powerLevel {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    font-weight: 200;
-    font-size: 14px;
-    color: #f5dc56;
-  }
-  .powerLevel:before {
-    content: "\2726";
-    display: inline-block;
-    vertical-align: 25%;
-    font-size: 50%;
   }
 }
 
 .levelBar {
-  height: 4px;
-  background-color: rgba(245, 245, 245, 0.1);
+  height: 2px;
   width: 100%;
   position: absolute;
-  bottom: 0;
+  bottom: -2px;
   left: 0;
-
-}
-
-.barFill {
   background-color: #5da469;
-  width: 0%;
-  height: 100%;
 
-  .moteProgress & {
-    background-color: #00aae1;
+  &.moteProgress {
+    background-color: #069;
     opacity: .6;
   }
 }
@@ -932,28 +959,14 @@ dim-store-heading {
 }
 
 .loadout-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: rgba(120, 120, 120, 0.7);
-  width: 30px;
-  height: 46px;
-  color: rgba(200, 200, 200, 1);
+  color: white;
   text-align: center;
-  font-size: 15px;
-  line-height: 41px;
-  padding: 0;
-  box-sizing: border-box;
+  font-size: 18px;
   cursor: pointer;
   outline: none;
-  &:hover {
-    background-color: rgba(160, 160, 160, 0.8);
-    color: rgba(245, 245, 245, 1);
-  }
-  .active {
-    background-color: rgba(10, 10, 10, 0.25);
-    color: rgba(245, 245, 245, 0.75);
-  }
+  margin-left: 6px;
+  margin-top: 1px;
+  opacity: 0.8;
 }
 
 .loadout-popup-content {
@@ -1346,8 +1359,8 @@ g {
 
 .stores {
   display: block;
-  // 100px margin to make room for the fixed header
-  margin-top: 100px;
+  // 97px margin to make room for the fixed header
+  margin-top: 97px;
 }
 
 .store-bounds {
@@ -1743,7 +1756,7 @@ h2, h3, h4 {
   right: 0;
   top: 50px;
   background-color: #434444;
-  height: 90px;
+  height: 87px;
   position: fixed;
   z-index: 4;
 
@@ -2093,8 +2106,8 @@ dim-manifest-progress {
   top: 0;
   left: 0;
   z-index: 1000;
-  border-top: 15px solid gold;
-  border-right: 15px solid transparent;
+  border-top: 13px solid gold;
+  border-right: 13px solid transparent;
 }
 
 .fa.fa-circle.trials {
