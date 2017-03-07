@@ -91,4 +91,3 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     loadingTracker.addPromise(dimStoreService.reloadStores());
   }
 }
-
