@@ -16,6 +16,7 @@
 * Add tags and notes to items! This has been in Beta forever but now it's official. Hit ? to see the keyboard shortcuts, and use "tag:" searches to find your tagged gear.
 * Remove Materials Exchange from the beta.
 * Vendors now show where they are, and are sorted better. All the cryptarchs now appear. Engrams waiting to be decrypted aren't shown in the vendor screen.
+* Experimental iOS 9 Mobile Safari compatibility. May be removed in the future.
 
 # 3.16.1
 
