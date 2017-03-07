@@ -12,6 +12,9 @@ window.iosDragDropShim = {
 require('./scripts/ios-drag-drop.js');
 window.addEventListener('touchmove', function() {});
 
+// Shim IndexedDB using WebSQL for iOS 9
+require('indexeddbshim');
+
 // TODO: remove this globals and instead require where needed
 window.$ = window.jQuery = require('jquery');
 require('jquery-textcomplete');

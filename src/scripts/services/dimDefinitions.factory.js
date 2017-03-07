@@ -40,12 +40,8 @@ function Definitions($q, dimManifestService) {
           // Load objects that lazily load their properties from the sqlite DB.
           lazyTables.forEach(function(tableShort) {
             const table = `Destiny${tableShort}Definition`;
-            defs[tableShort] = new Proxy({}, {
-              get: function(target, name) {
-                if (name === 'then') {
-                  return undefined;
-                }
-
+            defs[tableShort] = {
+              get: function(name) {
                 if (this.hasOwnProperty(name)) {
                   return this[name];
                 }
@@ -53,7 +49,7 @@ function Definitions($q, dimManifestService) {
                 this[name] = val;
                 return val;
               }
-            });
+            };
           });
 
           // Resources that need to be fully loaded (because they're iterated over)
