@@ -17,7 +17,7 @@ function MovePopup() {
     template: [
       '<div class="move-popup" alt="" title="">',
       '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></div>',
-      '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+      '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>',
       '  <div class="interaction">',
       '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
       '      <div class="move-button move-vault" alt="{{::store.name}}" title="{{::store.name}}" ',

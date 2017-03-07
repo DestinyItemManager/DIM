@@ -990,12 +990,6 @@ dim-store-heading {
   flex-direction: row;
   align-items: center;
   margin: 0 10px;
-  .min {
-    margin-right: 10px;
-  }
-  .max {
-    margin-left: 10px;
-  }
 }
 
 .move-amount-slider {
@@ -1012,6 +1006,13 @@ dim-store-heading {
   font-size: 16px;
   cursor: pointer;
   color: gray;
+  margin: 0 4px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
   &:hover {
     color: white;
   }
