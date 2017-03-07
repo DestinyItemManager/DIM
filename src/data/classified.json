@@ -2,7 +2,7 @@
    "itemHash":{
       "1458765388":{
          "bucketHash":"1469714392",
-         "icon":"/img/misc/celery.png",
+         "icon":"~/data/img/celery.png",
          "classType":3,
          "tierType":3,
          "i18n":{
@@ -45,7 +45,7 @@
       },
       "320629370":{
          "bucketHash":"1469714392",
-         "icon":"/img/misc/box_of_raisins.png",
+         "icon":"~/data/img/box_of_raisins.png",
          "classType":3,
          "tierType":3,
          "i18n":{
@@ -90,7 +90,7 @@
          "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
-         "icon":"/img/misc/siva_engine.png",
+         "icon":"~/data/img/siva_engine.png",
          "i18n":{
             "en":{
                "itemName":"SIVA Engine Replica (Charged)",
@@ -133,7 +133,7 @@
          "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
-         "icon":"/img/misc/siva_engine.png",
+         "icon":"~/data/img/siva_engine.png",
          "i18n":{
             "en":{
                "itemName":"SIVA Engine Replica (Charged)",
@@ -176,7 +176,7 @@
          "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
-         "icon":"/img/misc/siva_engine.png",
+         "icon":"~/data/img/siva_engine.png",
          "i18n":{
             "en":{
                "itemName":"SIVA Engine Replica (Charged)",
@@ -219,7 +219,7 @@
          "bucketHash":"375726501",
          "tierType":5,
          "classType":2,
-         "icon":"/img/misc/siva_engine.png",
+         "icon":"~/data/img/siva_engine.png",
          "i18n":{
             "en":{
                "itemName":"SIVA Engine Replica (Unstable)",
@@ -262,7 +262,7 @@
          "bucketHash":"375726501",
          "tierType":5,
          "classType":1,
-         "icon":"/img/misc/siva_engine.png",
+         "icon":"~/data/img/siva_engine.png",
          "i18n":{
             "en":{
                "itemName":"SIVA Engine Replica (Unstable)",
@@ -305,7 +305,7 @@
          "bucketHash":"375726501",
          "tierType":5,
          "classType":0,
-         "icon":"/img/misc/siva_engine.png",
+         "icon":"~/data/img/siva_engine.png",
          "i18n":{
             "en":{
                "itemName":"SIVA Engine Replica (Unstable)",
@@ -348,7 +348,7 @@
         "bucketHash":"375726501",
         "classType":3,
         "tierType":6,
-        "icon":"/img/misc/thorn_bounty.png",
+        "icon":"~/data/img/thorn_bounty.png",
         "i18n":{
           "en":{
             "itemName":"Jagged Purpose",
@@ -391,7 +391,7 @@
          "bucketHash":"375726501",
          "classType":3,
          "tierType":6,
-         "icon":"/img/misc/thorn_bounty.png",
+         "icon":"~/data/img/thorn_bounty.png",
          "i18n":{
             "en":{
                "itemName":"Depleted Hand Cannon",
@@ -434,7 +434,7 @@
          "bucketHash":"2025709351",
          "classType":3,
          "tierType":5,
-         "icon":"/img/misc/lysanders_cry.png",
+         "icon":"~/data/img/lysanders_cry.png",
          "primaryBaseStatHash": "1501155019",
          "stats":{
             "1501155019":{

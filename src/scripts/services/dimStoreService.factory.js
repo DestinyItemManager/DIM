@@ -30,7 +30,42 @@ function StoreService(
 
   var _removedNewItems = new Set();
 
-  const dimClassifiedDataPromiseURL = $DIM_FLAVOR === 'dev' ? '~app/data/classified.json' : 'https://beta.destinyitemmanager.com/data/classified.json';
+  // Load classified data once per load and keep it in memory until
+  // reload. Classified data always comes from
+  // beta.destinyitemmanager.com so it can be released faster than the
+  // release website, but the release website can still use the
+  // updated definitions.
+  const getClassifiedData = _.memoize(function() {
+    return idbKeyval.get('classified-data').then((data) => {
+      // Use cached data for up to 4 hours
+      if ($DIM_FLAVOR !== 'dev' &&
+          data &&
+          data.time > Date.now() - (4 * 60 * 60 * 1000)) {
+        return data;
+      }
+
+      // In dev, use a local copy of the JSON for testing
+      const url = ($DIM_FLAVOR === 'dev')
+              ? '/data/classified.json'
+              : 'https://beta.destinyitemmanager.com/data/classified.json';
+
+      return $http.get(url)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const remoteData = response.data;
+            remoteData.time = Date.now();
+            return idbKeyval.set('classified-data', remoteData).then(() => remoteData);
+          }
+
+          console.error("Couldn't load classified info from " + url);
+
+          return {
+            itemHash: {}
+          };
+        });
+    });
+  });
+
   const dimMissingSources = require('app/data/missing_sources.json');
 
   const yearHashes = {
@@ -609,7 +644,7 @@ function StoreService(
     return index;
   }
 
-  function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
+  function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
     var itemDef = defs.InventoryItem.get(item.itemHash);
     // Missing definition?
     if (!itemDef) {
@@ -638,12 +673,15 @@ function StoreService(
       console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
     }
 
-    if (!itemDef.itemName) {
-      return null;
+    if (itemDef.classified) {
+      const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
+      if (classifiedItemDef) {
+        itemDef = classifiedItemDef;
+      }
     }
 
-    if (itemDef.classified) {
-      itemDef = getClassifiedData(dimClassifiedData, itemDef.hash);
+    if (!itemDef || !itemDef.itemName) {
+      return null;
     }
 
     // fix itemDef for defense items with missing nodes
@@ -1468,7 +1506,8 @@ function StoreService(
       dimBucketService.getBuckets(),
       previousItems,
       newItems,
-      itemInfoService])
+      itemInfoService,
+      getClassifiedData()])
       .then(function(args) {
         var result = [];
         dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
@@ -1618,28 +1657,31 @@ function StoreService(
     });
     return ret;
   }
-  // code above is from https://github.com/DestinyTrialsReport
-  function getClassifiedData(dimClassifiedData, hash) {
-    var language = dimSettingsService.language;
-    var classifiedItem = null;
-    if (dimClassifiedData[hash]) { // do we have declassification info for item?
-       // classifiedItem.icon = dimClassifiedData[hash].icon;
-      classifiedItem.itemName = dimClassifiedData[hash].i18n[language].itemName;
-      classifiedItem.itemDescription = dimClassifiedData[hash].i18n[language].itemDescription;
-      classifiedItem.itemTypeName = dimClassifiedData[hash].i18n[language].itemTypeName;
-      classifiedItem.bucketTypeHash = dimClassifiedData[hash].bucketHash;
-      classifiedItem.tierType = dimClassifiedData[hash].tierType;
-      classifiedItem.classType = dimClassifiedData[hash].classType;
-      if (dimClassifiedData[hash].primaryBaseStatHash) {
-        classifiedItem.primaryBaseStatHash = dimClassifiedData[hash].primaryBaseStatHash;
-        classifiedItem.primaryStat = [];
-        classifiedItem.primaryStat.statHash = classifiedItem.primaryBaseStatHash;
-        classifiedItem.primaryStat.value = dimClassifiedData[hash].stats[classifiedItem.primaryStat.statHash].value;
+
+  function buildClassifiedItem(classifiedData, hash) {
+    const info = classifiedData.itemHash[hash];
+    if (info) { // do we have declassification info for item?
+      const localInfo = info.i18n[dimSettingsService.language];
+      const classifiedItem = {
+        icon: info.icon,
+        itemName: localInfo.itemName,
+        itemDescription: localInfo.itemDescription,
+        itemTypeName: localInfo.itemTypeName,
+        bucketTypeHash: info.bucketHash,
+        tierType: info.tierType,
+        classType: info.classType
+      };
+      if (info.primaryBaseStatHash) {
+        classifiedItem.primaryStat = {
+          statHash: info.primaryBaseStatHash,
+          value: info.stats[info.primaryBaseStatHash].value
+        };
       }
-      if (dimClassifiedData[hash].stats) {
-        classifiedItem.stats = dimClassifiedData[hash].stats;
+      if (info.stats) {
+        classifiedItem.stats = info.stats;
       }
+      return classifiedItem;
     }
-    return classifiedItem;
+    return null;
   }
 }
