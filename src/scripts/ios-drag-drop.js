@@ -292,11 +292,9 @@
     return function(evt){
       var el = evt.target;
 
-      console.log('touchstartDelay', delay, el.draggable, evt);
       do {
         if (el.draggable === true) {
           var heldItem = function(e) {
-            console.log('touchstart', e);
             end.off();
             cancel.off();
             scroll.off();
@@ -304,7 +302,6 @@
           };
 
           var onReleasedItem = function(e) {
-            console.log('released', e);
             end.off();
             cancel.off();
             scroll.off();

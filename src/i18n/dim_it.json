@@ -18,7 +18,7 @@
       "Throttled": "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
       "NotLoggedIn": "Effettuare l accesso a Bungie.net per utilizzare questa estensione.",
       "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
-      "NoAccount": "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
+      "NoAccount": "Non è stato trovato alcun account di Destiny su {platform}. Hai selezionato la piattaforma corretta?",
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
@@ -79,7 +79,7 @@
       "FilterHelp": "Cerca oggetti/perk o is:arc",
       "MaterialsExchange": "Livelli fazione disponibili",
       "Refresh": "Aggiorna i Dati di Destiny",
-      "SupportDIM": "Supporta DIM"
+      "SupportDIM": "Supporta"
    },
    "Help": {
       "BackToDIM": "Torna a DIM",
@@ -336,6 +336,11 @@
       "HowMuch": "Quanti {itemname} vuoi spostare?",
       "Move": "Sposta"
    },
+   "SyncService": {
+     "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
+     "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
+     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
+   },
    "Tags": {
       "TagItem": "Segna Oggetto",
       "Favorite": "Preferito",
@@ -381,23 +386,13 @@
        "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
        "Twitter": "Twitter",
        "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
-       "Version": "Versione"
+       "Version": "Versione",
+       "Transifex": "Unisciti al Team Traduzione!",
+       "TransifexText": "Utilizziamo Transifex per facilitare le traduzioni. Se vuoi vedere DIM nella tua lingua, unisciti al team."
      },
      "Support": {
        "Support": "Supportare DIM",
-       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
-       "Fans": "Siamo tutti grandissimi fan di Destiny. DIM è nato durante le ore di gioco, poiché conoscevamo il dolore di trasferire oggetti tra i personaggi, dimenticandone uno, o i viaggi alla torre per svuotare i propri ROC degli assalti. DIM è lo strumento che ti aiuterà a risparmiare tempo nel gioco.",
-       "Contribute": "Come posso contribuire?",
-       "Paypal":"Fai una donazione a DIM!",
-       "PaypalText": "Accettiamo donazioni su PayPal. Se DIM ti ha aiutato a riasparmiare tempo mentre giochi, supporta il team, che lavora al progetto.",
-       "Transifex": "Unisciti al Team Traduzione!",
-       "TransifexText": "Utilizziamo Transifex per facilitare le traduzioni. Se vuoi vedere DIM nella tua lingua, unisciti al team.",
-       "Share": "Condividi DIM con i tuoi amici.",
-       "ShareText": "Una volta provato quanto è facile equipaggiare un loadout, non potrai tornare indietro. Condividi il divertimento con i tuoi amici!",
-       "Reddit": "Hai qualche idea per DIM?",
-       "RedditText": "Vieni a trovarci su /r/destinyitemmanager e facci sapere della tua idea. Scoprirai con noi e con la community di DIM come iterare e migliorare un'idea nel migliore dei modi.",
-       "GitHub": "Sono uno sviluppatore/designer/entusiasta e sto cercando di contibruire al codice sorgente.",
-       "GitHubText": "Vieni a trovarci su GitHub e invia un messaggio a uno dei collaboratori. Siamo più che felici di accettare \"pull requests\". Unisciti a noi come collaboratore e prendi parte ai nostri incontri, dove parliamo di nuove versioni, particolari aggiornamenti o bug."
+       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine."
      },
      "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM."
    },

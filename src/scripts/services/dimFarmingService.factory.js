@@ -58,7 +58,7 @@ function FarmingService($rootScope,
     makingRoom: false,
     // Move all items on the selected character to the vault.
     moveItemsToVault: function(items, incrementCounter) {
-      return dimBucketService.then((buckets) => {
+      return dimBucketService.getBuckets().then((buckets) => {
         const reservations = {};
         if (settings.makeRoomForItems) {
           // reserve one space in the active character

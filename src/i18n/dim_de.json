@@ -18,7 +18,7 @@
       "Throttled": "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
       "NotLoggedIn": "Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen.",
       "Maintenance": "Bungie.net Server werden zur Zeit gewartet.",
-      "NoAccount": "Es wurde kein Destiny Account für diese Platform gefunden. Hast du die richtige Platform gewählt?",
+      "NoAccount": "Es wurde kein Destiny Account für {platform} gefunden. Hast du die richtige Platform gewählt?",
       "NoAccountForPlatform": "Konnte auf {platform} keinen Destiny Account für dich finden.",
       "NoCookies": "Keine Cookies gefunden.",
       "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
@@ -79,7 +79,7 @@
       "FilterHelp": "Suche nach Item/Perk oder is:arc",
       "MaterialsExchange": "Verfügbare Fraktionsränge",
       "Refresh": "Aktualisiere Destiny Daten",
-      "SupportDIM": "DIM Unterstützen"
+      "SupportDIM": "Unterstützen"
    },
    "Help": {
       "BackToDIM": "Zurück zu DIM",
@@ -326,6 +326,7 @@
       "NoBonus": "Kein Bonus",
       "OfMaxRoll": "{range} des max. Rolls",
       "PercentHelp": "Klicke für mehr Informationen über die Qualität der Werte.",
+      "Prestige": "Prestige Level: {level}\n{exp}xp bis 5 Lichtpartikel.",
       "Quality": "Qualität der Werte",
       "Strength": "Stärke",
       "TierProgress": "{progress} für {tier}"
@@ -334,6 +335,11 @@
       "FillStack": "Stapel auffüllen ({amount})",
       "HowMuch": "Wie viele {itemname} sollen verschoben werden?",
       "Move": "Verschieben"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Um Google Drive wieder zu authorisieren musst du deinen Browser neustarten.",
+     "OneItemTooLarge": "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mir zuvielen Gegenständen.",
+     "SaveTooLarge": "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
    },
    "Tags": {
       "TagItem": "Item markieren",
@@ -380,23 +386,13 @@
        "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
        "Twitter": "Twitter",
        "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
-       "Version": "Version"
+       "Version": "Version",
+       "Transifex": "Trete dem Übersetzer-Team bei!",
+       "TransifexText": "Wir nutzen Transifex für einfache Sprachanpassung. Wenn Du DIM in Deiner Sprache sehen möchtest, trete dem Team bei."
      },
      "Support": {
        "Support": "Unterstütze DIM",
-       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
-       "Fans": "Wir sind alle große Fans von Destiny. DIM erwachte in den Stunden des Gameplays zum Leben, in denen wir den Schmerz fühlten, als wir bei der Übertragung von Gegenständen zwischen den Charaktern ausgerechnet diesen einen Gegenstand vergessen hatten oder bei den vielen Flüge zum Turm bei denen wir unsere Engramme aus den Strikes entladen haben. DIM ist das Tool, das dir hilft, mehr Spielzeit zu bekommen.",
-       "Contribute": "Wie kann ich mich am Projekt beteiligen?",
-       "Paypal":"Gib DIM eine Spende!",
-       "PaypalText": "Wir benutzen PayPal für Spenden. Wenn DIM einen Unterschied in deiner Spielzeit macht, unterstütze das Team, das an dem Projekt arbeitet.",
-       "Transifex": "Trete dem Übersetzer-Team bei!",
-       "TransifexText": "Wir nutzen Transifex für einfache Sprachanpassung. Wenn Du DIM in Deiner Sprache sehen möchtest, trete dem Team bei.",
-       "Share": "Teile DIM mit deinen Freunden.",
-       "ShareText": "Sobald du erlebt hast, wie einfach es ist ein Loadout zu anzulegen, wirst du überwältigt sein. Teile den Spaß mit deinen Freunden!",
-       "Reddit": "Hast du eine Idee für DIM?",
-       "RedditText": "Besuche uns auf /r/destinyitemmanager und lass uns von deiner Idee wissen. Du wirst von uns hören, sowie auch von der Community rund um DIM, was ein großartiger Weg ist, um eine Idee aufzugreifen und zu verbessern.",
-       "GitHub": "Ich bin ein Entwickler/Designer/Enthusiast und ich möchte gerne etwas beitragen.",
-       "GitHubText": "Besuche uns auf GitHub und sende einem der beitragenden Personen eine Nachricht. Wir sind mehr als glücklich Pull Requests zu akzeptieren. Tritt uns als Unterstützer bei nehme an unseren Treffen teil, bei denen wir über die nächste Version, zukünftige Updates oder Bugs zu zerschmettern."
+       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen."
      },
      "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
    },
