@@ -89,6 +89,14 @@ div:focus, span:focus {
   }
 }
 
+.oc {
+  background: url('../oc.svg') no-repeat;
+  background-size: contain;
+  padding-left: 18px;
+  height: 14px;
+  line-height: 15px !important;
+}
+
 #header {
   #user {
     color: white;
@@ -97,7 +105,7 @@ div:focus, span:focus {
     font-size: 15px;
     color: #fafafa;
   }
-  .content span {
+  .content span, .content a {
     vertical-align: middle;
     margin: 0 8px;
     text-decoration: none;

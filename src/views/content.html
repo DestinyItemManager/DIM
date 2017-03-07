@@ -13,7 +13,7 @@
     </span>
     <span class="logo link" ng-class="app.$DIM_FLAVOR" ui-sref="inventory" title="v{{app.$DIM_VERSION}} ({{app.$DIM_FLAVOR}})">DIM</span>
     <span class="link" ng-click="app.showAbout($event)" translate="Header.About"></span>
-    <span class="link" ng-click="app.showSupport($event)" translate="Header.SupportDIM"></span>
+    <a class="oc link" ng-click="app.showSupport($event)" target='_blank' href='https://opencollective.com/dim' translate="Header.SupportDIM"></a>
     <span class="link" ng-if="app.featureFlags.vendorsEnabled" ng-class="{disabled: !app.vendorService.vendorsLoaded}" ng-click="app.toggleVendors($event)" translate="Vendors"></span>
     <span class="link" ng-if="app.xur.available" ng-click="app.showXur($event)">Xûr</span>
   </div>

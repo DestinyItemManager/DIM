@@ -79,7 +79,7 @@
       "FilterHelp": "Suche nach Item/Perk oder is:arc",
       "MaterialsExchange": "Verfügbare Fraktionsränge",
       "Refresh": "Aktualisiere Destiny Daten",
-      "SupportDIM": "DIM Unterstützen"
+      "SupportDIM": "Unterstützen"
    },
    "Help": {
       "BackToDIM": "Zurück zu DIM",
@@ -386,23 +386,13 @@
        "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
        "Twitter": "Twitter",
        "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
-       "Version": "Version"
+       "Version": "Version",
+       "Transifex": "Trete dem Übersetzer-Team bei!",
+       "TransifexText": "Wir nutzen Transifex für einfache Sprachanpassung. Wenn Du DIM in Deiner Sprache sehen möchtest, trete dem Team bei."
      },
      "Support": {
        "Support": "Unterstütze DIM",
-       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
-       "Fans": "Wir sind alle große Fans von Destiny. DIM erwachte in den Stunden des Gameplays zum Leben, in denen wir den Schmerz fühlten, als wir bei der Übertragung von Gegenständen zwischen den Charaktern ausgerechnet diesen einen Gegenstand vergessen hatten oder bei den vielen Flüge zum Turm bei denen wir unsere Engramme aus den Strikes entladen haben. DIM ist das Tool, das dir hilft, mehr Spielzeit zu bekommen.",
-       "Contribute": "Wie kann ich mich am Projekt beteiligen?",
-       "Paypal":"Gib DIM eine Spende!",
-       "PaypalText": "Wir benutzen PayPal für Spenden. Wenn DIM einen Unterschied in deiner Spielzeit macht, unterstütze das Team, das an dem Projekt arbeitet.",
-       "Transifex": "Trete dem Übersetzer-Team bei!",
-       "TransifexText": "Wir nutzen Transifex für einfache Sprachanpassung. Wenn Du DIM in Deiner Sprache sehen möchtest, trete dem Team bei.",
-       "Share": "Teile DIM mit deinen Freunden.",
-       "ShareText": "Sobald du erlebt hast, wie einfach es ist ein Loadout zu anzulegen, wirst du überwältigt sein. Teile den Spaß mit deinen Freunden!",
-       "Reddit": "Hast du eine Idee für DIM?",
-       "RedditText": "Besuche uns auf /r/destinyitemmanager und lass uns von deiner Idee wissen. Du wirst von uns hören, sowie auch von der Community rund um DIM, was ein großartiger Weg ist, um eine Idee aufzugreifen und zu verbessern.",
-       "GitHub": "Ich bin ein Entwickler/Designer/Enthusiast und ich möchte gerne etwas beitragen.",
-       "GitHubText": "Besuche uns auf GitHub und sende einem der beitragenden Personen eine Nachricht. Wir sind mehr als glücklich Pull Requests zu akzeptieren. Tritt uns als Unterstützer bei nehme an unseren Treffen teil, bei denen wir über die nächste Version, zukünftige Updates oder Bugs zu zerschmettern."
+       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen."
      },
      "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
    },
