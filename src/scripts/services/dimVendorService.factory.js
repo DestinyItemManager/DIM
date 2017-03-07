@@ -121,7 +121,7 @@ function VendorService(
 
     const characters = _.reject(stores, 'isVault');
 
-    _reloadPromise = dimDefinitions
+    _reloadPromise = dimDefinitions.getDefinitions()
       .then((defs) => {
         // Narrow down to only visible vendors (not packages and such)
         const vendorList = _.filter(defs.Vendor, (v) => v.summary.visible);
@@ -362,7 +362,7 @@ function VendorService(
       },
       vendorOrder: def.vendorSubcategoryHash + def.vendorOrder,
       faction: def.factionHash, // TODO: show rep!
-      location: defs.VendorCategory[def.vendorCategoryHash].categoryName
+      location: defs.VendorCategory.get(def.vendorCategoryHash).categoryName
     };
 
     const saleItems = flatMap(vendor.saleItemCategories, (categoryData) => {
@@ -389,7 +389,7 @@ function VendorService(
               costs: saleItem.costs.map((cost) => {
                 return {
                   value: cost.value,
-                  currency: _.pick(defs.InventoryItem[cost.itemHash], 'itemName', 'icon', 'itemHash')
+                  currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash')
                 };
               }).filter((c) => c.value > 0),
               item: itemsById["vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex],

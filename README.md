@@ -94,7 +94,12 @@ Clone the repo:
 
 Install dependencies:
 
-* `npm install`
+* Install [NodeJS].
+* Run `npm install`
+* Windows-based developers will need to install `windows-build-tools` (`npm install --global windows-build-tools`) globally prior to running `npm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
+
+Check code Style
+* `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
 
 Build in dev mode (extension)
 * `npm start`. This will bundle and copy all the assets, as well as watch for changes. You can now run DIM locally by enabling [Chrome Extensions Developer Mode](https://developer.chrome.com/extensions/faq#faq-dev-01) and point to the `dist` folder.
@@ -102,15 +107,12 @@ Build in dev mode (extension)
 Build in dev mode (website)
 * `npm run server`. Visit the URL it prints out to load DIM. It will update automatically as you change files.
 
-Check code Style
-* `npm run lint` will tell you if you're following the DIM code style (and automatically fix what it can).
-
 Get your own API key:
 
 * Goto [Bungie](https://www.bungie.net/en/Application)
 * Open your extension in another tab, copy the url up to `/index.html`.
 * Paste your extension url into the `Origin Header` section on bungie.net
-* Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.
+* Copy your API-key from bungie.net into DIM developer settings panel when it is loaded.* `npm install`
 
 Check out our [contributor guide](https://github.com/DestinyItemManager/DIM/blob/dev/CONTRIBUTING.md) for more tips.
 

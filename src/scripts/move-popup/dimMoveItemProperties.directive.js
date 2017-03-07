@@ -240,8 +240,8 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     console.log("DEBUG INFO for '" + vm.item.name + "'");
     console.log("DIM Item", vm.item);
     console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
-    dimDefinitions.then((defs) => {
-      console.log("Manifest Item Definition", defs.InventoryItem[vm.item.hash]);
+    dimDefinitions.getDefinitions().then((defs) => {
+      console.log("Manifest Item Definition", defs.InventoryItem.get(vm.item.hash));
     });
   };
 }

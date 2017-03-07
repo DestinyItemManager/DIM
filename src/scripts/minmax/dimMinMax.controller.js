@@ -241,11 +241,11 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
     return filteredLoadout;
   }
 
-  dimDefinitions.then(function(defs) {
+  dimDefinitions.getDefinitions().then(function(defs) {
     angular.extend(vm, {
       active: 'titan',
       i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.pluck(_.sortBy(defs.Class, function(classDef) { return classDef.classType; }), 'className')),
-      i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], function(key) { return defs.ItemCategory[key].title; })),
+      i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], function(key) { return defs.ItemCategory.get(key).title; })),
       activesets: '5/5/2',
       type: 'Helmet',
       scaleType: vm.featureFlags.qualityEnabled ? 'scaled' : 'base',

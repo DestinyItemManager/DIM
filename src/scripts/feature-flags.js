@@ -1,7 +1,7 @@
 const featureFlag = {
   isExtension: window.chrome && window.chrome.extension,
   // Tags are off in release right now
-  tagsEnabled: $DIM_FLAVOR !== 'release',
+  tagsEnabled: true,
   compareEnabled: true,
   vendorsEnabled: true,
   qualityEnabled: true,
