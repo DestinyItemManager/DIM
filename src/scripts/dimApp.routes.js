@@ -50,7 +50,7 @@ function routes($stateProvider, $urlRouterProvider) {
     templateUrl: developer
   }, {
     name: 'login',
-    parent: 'content',
+    parent: 'shell',
     url: '/login',
     templateUrl: login
   }];
@@ -59,7 +59,7 @@ function routes($stateProvider, $urlRouterProvider) {
     $stateProvider.state(state);
   });
 
-  $urlRouterProvider.otherwise('/welcome');
+  $urlRouterProvider.otherwise('/inventory');
 }
 
 export default routes;

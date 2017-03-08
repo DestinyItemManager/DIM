@@ -40,14 +40,10 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.2);
       cursor: pointer;
 
-      -webkit-transition: all 250ms;
-      -moz-transition: all 250ms;
       transition: all 250ms;
 
       &:hover {
         box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-        -webkit-transform: translateY(-2px);
-        -moz-transform: translateY(-2px);
         transform: translateY(-2px);
       }
     }
