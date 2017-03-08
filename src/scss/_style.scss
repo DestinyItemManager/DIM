@@ -117,18 +117,18 @@ div:focus, span:focus {
         margin-top: 1px;
       }
     }
-  }
-  .content span, .content a {
-    vertical-align: middle;
-    margin: 0 8px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 13px;
-    line-height: 25px;
-    text-align: center;
-    -webkit-touch-callout: none;
-    user-select: none;
-    outline: none;
+    span, a {
+      vertical-align: middle;
+      margin: 0 6px;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 13px;
+      line-height: 25px;
+      text-align: center;
+      -webkit-touch-callout: none;
+      user-select: none;
+      outline: none;
+    }
   }
   position: fixed;
   z-index: 5;
