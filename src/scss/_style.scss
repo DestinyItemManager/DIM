@@ -25,6 +25,10 @@
   height: var(--item-size + 4px);
 }
 
+h1, h2, h3, h4, h5 {
+  font-weight: normal;
+}
+
 div:focus, span:focus {
   outline-width: 0;
 }
@@ -193,6 +197,21 @@ dd {
   opacity: .20;
 }
 
+.search-link {
+  position: relative;
+  top: -2px;
+}
+
+.filter-help {
+  position: absolute;
+  right: -4px;
+  top: 1px;
+  .fa {
+    font-size: 16px !important;
+    color: #999 !important;
+  }
+}
+
 .ngdialog.modal-dialog {
   position: fixed;
   width: 100%;
@@ -325,6 +344,7 @@ a {
     margin-bottom: 0;
     padding: 15px;
     font-weight: 200;
+    background-color: #101010;
   }
   h2 {
     margin-top: 0;
@@ -804,8 +824,8 @@ dim-store-heading {
   }
 
   &:hover, &:active {
-    .overlay {
-      display: block;
+    .background {
+      filter: none;
     }
   }
 
@@ -887,7 +907,7 @@ dim-store-heading {
   opacity: .8;
   display: flex;
   flex-direction: row;
-  margin-top: 2px;
+  margin-top: 3px;
   .stat {
     flex: 1;
     display: flex;
@@ -928,7 +948,7 @@ dim-store-heading {
   opacity: 0.8;
 
   height: 16px;
-  margin-top: 2px;
+  margin-top: 3px;
   .vault-bucket {
     flex: 1;
     margin-right: 8px;
@@ -1421,7 +1441,7 @@ g {
 
 .store-header {
   position: fixed;
-  top: 54px;
+  top: 53px;
   z-index: 10;
 }
 

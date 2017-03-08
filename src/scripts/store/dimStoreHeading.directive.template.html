@@ -1,4 +1,4 @@
-<div class="character-box">
+<div class="character-box" ng-click="vm.openLoadoutPopup($event)">
   <div class="background" ng-style="{ 'background-image': 'url(' + vm.store.background + ')' }"></div>
   <div class="details">
     <div class="emblem" ng-style="{ 'background-image': 'url(' + vm.store.icon + ')' }"></div>
@@ -17,12 +17,8 @@
       <div class="currency" ng-if="::!!vm.store.isVault"> {{ vm.store.glimmer }} <img src="~app/images/glimmer.png"></div>
       <div class="currency legendaryMarks" ng-if="::!!vm.store.isVault"> {{ vm.store.legendaryMarks }} <img src="~app/images/legendaryMarks.png"></div>
     </div>
-    <i class="loadout-button fa fa-chevron-circle-down" translate-attr="{ title: 'Loadouts' }" ng-click="vm.openLoadoutPopup($event)"></i>
-    <!--
-         <div class="loadout-button" translate-attr="{ title: 'Loadouts' }" ng-click="vm.openLoadoutPopup($event)"><i class="fa fa-chevron-down"></i></div>
-       -->
+    <i class="loadout-button fa fa-chevron-circle-down" translate-attr="{ title: 'Loadouts' }"></i>
   </div>
-  <div class="overlay" ng-click="vm.openLoadoutPopup($event)"></div>
 </div>
 </div>
 <div class="loadout-menu" loadout-id="{{:: vm.store.id }}"></div>
