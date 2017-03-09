@@ -65,19 +65,14 @@ function gunListBuilder() {
     function getGuns(stores) {
         var allItems = getAllItems(stores);
 
-        var guns = [];
+        return _.filter(allItems,
+                        function(item) {
+                            if(!item.primStat) {
+                                return false;
+                            }
 
-        allItems.forEach(function(item) {
-            if (!item.primStat) {
-                return;
-            }
-
-            if (item.primStat.statHash === 368428387) {
-                guns.push(item);
-            }
-        });
-        
-        return guns;
+                            return (item.primStat.statHash === 368428387);
+                        });
     }
 
     glb.getWeaponList = function(stores) {
