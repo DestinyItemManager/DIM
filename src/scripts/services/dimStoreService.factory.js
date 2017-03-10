@@ -618,7 +618,7 @@ function StoreService(
       _stores.forEach(function(storeItem) {
         if(storeItem.hash == bulkRanking.hash) {
           //bugbug: what's the actual propery?
-          storeItem.ranking = bulkRanking.ranking;
+          storeItem.dtrRating = bulkRanking.rating;
         }
       });
     });
@@ -779,7 +779,8 @@ function StoreService(
       locked: item.locked,
       redacted: itemDef.redacted,
       classified: itemDef.classified,
-      isInLoadout: false
+      isInLoadout: false,
+      dtrRating: item.dtrRating
     });
 
     createdItem.index = createItemIndex(createdItem);
