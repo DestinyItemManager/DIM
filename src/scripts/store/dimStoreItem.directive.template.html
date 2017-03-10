@@ -19,7 +19,8 @@
            class="item-stat item-quality"
            ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>
       <div ng-if="vm.item.dtrRating"
-           class="item-stat item-dtrRating"> {{ vm.item.dtrRating }}</div>
+           class="item-stat item-dtrRating"
+           ng-style="vm.item.dtrRating | dtrRatingColor"> {{ vm.item.dtrRating }}</div>
       <!--
            The way the icon is specified here is impossible for webpack to bundle,
            so we've manually copied the element images across into the build dir

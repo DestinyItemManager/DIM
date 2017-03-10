@@ -610,7 +610,8 @@ function StoreService(
   }
 
   function attachRankings(bulkRankings) {
-    if(!bulkRankings) {
+    if ((!bulkRankings) ||
+        (!bulkRankings.length)) {
       return;
     }
 
