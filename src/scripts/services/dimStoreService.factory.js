@@ -21,12 +21,50 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags
+  dimFeatureFlags,
+  dimSettingsService,
+  $http
 ) {
   var _stores = [];
   var _idTracker = {};
 
   var _removedNewItems = new Set();
+
+  // Load classified data once per load and keep it in memory until
+  // reload. Classified data always comes from
+  // beta.destinyitemmanager.com so it can be released faster than the
+  // release website, but the release website can still use the
+  // updated definitions.
+  const getClassifiedData = _.memoize(function() {
+    return idbKeyval.get('classified-data').then((data) => {
+      // Use cached data for up to 4 hours
+      if ($DIM_FLAVOR !== 'dev' &&
+          data &&
+          data.time > Date.now() - (4 * 60 * 60 * 1000)) {
+        return data;
+      }
+
+      // In dev, use a local copy of the JSON for testing
+      const url = ($DIM_FLAVOR === 'dev')
+              ? '/data/classified.json'
+              : 'https://beta.destinyitemmanager.com/data/classified.json';
+
+      return $http.get(url)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const remoteData = response.data;
+            remoteData.time = Date.now();
+            return idbKeyval.set('classified-data', remoteData).then(() => remoteData);
+          }
+
+          console.error("Couldn't load classified info from " + url);
+
+          return {
+            itemHash: {}
+          };
+        });
+    });
+  });
 
   const dimMissingSources = require('app/data/missing_sources.json');
 
@@ -606,7 +644,7 @@ function StoreService(
     return index;
   }
 
-  function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, item, owner) {
+  function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
     var itemDef = defs.InventoryItem.get(item.itemHash);
     // Missing definition?
     if (!itemDef) {
@@ -620,6 +658,7 @@ function StoreService(
 
     if (!itemDef.icon && !itemDef.action) {
       itemDef.classified = true;
+      itemDef.classType = 3;
     }
 
     if (!itemDef.icon) {
@@ -634,7 +673,14 @@ function StoreService(
       console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
     }
 
-    if (!itemDef.itemName) {
+    if (itemDef.classified) {
+      const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
+      if (classifiedItemDef) {
+        itemDef = classifiedItemDef;
+      }
+    }
+
+    if (!itemDef || !itemDef.itemName) {
       return null;
     }
 
@@ -674,7 +720,7 @@ function StoreService(
     if (currentBucket.id.startsWith('BUCKET_VAULT')) {
       // TODO: Remove this if Bungie ever returns bucket.id for classified
       // items in the vault.
-      if (itemDef.classified) {
+      if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
         if (currentBucket.id.endsWith('WEAPONS')) {
           currentBucket = buckets.byType.Heavy;
         } else if (currentBucket.id.endsWith('ARMOR')) {
@@ -720,7 +766,7 @@ function StoreService(
       name: itemDef.itemName,
       description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
       icon: itemDef.icon,
-      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions),
+      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
       id: item.itemInstanceId,
       equipped: item.isEquipped,
       equipment: item.isEquipment,
@@ -1460,7 +1506,8 @@ function StoreService(
       dimBucketService.getBuckets(),
       previousItems,
       newItems,
-      itemInfoService])
+      itemInfoService,
+      getClassifiedData()])
       .then(function(args) {
         var result = [];
         dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
@@ -1610,5 +1657,31 @@ function StoreService(
     });
     return ret;
   }
-  // code above is from https://github.com/DestinyTrialsReport
+
+  function buildClassifiedItem(classifiedData, hash) {
+    const info = classifiedData.itemHash[hash];
+    if (info) { // do we have declassification info for item?
+      const localInfo = info.i18n[dimSettingsService.language];
+      const classifiedItem = {
+        icon: info.icon,
+        itemName: localInfo.itemName,
+        itemDescription: localInfo.itemDescription,
+        itemTypeName: localInfo.itemTypeName,
+        bucketTypeHash: info.bucketHash,
+        tierType: info.tierType,
+        classType: info.classType
+      };
+      if (info.primaryBaseStatHash) {
+        classifiedItem.primaryStat = {
+          statHash: info.primaryBaseStatHash,
+          value: info.stats[info.primaryBaseStatHash].value
+        };
+      }
+      if (info.stats) {
+        classifiedItem.stats = info.stats;
+      }
+      return classifiedItem;
+    }
+    return null;
+  }
 }
