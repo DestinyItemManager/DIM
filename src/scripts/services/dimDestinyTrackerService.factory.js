@@ -20,7 +20,11 @@ function DestinyTrackerService($q,
     }
 
     function handleErrors(response) {
-        //DTR-specific handling goes here
+        if(response.status != 200) {
+            return $q.reject(new Error("Destiny tracker service call failed."));
+        }
+
+        return response;
     }
 
     return {
@@ -36,7 +40,7 @@ function DestinyTrackerService($q,
                 .when(getBulkWeaponData(weaponList))
                 .then($http)
                 .then(handleErrors, handleErrors)
-                .then((response) => response.data.Response.data);
+                .then((response) => { return response.data; });
 
             return promise;
         }

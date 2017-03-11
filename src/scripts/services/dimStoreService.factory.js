@@ -579,8 +579,9 @@ function StoreService(
           var membershipType = null;
           var membershipId = null;
 
-          $q.all(dimDestinyTrackerService.bulkFetch(membershipType, membershipId, _stores))
-          .then((bulkRankings) => attachRankings(bulkRankings));
+          dimDestinyTrackerService
+            .bulkFetch(membershipType, membershipId, _stores)
+            .then((bulkRankings) => attachRankings(bulkRankings));
         }
         catch (e) {
           console.error("Failed to call Destiny Tracker service - " + e.stack);
