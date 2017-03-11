@@ -13,8 +13,8 @@ function DestinyTrackerService($q,
     function getBulkWeaponData(gunList) {
       return {
         method: 'POST',
-        url: 'https://www.destinytracker.com/api/weaponChecker/fetch',
-        data: { weaponList: gunList },
+        url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
+        data: gunList,
         dataType: 'json'
       };
     }
@@ -31,12 +31,6 @@ function DestinyTrackerService($q,
         },
         bulkFetch: function(membershipType, membershipId, stores) {
             var weaponList = _gunListBuilder.getWeaponList(stores);
-
-            var bulkCollection = { 
-                membershipType: membershipType,
-                membershipId: membershipId,
-                weaponCollection: weaponList
-            };
 
             var promise = $q
                 .when(getBulkWeaponData(weaponList))
@@ -78,37 +72,17 @@ function gunListBuilder() {
     glb.getWeaponList = function(stores) {
         var guns = getGuns(stores);
 
-        var newList = [];
+        var list = [];
 
         guns.forEach(function(gun) {
-            if(isKnownGun(newList, gun)) {
-                newList.forEach(function(listGun) {
-                    if(listGun.hash == gun.hash) {
-                        var newPerk = {
-                            roll: getGunRoll(gun),
-                            instanceIds: [ gun.id ]
-                        };
+            var dtrGun = translateToDtrGun(gun);
 
-                        listGun.talentPerks.push(newPerk);
-                        return true;
-                    }
-                });
-            } else {
-                var perk = {
-                    roll: getGunRoll(gun),
-                    instanceIds: [ gun.id ]
-                };
-
-                var listGun = {
-                    hash: gun.hash,
-                    talentPerks: [ perk ] 
-                };
-
-                newList.push(listGun);
+            if(!_.contains(list, dtrGun)) {
+                list.push(dtrGun);
             }
         });
 
-        return newList;        
+        return list;        
     }
 
     function getGunRoll(gun) {
@@ -119,21 +93,15 @@ function gunListBuilder() {
         return gun.talentGrid.dtrPerks.replace(/o/g, "");
     }
 
-    function isKnownGun(list, gun) {
-        var foundGun = false;
+    function translateToDtrGun(gun) {
+        return { 
+            referenceId: gun.hash,
+            roll: getGunRoll(gun)
+        };
+    }
 
-        var gunRoll = getGunRoll(gun);
-
-        list.forEach(function(listGun) {
-            var listGunRoll = getGunRoll(listGun);
-
-            if(listGunRoll == gunRoll) {
-                foundGun = true;
-                return true;
-            }
-        });
-
-        return foundGun;
+    function isKnownGun(list, dtrGun) {
+        return _.contains(list, dtrGun);
     }
 
     return glb;
