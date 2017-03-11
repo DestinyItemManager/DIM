@@ -102,7 +102,7 @@
     "angularjs-toaster": "github:DestinyItemManager/AngularJS-Toaster",
     "babel-polyfill": "^6.20.0",
     "components-font-awesome": "^4.7.0",
-    "drag-drop-webkit-mobile": "^1.2.0",
+    "drag-drop-webkit-mobile": "^1.4.1",
     "file-loader": "^0.10.1",
     "humanize-duration": "^3.10.0",
     "idb-keyval": "^2.3.0",
