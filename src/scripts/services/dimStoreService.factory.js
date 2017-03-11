@@ -619,6 +619,10 @@ function StoreService(
             //bugbug: what's the actual propery?
             storeItem.dtrRating = bulkRanking.rating;
           }
+          else {
+            //bugbug: giving random ratings is a terrible idea
+            storeItem.dtrRating = Math.round(Math.random()*5) + 1;
+          }
         })
       });
     });
