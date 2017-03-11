@@ -33,7 +33,7 @@ function DestinyTrackerService($q,
         },
         authenticate: function() {  
         },
-        bulkFetch: function(membershipType, membershipId, stores) {
+        bulkFetch: function(stores) {
             var weaponList = _gunListBuilder.getWeaponList(stores);
 
             var promise = $q

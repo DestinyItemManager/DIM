@@ -575,12 +575,8 @@ function StoreService(
       })
       .then(function() {
         try {
-          var platform = dimPlatformService.getActive();
-          var membershipType = null;
-          var membershipId = null;
-
           dimDestinyTrackerService
-            .bulkFetch(membershipType, membershipId, _stores)
+            .bulkFetch(_stores)
             .then((bulkRankings) => attachRankings(bulkRankings));
         }
         catch (e) {
