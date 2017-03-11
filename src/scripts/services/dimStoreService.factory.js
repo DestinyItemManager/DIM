@@ -613,11 +613,13 @@ function StoreService(
     }
 
     bulkRankings.forEach(function(bulkRanking) {
-      _stores.forEach(function(storeItem) {
-        if(storeItem.hash == bulkRanking.hash) {
-          //bugbug: what's the actual propery?
-          storeItem.dtrRating = bulkRanking.rating;
-        }
+      _stores.forEach(function(store) {
+        store.items.forEach(function(storeItem) {
+          if(storeItem.hash == bulkRanking.referenceId) {
+            //bugbug: what's the actual propery?
+            storeItem.dtrRating = bulkRanking.rating;
+          }
+        })
       });
     });
   }
