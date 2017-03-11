@@ -30,7 +30,7 @@
       </div>
     </div>
   </div>
-  <div class="vendors">
+  <div class="vendors" ng-class="{ 'hide-filtered': vm.settings.hideFilteredItems }">
     <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendorService.vendors" active-tab="vm.activeTab" total-coins="vm.totalCoins"></dim-vendor-items>
   </div>
 </div>
