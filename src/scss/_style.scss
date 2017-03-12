@@ -1108,11 +1108,11 @@ rzslider, .rzslider {
   text-align: right;
 }
 
-.item-rating-container {
+.item-review-container {
   width: 100%;
 }
 
-.item-dtr-rating-input {
+.item-dtr-review-input {
   background-color: #333;
   color: #fff;
   left: 0px;
@@ -1122,9 +1122,18 @@ rzslider, .rzslider {
   vertical-align: top;
 }
 
+.item-dtr-review-submit {
+  background-color: #333;
+  color: #fff;
+  left: 0px;
+  height: 30px;
+  padding: 4px 8px;
+  vertical-align: top;
+}
+
 .item-dtr-review {
   right: 0px;
-  width: 90%;
+  width: 70%;
   height: 30px;
   background-color: #333;
   padding: 4px 8px;
