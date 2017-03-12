@@ -1108,6 +1108,39 @@ rzslider, .rzslider {
   text-align: right;
 }
 
+.item-rating-container {
+  width: 100%;
+}
+
+.item-dtr-rating-input {
+  background-color: #333;
+  color: #fff;
+  left: 0px;
+  width: 30px;
+  height: 30px;
+  padding: 4px 8px;
+  vertical-align: top;
+}
+
+.item-dtr-review {
+  right: 0px;
+  width: 90%;
+  height: 30px;
+  background-color: #333;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  color: white; 
+}
+
+.item-dtr-review-error {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+  color: #985C58;
+  width: 100%;
+  text-align: right; 
+}
+
 .item-perks {
   margin: 5px 10px;
 }

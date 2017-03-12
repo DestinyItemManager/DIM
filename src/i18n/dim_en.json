@@ -275,6 +275,10 @@
       "Error": "Error! Max 120 characters for notes.",
       "Help": "Add notes to this item"
    },
+   "DtrReview": {
+     "Error": "Something went wrong with the review submission.",
+     "Help": "Add a review to this item"
+   },
    "Postmaster": {
       "Limit": "Postmaster Limit",
       "Desc": "There are 20 lost items at the Postmaster on your {store}. Any new items will overwrite the existing."
