@@ -140,7 +140,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   };
 
   vm.submitReview = function() {
-    var ranking = vm.item.dimInfo.ranking;
+    var newRating = vm.item.dtrRating;
     var review = vm.item.dimInfo.userReview;
 
     //bugbug: nothing here now but the post and handle error and yadda yadda
