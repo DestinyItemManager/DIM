@@ -79,7 +79,7 @@
       "FilterHelp": "Cerca oggetti/perk o is:arc",
       "MaterialsExchange": "Livelli fazione disponibili",
       "Refresh": "Aggiorna i Dati di Destiny",
-      "SupportDIM": "Supporta"
+      "SupportDIM": "Supporto"
    },
    "Help": {
       "BackToDIM": "Torna a DIM",
@@ -392,7 +392,8 @@
      },
      "Support": {
        "Support": "Supportare DIM",
-       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine."
+       "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
+       "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto."
      },
      "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM."
    },

@@ -18,7 +18,7 @@
       "Throttled": "La limite de connections à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
       "NotLoggedIn": "Veuillez vous connecter sur Bungie.net pour utiliser cette extension.",
       "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
-      "NoAccount": "Aucun compte Destiny n'a été trouvé pour cette platforme. Avez-vous sélectionné la bonne platforme?",
+      "NoAccount": "Aucun compte Destiny n'a été trouvé pour {platform}. Avez-vous sélectionné la bonne platforme?",
       "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {platform}.",
       "NoCookies": "Aucun cookie trouvé.",
       "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
