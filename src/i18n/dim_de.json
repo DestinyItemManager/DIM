@@ -79,7 +79,7 @@
       "FilterHelp": "Suche nach Item/Perk oder is:arc",
       "MaterialsExchange": "Verfügbare Fraktionsränge",
       "Refresh": "Aktualisiere Destiny Daten",
-      "SupportDIM": "Unterstützen"
+      "SupportDIM": "Support"
    },
    "Help": {
       "BackToDIM": "Zurück zu DIM",
@@ -388,11 +388,12 @@
        "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
        "Version": "Version",
        "Transifex": "Trete dem Übersetzer-Team bei!",
-       "TransifexText": "Wir nutzen Transifex für einfache Sprachanpassung. Wenn Du DIM in Deiner Sprache sehen möchtest, trete dem Team bei."
+       "TransifexText": "Wir nutzen Transifex zur unkomplizierte Übersetung. Wenn du DIM in deiner Sprache sehen möchtest, trete dem Team bei."
      },
      "Support": {
        "Support": "Unterstütze DIM",
-       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen."
+       "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
+       "OpenCollective": "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben."
      },
      "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
    },
