@@ -1663,6 +1663,7 @@ function StoreService(
     if (info) { // do we have declassification info for item?
       const localInfo = info.i18n[dimSettingsService.language];
       const classifiedItem = {
+        classified: true,
         icon: info.icon,
         itemName: localInfo.itemName,
         itemDescription: localInfo.itemDescription,
