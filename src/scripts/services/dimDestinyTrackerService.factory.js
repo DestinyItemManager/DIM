@@ -10,7 +10,7 @@ function DestinyTrackerService($q,
     var _remoteJwt = {};
     var _gunListBuilder = {};
 
-    function getBulkWeaponData(gunList) {
+    function getBulkWeaponDataPromise(gunList) {
       return {
         method: 'POST',
         url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
@@ -37,12 +37,15 @@ function DestinyTrackerService($q,
             var weaponList = _gunListBuilder.getWeaponList(stores);
 
             var promise = $q
-                .when(getBulkWeaponData(weaponList))
+                .when(getBulkWeaponDataPromise(weaponList))
                 .then($http)
                 .then(handleErrors, handleErrors)
                 .then((response) => { return response.data; });
 
             return promise;
+        },
+        submitReview: function(membershipInfo, item, userReview) {
+
         }
     }
 }
