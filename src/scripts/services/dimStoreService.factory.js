@@ -261,7 +261,8 @@ function StoreService(
     dropNewItem: dropNewItem,
     createItemIndex: createItemIndex,
     processItems: processItems,
-    hasNewItems: false
+    hasNewItems: false,
+    submitReview: submitReview
   };
 
   $rootScope.$on('dim-active-platform-updated', function() {
@@ -600,6 +601,12 @@ function StoreService(
 
     _reloadPromise.activePlatform = activePlatform;
     return _reloadPromise;
+  }
+
+  function submitReview(item, userReview) {
+    var membershipInfo = dimPlatformService.getActive();
+
+    dimDestinyTrackerService.submitReview(membershipInfo, item, userReview);
   }
 
   function getStore(id) {

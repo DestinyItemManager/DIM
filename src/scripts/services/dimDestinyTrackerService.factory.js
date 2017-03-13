@@ -45,7 +45,7 @@ function DestinyTrackerService($q,
             return promise;
         },
         submitReview: function(membershipInfo, item, userReview) {
-
+            
         }
     }
 }
