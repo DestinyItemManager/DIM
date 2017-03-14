@@ -57,14 +57,6 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
 
   $ngRedux.connect(mapStateToThis)(service);
 
-  return service;
-
-  function assignResultAndForward(dataset, attribute, result) {
-    dataset[attribute] = result;
-
-    return result;
-  }
-
   const handleErrors = function handleErrors(response) {
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
@@ -139,6 +131,14 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
 
     return response;
   }.bind(service);
+
+  return service;
+
+  function assignResultAndForward(dataset, attribute, result) {
+    dataset[attribute] = result;
+
+    return result;
+  }
 
   function retryOnThrottled(request) {
     function run(retries) {
