@@ -65,7 +65,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     return result;
   }
 
-  function handleErrors(response) {
+  const handleErrors = function handleErrors(response) {
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
     }
@@ -122,9 +122,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     } else if ((errorCode === 1618 || errorCode === 1601) &&
       response.config.url.indexOf('/Account/') >= 0 &&
       response.config.url.indexOf('/Character/') < 0) {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: '' })));
-      // TODO: Add platform back to error message.
-      // return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
+      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: this.selected.label })));
     } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
       $state.go('developer');
       return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
@@ -140,7 +138,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     }
 
     return response;
-  }
+  }.bind(service);
 
   function retryOnThrottled(request) {
     function run(retries) {
