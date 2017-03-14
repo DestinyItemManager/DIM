@@ -16,7 +16,11 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
 
   var apiKey;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-    apiKey = $DIM_API_KEY;
+    if (window.chrome && window.chrome.extension) {
+      apiKey = $DIM_API_KEY;
+    } else {
+      apiKey = $DIM_WEB_API_KEY;
+    }
   } else {
     apiKey = localStorage.apiKey;
   }
@@ -65,7 +69,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
     }
-    if (response.status === 503 || response.status === 522 /* cloudflare */) {
+    if (response.status === 503 || response.status === 522) { /* cloudflare */
       return $q.reject(new Error($translate.instant('BungieService.Down')));
     }
     if (response.status < 200 || response.status >= 400) {
@@ -75,19 +79,23 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
       })));
     }
 
-    var errorCode = response.data.ErrorCode;
+    var errorCode = response.data ? response.data.ErrorCode : -1;
 
     switch (errorCode) {
-      case 1: {
-        return response;
-      }
-      case 1627: {
-        return $q.reject("Vendor data is unavailable.");
-      }
-      case 2108: {
-        $rootScope.$broadcast('dim-no-token-found');
-        return $q.reject("DIM does not have permission to perform this action.");
-      }
+      case 1:
+        {
+          return response;
+        }
+      case 1627:
+        {
+          return $q.reject("Vendor data is unavailable.");
+        }
+      case 2106:
+      case 2108:
+        {
+          $rootScope.$broadcast('dim-no-token-found');
+          return $q.reject("DIM does not have permission to perform this action.");
+        }
       case 5:
       case 36:
       case 99:
@@ -95,9 +103,9 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
       case 2101:
       case 2102:
       case 2107:
-      // default: {
-      //   return response;
-      // }
+        // default: {
+        //   return response;
+        // }
     }
 
     if (errorCode === 36) {
@@ -105,14 +113,18 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     } else if (errorCode === 99) {
       if (window.chrome && window.chrome.extension) {
         openBungieNetTab();
+      } else {
+        $rootScope.$broadcast('dim-no-token-found');
       }
       return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
     } else if (errorCode === 5) {
       return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
-    } else if (errorCode === 1618 &&
+    } else if ((errorCode === 1618 || errorCode === 1601) &&
       response.config.url.indexOf('/Account/') >= 0 &&
       response.config.url.indexOf('/Character/') < 0) {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
+      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: '' })));
+      // TODO: Add platform back to error message.
+      // return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
     } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
       $state.go('developer');
       return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
@@ -175,7 +187,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     })
     .then($http)
     .then(handleErrors, handleErrors)
-    .then(function(response) {
+    .then((response) => {
       return response.data.Response;
     });
   }
@@ -771,4 +783,3 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     }
   }
 }
-

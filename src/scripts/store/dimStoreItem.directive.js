@@ -44,7 +44,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
 
   function Link(scope, element) {
     if (!firstItemTimed) {
-      console.timeEnd('First item directive built');
       firstItemTimed = true;
     }
 
@@ -204,6 +203,9 @@ function StoreItemCtrl() {
   var vm = this;
 
   vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
-  vm.draggable = (vm.item.equipment || vm.item.location.hasTransferDestination) && !vm.item.location.inPostmaster;
+  vm.draggable = !vm.item.location.inPostmaster &&
+    (vm.item.notransfer)
+    ? vm.item.equipment
+    : (vm.item.equipment || vm.item.location.hasTransferDestination);
 }
 

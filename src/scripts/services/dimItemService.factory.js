@@ -599,7 +599,7 @@ function ItemService(dimStoreService,
       } else {
         // Make one move and start over!
         return moveTo(moveAsideItem, moveAsideTarget, false, moveAsideItem.amount, excludes)
-          .then(() => canMoveToStore(item, options))
+          .then(() => canMoveToStore(item, store, options))
           .catch((e) => {
             if (numRetries < 3) {
               // Exclude this item and try again so we pick another

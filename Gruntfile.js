@@ -17,7 +17,9 @@ module.exports = function(grunt) {
           cwd: 'dist',
           src: [
             '**',
-            '!chrome.zip'
+            '!data',
+            '!chrome.zip',
+            '!.htaccess'
           ],
           dest: '/',
           filter: 'isFile'
@@ -62,11 +64,40 @@ module.exports = function(grunt) {
           zip: "dist/chrome.zip"
         }
       }
+    },
+
+    // Tasks for uploading the website versions
+    rsync: {
+      options: {
+        //dryRun: true,
+        args: ["--verbose"],
+        exclude: ["chrome.zip"],
+        host: process.env.REMOTE_HOST,
+        port: 2222,
+        recursive: true,
+        deleteAll: true,
+        ssh: true,
+        privateKey: 'config/dim_travis.rsa',
+        sshCmdArgs: ["-o StrictHostKeyChecking=no"]
+      },
+      beta: {
+        options: {
+          src: "dist/",
+          dest: process.env.REMOTE_PATH + "beta"
+        }
+      },
+      prod: {
+        options: {
+          src: "dist/",
+          dest: process.env.REMOTE_PATH + "prod"
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-rsync');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('dist/manifest.json');
@@ -75,16 +106,18 @@ module.exports = function(grunt) {
     grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
 
-  grunt.registerTask('publish_chrome_beta', [
+  grunt.registerTask('publish_beta', [
     'update_chrome_beta_manifest',
     'compress:chrome',
+    'log_beta_version',
     'webstore_upload:beta',
-    'log_beta_version'
+    'rsync:beta'
   ]);
 
-  grunt.registerTask('publish_chrome_release', [
+  grunt.registerTask('publish_release', [
     'compress:chrome',
-    'webstore_upload:release'
+    'webstore_upload:release',
+    'rsync:prod'
   ]);
 
   grunt.registerTask('log_beta_version', function() {

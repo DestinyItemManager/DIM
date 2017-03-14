@@ -11,6 +11,11 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFe
 
   var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
 
+  // Variables for templates that webpack does not automatically correct.
+  $rootScope.$DIM_VERSION = $DIM_VERSION;
+  $rootScope.$DIM_FLAVOR = $DIM_FLAVOR;
+  $rootScope.$DIM_CHANGELOG = $DIM_CHANGELOG;
+
   $rootScope.$on('dim-settings-loaded', () => {
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
       dimInfoService.show('old-chrome', {

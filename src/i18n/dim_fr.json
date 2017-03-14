@@ -11,13 +11,14 @@
       "Weapons": "Armes"
    },
    "BungieService": {
+      "DevVersion": "Est-ce une version de développement de DIM? Vous devez enregistrer votre extension chrome avec bungie.net.",
       "Down": "Bungie.net est hors service.",
       "Difficulties": "L'API de Bungie rencontre actuellement des difficultés.",
       "NetworkError": "Erreur de réseau - {status} {statusText}",
       "Throttled": "La limite de connections à l'API de Bungie a été atteinte. Veuillez réessayer plus tard.",
       "NotLoggedIn": "Veuillez vous connecter sur Bungie.net pour utiliser cette extension.",
       "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
-      "NoAccount": "Aucun compte Destiny n'a été trouvé pour cette platforme. Avez-vous sélectionné la bonne platforme?",
+      "NoAccount": "Aucun compte Destiny n'a été trouvé pour {platform}. Avez-vous sélectionné la bonne platforme?",
       "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {platform}.",
       "NoCookies": "Aucun cookie trouvé.",
       "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
@@ -30,7 +31,12 @@
       "All": "{type} comparisons ({quantity})",
       "Archetype": "Archetype comparisons ({quantity})",
       "Compare": "Comparer",
-      "Close": "Fermer"
+      "Close": "Fermer",
+      "Error": {
+         "Class": "Impossible de comparer cet objet parce qu'il n'est pas pour un {class}.",
+         "Archetype": "Impossible de comparer cet objet parce qu'il n'est pas un {type}."
+      },
+      "Splits": "Comparer des parts similaires ({quantity})"
    },
    "Cooldown": {
       "Grenade": "Régénération de Grenade",
@@ -43,7 +49,11 @@
    },
    "DidYouKnow": {
       "DidYouKnow": "Le saviez-vous?",
+      "Collapse": "Vous venez de réduire une section dans DIM! Il peut être utile de cache des parties de DIM que vous n'avez pas besoin d'utiliser normalement.",
       "DontShowAgain": "Ne plus jamais afficher cette astuce",
+      "DoubleClick": "Si vous déplacez un objet vers votre perso actuellement actif (dernière connexion), vous pouvez double-cliquer cet objet pour l'équiper instantanément.",
+      "DragAndDrop": "Les objets peuvent être glissés et déposés entre différentes colonnes de persos/coffres.",
+      "Expand": "Pour re-élargir une section, cliquez simplement l'icône \"plus\" sur la gauche de la catégorie vous avez réduite.",
       "TryNext": "Essayez ultérieurement"
    },
    "FarmingMode": {
@@ -55,11 +65,13 @@
          "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
          "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
       },
+      "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {character}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
       "Quickmove": "Déplacement rapide",
       "Stop": "Stop"
    },
    "Filter": {
-      "EnterName": "Entrez un nom d'objet:"
+      "EnterName": "Entrez un nom d'objet:",
+      "EnterNote": "Entrez vos notes:"
    },
    "Header": {
       "About": "À propos",
@@ -67,12 +79,47 @@
       "FilterHelp": "Rechercher objet/amélioration ou is:arc",
       "MaterialsExchange": "Rangs de faction disponibles",
       "Refresh": "Rafraîchir les données Destiny",
-      "SupportDIM": "Soutien DIM"
+      "SupportDIM": "Soutien"
    },
    "Help": {
       "BackToDIM": "Retour sur DIM",
       "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
-      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile."
+      "Drag": "Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer une partie de la pile.",
+      "ChangingPerks": "Changement d'Abilités Non Supporté",
+      "ChangingPerksInfo": "Désolé, ce n'est pas possible de changer d'abilités en dehors du jeu. On aurait aimé!",
+      "HidePopup": "Cacher Ce Popup",
+      "NeverShow": "Ne plus jamais afficher.",
+      "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
+      "Version": {
+         "Beta": "Beta a été mis à jour à v{version} ",
+         "Stable": "DIM v{version} Publiée"
+      },
+      "Xur": "Xûr est Là"
+   },
+   "Hotkey": {
+      "StartSearch": "Commencer une recherche",
+      "RefreshInventory": "Rafraîchir l'inventaire",
+      "ToggleDetails": "Basculer sur l'affichage des détails complets d'objet",
+      "MarkItemAs": "Marquer objet comme '{tag}'",
+      "ClearNewItems": "Effacer les nouveaux objets"
+   },
+   "Infusion": {
+      "Infusion": "Chercheur de Fuel à Infusion",
+      "Calc": "Calculateur d'infusion",
+      "InfuseItems": "Sélectionner un objet avec lequel infuser:",
+      "InfusionMaterials": "Matériels d'Infusion",
+      "LockedItems": "Inclure objets \"verrouillés\"",
+      "NoItems": "Pas d'objets infusables disponibles",
+      "NoTransfer": "Transférer matériel d'infusion\n{target} ne peut pas être déplacé.",
+      "ShowItems": "Afficher les objets infusables sur tous les persos et dans tous les coffres ",
+      "TransferItems": "Transférer objets",
+      "Using3": "utilisant 3"
+   },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet"
+   },
+   "ItemMove": {
+      "Consolidate": "{name} consolidé"
    },
    "ItemService": {
       "PercentComplete": "({ percent, number, percent } Achevée)"

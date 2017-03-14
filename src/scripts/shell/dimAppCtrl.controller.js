@@ -1,5 +1,4 @@
 import angular from 'angular';
-import _ from 'underscore';
 
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
@@ -8,6 +7,11 @@ function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadi
   'ngInject';
 
   var vm = this;
+
+  // Variables for templates that webpack does not automatically correct.
+  vm.$DIM_VERSION = $DIM_VERSION;
+  vm.$DIM_FLAVOR = $DIM_FLAVOR;
+  vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
 
   vm.loadingTracker = loadingTracker;
 
@@ -167,4 +171,8 @@ function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadi
   };
 
   vm.xur = dimXurService;
+
+  vm.refresh = function refresh() {
+    loadingTracker.addPromise(dimStoreService.reloadStores());
+  };
 }

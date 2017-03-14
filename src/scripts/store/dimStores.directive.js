@@ -73,7 +73,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimBucketServic
   vm.stores = dimStoreService.getStores();
   vm.vault = dimStoreService.getVault();
   vm.buckets = null;
-  dimBucketService.then(function(buckets) {
+  dimBucketService.getBuckets().then(function(buckets) {
     vm.buckets = angular.copy(buckets);
   });
   vm.toggleSection = function(id) {
@@ -87,4 +87,3 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimBucketServic
     vm.vault = dimStoreService.getVault();
   });
 }
-

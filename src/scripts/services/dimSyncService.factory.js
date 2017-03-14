@@ -5,7 +5,7 @@ angular.module('dimApp')
   .factory('SyncService', SyncService);
 
 
-function SyncService($q) {
+function SyncService($q, $translate) {
   var cached; // cached is the data in memory,
   var fileId; // reference to the file in drive
   var membershipId; // logged in bungie user id
@@ -40,7 +40,7 @@ function SyncService($q) {
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
           if (list.code === 401) {
-            reject(new Error('To re-authorize google drive, must restart your browser.'));
+            reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
             return;
           }
 
@@ -114,6 +114,24 @@ function SyncService($q) {
     });
   }
 
+  // function byteLength(str) {
+  //   // returns the byte length of an utf8 string
+  //   var s = str.length;
+  //   for (var i = str.length - 1; i >= 0; i--) {
+  //     var code = str.charCodeAt(i);
+  //     if (code > 0x7f && code <= 0x7ff) {
+  //       s++;
+  //     } else if (code > 0x7ff && code <= 0xffff) {
+  //       s += 2;
+  //     }
+
+  //     if (code >= 0xDC00 && code <= 0xDFFF) {
+  //       i--; // trail surrogate
+  //     }
+  //   }
+  //   return s;
+  // }
+
   // save data {key: value}
   function set(value, PUT) {
     //----
@@ -143,7 +161,14 @@ function SyncService($q) {
       return new $q((resolve, reject) => {
         chrome.storage.sync.set(cached, () => {
           if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError));
+            const message = chrome.runtime.lastError.message;
+            if (message.indexOf('QUOTA_BYTES_PER_ITEM') > -1) {
+              reject(new Error($translate.instant('SyncService.OneItemTooLarge')));
+            } else if (message.indexOf('QUOTA_BYTES') > -1) {
+              reject(new Error($translate.instant('SyncService.SaveTooLarge')));
+            } else {
+              reject(new Error(message));
+            }
           } else {
             resolve();
           }
@@ -252,8 +277,8 @@ function SyncService($q) {
       return set(cached, true);
     }
 
-    return $q((resolve, reject) => {
-      if (chrome.storage && chrome.storage.sync) {
+    if (window.chrome && chrome.storage && chrome.storage.sync) {
+      return $q((resolve, reject) => {
         chrome.storage.sync.remove(key, () => {
           if (chrome.runtime.lastError) {
             reject(chrome.runtime.lastError);
@@ -261,10 +286,10 @@ function SyncService($q) {
             resolve();
           }
         });
-      } else {
-        return set(cached, true);
-      }
-    });
+      });
+    } else {
+      return set(cached, true);
+    }
   }
 
   return {
@@ -278,4 +303,3 @@ function SyncService($q) {
     }
   };
 }
-

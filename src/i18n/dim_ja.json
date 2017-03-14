@@ -21,10 +21,12 @@
       "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
       "NoCookies": "クッキーが見つかりませんでした。",
       "NotConnected": "インターネットに接続してない可能性あります。",
+      "ItemUniqueness": "アイテムのレア度",
       "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。"
    },
    "Compare": {
       "ButtonHelp": "アイテムを比較する",
+      "All": "{type} 比較  ({quantity})",
       "Compare": "比較",
       "Close": "終了",
       "Error": {
@@ -55,7 +57,9 @@
    "Header": {
       "About": "情報",
       "Filters": "フィルター",
-      "SupportDIM": "DIMを支援する"
+      "FilterHelp": "アイテム／パークを検索",
+      "Refresh": "デスティニーデータを更新",
+      "SupportDIM": "サポート"
    },
    "Help": {
       "BackToDIM": "DIMに戻る",
@@ -68,16 +72,31 @@
       "Version": {
          "Beta": "ベータがv{version}にアップデートされました",
          "Stable": "DIM v{version} がリリースされました"
-      }
+      },
+      "Xur": "Xûrはここです"
+   },
+   "Hotkey": {
+      "StartSearch": "検索開始",
+      "RefreshInventory": "インベントリーを更新"
    },
    "Infusion": {
       "TransferItems": "アイテムの転送"
-    },
+   },
+   "ItemInfoService": {
+     "SaveInfoErrorTitle": "アイテム情報を保存するにエラーが発生しました。"
+   },
+   "ItemMove": {
+      "ToVault": "{name} 今は全て保管庫にあります。"
+   },
    "ItemService": {
-      "PercentComplete": "({ percent, number, percent } 完了)"
+      "PercentComplete": "({ percent, number, percent } 完了)",
+      "TwoExotics": "エキゾチックをどうやって2つを装備できたのかわかりません。"
    },
    "LB": {
       "Guardians": "ガーディアン",
+      "ShowGear": "{class} 装備を表示する",
+      "HideGear": "{class} 装備を非表示する",
+      "IncludeRare": "レアアイテム (青) を含む",
       "Help": {
         "Intellect": "知性はスーパースキルのクールダウン時間を短縮する",
         "Discipline": "鍛錬はグレネードのクールダウン時間を短縮する",
@@ -99,12 +118,17 @@
       "Random": "ランダム",
       "Save": "保存",
       "SaveAsNew": "新規で保存",
-      "Cancel": "キャンセル"
+      "Cancel": "キャンセル",
+      "CouldNotEquip": "{itemname} を装備できませんでした",
+      "NameRequired": "名称が必要"
+   },
+   "MaterialsExchange": {
+      "MaterialsExchange": "素材交換"
    },
    "MovePopup": {
       "Equip": "装備する",
       "Store": "保管する",
-      "Take": "Take",
+      "Take": "取る",
       "Vault": "保管庫"
    },
    "Notes": {
@@ -112,13 +136,17 @@
    },
    "Settings": {
       "Settings": "設定",
-      "SortRarity": "レア度"
+      "AlwaysShowDetails": "常にアイテム詳細を表示",
+      "SortRarity": "レア度",
+      "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
+      "ResetToDefault": "初期化する"
    },
    "Stats": {
       "Discipline": "鍛錬",
       "Intellect": "知性",
       "Level": "レベル",
-      "Strength": "腕力"
+      "Strength": "腕力",
+      "TierProgress": "{tier} の {progress}"
    },
    "StoreBucket": {
       "Move": "移動"
@@ -133,6 +161,7 @@
    "Vendors": {
       "Vendors": "ベンダー",
       "All": "全て",
+      "Compare": "持ってるものと比較",
       "Day": "日間",
       "Load": "ローディングベンダー",
       "ArmorAndWeapons": "アーマーとウェポン",
@@ -166,22 +195,13 @@
        "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
        "Twitter": "ツイッター",
        "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
-       "Version": "バージョン"
+       "Version": "バージョン",
+       "Transifex": "翻訳チームに参加してください！",
+       "TransifexText": "私達はTransifexを使用して翻訳しています。 あなたの言語にローカライズされたDIMを見たい場合は、チームに参加してください。"
      },
      "Support": {
        "Support": "DIMを支援する",
-       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
-       "Fans": "私たちはデスティニーの大ファンです。DIMは何時間ものゲームプレイ中にキャラクター間のギア伝達が難しいと感じたため作成されました。1つのアイテムを忘れたり、タワーに何度も行ったり、ストライクをしてアイテムを毎回保管するのは面倒です。DIMは、より多くのゲーム時間を得るのに役立つツールです。",
-       "Contribute": "私はどのように貢献できますか？",
-       "Paypal":"DIMにチップを贈る！",
-       "PaypalText": "私達はチップの受け取りにPayPalを使用しています。 DIMがあなたのゲーム時間をより楽しくするなら、プロジェクトに取り組むチームをサポートすることを検討してください。",
-       "Transifex": "翻訳チームに参加してください！",
-       "TransifexText": "私達はTransifexを使用して翻訳しています。 あなたの言語にローカライズされたDIMを見たい場合は、チームに参加してください。",
-       "Share": "あなたの友達とDIMを共有してください。",
-       "ShareText": "ロードアウトを装備するのがいかに簡単か経験したら、決して止められないでしょう。 あなたの友人と楽しく共有しましょう！",
-       "Reddit": "DIMへのアイデアはありますか？",
-       "RedditText": "DIMのホームページ /r/destinyitemmanager であなたのアイデアを聞かせてください。DIMの周りのコミュニティだけでなく、私たちからもお聞きします。アイデアの反復と改善に最適な方法です。",
-       "GitHub": "私はデベロッパーかデザイナーか熱狂者です。 ソースに貢献したいと思っています。"
+       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。"
      },
      "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。"
    },

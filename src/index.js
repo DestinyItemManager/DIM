@@ -2,6 +2,19 @@ require('babel-polyfill');
 
 require('./scripts/google');
 
+// Drag and drop
+window.iosDragDropShim = {
+  enableEnterLeave: true,
+  holdToDrag: 300
+};
+// Use our forked version until https://github.com/timruffles/ios-html5-drag-drop-shim/pull/85 is merged
+// require('drag-drop-webkit-mobile');
+require('./scripts/ios-drag-drop.js');
+window.addEventListener('touchmove', function() {});
+
+// Shim IndexedDB using WebSQL for iOS 9
+require('indexeddbshim');
+
 // TODO: remove this globals and instead require where needed
 window.$ = window.jQuery = require('jquery');
 require('jquery-textcomplete');
@@ -14,7 +27,6 @@ require('./scripts/oauth/oauth.module');
 require('./scripts/oauth/http-refresh-token.service');
 require('./scripts/oauth/oauth.service');
 require('./scripts/oauth/oauth-token.service');
-
 
 // Initialize the main DIM app
 require('./scripts/app.module');
