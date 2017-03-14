@@ -36,7 +36,8 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
       _platforms.push({
         id: bungieUser.gamerTag,
         type: 1,
-        label: 'Xbox'
+        label: 'Xbox',
+        membershipId: bungieUser.user.membershipId
       });
 
       // A fake PSN account for Xbox-only testers
@@ -45,7 +46,8 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
           id: bungieUser.gamerTag,
           type: 2,
           fake: true,
-          label: 'Fake PlayStation'
+          label: 'Fake PlayStation',
+          membershipId: bungieUser.user.membershipId
         });
       }
     }
@@ -54,7 +56,8 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
       _platforms.push({
         id: bungieUser.psnId,
         type: 2,
-        label: 'PlayStation'
+        label: 'PlayStation',
+        membershipId: bungieUser.user.membershipId
       });
 
       // A fake Xbox account for PSN-only testers
@@ -63,7 +66,8 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
           id: bungieUser.psnId,
           type: 2,
           fake: true,
-          label: 'Fake Xbox'
+          label: 'Fake Xbox',
+          membershipId: bungieUser.user.membershipId
         });
       }
     }
