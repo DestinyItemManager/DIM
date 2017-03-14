@@ -7,8 +7,10 @@
         <span class="link" ng-click="app.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
         <span class="link" ng-if="app.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"><i class="fa fa-list-alt"></i></span>
         <span class="link" ng-click="app.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
-        <span class="link" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-filter"></i></span>
-        <span class="link" title="Search"><span focus-on="clicked" dim-search-filter=""></span></span>
+        <span class="link search-link">
+          <span class="filter-help" ng-click="app.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-question-circle-o"></i></span>
+          <dim-search-filter></dim-search-filter>
+        </span>
       </div>
     </span>
     <span class="logo link" ng-class="app.$DIM_FLAVOR" ui-sref="inventory" title="v{{app.$DIM_VERSION}} ({{app.$DIM_FLAVOR}})">DIM</span>

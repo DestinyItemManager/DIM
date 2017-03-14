@@ -4,7 +4,7 @@
   margin: 0 auto;
 
   .vendors {
-    margin-top: 55px;
+    margin-top: 44px;
   }
   .vendorLabels h1 {
     display: inline-block;
@@ -66,18 +66,18 @@
     height: 51px;
     left: 0;
     width: 100%;
-    top: 50px;
+    top: 42px;
     background-color: #434444;
     z-index: 4;
   }
   .vendorHeaderWrapper {
     position: absolute;
-    top: 85px;
+    top: 72px;
     z-index: 4;
   }
   .vendorHeaderWrapper.sticky {
     position:fixed;
-    top: 50px;
+    top: 42px;
   }
   .vendor-headers-background.sticky {
     display: block;

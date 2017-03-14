@@ -17,6 +17,7 @@
 * Remove Materials Exchange from the beta.
 * Vendors now show where they are, and are sorted better. All the cryptarchs now appear. Engrams waiting to be decrypted aren't shown in the vendor screen.
 * Experimental iOS 9 Mobile Safari compatibility. May be removed in the future.
+* Style updates to clean up DIM's look and make sure more screen space is being used for items.
 * Gained the ability for us to fill in classified items, even if Bungie hasn't unclassified them. You still can't transfer them though.
 * The "Hide Unfiltered Items while Filtering" preference now applies to vendor gear too. #1528
 
