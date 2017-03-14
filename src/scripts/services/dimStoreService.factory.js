@@ -606,7 +606,9 @@ function StoreService(
   function submitReview(item, userReview) {
     var membershipInfo = dimPlatformService.getActive();
 
-    dimDestinyTrackerService.submitReview(membershipInfo, item, userReview);
+    dimDestinyTrackerService
+      .submitReview(membershipInfo, item, userReview)
+      .then((emptyResponse) => { return; });
   }
 
   function getStore(id) {
