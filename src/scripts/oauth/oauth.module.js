@@ -16,3 +16,4 @@ angular.module('dim-oauth', ['LocalStorageModule'])
       }
     });
   });
+

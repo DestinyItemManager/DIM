@@ -69,7 +69,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
     }
-    if (response.status === 503 || response.status === 522) { /* cloudflare */
+    if (response.status === 503 || response.status === 522 /* cloudflare */) {
       return $q.reject(new Error($translate.instant('BungieService.Down')));
     }
     if (response.status < 200 || response.status >= 400) {
@@ -535,6 +535,7 @@ function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaste
 
   function getVendorForCharacter(character, vendorHash) {
     const platform = this.selected;
+
     var data = {
       token: null,
       membershipType: null

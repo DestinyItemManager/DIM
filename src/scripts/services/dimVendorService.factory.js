@@ -127,9 +127,7 @@ function VendorService(
   }
 
   function reloadVendors(stores) {
-    var self = this;
-
-    const activePlatform = self.selected;
+    const activePlatform = this.selected;
 
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
       return _reloadPromise;
@@ -287,7 +285,6 @@ function VendorService(
   }
 
   function loadVendor(store, vendorDef, defs) {
-    var self = this;
     const vendorHash = vendorDef.hash;
 
     const key = vendorKey(store, vendorHash);
@@ -303,7 +300,7 @@ function VendorService(
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
           return dimBungieService
-            .getVendorForCharacter(store, vendorHash, self.selected)
+            .getVendorForCharacter(store, vendorHash, this.selected)
             .then((vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
@@ -519,3 +516,4 @@ function VendorService(
     return totalCoins;
   }
 }
+

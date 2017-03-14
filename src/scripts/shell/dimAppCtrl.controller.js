@@ -36,7 +36,6 @@ function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadi
     callback: function(event) {
       $rootScope.$broadcast('dim-focus-filter-input');
 
-
       event.preventDefault();
       event.stopPropagation();
     }
