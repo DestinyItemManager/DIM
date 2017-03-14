@@ -44,11 +44,18 @@ function DestinyTrackerService($q,
         return response;
     }
 
-    function getReviewerInfo(membershipInfo) {
+    function getReviewer(membershipInfo) {
         return {
             membershipId: membershipInfo.membershipId,
-            membershipType: membershipInfo.membershipType,
-            displayName: membershipInfo.displayName
+            type: membershipInfo.type,
+            displayName: membershipInfo.id
+        };
+    }
+
+    function getRatingAndReview(userReview) {
+        return {
+            rating: userReview.rating,
+            review: userReview.review
         };
     }
 
@@ -71,21 +78,11 @@ function DestinyTrackerService($q,
         },
         submitReview: function(membershipInfo, item, userReview) {
             var rollAndPerks = _gunListBuilder.getRollAndPerks(item);
-            var reviewer = getReviewerInfo(membershipInfo);
+            var reviewer = getReviewer(membershipInfo);
+            var review = getRatingAndReview(userReview);
 
-            var rating = {
-                referenceId: item.hash,
-                roll: rollAndPerks.roll,
-                selectedPerks: rollAndPerks.selectedPerks,
-                instanceId: item.id,
-                reviewer: {
-                    membershipId: membershipInfo.membershipId,
-                    type: membershipInfo.membershipType,
-                    displayName: membershipInfo.id
-                },
-                rating: userReview.rating,
-                review: userReview.review
-            };
+            var rating = Object.assign(rollAndPerks, review);
+            rating.reviewer = reviewer;
 
             var promise = $q
                 .when(submitItemReviewPromise(rating))
@@ -168,7 +165,9 @@ function gunListBuilder() {
     glb.getRollAndPerks = function(gun) {
         return {
             roll: getGunRoll(gun),
-            selectedPerks: getDtrPerks(gun)
+            selectedPerks: getDtrPerks(gun),
+            referenceId: gun.hash,
+            instanceId: gun.id,
         };
     }
 
