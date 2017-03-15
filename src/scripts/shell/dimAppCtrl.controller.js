@@ -1,5 +1,4 @@
 import angular from 'angular';
-import _ from 'underscore';
 
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
