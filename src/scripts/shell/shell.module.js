@@ -1,31 +1,28 @@
 import angular from 'angular';
+import ngReduxModule from 'ng-redux';
+import uiRouterModule from 'angular-ui-router';
+import dimAppModule from '../dimApp.module';
 
-import UIRouterModule from 'angular-ui-router';
+import routes from './shell.routes';
 
-import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
-import { PlatformChoiceComponent } from './platform-choice';
-import { ShellComponent } from './shell';
+import activityTrackerDirective from './activity-tracker/activity-tracker.directive';
+import activityTrackerService from './activity-tracker/activity-tracker.service';
+import platformActions from './platform/platform.actions';
+import platformChoiceComponent from './platform-choice/platform-choice.component';
+import shellComponent from './shell/shell.component';
 
-export const ShellModule = angular
+const shellModule = angular
   .module('dimShell', [
-    UIRouterModule
+    dimAppModule,
+    uiRouterModule,
+    ngReduxModule
   ])
-  .directive('dimActivityTracker', ActivityTrackerDirective)
-  .service('dimActivityTrackerService', ActivityTrackerService)
-  .component('dimPlatformChoice', PlatformChoiceComponent)
-  .component('dimShell', ShellComponent)
-  .config(function($stateProvider) {
-    'ngInject';
-
-    const states = [{
-      name: 'shell',
-      parent: 'root',
-      abstract: true,
-      component: 'dimShell'
-    }];
-
-    states.forEach((state) => {
-      $stateProvider.state(state);
-    });
-  })
+  .directive('dimActivityTracker', activityTrackerDirective)
+  .service('dimActivityTrackerService', activityTrackerService)
+  .factory('PlatformsActions', platformActions)
+  .component('dimPlatformChoice', platformChoiceComponent)
+  .component('dimShell', shellComponent)
+  .config(routes)
   .name;
+
+export default shellModule;

@@ -56,7 +56,7 @@ function Stores() {
 }
 
 
-function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
+function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimBucketService, dimInfoService, $translate) {
   var vm = this;
   const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>` +
                              `<p>${$translate.instant('DidYouKnow.Expand')}</p>`;
@@ -86,8 +86,4 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     vm.stores = stores.stores;
     vm.vault = dimStoreService.getVault();
   });
-
-  if (!vm.stores.length && dimPlatformService.getActive()) {
-    loadingTracker.addPromise(dimStoreService.reloadStores());
-  }
 }

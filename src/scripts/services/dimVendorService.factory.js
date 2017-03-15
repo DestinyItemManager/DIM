@@ -3,6 +3,8 @@ import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import idbKeyval from 'idb-keyval';
 
+import { getAll, getSelected } from '../shell/platform/platform.reducers';
+
 angular.module('dimApp')
   .factory('dimVendorService', VendorService);
 
@@ -12,9 +14,18 @@ function VendorService(
   dimStoreService,
   dimDefinitions,
   dimFeatureFlags,
-  dimPlatformService,
-  $q
+  $q,
+  $ngRedux,
+  PlatformsActions
 ) {
+  'ngInject';
+
+  function mapStateToThis(state) {
+    return {
+      platforms: getAll(state.platform),
+      selected: getSelected(state.platform)
+    };
+  }
   /*
   const allVendors = [
     1990950, // Titan Vanguard
@@ -100,6 +111,8 @@ function VendorService(
     deleteCachedVendors();
   });
 
+  $ngRedux.connect(mapStateToThis, PlatformsActions)(service);
+
   return service;
 
   function deleteCachedVendors() {
@@ -114,7 +127,8 @@ function VendorService(
   }
 
   function reloadVendors(stores) {
-    const activePlatform = dimPlatformService.getActive();
+    const activePlatform = this.selected;
+
     if (_reloadPromise && _reloadPromise.activePlatform === activePlatform) {
       return _reloadPromise;
     }
@@ -135,10 +149,10 @@ function VendorService(
           }
 
           if (service.vendors[vendorDef.hash] &&
-              _.all(stores, (store) =>
-                    cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys,
-                                         store,
-                                         vendorDef))) {
+            _.all(stores, (store) =>
+              cachedVendorUpToDate(service.vendors[vendorDef.hash].cacheKeys,
+                store,
+                vendorDef))) {
             service.loadedVendors++;
             return service.vendors[vendorDef.hash];
           } else {
@@ -286,7 +300,7 @@ function VendorService(
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
           return dimBungieService
-            .getVendorForCharacter(store, vendorHash)
+            .getVendorForCharacter(store, vendorHash, this.selected)
             .then((vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
@@ -473,17 +487,17 @@ function VendorService(
       return {};
     }
     var currencies = _.chain(vendors)
-          .values()
-          .pluck('categories')
-          .flatten()
-          .pluck('saleItems')
-          .flatten()
-          .pluck('costs')
-          .flatten()
-          .pluck('currency')
-          .pluck('itemHash')
-          .unique()
-          .value();
+      .values()
+      .pluck('categories')
+      .flatten()
+      .pluck('saleItems')
+      .flatten()
+      .pluck('costs')
+      .flatten()
+      .pluck('currency')
+      .pluck('itemHash')
+      .unique()
+      .value();
     const totalCoins = {};
     currencies.forEach(function(currencyHash) {
       // Legendary marks and glimmer are special cases

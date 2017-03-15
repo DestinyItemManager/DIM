@@ -1,10 +1,10 @@
+import controller from './shell.controller';
 import templateUrl from './shell.html';
 import './shell.scss';
 
-class ShellController {
-}
-
-export const ShellComponent = {
-  controller: ShellController,
-  templateUrl: templateUrl
+const shellComponent = {
+  controller,
+  templateUrl
 };
+
+export default shellComponent;

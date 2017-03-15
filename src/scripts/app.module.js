@@ -1,14 +1,21 @@
 import angular from 'angular';
+import ngReduxModule from 'ng-redux';
+import dimAppModule from './dimApp.module';
+import shellModule from './shell/shell.module';
+import storeModule from './store/store.module';
 
-import { DimAppModule } from './dimApp.module';
-import { ShellModule } from './shell/shell.module';
+import config from './app.config';
+import appComponent from './app.component';
 
-import { AppComponent } from './app.component';
-
-export const AppModule = angular
+const appModule = angular
   .module('app', [
-    DimAppModule,
-    ShellModule
+    dimAppModule,
+    shellModule,
+    ngReduxModule,
+    storeModule
   ])
-  .component('app', AppComponent)
+  .config(config)
+  .component('app', appComponent)
   .name;
+
+export default appModule;

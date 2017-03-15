@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-export function ActivityTrackerDirective($document, $interval, dimActivityTrackerService, dimStoreService, loadingTracker) {
+function activityTrackerDirective($document, $interval, dimActivityTrackerService, dimStoreService, loadingTracker) {
   'ngInject';
 
   return {
@@ -51,3 +51,5 @@ export function ActivityTrackerDirective($document, $interval, dimActivityTracke
     }
   };
 }
+
+export default activityTrackerDirective;

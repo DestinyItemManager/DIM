@@ -8,6 +8,7 @@ function ItemService(dimStoreService,
                      dimBungieService,
                      dimCategory,
                      dimFeatureFlags,
+                     dimPlatformService,
                      $q,
                      $translate) {
   // We'll reload the stores to check if things have been
@@ -28,7 +29,7 @@ function ItemService(dimStoreService,
   };
 
   function setItemState(item, store, lockState, type) {
-    return dimBungieService.setItemState(item, store, lockState, type)
+    return dimBungieService.setItemState(item, store, lockState, type, dimPlatformService.getActive())
       .then(() => lockState);
   }
 
@@ -236,7 +237,7 @@ function ItemService(dimStoreService,
       if (items.length === 1) {
         return equipItem(items[0]);
       }
-      return dimBungieService.equipItems(store, items)
+      return dimBungieService.equipItems(store, items, dimPlatformService.getActive())
         .then(function(equippedItems) {
           return equippedItems.map(function(i) {
             return updateItemModel(i, store, store, true);
@@ -249,7 +250,7 @@ function ItemService(dimStoreService,
     if (dimFeatureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
     }
-    return dimBungieService.equip(item)
+    return dimBungieService.equip(item, dimPlatformService.getActive())
       .then(function() {
         const store = dimStoreService.getStore(item.owner);
         return updateItemModel(item, store, store, true);
@@ -282,7 +283,7 @@ function ItemService(dimStoreService,
     if (dimFeatureFlags.debugMoves) {
       console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
     }
-    return dimBungieService.transfer(item, store, amount)
+    return dimBungieService.transfer(item, store, amount, dimPlatformService.getActive())
       .then(function() {
         var source = dimStoreService.getStore(item.owner);
         var newItem = updateItemModel(item, source, store, false, amount);

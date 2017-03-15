@@ -1,6 +1,8 @@
 import templateUrl from './app.html';
 import './app.scss';
 
-export const AppComponent = {
-  templateUrl: templateUrl
+const appComponent = {
+  templateUrl
 };
+
+export default appComponent;

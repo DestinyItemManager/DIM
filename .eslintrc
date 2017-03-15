@@ -59,7 +59,7 @@
     "radix": "error",
     "wrap-iife": ["error", "inside"],
     "yoda": "error",
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "max-len": "off",
     "no-console": "off",
     "no-multiple-empty-lines": "off",

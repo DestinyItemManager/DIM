@@ -1,10 +1,9 @@
 import angular from 'angular';
-import _ from 'underscore';
 
 angular.module('dimApp')
   .controller('dimAppCtrl', DimApp);
 
-function DimApp(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+function DimApp($ngRedux, dimActivityTrackerService, ngDialog, $rootScope, loadingTracker, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
   'ngInject';
 
   var vm = this;
@@ -15,21 +14,6 @@ function DimApp(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadi
   vm.$DIM_CHANGELOG = $DIM_CHANGELOG;
 
   vm.loadingTracker = loadingTracker;
-  vm.platforms = [];
-
-  vm.platformChange = function platformChange(platform) {
-    loadingTracker.addPromise(dimPlatformService.setActive(platform));
-  };
-
-  $scope.$on('dim-platforms-updated', function(e, args) {
-    vm.platforms = args.platforms;
-  });
-
-  $scope.$on('dim-active-platform-updated', function(e, args) {
-    dimState.active = vm.currentPlatform = args.platform;
-  });
-
-  loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
   vm.settings = dimSettingsService;
   $scope.$watch('app.settings.itemSize', function(size) {
@@ -62,14 +46,6 @@ function DimApp(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadi
     allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
     callback: function() {
       $rootScope.$broadcast('dim-escape-filter-input');
-    }
-  });
-
-  hotkeys.add({
-    combo: ['r'],
-    description: "Refresh inventory",
-    callback: function() {
-      vm.refresh();
     }
   });
 

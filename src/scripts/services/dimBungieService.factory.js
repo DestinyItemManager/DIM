@@ -1,10 +1,19 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { getSelected } from '../shell/platform/platform.reducers';
 
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
+function BungieService($ngRedux, $rootScope, $q, $timeout, $http, $state, toaster, $translate) {
+  'ngInject';
+
+  function mapStateToThis(state) {
+    return {
+      selected: getSelected(state.platform)
+    };
+  }
+
   var apiKey;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
     if (window.chrome && window.chrome.extension) {
@@ -46,15 +55,9 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     getVendorForCharacter: getVendorForCharacter
   };
 
-  return service;
+  $ngRedux.connect(mapStateToThis)(service);
 
-  function assignResultAndForward(dataset, attribute, result) {
-    dataset[attribute] = result;
-
-    return result;
-  }
-
-  function handleErrors(response) {
+  const handleErrors = function handleErrors(response) {
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
     }
@@ -71,27 +74,30 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     var errorCode = response.data ? response.data.ErrorCode : -1;
 
     switch (errorCode) {
-    case 1: {
-      return response;
-    }
-    case 1627: {
-      return $q.reject("Vendor data is unavailable.");
-    }
-    case 2106:
-    case 2108: {
-      $rootScope.$broadcast('dim-no-token-found');
-      return $q.reject("DIM does not have permission to perform this action.");
-    }
-    case 5:
-    case 36:
-    case 99:
-    case 1618:
-    case 2101:
-    case 2102:
-    case 2107:
-    // default: {
-    //   return response;
-    // }
+      case 1:
+        {
+          return response;
+        }
+      case 1627:
+        {
+          return $q.reject("Vendor data is unavailable.");
+        }
+      case 2106:
+      case 2108:
+        {
+          $rootScope.$broadcast('dim-no-token-found');
+          return $q.reject("DIM does not have permission to perform this action.");
+        }
+      case 5:
+      case 36:
+      case 99:
+      case 1618:
+      case 2101:
+      case 2102:
+      case 2107:
+        // default: {
+        //   return response;
+        // }
     }
 
     if (errorCode === 36) {
@@ -108,7 +114,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     } else if ((errorCode === 1618 || errorCode === 1601) &&
       response.config.url.indexOf('/Account/') >= 0 &&
       response.config.url.indexOf('/Character/') < 0) {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
+      return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: this.selected.label })));
     } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
       $state.go('developer');
       return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
@@ -124,6 +130,14 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     }
 
     return response;
+  }.bind(service);
+
+  return service;
+
+  function assignResultAndForward(dataset, attribute, result) {
+    dataset[attribute] = result;
+
+    return result;
   }
 
   function retryOnThrottled(request) {
@@ -171,7 +185,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     })
     .then($http)
     .then(handleErrors, handleErrors)
-    .then(function(response) {
+    .then((response) => {
       return response.data.Response;
     });
   }
@@ -518,7 +532,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   /************************************************************************************************************************************/
 
   function getVendorForCharacter(character, vendorHash) {
-    var platform = dimState.active;
+    const platform = this.selected;
+
     var data = {
       token: null,
       membershipType: null
@@ -547,7 +562,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   /************************************************************************************************************************************/
 
   function transfer(item, store, amount) {
-    var platform = dimState.active;
+    const platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -612,7 +627,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   /************************************************************************************************************************************/
 
   function equip(item) {
-    var platform = dimState.active;
+    const platform = this.selected;
     var data = {
       token: null,
       membershipType: null
@@ -657,12 +672,12 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
   // Returns a list of items that were successfully equipped
   function equipItems(store, items) {
+    const platform = this.selected;
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
     items = _.sortBy(items, function(i) {
       return i.isExotic ? 1 : 0;
     });
 
-    var platform = dimState.active;
     var data = {
       token: null,
       membershipType: null
@@ -712,16 +727,17 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   /************************************************************************************************************************************/
 
   function setItemState(item, store, lockState, type) {
+    const platform = this.selected;
+
     switch (type) {
-    case 'lock':
-      type = 'SetLockState';
-      break;
-    case 'track':
-      type = 'SetQuestTrackedState';
-      break;
+      case 'lock':
+        type = 'SetLockState';
+        break;
+      case 'track':
+        type = 'SetQuestTrackedState';
+        break;
     }
 
-    var platform = dimState.active;
     var data = {
       token: null,
       membershipType: null
@@ -766,4 +782,3 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     }
   }
 }
-
