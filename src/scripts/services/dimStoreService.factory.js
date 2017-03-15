@@ -625,12 +625,7 @@ function StoreService(
       _stores.forEach(function(store) {
         store.items.forEach(function(storeItem) {
           if(storeItem.hash == bulkRanking.referenceId) {
-            //bugbug: what's the actual propery?
             storeItem.dtrRating = bulkRanking.rating;
-          }
-          else {
-            //bugbug: giving random ratings is a terrible idea
-            storeItem.dtrRating = Math.round(Math.random()*5) + 1;
           }
         })
       });

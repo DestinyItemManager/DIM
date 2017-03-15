@@ -141,6 +141,8 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
   vm.submitReview = function() {
     var item = vm.item;
+
+    //bugbug: not here exactly, but the pop-up should be populated with the user review's rating, not the collective's rating
     var newRating = vm.item.dtrRating;
     var review = vm.item.dimInfo.userReview;
 
