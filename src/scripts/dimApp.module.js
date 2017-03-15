@@ -18,6 +18,7 @@ import 'angular-timer';
 import 'angular-uuid2/dist/angular-uuid2.js';
 
 import { ShellModule } from './shell/shell.module';
+import inventoryModule from './inventory/inventory.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -41,6 +42,7 @@ export const DimAppModule = angular
     TranslateModule,
     TranslateMessageFormatModule,
     UIRouterModule,
+    inventoryModule,
     'timer',
     'angularUUID2',
     'ajoslin.promise-tracker',

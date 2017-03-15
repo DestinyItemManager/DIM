@@ -19,11 +19,6 @@ function routes($stateProvider, $urlRouterProvider) {
     abstract: true,
     templateUrl: content
   }, {
-    name: 'inventory',
-    parent: 'content',
-    templateUrl: inventory,
-    url: '/inventory'
-  }, {
     name: 'best',
     parent: 'content',
     templateUrl: best,
