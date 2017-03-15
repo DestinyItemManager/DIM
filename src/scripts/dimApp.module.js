@@ -18,7 +18,7 @@ import 'angular-timer';
 import 'angular-uuid2/dist/angular-uuid2.js';
 
 import { ShellModule } from './shell/shell.module';
-import inventoryModule from './inventory/inventory.module';
+import inventoryModule from './store/inventory.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
