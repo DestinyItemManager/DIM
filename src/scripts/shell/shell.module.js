@@ -4,7 +4,8 @@ import UIRouterModule from 'angular-ui-router';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
 import { PlatformChoiceComponent } from './platform-choice';
-import { ShellComponent } from './shell';
+import shellComponent from './shell/shell.component';
+import contentComponent from './content/content.component';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -13,7 +14,8 @@ export const ShellModule = angular
   .directive('dimActivityTracker', ActivityTrackerDirective)
   .service('dimActivityTrackerService', ActivityTrackerService)
   .component('dimPlatformChoice', PlatformChoiceComponent)
-  .component('dimShell', ShellComponent)
+  .component('dimShell', shellComponent)
+  .component('content', contentComponent)
   .config(function($stateProvider) {
     'ngInject';
 
@@ -22,6 +24,11 @@ export const ShellModule = angular
       parent: 'root',
       abstract: true,
       component: 'dimShell'
+    }, {
+      name: 'content',
+      parent: 'shell',
+      abstract: true,
+      component: 'content'
     }];
 
     states.forEach((state) => {
