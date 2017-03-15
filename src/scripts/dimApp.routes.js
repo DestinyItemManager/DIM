@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import content from 'app/views/content.html';
-import inventory from 'app/views/inventory.template.html';
-=======
->>>>>>> 2ed9f8e... Removed the controller from markup.
 import best from 'app/views/best.template.html';
 import vendors from 'app/views/vendors.template.html';
 import materialExchange from 'app/views/mats-exchange.template.html';
