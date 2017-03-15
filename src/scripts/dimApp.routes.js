@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import content from 'app/views/content.html';
 import inventory from 'app/views/inventory.template.html';
+=======
+>>>>>>> 2ed9f8e... Removed the controller from markup.
 import best from 'app/views/best.template.html';
 import vendors from 'app/views/vendors.template.html';
 import materialExchange from 'app/views/mats-exchange.template.html';
@@ -13,16 +16,6 @@ function routes($stateProvider, $urlRouterProvider) {
   const states = [{
     name: 'root',
     abstract: true
-  }, {
-    name: 'content',
-    parent: 'shell',
-    abstract: true,
-    templateUrl: content
-  }, {
-    name: 'inventory',
-    parent: 'content',
-    templateUrl: inventory,
-    url: '/inventory'
   }, {
     name: 'best',
     parent: 'content',
