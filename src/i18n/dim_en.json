@@ -399,7 +399,13 @@
        "Sponsors": "Sponsors",
        "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site."
      },
-     "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM."
+     "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM.",
+     "Login": {
+       "Permission": "We need your permission...",
+       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
+       "Auth": "Authorize with Bungie.net",
+       "LearnMore": "Do you want to know more?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "5 Win Reward (Armor)",

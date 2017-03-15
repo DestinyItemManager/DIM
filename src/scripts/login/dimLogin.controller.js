@@ -1,4 +1,5 @@
 import angular from 'angular';
+import './login.scss';
 
 angular.module('dimApp')
   .controller('dimLoginCtrl', dimLoginCtrl);

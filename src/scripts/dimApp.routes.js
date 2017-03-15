@@ -50,7 +50,7 @@ function routes($stateProvider, $urlRouterProvider) {
     templateUrl: developer
   }, {
     name: 'login',
-    parent: 'content',
+    parent: 'shell',
     url: '/login',
     templateUrl: login
   }];
