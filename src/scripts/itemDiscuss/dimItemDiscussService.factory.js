@@ -4,6 +4,7 @@ angular.module('dimApp')
   .factory('dimItemDiscussService', ItemDiscussService);
 
 function ItemDiscussService($rootScope) {
+  console.log("Item discuss service loaded.");
   return {
     dialogOpen: false,
     addItemToDiscuss: addItemToDiscuss

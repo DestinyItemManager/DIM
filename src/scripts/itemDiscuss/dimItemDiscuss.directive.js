@@ -10,11 +10,7 @@ function ItemDiscuss() {
     controllerAs: 'vm',
     bindToController: true,
     scope: {},
-    template: `
-      <div id="discuss-drawer" ng-if="vm.show">
-        <div class="review-list"></div>
-      </div>
-    `
+    templateUrl: require('./dimItemDiscuss.directive.template.html')
   };
 }
 
