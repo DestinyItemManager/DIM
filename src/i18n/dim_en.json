@@ -277,7 +277,7 @@
      "UpStack": "Increase up to the next full stack",
      "DownStack": "Decrease down to the next full stack",
      "Increment": "One more",
-     "Decrement": "One fewer",
+     "Decrement": "One fewer"
    },
    "Notes": {
       "Error": "Error! Max 120 characters for notes.",
