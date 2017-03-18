@@ -4,7 +4,6 @@ import _ from 'underscore';
 angular.module('dimApp')
   .directive('dimItemDiscuss', ItemDiscuss);
 
-
 console.log("In discuss directive.");
 
 function ItemDiscuss() {
@@ -24,6 +23,7 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   vm.show = dimItemDiscussService.dialogOpen;
 
   $scope.$on('dim-store-item-discuss', function(event, args) {
+    console.log("Received discuss event.");
     vm.show = true;
     dimItemDiscussService.dialogOpen = true;
 
