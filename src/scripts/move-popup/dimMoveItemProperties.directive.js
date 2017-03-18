@@ -34,6 +34,7 @@ function MoveItemProperties() {
       '          {{vm.item.name}}',
       '        </a>',
       '      </div>',
+      '      <i translate-attr="{ title: \'DtrReview.DiscussHint\'}" ng-if="vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="dtr-review-discuss-button fa fa-comment" ng-click="vm.openDiscuss()"></i>',
       '      <i translate-attr="{ title: \'Compare.ButtonHelp\'}" ng-if="vm.featureFlags.compareEnabled && vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>',
       '      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
       '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',

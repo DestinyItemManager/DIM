@@ -278,7 +278,8 @@
    "DtrReview": {
      "Error": "Something went wrong with the review submission.",
      "Help": "Add a review to this item",
-     "Submit": "Submit"
+     "Submit": "Submit",
+     "DiscussHint": "Discuss this item."
    },
    "Postmaster": {
       "Limit": "Postmaster Limit",
