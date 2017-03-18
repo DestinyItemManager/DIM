@@ -7,7 +7,7 @@ angular.module('dimApp')
 console.log("In discuss directive.");
 
 function ItemDiscuss() {
-  console.log("In discuss proto.");
+  console.log("In discuss prototype.");
   return {
     controller: ItemDiscussCtrl,
     controllerAs: 'vm',
