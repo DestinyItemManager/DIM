@@ -68,6 +68,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeat
   vm.statRanges = {};
 
   $scope.$on('dim-store-item-compare', function(event, args) {
+    alert("hey.");
     vm.show = true;
     dimCompareService.dialogOpen = true;
 

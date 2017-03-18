@@ -44,8 +44,8 @@ require('./scripts/loadout/dimLoadoutPopup.directive');
 require('./scripts/loadout/random/dimRandom.controller');
 require('./scripts/compare/dimCompare.directive');
 require('./scripts/compare/dimCompareService.factory');
-require('./scripts/itemDiscuss/dimItemDiscuss.directive.js')
-require('./scripts/itemDiscuss/dimItemDiscussService.factory.js')
+require('./scripts/itemDiscuss/dimItemDiscuss.directive')
+require('./scripts/itemDiscuss/dimItemDiscussService.factory')
 require('./scripts/shell/dimAngularFilters.filter');
 require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
 require('./scripts/shell/dimAppCtrl.controller');

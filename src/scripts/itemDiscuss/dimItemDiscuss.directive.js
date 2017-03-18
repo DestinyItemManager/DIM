@@ -11,13 +11,12 @@ function ItemDiscuss() {
     bindToController: true,
     scope: {},
     template: `
-      <div id="loadout-drawer" ng-if="vm.show">
-        <div class="review-list">
+      <div id="discuss-drawer" ng-if="vm.show">
+        <div class="review-list"></div>
       </div>
     `
   };
 }
-
 
 function ItemDiscussCtrl($scope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags, $translate) {
   var vm = this;

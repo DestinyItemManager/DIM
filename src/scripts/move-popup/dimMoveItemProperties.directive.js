@@ -12,7 +12,6 @@ function MoveItemProperties() {
     scope: {
       item: '=dimMoveItemProperties',
       compareItem: '=dimCompareItem',
-      discussItem: '=dimDiscussItem',
       infuse: '=dimInfuse',
       changeDetails: '&'
     },
@@ -138,8 +137,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.openDiscuss = function() {
     ngDialog.closeAll();
     $rootScope.$broadcast('dim-store-item-discuss', {
-      item: vm.item,
-      dupes: true
+      item: vm.item
     });
   }
 
