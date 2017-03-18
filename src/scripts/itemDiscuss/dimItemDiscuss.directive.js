@@ -4,7 +4,11 @@ import _ from 'underscore';
 angular.module('dimApp')
   .directive('dimItemDiscuss', ItemDiscuss);
 
+
+console.log("In discuss directive.");
+
 function ItemDiscuss() {
+  console.log("In discuss proto.");
   return {
     controller: ItemDiscussCtrl,
     controllerAs: 'vm',
@@ -14,7 +18,7 @@ function ItemDiscuss() {
   };
 }
 
-function ItemDiscussCtrl($scope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags, $translate) {
+function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags, $translate) {
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
   vm.show = dimItemDiscussService.dialogOpen;
