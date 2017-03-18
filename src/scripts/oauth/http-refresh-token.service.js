@@ -35,15 +35,19 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
                 cache = OAuthService.refreshToken();
               }
 
-              return cache.then(function() {
-                config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
-
-                return config;
-              })
-              .catch(() => {
-                OAuthTokenService.removeToken();
-                $rootScope.$broadcast('dim-no-token-found');
-              });
+              return cache
+                .then(function() {
+                  config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+                  return config;
+                })
+                .catch((e) => {
+                  OAuthTokenService.removeToken();
+                  $rootScope.$broadcast('dim-no-token-found');
+                  throw e;
+                })
+                .finally(() => {
+                  cache = null;
+                });
             } else {
               OAuthTokenService.removeToken();
               $rootScope.$broadcast('dim-no-token-found');
