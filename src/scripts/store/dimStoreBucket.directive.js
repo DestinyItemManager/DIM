@@ -133,7 +133,7 @@ function StoreBucketCtrl($scope,
           '  </h1>',
           '  <div class="ngdialog-inner-content">',
           '    <form ng-submit="vm.finish()">',
-          '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+          '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>',
           '    </form>',
           '    <div class="buttons">' +
           '      <button ng-click="vm.finish()"><span translate="StoreBucket.Move"</span></button>',

@@ -1047,6 +1047,13 @@ dim-store-heading {
   font-size: 16px;
   cursor: pointer;
   color: gray;
+  margin: 0 4px;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
   &:hover {
     color: white;
   }

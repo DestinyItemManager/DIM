@@ -271,6 +271,14 @@
       "Take": "Take",
       "Vault": "Vault"
    },
+   "MoveAmount": {
+     "Min": "Minimum stack (1)",
+     "Max": "Total amount in this location",
+     "UpStack": "Increase up to the next full stack",
+     "DownStack": "Decrease down to the next full stack",
+     "Increment": "One more",
+     "Decrement": "One fewer",
+   },
    "Notes": {
       "Error": "Error! Max 120 characters for notes.",
       "Help": "Add notes to this item"

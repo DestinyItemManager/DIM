@@ -11,17 +11,22 @@ function MoveAmount($timeout) {
     restrict: 'E',
     scope: {
       amount: '=amount',
-      maximum: '=maximum'
+      maximum: '=maximum',
+      maxStackSize: '=maxStackSize'
     },
     replace: true,
     template: [
       '<div class="move-amount">',
-      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()">&#9664;</span>',
+      '  <i class="move-amount-arrow fa fa-fast-backward" tabindex="-1" ng-click="vm.min()" translate-attr="{ title: \'MoveAmount.Min\'}"></i>',
+      '  <i class="move-amount-arrow fa fa-step-backward" tabindex="-1" ng-click="vm.downstack()" translate-attr="{ title: \'MoveAmount.DownStack\'}"></i>',
+      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()" translate-attr="{ title: \'MoveAmount.Decrement\'}>&#9664;</span>',
       '  <input ng-model="vm.amount" type="text" ng-blur="vm.constrain()"/>',
       '  <div class="move-amount-slider">',
       '    <rzslider rz-slider-model="vm.amount" rz-slider-options="{ floor: 1, ceil: vm.maximum, showSelectionBar: true, hideLimitLabels: true }"></rzslider>',
       '  </div>',
-      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.increment()">&#9654;</span>',
+      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.increment()" translate-attr="{ title: \'MoveAmount.Increment\'}">&#9654;</span>',
+      '  <i class="move-amount-arrow fa fa-step-forward" tabindex="-1" ng-click="vm.upstack()" translate-attr="{ title: \'MoveAmount.UpStack\'}"></i>',
+      '  <i class="move-amount-arrow fa fa-fast-forward" tabindex="-1" ng-click="vm.max()" translate-attr="{ title: \'MoveAmount.Max\'}"></i>',
       '</div>'
     ].join(''),
     link: function(scope, element) {
@@ -43,8 +48,24 @@ function MoveAmountController() {
     vm.amount = Math.min(vm.amount + 1, vm.maximum);
   };
 
+  vm.max = function() {
+    vm.amount = vm.maximum;
+  };
+
+  vm.min = function() {
+    vm.amount = 1;
+  };
+
   vm.decrement = function() {
     vm.amount = Math.max(vm.amount - 1, 1);
+  };
+
+  vm.upstack = function() {
+    vm.amount = Math.min(vm.maximum, (Math.floor(vm.amount / vm.maxStackSize) * vm.maxStackSize) + vm.maxStackSize);
+  };
+
+  vm.downstack = function() {
+    vm.amount = Math.max(1, (Math.ceil(vm.amount / vm.maxStackSize) * vm.maxStackSize) - vm.maxStackSize);
   };
 
   vm.constrain = function() {

@@ -17,7 +17,7 @@ function MovePopup() {
     template: [
       '<div class="move-popup" alt="" title="">',
       '  <div dim-move-item-properties="vm.item" dim-infuse="vm.infuse" change-details="vm.reposition()"></div>',
-      '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum"></dim-move-amount>',
+      '  <dim-move-amount ng-if="vm.item.amount > 1 && !vm.item.notransfer" amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>',
       '  <div class="interaction">',
       '    <div class="locations" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
       '      <div class="move-button move-vault" alt="{{::store.name}}" title="{{::store.name}}" ',
@@ -56,7 +56,13 @@ function MovePopup() {
 
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
   var vm = this;
+  vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
+
+  if (vm.item.amount > 1) {
+    var store = dimStoreService.getStore(vm.item.owner);
+    vm.maximum = store.amountOfItem(vm.item);
+  }
 
   var shown = false;
 
@@ -88,15 +94,6 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
       });
     }
   };
-
-  // TODO: cache this, instead?
-  $scope.$watch('vm.item', function() {
-    if (vm.item.amount > 1) {
-      var store = dimStoreService.getStore(vm.item.owner);
-      vm.maximum = store.amountOfItem(vm.item);
-      vm.moveAmount = vm.maximum;
-    }
-  });
 
   /*
   * Open up the dialog for infusion by passing
