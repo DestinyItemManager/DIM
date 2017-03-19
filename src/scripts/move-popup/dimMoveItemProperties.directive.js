@@ -109,7 +109,7 @@ function MoveItemProperties() {
 function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions, dimDestinyTrackerService) {
   var vm = this;
 
-  vm.dtrRatingOptions = [1,2,3,4,5];
+  vm.dtrRatingOptions = [1, 2, 3, 4, 5];
 
   vm.featureFlags = dimFeatureFlags;
 
@@ -139,7 +139,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     $rootScope.$broadcast('dim-store-item-discuss', {
       item: vm.item
     });
-  }
+  };
 
   vm.updateNote = function() {
     if (angular.isDefined(vm.item.dimInfo.notes)) {
@@ -150,7 +150,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.submitReview = function() {
     var item = vm.item;
 
-    //bugbug: not here exactly, but the pop-up should be populated with the user review's rating, not the collective's rating
+    // bugbug: not here exactly, but the pop-up should be populated with the user review's rating, not the collective's rating
     var newRating = vm.item.dtrRating;
     var review = vm.item.dimInfo.userReview;
 
