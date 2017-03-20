@@ -56,7 +56,8 @@ function MinMaxLocksCtrl($scope, hotkeys, ngDialog) {
         my: 'left-2 top-2',
         at: 'left top',
         of: detailItemElement,
-        collision: 'flip flip'
+        collision: 'flip flip',
+        within: '.store-bounds'
       });
     }
   });

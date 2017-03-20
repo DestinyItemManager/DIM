@@ -335,8 +335,7 @@
   left: 0;
   top: 0;
   width: calc(((var(--item-size) + 20px) * 5) + 14px);
-  min-height: var(--item-size);
-  max-height: calc((var(--item-size) * 5) + 10px);
+  min-height: calc((var(--item-size) * 5) + 10px);
   overflow-y: auto;
   background-color: #656565;
   border: 2px solid #DDD;
