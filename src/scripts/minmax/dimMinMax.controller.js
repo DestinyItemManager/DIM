@@ -637,6 +637,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
           var felwinters = _.filter(items, { hash: 2672107540 });
           if (felwinters.length) {
             vm.excludeditems.push(...felwinters);
+            vm.excludeditems = _.uniq(vm.excludeditems, 'id');
           }
 
           allItems = allItems.concat(items);
@@ -662,6 +663,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
           var felwinters = _.filter(vendorItems, { hash: 2672107540 });
           if (felwinters.length) {
             vm.excludeditems.push(...felwinters);
+            vm.excludeditems = _.uniq(vm.excludeditems, 'id');
           }
 
           // Build a map of perks
