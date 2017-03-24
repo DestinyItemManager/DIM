@@ -167,15 +167,15 @@ module.exports = (env) => {
     // FYI, uglification runs on final chunks rather than individual modules
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       exclude: /-sqlLib-/, // ensure the sqlLib chunk doesnt get minifed
-      compress: { warnings: false, },
-      output: { comments: false, },
+      compress: { warnings: false },
+      output: { comments: false },
       sourceMap: true,
     }));
 
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
       test: /-sqlLib-/, // run only for the sql.js chunk
       compress: false,
-      output: { comments: false, },
+      output: { comments: false },
       sourceMap: true,
     }));
   }
