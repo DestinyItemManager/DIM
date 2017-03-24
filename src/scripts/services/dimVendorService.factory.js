@@ -69,6 +69,8 @@ function VendorService(
     2634310414
   ];
 
+  const xur = 2796397637;
+
   let _reloadPromise = null;
 
   const service = {
@@ -288,7 +290,7 @@ function VendorService(
           return dimBungieService
             .getVendorForCharacter(store, vendorHash)
             .then((vendor) => {
-              vendor.expires = calculateExpiration(vendor.nextRefreshDate);
+              vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
               vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
               vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
               return idbKeyval
@@ -313,10 +315,7 @@ function VendorService(
                     throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
                   });
               }
-              if (dimFeatureFlags.isExtension) {
-                throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
-              }
-              return $.reject();
+              throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
             });
         }
       })
@@ -334,8 +333,15 @@ function VendorService(
     return ['vendor', store.id, vendorHash].join('-');
   }
 
-  function calculateExpiration(nextRefreshDate) {
+  function calculateExpiration(nextRefreshDate, vendorHash) {
     const date = new Date(nextRefreshDate).getTime();
+
+    if (vendorHash === xur) {
+      // Xur always expires in an hour, because Bungie's data only
+      // says when his stock will refresh, not when he becomes
+      // unavailable.
+      return Math.min(date, Date.now() + (60 * 60 * 1000));
+    }
 
     // If the expiration is too far in the future, replace it with +8h
     if (date - Date.now() > 7 * 24 * 60 * 60 * 1000) {

@@ -21,6 +21,7 @@
 * Gained the ability for us to fill in classified items, even if Bungie hasn't unclassified them. You still can't transfer them though.
 * The "Hide Unfiltered Items while Filtering" preference now applies to vendor gear too. #1528
 * When moving stacks of items through the popup, there are now buttons to max out the amount, and add and remove up to even stacks of items.
+* Xur should disappear on Sundays again.
 
 # 3.16.1
 
