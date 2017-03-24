@@ -25,7 +25,7 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
 
     if (matched >= 0) {
       if (!config.headers.hasOwnProperty('Authorization')) {
-        if (OAuthService.isAuthenticated) {
+        if (OAuthService.isAuthenticated()) {
           let isValid = isTokenValid(OAuthTokenService.getAccessToken());
 
           if (isValid) {
