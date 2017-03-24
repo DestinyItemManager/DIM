@@ -1,4 +1,4 @@
-# next
+# 3.17.0
 
 * Fixed the perk selection in Loadout Builder. #1453
 * Fixed the logic for artifact bonuses to compute the right number. #1477
