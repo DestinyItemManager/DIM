@@ -24,7 +24,8 @@
       "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
       "Twitter": "Tenez-vous informer sur",
       "ItemUniqueness": "Unicité d'un objet",
-      "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{name}' {type} sur votre {character} mais cette destination a déjà cet objet et n'en autorise qu'un."
+      "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{name}' {type} sur votre {character} mais cette destination a déjà cet objet et n'en autorise qu'un.",
+      "VendorNotFound": "Les données du vendeur sont indisponible."
    },
    "Compare": {
       "ButtonHelp": "Comparer les objets",
@@ -78,7 +79,8 @@
       "Filters": "Filtres",
       "FilterHelp": "Rechercher objet/amélioration ou is:arc",
       "MaterialsExchange": "Rangs de faction disponibles",
-      "Refresh": "Rafraîchir les données Destiny"
+      "Refresh": "Rafraîchir les données Destiny",
+      "SupportDIM": "Soutien"
    },
    "Help": {
       "BackToDIM": "Retour sur DIM",
@@ -126,6 +128,7 @@
       "ToStore": "Tout/Toutes les {name} sont maintenant dans votre {store}."
    },
    "ItemService": {
+      "BucketFull": "Il y a trop d'objet '{itemtype}' dans {isVault, select, true{le} false{ton}} {store}.",
       "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
       "Classified2": "Objet classifié. Bungie n'a pas donné d'information à propos de cette objet. Cette objet n'est pas transférable pour le moment.",
       "Deequip": "Ne peut pas trouver un autre objet pour pouvoir déséquiper {itemname}",
@@ -177,7 +180,9 @@
         "Intellect": "L'intelligence accélère le temps de recharge du super chargé",
         "Discipline": "La Discipline accélère le temps de recharge des Grenades",
         "Strength": "La Force accélère le temps de recharge de la mêlée",
-        "Synergy": "Essayez de trouver une armure qui a des atouts augmentant le nombre de munitions pour les types d'armes que vous utilisez."
+        "Synergy": "Essayez de trouver une armure qui a des atouts augmentant le nombre de munitions pour les types d'armes que vous utilisez.",
+        "ChangeNodes": "Changer les nœuds d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
+        "StatsIncrease": "À mesure que le niveau de défense des objets augmente, les statistiques de cet objet (int/dis/for) augmentent également."
       },
       "Equip": "Équiper sur le perso actuel",
       "ShowAllConfigs": "Afficher toutes les configurations",
@@ -208,17 +213,34 @@
       "GatherEngramsExceptExotics": "Exotiques",
       "RestoreAllItems": "Tous les objets",
       "Random": "Aléatoire",
+      "Randomize": "Randomisez vos armes, armures, spectres et artéfacts équipés?",
+      "VendorsCannotEquip": "Ces objets de vendeurs ne peuvent pas être équipés:",
+      "VendorsCanEquip": "Ces objets peuvent être équipés:",
+      "MaxSlots": "Tu peut uniquement avoir {slots} de ce type d'objet dans un loadout.",
+      "OnlyItems": "Seulement les objets équipable, matériaux et consommables peuvent être ajoutés à un loadout.",
+      "FilteredItems": "Objets filtrés",
+      "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
+      "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
       "LoadoutName": "Nom du loadout...",
       "Save": "Sauvegarder",
       "SaveAsNew": "Sauvegarder comme nouveau",
       "Cancel": "Annuler",
       "ItemsWithIcon": "Les objets avec cet icone seront équipés. Cliquez sur un bouton d'objet pour l'équiper.",
+      "CouldNotEquip": "Impossible d'équiper {itemname}",
+      "TooManyRequested": "Tu a {total} {itemname} mais ton loadout demande {requested} Nous avons transféré tout ce que tu avais.",
       "DoesNotExist": "{itemname} n'existe pas dans votre compte.",
       "AppliedAuto": "Constructeur de Loadout automatique",
       "Applied": "Votre loadout de {amount} objets a été transféré à votre {store}",
       "AppliedError": "Aucun des objets de votre loadout n'a pu être transféré.",
       "AppliedWarn": "Votre loadout a été partiellement transféré, mais {failed} sur {total} objets ont échoué.",
-      "NameRequired": "Un nom est requis."
+      "NameRequired": "Un nom est requis.",
+      "MakeRoom": "Faites de la place pour le Commit Des Postes",
+      "MakeRoomDone": "À Fini de faire de la place pour {postmasterNum, plural, =1{1 objet du Commit Des Postes} other{# objet du Commit Des Postes}} en déplaçant {movedNum, plural, =1{1 objet} other{# objets}} hors de {store}.",
+      "MakeRoomError": "Impossible de faire de la place pour tous les objets du Commit Des Postes: {error}.",
+      "SaveErrorTitle": "Erreur lors de l'enregistrement du loadout",
+      "SaveErrorDescription": "Impossible d'enregistrer le loadout {loadoutName}: {error}",
+      "DeleteErrorTitle": "Erreur lors de la suppression du loadout",
+      "DeleteErrorDescription": "Impossible de supprimer le loadout {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Base de données d'info de Destiny en cours de construction",
@@ -232,9 +254,39 @@
       "Save": "Sauvegarde des dernières données de Destiny",
       "Unzip": "Désarchivage des dernières données de Destiny"
    },
+   "MaterialsExchange": {
+      "MaterialsExchange": "Échange de matériaux",
+      "CurrentRank": "Rang actuel",
+      "CurrentRep": "Rép. Actuel",
+      "OnHand": "Matériaux disponibles",
+      "FromTrade": "Matériaux de l'échange",
+      "NewRank": "Nouveau rang",
+      "NewRep": "Nouvelle Rép."
+   },
+   "MovePopup": {
+      "Consolidate": "Consolider",
+      "DistributeEvenly": "Distribuer équitablement",
+      "Equip": "Armer",
+      "Split": "Coupé",
+      "Store": "Dépôt",
+      "Take": "Faire",
+      "Vault": "Malle"
+   },
+   "MoveAmount": {
+     "Min": "Empilement minimum (1)",
+     "Max": "Montant total à cet emplacement",
+     "UpStack": "Augmentation jusqu'à la pile complète suivante",
+     "DownStack": "Diminution jusqu'à la pile complète suivante",
+     "Increment": "Un de plus",
+     "Decrement": "Un de moins"
+   },
    "Notes": {
       "Error": "Erreur! Max 120 charactères pour les notes.",
       "Help": "Ajouter des notes à cet objet"
+   },
+   "Postmaster": {
+      "Limit": "Limite du Commit Des Postes",
+      "Desc": "Il y a 20 objets perdus au Commit Des Postes sur votre {store}. Tous les nouveaux objets remplaceront les objets existants."
    },
    "Settings": {
       "Settings": "Paramètres",
@@ -271,15 +323,32 @@
       "ExportSS": "Télécharger le Tableur",
       "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
       "DIMPopups": "Popups d'Info de DIM",
-      "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
+      "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes",
+      "ImportExport": "Paramètres et données d'importation/exportation",
+      "Export": "Exportation des données de DIM",
+      "Import": "Importer des données de DIM"
    },
    "Stats": {
       "Discipline": "Discipline",
       "Intellect": "Intelligence",
       "Level": "Niveau",
       "NoBonus": "Pas de Bonus",
+      "OfMaxRoll": "{range} des stats parfaites",
+      "PercentHelp": "Cliquez pour plus d'informations sur ce qu'est la qualité des stats.",
+      "Prestige": "Niveau de prestige: {level}\n{exp}xp jusqu'à 5 particule de lumière.",
+      "Quality": "Qualité des stats",
       "Strength": "Force",
       "TierProgress": "{progress} pour {tier}"
+   },
+   "StoreBucket": {
+      "FillStack": "Remplir la pile ({amount})",
+      "HowMuch": "Combien de {itemname} faut-il déplacer?",
+      "Move": "Déplacer"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur.",
+     "OneItemTooLarge": "Votre fichier de sauvegarde a un objet trop volumineux. Probablement un loadout enregistré avec trop d'articles.",
+     "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les loadouts enregistrés."
    },
    "Tags": {
       "TagItem": "Tagger Objet",
@@ -291,6 +360,8 @@
    "Vendors": {
       "Vendors": "Marchands",
       "All": "Tous",
+      "Available": "Disponible sur",
+      "Compare": "Comparez avec ce que vous avez déjà",
       "Day": "{numDays, plural, =1{Journée} other{Journées}}",
       "Load": "Chargement des Marchands",
       "ArmorAndWeapons": "Armure & Armes",
@@ -323,9 +394,27 @@
        "Reddit": "Reddit",
        "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
        "Twitter": "Twitter",
-       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application."
+       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
+       "Version": "Version",
+       "Transifex": "Rejoignez l'équipe de traduction!",
+       "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez voir DIM localisé à votre langue rejoignez l'équipe."
      },
-     "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM"
+     "Support": {
+       "Support": "Soutenir DIM",
+       "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
+       "OpenCollective": "Nous utilisons OpenCollective comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
+       "Backers": "Les Supporters",
+       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
+       "Sponsors": "Partenaires",
+       "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site."
+     },
+     "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM",
+     "Login": {
+       "Permission": "Nous avons besoin de votre permission ...",
+       "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
+       "Auth": "Autoriser avec Bungie.net",
+       "LearnMore": "Voulez-vous en savoir plus?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Récompense à 5 Victoires (Armure)",
