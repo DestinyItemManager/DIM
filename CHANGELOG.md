@@ -21,6 +21,7 @@
 * Gained the ability for us to fill in classified items, even if Bungie hasn't unclassified them. You still can't transfer them though.
 * The "Hide Unfiltered Items while Filtering" preference now applies to vendor gear too. #1528
 * When moving stacks of items through the popup, there are now buttons to max out the amount, and add and remove up to even stacks of items.
+* Xur should disappear on Sundays again.
 
 # 3.16.1
 
@@ -60,6 +61,7 @@
 * When dequipping an item, we try harder to find a good item to equip in its place. We also prefer replacing exotics with other exotics, and correctly handle The Life Exotic perk.
 * Lots of new translations and localized strings.
 * Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
+* Fixed a too-small perk selection box in the loadout builder, and properly handle when vendors are selling Memory of Felwinter.
 
 # 3.14.1
 

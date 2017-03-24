@@ -37,7 +37,7 @@
     "no-alert": "error",
     "no-eq-null": "error",
     "no-extra-bind": "error",
-    "no-fallthrough": "error",
+    "no-fallthrough": "off",
     "no-implicit-coercion": "error",
     "no-implicit-globals": "error",
     "no-implied-eval": "error",
