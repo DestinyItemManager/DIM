@@ -19,7 +19,7 @@ function MoveAmount($timeout) {
       '<div class="move-amount">',
       '  <i class="move-amount-arrow fa fa-fast-backward" tabindex="-1" ng-click="vm.min()" translate-attr="{ title: \'MoveAmount.Min\'}"></i>',
       '  <i class="move-amount-arrow fa fa-step-backward" tabindex="-1" ng-click="vm.downstack()" translate-attr="{ title: \'MoveAmount.DownStack\'}"></i>',
-      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()" translate-attr="{ title: \'MoveAmount.Decrement\'}>&#9664;</span>',
+      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()" translate-attr="{ title: \'MoveAmount.Decrement\'}">&#9664;</span>',
       '  <input ng-model="vm.amount" type="text" ng-blur="vm.constrain()"/>',
       '  <div class="move-amount-slider">',
       '    <rzslider rz-slider-model="vm.amount" rz-slider-options="{ floor: 1, ceil: vm.maximum, showSelectionBar: true, hideLimitLabels: true }"></rzslider>',
@@ -76,4 +76,3 @@ function MoveAmountController() {
     vm.amount = Math.max(1, Math.min(value, vm.maximum));
   };
 }
-
