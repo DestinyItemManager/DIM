@@ -18,7 +18,7 @@ We use [Angular translate](https://angular-translate.github.io/docs/#/guide/02_g
 <a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://www.transifex.com/projects/p/destiny-item-manager/resource/dim/" 
 title="See more information on Transifex.com">Top translations: destiny-item-manager » dim</a><br/>
 ![current](https://chart.googleapis.com/chart?chxt=y%2Cr&chd=e%3A.......W8y8ybg&chco=84CCFF%2CBFE4FF%2CF4F6FB&chbh=9&chs=350x105&cht=bhs&chxl=0%3A%7CJapanese%7CGerman%7CSpanish%7CPortuguese+%28Brazil%29%7CEnglish%7CItalian%7CFrench%7C1%3A%7C43%25%7C95%25%7C95%25%7C99%25%7C100%25%7C100%25%7C100%25%7C)
-<a target="_blank" href="/"><img border="0" src="https://tx-assets.scdn5.secure.raxcdn.com/static/charts/images/tx-logo-micro.c5603f91c780.png"/></a>
+<br><a target="_blank" href="/"><img border="0" src="https://tx-assets.scdn5.secure.raxcdn.com/static/charts/images/tx-logo-micro.c5603f91c780.png"/></a>
 
 
 There are two different roles available per language
