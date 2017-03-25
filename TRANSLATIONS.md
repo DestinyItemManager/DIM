@@ -34,7 +34,7 @@ There are two different roles available per language
 
 [Translating with the Web Editor](https://docs.transifex.com/translation/translating-with-the-web-editor)
 
- *Translations are not considered complete, until they have been reviewed by at least 1 reviewer.
+ *Translations are not considered complete, until they have been reviewed by at least 1 reviewer.*
 
 [Plural/Select Help](http://format-message.github.io/icu-message-format-for-translators/editor.html)
 If you need help with the correct Plural or Select string open this page up and copy/paste the string you are translating into it.
