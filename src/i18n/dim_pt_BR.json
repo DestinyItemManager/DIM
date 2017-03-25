@@ -24,7 +24,8 @@
       "NotConnected": "Você deverá estar sem conexão com a Internet.",
       "Twitter": "Veja atualizações em",
       "ItemUniqueness": "Unicidade de itens",
-      "ItemUniquenessExplanation": "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo."
+      "ItemUniquenessExplanation": "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo.",
+      "VendorNotFound": "Informação do vendedor não disponível."
    },
    "Compare": {
       "ButtonHelp": "Comparar itens",
@@ -79,7 +80,7 @@
       "FilterHelp": "Buscar por item/perk ou is:arc",
       "MaterialsExchange": "Ranks de facção disponíveis",
       "Refresh": "Atualizar dados do Destiny",
-      "SupportDIM": "Apoie"
+      "SupportDIM": "Ajuda"
    },
    "Help": {
       "BackToDIM": "Voltar para o DIM",
@@ -271,6 +272,10 @@
       "Take": "Tomar",
       "Vault": "Cofre"
    },
+   "MoveAmount": {
+     "Increment": "Mais um",
+     "Decrement": "Menos um"
+   },
    "Notes": {
       "Error": "Erro! Anotações devem ter até 120 caracteres.",
       "Help": "Adicione anotações à este item"
@@ -392,9 +397,14 @@
      },
      "Support": {
        "Support": "Apoie o DIM",
-       "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa."
+       "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa.",
+       "Sponsors": "Patrocinadores"
      },
-     "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM."
+     "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM.",
+     "Login": {
+       "Permission": "Precisamos da sua permissão...",
+       "LearnMore": "Você quer saber mais?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Recompensa de 5 vitórias (armadura)",
