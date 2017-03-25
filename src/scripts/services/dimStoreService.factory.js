@@ -677,6 +677,7 @@ function StoreService(
       const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
       if (classifiedItemDef) {
         itemDef = classifiedItemDef;
+        item.primaryStat = itemDef.primaryStat;
       }
     }
 
