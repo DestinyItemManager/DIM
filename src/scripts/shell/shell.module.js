@@ -6,6 +6,7 @@ import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tra
 import { PlatformChoiceComponent } from './platform-choice';
 import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
+import backLinkComponent from './shell/backLink.component';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -16,6 +17,7 @@ export const ShellModule = angular
   .component('dimPlatformChoice', PlatformChoiceComponent)
   .component('dimShell', shellComponent)
   .component('content', contentComponent)
+  .component('backLink', backLinkComponent)
   .config(function($stateProvider) {
     'ngInject';
 

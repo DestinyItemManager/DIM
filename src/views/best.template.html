@@ -1,5 +1,5 @@
 <div class="minmax" ng-controller="dimMinMaxCtrl as vm" ng-class="{ itemQuality: vm.featureFlags.qualityEnabled }">
-  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i><span translate="Help.BackToDIM"></span></a>
+  <back-link></back-link>
   <h1 translate="LB"></h1>
 
   <dim-min-max-char-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></dim-min-max-char-select>
