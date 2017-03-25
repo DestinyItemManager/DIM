@@ -1,3 +1,8 @@
+# Next
+
+* Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
+* Localization updates
+
 # 3.17.0
 
 * Fixed the perk selection in Loadout Builder. #1453
