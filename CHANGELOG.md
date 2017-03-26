@@ -1,4 +1,4 @@
-# Next
+# v3.17.1
 
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
 * Localization updates
