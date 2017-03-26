@@ -1,3 +1,7 @@
+# Next
+
+* Fixed the logic for deciding which items can be tagged.
+
 # v3.17.1
 
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
