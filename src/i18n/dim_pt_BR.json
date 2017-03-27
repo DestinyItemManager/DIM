@@ -275,6 +275,8 @@
    "MoveAmount": {
      "Min": "Quantidade mínima (1)",
      "Max": "Quantidade total nesse local",
+     "UpStack": "Completar pilha",
+     "DownStack": "Eliminar pilha",
      "Increment": "Mais um",
      "Decrement": "Menos um"
    },
