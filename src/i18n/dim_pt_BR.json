@@ -273,6 +273,7 @@
       "Vault": "Cofre"
    },
    "MoveAmount": {
+     "Min": "Quantidade mínima (1)",
      "Max": "Quantidade total nesse local",
      "Increment": "Mais um",
      "Decrement": "Menos um"

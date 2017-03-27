@@ -274,9 +274,9 @@
    },
    "MoveAmount": {
      "Min": "Mindest-Stapel (1)",
-     "Max": "Totale Anzahl in dieser Stelle.",
-     "UpStack": "Erhöhen zum nächsten vollen Stapel",
-     "DownStack": "Reduzieren zum nächsten vollen Stapel",
+     "Max": "Gesamtmenge in dieser Stelle.",
+     "UpStack": "Auf nächsten vollen Stapel erhöhen",
+     "DownStack": "Auf letzten vollen Stapel verringern",
      "Increment": "Einer mehr",
      "Decrement": "Einer weniger"
    },
@@ -404,15 +404,15 @@
        "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
        "OpenCollective": "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
        "Backers": "Unterstützer",
-       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende und helfen uns, die aktive Entwicklung an DIM fortzusetzen.",
+       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln",
        "Sponsors": "Sponsoren",
-       "SponsorsDetail": "Werde Sponsor und platziere dein Logo mit einem Link zu deiner Seite hier."
+       "SponsorsDetail": "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite."
      },
      "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können.",
      "Login": {
-       "Permission": "Wir brauchen deine Ermächtigung....",
+       "Permission": "Wir brauchen dein Einverständnis....",
        "Explanation": "Erlaube DIM deinen Destiny Charakter,  Tresor und Fortschritt einzusehen und zu bearbeiten.",
-       "Auth": "Autorisieren via Bungie.net",
+       "Auth": "Autorisiere mit Bungie.net",
        "LearnMore": "Willst du mehr wissen?"
      }
    },
