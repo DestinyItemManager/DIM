@@ -5,8 +5,10 @@ import { sum, count } from '../util';
 import templateUrl from './record-books.html';
 import './record-books.scss';
 
-function RecordBooksController($scope, dimStoreService, dimDefinitions) {
+function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService) {
   const vm = this;
+
+  vm.settings = dimSettingsService;
 
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info
@@ -35,7 +37,6 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions) {
 
   function processRecordBook(defs, rawRecordBook) {
     // TODO: rewards are in "spotlights"
-    // TODO: there's a startDate/expirationDate
     // "recordBookDef.bannerImage" is a huge background image
 
     // TODO: rank
@@ -46,10 +47,25 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions) {
       name: recordBookDef.displayName,
       recordCount: recordBookDef.recordCount,
       completedCount: rawRecordBook.completedCount,
-      icon: recordBookDef.icon
+      icon: recordBookDef.icon,
+      startDate: rawRecordBook.startDate,
+      expirationDate: rawRecordBook.expirationDate
     };
 
     recordBook.objectives = (rawRecordBook.records || []).map((r) => processRecord(defs, recordBook, r));
+
+    const recordByHash = _.indexBy(recordBook.objectives, 'hash');
+
+    recordBook.pages = recordBookDef.pages.map((page) => {
+      return {
+        name: page.displayName,
+        description: page.displayDescription,
+        rewardsPage: page.displayStyle === 1,
+        records: page.records.map((r) => recordByHash[r.recordHash])
+        // rewards - map to items!
+        // may have to extract store service bits...
+      };
+    });
 
     // TODO: organize the records into pages
 
@@ -83,6 +99,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions) {
     }
 
     return {
+      hash: record.recordHash,
       icon: record.icon,
       description: record.description,
       displayName: record.displayName,
