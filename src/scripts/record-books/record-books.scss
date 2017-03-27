@@ -6,5 +6,53 @@
   .book-icon {
     height: 200px;
   }
-}
 
+  .record-book-page {
+  }
+
+  .record-page-records {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .record {
+    width: calc(50% - 26px);
+    background: #333;
+    padding: 10px;
+    margin: 6px 0px;
+    display: flex;
+    flex-direction: row;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+  }
+
+  .record-info {
+    flex: 1;
+    margin: 0 10px 0 20px;
+  }
+
+  .record-icon {
+    border-radius: 50%;
+    background-color: rgba(245, 245, 245, 0.1);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #fff;
+
+    &.complete {
+      border-color: #ffce1f;
+      background-color: rgba(255,206,31,0.4);
+    }
+  }
+}

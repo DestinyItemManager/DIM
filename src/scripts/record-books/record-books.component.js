@@ -113,7 +113,8 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       icon: record.icon,
       description: record.description,
       name: record.displayName,
-      objectives: objectives
+      objectives: objectives,
+      complete: _.all(objectives, 'complete')
     };
   }
 }

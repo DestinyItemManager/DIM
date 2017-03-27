@@ -14,17 +14,18 @@
 
     <img class="book-icon" ng-src="{{::book.icon | bungieIcon}}" />
 
-    <div ng-repeat="page in book.pages">
+    <div class="record-book-page" ng-repeat="page in book.pages">
       <h2>{{page.name}}</h2>
       <p>{{page.description}}</p>
 
-      <div ng-if="page.records.length">
-        <div ng-repeat="record in page.records">
-          <h3>{{record.name}}</h3>
-          <p>{{record.description}}</p>
-          <img ng-src="{{:: record.icon | bungieIcon}}"/>
-
-          <dim-objectives objectives="record.objectives"></dim-objectives>
+      <div class="record-page-records" ng-if="page.records.length">
+        <div class="record" ng-repeat="record in page.records">
+          <div class="record-icon" ng-class="{ complete: record.complete }" ng-style="{{::record.icon | bungieBackground}}"></div>
+          <div class="record-info">
+            <h3>{{record.name}}</h3>
+            <p>{{record.description}}</p>
+            <dim-objectives objectives="record.objectives"></dim-objectives>
+          </div>
         </div>
       </div>
     </div>
