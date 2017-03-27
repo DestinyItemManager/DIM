@@ -2,7 +2,32 @@ import angular from 'angular';
 import _ from 'underscore';
 
 angular.module('dimApp')
+  .component('dimObjectives', Objectives())
   .directive('dimMoveItemProperties', MoveItemProperties);
+
+function Objectives() {
+  return {
+    bindings: {
+      objectives: '<'
+    },
+    template: [
+      '<div class="item-objectives" ng-if="$ctrl.objectives.length">',
+      '  <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in $ctrl.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
+      '    <div ng-switch-when="trials">',
+      '      <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
+      '      <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>',
+      '    </div>',
+      '    <div ng-switch-default class="objective-checkbox"><div></div></div>',
+      '    <div ng-switch-default class="objective-progress">',
+      '      <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
+      '      <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
+      '      <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join('')
+  };
+}
 
 function MoveItemProperties() {
   return {
@@ -79,20 +104,7 @@ function MoveItemProperties() {
       '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
       '    <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>',
       '  </div>',
-      '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
-      '    <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
-      '      <div ng-switch-when="trials">',
-      '        <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
-      '        <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>',
-      '      </div>',
-      '      <div ng-switch-default class="objective-checkbox"><div></div></div>',
-      '      <div ng-switch-default class="objective-progress">',
-      '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-      '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
-      '        <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
+      '  <dim-objectives class="item-details" ng-if="vm.itemDetails" objectives="vm.item.objectives"></dim-objectives>',
       '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
       '    <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>',
       '    <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>',
