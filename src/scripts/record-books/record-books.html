@@ -1,48 +1,35 @@
 <div class="record-books">
   <back-link></back-link>
 
-  <h1>Record Books!</h1>
+  <h1 translate="RecordBooks"></h1>
 
-  <div ng-repeat="book in $ctrl.recordBooks">
+  <div class="record-book" ng-repeat="book in $ctrl.recordBooks | orderBy:'startDate' track by $index">
     <div class="title">
-      <div class="collapse-handle" ng-click="vm.toggleSection(bookHash)">
-        <i class="fa collapse" ng-class="vm.settings.collapsedSections[bookHash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+      <div class="collapse-handle" ng-click="$ctrl.toggleSection(book.hash)">
+        <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections[book.hash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+        <img class="book-icon" ng-src="{{::book.icon | bungieIcon}}" />
         {{::book.name}}
-        <span>{{book.completedCount}} / {{book.recordCount}}</span>
+        <span class="record-book-completion">{{book.completedCount}} / {{book.recordCount}}</span>
       </div>
     </div>
+    <div ng-if="!$ctrl.settings.collapsedSections[book.hash]">
+      <!-- <img class="book-icon" ng-src="{{::book.icon | bungieIcon}}" />-->
 
-    <img class="book-icon" ng-src="{{::book.icon | bungieIcon}}" />
+      <div class="record-book-page" ng-repeat="page in book.pages track by $index">
+        <h2>{{::page.name}}</h2>
+        <p>{{::page.description}}</p>
 
-    <div class="record-book-page" ng-repeat="page in book.pages">
-      <h2>{{page.name}}</h2>
-      <p>{{page.description}}</p>
-
-      <div class="record-page-records" ng-if="page.records.length">
-        <div class="record" ng-repeat="record in page.records">
-          <div class="record-icon" ng-class="{ complete: record.complete }" ng-style="{{::record.icon | bungieBackground}}"></div>
-          <div class="record-info">
-            <h3>{{record.name}}</h3>
-            <p>{{record.description}}</p>
-            <dim-objectives objectives="record.objectives"></dim-objectives>
+        <div class="record-page-records" ng-if="page.records.length">
+          <div class="record" ng-repeat="record in page.records track by $index">
+            <div class="record-icon" ng-class="{ complete: record.complete }" ng-style="{{::record.icon | bungieBackground}}"></div>
+            <div class="record-info">
+              <h3>{{::record.name}}</h3>
+              <p>{{::record.description}}</p>
+              <dim-objectives objectives="record.objectives"></dim-objectives>
+            </div>
           </div>
         </div>
       </div>
     </div>
-<!--
-    <div clas="item-details item-objectives" ng-if="book.objectives.length">
-      <div class="objective-row" ng-repeat="objective in book.objectives track by $index" ng-class="{'objective-complete': objective.complete, 'objective-boolean': objective.boolean }">
-        <div class="objective-checkbox"><div></div></div>
-        <div class="objective-progress">
-          <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>
-          <img ng-src="{{:: objective.icon | bungieIcon}}"/>
-          <div class="objective-description">{{ objective.displayName || (objective.complete ? 'Complete' : 'Incomplete') }}</div>
-          <div>{{objective.description}}</div>
-          <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>
-        </div>
-      </div>
-    </div>
   </div>
-  -->
 </div>
-

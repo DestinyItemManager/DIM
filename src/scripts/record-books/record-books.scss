@@ -3,41 +3,68 @@
   min-width: 450px;
   margin: 0 auto;
 
+  .record-book {
+    margin-bottom: 10px;
+  }
+
   .book-icon {
-    height: 200px;
+    height: 26px;
+    vertical-align: middle;
   }
 
   .record-book-page {
+    background: #555;
+    margin: 10px 10px 0 10px;
+    padding: 10px;
+
+    h2 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin: 0;
+      color: #e0e0e0;
+    }
   }
 
   .record-page-records {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .record-book-completion {
+    float: right;
   }
 
   .record {
-    width: calc(50% - 26px);
+    width: calc(50% - 22px);
     background: #333;
     padding: 10px;
-    margin: 6px 0px;
+    margin: 2px 0px;
     display: flex;
     flex-direction: row;
 
     h3 {
       margin: 0;
-      font-size: 18px;
+      font-size: 16px;
+      letter-spacing: 1px;
       font-weight: normal;
     }
 
     p {
-      margin: 8px 0;
+      margin: 0 0 8px 0;
+      color: #e0e0e0;
     }
   }
 
   .record-info {
     flex: 1;
-    margin: 0 10px 0 20px;
+    margin: 0 10px 0 12px;
   }
 
   .record-icon {

@@ -10,6 +10,12 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
   vm.settings = dimSettingsService;
 
+  // TODO: it's time for a directive
+  vm.toggleSection = function(id) {
+    vm.settings.collapsedSections[id] = !vm.settings.collapsedSections[id];
+    vm.settings.save();
+  };
+
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info
   // here. Unfortunately we're also using advisor info to populate
@@ -37,17 +43,17 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
   function processRecordBook(defs, rawRecordBook) {
     // TODO: rewards are in "spotlights"
-    // "recordBookDef.bannerImage" is a huge background image
-
     // TODO: rank
 
     const recordBookDef = defs.RecordBook.get(rawRecordBook.bookHash);
 
     const recordBook = {
+      hash: rawRecordBook.bookHash,
       name: recordBookDef.displayName,
       recordCount: recordBookDef.recordCount,
       completedCount: rawRecordBook.completedCount,
       icon: recordBookDef.icon,
+      banner: recordBookDef.bannerImage,
       startDate: rawRecordBook.startDate,
       expirationDate: rawRecordBook.expirationDate
     };
