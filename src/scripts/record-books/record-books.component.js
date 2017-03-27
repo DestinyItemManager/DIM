@@ -90,24 +90,30 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
   }
 
   function processRecord(defs, recordBook, record) {
-    // TODO: Really need Record objects, which can then have multiple objectives
-    const objectiveDef = defs.Objective.get(record.objectives[0].objectiveHash);
+    // TODO: objectives component
+    const objectives = record.objectives.map((objective) => {
+      const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
-    let display = undefined;
-    if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
-      display = record.objectives[0].displayValue;
-    }
+      let display = undefined;
+      if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
+        display = objective.displayValue;
+      }
+
+      return {
+        progress: objective.progress,
+        display: display,
+        completionValue: objectiveDef.completionValue,
+        complete: objective.isComplete,
+        boolean: objectiveDef.completionValue === 1
+      };
+    });
 
     return {
       hash: record.recordHash,
       icon: record.icon,
       description: record.description,
-      displayName: record.displayName,
-      progress: record.objectives[0].progress,
-      display: display,
-      completionValue: objectiveDef.completionValue,
-      complete: record.objectives[0].isComplete,
-      boolean: objectiveDef.completionValue === 1
+      name: record.displayName,
+      objectives: objectives
     };
   }
 }

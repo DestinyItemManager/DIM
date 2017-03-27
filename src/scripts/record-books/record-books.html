@@ -8,7 +8,7 @@
       <div class="collapse-handle" ng-click="vm.toggleSection(bookHash)">
         <i class="fa collapse" ng-class="vm.settings.collapsedSections[bookHash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
         {{::book.name}}
-        <span class="book-location">{{::book.location}}</span>
+        <span>{{book.completedCount}} / {{book.recordCount}}</span>
       </div>
     </div>
 
@@ -18,16 +18,13 @@
       <h2>{{page.name}}</h2>
       <p>{{page.description}}</p>
 
-      <div clas="item-details item-objectives" ng-if="page.records.length">
-        <div class="objective-row" ng-repeat="objective in page.records track by $index" ng-class="{'objective-complete': objective.complete, 'objective-boolean': objective.boolean }">
-          <div class="objective-checkbox"><div></div></div>
-          <div class="objective-progress">
-            <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>
-            <img ng-src="{{:: objective.icon | bungieIcon}}"/>
-            <div class="objective-description">{{ objective.displayName || (objective.complete ? 'Complete' : 'Incomplete') }}</div>
-            <div>{{objective.description}}</div>
-            <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>
-          </div>
+      <div ng-if="page.records.length">
+        <div ng-repeat="record in page.records">
+          <h3>{{record.name}}</h3>
+          <p>{{record.description}}</p>
+          <img ng-src="{{:: record.icon | bungieIcon}}"/>
+
+          <dim-objectives objectives="record.objectives"></dim-objectives>
         </div>
       </div>
     </div>
