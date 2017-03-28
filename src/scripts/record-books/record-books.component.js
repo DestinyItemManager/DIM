@@ -16,6 +16,10 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     vm.settings.save();
   };
 
+  vm.settingsChanged = function() {
+    vm.settings.save();
+  };
+
   // TODO: Ideally there would be an Advisors service that would
   // lazily load advisor info, and we'd get that info
   // here. Unfortunately we're also using advisor info to populate
@@ -31,7 +35,6 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     dimDefinitions.getDefinitions().then((defs) => {
       const rawRecordBooks = stores[0].advisors.recordBooks;
       vm.recordBooks = _.map(rawRecordBooks, (rb) => processRecordBook(defs, rb));
-      // TODO: sort down by start date, put finished below
     });
   }
 
@@ -46,7 +49,6 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     // TODO: rank
 
     const recordBookDef = defs.RecordBook.get(rawRecordBook.bookHash);
-
     const recordBook = {
       hash: rawRecordBook.bookHash,
       name: recordBookDef.displayName,
@@ -58,11 +60,13 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       expirationDate: rawRecordBook.expirationDate
     };
 
-    const records = (rawRecordBook.records || []).map((r) => processRecord(defs, recordBook, r));
+    const records = _.values(rawRecordBook.records).map((r) => processRecord(defs, r));
     const recordByHash = _.indexBy(records, 'hash');
 
+    let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {
-      return {
+      const createdPage = {
+        id: recordBook.hash + '-' + i++,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
@@ -71,11 +75,14 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
         // dimStoreService.processItems({ id: null }
         // may have to extract store service bits...
       };
+
+      createdPage.complete = _.all(createdPage.records, 'complete');
+      createdPage.completedCount = count(createdPage.records, 'complete');
+
+      return createdPage;
     });
 
-    // TODO: organize the records into pages
-
-    // TODO: show rewards?
+    // TODO: show rewards
 
     if (rawRecordBook.progression) {
       rawRecordBook.progression = angular.extend(rawRecordBook.progression, defs.Progression.get(rawRecordBook.progression.progressionHash));
@@ -86,18 +93,14 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       recordBook.percentComplete = count(records, 'complete') / records.length;
     }
 
-    recordBook.complete = _.chain(recordBook.records)
-      .pluck('objectives')
-      .flatten()
-      .all('isComplete')
-      .value();
+    recordBook.complete = _.all(recordBook.pages, 'complete');
 
-    console.log(recordBookDef, rawRecordBook, recordBook);
     return recordBook;
   }
 
-  function processRecord(defs, recordBook, record) {
-    // TODO: objectives component
+  function processRecord(defs, record) {
+    const recordDef = defs.Record.get(record.recordHash);
+
     const objectives = record.objectives.map((objective) => {
       const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
@@ -117,9 +120,9 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
     return {
       hash: record.recordHash,
-      icon: record.icon,
-      description: record.description,
-      name: record.displayName,
+      icon: recordDef.icon,
+      description: recordDef.description,
+      name: recordDef.displayName,
       objectives: objectives,
       complete: _.all(objectives, 'complete')
     };

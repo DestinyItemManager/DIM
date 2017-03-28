@@ -1269,6 +1269,10 @@ rzslider, .rzslider {
   display: flex;
   flex-direction: row;
   margin-bottom: 4px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .objective-checkbox {

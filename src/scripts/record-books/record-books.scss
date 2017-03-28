@@ -3,6 +3,16 @@
   min-width: 450px;
   margin: 0 auto;
 
+  h1 {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+
+    span {
+      flex: 1;
+    }
+  }
+
   .record-book {
     margin-bottom: 10px;
   }
@@ -17,13 +27,15 @@
   .record-book-page {
     background: #555;
     margin: 10px 10px 0 10px;
-    padding: 10px;
+    padding: 8px;
 
-    h2 {
+    .record-book-page-title {
       margin: 0;
       font-size: 14px;
       letter-spacing: 1px;
       text-transform: uppercase;
+      display: inline;
+
     }
 
     p {
@@ -36,17 +48,23 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .record-book-completion {
     float: right;
   }
 
+  .hide-completed {
+    float: right;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
   .record {
-    width: calc(50% - 22px);
+    width: calc(50% - 18px);
     background: #333;
-    padding: 10px;
+    padding: 8px;
     margin: 2px 0px;
     display: flex;
     flex-direction: row;
@@ -62,11 +80,20 @@
       margin: 0 0 8px 0;
       color: #e0e0e0;
     }
+
+  }
+
+  &.hide-complete {
+    .record, .record-book-page {
+      &.complete {
+        display: none;
+      }
+    }
   }
 
   .record-info {
     flex: 1;
-    margin: 0 10px 0 12px;
+    margin-left: 10px;
   }
 
   .record-icon {
@@ -78,10 +105,10 @@
     width: 60px;
     height: 60px;
     border: 2px solid #fff;
+  }
 
-    &.complete {
-      border-color: #ffce1f;
-      background-color: rgba(255,206,31,0.4);
-    }
+  .complete .record-icon {
+    border-color: #ffce1f;
+    background-color: rgba(255,206,31,0.4);
   }
 }
