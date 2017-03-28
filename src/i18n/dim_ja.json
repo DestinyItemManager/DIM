@@ -372,6 +372,10 @@
       "ShadersAndEmblems": "シェーダーとエンブレム",
       "Emotes": "感情表現"
    },
+   "RecordBooks": {
+     "RecordBooks": "記録ブック",
+     "HideCompleted": "完了した記録を非表示にする"
+   },
    "Views": {
      "About":{
        "BungieCopyright": "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。",
