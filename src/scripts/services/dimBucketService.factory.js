@@ -34,8 +34,6 @@ angular.module('dimApp')
     Progress: [
       'Bounties',
       'Quests',
-      'RecordBook',
-      'RecordBookLegacy',
       'Missions'
     ],
     Postmaster: [

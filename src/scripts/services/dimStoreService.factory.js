@@ -854,33 +854,7 @@ function StoreService(
     setItemYear(createdItem);
 
     // More objectives properties
-    if (owner.advisors && itemDef.recordBookHash && itemDef.recordBookHash > 0) {
-      try {
-        const recordBook = owner.advisors.recordBooks[itemDef.recordBookHash];
-
-        recordBook.records = _.map(_.values(recordBook.records), (record) => _.extend(defs.Record.get(record.recordHash), record));
-
-        createdItem.objectives = buildRecords(recordBook, defs.Objective);
-
-        if (recordBook.progression) {
-          recordBook.progression = angular.extend(recordBook.progression, defs.Progression.get(recordBook.progression.progressionHash));
-          createdItem.progress = recordBook.progression;
-          createdItem.percentComplete = createdItem.progress.currentProgress / _.reduce(createdItem.progress.steps, (memo, step) => memo + step.progressTotal, 0);
-        } else {
-          createdItem.percentComplete = _.countBy(createdItem.objectives, function(task) {
-            return task.complete;
-          }).true / createdItem.objectives.length;
-        }
-
-        createdItem.complete = _.chain(recordBook.records)
-          .pluck('objectives')
-          .flatten()
-          .all('isComplete')
-          .value();
-      } catch (e) {
-        console.error("Error building record book for " + createdItem.name, item, itemDef, e);
-      }
-    } else if (createdItem.objectives) {
+    if (createdItem.objectives) {
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
       createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
         return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
@@ -1096,35 +1070,6 @@ function StoreService(
       buildObjective('SevenWins', trials.highestWinRank, trials.winRewardDetails[1].winCount, true),
       buildObjective('Flawless', flawless, 1, true),
     ];
-  }
-
-  function buildRecords(recordBook, objectiveDefs) {
-    if (!recordBook.records || !recordBook.records.length) {
-      return undefined;
-    }
-
-    let processRecord = (recordBook, record) => {
-      var def = objectiveDefs.get(record.objectives[0].objectiveHash);
-
-      var display;
-      if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
-        display = record.objectives[0].displayValue;
-      }
-
-      return {
-        description: record.description,
-        displayName: record.displayName,
-        progress: record.objectives[0].progress,
-        display: display,
-        completionValue: def.completionValue,
-        complete: record.objectives[0].isComplete,
-        boolean: def.completionValue === 1
-      };
-    };
-
-    processRecord = processRecord.bind(this, recordBook);
-
-    return _.map(recordBook.records, processRecord);
   }
 
   function buildObjectives(objectives, objectiveDefs) {
