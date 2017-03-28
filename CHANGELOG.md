@@ -1,5 +1,6 @@
 # Next
 
+* Fixed the logic for deciding which items can be tagged.
 * Fix "Make room for postmaster".
 
 # v3.17.1

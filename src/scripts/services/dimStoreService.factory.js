@@ -789,7 +789,6 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-      taggable: item.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'),
       trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
       tracked: item.state === 2,
       locked: item.locked,
@@ -797,6 +796,8 @@ function StoreService(
       classified: itemDef.classified,
       isInLoadout: false
     });
+
+    createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
 
     createdItem.index = createItemIndex(createdItem);
 
