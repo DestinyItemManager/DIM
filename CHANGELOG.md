@@ -2,6 +2,7 @@
 
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
 * Localization updates
+* Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
 
 # 3.17.0
 
