@@ -24,7 +24,8 @@
       "NotConnected": "Es posible que no tengas conexión a Internet.",
       "Twitter": "Entérate de los estados de actualizaciones",
       "ItemUniqueness": "Unicidad de objeto",
-      "ItemUniquenessExplanation": "Intentáste mover el '{name}' {type} a tu {character} pero ese destino ya cuenta con ese objeto y solo puede tener uno."
+      "ItemUniquenessExplanation": "Intentáste mover el '{name}' {type} a tu {character} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
+      "VendorNotFound": "Los datos del proveedor no están disponibles."
    },
    "Compare": {
       "ButtonHelp": "Compara Elementos",
@@ -271,6 +272,14 @@
       "Take": "Tomar",
       "Vault": "Bóveda"
    },
+   "MoveAmount": {
+     "Min": "Montón mínimo (1)",
+     "Max": "Cantidad total en esta parte",
+     "UpStack": "Incrementar al siguiente montón lleno",
+     "DownStack": "Reducir al siguiente montón lleno",
+     "Increment": "Uno más",
+     "Decrement": "Uno menos"
+   },
    "Notes": {
       "Error": "Error! Máximo 120 caracteres por notas.",
       "Help": "Agregar notas a este artículo"
@@ -393,9 +402,19 @@
      "Support": {
        "Support": "Apoyando DIM",
        "FreeToDownload": "DIM es un producto gratis para descargar y usar. El código fuente de DIM es de fuente abierta, y libre para que cualquiera pueda mejorar. Nunca verás anuncios en DIM. Ese es nuestro compromiso.",
-       "OpenCollective": "Estamos usando OpenCollective como servicio para compensar a los desarrolladores por su dedicación y tiempo dedicado a este proyecto"
+       "OpenCollective": "Estamos usando OpenCollective como servicio para compensar a los desarrolladores por su dedicación y tiempo dedicado a este proyecto",
+       "Backers": "Partidarios",
+       "BackersDetail": "Apóyanos con una donación única o mensual y ayuda a que podamos continuar nuestro desarrollo activo.",
+       "Sponsors": "Patrocinadores",
+       "SponsorsDetail": "Conviértete en un patrocinador y obtendrás tu logo aquí con una liga a tu página web."
      },
-     "UpgradeChrome": "Tu versión de Chrome es muy vieja para correr DIM. Por favor actualiza Chrome para poder usarlo."
+     "UpgradeChrome": "Tu versión de Chrome es muy vieja para correr DIM. Por favor actualiza Chrome para poder usarlo.",
+     "Login": {
+       "Permission": "Necesitamos tu permiso...",
+       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, bóveda y progreso.",
+       "Auth": "Autorizar con Bungie.net",
+       "LearnMore": "Quieres saber más?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Recompensa de 5 victorias (Armadura)",

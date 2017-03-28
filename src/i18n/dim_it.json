@@ -24,7 +24,8 @@
       "NotConnected": "Potresti non essere connesso a internet.",
       "Twitter": "Ottieni informazioni sullo stato del servizio su",
       "ItemUniqueness": "Unicità dell elemento",
-      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa."
+      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
+      "VendorNotFound": "I dati dei mercanti non sono disponibili."
    },
    "Compare": {
       "ButtonHelp": "Confronta Oggetti",
@@ -267,9 +268,17 @@
       "DistributeEvenly": "Distribuisci Equamente",
       "Equip": "Usa",
       "Split": "Dividi",
-      "Store": "Mouvi",
+      "Store": "Muovi",
       "Take": "Prendi",
       "Vault": "Depos"
+   },
+   "MoveAmount": {
+     "Min": "Stack minimo (1)",
+     "Max": "Totale in questa posizione",
+     "UpStack": "Aumento fino al prossimo stack pieno",
+     "DownStack": "Diminuisci fino al prossimo stack pieno",
+     "Increment": "Ancora uno",
+     "Decrement": "Togli uno"
    },
    "Notes": {
       "Error": "Errore! Massimo 120 caratteri per nota.",
@@ -393,9 +402,19 @@
      "Support": {
        "Support": "Supportare DIM",
        "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
-       "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto."
+       "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
+       "Backers": "Donatori",
+       "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
+       "Sponsors": "Sponsors",
+       "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito."
      },
-     "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM."
+     "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
+     "Login": {
+       "Permission": "Ci serve il tuo permesso...",
+       "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
+       "Auth": "Richiedi autorizzazione su Bungie.net",
+       "LearnMore": "Vuoi saperne di più?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Ricompensa 5 Vittorie (Armatura)",
