@@ -372,7 +372,8 @@
       "Emotes": "Emotes"
    },
    "RecordBooks": {
-      "RecordBooks": "Record Books"
+     "RecordBooks": "Record Books",
+     "HideCompleted": "Hide completed records"
    },
    "Views": {
      "About":{
