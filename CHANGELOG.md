@@ -1,8 +1,14 @@
 # Next
 
+* Fixed the logic for deciding which items can be tagged.
+* Fix "Make room for postmaster".
+* Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
+
+# v3.17.1
+
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
 * Localization updates
-* Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
+* Moved the "VCR" controls for stackable item amount selection to their own row.
 
 # 3.17.0
 

@@ -1030,7 +1030,8 @@ dim-store-heading {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0 10px;
+  justify-content: space-around;
+  margin: 10px 0;
 }
 
 .move-amount-slider {
