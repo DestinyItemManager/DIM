@@ -66,6 +66,7 @@
          "MakeRoom": "設備を動かしてアイテムを拾うための空間を確保する",
          "Tooltip": "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
       },
+      "OutOfRoomTitle": "スペースありません。",
       "OutOfRoom": "{character}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。",
       "Quickmove": "素早く移動",
       "Stop": "停止"
@@ -105,7 +106,15 @@
       "ClearNewItems": "新しいアイテムをクリアする"
    },
    "Infusion": {
+      "Infusion": "融合対象物発掘機能",
+      "BringGear": "装備を持ってくる",
+      "Calc": "融合計算機能",
+      "InfuseItems": "融合するアイテムを選択",
+      "InfusionMaterials": "融合材料",
+      "LockedItems": "ロックされているアイテムも含む",
       "NoItems": "融合可能なアイテムありません。",
+      "NoTransfer": "融合材を移動\n {target} 移動できません.",
+      "ShowItems": "各キャラや保管庫にある融合可能なアイテムを表示。",
       "TransferItems": "アイテムの転送",
       "Using3": "3を使用"
    },
@@ -120,6 +129,7 @@
       "ToStore": "{name} が全て {store} にあります。"
    },
    "ItemService": {
+      "BucketFull": "{store} には {itemtype} のスペースがありません。",
       "Classified": "この商品は現在分類されており、現時点では譲渡できません。",
       "Classified2": "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。",
       "Deequip": "{itemname}を取り除くために装備するアイテムが見つかりません",
@@ -139,6 +149,7 @@
       "LockEquipped": "装備をロック",
       "ClearLocked": "ロックを解除",
       "Locked": "ロックされたアイテム",
+      "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
       "FilterSets": "フィルタセット",
       "AdvancedOptions": "高度なオプション",
       "ProcessingMode": {
@@ -158,6 +169,7 @@
       "IncludeRare": "レアアイテム (青) を含む",
       "Help": {
         "Help": "助けが必要？",
+        "Lock": "クリックするとパークを固定できます。",
         "NoPerk": "特典が表示されない場合は、その特典を持つ装甲を所有していないことを意味します",
         "MultiPerk":"複数の特典を持つアーマーを一緒に使用するには、希望の特典をシフト+クリックします",
         "Or": "これらの特典のいずれかを持つアーマーが使用されます (\"or\")",
@@ -170,6 +182,7 @@
         "Discipline": "鍛錬はグレネードのクールダウン時間を短縮する",
         "Strength": "腕力は近接スキルのクールダウン時間を短縮する",
         "Synergy": "使用中の武器の弾増弾がついてる防具を探しましょう。",
+        "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
         "StatsIncrease": "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
       },
       "Equip": "使用中のキャラクターに装備する",
@@ -218,10 +231,13 @@
       "TooManyRequested": "あなたは{total} {itemname}を持っていますが、あなたのロードアウトは{requested}を要求します。",
       "DoesNotExist": "{itemname} はあなたのアカウント内に存在しません。",
       "AppliedAuto": "自動ロードアウトビルダー",
+      "Applied": "{amount} 個のアイテムのロードアウトが {store} に転送されました.",
       "AppliedError": "あなたのロードアウトのアイテムは転送できませんでした。",
       "AppliedWarn": "あなたのロードアウトは部分的に移転されましたが、{total}の{failed}アイテムにエラーがありました。",
       "NameRequired": "名称が必要",
       "MakeRoom": "ポストマスターのための部屋を作る",
+      "MakeRoomDone": "{movedNum} 個のアイテムを移動させたことで ポストマスターにある {postmasterNum} 個のアイテム用のスペースを確保できした.",
+      "MakeRoomError": "ポストマスターの全アイテム用のスペースを確保できませんでした：  {error} 。",
       "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
       "SaveErrorDescription": "ロードアウトのセーブに失敗 {loadoutName}: {error}.",
       "DeleteErrorTitle": "ロードアウト削除中にエラー",
@@ -232,6 +248,7 @@
       "Download": "最新のDestiny情報をBungieからダウンロードする",
       "Error": "読み込みエラー:\n{error}\n再読み込みをしてください。",
       "Outdated": "古いデスティニーのデータ",
+      "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。",
       "BungieDown": "Bungie.netに問題があるかもしれません。",
       "Load": "デスティニーのセーブデータをロード中",
       "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
@@ -243,10 +260,13 @@
       "CurrentRank": "現在のランク",
       "CurrentRep": "現在の担当者",
       "OnHand": "手持ちの材料",
+      "FromTrade": "交換素材",
       "NewRank": "新しいランク",
       "NewRep": "新しい担当者"
    },
    "MovePopup": {
+      "Consolidate": "統合する",
+      "DistributeEvenly": "均等に割り当てる。",
       "Equip": "装備する",
       "Split": "分割",
       "Store": "保管する",
@@ -254,6 +274,10 @@
       "Vault": "保管庫"
    },
    "MoveAmount": {
+     "Min": "最小限 (1)",
+     "Max": "ここの合計は",
+     "UpStack": "一群になるまで追加する",
+     "DownStack": "一群になるまで減少させる",
      "Increment": "一つ多く",
      "Decrement": "一つ少なく"
    },
@@ -262,7 +286,8 @@
       "Help": "このアイテムにメモを追加"
    },
    "Postmaster": {
-      "Limit": "ポストマスターに空きがありません"
+      "Limit": "ポストマスターに空きがありません",
+      "Desc": "{store} のポストマスターに20個のアイテムがあります。新アイテムは前のと入り替わります."
    },
    "Settings": {
       "Settings": "設定",
@@ -280,13 +305,24 @@
       "ShowElemental": "武器の属性アイコンを表示する",
       "ShowElementalHelp": "武器の属性アイコンを表示する。",
       "SetSort": "アイテムを並べ替える",
+      "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
       "SortPrimary": "主要",
       "SortRarity": "レア度",
+      "SortRoll": "統計量のパーセント",
+      "InventoryColumns": "キャラクターインベントリ欄",
+      "InventoryColumnsHelp": "キャラクターインベントリの欄数を選択して下さい.",
+      "VaultColumns": "保管庫の上限欄数",
+      "VaultColumnsHelp": "保管庫の上限欄数を選択して下さい.",
       "SizeItem": "アイテムサイズ",
       "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
       "ResetToDefault": "初期化する",
       "CharacterOrder": "キャラクター指名",
+      "CharacterOrderHelp": "キャラクターが最近のログイン順や作成順に整理できます.",
+      "CharacterOrderRecent": "最近使用したキャラクター順で",
+      "CharacterOrderReversed": "最近使用したキャラクター順で (反転)",
+      "CharacterOrderFixed": "固定 (作成順)",
       "ExportSS": "スプレッドシートをダウンロードする",
+      "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
       "DIMPopups": "DIMの情報",
       "DIMPopupsReset": "以前非表示にしたヒントをリセットする",
       "ImportExport": "データの入力／出力やデータ管理。",
@@ -298,7 +334,9 @@
       "Intellect": "知性",
       "Level": "レベル",
       "NoBonus": "ボーナスなし。",
+      "OfMaxRoll": "統計量の  {range}",
       "PercentHelp": "品質の詳細については、をクリックしてください。",
+      "Prestige": "評判レベル：  {level}\n光の欠片5個までは後  {exp}xp",
       "Quality": "品質",
       "Strength": "腕力",
       "TierProgress": "{tier} の {progress}"
