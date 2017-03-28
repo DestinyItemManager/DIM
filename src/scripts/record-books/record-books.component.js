@@ -6,6 +6,8 @@ import templateUrl from './record-books.html';
 import './record-books.scss';
 
 function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService) {
+  'ngInject';
+
   const vm = this;
 
   vm.settings = dimSettingsService;
