@@ -17,12 +17,13 @@
       "NetworkError": "ネットワークエラー。{status} {statusText}",
       "NotLoggedIn": "この拡張を利用するためには、Bungie.net にログインしてください。",
       "Maintenance": "Bungie.net サーバーがメンテナンス中。",
-      "NoAccount": "選択されたプラットフォームではDestinyアカウントが見つかりませんでした。正しいプラットフォームが選択されていますか？",
+      "NoAccount": "{platform} ではディスティニーアカウントみつかりません。正しいプラットフォームを選択しているかご確認ください。",
       "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
       "NoCookies": "クッキーが見つかりませんでした。",
       "NotConnected": "インターネットに接続してない可能性あります。",
       "ItemUniqueness": "アイテムのレア度",
-      "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。"
+      "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
+      "VendorNotFound": "ベンダー情報ありません"
    },
    "Compare": {
       "ButtonHelp": "アイテムを比較する",
@@ -39,10 +40,15 @@
       "Melee": "近接チャージのクールダウン",
       "Super": "スーパースキルのクールダウン"
    },
+   "Debug": {
+      "View": "アイテムのデバッグ情報を見る"
+   },
    "DidYouKnow": {
       "DidYouKnow": "知っていますか？",
       "DontShowAgain": "このヒントをこれ以降表示しない",
       "DoubleClick": "今使用中のキャラクター(最後にログインしたキャラクター)にアイテムを移動する時はダブルクリックで即座に装備出来ます。",
+      "DragAndDrop": "各キャラ及び、保管庫の間にアイテムをドラッグ＆ドロップできます。",
+      "Expand": "To re-expand a section, simply click the plus sign icon on the far left of the category you collapsed.",
       "TryNext": "今度お試しください。"
    },
    "FarmingMode": {
@@ -52,7 +58,8 @@
       "Stop": "停止"
    },
    "Filter": {
-      "EnterName": "アイテム名を入力してください。"
+      "EnterName": "アイテム名を入力してください。",
+      "EnterNote": "ここにノート入力："
    },
    "Header": {
       "About": "情報",
@@ -64,6 +71,7 @@
    "Help": {
       "BackToDIM": "DIMに戻る",
       "CannotMove": "キャラクターからこのアイテムを外せません",
+      "Drag": "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。",
       "ChangingPerks": "パーク変更は対応していません",
       "ChangingPerksInfo": "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！",
       "HidePopup": "ポップアップを非表示にする",
@@ -80,28 +88,57 @@
       "RefreshInventory": "インベントリーを更新"
    },
    "Infusion": {
-      "TransferItems": "アイテムの転送"
+      "NoItems": "融合可能なアイテムありません。",
+      "TransferItems": "アイテムの転送",
+      "Using3": "3を使用"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "アイテム情報を保存するにエラーが発生しました。"
    },
    "ItemMove": {
-      "ToVault": "{name} 今は全て保管庫にあります。"
+      "ToVault": "{name} 今は全て保管庫にあります。",
+      "ToStore": "{name} が全て {store} にあります。"
    },
    "ItemService": {
+      "Classified2": "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。",
+      "OnlyEquippedLevel": "レベル {level} 以上のキャラクターのみ装備が可能です。",
       "PercentComplete": "({ percent, number, percent } 完了)",
+      "TooMuch": "保有している数より多めに移動しようとしています。",
       "TwoExotics": "エキゾチックをどうやって2つを装備できたのかわかりません。"
    },
    "LB": {
+      "LB": "ロードアウトビルダー",
       "Guardians": "ガーディアン",
       "ShowGear": "{class} 装備を表示する",
       "HideGear": "{class} 装備を非表示する",
+      "LockEquipped": "装備中の物をロックする",
+      "ClearLocked": "ロックを解除する",
+      "Locked": "ロックされたアイテム",
+      "ProcessingMode": {
+         "Fast": "高速",
+         "Full": "全て"
+      },
       "IncludeRare": "レアアイテム (青) を含む",
       "Help": {
+        "NoPerk": "選んだパークが付いてる防具を所持していなければそのパークは表示されません。",
+        "HigherTiers": "ティアが高い方がより良いです",
+        "Tier11Example": "4/5/2(ティア11装備)は知性4、鍛錬5、腕力、2(4+5+2=ティア11)",
         "Intellect": "知性はスーパースキルのクールダウン時間を短縮する",
         "Discipline": "鍛錬はグレネードのクールダウン時間を短縮する",
-        "Strength": "腕力は近接スキルのクールダウン時間を短縮する"
-      }
+        "Strength": "腕力は近接スキルのクールダウン時間を短縮する",
+        "Synergy": "使用中の武器の弾増弾がついてる防具を探しましょう。",
+        "StatsIncrease": "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
+      },
+      "Equip": "使用中のキャラクターに装備する",
+      "ShowAllConfigs": "全ての設定を表示する",
+      "ShowConfigs": "設定を表示する",
+      "HideAllConfigs": "全ての設定を隠す",
+      "HideConfigs": "設定を隠す",
+      "Vendor": "ベンダー装備も含む",
+      "Exclude": "省かれたアイテム",
+      "LockPerk": "パークを固定する",
+      "Missing1": "フルセットを作るためのレジェンダリー、エキゾチックの部位が足りません！",
+      "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！"
    },
    "Loadouts": {
       "Loadouts": "ロードアウト",
@@ -109,6 +146,7 @@
       "FromEquipped": "装備している",
       "Edit": "ロードアウトを編集",
       "Delete": "ロードアウトを削除",
+      "ConfirmDelete": "本当に「{name}」を削除しますか？",
       "ApplySearch": "アイテム = \"{query}\"",
       "MaximizeLight": "光レベルを最大化",
       "ItemLeveling": "アイテムのレベルアップ",
@@ -116,11 +154,28 @@
       "GatherEngramsExceptExotics": "エキゾチック",
       "RestoreAllItems": "全アイテム",
       "Random": "ランダム",
+      "Randomize": "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？",
+      "VendorsCannotEquip": "これらのベンダーアイテムは装備出来ません。",
+      "VendorsCanEquip": "これらのアイテムは装備出来ません。",
+      "NoExotics": "転送出来るエングラムがありません。",
+      "LoadoutName": "ロードアウトの名前...",
       "Save": "保存",
       "SaveAsNew": "新規で保存",
       "Cancel": "キャンセル",
       "CouldNotEquip": "{itemname} を装備できませんでした",
-      "NameRequired": "名称が必要"
+      "DoesNotExist": "{itemname} はあなたのアカウント内に存在しません。",
+      "AppliedAuto": "自動ロードアウトビルダー",
+      "NameRequired": "名称が必要",
+      "SaveErrorTitle": "ロードアウトのセーブ中にエラー",
+      "SaveErrorDescription": "ロードアウトのセーブに失敗 {loadoutName}: {error}.",
+      "DeleteErrorTitle": "ロードアウト削除中にエラー",
+      "DeleteErrorDescription": "ロードアウト削除失敗 {loadoutName}: {error}."
+   },
+   "Manifest": {
+      "Outdated": "古いデスティニーのデータ",
+      "BungieDown": "Bungie.netに問題があるかもしれません。",
+      "Load": "デスティニーのセーブデータをロード中",
+      "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
    },
    "MaterialsExchange": {
       "MaterialsExchange": "素材交換"
@@ -131,25 +186,46 @@
       "Take": "取る",
       "Vault": "保管庫"
    },
+   "MoveAmount": {
+     "Increment": "一つ多く",
+     "Decrement": "一つ少なく"
+   },
    "Notes": {
+      "Error": "エラー！ノートは120文字が上限です。",
       "Help": "このアイテムにメモを追加"
+   },
+   "Postmaster": {
+      "Limit": "ポストマスターに空きがありません",
    },
    "Settings": {
       "Settings": "設定",
+      "Language": "言語(反映させるにはDIMをリフレッシュしてください)",
       "AlwaysShowDetails": "常にアイテム詳細を表示",
+      "ShowElemental": "武器の属性アイコンを表示する",
+      "ShowElementalHelp": "武器の属性アイコンを表示する。",
       "SortRarity": "レア度",
+      "SizeItem": "アイテムサイズ",
       "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
-      "ResetToDefault": "初期化する"
+      "ResetToDefault": "初期化する",
+      "ExportSS": "スプレッドシートをダウンロードする",
+      "ImportExport": "データの入力／出力やデータ管理。",
+      "Export": "DIM データを出力。",
+      "Import": "DIM データを入力。"
    },
    "Stats": {
       "Discipline": "鍛錬",
       "Intellect": "知性",
       "Level": "レベル",
+      "NoBonus": "ボーナスなし。",
       "Strength": "腕力",
       "TierProgress": "{tier} の {progress}"
    },
    "StoreBucket": {
+      "HowMuch": "{itemname} を何個移動しますか。",
       "Move": "移動"
+   },
+   "SyncService": {
+     "SaveTooLarge": "容量上限です。ロードアウトを削除してください。"
    },
    "Tags": {
       "TagItem": "アイテムをタグする",
@@ -197,13 +273,21 @@
        "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
        "Version": "バージョン",
        "Transifex": "翻訳チームに参加してください！",
-       "TransifexText": "私達はTransifexを使用して翻訳しています。 あなたの言語にローカライズされたDIMを見たい場合は、チームに参加してください。"
+       "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
      },
      "Support": {
        "Support": "DIMを支援する",
-       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。"
+       "FreeToDownload": "DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告を見ることはありません。それが私たちのコミットメントです。",
+       "Sponsors": "スポンサー",
+       "SponsorsDetail": "スポンサーになってあなたのロゴやホームページをここに記載しましょう。"
      },
-     "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。"
+     "UpgradeChrome": "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。",
+     "Login": {
+       "Permission": "許可が必要です。",
+       "Explanation": "DIM にディスティニーのキャラクターや保管庫、進歩状況などを読み取ると編集する許可を与えて下さい。",
+       "Auth": "Bungie.net で許可する。",
+       "LearnMore": "詳しく知りたいですか。"
+     }
    },
    "TrialsCard": {
       "FiveWins": "5勝目の報酬 (防具)",
