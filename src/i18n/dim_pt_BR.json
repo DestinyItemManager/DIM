@@ -66,6 +66,7 @@
          "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
          "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
       },
+      "OutOfRoomTitle": "Sem espaço",
       "OutOfRoom": "Você está sem espaço para mover itens do {character}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
       "Quickmove": "Mover rapidamente",
       "Stop": "Parar"
@@ -273,6 +274,10 @@
       "Vault": "Cofre"
    },
    "MoveAmount": {
+     "Min": "Quantidade mínima (1)",
+     "Max": "Quantidade total nesse local",
+     "UpStack": "Completar pilha",
+     "DownStack": "Eliminar pilha",
      "Increment": "Mais um",
      "Decrement": "Menos um"
    },
@@ -393,16 +398,22 @@
        "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
        "Version": "Versão",
        "Transifex": "Junte-se à equipe de tradução!",
-       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você quer ver o DIM traduzido para o seu idioma, junte-se à equipe."
+       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
      },
      "Support": {
        "Support": "Apoie o DIM",
        "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa.",
-       "Sponsors": "Patrocinadores"
+       "OpenCollective": "Estamos utilizando o OpenCollective como serviço para providenciar uma compensação para os nossos desenvolvedores pela sua dedicação e tempo gasto nesse projeto.",
+       "Backers": "Apoiantes",
+       "BackersDetail": "Apoie-nos com uma única doação, ou doação mensal e ajude-nos a continuar o nosso desenvolvimento ativo.",
+       "Sponsors": "Patrocinadores",
+       "SponsorsDetail": "Torne-se um patrocinador e tenha o seu logo aqui com um link para o seu site."
      },
      "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM.",
      "Login": {
        "Permission": "Precisamos da sua permissão...",
+       "Explanation": "Dar permissão ao DIM para ver e modificar os seus personagens, cofre e progressão.",
+       "Auth": "Autorize com Bungie.net",
        "LearnMore": "Você quer saber mais?"
      }
    },

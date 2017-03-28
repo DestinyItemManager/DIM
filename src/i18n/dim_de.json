@@ -24,7 +24,8 @@
       "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
       "Twitter": "Bekomme Statusupdates auf",
       "ItemUniqueness": "Item Einzigartigkeit",
-      "ItemUniquenessExplanation": "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
+      "ItemUniquenessExplanation": "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
+      "VendorNotFound": "Händler Daten nicht verfügbar."
    },
    "Compare": {
       "ButtonHelp": "Gegenstände vergleichen",
@@ -271,6 +272,14 @@
       "Take": "Take",
       "Vault": "Vault"
    },
+   "MoveAmount": {
+     "Min": "Mindest-Stapel (1)",
+     "Max": "Gesamtmenge in dieser Stelle.",
+     "UpStack": "Auf nächsten vollen Stapel erhöhen",
+     "DownStack": "Auf letzten vollen Stapel verringern",
+     "Increment": "Einer mehr",
+     "Decrement": "Einer weniger"
+   },
    "Notes": {
       "Error": "Fehler! Max 120 Zeichen für Notizen.",
       "Help": "Notiz für dieses Item hinzufügen"
@@ -393,9 +402,19 @@
      "Support": {
        "Support": "Unterstütze DIM",
        "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
-       "OpenCollective": "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben."
+       "OpenCollective": "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
+       "Backers": "Unterstützer",
+       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln",
+       "Sponsors": "Sponsoren",
+       "SponsorsDetail": "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite."
      },
-     "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
+     "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können.",
+     "Login": {
+       "Permission": "Wir brauchen dein Einverständnis....",
+       "Explanation": "Erlaube DIM deinen Destiny Charakter,  Tresor und Fortschritt einzusehen und zu bearbeiten.",
+       "Auth": "Autorisiere mit Bungie.net",
+       "LearnMore": "Willst du mehr wissen?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "5 Siege Belohnung (Rüstung)",

@@ -104,10 +104,10 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeat
 
     if (vm.comparisons.length && vm.comparisons[0].typeName && args.item.typeName !== vm.comparisons[0].typeName) {
       if (vm.comparisons[0].classType && args.item.classType !== vm.comparisons[0].classType) {
-        toaster.pop('warning', args.item.name, $translate.instant(Compare.Error.Class, vm.comparisons[0].classType));
+        toaster.pop('warning', args.item.name, $translate.instant('Compare.Error.Class', vm.comparisons[0].classType));
         return;
       }
-      toaster.pop('warning', args.item.name, $translate.instant(Compare.Error.Archetype, vm.comparisons[0].typeName));
+      toaster.pop('warning', args.item.name, $translate.instant('Compare.Error.Archetype', vm.comparisons[0].typeName));
       return;
     }
 

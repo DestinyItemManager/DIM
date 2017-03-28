@@ -66,6 +66,7 @@
          "MakeRoom": "Make room to pick up items by moving equipment",
          "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
       },
+      "OutOfRoomTitle": "Out of Room",
       "OutOfRoom": "You're out of space to move items off of {character}. Time to decrypt some engrams and clear out the trash!",
       "Quickmove": "Quick Move",
       "Stop": "Stop"
@@ -401,7 +402,7 @@
        "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
        "Version": "Version",
        "Transifex": "Join the Translation Team!",
-       "TransifexText": "We use Transifex for ease of translation. If you want to see DIM localized to your language join the team."
+       "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
      },
      "Support": {
        "Support": "Supporting DIM",
