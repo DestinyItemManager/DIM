@@ -180,13 +180,15 @@ export default class ContentController {
     vm.showXur = showPopupFunction('xur');
     vm.showMatsExchange = showPopupFunction('mats-exchange');
 
-    vm.toggleMinMax = function(e) {
-      $state.go($state.is('best') ? 'inventory' : 'best');
-    };
+    function toggleState(name) {
+      return function(e) {
+        $state.go($state.is(name) ? 'inventory' : name);
+      };
+    }
 
-    vm.toggleVendors = function(e) {
-      $state.go($state.is('vendors') ? 'inventory' : 'vendors');
-    };
+    vm.toggleMinMax = toggleState('best');
+    vm.toggleVendors = toggleState('vendors');
+    vm.toggleRecordBooks = toggleState('record-books');
 
     vm.xur = dimXurService;
 

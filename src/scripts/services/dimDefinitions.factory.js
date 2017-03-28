@@ -10,7 +10,8 @@ const lazyTables = [
   'Progression',
   'Record',
   'ItemCategory',
-  'VendorCategory'
+  'VendorCategory',
+  'RecordBook'
 ];
 
 const eagerTables = [

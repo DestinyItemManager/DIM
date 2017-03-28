@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import $ from 'jquery';
 
 angular.module('dimApp')
   .controller('dimVendorCtrl', dimVendorCtrl);
@@ -53,10 +54,7 @@ function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, 
   });
 
   $scope.$on('dim-stores-updated', function(e, args) {
-    $scope.$applyAsync(() => {
-      vm.stores = _.reject(args.stores, (s) => s.isVault);
-      vm.totalCoins = dimVendorService.countCurrencies(args.stores, vm.vendorService.vendors);
-    });
+    init(args.stores);
   });
 }
 

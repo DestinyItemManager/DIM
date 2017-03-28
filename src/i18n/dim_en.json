@@ -372,6 +372,10 @@
       "ShadersAndEmblems": "Shaders & Emblems",
       "Emotes": "Emotes"
    },
+   "RecordBooks": {
+     "RecordBooks": "Record Books",
+     "HideCompleted": "Hide completed records"
+   },
    "Views": {
      "About":{
        "BungieCopyright": "All images and content are property of Bungie. Please contact us if there are any issues.",
