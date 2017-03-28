@@ -66,6 +66,7 @@
          "MakeRoom": "Make room to pick up items by moving equipment",
          "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
       },
+      "OutOfRoomTitle": "Out of Room",
       "OutOfRoom": "You're out of space to move items off of {character}. Time to decrypt some engrams and clear out the trash!",
       "Quickmove": "Quick Move",
       "Stop": "Stop"

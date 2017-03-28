@@ -47,7 +47,9 @@ function FarmingService($rootScope,
   const settings = dimSettingsService.farming;
 
   const outOfSpaceWarning = _.throttle((store) => {
-    toaster.pop('info', $translate.instant('FarmingMode.OutOfRoom', { character: store.name }));
+    toaster.pop('info',
+                $translate.instant('FarmingMode.OutOfRoomTitle'),
+                $translate.instant('FarmingMode.OutOfRoom', { character: store.name }));
   }, 60000);
 
   return {
