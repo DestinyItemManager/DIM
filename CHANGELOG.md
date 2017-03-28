@@ -2,6 +2,8 @@
 
 * Fixed the logic for deciding which items can be tagged.
 * Fix "Make room for postmaster".
+* Fix changing new-item shine, item quality display, and show elemental damage icon preferences. They should apply immediately now, without a reload.x
+* Localization updates.
 
 # v3.17.1
 
