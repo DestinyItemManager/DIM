@@ -1,5 +1,10 @@
 # Next
 
+* Fixed the logic for deciding which items can be tagged.
+* Fix "Make room for postmaster".
+
+# v3.17.1
+
 * Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
 * Localization updates
 * Moved the "VCR" controls for stackable item amount selection to their own row.

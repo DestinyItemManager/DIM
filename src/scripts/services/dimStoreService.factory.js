@@ -62,6 +62,13 @@ function StoreService(
           return {
             itemHash: {}
           };
+        })
+        .catch((e) => {
+          console.error("Couldn't load classified info from " + url, e);
+
+          return {
+            itemHash: {}
+          };
         });
     });
   });
@@ -677,6 +684,7 @@ function StoreService(
       const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
       if (classifiedItemDef) {
         itemDef = classifiedItemDef;
+        item.primaryStat = itemDef.primaryStat;
       }
     }
 
@@ -766,7 +774,7 @@ function StoreService(
       name: itemDef.itemName,
       description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
       icon: itemDef.icon,
-      notransfer: (currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
+      notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
       id: item.itemInstanceId,
       equipped: item.isEquipped,
       equipment: item.isEquipment,
@@ -788,7 +796,6 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-      taggable: item.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'),
       trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
       tracked: item.state === 2,
       locked: item.locked,
@@ -796,6 +803,8 @@ function StoreService(
       classified: itemDef.classified,
       isInLoadout: false
     });
+
+    createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
 
     createdItem.index = createItemIndex(createdItem);
 
