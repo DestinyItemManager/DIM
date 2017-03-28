@@ -12,10 +12,10 @@
         <span class="record-book-completion">{{book.completedCount}} / {{book.recordCount}}</span>
       </div>
     </div>
-    <div ng-if="!$ctrl.settings.collapsedSections[book.hash]">
-      <!-- <img class="book-icon" ng-src="{{::book.icon | bungieIcon}}" />-->
+    <!-- TODO: add an XP bar? -->
 
-      <div class="record-book-page" ng-repeat="page in book.pages track by $index">
+    <div ng-if="!$ctrl.settings.collapsedSections[book.hash]">
+      <div class="record-book-page" ng-repeat="page in book.pages track by $index" ng-if="!page.rewardsPage">
         <h2>{{::page.name}}</h2>
         <p>{{::page.description}}</p>
 

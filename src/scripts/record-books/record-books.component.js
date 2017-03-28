@@ -58,9 +58,8 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       expirationDate: rawRecordBook.expirationDate
     };
 
-    recordBook.objectives = (rawRecordBook.records || []).map((r) => processRecord(defs, recordBook, r));
-
-    const recordByHash = _.indexBy(recordBook.objectives, 'hash');
+    const records = (rawRecordBook.records || []).map((r) => processRecord(defs, recordBook, r));
+    const recordByHash = _.indexBy(records, 'hash');
 
     recordBook.pages = recordBookDef.pages.map((page) => {
       return {
@@ -69,6 +68,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
         rewardsPage: page.displayStyle === 1,
         records: page.records.map((r) => recordByHash[r.recordHash])
         // rewards - map to items!
+        // dimStoreService.processItems({ id: null }
         // may have to extract store service bits...
       };
     });
@@ -77,12 +77,13 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
     // TODO: show rewards?
 
-    if (recordBook.progression) {
-      recordBook.progression = angular.extend(recordBook.progression, defs.Progression.get(recordBook.progression.progressionHash));
-      recordBook.progress = recordBook.progression;
-      recordBook.percentComplete = recordBook.progress.currentProgress / sum(recordBook.progress.steps, 'progressTotal');
+    if (rawRecordBook.progression) {
+      rawRecordBook.progression = angular.extend(rawRecordBook.progression, defs.Progression.get(rawRecordBook.progression.progressionHash));
+      rawRecordBook.progress = rawRecordBook.progression;
+      rawRecordBook.percentComplete = rawRecordBook.progress.currentProgress / sum(rawRecordBook.progress.steps, 'progressTotal');
     } else {
-      recordBook.percentComplete = count(recordBook.objectives, 'complete') / recordBook.objectives.length;
+      // TODO: not accurate for multi-objectives
+      recordBook.percentComplete = count(records, 'complete') / records.length;
     }
 
     recordBook.complete = _.chain(recordBook.records)
