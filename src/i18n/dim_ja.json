@@ -175,7 +175,7 @@
       "Outdated": "古いデスティニーのデータ",
       "BungieDown": "Bungie.netに問題があるかもしれません。",
       "Load": "デスティニーのセーブデータをロード中",
-      "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
+      "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中"
    },
    "MaterialsExchange": {
       "MaterialsExchange": "素材交換"
@@ -195,7 +195,7 @@
       "Help": "このアイテムにメモを追加"
    },
    "Postmaster": {
-      "Limit": "ポストマスターに空きがありません",
+      "Limit": "ポストマスターに空きがありません"
    },
    "Settings": {
       "Settings": "設定",
