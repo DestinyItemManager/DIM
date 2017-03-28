@@ -62,6 +62,13 @@ function StoreService(
           return {
             itemHash: {}
           };
+        })
+        .catch((e) => {
+          console.error("Couldn't load classified info from " + url, e);
+
+          return {
+            itemHash: {}
+          };
         });
     });
   });
