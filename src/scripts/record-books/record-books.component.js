@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import angular from 'angular';
+import moment from 'moment';
 import { sum, count } from '../util';
 
 import templateUrl from './record-books.html';
@@ -107,8 +108,10 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
       let display = undefined;
-      if (record.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
-        display = objective.displayValue;
+      if (recordDef.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
+        display = objective.isComplete
+          ? objective.displayValue
+          : moment(moment.duration(objectiveDef.completionValue)._data).format("m:ss.SSS");
       }
 
       return {
