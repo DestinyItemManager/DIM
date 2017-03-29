@@ -8,7 +8,7 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
 
   const service = this;
   let cache = null;
-  const matcher = /www\.bungie.net\/Platform\/(User|Destiny)\//;
+  const matcher = /www\.bungie\.net\/Platform\/(User|Destiny)\//;
 
   service.request = requestHandler;
   service.response = responseHandler;
