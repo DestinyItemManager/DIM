@@ -66,6 +66,7 @@
          "MakeRoom": "Faites de la place pour collecter des objets en déplaçant de l'équipement",
          "Tooltip": "Si activé, DIM déplacera les armes at armures afin de faire de la place dans les coffres pour les engrammes."
       },
+      "OutOfRoomTitle": "Plus de Place",
       "OutOfRoom": "Vous n'avez plus d'espace pour déplacer des objets hors de {character}. Il serait temps de décrypter quelques engrammes et de faire le tri!",
       "Quickmove": "Déplacement rapide",
       "Stop": "Stop"
@@ -371,6 +372,10 @@
       "ShadersAndEmblems": "Revêtements & Emblèmes",
       "Emotes": "Intéractions"
    },
+   "RecordBooks": {
+     "RecordBooks": "Livre des Records",
+     "HideCompleted": "Cacher les records complétés"
+   },
    "Views": {
      "About":{
        "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
@@ -397,7 +402,7 @@
        "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
        "Version": "Version",
        "Transifex": "Rejoignez l'équipe de traduction!",
-       "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez voir DIM localisé à votre langue rejoignez l'équipe."
+       "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
      },
      "Support": {
        "Support": "Soutenir DIM",
