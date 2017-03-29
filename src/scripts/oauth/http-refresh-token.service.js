@@ -8,10 +8,7 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
 
   const service = this;
   let cache = null;
-  const limiters = [
-    /www\.bungie.net\/Platform\/User\/*/,
-    /www\.bungie.net\/Platform\/Destiny\/*/
-  ];
+  const matcher = /www\.bungie\.net\/Platform\/(User|Destiny)\//;
 
   service.request = requestHandler;
   service.response = responseHandler;
@@ -19,11 +16,7 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
   function requestHandler(config) {
     config.headers = config.headers || {};
 
-    const matched = limiters.findIndex((limiter) => {
-      return config.url.match(limiter);
-    });
-
-    if (matched >= 0) {
+    if (config.url.match(matcher)) {
       if (!config.headers.hasOwnProperty('Authorization')) {
         if (OAuthService.isAuthenticated()) {
           let isValid = isTokenValid(OAuthTokenService.getAccessToken());
@@ -74,11 +67,7 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
   }
 
   function responseHandler(response) {
-    const matched = limiters.findIndex((limiter) => {
-      return response.config.url.match(limiter);
-    });
-
-    if ((matched >= 0) && response && response.data) {
+    if (response && response.config.url.match(matcher) && response.data) {
       switch (response.data.ErrorCode) {
       case 99:
         {
