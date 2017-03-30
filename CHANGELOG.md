@@ -5,6 +5,8 @@
 * Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
 * Fix changing new-item shine, item quality display, and show elemental damage icon preferences. They should apply immediately now, without a reload.x
 * Localization updates.
+* Fixed objective text in the record book floating above stuff.
+* Fixed displaying record objectives that are time-based as time instead of just a number of seconds.
 
 # v3.17.1
 
