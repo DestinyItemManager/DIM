@@ -278,8 +278,8 @@
      "Max": "Totale in questa posizione",
      "UpStack": "Aumento fino al prossimo stack pieno",
      "DownStack": "Diminuisci fino al prossimo stack pieno",
-     "Increment": "Ancora uno",
-     "Decrement": "Togli uno"
+     "Increment": "Uno in più",
+     "Decrement": "Uno in meno"
    },
    "Notes": {
       "Error": "Errore! Massimo 120 caratteri per nota.",
