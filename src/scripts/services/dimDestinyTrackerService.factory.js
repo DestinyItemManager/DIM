@@ -6,174 +6,174 @@ angular.module('dimApp')
 
 function DestinyTrackerService($q,
                                $http) {
-    //todo: save/restore JWT from session storage
-    var _remoteJwt = {};
-    var _gunListBuilder = {};
+    // todo: save/restore JWT from session storage
+  var _remoteJwt = {};
+  var _gunListBuilder = {};
 
-    function getBulkWeaponDataPromise(gunList) {
-      return {
-        method: 'POST',
-        url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
-        data: gunList,
-        dataType: 'json'
-      };
-    }
-
-    function submitItemReviewPromise(itemReview) {
-        return {
-            method: 'POST',
-            url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
-            data: itemReview,
-            dataType: 'json'
-        };
-    }
-
-    function handleErrors(response) {
-        if(response.status != 200) {
-            return $q.reject(new Error("Destiny tracker service call failed."));
-        }
-
-        return response;
-    }
-
-    function handleSubmitErrors(response) {
-        if(response.status != 204) {
-            return $q.reject(new Error("Destiny tracker service submit failed."));
-        }
-
-        return response;
-    }
-
-    function getReviewer(membershipInfo) {
-        return {
-            membershipId: membershipInfo.membershipId,
-            type: membershipInfo.type,
-            displayName: membershipInfo.id
-        };
-    }
-
-    function getRatingAndReview(userReview) {
-        return {
-            rating: userReview.rating,
-            review: userReview.review
-        };
-    }
-
+  function getBulkWeaponDataPromise(gunList) {
     return {
-        init: function() {
-            _gunListBuilder = gunListBuilder();
-        },
-        authenticate: function() {  
-        },
-        bulkFetch: function(stores) {
-            var weaponList = _gunListBuilder.getWeaponList(stores);
+      method: 'POST',
+      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
+      data: gunList,
+      dataType: 'json'
+    };
+  }
 
-            var promise = $q
+  function submitItemReviewPromise(itemReview) {
+    return {
+      method: 'POST',
+      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
+      data: itemReview,
+      dataType: 'json'
+    };
+  }
+
+  function handleErrors(response) {
+    if (response.status != 200) {
+      return $q.reject(new Error("Destiny tracker service call failed."));
+    }
+
+    return response;
+  }
+
+  function handleSubmitErrors(response) {
+    if (response.status != 204) {
+      return $q.reject(new Error("Destiny tracker service submit failed."));
+    }
+
+    return response;
+  }
+
+  function getReviewer(membershipInfo) {
+    return {
+      membershipId: membershipInfo.membershipId,
+      type: membershipInfo.type,
+      displayName: membershipInfo.id
+    };
+  }
+
+  function getRatingAndReview(userReview) {
+    return {
+      rating: userReview.rating,
+      review: userReview.review
+    };
+  }
+
+  return {
+    init: function() {
+      _gunListBuilder = gunListBuilder();
+    },
+    authenticate: function() {
+    },
+    bulkFetch: function(stores) {
+      var weaponList = _gunListBuilder.getWeaponList(stores);
+
+      var promise = $q
                 .when(getBulkWeaponDataPromise(weaponList))
                 .then($http)
                 .then(handleErrors, handleErrors)
                 .then((response) => { return response.data; });
 
-            return promise;
-        },
-        submitReview: function(membershipInfo, item, userReview) {
-            var rollAndPerks = _gunListBuilder.getRollAndPerks(item);
-            var reviewer = getReviewer(membershipInfo);
-            var review = getRatingAndReview(userReview);
+      return promise;
+    },
+    submitReview: function(membershipInfo, item, userReview) {
+      var rollAndPerks = _gunListBuilder.getRollAndPerks(item);
+      var reviewer = getReviewer(membershipInfo);
+      var review = getRatingAndReview(userReview);
 
-            var rating = Object.assign(rollAndPerks, review);
-            rating.reviewer = reviewer;
+      var rating = Object.assign(rollAndPerks, review);
+      rating.reviewer = reviewer;
 
-            var promise = $q
+      var promise = $q
                 .when(submitItemReviewPromise(rating))
                 .then($http)
                 .then(handleSubmitErrors, handleSubmitErrors)
                 .then((response) => { return; });
 
-            return promise;
-        }
+      return promise;
     }
+  };
 }
 
 function gunListBuilder() {
-    var glb = {};
+  var glb = {};
 
-    function getAllItems(stores) {
-        var allItems = [];
+  function getAllItems(stores) {
+    var allItems = [];
 
-        stores.forEach(function(store) {
-            allItems = allItems.concat(store.items);
-        });
+    stores.forEach(function(store) {
+      allItems = allItems.concat(store.items);
+    });
 
-        return allItems;
-    }
+    return allItems;
+  }
 
-    function getGuns(stores) {
-        var allItems = getAllItems(stores);
+  function getGuns(stores) {
+    var allItems = getAllItems(stores);
 
-        return _.filter(allItems,
+    return _.filter(allItems,
                         function(item) {
-                            if(!item.primStat) {
-                                return false;
-                            }
+                          if (!item.primStat) {
+                            return false;
+                          }
 
-                            return (item.primStat.statHash === 368428387);
+                          return (item.primStat.statHash === 368428387);
                         });
+  }
+
+  glb.getWeaponList = function(stores) {
+    var guns = getGuns(stores);
+
+    var list = [];
+
+    guns.forEach(function(gun) {
+      var dtrGun = translateToDtrGun(gun);
+
+      if (!_.contains(list, dtrGun)) {
+        list.push(dtrGun);
+      }
+    });
+
+    return list;
+  };
+
+  function getDtrPerks(gun) {
+    if (!gun.talentGrid) {
+      return null;
     }
 
-    glb.getWeaponList = function(stores) {
-        var guns = getGuns(stores);
+    return gun.talentGrid.dtrPerks;
+  }
 
-        var list = [];
+  function getGunRoll(gun) {
+    var dtrPerks = getDtrPerks(gun);
 
-        guns.forEach(function(gun) {
-            var dtrGun = translateToDtrGun(gun);
-
-            if(!_.contains(list, dtrGun)) {
-                list.push(dtrGun);
-            }
-        });
-
-        return list;        
+    if (dtrPerks.length > 0) {
+      return dtrPerks.replace(/o/g, "");
     }
 
-    function getDtrPerks(gun) {
-        if(!gun.talentGrid) {
-            return null;
-        }
+    return null;
+  }
 
-        return gun.talentGrid.dtrPerks;
-    }
+  function translateToDtrGun(gun) {
+    return {
+      referenceId: gun.hash,
+      roll: getGunRoll(gun)
+    };
+  }
 
-    function getGunRoll(gun) {
-        var dtrPerks = getDtrPerks(gun);
+  glb.getRollAndPerks = function(gun) {
+    return {
+      roll: getGunRoll(gun),
+      selectedPerks: getDtrPerks(gun),
+      referenceId: gun.hash,
+      instanceId: gun.id,
+    };
+  };
 
-        if(dtrPerks.length > 0) {
-            return dtrPerks.replace(/o/g, "");
-        }
+  function isKnownGun(list, dtrGun) {
+    return _.contains(list, dtrGun);
+  }
 
-        return null;
-    }
-
-    function translateToDtrGun(gun) {
-        return { 
-            referenceId: gun.hash,
-            roll: getGunRoll(gun)
-        };
-    }
-
-    glb.getRollAndPerks = function(gun) {
-        return {
-            roll: getGunRoll(gun),
-            selectedPerks: getDtrPerks(gun),
-            referenceId: gun.hash,
-            instanceId: gun.id,
-        };
-    }
-
-    function isKnownGun(list, dtrGun) {
-        return _.contains(list, dtrGun);
-    }
-
-    return glb;
+  return glb;
 }
