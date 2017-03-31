@@ -4,10 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp')
   .directive('dimItemDiscuss', ItemDiscuss);
 
-console.log("In discuss directive.");
-
 function ItemDiscuss() {
-  console.log("In discuss prototype.");
   return {
     controller: ItemDiscussCtrl,
     controllerAs: 'vm',
