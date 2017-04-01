@@ -14,7 +14,7 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('dim-stores-updated', function(event, stores) {
-    console.log(stores.length + " items received.");
+    console.log(JSON.stringify(stores));
   });
 
   function getBulkWeaponDataPromise(gunList) {
