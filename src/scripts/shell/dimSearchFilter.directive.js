@@ -598,19 +598,19 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eververse (ev)
     vendor: function(predicate, item) {
       var vendorHashes = {
-        fwc: 2859308742,
-        do: 3080587303,
-        nm: 1963381593,
-        speaker: 3498761033,
-        variks: 3523074641,
-        shipwright: 3660582080,
-        vanguard: 3496730577,
-        osiris: 482203941,
-        xur: 941581325,
-        shaxx: 1257353826,
-        cq: 1587918730,
-        eris: 1662396737,
-        ev: 2155337848
+        fwc: 995344558,
+        do: 103311758,
+        nm: 3072854931,
+        speaker: 4241664776,
+        variks: 512830513,
+        shipwright: 3721473564,
+        vanguard: 1482793537,
+        osiris: 3378481830,
+        xur: 2179714245,
+        shaxx: 4134961255,
+        cq: 1362425043,
+        eris: 1374970038,
+        ev: 3559790162
       };
       if (!item) {
         return false;
