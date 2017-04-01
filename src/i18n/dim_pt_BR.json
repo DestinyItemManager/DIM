@@ -372,6 +372,10 @@
       "ShadersAndEmblems": "Tonalizadores & Emblemas",
       "Emotes": "Gestos"
    },
+   "RecordBooks": {
+     "RecordBooks": "Livro de Recordes",
+     "HideCompleted": "Esconder os recordes completados"
+   },
    "Views": {
      "About":{
        "BungieCopyright": "Todo o conteúdo e imagens são propriedade da Bungie. Por favor, contate-nos no caso de qualquer problema.",

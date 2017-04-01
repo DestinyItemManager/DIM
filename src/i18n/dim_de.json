@@ -66,6 +66,7 @@
          "MakeRoom": "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können",
          "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
       },
+      "OutOfRoomTitle": "Kein Platz",
       "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {character} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren.",
       "Quickmove": "Schnelles Verschieben",
       "Stop": "Stop"
@@ -371,6 +372,10 @@
       "ShadersAndEmblems": "Shader & Abzeichen",
       "Emotes": "Gesten"
    },
+   "RecordBooks": {
+     "RecordBooks": "Rekordbuch",
+     "HideCompleted": "Abgeschlossene Rekorde nicht anzeigen"
+   },
    "Views": {
      "About":{
        "BungieCopyright": "Alle Bilder und Inhalte sind Eigentum von Bungie. Bitte kontaktiere uns, wenn es irgendwelche Probleme gibt.",
@@ -397,7 +402,7 @@
        "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
        "Version": "Version",
        "Transifex": "Trete dem Übersetzer-Team bei!",
-       "TransifexText": "Wir nutzen Transifex zur unkomplizierte Übersetung. Wenn du DIM in deiner Sprache sehen möchtest, trete dem Team bei."
+       "TransifexText": "Wir benutzen Transifex für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
      },
      "Support": {
        "Support": "Unterstütze DIM",
