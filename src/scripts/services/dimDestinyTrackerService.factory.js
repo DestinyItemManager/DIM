@@ -129,7 +129,7 @@ function gunListBuilder() {
     guns.forEach(function(gun) {
       var dtrGun = translateToDtrGun(gun);
 
-      if (!_.contains(list, dtrGun)) {
+      if (!isKnownGun(list, dtrGun)) {
         list.push(dtrGun);
       }
     });
