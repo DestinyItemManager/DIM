@@ -66,6 +66,7 @@
          "MakeRoom": "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können",
          "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
       },
+      "OutOfRoomTitle": "Kein Platz",
       "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {character} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren.",
       "Quickmove": "Schnelles Verschieben",
       "Stop": "Stop"
@@ -372,7 +373,8 @@
       "Emotes": "Gesten"
    },
    "RecordBooks": {
-     "RecordBooks": "Rekordbuch"
+     "RecordBooks": "Rekordbuch",
+     "HideCompleted": "Abgeschlossene Rekorde nicht anzeigen"
    },
    "Views": {
      "About":{
