@@ -13,6 +13,10 @@ function DestinyTrackerService($q,
     console.log(JSON.stringify(item));
   });
 
+  $rootScope.$on('dim-stores-updated', function(event, stores) {
+    console.log(stores.length + " items received.");
+  });
+
   function getBulkWeaponDataPromise(gunList) {
     return {
       method: 'POST',
@@ -47,7 +51,7 @@ function DestinyTrackerService($q,
     return response;
   }
 
-  function getReviewer(membershipInfo) {
+  function toReviewer(membershipInfo) {
     return {
       membershipId: membershipInfo.membershipId,
       type: membershipInfo.type,
@@ -55,7 +59,7 @@ function DestinyTrackerService($q,
     };
   }
 
-  function getRatingAndReview(userReview) {
+  function toRatingAndReview(userReview) {
     return {
       rating: userReview.rating,
       review: userReview.review
@@ -81,8 +85,8 @@ function DestinyTrackerService($q,
     },
     submitReview: function(membershipInfo, item, userReview) {
       var rollAndPerks = _gunListBuilder.getRollAndPerks(item);
-      var reviewer = getReviewer(membershipInfo);
-      var review = getRatingAndReview(userReview);
+      var reviewer = toReviewer(membershipInfo);
+      var review = toRatingAndReview(userReview);
 
       var rating = Object.assign(rollAndPerks, review);
       rating.reviewer = reviewer;
