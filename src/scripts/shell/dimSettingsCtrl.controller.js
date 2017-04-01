@@ -48,11 +48,6 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
     _gaq.push(['_trackEvent', 'Download CSV', 'Armor']);
   };
 
-  vm.downloadWeaponJson = function() {
-    dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "WeaponsJson");
-    _gaq.push(['_trackEvent', 'Download JSON', 'Weapons']);
-  };
-
   vm.resetHiddenInfos = function() {
     dimInfoService.resetHiddenInfos();
   };
