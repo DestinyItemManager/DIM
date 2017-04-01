@@ -91,6 +91,8 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     vm.clicked = function openPopup(item, e) {
       e.stopPropagation();
 
+      $rootScope.$broadcast('item-clicked', item);
+
       if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(item);
         return;

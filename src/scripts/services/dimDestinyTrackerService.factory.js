@@ -5,8 +5,13 @@ angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
 function DestinyTrackerService($q,
-                               $http) {
+                               $http,
+                               $rootScope) {
   var _gunListBuilder = {};
+
+  $rootScope.$on('item-clicked', function(event, item) {
+    console.log(JSON.stringify(item));
+  });
 
   function getBulkWeaponDataPromise(gunList) {
     return {
