@@ -7,15 +7,35 @@ angular.module('dimApp')
 function DestinyTrackerService($q,
                                $http,
                                $rootScope) {
-  var _gunListBuilder = {};
+  var _gunListBuilder = gunListBuilder();
 
   $rootScope.$on('item-clicked', function(event, item) {
-    console.log(JSON.stringify(item));
+    console.log("Caught click event.");
   });
 
   $rootScope.$on('dim-stores-updated', function(event, stores) {
-    console.log(JSON.stringify(stores));
+    _bulkFetch(stores)
+      .then((bulkRankings) => attachRankings(bulkRankings,
+                                             stores.stores));
   });
+
+  function attachRankings(bulkRankings,
+                          stores) {
+    if ((!bulkRankings) ||
+        (!bulkRankings.length)) {
+      return;
+    }
+
+    bulkRankings.forEach(function(bulkRanking) {
+      stores.forEach(function(store) {
+        store.items.forEach(function(storeItem) {
+          if (storeItem.hash == bulkRanking.referenceId) {
+            storeItem.dtrRating = bulkRanking.rating;
+          }
+        });
+      });
+    });
+  }
 
   function getBulkWeaponDataPromise(gunList) {
     return {
@@ -66,22 +86,26 @@ function DestinyTrackerService($q,
     };
   }
 
+  function _bulkFetch(stores) {
+    if (stores.stores.length === 0) {
+      return $q.resolve();
+    }
+    var weaponList = _gunListBuilder.getWeaponList(stores.stores);
+
+    var promise = $q
+              .when(getBulkWeaponDataPromise(weaponList))
+              .then($http)
+              .then(handleErrors, handleErrors)
+              .then((response) => { return response.data; });
+
+    return promise;
+  }
+
   return {
-    init: function() {
-      _gunListBuilder = gunListBuilder();
-    },
     authenticate: function() {
     },
     bulkFetch: function(stores) {
-      var weaponList = _gunListBuilder.getWeaponList(stores);
-
-      var promise = $q
-                .when(getBulkWeaponDataPromise(weaponList))
-                .then($http)
-                .then(handleErrors, handleErrors)
-                .then((response) => { return response.data; });
-
-      return promise;
+      return _bulkFetch(stores);
     },
     submitReview: function(membershipInfo, item, userReview) {
       var rollAndPerks = _gunListBuilder.getRollAndPerks(item);

@@ -31,8 +31,6 @@ function StoreService(
 
   const dimMissingSources = require('app/data/missing_sources.json');
 
-  dimDestinyTrackerService.init();
-
   const yearHashes = {
     //         tTK       Variks        CoE         FoTL    Kings Fall
     year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
@@ -574,16 +572,6 @@ function StoreService(
 
         return stores;
       })
-      .then(function() {
-        try {
-          dimDestinyTrackerService
-            .bulkFetch(_stores)
-            .then((bulkRankings) => attachRankings(bulkRankings));
-        }
-        catch (e) {
-          console.error("Failed to call Destiny Tracker service - " + e.stack);
-        }
-      })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
           // no problem, just canceling the request
@@ -613,23 +601,6 @@ function StoreService(
 
   function getStore(id) {
     return _.find(_stores, { id: id });
-  }
-
-  function attachRankings(bulkRankings) {
-    if ((!bulkRankings) ||
-        (!bulkRankings.length)) {
-      return;
-    }
-
-    bulkRankings.forEach(function(bulkRanking) {
-      _stores.forEach(function(store) {
-        store.items.forEach(function(storeItem) {
-          if (storeItem.hash == bulkRanking.referenceId) {
-            storeItem.dtrRating = bulkRanking.rating;
-          }
-        });
-      });
-    });
   }
 
   // Set an ID for the item that should be unique across all items
