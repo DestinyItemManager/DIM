@@ -6,8 +6,6 @@ angular.module('dimApp')
 
 function DestinyTrackerService($q,
                                $http) {
-    // todo: save/restore JWT from session storage
-  var _remoteJwt = {};
   var _gunListBuilder = {};
 
   function getBulkWeaponDataPromise(gunList) {
@@ -29,7 +27,7 @@ function DestinyTrackerService($q,
   }
 
   function handleErrors(response) {
-    if (response.status != 200) {
+    if (response.status !== 200) {
       return $q.reject(new Error("Destiny tracker service call failed."));
     }
 
@@ -37,7 +35,7 @@ function DestinyTrackerService($q,
   }
 
   function handleSubmitErrors(response) {
-    if (response.status != 204) {
+    if (response.status !== 204) {
       return $q.reject(new Error("Destiny tracker service submit failed."));
     }
 
