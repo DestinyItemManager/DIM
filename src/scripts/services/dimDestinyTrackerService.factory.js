@@ -126,12 +126,12 @@ function DestinyTrackerService($q,
   };
 }
 
-function getNewItems(allItems) {
-  return _.where(allItems, { isNew: true });
-}
-
 function gunListBuilder() {
   var glb = {};
+
+  function getNewItems(allItems) {
+    return _.where(allItems, { isNew: true });
+  }
 
   function getAllItems(stores) {
     var allItems = [];
