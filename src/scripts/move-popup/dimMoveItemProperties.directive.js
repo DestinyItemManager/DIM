@@ -158,7 +158,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       review: review
     };
 
-    //bugbug: should broadcast event, not pass through store service
+    // bugbug: should broadcast event, not pass through store service
     dimStoreService.submitReview(item, userReview);
 
     return false;
