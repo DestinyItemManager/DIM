@@ -6,11 +6,15 @@ angular.module('dimApp')
 
 function DestinyTrackerService($q,
                                $http,
-                               $rootScope) {
+                               $rootScope,
+                               dimPlatformService,
+                               dimSettingsService) {
   var _gunListBuilder = gunListBuilder();
 
   $rootScope.$on('item-clicked', function(event, item) {
-    console.log("Caught click event.");
+    _getItemReviews(item)
+      .then((data) => attachReviews(item,
+                                    data));
   });
 
   $rootScope.$on('dim-stores-updated', function(event, stores) {
@@ -18,6 +22,20 @@ function DestinyTrackerService($q,
       .then((bulkRankings) => attachRankings(bulkRankings,
                                              stores.stores));
   });
+
+  function getUserReview(reviewData) {
+    return _.findWhere(reviewData.reviews, { isReviewer: true });
+  }
+
+  function attachReviews(item,
+                         reviewData) {
+    var userReview = getUserReview(reviewData);
+
+    if (userReview) {
+      item.userRating = userReview.rating;
+      item.userReview = userReview.review;
+    }
+  }
 
   function attachRankings(bulkRankings,
                           stores) {
@@ -51,6 +69,15 @@ function DestinyTrackerService($q,
       method: 'POST',
       url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
       data: itemReview,
+      dataType: 'json'
+    };
+  }
+
+  function getItemReviewsPromise(item) {
+    return {
+      method: 'POST',
+      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
+      data: item,
       dataType: 'json'
     };
   }
@@ -94,6 +121,18 @@ function DestinyTrackerService($q,
 
     var promise = $q
               .when(getBulkWeaponDataPromise(weaponList))
+              .then($http)
+              .then(handleErrors, handleErrors)
+              .then((response) => { return response.data; });
+
+    return promise;
+  }
+
+  function _getItemReviews(item) {
+    var postWeapon = _gunListBuilder.getRollAndPerks(item);
+
+    var promise = $q
+              .when(getItemReviewsPromise(postWeapon))
               .then($http)
               .then(handleErrors, handleErrors)
               .then((response) => { return response.data; });

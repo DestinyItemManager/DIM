@@ -55,7 +55,7 @@ function MoveItemProperties() {
       '  </div>',
       '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
       '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
-      '  <form ng-if="vm.item.lockable" name="dtrReview" ng-submit="vm.submitReview()"><div class="item-review-container"><select class="item-dtr-review-input" ng-model="vm.item.dtrRating" ng-options="item for item in vm.dtrRatingOptions"></select><textarea translate-attr="{ placeholder: \'DtrReview.Help\' }" class="item-dtr-review" ng-maxlength="120" ng-model="vm.item.dimInfo.userReview" ng-model-options="{ debounce: 250 }"></textarea><input class="item-dtr-review-submit" type="submit" translate-attr="{ value: \'DtrReview.Submit\' }" /></div></form>',
+      '  <form ng-if="vm.item.lockable" name="dtrReview" ng-submit="vm.submitReview()"><div class="item-review-container"><select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions"></select><textarea translate-attr="{ placeholder: \'DtrReview.Help\' }" class="item-dtr-review" ng-maxlength="120" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }"></textarea><input class="item-dtr-review-submit" type="submit" translate-attr="{ value: \'DtrReview.Submit\' }" /></div></form>',
       '  <span class="item-dtr-review-error" ng-show="dtrReview.data.$error.maxlength" translate="DtrReview.Error"></span>',
       '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
       '  <div class="item-details" ng-if="vm.item.classified" translate="ItemService.Classified2"></div>',
@@ -150,15 +150,15 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.submitReview = function() {
     var item = vm.item;
 
-    // bugbug: not here exactly, but the pop-up should be populated with the user review's rating, not the collective's rating
     var newRating = vm.item.dtrRating;
-    var review = vm.item.dimInfo.userReview;
+    var review = vm.item.userReview;
 
     var userReview = {
       rating: newRating,
       review: review
     };
 
+    //bugbug: should broadcast event, not pass through store service
     dimStoreService.submitReview(item, userReview);
 
     return false;
