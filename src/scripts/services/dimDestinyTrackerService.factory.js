@@ -140,19 +140,13 @@ function gunListBuilder() {
       allItems = allItems.concat(store.items);
     });
 
-    var newItems = getNewItems(allItems);
-
-    if (newItems.length > 0) {
-      return newItems;
-    }
-
     return allItems;
   }
 
   function getGuns(stores) {
     var allItems = getAllItems(stores);
 
-    return _.filter(allItems,
+    var allGuns = _.filter(allItems,
                         function(item) {
                           if (!item.primStat) {
                             return false;
@@ -160,6 +154,14 @@ function gunListBuilder() {
 
                           return (item.primStat.statHash === 368428387);
                         });
+
+    var newGuns = getNewItems(allGuns);
+
+    if (newGuns.length > 0) {
+      return newGuns;
+    }
+
+    return allGuns;
   }
 
   glb.getWeaponList = function(stores) {
