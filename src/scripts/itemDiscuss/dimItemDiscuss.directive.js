@@ -23,7 +23,5 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
     console.log("Received discuss event.");
     vm.show = true;
     dimItemDiscussService.dialogOpen = true;
-
-    vm.add(args);
   });
 }

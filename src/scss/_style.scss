@@ -1677,6 +1677,16 @@ dim-compare {
   }
 }
 
+#discuss-drawer {
+  left: 0;
+  right: 0;
+  position: fixed;
+  z-index: 3;
+  bottom: 0;
+  background: #434444;
+  color: #e0e0e0;
+  box-shadow: 0 -1px 6px 0px #222; }
+
 h2, h3, h4 {
   font-weight: 400;
 }
