@@ -300,6 +300,8 @@
       "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
       "ShowElemental": "Show elemental damage icons on weapons",
       "ShowElementalHelp": "Show elemental damage icons on weapons.",
+      "AllowIdPostToDtr": "Allow potentially identifying item information to be posted to Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "Allow DIM to post identifying item data to DTR.",
       "SetSort": "Sort Items by:",
       "SetSortHelp": "Sort items by rarity or their primary stat value.",
       "SortPrimary": "Primary stat",
