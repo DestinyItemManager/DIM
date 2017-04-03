@@ -12,6 +12,16 @@ const NotifyPlugin = require('notify-webpack-plugin');
 const ASSET_NAME_PATTERN = 'static/[name]-[hash:6].[ext]';
 
 const packageJson = require('../package.json');
+const nodeModulesDir = path.join(__dirname, '../node_modules');
+
+// https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
+var preMinifiedDeps = [
+  'angular/angular.min.js',
+  'moment/min/moment.min.js',
+  'underscore/underscore-min.js',
+  'indexeddbshim/dist/indexeddbshim.min.js',
+  'messageformat/messageformat.min.js',
+];
 
 module.exports = (env) => {
   const isDev = env === 'dev';
@@ -89,6 +99,11 @@ module.exports = (env) => {
           }),
         }
       ],
+
+      noParse: [
+        /\/jquery\.slim\.min\.js$/,
+        /\/sql\.js$/
+      ]
     },
 
     resolve: {
@@ -96,6 +111,8 @@ module.exports = (env) => {
 
       alias: {
         app: path.resolve('./src'),
+        // We don't need all of jQuery
+        jquery: path.resolve(nodeModulesDir, 'jquery/dist/jquery.slim.min.js')
       }
     },
 
@@ -159,6 +176,16 @@ module.exports = (env) => {
       tls: 'empty'
     },
   };
+
+  // Run through big deps and extract the first part of the path,
+  // as that is what you use to require the actual node modules
+  // in your code. Then use the complete path to point to the correct
+  // file and make sure webpack does not try to parse it
+  preMinifiedDeps.forEach(function(dep) {
+    var depPath = path.resolve(nodeModulesDir, dep);
+    config.resolve.alias[dep.split(path.sep)[0]] = depPath;
+    config.module.noParse.push(new RegExp(depPath));
+  });
 
   if (!isDev) {
     // Bail and fail hard on first error
