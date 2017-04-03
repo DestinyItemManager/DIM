@@ -210,7 +210,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       vm.item.type !== 'ClassItem' &&
       vm.item.type !== 'Artifact' &&
       vm.item.type !== 'Class') {
-    vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
+    vm.classType = vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
   }
 
   function compareItems(item) {
