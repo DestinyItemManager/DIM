@@ -16,11 +16,11 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 var preMinifiedDeps = [
-  'angular/angular.min.js',
   'moment/min/moment.min.js',
   'underscore/underscore-min.js',
   'indexeddbshim/dist/indexeddbshim.min.js',
   'messageformat/messageformat.min.js',
+  'jquery/dist/jquery.min.js'
 ];
 
 module.exports = (env) => {
@@ -51,7 +51,7 @@ module.exports = (env) => {
       //headers: { "X-Custom-Header": "yes" }
     },
 
-    devtool: 'source-map',
+    devtool: 'eval-cheap-module-source-map',
 
     stats: 'errors-only',
 
@@ -110,15 +110,13 @@ module.exports = (env) => {
       extensions: ['.js', '.json'],
 
       alias: {
-        app: path.resolve('./src'),
-        // We don't need all of jQuery
-        jquery: path.resolve(nodeModulesDir, 'jquery/dist/jquery.slim.min.js')
+        app: path.resolve('./src')
       }
     },
 
     plugins: [
       new CleanWebpackPlugin(['dist'], {
-        root: path.resolve('./'),
+        root: path.resolve('./')
       }),
 
       new NotifyPlugin('DIM', !isDev),
