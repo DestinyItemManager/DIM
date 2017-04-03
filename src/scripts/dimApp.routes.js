@@ -14,33 +14,33 @@ function routes($stateProvider, $urlRouterProvider) {
   }, {
     name: 'best',
     parent: 'content',
-    templateUrl: best,
+    template: best,
     url: '/best'
   }, {
     name: 'vendors',
     parent: 'content',
-    templateUrl: vendors,
+    template: vendors,
     url: '/vendors'
   }, {
     name: 'materials-exchange',
     parent: 'content',
     url: '/materials-exchange',
-    templateUrl: materialExchange
+    template: materialExchange
   }, {
     name: 'debugItem',
     parent: 'content',
     url: '/debugItem/:itemId',
-    templateUrl: debugItem
+    template: debugItem
   }, {
     name: 'developer',
     parent: 'content',
     url: '/developer',
-    templateUrl: developer
+    template: developer
   }, {
     name: 'login',
     parent: 'shell',
     url: '/login',
-    templateUrl: login
+    template: login
   }];
 
   states.forEach((state) => {

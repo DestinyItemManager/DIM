@@ -15,7 +15,7 @@ function LoadoutPopup() {
       store: '=dimLoadoutPopup'
     },
     replace: true,
-    templateUrl: require('./dimLoadoutPopup.directive.template.html')
+    template: require('./dimLoadoutPopup.directive.template.html')
   };
 }
 

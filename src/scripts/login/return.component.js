@@ -3,7 +3,7 @@ import simpleQueryString from 'simple-query-string';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,
-  templateUrl: require('app/scripts/login/return.component.template.html')
+  template: require('app/scripts/login/return.component.template.html')
 });
 
 function ReturnController($http) {

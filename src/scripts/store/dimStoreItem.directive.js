@@ -39,7 +39,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
-    templateUrl: require('./dimStoreItem.directive.template.html'),
+    template: require('./dimStoreItem.directive.template.html'),
   };
 
   function Link(scope, element) {

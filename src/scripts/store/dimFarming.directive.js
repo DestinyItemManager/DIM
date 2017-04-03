@@ -8,7 +8,7 @@ function Farming() {
     controllerAs: 'vm',
     bindToController: true,
     scope: {},
-    templateUrl: require('./dimFarming.directive.template.html')
+    template: require('./dimFarming.directive.template.html')
   };
 }
 

@@ -13,7 +13,7 @@ function StoreHeading() {
       store: '=storeData'
     },
     restrict: 'E',
-    templateUrl: require('./dimStoreHeading.directive.template.html')
+    template: require('./dimStoreHeading.directive.template.html')
   };
 }
 
