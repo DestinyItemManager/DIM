@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimStoreHeading.directive.template.html';
 
 angular.module('dimApp')
   .directive('dimStoreHeading', StoreHeading);
@@ -13,7 +14,7 @@ function StoreHeading() {
       store: '=storeData'
     },
     restrict: 'E',
-    template: require('./dimStoreHeading.directive.template.html')
+    template: template
   };
 }
 

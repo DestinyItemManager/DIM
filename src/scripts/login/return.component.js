@@ -1,9 +1,10 @@
 import angular from 'angular';
 import simpleQueryString from 'simple-query-string';
+import template from 'app/scripts/login/return.component.template.html';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,
-  template: require('app/scripts/login/return.component.template.html')
+  template: template
 });
 
 function ReturnController($http) {
