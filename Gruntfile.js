@@ -19,7 +19,8 @@ module.exports = function(grunt) {
             '**',
             '!data',
             '!chrome.zip',
-            '!.htaccess'
+            '!.htaccess',
+            '!stats.html'
           ],
           dest: '/',
           filter: 'isFile'
@@ -71,7 +72,7 @@ module.exports = function(grunt) {
       options: {
         //dryRun: true,
         args: ["--verbose"],
-        exclude: ["chrome.zip"],
+        exclude: ["chrome.zip", "stats.html"],
         host: process.env.REMOTE_HOST,
         port: 2222,
         recursive: true,

@@ -121,11 +121,8 @@ module.exports = (env) => {
       }),
 
       new CopyWebpackPlugin([
-        {
-          from: './node_modules/zip-js/WebContent',
-          to: 'static/zipjs',
-          ignore: ['tests/**/*'],
-        },
+        { from: './node_modules/zip-js/WebContent/z-worker.js', to: 'static/zipjs' },
+        { from: './node_modules/zip-js/WebContent/inflate.js', to: 'static/zipjs' },
 
         { from: './src/.htaccess' },
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
@@ -147,6 +144,12 @@ module.exports = (env) => {
         $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL)
       }),
 
+      // Slim down the locales required by moment
+      // See http://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack
+      // "en" is built-in
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /de|fr|es|pt-br|ja/),
+
+      // Enable if you want to debug the size of the chunks
       new Visualizer(),
     ],
 
