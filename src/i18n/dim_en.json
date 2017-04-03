@@ -44,6 +44,9 @@
       "Melee": "Melee cooldown",
       "Super": "Super cooldown"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Day} other{# Days}}"
+   },
    "Debug": {
       "Dump": "Dump info to console",
       "View": "View Item Debug Info"
@@ -285,6 +288,10 @@
       "Error": "Error! Max 120 characters for notes.",
       "Help": "Add notes to this item"
    },
+   "Objectives": {
+     "Complete": "Complete",
+     "Incomplete": "Incomplete"
+   },
    "Postmaster": {
       "Limit": "Postmaster Limit",
       "Desc": "There are 20 lost items at the Postmaster on your {store}. Any new items will overwrite the existing."
@@ -363,7 +370,6 @@
       "All": "All",
       "Available": "Available on",
       "Compare": "Compare with what you already have",
-      "Day": "{numDays, plural, =1{Day} other{Days}}",
       "Load": "Loading Vendors",
       "ArmorAndWeapons": "Armor & Weapons",
       "ShipsAndVehicles": "Ships & Vehicles",

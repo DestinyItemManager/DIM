@@ -44,6 +44,9 @@
       "Melee": "Nahkampf Abklingzeit",
       "Super": "Super Abklingzeit"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Tag} other{# Tage}}"
+   },
    "Debug": {
       "Dump": "Info in Konsole ausgeben",
       "View": "Zeige Item Debug Info"
@@ -363,7 +366,6 @@
       "All": "Alle",
       "Available": "Verfügbar auf",
       "Compare": "Vergleiche mit dem was du bereits hast",
-      "Day": "{numDays, plural, =1{Tag} other{Tage}}",
       "Load": "Lade Händler",
       "ArmorAndWeapons": "Panzerung & Waffen",
       "ShipsAndVehicles": "Schiffe & Fahrzeuge",

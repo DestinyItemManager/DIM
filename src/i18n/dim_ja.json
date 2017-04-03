@@ -44,6 +44,9 @@
       "Melee": "近接チャージのクールダウン",
       "Super": "スーパースキルのクールダウン"
    },
+   "Countdown": {
+     "Day": "{numDays} 日間"
+   },
    "Debug": {
       "Dump": "コンソールに情報をダンプする",
       "View": "アイテムのデバッグ情報を見る"
@@ -363,7 +366,6 @@
       "All": "全て",
       "Available": "利用可能",
       "Compare": "持ってるものと比較",
-      "Day": "日間",
       "Load": "ローディングベンダー",
       "ArmorAndWeapons": "アーマーとウェポン",
       "ShipsAndVehicles": "船とビークル",

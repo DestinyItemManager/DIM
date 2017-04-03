@@ -44,6 +44,9 @@
       "Melee": "Régénération de Mêlée",
       "Super": "Régénération du Super"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
+   },
    "Debug": {
       "Dump": "Envoyer les infos sur la console",
       "View": "Afficher les infos de débug de l'objet."
@@ -363,7 +366,6 @@
       "All": "Tous",
       "Available": "Disponible sur",
       "Compare": "Comparez avec ce que vous avez déjà",
-      "Day": "{numDays, plural, =1{Journée} other{Journées}}",
       "Load": "Chargement des Marchands",
       "ArmorAndWeapons": "Armure & Armes",
       "ShipsAndVehicles": "Vaisseaux & Véhicules",

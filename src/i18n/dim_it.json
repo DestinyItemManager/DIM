@@ -44,6 +44,9 @@
       "Melee": "Corpo a corpo tempo di recupero",
       "Super": "Super tempo di recupero"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Giorno} other{# Giorni}}"
+   },
    "Debug": {
       "Dump": "Svuota informazioni nella console",
       "View": "Visualizza Item Debug Info"
@@ -363,7 +366,6 @@
       "All": "Tutto",
       "Available": "Disponibile da",
       "Compare": "Confronta con quello che hai già",
-      "Day": "{numDays, plural, =1{Giorno} other{Giorni}}",
       "Load": "Caricamento Mercanti",
       "ArmorAndWeapons": "Equipaggiamento & Armi",
       "ShipsAndVehicles": "Navi & Veicoli",

@@ -44,6 +44,9 @@
       "Melee": "Tempo de carga do corpo-a-corpo",
       "Super": "Tempo de carga da Super"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Dia} other{# Dias}}"
+   },
    "Debug": {
       "Dump": "Enviar informação ao console",
       "View": "Visualizar informações de Debug do item"
@@ -363,7 +366,6 @@
       "All": "Todos",
       "Available": "Disponível em",
       "Compare": "Compare com o que você já possui",
-      "Day": "{numDays, plural, =1{Dia} other{Dias}}",
       "Load": "Carregando vendedores",
       "ArmorAndWeapons": "Armaduras & Armas",
       "ShipsAndVehicles": "Naves & Veículos",
