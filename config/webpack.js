@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
+// const Visualizer = require('webpack-visualizer-plugin');
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
@@ -33,7 +33,7 @@ module.exports = (env) => {
   const config = {
     entry: {
       main: './src/index.js',
-      authReturn: './src/authReturn.js',
+      authReturn: './src/authReturn.js'
     },
 
     output: {
@@ -47,11 +47,10 @@ module.exports = (env) => {
       publicPath: '/',
       https: true,
       host: '0.0.0.0',
-      hot: false,
-      //headers: { "X-Custom-Header": "yes" }
+      hot: false
     },
 
-    devtool: 'eval-cheap-module-source-map',
+    devtool: 'source-map',
 
     stats: 'errors-only',
 
@@ -66,7 +65,7 @@ module.exports = (env) => {
           exclude: /node_modules/,
           use: [
             'babel-loader'
-          ],
+          ]
         }, {
           test: /\.json$/,
           loader: 'json-loader'
@@ -75,18 +74,18 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: { name: ASSET_NAME_PATTERN },
+              options: { name: ASSET_NAME_PATTERN }
             },
             'extract-loader',
             'html-loader'
-          ],
+          ]
         }, {
           test: /\.(png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
             name: ASSET_NAME_PATTERN
-          },
+          }
         }, {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
@@ -96,7 +95,7 @@ module.exports = (env) => {
               'sass-loader'
             ],
             fallback: 'style-loader'
-          }),
+          })
         }
       ],
 
@@ -126,13 +125,13 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'index.html',
-        template: '!handlebars-loader!src/index.html',
+        template: '!handlebars-loader!src/index.html'
       }),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'return.html',
-        template: '!handlebars-loader!src/return.html',
+        template: '!handlebars-loader!src/return.html'
       }),
 
       new CopyWebpackPlugin([
@@ -159,20 +158,15 @@ module.exports = (env) => {
         $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL)
       }),
 
-      // Slim down the locales required by moment
-      // See http://stackoverflow.com/questions/25384360/how-to-prevent-moment-js-from-loading-locales-with-webpack
-      // "en" is built-in
-      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /de|fr|es|pt-br|ja/),
-
       // Enable if you want to debug the size of the chunks
-      new Visualizer(),
+      //new Visualizer(),
     ],
 
     node: {
       fs: 'empty',
       net: 'empty',
       tls: 'empty'
-    },
+    }
   };
 
   // Run through big deps and extract the first part of the path,
@@ -197,14 +191,7 @@ module.exports = (env) => {
       exclude: /-sqlLib-/, // ensure the sqlLib chunk doesnt get minifed
       compress: { warnings: false },
       output: { comments: false },
-      sourceMap: true,
-    }));
-
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      test: /-sqlLib-/, // run only for the sql.js chunk
-      compress: false,
-      output: { comments: false },
-      sourceMap: true,
+      sourceMap: true
     }));
   }
 
