@@ -288,6 +288,10 @@
       "Error": "Error! Máximo 120 caracteres por notas.",
       "Help": "Agregar notas a este artículo"
    },
+   "Objectives": {
+     "Complete": "Completo",
+     "Incomplete": "Incompleto"
+   },
    "Postmaster": {
       "Limit": "Límite de Administración",
       "Desc": "Hay 20 objetos perdidos en la Administración en tu {store}. Nuevos objetos reemplazarán los ya existentes"
