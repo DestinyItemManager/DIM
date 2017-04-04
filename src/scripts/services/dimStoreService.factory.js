@@ -955,6 +955,15 @@ function StoreService(
         }
       }
 
+      var dtrRoll = "";
+      if (talentNodeGroup.isRandom) {
+        dtrRoll = node.nodeHash.toString(16);
+        if (dtrRoll.length > 1) {
+          dtrRoll += ".";
+        }
+        dtrRoll += node.stepIndex.toString(16);
+      }
+
       // There's a lot more here, but we're taking just what we need
       return {
         name: nodeName,
@@ -981,7 +990,8 @@ function StoreService(
         // Some nodes don't show up in the grid, like purchased ascend nodes
         hidden: node.hidden,
 
-        dtrHash: dtrHash
+        dtrHash: dtrHash,
+        dtrRoll: dtrRoll
 
         // Whether (and in which order) this perk should be
         // "featured" on an abbreviated info panel, as in the
@@ -1036,6 +1046,7 @@ function StoreService(
       ascended: Boolean(ascendNode && ascendNode.activated),
       infusable: _.any(gridNodes, { hash: 1270552711 }),
       dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
+      dtrRoll: _.compact(_.pluck(gridNodes, 'dtrRoll')).join(';'),
       complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
     };
   }

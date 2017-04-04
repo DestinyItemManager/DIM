@@ -4,12 +4,109 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
 
+class gunTransformer {
+  translateToDtrGun(gun) {
+    return {
+      referenceId: gun.hash,
+      roll: gun.dtrRoll
+    };
+  }
+
+  getRollAndPerks(gun) {
+    return {
+      roll: this.getDtrRoll(gun),
+      selectedPerks: this.getDtrPerks(gun),
+      referenceId: gun.hash,
+      instanceId: gun.id,
+    };
+  }
+
+  getDtrPerks(gun) {
+    if (!gun.talentGrid) {
+      return null;
+    }
+
+    return gun.talentGrid.dtrPerks;
+  }
+
+  getDtrRoll(gun) {
+    if (!gun.talentGrid) {
+      return null;
+    }
+
+    return gun.talentGrid.dtrRoll;
+  }
+}
+
+class gunListBuilder {
+  constructor() {
+    this._gunTransformer = new gunTransformer();
+  }
+
+  getNewItems(allItems) {
+    return _.where(allItems, { isNew: true });
+  }
+
+  getAllItems(stores) {
+    var allItems = [];
+
+    stores.forEach(function(store) {
+      allItems = allItems.concat(store.items);
+    });
+
+    return allItems;
+  }
+
+  getGuns(stores) {
+    var allItems = this.getAllItems(stores);
+
+    var allGuns = _.filter(allItems,
+                        function(item) {
+                          if (!item.primStat) {
+                            return false;
+                          }
+
+                          return (item.primStat.statHash === 368428387);
+                        });
+
+    var newGuns = this.getNewItems(allGuns);
+
+    if (newGuns.length > 0) {
+      return newGuns;
+    }
+
+    return allGuns;
+  }
+
+  getWeaponList(stores) {
+    var guns = this.getGuns(stores);
+
+    var list = [];
+    var self = this;
+
+    guns.forEach(function(gun) {
+      var dtrGun = self._gunTransformer.translateToDtrGun(gun);
+
+      if (!self.isKnownGun(list, dtrGun)) {
+        list.push(dtrGun);
+      }
+    });
+
+    return list;
+  }
+
+  isKnownGun(list, dtrGun) {
+    return _.contains(list, dtrGun);
+  }
+}
+
 function DestinyTrackerService($q,
                                $http,
                                $rootScope,
                                dimPlatformService,
                                dimSettingsService) {
-  var _gunListBuilder = gunListBuilder();
+  var _gunListBuilder = new gunListBuilder();
+  var _gunTransformer = new gunTransformer();
 
   $rootScope.$on('item-clicked', function(event, item) {
     _getItemReviews(item)
@@ -129,7 +226,7 @@ function DestinyTrackerService($q,
   }
 
   function _getItemReviews(item) {
-    var postWeapon = _gunListBuilder.getRollAndPerks(item);
+    var postWeapon = _gunTransformer.getRollAndPerks(item);
 
     var promise = $q
               .when(getItemReviewsPromise(postWeapon))
@@ -147,7 +244,7 @@ function DestinyTrackerService($q,
       return _bulkFetch(stores);
     },
     submitReview: function(membershipInfo, item, userReview) {
-      var rollAndPerks = _gunListBuilder.getRollAndPerks(item);
+      var rollAndPerks = _gunTransformer.getRollAndPerks(item);
       var reviewer = toReviewer(membershipInfo);
       var review = toRatingAndReview(userReview);
 
@@ -163,99 +260,4 @@ function DestinyTrackerService($q,
       return promise;
     }
   };
-}
-
-function gunListBuilder() {
-  var glb = {};
-
-  function getNewItems(allItems) {
-    return _.where(allItems, { isNew: true });
-  }
-
-  function getAllItems(stores) {
-    var allItems = [];
-
-    stores.forEach(function(store) {
-      allItems = allItems.concat(store.items);
-    });
-
-    return allItems;
-  }
-
-  function getGuns(stores) {
-    var allItems = getAllItems(stores);
-
-    var allGuns = _.filter(allItems,
-                        function(item) {
-                          if (!item.primStat) {
-                            return false;
-                          }
-
-                          return (item.primStat.statHash === 368428387);
-                        });
-
-    var newGuns = getNewItems(allGuns);
-
-    if (newGuns.length > 0) {
-      return newGuns;
-    }
-
-    return allGuns;
-  }
-
-  glb.getWeaponList = function(stores) {
-    var guns = getGuns(stores);
-
-    var list = [];
-
-    guns.forEach(function(gun) {
-      var dtrGun = translateToDtrGun(gun);
-
-      if (!isKnownGun(list, dtrGun)) {
-        list.push(dtrGun);
-      }
-    });
-
-    return list;
-  };
-
-  function getDtrPerks(gun) {
-    if (!gun.talentGrid) {
-      return null;
-    }
-
-    return gun.talentGrid.dtrPerks;
-  }
-
-  function getGunRoll(gun) {
-    var dtrPerks = getDtrPerks(gun);
-
-    if (dtrPerks.length > 0) {
-      return dtrPerks.replace(/o/g, "");
-    }
-
-    return null;
-  }
-
-  function translateToDtrGun(gun) {
-    return {
-      referenceId: gun.hash,
-      roll: getGunRoll(gun)
-    };
-  }
-
-  glb.getRollAndPerks = function(gun) {
-    return {
-      roll: getGunRoll(gun),
-      selectedPerks: getDtrPerks(gun),
-      referenceId: gun.hash,
-      instanceId: gun.id,
-    };
-  };
-
-  function isKnownGun(list, dtrGun) {
-    return _.contains(list, dtrGun);
-  }
-
-  return glb;
 }

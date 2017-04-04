@@ -150,7 +150,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.submitReview = function() {
     var item = vm.item;
 
-    var newRating = vm.item.dtrRating;
+    var newRating = vm.item.userRating;
     var review = vm.item.userReview;
 
     var userReview = {
