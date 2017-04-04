@@ -288,6 +288,10 @@
       "Error": "Erreur! Max 120 charactères pour les notes.",
       "Help": "Ajouter des notes à cet objet"
    },
+   "Objectives": {
+     "Complete": "Achevée",
+     "Incomplete": "Incomplet"
+   },
    "Postmaster": {
       "Limit": "Limite du Commit Des Postes",
       "Desc": "Il y a 20 objets perdus au Commit Des Postes sur votre {store}. Tous les nouveaux objets remplaceront les objets existants."
