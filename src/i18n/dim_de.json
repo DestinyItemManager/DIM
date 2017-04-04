@@ -288,6 +288,10 @@
       "Error": "Fehler! Max 120 Zeichen für Notizen.",
       "Help": "Notiz für dieses Item hinzufügen"
    },
+   "Objectives": {
+     "Complete": "Vollständig",
+     "Incomplete": "Unvollständig"
+   },
    "Postmaster": {
       "Limit": "Poststellenlimit",
       "Desc": "Es sind 20 verlorene Gegenstände in der Poststelle deines {store}. Jedes neue Item wird bereits vorhandene überschreiben."
@@ -429,4 +433,3 @@
       "Flawless": "Makellos"
    }
 }
-
