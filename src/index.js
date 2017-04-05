@@ -18,9 +18,7 @@ require('indexeddbshim');
 window.$ = window.jQuery = require('jquery');
 require('jquery-textcomplete');
 require('jquery-ui/ui/position');
-window.humanizeDuration = require('humanize-duration');
 window.MessageFormat = require('messageformat');
-window.moment = require('moment');
 
 require('./scripts/oauth/oauth.module');
 require('./scripts/oauth/http-refresh-token.service');

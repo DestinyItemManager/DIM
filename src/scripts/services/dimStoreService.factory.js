@@ -1090,8 +1090,10 @@ function StoreService(
       var def = objectiveDefs.get(objective.objectiveHash);
 
       return {
-        description: '',
-        displayName: def.displayDescription,
+        displayName: def.displayDescription ||
+          (objective.isComplete
+           ? $translate.instant('Objectives.Complete')
+           : $translate.instant('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,

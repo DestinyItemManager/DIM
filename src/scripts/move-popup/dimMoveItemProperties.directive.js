@@ -20,8 +20,8 @@ function Objectives() {
       '    <div ng-switch-default class="objective-checkbox"><div></div></div>',
       '    <div ng-switch-default class="objective-progress">',
       '      <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-      '      <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
-      '      <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>',
+      '      <div class="objective-description">{{ objective.displayName }}</div>',
+      '      <div class="objective-text">{{ objective.display }}</div>',
       '    </div>',
       '  </div>',
       '</div>'

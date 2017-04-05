@@ -44,6 +44,9 @@
       "Melee": "Tempo de carga do corpo-a-corpo",
       "Super": "Tempo de carga da Super"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Dia} other{# Dias}}"
+   },
    "Debug": {
       "Dump": "Enviar informação ao console",
       "View": "Visualizar informações de Debug do item"
@@ -285,6 +288,10 @@
       "Error": "Erro! Anotações devem ter até 120 caracteres.",
       "Help": "Adicione anotações à este item"
    },
+   "Objectives": {
+     "Complete": "Completo",
+     "Incomplete": "Incompleto"
+   },
    "Postmaster": {
       "Limit": "Limite do Chefe de Correio",
       "Desc": "Há 20 itens perdidos em seu Correio com seu {store}. Quaisquer novos itens irão substituir os existentes."
@@ -363,7 +370,6 @@
       "All": "Todos",
       "Available": "Disponível em",
       "Compare": "Compare com o que você já possui",
-      "Day": "{numDays, plural, =1{Dia} other{Dias}}",
       "Load": "Carregando vendedores",
       "ArmorAndWeapons": "Armaduras & Armas",
       "ShipsAndVehicles": "Naves & Veículos",

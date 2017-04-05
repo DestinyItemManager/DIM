@@ -44,6 +44,9 @@
       "Melee": "Tiempo para Cuerpo a cuerpo",
       "Super": "Tiempo para Super"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Día} other{# Días}}"
+   },
    "Debug": {
       "Dump": "Tirar información a la consola",
       "View": "Ver información de depuración de objeto"
@@ -285,6 +288,10 @@
       "Error": "Error! Máximo 120 caracteres por notas.",
       "Help": "Agregar notas a este artículo"
    },
+   "Objectives": {
+     "Complete": "Completo",
+     "Incomplete": "Incompleto"
+   },
    "Postmaster": {
       "Limit": "Límite de Administración",
       "Desc": "Hay 20 objetos perdidos en la Administración en tu {store}. Nuevos objetos reemplazarán los ya existentes"
@@ -363,7 +370,6 @@
       "All": "Todo",
       "Available": "Disponible en",
       "Compare": "Comparar con lo que ya tienes",
-      "Day": "{numDays, plural, =1{Día} other{Días}}",
       "Load": "Cargando comerciantes",
       "ArmorAndWeapons": "Armadura y armas",
       "ShipsAndVehicles": "Naves y vehículos",

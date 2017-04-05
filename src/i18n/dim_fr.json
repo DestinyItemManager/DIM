@@ -44,6 +44,9 @@
       "Melee": "Régénération de Mêlée",
       "Super": "Régénération du Super"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
+   },
    "Debug": {
       "Dump": "Envoyer les infos sur la console",
       "View": "Afficher les infos de débug de l'objet."
@@ -285,6 +288,10 @@
       "Error": "Erreur! Max 120 charactères pour les notes.",
       "Help": "Ajouter des notes à cet objet"
    },
+   "Objectives": {
+     "Complete": "Achevée",
+     "Incomplete": "Incomplet"
+   },
    "Postmaster": {
       "Limit": "Limite du Commit Des Postes",
       "Desc": "Il y a 20 objets perdus au Commit Des Postes sur votre {store}. Tous les nouveaux objets remplaceront les objets existants."
@@ -363,7 +370,6 @@
       "All": "Tous",
       "Available": "Disponible sur",
       "Compare": "Comparez avec ce que vous avez déjà",
-      "Day": "{numDays, plural, =1{Journée} other{Journées}}",
       "Load": "Chargement des Marchands",
       "ArmorAndWeapons": "Armure & Armes",
       "ShipsAndVehicles": "Vaisseaux & Véhicules",
