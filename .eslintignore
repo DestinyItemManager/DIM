@@ -1,5 +1,4 @@
-app/scripts/jquery-ui.position.js
-app/vendor/
+src/scripts/ios-drag-drop.js
 build/
 dist/
 Gruntfile.js

@@ -1,4 +1,50 @@
-# v3.16.0
+# Next
+
+* Fixed the logic for deciding which items can be tagged.
+* Fix "Make room for postmaster".
+* Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
+* Fix changing new-item shine, item quality display, and show elemental damage icon preferences. They should apply immediately now, without a reload.x
+* Localization updates.
+* Fixed objective text in the record book floating above stuff.
+* Fixed displaying record objectives that are time-based as time instead of just a number of seconds.
+* When pinned to the iOS home screen, DIM now looks more like a regular browser than an app. The upside is you can now actually authorize it when it's pinned!
+
+# v3.17.1
+
+* Fixed a bug with the display of the amount selection controls in the move popup for stackable items.
+* Localization updates
+* Moved the "VCR" controls for stackable item amount selection to their own row.
+
+# 3.17.0
+
+* Fixed the perk selection in Loadout Builder. #1453
+* Fixed the logic for artifact bonuses to compute the right number. #1477
+* Restore some missing images from our build system changes.
+* Don't allow engrams to be tagged. #1478
+* Add home screen icons (and Safari tab icons, and Windows tile icons) for the website.
+* Fixed "is:locked" filters to be consistent for engrams. #1489
+* The Beta website is now updated automatically for every PR.
+* If you're not logged in to the website, we show the login screen.
+* Better error messages for when you have the wrong platform selected, plus the error doesn't cover the platform selector.
+* Improved website compatibility with Firefox, Safari, and Edge.
+* Many style fixes for Safari.
+* Drag and drop is now supported on touch devices. Press and hold an item to drag it. #1499
+* Armsday packages can no longer be dragged. #1512
+* Add tags and notes to items! This has been in Beta forever but now it's official. Hit ? to see the keyboard shortcuts, and use "tag:" searches to find your tagged gear.
+* Remove Materials Exchange from the beta.
+* Vendors now show where they are, and are sorted better. All the cryptarchs now appear. Engrams waiting to be decrypted aren't shown in the vendor screen.
+* Experimental iOS 9 Mobile Safari compatibility. May be removed in the future.
+* Style updates to clean up DIM's look and make sure more screen space is being used for items.
+* Gained the ability for us to fill in classified items, even if Bungie hasn't unclassified them. You still can't transfer them though.
+* The "Hide Unfiltered Items while Filtering" preference now applies to vendor gear too. #1528
+* When moving stacks of items through the popup, there are now buttons to max out the amount, and add and remove up to even stacks of items.
+* Xur should disappear on Sundays again.
+
+# 3.16.1
+
+* Significantly increased the storage limit for tags and notes. It's still possible to go over (especially with long notes) but it should happen far less frequently - and it should notify you when it happens.
+
+# 3.16.0
 
 * Removed farming option to keep greens since they're disassembled by default now.
 * Added stat search, for example: "stat:rof:>= 22"
@@ -32,6 +78,7 @@
 * When dequipping an item, we try harder to find a good item to equip in its place. We also prefer replacing exotics with other exotics, and correctly handle The Life Exotic perk.
 * Lots of new translations and localized strings.
 * Vendors update when you reach a new level in their associated faction, or when you change faction alignment.
+* Fixed a too-small perk selection box in the loadout builder, and properly handle when vendors are selling Memory of Felwinter.
 
 # 3.14.1
 

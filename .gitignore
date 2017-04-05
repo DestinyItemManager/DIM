@@ -1,6 +1,4 @@
-app/vendor/
 dist/
-app/styles
 .settings/
 .idea/
 .vscode/
@@ -12,15 +10,19 @@ build/api-manifest/*.json
 build/*.json
 build/*.zip
 *.DS_Store
+config/dim_travis.rsa
 
 !do-not-delete.txt
 !build/itemHashes.json
 !build/progressionMeta.json
 !build/img/misc/missing_icon.png
 
-build/extension
-build/dim-extension.zip
-
 .brackets.json
 .npmrc
 npm-debug.log
+app/*
+!app/index.html
+!app/icon16.png
+!app/manifest.json
+!app/main.js
+!app/index.js

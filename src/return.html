@@ -1,0 +1,17 @@
+<html !doctype>
+  <head>
+    <title>Validating Authorization</title>
+
+    {{#each htmlWebpackPlugin.files.chunks.authReturn.css}}
+      <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
+    {{/each}}
+  </head>
+
+  <body>
+    <div ng-app="dimLogin" ng-strict-di ng-csp>
+      <dim-return></dim-return>
+    </div>
+
+    <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.authReturn.entry}}"></script>
+  </body>
+</html>

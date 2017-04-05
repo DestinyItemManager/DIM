@@ -1,0 +1,60 @@
+.billboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Roboto, 'Open Sans', sans-serif;
+  font-size: 16px;
+
+  .content {
+    min-width: 0;
+    max-width: none;
+    padding: 1rem 3rem;
+    background-color: #506d86;
+    color: white;
+    margin-top: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    margin: .5rem 0;
+    text-align: center;
+  }
+
+  a {
+    display: inline-block;
+  }
+
+  p.auth, p.help {
+    text-align: center;
+  }
+
+  p.auth {
+    margin-top: 2rem;
+
+    a {
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #ffaf3b;
+      color: #333;
+      padding: 1rem 3rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.2);
+      cursor: pointer;
+
+      transition: all 250ms;
+
+      &:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  p.help {
+    a {
+      text-decoration: underline;
+      font-size: .875rem;
+      color: #ccc;
+      cursor: pointer;
+    }
+  }
+}

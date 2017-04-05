@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="" ng-app="app" ng-csp ng-strict-di>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DIM</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
+    <link href='https://www.bungie.net' rel='preconnect'>
+    <link href='https://apis.google.com' rel='preconnect'>
+    <link href='https://ssl.google-analytics.com' rel='preconnect'>
+    <link href='https://www.google-analytics.com' rel='preconnect'>
+    <link href='https://accounts.google.com' rel='preconnect'>
+    <link href='https://ssl.gstatic.com' rel='preconnect'>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:200,400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest-webapp.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#434444">
+    <meta name="theme-color" content="#434444">
+    <meta name='apple-mobile-web-app-status-bar-style' content='black'>
+
+    {{#each htmlWebpackPlugin.files.chunks.main.css}}
+      <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
+    {{/each}}
+
+  </head>
+
+  <body ng-strict-di>
+    <app></app>
+    <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{htmlWebpackPlugin.files.chunks.main.entry}}"></script>
+  </body>
+
+</html>

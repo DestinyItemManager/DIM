@@ -1,0 +1,30 @@
+<div id="header">
+  <div class="content">
+    <span class="header-right">
+      <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
+      <div class="header-right" id="actions">
+        <span class="link" ng-click="$ctrl.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': $ctrl.loadingTracker.active()}" class="fa fa-refresh"></i></span>
+        <span class="link" ng-click="$ctrl.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
+        <span class="link" ng-if="$ctrl.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"><i class="fa fa-list-alt"></i></span>
+        <span class="link" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
+        <span class="link search-link">
+          <span class="filter-help" ng-click="$ctrl.showFilters($event)" translate-attr="{ title: 'Header.Filters'}"><i class="fa fa-question-circle-o"></i></span>
+          <dim-search-filter></dim-search-filter>
+        </span>
+      </div>
+    </span>
+    <span class="logo link" ng-class="$ctrl.$DIM_FLAVOR" ui-sref="inventory" title="v{{$ctrl.$DIM_VERSION}} ({{$ctrl.$DIM_FLAVOR}})">DIM</span>
+    <span class="link" ng-click="$ctrl.showAbout($event)" translate="Header.About"></span>
+    <a class="oc link" ng-click="$ctrl.showSupport($event)" translate="Header.SupportDIM"></a>
+    <span class="link" ng-click="$ctrl.toggleRecordBooks($event)" translate="RecordBooks"></span>
+    <span class="link" ng-if="$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleVendors($event)" translate="Vendors"></span>
+    <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
+  </div>
+</div>
+<toaster-container toaster-options="{ 'time-out': 10000, limit: 6 }"></toaster-container>
+<div id="content" class="content" ui-view></div>
+<div class="store-bounds"></div>
+<dim-manifest-progress></dim-manifest-progress>
+<div class="random-loadout" ng-controller="dimRandomCtrl as random">
+  <a class="loadout random" href="#" ng-disabled="random.disableRandomLoadout" ng-if="random.showRandomLoadout" ng-click="random.applyRandomLoadout($event)">&Pi;</a>
+</div>

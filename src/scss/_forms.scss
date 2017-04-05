@@ -1,0 +1,45 @@
+
+.dim-button {
+  cursor: pointer;
+  background-color: gray;
+  padding: 3px 10px;
+  box-shadow: inset 0px 0px 1px black;
+  display: inline-block;
+  &:hover {
+    background-color: $orange;
+  }
+  &:active, &.selected {
+    box-shadow: none;
+    background-color: $orange;
+  }
+  input {
+    display: none;
+  }
+}
+
+.dim-input {
+  padding-left: 5px;
+  height: 22px;
+  background: rgb(46, 46, 46);
+  border: none;
+  border-bottom: 1px solid gray;
+  color: white;
+
+  &:hover, &:focus {
+    background: transparent;
+    outline: none;
+    border-bottom: 1px solid $orange;
+  }
+}
+
+.link {
+  color: white;
+  &:hover {
+    color: $orange;
+    cursor: pointer;
+  }
+}
+
+.back-link i {
+  margin-right: .25em;
+}

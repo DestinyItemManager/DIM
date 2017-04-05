@@ -1,0 +1,17 @@
+<div>
+    <h1 translate="Views.Support"></h1>
+    <div class="ngdialog-inner-content">
+        <p translate="Views.Support.FreeToDownload"></p>
+        <p translate="Views.Support.OpenCollective"></p>
+        <h2 translate="Views.Support.Backers"></h2>
+        <p translate="Views.Support.BackersDetail"></p>
+        <div class="backers">
+          <a ng-repeat="i in 29 | range track by $index" ng-href="https://opencollective.com/dim/backer/{{$index}}/website" target="_blank"><img ng-src="https://opencollective.com/dim/backer/{{$index}}/avatar.svg"></a>
+        </div>
+        <h2 translate="Views.Support.Sponsors"></h2>
+        <p translate="Views.Support.SponsorsDetail"></p>
+        <div class="backers">
+          <a ng-repeat="i in 29 | range track by $index" ng-href="https://opencollective.com/dim/sponsor/{{$index}}/website" target="_blank"><img ng-src="https://opencollective.com/dim/sponsor/{{$index}}/avatar.svg"></a>
+        </div>
+    </div>
+</div>

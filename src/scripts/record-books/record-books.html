@@ -1,0 +1,46 @@
+<div class="record-books" ng-class="{ 'hide-complete': $ctrl.settings.hideCompletedRecords }">
+  <back-link></back-link>
+
+  <h1>
+    <span translate="RecordBooks"></span>
+    <div class="hide-completed">
+      <label>
+        <input type="checkbox" ng-model="$ctrl.settings.hideCompletedRecords" ng-change="$ctrl.settingsChanged()">
+        <span translate="RecordBooks.HideCompleted"></span>
+      </label>
+    </div>
+  </h1>
+
+  <div class="record-book" ng-repeat="book in $ctrl.recordBooks | orderBy:['complete','-startDate'] track by $index">
+    <div class="title">
+      <div class="collapse-handle" ng-click="$ctrl.toggleSection(book.hash)">
+        <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections[book.hash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+        <img class="book-icon" ng-src="{{::book.icon | bungieIcon}}" />
+        {{::book.name}}
+        <span class="record-book-completion">{{book.completedCount}} / {{::book.recordCount}}</span>
+      </div>
+    </div>
+
+    <div ng-if="!$ctrl.settings.collapsedSections[book.hash]">
+      <div class="record-book-page" ng-class="{ complete: page.complete }" ng-repeat="page in book.pages track by $index" ng-if="!page.rewardsPage">
+        <div class="collapse-handle" ng-click="$ctrl.toggleSection(page.id)">
+          <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections[page.id] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
+          <span class="record-book-page-title">{{::page.name}}</span>
+          <span class="record-book-completion">{{page.completedCount}} / {{::page.records.length}}</span>
+        </div>
+        <p>{{::page.description}}</p>
+
+        <div class="record-page-records" ng-if="page.records.length && !$ctrl.settings.collapsedSections[page.id]">
+          <div class="record" ng-class="{ complete: record.complete }" ng-repeat="record in page.records track by $index">
+            <div class="record-icon"ng-style="{{::record.icon | bungieBackground}}"></div>
+            <div class="record-info">
+              <h3>{{::record.name}}</h3>
+              <p>{{::record.description}}</p>
+              <dim-objectives objectives="record.objectives"></dim-objectives>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

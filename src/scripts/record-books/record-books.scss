@@ -1,0 +1,114 @@
+.record-books {
+  max-width: 900px;
+  min-width: 450px;
+  margin: 0 auto;
+
+  h1 {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+
+    span {
+      flex: 1;
+    }
+  }
+
+  .record-book {
+    margin-bottom: 10px;
+  }
+
+  .book-icon {
+    height: 26px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .record-book-page {
+    background: #555;
+    margin: 10px 10px 0 10px;
+    padding: 8px;
+
+    .record-book-page-title {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: inline;
+      margin-left: 2px;
+    }
+
+    p {
+      margin: 0;
+      color: #e0e0e0;
+    }
+  }
+
+  .record-page-records {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .record-book-completion {
+    float: right;
+  }
+
+  .hide-completed {
+    float: right;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .record {
+    width: calc(50% - 18px);
+    background: #333;
+    padding: 8px;
+    margin: 2px 0px;
+    display: flex;
+    flex-direction: row;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-weight: normal;
+    }
+
+    p {
+      margin: 0 0 8px 0;
+      color: #e0e0e0;
+    }
+
+  }
+
+  &.hide-complete {
+    .record, .record-book-page {
+      &.complete {
+        display: none;
+      }
+    }
+  }
+
+  .record-info {
+    flex: 1;
+    margin-left: 10px;
+  }
+
+  .record-icon {
+    border-radius: 50%;
+    background-color: rgba(245, 245, 245, 0.1);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #fff;
+  }
+
+  .complete .record-icon {
+    border-color: #ffce1f;
+    background-color: rgba(255,206,31,0.4);
+  }
+}

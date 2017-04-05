@@ -1,0 +1,82 @@
+<div class="loadout-popup-content">
+  <ul class="loadout-list">
+
+    <li class="loadout-set">
+      <span ng-click="vm.newLoadout($event)">
+        <i class="fa fa-plus-circle"></i>
+        <span translate="Loadouts.Create"></span>
+      </span>
+      <span ng-click="vm.newLoadoutFromEquipped($event)" translate="Loadouts.FromEquipped"></span>
+    </li>
+
+    <li ng-repeat="loadout in vm.loadouts track by loadout.id" class="loadout-set">
+      <span title="{{ loadout.name }}" ng-click="vm.applyLoadout(loadout, $event)">
+        {{ loadout.name }}
+      </span>
+      <span class="delete" translate-attr="{ title: 'Loadouts.Delete' }" ng-click="vm.deleteLoadout(loadout, $event)">
+        <i class="fa fa-trash-o"></i>
+      </span>
+      <span translate-attr="{ title: 'Loadouts.Edit' }" ng-click="vm.editLoadout(loadout, $event)">
+        <i class="fa fa-pencil"></i>
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="vm.search.query">
+      <span ng-click="vm.searchLoadout($event)">
+        <i class="fa fa-search"></i>
+        {{ 'Loadouts.ApplySearch' | translate:{ query: vm.search.query } }}
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="!vm.store.isVault">
+      <span ng-click="vm.maxLightLoadout($event)">
+        <i class="fa fa-star"></i>
+        <span translate="Loadouts.MaximizeLight"></span>
+        <span class="light" ng-bind="::vm.maxLightValue"></span>
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="!vm.store.isVault">
+      <span ng-click="vm.itemLevelingLoadout($event)">
+        <i class="fa fa-level-up"></i>
+        <span translate="Loadouts.ItemLeveling"></span>
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="!vm.store.isVault">
+      <span ng-click="vm.makeRoomForPostmaster($event)">
+        <i class="fa fa-envelope"></i>
+        <span translate="Loadouts.MakeRoom"></span>
+      </span>
+    </li>
+
+    <li class="loadout-set">
+      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: true  } )">
+        <img class="fa" src="~app/images/engram.svg" height="12" width="12"/>
+        <span translate="Loadouts.GatherEngrams"></span>
+      </span>
+      <span ng-click="vm.gatherEngramsLoadout($event, { exotics: false })">
+        <i class="fa fa-ban"></i>
+        <span translate="Loadouts.GatherEngramsExceptExotics"></span>
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="!vm.store.isVault">
+      <span ng-click="vm.startFarming($event)">
+        <img class="fa" src="~app/images/engram.svg" height="12" width="12"/>
+        <span translate="FarmingMode"></span>
+      </span>
+    </li>
+
+    <li class="loadout-set" ng-if="vm.previousLoadout">
+      <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)">
+        <i class="fa fa-undo"></i>
+        {{vm.previousLoadout.name}}
+      </span>
+      <span ng-click="vm.applyLoadout(vm.previousLoadout, $event)">
+        <span translate="Loadouts.RestoreAllItems"></span>
+      </span>
+    </li>
+
+  </ul>
+</div>

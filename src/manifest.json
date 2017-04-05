@@ -1,0 +1,48 @@
+{
+  "manifest_version": 2,
+  "name": "Destiny Item Manager",
+  "version": "3.18.0",
+  "description": "Robust interface to manage gear, weapons, and items in Destiny.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "short_name": "DIM",
+  "background": {
+    "scripts": [
+      "extension-scripts/main.js"
+    ]
+  },
+  "web_accessible_resources": [
+    "input.html",
+    "return.html"
+  ],
+  "permissions": [
+    "storage",
+    "*://www.bungie.net/*",
+    "cookies",
+    "identity"
+  ],
+  "oauth2": {
+    "client_id": "22022180893-klqc2vd3ubp8ap5kmsk3j4ad67i8kmcm.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.appfolder"
+    ]
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "icon19.png",
+      "38": "icon38.png"
+    }
+  },
+  "options_ui": {
+    "page": "index.html",
+    "chrome_style": false,
+    "open_in_tab": true
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
+  "incognito": "split",
+  "offline_enabled": false,
+  "minimum_chrome_version": "51"
+}

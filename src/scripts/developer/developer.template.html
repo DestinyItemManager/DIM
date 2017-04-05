@@ -1,0 +1,18 @@
+<div ng-controller="dimDeveloperCtrl as vm">
+  <h1>Developer Settings</h1>
+  <span ng-show="vm.warning">
+    <h3>Configuration Error</h3>
+    <span ng-bind="vm.warning"></span>
+  </span>
+  <span ng-hide="vm.warning">
+    <h3>Configure API Key</h3>
+    <ol>
+      <li>Visit <a href="https://www.bungie.net/en/Application/Create" target="_blank">https://www.bungie.net/en/Application/Create</a></li>
+      <li>Paste <input type="text" ng-value="vm.URLRet" /> into the "Redirect URL" section under "App Authentication".</li>
+      <li>Paste <input type="text" ng-value="vm.URL" /> into the "Origin Header" section under "Browser Based Apps".</li>
+      <li>After saving, copy the "API Key" here <input type="text" ng-model="vm.apiKey"/></li>
+      <li>Copy the "Authorization URL" here <input type="text" ng-model="vm.authorizationURL"/></li>
+      <li><input type="button" ng-click="vm.save()" value="Save" /></li>
+    </ol>
+  </span>
+</div>

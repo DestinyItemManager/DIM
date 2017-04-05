@@ -1,7 +1,9 @@
 {
   "env": {
+    "es6": true,
     "browser": true,
-    "jquery": true
+    "jquery": true,
+    "node": true
   },
   "extends": "eslint:recommended",
   "root": true,
@@ -9,29 +11,20 @@
     "ecmaVersion": 6,
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
-    }
+    },
+    "sourceType": "module"
   },
   "globals": {
-    "angular": true,
-    "$": true,
-    "_": true,
     "_gaq": true,
     "chrome": true,
-    "sum": true,
-    "count": true,
-    "flatMap": true,
     "gapi": true,
-    "Set": true,
-    "base64js": true,
-    "SQL": true,
-    "zip": true,
-    "Uint8Array": true,
-    "Int32Array": true,
-    "DataView": true,
-    "Proxy": true,
-    "ga": true,
-    "idbKeyval": true,
-    "simpleQueryString": true
+    "$DIM_FLAVOR": true,
+    "$DIM_CHANGELOG": true,
+    "$DIM_VERSION": true,
+    "$DIM_API_KEY": true,
+    "$DIM_AUTH_URL": true,
+    "$DIM_WEB_API_KEY": true,
+    "$DIM_WEB_AUTH_URL": true,
   },
   "rules": {
     "array-callback-return": "error",
@@ -44,7 +37,7 @@
     "no-alert": "error",
     "no-eq-null": "error",
     "no-extra-bind": "error",
-    "no-fallthrough": "error",
+    "no-fallthrough": "off",
     "no-implicit-coercion": "error",
     "no-implicit-globals": "error",
     "no-implied-eval": "error",
@@ -57,7 +50,9 @@
     "no-throw-literal": "error",
     "no-unmodified-loop-condition": "error",
     "no-unused-expressions": "error",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "(^e$|^_)" }],
+    "no-unused-vars": ["error", {
+      "argsIgnorePattern": "(^e$|^_)"
+    }],
     "no-useless-call": "error",
     "no-useless-escape": "error",
     "no-void": "error",
@@ -73,11 +68,14 @@
     "camelcase": ["error", {
       "properties": "never"
     }],
+    "comma-dangle": ["error", "only-multiline"],
     "comma-spacing": "error",
     "comma-style": "error",
     "key-spacing": "error",
     "keyword-spacing": "error",
-    "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
+    "newline-per-chained-call": ["error", {
+      "ignoreChainWithDepth": 2
+    }],
     "no-array-constructor": "error",
     "no-lonely-if": "error",
     "no-mixed-operators": "error",
@@ -99,13 +97,17 @@
     "space-in-parens": "error",
     "space-infix-ops": "error",
     "space-unary-ops": "error",
-    "spaced-comment": ["error", "always", { "exceptions": ["-", "*"] }],
+    "spaced-comment": ["error", "always", {
+      "exceptions": ["-", "*"]
+    }],
     "arrow-parens": "error",
     "arrow-spacing": "error",
     "constructor-super": "error",
     "generator-star-spacing": "error",
     "no-class-assign": "error",
-    "no-confusing-arrow": ["error", {allowParens: true}],
+    "no-confusing-arrow": ["error", {
+      "allowParens": true
+    }],
     "no-const-assign": "error",
     "no-dupe-class-members": "error",
     "no-new-symbol": "error",
