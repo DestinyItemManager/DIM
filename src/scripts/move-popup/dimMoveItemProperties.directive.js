@@ -106,7 +106,7 @@ function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
   var vm = this;
 
   vm.dtrRatingOptions = [1, 2, 3, 4, 5];

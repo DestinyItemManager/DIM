@@ -103,8 +103,7 @@ class gunListBuilder {
 function DestinyTrackerService($q,
                                $http,
                                $rootScope,
-                               dimPlatformService,
-                               dimSettingsService) {
+                               dimPlatformService) {
   var _gunListBuilder = new gunListBuilder();
   var _gunTransformer = new gunTransformer();
 
