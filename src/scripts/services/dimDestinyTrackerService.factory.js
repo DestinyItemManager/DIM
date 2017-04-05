@@ -215,22 +215,22 @@ function DestinyTrackerService($q,
   }
 
   function _submitReview(item, userReview) {
-      var membershipInfo = dimPlatformService.getActive();
+    var membershipInfo = dimPlatformService.getActive();
 
-      var rollAndPerks = _gunTransformer.getRollAndPerks(item);
-      var reviewer = toReviewer(membershipInfo);
-      var review = toRatingAndReview(userReview);
+    var rollAndPerks = _gunTransformer.getRollAndPerks(item);
+    var reviewer = toReviewer(membershipInfo);
+    var review = toRatingAndReview(userReview);
 
-      var rating = Object.assign(rollAndPerks, review);
-      rating.reviewer = reviewer;
+    var rating = Object.assign(rollAndPerks, review);
+    rating.reviewer = reviewer;
 
-      var promise = $q
-                .when(submitItemReviewPromise(rating))
-                .then($http)
-                .then(handleSubmitErrors, handleSubmitErrors)
-                .then((response) => { return; });
+    var promise = $q
+              .when(submitItemReviewPromise(rating))
+              .then($http)
+              .then(handleSubmitErrors, handleSubmitErrors)
+              .then((response) => { return; });
 
-      return promise;
+    return promise;
   }
 
   function _bulkFetch(stores) {
