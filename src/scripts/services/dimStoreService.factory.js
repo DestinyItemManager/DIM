@@ -21,8 +21,7 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags,
-  dimDestinyTrackerService
+  dimFeatureFlags
 ) {
   var _stores = [];
   var _idTracker = {};
@@ -259,8 +258,7 @@ function StoreService(
     dropNewItem: dropNewItem,
     createItemIndex: createItemIndex,
     processItems: processItems,
-    hasNewItems: false,
-    submitReview: submitReview
+    hasNewItems: false
   };
 
   $rootScope.$on('dim-active-platform-updated', function() {
@@ -589,14 +587,6 @@ function StoreService(
 
     _reloadPromise.activePlatform = activePlatform;
     return _reloadPromise;
-  }
-
-  function submitReview(item, userReview) {
-    var membershipInfo = dimPlatformService.getActive();
-
-    dimDestinyTrackerService
-      .submitReview(membershipInfo, item, userReview)
-      .then((emptyResponse) => { return; });
   }
 
   function getStore(id) {
