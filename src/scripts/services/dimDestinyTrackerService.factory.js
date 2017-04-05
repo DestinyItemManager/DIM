@@ -8,7 +8,7 @@ class gunTransformer {
   translateToDtrGun(gun) {
     return {
       referenceId: gun.hash,
-      roll: gun.dtrRoll
+      roll: this.getDtrRoll(gun)
     };
   }
 
