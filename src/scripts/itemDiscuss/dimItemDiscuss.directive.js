@@ -14,13 +14,12 @@ function ItemDiscuss() {
   };
 }
 
-function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags, $translate) {
+function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags) {
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
   vm.show = dimItemDiscussService.dialogOpen;
 
   $scope.$on('dim-store-item-discuss', function(event, args) {
-    console.log("Received discuss event.");
     vm.show = true;
     dimItemDiscussService.dialogOpen = true;
   });
