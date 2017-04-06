@@ -239,7 +239,9 @@ class reviewSubmitter {
     this._dimPlatformService = dimPlatformService;
   }
 
-  toReviewer(membershipInfo) {
+  getReviewer() {
+    var membershipInfo = this._dimPlatformService.getActive();
+
     return {
       membershipId: membershipInfo.membershipId,
       type: membershipInfo.type,
@@ -264,10 +266,8 @@ class reviewSubmitter {
   }
 
   submitReviewPromise(item, userReview) {
-    var membershipInfo = this._dimPlatformService.getActive();
-
     var rollAndPerks = this._gunTransformer.getRollAndPerks(item);
-    var reviewer = this.toReviewer(membershipInfo);
+    var reviewer = this.getReviewer();
     var review = this.toRatingAndReview(userReview);
 
     var rating = Object.assign(rollAndPerks, review);
@@ -291,12 +291,18 @@ class reviewSubmitter {
 function DestinyTrackerService($q,
                                $http,
                                $rootScope,
-                               dimPlatformService) {
+                               dimPlatformService,
+                               dimSettingsService) {
+  // bugbug: don't pull reviews or do anything with an item click event unless the setting is turned on
   var _bulkFetcher = new bulkFetcher($q, $http);
   var _reviewsFetcher = new reviewsFetcher($q, $http);
   var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService);
 
   $rootScope.$on('item-clicked', function(event, item) {
+    if (!dimSettingsService.allowIdPostToDtr) {
+      return;
+    }
+
     _reviewsFetcher.getItemReviews(item);
   });
 
@@ -305,6 +311,10 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('review-submitted', function(event, item, userReview) {
+    if (!dimSettingsService.allowIdPostToDtr) {
+      return;
+    }
+
     _reviewSubmitter.submitReview(item, userReview);
   });
 
