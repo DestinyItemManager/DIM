@@ -277,7 +277,7 @@
    },
    "DtrReview": {
      "Error": "Something went wrong with the review submission.",
-     "Help": "Optionally add a review to this item",
+     "Help": "Optionally add a review",
      "Submit": "Submit",
      "DiscussHint": "Discuss this item."
    },
