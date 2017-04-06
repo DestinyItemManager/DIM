@@ -100,12 +100,77 @@ class gunListBuilder {
   }
 }
 
+class bulkFetcher {
+  constructor($q, $http) {
+    this.$q = $q;
+    this.$http = $http;
+    this._gunListBuilder = new gunListBuilder();
+  }
+
+  getBulkWeaponDataPromise(gunList) {
+    return {
+      method: 'POST',
+      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
+      data: gunList,
+      dataType: 'json'
+    };
+  }
+
+  handleErrors(response) {
+    if (response.status !== 200) {
+      return this.$q.reject(new Error("Destiny tracker service call failed."));
+    }
+
+    return response;
+  }
+
+  getBulkFetchPromise(stores) {
+    if (stores.stores.length === 0) {
+      return this.$q.resolve();
+    }
+
+    var weaponList = this._gunListBuilder.getWeaponList(stores.stores);
+
+    var promise = this.$q
+              .when(this.getBulkWeaponDataPromise(weaponList))
+              .then(this.$http)
+              .then(this.handleErrors, this.handleErrors)
+              .then((response) => { return response.data; });
+
+    return promise;
+  }
+
+  bulkFetch(stores) {
+    this.getBulkFetchPromise(stores)
+      .then((bulkRankings) => this.attachRankings(bulkRankings,
+                                                  stores.stores));
+  }
+
+  attachRankings(bulkRankings,
+                          stores) {
+    if ((!bulkRankings) ||
+        (!bulkRankings.length)) {
+      return;
+    }
+
+    bulkRankings.forEach(function(bulkRanking) {
+      stores.forEach(function(store) {
+        store.items.forEach(function(storeItem) {
+          if (storeItem.hash == bulkRanking.referenceId) {
+            storeItem.dtrRating = bulkRanking.rating;
+          }
+        });
+      });
+    });
+  }
+}
+
 function DestinyTrackerService($q,
                                $http,
                                $rootScope,
                                dimPlatformService) {
-  var _gunListBuilder = new gunListBuilder();
   var _gunTransformer = new gunTransformer();
+  var _bulkFetcher = new bulkFetcher($q, $http);
 
   $rootScope.$on('item-clicked', function(event, item) {
     _getItemReviews(item)
@@ -114,9 +179,7 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('dim-stores-updated', function(event, stores) {
-    _bulkFetch(stores)
-      .then((bulkRankings) => attachRankings(bulkRankings,
-                                             stores.stores));
+    _bulkFetcher.bulkFetch(stores);
   });
 
   $rootScope.$on('review-submitted', function(event, item, userReview) {
@@ -138,33 +201,6 @@ function DestinyTrackerService($q,
     }
   }
 
-  function attachRankings(bulkRankings,
-                          stores) {
-    if ((!bulkRankings) ||
-        (!bulkRankings.length)) {
-      return;
-    }
-
-    bulkRankings.forEach(function(bulkRanking) {
-      stores.forEach(function(store) {
-        store.items.forEach(function(storeItem) {
-          if (storeItem.hash == bulkRanking.referenceId) {
-            storeItem.dtrRating = bulkRanking.rating;
-          }
-        });
-      });
-    });
-  }
-
-  function getBulkWeaponDataPromise(gunList) {
-    return {
-      method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
-      data: gunList,
-      dataType: 'json'
-    };
-  }
-
   function submitItemReviewPromise(itemReview) {
     return {
       method: 'POST',
@@ -181,14 +217,6 @@ function DestinyTrackerService($q,
       data: item,
       dataType: 'json'
     };
-  }
-
-  function handleErrors(response) {
-    if (response.status !== 200) {
-      return $q.reject(new Error("Destiny tracker service call failed."));
-    }
-
-    return response;
   }
 
   function handleSubmitErrors(response) {
@@ -233,21 +261,6 @@ function DestinyTrackerService($q,
     return promise;
   }
 
-  function _bulkFetch(stores) {
-    if (stores.stores.length === 0) {
-      return $q.resolve();
-    }
-    var weaponList = _gunListBuilder.getWeaponList(stores.stores);
-
-    var promise = $q
-              .when(getBulkWeaponDataPromise(weaponList))
-              .then($http)
-              .then(handleErrors, handleErrors)
-              .then((response) => { return response.data; });
-
-    return promise;
-  }
-
   function _getItemReviews(item) {
     var postWeapon = _gunTransformer.getRollAndPerks(item);
 
@@ -262,9 +275,6 @@ function DestinyTrackerService($q,
 
   return {
     authenticate: function() {
-    },
-    bulkFetch: function(stores) {
-      return _bulkFetch(stores);
     },
     submitReview: function(membershipInfo, item, userReview) {
       var rollAndPerks = _gunTransformer.getRollAndPerks(item);
