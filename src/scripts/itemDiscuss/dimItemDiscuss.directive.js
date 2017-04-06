@@ -1,5 +1,4 @@
 import angular from 'angular';
-import _ from 'underscore';
 
 angular.module('dimApp')
   .directive('dimItemDiscuss', ItemDiscuss);
@@ -18,9 +17,4 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
   vm.show = dimItemDiscussService.dialogOpen;
-
-  $scope.$on('dim-store-item-discuss', function(event, args) {
-    vm.show = true;
-    dimItemDiscussService.dialogOpen = true;
-  });
 }
