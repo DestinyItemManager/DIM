@@ -213,8 +213,8 @@ mod.filter('qualityColor', function() {
 
 mod.filter('dtrRatingColor', function() {
   return function getColor(value, property) {
-    if(!value) {
-      return;
+    if (!value) {
+      return null;
     }
 
     property = property || 'background-color';
@@ -236,7 +236,7 @@ mod.filter('dtrRatingColor', function() {
     result[property] = 'hsl(' + color + ',85%,60%)';
     return result;
   };
-})
+});
 
 /**
  * Reduce a string to its first letter.
