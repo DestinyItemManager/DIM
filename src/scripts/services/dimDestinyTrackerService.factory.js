@@ -298,8 +298,12 @@ function DestinyTrackerService($q,
   var _reviewsFetcher = new reviewsFetcher($q, $http);
   var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService);
 
+  function _userHasNotOkayedPostingIds() {
+    return (!dimSettingsService.allowIdPostToDtr);
+  }
+
   $rootScope.$on('item-clicked', function(event, item) {
-    if (!dimSettingsService.allowIdPostToDtr) {
+    if (_userHasNotOkayedPostingIds()) {
       return;
     }
 
@@ -311,7 +315,7 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('review-submitted', function(event, item, userReview) {
-    if (!dimSettingsService.allowIdPostToDtr) {
+    if (_userHasNotOkayedPostingIds()) {
       return;
     }
 
