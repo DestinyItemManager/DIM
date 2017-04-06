@@ -276,15 +276,13 @@ class reviewSubmitter {
     var promise = this.$q
               .when(this.submitItemReviewCall(rating))
               .then(this.$http)
-              .then(this._trackerErrorHandler.handleSubmitErrors, this._trackerErrorHandler.handleSubmitErrors)
-              .then((response) => { return; });
+              .then(this._trackerErrorHandler.handleSubmitErrors, this._trackerErrorHandler.handleSubmitErrors);
 
     return promise;
   }
 
   submitReview(item, userReview) {
-    this.submitReviewPromise(item, userReview)
-      .then((emptyResponse) => { return; });
+    this.submitReviewPromise(item, userReview);
   }
 }
 
