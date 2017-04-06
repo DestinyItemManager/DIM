@@ -101,9 +101,21 @@ class gunListBuilder {
 }
 
 class trackerErrorHandler {
+  constructor($q) {
+    this.$q = $q;
+  }
+
   handleErrors(response) {
     if (response.status !== 200) {
       return this.$q.reject(new Error("Destiny tracker service call failed."));
+    }
+
+    return response;
+  }
+
+  handleSubmitErrors(response) {
+    if (response.status !== 204) {
+      return this.$q.reject(new Error("Destiny tracker service submit failed."));
     }
 
     return response;
@@ -115,7 +127,7 @@ class bulkFetcher {
     this.$q = $q;
     this.$http = $http;
     this._gunListBuilder = new gunListBuilder();
-    this.trackerErrorHandler = new trackerErrorHandler();
+    this._trackerErrorHandler = new trackerErrorHandler($q);
   }
 
   getBulkWeaponDataPromise(gunList) {
@@ -137,7 +149,7 @@ class bulkFetcher {
     var promise = this.$q
               .when(this.getBulkWeaponDataPromise(weaponList))
               .then(this.$http)
-              .then(this.trackerErrorHandler.handleErrors, this.trackerErrorHandler.handleErrors)
+              .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
               .then((response) => { return response.data; });
 
     return promise;
@@ -173,7 +185,7 @@ class reviewsFetcher {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
-    this.trackerErrorHandler = new trackerErrorHandler();
+    this._trackerErrorHandler = new trackerErrorHandler($q);
   }
 
   getItemReviewsCall(item) {
@@ -191,7 +203,7 @@ class reviewsFetcher {
     var promise = this.$q
               .when(this.getItemReviewsCall(postWeapon))
               .then(this.$http)
-              .then(this.trackerErrorHandler.handleErrors, this.trackerErrorHandler.handleErrors)
+              .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
               .then((response) => { return response.data; });
 
     return promise;
@@ -218,13 +230,71 @@ class reviewsFetcher {
   }
 }
 
+class reviewSubmitter {
+  constructor($q, $http, dimPlatformService) {
+    this.$q = $q;
+    this.$http = $http;
+    this._gunTransformer = new gunTransformer();
+    this._trackerErrorHandler = new trackerErrorHandler($q);
+    this._dimPlatformService = dimPlatformService;
+  }
+
+  toReviewer(membershipInfo) {
+    return {
+      membershipId: membershipInfo.membershipId,
+      type: membershipInfo.type,
+      displayName: membershipInfo.id
+    };
+  }
+
+  toRatingAndReview(userReview) {
+    return {
+      rating: userReview.rating,
+      review: userReview.review
+    };
+  }
+
+  submitItemReviewCall(itemReview) {
+    return {
+      method: 'POST',
+      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
+      data: itemReview,
+      dataType: 'json'
+    };
+  }
+
+  submitReviewPromise(item, userReview) {
+    var membershipInfo = this._dimPlatformService.getActive();
+
+    var rollAndPerks = this._gunTransformer.getRollAndPerks(item);
+    var reviewer = this.toReviewer(membershipInfo);
+    var review = this.toRatingAndReview(userReview);
+
+    var rating = Object.assign(rollAndPerks, review);
+    rating.reviewer = reviewer;
+
+    var promise = this.$q
+              .when(this.submitItemReviewCall(rating))
+              .then(this.$http)
+              .then(this._trackerErrorHandler.handleSubmitErrors, this._trackerErrorHandler.handleSubmitErrors)
+              .then((response) => { return; });
+
+    return promise;
+  }
+
+  submitReview(item, userReview) {
+    this.submitReviewPromise(item, userReview)
+      .then((emptyResponse) => { return; });
+  }
+}
+
 function DestinyTrackerService($q,
                                $http,
                                $rootScope,
                                dimPlatformService) {
-  var _gunTransformer = new gunTransformer();
   var _bulkFetcher = new bulkFetcher($q, $http);
   var _reviewsFetcher = new reviewsFetcher($q, $http);
+  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService);
 
   $rootScope.$on('item-clicked', function(event, item) {
     _reviewsFetcher.getItemReviews(item);
@@ -235,79 +305,9 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('review-submitted', function(event, item, userReview) {
-    _submitReview(item, userReview)
-      .then((emptyResponse) => { return; });
+    _reviewSubmitter.submitReview(item, userReview);
   });
 
-  function submitItemReviewPromise(itemReview) {
-    return {
-      method: 'POST',
-      url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews/submit',
-      data: itemReview,
-      dataType: 'json'
-    };
-  }
-
-  function handleSubmitErrors(response) {
-    if (response.status !== 204) {
-      return $q.reject(new Error("Destiny tracker service submit failed."));
-    }
-
-    return response;
-  }
-
-  function toReviewer(membershipInfo) {
-    return {
-      membershipId: membershipInfo.membershipId,
-      type: membershipInfo.type,
-      displayName: membershipInfo.id
-    };
-  }
-
-  function toRatingAndReview(userReview) {
-    return {
-      rating: userReview.rating,
-      review: userReview.review
-    };
-  }
-
-  function _submitReview(item, userReview) {
-    var membershipInfo = dimPlatformService.getActive();
-
-    var rollAndPerks = _gunTransformer.getRollAndPerks(item);
-    var reviewer = toReviewer(membershipInfo);
-    var review = toRatingAndReview(userReview);
-
-    var rating = Object.assign(rollAndPerks, review);
-    rating.reviewer = reviewer;
-
-    var promise = $q
-              .when(submitItemReviewPromise(rating))
-              .then($http)
-              .then(handleSubmitErrors, handleSubmitErrors)
-              .then((response) => { return; });
-
-    return promise;
-  }
-
   return {
-    authenticate: function() {
-    },
-    submitReview: function(membershipInfo, item, userReview) {
-      var rollAndPerks = _gunTransformer.getRollAndPerks(item);
-      var reviewer = toReviewer(membershipInfo);
-      var review = toRatingAndReview(userReview);
-
-      var rating = Object.assign(rollAndPerks, review);
-      rating.reviewer = reviewer;
-
-      var promise = $q
-                .when(submitItemReviewPromise(rating))
-                .then($http)
-                .then(handleSubmitErrors, handleSubmitErrors)
-                .then((response) => { return; });
-
-      return promise;
-    }
   };
 }
