@@ -171,7 +171,7 @@ class bulkFetcher {
     bulkRankings.forEach(function(bulkRanking) {
       stores.forEach(function(store) {
         store.items.forEach(function(storeItem) {
-          if (storeItem.hash == bulkRanking.referenceId) {
+          if (storeItem.hash === Number(bulkRanking.referenceId)) {
             storeItem.dtrRating = bulkRanking.rating;
           }
         });
