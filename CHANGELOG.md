@@ -1,7 +1,7 @@
 # next
 
 * Fixed the perk selection in Loadout Builder. #1453
-* Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)).  Done in conjunction with destinytracker.net.
+* Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)).  Done in conjunction with destinytracker.com.
 
 # 3.16.1
 
