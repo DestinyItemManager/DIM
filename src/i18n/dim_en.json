@@ -279,7 +279,10 @@
      "Error": "Something went wrong with the review submission.",
      "Help": "Optionally add a review",
      "Submit": "Submit",
-     "DiscussHint": "Discuss this item."
+     "DiscussHint": "Discuss this item.",
+     "FlavorText": "Seek out other Guardians when the howling loneliness grows too deep. Pretend it's a chance meeting, though.",
+     "ServiceCallError": "Destiny tracker service call failed.",
+     "ServiceSubmitError": "Destiny tracker service submit failed."
    },
    "Postmaster": {
       "Limit": "Postmaster Limit",

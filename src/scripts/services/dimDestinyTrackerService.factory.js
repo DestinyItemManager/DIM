@@ -101,13 +101,15 @@ class gunListBuilder {
 }
 
 class trackerErrorHandler {
-  constructor($q) {
+  constructor($q,
+              $translate) {
     this.$q = $q;
+    this.$translate = $translate;
   }
 
   handleErrors(response) {
     if (response.status !== 200) {
-      return this.$q.reject(new Error("Destiny tracker service call failed."));
+      return this.$q.reject(new Error(this.$translate.instant('DtrReview.ServiceCallError')));
     }
 
     return response;
@@ -115,7 +117,7 @@ class trackerErrorHandler {
 
   handleSubmitErrors(response) {
     if (response.status !== 204) {
-      return this.$q.reject(new Error("Destiny tracker service submit failed."));
+      return this.$q.reject(new Error(this.$translate.instant('DtrReview.ServiceSubmitError')));
     }
 
     return response;
@@ -123,11 +125,11 @@ class trackerErrorHandler {
 }
 
 class bulkFetcher {
-  constructor($q, $http) {
+  constructor($q, $http, trackerErrorHandler) {
     this.$q = $q;
     this.$http = $http;
     this._gunListBuilder = new gunListBuilder();
-    this._trackerErrorHandler = new trackerErrorHandler($q);
+    this._trackerErrorHandler = trackerErrorHandler;
   }
 
   getBulkWeaponDataPromise(gunList) {
@@ -181,11 +183,11 @@ class bulkFetcher {
 }
 
 class reviewsFetcher {
-  constructor($q, $http) {
+  constructor($q, $http, trackerErrorHandler) {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
-    this._trackerErrorHandler = new trackerErrorHandler($q);
+    this._trackerErrorHandler = trackerErrorHandler;
   }
 
   getItemReviewsCall(item) {
@@ -231,11 +233,11 @@ class reviewsFetcher {
 }
 
 class reviewSubmitter {
-  constructor($q, $http, dimPlatformService) {
+  constructor($q, $http, dimPlatformService, trackerErrorHandler) {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
-    this._trackerErrorHandler = new trackerErrorHandler($q);
+    this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
   }
 
@@ -290,11 +292,12 @@ function DestinyTrackerService($q,
                                $http,
                                $rootScope,
                                dimPlatformService,
-                               dimSettingsService) {
-  // bugbug: don't pull reviews or do anything with an item click event unless the setting is turned on
-  var _bulkFetcher = new bulkFetcher($q, $http);
-  var _reviewsFetcher = new reviewsFetcher($q, $http);
-  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService);
+                               dimSettingsService,
+                               $translate) {
+  var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
+  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler);
+  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler);
+  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler);
 
   function _userHasNotOkayedPostingIds() {
     return (!dimSettingsService.allowIdPostToDtr);
