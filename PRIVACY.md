@@ -11,13 +11,13 @@ You need go to the settings menu to opt in to sending any of this information.  
 # What we send #
 
 * InstanceId
-    * A unique ID specific to the player's version of a weapon.
+    * *A unique ID specific to the player's version of a weapon.*
     * It is...
         * sent when getting weapon reviews to identify the reviews the user wrote themselves.
         * sent when submitting a review to make sure we don't get duplicate reviews.
 * MembershipId
-    * A unique ID identifying the player's account on Bungie.Net.
+    * *A unique ID identifying the player's account on Bungie.Net.*
         * It's being sent when submitting a review to get an ID that identifies the reviewer.
 * DisplayName
-    * Name of the player's account (think: XBL gamertag, PSN ID).
+    * *Name of the player's account (think: XBL gamertag, PSN ID).*
         * It's being sent when submitting a review to give a name to the reviewer.
