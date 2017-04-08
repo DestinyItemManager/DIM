@@ -15,7 +15,6 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
   const matcher = /www\.bungie\.net\/Platform\/(User|Destiny)\//;
 
   service.request = requestHandler;
-  service.response = responseHandler;
 
   function requestHandler(config) {
     config.headers = config.headers || {};
@@ -37,34 +36,46 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
 
               return cache
                 .then(function() {
+                  console.log("Successfully updated auth token from refresh token.");
                   config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
                   return config;
                 })
-                .catch((e) => {
-                  OAuthTokenService.removeToken();
-                  $rootScope.$broadcast('dim-no-token-found');
-                  throw e;
-                })
+                .catch(handleRefreshTokenError)
                 .finally(() => {
                   cache = null;
                 });
             } else {
+              console.warn("Refresh token invalid, clearing auth tokens & going to login");
               OAuthTokenService.removeToken();
               $rootScope.$broadcast('dim-no-token-found');
             }
           }
         } else {
+          console.warn("No auth token exists, redirect to login");
           OAuthTokenService.removeToken();
           $rootScope.$broadcast('dim-no-token-found');
         }
       }
-
-      //  && OAuthTokenService.getAuthorizationHeader()) {
-      //   config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
-      // }
     }
 
     return config;
+  }
+
+  function handleRefreshTokenError(response) {
+    if (response.status === -1) {
+      console.warn("Error getting auth token from refresh token because there's no internet connection. Not clearing token.", response);
+    } else if (response.data && response.data.ErrorCode) {
+      if (response.data.ErrorCode === 2110 /* RefreshTokenNotYetValid */ ||
+          response.data.ErrorCode === 2111 /* AccessTokenHasExpired */) {
+        console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
+        OAuthTokenService.removeToken();
+        $rootScope.$broadcast('dim-no-token-found');
+      }
+    } else {
+      console.warn("Other error getting auth token from refresh token. Not clearing auth tokens", response);
+    }
+    // TODO: Localize this error? Does it get displayed?
+    throw new Error("Error getting auth token from refresh token");
   }
 
   function isTokenValid(token) {
@@ -73,42 +84,4 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
 
     return (!expired && isReady);
   }
-
-  function responseHandler(response) {
-    if (response && response.config.url.match(matcher) && response.data) {
-      switch (response.data.ErrorCode) {
-      case 99:
-        {
-          if (OAuthTokenService.hasTokenExpired(OAuthTokenService.getAccessToken())) {
-            $rootScope.$broadcast('dim-no-token-found');
-          }
-          // if (canRefreshAuthorization(response)) {
-          //   return refreshAuthorization(response);
-          // } else {
-          //   // Generate access token
-          // }
-          break;
-        }
-      }
-    }
-
-    return $q.when(response);
-  }
-
-//    function canRefreshAuthorization(response) {
-//      const responseHasAuthorization = response.config && response.config.headers && response.config.headers.Authorization;
-//
-//      return responseHasAuthorization;
-//    }
-//
-//    function replayRequest(config) {
-//      const $http = $injector.get('$http');
-//
-//      return $http(config);
-//    }
-//
-//    function refreshAuthorization(response) {
-//          // response.config.headers.Authorization = 'Bearer ' + authorization.accessToken.value;
-//          // return $injector.get('$http')(response.config);
-//    }
 }
