@@ -7,6 +7,7 @@ import { PlatformChoiceComponent } from './platform-choice';
 import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
 import backLinkComponent from './shell/backLink.component';
+import { CountdownComponent } from './countdown.component';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -18,6 +19,7 @@ export const ShellModule = angular
   .component('dimShell', shellComponent)
   .component('content', contentComponent)
   .component('backLink', backLinkComponent)
+  .component('countdown', CountdownComponent)
   .config(function($stateProvider) {
     'ngInject';
 

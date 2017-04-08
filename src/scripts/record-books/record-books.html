@@ -11,7 +11,7 @@
     </div>
   </h1>
 
-  <div class="record-book" ng-repeat="book in $ctrl.recordBooks | orderBy:['complete','startDate'] track by $index">
+  <div class="record-book" ng-repeat="book in $ctrl.recordBooks | orderBy:['complete','-startDate'] track by $index">
     <div class="title">
       <div class="collapse-handle" ng-click="$ctrl.toggleSection(book.hash)">
         <i class="fa collapse" ng-class="$ctrl.settings.collapsedSections[book.hash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>

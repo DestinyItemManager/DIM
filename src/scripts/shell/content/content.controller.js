@@ -1,3 +1,10 @@
+import settingsTemplate from 'app/views/settings.template.html';
+import aboutTemplate from 'app/views/about.template.html';
+import supportTemplate from 'app/views/support.template.html';
+import filtersTemplate from 'app/views/filters.template.html';
+import xurTemplate from 'app/views/xur.template.html';
+import matsExchangeTemplate from 'app/views/mats-exchange.template.html';
+
 export default class ContentController {
   constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
     'ngInject';
@@ -151,7 +158,7 @@ export default class ContentController {
      * Show a popup dialog containing the given template. Its class
      * will be based on the name.
      */
-    function showPopupFunction(name) {
+    function showPopupFunction(name, template) {
       var result;
       return function(e) {
         e.stopPropagation();
@@ -161,7 +168,7 @@ export default class ContentController {
         } else {
           ngDialog.closeAll();
           result = ngDialog.open({
-            template: require('app/views/' + name + '.template.html'),
+            template: template,
             className: name,
             appendClassName: 'modal-dialog'
           });
@@ -173,12 +180,12 @@ export default class ContentController {
       };
     }
 
-    vm.showSetting = showPopupFunction('settings');
-    vm.showAbout = showPopupFunction('about');
-    vm.showSupport = showPopupFunction('support');
-    vm.showFilters = showPopupFunction('filters');
-    vm.showXur = showPopupFunction('xur');
-    vm.showMatsExchange = showPopupFunction('mats-exchange');
+    vm.showSetting = showPopupFunction('settings', settingsTemplate);
+    vm.showAbout = showPopupFunction('about', aboutTemplate);
+    vm.showSupport = showPopupFunction('support', supportTemplate);
+    vm.showFilters = showPopupFunction('filters', filtersTemplate);
+    vm.showXur = showPopupFunction('xur', xurTemplate);
+    vm.showMatsExchange = showPopupFunction('mats-exchange', matsExchangeTemplate);
 
     function toggleState(name) {
       return function(e) {

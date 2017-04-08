@@ -77,9 +77,9 @@ function StoreService(
 
   const yearHashes = {
     //         tTK       Variks        CoE         FoTL    Kings Fall
-    year2: [460228854, 32533074641, 3739898362, 907422371, 3551688287],
-    //         RoI       WoTM         FoTl       Dawning
-    year3: [24296771, 3147905712, 907422371, 4153390200]
+    year2: [2659839637, 512830513, 1537575125, 3475869915, 1662673928],
+    //         RoI       WoTM         FoTl       Dawning    Raid Reprise
+    year3: [2964550958, 4160622434, 3475869915, 3131490494, 4161861381]
   };
 
   // Label isn't used, but it helps us understand what each one is
@@ -1090,8 +1090,10 @@ function StoreService(
       var def = objectiveDefs.get(objective.objectiveHash);
 
       return {
-        description: '',
-        displayName: def.displayDescription,
+        displayName: def.displayDescription ||
+          (objective.isComplete
+           ? $translate.instant('Objectives.Complete')
+           : $translate.instant('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,

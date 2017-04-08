@@ -14,7 +14,6 @@ import TranslateMessageFormatModule from 'angular-translate-interpolation-messag
 import UIRouterModule from 'angular-ui-router';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
-import 'angular-timer';
 import 'angular-uuid2/dist/angular-uuid2.js';
 
 import { ShellModule } from './shell/shell.module';
@@ -45,7 +44,6 @@ export const DimAppModule = angular
     UIRouterModule,
     inventoryModule,
     recordBooksModule,
-    'timer',
     'angularUUID2',
     'ajoslin.promise-tracker',
     'cfp.hotkeys',

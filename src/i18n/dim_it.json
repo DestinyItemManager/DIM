@@ -44,6 +44,9 @@
       "Melee": "Corpo a corpo tempo di recupero",
       "Super": "Super tempo di recupero"
    },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Giorno} other{# Giorni}}"
+   },
    "Debug": {
       "Dump": "Svuota informazioni nella console",
       "View": "Visualizza Item Debug Info"
@@ -285,6 +288,10 @@
       "Error": "Errore! Massimo 120 caratteri per nota.",
       "Help": "Aggiungere note a questo oggetto"
    },
+   "Objectives": {
+     "Complete": "Completo",
+     "Incomplete": "Incompleto"
+   },
    "Postmaster": {
       "Limit": "Limite Amministratore",
       "Desc": "Sul tuo {store} ci sono 20 oggetti persi dall'amministratore. Qualsiasi nuovo oggetto sovrascriverà uno degli esistenti."
@@ -363,7 +370,6 @@
       "All": "Tutto",
       "Available": "Disponibile da",
       "Compare": "Confronta con quello che hai già",
-      "Day": "{numDays, plural, =1{Giorno} other{Giorni}}",
       "Load": "Caricamento Mercanti",
       "ArmorAndWeapons": "Equipaggiamento & Armi",
       "ShipsAndVehicles": "Navi & Veicoli",

@@ -42,7 +42,7 @@ var VendorItems = {
     '      {{::vendor.name}}',
     '      <span class="vendor-location">{{::vendor.location}}</span>',
     '    </div>',
-    '    <timer class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate" max-time-unit="\'day\'" interval="1000">{{days}} <span translate="Vendors.Day" translate-values="{ numDays: days }"></span> {{hhours}}:{{mminutes}}:{{sseconds}}</timer>',
+    '    <countdown class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate"></countdown>',
     '  </div>',
     '  <div class="vendor-row" ng-if="!vm.settings.collapsedSections[vendorHash]">',
     '    <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
