@@ -65,7 +65,8 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
       console.warn("Error getting auth token from refresh token because there's no internet connection. Not clearing token.", response);
     } else if (response.data && response.data.ErrorCode) {
       if (response.data.ErrorCode === 2110 /* RefreshTokenNotYetValid */ ||
-          response.data.ErrorCode === 2111 /* AccessTokenHasExpired */) {
+          response.data.ErrorCode === 2111 /* AccessTokenHasExpired */ ||
+          response.data.ErrorCode === 2106 /* AuthorizationCodeInvalid */) {
         console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
         OAuthTokenService.removeToken();
         $rootScope.$broadcast('dim-no-token-found');
