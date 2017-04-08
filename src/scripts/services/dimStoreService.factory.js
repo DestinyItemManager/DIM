@@ -27,6 +27,8 @@ function StoreService(
   var _stores = [];
   var _idTracker = {};
 
+  dimDestinyTrackerService.init();
+
   var _removedNewItems = new Set();
 
   const dimMissingSources = require('app/data/missing_sources.json');

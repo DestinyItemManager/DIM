@@ -324,5 +324,6 @@ function DestinyTrackerService($q,
   });
 
   return {
+    init: function() {}
   };
 }
