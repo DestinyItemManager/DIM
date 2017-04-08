@@ -32,7 +32,7 @@ function OAuthTokenService(localStorageService) {
    * Save all the information about access/refresh tokens.
    * @param {Token} token.accessToken
    * @param {Token} token.refreshToken
-   * @param {string} scope the scope bitfield describing allowed actions
+   * @param {string} token.scope the scope bitfield describing allowed actions
    */
   function setToken(token) {
     localStorageService.set('authorization', token);
@@ -80,11 +80,12 @@ function OAuthTokenService(localStorageService) {
    * Get an absolute UTC epoch milliseconds timestamp for either the 'expires' or 'readyin' property.
    * @param {Token} token
    * @param {string} property - 'expires' or 'readyin'
+   * @return {number} UTC epoch milliseconds timestamp
    */
   function getTokenDate(token, property) {
     if (token && token.hasOwnProperty('inception') && token.hasOwnProperty(property)) {
       const inception = token.inception;
-      return new Date(inception.valueOf() + (token[property] * 1000));
+      return inception + (token[property] * 1000);
     }
 
     return 0;
