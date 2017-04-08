@@ -19,42 +19,41 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
   function requestHandler(config) {
     config.headers = config.headers || {};
 
-    if (config.url.match(matcher)) {
-      if (!config.headers.hasOwnProperty('Authorization')) {
-        if (OAuthService.isAuthenticated()) {
-          let isValid = isTokenValid(OAuthTokenService.getAccessToken());
+    if (config.url.match(matcher) &&
+        !config.headers.hasOwnProperty('Authorization')) {
+      if (OAuthService.isAuthenticated()) {
+        let isValid = isTokenValid(OAuthTokenService.getAccessToken());
+
+        if (isValid) {
+          config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+        } else {
+          isValid = isTokenValid(OAuthTokenService.getRefreshToken());
 
           if (isValid) {
-            config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+            cache = cache || OAuthService.refreshToken();
+
+            return cache
+              .then(function() {
+                console.log("Successfully updated auth token from refresh token.");
+                config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+                return config;
+              })
+              .catch(handleRefreshTokenError)
+              .finally(() => {
+                cache = null;
+              });
           } else {
-            isValid = isTokenValid(OAuthTokenService.getRefreshToken());
-
-            if (isValid) {
-              if (!cache) {
-                cache = OAuthService.refreshToken();
-              }
-
-              return cache
-                .then(function() {
-                  console.log("Successfully updated auth token from refresh token.");
-                  config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
-                  return config;
-                })
-                .catch(handleRefreshTokenError)
-                .finally(() => {
-                  cache = null;
-                });
-            } else {
-              console.warn("Refresh token invalid, clearing auth tokens & going to login");
-              OAuthTokenService.removeToken();
-              $rootScope.$broadcast('dim-no-token-found');
-            }
+            console.warn("Refresh token invalid, clearing auth tokens & going to login");
+            OAuthTokenService.removeToken();
+            $rootScope.$broadcast('dim-no-token-found');
+            // TODO: throw error?
           }
-        } else {
-          console.warn("No auth token exists, redirect to login");
-          OAuthTokenService.removeToken();
-          $rootScope.$broadcast('dim-no-token-found');
         }
+      } else {
+        console.warn("No auth token exists, redirect to login");
+        OAuthTokenService.removeToken();
+        $rootScope.$broadcast('dim-no-token-found');
+        // TODO: throw error?
       }
     }
 
