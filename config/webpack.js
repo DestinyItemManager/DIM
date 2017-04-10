@@ -144,6 +144,7 @@ module.exports = (env) => {
         { from: './src/manifest-webapp.json' },
         { from: './src/data', to: 'data/' },
         { from: `./icons/${env}/` },
+        { from: './src/safari-pinned-tab.svg' },
       ]),
 
       new webpack.DefinePlugin({
