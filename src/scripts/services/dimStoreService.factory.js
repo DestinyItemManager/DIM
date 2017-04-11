@@ -866,7 +866,11 @@ function StoreService(
     if (createdItem.objectives) {
       createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
       createdItem.percentComplete = sum(createdItem.objectives, function(objective) {
-        return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+        if (objective.completionValue) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+        } else {
+          return 0;
+        }
       });
     } else if (createdItem.talentGrid) {
       createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
