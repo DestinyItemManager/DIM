@@ -1097,7 +1097,8 @@ function StoreService(
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,
-        boolean: def.completionValue === 1
+        boolean: def.completionValue === 1,
+        display: objective.progress + "/" + def.completionValue
       };
     });
   }
