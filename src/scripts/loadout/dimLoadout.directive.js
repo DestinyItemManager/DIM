@@ -261,6 +261,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       return;
     }
 
+    let numInterestingStats = 0;
     const combinedStats = _.chain(items)
       .values()
       .flatten()
@@ -269,6 +270,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       .flatten()
       .filter((stat) => interestingStats.has(stat.id))
       .reduce((stats, stat) => {
+        numInterestingStats++;
         if (stats[stat.id]) {
           stats[stat.id].value += stat.value;
         } else {
@@ -281,7 +283,9 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       }, {})
       .value();
 
-    if (_.isEmpty(combinedStats)) {
+    // Seven types of things that contribute to these stats, times 3 stats, equals
+    // a complete set of armor, ghost and artifact.
+    if (_.isEmpty(combinedStats) || numInterestingStats < (7 * 3)) {
       vm.stats = null;
       return;
     }
