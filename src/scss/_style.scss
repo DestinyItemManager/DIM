@@ -1480,6 +1480,12 @@ g {
   background: #434444;
   color: #e0e0e0;
   box-shadow: 0 -1px 6px 0px #222;
+
+  dim-stats {
+    display: block;
+    width: 300px;
+    height: 16px;
+  }
 }
 
 dim-compare {
@@ -1602,6 +1608,7 @@ dim-compare {
   flex-direction: row;
   align-items: flex-start;
   min-height: 50px;
+  min-height: calc(var(--item-size) + 4px);
   .equipped {
     width: 16px;
     height: 16px;

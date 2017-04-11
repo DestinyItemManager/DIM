@@ -8,6 +8,7 @@
 * Fixed objective text in the record book floating above stuff.
 * Fixed displaying record objectives that are time-based as time instead of just a number of seconds.
 * When pinned to the iOS home screen, DIM now looks more like a regular browser than an app. The upside is you can now actually authorize it when it's pinned!
+* Loadouts with equipped armor now include a stat bar that will tell you the stat tiers of the equipped loadout pieces.
 
 # v3.17.1
 

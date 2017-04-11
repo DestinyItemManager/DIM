@@ -93,11 +93,15 @@ function Loadout(dimLoadoutService, $translate) {
     scope.$on('dim-active-platform-updated', function() {
       vm.show = false;
     });
+
+    scope.$watchCollection('vm.loadout.items', function(items) {
+      vm.recalculateStats(items);
+    });
   }
 }
 
 
-function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate) {
+function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate, dimStoreService, dimDefinitions) {
   var vm = this;
 
   vm.settings = dimSettingsService;
@@ -246,6 +250,45 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
         item.equipped = true;
       }
     }
+
+    vm.recalculateStats(vm.loadout.items);
+  };
+
+  vm.recalculateStats = function(items) {
+    const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
+    if (!items) {
+      vm.stats = null;
+      return;
+    }
+
+    const combinedStats = _.chain(items)
+      .values()
+      .flatten()
+      .filter('equipped')
+      .map('stats')
+      .flatten()
+      .filter((stat) => interestingStats.has(stat.id))
+      .reduce((stats, stat) => {
+        if (stats[stat.id]) {
+          stats[stat.id].value += stat.value;
+        } else {
+          stats[stat.id] = {
+            statHash: stat.statHash,
+            value: stat.value
+          };
+        }
+        return stats;
+      }, {})
+      .value();
+
+    if (_.isEmpty(combinedStats)) {
+      vm.stats = null;
+      return;
+    }
+
+    dimDefinitions.getDefinitions().then((defs) => {
+      vm.stats = dimStoreService.getCharacterStatsData(defs.Stat, { stats: combinedStats });
+    });
   };
 }
 
