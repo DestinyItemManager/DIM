@@ -30,7 +30,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
   vm.settings = dimSettingsService;
 
   // Edge doesn't support these
-  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('--fake-var', 0);
+  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
   vm.showSync = function() {
     return SyncService.drive();
