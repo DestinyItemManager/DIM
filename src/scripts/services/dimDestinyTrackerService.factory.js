@@ -125,11 +125,12 @@ class trackerErrorHandler {
 }
 
 class bulkFetcher {
-  constructor($q, $http, trackerErrorHandler) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker) {
     this.$q = $q;
     this.$http = $http;
     this._gunListBuilder = new gunListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
+    this._loadingTracker = loadingTracker;
   }
 
   getBulkWeaponDataPromise(gunList) {
@@ -153,6 +154,8 @@ class bulkFetcher {
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
               .then((response) => { return response.data; });
+
+    this._loadingTracker.addPromise(promise);
 
     return promise;
   }
@@ -183,11 +186,12 @@ class bulkFetcher {
 }
 
 class reviewsFetcher {
-  constructor($q, $http, trackerErrorHandler) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker) {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
+    this._loadingTracker = loadingTracker;
   }
 
   getItemReviewsCall(item) {
@@ -207,6 +211,8 @@ class reviewsFetcher {
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
               .then((response) => { return response.data; });
+
+    this._loadingTracker.addPromise(promise);
 
     return promise;
   }
@@ -233,12 +239,13 @@ class reviewsFetcher {
 }
 
 class reviewSubmitter {
-  constructor($q, $http, dimPlatformService, trackerErrorHandler) {
+  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker) {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
+    this._loadingTracker = loadingTracker;
   }
 
   getReviewer() {
@@ -280,6 +287,8 @@ class reviewSubmitter {
               .then(this.$http)
               .then(this._trackerErrorHandler.handleSubmitErrors, this._trackerErrorHandler.handleSubmitErrors);
 
+    this._loadingTracker.addPromise(promise);
+
     return promise;
   }
 
@@ -294,11 +303,12 @@ function DestinyTrackerService($q,
                                dimPlatformService,
                                dimSettingsService,
                                $translate,
-                               dimFeatureFlags) {
+                               dimFeatureFlags,
+                               loadingTracker) {
   var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
-  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler);
-  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler);
-  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler);
+  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker);
+  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker);
+  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker);
   var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
 
   function _userHasNotOkayedPostingIds() {
