@@ -11,6 +11,7 @@ const featureFlag = {
   debugMoves: false,
   // show changelog toaster
   changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
+  sendingWeaponDataEnabled: true,
 
   materialsExchangeEnabled: $DIM_FLAVOR !== 'release',
   // allow importing and exporting your DIM data to JSON

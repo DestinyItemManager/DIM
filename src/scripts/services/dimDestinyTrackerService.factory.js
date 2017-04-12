@@ -293,18 +293,21 @@ function DestinyTrackerService($q,
                                $rootScope,
                                dimPlatformService,
                                dimSettingsService,
-                               $translate) {
+                               $translate,
+                               dimFeatureFlags) {
   var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
   var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler);
   var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler);
   var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler);
+  var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
 
   function _userHasNotOkayedPostingIds() {
     return (!dimSettingsService.allowIdPostToDtr);
   }
 
   $rootScope.$on('item-clicked', function(event, item) {
-    if (_userHasNotOkayedPostingIds()) {
+    if ((!_postEnabled) ||
+        (_userHasNotOkayedPostingIds())) {
       return;
     }
 
@@ -312,11 +315,16 @@ function DestinyTrackerService($q,
   });
 
   $rootScope.$on('dim-stores-updated', function(event, stores) {
+    if (!_postEnabled) {
+      return;
+    }
+
     _bulkFetcher.bulkFetch(stores);
   });
 
   $rootScope.$on('review-submitted', function(event, item, userReview) {
-    if (_userHasNotOkayedPostingIds()) {
+    if ((!_postEnabled) ||
+        (_userHasNotOkayedPostingIds())) {
       return;
     }
 
