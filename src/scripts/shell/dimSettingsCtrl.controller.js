@@ -54,6 +54,11 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
     dimInfoService.resetHiddenInfos();
   };
 
+  vm.resetItemSize = function() {
+    vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+    vm.save();
+  };
+
   vm.exportData = function() {
     // Function to download data to a file
     function download(data, filename, type) {
