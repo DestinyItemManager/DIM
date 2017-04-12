@@ -1484,7 +1484,11 @@ g {
   dim-stats {
     display: block;
     width: 300px;
-    height: 16px;
+    opacity: .3;
+
+    &.complete {
+      opacity: 1;
+    }
   }
 }
 

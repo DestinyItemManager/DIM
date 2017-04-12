@@ -283,12 +283,14 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       }, {})
       .value();
 
-    // Seven types of things that contribute to these stats, times 3 stats, equals
-    // a complete set of armor, ghost and artifact.
-    if (_.isEmpty(combinedStats) || numInterestingStats < (7 * 3)) {
+    if (_.isEmpty(combinedStats)) {
       vm.stats = null;
       return;
     }
+
+    // Seven types of things that contribute to these stats, times 3 stats, equals
+    // a complete set of armor, ghost and artifact.
+    vm.completeArmor = numInterestingStats === (7 * 3);
 
     dimDefinitions.getDefinitions().then((defs) => {
       vm.stats = dimStoreService.getCharacterStatsData(defs.Stat, { stats: combinedStats });
