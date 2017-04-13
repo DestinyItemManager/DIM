@@ -103,8 +103,13 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     case 2101: // ApiInvalidOrExpiredKey
     case 2102: // ApiKeyMissingFromRequest
     case 2107: // OriginHeaderDoesNotMatchKey
-      $state.go('developer');
-      return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
+      if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+        $state.go('apiError');
+        return $q.reject(new Error($translate.instant('BungieService.ApiDown')));
+      } else {
+        $state.go('developer');
+        return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
+      }
     }
 
     // Any other error
@@ -762,4 +767,3 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     }
   }
 }
-
