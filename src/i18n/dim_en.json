@@ -278,6 +278,8 @@
    "DtrReview": {
      "Error": "Something went wrong with the review submission.",
      "Help": "Optionally add a review",
+     "HelpPros": "Optionally, describe the positives of this weapon.",
+     "HelpCons": "Optionally, describe the negatives of this weapon.",
      "Submit": "Submit",
      "DiscussHint": "Discuss this item.",
      "FlavorText": "Seek out other Guardians when the howling loneliness grows too deep. Pretend it's a chance meeting, though.",

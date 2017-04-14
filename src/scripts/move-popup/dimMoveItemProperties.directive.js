@@ -152,10 +152,14 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
     var newRating = vm.item.userRating;
     var review = vm.item.userReview;
+    var pros = vm.item.userReviewPros;
+    var cons = vm.item.userReviewCons;
 
     var userReview = {
       rating: newRating,
-      review: review
+      review: review,
+      pros: pros,
+      cons: cons
     };
 
     $rootScope.$broadcast('review-submitted', item, userReview);

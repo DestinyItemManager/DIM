@@ -1140,6 +1140,78 @@ rzslider, .rzslider {
   color: white; 
 }
 
+.user-review-form .item-dtr-review {
+  right: 0px;
+  width: 90%;
+  height: 200px;
+  background-color: #333;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  color: white; 
+}
+
+.user-review-review-preamble {
+  width: 100%;
+}
+
+.user-review-review-field {
+  width: 90%;
+}
+
+.user-review-pro-con-container {
+  width: 100%;
+  display: table;
+}
+
+.user-review-form .item-dtr-pros {
+  right: 0px;
+  width: 75%;
+  height: 125px;
+  background-color: #333;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  color: white; 
+}
+
+.user-review-pros-preamble {
+  float: left;
+  display: table-cell;
+}
+
+.user-review-pros-field {
+  float: right;
+  display: table-cell;
+  width: 80%;
+}
+
+.user-review-cons-preamble {
+  float: left;
+  display: table-cell;
+}
+
+.user-review-cons-field {
+  float: right;
+  display: table-cell;
+  width: 80%;
+}
+
+.user-review-form .item-dtr-cons {
+  right: 0px;
+  width: 75%;
+  height: 125px;
+  background-color: #333;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  color: white; 
+}
+
+.user-review-submit {
+  width: 100%;
+}
+
 .item-dtr-review-error {
   margin: 5px 10px;
   white-space: pre-wrap;
