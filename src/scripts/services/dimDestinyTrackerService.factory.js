@@ -230,6 +230,8 @@ class reviewsFetcher {
     if (userReview) {
       item.userRating = userReview.rating;
       item.userReview = userReview.review;
+      item.userPros = userReview.pros;
+      item.userCons = userReview.cons;
     }
   }
 
