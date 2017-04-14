@@ -1685,7 +1685,36 @@ dim-compare {
   bottom: 0;
   background: #434444;
   color: #e0e0e0;
-  box-shadow: 0 -1px 6px 0px #222; }
+  box-shadow: 0 -1px 6px 0px #222;
+  height: 80%; }
+
+.user-review-form {
+  float: left;
+  width: 50%;
+  height: 100%;
+  overflow: auto;
+}
+
+.community-reviews {
+  float: right;
+  width: 50%;
+  height: 100%;
+  overflow: auto;
+}
+
+.community-review-review {
+  font-size: medium;
+}
+
+.community-review-pros-preamble {
+  float: left;
+  width: 20%;
+}
+
+.community-review-pros {
+  float: right;
+  width: 80%;
+}
 
 h2, h3, h4 {
   font-weight: 400;

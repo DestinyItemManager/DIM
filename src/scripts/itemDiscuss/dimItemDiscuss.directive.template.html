@@ -1,12 +1,93 @@
 <div id="discuss-drawer" ng-if="vm.show">
-    <div class="user-review-form">
-        {{ vm.item.userRating }}
-        {{ vm.item.userReview }}
+    <div class="discuss-options">
+        <button ng-click="vm.cancel()" translate="Loadouts.Cancel"></button>
     </div>
+    <div class="user-review-form">
+        <form name="dtrReview" ng-submit="vm.submitReview()">
+            <div class="user-review-header">
+                Have feedback?
+            </div>
+            
+            <div class="user-review-rating-preamble">
+                Rating
+            </div>
+            <div class="user-review-rating-field">
+                <select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions"></select>
+            </div>
+            
+            <div class="user-review-review-preamble">
+                Review
+            </div>
+            <div class="user-review-review-field">
+                <textarea translate-attr="{ placeholder: 'DtrReview.Help' }" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }"></textarea>
+            </div>
+            
+            <div class="user-review-pros-preamble">
+                Pros
+            </div>
+            <div class="user-review-pros-field">
+                <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }"></textarea>
+            </div>
+
+            <div class="user-review-cons-preamble">
+                Cons
+            </div>
+            <div class="user-review-cons-field">
+                <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }"></textarea>
+            </div>
+
+            <div class="user-review-submit">
+                <input class="item-dtr-review-submit" type="submit" translate-attr="{ value: 'DtrReview.Submit' }" ng-disabled="!vm.item.userRating || vm.item.userRating < 1" />
+            </div>
+    </div>
+
     <div class="community-reviews">
-        <div ng-repeat="communityReview in vm.item.communityReviews">
-            {{ communityReview.reviewer.displayName }}
-            {{ communityReview.review }}
+        <div ng-repeat="communityReview in vm.item.communityReviews" class="community-review">
+            <table width="100%">
+                <tr>
+                    <td class="community-review-display-name">
+                        <h1>{{ communityReview.reviewer.displayName }}</h1>
+                    </td>
+                    <td class="community-review-rating">
+                        <h2>{{ communityReview.rating }}</h2>
+                    </td>
+                </tr>
+                <tr ng-if="communityReview.review">
+                    <td colspan="2" class="community-review-review">
+                        {{ communityReview.review }}
+                    </td>
+                </tr>
+                <tr ng-if="communityReview.pros || communityReview.cons">
+                    <td ng-if="communityReview.pros">
+                        <table>
+                            <tr>
+                                <td>
+                                    <h2>Pros</h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="community-review-pros">
+                                    {{ communityReview.pros }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td ng-if="communityReview.cons">
+                        <table>
+                            <tr>
+                                <td>
+                                    <h2>Cons</h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="community-review-cons">
+                                    {{ communityReview.cons }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
