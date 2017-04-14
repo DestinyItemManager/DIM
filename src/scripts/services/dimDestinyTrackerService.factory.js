@@ -265,7 +265,9 @@ class reviewSubmitter {
   toRatingAndReview(userReview) {
     return {
       rating: userReview.rating,
-      review: userReview.review
+      review: userReview.review,
+      pros: userReview.pros,
+      cons: userReview.cons
     };
   }
 
