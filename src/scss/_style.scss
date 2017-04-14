@@ -1120,6 +1120,16 @@ rzslider, .rzslider {
   vertical-align: top;
 }
 
+.user-review-rating-preamble {
+  display: table-cell;
+  width: 20%;
+  vertical-align: middle;
+}
+
+.user-review-rating-field {
+  display: table-cell;
+}
+
 .item-dtr-review-submit {
   background-color: #333;
   color: #fff;
@@ -1138,6 +1148,14 @@ rzslider, .rzslider {
   border: none;
   outline: none;
   color: white; 
+}
+
+.user-review-form .item-dtr-review-input {
+  background-color: #333;
+  color: #fff;
+  left: 0px;
+  height: 50px;
+  vertical-align: top;
 }
 
 .user-review-form .item-dtr-review {
