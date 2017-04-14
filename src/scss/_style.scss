@@ -1151,6 +1151,15 @@ rzslider, .rzslider {
   color: white; 
 }
 
+.user-review-form .item-dtr-review-submit {
+  background-color: #333;
+  color: #fff;
+  left: 0px;
+  height: 50px;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+
 .user-review-review-preamble {
   width: 100%;
 }
@@ -1209,7 +1218,8 @@ rzslider, .rzslider {
 }
 
 .user-review-submit {
-  width: 100%;
+  width: 30%;
+  float: right;
 }
 
 .item-dtr-review-error {

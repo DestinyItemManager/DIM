@@ -282,6 +282,10 @@
      "HelpCons": "Optionally, describe the negatives of this weapon.",
      "Submit": "Submit",
      "DiscussHint": "Discuss this item.",
+     "RatingHint": "Rate this item.",
+     "ReviewHint": "Write your own review.",
+     "Pros": "Pros",
+     "Cons": "Cons",
      "FlavorText": "Seek out other Guardians when the howling loneliness grows too deep. Pretend it's a chance meeting, though.",
      "ServiceCallError": "Destiny tracker service call failed.",
      "ServiceSubmitError": "Destiny tracker service submit failed."
