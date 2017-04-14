@@ -1,3 +1,12 @@
 <div id="discuss-drawer" ng-if="vm.show">
-    <div class="review-list" translate="DtrReview.FlavorText"></div>
+    <div class="user-review-form">
+        {{ vm.item.userRating }}
+        {{ vm.item.userReview }}
+    </div>
+    <div class="community-reviews">
+        <div ng-repeat="communityReview in vm.item.communityReviews">
+            {{ communityReview.reviewer.displayName }}
+            {{ communityReview.review }}
+        </div>
+    </div>
 </div>

@@ -225,6 +225,8 @@ class reviewsFetcher {
                 reviewData) {
     var userReview = this.getUserReview(reviewData);
 
+    item.communityReviews = reviewData.reviews;
+
     if (userReview) {
       item.userRating = userReview.rating;
       item.userReview = userReview.review;

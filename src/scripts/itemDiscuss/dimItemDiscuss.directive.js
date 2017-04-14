@@ -17,4 +17,10 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
   vm.show = dimItemDiscussService.dialogOpen;
+
+  $rootScope.$on('dim-store-item-discuss', function(event, item) {
+    vm.show = true;
+
+    vm.item = item.item;
+  });
 }
