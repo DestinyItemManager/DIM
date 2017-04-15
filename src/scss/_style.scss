@@ -1180,15 +1180,19 @@ rzslider, .rzslider {
 
 .user-review-review-preamble {
   width: 100%;
+  display: flex;
 }
 
 .user-review-review-field {
   width: 90%;
+  display: flex;
+  padding-bottom: 10px;
 }
 
 .user-review-pro-con-container {
   width: 100%;
   display: table;
+  background: #434444;
 }
 
 .user-review-form .item-dtr-pros {
@@ -1798,6 +1802,7 @@ dim-compare {
   width: 50%;
   height: 100%;
   overflow: auto;
+  background: #434444;
 }
 
 .community-reviews {
