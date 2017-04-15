@@ -1,0 +1,94 @@
+# Linter Options
+options:
+  # Don't merge default rules
+  merge-default-rules: false
+
+# File Options
+files:
+  include: 'src/scss/**/*.scss'
+  ignore: 'src/scss/_toast.scss'
+
+# Rule Configuration
+rules:
+  # Extends
+  extends-before-mixins: 2
+  extends-before-declarations: 2
+  placeholder-in-extend: 2
+
+  # Mixins
+  mixins-before-declarations: 0
+
+  # Line Spacing
+  one-declaration-per-line: 2
+  empty-line-between-blocks: 2
+  single-line-per-selector: 2
+
+  # Disallows
+  no-color-keywords: 0
+  no-color-literals: 0
+  no-css-comments: 0
+  no-debug: 2
+  no-duplicate-properties: 1
+  no-empty-rulesets: 2
+  no-extends: 0
+  no-ids: 2
+  no-important: 1
+  no-invalid-hex: 2
+  no-mergeable-selectors: 2
+  no-misspelled-properties:
+    - 2
+    - extra-properties:
+      - 'overflow-scrolling'
+  no-qualifying-elements: 0
+  no-trailing-zero: 2
+  no-transition-all: 2
+  no-url-protocols: 0
+  no-vendor-prefixes: 0
+  no-warn: 1
+
+  # Nesting
+  force-attribute-nesting: 0
+  force-element-nesting: 0
+  force-pseudo-nesting: 0
+
+  # Name Formats
+  function-name-format: 0
+  mixin-name-format: 0
+  placeholder-name-format: 0
+  variable-name-format: 0
+
+  # Style Guide
+  border-zero: 2
+  brace-style: 2
+  clean-import-paths: 0
+  empty-args: 2
+  hex-length: 0
+  hex-notation: 0
+  indentation: 2
+  leading-zero: 0
+  nesting-depth:
+    - 2
+    - max-depth: 3
+  property-sort-order: 0
+  quotes: 2
+  shorthand-values:
+    - 2
+    - allowed-shorthands:
+        - 1
+        - 2
+  url-quotes: 2
+  variable-for-property: 1
+  zero-unit: 0
+
+  # Inner Spacing
+  space-after-comma: 2
+  space-before-colon: 2
+  space-after-colon: 2
+  space-before-brace: 2
+  space-before-bang: 2
+  space-after-bang: 2
+  space-between-parens: 2
+
+  # Final Items
+  trailing-semicolon: 2
+  final-newline: 2
