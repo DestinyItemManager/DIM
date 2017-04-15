@@ -11,6 +11,13 @@
   --vault-max-columns: 999;
 }
 
+// iPad - use smaller items to fit them on screen.
+@media (max-width: 1025px) {
+  :root {
+    --item-size: 38px;
+  }
+}
+
 @mixin item-size {
   width: 44px;
   height: 44px;
