@@ -44,7 +44,7 @@ function ReturnController($http) {
     })
     .then((response) => {
       if (response.data.ErrorCode === 1) {
-        const inception = new Date().toISOString();
+        const inception = Date.now();
         const authorization = {
           accessToken: angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: inception }),
           refreshToken: angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: inception }),
