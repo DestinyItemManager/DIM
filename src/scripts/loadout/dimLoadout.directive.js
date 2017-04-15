@@ -94,8 +94,8 @@ function Loadout(dimLoadoutService, $translate) {
       vm.show = false;
     });
 
-    scope.$watchCollection('vm.loadout.items', function(items) {
-      vm.recalculateStats(items);
+    scope.$watchCollection('vm.loadout.items', function() {
+      vm.recalculateStats();
     });
   }
 }
@@ -190,6 +190,8 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     } else {
       toaster.pop('warning', '', $translate.instant('Loadouts.OnlyItems'));
     }
+
+    vm.recalculateStats();
   };
 
   vm.remove = function remove(item, $event) {
@@ -211,6 +213,8 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     if (item.equipped && typeInventory.length > 0) {
       typeInventory[0].equipped = true;
     }
+
+    vm.recalculateStats();
   };
 
   vm.equip = function equip(item) {
@@ -254,7 +258,8 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     vm.recalculateStats(vm.loadout.items);
   };
 
-  vm.recalculateStats = function(items) {
+  vm.recalculateStats = function() {
+    const items = vm.loadout.items;
     const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
     if (!items) {
       vm.stats = null;
@@ -283,14 +288,15 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       }, {})
       .value();
 
+    // Seven types of things that contribute to these stats, times 3 stats, equals
+    // a complete set of armor, ghost and artifact.
+    vm.hasArmor = numInterestingStats > 0;
+    vm.completeArmor = numInterestingStats === (7 * 3);
+
     if (_.isEmpty(combinedStats)) {
       vm.stats = null;
       return;
     }
-
-    // Seven types of things that contribute to these stats, times 3 stats, equals
-    // a complete set of armor, ghost and artifact.
-    vm.completeArmor = numInterestingStats === (7 * 3);
 
     dimDefinitions.getDefinitions().then((defs) => {
       vm.stats = dimStoreService.getCharacterStatsData(defs.Stat, { stats: combinedStats });
