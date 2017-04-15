@@ -1,12 +1,12 @@
-import angular from 'angular';
 import _ from 'underscore';
 import $ from 'jquery';
 
-angular.module('dimApp')
-  .controller('dimVendorCtrl', dimVendorCtrl);
+import templateUrl from './vendors.html';
+import './vendors.scss';
 
+function VendorsController($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
+  'ngInject';
 
-function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
   var vm = this;
 
   var $window = $(window);
@@ -58,3 +58,8 @@ function dimVendorCtrl($scope, $state, $q, dimStoreService, dimSettingsService, 
   });
 }
 
+export const VendorsComponent = {
+  controller: VendorsController,
+  templateUrl: templateUrl,
+  controllerAs: 'vm'
+};
