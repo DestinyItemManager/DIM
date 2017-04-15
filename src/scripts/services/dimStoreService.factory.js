@@ -303,6 +303,7 @@ function StoreService(
     dropNewItem: dropNewItem,
     createItemIndex: createItemIndex,
     processItems: processItems,
+    getCharacterStatsData,
     hasNewItems: false
   };
 
@@ -1378,6 +1379,7 @@ function StoreService(
         bonus: bonus,
         statHash: stat.statHash,
         name: def.statName,
+        id: def.statIdentifier,
         sort: sort,
         value: val,
         maximumValue: maximumValue,
