@@ -259,12 +259,13 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
   };
 
   vm.recalculateStats = function() {
-    const items = vm.loadout.items;
-    const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
-    if (!items) {
+    if (!vm.loadout || !vm.loadout.items) {
       vm.stats = null;
       return;
     }
+
+    const items = vm.loadout.items;
+    const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
 
     let numInterestingStats = 0;
     const combinedStats = _.chain(items)
