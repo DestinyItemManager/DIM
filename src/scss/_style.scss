@@ -1150,6 +1150,10 @@ rzslider, .rzslider {
   color: white; 
 }
 
+.user-review-community-overview {
+  width: 100%;
+}
+
 .user-review-form .item-dtr-review-input {
   background-color: #333;
   color: #fff;
@@ -1799,7 +1803,7 @@ dim-compare {
 
 .user-review-form {
   float: left;
-  width: 50%;
+  width: 48%;
   height: 100%;
   overflow: auto;
   background: #434444;

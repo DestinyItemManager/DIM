@@ -288,7 +288,11 @@
      "Cons": "Cons",
      "FlavorText": "Seek out other Guardians when the howling loneliness grows too deep. Pretend it's a chance meeting, though.",
      "ServiceCallError": "Destiny tracker service call failed.",
-     "ServiceSubmitError": "Destiny tracker service submit failed."
+     "ServiceSubmitError": "Destiny tracker service submit failed.",
+     "NoReviewsYet": "has no community reviews yet. Be the first!",
+     "HasAverage": "has an average rating of",
+     "Based": "based on",
+     "ReviewCount": "reviews."
    },
    "Postmaster": {
       "Limit": "Postmaster Limit",

@@ -2,7 +2,16 @@
     <div class="discuss-options">
         <button class="dim-button" style="float: right;" ng-click="vm.cancel()" translate="Loadouts.Cancel"></button>
     </div>
+
     <div class="user-review-form">
+        <div class="user-review-community-overview">
+            <div ng-if="vm.item.communityReviews.length">
+                <h2>{{ vm.item.name }} {{ 'DtrReview.HasAverage' | translate }} {{ vm.item.dtrRating }} {{ 'DtrReview.Based' | translate }} {{ vm.item.communityReviews.length }} {{ 'DtrReview.ReviewCount' | translate }}</h2>
+            </div>
+            <div ng-if="!vm.item.communityReviews.length">
+                <h2>{{ vm.item.name }} {{ 'DtrReview.NoReviewsYet' | translate }}</h2>
+            </div>
+        </div>
         <form name="dtrReview" ng-submit="vm.submitReview()">
             <div class="user-review-pro-con-container">
                 <div class="user-review-rating-preamble">
