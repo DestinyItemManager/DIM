@@ -1,4 +1,5 @@
 const execFile = require("child_process").execFile;
+const fs = require("fs");
 
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
@@ -141,6 +142,10 @@ module.exports = function(grunt) {
             } else {
               resolve();
             }
+          });
+        }).then(function() {
+          return new Promise(function(resolve, reject) {
+            fs.chmod(file + ".br", 0644, resolve);
           });
         }));
       });
