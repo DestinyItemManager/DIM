@@ -1,10 +1,9 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-angular.module('dimApp')
-  .factory('dimXurService', XurService);
-
 function XurService($rootScope, dimVendorService, dimStoreService) {
+  'ngInject';
+
   const xurVendorId = 2796397637;
   const service = {
     available: false,
@@ -33,3 +32,6 @@ function XurService($rootScope, dimVendorService, dimStoreService) {
   return service;
 }
 
+export {
+  XurService
+};

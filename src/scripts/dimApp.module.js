@@ -19,6 +19,7 @@ import 'angular-uuid2/dist/angular-uuid2.js';
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
+import vendorsModule from './vendors/vendors.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -44,6 +45,7 @@ export const DimAppModule = angular
     UIRouterModule,
     inventoryModule,
     recordBooksModule,
+    vendorsModule,
     'angularUUID2',
     'ajoslin.promise-tracker',
     'cfp.hotkeys',

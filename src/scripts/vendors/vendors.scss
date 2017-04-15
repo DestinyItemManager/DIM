@@ -195,7 +195,7 @@
   float: right;
 }
 
-dim-vendor-currencies {
+vendor-currencies {
   float: right;
   margin-top: 10px;
   display: flex;
@@ -226,7 +226,7 @@ dim-vendor-currencies {
     flex-wrap: none;
   }
 
-  dim-vendor-currencies {
+  vendor-currencies {
     margin-top: 0;
   }
 }
