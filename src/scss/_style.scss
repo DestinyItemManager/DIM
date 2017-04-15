@@ -1121,6 +1121,7 @@ rzslider, .rzslider {
 }
 
 .user-review-rating-preamble {
+  font-size: larger;
   display: table-cell;
   width: 20%;
   vertical-align: middle;
@@ -1151,6 +1152,7 @@ rzslider, .rzslider {
 }
 
 .user-review-community-overview {
+  font-size: x-large;
   width: 100%;
 }
 
@@ -1183,6 +1185,7 @@ rzslider, .rzslider {
 }
 
 .user-review-review-preamble {
+  font-size: large;
   width: 100%;
   display: flex;
 }
@@ -1193,7 +1196,7 @@ rzslider, .rzslider {
   padding-bottom: 10px;
 }
 
-.user-review-pro-con-container {
+.user-review-container {
   width: 100%;
   display: table;
   background: #434444;
@@ -1211,6 +1214,7 @@ rzslider, .rzslider {
 }
 
 .user-review-pros-preamble {
+  font-size: large;
   float: left;
   display: table-cell;
 }
@@ -1222,6 +1226,7 @@ rzslider, .rzslider {
 }
 
 .user-review-cons-preamble {
+  font-size: large;
   float: left;
   display: table-cell;
 }
@@ -1254,6 +1259,17 @@ rzslider, .rzslider {
   color: #985C58;
   width: 100%;
   text-align: right; 
+}
+
+.community-review-display-name {
+  font-size: xx-large;
+  display: table-cell;
+}
+
+.community-review-rating {
+  font-size: x-large;
+  text-align: left;
+  display: table-cell;
 }
 
 .item-perks {
@@ -1816,18 +1832,67 @@ dim-compare {
   overflow: auto;
 }
 
-.community-review-review {
-  font-size: medium;
+.community-review {
+  display: table;
 }
 
-.community-review-pros-preamble {
+.community-review-review {
+  font-size: 16px;
+  display: table-cell;
+  width: 100%;
+}
+
+.community-review-highlighter {
+  display: table-cell;
+}
+
+.community-review-content {
+  display: table-cell;
+}
+
+.user-review-circle {
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
   float: left;
-  width: 20%;
+}
+
+.orange-circle {
+  background-color: orange;
+}
+
+.green-circle {
+  background-color: green;
+}
+
+.community-reviews-pros-container {
+  width: 48%;
+  display: table-cell;
+  float: left;
+}
+
+.community-review-pros-header {
+  font-size: 16px;
+  display: flex;
 }
 
 .community-review-pros {
+  display: flex;
+}
+
+.community-reviews-cons-container {
+  width: 48%;
+  display: table-cell;
   float: right;
-  width: 80%;
+}
+
+.community-review-cons-header {
+  font-size: 16px;
+  display: flex;
+}
+
+.community-review-cons {
+  display: flex;
 }
 
 h2, h3, h4 {
