@@ -166,8 +166,22 @@ class bulkFetcher {
                                                   stores.stores));
   }
 
+  toAtMostOneDecimal(rating) {
+    if (!rating) {
+      return null;
+    }
+
+    if ((rating % 1) === 0) {
+      return rating;
+    }
+
+    return rating.toFixed(1);
+  }
+
   attachRankings(bulkRankings,
-                          stores) {
+                 stores) {
+    var self = this;
+
     if ((!bulkRankings) ||
         (!bulkRankings.length)) {
       return;
@@ -177,7 +191,7 @@ class bulkFetcher {
       stores.forEach(function(store) {
         store.items.forEach(function(storeItem) {
           if (storeItem.hash === Number(bulkRanking.referenceId)) {
-            storeItem.dtrRating = bulkRanking.rating;
+            storeItem.dtrRating = self.toAtMostOneDecimal(bulkRanking.rating);
           }
         });
       });
