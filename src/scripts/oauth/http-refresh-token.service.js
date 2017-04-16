@@ -74,8 +74,7 @@ function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthT
     } else {
       console.warn("Other error getting auth token from refresh token. Not clearing auth tokens", response);
     }
-    // TODO: Localize this error? Does it get displayed?
-    throw new Error("Error getting auth token from refresh token");
+    return $q.reject(response);
   }
 
   function isTokenValid(token) {
