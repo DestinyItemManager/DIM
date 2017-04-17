@@ -20,6 +20,10 @@ mod.filter('bungieIcon', function($sce) {
  */
 mod.filter('bungieBackground', function() {
   return function backgroundImage(value) {
+    if (!value) {
+      return {};
+    }
+
     // Hacky workaround so we can reference local images
     if (value.startsWith('~')) {
       const baseUrl = ($DIM_FLAVOR === 'dev')
