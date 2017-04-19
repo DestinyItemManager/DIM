@@ -6,4 +6,4 @@ mkdir out
 cd out
 ../configure-cmake --prefix="$PWD/bin"
 make install
-$PWD/bin/bin/bro --help
+
