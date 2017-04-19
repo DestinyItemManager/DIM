@@ -124,7 +124,7 @@ module.exports = function(grunt) {
       const promises = [];
       this.filesSrc.forEach(function(file) {
         promises.push(new Promise(function(resolve, reject) {
-          execFile("gzip", ["--best", "--keep", "--no-name", file], function(error, stdout, stderr) {
+          execFile("gzip", ["--best", "-k", "--no-name", file], function(error, stdout, stderr) {
             grunt.log.writeln("gzip " + file + " => " + stdout + stderr);
             if (error) {
               reject(error);
@@ -136,10 +136,11 @@ module.exports = function(grunt) {
 
         promises.push(new Promise(function(resolve, reject) {
           execFile("brotli/out/bin/bin/bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
-            grunt.log.writeln("brotli " + file + " => " + stdout + stderr);
             if (error) {
+              grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
               reject(error);
             } else {
+              grunt.log.writeln("brotli " + file + " => success");
               resolve();
             }
           });
