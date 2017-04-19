@@ -1,4 +1,4 @@
-const execFile = require("child_process").execFile;
+const child_process = require("child_process");
 const fs = require("fs");
 
 module.exports = function(grunt) {
@@ -124,18 +124,19 @@ module.exports = function(grunt) {
       const promises = [];
       this.filesSrc.forEach(function(file) {
         promises.push(new Promise(function(resolve, reject) {
-          execFile("gzip", ["--best", "-k", "--no-name", file], function(error, stdout, stderr) {
-            grunt.log.writeln("gzip " + file + " => " + stdout + stderr);
+          child_process.exec("gzip -c --no-name " + file + " > " + file + ".gz", function(error, stdout, stderr) {
             if (error) {
+              grunt.log.writeln("gzip " + file + " => error: " + stdout + stderr);
               reject(error);
             } else {
+              grunt.log.writeln("gzip " + file + " => success");
               resolve();
             }
           });
         }));
 
         promises.push(new Promise(function(resolve, reject) {
-          execFile("brotli/out/bin/bin/bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
+          child_process.execFile("brotli/out/bin/bin/bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
             if (error) {
               grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
               reject(error);
