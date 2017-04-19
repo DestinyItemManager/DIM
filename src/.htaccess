@@ -711,11 +711,9 @@ ServerSignature Off
 # ######################################################################
 
 
-<IfModule mod_mime.c>
-    AddEncoding gzip .svgz
-    AddEncoding gzip .gz
-    AddEncoding br .br
-</IfModule>
+AddEncoding gzip .svgz
+AddEncoding gzip .gz
+AddEncoding br .br
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -729,7 +727,6 @@ ServerSignature Off
 
     # Serve pre-gzipped stuff if we got it
     RewriteCond %{HTTP:Accept-encoding} gzip
-    RewriteCond %{HTTP_USER_AGENT} !Konqueror
     RewriteCond %{REQUEST_FILENAME}.gz -f
     RewriteRule ^(.*)$ $1.gz [QSA,L]
 </IfModule>
