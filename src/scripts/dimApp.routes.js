@@ -3,6 +3,7 @@ import materialExchange from 'app/views/mats-exchange.template.html';
 import debugItem from 'app/views/debugItem.template.html';
 import developer from 'app/scripts/developer/developer.template.html';
 import login from 'app/scripts/login/login.template.html';
+import apiError from 'app/views/apiError.template.html';
 
 function routes($stateProvider, $urlRouterProvider) {
   'ngInject';
@@ -35,6 +36,11 @@ function routes($stateProvider, $urlRouterProvider) {
     parent: 'shell',
     url: '/login',
     templateUrl: login
+  }, {
+    name: 'apiError',
+    parent: 'content',
+    url: '/apiError',
+    templateUrl: apiError
   }];
 
   states.forEach((state) => {

@@ -11,6 +11,7 @@
       "Weapons": "Weapons"
    },
    "BungieService": {
+      "ApiDown": "Bungie.net API is down.",
       "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with bungie.net.",
       "Down": "Bungie.net is down.",
       "Difficulties": "The Bungie API is currently experiencing difficulties.",
@@ -408,6 +409,10 @@
        "Version": "Version",
        "Transifex": "Join the Translation Team!",
        "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
+     },
+     "API": {
+       "Header":"Bungie API Error",
+       "HelpText":"The Bungie API is currently down."
      },
      "Support": {
        "Support": "Supporting DIM",
