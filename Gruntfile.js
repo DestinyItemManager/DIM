@@ -1,3 +1,6 @@
+const execFile = require("child_process").execFile;
+const fs = require("fs");
+
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
@@ -93,6 +96,12 @@ module.exports = function(grunt) {
           dest: process.env.REMOTE_PATH + "prod"
         }
       }
+    },
+
+    precompress: {
+      web: {
+        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg}"
+      }
     }
   });
 
@@ -106,6 +115,44 @@ module.exports = function(grunt) {
     manifest.version = betaVersion;
     grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
+
+  grunt.registerMultiTask(
+    'precompress',
+    'Create gzip and brotli versions of web assets',
+    function() {
+      const done = this.async();
+      const promises = [];
+      this.filesSrc.forEach(function(file) {
+        promises.push(new Promise(function(resolve, reject) {
+          execFile("gzip", ["--best", "--keep", "--no-name", file], function(error, stdout, stderr) {
+            grunt.log.writeln("gzip " + file + " => " + stdout + stderr);
+            if (error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
+        }));
+
+        promises.push(new Promise(function(resolve, reject) {
+          execFile("bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
+            grunt.log.writeln("brotli " + file + " => " + stdout + stderr);
+            if (error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
+        }).then(function() {
+          return new Promise(function(resolve, reject) {
+            fs.chmod(file + ".br", 0644, resolve);
+          });
+        }));
+      });
+
+      Promise.all(promises).then(done);
+    }
+  );
 
   grunt.registerTask('publish_beta', [
     'update_chrome_beta_manifest',
