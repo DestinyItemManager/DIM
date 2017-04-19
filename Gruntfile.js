@@ -135,7 +135,7 @@ module.exports = function(grunt) {
         }));
 
         promises.push(new Promise(function(resolve, reject) {
-          execFile("bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
+          execFile("brotli/out/bin/bin/bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
             grunt.log.writeln("brotli " + file + " => " + stdout + stderr);
             if (error) {
               reject(error);
