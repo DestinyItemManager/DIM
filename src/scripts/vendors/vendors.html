@@ -1,4 +1,4 @@
-<div class="vendor" ng-controller="dimVendorCtrl as vm">
+<div class="vendor">
   <div ng-if="!vm.vendorService.vendorsLoaded" class="vendor-loading"><i class="fa-spin fa fa-refresh"></i> <span translate="Vendors.Load"></span>...</div>
   <back-link></back-link>
 
@@ -32,6 +32,6 @@
     </div>
   </div>
   <div class="vendors" ng-class="{ 'hide-filtered': vm.settings.hideFilteredItems }">
-    <dim-vendor-items stores-data="vm.stores" vendors-data="vm.vendorService.vendors" active-tab="vm.activeTab" total-coins="vm.totalCoins"></dim-vendor-items>
+    <vendor-items stores-data="vm.stores" vendors-data="vm.vendorService.vendors" active-tab="vm.activeTab" total-coins="vm.totalCoins"></vendor-items>
   </div>
 </div>

@@ -1,5 +1,4 @@
 import best from 'app/views/best.template.html';
-import vendors from 'app/views/vendors.template.html';
 import materialExchange from 'app/views/mats-exchange.template.html';
 import debugItem from 'app/views/debugItem.template.html';
 import developer from 'app/scripts/developer/developer.template.html';
@@ -16,11 +15,6 @@ function routes($stateProvider, $urlRouterProvider) {
     parent: 'content',
     template: best,
     url: '/best'
-  }, {
-    name: 'vendors',
-    parent: 'content',
-    template: vendors,
-    url: '/vendors'
   }, {
     name: 'materials-exchange',
     parent: 'content',

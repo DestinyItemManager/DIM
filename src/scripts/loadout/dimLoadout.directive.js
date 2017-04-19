@@ -94,11 +94,15 @@ function Loadout(dimLoadoutService, $translate) {
     scope.$on('dim-active-platform-updated', function() {
       vm.show = false;
     });
+
+    scope.$watchCollection('vm.loadout.items', function() {
+      vm.recalculateStats();
+    });
   }
 }
 
 
-function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate) {
+function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate, dimStoreService, dimDefinitions) {
   var vm = this;
 
   vm.settings = dimSettingsService;
@@ -187,6 +191,8 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     } else {
       toaster.pop('warning', '', $translate.instant('Loadouts.OnlyItems'));
     }
+
+    vm.recalculateStats();
   };
 
   vm.remove = function remove(item, $event) {
@@ -208,6 +214,8 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     if (item.equipped && typeInventory.length > 0) {
       typeInventory[0].equipped = true;
     }
+
+    vm.recalculateStats();
   };
 
   vm.equip = function equip(item) {
@@ -247,6 +255,54 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
         item.equipped = true;
       }
     }
+
+    vm.recalculateStats(vm.loadout.items);
+  };
+
+  vm.recalculateStats = function() {
+    if (!vm.loadout || !vm.loadout.items) {
+      vm.stats = null;
+      return;
+    }
+
+    const items = vm.loadout.items;
+    const interestingStats = new Set(['STAT_INTELLECT', 'STAT_DISCIPLINE', 'STAT_STRENGTH']);
+
+    let numInterestingStats = 0;
+    const combinedStats = _.chain(items)
+      .values()
+      .flatten()
+      .filter('equipped')
+      .map('stats')
+      .flatten()
+      .filter((stat) => interestingStats.has(stat.id))
+      .reduce((stats, stat) => {
+        numInterestingStats++;
+        if (stats[stat.id]) {
+          stats[stat.id].value += stat.value;
+        } else {
+          stats[stat.id] = {
+            statHash: stat.statHash,
+            value: stat.value
+          };
+        }
+        return stats;
+      }, {})
+      .value();
+
+    // Seven types of things that contribute to these stats, times 3 stats, equals
+    // a complete set of armor, ghost and artifact.
+    vm.hasArmor = numInterestingStats > 0;
+    vm.completeArmor = numInterestingStats === (7 * 3);
+
+    if (_.isEmpty(combinedStats)) {
+      vm.stats = null;
+      return;
+    }
+
+    dimDefinitions.getDefinitions().then((defs) => {
+      vm.stats = dimStoreService.getCharacterStatsData(defs.Stat, { stats: combinedStats });
+    });
   };
 }
 

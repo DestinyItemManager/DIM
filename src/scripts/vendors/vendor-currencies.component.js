@@ -1,7 +1,6 @@
-import angular from 'angular';
 import { flatMap } from '../util';
 
-var VendorCurrencies = {
+export const VendorCurrencies = {
   controller: VendorCurrenciesCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -17,11 +16,9 @@ var VendorCurrencies = {
   ].join('')
 };
 
-angular.module('dimApp')
-  .component('dimVendorCurrencies', VendorCurrencies);
-
-
 function VendorCurrenciesCtrl($scope, $filter) {
+  'ngInject';
+
   const vm = this;
 
   $scope.$watchGroup(['vm.vendorCategories', 'vm.propertyFilter'], () => {

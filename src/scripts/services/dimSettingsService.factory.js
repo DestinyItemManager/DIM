@@ -48,8 +48,8 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     charCol: 3,
     // How many columns to display vault buckets
     vaultMaxCol: 999,
-    // How big in pixels to draw items
-    itemSize: 44,
+    // How big in pixels to draw items - start smaller for iPad
+    itemSize: window.matchMedia('(max-width: 1025px)').matches ? 38 : 44,
     // Which categories or buckets should be collapsed?
     collapsedSections: {},
     // What settings for farming mode

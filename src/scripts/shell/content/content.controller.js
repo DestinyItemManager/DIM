@@ -2,7 +2,7 @@ import settingsTemplate from 'app/views/settings.template.html';
 import aboutTemplate from 'app/views/about.template.html';
 import supportTemplate from 'app/views/support.template.html';
 import filtersTemplate from 'app/views/filters.template.html';
-import xurTemplate from 'app/views/xur.template.html';
+import xurTemplate from 'app/scripts/vendors/xur.html';
 import matsExchangeTemplate from 'app/views/mats-exchange.template.html';
 
 export default class ContentController {

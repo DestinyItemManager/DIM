@@ -2,28 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import { sum } from '../util';
 
-var VendorItem = {
-  bindings: {
-    saleItem: '<',
-    totalCoins: '<',
-    itemClicked: '&'
-  },
-  template: [
-    '<div class="vendor-item"',
-    '     ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }">',
-    '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
-    '  <dim-simple-item item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })" ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }"></dim-simple-item>',
-    '  <div class="vendor-costs">',
-    '    <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
-    '      {{::cost.value}}',
-    '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
-    '    </div>',
-    '  </div>',
-    '</div>'
-  ].join('')
-};
-
-var VendorItems = {
+export const VendorItems = {
   controller: VendorItemsCtrl,
   controllerAs: 'vm',
   bindings: {
@@ -45,11 +24,11 @@ var VendorItems = {
     '    <countdown class="vendor-timer" ng-if="vendor.nextRefreshDate[0] !== \'9\'" end-time="vendor.nextRefreshDate"></countdown>',
     '  </div>',
     '  <div class="vendor-row" ng-if="!vm.settings.collapsedSections[vendorHash]">',
-    '    <dim-vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></dim-vendor-currencies>',
+    '    <vendor-currencies vendor-categories="vendor.categories" total-coins="vm.totalCoins" property-filter="vm.activeTab"></vendor-currencies>',
     '    <div class="vendor-category" ng-repeat="category in vendor.categories | vendorTab:vm.activeTab track by category.index">',
     '      <h3 class="category-title">{{::category.title}}</h3>',
     '      <div class="vendor-items">',
-    '        <dim-vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></dim-vendor-item>',
+    '        <vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:vm.activeTab track by saleItem.index" sale-item="saleItem" total-coins="vm.totalCoins" item-clicked="vm.itemClicked(saleItem, $event)"></vendor-item>',
     '      </div>',
     '    </div>',
     '  </div>',
@@ -57,39 +36,9 @@ var VendorItems = {
   ].join('')
 };
 
-angular.module('dimApp')
-  .component('dimVendorItem', VendorItem)
-  .component('dimVendorItems', VendorItems)
-  .filter('vendorTab', function() {
-    return function vendorTab(categories, prop) {
-      if (!prop || !prop.length) {
-        return categories;
-      }
-      return _.filter(categories, prop);
-    };
-  })
-  .filter('vendorTabItems', function() {
-    return function vendorTab(items, prop) {
-      if (!prop || !prop.length) {
-        return items;
-      }
-      return _.filter(items, {
-        hasArmorWeaps: (saleItem) => (saleItem.item.bucket.sort === 'Weapons' || saleItem.item.bucket.sort === 'Armor' || saleItem.item.type === 'Artifact' || saleItem.item.type === 'Ghost'),
-        hasVehicles: (saleItem) => (saleItem.item.type === 'Ship' || saleItem.item.type === 'Vehicle'),
-        hasShadersEmbs: (saleItem) => (saleItem.item.type === "Emblem" || saleItem.item.type === "Shader"),
-        hasEmotes: (saleItem) => (saleItem.item.type === "Emote"),
-        hasConsumables: (saleItem) => (saleItem.item.type === "Material" || saleItem.item.type === "Consumable"),
-        hasBounties: (saleItem) => (saleItem.item.type === 'Bounties')
-      }[prop]);
-    };
-  })
-  .filter('values', function() {
-    return function values(obj) {
-      return _.values(obj);
-    };
-  });
-
 function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) {
+  'ngInject';
+
   var vm = this;
   var dialogResult = null;
   var detailItem = null;

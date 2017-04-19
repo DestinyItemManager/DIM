@@ -3,9 +3,6 @@ import _ from 'underscore';
 import { sum, flatMap } from '../util';
 import idbKeyval from 'idb-keyval';
 
-angular.module('dimApp')
-  .factory('dimVendorService', VendorService);
-
 function VendorService(
   $rootScope,
   dimBungieService,
@@ -15,6 +12,8 @@ function VendorService(
   dimPlatformService,
   $q
 ) {
+  'ngInject';
+
   /*
   const allVendors = [
     1990950, // Titan Vanguard
@@ -509,3 +508,6 @@ function VendorService(
   }
 }
 
+export {
+  VendorService
+};

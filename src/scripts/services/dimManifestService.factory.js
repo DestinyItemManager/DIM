@@ -95,14 +95,25 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
         })
         .catch((e) => {
           let message = e.message || e;
-          if (e.status && e.status !== 200) {
-            message = $translate.instant('Manifest.BungieDown', { error: e.statusText });
-          }
           service.statusText = $translate.instant('Manifest.Error', { error: message });
+
+          if (e.status === -1) {
+            message = $translate.instant('BungieService.NotConnected');
+          } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
+            message = $translate.instant('BungieService.Down');
+          } else if (e.status < 200 || e.status >= 400) {
+            message = $translate.instant('BungieService.NetworkError', {
+              status: e.status,
+              statusText: e.statusText
+            });
+          } else {
+            // Something may be wrong with the manifest
+            deleteManifestFile();
+          }
+
           manifestPromise = null;
           service.isError = true;
-          deleteManifestFile();
-          throw e;
+          throw new Error(message);
         });
 
       return manifestPromise;

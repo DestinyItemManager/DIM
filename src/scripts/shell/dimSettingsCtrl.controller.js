@@ -30,7 +30,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
   vm.settings = dimSettingsService;
 
   // Edge doesn't support these
-  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('--fake-var', 0);
+  vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
 
   vm.showSync = function() {
     return SyncService.drive();
@@ -52,6 +52,11 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
 
   vm.resetHiddenInfos = function() {
     dimInfoService.resetHiddenInfos();
+  };
+
+  vm.resetItemSize = function() {
+    vm.settings.itemSize = window.matchMedia('(max-width: 1025px)').matches ? 38 : 44;
+    vm.save();
   };
 
   vm.exportData = function() {

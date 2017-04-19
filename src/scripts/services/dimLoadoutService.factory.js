@@ -262,20 +262,31 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       });
 
       // Only select stuff that needs to change state
+      var totalItems = items.length;
       items = _.filter(items, function(pseudoItem) {
         var item = getLoadoutItem(pseudoItem, store);
-        return !item ||
-          !item.equipment ||
-          item.owner !== store.id ||
-          item.equipped !== pseudoItem.equipped;
+        var invalid = !item || !item.equipment;
+        var alreadyThere = item.owner !== store.id ||
+              // Needs to be equipped. Stuff not marked "equip" doesn't
+              // necessarily mean to de-equip it.
+              (pseudoItem.equipped && !item.equipped);
+
+        // provide a more accurate count of total items
+        if (invalid) {
+          totalItems--;
+        }
+
+        return invalid || alreadyThere;
       });
 
       // only try to equip subclasses that are equippable, since we allow multiple in a loadout
       items = items.filter(function(item) {
-        return item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+        var ok = item.type !== 'Class' || !item.equipped || item.canBeEquippedBy(store);
+        if (!ok) {
+          totalItems--;
+        }
+        return ok;
       });
-      var totalItems = items.length;
-
 
       // vault can't equip
       if (store.isVault) {
