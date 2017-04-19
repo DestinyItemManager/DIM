@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 
-import templateUrl from './vendors.html';
+import template from './vendors.html';
 import './vendors.scss';
 
 function VendorsController($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
@@ -60,6 +60,6 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
 
 export const VendorsComponent = {
   controller: VendorsController,
-  templateUrl: templateUrl,
+  template: template,
   controllerAs: 'vm'
 };
