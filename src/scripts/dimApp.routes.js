@@ -1,7 +1,6 @@
 import best from 'app/views/best.template.html';
 import materialExchange from 'app/views/mats-exchange.template.html';
 import debugItem from 'app/views/debugItem.template.html';
-import developer from 'app/scripts/developer/developer.template.html';
 import login from 'app/scripts/login/login.template.html';
 
 function routes($stateProvider, $urlRouterProvider) {
@@ -26,16 +25,20 @@ function routes($stateProvider, $urlRouterProvider) {
     url: '/debugItem/:itemId',
     templateUrl: debugItem
   }, {
-    name: 'developer',
-    parent: 'content',
-    url: '/developer',
-    templateUrl: developer
-  }, {
     name: 'login',
     parent: 'shell',
     url: '/login',
     templateUrl: login
   }];
+
+  if ($DIM_FLAVOR === 'dev') {
+    states.push({
+      name: 'developer',
+      parent: 'content',
+      url: '/developer',
+      templateUrl: require('app/scripts/developer/developer.template.html')
+    });
+  }
 
   states.forEach((state) => {
     $stateProvider.state(state);
