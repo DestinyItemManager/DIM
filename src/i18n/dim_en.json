@@ -286,12 +286,10 @@
      "ReviewHint": "Write your own review.",
      "Pros": "Pros",
      "Cons": "Cons",
-     "FlavorText": "Seek out other Guardians when the howling loneliness grows too deep. Pretend it's a chance meeting, though.",
      "ServiceCallError": "Destiny tracker service call failed.",
      "ServiceSubmitError": "Destiny tracker service submit failed.",
      "NoReviewsYet": "{itemName} has no community reviews yet. Be the first!",
-     "CurrentAverageRating": "{itemName} has an average rating of {itemRating} based on {numReviews} reviews.",
-     "ReviewCount": "reviews."
+     "CurrentAverageRating": "{itemName} has an average rating of {itemRating} based on {numReviews} reviews."
    },
    "Postmaster": {
       "Limit": "Postmaster Limit",
