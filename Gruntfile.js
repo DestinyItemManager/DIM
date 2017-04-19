@@ -159,12 +159,14 @@ module.exports = function(grunt) {
     'compress:chrome',
     'log_beta_version',
     'webstore_upload:beta',
+    'precompress',
     'rsync:beta'
   ]);
 
   grunt.registerTask('publish_release', [
     'compress:chrome',
     'webstore_upload:release',
+    'precompress',
     'rsync:prod'
   ]);
 
