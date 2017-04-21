@@ -69,11 +69,11 @@ class gunListBuilder {
                           return (item.primStat.statHash === 368428387);
                         });
 
-    var newGuns = this.getNewItems(allGuns);
+    // var newGuns = this.getNewItems(allGuns);
 
-    if (newGuns.length > 0) {
-      return newGuns;
-    }
+    // if (newGuns.length > 0) {
+    //   return newGuns;
+    // }
 
     return allGuns;
   }
