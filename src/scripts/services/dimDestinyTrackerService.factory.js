@@ -95,7 +95,12 @@ class gunListBuilder {
     var allDtrItems = _.map(allItems, function(item) { return self._gunTransformer.translateToDtrGun(item); });
     var allKnownDtrItems = scoreMaintainer.getItemStores();
 
-    return _.difference(allDtrItems, allKnownDtrItems);
+    var unmatched = _.filter(allDtrItems, function(dtrItem) {
+      var matchingItem = _.findWhere(allKnownDtrItems, { referenceId: String(dtrItem.referenceId), roll: dtrItem.roll });
+      return (matchingItem === null);
+    });
+
+    return unmatched;
   }
 
   getAllItems(stores) {
@@ -109,6 +114,7 @@ class gunListBuilder {
   }
 
   getGuns(stores, scoreMaintainer) {
+    var self = this;
     var allItems = this.getAllItems(stores);
 
     var allGuns = _.filter(allItems,
@@ -122,7 +128,7 @@ class gunListBuilder {
 
     var newGuns = this.getNewItems(allGuns, scoreMaintainer);
 
-    if (newGuns.length > 0) {
+    if (scoreMaintainer.getItemStores().length > 0) {
       return newGuns;
     }
 
@@ -198,6 +204,10 @@ class bulkFetcher {
     }
 
     var weaponList = this._gunListBuilder.getWeaponList(stores.stores, this._scoreMaintainer);
+
+    if (!weaponList.length) {
+      return this.$q.resolve();
+    }
 
     var promise = this.$q
               .when(this.getBulkWeaponDataPromise(weaponList))
