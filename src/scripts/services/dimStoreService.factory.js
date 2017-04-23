@@ -573,6 +573,9 @@ function StoreService(
 
         return stores;
       })
+      .then(function(stores) {
+        dimDestinyTrackerService.reattachScores(null, stores);
+      })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
           // no problem, just canceling the request

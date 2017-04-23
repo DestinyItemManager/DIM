@@ -38,13 +38,64 @@ class gunTransformer {
   }
 }
 
+class ScoreMaintainer {
+  constructor() {
+    this._gunTransformer = new gunTransformer();
+    this._itemStores = [];
+  }
+
+  getMatchingItem(dtrItem) {
+    dtrItem.referenceId = String(dtrItem.referenceId);
+
+    return _.findWhere(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
+  }
+
+  getRatingData(item) {
+    var dtrItem = this._gunTransformer.translateToDtrGun(item);
+
+    var matchingItem = this.getMatchingItem(dtrItem);
+
+    if (!matchingItem) {
+      return null;
+    }
+
+    return matchingItem;
+  }
+
+  toAtMostOneDecimal(rating) {
+    if (!rating) {
+      return null;
+    }
+
+    if ((rating % 1) === 0) {
+      return rating;
+    }
+
+    return rating.toFixed(1);
+  }
+
+  addScore(dtrRating) {
+    dtrRating.rating = this.toAtMostOneDecimal(dtrRating.rating);
+
+    this._itemStores.push(dtrRating);
+  }
+
+  getItemStores() {
+    return this._itemStores;
+  }
+}
+
 class gunListBuilder {
   constructor() {
     this._gunTransformer = new gunTransformer();
   }
 
-  getNewItems(allItems) {
-    return _.where(allItems, { isNew: true });
+  getNewItems(allItems, scoreMaintainer) {
+    var self = this;
+    var allDtrItems = _.map(allItems, function(item) { return self._gunTransformer.translateToDtrGun(item); });
+    var allKnownDtrItems = scoreMaintainer.getItemStores();
+
+    return _.difference(allDtrItems, allKnownDtrItems);
   }
 
   getAllItems(stores) {
@@ -57,7 +108,7 @@ class gunListBuilder {
     return allItems;
   }
 
-  getGuns(stores) {
+  getGuns(stores, scoreMaintainer) {
     var allItems = this.getAllItems(stores);
 
     var allGuns = _.filter(allItems,
@@ -69,26 +120,24 @@ class gunListBuilder {
                           return (item.primStat.statHash === 368428387);
                         });
 
-    // var newGuns = this.getNewItems(allGuns);
+    var newGuns = this.getNewItems(allGuns, scoreMaintainer);
 
-    // if (newGuns.length > 0) {
-    //   return newGuns;
-    // }
+    if (newGuns.length > 0) {
+      return newGuns;
+    }
 
-    return allGuns;
+    return _.map(allGuns, function(item) { return self._gunTransformer.translateToDtrGun(item); });
   }
 
-  getWeaponList(stores) {
-    var guns = this.getGuns(stores);
+  getWeaponList(stores, scoreMaintainer) {
+    var guns = this.getGuns(stores, scoreMaintainer);
 
     var list = [];
     var self = this;
 
     guns.forEach(function(gun) {
-      var dtrGun = self._gunTransformer.translateToDtrGun(gun);
-
-      if (!self.isKnownGun(list, dtrGun)) {
-        list.push(dtrGun);
+      if (!self.isKnownGun(list, gun)) {
+        list.push(gun);
       }
     });
 
@@ -125,12 +174,13 @@ class trackerErrorHandler {
 }
 
 class bulkFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
     this._gunListBuilder = new gunListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
+    this._scoreMaintainer = scoreMaintainer;
   }
 
   getBulkWeaponDataPromise(gunList) {
@@ -147,7 +197,7 @@ class bulkFetcher {
       return this.$q.resolve();
     }
 
-    var weaponList = this._gunListBuilder.getWeaponList(stores.stores);
+    var weaponList = this._gunListBuilder.getWeaponList(stores.stores, this._scoreMaintainer);
 
     var promise = this.$q
               .when(this.getBulkWeaponDataPromise(weaponList))
@@ -166,34 +216,28 @@ class bulkFetcher {
                                                   stores.stores));
   }
 
-  toAtMostOneDecimal(rating) {
-    if (!rating) {
-      return null;
-    }
-
-    if ((rating % 1) === 0) {
-      return rating;
-    }
-
-    return rating.toFixed(1);
-  }
-
   attachRankings(bulkRankings,
                  stores) {
-    var self = this;
-
-    if ((!bulkRankings) ||
-        (!bulkRankings.length)) {
+    if ((!bulkRankings) &&
+        (!stores)) {
       return;
     }
 
-    bulkRankings.forEach(function(bulkRanking) {
-      stores.forEach(function(store) {
-        store.items.forEach(function(storeItem) {
-          if (storeItem.hash === Number(bulkRanking.referenceId)) {
-            storeItem.dtrRating = self.toAtMostOneDecimal(bulkRanking.rating);
-          }
-        });
+    var self = this;
+
+    if (bulkRankings) {
+      bulkRankings.forEach(function(bulkRanking) {
+        self._scoreMaintainer.addScore(bulkRanking);
+      });
+    }
+
+    stores.forEach(function(store) {
+      store.items.forEach(function(storeItem) {
+        var matchingItem = self._scoreMaintainer.getRatingData(storeItem);
+
+        if (matchingItem) {
+          storeItem.dtrRating = matchingItem.rating;
+        }
       });
     });
   }
@@ -325,8 +369,9 @@ function DestinyTrackerService($q,
                                $translate,
                                dimFeatureFlags,
                                loadingTracker) {
+  var _scoreMaintainer = new ScoreMaintainer();
   var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
-  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker);
+  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
   var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker);
   var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker);
   var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
@@ -362,6 +407,10 @@ function DestinyTrackerService($q,
   });
 
   return {
-    init: function() {}
+    init: function() {},
+    reattachScores: function(stores) {
+      _bulkFetcher.attachRankings(null,
+                                  stores);
+    }
   };
 }
