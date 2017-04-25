@@ -85,8 +85,12 @@ class ScoreMaintainer {
     var dtrItem = this._gunTransformer.translateToDtrGun(item);
     var matchingItem = this.getMatchingItem(dtrItem);
 
+    var rating = matchingItem.rating;
+
     Object.assign(matchingItem,
                   userReview);
+
+    matchingItem.rating = rating;
   }
 
   getItemStores() {
@@ -409,6 +413,7 @@ function DestinyTrackerService($q,
       return;
     }
 
+    // TODO: pull from score maintainer if review exists instead
     _reviewsFetcher.getItemReviews(item);
   });
 
@@ -426,6 +431,7 @@ function DestinyTrackerService($q,
       return;
     }
 
+    // TODO: bake item cache flush into submit promise
     _reviewSubmitter.submitReview(item, userReview);
   });
 
