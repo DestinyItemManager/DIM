@@ -12,26 +12,26 @@
             <div class="user-review-container">
                 <div class="user-review-rating-preamble" translate="DtrReview.RatingHint" />
                 <div class="user-review-rating-field">
-                    <select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions" />
+                    <select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions" ng-blur="vm.reviewBlur()" />
                 </div>
             </div>
 
             <div class="user-review-review-preamble" translate="DtrReview.ReviewHint" />
             <div class="user-review-review-field">
-                <textarea translate-attr="{ placeholder: 'DtrReview.Help' }" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" />
+                <textarea translate-attr="{ placeholder: 'DtrReview.Help' }" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()" />
             </div>
 
             <div class="user-review-container">
                 <div class="user-review-pros-preamble" translate="DtrReview.Pros" />
                 <div class="user-review-pros-field">
-                    <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }" />
+                    <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()" />
                 </div>
             </div>
 
             <div class="user-review-container">
                 <div class="user-review-cons-preamble" translate="DtrReview.Cons" />
                 <div class="user-review-cons-field">
-                    <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }" />
+                    <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()" />
                 </div>
             </div>
 

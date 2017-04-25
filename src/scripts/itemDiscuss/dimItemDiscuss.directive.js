@@ -13,7 +13,7 @@ function ItemDiscuss() {
   };
 }
 
-function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags) {
+function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags, dimDestinyTrackerService) {
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
   vm.show = dimItemDiscussService.dialogOpen;
@@ -33,11 +33,18 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
 
   vm.submitReview = function submitReview() {
     var item = vm.item;
+    var userReview = vm.toUserReview(item);
 
-    var newRating = vm.item.userRating;
-    var review = vm.item.userReview;
-    var pros = vm.item.userReviewPros;
-    var cons = vm.item.userReviewCons;
+    $rootScope.$broadcast('review-submitted', item, userReview);
+
+    return false;
+  };
+
+  vm.toUserReview = function(item) {
+    var newRating = item.userRating;
+    var review = item.userReview;
+    var pros = item.userReviewPros;
+    var cons = item.userReviewCons;
 
     var userReview = {
       rating: newRating,
@@ -46,8 +53,14 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
       cons: cons
     };
 
-    $rootScope.$broadcast('review-submitted', item, userReview);
+    return userReview;
+  };
 
-    return false;
+  vm.reviewBlur = function() {
+    var item = vm.item;
+    var userReview = vm.toUserReview(item);
+
+    dimDestinyTrackerService.updateUserRankings(item,
+                                                userReview);
   };
 }
