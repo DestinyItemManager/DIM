@@ -421,6 +421,10 @@ function DestinyTrackerService($q,
     reattachScores: function(stores) {
       _bulkFetcher.attachRankings(null,
                                   stores);
+    },
+    updateUserRankings: function(item, userReview) {
+      console.log(item);
+      console.log(userReview);
     }
   };
 }
