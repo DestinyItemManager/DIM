@@ -80,6 +80,15 @@ class ScoreMaintainer {
     this._itemStores.push(dtrRating);
   }
 
+  addReviewData(item,
+                userReview) {
+    var dtrItem = this._gunTransformer.translateToDtrGun(item);
+    var matchingItem = this.getMatchingItem(dtrItem);
+
+    Object.assign(matchingItem,
+                  userReview);
+  }
+
   getItemStores() {
     return this._itemStores;
   }
@@ -247,6 +256,10 @@ class bulkFetcher {
 
         if (matchingItem) {
           storeItem.dtrRating = matchingItem.rating;
+          storeItem.userRating = matchingItem.rating;
+          storeItem.userReview = matchingItem.review;
+          storeItem.pros = matchingItem.pros;
+          storeItem.cons = matchingItem.cons;
         }
       });
     });
@@ -422,9 +435,10 @@ function DestinyTrackerService($q,
       _bulkFetcher.attachRankings(null,
                                   stores);
     },
-    updateUserRankings: function(item, userReview) {
-      console.log(item);
-      console.log(userReview);
+    updateUserRankings: function(item,
+                                 userReview) {
+      _scoreMaintainer.addReviewData(item,
+                                     userReview);
     }
   };
 }
