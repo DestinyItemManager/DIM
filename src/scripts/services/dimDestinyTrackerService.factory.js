@@ -82,13 +82,14 @@ class ScoreMaintainer {
 
   addUserReviewData(item,
                     userReview) {
-    var dtrItem = this._gunTransformer.translateToDtrGun(item);
-    var matchingItem = this.getMatchingItem(dtrItem);
+    var matchingItem = this.getMatchingItem(item);
 
     var rating = matchingItem.rating;
 
     Object.assign(matchingItem,
                   userReview);
+
+    matchingItem.userRating = matchingItem.rating;
 
     matchingItem.rating = rating;
   }
@@ -99,8 +100,6 @@ class ScoreMaintainer {
 
     matchingItem.reviews = reviewsData.reviews;
     matchingItem.reviewsDataFetched = true;
-
-    this.eventuallyPurgeCachedData(item);
   }
 
   getItemStores() {
@@ -347,11 +346,22 @@ class reviewsFetcher {
                                          reviewData);
   }
 
+  attachCachedReviews(item,
+                      cachedItem) {
+    item.communityReviews = cachedItem.reviews;
+
+    item.userRating = cachedItem.userRating;
+    item.userReview = cachedItem.review;
+    item.userReviewPros = cachedItem.pros;
+    item.userReviewCons = cachedItem.cons;
+  }
+
   getItemReviews(item) {
     var ratingData = this._scoreMaintainer.getRatingData(item);
+
     if (ratingData.reviewsDataFetched) {
-      this.attachReviews(item,
-                         ratingData);
+      this.attachCachedReviews(item,
+                               ratingData);
 
       return;
     }
