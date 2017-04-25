@@ -44,16 +44,16 @@ class ScoreMaintainer {
     this._itemStores = [];
   }
 
-  getMatchingItem(dtrItem) {
+  getMatchingItem(item) {
+    var dtrItem = this._gunTransformer.translateToDtrGun(item);
+
     dtrItem.referenceId = String(dtrItem.referenceId);
 
     return _.findWhere(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
   }
 
   getRatingData(item) {
-    var dtrItem = this._gunTransformer.translateToDtrGun(item);
-
-    var matchingItem = this.getMatchingItem(dtrItem);
+    var matchingItem = this.getMatchingItem(item);
 
     if (!matchingItem) {
       return null;
@@ -80,8 +80,8 @@ class ScoreMaintainer {
     this._itemStores.push(dtrRating);
   }
 
-  addReviewData(item,
-                userReview) {
+  addUserReviewData(item,
+                    userReview) {
     var dtrItem = this._gunTransformer.translateToDtrGun(item);
     var matchingItem = this.getMatchingItem(dtrItem);
 
@@ -91,6 +91,14 @@ class ScoreMaintainer {
                   userReview);
 
     matchingItem.rating = rating;
+  }
+
+  addReviewsData(item,
+                 reviewsData) {
+    var matchingItem = this.getMatchingItem(item);
+
+    matchingItem.reviews = reviewsData.reviews;
+    matchingItem.reviewsDataFetched = true;
   }
 
   getItemStores() {
@@ -271,12 +279,13 @@ class bulkFetcher {
 }
 
 class reviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
+    this._scoreMaintainer = scoreMaintainer;
   }
 
   getItemReviewsCall(item) {
@@ -318,9 +327,20 @@ class reviewsFetcher {
       item.userReviewPros = userReview.pros;
       item.userReviewCons = userReview.cons;
     }
+
+    this._scoreMaintainer.addReviewsData(item,
+                                         reviewData);
   }
 
   getItemReviews(item) {
+    var ratingData = this._scoreMaintainer.getRatingData(item);
+    if (ratingData.reviewsDataFetched) {
+      this.attachReviews(item,
+                         ratingData);
+
+      return;
+    }
+
     this.getItemReviewsPromise(item)
       .then((data) => this.attachReviews(item,
                                          data));
@@ -399,7 +419,7 @@ function DestinyTrackerService($q,
   var _scoreMaintainer = new ScoreMaintainer();
   var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
   var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
-  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker);
+  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
   var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker);
   var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
 
@@ -413,7 +433,6 @@ function DestinyTrackerService($q,
       return;
     }
 
-    // TODO: pull from score maintainer if review exists instead
     _reviewsFetcher.getItemReviews(item);
   });
 
@@ -443,8 +462,8 @@ function DestinyTrackerService($q,
     },
     updateUserRankings: function(item,
                                  userReview) {
-      _scoreMaintainer.addReviewData(item,
-                                     userReview);
+      _scoreMaintainer.addUserReviewData(item,
+                                         userReview);
     }
   };
 }
