@@ -99,10 +99,25 @@ class ScoreMaintainer {
 
     matchingItem.reviews = reviewsData.reviews;
     matchingItem.reviewsDataFetched = true;
+
+    this.eventuallyPurgeCachedData(item);
   }
 
   getItemStores() {
     return this._itemStores;
+  }
+
+  eventuallyPurgeCachedData(item) {
+    var tenMinutes = 1000 * 60 * 10;
+    var self = this;
+
+    setTimeout(function() {
+      var matchingItem = self.getMatchingItem(item);
+
+      matchingItem.reviews = null;
+      matchingItem.reviewsDataFetched = false;
+    },
+      tenMinutes);
   }
 }
 
@@ -348,13 +363,14 @@ class reviewsFetcher {
 }
 
 class reviewSubmitter {
-  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker) {
+  constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
     this._gunTransformer = new gunTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
+    this._scoreMaintainer = scoreMaintainer;
   }
 
   getReviewer() {
@@ -403,8 +419,13 @@ class reviewSubmitter {
     return promise;
   }
 
+  eventuallyPurgeCachedData(item) {
+    this._scoreMaintainer.eventuallyPurgeCachedData(item);
+  }
+
   submitReview(item, userReview) {
-    this.submitReviewPromise(item, userReview);
+    this.submitReviewPromise(item, userReview)
+      .then(this.eventuallyPurgeCachedData(item));
   }
 }
 
@@ -420,7 +441,7 @@ function DestinyTrackerService($q,
   var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
   var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
   var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
-  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker);
+  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
   var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
 
   function _userHasNotOkayedPostingIds() {
@@ -450,7 +471,6 @@ function DestinyTrackerService($q,
       return;
     }
 
-    // TODO: bake item cache flush into submit promise
     _reviewSubmitter.submitReview(item, userReview);
   });
 
