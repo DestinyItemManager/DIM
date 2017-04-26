@@ -274,8 +274,8 @@
       "Store": "Store",
       "Take": "Take",
       "Vault": "Vault",
-      "LockUnlock": "{locked, select, true{Lock} other{Unlock}} {itemType}",
-      "TrackUntrack": "{locked, select, true{Track} other{Untrack}} {itemType}"
+      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
    },
    "MoveAmount": {
      "Min": "Minimum stack (1)",

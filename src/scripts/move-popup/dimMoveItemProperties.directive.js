@@ -50,7 +50,7 @@ function MoveItemProperties() {
       '        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, \'lock\')" translate-values="{itemType: vm.item.typeName, locked: vm.item.locked}" translate-attr="{title: \'MovePopup.LockUnlock\'}">',
       '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
       '        </div>',
-      '        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" translate-values="{itemType: vm.item.typeName, locked: vm.item.locked}" translate-attr="{title: \'MovePopup.TrackUntrack\'}">',
+      '        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" translate-values="{itemType: vm.item.typeName, tracked: vm.item.tracked}" translate-attr="{title: \'MovePopup.TrackUntrack\'}">',
       '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
       '        </div>',
       '      </div>',
