@@ -20,14 +20,14 @@ const angular = require('angular');
             icon: notification.icon
           };
           if (Notification.permission === "granted") {
-            const notification = new Notification(notification.title, options);
+            const notificationObject = new Notification(notification.title, options);
           }
           // Otherwise, we need to ask the user for permission
           else if (Notification.permission !== 'denied') {
             Notification.requestPermission((permission) => {
               // If the user accepts, let's create a notification
               if (permission === "granted") {
-                var notification = new Notification(notification.title, options);
+                var notificationObject = new Notification(notification.title, options);
               }
             });
           }

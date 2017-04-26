@@ -1,6 +1,25 @@
 const angular = require('angular');
 const _ = require('underscore');
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 (function() {
   'use strict';
 
@@ -28,11 +47,11 @@ const _ = require('underscore');
           if (!store) {
             return;
           }
-          const newItems = _.filter(store.items, function(item) { return item.isNew && !item.notransfer && item.equipment && !item.classified && _.indexOf(alreadyNotified, item.id) >= 0; });
+          const newItems = shuffle(_.filter(store.items, function(item) { return !item.notransfer && item.equipment && !item.classified && _.indexOf(alreadyNotified, item.id) < 0; }));
           if (newItems.length > 0) {
             const bodyString = "You recieved " + newItems[0].name + (newItems.length > 1 ? (" and " + (newItems.length - 1) + " other items!") : "!");
             _.each(newItems, (item) => {
-              this.alreadyNotified.push(item.id);
+              alreadyNotified.push(item.id);
             });
             createNotification({
               title: "New Loot!",
