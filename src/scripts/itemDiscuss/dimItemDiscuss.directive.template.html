@@ -42,7 +42,7 @@
     </div>
 
     <div class="community-reviews">
-        <div ng-repeat="communityReview in vm.item.communityReviews" class="community-review">
+        <div ng-repeat="communityReview in vm.item.communityReviews | filter:{review: ''}" class="community-review">
             <div class="community-review-highlighter">
                 <div class="user-review-circle green-circle" ng-if="communityReview.isHighlighted" />
                 <div class="user-review-circle orange-circle" ng-if="!communityReview.isHighlighted" />
