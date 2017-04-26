@@ -272,7 +272,7 @@
       "Equip": "Equip",
       "Split": "Split",
       "Store": "Store",
-      "Subtitle": "{light} {statName} {classType} {typeName}",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Take",
       "Vault": "Vault"
    },

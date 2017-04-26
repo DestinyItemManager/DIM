@@ -273,7 +273,7 @@
       "Equip": "Equip",
       "Split": "Dividir",
       "Store": "Mover",
-      "Subtitle": "{classType} {typeName} com {light} de {statName}",
+      "Subtitle": "{classType} {typeName} {light, select, null{} other{com {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
       "Vault": "Cofre"
    },
