@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Incapaz de encontrar uma conta de Destiny no {platform}.",
       "NoCookies": "Nenhum cookie encontrado.",
       "NotConnected": "Você deverá estar sem conexão com a Internet.",
-      "Twitter": "Veja atualizações em",
+      "Twitter": "Veja atualizações em:",
       "ItemUniqueness": "Unicidade de itens",
       "ItemUniquenessExplanation": "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo.",
       "VendorNotFound": "Informação do vendedor não disponível."

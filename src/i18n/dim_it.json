@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
-      "Twitter": "Ottieni informazioni sullo stato del servizio su",
+      "Twitter": "Ottieni informazioni sullo stato del servizio su:",
       "ItemUniqueness": "Unicità dell elemento",
       "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
       "VendorNotFound": "I dati dei mercanti non sono disponibili."

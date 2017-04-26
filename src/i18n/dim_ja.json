@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
       "NoCookies": "クッキーが見つかりませんでした。",
       "NotConnected": "インターネットに接続してない可能性あります。",
-      "Twitter": "最新の状態に更新します。",
+      "Twitter": "最新の状態に更新します。:",
       "ItemUniqueness": "アイテムのレア度",
       "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
       "VendorNotFound": "ベンダー情報ありません"

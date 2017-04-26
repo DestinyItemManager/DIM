@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Konnte auf {platform} keinen Destiny Account für dich finden.",
       "NoCookies": "Keine Cookies gefunden.",
       "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
-      "Twitter": "Bekomme Statusupdates auf",
+      "Twitter": "Bekomme Statusupdates auf:",
       "ItemUniqueness": "Item Einzigartigkeit",
       "ItemUniquenessExplanation": "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
       "VendorNotFound": "Händler Daten nicht verfügbar."
