@@ -350,10 +350,24 @@ class reviewsFetcher {
                       cachedItem) {
     item.communityReviews = cachedItem.reviews;
 
-    item.userRating = cachedItem.userRating;
-    item.userReview = cachedItem.review;
-    item.userReviewPros = cachedItem.pros;
-    item.userReviewCons = cachedItem.cons;
+    this.attachReviews(item,
+                       cachedItem);
+
+    if (cachedItem.userRating) {
+      item.userRating = cachedItem.userRating;
+    }
+
+    if (cachedItem.review) {
+      item.userReview = cachedItem.review;
+    }
+
+    if (cachedItem.pros) {
+      item.userReviewPros = cachedItem.pros;
+    }
+
+    if (cachedItem.cons) {
+      item.userReviewCons = cachedItem.cons;
+    }
   }
 
   getItemReviews(item) {
