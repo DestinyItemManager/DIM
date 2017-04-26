@@ -40,9 +40,9 @@
       "Splits": "Confronta simili suddivisioni ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Granate tempo di recupero",
-      "Melee": "Corpo a corpo tempo di recupero",
-      "Super": "Super tempo di recupero"
+      "Grenade": "Granate tempo di recupero: {cooldown}",
+      "Melee": "Corpo a corpo tempo di recupero: {cooldown}",
+      "Super": "Super tempo di recupero: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Giorno} other{# Giorni}}"
@@ -346,7 +346,7 @@
       "Prestige": "Livello Prestigio: {level}\n{exp}xp fino alle 5 particelle di luce",
       "Quality": "Qualità statistiche",
       "Strength": "Forza",
-      "TierProgress": "{progress} per {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 per T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Riempi Stack ({amount})",

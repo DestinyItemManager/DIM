@@ -40,9 +40,9 @@
       "Splits": "Comparar partes similares ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Tiempo para Granada",
-      "Melee": "Tiempo para Cuerpo a cuerpo",
-      "Super": "Tiempo para Super"
+      "Grenade": "Tiempo para Granada: {cooldown}",
+      "Melee": "Tiempo para Cuerpo a cuerpo: {cooldown}",
+      "Super": "Tiempo para Super: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Día} other{# Días}}"
@@ -346,7 +346,7 @@
       "Prestige": "Nivel de Prestigio: {level}\n{exp}xp para 5 motas de luz.",
       "Quality": "Calidad Estadística",
       "Strength": "Fuerza",
-      "TierProgress": "{progress} por {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 por T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Llena la pila ({amount})",

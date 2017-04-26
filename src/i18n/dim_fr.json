@@ -40,9 +40,9 @@
       "Splits": "Comparer des parts similaires ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Régénération de Grenade",
-      "Melee": "Régénération de Mêlée",
-      "Super": "Régénération du Super"
+      "Grenade": "Régénération de Grenade: {cooldown}",
+      "Melee": "Régénération de Mêlée: {cooldown}",
+      "Super": "Régénération du Super: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
@@ -346,7 +346,7 @@
       "Prestige": "Niveau de prestige: {level}\n{exp}xp jusqu'à 5 particule de lumière.",
       "Quality": "Qualité des stats",
       "Strength": "Force",
-      "TierProgress": "{progress} pour {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 pour T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Remplir la pile ({amount})",

@@ -69,7 +69,7 @@ function MoveItemProperties() {
       '      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
       '        <div ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-class="::vm.item.dmg"></div>',
       '      </div>',
-      '      <div class="item-type-info">{{vm.light}} {{::vm.classType}} {{::vm.item.typeName}}</div>',
+      '      <div class="item-type-info" translate-values="{ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType, typeName: vm.item.typeName }" translate="MovePopup.Subtitle"></div>',
       '      <div ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></div>',
       '      <dim-item-tag ng-if="vm.featureFlags.tagsEnabled && vm.item.taggable" item="vm.item"></dim-item-tag>',
       '    </div>',
@@ -199,7 +199,6 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();
-    vm.light += ' ' + vm.item.primStat.stat.statName;
     if (vm.item.dmg) {
       vm.classes['is-' + vm.item.dmg] = true;
     }

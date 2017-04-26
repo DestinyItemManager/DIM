@@ -40,9 +40,9 @@
       "Splits": "同様の分割を比較する（{数量}）"
    },
    "Cooldown": {
-      "Grenade": "グレネードのクールダウン",
-      "Melee": "近接チャージのクールダウン",
-      "Super": "スーパースキルのクールダウン"
+      "Grenade": "グレネードのクールダウン: {cooldown}",
+      "Melee": "近接チャージのクールダウン: {cooldown}",
+      "Super": "スーパースキルのクールダウン: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays} 日間"
@@ -346,7 +346,7 @@
       "Prestige": "評判レベル：  {level}\n光の欠片5個までは後  {exp}xp",
       "Quality": "品質",
       "Strength": "腕力",
-      "TierProgress": "{tier} の {progress}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 の T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "フルスタック ({amount})",

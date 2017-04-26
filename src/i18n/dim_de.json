@@ -40,9 +40,9 @@
       "Splits": "Vergleiche mit selben Werten ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Granaten Abklingzeit",
-      "Melee": "Nahkampf Abklingzeit",
-      "Super": "Super Abklingzeit"
+      "Grenade": "Granaten Abklingzeit: {cooldown}",
+      "Melee": "Nahkampf Abklingzeit: {cooldown}",
+      "Super": "Super Abklingzeit: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Tag} other{# Tage}}"
@@ -346,7 +346,7 @@
       "Prestige": "Prestige Level: {level}\n{exp}xp bis 5 Lichtpartikel.",
       "Quality": "Qualität der Werte",
       "Strength": "Stärke",
-      "TierProgress": "{progress} für {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 für T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Stapel auffüllen ({amount})",

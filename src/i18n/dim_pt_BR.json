@@ -40,9 +40,9 @@
       "Splits": "Compare com atributos similares ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Tempo de carga da granada",
-      "Melee": "Tempo de carga do corpo-a-corpo",
-      "Super": "Tempo de carga da Super"
+      "Grenade": "Tempo de carga da granada: {cooldown}",
+      "Melee": "Tempo de carga do corpo-a-corpo: {cooldown}",
+      "Super": "Tempo de carga da Super: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Dia} other{# Dias}}"
@@ -273,6 +273,7 @@
       "Equip": "Equip",
       "Split": "Dividir",
       "Store": "Mover",
+      "Subtitle": "{classType} {typeName} com {light} de {statName}",
       "Take": "Tomar",
       "Vault": "Cofre"
    },
@@ -346,7 +347,7 @@
       "Prestige": "Nível de prestígio: {level}\n{exp}xp para 5 fragmentos de luz.",
       "Quality": "Níveis de qualidade",
       "Strength": "Força",
-      "TierProgress": "{progress} para {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 para T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Encher Pilha ({amount})",

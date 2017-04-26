@@ -40,9 +40,9 @@
       "Splits": "Compare similar splits ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Grenade cooldown",
-      "Melee": "Melee cooldown",
-      "Super": "Super cooldown"
+      "Grenade": "Grenade cooldown: {cooldown}",
+      "Melee": "Melee cooldown: {cooldown}",
+      "Super": "Super cooldown: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Day} other{# Days}}"
@@ -272,6 +272,7 @@
       "Equip": "Equip",
       "Split": "Split",
       "Store": "Store",
+      "Subtitle": "{light} {statName} {classType} {typeName}",
       "Take": "Take",
       "Vault": "Vault"
    },
@@ -345,7 +346,7 @@
       "Prestige": "Prestige Level: {level}\n{exp}xp until 5 motes of light.",
       "Quality": "Stats quality",
       "Strength": "Strength",
-      "TierProgress": "{progress} for {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 for T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",
