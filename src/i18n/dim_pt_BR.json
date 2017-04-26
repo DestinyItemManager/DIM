@@ -407,7 +407,7 @@
        "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
        "Twitter": "Twitter",
        "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-       "Version": "Versão",
+       "Version": "Versão {version} ({flavor})",
        "Transifex": "Junte-se à equipe de tradução!",
        "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
      },
