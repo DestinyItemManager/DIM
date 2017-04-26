@@ -92,7 +92,7 @@ function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) 
             '  <div class="item-description" ng-if="!vm.item.equipment && vm.compareItemCount">You have {{vm.compareItemCount}} of these.</div>',
             '  <div class="item-details" ng-if="vm.saleItem.failureStrings">{{vm.saleItem.failureStrings}}</div>',
             '  <div class="item-details" ng-if="vm.unlockStores.length">',
-            '    <div translate="Vendors.Available">:</div>',
+            '    <div translate="Vendors.Available"></div>',
             '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
             '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
             '      {{store.name}}',
@@ -139,4 +139,3 @@ function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) 
     }
   });
 }
-
