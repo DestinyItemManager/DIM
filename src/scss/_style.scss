@@ -607,6 +607,10 @@ img {
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
@@ -684,21 +688,13 @@ img {
 }
 
 .item {
-  margin: 2px 2px -2px 2px;
+  margin: 2px;
+  width: 48px;
+  height: 48px;
   position: relative;
-  display: inline-block;
-  &.popup-open:before {
-    border: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent;
-    border-width: .4em .4em 0;
-    top: -6px;
-    content: "";
-    display: block;
-    left: 16px;
-    position: absolute;
-    z-index: 2;
-  }
-
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
+  contain: strict;
   .item-xp-bar-small {
     position: absolute;
     top: 0;
