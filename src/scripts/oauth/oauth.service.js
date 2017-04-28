@@ -15,11 +15,22 @@ function OAuthService($q, $injector, localStorageService, OAuthTokenService) {
   function refreshToken() {
     const $http = $injector.get('$http');
 
+    var apiKey;
+    if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+      if (window.chrome && window.chrome.extension) {
+        apiKey = $DIM_API_KEY;
+      } else {
+        apiKey = $DIM_WEB_API_KEY;
+      }
+    } else {
+      apiKey = localStorageService.get('apiKey');
+    }
+
     return $http({
       method: 'POST',
       url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromRefreshToken/',
       headers: {
-        'X-API-Key': localStorageService.get('apiKey')
+        'X-API-Key': apiKey
       },
       data: {
         refreshToken: OAuthTokenService.getRefreshToken().value

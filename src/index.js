@@ -78,7 +78,9 @@ require('./scripts/minmax/dimMinMaxItem.directive');
 require('./scripts/minmax/dimMinMaxLocks.directive');
 require('./scripts/minmax/dimMinMaxCharSelect.directive');
 require('./scripts/debug/dimDebugItem.controller');
-require('./scripts/developer/dimDeveloper.controller');
+if ($DIM_FLAVOR === 'dev') {
+  require('./scripts/developer/dimDeveloper.controller');
+}
 require('./scripts/materials-exchange/dimCollapsible.directive');
 require('./scripts/login/dimLogin.controller');
 

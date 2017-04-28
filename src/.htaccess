@@ -710,15 +710,15 @@ ServerSignature Off
 # # WEB PERFORMANCE                                                    #
 # ######################################################################
 
+SetEnv no-gzip
 
-<IfModule mod_mime.c>
-    AddEncoding gzip .svgz
-    AddEncoding gzip .gz
-    AddEncoding br .br
-</IfModule>
+AddEncoding gzip .svgz
+AddEncoding gzip .gz
+AddEncoding br .br
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
 
     # for any request, search for pre-compressed versions (gzip or brotli) and serve that directly if it's supported
 
@@ -729,10 +729,45 @@ ServerSignature Off
 
     # Serve pre-gzipped stuff if we got it
     RewriteCond %{HTTP:Accept-encoding} gzip
-    RewriteCond %{HTTP_USER_AGENT} !Konqueror
     RewriteCond %{REQUEST_FILENAME}.gz -f
     RewriteRule ^(.*)$ $1.gz [QSA,L]
 </IfModule>
+
+# Our host seems to want to force the .gz files to be application/x-gzip
+<FilesMatch \.html\.gz$>
+    ForceType text/html
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.js\.gz$>
+    ForceType application/javascript
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.css\.gz$>
+    ForceType text/css
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.json\.gz$>
+    ForceType text/json
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.svg\.gz$>
+    ForceType image/svg+xml
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.ttf\.gz$>
+    ForceType application/font-sfnt
+    Header set Content-Encoding gzip
+</FilesMatch>
+
+<FilesMatch \.eot\.gz$>
+    ForceType application/vnd.ms-fontobject
+    Header set Content-Encoding gzip
+</FilesMatch>
 
 # ----------------------------------------------------------------------
 # | Content transformation                                             |

@@ -132,7 +132,7 @@
       "ToStore": "Alle {name} sind nun bei deinem {store}."
    },
    "ItemService": {
-      "BucketFull": "Es sind zu viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar vom}} {store}.",
+      "BucketFull": "Es sind zu viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar vom} other{}} {store}.",
       "Classified": "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
       "Classified2": "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar.",
       "Deequip": "Kann keinen weiteren ausrüstbaren Gegenstand finden um {itemname} abzulegen.",

@@ -132,7 +132,7 @@
       "ToStore": "Todos os {name} estão agora no seu {store}."
    },
    "ItemService": {
-      "BucketFull": "Há muitos '{itemtype}' {isVault, select, true{no} false{em seu}} {store}.",
+      "BucketFull": "Há muitos '{itemtype}' {isVault, select, true{no} other{em seu}} {store}.",
       "Classified": "Este item é confidencial e não pode ser transferido no momento.",
       "Classified2": "Item confidencial. A Bungie não fornece informações sobre este item. Este item ainda não é transferível.",
       "Deequip": "Não foi possível encontrar outro item para equipar no lugar de {itemname}",
