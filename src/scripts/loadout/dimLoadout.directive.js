@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimLoadout.directive.template.html';
 
 angular.module('dimApp').directive('dimLoadout', Loadout);
 
@@ -11,7 +12,7 @@ function Loadout(dimLoadoutService, $translate) {
     bindToController: true,
     link: Link,
     scope: {},
-    templateUrl: require('./dimLoadout.directive.template.html')
+    template: template
   };
 
   function Link(scope) {

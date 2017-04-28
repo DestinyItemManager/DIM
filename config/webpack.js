@@ -72,10 +72,7 @@ module.exports = (env) => {
         }, {
           test: /\.html$/,
           use: [
-            {
-              loader: 'file-loader',
-              options: { name: ASSET_NAME_PATTERN }
-            },
+            'raw-loader',
             'extract-loader',
             'html-loader'
           ]

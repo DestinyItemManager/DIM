@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimFarming.directive.template.html';
 
 angular.module('dimApp').directive('dimFarming', Farming);
 
@@ -8,7 +9,7 @@ function Farming() {
     controllerAs: 'vm',
     bindToController: true,
     scope: {},
-    templateUrl: require('./dimFarming.directive.template.html')
+    template: template
   };
 }
 

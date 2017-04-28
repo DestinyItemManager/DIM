@@ -2,7 +2,7 @@ import _ from 'underscore';
 import angular from 'angular';
 import { sum, count } from '../util';
 
-import templateUrl from './record-books.html';
+import template from './record-books.html';
 import './record-books.scss';
 
 function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSettingsService, $filter) {
@@ -140,5 +140,5 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
 
 export const RecordBooksComponent = {
   controller: RecordBooksController,
-  templateUrl: templateUrl
+  template: template
 };

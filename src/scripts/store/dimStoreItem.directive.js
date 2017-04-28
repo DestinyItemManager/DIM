@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimStoreItem.directive.template.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
@@ -39,7 +40,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
-    templateUrl: require('./dimStoreItem.directive.template.html'),
+    template: template
   };
 
   function Link(scope, element) {

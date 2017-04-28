@@ -12,23 +12,23 @@ function routes($stateProvider, $urlRouterProvider) {
   }, {
     name: 'best',
     parent: 'content',
-    templateUrl: best,
+    template: best,
     url: '/best'
   }, {
     name: 'materials-exchange',
     parent: 'content',
     url: '/materials-exchange',
-    templateUrl: materialExchange
+    template: materialExchange
   }, {
     name: 'debugItem',
     parent: 'content',
     url: '/debugItem/:itemId',
-    templateUrl: debugItem
+    template: debugItem
   }, {
     name: 'login',
     parent: 'shell',
     url: '/login',
-    templateUrl: login
+    template: login
   }];
 
   if ($DIM_FLAVOR === 'dev') {
@@ -36,7 +36,7 @@ function routes($stateProvider, $urlRouterProvider) {
       name: 'developer',
       parent: 'content',
       url: '/developer',
-      templateUrl: require('app/scripts/developer/developer.template.html')
+      template: require('app/scripts/developer/developer.template.html')
     });
   }
 
