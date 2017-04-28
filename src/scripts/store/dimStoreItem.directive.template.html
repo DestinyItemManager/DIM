@@ -5,12 +5,12 @@
      drag="::vm.item.index"
      class="item"
      ng-class="{ 'search-hidden': !vm.item.visible }">
+  <div class="item-xp-bar item-xp-bar-small"
+       ng-if="vm.item.percentComplete && !vm.item.complete"
+       dim-percent-width="vm.item.percentComplete">
+  </div>
   <div class="item-elem"
        ng-class="{ 'complete': vm.item.complete }">
-    <div class="item-xp-bar item-xp-bar-small"
-         ng-if="vm.item.percentComplete && !vm.item.complete">
-      <div dim-percent-width="vm.item.percentComplete"></div>
-    </div>
     <div class="img"
          ng-style="::vm.item.icon | bungieBackground"
          ng-click="vm.clicked(vm.item, $event)"
