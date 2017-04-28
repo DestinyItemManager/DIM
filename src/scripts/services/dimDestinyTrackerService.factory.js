@@ -38,7 +38,7 @@ class gunTransformer {
   }
 }
 
-class ScoreMaintainer {
+class reviewDataCache {
   constructor() {
     this._gunTransformer = new gunTransformer();
     this._itemStores = [];
@@ -221,7 +221,7 @@ class bulkFetcher {
     this._gunListBuilder = new gunListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
-    this._scoreMaintainer = scoreMaintainer;
+    this._reviewDataCache = scoreMaintainer;
   }
 
   getBulkWeaponDataPromise(gunList) {
@@ -238,7 +238,7 @@ class bulkFetcher {
       return this.$q.resolve();
     }
 
-    var weaponList = this._gunListBuilder.getWeaponList(stores.stores, this._scoreMaintainer);
+    var weaponList = this._gunListBuilder.getWeaponList(stores.stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       return this.$q.resolve();
@@ -272,13 +272,13 @@ class bulkFetcher {
 
     if (bulkRankings) {
       bulkRankings.forEach(function(bulkRanking) {
-        self._scoreMaintainer.addScore(bulkRanking);
+        self._reviewDataCache.addScore(bulkRanking);
       });
     }
 
     stores.forEach(function(store) {
       store.items.forEach(function(storeItem) {
-        var matchingItem = self._scoreMaintainer.getRatingData(storeItem);
+        var matchingItem = self._reviewDataCache.getRatingData(storeItem);
 
         if (matchingItem) {
           storeItem.dtrRating = matchingItem.rating;
@@ -299,7 +299,7 @@ class reviewsFetcher {
     this._gunTransformer = new gunTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
-    this._scoreMaintainer = scoreMaintainer;
+    this._reviewDataCache = scoreMaintainer;
   }
 
   getItemReviewsCall(item) {
@@ -342,7 +342,7 @@ class reviewsFetcher {
       item.userReviewCons = userReview.cons;
     }
 
-    this._scoreMaintainer.addReviewsData(item,
+    this._reviewDataCache.addReviewsData(item,
                                          reviewData);
   }
 
@@ -371,7 +371,7 @@ class reviewsFetcher {
   }
 
   getItemReviews(item) {
-    var ratingData = this._scoreMaintainer.getRatingData(item);
+    var ratingData = this._reviewDataCache.getRatingData(item);
 
     if (ratingData.reviewsDataFetched) {
       this.attachCachedReviews(item,
@@ -394,7 +394,7 @@ class reviewSubmitter {
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
-    this._scoreMaintainer = scoreMaintainer;
+    this._reviewDataCache = scoreMaintainer;
   }
 
   getReviewer() {
@@ -444,7 +444,7 @@ class reviewSubmitter {
   }
 
   eventuallyPurgeCachedData(item) {
-    this._scoreMaintainer.eventuallyPurgeCachedData(item);
+    this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
   submitReview(item, userReview) {
@@ -461,11 +461,11 @@ function DestinyTrackerService($q,
                                $translate,
                                dimFeatureFlags,
                                loadingTracker) {
-  var _scoreMaintainer = new ScoreMaintainer();
+  var _reviewDataCache = new reviewDataCache();
   var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
-  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
-  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
-  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _scoreMaintainer);
+  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
 
   function _userHasNotOkayedPostingIds() {
@@ -506,7 +506,7 @@ function DestinyTrackerService($q,
     },
     updateUserRankings: function(item,
                                  userReview) {
-      _scoreMaintainer.addUserReviewData(item,
+      _reviewDataCache.addUserReviewData(item,
                                          userReview);
     }
   };
