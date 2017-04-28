@@ -132,7 +132,7 @@
       "ToStore": "Todos los {name} ahora están en tu {store}"
    },
    "ItemService": {
-      "BucketFull": "Hay muchos objetos de tipo '{itemtype}' {isVault, select, true{en la} false{en tu}} {store}.",
+      "BucketFull": "Hay muchos objetos de tipo '{itemtype}' {isVault, select, true{en la} other{en tu}} {store}.",
       "Classified": "Este objeto es 'clasificado' y no puede transferirse en este momento",
       "Classified2": "Objeto 'clasificado'. Bungie no a entregado información acerca de este objeto.  Este objeto todavía no es transferible.",
       "Deequip": "No se encontró otro objeto a equipar para desequipar  {itemname}",
