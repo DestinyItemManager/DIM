@@ -107,7 +107,7 @@ function MoveItemProperties() {
       '  <dim-objectives class="item-details" ng-if="vm.itemDetails" objectives="vm.item.objectives"></dim-objectives>',
       '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
       '    <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>',
-      '    <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>',
+      '    <button ng-click="vm.dumpDebugInfo()" translate="Debug.Dump"></a>',
       '  </div>',
       '</div>'
     ].join('')
