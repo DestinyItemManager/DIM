@@ -39,10 +39,10 @@
         <span class="bigValue">{{vm.infused}}</span>
         <span class="green">(+ {{vm.infused - vm.source.primStat.value}})</span>
         <div>
-          <span> 3 <span class="currency"><img alt="Legendary Marks" title="Legendary Marks" src="~app/images/legendaryMarks.png"></span></span>
-          <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="Exotic Shards" title="Exotic Shards" src="https://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
-          <span> + 250 <span class="currency"><img alt="Glimmer" title="Glimmer" src="~app/images/glimmer.png"></span></span>
-          <span> + {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="Materials" title="Materials" ng-src="{{vm.wildcardMaterialIcon | bungieIcon}}"></span></span>
+          <span> 3 <span class="currency"><img alt="{{::vm.i18n.legendaryMarks}}" title="{{::vm.i18n.legendaryMarks}}" src="~app/images/legendaryMarks.png"></span></span>
+          <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{::vm.i18n.exoticShard}}" title="{{::vm.i18n.exoticShard}}" src="https://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
+          <span> + 250 <span class="currency"><img alt="{{::vm.i18n.glimmer}}" title="{{::vm.i18n.glimmer}}" src="~app/images/glimmer.png"></span></span>
+          <span> + {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="{{::vm.wildcardMaterial}}" title="{{::vm.wildcardMaterial}}" ng-src="{{vm.wildcardMaterialIcon | bungieIcon}}"></span></span>
         </div>
       </div>
       <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" translate="Infusion.TransferItems"></button>
