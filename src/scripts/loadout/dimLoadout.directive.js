@@ -275,6 +275,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       .filter('equipped')
       .map('stats')
       .flatten()
+      .filter()
       .filter((stat) => interestingStats.has(stat.id))
       .reduce((stats, stat) => {
         numInterestingStats++;
