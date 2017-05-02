@@ -675,15 +675,18 @@ img {
   margin: 2px;
   position: relative;
   contain: strict;
-  .item-xp-bar-small {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 2px;
-  }
   &.search-hidden {
     opacity: .2;
   }
+}
+
+.item-xp-bar-small {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: $xp;
 }
 
 .item-img {
@@ -698,7 +701,7 @@ img {
     outline: none;
   }
   &.complete {
-    border-color: #f5dc56;
+    border-color: $gold;
   }
 }
 
@@ -742,7 +745,7 @@ img {
 }
 
 .complete {
-  border-color: #f5dc56;
+  border-color: $gold;
 }
 
 .factionrep {
@@ -849,7 +852,7 @@ dim-store-heading {
     margin-right: 1px;
   }
   .powerLevel {
-    color: #f5dc56;
+    color: $gold;
     &:before {
       content: "\2726";
       display: inline-block;
@@ -872,7 +875,7 @@ dim-store-heading {
   position: absolute;
   bottom: -2px;
   left: 0;
-  background-color: #5da469;
+  background-color: $xp;
 
   &.moteProgress {
     background-color: #069;
@@ -1326,7 +1329,7 @@ rzslider, .rzslider {
 }
 
 .talent-node-showxp .talent-node-xp {
-  stroke: #5EA16A;
+  stroke: $xp;
 }
 
 .talent-node-activated .talent-node-xp {
@@ -1682,7 +1685,7 @@ dim-compare {
 
   .light {
     font-weight: 200;
-    color: #f5dc56;
+    color: $gold;
     float: right;
     &:before {
       content: "\2726";
@@ -1792,7 +1795,7 @@ h2, h3, h4 {
 .item-xp-bar {
   height: 4px;
   width: 100%;
-  background-color: #5EA16A;
+  background-color: $xp;
 }
 
 /* Infuse */
