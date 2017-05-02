@@ -8,7 +8,7 @@
   <div class="item-xp-bar item-xp-bar-small"
        ng-if="vm.item.percentComplete && !vm.item.complete"
        dim-percent-width="vm.item.percentComplete"></div>
-  <div class="img"
+  <div class="item-img"
        ng-class="{ 'complete': vm.item.complete }"
        ng-style="::vm.item.icon | bungieBackground"
        ng-click="vm.clicked(vm.item, $event)"
@@ -16,7 +16,7 @@
   <div ng-if="vm.item.quality"
        class="item-stat item-quality"
        ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>
-  <div class="element"
+  <div class="item-element"
        ng-class="::vm.item.dmg"></div>
   <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>
   <div ng-if="vm.item.isNew"
