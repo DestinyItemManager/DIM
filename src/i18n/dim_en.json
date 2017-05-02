@@ -131,7 +131,7 @@
       "ToStore": "All {name} are now on your {store}."
    },
    "ItemService": {
-      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
+      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} other{on your}} {store}.",
       "Classified": "This item is classified and cannot be transferred at this time.",
       "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
       "Deequip": "Cannot find another item to equip in order to dequip {itemname}",
@@ -272,7 +272,9 @@
       "Split": "Split",
       "Store": "Store",
       "Take": "Take",
-      "Vault": "Vault"
+      "Vault": "Vault",
+      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
    },
    "MoveAmount": {
      "Min": "Minimum stack (1)",

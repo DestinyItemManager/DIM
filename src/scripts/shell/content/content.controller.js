@@ -169,6 +169,7 @@ export default class ContentController {
           ngDialog.closeAll();
           result = ngDialog.open({
             template: template,
+            plain: true,
             className: name,
             appendClassName: 'modal-dialog'
           });

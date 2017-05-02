@@ -47,10 +47,10 @@ function MoveItemProperties() {
       '  <div class="item-header" ng-class="vm.classes">',
       '    <div class="item-title-container">',
       '      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
-      '        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, \'lock\')" title="{{!vm.item.locked ? \'Lock\':\'Unlock\'}} {{::vm.item.typeName}}">',
+      '        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, \'lock\')" translate-values="{itemType: vm.item.typeName, locked: vm.item.locked}" translate-attr="{title: \'MovePopup.LockUnlock\'}">',
       '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
       '        </div>',
-      '        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" title="{{!vm.item.tracked ? \'Track\':\'Untrack\'}} {{::vm.item.typeName}}">',
+      '        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" translate-values="{itemType: vm.item.typeName, tracked: vm.item.tracked}" translate-attr="{title: \'MovePopup.TrackUntrack\'}">',
       '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
       '        </div>',
       '      </div>',
@@ -107,7 +107,7 @@ function MoveItemProperties() {
       '  <dim-objectives class="item-details" ng-if="vm.itemDetails" objectives="vm.item.objectives"></dim-objectives>',
       '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
       '    <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>',
-      '    <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>',
+      '    <button ng-click="vm.dumpDebugInfo()" translate="Debug.Dump"></a>',
       '  </div>',
       '</div>'
     ].join('')

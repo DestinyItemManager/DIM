@@ -24,7 +24,7 @@
       "NotConnected": "Potresti non essere connesso a internet.",
       "Twitter": "Ottieni informazioni sullo stato del servizio su",
       "ItemUniqueness": "Unicità dell elemento",
-      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
+      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} other{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
       "VendorNotFound": "I dati dei mercanti non sono disponibili."
    },
    "Compare": {
@@ -62,10 +62,10 @@
    },
    "FarmingMode": {
       "FarmingMode": "Modalità Farming (sposta oggetti)",
-      "Desc": "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} female{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
+      "Desc": "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} other{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
       "Configuration": "Configurazione",
       "MakeRoom": {
-         "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} female{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
+         "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} other{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
          "MakeRoom": "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
          "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
       },
@@ -234,12 +234,12 @@
       "TooManyRequested": "Hai un totale di {total} {itemname}, ma il tuo loadout ne richiede {requested}. Abbiamo trasferito tutti quelli che avevi.",
       "DoesNotExist": "{itemname} non esiste sul tuo account.",
       "AppliedAuto": "Costruttore Automatico di Loadout",
-      "Applied": "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
+      "Applied": "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} other{alla tua}} {store}.",
       "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
       "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito.",
       "NameRequired": "E' richiesto un nome.",
       "MakeRoom": "Crea spazio per l'Amministratore",
-      "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} female{dalla}} {store}.",
+      "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} other{dalla}} {store}.",
       "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}.",
       "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
       "SaveErrorDescription": "Impossibile salvare il loadout {loadoutName}: {error}.",

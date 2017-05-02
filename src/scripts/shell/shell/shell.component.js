@@ -1,8 +1,8 @@
 import controller from './shell.controller';
-import templateUrl from './shell.html';
+import template from './shell.html';
 import './shell.scss';
 
 export default {
   controller,
-  templateUrl
+  template
 };
