@@ -1,3 +1,5 @@
+@import 'variables';
+
 .minmax {
   width: 900px;
   margin: 0 auto;
@@ -17,11 +19,11 @@
   }
 
   .ex-or {
-    background-color: #E8A534;
+    background-color: $orange;
   }
 
   .ex-and {
-    background-color: #B184C5;
+    background-color: $void;
   }
 
   .locked-perk-notification img {
@@ -83,7 +85,7 @@
   }
 
   .expand-configs:hover {
-    color: #E8A534;
+    color: $orange;
     cursor: pointer;
   }
 
@@ -120,6 +122,7 @@
     flex-wrap: wrap;
     .item {
       margin: 0;
+      display: inline-block;
     }
   }
 
@@ -185,7 +188,7 @@
       right: 35px;
       font-weight: 200;
       font-size: 12px;
-      color: #f5dc56;
+      color: $gold;
     }
     .powerLevel:before {
       content: "\2726";
@@ -348,11 +351,11 @@
   }
 
   & .perk:hover, & .active-perk-or {
-    background-color: #E8A534;
+    background-color: $orange;
   }
 
   &.shift-held .perk:hover, & .active-perk-and {
-    background-color: #B184C5;
+    background-color: $void;
   }
 
   & .perk img {

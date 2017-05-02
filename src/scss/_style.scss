@@ -28,8 +28,8 @@
 @mixin item-size-padded {
   width: 48px;
   height: 48px;
-  width: var(--item-size + 4px);
-  height: var(--item-size + 4px);
+  width: calc(var(--item-size) + 4px);
+  height: calc(var(--item-size) + 4px);
 }
 
 h1, h2, h3, h4, h5 {
@@ -170,18 +170,6 @@ div:focus, span:focus {
   display: none !important;
 }
 
-.img.how:before {
-  content: '';
-  display: block;
-  background-image: url('../images/how.png');
-  position: absolute;
-  height: 16px;
-  width: 16px;
-  background-size: 16px;
-  right: 0;
-  box-shadow: inset 0 0 10px 0px #B84;
-}
-
 #filter-input {
   width: 250px;
   margin-left: -3gpx;
@@ -199,10 +187,6 @@ dt {
 
 dd {
   margin: 3px 20px;
-}
-
-.item.search-hidden .item-elem {
-  opacity: .20;
 }
 
 .search-link {
@@ -607,6 +591,9 @@ img {
   background-position: 4px 4px;
   background-image: url('../images/bg_inventory_bucket_single_crop.png');
   background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   &.on-drag-hover {
     box-shadow: inset 0 0 6px 0 rgba(200, 200, 200, 0.7);
   }
@@ -684,67 +671,63 @@ img {
 }
 
 .item {
-  margin: 2px 2px -2px 2px;
+  @include item-size-padded;
+  margin: 2px;
   position: relative;
-  display: inline-block;
-  &.popup-open:before {
-    border: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent;
-    border-width: .4em .4em 0;
-    top: -6px;
-    content: "";
-    display: block;
-    left: 16px;
-    position: absolute;
-    z-index: 2;
-  }
-
-  .item-xp-bar-small {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 2px;
+  contain: strict;
+  &.search-hidden {
+    opacity: .2;
   }
 }
 
-.item-elem {
+.item-xp-bar-small {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: $xp;
+}
+
+.item-img {
+  @include item-size;
   background-color: #5c7183;
   cursor: pointer;
   border: 2px solid #DDD;
-  > {
-    .img, img {
-      @include item-size;
-      background-size: cover;
-      display: block;
-      &:focus {
-        outline: none;
-      }
-    }
+  background-size: cover;
+  display: block;
+  box-sizing: content-box;
+  &:focus {
+    outline: none;
   }
-  .element {
-    display: none;
-    pointer-events: none;
-    .show-elements & {
-      position: absolute;
-      bottom: 2px;
-      left: 2px;
-      height: 16px;
-      width: 16px;
-      filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
-      background-repeat: no-repeat;
-      background-size: contain;
-      &.void {
-        display: block;
-        background-image: url('../images/void.png');
-      }
-      &.arc {
-        display: block;
-        background-image: url('../images/arc.png');
-      }
-      &.solar {
-        display: block;
-        background-image: url('../images/solar.png');
-      }
+  &.complete {
+    border-color: $gold;
+  }
+}
+
+.item-element {
+  display: none;
+  pointer-events: none;
+  .show-elements & {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    height: 14px;
+    width: 14px;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
+    background-repeat: no-repeat;
+    background-size: contain;
+    &.void {
+      display: block;
+      background-image: url('../images/void.png');
+    }
+    &.arc {
+      display: block;
+      background-image: url('../images/arc.png');
+    }
+    &.solar {
+      display: block;
+      background-image: url('../images/solar.png');
     }
   }
 }
@@ -761,23 +744,14 @@ img {
   }
 }
 
-.item .stack {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 1px;
-  max-width: 20px;
-  text-align: center;
-  background: #F5f5f5;
-  color: #24282b;
-}
-
 .complete {
-  border-color: #f5dc56;
+  border-color: $gold;
 }
 
-.over {
-  background: rgba(0, 0, 0, 0.5);
+.factionrep {
+  margin: 2px 2px -2px 2px;
+  position: relative;
+  display: inline-block;
 }
 
 dim-store-heading {
@@ -878,7 +852,7 @@ dim-store-heading {
     margin-right: 1px;
   }
   .powerLevel {
-    color: #f5dc56;
+    color: $gold;
     &:before {
       content: "\2726";
       display: inline-block;
@@ -901,7 +875,7 @@ dim-store-heading {
   position: absolute;
   bottom: -2px;
   left: 0;
-  background-color: #5da469;
+  background-color: $xp;
 
   &.moteProgress {
     background-color: #069;
@@ -1355,7 +1329,7 @@ rzslider, .rzslider {
 }
 
 .talent-node-showxp .talent-node-xp {
-  stroke: #5EA16A;
+  stroke: $xp;
 }
 
 .talent-node-activated .talent-node-xp {
@@ -1711,7 +1685,7 @@ dim-compare {
 
   .light {
     font-weight: 200;
-    color: #f5dc56;
+    color: $gold;
     float: right;
     &:before {
       content: "\2726";
@@ -1821,10 +1795,7 @@ h2, h3, h4 {
 .item-xp-bar {
   height: 4px;
   width: 100%;
-  div {
-    height: 100%;
-    background-color: #5EA16A;
-  }
+  background-color: $xp;
 }
 
 /* Infuse */
@@ -1865,9 +1836,6 @@ h2, h3, h4 {
   .bigValue {
     font-size: 32px;
     line-height: 1em;
-  }
-  .infuseSourceItem {
-    @include item-size-padded;
   }
   .infuseSourceDetailsRow {
     margin-left: 1rem;
@@ -1920,12 +1888,10 @@ h2, h3, h4 {
   .item {
     float: left;
     margin: 3px 3px;
-    @include item-size-padded;
   }
   .infusedItem {
     float: left;
     margin: 3px 10px 3px 3px;
-    @include item-size-padded;
   }
   .plusSeparator {
     float: left;
