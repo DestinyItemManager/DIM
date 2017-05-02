@@ -33,9 +33,6 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
     showLockedItems: false,
     target: null,
     exotic: false,
-    mote: false,
-    weapon: false,
-    armor: false,
     infused: 0,
     infusable: [],
     transferInProgress: false,
@@ -48,11 +45,14 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
       vm.exotic = item.tier === 'Exotic';
       vm.stat = vm.source.primStat.stat;
       if (item.bucket.sort === 'General') {
-        vm.mote = true;
+        vm.wildcardMaterialCost = 2;
+        vm.wildcardMaterialHash = 937555249;
       } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
-        vm.weapon = true;
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1898539128;
       } else {
-        vm.armor = true;
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1542293174;
       }
     },
 

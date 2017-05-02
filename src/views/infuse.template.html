@@ -42,9 +42,7 @@
           <span> 3 <span class="currency"><img alt="{{::vm.i18n[2534352370]}}" title="{{::vm.i18n[2534352370]}}" src="~app/images/legendaryMarks.png"></span></span>
           <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{::vm.i18n[452597397]}}" title="{{::vm.i18n[452597397]}}" src="https://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
           <span> + 250 <span class="currency"><img alt="{{::vm.i18n[3159615086]}}" title="{{::vm.i18n[3159615086]}}" src="~app/images/glimmer.png"></span></span>
-          <span ng-if="vm.mote"> + 2 <span class="currency"><img alt="{{::vm.i18n[937555249]}}" title="{{::vm.i18n[937555249]}}" ng-src="{{vm.icon[937555249] | bungieIcon}}"></span></span>
-          <span ng-if="vm.weapon"> + 10 <span class="currency"><img alt="{{::vm.i18n[1898539128]}}" title="{{::vm.i18n[1898539128]}}" ng-src="{{vm.icon[1898539128] | bungieIcon}}"></span></span>
-          <span ng-if="vm.armor"> + 10 <span class="currency"><img alt="{{::vm.i18n[1542293174]}}" title="{{::vm.i18n[1542293174]}}" ng-src="{{vm.icon[1542293174] | bungieIcon}}"></span></span>
+          <span> + {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="{{::vm.i18n[vm.wildcardMaterialHash]}}" title="{{::vm.i18n[vm.wildcardMaterialHash]}}" ng-src="{{vm.icon[vm.wildcardMaterialHash] | bungieIcon}}"></span></span>
         </div>
       </div>
       <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" translate="Infusion.TransferItems"></button>
