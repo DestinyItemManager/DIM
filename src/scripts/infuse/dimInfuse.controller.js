@@ -11,15 +11,15 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
   vm.i18n = {};
   vm.icon = {};
   dimDefinitions.getDefinitions().then((defs) => {
-    vm.i18n.exoticShard = defs.InventoryItem.get(452597397).itemName;
-    vm.i18n.legendaryMarks = defs.InventoryItem.get(2534352370).itemName;
-    vm.i18n.glimmer = defs.InventoryItem.get(3159615086).itemName;
-    vm.i18n.mote = defs.InventoryItem.get(937555249).itemName;
-    vm.i18n.weapon = defs.InventoryItem.get(1898539128).itemName;
-    vm.i18n.armor = defs.InventoryItem.get(1542293174).itemName;
-    vm.icon.mote = defs.InventoryItem.get(937555249).icon;
-    vm.icon.weapon = defs.InventoryItem.get(1898539128).icon;
-    vm.icon.armor = defs.InventoryItem.get(1542293174).icon;
+    vm.i18n[452597397] = defs.InventoryItem.get(452597397).itemName;
+    vm.i18n[2534352370] = defs.InventoryItem.get(2534352370).itemName;
+    vm.i18n[3159615086] = defs.InventoryItem.get(3159615086).itemName;
+    vm.i18n[937555249] = defs.InventoryItem.get(937555249).itemName;
+    vm.i18n[1898539128] = defs.InventoryItem.get(1898539128).itemName;
+    vm.i18n[1542293174] = defs.InventoryItem.get(1542293174).itemName;
+    vm.icon[937555249] = defs.InventoryItem.get(937555249).icon;
+    vm.icon[1898539128] = defs.InventoryItem.get(1898539128).icon;
+    vm.icon[1542293174] = defs.InventoryItem.get(1542293174).icon;
   });
 
   if (_gaq) {
@@ -33,6 +33,9 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
     showLockedItems: false,
     target: null,
     exotic: false,
+    mote: false,
+    weapon: false,
+    armor: false,
     infused: 0,
     infusable: [],
     transferInProgress: false,
@@ -45,17 +48,11 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
       vm.exotic = item.tier === 'Exotic';
       vm.stat = vm.source.primStat.stat;
       if (item.bucket.sort === 'General') {
-        vm.wildcardMaterialIcon = vm.icon.mote; // || '/common/destiny_content/icons/2e026fc67d445e5b2630277aa794b4b1.jpg';
-        vm.wildcardMaterialCost = 2;
-        vm.wilcardMaterial = vm.i18n.mote;
+        vm.mote = true;
       } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
-        vm.wildcardMaterialIcon = vm.icon.weapon; // || '/common/destiny_content/icons/f2572a4949fb16df87ba9760f713dac3.jpg';
-        vm.wildcardMaterialCost = 10;
-        vm.wilcardMaterial = vm.i18n.weapon;
+        vm.weapon = true;
       } else {
-        vm.wildcardMaterialIcon = vm.icon.armor; // || '/common/destiny_content/icons/972ae2c6ccbf59cde293a2ed50a57a93.jpg';
-        vm.wildcardMaterialCost = 10;
-        vm.wilcardMaterial = vm.i18n.armor;
+        vm.armor = true;
       }
     },
 
