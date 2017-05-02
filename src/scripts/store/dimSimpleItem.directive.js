@@ -11,7 +11,7 @@ function dimItem() {
     },
     restrict: 'E',
     template: [
-      '<div title="{{ vm.item.primStat.value }} {{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" class="item">',
+      '<div title="{{ vm.item.name }}" alt="{{ vm.item.primStat.value }} {{ vm.item.name }}" class="item">',
       '  <div class="item-img" ng-class="{ complete: vm.item.complete }" ng-style="vm.item.icon | bungieBackground">',
       '  <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>',
       '  <div ng-if="vm.item.quality" class="item-stat item-quality" ng-style="vm.item.quality.min | qualityColor">{{ vm.item.quality.min }}%</div>',

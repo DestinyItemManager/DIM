@@ -1,7 +1,7 @@
 <div ui-draggable="{{ ::vm.draggable }}"
      id="{{ ::vm.item.index }}"
      drag-channel="{{ ::vm.dragChannel }}"
-     title="{{vm.item.primStat.value}} {{::vm.item.name}}"
+     title="{{::vm.item.name}}"
      drag="::vm.item.index"
      class="item"
      ng-class="{ 'search-hidden': !vm.item.visible }">
@@ -27,6 +27,7 @@
          width="44" />
   </div>
   <div ng-class="vm.badgeClassNames"
-       ng-if="vm.showBadge">{{ vm.badgeCount }}</div>
+       ng-if="vm.showBadge"
+       ng-bind="vm.badgeCount"></div>
 </div>
 
