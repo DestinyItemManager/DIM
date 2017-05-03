@@ -22,15 +22,15 @@ function StoreBucket() {
       '     ui-on-drop="vm.onDrop($data, $event, false)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
       '     drop-channel="{{::vm.dropChannel}}">',
       '  <div class="equipped sub-bucket" ng-repeat="item in vm.items | equipped:true track by item.index"',
-      '       ng-if="!vm.store.isVault"',
+      '       ng-if="::!vm.store.isVault"',
       '       ui-on-drop="vm.onDrop($data, $event, true)" ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)"',
       '       drop-channel="{{::vm.dropChannel}}">',
-      '    <dim-store-item store-data="vm.store" item-data="item"></dim-store-item>',
+      '    <dim-store-item item-data="item"></dim-store-item>',
       '  </div>',
       '  <div class="unequipped sub-bucket" ui-on-drop="vm.onDrop($data, $event, false)" ',
       '      ui-on-drag-enter="vm.onDragEnter($event)" ui-on-drag-leave="vm.onDragLeave($event)" ',
       '      drop-channel="{{::vm.dropChannel}}">',
-      '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" store-data="vm.store" item-data="item"></dim-store-item>',
+      '    <dim-store-item ng-repeat="item in vm.items | equipped:false | sortItems:vm.settings.itemSort track by item.index" item-data="item"></dim-store-item>',
       '  </div>',
       '</div>'
     ].join('')

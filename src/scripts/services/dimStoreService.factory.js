@@ -799,9 +799,8 @@ function StoreService(
       equipped: item.isEquipped,
       equipment: item.isEquipment,
       complete: item.isGridComplete,
-      percentComplete: null,
       amount: item.stackSize,
-      primStat: item.primaryStat,
+      primStat: item.primaryStat || null,
       typeName: itemDef.itemTypeName,
       // "perks" are the two or so talent grid items that are "featured" for an
       // item in its popup in the game. We don't currently use these.
@@ -816,12 +815,17 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-      trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
+      trackable: Boolean(currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)),
       tracked: item.state === 2,
       locked: item.locked,
-      redacted: itemDef.redacted,
-      classified: itemDef.classified,
-      isInLoadout: false
+      redacted: Boolean(itemDef.redacted),
+      classified: Boolean(itemDef.classified),
+      isInLoadout: false,
+      percentComplete: null, // filled in later
+      talentGrid: null, // filled in later
+      stats: null, // filled in later
+      objectives: null, // filled in later
+      quality: null // filled in later
     });
 
     createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');

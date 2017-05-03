@@ -25,7 +25,7 @@
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
-          <dim-min-max-item shift-click-callback="vm.excludeItem" item-data="item" store-data="vm.getStore(item.owner)"></dim-min-max-item>
+          <dim-min-max-item shift-click-callback="vm.excludeItem" item-data="item"></dim-min-max-item>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="vm.onExcludedDrop($data, $channel)" drop-validate="vm.excludedItemsValid($data, $channel)">
           <div class="excluded-items">
             <div class="excluded-item" ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index">
-              <dim-min-max-item item-data="excludeditem" store-data="vm.getStore(excludeditem.owner)"></dim-min-max-item>
+              <dim-min-max-item item-data="excludeditem"></dim-min-max-item>
               <div class="close" ng-click="vm.onExcludedRemove(excludeditem.index)" role="button" tabindex="0"></div>
             </div>
           </div>
@@ -141,7 +141,7 @@
       <div><dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats><span class='dim-button' ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span><span class='dim-button equip-button' ng-click="vm.equipItems(setType.set)" translate="LB.Equip"></span></div>
       <div class="minmax-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
-          <dim-min-max-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item" store-data="vm.getStore(armorpiece.item.owner)"></dim-min-max-item>
+          <dim-min-max-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></dim-min-max-item>
           <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
           <div class="label"><small translate="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[vm.activesets].configs">

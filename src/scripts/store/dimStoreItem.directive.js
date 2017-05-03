@@ -36,7 +36,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     replace: true,
     restrict: 'E',
     scope: {
-      store: '=storeData',
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
@@ -116,13 +115,21 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimCompareService.addItemToCompare(item, e);
       } else {
         dialogResult = ngDialog.open({
-          template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+          template: [
+            '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()">',
+            '  <dim-move-popup store="vm.store" item="vm.item"></dim-move-popup>',
+            '</div>'].join(''),
           plain: true,
           overlay: false,
           className: 'move-popup-dialog',
           showClose: false,
           data: element,
-          scope: scope,
+          controllerAs: 'vm',
+          controller: function() {
+            'ngInject';
+            this.item = vm.item;
+            this.store = dimStoreService.getStore(this.item.owner);
+          },
 
           // Setting these focus options prevents the page from
           // jumping as dialogs are shown/hidden
@@ -194,7 +201,7 @@ function processItem(vm, item) {
     'item-equipment': true
   };
 
-  vm.showBadge = item.primStat && item.primStat.value;
+  vm.showBadge = Boolean(item.primStat && item.primStat.value);
 
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
