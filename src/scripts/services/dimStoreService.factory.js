@@ -368,6 +368,8 @@ function StoreService(
       }
     }
 
+    _idTracker = {};
+
     _reloadPromise = $q.all([
       dimDefinitions.getDefinitions(),
       dimBucketService.getBuckets(),
@@ -641,15 +643,15 @@ function StoreService(
   // Set an ID for the item that should be unique across all items
   function createItemIndex(item) {
     // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-    var index = item.hash + '-';
     if (item.id === '0') {
+      var index = item.hash + '-';
       index = index + item.amount;
       _idTracker[index] = (_idTracker[index] || 0) + 1;
       index = index + '-' + _idTracker[index];
+      return index;
     } else {
-      index = index + item.id;
+      return item.id;
     }
-    return index;
   }
 
   function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
