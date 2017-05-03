@@ -166,9 +166,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     // Note that this hack means that dim-store-items used outside of ng-repeat won't
     // update!
 
-    vm.badgeClassNames = {
-      'item-stat-no-bg': Boolean(vm.item.quality)
-    };
+    vm.badgeClassNames = {};
 
     if (!vm.item.primStat && vm.item.objectives) {
       processBounty(vm, vm.item);
@@ -205,8 +203,9 @@ function processItem(vm, item) {
 
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
-
+    vm.badgeClassNames['item-stat-no-bg'] = Boolean(vm.item.quality);
     vm.badgeClassNames['stat-damage-' + item.dmg] = true;
+
     vm.badgeCount = item.primStat.value;
   }
 }

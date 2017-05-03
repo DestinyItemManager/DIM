@@ -675,9 +675,9 @@ img {
   margin: 2px;
   position: relative;
   contain: strict;
-  &.search-hidden {
-    opacity: .2;
-  }
+}
+.search-hidden {
+  opacity: .2;
 }
 
 .item-xp-bar-small {
