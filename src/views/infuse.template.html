@@ -39,10 +39,10 @@
         <span class="bigValue">{{vm.infused}}</span>
         <span class="green">(+ {{vm.infused - vm.source.primStat.value}})</span>
         <div>
-          <span> 3 <span class="currency"><img alt="{{::vm.i18n[2534352370]}}" title="{{::vm.i18n[2534352370]}}" src="~app/images/legendaryMarks.png"></span></span>
-          <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{::vm.i18n[452597397]}}" title="{{::vm.i18n[452597397]}}" src="https://www.bungie.net/common/destiny_content/icons/e6d2a0561e784ae224e2aa53aa66e8a7.jpg"></span></span>
-          <span> + 250 <span class="currency"><img alt="{{::vm.i18n[3159615086]}}" title="{{::vm.i18n[3159615086]}}" src="~app/images/glimmer.png"></span></span>
-          <span> + {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="{{::vm.i18n[vm.wildcardMaterialHash]}}" title="{{::vm.i18n[vm.wildcardMaterialHash]}}" ng-src="{{vm.icon[vm.wildcardMaterialHash] | bungieIcon}}"></span></span>
+          <span> 3 <span class="currency"><img alt="{{::vm.items[2534352370].itemName}}" title="{{::vm.items[2534352370].itemName}}" ng-src="{{vm.items[2534352370].icon | bungieIcon}}"></span></span>
+          <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{::vm.items[452597397].itemName}}" title="{{::vm.items[452597397].itemName}}" ng-src="{{vm.items[452597397].icon | bungieIcon}}"></span></span>
+          <span> + 250 <span class="currency"><img alt="{{::vm.items[3159615086].itemName}}" title="{{::vm.items[3159615086].itemName}}" ng-src="{{vm.items[3159615086].icon | bungieIcon}}"></span></span>
+          <span> + {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="{{::vm.items[vm.wildcardMaterialHash].itemName}}" title="{{::vm.items[vm.wildcardMaterialHash].itemName}}" ng-src="{{vm.items[vm.wildcardMaterialHash].icon | bungieIcon}}"></span></span>
         </div>
       </div>
       <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" translate="Infusion.TransferItems"></button>

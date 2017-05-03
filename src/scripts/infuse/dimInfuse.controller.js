@@ -8,18 +8,14 @@ angular.module('dimApp')
 function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoadoutService, toaster, $q, $translate) {
   var vm = this;
 
-  vm.i18n = {};
-  vm.icon = {};
+  vm.items = {};
   dimDefinitions.getDefinitions().then((defs) => {
-    vm.i18n[452597397] = defs.InventoryItem.get(452597397).itemName;
-    vm.i18n[2534352370] = defs.InventoryItem.get(2534352370).itemName;
-    vm.i18n[3159615086] = defs.InventoryItem.get(3159615086).itemName;
-    vm.i18n[937555249] = defs.InventoryItem.get(937555249).itemName;
-    vm.i18n[1898539128] = defs.InventoryItem.get(1898539128).itemName;
-    vm.i18n[1542293174] = defs.InventoryItem.get(1542293174).itemName;
-    vm.icon[937555249] = defs.InventoryItem.get(937555249).icon;
-    vm.icon[1898539128] = defs.InventoryItem.get(1898539128).icon;
-    vm.icon[1542293174] = defs.InventoryItem.get(1542293174).icon;
+    vm.items[452597397] = defs.InventoryItem.get(452597397);
+    vm.items[2534352370] = defs.InventoryItem.get(2534352370);
+    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
+    vm.items[937555249] = defs.InventoryItem.get(937555249);
+    vm.items[1898539128] = defs.InventoryItem.get(1898539128);
+    vm.items[1542293174] = defs.InventoryItem.get(1542293174);
   });
 
   if (_gaq) {
