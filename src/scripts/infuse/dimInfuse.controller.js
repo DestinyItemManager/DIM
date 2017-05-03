@@ -5,8 +5,18 @@ angular.module('dimApp')
   .controller('dimInfuseCtrl', dimInfuseCtrl);
 
 
-function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoadoutService, toaster, $q, $translate) {
+function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoadoutService, toaster, $q, $translate) {
   var vm = this;
+
+  vm.items = {};
+  dimDefinitions.getDefinitions().then((defs) => {
+    vm.items[452597397] = defs.InventoryItem.get(452597397);
+    vm.items[2534352370] = defs.InventoryItem.get(2534352370);
+    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
+    vm.items[937555249] = defs.InventoryItem.get(937555249);
+    vm.items[1898539128] = defs.InventoryItem.get(1898539128);
+    vm.items[1542293174] = defs.InventoryItem.get(1542293174);
+  });
 
   if (_gaq) {
     // Disable sending pageviews on popups for now, over concerns that we'll go over our free GA limits.
@@ -30,12 +40,16 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
       vm.target = null;
       vm.exotic = item.tier === 'Exotic';
       vm.stat = vm.source.primStat.stat;
-      vm.wildcardMaterialIcon = item.bucket.sort === 'General' ? '2e026fc67d445e5b2630277aa794b4b1'
-        : vm.stat.statIdentifier === 'STAT_DAMAGE' ? 'f2572a4949fb16df87ba9760f713dac3'
-        : '972ae2c6ccbf59cde293a2ed50a57a93';
-      vm.wildcardMaterialIcon = '/common/destiny_content/icons/' + vm.wildcardMaterialIcon + '.jpg';
-      // 2 motes, or 10 armor/weapon materials
-      vm.wildcardMaterialCost = item.bucket.sort === 'General' ? 2 : 10;
+      if (item.bucket.sort === 'General') {
+        vm.wildcardMaterialCost = 2;
+        vm.wildcardMaterialHash = 937555249;
+      } else if (vm.stat.statIdentifier === 'STAT_DAMAGE') {
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1898539128;
+      } else {
+        vm.wildcardMaterialCost = 10;
+        vm.wildcardMaterialHash = 1542293174;
+      }
     },
 
     selectItem: function(item, e) {
@@ -156,4 +170,3 @@ function dimInfuseCtrl($scope, dimStoreService, dimItemService, ngDialog, dimLoa
   vm.setSourceItem($scope.$parent.ngDialogData);
   vm.getItems();
 }
-
