@@ -87,7 +87,6 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
     vm.newExperience = (totalRank % 2500);
   }
 
-
   var materialsHashes = [
     211861343,  // heavy ammo synth
     928169143,  // special ammo synth
@@ -122,8 +121,6 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   var gunSmithMatsHashes = [
     1898539128  // weapon parts
   ];
-
-
 
   vm.glimmer = dimStoreService.getVault().glimmer;
   vm.xurMats = mapXurItems(xurMatsHashes);
@@ -184,14 +181,14 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
     var rep = 0;
     if (item && item.hash) {
       switch (item.hash) {
-      case 211861343:
+      case 211861343: // heavy ammo synth
         rep = Math.floor(item.amount * 25);
-        break;       // heavy ammo synth
-      case 937555249:
-        rep = Math.floor(item.amount / 5) * 100;  // motes of light
         break;
-      case 928169143:
-        rep = Math.floor(item.amount / 4) * 25;   // special ammo synth
+      case 937555249: // motes of light
+        rep = Math.floor(item.amount / 5) * 100;
+        break;
+      case 928169143: // special ammo synth
+        rep = Math.floor(item.amount / 4) * 25;
         break;
       case 1542293174: // armor materials
       case 1898539128: // weapon parts
