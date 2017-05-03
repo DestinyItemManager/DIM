@@ -643,15 +643,32 @@ function StoreService(
   // Set an ID for the item that should be unique across all items
   function createItemIndex(item) {
     // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+    var index = item.id;
     if (item.id === '0') {
-      var index = item.hash + '-';
-      index = index + item.amount;
+      index = item.hash + '-am' + item.amount;
       _idTracker[index] = (_idTracker[index] || 0) + 1;
-      index = index + '-' + _idTracker[index];
-      return index;
-    } else {
-      return item.id;
+      index = index + '-t' + _idTracker[index];
     }
+
+    // Perf hack: the index is used as a key for ng-repeat. What we are doing here
+    // is adding extra info to that key in order to force items to be re-rendered when
+    // this index changes. These properties are selected because they're used in the
+    // dimStoreItem directive. Ideally this would just be a hash of all these properties,
+    // but for now a big string will do.
+    //
+    // Oh, also, this value needs to be safe as an HTML ID.
+
+    if (!item.complete && item.percentComplete) {
+      index += '-pc' + Math.round(item.percentComplete * 100);
+    }
+    if (item.quality) {
+      index += '-q' + item.quality.min;
+    }
+    if (item.primStat && item.primStat.value) {
+      index += '-ps' + item.primStat.value;
+    }
+
+    return index;
   }
 
   function processSingleItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
@@ -809,8 +826,6 @@ function StoreService(
 
     createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
 
-    createdItem.index = createItemIndex(createdItem);
-
     // Moving rare masks destroys them
     if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
       createdItem.notransfer = true;
@@ -892,6 +907,8 @@ function StoreService(
       createdItem.complete = owner.advisors.activities.trials.completion.success;
       createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
     }
+
+    createdItem.index = createItemIndex(createdItem);
 
     return createdItem;
   }

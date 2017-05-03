@@ -143,28 +143,33 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       }
     });
 
-    vm.badgeClassNames = {};
+    // Perf hack: the item's "index" property is computed based on:
+    //  * its ID
+    //  * amount (and a unique-ifier) if it's a stackable
+    //  * primary stat
+    //  * completion percentage
+    //  * quality minimum
+    //
+    // As a result we can bind-once or compute up front properties that depend
+    // on those values, since if any of them change, the *entire* item directive
+    // will be recreated from scratch. This is cheaper overall since the number of
+    // items that get infused or have XP added to them in any given refresh is much
+    // smaller than the number of items that don't.
+    //
+    // Note that this hack means that dim-store-items used outside of ng-repeat won't
+    // update!
+
+    vm.badgeClassNames = {
+      'item-stat-no-bg': Boolean(vm.item.quality)
+    };
 
     if (!vm.item.primStat && vm.item.objectives) {
-      scope.$watchGroup([
-        'vm.item.percentComplete',
-        'vm.item.complete'], function() {
-        processBounty(vm, vm.item);
-      });
+      processBounty(vm, vm.item);
     } else if (vm.item.maxStackSize > 1) {
-      scope.$watchGroup([
-        'vm.item.amount'], function() {
-        processStackable(vm, vm.item);
-      });
+      processStackable(vm, vm.item);
     } else {
-      scope.$watch('vm.item.primStat.value', function() {
-        processItem(vm, vm.item);
-      });
+      processItem(vm, vm.item);
     }
-
-    scope.$watch('vm.item.quality', function() {
-      vm.badgeClassNames['item-stat-no-bg'] = vm.item.quality;
-    });
   }
 }
 
