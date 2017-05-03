@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Incapaz de encontrar uma conta de Destiny no {platform}.",
       "NoCookies": "Nenhum cookie encontrado.",
       "NotConnected": "Você deverá estar sem conexão com a Internet.",
-      "Twitter": "Veja atualizações em",
+      "Twitter": "Veja atualizações em:",
       "ItemUniqueness": "Unicidade de itens",
       "ItemUniquenessExplanation": "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo.",
       "VendorNotFound": "Informação do vendedor não disponível."
@@ -40,9 +40,9 @@
       "Splits": "Compare com atributos similares ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Tempo de carga da granada",
-      "Melee": "Tempo de carga do corpo-a-corpo",
-      "Super": "Tempo de carga da Super"
+      "Grenade": "Tempo de carga da granada: {cooldown}",
+      "Melee": "Tempo de carga do corpo-a-corpo: {cooldown}",
+      "Super": "Tempo de carga da Super: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Dia} other{# Dias}}"
@@ -273,6 +273,7 @@
       "Equip": "Equip",
       "Split": "Dividir",
       "Store": "Mover",
+      "Subtitle": "{classType} {typeName} {light, select, null{} other{com {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
       "Vault": "Cofre"
    },
@@ -346,7 +347,7 @@
       "Prestige": "Nível de prestígio: {level}\n{exp}xp para 5 fragmentos de luz.",
       "Quality": "Níveis de qualidade",
       "Strength": "Força",
-      "TierProgress": "{progress} para {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 para T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Encher Pilha ({amount})",
@@ -368,8 +369,8 @@
    "Vendors": {
       "Vendors": "Vendedores",
       "All": "Todos",
-      "Available": "Disponível em",
-      "Compare": "Compare com o que você já possui",
+      "Available": "Disponível em:",
+      "Compare": "Compare com o que você já possui:",
       "Load": "Carregando vendedores",
       "ArmorAndWeapons": "Armaduras & Armas",
       "ShipsAndVehicles": "Naves & Veículos",
@@ -406,7 +407,7 @@
        "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
        "Twitter": "Twitter",
        "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-       "Version": "Versão",
+       "Version": "Versão {version} ({flavor})",
        "Transifex": "Junte-se à equipe de tradução!",
        "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
      },

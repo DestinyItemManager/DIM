@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
-      "Twitter": "Ottieni informazioni sullo stato del servizio su",
+      "Twitter": "Ottieni informazioni sullo stato del servizio su:",
       "ItemUniqueness": "Unicità dell elemento",
       "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} other{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
       "VendorNotFound": "I dati dei mercanti non sono disponibili."
@@ -40,9 +40,9 @@
       "Splits": "Confronta simili suddivisioni ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Granate tempo di recupero",
-      "Melee": "Corpo a corpo tempo di recupero",
-      "Super": "Super tempo di recupero"
+      "Grenade": "Granate tempo di recupero: {cooldown}",
+      "Melee": "Corpo a corpo tempo di recupero: {cooldown}",
+      "Super": "Super tempo di recupero: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Giorno} other{# Giorni}}"
@@ -346,7 +346,7 @@
       "Prestige": "Livello Prestigio: {level}\n{exp}xp fino alle 5 particelle di luce",
       "Quality": "Qualità statistiche",
       "Strength": "Forza",
-      "TierProgress": "{progress} per {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 per T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Riempi Stack ({amount})",
@@ -368,8 +368,8 @@
    "Vendors": {
       "Vendors": "Mercanti",
       "All": "Tutto",
-      "Available": "Disponibile da",
-      "Compare": "Confronta con quello che hai già",
+      "Available": "Disponibile da:",
+      "Compare": "Confronta con quello che hai già:",
       "Load": "Caricamento Mercanti",
       "ArmorAndWeapons": "Equipaggiamento & Armi",
       "ShipsAndVehicles": "Navi & Veicoli",
@@ -406,7 +406,7 @@
        "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
        "Twitter": "Twitter",
        "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
-       "Version": "Versione",
+       "Version": "Versione {version} ({flavor})",
        "Transifex": "Unisciti al Team Traduzione!",
        "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
      },

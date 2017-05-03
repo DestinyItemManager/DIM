@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
       "NoCookies": "クッキーが見つかりませんでした。",
       "NotConnected": "インターネットに接続してない可能性あります。",
-      "Twitter": "最新の状態に更新します。",
+      "Twitter": "最新の状態に更新します。:",
       "ItemUniqueness": "アイテムのレア度",
       "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
       "VendorNotFound": "ベンダー情報ありません"
@@ -40,9 +40,9 @@
       "Splits": "同様の分割を比較する（{数量}）"
    },
    "Cooldown": {
-      "Grenade": "グレネードのクールダウン",
-      "Melee": "近接チャージのクールダウン",
-      "Super": "スーパースキルのクールダウン"
+      "Grenade": "グレネードのクールダウン: {cooldown}",
+      "Melee": "近接チャージのクールダウン: {cooldown}",
+      "Super": "スーパースキルのクールダウン: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays} 日間"
@@ -346,7 +346,7 @@
       "Prestige": "評判レベル：  {level}\n光の欠片5個までは後  {exp}xp",
       "Quality": "品質",
       "Strength": "腕力",
-      "TierProgress": "{tier} の {progress}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 の T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "フルスタック ({amount})",
@@ -368,8 +368,8 @@
    "Vendors": {
       "Vendors": "ベンダー",
       "All": "全て",
-      "Available": "利用可能",
-      "Compare": "持ってるものと比較",
+      "Available": "利用可能:",
+      "Compare": "持ってるものと比較:",
       "Load": "ローディングベンダー",
       "ArmorAndWeapons": "アーマーとウェポン",
       "ShipsAndVehicles": "船とビークル",
@@ -406,7 +406,7 @@
        "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
        "Twitter": "ツイッター",
        "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
-       "Version": "バージョン",
+       "Version": "バージョン  {version} ({flavor})",
        "Transifex": "翻訳チームに参加してください！",
        "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
      },

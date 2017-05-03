@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Nous n'avons pas trouvé de compte Destiny pour vous sur {platform}.",
       "NoCookies": "Aucun cookie trouvé.",
       "NotConnected": "Vous n'êtes probablement pas connecté à Internet.",
-      "Twitter": "Tenez-vous informer sur",
+      "Twitter": "Tenez-vous informer sur:",
       "ItemUniqueness": "Unicité d'un objet",
       "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{name}' {type} sur votre {character} mais cette destination a déjà cet objet et n'en autorise qu'un.",
       "VendorNotFound": "Les données du vendeur sont indisponible."
@@ -40,9 +40,9 @@
       "Splits": "Comparer des parts similaires ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Régénération de Grenade",
-      "Melee": "Régénération de Mêlée",
-      "Super": "Régénération du Super"
+      "Grenade": "Régénération de Grenade: {cooldown}",
+      "Melee": "Régénération de Mêlée: {cooldown}",
+      "Super": "Régénération du Super: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
@@ -346,7 +346,7 @@
       "Prestige": "Niveau de prestige: {level}\n{exp}xp jusqu'à 5 particule de lumière.",
       "Quality": "Qualité des stats",
       "Strength": "Force",
-      "TierProgress": "{progress} pour {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 pour T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Remplir la pile ({amount})",
@@ -368,8 +368,8 @@
    "Vendors": {
       "Vendors": "Marchands",
       "All": "Tous",
-      "Available": "Disponible sur",
-      "Compare": "Comparez avec ce que vous avez déjà",
+      "Available": "Disponible sur:",
+      "Compare": "Comparez avec ce que vous avez déjà:",
       "Load": "Chargement des Marchands",
       "ArmorAndWeapons": "Armure & Armes",
       "ShipsAndVehicles": "Vaisseaux & Véhicules",
@@ -406,7 +406,7 @@
        "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
        "Twitter": "Twitter",
        "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
-       "Version": "Version",
+       "Version": "Version {version} ({flavor})",
        "Transifex": "Rejoignez l'équipe de traduction!",
        "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
      },
