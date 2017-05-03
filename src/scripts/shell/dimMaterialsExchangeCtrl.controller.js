@@ -4,17 +4,22 @@ import _ from 'underscore';
 angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
 
-function MaterialsController($scope, dimItemService, dimStoreService, $state, dimFeatureFlags) {
+function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreService, $state, dimFeatureFlags) {
   if (!dimFeatureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;
   }
 
   var vm = this;
+
+  vm.items = {};
+  dimDefinitions.getDefinitions().then((defs) => {
+    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
+  });
+
   vm.repPool = {};
   vm.newRank = 0;
   vm.newExperience = 0;
-  vm.GlimmerIcon = require('../../images/glimmer.png');
 
   vm.factions = [
     // 174528503, eris breaks things atm
@@ -170,7 +175,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state, di
   function mapErisItems(hashes) {
     var mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
-      mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
+      mappedItems[1].amount = mappedItems[0].amount;
     }
     return mappedItems;
   }
