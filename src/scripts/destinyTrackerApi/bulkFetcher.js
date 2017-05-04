@@ -1,10 +1,10 @@
-import { gunListBuilder } from './gunListBuilder.js';
+import { itemListBuilder } from './itemListBuilder.js';
 
 class bulkFetcher {
   constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
-    this._gunListBuilder = new gunListBuilder();
+    this._itemListBuilder = new itemListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = scoreMaintainer;
@@ -24,7 +24,7 @@ class bulkFetcher {
       return this.$q.resolve();
     }
 
-    var weaponList = this._gunListBuilder.getWeaponList(stores.stores, this._reviewDataCache);
+    var weaponList = this._itemListBuilder.getWeaponList(stores.stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       return this.$q.resolve();

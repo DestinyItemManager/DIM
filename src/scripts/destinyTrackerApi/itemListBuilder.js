@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import { itemTransformer } from './itemTransformer.js';
 
-class gunListBuilder {
+class itemListBuilder {
   constructor() {
     this._itemTransformer = new itemTransformer();
   }
@@ -71,4 +71,4 @@ class gunListBuilder {
   }
 }
 
-export { gunListBuilder };
+export { itemListBuilder };
