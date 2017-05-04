@@ -8,7 +8,7 @@ class reviewDataCache {
   }
 
   getMatchingItem(item) {
-    var dtrItem = this._itemTransformer.translateToDtrGun(item);
+    var dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     dtrItem.referenceId = String(dtrItem.referenceId);
 

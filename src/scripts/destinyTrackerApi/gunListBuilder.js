@@ -8,7 +8,7 @@ class gunListBuilder {
 
   getNewItems(allItems, scoreMaintainer) {
     var self = this;
-    var allDtrItems = _.map(allItems, function(item) { return self._itemTransformer.translateToDtrGun(item); });
+    var allDtrItems = _.map(allItems, function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
     var allKnownDtrItems = scoreMaintainer.getItemStores();
 
     var unmatched = _.filter(allDtrItems, function(dtrItem) {
@@ -48,7 +48,7 @@ class gunListBuilder {
       return newGuns;
     }
 
-    return _.map(allGuns, function(item) { return self._itemTransformer.translateToDtrGun(item); });
+    return _.map(allGuns, function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
   }
 
   getWeaponList(stores, scoreMaintainer) {
