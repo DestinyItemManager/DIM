@@ -1,14 +1,14 @@
 import _ from 'underscore';
-import { gunTransformer } from './gunTransformer.js';
+import { itemTransformer } from './itemTransformer.js';
 
 class reviewDataCache {
   constructor() {
-    this._gunTransformer = new gunTransformer();
+    this._itemTransformer = new itemTransformer();
     this._itemStores = [];
   }
 
   getMatchingItem(item) {
-    var dtrItem = this._gunTransformer.translateToDtrGun(item);
+    var dtrItem = this._itemTransformer.translateToDtrGun(item);
 
     dtrItem.referenceId = String(dtrItem.referenceId);
 

@@ -1,10 +1,10 @@
-import { gunTransformer } from './gunTransformer.js';
+import { itemTransformer } from './itemTransformer.js';
 
 class reviewSubmitter {
   constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
-    this._gunTransformer = new gunTransformer();
+    this._itemTransformer = new itemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
@@ -40,7 +40,7 @@ class reviewSubmitter {
   }
 
   submitReviewPromise(item, userReview) {
-    var rollAndPerks = this._gunTransformer.getRollAndPerks(item);
+    var rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     var reviewer = this.getReviewer();
     var review = this.toRatingAndReview(userReview);
 

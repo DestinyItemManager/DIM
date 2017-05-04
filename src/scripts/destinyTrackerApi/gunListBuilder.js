@@ -1,14 +1,14 @@
 import _ from 'underscore';
-import { gunTransformer } from './gunTransformer.js';
+import { itemTransformer } from './itemTransformer.js';
 
 class gunListBuilder {
   constructor() {
-    this._gunTransformer = new gunTransformer();
+    this._itemTransformer = new itemTransformer();
   }
 
   getNewItems(allItems, scoreMaintainer) {
     var self = this;
-    var allDtrItems = _.map(allItems, function(item) { return self._gunTransformer.translateToDtrGun(item); });
+    var allDtrItems = _.map(allItems, function(item) { return self._itemTransformer.translateToDtrGun(item); });
     var allKnownDtrItems = scoreMaintainer.getItemStores();
 
     var unmatched = _.filter(allDtrItems, function(dtrItem) {
@@ -48,7 +48,7 @@ class gunListBuilder {
       return newGuns;
     }
 
-    return _.map(allGuns, function(item) { return self._gunTransformer.translateToDtrGun(item); });
+    return _.map(allGuns, function(item) { return self._itemTransformer.translateToDtrGun(item); });
   }
 
   getWeaponList(stores, scoreMaintainer) {

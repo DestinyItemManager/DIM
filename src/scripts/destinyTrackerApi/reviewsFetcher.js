@@ -1,11 +1,11 @@
 import _ from 'underscore';
-import { gunTransformer } from './gunTransformer.js';
+import { itemTransformer } from './itemTransformer.js';
 
 class reviewsFetcher {
   constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
-    this._gunTransformer = new gunTransformer();
+    this._itemTransformer = new itemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = scoreMaintainer;
@@ -21,7 +21,7 @@ class reviewsFetcher {
   }
 
   getItemReviewsPromise(item) {
-    var postWeapon = this._gunTransformer.getRollAndPerks(item);
+    var postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     var promise = this.$q
               .when(this.getItemReviewsCall(postWeapon))

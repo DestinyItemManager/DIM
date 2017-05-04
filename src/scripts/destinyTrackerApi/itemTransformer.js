@@ -1,4 +1,4 @@
-class gunTransformer {
+class itemTransformer {
   translateToDtrGun(gun) {
     return {
       referenceId: gun.hash,
@@ -32,4 +32,4 @@ class gunTransformer {
   }
 }
 
-export { gunTransformer };
+export { itemTransformer };
