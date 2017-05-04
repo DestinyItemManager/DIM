@@ -951,13 +951,22 @@ function StoreService(
         }
       }
 
-      var dtrRoll = "";
-      if (talentNodeGroup.isRandom) {
-        dtrRoll = node.nodeHash.toString(16);
-        if (dtrRoll.length > 1) {
-          dtrRoll += ".";
-        }
-        dtrRoll += node.stepIndex.toString(16);
+      // Generate a hash that identifies the weapons permutation and selected perks.
+      // This is used by the Weapon Reviewing system.
+      var dtrRoll = node.nodeHash.toString(16);
+
+      if (dtrRoll.length > 1) {
+        dtrRoll += ".";
+      }
+
+      dtrRoll += node.stepIndex.toString(16);
+
+      if (node.isActivated) {
+        dtrRoll += "o";
+      }
+
+      if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+        dtrRoll += "," + talentNodeSelected.perkHashes.join(',');
       }
 
       // There's a lot more here, but we're taking just what we need
