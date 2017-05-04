@@ -68,7 +68,7 @@ class bulkFetcher {
 
         if (matchingItem) {
           storeItem.dtrRating = matchingItem.rating;
-          storeItem.userRating = matchingItem.rating;
+          storeItem.userRating = matchingItem.userRating;
           storeItem.userReview = matchingItem.review;
           storeItem.pros = matchingItem.pros;
           storeItem.cons = matchingItem.cons;
