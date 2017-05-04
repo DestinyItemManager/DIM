@@ -29,11 +29,11 @@ class itemListBuilder {
     return allItems;
   }
 
-  getGuns(stores, scoreMaintainer) {
+  getWeapons(stores, scoreMaintainer) {
     var self = this;
     var allItems = this.getAllItems(stores);
 
-    var allGuns = _.filter(allItems,
+    var allWeapons = _.filter(allItems,
                         function(item) {
                           if (!item.primStat) {
                             return false;
@@ -42,32 +42,32 @@ class itemListBuilder {
                           return (item.primStat.statHash === 368428387);
                         });
 
-    var newGuns = this.getNewItems(allGuns, scoreMaintainer);
+    var newGuns = this.getNewItems(allWeapons, scoreMaintainer);
 
     if (scoreMaintainer.getItemStores().length > 0) {
       return newGuns;
     }
 
-    return _.map(allGuns, function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
+    return _.map(allWeapons, function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
   }
 
   getWeaponList(stores, scoreMaintainer) {
-    var guns = this.getGuns(stores, scoreMaintainer);
+    var weapons = this.getWeapons(stores, scoreMaintainer);
 
     var list = [];
     var self = this;
 
-    guns.forEach(function(gun) {
-      if (!self.isKnownGun(list, gun)) {
-        list.push(gun);
+    weapons.forEach(function(weapon) {
+      if (!self.isKnownWeapon(list, weapon)) {
+        list.push(weapon);
       }
     });
 
     return list;
   }
 
-  isKnownGun(list, dtrGun) {
-    return _.contains(list, dtrGun);
+  isKnownWeapon(list, dtrWeapon) {
+    return _.contains(list, dtrWeapon);
   }
 }
 
