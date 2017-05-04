@@ -1,34 +1,34 @@
 class itemTransformer {
-  translateToDtrGun(gun) {
+  translateToDtrWeapon(weapon) {
     return {
-      referenceId: gun.hash,
-      roll: this.getDtrRoll(gun)
+      referenceId: weapon.hash,
+      roll: this.getDtrRoll(weapon)
     };
   }
 
-  getRollAndPerks(gun) {
+  getRollAndPerks(weapon) {
     return {
-      roll: this.getDtrRoll(gun),
-      selectedPerks: this.getDtrPerks(gun),
-      referenceId: gun.hash,
-      instanceId: gun.id,
+      roll: this.getDtrRoll(weapon),
+      selectedPerks: this.getDtrPerks(weapon),
+      referenceId: weapon.hash,
+      instanceId: weapon.id,
     };
   }
 
-  getDtrPerks(gun) {
-    if (!gun.talentGrid) {
+  getDtrPerks(weapon) {
+    if (!weapon.talentGrid) {
       return null;
     }
 
-    return gun.talentGrid.dtrPerks;
+    return weapon.talentGrid.dtrPerks;
   }
 
-  getDtrRoll(gun) {
-    if (!gun.talentGrid) {
+  getDtrRoll(weapon) {
+    if (!weapon.talentGrid) {
       return null;
     }
 
-    return gun.talentGrid.dtrRoll;
+    return weapon.talentGrid.dtrRoll;
   }
 }
 
