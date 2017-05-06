@@ -1,9 +1,9 @@
 import angular from 'angular';
-import { reviewDataCache } from '../destinyTrackerApi/reviewDataCache.js';
-import { trackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler.js';
-import { bulkFetcher } from '../destinyTrackerApi/bulkFetcher.js';
-import { reviewsFetcher } from '../destinyTrackerApi/reviewsFetcher.js';
-import { reviewSubmitter } from '../destinyTrackerApi/reviewSubmitter.js';
+import { ReviewDataCache } from '../destinyTrackerApi/reviewDataCache';
+import { TrackerErrorHandler } from '../destinyTrackerApi/trackerErrorHandler';
+import { BulkFetcher } from '../destinyTrackerApi/bulkFetcher';
+import { ReviewsFetcher } from '../destinyTrackerApi/reviewsFetcher';
+import { ReviewSubmitter } from '../destinyTrackerApi/reviewSubmitter';
 
 angular.module('dimApp')
   .factory('dimDestinyTrackerService', DestinyTrackerService);
@@ -16,11 +16,11 @@ function DestinyTrackerService($q,
                                $translate,
                                dimFeatureFlags,
                                loadingTracker) {
-  var _reviewDataCache = new reviewDataCache();
-  var _trackerErrorHandler = new trackerErrorHandler($q, $translate);
-  var _bulkFetcher = new bulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  var _reviewsFetcher = new reviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  var _reviewSubmitter = new reviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  var _reviewDataCache = new ReviewDataCache();
+  var _trackerErrorHandler = new TrackerErrorHandler($q, $translate);
+  var _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  var _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  var _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   var _postEnabled = dimFeatureFlags.sendingWeaponDataEnabled;
 
   function _userHasNotOkayedPostingIds() {

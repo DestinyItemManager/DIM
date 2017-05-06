@@ -1,4 +1,4 @@
-class trackerErrorHandler {
+class TrackerErrorHandler {
   constructor($q,
               $translate) {
     this.$q = $q;
@@ -22,4 +22,4 @@ class trackerErrorHandler {
   }
 }
 
-export { trackerErrorHandler };
+export { TrackerErrorHandler };

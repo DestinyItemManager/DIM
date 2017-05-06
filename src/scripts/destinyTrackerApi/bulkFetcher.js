@@ -1,10 +1,10 @@
-import { itemListBuilder } from './itemListBuilder.js';
+import { ItemListBuilder } from './itemListBuilder';
 
-class bulkFetcher {
+class BulkFetcher {
   constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
-    this._itemListBuilder = new itemListBuilder();
+    this._itemListBuilder = new ItemListBuilder();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = scoreMaintainer;
@@ -78,4 +78,4 @@ class bulkFetcher {
   }
 }
 
-export { bulkFetcher };
+export { BulkFetcher };

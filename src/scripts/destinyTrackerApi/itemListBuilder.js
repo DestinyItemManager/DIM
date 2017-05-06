@@ -1,9 +1,9 @@
 import _ from 'underscore';
-import { itemTransformer } from './itemTransformer.js';
+import { ItemTransformer } from './itemTransformer';
 
-class itemListBuilder {
+class ItemListBuilder {
   constructor() {
-    this._itemTransformer = new itemTransformer();
+    this._itemTransformer = new ItemTransformer();
   }
 
   getNewItems(allItems, scoreMaintainer) {
@@ -71,4 +71,4 @@ class itemListBuilder {
   }
 }
 
-export { itemListBuilder };
+export { ItemListBuilder };

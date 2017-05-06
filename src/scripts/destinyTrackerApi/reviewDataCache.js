@@ -1,9 +1,9 @@
 import _ from 'underscore';
-import { itemTransformer } from './itemTransformer.js';
+import { ItemTransformer } from './itemTransformer';
 
-class reviewDataCache {
+class ReviewDataCache {
   constructor() {
-    this._itemTransformer = new itemTransformer();
+    this._itemTransformer = new ItemTransformer();
     this._itemStores = [];
   }
 
@@ -83,4 +83,4 @@ class reviewDataCache {
   }
 }
 
-export { reviewDataCache };
+export { ReviewDataCache };

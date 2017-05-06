@@ -1,10 +1,10 @@
-import { itemTransformer } from './itemTransformer.js';
+import { ItemTransformer } from './itemTransformer';
 
-class reviewSubmitter {
+class ReviewSubmitter {
   constructor($q, $http, dimPlatformService, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
-    this._itemTransformer = new itemTransformer();
+    this._itemTransformer = new ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._dimPlatformService = dimPlatformService;
     this._loadingTracker = loadingTracker;
@@ -67,4 +67,4 @@ class reviewSubmitter {
   }
 }
 
-export { reviewSubmitter };
+export { ReviewSubmitter };

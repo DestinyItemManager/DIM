@@ -1,11 +1,11 @@
 import _ from 'underscore';
-import { itemTransformer } from './itemTransformer.js';
+import { ItemTransformer } from './itemTransformer';
 
-class reviewsFetcher {
+class ReviewsFetcher {
   constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
     this.$q = $q;
     this.$http = $http;
-    this._itemTransformer = new itemTransformer();
+    this._itemTransformer = new ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
     this._reviewDataCache = scoreMaintainer;
@@ -95,4 +95,4 @@ class reviewsFetcher {
   }
 }
 
-export { reviewsFetcher };
+export { ReviewsFetcher };
