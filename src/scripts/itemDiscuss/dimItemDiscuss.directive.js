@@ -27,7 +27,6 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   });
 
   vm.cancel = function cancel() {
-    vm.loadout = angular.copy(vm.defaults);
     dimItemDiscussService.dialogOpen = false;
     vm.show = false;
   };
@@ -61,7 +60,7 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
     var item = vm.item;
     var userReview = vm.toUserReview(item);
 
-    dimDestinyTrackerService.updateUserRankings(item,
-                                                userReview);
+    dimDestinyTrackerService.updateCachedUserRankings(item,
+                                                      userReview);
   };
 }
