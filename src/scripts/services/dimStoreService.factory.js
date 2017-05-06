@@ -22,8 +22,7 @@ function StoreService(
   $translate,
   uuid2,
   dimFeatureFlags,
-  dimDestinyTrackerService
-  dimFeatureFlags,
+  dimDestinyTrackerService,
   dimSettingsService,
   $http
 ) {
