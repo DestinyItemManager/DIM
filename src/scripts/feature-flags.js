@@ -11,6 +11,7 @@ const featureFlag = {
   debugMoves: false,
   // show changelog toaster
   changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
+  // allow fetching item (weapon) scores and fetching/sending reviews from the Destiny Tracker API
   sendingWeaponDataEnabled: true,
 
   materialsExchangeEnabled: false,
