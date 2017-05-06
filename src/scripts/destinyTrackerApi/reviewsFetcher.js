@@ -1,17 +1,23 @@
 import _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
 
+/**
+ * Get the community reviews from the DTR API for a specific item.
+ * This was tailored to work for weapons.  Items (armor, etc.) may or may not work.
+ *
+ * @class ReviewsFetcher
+ */
 class ReviewsFetcher {
-  constructor($q, $http, trackerErrorHandler, loadingTracker, scoreMaintainer) {
+  constructor($q, $http, trackerErrorHandler, loadingTracker, reviewDataCache) {
     this.$q = $q;
     this.$http = $http;
     this._itemTransformer = new ItemTransformer();
     this._trackerErrorHandler = trackerErrorHandler;
     this._loadingTracker = loadingTracker;
-    this._reviewDataCache = scoreMaintainer;
+    this._reviewDataCache = reviewDataCache;
   }
 
-  getItemReviewsCall(item) {
+  _getItemReviewsCall(item) {
     return {
       method: 'POST',
       url: 'https://reviews-api.destinytracker.net/api/weaponChecker/reviews',
@@ -20,11 +26,11 @@ class ReviewsFetcher {
     };
   }
 
-  getItemReviewsPromise(item) {
+  _getItemReviewsPromise(item) {
     var postWeapon = this._itemTransformer.getRollAndPerks(item);
 
     var promise = this.$q
-              .when(this.getItemReviewsCall(postWeapon))
+              .when(this._getItemReviewsCall(postWeapon))
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
               .then((response) => { return response.data; });
@@ -34,13 +40,13 @@ class ReviewsFetcher {
     return promise;
   }
 
-  getUserReview(reviewData) {
+  _getUserReview(reviewData) {
     return _.findWhere(reviewData.reviews, { isReviewer: true });
   }
 
-  attachReviews(item,
-                reviewData) {
-    var userReview = this.getUserReview(reviewData);
+  _attachReviews(item,
+                 reviewData) {
+    var userReview = this._getUserReview(reviewData);
 
     item.communityReviews = reviewData.reviews;
 
@@ -55,11 +61,11 @@ class ReviewsFetcher {
                                          reviewData);
   }
 
-  attachCachedReviews(item,
-                      cachedItem) {
+  _attachCachedReviews(item,
+                       cachedItem) {
     item.communityReviews = cachedItem.reviews;
 
-    this.attachReviews(item,
+    this._attachReviews(item,
                        cachedItem);
 
     if (cachedItem.userRating) {
@@ -79,18 +85,28 @@ class ReviewsFetcher {
     }
   }
 
+  /**
+   * Get community (which may include the current user's) reviews for a given item and attach
+   * them to the item.
+   * Attempts to fetch data from the cache first.
+   *
+   * @param {any} item
+   * @returns {void}
+   *
+   * @memberof ReviewsFetcher
+   */
   getItemReviews(item) {
     var ratingData = this._reviewDataCache.getRatingData(item);
 
     if (ratingData.reviewsDataFetched) {
-      this.attachCachedReviews(item,
+      this._attachCachedReviews(item,
                                ratingData);
 
       return;
     }
 
-    this.getItemReviewsPromise(item)
-      .then((data) => this.attachReviews(item,
+    this._getItemReviewsPromise(item)
+      .then((data) => this._attachReviews(item,
                                          data));
   }
 }
