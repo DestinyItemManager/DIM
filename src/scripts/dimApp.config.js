@@ -53,7 +53,8 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   // https://github.com/likeastore/ngDialog/issues/327
   ngDialogProvider.setDefaults({
     appendTo: '.app',
-    disableAnimation: true
+    disableAnimation: true,
+    plain: true
   });
 }
 
