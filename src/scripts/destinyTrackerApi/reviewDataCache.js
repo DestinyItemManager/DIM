@@ -30,13 +30,7 @@ class ReviewDataCache {
    * @memberof ReviewDataCache
    */
   getRatingData(item) {
-    var matchingItem = this._getMatchingItem(item);
-
-    if (!matchingItem) {
-      return null;
-    }
-
-    return matchingItem;
+    return (this._getMatchingItem(item) || null);
   }
 
   _toAtMostOneDecimal(rating) {
