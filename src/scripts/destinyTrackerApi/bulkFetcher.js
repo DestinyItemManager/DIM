@@ -20,11 +20,11 @@ class BulkFetcher {
   }
 
   _getBulkFetchPromise(stores) {
-    if (!stores.stores.length) {
+    if (!stores.length) {
       return this.$q.resolve();
     }
 
-    var weaponList = this._itemListBuilder.getWeaponList(stores.stores, this._reviewDataCache);
+    var weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       return this.$q.resolve();
@@ -34,7 +34,7 @@ class BulkFetcher {
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
-              .then((response) => { return response.data; });
+              .then((response) => response.data);
 
     this._loadingTracker.addPromise(promise);
 
@@ -44,14 +44,16 @@ class BulkFetcher {
   /**
    * Fetch the DTR community scores for all weapon items found in the supplied stores.
    *
-   * @param {any} stores
+   * @param {any} storesContainer
    *
    * @memberof BulkFetcher
    */
-  bulkFetch(stores) {
+  bulkFetch(storesContainer) {
+    const stores = storesContainer.stores;
+
     this._getBulkFetchPromise(stores)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
-                                                  stores.stores));
+                                                  stores));
   }
 
   attachRankings(bulkRankings,
