@@ -54,7 +54,6 @@ function DestinyTrackerService($q,
   });
 
   return {
-    init: function() {},
     reattachScores: function(stores) {
       _bulkFetcher.attachRankings(null,
                                   stores);

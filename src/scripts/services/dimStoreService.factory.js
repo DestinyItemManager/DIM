@@ -29,8 +29,6 @@ function StoreService(
   var _stores = [];
   var _idTracker = {};
 
-  dimDestinyTrackerService.init();
-
   var _removedNewItems = new Set();
 
   // Load classified data once per load and keep it in memory until
