@@ -1,3 +1,4 @@
+import { flatMap } from '../util';
 import _ from 'underscore';
 import { ItemTransformer } from './itemTransformer';
 
@@ -14,10 +15,10 @@ class ItemListBuilder {
 
   _getNewItems(allItems, reviewDataCache) {
     var self = this;
-    var allDtrItems = _.map(allItems, function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
+    var allDtrItems = allItems.map(function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
     var allKnownDtrItems = reviewDataCache.getItemStores();
 
-    var unmatched = _.filter(allDtrItems, function(dtrItem) {
+    var unmatched = allDtrItems.filter(function(dtrItem) {
       var matchingItem = _.findWhere(allKnownDtrItems, { referenceId: String(dtrItem.referenceId), roll: dtrItem.roll });
       return (matchingItem === null);
     });
@@ -26,16 +27,11 @@ class ItemListBuilder {
   }
 
   _getAllItems(stores) {
-    var allItems = [];
-
-    stores.forEach(function(store) {
-      allItems = allItems.concat(store.items);
-    });
-
-    return allItems;
+    return flatMap(stores, (store) => store.items);
   }
 
-  _getWeapons(stores, reviewDataCache) {
+  // Get all of the weapons from our stores in a DTR API-friendly format.
+  _getDtrWeapons(stores, reviewDataCache) {
     var self = this;
     var allItems = this._getAllItems(stores);
 
@@ -45,7 +41,7 @@ class ItemListBuilder {
                             return false;
                           }
 
-                          return (item.primStat.statHash === 368428387);
+                          return (item.bucket.sort === 'Weapons');
                         });
 
     var newGuns = this._getNewItems(allWeapons, reviewDataCache);
@@ -69,14 +65,14 @@ class ItemListBuilder {
    * @memberof ItemListBuilder
    */
   getWeaponList(stores, reviewDataCache) {
-    var weapons = this._getWeapons(stores, reviewDataCache);
+    var dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
 
     var list = [];
     var self = this;
 
-    weapons.forEach(function(weapon) {
-      if (!self._isKnownWeapon(list, weapon)) {
-        list.push(weapon);
+    dtrWeapons.forEach(function(dtrWeapon) {
+      if (!self._isKnownWeapon(list, dtrWeapon)) {
+        list.push(dtrWeapon);
       }
     });
 
