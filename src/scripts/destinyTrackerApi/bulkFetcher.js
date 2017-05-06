@@ -20,7 +20,7 @@ class BulkFetcher {
   }
 
   _getBulkFetchPromise(stores) {
-    if (stores.stores.length === 0) {
+    if (!stores.stores.length) {
       return this.$q.resolve();
     }
 
