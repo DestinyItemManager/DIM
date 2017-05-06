@@ -24,13 +24,13 @@ class BulkFetcher {
       return this.$q.resolve();
     }
 
-    var weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
+    const weaponList = this._itemListBuilder.getWeaponList(stores, this._reviewDataCache);
 
     if (!weaponList.length) {
       return this.$q.resolve();
     }
 
-    var promise = this.$q
+    const promise = this.$q
               .when(this._getBulkWeaponDataEndpointPost(weaponList))
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
@@ -73,7 +73,7 @@ class BulkFetcher {
 
     stores.forEach(function(store) {
       store.items.forEach(function(storeItem) {
-        var matchingItem = self._reviewDataCache.getRatingData(storeItem);
+        const matchingItem = self._reviewDataCache.getRatingData(storeItem);
 
         if (matchingItem) {
           storeItem.dtrRating = matchingItem.rating;
