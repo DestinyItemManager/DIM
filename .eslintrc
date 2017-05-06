@@ -23,6 +23,8 @@
     "$DIM_VERSION": true,
     "$DIM_API_KEY": true,
     "$DIM_AUTH_URL": true,
+    "$DIM_WEB_API_KEY": true,
+    "$DIM_WEB_AUTH_URL": true,
   },
   "rules": {
     "array-callback-return": "error",
@@ -35,7 +37,7 @@
     "no-alert": "error",
     "no-eq-null": "error",
     "no-extra-bind": "error",
-    "no-fallthrough": "error",
+    "no-fallthrough": "off",
     "no-implicit-coercion": "error",
     "no-implicit-globals": "error",
     "no-implied-eval": "error",

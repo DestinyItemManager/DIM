@@ -1,5 +1,5 @@
 <div class="minmax" ng-controller="dimMinMaxCtrl as vm" ng-class="{ itemQuality: vm.featureFlags.qualityEnabled }">
-  <a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i><span translate="Help.BackToDIM"></span></a>
+  <back-link></back-link>
   <h1 translate="LB"></h1>
 
   <dim-min-max-char-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></dim-min-max-char-select>
@@ -52,7 +52,7 @@
       <div class="excluded-container">
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="vm.onExcludedDrop($data, $channel)" drop-validate="vm.excludedItemsValid($data, $channel)">
           <div class="excluded-items">
-            <div class="excluded-item" ng-repeat="excludeditem in vm.excludeditems">
+            <div class="excluded-item" ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index">
               <dim-min-max-item item-data="excludeditem" store-data="vm.getStore(excludeditem.owner)"></dim-min-max-item>
               <div class="close" ng-click="vm.onExcludedRemove(excludeditem.index)" role="button" tabindex="0"></div>
             </div>

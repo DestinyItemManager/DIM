@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
+import template from './dimLoadoutPopup.directive.template.html';
 
 angular.module('dimApp')
   .directive('dimLoadoutPopup', LoadoutPopup);
@@ -15,7 +16,7 @@ function LoadoutPopup() {
       store: '=dimLoadoutPopup'
     },
     replace: true,
-    templateUrl: require('./dimLoadoutPopup.directive.template.html')
+    template: template
   };
 }
 
@@ -305,7 +306,7 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
   vm.makeRoomForPostmaster = function makeRoomForPostmaster() {
     ngDialog.closeAll();
 
-    dimBucketService.then((buckets) => {
+    dimBucketService.getBuckets().then((buckets) => {
       const postmasterItems = flatMap(buckets.byCategory.Postmaster,
                                       (bucket) => vm.store.buckets[bucket.id]);
       const postmasterItemCountsByType = _.countBy(postmasterItems,

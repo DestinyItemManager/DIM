@@ -1,7 +1,7 @@
 const featureFlag = {
   isExtension: window.chrome && window.chrome.extension,
   // Tags are off in release right now
-  tagsEnabled: $DIM_FLAVOR !== 'release',
+  tagsEnabled: true,
   compareEnabled: true,
   vendorsEnabled: true,
   qualityEnabled: true,
@@ -13,7 +13,7 @@ const featureFlag = {
   changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
   sendingWeaponDataEnabled: true,
 
-  materialsExchangeEnabled: $DIM_FLAVOR !== 'release',
+  materialsExchangeEnabled: false,
   // allow importing and exporting your DIM data to JSON
   importExport: $DIM_FLAVOR !== 'release'
 };

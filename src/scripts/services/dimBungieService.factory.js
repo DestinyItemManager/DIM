@@ -7,7 +7,11 @@ angular.module('dimApp')
 function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
   var apiKey;
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-    apiKey = $DIM_API_KEY;
+    if (window.chrome && window.chrome.extension) {
+      apiKey = $DIM_API_KEY;
+    } else {
+      apiKey = $DIM_WEB_API_KEY;
+    }
   } else {
     apiKey = localStorage.apiKey;
   }
@@ -64,48 +68,51 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       })));
     }
 
-    var errorCode = response.data.ErrorCode;
+    var errorCode = response.data ? response.data.ErrorCode : -1;
 
+    // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
     switch (errorCode) {
-    case 1: {
+    case 1: // Success
       return response;
-    }
-    case 1627: {
-      return $q.reject("Vendor data is unavailable.");
-    }
-    case 2108: {
+    case 1627: // DestinyVendorNotFound
+      return $q.reject(new Error($translate.instant('BungieService.VendorNotFound')));
+    case 2106: // AuthorizationCodeInvalid
+    case 2108: // AccessNotPermittedByApplicationScope
       $rootScope.$broadcast('dim-no-token-found');
       return $q.reject("DIM does not have permission to perform this action.");
-    }
-    case 5:
-    case 36:
-    case 99:
-    case 1618:
-    case 2101:
-    case 2102:
-    case 2107:
-    // default: {
-    //   return response;
-    // }
-    }
-
-    if (errorCode === 36) {
+    case 5: // SystemDisabled
+      return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
+    case 35: // ThrottleLimitExceededMinutes
+    case 36: // ThrottleLimitExceededMomentarily
+    case 37: // ThrottleLimitExceededSeconds
       return $q.reject(new Error($translate.instant('BungieService.Throttled')));
-    } else if (errorCode === 99) {
+    case 2111: // token expired
+    case 99: // WebAuthRequired
       if (window.chrome && window.chrome.extension) {
         openBungieNetTab();
+      } else {
+        $rootScope.$broadcast('dim-no-token-found');
       }
       return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
-    } else if (errorCode === 5) {
-      return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
-    } else if (errorCode === 1618 &&
-      response.config.url.indexOf('/Account/') >= 0 &&
-      response.config.url.indexOf('/Character/') < 0) {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccount')));
-    } else if (errorCode === 2107 || errorCode === 2101 || errorCode === 2102) {
-      $state.go('developer');
-      return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
-    } else if (errorCode > 1) {
+    case 1601: // DestinyAccountNotFound
+    case 1618: // DestinyUnexpectedError
+      if (response.config.url.indexOf('/Account/') >= 0 &&
+          response.config.url.indexOf('/Character/') < 0) {
+        return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
+      }
+    case 2101: // ApiInvalidOrExpiredKey
+    case 2102: // ApiKeyMissingFromRequest
+    case 2107: // OriginHeaderDoesNotMatchKey
+      if ($DIM_FLAVOR === 'dev') {
+        $state.go('developer');
+        return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
+      } else {
+        return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
+      }
+    }
+
+    // Any other error
+    if (errorCode > 1) {
       if (response.data.Message) {
         const error = new Error(response.data.Message);
         error.code = response.data.ErrorCode;

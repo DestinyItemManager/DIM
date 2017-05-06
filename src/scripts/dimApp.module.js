@@ -14,11 +14,12 @@ import TranslateMessageFormatModule from 'angular-translate-interpolation-messag
 import UIRouterModule from 'angular-ui-router';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
-import 'angular-timer';
 import 'angular-uuid2/dist/angular-uuid2.js';
 
-import { RouterBlockModule } from './blocks/router/router.module';
-import { ShellModule } from './shell/dimShell.module';
+import { ShellModule } from './shell/shell.module';
+import inventoryModule from './store/inventory.module';
+import recordBooksModule from './record-books/record-books.module';
+import vendorsModule from './vendors/vendors.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -36,21 +37,22 @@ export const DimAppModule = angular
     MessagesModule,
     MomentModule,
     RateLimiterModule,
-    RouterBlockModule,
     ShellModule,
     SliderModule,
     ToasterModule,
     TranslateModule,
     TranslateMessageFormatModule,
     UIRouterModule,
-    'timer',
+    inventoryModule,
+    recordBooksModule,
+    vendorsModule,
     'angularUUID2',
     'ajoslin.promise-tracker',
     'cfp.hotkeys',
     'dim-oauth'
   ])
   .config(config)
-  .run(routes)
+  .config(routes)
   .run(run)
   .value('dimFeatureFlags', featureFlags)
   .value('dimState', state)

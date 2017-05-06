@@ -1,0 +1,968 @@
+{
+   "itemHash":{
+      "1458765388":{
+         "bucketHash":"1469714392",
+         "icon":"~/data/img/celery.png",
+         "classType":3,
+         "tierType":3,
+         "i18n":{
+            "en":{
+               "itemName":"Piece of Celery",
+               "itemDescription":"It's slightly wilted.",
+               "itemTypeName":"Sweets"
+            },
+            "de":{
+               "itemName":"Stück Sellerie",
+               "itemDescription":"Es ist leicht verwelkt.",
+               "itemTypeName":"Süßigkeiten"
+            },
+            "fr":{
+               "itemName":"Branche de Céleri",
+               "itemDescription":"Elle est flétrie",
+               "itemTypeName":"Bonbons"
+            },
+            "es":{
+               "itemName":"Tronco de Apio",
+               "itemDescription":"Se ha marchitado un poco.",
+               "itemTypeName":"Golosinas"
+            },
+            "it":{
+               "itemName":"Gambo di Sedano",
+               "itemDescription":"É un po' appassito",
+               "itemTypeName":"Dolci"
+            },
+            "ja":{
+               "itemName":"Piece of Celery",
+               "itemDescription":"It's slightly wilted.",
+               "itemTypeName":"Sweets"
+            },
+            "pt-br":{
+               "itemName":"Talo de Salsão",
+               "itemDescription":"Está um pouco murcho",
+               "itemTypeName":"Doces"
+            }
+         }
+      },
+      "320629370":{
+         "bucketHash":"1469714392",
+         "icon":"~/data/img/box_of_raisins.png",
+         "classType":3,
+         "tierType":3,
+         "i18n":{
+            "en":{
+               "itemName":"Tiny Box of Raisins",
+               "itemDescription":"What? Why...?",
+               "itemTypeName":"Sweets"
+            },
+            "de":{
+               "itemName":"Klitzekleine Schachtel mit Rosinen",
+               "itemDescription":"Was? Warum...?",
+               "itemTypeName":"Süßigkeiten"
+            },
+            "fr":{
+               "itemName":"Petite Boîte de Raisins secs",
+               "itemDescription":"Quoi? Mais... pourquoi?",
+               "itemTypeName":"Bonbons"
+            },
+            "es":{
+               "itemName":"Diminuta Caja de Pasas",
+               "itemDescription":"¿Qué? ¿Por qué...?",
+               "itemTypeName":"Golosinas"
+            },
+            "it":{
+               "itemName":"Scatolina di Uvetta",
+               "itemDescription":"Cosa? Perché...?",
+               "itemTypeName":"Dolci"
+            },
+            "ja":{
+               "itemName":"Tiny Box of Raisins",
+               "itemDescription":"What? Why...?",
+               "itemTypeName":"Sweets"
+            },
+            "pt-br":{
+               "itemName":"Caixinha de Passas",
+               "itemDescription":"O qué? Por qué...?",
+               "itemTypeName":"Doces"
+            }
+         }
+      },
+      "640697284":{
+         "bucketHash":"375726501",
+         "tierType":5,
+         "classType":2,
+         "icon":"~/data/img/siva_engine.png",
+         "i18n":{
+            "en":{
+               "itemName":"SIVA Engine Replica (Charged)",
+               "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "de":{
+               "itemName":"SIVA-Triebwerk-Replik (Aufgeladen)",
+               "itemDescription":"Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
+               "itemTypeName":"SIVA-Triebwerks"
+            },
+            "fr":{
+               "itemName":"Copie du générateur d'ARIA (Chargé)",
+               "itemDescription":"Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
+               "itemTypeName":"générateur d'ARIA"
+            },
+            "es":{
+               "itemName":"Réplica del Motor de SIVA (Cargada)",
+               "itemDescription":"Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.",
+               "itemTypeName":"Motor de SIVA"
+            },
+            "it":{
+               "itemName":"Copia del Motore della SIVA (Carcicata)",
+               "itemDescription":"Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.",
+               "itemTypeName":"Motore della SIVA"
+            },
+            "ja":{
+               "itemName":"SIVA Engine Replica (Charged)",
+               "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "pt-br":{
+               "itemName":"Réplica do Motor de SIVA (Carregado)",
+               "itemDescription":"A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
+               "itemTypeName":"Motor de SIVA"
+            }
+         }
+      },
+      "1518021613":{
+         "bucketHash":"375726501",
+         "tierType":5,
+         "classType":1,
+         "icon":"~/data/img/siva_engine.png",
+         "i18n":{
+            "en":{
+               "itemName":"SIVA Engine Replica (Charged)",
+               "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "de":{
+               "itemName":"SIVA-Triebwerk-Replik (Aufgeladen)",
+               "itemDescription":"Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
+               "itemTypeName":"SIVA-Triebwerks"
+            },
+            "fr":{
+               "itemName":"Copie du générateur d'ARIA (Chargé)",
+               "itemDescription":"Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
+               "itemTypeName":"générateur d'ARIA"
+            },
+            "es":{
+               "itemName":"Réplica del Motor de SIVA (Cargada)",
+               "itemDescription":"Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.",
+               "itemTypeName":"Motor de SIVA"
+            },
+            "it":{
+               "itemName":"Copia del Motore della SIVA (Carcicata)",
+               "itemDescription":"Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.",
+               "itemTypeName":"Motore della SIVA"
+            },
+            "ja":{
+               "itemName":"SIVA Engine Replica (Charged)",
+               "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "pt-br":{
+               "itemName":"Réplica do Motor de SIVA (Carregado)",
+               "itemDescription":"A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
+               "itemTypeName":"Motor de SIVA"
+            }
+         }
+      },
+      "2196813905":{
+         "bucketHash":"375726501",
+         "tierType":5,
+         "classType":0,
+         "icon":"~/data/img/siva_engine.png",
+         "i18n":{
+            "en":{
+               "itemName":"SIVA Engine Replica (Charged)",
+               "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "de":{
+               "itemName":"SIVA-Triebwerk-Replik (Aufgeladen)",
+               "itemDescription":"Diese Replik eines aufgeladenen SIVA-Triebwerks wurde von Shiro-4 zusammengeschustert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
+               "itemTypeName":"SIVA-Triebwerks"
+            },
+            "fr":{
+               "itemName":"Copie du générateur d'ARIA (Chargé)",
+               "itemDescription":"Cette copie d'un Générateur d'ARIA chargé a été assemblée par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
+               "itemTypeName":"générateur d'ARIA"
+            },
+            "es":{
+               "itemName":"Réplica del Motor de SIVA (Cargada)",
+               "itemDescription":"Esta réplica de un motor de SIVA cargado fue creada por Shiro-4, para estudiar el potencial del motor.",
+               "itemTypeName":"Motor de SIVA"
+            },
+            "it":{
+               "itemName":"Copia del Motore della SIVA (Carcicata)",
+               "itemDescription":"Questa copia di un motore carico della SIVA è stata assemblata da Shiro-4 per capire il pieno potenziale del motore.",
+               "itemTypeName":"Motore della SIVA"
+            },
+            "ja":{
+               "itemName":"SIVA Engine Replica (Charged)",
+               "itemDescription":"This replica of a charged SIVA engine was cobbled together by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "pt-br":{
+               "itemName":"Réplica do Motor de SIVA (Carregado)",
+               "itemDescription":"A réplica de um motor de SIVA carregado foi montada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
+               "itemTypeName":"Motor de SIVA"
+            }
+         }
+      },
+      "2621635855":{
+         "bucketHash":"375726501",
+         "tierType":5,
+         "classType":2,
+         "icon":"~/data/img/siva_engine.png",
+         "i18n":{
+            "en":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "de":{
+               "itemName":"SIVA-Triebwerk-Replik (Instabil)",
+               "itemDescription":"Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
+               "itemTypeName":"SIVA-Triebwerks"
+            },
+            "fr":{
+               "itemName":"Copie du générateur d'ARIA (Instable)",
+               "itemDescription":"Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
+               "itemTypeName":"générateur d'ARIA"
+            },
+            "es":{
+               "itemName":"Réplica del Motor de SIVA (Inestable)",
+               "itemDescription":"Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.",
+               "itemTypeName":"Motor de SIVA"
+            },
+            "it":{
+               "itemName":"Copia del Motore della SIVA (Instabile)",
+               "itemDescription":"Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.",
+               "itemTypeName":"Motore della SIVA"
+            },
+            "ja":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "pt-br":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
+               "itemTypeName":"Motor de SIVA"
+            }
+         }
+      },
+      "4088336240":{
+         "bucketHash":"375726501",
+         "tierType":5,
+         "classType":1,
+         "icon":"~/data/img/siva_engine.png",
+         "i18n":{
+            "en":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "de":{
+               "itemName":"SIVA-Triebwerk-Replik (Instabil)",
+               "itemDescription":"Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
+               "itemTypeName":"SIVA-Triebwerks"
+            },
+            "fr":{
+               "itemName":"Copie du générateur d'ARIA (Instable)",
+               "itemDescription":"Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
+               "itemTypeName":"générateur d'ARIA"
+            },
+            "es":{
+               "itemName":"Réplica del Motor de SIVA (Inestable)",
+               "itemDescription":"Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.",
+               "itemTypeName":"Motor de SIVA"
+            },
+            "it":{
+               "itemName":"Copia del Motore della SIVA (Instabile)",
+               "itemDescription":"Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.",
+               "itemTypeName":"Motore della SIVA"
+            },
+            "ja":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "pt-br":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
+               "itemTypeName":"Motor de SIVA"
+            }
+         }
+      },
+      "562302206":{
+         "bucketHash":"375726501",
+         "tierType":5,
+         "classType":0,
+         "icon":"~/data/img/siva_engine.png",
+         "i18n":{
+            "en":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "de":{
+               "itemName":"SIVA-Triebwerk-Replik (Instabil)",
+               "itemDescription":"Diese Replik eines mächtigen, jedoch instabilen SIVA-Triebwerks wurde sorgfälig von Shiro-4 konstruiert, um zur Erforschung des vollen Potenzials des Triebwerks beizutragen.",
+               "itemTypeName":"SIVA-Triebwerks"
+            },
+            "fr":{
+               "itemName":"Copie du générateur d'ARIA (Instable)",
+               "itemDescription":"Cette copie d'un Générateur d'ARIA puissant, mais instable, a été mis au point avec soins par Shiro-4 pour vous aider dans votre exploration du plein potentiel du Générateur.",
+               "itemTypeName":"générateur d'ARIA"
+            },
+            "es":{
+               "itemName":"Réplica del Motor de SIVA (Inestable)",
+               "itemDescription":"Esta réplica de un motor de SIVA poderoso, pero inestable, fue creada por Shiro-4, para estudiar el potencial del motor.",
+               "itemTypeName":"Motor de SIVA"
+            },
+            "it":{
+               "itemName":"Copia del Motore della SIVA (Instabile)",
+               "itemDescription":"Questa copia di un motore carico ma instabile della SIVA è stata progettata da Shiro-4 per capire il pieno potenziale del motore.",
+               "itemTypeName":"Motore della SIVA"
+            },
+            "ja":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"This replica of a powerful, yet unstable, SIVA engine was carefully engineered by Shiro-4 to aid in the exploration of the engine's full potential.",
+               "itemTypeName":"SIVA Engine"
+            },
+            "pt-br":{
+               "itemName":"SIVA Engine Replica (Unstable)",
+               "itemDescription":"Esta réplica de um motor de SIVA poderoso, porém instável, foi cuidadosamente projetada pelo Shiro-4 para auxilar na exploração potencial completo do motor.",
+               "itemTypeName":"Motor de SIVA"
+            }
+         }
+      },
+      "246897088":{
+         "bucketHash":"375726501",
+         "classType":3,
+         "tierType":6,
+         "icon":"~/data/img/thorn_bounty.png",
+         "i18n":{
+            "en":{
+               "itemName":"Jagged Purpose",
+               "itemDescription":"A jagged and angry shard. It seeths with a festering sickness. Faint, yet deadly. Eris may have interest in such a vile thing.",
+               "itemTypeName":"Curio"
+            },
+            "de":{
+               "itemName":"Zerklüftete Bestimmung",
+               "itemDescription":"Ein gekerbtes und wütendes Bruchstück. Es kocht voller schwarender Krankheit. Schwach, doch todlich. Eris hatte vielleicht Interesse an so eniem abscheulichen Ding.",
+               "itemTypeName":"Kuriosität"
+            },
+            "fr":{
+               "itemName":"Finalité Tranchante",
+               "itemDescription":"Un éclat tranchant et furieux. Il bouillonne d'un mal virulent. Faible, presque mortel. Eris puorrait être intéressée par une telle abomination.",
+               "itemTypeName":"Curiosité"
+            },
+            "es":{
+               "itemName":"Áspero Propósito",
+               "itemDescription":"Un fragmento áspero y furioso. Supura enfermedad. Débil, pero mortal. Eris podría estar interesada en esta cosa vil.",
+               "itemTypeName":"Curiosidad"
+            },
+            "it":{
+               "itemName":"Apparenza Acuminata",
+               "itemDescription":"Un frammento acuminato che ribolle di un male putrido, fievole, ma letale. Eris potrebbe essere interessata in un oggetto così disgustoso.",
+               "itemTypeName":"Curiosità"
+            },
+            "ja":{
+               "itemName":"Jagged Purpose",
+               "itemDescription":"A jagged and angry shard. It seeths with a festering sickness. Faint, yet deadly. Eris may have interest in such a vile thing.",
+               "itemTypeName":"Curio"
+            },
+            "pt-br":{
+               "itemName":"Propósito Espinhoso",
+               "itemDescription":"Um fragmento espinhoso e irritado. Ele ferve com uma moléstia pútrida. Fraca, mas mortal. A Eris pode estar interessada em coisas tão perversas.",
+               "itemTypeName":"Raridade"
+            }
+         }
+      },
+      "246897089":{
+         "bucketHash":"375726501",
+         "classType":3,
+         "tierType":6,
+         "icon":"~/data/img/thorn_bounty.png",
+         "i18n":{
+            "en":{
+               "itemName":"Depleted Hand Cannon",
+               "itemDescription":"You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.",
+               "itemTypeName":"Curio"
+            },
+            "de":{
+               "itemName":"Erschöpfte Handfeuerwaffe",
+               "itemDescription":"Die wurde eine gebrauchte Handfeuerwaffe und seitenlanges kryptisches Gekritzel über eine der Waffen des Leids überreicht.",
+               "itemTypeName":"Kuriosität"
+            },
+            "fr":{
+               "itemName":"Revolver Appauvri",
+               "itemDescription":"Vous avez reçu un revolver usé et des pages couvertes d'écrits énigmatiques concernant une des Armes du malheur.",
+               "itemTypeName":"Curiosité"
+            },
+            "es":{
+               "itemName":"Cañón de Mano Agotado",
+               "itemDescription":"Te han dado un cañón de mano usado y varias páginas crípticas sobres una de las Armas del Dolor.",
+               "itemTypeName":"Curiosidad"
+            },
+            "it":{
+               "itemName":"Cannone poratile Esaurito",
+               "itemDescription":"Hai ricevuto un cannone portatile logoro e delle pagine dalle scritture enigmatiche riguardo una delle Armi del Dolore.",
+               "itemTypeName":"Curiosità"
+            },
+            "ja":{
+               "itemName":"Depleted Hand Cannon",
+               "itemDescription":"You've been given a worn hand cannon and pages of cryptic writings pertaining to one of the Weapons of Sorrow.",
+               "itemTypeName":"Curio"
+            },
+            "pt-br":{
+               "itemName":"Canhão de Mão Descarregado",
+               "itemDescription":"Você recebeu um canhão de mão usado e páginas de uma escrita críptica pertencente a uma das Armas do Desalento.",
+               "itemTypeName":"Raridade"
+            }
+         }
+      },
+      "4083935122":{
+         "bucketHash":"2025709351",
+         "classType":3,
+         "tierType":5,
+         "icon":"~/data/img/lysanders_cry.png",
+         "primaryBaseStatHash":"1501155019",
+         "stats":{
+            "1501155019":{
+               "value":160,
+               "min":160,
+               "max":160
+            },
+            "360359141":{
+               "value":55,
+               "min":55,
+               "max":55
+            },
+            "3017642079":{
+               "value":35,
+               "min":35,
+               "max":35
+            }
+         },
+         "i18n":{
+            "en":{
+               "itemName":"Lysander's Cry",
+               "itemDescription":"You've recreated the fall of the Concordat, and something answered.",
+               "itemTypeName":"Vehicle"
+            },
+            "de":{
+               "itemName":"Lysanders Ruf",
+               "itemDescription":"Du hast den Fall des Konkordats nachgestelt und eine Antwort erhalten.",
+               "itemTypeName":"Transportmittel"
+            },
+            "fr":{
+               "itemName":"Cri de Lysandre",
+               "itemDescription":"Vous avez recrée la chute du Concordat et quelque chose est apparu.",
+               "itemTypeName":"Véhicule"
+            },
+            "es":{
+               "itemName":"Grito de Lysander",
+               "itemDescription":"Has recreado la caída del Concordato, y algo te ha respondido.",
+               "itemTypeName":"Vehículo"
+            },
+            "it":{
+               "itemName":"Grido di Lysander",
+               "itemDescription":"Da quando avete inscenato la caduta del Concordato, qualcose si è destato.",
+               "itemTypeName":"Veicolo"
+            },
+            "ja":{
+               "itemName":"Lysander's Cry",
+               "itemDescription":"You've recreated the fall of the Concordat, and something answered.",
+               "itemTypeName":"Vehicle"
+            },
+            "pt-br":{
+               "itemName":"Choro de Lysander",
+               "itemDescription":"Você ercriou a queda da Concordata, e alguma coisa respondeu.",
+               "itemTypeName":"Veículo"
+            }
+         }
+      },
+      "XXXXXXX11":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (1/6).\nTalk to Ikora Rey\nTake the schematic to Ikora Rey in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Lieder der Leere",
+               "itemDescription":"Nova Mortis Questline (1/6)\nSprich mit Ikora Rey.\nBring den Bauplan zu Ikora Rey im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Chants Abyssaux",
+               "itemDescription":"Nova Mortis Questline (1/6)\nParlez à Ikora Rey\nApportez le schéma à Ikora Rey, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Canciones del Vacío",
+               "itemDescription":"Nova Mortis Questline (1/6)\nHabla con Ikora Rey\nLlévale los planos a Ikora Rey en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Canzoni del Vuoto",
+               "itemDescription":"Nova Mortis Questline (1/6)\nParla con Ikora Rey\nPorta lo schema da Ikora Rey alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (1/6).\nTalk to Ikora Rey\nTake the schematic to Ikora Rey in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Canções do Vácuo",
+               "itemDescription":"Nova Mortis Questline (1/6)\nFale com Ikora Rey\nLeve o projeto para Ikora Rey na Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "XXXXXXX12":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (2/6).\nBanshee Knows\nTalk to Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Lieder der Leere",
+               "itemDescription":"Nova Mortis Questline (2/6)\nBanshee weiß es\nSprich mit Banshee-44 im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Chants Abyssaux",
+               "itemDescription":"Nova Mortis Questline (2/6)\nParlez à Banshee\nParlez à Banshee-44, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Canciones del Vacío",
+               "itemDescription":"Nova Mortis Questline (2/6)\nBanshee lo sabe\nHabla con Banshee-44 en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Canzoni del Vuoto",
+               "itemDescription":"Nova Mortis Questline (2/6)\nBanshee lo sa\nParla con Banshee-44 alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (2/6).\nBanshee Knows\nTalk to Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Canções do Vácuo",
+               "itemDescription":"Nova Mortis Questline (2/6)\nO Banshee Sabe\nFale com o Banshee-44 na Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "638363848":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (3/6).\nExperience Breeds Excellence\nGet points from kills with Void abilities in any activity.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Lieder der Leere",
+               "itemDescription":"Nova Mortis Questline (3/6)\nAus Erfarung entsteht Exzellenz\nErhalte bei jeder Aktivität Punkte für Kills mit Leerefähigkeit.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Chants Abyssaux",
+               "itemDescription":"Nova Mortis Questline (3/6)\nL'expérience entraîne l'excellence\nDans n'importe quel type d'activité, obtenez des points en réalisant des frags avec des capacités abyssales.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Canciones del Vacío",
+               "itemDescription":"Nova Mortis Questline (3/6)\nLa práctica hace al maestro\nConsigue puntos por bajas con habilidades de vacío en cualquier actividad.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Canzoni del Vuoto",
+               "itemDescription":"Nova Mortis Questline (3/6)\nL'esperienza alimenta la perfezione\nGuadagna punti uccidendo nemici con abilità da vuoto in qualsiasi attività.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (3/6).\nExperience Breeds Excellence\nGet points from kills with Void abilities in any activity.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Canções do Vácuo",
+               "itemDescription":"Nova Mortis Questline (3/6)\nA Experiência Produz Excelência\nObtenha pontos por baixas com habilidades de vácuo em qualquer atividade.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "2679684106":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (4/6).\nReturn to Banshee-44\nTalk to Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Lieder der Leere",
+               "itemDescription":"Nova Mortis Questline (4/6)\nKehre zu Banshee-44 zurück.\nSprich mit Banshee-44 im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Chants Abyssaux",
+               "itemDescription":"Nova Mortis Questline (4/6)\nRetournez voir Banshee-44\nParlez à Banshee-44, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Canciones del Vacío",
+               "itemDescription":"Nova Mortis Questline (4/6)\nHabla con Banshee-44\nHabla con Banshee-44 en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Canzoni del Vuoto",
+               "itemDescription":"Nova Mortis Questline (4/6)\nTorna da Banshee-44\nParla con Banshee-44 alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (4/6).\nReturn to Banshee-44\nTalk to Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Canções do Vácuo",
+               "itemDescription":"Nova Mortis Questline (4/6)\nVolte até o Banshee-44\nFale com Banshee-44 na Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "2098441281":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (5/6).\nWaking Nova Mortis\nDefeat the Hive Abomination in \"The Abomination Heist\" Strike on the Moon.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Lieder der Leere",
+               "itemDescription":"Nova Mortis Questline (5/6)\nErweckung von Nova Mortis\nBesiege die Schar-Abscheulichkeit im Strike \"Der Monstrositätenraub\" auf dem Mond.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Chants Abyssaux",
+               "itemDescription":"Nova Mortis Questline (5/6)\nNova Mortis s'éveille\nÉliminez l'abomination de la Ruche dans l'Assaut «L'abomination détournée», sur la Lune.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Canciones del Vacío",
+               "itemDescription":"Nova Mortis Questline (5/6)\nEl despertar de la Nova Mortis\nDerrota a la abominacíon de la colmena en el Asalto \"El rapto de la abominacíon\" en la Luna.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Canzoni del Vuoto",
+               "itemDescription":"Nova Mortis Questline (5/6)\nIl risveglio Nova Mortis\nSconfiggi l'abomino dell'alveare nell'Assalto sulla Luna \"Il rapimento dell'abomino\".",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (5/6).\nWaking Nova Mortis\nDefeat the Hive Abomination in \"The Abomination Heist\" Strike on the Moon.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Canções do Vácuo",
+               "itemDescription":"Nova Mortis Questline (5/6)\nDespertando a Nova Mortis\nDerrote a abominação da Colmeia no assalto \"O Golpe à Abominação\" na Lua.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "4227676115":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (6/6).\nReturn to Ikora Rey\nSpeak to Ikora Rey in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Lieder der Leere",
+               "itemDescription":"Nova Mortis Questline (6/6)\nKehre zu Ikora Rey zurück.\nSprich mit Ikora Rey im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Chants Abyssaux",
+               "itemDescription":"Nova Mortis Questline (6/6)\nRetournez voir Ikora Rey\nParlez à Ikora Rey, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Canciones del Vacío",
+               "itemDescription":"Nova Mortis Questline (6/6)\nHabla con Ikora Rey\nHabla con Ikora Rey en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Canzoni del Vuoto",
+               "itemDescription":"Nova Mortis Questline (6/6)\nTorna da Ikora Rey\nParla con Ikora Rey alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Songs from the Void",
+               "itemDescription":"Nova Mortis Questline (6/6).\nReturn to Ikora Rey\nSpeak to Ikora Rey in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Canções do Vácuo",
+               "itemDescription":"Nova Mortis Questline (6/6)\nVolte à Ikora Rey\nFale com a Ikora Rey no Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "1473747995":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (1/5).\nWhat Remains\nTalk to Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Feuerhymnen",
+               "itemDescription":"Abbadon Questline (1/5).\nWas übrig blieb\nSprich mit Banshee-44 im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Hymnes de Feu",
+               "itemDescription":"Abbadon Questline (1/5).\nCe qui reste\nParlez à Banshee-44, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Himnos de fuego",
+               "itemDescription":"Abbadon Questline (1/5).\nLo único que nos queda\nHabla con Banshee-44 en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Inni del fuoco",
+               "itemDescription":"Abbadon Questline (1/5).\nCiò che resta\nParla con Banshee-44 alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (1/5).\nWhat Remains\nTalk to Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Hinos de Fogo",
+               "itemDescription":"Abbadon Questline (1/5).\nO Que Resta\nFale com o Banshee-44 na Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "3334235849":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (2/5).\nCleansing Flames\nGet points from kills with Solar abilities in any activity.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Feuerhymnen",
+               "itemDescription":"Abbadon Questline (2/5).\nReinigendes Feuer\nErhalte bei jeder Aktivität Punkte für Kills mit Solarfähigkeit.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Hymnes de Feu",
+               "itemDescription":"Abbadon Questline (2/5).\nFeu purificateur\nDans n'importe quel type d'activité, obtenez des points en réalisant des frags avec des capacités solaires.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Himnos de fuego",
+               "itemDescription":"Abbadon Questline (2/5).\nLlamas purificadoras\nConsigue puntos por bajas con habilidades solares en cualquier actividad.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Inni del fuoco",
+               "itemDescription":"Abbadon Questline (2/5).\nFiamme puriicatrici\nGuadagna punti uccidendo i nemici con abilità solari in qualsiasi attività.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (2/5).\nCleansing Flames\nGet points from kills with Solar abilities in any activity.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Hinos de Fogo",
+               "itemDescription":"Abbadon Questline (2/5).\nChamas Purificadoras\nObtenha pontos por baixas com habilidades solares em qualquer atividade.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "171851345":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (3/5).\nThe Power of a Star\nSpeak with Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Feuerhymnen",
+               "itemDescription":"Abbadon Questline (3/5).\nDie Macht eines Sterns\nSprich mit Banshee-44 im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Hymnes de Feu",
+               "itemDescription":"Abbadon Questline (3/5).\nPuissance stellaire\nParlez à Banshee-44, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Himnos de fuego",
+               "itemDescription":"Abbadon Questline (3/5).\nEl poder de una estrella\nHabla con Banshee-44 en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Inni del fuoco",
+               "itemDescription":"Abbadon Questline (3/5).\nIl potere di una stella\nParla con Banshee-44 alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (3/5).\nThe Power of a Star\nSpeak with Banshee-44 in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Hinos de Fogo",
+               "itemDescription":"Abbadon Questline (3/5).\nO Poder de uma Estrela\nFale com o Banshee-44 na Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "2877686889":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (4/5).\nBurning Bright\nDefeat Valus Tlu'urn and Valus Mau'ual in the \"Shield Brothers\" strike on the Dreadnaught.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Feuerhymnen",
+               "itemDescription":"Abbadon Questline (4/5).\nLodernde Flammen\nBesiege Valus Tlu'urn und Valus Mau'ual im Strike \"Schild-Brüder\" im Grabschiff.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Hymnes de Feu",
+               "itemDescription":"Abbadon Questline (4/5).\nTout feu tout flamme\nÉliminez Valus Tlu'urn et Valus Mau'ual dans l'Assaut «Les Frères au bouclier», dans le Cuirassé.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Himnos de fuego",
+               "itemDescription":"Abbadon Questline (4/5).\nLlama ardiente\nDerrota a Valus Tlu'urn y a Valus Mau'ual en el Asalto \"Hermanos Escudo\" en el Acorazado.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Inni del fuoco",
+               "itemDescription":"Abbadon Questline (4/5).\nBagliore rovente\nSconfiggi Valus Tlu'urn e Valus Mau'ual nell'Assalto \"Fratelli di sangue\" sull'Astrocorazzata.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (4/5).\nBurning Bright\nDefeat Valus Tlu'urn and Valus Mau'ual in the \"Shield Brothers\" strike on the Dreadnaught.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Hinos de Fogo",
+               "itemDescription":"Abbadon Questline (4/5).\nBrilho Ardente\nDerrote Valus Tlu'urn e Valus Mau'ual no assalto \"Irmãos Escudeiros\" no Encouraçado.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      },
+      "1523393679":{
+         "bucketHash":"1801258597",
+         "classType":3,
+         "tierType":0,
+         "icon":"~/data/img/classified_weapon_quest.png",
+         "i18n":{
+            "en":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (5/5).\nCatching a Star\nReport to Commander Zavala in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "de":{
+               "itemName":"Feuerhymnen",
+               "itemDescription":"Abbadon Questline (5/5).\nEinen Stern fangen\nBegib dich zu Commander Zavala im Turm.",
+               "itemTypeName":"Quest"
+            },
+            "fr":{
+               "itemName":"Hymnes de Feu",
+               "itemDescription":"Abbadon Questline (5/5).\nUno étoile à maîtriser\nFaites votre rapport au commandant Zavala, à la Tour.",
+               "itemTypeName":"Quêtes"
+            },
+            "es":{
+               "itemName":"Himnos de fuego",
+               "itemDescription":"Abbadon Questline (5/5).\nCaza una estrella\nInforma al comandante Zavala en la Torre.",
+               "itemTypeName":"Aventuras"
+            },
+            "it":{
+               "itemName":"Inni del fuoco",
+               "itemDescription":"Abbadon Questline (5/5).\nA caccia di una stella\nFai rapporto al Commandate Zavala alla Torre.",
+               "itemTypeName":"Imprese"
+            },
+            "ja":{
+               "itemName":"Hymns of Fire",
+               "itemDescription":"Abbadon Questline (5/5).\nCatching a Star\nReport to Commander Zavala in the Tower.",
+               "itemTypeName":"Quest"
+            },
+            "pt-br":{
+               "itemName":"Hinos de Fogo",
+               "itemDescription":"Abbadon Questline (5/5).\nCapturando uma Estrela\nApresente-se ao Comandante Zavala na Torre.",
+               "itemTypeName":"Jornadas"
+            }
+         }
+      }
+   }
+}

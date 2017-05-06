@@ -20,6 +20,19 @@ mod.filter('bungieIcon', function($sce) {
  */
 mod.filter('bungieBackground', function() {
   return function backgroundImage(value) {
+    if (!value) {
+      return {};
+    }
+
+    // Hacky workaround so we can reference local images
+    if (value.startsWith('~')) {
+      const baseUrl = ($DIM_FLAVOR === 'dev')
+              ? ''
+              : 'https://beta.destinyitemmanager.com';
+      return {
+        'background-image': 'url(' + baseUrl + value.substr(1) + ')'
+      };
+    }
     return {
       'background-image': 'url(https://www.bungie.net' + value + ')'
     };

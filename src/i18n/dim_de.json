@@ -18,13 +18,14 @@
       "Throttled": "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut.",
       "NotLoggedIn": "Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen.",
       "Maintenance": "Bungie.net Server werden zur Zeit gewartet.",
-      "NoAccount": "Es wurde kein Destiny Account für diese Platform gefunden. Hast du die richtige Platform gewählt?",
+      "NoAccount": "Es wurde kein Destiny Account für {platform} gefunden. Hast du die richtige Platform gewählt?",
       "NoAccountForPlatform": "Konnte auf {platform} keinen Destiny Account für dich finden.",
       "NoCookies": "Keine Cookies gefunden.",
       "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
-      "Twitter": "Bekomme Statusupdates auf",
+      "Twitter": "Bekomme Statusupdates auf:",
       "ItemUniqueness": "Item Einzigartigkeit",
-      "ItemUniquenessExplanation": "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
+      "ItemUniquenessExplanation": "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
+      "VendorNotFound": "Händler Daten nicht verfügbar."
    },
    "Compare": {
       "ButtonHelp": "Gegenstände vergleichen",
@@ -39,9 +40,12 @@
       "Splits": "Vergleiche mit selben Werten ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Granaten Abklingzeit",
-      "Melee": "Nahkampf Abklingzeit",
-      "Super": "Super Abklingzeit"
+      "Grenade": "Granaten Abklingzeit: {cooldown}",
+      "Melee": "Nahkampf Abklingzeit: {cooldown}",
+      "Super": "Super Abklingzeit: {cooldown}"
+   },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Tag} other{# Tage}}"
    },
    "Debug": {
       "Dump": "Info in Konsole ausgeben",
@@ -65,6 +69,7 @@
          "MakeRoom": "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können",
          "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
       },
+      "OutOfRoomTitle": "Kein Platz",
       "OutOfRoom": "Dir ist der Platz ausgegangen um Gegenstände von {character} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren.",
       "Quickmove": "Schnelles Verschieben",
       "Stop": "Stop"
@@ -79,7 +84,7 @@
       "FilterHelp": "Suche nach Item/Perk oder is:arc",
       "MaterialsExchange": "Verfügbare Fraktionsränge",
       "Refresh": "Aktualisiere Destiny Daten",
-      "SupportDIM": "DIM Unterstützen"
+      "SupportDIM": "Support"
    },
    "Help": {
       "BackToDIM": "Zurück zu DIM",
@@ -127,7 +132,7 @@
       "ToStore": "Alle {name} sind nun bei deinem {store}."
    },
    "ItemService": {
-      "BucketFull": "Es sind zu viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar vom}} {store}.",
+      "BucketFull": "Es sind zu viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar vom} other{}} {store}.",
       "Classified": "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
       "Classified2": "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar.",
       "Deequip": "Kann keinen weiteren ausrüstbaren Gegenstand finden um {itemname} abzulegen.",
@@ -271,9 +276,21 @@
       "Take": "Take",
       "Vault": "Vault"
    },
+   "MoveAmount": {
+     "Min": "Mindest-Stapel (1)",
+     "Max": "Gesamtmenge in dieser Stelle.",
+     "UpStack": "Auf nächsten vollen Stapel erhöhen",
+     "DownStack": "Auf letzten vollen Stapel verringern",
+     "Increment": "Einer mehr",
+     "Decrement": "Einer weniger"
+   },
    "Notes": {
       "Error": "Fehler! Max 120 Zeichen für Notizen.",
       "Help": "Notiz für dieses Item hinzufügen"
+   },
+   "Objectives": {
+     "Complete": "Vollständig",
+     "Incomplete": "Unvollständig"
    },
    "Postmaster": {
       "Limit": "Poststellenlimit",
@@ -326,14 +343,20 @@
       "NoBonus": "Kein Bonus",
       "OfMaxRoll": "{range} des max. Rolls",
       "PercentHelp": "Klicke für mehr Informationen über die Qualität der Werte.",
+      "Prestige": "Prestige Level: {level}\n{exp}xp bis 5 Lichtpartikel.",
       "Quality": "Qualität der Werte",
       "Strength": "Stärke",
-      "TierProgress": "{progress} für {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 für T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Stapel auffüllen ({amount})",
       "HowMuch": "Wie viele {itemname} sollen verschoben werden?",
       "Move": "Verschieben"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Um Google Drive wieder zu authorisieren musst du deinen Browser neustarten.",
+     "OneItemTooLarge": "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mir zuvielen Gegenständen.",
+     "SaveTooLarge": "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
    },
    "Tags": {
       "TagItem": "Item markieren",
@@ -345,9 +368,8 @@
    "Vendors": {
       "Vendors": "Händler",
       "All": "Alle",
-      "Available": "Verfügbar auf",
-      "Compare": "Vergleiche mit dem was du bereits hast",
-      "Day": "{numDays, plural, =1{Tag} other{Tage}}",
+      "Available": "Verfügbar auf:",
+      "Compare": "Vergleiche mit dem was du bereits hast:",
       "Load": "Lade Händler",
       "ArmorAndWeapons": "Panzerung & Waffen",
       "ShipsAndVehicles": "Schiffe & Fahrzeuge",
@@ -355,6 +377,10 @@
       "Bounties": "Beutezüge",
       "ShadersAndEmblems": "Shader & Abzeichen",
       "Emotes": "Gesten"
+   },
+   "RecordBooks": {
+     "RecordBooks": "Rekordbuch",
+     "HideCompleted": "Abgeschlossene Rekorde nicht anzeigen"
    },
    "Views": {
      "About":{
@@ -380,25 +406,26 @@
        "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
        "Twitter": "Twitter",
        "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
-       "Version": "Version"
+       "Version": "Version {version} ({flavor})",
+       "Transifex": "Trete dem Übersetzer-Team bei!",
+       "TransifexText": "Wir benutzen Transifex für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
      },
      "Support": {
        "Support": "Unterstütze DIM",
        "FreeToDownload": "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen.",
-       "Fans": "Wir sind alle große Fans von Destiny. DIM erwachte in den Stunden des Gameplays zum Leben, in denen wir den Schmerz fühlten, als wir bei der Übertragung von Gegenständen zwischen den Charaktern ausgerechnet diesen einen Gegenstand vergessen hatten oder bei den vielen Flüge zum Turm bei denen wir unsere Engramme aus den Strikes entladen haben. DIM ist das Tool, das dir hilft, mehr Spielzeit zu bekommen.",
-       "Contribute": "Wie kann ich mich am Projekt beteiligen?",
-       "Paypal":"Gib DIM eine Spende!",
-       "PaypalText": "Wir benutzen PayPal für Spenden. Wenn DIM einen Unterschied in deiner Spielzeit macht, unterstütze das Team, das an dem Projekt arbeitet.",
-       "Transifex": "Trete dem Übersetzer-Team bei!",
-       "TransifexText": "Wir nutzen Transifex für einfache Sprachanpassung. Wenn Du DIM in Deiner Sprache sehen möchtest, trete dem Team bei.",
-       "Share": "Teile DIM mit deinen Freunden.",
-       "ShareText": "Sobald du erlebt hast, wie einfach es ist ein Loadout zu anzulegen, wirst du überwältigt sein. Teile den Spaß mit deinen Freunden!",
-       "Reddit": "Hast du eine Idee für DIM?",
-       "RedditText": "Besuche uns auf /r/destinyitemmanager und lass uns von deiner Idee wissen. Du wirst von uns hören, sowie auch von der Community rund um DIM, was ein großartiger Weg ist, um eine Idee aufzugreifen und zu verbessern.",
-       "GitHub": "Ich bin ein Entwickler/Designer/Enthusiast und ich möchte gerne etwas beitragen.",
-       "GitHubText": "Besuche uns auf GitHub und sende einem der beitragenden Personen eine Nachricht. Wir sind mehr als glücklich Pull Requests zu akzeptieren. Tritt uns als Unterstützer bei nehme an unseren Treffen teil, bei denen wir über die nächste Version, zukünftige Updates oder Bugs zu zerschmettern."
+       "OpenCollective": "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben.",
+       "Backers": "Unterstützer",
+       "BackersDetail": "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln",
+       "Sponsors": "Sponsoren",
+       "SponsorsDetail": "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite."
      },
-     "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
+     "UpgradeChrome": "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können.",
+     "Login": {
+       "Permission": "Wir brauchen dein Einverständnis....",
+       "Explanation": "Erlaube DIM deinen Destiny Charakter,  Tresor und Fortschritt einzusehen und zu bearbeiten.",
+       "Auth": "Autorisiere mit Bungie.net",
+       "LearnMore": "Willst du mehr wissen?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "5 Siege Belohnung (Rüstung)",

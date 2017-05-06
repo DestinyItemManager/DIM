@@ -18,13 +18,14 @@
       "Throttled": "Bungie API throttling limit exceeded. Please wait a bit and then retry.",
       "NotLoggedIn": "Please log into Bungie.net in order to use this extension.",
       "Maintenance": "Bungie.net servers are down for maintenance.",
-      "NoAccount": "No Destiny account was found for this platform. Do you have the right platform selected?",
+      "NoAccount": "No Destiny account was found on {platform}. Do you have the right platform selected?",
       "NoAccountForPlatform": "Failed to find a Destiny account for you on {platform}.",
       "NoCookies": "No cookies found.",
       "NotConnected": "You may not be connected to the internet.",
-      "Twitter": "Get status updates on",
+      "Twitter": "Get status updates on:",
       "ItemUniqueness": "Item Uniqueness",
-      "ItemUniquenessExplanation": "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one."
+      "ItemUniquenessExplanation": "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one.",
+      "VendorNotFound": "Vendor data is unavailable."
    },
    "Compare": {
       "ButtonHelp": "Compare Items",
@@ -39,9 +40,12 @@
       "Splits": "Compare similar splits ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Grenade cooldown",
-      "Melee": "Melee cooldown",
-      "Super": "Super cooldown"
+      "Grenade": "Grenade cooldown: {cooldown}",
+      "Melee": "Melee cooldown: {cooldown}",
+      "Super": "Super cooldown: {cooldown}"
+   },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Day} other{# Days}}"
    },
    "Debug": {
       "Dump": "Dump info to console",
@@ -65,6 +69,7 @@
          "MakeRoom": "Make room to pick up items by moving equipment",
          "Tooltip": "If checked, DIM will move weapons and armor around to make space in the vault for engrams."
       },
+      "OutOfRoomTitle": "Out of Room",
       "OutOfRoom": "You're out of space to move items off of {character}. Time to decrypt some engrams and clear out the trash!",
       "Quickmove": "Quick Move",
       "Stop": "Stop"
@@ -79,7 +84,7 @@
       "FilterHelp": "Search item/perk or is:arc",
       "MaterialsExchange": "Available faction ranks",
       "Refresh": "Refresh Destiny Data",
-      "SupportDIM": "Support DIM"
+      "SupportDIM": "Support"
    },
    "Help": {
       "BackToDIM": "Back to DIM",
@@ -105,7 +110,7 @@
    },
    "Infusion": {
       "Infusion": "Infusion Fuel Finder",
-      "BringGear": "Will bring the gear to",
+      "BringGear": "Will bring the gear to:",
       "Calc": "Infusion calculator",
       "InfuseItems": "Select item to infuse with:",
       "InfusionMaterials": "Infusion Materials",
@@ -113,8 +118,7 @@
       "NoItems": "No infusable items available.",
       "NoTransfer": "Transfer infusion material\n {target} cannot be moved.",
       "ShowItems": "Show infusable items across all characters and vault",
-      "TransferItems": "Transfer items",
-      "Using3": "using 3"
+      "TransferItems": "Transfer items"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Error saving item info",
@@ -127,7 +131,7 @@
       "ToStore": "All {name} are now on your {store}."
    },
    "ItemService": {
-      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} false{on your}} {store}.",
+      "BucketFull": "There are too many '{itemtype}' items {isVault, select, true{in the} other{on your}} {store}.",
       "Classified": "This item is classified and cannot be transferred at this time.",
       "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
       "Deequip": "Cannot find another item to equip in order to dequip {itemname}",
@@ -247,7 +251,6 @@
       "Error": "Error loading Destiny info:\n{error}\nReload to retry.",
       "Outdated": "Outdated Destiny Info",
       "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems.",
-      "BungieDown": "Bungie.net may be having trouble.",
       "Load": "Loading saved Destiny info",
       "LoadCharInv": "Loading Destiny characters and inventory",
       "Save": "Saving latest Destiny info",
@@ -268,8 +271,19 @@
       "Equip": "Equip",
       "Split": "Split",
       "Store": "Store",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Take",
-      "Vault": "Vault"
+      "Vault": "Vault",
+      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
+   },
+   "MoveAmount": {
+     "Min": "Minimum stack (1)",
+     "Max": "Total amount in this location",
+     "UpStack": "Increase up to the next full stack",
+     "DownStack": "Decrease down to the next full stack",
+     "Increment": "One more",
+     "Decrement": "One fewer"
    },
    "Notes": {
       "Error": "Error! Max 120 characters for notes.",
@@ -290,6 +304,10 @@
      "ServiceSubmitError": "Destiny tracker service submit failed.",
      "NoReviewsYet": "{itemName} has no community reviews yet. Be the first!",
      "CurrentAverageRating": "{itemName} has an average rating of {itemRating} based on {numReviews} reviews."
+   },
+   "Objectives": {
+     "Complete": "Complete",
+     "Incomplete": "Incomplete"
    },
    "Postmaster": {
       "Limit": "Postmaster Limit",
@@ -347,7 +365,7 @@
       "Prestige": "Prestige Level: {level}\n{exp}xp until 5 motes of light.",
       "Quality": "Stats quality",
       "Strength": "Strength",
-      "TierProgress": "{progress} for {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 for T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",
@@ -369,9 +387,8 @@
    "Vendors": {
       "Vendors": "Vendors",
       "All": "All",
-      "Available": "Available on",
-      "Compare": "Compare with what you already have",
-      "Day": "{numDays, plural, =1{Day} other{Days}}",
+      "Available": "Available on:",
+      "Compare": "Compare with what you already have:",
       "Load": "Loading Vendors",
       "ArmorAndWeapons": "Armor & Weapons",
       "ShipsAndVehicles": "Ships & Vehicles",
@@ -379,6 +396,10 @@
       "Bounties": "Bounties",
       "ShadersAndEmblems": "Shaders & Emblems",
       "Emotes": "Emotes"
+   },
+   "RecordBooks": {
+     "RecordBooks": "Record Books",
+     "HideCompleted": "Hide completed records"
    },
    "Views": {
      "About":{
@@ -404,25 +425,26 @@
        "RedditHelp": "If you have questions, comments, or suggestions- let us know!",
        "Twitter": "Twitter",
        "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
-       "Version": "Version"
+       "Version": "Version {version} ({flavor})",
+       "Transifex": "Join the Translation Team!",
+       "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
      },
      "Support": {
        "Support": "Supporting DIM",
        "FreeToDownload": "DIM is a product that is free to download and use. The source code for DIM is open sourced, and free to anyone to enhance. You will never see an ad in DIM. That is our commitment.",
-       "Fans": "We're all huge fans of Destiny. DIM came to life in those hours of gameplay because we felt that pain of transferring gear between characters and forgetting that one item, or trips down to the tower to unload your ROC strikes. DIM is the tool that will help you get more gametime.",
-       "Contribute": "How can I contribute?",
-       "Paypal":"Give DIM a Tip!",
-       "PaypalText": "We use Paypal to accept tips. If DIM has made a difference in your gametime, support the team working on the project.",
-       "Transifex": "Join the Translation Team!",
-       "TransifexText": "We use Transifex for ease of translation. If you want to see DIM localized to your language join the team.",
-       "Share": "Share the DIM with your friends.",
-       "ShareText": "Once you've experienced how easy it is to equip a loadout, you'll be hooked. Share the fun with your friends!",
-       "Reddit": "Do you have an idea for DIM?",
-       "RedditText": "Visit us on /r/destinyitemmanager and let us know about your idea. You'll hear from us as well as the community around DIM which is a great way to iterate and improve an idea.",
-       "GitHub": "I'm a developer/designer/enthusist and I'm looking to contribute to the source.",
-       "GitHubText": "Visit us on GitHub and send one of the contributors a message. We're more than happy to accept pull requests.  Join us as a contributor and join our meetings where we talk about the next version, feature updates, or crushing bugs."
+       "OpenCollective": "We are using OpenCollective as a service to provide compensation to our developers for their dedication and time spent on this project.",
+       "Backers": "Backers",
+       "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
+       "Sponsors": "Sponsors",
+       "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site."
      },
-     "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM."
+     "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM.",
+     "Login": {
+       "Permission": "We need your permission...",
+       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
+       "Auth": "Authorize with Bungie.net",
+       "LearnMore": "Do you want to know more?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "5 Win Reward (Armor)",

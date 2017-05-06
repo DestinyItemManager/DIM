@@ -1,3 +1,6 @@
+const child_process = require("child_process");
+const fs = require("fs");
+
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
 
@@ -17,7 +20,10 @@ module.exports = function(grunt) {
           cwd: 'dist',
           src: [
             '**',
-            '!chrome.zip'
+            '!data',
+            '!chrome.zip',
+            '!.htaccess',
+            '!stats.html'
           ],
           dest: '/',
           filter: 'isFile'
@@ -62,11 +68,46 @@ module.exports = function(grunt) {
           zip: "dist/chrome.zip"
         }
       }
+    },
+
+    // Tasks for uploading the website versions
+    rsync: {
+      options: {
+        //dryRun: true,
+        args: ["--verbose"],
+        exclude: ["chrome.zip", "stats.html"],
+        host: process.env.REMOTE_HOST,
+        port: 2222,
+        recursive: true,
+        deleteAll: true,
+        ssh: true,
+        privateKey: 'config/dim_travis.rsa',
+        sshCmdArgs: ["-o StrictHostKeyChecking=no"]
+      },
+      beta: {
+        options: {
+          src: "dist/",
+          dest: process.env.REMOTE_PATH + "beta"
+        }
+      },
+      prod: {
+        options: {
+          src: "dist/",
+          dest: process.env.REMOTE_PATH + "prod"
+        }
+      }
+    },
+
+    precompress: {
+      web: {
+        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg}"
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-rsync');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('dist/manifest.json');
@@ -75,16 +116,60 @@ module.exports = function(grunt) {
     grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
 
-  grunt.registerTask('publish_chrome_beta', [
+  grunt.registerMultiTask(
+    'precompress',
+    'Create gzip and brotli versions of web assets',
+    function() {
+      const done = this.async();
+      const promises = [];
+      this.filesSrc.forEach(function(file) {
+        promises.push(new Promise(function(resolve, reject) {
+          child_process.exec("gzip -c --no-name " + file + " > " + file + ".gz", function(error, stdout, stderr) {
+            if (error) {
+              grunt.log.writeln("gzip " + file + " => error: " + stdout + stderr);
+              reject(error);
+            } else {
+              grunt.log.writeln("gzip " + file + " => success");
+              resolve();
+            }
+          });
+        }));
+
+        promises.push(new Promise(function(resolve, reject) {
+          child_process.execFile("brotli/out/bin/bin/bro", ["--quality", "9", "--input", file, "--output", file + ".br"], function(error, stdout, stderr) {
+            if (error) {
+              grunt.log.writeln("brotli " + file + " => error: " + stdout + stderr);
+              reject(error);
+            } else {
+              grunt.log.writeln("brotli " + file + " => success");
+              resolve();
+            }
+          });
+        }).then(function() {
+          return new Promise(function(resolve, reject) {
+            fs.chmod(file + ".br", 0644, resolve);
+          });
+        }));
+      });
+
+      Promise.all(promises).then(done);
+    }
+  );
+
+  grunt.registerTask('publish_beta', [
     'update_chrome_beta_manifest',
     'compress:chrome',
+    'log_beta_version',
     'webstore_upload:beta',
-    'log_beta_version'
+    'precompress',
+    'rsync:beta'
   ]);
 
-  grunt.registerTask('publish_chrome_release', [
+  grunt.registerTask('publish_release', [
     'compress:chrome',
-    'webstore_upload:release'
+    'webstore_upload:release',
+    'precompress',
+    'rsync:prod'
   ]);
 
   grunt.registerTask('log_beta_version', function() {

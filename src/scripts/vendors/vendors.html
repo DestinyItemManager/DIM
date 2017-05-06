@@ -1,0 +1,37 @@
+<div class="vendor">
+  <div ng-if="!vm.vendorService.vendorsLoaded" class="vendor-loading"><i class="fa-spin fa fa-refresh"></i> <span translate="Vendors.Load"></span>...</div>
+  <back-link></back-link>
+
+  <div id="vendorHeadersBackground" class="vendor-headers-background"></div>
+  <div id="vendorHeaderWrapper" class="vendorHeaderWrapper">
+    <div class="vendorLabels">
+      <h1 translate="Vendors"></h1>
+      <div class="vendorTabs">
+        <label ng-class="{active: vm.activeTab === ''}">
+          <input type='radio' ng-model='vm.activeTab' value=''><span translate="Vendors.All"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasArmorWeaps'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasArmorWeaps'><span translate="Vendors.ArmorAndWeapons"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasConsumables'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasConsumables'><span translate="Vendors.Consumables"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasBounties'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasBounties'><span translate="Vendors.Bounties"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasVehicles'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasVehicles'><span translate="Vendors.ShipsAndVehicles"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasShadersEmbs'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasShadersEmbs'><span translate="Vendors.ShadersAndEmblems"></span>
+        </label>
+        <label ng-class="{active: vm.activeTab === 'hasEmotes'}">
+          <input type='radio' ng-model='vm.activeTab' value='hasEmotes'><span translate="Vendors.Emotes"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="vendors" ng-class="{ 'hide-filtered': vm.settings.hideFilteredItems }">
+    <vendor-items stores-data="vm.stores" vendors-data="vm.vendorService.vendors" active-tab="vm.activeTab" total-coins="vm.totalCoins"></vendor-items>
+  </div>
+</div>

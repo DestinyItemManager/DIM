@@ -1,9 +1,10 @@
 import angular from 'angular';
 import simpleQueryString from 'simple-query-string';
+import template from './return.component.template.html';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,
-  templateUrl: require('app/scripts/login/return.component.template.html')
+  template: template
 });
 
 function ReturnController($http) {
@@ -23,7 +24,11 @@ function ReturnController($http) {
     var apiKey;
 
     if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-      apiKey = $DIM_API_KEY;
+      if (window.chrome && window.chrome.extension) {
+        apiKey = $DIM_API_KEY;
+      } else {
+        apiKey = $DIM_WEB_API_KEY;
+      }
     } else {
       apiKey = localStorage.apiKey;
     }
@@ -40,7 +45,7 @@ function ReturnController($http) {
     })
     .then((response) => {
       if (response.data.ErrorCode === 1) {
-        const inception = new Date().toISOString();
+        const inception = Date.now();
         const authorization = {
           accessToken: angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: inception }),
           refreshToken: angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: inception }),

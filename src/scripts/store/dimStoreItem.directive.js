@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimStoreItem.directive.template.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
@@ -39,12 +40,11 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
-    templateUrl: require('./dimStoreItem.directive.template.html'),
+    template: template
   };
 
   function Link(scope, element) {
     if (!firstItemTimed) {
-      console.timeEnd('First item directive built');
       firstItemTimed = true;
     }
 
@@ -209,6 +209,9 @@ function StoreItemCtrl() {
   var vm = this;
 
   vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
-  vm.draggable = (vm.item.equipment || vm.item.location.hasTransferDestination) && !vm.item.location.inPostmaster;
+  vm.draggable = !vm.item.location.inPostmaster &&
+    (vm.item.notransfer)
+    ? vm.item.equipment
+    : (vm.item.equipment || vm.item.location.hasTransferDestination);
 }
 

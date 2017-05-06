@@ -18,13 +18,14 @@
       "Throttled": "Superato il limite di strozzamento delle API di Bungie. Riprovare fra poco.",
       "NotLoggedIn": "Effettuare l accesso a Bungie.net per utilizzare questa estensione.",
       "Maintenance": "I server di Bungie.net sono offline per manutenzione.",
-      "NoAccount": "Non è stato trovato alcun account Destiny per questa piattaforma. Hai selezionato la piattaforma giusta?",
+      "NoAccount": "Non è stato trovato alcun account di Destiny su {platform}. Hai selezionato la piattaforma corretta?",
       "NoAccountForPlatform": "Impossibile trovare un account Destiny per te su {platform}.",
       "NoCookies": "Non è stato trovato nessun cookie.",
       "NotConnected": "Potresti non essere connesso a internet.",
-      "Twitter": "Ottieni informazioni sullo stato del servizio su",
+      "Twitter": "Ottieni informazioni sullo stato del servizio su:",
       "ItemUniqueness": "Unicità dell elemento",
-      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} female{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa."
+      "ItemUniquenessExplanation": "Hai provato a spostare il '{name}' {type} {gender, select, male{al tuo} other{alla tua}} {character} ma quella destinazione ne possiede già una e solo una è concessa.",
+      "VendorNotFound": "I dati dei mercanti non sono disponibili."
    },
    "Compare": {
       "ButtonHelp": "Confronta Oggetti",
@@ -39,9 +40,12 @@
       "Splits": "Confronta simili suddivisioni ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Granate tempo di recupero",
-      "Melee": "Corpo a corpo tempo di recupero",
-      "Super": "Super tempo di recupero"
+      "Grenade": "Granate tempo di recupero: {cooldown}",
+      "Melee": "Corpo a corpo tempo di recupero: {cooldown}",
+      "Super": "Super tempo di recupero: {cooldown}"
+   },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Giorno} other{# Giorni}}"
    },
    "Debug": {
       "Dump": "Svuota informazioni nella console",
@@ -58,13 +62,14 @@
    },
    "FarmingMode": {
       "FarmingMode": "Modalità Farming (sposta oggetti)",
-      "Desc": "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} female{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
+      "Desc": "DIM sposta Engrammi e consumabili per Lumen {gender, select, male{dal} other{dalla}} {store} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
       "Configuration": "Configurazione",
       "MakeRoom": {
-         "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} female{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
+         "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen {gender, select, male{dal} other{dalla}} {store} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
          "MakeRoom": "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
          "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
       },
+      "OutOfRoomTitle": "Spazio esaurito",
       "OutOfRoom": "Non hai più spazio per trasferire oggetti dal {character}. E' il momento di decriptare degli engrammi e pulire il cestino!",
       "Quickmove": "Spostamento Rapido",
       "Stop": "Stop"
@@ -79,7 +84,7 @@
       "FilterHelp": "Cerca oggetti/perk o is:arc",
       "MaterialsExchange": "Livelli fazione disponibili",
       "Refresh": "Aggiorna i Dati di Destiny",
-      "SupportDIM": "Supporta DIM"
+      "SupportDIM": "Supporto"
    },
    "Help": {
       "BackToDIM": "Torna a DIM",
@@ -229,12 +234,12 @@
       "TooManyRequested": "Hai un totale di {total} {itemname}, ma il tuo loadout ne richiede {requested}. Abbiamo trasferito tutti quelli che avevi.",
       "DoesNotExist": "{itemname} non esiste sul tuo account.",
       "AppliedAuto": "Costruttore Automatico di Loadout",
-      "Applied": "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} female{alla tua}} {store}.",
+      "Applied": "Il tuo loadout di {amount, plural, =1{un oggetto} other{# oggetti}} è stato trasferito {gender, select, male{al tuo} other{alla tua}} {store}.",
       "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
       "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {failed} di {total} oggetti il trasferimento è fallito.",
       "NameRequired": "E' richiesto un nome.",
       "MakeRoom": "Crea spazio per l'Amministratore",
-      "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} female{dalla}} {store}.",
+      "MakeRoomDone": "Ho terminato di creare spazio per {postmasterNum, plural, =1{1 oggetto} other{# oggetti}}  dell'Amministratore togliendo {movedNum, plural, =1{1 oggetto} other{# oggetti}} {gender, select, male{dal} other{dalla}} {store}.",
       "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {error}.",
       "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
       "SaveErrorDescription": "Impossibile salvare il loadout {loadoutName}: {error}.",
@@ -267,13 +272,25 @@
       "DistributeEvenly": "Distribuisci Equamente",
       "Equip": "Usa",
       "Split": "Dividi",
-      "Store": "Mouvi",
+      "Store": "Muovi",
       "Take": "Prendi",
       "Vault": "Depos"
+   },
+   "MoveAmount": {
+     "Min": "Stack minimo (1)",
+     "Max": "Totale in questa posizione",
+     "UpStack": "Aumento fino al prossimo stack pieno",
+     "DownStack": "Diminuisci fino al prossimo stack pieno",
+     "Increment": "Uno in più",
+     "Decrement": "Uno in meno"
    },
    "Notes": {
       "Error": "Errore! Massimo 120 caratteri per nota.",
       "Help": "Aggiungere note a questo oggetto"
+   },
+   "Objectives": {
+     "Complete": "Completo",
+     "Incomplete": "Incompleto"
    },
    "Postmaster": {
       "Limit": "Limite Amministratore",
@@ -329,12 +346,17 @@
       "Prestige": "Livello Prestigio: {level}\n{exp}xp fino alle 5 particelle di luce",
       "Quality": "Qualità statistiche",
       "Strength": "Forza",
-      "TierProgress": "{progress} per {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 per T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Riempi Stack ({amount})",
       "HowMuch": "Quanti {itemname} vuoi spostare?",
       "Move": "Sposta"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Per autorizzare nuovamente google drive, devi riavviare il browser.",
+     "OneItemTooLarge": "Il tuo file di salvataggio contiene un elemento troppo grande. Molto probabilmente un loadout possiede troppi oggetti.",
+     "SaveTooLarge": "Il tuo file di salvataggio è troppo grande. Rimuovi i loadout salvati."
    },
    "Tags": {
       "TagItem": "Segna Oggetto",
@@ -346,9 +368,8 @@
    "Vendors": {
       "Vendors": "Mercanti",
       "All": "Tutto",
-      "Available": "Disponibile da",
-      "Compare": "Confronta con quello che hai già",
-      "Day": "{numDays, plural, =1{Giorno} other{Giorni}}",
+      "Available": "Disponibile da:",
+      "Compare": "Confronta con quello che hai già:",
       "Load": "Caricamento Mercanti",
       "ArmorAndWeapons": "Equipaggiamento & Armi",
       "ShipsAndVehicles": "Navi & Veicoli",
@@ -356,6 +377,10 @@
       "Bounties": "Taglie",
       "ShadersAndEmblems": "Shader & Emblemi",
       "Emotes": "Emotes"
+   },
+   "RecordBooks": {
+     "RecordBooks": "Registri",
+     "HideCompleted": "Nascondi completati"
    },
    "Views": {
      "About":{
@@ -381,25 +406,26 @@
        "RedditHelp": "Se hai domande, commenti o suggerimenti - facci sapere!",
        "Twitter": "Twitter",
        "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
-       "Version": "Versione"
+       "Version": "Versione {version} ({flavor})",
+       "Transifex": "Unisciti al Team Traduzione!",
+       "TransifexText": "Utilizziamo Transifex per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team."
      },
      "Support": {
        "Support": "Supportare DIM",
        "FreeToDownload": "DIM è un prodotto, che si può scaricare e usare gratuitamente. Il codice sorgente di DIM è open source, e chiunque può contribuire a migliorarlo. Non vedrai mai pubblicità in DIM. Ci impegniamo a tal fine.",
-       "Fans": "Siamo tutti grandissimi fan di Destiny. DIM è nato durante le ore di gioco, poiché conoscevamo il dolore di trasferire oggetti tra i personaggi, dimenticandone uno, o i viaggi alla torre per svuotare i propri ROC degli assalti. DIM è lo strumento che ti aiuterà a risparmiare tempo nel gioco.",
-       "Contribute": "Come posso contribuire?",
-       "Paypal":"Fai una donazione a DIM!",
-       "PaypalText": "Accettiamo donazioni su PayPal. Se DIM ti ha aiutato a riasparmiare tempo mentre giochi, supporta il team, che lavora al progetto.",
-       "Transifex": "Unisciti al Team Traduzione!",
-       "TransifexText": "Utilizziamo Transifex per facilitare le traduzioni. Se vuoi vedere DIM nella tua lingua, unisciti al team.",
-       "Share": "Condividi DIM con i tuoi amici.",
-       "ShareText": "Una volta provato quanto è facile equipaggiare un loadout, non potrai tornare indietro. Condividi il divertimento con i tuoi amici!",
-       "Reddit": "Hai qualche idea per DIM?",
-       "RedditText": "Vieni a trovarci su /r/destinyitemmanager e facci sapere della tua idea. Scoprirai con noi e con la community di DIM come iterare e migliorare un'idea nel migliore dei modi.",
-       "GitHub": "Sono uno sviluppatore/designer/entusiasta e sto cercando di contibruire al codice sorgente.",
-       "GitHubText": "Vieni a trovarci su GitHub e invia un messaggio a uno dei collaboratori. Siamo più che felici di accettare \"pull requests\". Unisciti a noi come collaboratore e prendi parte ai nostri incontri, dove parliamo di nuove versioni, particolari aggiornamenti o bug."
+       "OpenCollective": "Utilizziamo OpenCollective come servizio per fornire un compenso ai nostri sviluppatori per la loro dedizione e il tempo investito in questo progetto.",
+       "Backers": "Donatori",
+       "BackersDetail": "Supportaci con una donazione singola oppure con una mensile e aiutaci a continuare il nostro sviluppo.",
+       "Sponsors": "Sponsors",
+       "SponsorsDetail": "Diventa uno sponsor ed ottieni il tuo logo qui con un link al tuo sito."
      },
-     "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM."
+     "UpgradeChrome": "La tua versione di Chrome è troppo vecchia per eseguire DIM. Aggiorna Chrome per utilizzare DIM.",
+     "Login": {
+       "Permission": "Ci serve il tuo permesso...",
+       "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
+       "Auth": "Richiedi autorizzazione su Bungie.net",
+       "LearnMore": "Vuoi saperne di più?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Ricompensa 5 Vittorie (Armatura)",

@@ -2,7 +2,32 @@ import angular from 'angular';
 import _ from 'underscore';
 
 angular.module('dimApp')
+  .component('dimObjectives', Objectives())
   .directive('dimMoveItemProperties', MoveItemProperties);
+
+function Objectives() {
+  return {
+    bindings: {
+      objectives: '<'
+    },
+    template: [
+      '<div class="item-objectives" ng-if="$ctrl.objectives.length">',
+      '  <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in $ctrl.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
+      '    <div ng-switch-when="trials">',
+      '      <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
+      '      <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>',
+      '    </div>',
+      '    <div ng-switch-default class="objective-checkbox"><div></div></div>',
+      '    <div ng-switch-default class="objective-progress">',
+      '      <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
+      '      <div class="objective-description">{{ objective.displayName }}</div>',
+      '      <div class="objective-text">{{ objective.display }}</div>',
+      '    </div>',
+      '  </div>',
+      '</div>'
+    ].join('')
+  };
+}
 
 function MoveItemProperties() {
   return {
@@ -22,10 +47,10 @@ function MoveItemProperties() {
       '  <div class="item-header" ng-class="vm.classes">',
       '    <div class="item-title-container">',
       '      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
-      '        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, \'lock\')" title="{{!vm.item.locked ? \'Lock\':\'Unlock\'}} {{::vm.item.typeName}}">',
+      '        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, \'lock\')" translate-values="{itemType: vm.item.typeName, locked: vm.item.locked}" translate-attr="{title: \'MovePopup.LockUnlock\'}">',
       '          <i class="lock fa" ng-class="{\'fa-lock\': vm.item.locked, \'fa-unlock-alt\': !vm.item.locked, \'is-locking\': vm.locking }"></i>',
       '        </div>',
-      '        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" title="{{!vm.item.tracked ? \'Track\':\'Untrack\'}} {{::vm.item.typeName}}">',
+      '        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, \'track\')" translate-values="{itemType: vm.item.typeName, tracked: vm.item.tracked}" translate-attr="{title: \'MovePopup.TrackUntrack\'}">',
       '          <i class="lock fa" ng-class="{\'fa-star\': vm.item.tracked, \'fa-star-o\': !vm.item.tracked, \'is-locking\': vm.locking }"></i>',
       '        </div>',
       '      </div>',
@@ -43,17 +68,15 @@ function MoveItemProperties() {
       '    </div>',
       '    <div class="item-subtitle">',
       '      <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">',
-      '        <img ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-src="/images/{{ ::vm.item.dmg }}.png"/>',
+      '        <div ng-if="vm.item.dmg && vm.item.dmg !== \'kinetic\'" class="element" ng-class="::vm.item.dmg"></div>',
       '      </div>',
-      '      <div class="item-type-info">{{vm.light}} {{::vm.classType}} {{::vm.item.typeName}}</div>',
+      '      <div class="item-type-info" translate-values="{ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType, typeName: vm.item.typeName }" translate="MovePopup.Subtitle"></div>',
       '      <div ng-if="vm.item.objectives" translate-values="{ percent: vm.item.percentComplete }" translate="ItemService.PercentComplete"></div>',
-      '      <dim-item-tag ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" item="vm.item"></dim-item-tag>',
+      '      <dim-item-tag ng-if="vm.featureFlags.tagsEnabled && vm.item.taggable" item="vm.item"></dim-item-tag>',
       '    </div>',
       '  </div>',
-      '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete">',
-      '    <div dim-percent-width="vm.item.percentComplete"></div>',
-      '  </div>',
-      '  <form ng-if="vm.item.lockable && vm.featureFlags.tagsEnabled" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
+      '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>',
+      '  <form ng-if="vm.featureFlags.tagsEnabled && vm.item.taggable" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
       '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
       '  <form ng-if="vm.item.lockable" name="dtrReview" ng-submit="vm.submitReview()"><div class="item-review-container"><select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions" ng-blur="vm.reviewBlur()"></select><textarea translate-attr="{ placeholder: \'DtrReview.Help\' }" class="item-dtr-review" ng-maxlength="120" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea><input class="item-dtr-review-submit" type="submit" translate-attr="{ value: \'DtrReview.Submit\' }" ng-disabled="!vm.item.userRating || vm.item.userRating < 1" /></div></form>',
       '  <span class="item-dtr-review-error" ng-show="dtrReview.data.$error.maxlength" translate="DtrReview.Error"></span>',
@@ -82,23 +105,10 @@ function MoveItemProperties() {
       '  <div class="item-details item-perks" ng-if="vm.item.talentGrid && vm.itemDetails">',
       '    <dim-talent-grid talent-grid="vm.item.talentGrid" dim-infuse="vm.infuse(vm.item, $event)"></dim-talent-grid>',
       '  </div>',
-      '  <div class="item-details item-objectives" ng-if="vm.item.objectives.length && vm.itemDetails">',
-      '    <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in vm.item.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
-      '      <div ng-switch-when="trials">',
-      '        <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
-      '        <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>',
-      '      </div>',
-      '      <div ng-switch-default class="objective-checkbox"><div></div></div>',
-      '      <div ng-switch-default class="objective-progress">',
-      '        <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-      '        <div class="objective-description" title="{{ objective.description }}">{{ objective.displayName || (objective.complete ? \'Complete\' : \'Incomplete\') }}</div>',
-      '        <div class="objective-text">{{ objective.display || (objective.progress + "/" + objective.completionValue) }}</div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
+      '  <dim-objectives class="item-details" ng-if="vm.itemDetails" objectives="vm.item.objectives"></dim-objectives>',
       '  <div ng-if="vm.featureFlags.debugMode" class="item-details">',
       '    <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>',
-      '    <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>',
+      '    <button ng-click="vm.dumpDebugInfo()" translate="Debug.Dump"></a>',
       '  </div>',
       '</div>'
     ].join('')
@@ -222,7 +232,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     'is-void': false
   };
 
-  vm.light = '';
+  vm.light = null;
   vm.classType = '';
   vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
   vm.itemDetails = vm.showDetailsByDefault;
@@ -233,7 +243,6 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();
-    vm.light += ' ' + vm.item.primStat.stat.statName;
     if (vm.item.dmg) {
       vm.classes['is-' + vm.item.dmg] = true;
     }
@@ -244,7 +253,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       vm.item.type !== 'ClassItem' &&
       vm.item.type !== 'Artifact' &&
       vm.item.type !== 'Class') {
-    vm.classType = vm.item.classTypeName[0].toUpperCase() + vm.item.classTypeName.slice(1);
+    vm.classType = vm.item.classTypeNameLocalized[0].toUpperCase() + vm.item.classTypeNameLocalized.slice(1);
   }
 
   function compareItems(item) {
@@ -286,9 +295,8 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     console.log("DEBUG INFO for '" + vm.item.name + "'");
     console.log("DIM Item", vm.item);
     console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
-    dimDefinitions.then((defs) => {
-      console.log("Manifest Item Definition", defs.InventoryItem[vm.item.hash]);
+    dimDefinitions.getDefinitions().then((defs) => {
+      console.log("Manifest Item Definition", defs.InventoryItem.get(vm.item.hash));
     });
   };
 }
-

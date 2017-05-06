@@ -138,9 +138,9 @@ function SearchFilter(dimSearchService) {
       });
     },
     bindToController: true,
-    restrict: 'A',
+    restrict: 'E',
     template: [
-      '<input id="filter-input" class="dim-input" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
+      '<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
     ].join('')
   };
 }
@@ -395,8 +395,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         item.tracked;
     },
     unlocked: function(predicate, item) {
-      return item.lockable &&
-        !item.locked;
+      return (item.lockable &&
+        !item.locked) || !item.lockable;
     },
     locked: function(predicate, item) {
       return item.lockable &&
@@ -597,20 +597,20 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eris Morn (eris)
     //   * Eververse (ev)
     vendor: function(predicate, item) {
-      var vendorHashes = {
-        fwc: 2859308742,
-        do: 3080587303,
-        nm: 1963381593,
-        speaker: 3498761033,
-        variks: 3523074641,
-        shipwright: 3660582080,
-        vanguard: 3496730577,
-        osiris: 482203941,
-        xur: 941581325,
-        shaxx: 1257353826,
-        cq: 1587918730,
-        eris: 1662396737,
-        ev: 2155337848
+      var vendorHashes = {         // identifier
+        fwc: 995344558,            // SOURCE_VENDOR_FUTURE_WAR_CULT
+        do: 103311758,             // SOURCE_VENDOR_DEAD_ORBIT
+        nm: 3072854931,            // SOURCE_VENDOR_NEW_MONARCHY
+        speaker: 4241664776,       // SOURCE_VENDOR_SPEAKER
+        variks: 512830513,         // SOURCE_VENDOR_FALLEN
+        shipwright: 3721473564,    // SOURCE_VENDOR_SHIPWRIGHT
+        vanguard: 1482793537,      // SOURCE_VENDOR_VANGUARD
+        osiris: 3378481830,        // SOURCE_VENDOR_OSIRIS
+        xur: 2179714245,           // SOURCE_VENDOR_BLACK_MARKET
+        shaxx: 4134961255,         // SOURCE_VENDOR_CRUCIBLE_HANDLER
+        cq: 1362425043,            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
+        eris: 1374970038,          // SOURCE_VENDOR_CROTAS_BANE
+        ev: 3559790162             // SOURCE_VENDOR_SPECIAL_ORDERS
       };
       if (!item) {
         return false;
@@ -634,22 +634,22 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Challenge of Elders (coe)
     //   * Archon Forge (af)
     activity: function(predicate, item) {
-      var activityHashes = {
-        trials: 3413298620,
-        ib: 478645002,
-        qw: 3286066462,
-        cd: 344892955,
-        srl: 3945957624,
-        vog: 686593720,
-        ce: 3107502809,
-        ttk: 460228854,
-        kf: 3551688287,
-        roi: 24296771,
-        wotm: 3147905712,
-        poe: 36493462,
-        coe: 3739898362,
-        af: 1389125983,
-        dawning: 4153390200
+      var activityHashes = { // identifier
+        trials: 2650556703,  // SOURCE_TRIALS_OF_OSIRIS
+        ib: 1322283879,      // SOURCE_IRON_BANNER
+        qw: 1983234046,      // SOURCE_QUEENS_EMISSARY_QUEST
+        cd: 2775576620,      // SOURCE_CRIMSON_DOUBLES
+        srl: 1234918199,     // SOURCE_SRL
+        vog: 440710167,      // SOURCE_VAULT_OF_GLASS
+        ce: 2585003248,      // SOURCE_CROTAS_END
+        ttk: 2659839637,     // SOURCE_TTK
+        kf: 1662673928,      // SOURCE_KINGS_FALL
+        roi: 2964550958,     // SOURCE_RISE_OF_IRON
+        wotm: 4160622434,    // SOURCE_WRATH_OF_THE_MACHINE
+        poe: 2784812137,     // SOURCE_PRISON_ELDERS
+        coe: 1537575125,     // SOURCE_POE_ELDER_CHALLENGE
+        af: 3667653533,      // SOURCE_ARCHON_FORGE
+        dawning: 3131490494  // SOURCE_DAWNING
       };
       if (!item) {
         return false;

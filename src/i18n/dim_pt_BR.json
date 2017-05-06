@@ -18,13 +18,14 @@
       "Throttled": "Limite de acesso à API da Bungie API excedido. Por favor, aguarde um pouco e tente novamente.",
       "NotLoggedIn": "Por favor, faça seu login no Bungie.net para utilizar esta extensão.",
       "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
-      "NoAccount": "Nenhuma conta de Destiny foi encontrada para esta plataforma. Você selecionou a plataforma correta?",
+      "NoAccount": "Nenhuma conta de Destiny foi encontrada no {platform}. Você selecionou a plataforma correta?",
       "NoAccountForPlatform": "Incapaz de encontrar uma conta de Destiny no {platform}.",
       "NoCookies": "Nenhum cookie encontrado.",
       "NotConnected": "Você deverá estar sem conexão com a Internet.",
-      "Twitter": "Veja atualizações em",
+      "Twitter": "Veja atualizações em:",
       "ItemUniqueness": "Unicidade de itens",
-      "ItemUniquenessExplanation": "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo."
+      "ItemUniquenessExplanation": "Você tentou mover o {type} '{name}' para seu {character} mas o local de destino já possui um item do tipo.",
+      "VendorNotFound": "Informação do vendedor não disponível."
    },
    "Compare": {
       "ButtonHelp": "Comparar itens",
@@ -39,9 +40,12 @@
       "Splits": "Compare com atributos similares ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Tempo de carga da granada",
-      "Melee": "Tempo de carga do corpo-a-corpo",
-      "Super": "Tempo de carga da Super"
+      "Grenade": "Tempo de carga da granada: {cooldown}",
+      "Melee": "Tempo de carga do corpo-a-corpo: {cooldown}",
+      "Super": "Tempo de carga da Super: {cooldown}"
+   },
+   "Countdown": {
+     "Days": "{numDays, plural, =1{# Dia} other{# Dias}}"
    },
    "Debug": {
       "Dump": "Enviar informação ao console",
@@ -65,6 +69,7 @@
          "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
          "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
       },
+      "OutOfRoomTitle": "Sem espaço",
       "OutOfRoom": "Você está sem espaço para mover itens do {character}. É hora de descriptografar alguns engramas e fazer uma limpeza!",
       "Quickmove": "Mover rapidamente",
       "Stop": "Parar"
@@ -79,7 +84,7 @@
       "FilterHelp": "Buscar por item/perk ou is:arc",
       "MaterialsExchange": "Ranks de facção disponíveis",
       "Refresh": "Atualizar dados do Destiny",
-      "SupportDIM": "Apoie o DIM"
+      "SupportDIM": "Ajuda"
    },
    "Help": {
       "BackToDIM": "Voltar para o DIM",
@@ -118,7 +123,7 @@
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Erro salvando informação de item.",
-     "SaveInfoErrorDescription": "Houve um problema salvando Informação specifica de DIM sobre um item. Um problema é há um limite de data que podem salvado - este é porque tags e notas não são permitido fora de versão Beta. O erro era: {error}."
+     "SaveInfoErrorDescription": "Houve um problema ao salvar uma informação específica do DIM sobre um item. O problema é que há um limite de dados que podem salvos - é por isso que tags e notas não são permitidos fora da versão Beta. O erro era: {error}."
    },
    "ItemMove": {
       "Consolidate": "{name} consolidado",
@@ -127,7 +132,7 @@
       "ToStore": "Todos os {name} estão agora no seu {store}."
    },
    "ItemService": {
-      "BucketFull": "Há muitos '{itemtype}' {isVault, select, true{no} false{em seu}} {store}.",
+      "BucketFull": "Há muitos '{itemtype}' {isVault, select, true{no} other{em seu}} {store}.",
       "Classified": "Este item é confidencial e não pode ser transferido no momento.",
       "Classified2": "Item confidencial. A Bungie não fornece informações sobre este item. Este item ainda não é transferível.",
       "Deequip": "Não foi possível encontrar outro item para equipar no lugar de {itemname}",
@@ -169,7 +174,7 @@
         "Help": "Precisa de ajuda?",
         "Lock": "Trave um conjunto de perks clicando na caixa e selecionando os perks.",
         "NoPerk": "Se um perk não aparece, significa que você não tem armaduras com este perk.",
-        "MultiPerk":"Se você quiser usar vários perks em uma armadura, Shift+clique nos perks desejados.",
+        "MultiPerk":"Se você quiser usar uma armadura com múltiplos perks juntos, Shift+clique nos perks desejados.",
         "Or": "Armadura com qualquer um destes perks será usada (\"ou\")",
         "And": "Armadura com todos esses perks será usada (\"e\")",
         "DragAndDrop": "Arraste e solte itens nas caixas para construir sets somente com aquele equipamento.",
@@ -180,8 +185,8 @@
         "Discipline": "Disciplina acelera o tempo de recarga de granadas.",
         "Strength": "Força acelera o tempo de recarga do corpo-a-corpo.",
         "Synergy": "Tente encontrar uma armadura com perks que aumentem a quantidade de munição das armas que você mais usa.",
-        "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada Loadout.",
-        "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumenta."
+        "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
+        "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumentam."
       },
       "Equip": "Equipar no personagem atual",
       "ShowAllConfigs": "Exibir todas as configurações",
@@ -236,10 +241,10 @@
       "MakeRoom": "Abrir espaço para itens do Correio",
       "MakeRoomDone": "Foi aberto espaço para {postmasterNum, plural, =1{1 item de Correio} other{# itens de Correio}} movendo {movedNum, plural, =1{1 item} other{# itens}} do {store}.",
       "MakeRoomError": "Incapaz de abrir espaço para todos os itens do Correio: {error}.",
-      "SaveErrorTitle": "Erro salvando set",
-      "SaveErrorDescription": "Incapaz de salvar set {loadoutName}: {error}.",
-      "DeleteErrorTitle": "Erro deletando set",
-      "DeleteErrorDescription": "Incapaz de deletar set {loadoutName}: {error}."
+      "SaveErrorTitle": "Erro ao salvar o set",
+      "SaveErrorDescription": "Incapaz de salvar o set {loadoutName}: {error}.",
+      "DeleteErrorTitle": "Erro ao deletar o set set",
+      "DeleteErrorDescription": "Incapaz de deletar o set {loadoutName}: {error}."
    },
    "Manifest": {
       "Build": "Construindo banco de dados de informações",
@@ -268,12 +273,25 @@
       "Equip": "Equip",
       "Split": "Dividir",
       "Store": "Mover",
+      "Subtitle": "{classType} {typeName} {light, select, null{} other{com {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
       "Vault": "Cofre"
+   },
+   "MoveAmount": {
+     "Min": "Quantidade mínima (1)",
+     "Max": "Quantidade total nesse local",
+     "UpStack": "Completar pilha",
+     "DownStack": "Eliminar pilha",
+     "Increment": "Mais um",
+     "Decrement": "Menos um"
    },
    "Notes": {
       "Error": "Erro! Anotações devem ter até 120 caracteres.",
       "Help": "Adicione anotações à este item"
+   },
+   "Objectives": {
+     "Complete": "Completo",
+     "Incomplete": "Incompleto"
    },
    "Postmaster": {
       "Limit": "Limite do Chefe de Correio",
@@ -326,14 +344,20 @@
       "NoBonus": "Sem bônus",
       "OfMaxRoll": "{range} do valor máximo",
       "PercentHelp": "Clique para mais informações sobre Níveis de Qualidade.",
+      "Prestige": "Nível de prestígio: {level}\n{exp}xp para 5 fragmentos de luz.",
       "Quality": "Níveis de qualidade",
       "Strength": "Força",
-      "TierProgress": "{progress} para {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 para T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Encher Pilha ({amount})",
       "HowMuch": "Quantos {itemname} para transferir?",
       "Move": "Transferir"
+   },
+   "SyncService": {
+     "GoogleDriveReAuth": "Para reautorizar o Google Drive você deverá reiniciar seu navegador.",
+     "OneItemTooLarge": "Seu arquivo salvo possui algum item que é muito grande. Muito provavelmente um set salvo possui muitos itens.",
+     "SaveTooLarge": "Seu arquivo salvo é muito grande. Remova alguns sets salvos."
    },
    "Tags": {
       "TagItem": "Marcar item",
@@ -345,9 +369,8 @@
    "Vendors": {
       "Vendors": "Vendedores",
       "All": "Todos",
-      "Available": "Disponível em",
-      "Compare": "Compare com o que você já possui",
-      "Day": "{numDays, plural, =1{Dia} other{Dias}}",
+      "Available": "Disponível em:",
+      "Compare": "Compare com o que você já possui:",
       "Load": "Carregando vendedores",
       "ArmorAndWeapons": "Armaduras & Armas",
       "ShipsAndVehicles": "Naves & Veículos",
@@ -355,6 +378,10 @@
       "Bounties": "Contratos",
       "ShadersAndEmblems": "Tonalizadores & Emblemas",
       "Emotes": "Gestos"
+   },
+   "RecordBooks": {
+     "RecordBooks": "Livro de Recordes",
+     "HideCompleted": "Esconder os recordes completados"
    },
    "Views": {
      "About":{
@@ -380,25 +407,26 @@
        "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
        "Twitter": "Twitter",
        "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-       "Version": "Versão"
+       "Version": "Versão {version} ({flavor})",
+       "Transifex": "Junte-se à equipe de tradução!",
+       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
      },
      "Support": {
        "Support": "Apoie o DIM",
        "FreeToDownload": "O DIM é gratuito para baixar e usar. O código-fonte do DIM é open-source e livre para qualquer um aperfeiçoá-lo. Você nunca verá propagandas no DIM, essa é nossa promessa.",
-       "Fans": "Somos todos grandes fãs de Destiny. O DIM tomou forma nessas horas de gameplay porque sentimos uma enorme dificuldade em transferir itens entre personagens, esquecer de um item, voltar para a Torre, mover itens para o cofre, trocar novamente de personagem. O DIM é a ferramenta que irá te ajudar a ganhar mais tempo no jogo.",
-       "Contribute": "Como posso ajudar?",
-       "Paypal":"Faça uma doação!",
-       "PaypalText": "Nós usamos o PayPal para receber doações. Se o DIM fez diferença nas suas horas de jogo, dê seu suporte à equipe que trabalha no projeto.",
-       "Transifex": "Junte-se à equipe de tradução!",
-       "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você quer ver o DIM traduzido para o seu idioma, junte-se à equipe.",
-       "Share": "Compartilhe o DIM com seus amigos.",
-       "ShareText": "Uma vez que tenha visto o quão fácil é transferir e equipar seus itens usando o DIM, você não vai mais conseguir largar. Compartilhe essa facilidade com seus amigos!",
-       "Reddit": "Você tem uma ideia nova para o DIM?",
-       "RedditText": "Visite nossa página em /r/destinyitemmanager (em inglês) e conte-nos sobre sua ideia. Você irá interagir conosco e com o resto da comunidade do DIM, uma excelente forma de debater e aprimorar uma ideia nova.",
-       "GitHub": "Eu sou desenvolvedor/designer/entusiasta e quero contribuir com o código-fonte.",
-       "GitHubText": "Visite nosso GitHub e envie uma mensagem aos colaboradores. Ficaremos felizes em aceitar novos pull requests. Junte-se a nós como colaborador e faça parte de nossas discussões sobre próximas versões, atualizações, correções de bugs."
+       "OpenCollective": "Estamos utilizando o OpenCollective como serviço para providenciar uma compensação para os nossos desenvolvedores pela sua dedicação e tempo gasto nesse projeto.",
+       "Backers": "Apoiantes",
+       "BackersDetail": "Apoie-nos com uma única doação, ou doação mensal e ajude-nos a continuar o nosso desenvolvimento ativo.",
+       "Sponsors": "Patrocinadores",
+       "SponsorsDetail": "Torne-se um patrocinador e tenha o seu logo aqui com um link para o seu site."
      },
-     "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM."
+     "UpgradeChrome": "Sua versão do Chrome é muito antiga. Por favor, atualize o Chrome para usar o DIM.",
+     "Login": {
+       "Permission": "Precisamos da sua permissão...",
+       "Explanation": "Dar permissão ao DIM para ver e modificar os seus personagens, cofre e progressão.",
+       "Auth": "Autorize com Bungie.net",
+       "LearnMore": "Você quer saber mais?"
+     }
    },
    "TrialsCard": {
       "FiveWins": "Recompensa de 5 vitórias (armadura)",
