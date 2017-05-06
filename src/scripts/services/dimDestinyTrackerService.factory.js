@@ -54,7 +54,7 @@ function DestinyTrackerService($q,
   });
 
   return {
-    reattachScores: function(stores) {
+    reattachScoresFromCache: function(stores) {
       _bulkFetcher.attachRankings(null,
                                   stores);
     },

@@ -617,7 +617,7 @@ function StoreService(
         return stores;
       })
       .then(function(stores) {
-        dimDestinyTrackerService.reattachScores(null, stores);
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
       })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
