@@ -161,8 +161,8 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     var item = vm.item;
     var userReview = vm.toUserReview(item);
 
-    dimDestinyTrackerService.updateUserRankings(item,
-                                                userReview);
+    dimDestinyTrackerService.updateCachedUserRankings(item,
+                                                      userReview);
   };
 
   vm.toUserReview = function(item) {

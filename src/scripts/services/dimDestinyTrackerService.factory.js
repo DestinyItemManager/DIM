@@ -58,8 +58,8 @@ function DestinyTrackerService($q,
       _bulkFetcher.attachRankings(null,
                                   stores);
     },
-    updateUserRankings: function(item,
-                                 userReview) {
+    updateCachedUserRankings: function(item,
+                                       userReview) {
       _reviewDataCache.addUserReviewData(item,
                                          userReview);
     }
