@@ -41,7 +41,7 @@
     "chrome_style": false,
     "open_in_tab": true
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://apis.google.com https://reviews-api.destinytracker.net; object-src 'self'",
   "incognito": "split",
   "offline_enabled": false,
   "minimum_chrome_version": "51"
