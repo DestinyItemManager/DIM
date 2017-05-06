@@ -10,7 +10,7 @@ class BulkFetcher {
     this._reviewDataCache = scoreMaintainer;
   }
 
-  getBulkWeaponDataPromise(gunList) {
+  _getBulkWeaponDataEndpointPost(gunList) {
     return {
       method: 'POST',
       url: 'https://reviews-api.destinytracker.net/api/weaponChecker/fetch',
@@ -19,7 +19,7 @@ class BulkFetcher {
     };
   }
 
-  getBulkFetchPromise(stores) {
+  _getBulkFetchPromise(stores) {
     if (stores.stores.length === 0) {
       return this.$q.resolve();
     }
@@ -31,7 +31,7 @@ class BulkFetcher {
     }
 
     var promise = this.$q
-              .when(this.getBulkWeaponDataPromise(weaponList))
+              .when(this._getBulkWeaponDataEndpointPost(weaponList))
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
               .then((response) => { return response.data; });
@@ -41,8 +41,15 @@ class BulkFetcher {
     return promise;
   }
 
+  /**
+   * Fetch the DTR community scores for all weapon items found in the supplied stores.
+   *
+   * @param {any} stores
+   *
+   * @memberof BulkFetcher
+   */
   bulkFetch(stores) {
-    this.getBulkFetchPromise(stores)
+    this._getBulkFetchPromise(stores)
       .then((bulkRankings) => this.attachRankings(bulkRankings,
                                                   stores.stores));
   }
