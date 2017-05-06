@@ -27,9 +27,9 @@ class ReviewsFetcher {
   }
 
   _getItemReviewsPromise(item) {
-    var postWeapon = this._itemTransformer.getRollAndPerks(item);
+    const postWeapon = this._itemTransformer.getRollAndPerks(item);
 
-    var promise = this.$q
+    const promise = this.$q
               .when(this._getItemReviewsCall(postWeapon))
               .then(this.$http)
               .then(this._trackerErrorHandler.handleErrors, this._trackerErrorHandler.handleErrors)
@@ -46,7 +46,7 @@ class ReviewsFetcher {
 
   _attachReviews(item,
                  reviewData) {
-    var userReview = this._getUserReview(reviewData);
+    const userReview = this._getUserReview(reviewData);
 
     item.communityReviews = reviewData.reviews;
 
@@ -96,7 +96,7 @@ class ReviewsFetcher {
    * @memberof ReviewsFetcher
    */
   getItemReviews(item) {
-    var ratingData = this._reviewDataCache.getRatingData(item);
+    const ratingData = this._reviewDataCache.getRatingData(item);
 
     if (ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
