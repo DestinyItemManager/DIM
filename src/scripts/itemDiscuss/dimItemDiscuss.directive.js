@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimItemDiscuss.directive.template.html';
 
 angular.module('dimApp')
   .directive('dimItemDiscuss', ItemDiscuss);
@@ -9,7 +10,7 @@ function ItemDiscuss() {
     controllerAs: 'vm',
     bindToController: true,
     scope: {},
-    templateUrl: require('./dimItemDiscuss.directive.template.html')
+    template: template
   };
 }
 
