@@ -246,7 +246,7 @@ mod.filter('dtrRatingColor', function() {
       color = 190;
     }
     var result = {};
-    result[property] = 'hsl(' + color + ',85%,60%)';
+    result[property] = 'hsl(' + color + '%,85%,60%)';
     return result;
   };
 });
