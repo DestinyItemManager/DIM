@@ -985,21 +985,27 @@ function StoreService(
 
       // Generate a hash that identifies the weapons permutation and selected perks.
       // This is used by the Weapon Reviewing system.
-      var dtrRoll = node.nodeHash.toString(16);
+      const generateDtrRoll = (node, talentNodeSelected) => {
+        var dtrRoll = node.nodeHash.toString(16);
 
-      if (dtrRoll.length > 1) {
-        dtrRoll += ".";
-      }
+        if (dtrRoll.length > 1) {
+          dtrRoll += ".";
+        }
 
-      dtrRoll += node.stepIndex.toString(16);
+        dtrRoll += node.stepIndex.toString(16);
 
-      if (node.isActivated) {
-        dtrRoll += "o";
-      }
+        if (node.isActivated) {
+          dtrRoll += "o";
+        }
 
-      if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
-        dtrRoll += "," + talentNodeSelected.perkHashes.join(',');
-      }
+        if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+          dtrRoll += "," + talentNodeSelected.perkHashes.join(',');
+        }
+
+        return dtrRoll;
+      };
+
+      var dtrRoll = generateDtrRoll(node, talentNodeSelected);
 
       // There's a lot more here, but we're taking just what we need
       return {
