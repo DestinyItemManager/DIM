@@ -118,8 +118,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimCompareService.addItemToCompare(item, e);
       } else if (dimItemDiscussService.dialogOpen) {
         dimItemDiscussService.addItemToDiscuss(item, e);
-      }
-      else {
+      } else {
         dialogResult = ngDialog.open({
           template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
           plain: true,
