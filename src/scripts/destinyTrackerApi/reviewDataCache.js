@@ -16,6 +16,8 @@ class ReviewDataCache {
   _getMatchingItem(item) {
     var dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
+    // The DTR API isn't consistent about returning reference ID as an int in its responses
+    // and findWhere considers 123 !== "123".
     dtrItem.referenceId = String(dtrItem.referenceId);
 
     return _.findWhere(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
