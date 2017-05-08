@@ -62,20 +62,9 @@ class ItemListBuilder {
   getWeaponList(stores, reviewDataCache) {
     var dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
 
-    var list = [];
-    var self = this;
+    const list = new Set(dtrWeapons);
 
-    dtrWeapons.forEach(function(dtrWeapon) {
-      if (!self._isKnownWeapon(list, dtrWeapon)) {
-        list.push(dtrWeapon);
-      }
-    });
-
-    return list;
-  }
-
-  _isKnownWeapon(list, dtrWeapon) {
-    return _.contains(list, dtrWeapon);
+    return Array.from(list);
   }
 }
 
