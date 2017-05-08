@@ -117,12 +117,13 @@ module.exports = (env) => {
 
       new NotifyPlugin('DIM', !isDev),
 
-      new ExtractTextPlugin('styles-[hash:6].css'),
+      new ExtractTextPlugin('styles-[contenthash:6].css'),
 
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'index.html',
-        template: '!handlebars-loader!src/index.html'
+        template: '!handlebars-loader!src/index.html',
+        chunks: ['manifest', 'vendor', 'main']
       }),
 
       new HtmlWebpackPlugin({
@@ -143,6 +144,26 @@ module.exports = (env) => {
         { from: `./icons/${env}/` },
         { from: './src/safari-pinned-tab.svg' },
       ]),
+
+      // Optimize chunk IDs
+      new webpack.optimize.OccurrenceOrderPlugin(true),
+
+      // Extract a stable "vendor" chunk
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: function(module) {
+          // this assumes your vendor imports exist in the node_modules directory
+          return module.context && module.context.indexOf('node_modules') !== -1;
+        }
+      }),
+
+      // CommonChunksPlugin will now extract all the common modules
+      // from vendor and main bundles.  But since there are no more
+      // common modules between them we end up with just the runtime
+      // code included in the manifest file
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'manifest'
+      }),
 
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
