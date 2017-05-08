@@ -7,7 +7,7 @@ const featureFlag = {
   debugMode: false,                           // Additional debugging / item info tools
   debugMoves: false,                          // Print debug info to console about item moves
   changelogToaster: $DIM_FLAVOR !== 'dev',    // show changelog toaster
-  materialsExchangeEnabled: $DIM_FLAVOR === 'dev',
+  materialsExchangeEnabled: false,
   importExport: $DIM_FLAVOR !== 'release'     // allow importing and exporting your DIM data to JSON
 };
 
