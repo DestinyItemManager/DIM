@@ -12,7 +12,7 @@ const featureFlag = {
   // show changelog toaster
   changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
   // allow fetching item (weapon) scores and fetching/sending reviews from the Destiny Tracker API
-  sendingWeaponDataEnabled: true,
+  sendingWeaponDataEnabled: $DIM_FLAVOR === 'dev',
 
   materialsExchangeEnabled: false,
   // allow importing and exporting your DIM data to JSON
