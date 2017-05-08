@@ -110,7 +110,6 @@
     "jquery": "^3.1.1",
     "jquery-textcomplete": "^1.8.0",
     "jquery-ui": "^1.12.1",
-    "lodash": "^4.17.3",
     "messageformat": "^1.0.2",
     "ng-dialog": "^0.6.4",
     "ng-http-rate-limiter": "^1.0.1",
