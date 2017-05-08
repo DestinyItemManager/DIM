@@ -1,4 +1,3 @@
-import isFunction from 'lodash/isFunction';
 import template from './platform-choice.html';
 import './platform-choice.scss';
 
@@ -20,7 +19,7 @@ class PlatformChoiceController {
   }
 
   change(platform) {
-    if (platform && isFunction(this.onPlatformChange)) {
+    if (platform && this.onPlatformChange) {
       this.onPlatformChange({
         platform: platform
       });
