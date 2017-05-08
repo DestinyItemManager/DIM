@@ -24,7 +24,7 @@ class ReviewDataCache {
   }
 
   /**
-   * Do we have any locally-cached review data for the given item from the DIM store?
+   * Get the locally-cached review data for the given item from the DIM store, if it exists.
    *
    * @param {any} item
    * @returns {any}
@@ -32,7 +32,7 @@ class ReviewDataCache {
    * @memberof ReviewDataCache
    */
   getRatingData(item) {
-    return (this._getMatchingItem(item) || null);
+    return this._getMatchingItem(item) || null;
   }
 
   _toAtMostOneDecimal(rating) {

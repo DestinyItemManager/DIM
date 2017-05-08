@@ -14,14 +14,10 @@ class ItemListBuilder {
   }
 
   _getNewItems(allItems, reviewDataCache) {
-    var self = this;
-    var allDtrItems = allItems.map(function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
-    var allKnownDtrItems = reviewDataCache.getItemStores();
+    const allDtrItems = allItems.map((item) => this._itemTransformer.translateToDtrWeapon(item));
+    const allKnownDtrItems = reviewDataCache.getItemStores();
 
-    var unmatched = allDtrItems.filter(function(dtrItem) {
-      var matchingItem = _.findWhere(allKnownDtrItems, { referenceId: String(dtrItem.referenceId), roll: dtrItem.roll });
-      return (matchingItem === null);
-    });
+    const unmatched = _.reject(allDtrItems, (dtrItem) => _.any(allKnownDtrItems, { referenceId: String(dtrItem.referenceId), roll: dtrItem.roll }));
 
     return unmatched;
   }
@@ -32,10 +28,9 @@ class ItemListBuilder {
 
   // Get all of the weapons from our stores in a DTR API-friendly format.
   _getDtrWeapons(stores, reviewDataCache) {
-    var self = this;
-    var allItems = this._getAllItems(stores);
+    const allItems = this._getAllItems(stores);
 
-    var allWeapons = _.filter(allItems,
+    const allWeapons = _.filter(allItems,
                         function(item) {
                           if (!item.primStat) {
                             return false;
@@ -44,13 +39,13 @@ class ItemListBuilder {
                           return (item.bucket.sort === 'Weapons');
                         });
 
-    var newGuns = this._getNewItems(allWeapons, reviewDataCache);
+    const newGuns = this._getNewItems(allWeapons, reviewDataCache);
 
     if (reviewDataCache.getItemStores().length > 0) {
       return newGuns;
     }
 
-    return _.map(allWeapons, function(item) { return self._itemTransformer.translateToDtrWeapon(item); });
+    return allWeapons.map((weapon) => this._itemTransformer.translateToDtrWeapon(weapon));
   }
 
   /**
@@ -60,7 +55,7 @@ class ItemListBuilder {
    *
    * @param {any} stores
    * @param {ReviewDataCache} reviewDataCache
-   * @returns {array}
+   * @returns {array<DtrItem>}
    *
    * @memberof ItemListBuilder
    */
