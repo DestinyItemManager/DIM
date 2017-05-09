@@ -59,6 +59,7 @@ function MoveItemProperties() {
       '          {{vm.item.name}}',
       '        </a>',
       '      </div>',
+      '      <i translate-attr="{ title: \'DtrReview.DiscussHint\'}" ng-if="vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="dtr-review-discuss-button fa fa-comment" ng-click="vm.openDiscuss()"></i>',
       '      <i translate-attr="{ title: \'Compare.ButtonHelp\'}" ng-if="vm.featureFlags.compareEnabled && vm.item.talentGrid && vm.item.equipment && vm.item.lockable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>',
       '      <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">',
       '        <i class="info fa" ng-class="{ \'fa-chevron-circle-up\': vm.itemDetails, \'fa-chevron-circle-down\': !vm.itemDetails }">',
@@ -77,6 +78,8 @@ function MoveItemProperties() {
       '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>',
       '  <form ng-if="vm.featureFlags.tagsEnabled && vm.item.taggable" name="notes"><textarea name="data" translate-attr="{ placeholder: \'Notes.Help\' }" class="item-notes" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>',
       '  <span class="item-notes-error" ng-show="notes.data.$error.maxlength" translate="Notes.Error"></span>',
+      '  <form ng-if="vm.item.lockable" name="dtrReview" ng-submit="vm.submitReview()"><div class="item-review-container"><select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions" ng-blur="vm.reviewBlur()"></select><textarea translate-attr="{ placeholder: \'DtrReview.Help\' }" class="item-dtr-review" ng-maxlength="120" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea><input class="item-dtr-review-submit" type="submit" translate-attr="{ value: \'DtrReview.Submit\' }" ng-disabled="!vm.item.userRating || vm.item.userRating < 1" /></div></form>',
+      '  <span class="item-dtr-review-error" ng-show="dtrReview.data.$error.maxlength" translate="DtrReview.Error"></span>',
       '  <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>',
       '  <div class="item-details" ng-if="vm.item.classified" translate="ItemService.Classified2"></div>',
       '  <div class="stats" ng-if="vm.itemDetails && vm.hasDetails">',
@@ -113,8 +116,10 @@ function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions, dimDestinyTrackerService) {
   var vm = this;
+
+  vm.dtrRatingOptions = [1, 2, 3, 4, 5];
 
   vm.featureFlags = dimFeatureFlags;
 
@@ -139,10 +144,51 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     });
   };
 
+  vm.openDiscuss = function() {
+    ngDialog.closeAll();
+    $rootScope.$broadcast('dim-store-item-discuss', {
+      item: vm.item
+    });
+  };
+
   vm.updateNote = function() {
     if (angular.isDefined(vm.item.dimInfo.notes)) {
       vm.item.dimInfo.save();
     }
+  };
+
+  vm.reviewBlur = function() {
+    var item = vm.item;
+    var userReview = vm.toUserReview(item);
+
+    dimDestinyTrackerService.updateCachedUserRankings(item,
+                                                      userReview);
+  };
+
+  vm.toUserReview = function(item) {
+    var newRating = item.userRating;
+    var review = item.userReview;
+    var pros = item.userReviewPros;
+    var cons = item.userReviewCons;
+
+    var userReview = {
+      rating: newRating,
+      review: review,
+      pros: pros,
+      cons: cons
+    };
+
+    return userReview;
+  };
+
+  vm.submitReview = function() {
+    var item = vm.item;
+
+    var userReview = vm.toUserReview(item);
+
+    $rootScope.$broadcast('review-submitted', item, userReview);
+
+    return false;
   };
 
   vm.setItemState = function setItemState(item, type) {

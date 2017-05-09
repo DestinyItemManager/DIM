@@ -224,6 +224,33 @@ mod.filter('qualityColor', function() {
   };
 });
 
+mod.filter('dtrRatingColor', function() {
+  return function getColor(value, property) {
+    if (!value) {
+      return null;
+    }
+
+    property = property || 'background-color';
+    var color = 0;
+    if (value < 2) {
+      color = 0;
+    } else if (value <= 3) {
+      color = 15;
+    } else if (value <= 4) {
+      color = 30;
+    } else if (value <= 4.4) {
+      color = 60;
+    } else if (value <= 4.8) {
+      color = 120;
+    } else if (value >= 4.9) {
+      color = 190;
+    }
+    var result = {};
+    result[property] = 'hsl(' + color + ',85%,60%)';
+    return result;
+  };
+});
+
 /**
  * Reduce a string to its first letter.
  */

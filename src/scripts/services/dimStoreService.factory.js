@@ -22,6 +22,7 @@ function StoreService(
   $translate,
   uuid2,
   dimFeatureFlags,
+  dimDestinyTrackerService,
   dimSettingsService,
   $http
 ) {
@@ -615,6 +616,9 @@ function StoreService(
 
         return stores;
       })
+      .then(function(stores) {
+        dimDestinyTrackerService.reattachScoresFromCache(stores);
+      })
       .catch(function(e) {
         if (e.message === 'Active platform mismatch') {
           // no problem, just canceling the request
@@ -802,7 +806,8 @@ function StoreService(
       locked: item.locked,
       redacted: itemDef.redacted,
       classified: itemDef.classified,
-      isInLoadout: false
+      isInLoadout: false,
+      dtrRating: item.dtrRating
     });
 
     createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
@@ -978,6 +983,30 @@ function StoreService(
         }
       }
 
+      // Generate a hash that identifies the weapons permutation and selected perks.
+      // This is used by the Weapon Reviewing system.
+      const generateNodeDtrRoll = (node, talentNodeSelected) => {
+        var dtrRoll = node.nodeHash.toString(16);
+
+        if (dtrRoll.length > 1) {
+          dtrRoll += ".";
+        }
+
+        dtrRoll += node.stepIndex.toString(16);
+
+        if (node.isActivated) {
+          dtrRoll += "o";
+        }
+
+        if (talentNodeSelected.perkHashes && talentNodeSelected.perkHashes.length > 0) {
+          dtrRoll += "," + talentNodeSelected.perkHashes.join(',');
+        }
+
+        return dtrRoll;
+      };
+
+      var dtrRoll = generateNodeDtrRoll(node, talentNodeSelected);
+
       // There's a lot more here, but we're taking just what we need
       return {
         name: nodeName,
@@ -1004,7 +1033,8 @@ function StoreService(
         // Some nodes don't show up in the grid, like purchased ascend nodes
         hidden: node.hidden,
 
-        dtrHash: dtrHash
+        dtrHash: dtrHash,
+        dtrRoll: dtrRoll
 
         // Whether (and in which order) this perk should be
         // "featured" on an abbreviated info panel, as in the
@@ -1059,6 +1089,7 @@ function StoreService(
       ascended: Boolean(ascendNode && ascendNode.activated),
       infusable: _.any(gridNodes, { hash: 1270552711 }),
       dtrPerks: _.compact(_.pluck(gridNodes, 'dtrHash')).join(';'),
+      dtrRoll: _.compact(_.pluck(gridNodes, 'dtrRoll')).join(';'),
       complete: totalXPRequired <= totalXP && _.all(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn))
     };
   }

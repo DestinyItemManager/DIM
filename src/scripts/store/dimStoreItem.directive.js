@@ -24,7 +24,7 @@ angular.module('dimApp')
 
 
 
-function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
+function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, dimItemDiscussService, $rootScope, dimActionQueue) {
   var otherDialog = null;
   let firstItemTimed = false;
 
@@ -74,7 +74,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     }
 
     vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
-      if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
+      if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen && !dimItemDiscussService.dialogOpen) {
         e.stopPropagation();
         const active = dimStoreService.getActiveStore();
 
@@ -90,6 +90,8 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
 
     vm.clicked = function openPopup(item, e) {
       e.stopPropagation();
+
+      $rootScope.$broadcast('item-clicked', item);
 
       if (vm.shiftClickCallback && e.shiftKey) {
         vm.shiftClickCallback(item);
@@ -114,6 +116,8 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimLoadoutService.addItemToLoadout(item, e);
       } else if (dimCompareService.dialogOpen) {
         dimCompareService.addItemToCompare(item, e);
+      } else if (dimItemDiscussService.dialogOpen) {
+        dimItemDiscussService.addItemToDiscuss(item, e);
       } else {
         dialogResult = ngDialog.open({
           template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',

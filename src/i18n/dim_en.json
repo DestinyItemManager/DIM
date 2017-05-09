@@ -289,6 +289,22 @@
       "Error": "Error! Max 120 characters for notes.",
       "Help": "Add notes to this item"
    },
+   "DtrReview": {
+     "Error": "Something went wrong with the review submission.",
+     "Help": "Optionally add a review",
+     "HelpPros": "Optionally, describe the positives of this weapon.",
+     "HelpCons": "Optionally, describe the negatives of this weapon.",
+     "Submit": "Submit",
+     "DiscussHint": "Discuss this item.",
+     "RatingHint": "Rate this item.",
+     "ReviewHint": "Write your own review.",
+     "Pros": "Pros",
+     "Cons": "Cons",
+     "ServiceCallError": "Destiny tracker service call failed.",
+     "ServiceSubmitError": "Destiny tracker service submit failed.",
+     "NoReviewsYet": "{itemName} has no community reviews yet. Be the first!",
+     "CurrentAverageRating": "{itemName} has an average rating of {itemRating} based on {numReviews} reviews."
+   },
    "Objectives": {
      "Complete": "Complete",
      "Incomplete": "Incomplete"
@@ -312,6 +328,8 @@
       "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
       "ShowElemental": "Show elemental damage icons on weapons",
       "ShowElementalHelp": "Show elemental damage icons on weapons.",
+      "AllowIdPostToDtr": "Allow potentially identifying item information to be posted to Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "Allow DIM to post identifying item data to DTR.",
       "SetSort": "Sort Items by:",
       "SetSortHelp": "Sort items by rarity or their primary stat value.",
       "SortPrimary": "Primary stat",
