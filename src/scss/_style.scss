@@ -2145,6 +2145,11 @@ dim-manifest-progress {
   margin-bottom: .25em;
 }
 
-.backers a {
-  margin-right: 1em;
+.backers {
+  a {
+    margin-right: 1em;
+  }
+  img {
+    border-radius: 50%;
+  }
 }
