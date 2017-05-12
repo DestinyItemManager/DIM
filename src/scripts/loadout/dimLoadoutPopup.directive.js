@@ -198,7 +198,7 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
 
     var applicableItems = _.select(dimItemService.getItems(), function(i) {
       return i.canBeEquippedBy(vm.store) &&
-        i.primStat !== undefined && // has a primary stat (sanity check)
+        i.primStat && // has a primary stat (sanity check)
         _.contains(lightTypes, i.type); // one of our selected types
     });
 

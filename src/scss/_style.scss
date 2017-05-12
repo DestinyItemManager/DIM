@@ -1527,7 +1527,6 @@ dim-compare {
   }
   > div {
     padding-left: 4px;
-    height: 16px;
   }
   .highlight {
     background-color: rgba(128, 128, 128, .25);
@@ -1995,6 +1994,10 @@ h2, h3, h4 {
       padding: 0;
       list-style: none;
     }
+  }
+
+  .item {
+    float: left;
   }
 
   .engram-icon {
