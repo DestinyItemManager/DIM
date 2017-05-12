@@ -152,7 +152,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeat
   };
 
   vm.itemClick = function itemClick(item) {
-    const element = angular.element('#' + item.hash + '-' + item.id);
+    const element = angular.element('#' + item.index);
     const elementRect = element[0].getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
     window.scrollTo(0, absoluteElementTop - 150);

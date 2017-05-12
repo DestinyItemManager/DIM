@@ -675,6 +675,7 @@ img {
   margin: 2px;
   position: relative;
   contain: strict;
+  cursor: pointer;
 }
 .search-hidden {
   opacity: .2;
@@ -692,7 +693,6 @@ img {
 .item-img {
   @include item-size;
   background-color: #5c7183;
-  cursor: pointer;
   border: 2px solid #DDD;
   background-size: cover;
   display: block;
