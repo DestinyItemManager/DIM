@@ -34,7 +34,7 @@ function Stores() {
       '    <span><i class="fa collapse" ng-class="vm.settings.collapsedSections[\'Reputation\'] ? \'fa-plus-square-o\': \'fa-minus-square-o\'"></i> <span translate="Bucket.Reputation"></span></span>',
       '  </div>',
       '  <div class="store-row items reputation" ng-if="!vm.settings.collapsedSections[\'Reputation\']">',
-      '    <div class="store-cell" ng-class="{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
+      '    <div class="store-cell" ng-class="::{ vault: store.isVault }" ng-repeat="store in vm.stores | sortStores:vm.settings.characterOrder track by store.id">',
       '      <dim-store-reputation store-data="store"></dim-store-reputation>',
       '    </div>',
       '  </div>',

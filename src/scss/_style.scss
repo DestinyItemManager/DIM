@@ -675,9 +675,10 @@ img {
   margin: 2px;
   position: relative;
   contain: strict;
-  &.search-hidden {
-    opacity: .2;
-  }
+  cursor: pointer;
+}
+.search-hidden {
+  opacity: .2;
 }
 
 .item-xp-bar-small {
@@ -692,7 +693,6 @@ img {
 .item-img {
   @include item-size;
   background-color: #5c7183;
-  cursor: pointer;
   border: 2px solid #DDD;
   background-size: cover;
   display: block;
@@ -1506,7 +1506,6 @@ dim-compare {
   }
   > div {
     padding-left: 4px;
-    height: 16px;
   }
   .highlight {
     background-color: rgba(128, 128, 128, .25);
@@ -1974,6 +1973,10 @@ h2, h3, h4 {
       padding: 0;
       list-style: none;
     }
+  }
+
+  .item {
+    float: left;
   }
 
   .engram-icon {

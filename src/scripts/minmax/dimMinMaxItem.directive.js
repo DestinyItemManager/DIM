@@ -7,7 +7,6 @@ var MinMaxItem = {
   controllerAs: 'vm',
   bindings: {
     itemData: '<',
-    storeData: '<',
     shiftClickCallback: '='
   },
   template: [
@@ -17,7 +16,7 @@ var MinMaxItem = {
     '  </div>',
     '  <dim-simple-item ui-draggable="true" drag="::vm.itemData.index" drag-channel="{{ ::vm.itemData.type }}" id="vendor-{{::vm.itemData.hash}}" item-data="vm.itemData" ng-click="vm.itemClicked(vm.itemData, $event)" ng-class="{ \'search-hidden\': !vm.itemData.visible }"></dim-simple-item>',
     '</div>',
-    '<dim-store-item ng-if="!vm.itemData.isVendorItem" shift-click-callback="vm.shiftClickCallback" item-data="vm.itemData" store-data="vm.storeData"></dim-store-item>'
+    '<dim-store-item ng-if="!vm.itemData.isVendorItem" shift-click-callback="vm.shiftClickCallback" item-data="vm.itemData"></dim-store-item>'
   ].join('')
 };
 

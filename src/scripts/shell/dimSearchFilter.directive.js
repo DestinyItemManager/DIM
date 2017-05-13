@@ -139,6 +139,7 @@ function SearchFilter(dimSearchService) {
     },
     bindToController: true,
     restrict: 'E',
+    scope: {},
     template: [
       '<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" translate-attr="{ placeholder: \'Header.FilterHelp\' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">'
     ].join('')
@@ -487,7 +488,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         }));
     },
     light: function(predicate, item) {
-      if (predicate.length === 0 || item.primStat === undefined) {
+      if (predicate.length === 0 || !item.primStat) {
         return false;
       }
 
@@ -530,7 +531,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return result;
     },
     quality: function(predicate, item) {
-      if (predicate.length === 0 || item.quality === undefined || item.quality === null) {
+      if (predicate.length === 0 || !item.quality) {
         return false;
       }
 
@@ -736,7 +737,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
   var filterByStats = function(predicate, item, statType) {
-    if (predicate.length === 0 || item.stats === undefined) {
+    if (predicate.length === 0 || !item.stats) {
       return false;
     }
 

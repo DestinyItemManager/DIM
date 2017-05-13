@@ -31,7 +31,7 @@ var MinMaxLocks = {
     '    </div>',
     '    <div ng-switch-default>',
     '      <div class="lock-container">',
-    '        <dim-min-max-item item-data="lockeditem" store-data="vm.getStore({owner: lockeditem.owner})"></dim-min-max-item>',
+    '        <dim-min-max-item item-data="lockeditem"></dim-min-max-item>',
     '        <div class="close" ng-click="vm.onRemove({type: type})" role="button" tabindex="0"></div>',
     '      </div>',
     '    </div>',

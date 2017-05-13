@@ -8,10 +8,10 @@ function MovePopup() {
     controller: MovePopupController,
     controllerAs: 'vm',
     bindToController: true,
-    restrict: 'A',
+    restrict: 'E',
     scope: {
-      store: '=dimStore',
-      item: '=dimItem'
+      store: '=',
+      item: '='
     },
     replace: true,
     template: [

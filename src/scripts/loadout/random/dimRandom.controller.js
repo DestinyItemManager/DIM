@@ -8,11 +8,12 @@ angular.module('dimApp')
 function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, $translate) {
   var vm = this;
 
-  $scope.$on('dim-stores-updated', function() {
+  const deregister = $scope.$on('dim-stores-updated', function() {
     vm.showRandomLoadout = true;
+    deregister();
   });
 
-  vm.showRandomLoadout = false;
+  vm.showRandomLoadout = undefined;
   vm.disableRandomLoadout = false;
 
   vm.applyRandomLoadout = function() {

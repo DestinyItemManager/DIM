@@ -36,7 +36,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     replace: true,
     restrict: 'E',
     scope: {
-      store: '=storeData',
       item: '=itemData',
       shiftClickCallback: '=shiftClickCallback'
     },
@@ -118,13 +117,18 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimCompareService.addItemToCompare(item, e);
       } else {
         dialogResult = ngDialog.open({
-          template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
+          template: '<dim-move-popup store="vm.store" item="vm.item" ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()"></dim-move-popup>',
           plain: true,
           overlay: false,
           className: 'move-popup-dialog',
           showClose: false,
           data: element,
-          scope: scope,
+          controllerAs: 'vm',
+          controller: function() {
+            'ngInject';
+            this.item = vm.item;
+            this.store = dimStoreService.getStore(this.item.owner);
+          },
 
           // Setting these focus options prevents the page from
           // jumping as dialogs are shown/hidden
@@ -145,35 +149,31 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       }
     });
 
+    // Perf hack: the item's "index" property is computed based on:
+    //  * its ID
+    //  * amount (and a unique-ifier) if it's a stackable
+    //  * primary stat
+    //  * completion percentage
+    //  * quality minimum
+    //
+    // As a result we can bind-once or compute up front properties that depend
+    // on those values, since if any of them change, the *entire* item directive
+    // will be recreated from scratch. This is cheaper overall since the number of
+    // items that get infused or have XP added to them in any given refresh is much
+    // smaller than the number of items that don't.
+    //
+    // Note that this hack means that dim-store-items used outside of ng-repeat won't
+    // update!
+
     vm.badgeClassNames = {};
 
     if (!vm.item.primStat && vm.item.objectives) {
-      scope.$watchGroup([
-        'vm.item.percentComplete',
-        'vm.item.complete'], function() {
-        processBounty(vm, vm.item);
-      });
+      processBounty(vm, vm.item);
     } else if (vm.item.maxStackSize > 1) {
-      scope.$watchGroup([
-        'vm.item.amount'], function() {
-        processStackable(vm, vm.item);
-      });
+      processStackable(vm, vm.item);
     } else {
-      scope.$watch('vm.item.primStat.value', function() {
-        processItem(vm, vm.item);
-      });
+      processItem(vm, vm.item);
     }
-
-    scope.$watch('vm.item.quality', function() {
-      vm.badgeClassNames['item-stat-no-bg'] = vm.item.quality;
-    });
-
-    scope.$watch('vm.item.dtrRating', function() {
-      if (vm.item.primStat && vm.item.primStat.statHash !== 368428387) {
-        return;
-      }
-      vm.badgeClassNames['item-stat-no-bg'] = vm.item.dtrRating;
-    });
   }
 }
 
@@ -198,10 +198,12 @@ function processItem(vm, item) {
     'item-equipment': true
   };
 
-  vm.showBadge = item.primStat && item.primStat.value;
+  vm.showBadge = Boolean(item.primStat && item.primStat.value);
 
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
+    vm.badgeClassNames['item-stat-no-bg'] = Boolean(vm.item.quality);
+    vm.badgeClassNames['stat-damage-' + item.dmg] = true;
 
     vm.badgeCount = item.primStat.value;
   }
