@@ -1,4 +1,3 @@
-import angular from 'angular';
 import _ from 'underscore';
 
 function XurService($rootScope, dimVendorService, dimStoreService) {
