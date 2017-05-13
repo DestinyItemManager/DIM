@@ -369,6 +369,8 @@ function StoreService(
       }
     }
 
+    _idTracker = {};
+
     _reloadPromise = $q.all([
       dimDefinitions.getDefinitions(),
       dimBucketService.getBuckets(),
@@ -645,14 +647,31 @@ function StoreService(
   // Set an ID for the item that should be unique across all items
   function createItemIndex(item) {
     // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-    var index = item.hash + '-';
+    var index = item.id;
     if (item.id === '0') {
-      index = index + item.amount;
+      index = item.hash + '-am' + item.amount;
       _idTracker[index] = (_idTracker[index] || 0) + 1;
-      index = index + '-' + _idTracker[index];
-    } else {
-      index = index + item.id;
+      index = index + '-t' + _idTracker[index];
     }
+
+    // Perf hack: the index is used as a key for ng-repeat. What we are doing here
+    // is adding extra info to that key in order to force items to be re-rendered when
+    // this index changes. These properties are selected because they're used in the
+    // dimStoreItem directive. Ideally this would just be a hash of all these properties,
+    // but for now a big string will do.
+    //
+    // Oh, also, this value needs to be safe as an HTML ID.
+
+    if (!item.complete && item.percentComplete) {
+      index += '-pc' + Math.round(item.percentComplete * 100);
+    }
+    if (item.quality) {
+      index += '-q' + item.quality.min;
+    }
+    if (item.primStat && item.primStat.value) {
+      index += '-ps' + item.primStat.value;
+    }
+
     return index;
   }
 
@@ -784,9 +803,8 @@ function StoreService(
       equipped: item.isEquipped,
       equipment: item.isEquipment,
       complete: item.isGridComplete,
-      percentComplete: null,
       amount: item.stackSize,
-      primStat: item.primaryStat,
+      primStat: item.primaryStat || null,
       typeName: itemDef.itemTypeName,
       // "perks" are the two or so talent grid items that are "featured" for an
       // item in its popup in the game. We don't currently use these.
@@ -801,18 +819,21 @@ function StoreService(
       visible: true,
       sourceHashes: itemDef.sourceHashes,
       lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-      trackable: currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597),
+      trackable: Boolean(currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)),
       tracked: item.state === 2,
       locked: item.locked,
-      redacted: itemDef.redacted,
-      classified: itemDef.classified,
+      redacted: Boolean(itemDef.redacted),
+      classified: Boolean(itemDef.classified),
       isInLoadout: false,
-      dtrRating: item.dtrRating
+      dtrRating: item.dtrRating,
+      percentComplete: null, // filled in later
+      talentGrid: null, // filled in later
+      stats: null, // filled in later
+      objectives: null, // filled in later
+      quality: null // filled in later
     });
 
     createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
-
-    createdItem.index = createItemIndex(createdItem);
 
     // Moving rare masks destroys them
     if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
@@ -895,6 +916,8 @@ function StoreService(
       createdItem.complete = owner.advisors.activities.trials.completion.success;
       createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
     }
+
+    createdItem.index = createItemIndex(createdItem);
 
     return createdItem;
   }
