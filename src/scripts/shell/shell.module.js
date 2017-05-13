@@ -1,6 +1,6 @@
 import angular from 'angular';
 
-import UIRouterModule from 'angular-ui-router';
+import UIRouterModule from '@uirouter/angularjs';
 
 import { ActivityTrackerDirective, ActivityTrackerService } from './activity-tracker';
 import { PlatformChoiceComponent } from './platform-choice';
