@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "No encontramos una cuenta de Destiny para {platform}.",
       "NoCookies": "No se encontraron cookies.",
       "NotConnected": "Es posible que no tengas conexión a Internet.",
-      "Twitter": "Entérate de los estados de actualizaciones",
+      "Twitter": "Entérate de los estados de actualizaciones:",
       "ItemUniqueness": "Unicidad de objeto",
       "ItemUniquenessExplanation": "Intentáste mover el '{name}' {type} a tu {character} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
       "VendorNotFound": "Los datos del proveedor no están disponibles."
@@ -40,9 +40,9 @@
       "Splits": "Comparar partes similares ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Tiempo para Granada",
-      "Melee": "Tiempo para Cuerpo a cuerpo",
-      "Super": "Tiempo para Super"
+      "Grenade": "Tiempo para Granada: {cooldown}",
+      "Melee": "Tiempo para Cuerpo a cuerpo: {cooldown}",
+      "Super": "Tiempo para Super: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Día} other{# Días}}"
@@ -346,7 +346,7 @@
       "Prestige": "Nivel de Prestigio: {level}\n{exp}xp para 5 motas de luz.",
       "Quality": "Calidad Estadística",
       "Strength": "Fuerza",
-      "TierProgress": "{progress} por {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 por T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Llena la pila ({amount})",
@@ -368,8 +368,8 @@
    "Vendors": {
       "Vendors": "Comerciantes",
       "All": "Todo",
-      "Available": "Disponible en",
-      "Compare": "Comparar con lo que ya tienes",
+      "Available": "Disponible en:",
+      "Compare": "Comparar con lo que ya tienes:",
       "Load": "Cargando comerciantes",
       "ArmorAndWeapons": "Armadura y armas",
       "ShipsAndVehicles": "Naves y vehículos",
@@ -406,7 +406,7 @@
        "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
        "Twitter": "Twitter",
        "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
-       "Version": "Versión",
+       "Version": "Versión {version} ({flavor})",
        "Transifex": "Únete al Equipo Traductor!",
        "TransifexText": "Utilizamos Transifex para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo."
      },

@@ -16,6 +16,9 @@
   <div ng-if="::vm.item.quality"
        class="item-stat item-quality"
        ng-style="::vm.item.quality.min | qualityColor">{{ ::vm.item.quality.min }}%</div>
+  <div ng-if="vm.item.dtrRating"
+       class="item-dtr-rating"
+       ng-style="vm.item.dtrRating | dtrRatingColor">{{ vm.item.dtrRating }}</div>
   <div class="item-element"
        ng-class="::vm.item.dmg"></div>
   <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>

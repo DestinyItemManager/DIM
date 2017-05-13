@@ -84,7 +84,7 @@ function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) 
             '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
             '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
             '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-            '    <div translate="Vendors.Compare">:</div>',
+            '    <div translate="Vendors.Compare"></div>',
             '    <div class="compare-items">',
             '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
             '    </div>',
@@ -92,7 +92,7 @@ function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) 
             '  <div class="item-description" ng-if="!vm.item.equipment && vm.compareItemCount">You have {{vm.compareItemCount}} of these.</div>',
             '  <div class="item-details" ng-if="vm.saleItem.failureStrings">{{vm.saleItem.failureStrings}}</div>',
             '  <div class="item-details" ng-if="vm.unlockStores.length">',
-            '    <div translate="Vendors.Available">:</div>',
+            '    <div translate="Vendors.Available"></div>',
             '    <div class="unlocked-character" ng-repeat="store in vm.unlockStores | sortStores:vm.settings.characterOrder track by store.id">',
             '      <div class="emblem" ng-style="{ \'background-image\': \'url(\' + store.icon + \')\' }"></div>',
             '      {{store.name}}',
@@ -139,4 +139,3 @@ function VendorItemsCtrl($scope, ngDialog, dimStoreService, dimSettingsService) 
     }
   });
 }
-

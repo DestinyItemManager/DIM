@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Failed to find a Destiny account for you on {platform}.",
       "NoCookies": "No cookies found.",
       "NotConnected": "You may not be connected to the internet.",
-      "Twitter": "Get status updates on",
+      "Twitter": "Get status updates on:",
       "ItemUniqueness": "Item Uniqueness",
       "ItemUniquenessExplanation": "You tried to move the '{name}' {type} to your {character} but that destination already has that item and is only allowed one.",
       "VendorNotFound": "Vendor data is unavailable."
@@ -40,9 +40,9 @@
       "Splits": "Compare similar splits ({quantity})"
    },
    "Cooldown": {
-      "Grenade": "Grenade cooldown",
-      "Melee": "Melee cooldown",
-      "Super": "Super cooldown"
+      "Grenade": "Grenade cooldown: {cooldown}",
+      "Melee": "Melee cooldown: {cooldown}",
+      "Super": "Super cooldown: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays, plural, =1{# Day} other{# Days}}"
@@ -110,7 +110,7 @@
    },
    "Infusion": {
       "Infusion": "Infusion Fuel Finder",
-      "BringGear": "Will bring the gear to",
+      "BringGear": "Will bring the gear to:",
       "Calc": "Infusion calculator",
       "InfuseItems": "Select item to infuse with:",
       "InfusionMaterials": "Infusion Materials",
@@ -118,8 +118,7 @@
       "NoItems": "No infusable items available.",
       "NoTransfer": "Transfer infusion material\n {target} cannot be moved.",
       "ShowItems": "Show infusable items across all characters and vault",
-      "TransferItems": "Transfer items",
-      "Using3": "using 3"
+      "TransferItems": "Transfer items"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Error saving item info",
@@ -272,6 +271,7 @@
       "Equip": "Equip",
       "Split": "Split",
       "Store": "Store",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Take",
       "Vault": "Vault",
       "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
@@ -288,6 +288,22 @@
    "Notes": {
       "Error": "Error! Max 120 characters for notes.",
       "Help": "Add notes to this item"
+   },
+   "DtrReview": {
+     "Error": "Something went wrong with the review submission.",
+     "Help": "Optionally add a review",
+     "HelpPros": "Optionally, describe the positives of this weapon.",
+     "HelpCons": "Optionally, describe the negatives of this weapon.",
+     "Submit": "Submit",
+     "DiscussHint": "Discuss this item.",
+     "RatingHint": "Rate this item.",
+     "ReviewHint": "Write your own review.",
+     "Pros": "Pros",
+     "Cons": "Cons",
+     "ServiceCallError": "Destiny tracker service call failed.",
+     "ServiceSubmitError": "Destiny tracker service submit failed.",
+     "NoReviewsYet": "{itemName} has no community reviews yet. Be the first!",
+     "CurrentAverageRating": "{itemName} has an average rating of {itemRating} based on {numReviews} reviews."
    },
    "Objectives": {
      "Complete": "Complete",
@@ -312,6 +328,8 @@
       "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
       "ShowElemental": "Show elemental damage icons on weapons",
       "ShowElementalHelp": "Show elemental damage icons on weapons.",
+      "AllowIdPostToDtr": "Allow potentially identifying item information to be posted to Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "Allow DIM to post identifying item data to DTR.",
       "SetSort": "Sort Items by:",
       "SetSortHelp": "Sort items by rarity or their primary stat value.",
       "SortPrimary": "Primary stat",
@@ -347,7 +365,7 @@
       "Prestige": "Prestige Level: {level}\n{exp}xp until 5 motes of light.",
       "Quality": "Stats quality",
       "Strength": "Strength",
-      "TierProgress": "{progress} for {tier}"
+      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 for T{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",
@@ -369,8 +387,8 @@
    "Vendors": {
       "Vendors": "Vendors",
       "All": "All",
-      "Available": "Available on",
-      "Compare": "Compare with what you already have",
+      "Available": "Available on:",
+      "Compare": "Compare with what you already have:",
       "Load": "Loading Vendors",
       "ArmorAndWeapons": "Armor & Weapons",
       "ShipsAndVehicles": "Ships & Vehicles",
@@ -407,7 +425,7 @@
        "RedditHelp": "If you have questions, comments, or suggestions- let us know!",
        "Twitter": "Twitter",
        "TwitterHelp": "Be sure to follow us to stay on top of updates and realtime application state information.",
-       "Version": "Version",
+       "Version": "Version {version} ({flavor})",
        "Transifex": "Join the Translation Team!",
        "TransifexText": "We use Transifex for ease of translation. If you want to improve one of DIM's translations, join the team."
      },

@@ -40,6 +40,8 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     showNewAnimation: true,
     // Show elemental damage icons
     showElements: false,
+    // Can we post identifying information to DTR?
+    allowIdPostToDtr: false,
     // Sort characters (mostRecent, mostRecentReverse, fixed)
     characterOrder: 'mostRecent',
     // Sort items in buckets (primaryStat, rarityThenPrimary, quality)

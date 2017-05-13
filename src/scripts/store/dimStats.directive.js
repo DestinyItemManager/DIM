@@ -38,17 +38,13 @@ function StatsCtrl($scope, $translate) {
     vm.statList = [vm.stats.STAT_INTELLECT, vm.stats.STAT_DISCIPLINE, vm.stats.STAT_STRENGTH];
     vm.statList.forEach(function(stat) {
       // compute tooltip
-      var next = ' (' + stat.value + '/300)';
       var tier = stat.tier;
+      var next = $translate.instant('Stats.TierProgress', { progress: tier === 5 ? stat.value : (stat.value % 60), tier: tier, nextTier: tier + 1, statName: stat.name });
       var cooldown = stat.cooldown || '';
-      if (tier !== 5) {
-        next = ' (' + $translate.instant('Stats.TierProgress', { progress: (stat.value % 60) + "/60", tier: 'T' + (tier + 1) }) + ')';
-      }
       if (cooldown) {
-        cooldown = '\n' + $translate.instant('Cooldown.' + stat.effect) + ": " + cooldown;
+        cooldown = $translate.instant('Cooldown.' + stat.effect, { cooldown: cooldown });
       }
-      stat.tooltip = 'T' + tier + ' ' + stat.name + next + cooldown;
+      stat.tooltip = next + cooldown;
     });
   });
 }
-

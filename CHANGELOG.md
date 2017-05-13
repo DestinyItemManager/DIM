@@ -21,6 +21,7 @@
 # 3.17.0
 
 * Fixed the perk selection in Loadout Builder. #1453
+* Integrated Trials-centric weapon reviews (and the ability to rate your own gear (and make comments about your gear)).  Done in conjunction with destinytracker.com.
 * Fixed the logic for artifact bonuses to compute the right number. #1477
 * Restore some missing images from our build system changes.
 * Don't allow engrams to be tagged. #1478
