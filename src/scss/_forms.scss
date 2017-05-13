@@ -1,4 +1,21 @@
 
+textarea {
+  width: 100%;
+  height: 30px;
+  background-color: #333;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  color: white;
+}
+textarea.textarea-error {
+  margin: 5px 10px;
+  white-space: pre-wrap;
+  color: #985C58;
+  width: 100%;
+  text-align: right;
+}
+
 .dim-button {
   cursor: pointer;
   background-color: gray;

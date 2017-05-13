@@ -44,11 +44,13 @@ class ReviewsFetcher {
     return _.findWhere(reviewData.reviews, { isReviewer: true });
   }
 
-  _attachReviews(item,
-                 reviewData) {
+  _attachReviews(item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
-    item.communityReviews = reviewData.reviews;
+    item.totalReviews = reviewData.reviews.length;
+    item.writtenReviews = _(reviewData.reviews).filter((details) => {
+      return details.review;
+    });
 
     if (userReview) {
       item.userRating = userReview.rating;
@@ -57,8 +59,7 @@ class ReviewsFetcher {
       item.userReviewCons = userReview.cons;
     }
 
-    this._reviewDataCache.addReviewsData(item,
-                                         reviewData);
+    this._reviewDataCache.addReviewsData(item, reviewData);
   }
 
   _attachCachedReviews(item,

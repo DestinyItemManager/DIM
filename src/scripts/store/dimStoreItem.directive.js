@@ -24,7 +24,7 @@ angular.module('dimApp')
 
 
 
-function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, dimItemDiscussService, $rootScope, dimActionQueue) {
+function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
   var otherDialog = null;
   let firstItemTimed = false;
 
@@ -74,7 +74,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     }
 
     vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
-      if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen && !dimItemDiscussService.dialogOpen) {
+      if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
         e.stopPropagation();
         const active = dimStoreService.getActiveStore();
 
@@ -116,8 +116,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimLoadoutService.addItemToLoadout(item, e);
       } else if (dimCompareService.dialogOpen) {
         dimCompareService.addItemToCompare(item, e);
-      } else if (dimItemDiscussService.dialogOpen) {
-        dimItemDiscussService.addItemToDiscuss(item, e);
       } else {
         dialogResult = ngDialog.open({
           template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-move-popup dim-store="vm.store" dim-item="vm.item"></div>',
@@ -169,6 +167,13 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     scope.$watch('vm.item.quality', function() {
       vm.badgeClassNames['item-stat-no-bg'] = vm.item.quality;
     });
+
+    scope.$watch('vm.item.dtrRating', function() {
+      if (vm.item.primStat && vm.item.primStat.statHash !== 368428387) {
+        return;
+      }
+      vm.badgeClassNames['item-stat-no-bg'] = vm.item.dtrRating;
+    });
   }
 }
 
@@ -198,11 +203,9 @@ function processItem(vm, item) {
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
 
-    vm.badgeClassNames['stat-damage-' + item.dmg] = true;
     vm.badgeCount = item.primStat.value;
   }
 }
-
 
 function StoreItemCtrl() {
   var vm = this;

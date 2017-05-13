@@ -1,6 +1,5 @@
 class TrackerErrorHandler {
-  constructor($q,
-              $translate) {
+  constructor($q, $translate) {
     this.$q = $q;
     this.$translate = $translate;
   }
