@@ -11,7 +11,7 @@ import SliderModule from 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import TranslateModule from 'angular-translate';
 import TranslateMessageFormatModule from 'angular-translate-interpolation-messageformat';
-import UIRouterModule from 'angular-ui-router';
+import UIRouterModule from '@uirouter/angularjs';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 import 'angular-uuid2/dist/angular-uuid2.js';
