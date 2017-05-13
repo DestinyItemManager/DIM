@@ -19,6 +19,7 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   if (!window.chrome || !window.chrome.extension) {
     $httpProvider.interceptors.push('http-refresh-token');
   }
+  $httpProvider.useApplyAsync(true);
 
   // See https://angular-translate.github.io/docs/#/guide
   $translateProvider.useSanitizeValueStrategy('escape');
