@@ -1,3 +1,4 @@
+import angular from 'angular';
 import template from './item-stats.html';
 
 function ItemStatsController(dimSettingsService, dimFeatureFlags) {

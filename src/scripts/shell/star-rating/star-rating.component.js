@@ -20,27 +20,27 @@ function StarRatingController($element) {
   vm.toggle = function(index) {
     vm.rating = index;
 
-    if (vm.onRatingChange && typeof(vm.onRatingChange) === 'function') {
+    if (vm.onRatingChange && typeof vm.onRatingChange === 'function') {
       vm.onRatingChange({
         rating: vm.rating + 1
       });
     }
     updateStars();
-  }
+  };
 
   vm.hover = function(index) {
     vm.stars.forEach((star, id) => {
       star.hovered = index !== undefined && id <= index;
     });
-  }
+  };
 
   vm.$onChanges = function(update) {
     if (!update.rating.currentValue === undefined) {
       return;
     }
-    vm.rating = Math.round(update.rating.currentValue)
+    vm.rating = Math.round(update.rating.currentValue);
     updateStars();
-  }
+  };
 }
 
 export const StarRatingComponent = {

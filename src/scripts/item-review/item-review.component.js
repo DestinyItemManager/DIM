@@ -1,4 +1,4 @@
-
+import angular from 'angular';
 import template from './item-review.html';
 import './item-review.scss';
 
@@ -11,7 +11,7 @@ function ItemReviewController($rootScope, dimSettingsService) {
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
 
-  vm.procon = false // TODO: turn this back on..
+  vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
     pros: ['fast', 'lol'],
     cons: ['ok']
@@ -37,7 +37,6 @@ function ItemReviewController($rootScope, dimSettingsService) {
     }
     vm.expandReview = true;
   };
-
 }
 
 var ItemReviewComponent = {
