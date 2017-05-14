@@ -147,7 +147,7 @@ function SearchFilter(dimSearchService) {
 }
 
 
-function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService) {
+function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $translate) {
   var vm = this;
   var filterInputSelector = '#filter-input';
   var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
@@ -174,14 +174,24 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     vm.filter();
   });
 
-  $scope.$on('dim-focus-filter-input', function() {
-    vm.focusFilterInput();
-  });
-
-  $scope.$on('dim-escape-filter-input', function() {
-    vm.blurFilterInputIfEmpty();
-    vm.clearFilter();
-  });
+  hotkeys.bindTo($scope)
+    .add({
+      combo: ['f'],
+      description: $translate.instant('Hotkey.StartSearch'),
+      callback: function(event) {
+        vm.focusFilterInput();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    })
+    .add({
+      combo: ['esc'],
+      allowIn: ['INPUT'],
+      callback: function() {
+        vm.blurFilterInputIfEmpty();
+        vm.clearFilter();
+      }
+    });
 
   $scope.$on('dim-clear-filter-input', function() {
     vm.clearFilter();
