@@ -97,46 +97,56 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     ready: $q.defer(),
 
     get: function() {
-      return this.ready.promise.then(this.authorize.bind(this)).then(() => {
-        return new $q((resolve) => {
-          gapi.client.load('drive', 'v2', function() {
-            gapi.client.drive.files.get({
-              fileId: this.fileId,
-              alt: 'media'
-            }).execute((resp) => {
-              if (resp.code === 401 || resp.code === 404) {
-                this.revokeDrive();
-                return;
-              }
-              cached = resp;
-              resolve(cached);
+      return this.ready.promise
+        .then(this.authorize.bind(this))
+        .then(() => {
+          return new $q((resolve) => {
+            gapi.client.load('drive', 'v2', function() {
+              gapi.client.drive.files.get({
+                fileId: this.fileId,
+                alt: 'media'
+              }).execute((resp) => {
+                if (resp.code === 401 || resp.code === 404) {
+                  this.revokeDrive();
+                  return;
+                }
+                cached = resp;
+                resolve(cached);
+              });
             });
           });
-        });
       });
     },
 
     // TODO: set a timestamp for merging?
     set: function(value) {
-      return new $q((resolve, reject) => {
-        gapi.client.request({
-          path: '/upload/drive/v2/files/' + this.fileId,
-          method: 'PUT',
-          params: {
-            uploadType: 'media',
-            alt: 'json'
-          },
-          body: value
-        }).execute((resp) => {
-          if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
-            this.revokeDrive();
-            reject(new Error('error saving. revoking drive: ' + resp.error));
-            return;
-          } else {
-            resolve(value);
-          }
+      return this.ready.promise
+        .then(this.authorize.bind(this))
+        .then(() => {
+          return new $q((resolve, reject) => {
+            if (!this.fileId) {
+              throw new Error("no file!");
+            }
+            gapi.client.request({
+              path: '/upload/drive/v2/files/' + this.fileId,
+              method: 'PUT',
+              params: {
+                uploadType: 'media',
+                alt: 'json'
+              },
+              body: value
+            }).execute((resp) => {
+              if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
+                this.revokeDrive();
+                reject(new Error('error saving. revoking drive: ' + resp.error));
+                return;
+              } else {
+                console.log("saved to GDrive!");
+                resolve(value);
+              }
+            });
+          });
         });
-      });
     },
 
     init: function() {
@@ -174,8 +184,9 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
             this.getFileId().then(resolve);
           });
         } else { // otherwise we do the normal auth flow
-          console.log("normal auth");
+          console.log("normal auth", this.drive);
           gapi.auth.authorize(this.drive, (result) => {
+            console.log('auth result', this.drive, result);
             // if no errors, we're good to sync!
             this.drive.immediate = result && !result.error;
 
@@ -349,6 +360,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
         return promise;
       }, $q.when())
       .then((value) => {
+        console.log("caching value", value);
         cached = value || {};
         return value;
       });

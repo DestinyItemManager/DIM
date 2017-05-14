@@ -84,6 +84,7 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
   };
 
   // Load settings async
+  console.log("loading settings");
   SyncService.get().then(function(data) {
     data = data || {};
 
@@ -98,6 +99,7 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
       { type: 'infuse', label: 'Tags.Infuse', hotkey: '$', icon: 'bolt' }
     ];
 
+    console.log("loaded settings");
     _loaded = true;
 
     $rootScope.$evalAsync(function() {
