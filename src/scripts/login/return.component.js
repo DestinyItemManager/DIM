@@ -21,6 +21,11 @@ function ReturnController($http) {
     ctrl.state = queryString.state;
     ctrl.authorized = (ctrl.code.length > 0);
 
+    if (ctrl.state !== localStorage.authorizationState) {
+      window.location = "/#!/login";
+      return;
+    }
+
     var apiKey;
 
     if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {

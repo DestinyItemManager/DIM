@@ -4,8 +4,10 @@ import './login.scss';
 angular.module('dimApp')
   .controller('dimLoginCtrl', dimLoginCtrl);
 
-function dimLoginCtrl() {
+function dimLoginCtrl(uuid2) {
   const vm = this;
+
+  localStorage.authorizationState = uuid2.newguid();
 
   if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
     if (window.chrome && window.chrome.extension) {
@@ -16,5 +18,7 @@ function dimLoginCtrl() {
   } else {
     vm.authorizationURL = localStorage.authorizationURL;
   }
+
+  vm.authorizationURL = vm.authorizationURL + '?state=' + localStorage.authorizationState;
 }
 
