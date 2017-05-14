@@ -175,7 +175,9 @@ module.exports = (env) => {
         $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL),
         // Website and extension have different keys
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
-        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL)
+        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL),
+
+        $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com')
       }),
 
       // Enable if you want to debug the size of the chunks

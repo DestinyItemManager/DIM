@@ -8,6 +8,7 @@ angular.module('dimApp')
 function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags) {
   var cached; // cached is the data in memory,
 
+  // TODO: move these into subfiles
   const LocalStorage = {
     get: function() {
       return $q.resolve(JSON.parse(localStorage.getItem('DIM')));
@@ -87,6 +88,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
 
   const GoogleDriveStorage = {
     drive: { // drive api data
+      // client_id: $GOOGLE_DRIVE_CLIENT_ID,
       client_id: '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
       scope: 'https://www.googleapis.com/auth/drive.appfolder',
       immediate: false
@@ -150,6 +152,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
       // TODO: first time we do this we should probably merge data? do we need timestamps on everything?
       return new $q((resolve, reject) => {
         console.log('authorizing');
+        // TODO: don't have this path?
         // we're a chrome app so we do this
         if (window.chrome && chrome.identity) {
           console.log("auth with crhome");
@@ -172,7 +175,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
           });
         } else { // otherwise we do the normal auth flow
           console.log("normal auth");
-          gapi.auth.authorize(this.drive, function(result) {
+          gapi.auth.authorize(this.drive, (result) => {
             // if no errors, we're good to sync!
             this.drive.immediate = result && !result.error;
 
@@ -196,8 +199,11 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     },
 
     getFileName: function() {
-      return dimBungieService.getMembership(dimState.active)
-        .then((membershipId) => 'DIM-' + $DIM_FLAVOR + '-' + membershipId);
+      const platform = dimState.active;
+      if (platform) {
+        return 'DIM-' + $DIM_FLAVOR + '-' + platform.membershipId;
+      }
+      return null;
     },
 
     // load the file from google drive
@@ -213,46 +219,49 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
         return $q.resolve(this.fileId);
       }
 
-      return this.getFileName()
-        .then((fileName) => {
-          return new $q((resolve, reject) => {
-            // load the drive client.
-            gapi.client.load('drive', 'v2', () => {
-              // grab all of the list files
-              gapi.client.drive.files.list().execute((list) => {
-                if (list.code === 401) {
-                  reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
-                  return;
-                }
+      const fileName = this.getFileName();
 
-                // look for the saved file.
-                for (var i = list.items.length - 1; i > 0; i--) {
-                  if (list.items[i].title === fileName) {
-                    this.fileId = list.items[i].id;
-                    resolve(this.fileId);
-                    return;
-                  }
-                }
+      if (!fileName) {
+        return $q.reject(new Error("You're not logged in yet"));
+      }
 
-                // couldn't find the file, lets create a new one.
-                gapi.client.request({
-                  path: '/drive/v2/files',
-                  method: 'POST',
-                  body: {
-                    title: fileName,
-                    mimeType: 'application/json',
-                    parents: [{
-                      id: 'appfolder'
-                    }]
-                  }
-                }).execute((file) => {
-                  this.fileId = file.id;
-                  resolve(this.fileId);
-                });
-              });
+      return new $q((resolve, reject) => {
+        // load the drive client.
+        gapi.client.load('drive', 'v2', () => {
+          // grab all of the list files
+          gapi.client.drive.files.list().execute((list) => {
+            if (list.code === 401) {
+              reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
+              return;
+            }
+
+            // look for the saved file.
+            for (var i = list.items.length - 1; i > 0; i--) {
+              if (list.items[i].title === fileName) {
+                this.fileId = list.items[i].id;
+                resolve(this.fileId);
+                return;
+              }
+            }
+
+            // couldn't find the file, lets create a new one.
+            gapi.client.request({
+              path: '/drive/v2/files',
+              method: 'POST',
+              body: {
+                title: fileName,
+                mimeType: 'application/json',
+                parents: [{
+                  id: 'appfolder'
+                }]
+              }
+            }).execute((file) => {
+              this.fileId = file.id;
+              resolve(this.fileId);
             });
           });
-        })
+        });
+      })
         .then((fileId) => {
           console.log("fileid", fileId);
           localStorage.setItem('gdrive-fileid', fileId);
