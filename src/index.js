@@ -20,11 +20,6 @@ require('jquery-textcomplete');
 require('jquery-ui/ui/position');
 window.MessageFormat = require('messageformat');
 
-require('./scripts/oauth/oauth.module');
-require('./scripts/oauth/http-refresh-token.service');
-require('./scripts/oauth/oauth.service');
-require('./scripts/oauth/oauth-token.service');
-
 // Initialize the main DIM app
 require('./scripts/app.module');
 

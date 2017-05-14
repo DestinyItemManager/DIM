@@ -1,9 +1,8 @@
 import angular from 'angular';
 
-angular.module('dim-oauth')
-  .service('OAuthService', OAuthService);
+export function OAuthService($q, $injector, localStorageService, OAuthTokenService) {
+  'ngInject';
 
-function OAuthService($q, $injector, localStorageService, OAuthTokenService) {
   function isAuthenticated() {
     return Boolean(OAuthTokenService.getToken());
   }
