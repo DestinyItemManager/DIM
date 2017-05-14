@@ -49,25 +49,6 @@ export default class ContentController {
     vm.vendorService = dimVendorService;
 
     hotkeys.add({
-      combo: ['f'],
-      description: 'Start a search',
-      callback: function(event) {
-        $rootScope.$broadcast('dim-focus-filter-input');
-
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    });
-
-    hotkeys.add({
-      combo: ['esc'],
-      allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-      callback: function() {
-        $rootScope.$broadcast('dim-escape-filter-input');
-      }
-    });
-
-    hotkeys.add({
       combo: ['r'],
       description: "Refresh inventory",
       callback: function() {
