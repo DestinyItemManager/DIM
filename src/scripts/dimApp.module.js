@@ -20,6 +20,7 @@ import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
+import oauthModule from './oauth/oauth.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -46,10 +47,10 @@ export const DimAppModule = angular
     inventoryModule,
     recordBooksModule,
     vendorsModule,
+    oauthModule,
     'angularUUID2',
     'ajoslin.promise-tracker',
-    'cfp.hotkeys',
-    'dim-oauth'
+    'cfp.hotkeys'
   ])
   .config(config)
   .config(routes)
