@@ -8,10 +8,6 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
   var _platforms = [];
   var _active = null;
 
-  // Testing
-  var testFakeXbox = false;
-  var testFakePlaystation = false;
-
   var service = {
     getPlatforms: getPlatforms,
     getActive: getActive,
@@ -21,56 +17,20 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
   return service;
 
   function getPlatforms() {
-    var dataPromise = dimBungieService.getPlatforms()
+    return dimBungieService.getAccounts()
       .then(generatePlatforms);
-
-    return dataPromise;
   }
 
-  function generatePlatforms(response) {
-    var bungieUser = response.data.Response;
-
-    _platforms.splice(0);
-
-    if (bungieUser.gamerTag) {
-      _platforms.push({
-        id: bungieUser.gamerTag,
-        type: 1,
-        label: 'Xbox',
-        membershipId: bungieUser.user.membershipId
-      });
-
-      // A fake PSN account for Xbox-only testers
-      if (testFakePlaystation) {
-        _platforms.push({
-          id: bungieUser.gamerTag,
-          type: 2,
-          fake: true,
-          label: 'Fake PlayStation',
-          membershipId: bungieUser.user.membershipId
-        });
-      }
-    }
-
-    if (bungieUser.psnId) {
-      _platforms.push({
-        id: bungieUser.psnId,
-        type: 2,
-        label: 'PlayStation',
-        membershipId: bungieUser.user.membershipId
-      });
-
-      // A fake Xbox account for PSN-only testers
-      if (testFakeXbox) {
-        _platforms.push({
-          id: bungieUser.psnId,
-          type: 2,
-          fake: true,
-          label: 'Fake Xbox',
-          membershipId: bungieUser.user.membershipId
-        });
-      }
-    }
+  function generatePlatforms(bungieUser) {
+    _platforms = bungieUser.destinyAccounts.map((destinyAccount) => {
+      const account = {
+        id: destinyAccount.userInfo.displayName,
+        type: destinyAccount.userInfo.membershipType,
+        membershipId: destinyAccount.userInfo.membershipId
+      };
+      account.label = account.type === 1 ? 'Xbox' : 'PlayStation';
+      return account;
+    });
 
     $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
 
@@ -83,37 +43,23 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
   }
 
   function getActivePlatform() {
-    var promise = SyncService.get().then(function(data) {
-      var previousPlatform = null;
-      var active = null;
-      var previousPlatformType = null;
-
-      if (data) {
-        previousPlatformType = data.platformType;
+    return SyncService.get().then(function(data) {
+      if (!_platforms.length) {
+        return null;
       }
 
-      if (!_.isNull(previousPlatformType)) {
-        previousPlatform = _.find(_platforms, function(platform) {
-          return platform.type === previousPlatformType;
+      if (_active && _.find(_platforms, { id: _active.id })) {
+        return _active;
+      } else if (data && data.platformType) {
+        var active = _.find(_platforms, function(platform) {
+          return platform.type === data.platformType;
         });
-      }
-
-      if (_.size(_platforms) > 0) {
-        if (active === null) {
-          active = previousPlatform || _platforms[0];
-        } else if (_.find(_platforms, { id: _active.id })) {
-          active = _active;
-        } else {
-          active = _platforms[0];
+        if (active) {
+          return active;
         }
-      } else {
-        active = null;
       }
-
-      return active;
+      return _platforms[0];
     });
-
-    return promise;
   }
 
   function getActive() {

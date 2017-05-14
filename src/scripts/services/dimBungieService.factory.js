@@ -16,16 +16,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     apiKey = localStorage.apiKey;
   }
 
-  var platformPromise = null;
-  var membershipPromise = null;
-
-  $rootScope.$on('dim-active-platform-updated', function() {
-    platformPromise = null;
-    membershipPromise = null;
-  });
-
   var service = {
-    getPlatforms: getPlatforms,
+    getAccounts: getAccounts,
     getCharacters: getCharacters,
     getStores: getStores,
     transfer: transfer,
@@ -169,56 +161,16 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       .then((response) => response.data.Response);
   }
 
-  function getPlatforms() {
-    platformPromise = platformPromise ||
-      $http(bungieApiQuery('/Platform/User/GetBungieNetUser/'))
+  function getAccounts() {
+    return $http(bungieApiQuery('/Platform/User/GetCurrentBungieAccount/'))
       .then(handleErrors, handleErrors)
-      .catch(function(e) {
-        showErrorToaster(e);
-        return $q.reject(e);
-      });
-
-    return platformPromise;
-  }
-
-  function getMembership(platform) {
-    membershipPromise = membershipPromise ||
-      $http(bungieApiQuery(
-        `/Platform/Destiny/${platform.type}/Stats/GetMembershipIdByDisplayName/${platform.id}/`
-      ))
-      .then(handleErrors, handleErrors)
-      .then(processBnetMembershipRequest, rejectBnetMembershipRequest)
-      .catch(function(error) {
-        membershipPromise = null;
-        return $q.reject(error);
-      });
-
-    return membershipPromise;
-
-    function processBnetMembershipRequest(response) {
-      if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
-          platform: platform.label
-        })));
-      }
-
-      return $q.when(response.data.Response);
-    }
-
-    function rejectBnetMembershipRequest() {
-      return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
-        platform: platform.label
-      })));
-    }
+      .then((response) => response.data.Response);
   }
 
   function getCharacters(platform) {
-    const platformName = platform.type === 1 ? 'Xbox' : 'PSN';
-
-    var charactersPromise = getMembership(platform)
-        .then((membershipId) => $http(bungieApiQuery(
-          `/Platform/Destiny/Tiger${platformName}/Account/${membershipId}/`
-        )))
+    var charactersPromise = $http(bungieApiQuery(
+      `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/`
+    ))
         .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
 
@@ -243,17 +195,14 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   }
 
   function getStores(platform) {
-    return $q.all([
-      getMembership(platform),
-      getCharacters(platform)
-    ])
-      .then(function([membershipId, characters]) {
+    return getCharacters(platform)
+      .then((characters) => {
         return $q.all([
-          getDestinyInventories(platform, membershipId, characters),
-          getDestinyProgression(platform, membershipId, characters)
+          getDestinyInventories(platform, characters),
+          getDestinyProgression(platform, characters)
           // Don't let failure of progression fail other requests.
             .catch((e) => console.error("Failed to load character progression", e)),
-          getDestinyAdvisors(platform, membershipId, characters)
+          getDestinyAdvisors(platform, characters)
           // Don't let failure of advisors fail other requests.
             .catch((e) => console.error("Failed to load advisors", e))
         ]).then(function(data) {
@@ -274,11 +223,11 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       return payload;
     }
 
-    function getDestinyInventories(platform, membershipId, characters) {
+    function getDestinyInventories(platform, characters) {
       // Guardians
       const promises = characters.map(function(character) {
         return $http(bungieApiQuery(
-          `/Platform/Destiny/${platform.type}/Account/${membershipId}/Character/${character.id}/Inventory/?definitions=false`
+          `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
         ))
           .then(handleErrors, handleErrors)
           .then((response) => processInventoryResponse(character, response));
@@ -290,7 +239,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
         base: null
       };
 
-      const vaultPromise = $http(bungieApiQuery(`/Platform/Destiny/${platform.type}/MyAccount/Vault/?definitions=false`))
+      const vaultPromise = $http(bungieApiQuery(`/Platform/Destiny/${platform.type}/MyAccount/Vault/`))
         .then(handleErrors, handleErrors)
           .then((response) => processInventoryResponse(vault, response));
 
@@ -300,10 +249,10 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     }
   }
 
-  function getDestinyProgression(platform, membershipId, characters) {
+  function getDestinyProgression(platform, characters) {
     const promises = characters.map(function(character) {
       return $http(bungieApiQuery(
-        `/Platform/Destiny/${platform.type}/Account/${membershipId}/Character/${character.id}/Progression/?definitions=false`
+        `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
       ))
         .then(handleErrors, handleErrors)
         .then((response) => processProgressionResponse(character, response));
@@ -317,10 +266,10 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     return $q.all(promises);
   }
 
-  function getDestinyAdvisors(platform, membershipId, characters) {
+  function getDestinyAdvisors(platform, characters) {
     var promises = characters.map(function(character) {
       return $http(bungieApiQuery(
-        `/Platform/Destiny/${platform.type}/Account/${membershipId}/Character/${character.id}/Advisors/V2/?definitions=false`
+        `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
       ))
         .then(handleErrors, handleErrors)
         .then((response) => processAdvisorsResponse(character, response));
