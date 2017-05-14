@@ -1,13 +1,8 @@
-import angular from 'angular';
-
-angular.module('dim-oauth')
-  .service('http-refresh-token', HttpRefreshTokenService);
-
 /**
  * This is an interceptor for the $http service that watches for missing or expired
  * OAuth tokens and attempts to acquire them.
  */
-function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthTokenService) {
+export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthTokenService) {
   'ngInject';
 
   const service = this;

@@ -1,8 +1,3 @@
-import angular from 'angular';
-
-angular.module('dim-oauth')
-  .service('OAuthTokenService', OAuthTokenService);
-
 /**
  * This service manages storage and management of saved OAuth
  * authorization and refresh tokens.
@@ -10,7 +5,9 @@ angular.module('dim-oauth')
  * See https://www.bungie.net/en/Help/Article/45481 for details about
  * Bungie.net OAuth.
  */
-function OAuthTokenService(localStorageService) {
+export function OAuthTokenService(localStorageService) {
+  'ngInject';
+
   /**
    * An OAuth token, either authorization or refresh.
    * @typedef {Object} Token
