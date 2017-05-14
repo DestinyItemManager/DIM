@@ -4,8 +4,8 @@ import _ from 'underscore';
 angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
 
-function MaterialsController($scope, dimItemService, dimStoreService, $state, dimFeatureFlags) {
-  if (!dimFeatureFlags.materialsExchangeEnabled) {
+function MaterialsController($scope, dimItemService, dimStoreService, $state) {
+  if (!$featureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;
   }

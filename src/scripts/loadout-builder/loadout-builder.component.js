@@ -8,11 +8,11 @@ export const LoadoutBuilderComponent = {
   controllerAs: 'vm'
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
   var vm = this;
-  vm.featureFlags = dimFeatureFlags;
+  vm.qualityEnabled = $featureFlags.qualityEnabled;
 
   if (dimStoreService.getStores().length === 0) {
     $state.go('inventory');

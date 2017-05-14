@@ -1,8 +1,8 @@
 export default class ShellController {
-  constructor(dimSettingsService, dimFeatureFlags) {
+  constructor(dimSettingsService) {
     'ngInject';
 
-    this.featureFlags = dimFeatureFlags;
+    this.qualityEnabled = $featureFlags.qualityEnabled;
     this.settings = dimSettingsService;
   }
 }
