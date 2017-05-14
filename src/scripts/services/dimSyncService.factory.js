@@ -107,8 +107,12 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
             alt: 'media'
           });
         })
+        .then((resp) => {
+          console.log('got from gdrive', resp);
+          return resp.result;
+        })
         .catch((e) => {
-          //this.revokeDrive();
+          // this.revokeDrive();
           throw e;
         });
     },
@@ -120,7 +124,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
           if (!this.fileId) {
             throw new Error("no file!");
           }
-          return gapi.client.request({
+          return $q.when(gapi.client.request({
             path: '/upload/drive/v3/files/' + this.fileId,
             method: 'PATCH',
             params: {
@@ -128,24 +132,31 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
               alt: 'json'
             },
             body: value
-          }).then((resp) => {
-            if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
+          }))
+            .then((resp) => {
+              console.log("saved to GDrive!", value, resp);
+              return value;
+            })
+            .catch((resp) => {
               //this.revokeDrive();
               throw new Error('error saving. revoking drive: ' + resp.error);
-            } else {
-              console.log("saved to GDrive!");
-              return value;
-            }
-          });
+            });
         });
     },
 
     updateSigninStatus: function(isSignedIn) {
       if (isSignedIn) {
-        console.log('signed in');
-        this.getFileId();
+        console.log('signed in to gdrive');
+        const wasEnabled = this.enabled;
+        this.getFileId().then(() => {
+          if (!wasEnabled) {
+            // Force refresh
+            console.log("force refresh");
+            SyncService.get(true);
+          }
+        });
       } else {
-        console.log('not signed in');
+        console.log('not signed in to gdrive');
         this.enabled = false;
       }
     },
@@ -291,7 +302,6 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     }
 
     console.log('set', value);
-
 
     return adapters.reduce((promise, adapter) => {
       if (adapter.enabled) {
