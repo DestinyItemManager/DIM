@@ -346,12 +346,12 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
           toaster.pop('success',
                       $translate.instant('Loadouts.MakeRoom'),
                       $translate.instant('Loadouts.MakeRoomDone', { postmasterNum: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name, gender: vm.store.gender }));
-          return $q.resolve();
         })
         .catch((e) => {
           toaster.pop('error',
                       $translate.instant('Loadouts.MakeRoom'),
                       $translate.instant('Loadouts.MakeRoomError', { error: e.message }));
+          throw e;
         });
     });
   };
