@@ -5,18 +5,14 @@ import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
 // For zip
-require('imports-loader?this=>window!zip-js/WebContent/zip.js');
+import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 
-// require.ensure splits up the sql library so the user only loads it
+// Dynamic import splits up the sql library so the user only loads it
 // if they need it. So we can minify sql.js specifically (as explained
 // in the Webpack config, we need to explicitly name this chunk, which
-// can only be done using the require.ensure method
+// can only be done using the dynamic import method.
 function requireSqlLib() {
-  return new Promise((resolve) => {
-    require.ensure('sql.js', (require) => {
-      resolve(require('sql.js'));
-    }, 'sqlLib');
-  });
+  return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
 }
 
 angular.module('dimApp')
