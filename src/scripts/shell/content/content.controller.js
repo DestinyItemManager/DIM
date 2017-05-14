@@ -2,7 +2,6 @@ import settingsTemplate from 'app/views/settings.template.html';
 import aboutTemplate from 'app/views/about.template.html';
 import supportTemplate from 'app/views/support.template.html';
 import filtersTemplate from 'app/views/filters.template.html';
-import matsExchangeTemplate from 'app/views/mats-exchange.template.html';
 
 export default class ContentController {
   constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $translate) {
@@ -131,7 +130,6 @@ export default class ContentController {
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
     vm.showXur = showPopupFunction('xur', '<xur></xur>');
-    vm.showMatsExchange = showPopupFunction('mats-exchange', matsExchangeTemplate);
 
     function toggleState(name) {
       return function(e) {
