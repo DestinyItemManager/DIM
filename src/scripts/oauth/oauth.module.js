@@ -10,9 +10,8 @@ export default angular.module('dim-oauth', [LocalStorageModule])
   .service('http-refresh-token', HttpRefreshTokenService)
   .run(function($rootScope, $state) {
     $rootScope.$on('dim-no-token-found', function() {
-      if ($DIM_FLAVOR !== 'dev') {
-        $state.go('login');
-      } else if (!localStorage.apiKey || !localStorage.authorizationURL) {
+      if ($DIM_FLAVOR === 'dev' &&
+          (!localStorage.apiKey || !localStorage.authorizationURL)) {
         $state.go('developer');
       } else {
         $state.go('login');
