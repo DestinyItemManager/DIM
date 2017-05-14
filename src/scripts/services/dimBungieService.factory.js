@@ -1,21 +1,11 @@
 import angular from 'angular';
 import _ from 'underscore';
+import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
 function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
-  var apiKey;
-  if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-    if (window.chrome && window.chrome.extension) {
-      apiKey = $DIM_API_KEY;
-    } else {
-      apiKey = $DIM_WEB_API_KEY;
-    }
-  } else {
-    apiKey = localStorage.apiKey;
-  }
-
   var service = {
     getAccounts: getAccounts,
     getCharacters: getCharacters,
@@ -29,31 +19,6 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   };
 
   return service;
-
-  function bungieApiUpdate(path, data) {
-    return {
-      method: 'POST',
-      url: 'https://www.bungie.net' + path,
-      headers: {
-        'X-API-Key': apiKey
-      },
-      withCredentials: true,
-      dataType: 'json',
-      data: data
-    };
-  }
-
-  function bungieApiQuery(path) {
-    return {
-      method: 'GET',
-      url: 'https://www.bungie.net' + path,
-      headers: {
-        'X-API-Key': apiKey
-      },
-      withCredentials: true
-    };
-  }
-
   function handleErrors(response) {
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
