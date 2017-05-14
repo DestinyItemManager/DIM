@@ -23,7 +23,7 @@ function ReturnController($http) {
     ctrl.authorized = (ctrl.code.length > 0);
 
     if (ctrl.state !== localStorage.authorizationState) {
-      window.location = "/#!/login";
+      window.location = "/index.html#!/login";
       return;
     }
 
@@ -44,7 +44,7 @@ function ReturnController($http) {
 
         localStorage.authorization = JSON.stringify(authorization);
 
-        window.location = "/";
+        window.location = "/index.html";
       } else {
         console.error(response.data.Message, response);
       }
