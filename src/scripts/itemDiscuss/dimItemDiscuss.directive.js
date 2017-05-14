@@ -20,7 +20,7 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   vm.show = dimItemDiscussService.dialogOpen;
   vm.dtrRatingOptions = [1, 2, 3, 4, 5];
 
-  $rootScope.$on('dim-store-item-discuss', function(event, item) {
+  $scope.$on('dim-store-item-discuss', function(event, item) {
     vm.show = true;
 
     vm.item = item.item;

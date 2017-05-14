@@ -20,7 +20,7 @@ function LoadoutPopup() {
   };
 }
 
-function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $translate, dimBucketService, $q, dimStoreService) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $translate, dimBucketService, $q, dimStoreService) {
   var vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -50,8 +50,8 @@ function LoadoutPopupCtrl($rootScope, ngDialog, dimLoadoutService, dimItemServic
           .value();
       });
   }
-  $rootScope.$on('dim-save-loadout', initLoadouts);
-  $rootScope.$on('dim-delete-loadout', initLoadouts);
+  $scope.$on('dim-save-loadout', initLoadouts);
+  $scope.$on('dim-delete-loadout', initLoadouts);
   initLoadouts();
 
   vm.newLoadout = function newLoadout() {
