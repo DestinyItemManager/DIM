@@ -1,21 +1,108 @@
+import angular from 'angular';
+import _ from 'underscore';
+import { sum } from '../util';
+import template from './vendor-item.html';
+import dialogTemplate from './vendor-item-dialog.html';
 
 export const VendorItem = {
   bindings: {
     saleItem: '<',
-    totalCoins: '<',
-    itemClicked: '&'
+    totalCoins: '<'
   },
-  template: [
-    '<div class="vendor-item"',
-    '     ng-class="{ \'search-hidden\': !$ctrl.saleItem.item.visible }">',
-    '  <div ng-if="!$ctrl.saleItem.unlocked" class="locked-overlay"></div>',
-    '  <dim-simple-item item-data="$ctrl.saleItem.item" ng-click="$ctrl.itemClicked({ $event: $event })"></dim-simple-item>',
-    '  <div class="vendor-costs">',
-    '    <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash" class="cost" ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">',
-    '      {{::cost.value}}',
-    '      <span class="currency"><img ng-src="{{::cost.currency.icon | bungieIcon}}" title="{{::cost.currency.itemName}}"></span>',
-    '    </div>',
-    '  </div>',
-    '</div>'
-  ].join('')
+  template: template,
+  controller: VendorItemCtrl
 };
+
+var otherDialog = null;
+
+function VendorItemCtrl($scope, ngDialog, dimStoreService) {
+  'ngInject';
+
+  var vm = this;
+
+  var dialogResult = null;
+  var detailItem = null;
+  var detailItemElement = null;
+
+  $scope.$on('ngDialog.opened', function(event, $dialog) {
+    if (dialogResult && $dialog[0].id === dialogResult.id) {
+      $dialog.position({
+        my: 'left top',
+        at: 'left bottom+2',
+        of: detailItemElement,
+        collision: 'flip flip'
+      });
+    }
+  });
+
+  vm.clicked = function(e) {
+    e.stopPropagation();
+    if (dialogResult) {
+      dialogResult.close();
+    }
+
+    if (otherDialog) {
+      if (ngDialog.isOpen(otherDialog.id)) {
+        otherDialog.close();
+      }
+      otherDialog = null;
+    }
+
+    const item = vm.saleItem.item;
+    if (detailItem === item) {
+      detailItem = null;
+      dialogResult = null;
+      detailItemElement = null;
+    } else {
+      detailItem = item;
+      detailItemElement = angular.element(e.currentTarget);
+
+      var compareItems = _.flatten(dimStoreService.getStores().map(function(store) {
+        return _.filter(store.items, { hash: item.hash });
+      }));
+
+      var compareItemCount = sum(compareItems, 'amount');
+
+      dialogResult = ngDialog.open({
+        template: dialogTemplate,
+        overlay: false,
+        className: 'move-popup vendor-move-popup ' + (vm.extraMovePopupClass || ''),
+        showClose: false,
+        scope: angular.extend($scope.$new(true), {
+        }),
+        controllerAs: 'vm',
+        controller: function() {
+          var innerVm = this;
+          angular.extend(innerVm, {
+            settings: innerVm.settings,
+            item: item,
+            saleItem: vm.saleItem,
+            unlockStores: vm.saleItem.unlockedByCharacter.map((id) => _.find(dimStoreService.getStores(), { id })),
+            compareItems: compareItems,
+            compareItem: _.first(compareItems),
+            compareItemCount: compareItemCount,
+            setCompareItem: function(item) {
+              this.compareItem = item;
+            }
+          });
+        },
+        // Setting these focus options prevents the page from
+        // jumping as dialogs are shown/hidden
+        trapFocus: false,
+        preserveFocus: false
+      });
+
+      otherDialog = dialogResult;
+
+      dialogResult.closePromise.then(function() {
+        dialogResult = null;
+      });
+    }
+  };
+
+  vm.$onDestroy = function() {
+    if (dialogResult) {
+      dialogResult.close();
+    }
+  };
+}

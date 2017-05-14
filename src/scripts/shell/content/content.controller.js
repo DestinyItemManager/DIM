@@ -2,7 +2,6 @@ import settingsTemplate from 'app/views/settings.template.html';
 import aboutTemplate from 'app/views/about.template.html';
 import supportTemplate from 'app/views/support.template.html';
 import filtersTemplate from 'app/views/filters.template.html';
-import xurTemplate from 'app/scripts/vendors/xur.html';
 import matsExchangeTemplate from 'app/views/mats-exchange.template.html';
 
 export default class ContentController {
@@ -113,7 +112,6 @@ export default class ContentController {
           ngDialog.closeAll();
           result = ngDialog.open({
             template: template,
-            plain: true,
             className: name,
             appendClassName: 'modal-dialog'
           });
@@ -129,7 +127,7 @@ export default class ContentController {
     vm.showAbout = showPopupFunction('about', aboutTemplate);
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
-    vm.showXur = showPopupFunction('xur', xurTemplate);
+    vm.showXur = showPopupFunction('xur', '<xur></xur>');
     vm.showMatsExchange = showPopupFunction('mats-exchange', matsExchangeTemplate);
 
     function toggleState(name) {
