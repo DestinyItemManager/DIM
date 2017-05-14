@@ -20,6 +20,7 @@ import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
+import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -46,6 +47,7 @@ export const DimAppModule = angular
     inventoryModule,
     recordBooksModule,
     vendorsModule,
+    loadoutBuilderModule,
     'angularUUID2',
     'ajoslin.promise-tracker',
     'cfp.hotkeys',

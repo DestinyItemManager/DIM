@@ -194,7 +194,7 @@ export default class ContentController {
       };
     }
 
-    vm.toggleMinMax = toggleState('best');
+    vm.toggleLoadoutBuilder = toggleState('loadout-builder');
     vm.toggleVendors = toggleState('vendors');
     vm.toggleRecordBooks = toggleState('record-books');
 

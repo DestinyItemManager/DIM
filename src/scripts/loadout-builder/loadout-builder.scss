@@ -1,6 +1,6 @@
-@import 'variables';
+@import '../../scss/variables';
 
-.minmax {
+.loadout-builder {
   width: 900px;
   margin: 0 auto;
 
@@ -114,7 +114,7 @@
     cursor: pointer;
   }
 
-  .minmax-section {
+  .loadout-builder-section {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -126,7 +126,7 @@
     }
   }
 
-  .minmax-select-box {
+  .loadout-builder-select-box {
     display: inline-block;
     position: relative;
     height: 40px;
@@ -198,7 +198,7 @@
     }
   }
 
-  .minmax-select-button {
+  .loadout-builder-select-button {
     position: absolute;
     top: 0;
     right: 0;

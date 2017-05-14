@@ -26,15 +26,11 @@ export default angular
   .config(($stateProvider) => {
     'ngInject';
 
-    const states = [{
+    $stateProvider.state({
       name: 'vendors',
       parent: 'content',
       component: 'vendors',
       url: '/vendors'
-    }];
-
-    states.forEach((state) => {
-      $stateProvider.state(state);
     });
   })
   .name;

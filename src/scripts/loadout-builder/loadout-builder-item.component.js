@@ -1,30 +1,22 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
+import template from './loadout-builder-item.html';
+import dialogTemplate from './loadout-builder-item-dialog.html';
 
-var MinMaxItem = {
-  controller: MinMaxItemCtrl,
+export const LoadoutBuilderItem = {
+  controller: LoadoutBuilderItemCtrl,
   controllerAs: 'vm',
   bindings: {
     itemData: '<',
     shiftClickCallback: '='
   },
-  template: [
-    '<div ng-if="vm.itemData.isVendorItem" class="item-overlay-container">',
-    '  <div class="vendor-icon-background">',
-    '    <img ng-src="{{vm.itemData.vendorIcon | bungieIcon}}" class="vendor-icon" />',
-    '  </div>',
-    '  <dim-simple-item ui-draggable="true" drag="::vm.itemData.index" drag-channel="{{ ::vm.itemData.type }}" id="vendor-{{::vm.itemData.hash}}" item-data="vm.itemData" ng-click="vm.itemClicked(vm.itemData, $event)" ng-class="{ \'search-hidden\': !vm.itemData.visible }"></dim-simple-item>',
-    '</div>',
-    '<dim-store-item ng-if="!vm.itemData.isVendorItem" shift-click-callback="vm.shiftClickCallback" item-data="vm.itemData"></dim-store-item>'
-  ].join('')
+  template: template
 };
 
-angular.module('dimApp')
-  .component('dimMinMaxItem', MinMaxItem);
+function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
+  'ngInject';
 
-
-function MinMaxItemCtrl($scope, ngDialog, dimStoreService) {
   var vm = this;
   var dialogResult = null;
   var detailItem = null;
@@ -68,18 +60,7 @@ function MinMaxItemCtrl($scope, ngDialog, dimStoreService) {
         var compareItemCount = sum(compareItems, 'amount');
 
         dialogResult = ngDialog.open({
-          template: [
-            '<div class="move-popup" dim-click-anywhere-but-here="closeThisDialog()">',
-            '  <div dim-move-item-properties="vm.item" dim-compare-item="vm.compareItem"></div>',
-            '  <div class="item-details more-item-details" ng-if="vm.item.equipment && vm.compareItems.length">',
-            '    <div translate="Vendors.Compare">:</div>',
-            '    <div class="compare-items">',
-            '      <dim-simple-item ng-repeat="ownedItem in vm.compareItems track by ownedItem.index" item-data="ownedItem" ng-click="vm.setCompareItem(ownedItem)" ng-class="{ selected: (ownedItem.index === vm.compareItem.index) }"></dim-simple-item>',
-            '    </div>',
-            '  </div>',
-            '  <div class="item-description" ng-if="!vm.item.equipment">You have {{vm.compareItemCount}} of these.</div>',
-            '</div>'].join(''),
-          plain: true,
+          template: dialogTemplate,
           overlay: false,
           className: 'move-popup vendor-move-popup',
           showClose: false,
