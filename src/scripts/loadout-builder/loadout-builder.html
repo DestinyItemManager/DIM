@@ -1,8 +1,8 @@
-<div class="minmax" ng-controller="dimMinMaxCtrl as vm" ng-class="{ itemQuality: vm.featureFlags.qualityEnabled }">
+<div class="loadout-builder" ng-class="{ itemQuality: vm.featureFlags.qualityEnabled }">
   <back-link></back-link>
   <h1 translate="LB"></h1>
 
-  <dim-min-max-char-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></dim-min-max-char-select>
+  <loadout-builder-character-select active-characters="vm.activeCharacters" selected-character="vm.selectedCharacter" on-selected-change="vm.onSelectedChange(prev, new)"></loadout-builder-character-select>
 
   <dim-loadout></dim-loadout>
 
@@ -16,7 +16,7 @@
       <span translate="LB.Vendor"></span>
     </label>
 
-    <div class="minmax-section">
+    <div class="loadout-builder-section">
       <div ng-repeat="item in vm.ranked[vm.type] | orderBy:'-quality.min'">
         <div class="item-container" ng-if="item.primStat.value >= 280">
           <div class="item-stats">
@@ -25,7 +25,7 @@
               <span ng-if="normalStat.scaled > 0"><small ng-bind="normalStat.scaled"></small>/<small ng-bind="stat.split"></small></span>
             </div>
           </div>
-          <dim-min-max-item shift-click-callback="vm.excludeItem" item-data="item"></dim-min-max-item>
+          <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="item"></loadout-builder-item>
         </div>
       </div>
     </div>
@@ -37,23 +37,27 @@
       <span class='dim-button locked-button' ng-click="vm.clearLocked()" translate="LB.ClearLocked"></span>
       <span translate="LB.Locked"></span> - <small translate="LB.LockedHelp"></small>
     </p>
-    <dim-min-max-locks class="minmax-section" locked-items="vm.lockeditems" locked-perks="vm.lockedperks" active-perks="vm.activePerks"
+    <loadout-builder-locks
+      class="loadout-builder-section"
+      locked-items="vm.lockeditems"
+      locked-perks="vm.lockedperks"
+      active-perks="vm.activePerks"
       i18n-item-names="vm.i18nItemNames"
       locked-items-valid="vm.lockedItemsValid($data, type)"
       on-drop="vm.onDrop($data, type)"
       on-remove="vm.onRemove(type)"
       get-store="vm.getStore(owner)"
       on-perk-locked="vm.onPerkLocked(perk, type, $event)">
-    </dim-min-max-locks>
+    </loadout-builder-locks>
   </div>
   <div class="section" ng-show="vm.excludeditems.length">
     <p><span translate="LB.Exclude"></span> - <small translate="LB.ExcludeHelp"></small></p>
-    <div class="minmax-section">
+    <div class="loadout-builder-section">
       <div class="excluded-container">
         <div drag-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" drop-channel="Helmet, Gauntlets, Chest, Leg, ClassItem, Ghost, Artifact" ui-on-drop="vm.onExcludedDrop($data, $channel)" drop-validate="vm.excludedItemsValid($data, $channel)">
           <div class="excluded-items">
             <div class="excluded-item" ng-repeat="excludeditem in vm.excludeditems track by excludeditem.index">
-              <dim-min-max-item item-data="excludeditem"></dim-min-max-item>
+              <loadout-builder-item item-data="excludeditem"></loadout-builder-item>
               <div class="close" ng-click="vm.onExcludedRemove(excludeditem.index)" role="button" tabindex="0"></div>
             </div>
           </div>
@@ -139,9 +143,9 @@
   <div ng-show="vm.progress >= 1">
     <div class="section loadout" ng-repeat="setType in vm.activeHighestSets">
       <div><dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats><span class='dim-button' ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span><span class='dim-button equip-button' ng-click="vm.equipItems(setType.set)" translate="LB.Equip"></span></div>
-      <div class="minmax-section">
+      <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
-          <dim-min-max-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></dim-min-max-item>
+          <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></loadout-builder-item>
           <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
           <div class="label"><small translate="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[vm.activesets].configs">

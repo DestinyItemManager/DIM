@@ -1,4 +1,3 @@
-import best from 'app/views/best.template.html';
 import materialExchange from 'app/views/mats-exchange.template.html';
 import debugItem from 'app/views/debugItem.template.html';
 import login from 'app/scripts/login/login.template.html';
@@ -9,11 +8,6 @@ function routes($stateProvider, $urlRouterProvider) {
   const states = [{
     name: 'root',
     abstract: true
-  }, {
-    name: 'best',
-    parent: 'content',
-    template: best,
-    url: '/best'
   }, {
     name: 'materials-exchange',
     parent: 'content',
