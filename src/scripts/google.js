@@ -1,4 +1,5 @@
 
+/*
 (function loadGapi() {
   var head = document.getElementsByTagName('head')[0];
   var script = document.createElement('script');
@@ -6,6 +7,7 @@
   script.src = "https://apis.google.com/js/client.js?onload=initgapi";
   head.appendChild(script);
 })();
+*/
 
 window._gaq = window._gaq || [];
 var _gaq = window._gaq;

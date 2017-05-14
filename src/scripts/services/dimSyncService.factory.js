@@ -89,69 +89,84 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
   const GoogleDriveStorage = {
     drive: { // drive api data
       // client_id: $GOOGLE_DRIVE_CLIENT_ID,
-      client_id: '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
-      scope: 'https://www.googleapis.com/auth/drive.appfolder',
-      immediate: false
+      clientId: '22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com',
+      scope: 'https://www.googleapis.com/auth/drive.appdata',
+      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]
     },
     fileId: null,
     ready: $q.defer(),
 
     get: function() {
       return this.ready.promise
-        .then(this.authorize.bind(this))
         .then(() => {
-          return new $q((resolve) => {
-            gapi.client.load('drive', 'v2', function() {
-              gapi.client.drive.files.get({
-                fileId: this.fileId,
-                alt: 'media'
-              }).execute((resp) => {
-                if (resp.code === 401 || resp.code === 404) {
-                  this.revokeDrive();
-                  return;
-                }
-                cached = resp;
-                resolve(cached);
-              });
-            });
+          if (!this.fileId) {
+            throw new Error("no file!");
+          }
+          return gapi.client.drive.files.get({
+            fileId: this.fileId,
+            alt: 'media'
           });
-      });
+        })
+        .catch((e) => {
+          //this.revokeDrive();
+          throw e;
+        });
     },
 
     // TODO: set a timestamp for merging?
     set: function(value) {
       return this.ready.promise
-        .then(this.authorize.bind(this))
         .then(() => {
-          return new $q((resolve, reject) => {
-            if (!this.fileId) {
-              throw new Error("no file!");
+          if (!this.fileId) {
+            throw new Error("no file!");
+          }
+          return gapi.client.request({
+            path: '/upload/drive/v3/files/' + this.fileId,
+            method: 'PATCH',
+            params: {
+              uploadType: 'media',
+              alt: 'json'
+            },
+            body: value
+          }).then((resp) => {
+            if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
+              //this.revokeDrive();
+              throw new Error('error saving. revoking drive: ' + resp.error);
+            } else {
+              console.log("saved to GDrive!");
+              return value;
             }
-            gapi.client.request({
-              path: '/upload/drive/v2/files/' + this.fileId,
-              method: 'PUT',
-              params: {
-                uploadType: 'media',
-                alt: 'json'
-              },
-              body: value
-            }).execute((resp) => {
-              if (resp && resp.error && (resp.error.code === 401 || resp.error.code === 404)) {
-                this.revokeDrive();
-                reject(new Error('error saving. revoking drive: ' + resp.error));
-                return;
-              } else {
-                console.log("saved to GDrive!");
-                resolve(value);
-              }
-            });
           });
         });
     },
 
+    updateSigninStatus: function(isSignedIn) {
+      if (isSignedIn) {
+        console.log('signed in');
+        this.getFileId();
+      } else {
+        console.log('not signed in');
+        this.enabled = false;
+      }
+    },
+
     init: function() {
-      console.log("gdrive init");
-      this.ready.resolve();
+      if (!dimFeatureFlags.gdrive) {
+        console.log("Google drive disabled");
+        return;
+      }
+      console.log("gdrive init requested");
+      gapi.load('client:auth2', () => {
+        gapi.client.init(this.drive).then(() => {
+          console.log("gdrive init complete");
+          // Listen for sign-in state changes.
+          gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus.bind(this));
+
+          // Handle the initial sign-in state.
+          this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          this.ready.resolve();
+        });
+      });
     },
 
     // TODO: need to store gdrive file id in local storage
@@ -159,54 +174,14 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     // TODO: don't redo this?
     // check if the user is authorized with google drive
     authorize: function() {
-      // TODO: first time we do this we should probably merge data? do we need timestamps on everything?
-      return new $q((resolve, reject) => {
+      // TODO: probably shouldn't do this unless clicked!
+      if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+        console.log('already authorized');
+      } else {
         console.log('authorizing');
-        // TODO: don't have this path?
-        // we're a chrome app so we do this
-        if (window.chrome && chrome.identity) {
-          console.log("auth with crhome");
-          chrome.identity.getAuthToken({
-            interactive: true
-          }, function(token) {
-            console.log('token', token);
-            if (chrome.runtime.lastError) {
-              // TODO: use an error
-              console.log(chrome.runtime.lastError);
-              this.revokeDrive();
-              return;
-            }
-
-            console.log("Authed");
-            gapi.auth.setToken({
-              access_token: token
-            });
-            this.getFileId().then(resolve);
-          });
-        } else { // otherwise we do the normal auth flow
-          console.log("normal auth", this.drive);
-          gapi.auth.authorize(this.drive, (result) => {
-            console.log('auth result', this.drive, result);
-            // if no errors, we're good to sync!
-            this.drive.immediate = result && !result.error;
-
-            // resolve promise for errors
-            if (!result || result.error) {
-              reject(new Error(result));
-              return;
-            }
-
-            console.log("Authed");
-
-            this.getFileId().then(resolve);
-          });
-        }
-      })
-        .then((fileId) => {
-          this.enabled = true;
-          // TODO: cache authorized??
-          return fileId;
-        });
+        gapi.auth2.getAuthInstance().signIn();
+        // TODO: On first signin, sync?
+      }
     },
 
     getFileName: function() {
@@ -236,57 +211,55 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
         return $q.reject(new Error("You're not logged in yet"));
       }
 
-      return new $q((resolve, reject) => {
-        // load the drive client.
-        gapi.client.load('drive', 'v2', () => {
-          // grab all of the list files
-          gapi.client.drive.files.list().execute((list) => {
-            if (list.code === 401) {
-              reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
-              return;
-            }
+      // grab all of the list files
+      return $q.when(gapi.client.drive.files.list({ spaces: 'appDataFolder' }))
+        .then((list) => {
+          console.log('file list', list);
 
-            // look for the saved file.
-            for (var i = list.items.length - 1; i > 0; i--) {
-              if (list.items[i].title === fileName) {
-                this.fileId = list.items[i].id;
-                resolve(this.fileId);
-                return;
-              }
-            }
+          if (!list.result || !list.result.files) {
+            throw new Error("No files!");
+          }
 
-            // couldn't find the file, lets create a new one.
-            gapi.client.request({
-              path: '/drive/v2/files',
-              method: 'POST',
-              body: {
-                title: fileName,
-                mimeType: 'application/json',
-                parents: [{
-                  id: 'appfolder'
-                }]
-              }
-            }).execute((file) => {
-              this.fileId = file.id;
-              resolve(this.fileId);
-            });
+          const files = list.result.files;
+
+          // look for the saved file.
+          const file = _.find(files, { title: fileName });
+          if (file) {
+            this.fileId = file.id;
+            return this.fileId;
+          }
+
+          // couldn't find the file, lets create a new one.
+          return gapi.client.drive.files.create({
+            title: fileName,
+            media: {
+              mimeType: 'application/json'
+            },
+            parents: ['appDataFolder']
+          }).then((file) => {
+            console.log('created file', file);
+            this.fileId = file.result.id;
+            return this.fileId;
           });
-        });
-      })
+        })
         .then((fileId) => {
           console.log("fileid", fileId);
           localStorage.setItem('gdrive-fileid', fileId);
+          this.enabled = true;
           return fileId;
+        })
+        .catch((e) => {
+          console.error(e);
+          throw new Error($translate.instant('SyncService.GoogleDriveReAuth'));
         });
     },
 
     revokeDrive: function() {
       console.log("revoke drive");
-      if (this.fileId) {
-        this.fileId = undefined;
-        this.enabled = false;
-        localStorage.removeItem('gdrive-fileid');
-      }
+      this.fileId = undefined;
+      this.enabled = false;
+      localStorage.removeItem('gdrive-fileid');
+      gapi.auth2.getAuthInstance().signOut();
     },
 
     enabled: dimFeatureFlags.gdrive && Boolean(localStorage.getItem('gdrive-fileid')),
@@ -307,7 +280,6 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     }
 
     if (!PUT && angular.equals(_.pick(cached, _.keys(value)), value)) {
-      console.log("already set, skipping", value);
       return $q.when();
     }
 
@@ -398,6 +370,9 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
   return {
     authorizeGdrive: function() {
       return GoogleDriveStorage.authorize();
+    },
+    logoutGdrive: function() {
+      return GoogleDriveStorage.revokeDrive();
     },
     get: get,
     set: set,

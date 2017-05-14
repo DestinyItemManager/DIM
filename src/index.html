@@ -28,7 +28,7 @@
     <meta name='apple-mobile-web-app-status-bar-style' content='black'>
 
     {{#each htmlWebpackPlugin.files.css}}
-      <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
+    <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
     {{/each}}
 
   </head>
@@ -36,9 +36,10 @@
   <body ng-strict-di>
     <app></app>
 
+    <script src="https://apis.google.com/js/api.js"></script>
+
     {{#each htmlWebpackPlugin.files.js}}
     <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{this}}"></script>
     {{/each}}
   </body>
-
 </html>

@@ -2,6 +2,7 @@
   <h1 translate="Settings"></h1>
   <div class="ngdialog-inner-content">
     <button ng-if='vm.featureFlags.gdrive' class='btn' ng-click='vm.driveSync()'>Sync with Drive</button>
+    <button ng-if='vm.featureFlags.gdrive' class='btn' ng-click='vm.driveLogout()'>Log out of Drive</button>
   <form class="settings">
     <table>
       <tr>

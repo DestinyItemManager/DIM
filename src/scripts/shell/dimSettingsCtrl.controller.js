@@ -36,6 +36,10 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
     SyncService.authorizeGdrive();
   };
 
+  vm.driveLogout = function() {
+    SyncService.logoutGdrive();
+  };
+
   vm.downloadWeaponCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");
     _gaq.push(['_trackEvent', 'Download CSV', 'Weapons']);

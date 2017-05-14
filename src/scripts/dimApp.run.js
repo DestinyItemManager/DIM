@@ -5,9 +5,7 @@ import upgradeChrome from '../views/upgrade-chrome.html';
 function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFeatureFlags) {
   'ngInject';
 
-  $window.initgapi = () => {
-    SyncService.init();
-  };
+  SyncService.init();
 
   var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
 
