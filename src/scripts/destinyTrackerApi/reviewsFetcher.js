@@ -48,9 +48,7 @@ class ReviewsFetcher {
     const userReview = this._getUserReview(reviewData);
 
     item.totalReviews = reviewData.reviews.length;
-    item.writtenReviews = _(reviewData.reviews).filter((details) => {
-      return details.review;
-    });
+    item.writtenReviews = _.filter(reviewData.reviews, 'review');
 
     if (userReview) {
       item.userRating = userReview.rating;
@@ -66,15 +64,14 @@ class ReviewsFetcher {
                        cachedItem) {
     item.communityReviews = cachedItem.reviews;
 
-    this._attachReviews(item,
-                       cachedItem);
+    this._attachReviews(item, cachedItem);
 
     if (cachedItem.userRating) {
       item.userRating = cachedItem.userRating;
     }
 
     if (cachedItem.review) {
-      item.userReview = cachedItem.review;
+      item.userReview = cachedItem.userReview;
     }
 
     if (cachedItem.pros) {
@@ -97,6 +94,9 @@ class ReviewsFetcher {
    * @memberof ReviewsFetcher
    */
   getItemReviews(item) {
+    if (!item.reviewable) {
+      return;
+    }
     const ratingData = this._reviewDataCache.getRatingData(item);
 
     if (ratingData.reviewsDataFetched) {

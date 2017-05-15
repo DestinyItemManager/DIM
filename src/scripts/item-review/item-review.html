@@ -1,4 +1,4 @@
-<div ng-if="$ctrl.canReview" class="user-review__header">
+<div ng-if="$ctrl.canReview" class="user-review--header">
   <span translate="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)"></star-rating>
 
@@ -8,10 +8,10 @@
   </span>
 </div>
 
-<div class="community-review__details" ng-show="$ctrl.expandReview">
+<div class="community-review--details" ng-show="$ctrl.expandReview">
   <textarea translate-attr="{ placeholder: 'DtrReview.Help' }"
             ng-model="$ctrl.item.userReview"></textarea>
-  <div ng-if="$ctrl.procon" class="community-review__procon">
+  <div ng-if="$ctrl.procon" class="community-review--procon">
     <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }"
               ng-model="$ctrl.item.userReviewPros"></textarea>
     <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }"
@@ -19,14 +19,14 @@
   </div>
 </div>
 
-<div class="community-review__reviews" ng-hide="$ctrl.expandReview">
+<div class="community-review--reviews" ng-hide="$ctrl.expandReview">
   <div ng-if="$ctrl.submitted"
-       class="community-review__message"
+       class="community-review--message"
        translate="DtrReview.ThankYou"></div>
   <div ng-if="!$ctrl.item.writtenReviews.length && !$ctrl.submitted"
-       class="community-review__message"
+       class="community-review--message"
        translate="DtrReview.NoReviews"></div>
-  <div ng-if="$ctrl.procon" class="community-review__procon">
+  <div ng-if="$ctrl.procon" class="community-review--procon">
     <div>
       <div translate="DtrReview.Pros"></div>
       <div ng-repeat="pro in $ctrl.aggregate.pros" ng-bind='pro'></div>
@@ -37,9 +37,9 @@
     </div>
   </div>
   <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
-    <div class="community-review__who">
+    <div class="community-review--who">
       <star-rating rating="review.rating" read-only></star-rating>
-      <div ng-bind="review.reviewer.displayName" ng-class="{'community-review__who--special': review.isHighlighted}"></div>
+      <div ng-bind="review.reviewer.displayName" ng-class="{'community-review--who__special': review.isHighlighted}"></div>
       <div ng-bind="review.timestamp | date:'mediumDate'"></div>
     </div>
     <div ng-bind="review.review"></div>

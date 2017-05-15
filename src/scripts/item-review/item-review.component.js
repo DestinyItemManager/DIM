@@ -1,4 +1,3 @@
-import angular from 'angular';
 import template from './item-review.html';
 import './item-review.scss';
 
@@ -39,13 +38,10 @@ function ItemReviewController($rootScope, dimSettingsService) {
   };
 }
 
-var ItemReviewComponent = {
+export const ItemReviewComponent = {
   bindings: {
     item: '<'
   },
   controller: ItemReviewController,
   template: template
 };
-
-angular.module('dimApp')
-  .component('dimItemReview', ItemReviewComponent);

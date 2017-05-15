@@ -29,8 +29,7 @@
          height="44"
          width="44" />
   </div>
-  <div ng-class="::vm.badgeClassNames"
-       class="{{ vm.item.dtrRating || vm.item.quality ? 'item-stat-no-bg':'' }}"
+  <div ng-class="vm.badgeClassNames"
        ng-if="::vm.showBadge"
        ng-bind="::vm.badgeCount"></div>
 </div>
