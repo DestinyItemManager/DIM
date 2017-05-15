@@ -294,7 +294,10 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
       throw new Error("Must call get at least once before setting");
     }
 
+    console.log(value, _.pick(cached, _.keys(value)));
+
     if (!PUT && angular.equals(_.pick(cached, _.keys(value)), value)) {
+      console.log("Skip save, already got it");
       return $q.when();
     }
 
@@ -358,13 +361,24 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
   function remove(key) {
     // just delete that key, maybe someday save to an undo array?
 
+    let deleted = false;
     if (_.isArray(key)) {
       _.each(key, (k) => {
-        delete cached[k];
+        if (cached[k]) {
+          delete cached[k];
+          deleted = true;
+        }
       });
     } else {
+      deleted = Boolean(cached[key]);
       delete cached[key];
     }
+
+    if (!deleted) {
+      console.log("ALREADY DELETED", key);
+      return $q.when();
+    }
+
     // TODO: remove where possible, get/set elsewhere?
     return adapters.reduce((promise, adapter) => {
       if (adapter.enabled) {

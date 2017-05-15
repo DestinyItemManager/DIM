@@ -70,6 +70,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
     _active = platform;
     var promise;
 
+    console.log("SET PLATFORM", platform);
     if (platform === null) {
       promise = SyncService.remove('platformType');
     } else {
