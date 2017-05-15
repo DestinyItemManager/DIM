@@ -134,7 +134,6 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           data[l.id] = l;
         });
 
-        console.log("SAVE LOADOUTS");
         return SyncService.set(data).then(() => loadoutPrimitives);
       });
   }

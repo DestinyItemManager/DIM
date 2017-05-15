@@ -38,7 +38,6 @@ function InfoService(toaster, $http, $translate, SyncService) {
           onHideCallback: function() {
             if ($('#info-' + id).is(':checked')) {
               save['info.' + id] = 1;
-              console.log("SETTING INFO HIDE FLAG");
               SyncService.set(save);
             }
           }
