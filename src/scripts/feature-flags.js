@@ -19,7 +19,8 @@ const featureFlag = {
   importExport: $DIM_FLAVOR !== 'release',
 
   // Sync data over gdrive
-  gdrive: $DIM_FLAVOR !== 'release'
+  gdrive: $DIM_FLAVOR !== 'release',
+  debugSync: false
 };
 
 export default featureFlag;

@@ -11,12 +11,12 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
     },
     fileId: null,
     ready: $q.defer(),
-    // TODO: onEnabled
 
     get: function() {
       return this.ready.promise
         .then(() => {
           if (!this.fileId) {
+            // TODO: error handling
             throw new Error("no file!");
           }
           return gapi.client.drive.files.get({
@@ -24,11 +24,9 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
             alt: 'media'
           });
         })
-        .then((resp) => {
-          console.log('got from gdrive', resp);
-          return resp.result;
-        })
+        .then((resp) => resp.result)
         .catch((e) => {
+          // TODO: error handling
           // this.revokeDrive();
           throw e;
         });
@@ -36,7 +34,6 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
 
     // TODO: set a timestamp for merging?
     set: function(value) {
-      console.log("set in gdrive", value);
       return this.ready.promise
         .then(() => {
           if (!this.fileId) {
@@ -51,12 +48,10 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
             },
             body: value
           }))
-            .then((resp) => {
-              console.log("saved to GDrive!", value, resp);
-              return value;
-            })
+            .then(() => value)
             .catch((resp) => {
-              //this.revokeDrive();
+              // TODO: error handling
+              // this.revokeDrive();
               throw new Error('error saving. revoking drive: ' + resp.error);
             });
         });
@@ -64,23 +59,33 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
 
     updateSigninStatus: function(isSignedIn) {
       if (isSignedIn) {
-        console.log('signed in to gdrive');
+        if (dimFeatureFlags.debugSync) {
+          console.log('signed in to Google Drive');
+        }
         this.getFileId();
       } else {
-        console.log('not signed in to gdrive');
+        if (dimFeatureFlags.debugSync) {
+          console.log('not signed in to Google Drive');
+        }
         this.enabled = false;
       }
     },
 
     init: function() {
       if (!dimFeatureFlags.gdrive) {
-        console.log("Google drive disabled");
+        if (dimFeatureFlags.debugSync) {
+          console.log("Google Drive disabled");
+        }
         return;
       }
-      console.log("gdrive init requested");
+      if (dimFeatureFlags.debugSync) {
+        console.log("gdrive init requested");
+      }
       gapi.load('client:auth2', () => {
         gapi.client.init(this.drive).then(() => {
-          console.log("gdrive init complete");
+          if (dimFeatureFlags.debugSync) {
+            console.log("gdrive init complete");
+          }
           // Listen for sign-in state changes.
           gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus.bind(this));
 
@@ -91,19 +96,17 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
       });
     },
 
-    // TODO: need to store gdrive file id in local storage
-
-    // TODO: don't redo this?
-    // check if the user is authorized with google drive
     authorize: function() {
-      // TODO: probably shouldn't do this unless clicked!
       if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-        console.log('already authorized');
+        if (dimFeatureFlags.debugSync) {
+          console.log('Google Drive already authorized');
+        }
         return $q.when();
       } else {
-        console.log('authorizing');
+        if (dimFeatureFlags.debugSync) {
+          console.log('authorizing Google Drive');
+        }
         return gapi.auth2.getAuthInstance().signIn();
-        // TODO: On first signin, sync?
       }
     },
 
@@ -117,7 +120,6 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
 
     // load the file from google drive
     getFileId: function() {
-      // TODO: need a file per membership?
       // if we already have the fileId, just return.
       if (this.fileId) {
         return $q.resolve(this.fileId);
@@ -131,15 +133,16 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
       const fileName = this.getFileName();
 
       if (!fileName) {
+        // TODO: localize
+        // TODO: observe logged in / platforms and don't load before that
         return $q.reject(new Error("You're not logged in yet"));
       }
 
       // grab all of the list files
       return $q.when(gapi.client.drive.files.list({ spaces: 'appDataFolder' }))
         .then((list) => {
-          console.log('file list', list);
-
           if (!list.result || !list.result.files) {
+            // TODO: error handling
             throw new Error("No files!");
           }
 
@@ -160,25 +163,27 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
             },
             parents: ['appDataFolder']
           }).then((file) => {
-            console.log('created file', file);
+            if (dimFeatureFlags.debugSync) {
+              console.log('created file in Google Drive', file);
+            }
             this.fileId = file.result.id;
             return this.fileId;
           });
         })
         .then((fileId) => {
-          console.log("fileid", fileId);
           localStorage.setItem('gdrive-fileid', fileId);
           this.enabled = true;
           return fileId;
         })
         .catch((e) => {
+          // TODO: error handling
           console.error(e);
           throw new Error($translate.instant('SyncService.GoogleDriveReAuth'));
         });
     },
 
     revokeDrive: function() {
-      console.log("revoke drive");
+      console.log("revoking Google drive");
       this.fileId = undefined;
       this.enabled = false;
       localStorage.removeItem('gdrive-fileid');

@@ -7,7 +7,7 @@ export function LocalStorage($q) {
     },
 
     set: function(value) {
-      // TODO: remove in favor of localStorage?
+      // TODO: remove in favor of IndexedDB
       localStorage.setItem('DIM', JSON.stringify(value));
       return $q.resolve(value);
     },

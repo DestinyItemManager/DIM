@@ -9,7 +9,6 @@ export function IndexedDBStorage() {
     },
 
     set: function(value) {
-      console.log("saved to indexeddb");
       return idbKeyval.set('DIM-data', value);
     },
 

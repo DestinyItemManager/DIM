@@ -18,7 +18,8 @@ function SyncService(
   LocalStorage,
   IndexedDBStorage,
   ChromeSyncStorage,
-  GoogleDriveStorage
+  GoogleDriveStorage,
+  dimFeatureFlags
 ) {
   var cached; // cached is the data in memory,
 
@@ -35,10 +36,10 @@ function SyncService(
       throw new Error("Must call get at least once before setting");
     }
 
-    console.log(value, _.pick(cached, _.keys(value)));
-
     if (!PUT && angular.equals(_.pick(cached, _.keys(value)), value)) {
-      console.log("Skip save, already got it");
+      if (dimFeatureFlags.debugSync) {
+        console.log("Skip save, already got it");
+      }
       return $q.when();
     }
 
@@ -49,12 +50,12 @@ function SyncService(
       angular.extend(cached, value);
     }
 
-    console.log('set', value);
-
     return adapters.reduce((promise, adapter) => {
       if (adapter.enabled) {
         return promise.then(() => {
-          console.log('setting', adapter.name, cached);
+          if (dimFeatureFlags.debugSync) {
+            console.log('setting', adapter.name, cached);
+          }
           return adapter.set(cached);
         });
         // TODO: catch?
@@ -73,25 +74,26 @@ function SyncService(
     }
 
     if (_getPromise) {
-      console.log("ALREADY LOADING DANGIT");
       return _getPromise;
     }
     // TODO: get from all adapters, setting along the way?
-    // TODO: this prefers local data always, even if remote data has changed!
-    // TODO: old code looked bottom-up
+    // TODO: this prefers (and waits for) remote data always - is that right?
 
     let previous = null;
     _getPromise = adapters.reverse()
       .reduce((promise, adapter) => {
         if (adapter.enabled) {
           return promise.then((value) => {
-            console.log('got', value, 'from previous', previous);
             if (value && !_.isEmpty(value)) {
-              console.log('got from previous', previous, value);
+              if (dimFeatureFlags.debugSync) {
+                console.log('got', value, 'from previous adapter ', previous);
+              }
               return value;
             }
             previous = adapter.name;
-            console.log('getting', adapter.name);
+            if (dimFeatureFlags.debugSync) {
+              console.log('getting from ', adapter.name);
+            }
             return adapter.get();
           });
           // TODO: catch, set status
@@ -99,7 +101,6 @@ function SyncService(
         return promise;
       }, $q.when())
       .then((value) => {
-        console.log("caching value", value);
         cached = value || {};
         return value;
       })
@@ -127,11 +128,9 @@ function SyncService(
     }
 
     if (!deleted) {
-      console.log("ALREADY DELETED", key);
       return $q.when();
     }
 
-    // TODO: remove where possible, get/set elsewhere?
     return adapters.reduce((promise, adapter) => {
       if (adapter.enabled) {
         if (adapter.remove) {
@@ -152,7 +151,7 @@ function SyncService(
   return {
     authorizeGdrive: function() {
       return GoogleDriveStorage.authorize();
-      // TODO: then reload!
+      // TODO: after authorized, reload! (SyncService.get(true))!
     },
     logoutGdrive: function() {
       return GoogleDriveStorage.revokeDrive();

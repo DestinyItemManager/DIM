@@ -16,7 +16,7 @@ export function ChromeSyncStorage($q, $translate) {
     },
 
     set: function(value) {
-      // TODO: move key-splitting in here?
+      // TODO: move key-splitting logic into here?
       return new $q((resolve, reject) => {
         chrome.storage.sync.set(value, () => {
           if (chrome.runtime.lastError) {
@@ -29,7 +29,7 @@ export function ChromeSyncStorage($q, $translate) {
               reject(new Error(message));
             }
           } else {
-            resolve();
+            resolve(value);
           }
         });
       });
@@ -47,6 +47,7 @@ export function ChromeSyncStorage($q, $translate) {
       });
     },
 
+    // TODO: actually remove from the list when not-chrome
     enabled: (window.chrome && chrome.storage && chrome.storage.sync),
     name: 'ChromeSyncStorage'
   };
