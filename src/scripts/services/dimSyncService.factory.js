@@ -15,6 +15,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     },
 
     set: function(value) {
+      // TODO: remove in favor of localStorage?
       localStorage.setItem('DIM', JSON.stringify(value));
       return $q.resolve(value);
     },
@@ -30,6 +31,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     },
 
     set: function(value) {
+      console.log("saved to indexeddb");
       return idbKeyval.set('DIM-data', value);
     },
 
@@ -52,6 +54,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     },
 
     set: function(value) {
+      // TODO: move key-splitting in here?
       return new $q((resolve, reject) => {
         chrome.storage.sync.set(value, () => {
           if (chrome.runtime.lastError) {
@@ -119,6 +122,7 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
 
     // TODO: set a timestamp for merging?
     set: function(value) {
+      console.log("set in gdrive", value);
       return this.ready.promise
         .then(() => {
           if (!this.fileId) {
@@ -326,14 +330,16 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     // TODO: this prefers local data always, even if remote data has changed!
     // TODO: old code looked bottom-up
 
+    let previous = null;
     return adapters.reverse()
       .reduce((promise, adapter) => {
         if (adapter.enabled) {
           return promise.then((value) => {
-            if (value) {
-              console.log('got from previous', value);
+            if (value && !_.isEmpty(value)) {
+              console.log('got from previous', previous, value);
               return value;
             }
+            previous = adapter.name;
             console.log('getting', adapter.name);
             return adapter.get();
           });
