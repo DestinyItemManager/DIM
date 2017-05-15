@@ -129,7 +129,8 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         inject: false,
         filename: 'return.html',
-        template: '!handlebars-loader!src/return.html'
+        template: '!handlebars-loader!src/return.html',
+        chunks: ['manifest', 'vendor', 'authReturn']
       }),
 
       new CopyWebpackPlugin([

@@ -8,7 +8,7 @@ import { VendorItems } from './vendor-items.component';
 import { VendorItem } from './vendor-item.component';
 import { VendorCurrencies } from './vendor-currencies.component';
 import { vendorTab, vendorTabItems } from './vendors.filters';
-import { XurController } from './xur.controller';
+import { Xur } from './xur.component';
 
 export default angular
   // TODO: once bungie service is its own module, add a dependency here
@@ -19,22 +19,18 @@ export default angular
   .component('vendorItems', VendorItems)
   .component('vendorItem', VendorItem)
   .component('vendorCurrencies', VendorCurrencies)
-  .controller('dimXurCtrl', XurController)
+  .component('xur', Xur)
   .filter('vendorTab', () => vendorTab)
   .filter('vendorTabItems', () => vendorTabItems)
   .filter('values', () => _.values)
   .config(($stateProvider) => {
     'ngInject';
 
-    const states = [{
+    $stateProvider.state({
       name: 'vendors',
       parent: 'content',
       component: 'vendors',
       url: '/vendors'
-    }];
-
-    states.forEach((state) => {
-      $stateProvider.state(state);
     });
   })
   .name;

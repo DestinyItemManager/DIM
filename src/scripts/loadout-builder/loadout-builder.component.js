@@ -1,11 +1,16 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './loadout-builder.html';
 
-angular.module('dimApp')
-  .controller('dimMinMaxCtrl', dimMinMaxCtrl);
+export const LoadoutBuilderComponent = {
+  controller: LoadoutBuilderController,
+  template: template,
+  controllerAs: 'vm'
+};
 
+function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
+  'ngInject';
 
-function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
   var vm = this;
   vm.featureFlags = dimFeatureFlags;
 
@@ -208,7 +213,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
 
   function getId(index) {
     var split = index.split('-');
-    return split[1] === '1' ? index : split[1];
+    return split[0] === 'vendor' ? index : split[0];
   }
 
   function getItemById(id, type) {
@@ -547,7 +552,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
 
                         processedCount++;
                         if (processedCount % 50000 === 0) { // do this so the page doesn't lock up
-                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/best') {
+                          if (vm.active !== activeGuardian || vm.lockedchanged || vm.excludedchanged || vm.perkschanged || $location.path() !== '/loadout-builder') {
                             // If active guardian or page is changed then stop processing combinations
                             vm.lockedchanged = false;
                             vm.excludedchanged = false;
@@ -752,7 +757,7 @@ function dimMinMaxCtrl($scope, $rootScope, $state, $q, $timeout, $location, $tra
     vm.getItems();
   });
 
-  $rootScope.$on('dim-active-platform-updated', function() {
+  $scope.$on('dim-active-platform-updated', function() {
     vm.activePerks = {};
     vm.excludeditems = [];
     vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };

@@ -4,7 +4,7 @@
       <dim-platform-choice platforms="$ctrl.platforms" current="$ctrl.currentPlatform" on-platform-change="$ctrl.platformChange(platform)" class="header-right"></dim-platform-choice>
       <div class="header-right" id="actions">
         <span class="link" ng-click="$ctrl.refresh($event)" translate-attr="{ title: 'Header.Refresh'}"><i ng-class="{'fa-spin': $ctrl.loadingTracker.active()}" class="fa fa-refresh"></i></span>
-        <span class="link" ng-click="$ctrl.toggleMinMax($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
+        <span class="link" ng-click="$ctrl.toggleLoadoutBuilder($event)" translate-attr="{ title: 'LB'}"><i class="fa fa-bar-chart"></i></span>
         <span class="link" ng-if="::$ctrl.featureFlags.materialsExchangeEnabled" ui-sref="materials-exchange" translate-attr="{ title: 'Header.MaterialsExchange' }"><i class="fa fa-list-alt"></i></span>
         <span class="link" ng-click="$ctrl.showSetting($event)" translate-attr="{ title: 'Settings'}"><i class="fa fa-cog"></i></span>
         <span class="link search-link">

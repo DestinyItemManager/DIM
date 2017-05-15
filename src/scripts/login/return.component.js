@@ -1,6 +1,7 @@
 import angular from 'angular';
 import simpleQueryString from 'simple-query-string';
 import template from './return.component.template.html';
+import { bungieApiUpdate } from '../services/bungie-api-utils';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,
@@ -21,28 +22,17 @@ function ReturnController($http) {
     ctrl.state = queryString.state;
     ctrl.authorized = (ctrl.code.length > 0);
 
-    var apiKey;
-
-    if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-      if (window.chrome && window.chrome.extension) {
-        apiKey = $DIM_API_KEY;
-      } else {
-        apiKey = $DIM_WEB_API_KEY;
-      }
-    } else {
-      apiKey = localStorage.apiKey;
+    if (ctrl.state !== localStorage.authorizationState) {
+      window.location = "/index.html#!/login";
+      return;
     }
 
-    $http({
-      method: 'POST',
-      url: 'https://www.bungie.net/Platform/App/GetAccessTokensFromCode/',
-      headers: {
-        'X-API-Key': apiKey
-      },
-      data: {
+    $http(bungieApiUpdate(
+      '/Platform/App/GetAccessTokensFromCode/',
+      {
         code: ctrl.code
       }
-    })
+    ))
     .then((response) => {
       if (response.data.ErrorCode === 1) {
         const inception = Date.now();
@@ -54,7 +44,7 @@ function ReturnController($http) {
 
         localStorage.authorization = JSON.stringify(authorization);
 
-        window.location = "/";
+        window.location = "/index.html";
       } else {
         console.error(response.data.Message, response);
       }

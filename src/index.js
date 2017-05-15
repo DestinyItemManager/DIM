@@ -20,11 +20,6 @@ require('jquery-textcomplete');
 require('jquery-ui/ui/position');
 window.MessageFormat = require('messageformat');
 
-require('./scripts/oauth/oauth.module');
-require('./scripts/oauth/http-refresh-token.service');
-require('./scripts/oauth/oauth.service');
-require('./scripts/oauth/oauth-token.service');
-
 // Initialize the main DIM app
 require('./scripts/app.module');
 
@@ -76,10 +71,6 @@ require('./scripts/move-popup/dimTalentGrid.directive');
 require('./scripts/move-popup/dimMoveItemProperties.directive');
 require('./scripts/move-popup/dimItemTag.directive');
 require('./scripts/infuse/dimInfuse.controller');
-require('./scripts/minmax/dimMinMax.controller');
-require('./scripts/minmax/dimMinMaxItem.directive');
-require('./scripts/minmax/dimMinMaxLocks.directive');
-require('./scripts/minmax/dimMinMaxCharSelect.directive');
 require('./scripts/debug/dimDebugItem.controller');
 if ($DIM_FLAVOR === 'dev') {
   require('./scripts/developer/dimDeveloper.controller');

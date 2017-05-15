@@ -2,11 +2,10 @@ import settingsTemplate from 'app/views/settings.template.html';
 import aboutTemplate from 'app/views/about.template.html';
 import supportTemplate from 'app/views/support.template.html';
 import filtersTemplate from 'app/views/filters.template.html';
-import xurTemplate from 'app/scripts/vendors/xur.html';
 import matsExchangeTemplate from 'app/views/mats-exchange.template.html';
 
 export default class ContentController {
-  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService) {
+  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService, $translate) {
     'ngInject';
 
     var vm = this;
@@ -48,28 +47,11 @@ export default class ContentController {
     vm.featureFlags = dimFeatureFlags;
     vm.vendorService = dimVendorService;
 
-    hotkeys.add({
-      combo: ['f'],
-      description: 'Start a search',
-      callback: function(event) {
-        $rootScope.$broadcast('dim-focus-filter-input');
-
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    });
-
-    hotkeys.add({
-      combo: ['esc'],
-      allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-      callback: function() {
-        $rootScope.$broadcast('dim-escape-filter-input');
-      }
-    });
+    hotkeys = hotkeys.bindTo($scope);
 
     hotkeys.add({
       combo: ['r'],
-      description: "Refresh inventory",
+      description: $translate.instant('Hotkey.RefreshInventory'),
       callback: function() {
         vm.refresh();
       }
@@ -77,62 +59,23 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['i'],
-      description: "Toggle showing full item details",
+      description: $translate.instant('Hotkey.ToggleDetails'),
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
     });
 
     if (vm.featureFlags.tagsEnabled) {
-      /* Add each hotkey manually until hotkeys can be translated.
-          _.each(dimSettingsService.itemTags, (tag) => {
-            if (tag.hotkey) {
-              hotkeys.add({
-                combo: [tag.hotkey],
-                description: "Mark item as '" + tag.label + "'",
-                callback: function() {
-                  $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
-                }
-              });
+      dimSettingsService.itemTags.forEach((tag) => {
+        if (tag.hotkey) {
+          hotkeys.add({
+            combo: [tag.hotkey],
+            description: $translate.instant('Hotkey.MarkItemAs', {
+              tag: $translate.instant(tag.label)
+            }),
+            callback: function() {
+              $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
             }
-          });
-      */
-      hotkeys.add({
-        combo: ['!'],
-        description: "Mark item as 'Favorite'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'favorite'
-          });
-        }
-      });
-
-      hotkeys.add({
-        combo: ['@'],
-        description: "Mark item as 'Keep'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'keep'
-          });
-        }
-      });
-
-      hotkeys.add({
-        combo: ['#'],
-        description: "Mark item as 'Junk'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'junk'
-          });
-        }
-      });
-
-      hotkeys.add({
-        combo: ['$'],
-        description: "Mark item as 'Infuse'",
-        callback: function() {
-          $rootScope.$broadcast('dim-item-tag', {
-            tag: 'infuse'
           });
         }
       });
@@ -140,7 +83,7 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['x'],
-      description: "Clear new items",
+      description: $translate.instant('Hotkey.ClearNewItems'),
       callback: function() {
         dimStoreService.clearNewItems();
       }
@@ -169,7 +112,6 @@ export default class ContentController {
           ngDialog.closeAll();
           result = ngDialog.open({
             template: template,
-            plain: true,
             className: name,
             appendClassName: 'modal-dialog'
           });
@@ -185,7 +127,7 @@ export default class ContentController {
     vm.showAbout = showPopupFunction('about', aboutTemplate);
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
-    vm.showXur = showPopupFunction('xur', xurTemplate);
+    vm.showXur = showPopupFunction('xur', '<xur></xur>');
     vm.showMatsExchange = showPopupFunction('mats-exchange', matsExchangeTemplate);
 
     function toggleState(name) {
@@ -194,7 +136,7 @@ export default class ContentController {
       };
     }
 
-    vm.toggleMinMax = toggleState('best');
+    vm.toggleLoadoutBuilder = toggleState('loadout-builder');
     vm.toggleVendors = toggleState('vendors');
     vm.toggleRecordBooks = toggleState('record-books');
 

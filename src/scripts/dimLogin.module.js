@@ -1,2 +1,4 @@
 import angular from 'angular';
-angular.module('dimLogin', []);
+import 'angular-uuid2/dist/angular-uuid2.js';
+
+angular.module('dimLogin', ['angularUUID2']);
