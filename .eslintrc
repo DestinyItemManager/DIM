@@ -25,6 +25,7 @@
     "$DIM_AUTH_URL": true,
     "$DIM_WEB_API_KEY": true,
     "$DIM_WEB_AUTH_URL": true,
+    "$GOOGLE_DRIVE_CLIENT_ID": true
   },
   "rules": {
     "array-callback-return": "error",
