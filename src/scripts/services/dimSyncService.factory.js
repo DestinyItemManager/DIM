@@ -322,6 +322,8 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
     }, $q.when());
   }
 
+  let _getPromise = null;
+
   // get DIM saved data
   function get(force) {
     // if we already have it and we're not forcing a sync
@@ -329,15 +331,20 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
       return $q.resolve(cached);
     }
 
+    if (_getPromise) {
+      console.log("ALREADY LOADING DANGIT");
+      return _getPromise;
+    }
     // TODO: get from all adapters, setting along the way?
     // TODO: this prefers local data always, even if remote data has changed!
     // TODO: old code looked bottom-up
 
     let previous = null;
-    return adapters.reverse()
+    _getPromise = adapters.reverse()
       .reduce((promise, adapter) => {
         if (adapter.enabled) {
           return promise.then((value) => {
+            console.log('got', value, 'from previous', previous);
             if (value && !_.isEmpty(value)) {
               console.log('got from previous', previous, value);
               return value;
@@ -354,7 +361,11 @@ function SyncService($q, $translate, dimBungieService, dimState, dimFeatureFlags
         console.log("caching value", value);
         cached = value || {};
         return value;
+      })
+      .finally(() => {
+        _getPromise = null;
       });
+    return _getPromise;
   }
 
   // remove something from DIM by key
