@@ -110,7 +110,7 @@
    },
    "Infusion": {
       "Infusion": "Buscador de Item para Infusão",
-      "BringGear": "Elevará o item para",
+      "BringGear": "Elevará o item para:",
       "Calc": "Calculadora de infusões",
       "InfuseItems": "Selecione um item para infundir:",
       "InfusionMaterials": "Materiais de infusão",
@@ -118,8 +118,7 @@
       "NoItems": "Nenhum item para infusão encontrado.",
       "NoTransfer": "Transferência de materia para infusão\n {target} não pôde ser movido.",
       "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
-      "TransferItems": "Transferir itens",
-      "Using3": "usando 3"
+      "TransferItems": "Transferir itens"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Erro salvando informação de item.",
@@ -252,7 +251,6 @@
       "Error": "Erro ao carregar informações de Destiny:\n{error}\nReinicie para tentar novamente.",
       "Outdated": "Informações desatualizadas",
       "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
-      "BungieDown": "A Bungie.net parece estar passando por problemas.",
       "Load": "Carregando informações salvas",
       "LoadCharInv": "Carregando personagens e inventário",
       "Save": "Salvando últimas informações ",
@@ -275,7 +273,9 @@
       "Store": "Mover",
       "Subtitle": "{classType} {typeName} {light, select, null{} other{com {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
-      "Vault": "Cofre"
+      "Vault": "Cofre",
+      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
    },
    "MoveAmount": {
      "Min": "Quantidade mínima (1)",
@@ -310,8 +310,6 @@
       "ShowOverlayHelp": "Itens novos serão exibidos com uma sobreposição de destaque.",
       "ShowAnimations": "Exibir animação da sobreposição em itens novos.",
       "ShowAnimationsHelp": "Irá exibir uma animação em itens novos. Desativar esse recurso pode economizar ciclos de CPU.",
-      "ShowElemental": "Exibir ícone de dano elemental em armas",
-      "ShowElementalHelp": "Exibe o ícone do dano elemental da arma.",
       "SetSort": "Ordenar itens por:",
       "SetSortHelp": "Ordena os itens por nível de luz ou raridade.",
       "SortPrimary": "Estatística primária",
@@ -323,7 +321,6 @@
       "VaultColumnsHelp": "Selecione o número máximo de colunas a ser exibido no cofre.",
       "SizeItem": "Tamanho do item",
       "SizeItemHelp": "Quão grande será exibida a imagem do item?",
-      "ResetToDefault": "Restaurar para padrão",
       "CharacterOrder": "Ordem dos personagens",
       "CharacterOrderHelp": "Personagens podem ser ordenados por data de login ou pela data de criação.",
       "CharacterOrderRecent": "Personagem com login mais recente",
