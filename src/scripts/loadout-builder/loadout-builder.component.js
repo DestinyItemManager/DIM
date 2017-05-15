@@ -213,7 +213,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
 
   function getId(index) {
     var split = index.split('-');
-    return split[1] === '1' ? index : split[1];
+    return split[0] === 'vendor' ? index : split[0];
   }
 
   function getItemById(id, type) {
