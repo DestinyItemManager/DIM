@@ -5,17 +5,22 @@ import '../materials-exchange/materials-exchange.scss';
 angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
 
-function MaterialsController($scope, dimItemService, dimStoreService, $state) {
+function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreService, $state) {
   if (!$featureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;
   }
 
   var vm = this;
+
+  vm.items = {};
+  dimDefinitions.getDefinitions().then((defs) => {
+    vm.items[3159615086] = defs.InventoryItem.get(3159615086);
+  });
+
   vm.repPool = {};
   vm.newRank = 0;
   vm.newExperience = 0;
-  vm.GlimmerIcon = require('../../images/glimmer.png');
 
   vm.factions = [
     // 174528503, eris breaks things atm
@@ -83,7 +88,6 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state) {
     vm.newExperience = (totalRank % 2500);
   }
 
-
   var materialsHashes = [
     211861343,  // heavy ammo synth
     928169143,  // special ammo synth
@@ -118,8 +122,6 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state) {
   var gunSmithMatsHashes = [
     1898539128  // weapon parts
   ];
-
-
 
   vm.glimmer = dimStoreService.getVault().glimmer;
   vm.xurMats = mapXurItems(xurMatsHashes);
@@ -171,7 +173,7 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state) {
   function mapErisItems(hashes) {
     var mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
-      mappedItems[1].amount = Math.floor(mappedItems[0].amount / 5);
+      mappedItems[1].amount = mappedItems[0].amount;
     }
     return mappedItems;
   }
@@ -180,14 +182,14 @@ function MaterialsController($scope, dimItemService, dimStoreService, $state) {
     var rep = 0;
     if (item && item.hash) {
       switch (item.hash) {
-      case 211861343:
+      case 211861343: // heavy ammo synth
         rep = Math.floor(item.amount * 25);
-        break;       // heavy ammo synth
-      case 937555249:
-        rep = Math.floor(item.amount / 5) * 100;  // motes of light
         break;
-      case 928169143:
-        rep = Math.floor(item.amount / 4) * 25;   // special ammo synth
+      case 937555249: // motes of light
+        rep = Math.floor(item.amount / 5) * 100;
+        break;
+      case 928169143: // special ammo synth
+        rep = Math.floor(item.amount / 4) * 25;
         break;
       case 1542293174: // armor materials
       case 1898539128: // weapon parts
