@@ -1,7 +1,7 @@
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController($rootScope, dimSettingsService) {
+function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService) {
   'ngInject';
 
   const vm = this;
@@ -35,6 +35,30 @@ function ItemReviewController($rootScope, dimSettingsService) {
       vm.item.userRating = rating;
     }
     vm.expandReview = true;
+  };
+
+  vm.reviewBlur = function() {
+    var item = vm.item;
+    var userReview = vm.toUserReview(item);
+
+    dimDestinyTrackerService.updateCachedUserRankings(item,
+                                                      userReview);
+  };
+
+  vm.toUserReview = function(item) {
+    var newRating = item.userRating;
+    var review = item.userReview;
+    var pros = item.userReviewPros;
+    var cons = item.userReviewCons;
+
+    var userReview = {
+      rating: newRating,
+      review: review,
+      pros: pros,
+      cons: cons
+    };
+
+    return userReview;
   };
 }
 

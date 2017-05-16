@@ -1,6 +1,6 @@
 <div ng-if="$ctrl.canReview" class="user-review--header">
   <span translate="DtrReview.YourReview"></span>
-  <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)"></star-rating>
+  <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="vm.reviewBlur()"></star-rating>
 
   <span ng-show="$ctrl.expandReview">
     <span class="dim-button" ng-click="$ctrl.submitReview()" translate="DtrReview.Submit"></span>
@@ -10,12 +10,15 @@
 
 <div class="community-review--details" ng-show="$ctrl.expandReview">
   <textarea translate-attr="{ placeholder: 'DtrReview.Help' }"
-            ng-model="$ctrl.item.userReview"></textarea>
+            ng-model="$ctrl.item.userReview"
+            ng-blur="vm.reviewBlur()"></textarea>
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }"
-              ng-model="$ctrl.item.userReviewPros"></textarea>
+              ng-model="$ctrl.item.userReviewPros"
+              ng-blur="vm.reviewBlur()"></textarea>
     <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }"
-              ng-model="$ctrl.item.userReviewCons"></textarea>
+              ng-model="$ctrl.item.userReviewCons"
+              ng-blur="vm.reviewBlur()"></textarea>
   </div>
 </div>
 
