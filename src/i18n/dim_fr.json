@@ -110,7 +110,7 @@
    },
    "Infusion": {
       "Infusion": "Chercheur de Fuel à Infusion",
-      "BringGear": "Cela amènera l'équipement à",
+      "BringGear": "Cela amènera l'équipement à:",
       "Calc": "Calculateur d'infusion",
       "InfuseItems": "Sélectionner un objet avec lequel infuser:",
       "InfusionMaterials": "Matériels d'Infusion",
@@ -118,8 +118,7 @@
       "NoItems": "Pas d'objets infusables disponibles",
       "NoTransfer": "Transférer matériel d'infusion\n{target} ne peut pas être déplacé.",
       "ShowItems": "Afficher les objets infusables sur tous les persos et dans tous les coffres ",
-      "TransferItems": "Transférer objets",
-      "Using3": "utilisant 3"
+      "TransferItems": "Transférer objets"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet",
@@ -252,7 +251,6 @@
       "Error": "Erreur de chargement des infos Destiny:\n{error}\nRedémarrez pour rééssayer.",
       "Outdated": "Infos Destiny expirées",
       "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionalités de DIM puissent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système.",
-      "BungieDown": "Bungie.net rencontre des problèmes.",
       "Load": "Chargement des données sauvegardées de Destiny",
       "LoadCharInv": "Chargement des persos et des inventaires de Destiny",
       "Save": "Sauvegarde des dernières données de Destiny",
@@ -273,6 +271,7 @@
       "Equip": "Armer",
       "Split": "Coupé",
       "Store": "Dépôt",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Faire",
       "Vault": "Malle"
    },
@@ -309,8 +308,6 @@
       "ShowOverlayHelp": "Afficher les nouveaux objets avec un indicateur.",
       "ShowAnimations": "Afficher les animations pour les nouveaux objets",
       "ShowAnimationsHelp": "Affichera les animations pour les nouveaux objets. Désactiver cette option peut améliorer les performances du CPU.",
-      "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
-      "ShowElementalHelp": "Afficher les icônes d'élément de dégât sur les armes.",
       "SetSort": "Ordonner les objets par:",
       "SetSortHelp": "Ordonner les objets par rareté ou par la valeur de leur stat première.",
       "SortPrimary": "Stat première",
@@ -322,7 +319,6 @@
       "VaultColumnsHelp": "Sélectionner le nombre maximum de colonnes pour l'inventaire des Coffres.",
       "SizeItem": "Taille d'un objet",
       "SizeItemHelp": "Quelle taille devrait être les objets?",
-      "ResetToDefault": "Réinitialiser par défaut",
       "CharacterOrder": "Ordre de Perso",
       "CharacterOrderHelp": "Les persos peuvent être ordonnés par dernière connexion ou par leur date de création.",
       "CharacterOrderRecent": "Par le Plus Récent",
