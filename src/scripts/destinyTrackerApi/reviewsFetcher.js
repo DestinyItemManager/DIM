@@ -70,7 +70,7 @@ class ReviewsFetcher {
       item.userRating = cachedItem.userRating;
     }
 
-    if (cachedItem.review) {
+    if (cachedItem.userReview) {
       item.userReview = cachedItem.userReview;
     }
 
