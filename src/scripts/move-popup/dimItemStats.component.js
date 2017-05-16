@@ -1,11 +1,11 @@
 import angular from 'angular';
 import template from './item-stats.html';
 
-function ItemStatsController(dimSettingsService, dimFeatureFlags) {
+function ItemStatsController(dimSettingsService) {
   'ngInject';
 
   this.settings = dimSettingsService;
-  this.featureFlags = dimFeatureFlags;
+  this.qualityEnabled = $featureFlags.qualityEnabled;
 }
 
 var ItemStatsComponent = {

@@ -835,9 +835,9 @@ function StoreService(
     });
 
     // *able
-    createdItem.taggable = Boolean(dimFeatureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
-    createdItem.comparable = Boolean(dimFeatureFlags.compareEnabled && createdItem.talentGrid && createdItem.equipment && createdItem.lockable);
-    createdItem.reviewable = Boolean(dimFeatureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.talentGrid && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
 
     // Moving rare masks destroys them
     if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {

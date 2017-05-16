@@ -21,12 +21,6 @@ function DestinyTrackerService($q,
   var _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   var _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
 
-  var _postEnabled = $featureFlags.sendingWeaponDataEnabled;
-
-  function _userHasNotOkayedPostingIds() {
-    return (!dimSettingsService.allowIdPostToDtr);
-  }
-
   $rootScope.$on('item-clicked', function(event, item) {
     _reviewsFetcher.getItemReviews(item);
   });
