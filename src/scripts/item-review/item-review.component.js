@@ -6,9 +6,9 @@ function ItemReviewController($rootScope, dimSettingsService) {
 
   const vm = this;
   vm.canReview = dimSettingsService.allowIdPostToDtr;
-  vm.expandReview = false;
   vm.submitted = false;
   vm.hasUserReview = vm.item.userRating;
+  vm.expandReview = vm.hasUserReview;
 
   vm.procon = false; // TODO: turn this back on..
   vm.aggregate = {
