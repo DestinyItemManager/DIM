@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "Konnte auf {platform} keinen Destiny Account für dich finden.",
       "NoCookies": "Keine Cookies gefunden.",
       "NotConnected": "Du bist eventuell nicht mit dem Internet verbunden.",
-      "Twitter": "Bekomme Statusupdates auf:",
+      "Twitter": "Hol dir Statusupdates auf:",
       "ItemUniqueness": "Item Einzigartigkeit",
       "ItemUniquenessExplanation": "Du hast versucht '{name}' {type} zu deinem {character} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt..",
       "VendorNotFound": "Händler Daten nicht verfügbar."
@@ -110,7 +110,7 @@
    },
    "Infusion": {
       "Infusion": "Finde Infusions-Material",
-      "BringGear": "Bringt die Ausrüstung zu",
+      "BringGear": "Bringt die Ausrüstung auf:",
       "Calc": "Infusionsrechner",
       "InfuseItems": "Item auswählen zum Infundieren mit:",
       "InfusionMaterials": "Infusions Material",
@@ -118,8 +118,7 @@
       "NoItems": "Keine infundierbaren Items verfügbar.",
       "NoTransfer": "Transfer des Infundiermaterials\n{target} kann nicht verschoben werden.",
       "ShowItems": "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor",
-      "TransferItems": "Übertrage Items",
-      "Using3": "verwendet 3"
+      "TransferItems": "Übertrage Items"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Fehler beim Speichern der Item-Infos",
@@ -132,7 +131,7 @@
       "ToStore": "Alle {name} sind nun bei deinem {store}."
    },
    "ItemService": {
-      "BucketFull": "Es sind zu viele '{itemtype}'-Gegenstände im{isVault, select, false{ Inventar vom} other{}} {store}.",
+      "BucketFull": "Es sind zu viele '{itemtype}'-Gegenstände im {isVault, select, false{Inventar vom} other{}} {store}.",
       "Classified": "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
       "Classified2": "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar.",
       "Deequip": "Kann keinen weiteren ausrüstbaren Gegenstand finden um {itemname} abzulegen.",
@@ -252,7 +251,6 @@
       "Error": "Fehler beim Laden von Destiny Daten:\n{error}\nApp neu laden, um es nochmals zu versuchen.",
       "Outdated": "Veraltete Destiny Daten",
       "OutdatedExplanation": "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreiten werden.",
-      "BungieDown": "Bungie.net hat möglicherweise Probleme.",
       "Load": "Lade gespeicherte Daten",
       "LoadCharInv": "Lade Destiny Charaktere und Inventar",
       "Save": "Speichere neueste Daten",
@@ -273,8 +271,11 @@
       "Equip": "Equip",
       "Split": "Split",
       "Store": "Store",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "Take",
-      "Vault": "Vault"
+      "Vault": "Vault",
+      "LockUnlock": "{itemType} {locked, select, false{sperren} other{entsperren}}",
+      "TrackUntrack": "{itemType} {tracked, select, false{} other{nicht}} verfolgen"
    },
    "MoveAmount": {
      "Min": "Mindest-Stapel (1)",
@@ -309,8 +310,6 @@
       "ShowOverlayHelp": "Zeigt neue Gegenstände mit einem hellen Overlay an.",
       "ShowAnimations": "Zeige animiertes Overlay bei neuen Gegenständen an",
       "ShowAnimationsHelp": "Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten verringert die CPU Auslastung.",
-      "ShowElemental": "Zeige Elementarschaden bei Waffen an",
-      "ShowElementalHelp": "Zeigt den Elementarschaden bei Waffen an.",
       "SetSort": "Sortiere Gegenstände nach:",
       "SetSortHelp": "Sortieren von Gegenständen nach Seltenheit oder ihrem primären Statuswert.",
       "SortPrimary": "Primärer Wert",
@@ -322,7 +321,6 @@
       "VaultColumnsHelp": "Wähle die maximale Anzahl von Spalten für den Tresor aus.",
       "SizeItem": "Item Größe",
       "SizeItemHelp": "Wie groß sollen die Gegenstände sein?",
-      "ResetToDefault": "Zurücksetzen auf Standard",
       "CharacterOrder": "Charakter Reihenfolge",
       "CharacterOrderHelp": "Charakter können nach dem letzten Login oder ihrem Erstelldatum sortiert werden.",
       "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
@@ -379,7 +377,7 @@
       "Emotes": "Gesten"
    },
    "RecordBooks": {
-     "RecordBooks": "Rekordbuch",
+     "RecordBooks": "Urkundenbücher",
      "HideCompleted": "Abgeschlossene Rekorde nicht anzeigen"
    },
    "Views": {

@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "{platform} でのデスティニーアカウントが見つかりません。",
       "NoCookies": "クッキーが見つかりませんでした。",
       "NotConnected": "インターネットに接続してない可能性あります。",
-      "Twitter": "最新の状態に更新します。:",
+      "Twitter": "最新情報に更新します。:",
       "ItemUniqueness": "アイテムのレア度",
       "ItemUniquenessExplanation": "'{name}' {type} を {character} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。",
       "VendorNotFound": "ベンダー情報ありません"
@@ -41,14 +41,14 @@
    },
    "Cooldown": {
       "Grenade": "グレネードのクールダウン: {cooldown}",
-      "Melee": "近接チャージのクールダウン: {cooldown}",
+      "Melee": "近接のクールダウン: {cooldown}",
       "Super": "スーパースキルのクールダウン: {cooldown}"
    },
    "Countdown": {
      "Days": "{numDays} 日間"
    },
    "Debug": {
-      "Dump": "コンソールに情報をダンプする",
+      "Dump": "ゲーム機に情報を転送する",
       "View": "アイテムのデバッグ情報を見る"
    },
    "DidYouKnow": {
@@ -110,7 +110,7 @@
    },
    "Infusion": {
       "Infusion": "融合対象物発掘機能",
-      "BringGear": "装備を持ってくる",
+      "BringGear": "装備を転送する:",
       "Calc": "融合計算機能",
       "InfuseItems": "融合するアイテムを選択",
       "InfusionMaterials": "融合材料",
@@ -118,8 +118,7 @@
       "NoItems": "融合可能なアイテムありません。",
       "NoTransfer": "融合材を移動\n {target} 移動できません.",
       "ShowItems": "各キャラや保管庫にある融合可能なアイテムを表示。",
-      "TransferItems": "アイテムの転送",
-      "Using3": "3を使用"
+      "TransferItems": "アイテムの転送"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "アイテム情報を保存するにエラーが発生しました。",
@@ -252,7 +251,6 @@
       "Error": "読み込みエラー:\n{error}\n再読み込みをしてください。",
       "Outdated": "古いデスティニーのデータ",
       "OutdatedExplanation": "Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。",
-      "BungieDown": "Bungie.netに問題があるかもしれません。",
       "Load": "デスティニーのセーブデータをロード中",
       "LoadCharInv": "デスティニーのキャラクターとインベントリをロード中",
       "Save": "最新のデータを保存する",
@@ -273,6 +271,7 @@
       "Equip": "装備する",
       "Split": "分割",
       "Store": "保管する",
+      "Subtitle": "{light, select, null{} other{{light}}} {statName, select, undefined{} other{{statName}}} {classType} {typeName}",
       "Take": "取る",
       "Vault": "保管庫"
    },
@@ -309,8 +308,6 @@
       "ShowOverlayHelp": "オーレイで新しいアイテムを表示します。",
       "ShowAnimations": "新しいアイテムのオーバーレイアニメーションを表示する。",
       "ShowAnimationsHelp": "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。",
-      "ShowElemental": "武器の属性アイコンを表示する",
-      "ShowElementalHelp": "武器の属性アイコンを表示する。",
       "SetSort": "アイテムを並べ替える",
       "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
       "SortPrimary": "主要",
@@ -322,7 +319,6 @@
       "VaultColumnsHelp": "保管庫の上限欄数を選択して下さい.",
       "SizeItem": "アイテムサイズ",
       "SizeItemHelp": "アイテムの大きさどのぐらいがいいですか。",
-      "ResetToDefault": "初期化する",
       "CharacterOrder": "キャラクター指名",
       "CharacterOrderHelp": "キャラクターが最近のログイン順や作成順に整理できます.",
       "CharacterOrderRecent": "最近使用したキャラクター順で",
@@ -369,7 +365,7 @@
       "Vendors": "ベンダー",
       "All": "全て",
       "Available": "利用可能:",
-      "Compare": "持ってるものと比較:",
+      "Compare": "装備中のものと比較:",
       "Load": "ローディングベンダー",
       "ArmorAndWeapons": "アーマーとウェポン",
       "ShipsAndVehicles": "船とビークル",
@@ -406,7 +402,7 @@
        "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
        "Twitter": "ツイッター",
        "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
-       "Version": "バージョン  {version} ({flavor})",
+       "Version": "バージョン {version} ({flavor})",
        "Transifex": "翻訳チームに参加してください！",
        "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
      },
