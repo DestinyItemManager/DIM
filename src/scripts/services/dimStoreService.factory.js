@@ -21,7 +21,7 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags,
+  dimState,
   dimDestinyTrackerService,
   dimSettingsService,
   $http
@@ -909,7 +909,7 @@ function StoreService(
     }
 
     // In debug mode, keep the original JSON around
-    if (dimFeatureFlags.debugMode) {
+    if (dimState.debug) {
       createdItem.originalItem = item;
     }
 

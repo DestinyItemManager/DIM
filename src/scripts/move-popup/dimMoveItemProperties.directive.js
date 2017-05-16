@@ -107,11 +107,17 @@ function MoveItemProperties() {
 }
 
 
-function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, $scope, $rootScope, dimFeatureFlags, dimDefinitions, dimDestinyTrackerService) {
+function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
   var vm = this;
 
-  vm.featureFlags = dimFeatureFlags;
   vm.tab = 'default';
+
+  vm.featureFlags = {
+    qualityEnabled: $featureFlags.qualityEnabled,
+    compareEnabled: $featureFlags.compareEnabled,
+    tagsEnabled: $featureFlags.tagsEnabled,
+    debugMode: dimState.debug
+  };
 
   vm.hasDetails = (vm.item.stats && vm.item.stats.length) ||
     vm.item.talentGrid ||

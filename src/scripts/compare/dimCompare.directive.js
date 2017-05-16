@@ -34,13 +34,13 @@ function Compare() {
         </div>
         <div class="compare-bucket" ng-mouseleave="vm.highlight = null">
           <div class="compare-item fixed-left">
-            <div class="spacer" ng-class="{withTags: vm.featureFlags.tagsEnabled}"></div>
+            <div class="spacer" ng-class="::{withTags: vm.tagsEnabled}"></div>
             <div class="compare-stat-label" ng-class="{highlight: vm.highlight === vm.comparisons[0].primStat.statHash, sorted: vm.sortedHash === vm.comparisons[0].primStat.statHash}" ng-mouseover="vm.highlight = vm.comparisons[0].primStat.statHash" ng-click="vm.sort(vm.comparisons[0].primStat.statHash)" ng-bind="vm.comparisons[0].primStat.stat.statName"></div>
             <div class="compare-stat-label" ng-class="{highlight: vm.highlight === stat.statHash, sorted: vm.sortedHash === stat.statHash}" ng-mouseover="vm.highlight = stat.statHash" ng-click="vm.sort(stat.statHash)" ng-repeat="stat in vm.comparisons[0].stats track by stat.statHash" ng-bind="::stat.name"></div>
           </div>
           <div ng-repeat="item in vm.comparisons track by item.id" class="compare-item">
             <div class="close" ng-click="vm.remove(item);"></div>
-            <dim-item-tag ng-if="vm.featureFlags.tagsEnabled" item="item"></dim-item-tag>
+            <dim-item-tag ng-if="::vm.tagsEnabled" item="item"></dim-item-tag>
             <div class="item-name" ng-click="vm.itemClick(item)" ng-bind="::item.name"></div>
             <dim-simple-item item-data="item"></dim-simple-item>
             <div ng-class="{highlight: vm.highlight === item.primStat.stat.statHash}" ng-mouseover="vm.highlight = item.primStat.statHash" ng-style="item.primStat | statRange:vm.statRanges | qualityColor:'color'">
@@ -59,9 +59,9 @@ function Compare() {
 }
 
 
-function CompareCtrl($scope, toaster, dimCompareService, dimItemService, dimFeatureFlags, $translate) {
+function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $translate) {
   var vm = this;
-  vm.featureFlags = dimFeatureFlags;
+  vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
 
   vm.comparisons = [];

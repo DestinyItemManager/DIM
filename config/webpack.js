@@ -175,7 +175,27 @@ module.exports = (env) => {
         $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL),
         // Website and extension have different keys
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
-        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL)
+        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL),
+
+        // Feature flags!
+
+        // Tags are off in release right now
+        '$featureFlags.tagsEnabled': JSON.stringify(true),
+        '$featureFlags.compareEnabled': JSON.stringify(true),
+        '$featureFlags.vendorsEnabled': JSON.stringify(true),
+        '$featureFlags.qualityEnabled': JSON.stringify(true),
+        // Additional debugging / item info tools
+        '$featureFlags.debugMode': JSON.stringify(false),
+        // Print debug info to console about item moves
+        '$featureFlags.debugMoves': JSON.stringify(false),
+        // show changelog toaster
+        '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
+        // allow fetching item (weapon) scores and fetching/sending reviews from the Destiny Tracker API
+        '$featureFlags.sendingWeaponDataEnabled': JSON.stringify(env === 'dev'),
+
+        '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
+        // allow importing and exporting your DIM data to JSON
+        '$featureFlags.importExport': JSON.stringify(env !== 'release')
       }),
 
       // Enable if you want to debug the size of the chunks

@@ -2,10 +2,9 @@ import settingsTemplate from 'app/views/settings.template.html';
 import aboutTemplate from 'app/views/about.template.html';
 import supportTemplate from 'app/views/support.template.html';
 import filtersTemplate from 'app/views/filters.template.html';
-import matsExchangeTemplate from 'app/views/mats-exchange.template.html';
 
 export default class ContentController {
-  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimFeatureFlags, dimVendorService, $translate) {
+  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $translate) {
     'ngInject';
 
     var vm = this;
@@ -44,7 +43,10 @@ export default class ContentController {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
-    vm.featureFlags = dimFeatureFlags;
+    vm.featureFlags = {
+      materialsExchangeEnabled: $featureFlags.materialsExchangeEnabled,
+      vendorsEnabled: $featureFlags.vendorsEnabled
+    };
     vm.vendorService = dimVendorService;
 
     hotkeys = hotkeys.bindTo($scope);
@@ -92,7 +94,7 @@ export default class ContentController {
     hotkeys.add({
       combo: ['ctrl+alt+shift+d'],
       callback: function() {
-        dimFeatureFlags.debugMode = true;
+        dimState.debug = true;
         console.log("***** DIM DEBUG MODE ENABLED *****");
       }
     });
@@ -128,7 +130,6 @@ export default class ContentController {
     vm.showSupport = showPopupFunction('support', supportTemplate);
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
     vm.showXur = showPopupFunction('xur', '<xur></xur>');
-    vm.showMatsExchange = showPopupFunction('mats-exchange', matsExchangeTemplate);
 
     function toggleState(name) {
       return function(e) {

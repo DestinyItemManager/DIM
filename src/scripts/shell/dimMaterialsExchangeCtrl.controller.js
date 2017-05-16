@@ -1,11 +1,12 @@
 import angular from 'angular';
 import _ from 'underscore';
+import '../materials-exchange/materials-exchange.scss';
 
 angular.module('dimApp').controller('dimMaterialsExchangeCtrl', MaterialsController);
 
 
-function MaterialsController($scope, dimItemService, dimStoreService, $state, dimFeatureFlags) {
-  if (!dimFeatureFlags.materialsExchangeEnabled) {
+function MaterialsController($scope, dimItemService, dimStoreService, $state) {
+  if (!$featureFlags.materialsExchangeEnabled) {
     $state.go('inventory');
     return;
   }

@@ -8,11 +8,12 @@ export const LoadoutBuilderComponent = {
   controllerAs: 'vm'
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimFeatureFlags, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
   var vm = this;
-  vm.featureFlags = dimFeatureFlags;
+  vm.qualityEnabled = $featureFlags.qualityEnabled;
+  vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
   if (dimStoreService.getStores().length === 0) {
     $state.go('inventory');
@@ -252,7 +253,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
       i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], function(key) { return defs.ItemCategory.get(key).title; })),
       activesets: '5/5/2',
       type: 'Helmet',
-      scaleType: vm.featureFlags.qualityEnabled ? 'scaled' : 'base',
+      scaleType: $featureFlags.qualityEnabled ? 'scaled' : 'base',
       progress: 0,
       fullMode: false,
       includeVendors: false,

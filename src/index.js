@@ -47,7 +47,6 @@ require('./scripts/loadout/random/dimRandom.controller');
 require('./scripts/compare/dimCompare.directive');
 require('./scripts/compare/dimCompareService.factory');
 require('./scripts/shell/dimAngularFilters.filter');
-require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
 require('./scripts/shell/dimSettingsCtrl.controller');
 require('./scripts/shell/dimSearchFilter.directive');
 require('./scripts/shell/dimClickAnywhereButHere.directive');
@@ -75,7 +74,10 @@ require('./scripts/debug/dimDebugItem.controller');
 if ($DIM_FLAVOR === 'dev') {
   require('./scripts/developer/dimDeveloper.controller');
 }
-require('./scripts/materials-exchange/dimCollapsible.directive');
+if ($featureFlags.materialsExchangeEnabled) {
+  require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
+  require('./scripts/materials-exchange/dimCollapsible.directive');
+}
 require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');

@@ -14,13 +14,18 @@ function DestinyTrackerService($q,
                                dimPlatformService,
                                dimSettingsService,
                                $translate,
-                               dimFeatureFlags,
                                loadingTracker) {
   var _reviewDataCache = new ReviewDataCache();
   var _trackerErrorHandler = new TrackerErrorHandler($q, $translate);
   var _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   var _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
   var _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+
+  var _postEnabled = $featureFlags.sendingWeaponDataEnabled;
+
+  function _userHasNotOkayedPostingIds() {
+    return (!dimSettingsService.allowIdPostToDtr);
+  }
 
   $rootScope.$on('item-clicked', function(event, item) {
     _reviewsFetcher.getItemReviews(item);

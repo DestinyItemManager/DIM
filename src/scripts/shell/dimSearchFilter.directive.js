@@ -5,7 +5,7 @@ angular.module('dimApp')
   .factory('dimSearchService', SearchService)
   .directive('dimSearchFilter', SearchFilter);
 
-function SearchService(dimSettingsService, dimFeatureFlags) {
+function SearchService(dimSettingsService) {
   const categoryFilters = {
     pulserifle: ['CATEGORY_PULSE_RIFLE'],
     scoutrifle: ['CATEGORY_SCOUT_RIFLE'],
@@ -71,7 +71,7 @@ function SearchService(dimSettingsService, dimFeatureFlags) {
     return ["is:" + word, "not:" + word];
   }));
 
-  if (dimFeatureFlags.tagsEnabled) {
+  if ($featureFlags.tagsEnabled) {
     dimSettingsService.itemTags.forEach(function(tag) {
       if (tag.type) {
         keywords.push("tag:" + tag.type);
@@ -100,7 +100,7 @@ function SearchService(dimSettingsService, dimFeatureFlags) {
   });
 
   // free form notes on items
-  if (dimFeatureFlags.tagsEnabled) {
+  if ($featureFlags.tagsEnabled) {
     keywords.push('notes:');
   }
 

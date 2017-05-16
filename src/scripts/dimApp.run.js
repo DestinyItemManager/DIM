@@ -2,7 +2,7 @@ import changelog from '../views/changelog-toaster-release.html';
 
 import upgradeChrome from '../views/upgrade-chrome.html';
 
-function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFeatureFlags) {
+function run($window, $rootScope, $translate, SyncService, dimInfoService) {
   'ngInject';
 
   $window.initgapi = () => {
@@ -27,7 +27,7 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFe
 
     console.log('DIM v' + $DIM_VERSION + ' (' + $DIM_FLAVOR + ') - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-    if (dimFeatureFlags.changelogToaster && ($DIM_FLAVOR === 'release')) {
+    if ($featureFlags.changelogToaster) {
       dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
         title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', {
           version: $DIM_VERSION
