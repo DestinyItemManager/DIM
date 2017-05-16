@@ -7,7 +7,6 @@ angular.module('dimApp')
 function ItemService(dimStoreService,
                      dimBungieService,
                      dimCategory,
-                     dimFeatureFlags,
                      $q,
                      $translate) {
   // We'll reload the stores to check if things have been
@@ -246,7 +245,7 @@ function ItemService(dimStoreService,
   }
 
   function equipItem(item) {
-    if (dimFeatureFlags.debugMoves) {
+    if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
     }
     return dimBungieService.equip(item)
@@ -279,7 +278,7 @@ function ItemService(dimStoreService,
   }
 
   function moveToStore(item, store, equip, amount) {
-    if (dimFeatureFlags.debugMoves) {
+    if ($featureFlags.debugMoves) {
       console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
     }
     return dimBungieService.transfer(item, store, amount)

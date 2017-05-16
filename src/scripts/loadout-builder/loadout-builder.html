@@ -1,4 +1,4 @@
-<div class="loadout-builder" ng-class="{ itemQuality: vm.featureFlags.qualityEnabled }">
+<div class="loadout-builder" ng-class="::{ itemQuality: vm.qualityEnabled }">
   <back-link></back-link>
   <h1 translate="LB"></h1>
 
@@ -86,7 +86,7 @@
         <p>
           <label>
             <select ng-model="vm.scaleType" ng-change="vm.onModeChange()">
-              <option ng-if="vm.featureFlags.qualityEnabled" value="scaled" translate="LB.Scaled"></option>
+              <option ng-if="::vm.qualityEnabled" value="scaled" translate="LB.Scaled"></option>
               <option value="base" translate="LB.Current"></option>
             </select>
             <span translate="LB.LightMode"></span>
