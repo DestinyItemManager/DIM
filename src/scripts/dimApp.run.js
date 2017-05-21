@@ -29,10 +29,9 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService) {
 
     if ($featureFlags.changelogToaster) {
       dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
-        title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', {
-          version: $DIM_VERSION
-        }) : $translate.instant('Help.Version.Beta', {
-          version: $DIM_VERSION
+        title: $translate.instant('Help.Version', {
+          version: $DIM_VERSION,
+          beta: $DIM_FLAVOR === 'beta'
         }),
         view: changelog
       });

@@ -95,10 +95,7 @@
       "HidePopup": "ポップアップを非表示にする",
       "NeverShow": "次回から表示しない",
       "UpgradeChrome": "クロームをアップデートしてください",
-      "Version": {
-         "Beta": "ベータがv{version}にアップデートされました",
-         "Stable": "DIM v{version} がリリースされました"
-      },
+      "Version": "{beta, select, true{ベータがv{version}にアップデートされました} other{DIM v{version} がリリースされました}}",
       "Xur": "Xûrはここです"
    },
    "Hotkey": {
