@@ -87,24 +87,25 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     return response;
   }
 
-  function retryOnThrottled(request) {
-    function run(retries) {
-      return $http(request)
-        .then(function success(response) {
-          if (response.data.ErrorCode === 36) {
-            if (retries <= 0) {
-              return response;
-            } else {
-              return $timeout(Math.pow(2, 4 - retries) * 1000).then(() => run(retries - 1));
-            }
-          } else {
-            return response;
-          }
-        })
-        .catch(handleErrors);
+  function retryOnThrottled(response, retries = 3) {
+    // TODO: these different statuses suggest different backoffs
+    if (response.data &&
+        // ThrottleLimitExceededMinutes
+        (response.data.ErrorCode === 35 ||
+         // ThrottleLimitExceededMomentarily
+         response.data.ErrorCode === 36 ||
+         // ThrottleLimitExceededSeconds
+         response.data.ErrorCode === 37)) {
+      if (retries <= 0) {
+        return response;
+      } else {
+        return $timeout(Math.pow(2, 4 - retries) * 1000)
+          .then(() => $http(response.config))
+          .then((response) => retryOnThrottled(response, retries - 1));
+      }
+    } else {
+      return response;
     }
-
-    return run(3);
   }
 
   function showErrorToaster(e) {
