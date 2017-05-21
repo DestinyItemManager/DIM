@@ -95,10 +95,7 @@
       "HidePopup": "Dieses Fenster ausblenden",
       "NeverShow": "Diesen Tipp nicht erneut zeigen",
       "UpgradeChrome": "Bitte aktualisiere Chrome",
-      "Version": {
-         "Beta": "Beta wurde auf v{version} aktualisiert",
-         "Stable": "DIM v{version} veröffentlicht"
-      },
+      "Version": "{beta, select, true{Beta wurde auf v{version} aktualisiert} other{DIM v{version} veröffentlicht}}",
       "Xur": "Xûr ist da"
    },
    "Hotkey": {
