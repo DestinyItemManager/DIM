@@ -55,6 +55,9 @@ div:focus, span:focus {
 
 .new_overlay {
   @include item-size;
+  position: absolute;
+  top: 2px;
+  left: 2px;
   pointer-events: none;
   .new-item-animated & {
     will-change: transform;
