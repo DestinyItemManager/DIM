@@ -549,6 +549,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
                             setMap[set.setHash] = { set: set, tiers: {} };
                             setMap[set.setHash].tiers[tiersString] = { stats: set.stats, configs: [getBonusConfig(set.armor)] };
                           }
+
+                          set.includesVendorItems = _.any(_.values(set.armor), (armor) => armor.item.isVendorItem);
                         }
 
                         processedCount++;
