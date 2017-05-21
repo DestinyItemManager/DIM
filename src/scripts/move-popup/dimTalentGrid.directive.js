@@ -52,7 +52,7 @@ function TalentGridCtrl(dimInfoService, $translate) {
       vm.infuse({ $event });
     } else if (node.exclusiveInColumn) {
       // popup warning
-      dimInfoService.show('lostitems', {
+      dimInfoService.show('changeperks', {
         type: 'warning',
         title: $translate.instant('Help.ChangingPerks'),
         body: $translate.instant('Help.ChangingPerksInfo'),
