@@ -266,21 +266,21 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
       // Only select stuff that needs to change state
       var totalItems = items.length;
-      items = items.filter(function(pseudoItem) {
-        const item = getLoadoutItem(pseudoItem, store);
-        const invalid = !item || !item.equipment;
+      items = _.filter(items, function(pseudoItem) {
+        var item = getLoadoutItem(pseudoItem, store);
+        var invalid = !item || !item.equipment;
         // provide a more accurate count of total items
         if (invalid) {
           totalItems--;
-          return false;
+          return true;
         }
 
-        const notAlreadyThere = item.owner !== store.id ||
+        var alreadyThere = item.owner !== store.id ||
               // Needs to be equipped. Stuff not marked "equip" doesn't
               // necessarily mean to de-equip it.
               (pseudoItem.equipped && !item.equipped);
 
-        return notAlreadyThere;
+        return alreadyThere;
       });
 
       // only try to equip subclasses that are equippable, since we allow multiple in a loadout
