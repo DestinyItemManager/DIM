@@ -266,6 +266,8 @@
       "NewRep": "Neuer Ruf"
    },
    "MovePopup": {
+      "OverviewTab": "Übersicht",
+      "ReviewsTab": "Berichte",
       "Consolidate": "Zusammenführen",
       "DistributeEvenly": "Gleichmäßig verteilen",
       "Equip": "Equip",
@@ -289,6 +291,23 @@
       "Error": "Fehler! Max 120 Zeichen für Notizen.",
       "Help": "Notiz für dieses Item hinzufügen"
    },
+   "DtrReview": {
+     "ThankYou": "Vielen Dank für die eingereichte Bewertung! Sie wird bald veröffentlicht.",
+     "Help": "Schreibe einen Bericht (Optional)",
+     "HelpPros": "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)",
+     "HelpCons": "Beschreibe die negativen Eigenschaften dieser Waffe (Optional)",
+     "YourReview": "Dein Bericht",
+     "Edit": "Ändern",
+     "Delete": "Löschen",
+     "Submit": "Absenden",
+     "Cancel": "Abbrechen",
+     "Pros": "Vorteile",
+     "Cons": "Nachteile",
+     "NoReviews": "Bisher gibt es keine Berichte für diesen Gegenstand, sei der Erste!",
+     "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
+     "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
+     "AverageRating": "({itemRating}) basierend auf {numReviews} Berichten."
+   },
    "Objectives": {
      "Complete": "Vollständig",
      "Incomplete": "Unvollständig"
@@ -310,6 +329,10 @@
       "ShowOverlayHelp": "Zeigt neue Gegenstände mit einem hellen Overlay an.",
       "ShowAnimations": "Zeige animiertes Overlay bei neuen Gegenständen an",
       "ShowAnimationsHelp": "Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten verringert die CPU Auslastung.",
+      "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
+      "ShowReviewsHelp": "Zeige die durchschnittliche User basierte Wertung bei Waffen an",
+      "AllowIdPostToDtr": "Teile Account-Name und bewertete Items mit Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "DIM wird deinen Account-Namen und jedes Item das du bewertet hast mit Destiny Tracker teilen.",
       "SetSort": "Sortiere Gegenstände nach:",
       "SetSortHelp": "Sortieren von Gegenständen nach Seltenheit oder ihrem primären Statuswert.",
       "SortPrimary": "Primärer Wert",
@@ -321,6 +344,7 @@
       "VaultColumnsHelp": "Wähle die maximale Anzahl von Spalten für den Tresor aus.",
       "SizeItem": "Item Größe",
       "SizeItemHelp": "Wie groß sollen die Gegenstände sein?",
+      "ResetToDefault": "Zurücksetzen",
       "CharacterOrder": "Charakter Reihenfolge",
       "CharacterOrderHelp": "Charakter können nach dem letzten Login oder ihrem Erstelldatum sortiert werden.",
       "CharacterOrderRecent": "Nach zuletzt aktivem Charakter",
