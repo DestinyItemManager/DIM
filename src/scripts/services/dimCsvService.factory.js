@@ -181,7 +181,23 @@ function CsvService() {
       data += stats.reload + ",";
       data += stats.magazine + ",";
       data += stats.equipSpeed + ",";
-      data += ((gun.dimInfo && gun.dimInfo.notes) || '') + ",";
+      // the Notes column may need CSV escaping, as it's user-supplied input.
+      if (gun.dimInfo && gun.dimInfo.notes) {
+        // if any of these four characters are present, we have to escape it.
+        if (/[",\r\n]/.test(gun.dimInfo.notes)) {
+          var notes = gun.dimInfo.notes;
+          // emit the escaped data, wrapped in double quotes.
+          // any instances of " need to be changed to "" per RFC 4180.
+          // everything else is fine, as long as it's in double quotes.
+          data += '"' + notes.replace(/"/g, '""') + '",';
+        } else {
+          // no escaping required, append it as-is.
+          data += gun.dimInfo.notes + ",";
+        }
+      } else {
+        // terminate the empty Notes column with a comma and continue.
+        data += ",";
+      }
       // haven't seen this null yet, but can't hurt to check since we saw it on armor above
       if (gun.talentGrid) {
         data += buildNodeString(gun.talentGrid.nodes);
@@ -235,4 +251,3 @@ function CsvService() {
     downloadCsvFiles: downloadCsvFiles
   };
 }
-
