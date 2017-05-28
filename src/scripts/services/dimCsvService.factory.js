@@ -85,6 +85,7 @@ function CsvService() {
       data += stats.Discipline ? stats.Discipline.value + "," : "0,";
       data += stats.Strength ? stats.Strength.value + "," : "0,";
 
+      data += cleanNotes(item);
 
       // if DB is out of date this can be null, can't hurt to be careful
       if (item.talentGrid) {
@@ -165,6 +166,7 @@ function CsvService() {
       data += stats.magazine + ",";
       data += stats.equipSpeed + ",";
 
+      data += cleanNotes(gun);
 
       // haven't seen this null yet, but can't hurt to check since we saw it on armor above
       if (gun.talentGrid) {
