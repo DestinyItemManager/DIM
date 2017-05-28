@@ -56,7 +56,7 @@ function SearchService(dimSettingsService) {
     glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     year: ['year1', 'year2', 'year3'],
     vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev'],
-    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning'],
+    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot', 'triumph'],
     hasLight: ['light', 'haslight'],
     weapon: ['weapon'],
     armor: ['armor'],
@@ -660,7 +660,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         poe: 2784812137,     // SOURCE_PRISON_ELDERS
         coe: 1537575125,     // SOURCE_POE_ELDER_CHALLENGE
         af: 3667653533,      // SOURCE_ARCHON_FORGE
-        dawning: 3131490494  // SOURCE_DAWNING
+        dawning: 3131490494, // SOURCE_DAWNING
+        aot: 3068521220,     // SOURCE_AGES_OF_TRIUMPH
+        triumph: 3068521220  // SOURCE_AGES_OF_TRIUMPH
       };
       if (!item) {
         return false;
