@@ -11,9 +11,16 @@ if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
 }
 
 function bungieApiUpdate(path, data, ver) {
+  if (!ver) {
+    if (path.includes("/Platform/Destiny")) {
+      ver = '/D1';
+    } else {
+      ver = '';
+    }
+  }
   return {
     method: 'POST',
-    url: 'https://www.bungie.net' + (ver === null ? '/d1' : '') + path,
+    url: 'https://www.bungie.net' + ver + path,
     headers: {
       'X-API-Key': apiKey
     },
@@ -24,9 +31,16 @@ function bungieApiUpdate(path, data, ver) {
 }
 
 function bungieApiQuery(path, ver) {
+  if (!ver) {
+    if (path.includes("/Platform/Destiny")) {
+      ver = '/D1';
+    } else {
+      ver = '';
+    }
+  }
   return {
     method: 'GET',
-    url: 'https://www.bungie.net' + (ver === null ? '/d1' : '') + path,
+    url: 'https://www.bungie.net' + ver + path,
     headers: {
       'X-API-Key': apiKey
     },
