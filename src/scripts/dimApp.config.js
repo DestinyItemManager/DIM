@@ -48,6 +48,8 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   // what I assume is clock skew between Bungie's hosts when they calculate a global rate limit.
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/TransferItem/, 1, 1100);
   ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/Platform\/Destiny\/EquipItem/, 1, 1100);
+  ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/d1\/Platform\/Destiny\/TransferItem/, 1, 1100);
+  ngHttpRateLimiterConfigProvider.addLimiter(/www\.bungie\.net\/d1\/Platform\/Destiny\/EquipItem/, 1, 1100);
 
   // https://github.com/likeastore/ngDialog/issues/327
   ngDialogProvider.setDefaults({

@@ -10,10 +10,10 @@ if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
   apiKey = localStorage.apiKey;
 }
 
-function bungieApiUpdate(path, data) {
+function bungieApiUpdate(path, data, ver) {
   return {
     method: 'POST',
-    url: 'https://www.bungie.net' + path,
+    url: 'https://www.bungie.net' + (ver === null ? '/d1' : '') + path,
     headers: {
       'X-API-Key': apiKey
     },
@@ -23,10 +23,10 @@ function bungieApiUpdate(path, data) {
   };
 }
 
-function bungieApiQuery(path) {
+function bungieApiQuery(path, ver) {
   return {
     method: 'GET',
-    url: 'https://www.bungie.net' + path,
+    url: 'https://www.bungie.net' + (ver === null ? '/d1' : '') + path,
     headers: {
       'X-API-Key': apiKey
     },
