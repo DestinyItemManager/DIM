@@ -52,7 +52,6 @@
     "babel-plugin-angularjs-annotate": "^0.7.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-preset-es2015": "^6.18.0",
-    "bower": "^1.7.9",
     "chalk": "^1.1.3",
     "clean-webpack-plugin": "^0.1.14",
     "copy-webpack-plugin": "^4.0.1",
