@@ -10,17 +10,10 @@ if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
   apiKey = localStorage.apiKey;
 }
 
-function bungieApiUpdate(path, data, ver) {
-  if (!ver) {
-    if (path.includes("/Platform/Destiny")) {
-      ver = '/D1';
-    } else {
-      ver = '';
-    }
-  }
+function bungieApiUpdate(path, data) {
   return {
     method: 'POST',
-    url: 'https://www.bungie.net' + ver + path,
+    url: 'https://www.bungie.net' + path,
     headers: {
       'X-API-Key': apiKey
     },
@@ -30,17 +23,10 @@ function bungieApiUpdate(path, data, ver) {
   };
 }
 
-function bungieApiQuery(path, ver) {
-  if (!ver) {
-    if (path.includes("/Platform/Destiny")) {
-      ver = '/D1';
-    } else {
-      ver = '';
-    }
-  }
+function bungieApiQuery(path) {
   return {
     method: 'GET',
-    url: 'https://www.bungie.net' + ver + path,
+    url: 'https://www.bungie.net' + path,
     headers: {
       'X-API-Key': apiKey
     },
