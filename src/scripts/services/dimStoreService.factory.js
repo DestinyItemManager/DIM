@@ -12,7 +12,6 @@ function StoreService(
   $q,
   dimBungieService,
   dimPlatformService,
-  dimCategory,
   dimDefinitions,
   dimBucketService,
   dimItemInfoService,

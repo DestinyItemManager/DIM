@@ -43,6 +43,9 @@
     "$GOOGLE_DRIVE_CLIENT_ID": true,
     "$featureFlags": true
   },
+  "plugins": [
+    "angular"
+  ],
   "rules": {
     "array-callback-return": "error",
     "block-scoped-var": "error",
@@ -158,6 +161,15 @@
     "yield-star-spacing": "error",
     "import/no-duplicates": "error",
     "import/no-namespace": "error",
-    "import/newline-after-import": "error"
+    "import/newline-after-import": "error",
+    "angular/no-private-call": "error",
+    "angular/controller-as-vm": "error",
+    "angular/controller-as": "error",
+    "angular/di-unused": "error",
+    "angular/directive-restrict": "error",
+    "angular/empty-controller": "error",
+    "angular/no-http-callback": "error",
+    "angular/di": ["error", "function"],
+    "angular/on-destroy": "error"
   }
 }
