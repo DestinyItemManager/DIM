@@ -85,23 +85,7 @@ function CsvService() {
       data += stats.Discipline ? stats.Discipline.value + "," : "0,";
       data += stats.Strength ? stats.Strength.value + "," : "0,";
 
-      // the Notes column may need CSV escaping, as it's user-supplied input.
-      if (item.dimInfo && item.dimInfo.notes) {
-        // if any of these four characters are present, we have to escape it.
-        if (/[",\r\n]/.test(item.dimInfo.notes)) {
-          var notes = item.dimInfo.notes;
-          // emit the escaped data, wrapped in double quotes.
-          // any instances of " need to be changed to "" per RFC 4180.
-          // everything else is fine, as long as it's in double quotes.
-          data += '"' + notes.replace(/"/g, '""') + '",';
-        } else {
-          // no escaping required, append it as-is.
-          data += item.dimInfo.notes + ",";
-        }
-      } else {
-        // terminate the empty Notes column with a comma and continue.
-        data += ",";
-      }
+      data += cleanNotes(item);
 
       // if DB is out of date this can be null, can't hurt to be careful
       if (item.talentGrid) {
@@ -181,7 +165,9 @@ function CsvService() {
       data += stats.reload + ",";
       data += stats.magazine + ",";
       data += stats.equipSpeed + ",";
-      data += ((gun.dimInfo && gun.dimInfo.notes) || '') + ",";
+
+      data += cleanNotes(gun);
+
       // haven't seen this null yet, but can't hurt to check since we saw it on armor above
       if (gun.talentGrid) {
         data += buildNodeString(gun.talentGrid.nodes);
@@ -189,6 +175,28 @@ function CsvService() {
       data += "\n";
     });
     downloadCsv("destinyWeapons", header + data);
+  }
+
+  function cleanNotes(item) {
+    var cleanedNotes;
+    // the Notes column may need CSV escaping, as it's user-supplied input.
+    if (item.dimInfo && item.dimInfo.notes) {
+      // if any of these four characters are present, we have to escape it.
+      if (/[",\r\n]/.test(item.dimInfo.notes)) {
+        var notes = item.dimInfo.notes;
+        // emit the escaped data, wrapped in double quotes.
+        // any instances of " need to be changed to "" per RFC 4180.
+        // everything else is fine, as long as it's in double quotes.
+        cleanedNotes = '"' + notes.replace(/"/g, '""') + '",';
+      } else {
+        // no escaping required, append it as-is.
+        cleanedNotes = item.dimInfo.notes + ",";
+      }
+    } else {
+      // terminate the empty Notes column with a comma and continue.
+      cleanedNotes = ",";
+    }
+    return cleanedNotes;
   }
 
   function downloadCsvFiles(stores, type) {
@@ -235,4 +243,3 @@ function CsvService() {
     downloadCsvFiles: downloadCsvFiles
   };
 }
-
