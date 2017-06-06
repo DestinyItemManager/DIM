@@ -13,6 +13,7 @@
 * The count of items in your loadout is now more accurate.
 * DIM is now better at figuring out which platforms you have Destiny accounts on.
 * DIM is faster!
+* Added Age of Triumph filters is:aot and is:triumph
 * Loadout Builder's equip button now operates on the selected character, not your last-played character.
 
 # v3.17.1
