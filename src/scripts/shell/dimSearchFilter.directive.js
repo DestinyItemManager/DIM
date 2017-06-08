@@ -645,34 +645,40 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Challenge of Elders (coe)
     //   * Archon Forge (af)
     activity: function(predicate, item) {
-      var activityHashes = { // identifier
-        trials: 2650556703,  // SOURCE_TRIALS_OF_OSIRIS
-        ib: 1322283879,      // SOURCE_IRON_BANNER
-        qw: 1983234046,      // SOURCE_QUEENS_EMISSARY_QUEST
-        cd: 2775576620,      // SOURCE_CRIMSON_DOUBLES
-        srl: 1234918199,     // SOURCE_SRL
-        vog: 440710167,      // SOURCE_VAULT_OF_GLASS
-        ce: 2585003248,      // SOURCE_CROTAS_END
-        ttk: 2659839637,     // SOURCE_TTK
-        kf: 1662673928,      // SOURCE_KINGS_FALL
-        roi: 2964550958,     // SOURCE_RISE_OF_IRON
-        wotm: 4160622434,    // SOURCE_WRATH_OF_THE_MACHINE
-        poe: 2784812137,     // SOURCE_PRISON_ELDERS
-        coe: 1537575125,     // SOURCE_POE_ELDER_CHALLENGE
-        af: 3667653533,      // SOURCE_ARCHON_FORGE
-        dawning: 3131490494, // SOURCE_DAWNING
-        aot: 3068521220,     // SOURCE_AGES_OF_TRIUMPH
-        triumph: 3068521220  // SOURCE_AGES_OF_TRIUMPH
+      var activityHashes = {}; // identifier
+      activityHashes.required = {
+        trials: [2650556703],  // SOURCE_TRIALS_OF_OSIRIS
+        ib: [1322283879],      // SOURCE_IRON_BANNER
+        qw: [1983234046],      // SOURCE_QUEENS_EMISSARY_QUEST
+        cd: [2775576620],      // SOURCE_CRIMSON_DOUBLES
+        srl: [1234918199],     // SOURCE_SRL
+        vog: [440710167],      // SOURCE_VAULT_OF_GLASS
+        ce: [2585003248],      // SOURCE_CROTAS_END
+        ttk: [2659839637],     // SOURCE_TTK
+        kf: [1662673928],      // SOURCE_KINGS_FALL
+        roi: [2964550958],     // SOURCE_RISE_OF_IRON
+        wotm: [4160622434],    // SOURCE_WRATH_OF_THE_MACHINE
+        poe: [2784812137],     // SOURCE_PRISON_ELDERS
+        coe: [1537575125],     // SOURCE_POE_ELDER_CHALLENGE
+        af: [3667653533],      // SOURCE_ARCHON_FORGE
+        dawning: [3131490494], // SOURCE_DAWNING
+        aot: [3068521220, 4161861381],    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+        triumph: [3068521220, 416861381]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+      };
+      activityHashes.restricted = {
+        aot: [2964550958, 2659839637],      // Remove ROI and TTK
+        triumph: [2964550958, 2659839637]   // Remove ROI and TTK
       };
       if (!item) {
         return false;
       }
       if (predicate === "vanilla") {
         return item.year === 1;
-      } else if (predicate === "aot" || predicate === "triumph") {
-        return ((item.sourceHashes.includes(3068521220) || item.sourceHashes.includes(4161861381)) && !(item.sourceHashes.includes(2964550958) || item.sourceHashes.includes(2659839637)));
       } else {
-        return (item.sourceHashes.includes(activityHashes[predicate]));
+        if (activityHashes.restricted[predicate]) {
+          return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)) && !(activityHashes.restricted[predicate].some((el) => item.sourceHashes.includes(el))));
+        }
+        return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)));
       }
     },
     inloadout: function(predicate, item) {
