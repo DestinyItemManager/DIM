@@ -608,25 +608,33 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eris Morn (eris)
     //   * Eververse (ev)
     vendor: function(predicate, item) {
-      var vendorHashes = {         // identifier
-        fwc: 995344558,            // SOURCE_VENDOR_FUTURE_WAR_CULT
-        do: 103311758,             // SOURCE_VENDOR_DEAD_ORBIT
-        nm: 3072854931,            // SOURCE_VENDOR_NEW_MONARCHY
-        speaker: 4241664776,       // SOURCE_VENDOR_SPEAKER
-        variks: 512830513,         // SOURCE_VENDOR_FALLEN
-        shipwright: 3721473564,    // SOURCE_VENDOR_SHIPWRIGHT
-        vanguard: 1482793537,      // SOURCE_VENDOR_VANGUARD
-        osiris: 3378481830,        // SOURCE_VENDOR_OSIRIS
-        xur: 2179714245,           // SOURCE_VENDOR_BLACK_MARKET
-        shaxx: 4134961255,         // SOURCE_VENDOR_CRUCIBLE_HANDLER
-        cq: 1362425043,            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
-        eris: 1374970038,          // SOURCE_VENDOR_CROTAS_BANE
-        ev: 3559790162             // SOURCE_VENDOR_SPECIAL_ORDERS
+      var vendorHashes = {};       // identifier
+      vendorHashes.required = {
+        fwc: [995344558],            // SOURCE_VENDOR_FUTURE_WAR_CULT
+        do: [103311758],             // SOURCE_VENDOR_DEAD_ORBIT
+        nm: [3072854931],            // SOURCE_VENDOR_NEW_MONARCHY
+        speaker: [4241664776],       // SOURCE_VENDOR_SPEAKER
+        variks: [512830513],         // SOURCE_VENDOR_FALLEN
+        shipwright: [3721473564],    // SOURCE_VENDOR_SHIPWRIGHT
+        vanguard: [1482793537],      // SOURCE_VENDOR_VANGUARD
+        osiris: [3378481830],        // SOURCE_VENDOR_OSIRIS
+        xur: [2179714245],           // SOURCE_VENDOR_BLACK_MARKET
+        shaxx: [4134961255],         // SOURCE_VENDOR_CRUCIBLE_HANDLER
+        cq: [1362425043],            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
+        eris: [1374970038],          // SOURCE_VENDOR_CROTAS_BANE
+        ev: [3559790162]             // SOURCE_VENDOR_SPECIAL_ORDERS
+      };
+      vendorHashes.restricted = {
       };
       if (!item) {
         return false;
       }
-      return (item.sourceHashes.includes(vendorHashes[predicate]));
+      if (vendorHashes.restricted[predicate]) {
+        return (vendorHashes.required[predicate].some((vendorHash) => item.sourceHashes.includes(vendorHash)) &&
+              !(vendorHashes.restricted[predicate].some((vendorHash) => item.sourceHashes.includes(vendorHash))));
+      } else {
+        return (vendorHashes.required[predicate].some((vendorHash) => item.sourceHashes.includes(vendorHash)));
+      }
     },
     // filter on what activity an item can come from. Currently supports
     //   * Vanilla (vanilla)
@@ -662,10 +670,12 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         coe: [1537575125],     // SOURCE_POE_ELDER_CHALLENGE
         af: [3667653533],      // SOURCE_ARCHON_FORGE
         dawning: [3131490494], // SOURCE_DAWNING
-        aot: [3068521220, 4161861381],    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
-        triumph: [3068521220, 416861381]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+        aot: [3068521220, 4161861381, 440710167],    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+        triumph: [3068521220, 416861381, 440710167]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
       };
       activityHashes.restricted = {
+        kf: [2179714245, 2682516238, 560942287],        // remove xur exotics and patrol items
+        wotm: [2179714245, 2682516238, 560942287],      // remove xur exotics and patrol items
         aot: [2964550958, 2659839637],      // Remove ROI and TTK
         triumph: [2964550958, 2659839637]   // Remove ROI and TTK
       };
@@ -675,10 +685,10 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       if (predicate === "vanilla") {
         return item.year === 1;
       } else if (activityHashes.restricted[predicate]) {
-        return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)) &&
-              !(activityHashes.restricted[predicate].some((el) => item.sourceHashes.includes(el))));
+        return (activityHashes.required[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash)) &&
+              !(activityHashes.restricted[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash))));
       } else {
-        return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)));
+        return (activityHashes.required[predicate].some((sourceHash) => item.sourceHashes.includes(sourceHash)));
       }
     },
     inloadout: function(predicate, item) {
