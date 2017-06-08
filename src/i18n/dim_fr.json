@@ -95,10 +95,7 @@
       "HidePopup": "Cacher Ce Popup",
       "NeverShow": "Ne plus jamais afficher.",
       "UpgradeChrome": "Veuillez Mettre à Jour Chrome",
-      "Version": {
-         "Beta": "Beta a été mis à jour à v{version} ",
-         "Stable": "DIM v{version} Publiée"
-      },
+      "Version": "{beta, select, true{Beta a été mis à jour à v{version}} other{DIM v{version} Publiée}}",
       "Xur": "Xûr est Là"
    },
    "Hotkey": {

@@ -205,6 +205,9 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
   // subclasses have unique IDs, and emblems/shaders/etc are interchangeable.
   function getLoadoutItem(pseudoItem, store) {
     var item = dimItemService.getItem(pseudoItem);
+    if (!item) {
+      return null;
+    }
     if (_.contains(['Class', 'Shader', 'Emblem', 'Emote', 'Ship', 'Horn'], item.type)) {
       item = _.find(store.items, {
         hash: pseudoItem.hash
@@ -266,17 +269,18 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
       items = _.filter(items, function(pseudoItem) {
         var item = getLoadoutItem(pseudoItem, store);
         var invalid = !item || !item.equipment;
+        // provide a more accurate count of total items
+        if (invalid) {
+          totalItems--;
+          return true;
+        }
+
         var alreadyThere = item.owner !== store.id ||
               // Needs to be equipped. Stuff not marked "equip" doesn't
               // necessarily mean to de-equip it.
               (pseudoItem.equipped && !item.equipped);
 
-        // provide a more accurate count of total items
-        if (invalid) {
-          totalItems--;
-        }
-
-        return invalid || alreadyThere;
+        return alreadyThere;
       });
 
       // only try to equip subclasses that are equippable, since we allow multiple in a loadout

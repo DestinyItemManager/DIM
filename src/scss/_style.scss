@@ -55,6 +55,9 @@ div:focus, span:focus {
 
 .new_overlay {
   @include item-size;
+  position: absolute;
+  top: 2px;
+  left: 2px;
   pointer-events: none;
   .new-item-animated & {
     will-change: transform;
@@ -98,14 +101,6 @@ div:focus, span:focus {
   &.beta {
     filter: hue-rotate(153deg);
   }
-}
-
-.oc {
-  background: url('../oc.svg') no-repeat;
-  background-size: contain;
-  padding-left: 18px;
-  height: 14px;
-  line-height: 15px !important;
 }
 
 #header {

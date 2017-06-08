@@ -84,7 +84,7 @@
       "FilterHelp": "Search item/perk or is:arc",
       "MaterialsExchange": "Available faction ranks",
       "Refresh": "Refresh Destiny Data",
-      "SupportDIM": "Support"
+      "SupportDIM": "Backers"
    },
    "Help": {
       "BackToDIM": "Back to DIM",
@@ -95,10 +95,7 @@
       "HidePopup": "Hide This Popup",
       "NeverShow": "Never show me this again.",
       "UpgradeChrome": "Please Upgrade Chrome",
-      "Version": {
-         "Beta": "Beta has been updated to v{version}",
-         "Stable": "DIM v{version} Released"
-      },
+      "Version": "{beta, select, true{Beta has been updated to v{version}} other{DIM v{version} Released}}",
       "Xur": "Xûr is Here"
    },
    "Hotkey": {

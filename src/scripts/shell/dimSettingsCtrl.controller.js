@@ -10,6 +10,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
     importExport: $featureFlags.importExport,
     qualityEnabled: $featureFlags.qualityEnabled,
     reviewsEnabled: $featureFlags.reviewsEnabled,
+    tagsEnabled: $featureFlags.tagsEnabled
   };
   vm.loadingTracker = loadingTracker;
 

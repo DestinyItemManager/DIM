@@ -87,24 +87,25 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     return response;
   }
 
-  function retryOnThrottled(request) {
-    function run(retries) {
-      return $http(request)
-        .then(function success(response) {
-          if (response.data.ErrorCode === 36) {
-            if (retries <= 0) {
-              return response;
-            } else {
-              return $timeout(Math.pow(2, 4 - retries) * 1000).then(() => run(retries - 1));
-            }
-          } else {
-            return response;
-          }
-        })
-        .catch(handleErrors);
+  function retryOnThrottled(response, retries = 3) {
+    // TODO: these different statuses suggest different backoffs
+    if (response.data &&
+        // ThrottleLimitExceededMinutes
+        (response.data.ErrorCode === 35 ||
+         // ThrottleLimitExceededMomentarily
+         response.data.ErrorCode === 36 ||
+         // ThrottleLimitExceededSeconds
+         response.data.ErrorCode === 37)) {
+      if (retries <= 0) {
+        return response;
+      } else {
+        return $timeout(Math.pow(2, 4 - retries) * 1000)
+          .then(() => $http(response.config))
+          .then((response) => retryOnThrottled(response, retries - 1));
+      }
+    } else {
+      return response;
     }
-
-    return run(3);
   }
 
   function showErrorToaster(e) {
@@ -121,7 +122,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   }
 
   function getManifest() {
-    return $http(bungieApiQuery('/Platform/Destiny/Manifest/'))
+    return $http(bungieApiQuery('/D1/Platform/Destiny/Manifest/'))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response);
   }
@@ -134,7 +135,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
   function getCharacters(platform) {
     var charactersPromise = $http(bungieApiQuery(
-      `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/`
+      `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/`
     ))
         .then(handleErrors, handleErrors)
         .then(processBnetCharactersRequest);
@@ -192,7 +193,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       // Guardians
       const promises = characters.map(function(character) {
         return $http(bungieApiQuery(
-          `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
+          `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
         ))
           .then(handleErrors, handleErrors)
           .then((response) => processInventoryResponse(character, response));
@@ -204,7 +205,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
         base: null
       };
 
-      const vaultPromise = $http(bungieApiQuery(`/Platform/Destiny/${platform.type}/MyAccount/Vault/`))
+      const vaultPromise = $http(bungieApiQuery(`/D1/Platform/Destiny/${platform.type}/MyAccount/Vault/`))
         .then(handleErrors, handleErrors)
           .then((response) => processInventoryResponse(vault, response));
 
@@ -217,7 +218,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   function getDestinyProgression(platform, characters) {
     const promises = characters.map(function(character) {
       return $http(bungieApiQuery(
-        `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
+        `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
       ))
         .then(handleErrors, handleErrors)
         .then((response) => processProgressionResponse(character, response));
@@ -234,7 +235,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   function getDestinyAdvisors(platform, characters) {
     var promises = characters.map(function(character) {
       return $http(bungieApiQuery(
-        `/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
+        `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
       ))
         .then(handleErrors, handleErrors)
         .then((response) => processAdvisorsResponse(character, response));
@@ -251,7 +252,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   function getVendorForCharacter(character, vendorHash) {
     var platform = dimState.active;
     return $http(bungieApiQuery(
-      `/Platform/Destiny/${platform.type}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
+      `/D1/Platform/Destiny/${platform.type}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     ))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response.data);
@@ -260,7 +261,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   function transfer(item, store, amount) {
     var platform = dimState.active;
     var promise = $http(bungieApiUpdate(
-      '/Platform/Destiny/TransferItem/',
+      '/D1/Platform/Destiny/TransferItem/',
       {
         characterId: store.isVault ? item.owner : store.id,
         membershipType: platform.type,
@@ -297,7 +298,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
   function equip(item) {
     var platform = dimState.active;
     return $http(bungieApiUpdate(
-      '/Platform/Destiny/EquipItem/',
+      '/D1/Platform/Destiny/EquipItem/',
       {
         characterId: item.owner,
         membershipType: platform.type,
@@ -317,7 +318,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
     var platform = dimState.active;
     return $http(bungieApiUpdate(
-      '/Platform/Destiny/EquipItems/',
+      '/D1/Platform/Destiny/EquipItems/',
       {
         characterId: store.id,
         membershipType: platform.type,
@@ -349,7 +350,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
 
     var platform = dimState.active;
     return $http(bungieApiUpdate(
-      `/Platform/Destiny/${type}/`,
+      `/D1/Platform/Destiny/${type}/`,
       {
         characterId: store.isVault ? item.owner : store.id,
         membershipType: platform.type,
@@ -361,4 +362,3 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
       .then(handleErrors, handleErrors);
   }
 }
-
