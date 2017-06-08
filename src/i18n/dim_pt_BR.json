@@ -263,6 +263,8 @@
       "NewRep": "Nova reputação"
    },
    "MovePopup": {
+      "OverviewTab": "Visão geral",
+      "ReviewsTab": "Análises",
       "Consolidate": "Consolidar",
       "DistributeEvenly": "Distribuir igualmente",
       "Equip": "Equip",
@@ -286,6 +288,23 @@
       "Error": "Erro! Anotações devem ter até 120 caracteres.",
       "Help": "Adicione anotações à este item"
    },
+   "DtrReview": {
+     "ThankYou": "Obrigado por submeteres a tua análise! Ficará disponível dentro de momentos.",
+     "Help": "Escreva uma análise (opcional)",
+     "HelpPros": "Descreva os aspetos positivos desta arma (opcional)",
+     "HelpCons": "Descreva os aspetos negativos desta arma (opcional)",
+     "YourReview": "A sua análise",
+     "Edit": "Editar",
+     "Delete": "Apagar",
+     "Submit": "Enviar",
+     "Cancel": "Cancelar",
+     "Pros": "Prós",
+     "Cons": "Contras",
+     "NoReviews": "Ainda não há análises para este item, sê o primeiro!",
+     "ServiceCallError": "O serviço de chamada do Destiny tracker falhou.",
+     "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou.",
+     "AverageRating": "({itemRating}) baseado em {numReviews} análises."
+   },
    "Objectives": {
      "Complete": "Completo",
      "Incomplete": "Incompleto"
@@ -307,6 +326,10 @@
       "ShowOverlayHelp": "Itens novos serão exibidos com uma sobreposição de destaque.",
       "ShowAnimations": "Exibir animação da sobreposição em itens novos.",
       "ShowAnimationsHelp": "Irá exibir uma animação em itens novos. Desativar esse recurso pode economizar ciclos de CPU.",
+      "ShowReviews": "Mostrar classificações das armas em análise.",
+      "ShowReviewsHelp": "Mostrar a média utilizador-armas analisadas.",
+      "AllowIdPostToDtr": "Partilhar username e items analisados com o Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "DIM vai partilhar o seu username e qualquer item que tenhas feito review com o Destiny Tracker.",
       "SetSort": "Ordenar itens por:",
       "SetSortHelp": "Ordena os itens por nível de luz ou raridade.",
       "SortPrimary": "Estatística primária",
@@ -318,6 +341,7 @@
       "VaultColumnsHelp": "Selecione o número máximo de colunas a ser exibido no cofre.",
       "SizeItem": "Tamanho do item",
       "SizeItemHelp": "Quão grande será exibida a imagem do item?",
+      "ResetToDefault": "Reset",
       "CharacterOrder": "Ordem dos personagens",
       "CharacterOrderHelp": "Personagens podem ser ordenados por data de login ou pela data de criação.",
       "CharacterOrderRecent": "Personagem com login mais recente",

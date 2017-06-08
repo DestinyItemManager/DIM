@@ -284,6 +284,16 @@
       "Error": "Erreur! Max 120 charactères pour les notes.",
       "Help": "Ajouter des notes à cet objet"
    },
+   "DtrReview": {
+     "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
+     "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
+     "Edit": "Éditer",
+     "Delete": "Supprimer",
+     "Submit": "Envoyer",
+     "Cancel": "Annuler",
+     "Pros": "Avantages",
+     "Cons": "Désavantages"
+   },
    "Objectives": {
      "Complete": "Achevée",
      "Incomplete": "Incomplet"
@@ -305,6 +315,7 @@
       "ShowOverlayHelp": "Afficher les nouveaux objets avec un indicateur.",
       "ShowAnimations": "Afficher les animations pour les nouveaux objets",
       "ShowAnimationsHelp": "Affichera les animations pour les nouveaux objets. Désactiver cette option peut améliorer les performances du CPU.",
+      "AllowIdPostToDtrHelp": "DIM va partager votre nom de compte et tout élément que vous consultez avec Destiny Tracker.",
       "SetSort": "Ordonner les objets par:",
       "SetSortHelp": "Ordonner les objets par rareté ou par la valeur de leur stat première.",
       "SortPrimary": "Stat première",
@@ -316,6 +327,7 @@
       "VaultColumnsHelp": "Sélectionner le nombre maximum de colonnes pour l'inventaire des Coffres.",
       "SizeItem": "Taille d'un objet",
       "SizeItemHelp": "Quelle taille devrait être les objets?",
+      "ResetToDefault": "Réinitialiser",
       "CharacterOrder": "Ordre de Perso",
       "CharacterOrderHelp": "Les persos peuvent être ordonnés par dernière connexion ou par leur date de création.",
       "CharacterOrderRecent": "Par le Plus Récent",
