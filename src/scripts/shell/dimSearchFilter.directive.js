@@ -679,8 +679,16 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         triumph: [3068521220, 416861381, 440710167]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
       };
       activityHashes.restricted = {
+        trials: [2179714245, 2682516238, 560942287],
+        ib: [3602080346],                               // remove engrams and random blue drops (Strike)
+        qw: [3602080346],                               // remove engrams and random blue drops (Strike)
+        cd: [3602080346],                               // remove engrams and random blue drops (Strike)
         kf: [2179714245, 2682516238, 560942287],        // remove xur exotics and patrol items
         wotm: [2179714245, 2682516238, 560942287],      // remove xur exotics and patrol items
+        poe: [3602080346, 2682516238],                  // remove engrams
+        coe: [3602080346, 2682516238],                  // remove engrams
+        af: [2682516238],                               // remove engrams
+        dawning: [2682516238, 1111209135],              // remove engrams, planetary materials, & chroma
         aot: [2964550958, 2659839637],                  // Remove ROI and TTK
         triumph: [2964550958, 2659839637]               // Remove ROI and TTK
       };
