@@ -674,10 +674,10 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
       if (predicate === "vanilla") {
         return item.year === 1;
+      } else if (activityHashes.restricted[predicate]) {
+        return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)) &&
+              !(activityHashes.restricted[predicate].some((el) => item.sourceHashes.includes(el))));
       } else {
-        if (activityHashes.restricted[predicate]) {
-          return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)) && !(activityHashes.restricted[predicate].some((el) => item.sourceHashes.includes(el))));
-        }
         return (activityHashes.required[predicate].some((el) => item.sourceHashes.includes(el)));
       }
     },
