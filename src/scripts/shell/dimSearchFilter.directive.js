@@ -625,6 +625,11 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         ev: [3559790162]             // SOURCE_VENDOR_SPECIAL_ORDERS
       };
       vendorHashes.restricted = {
+        fwc: [1111209135],           // remove motes of light & strange coins
+        do: [1111209135],
+        nm: [1111209135],
+        speaker: [1111209135],
+        cq: [512830513, 2682516238]  // remove ammo synths and planetary materials
       };
       if (!item) {
         return false;
@@ -676,8 +681,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       activityHashes.restricted = {
         kf: [2179714245, 2682516238, 560942287],        // remove xur exotics and patrol items
         wotm: [2179714245, 2682516238, 560942287],      // remove xur exotics and patrol items
-        aot: [2964550958, 2659839637],      // Remove ROI and TTK
-        triumph: [2964550958, 2659839637]   // Remove ROI and TTK
+        aot: [2964550958, 2659839637],                  // Remove ROI and TTK
+        triumph: [2964550958, 2659839637]               // Remove ROI and TTK
       };
       if (!item) {
         return false;
