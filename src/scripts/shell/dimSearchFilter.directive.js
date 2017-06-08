@@ -669,6 +669,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
       if (predicate === "vanilla") {
         return item.year === 1;
+      } else if (predicate === "aot" || predicate === "triumph") {
+        return ((item.sourceHashes.includes(3068521220) || item.sourceHashes.includes(4161861381)) && !(item.sourceHashes.includes(2964550958) || item.sourceHashes.includes(2659839637)));
       } else {
         return (item.sourceHashes.includes(activityHashes[predicate]));
       }
