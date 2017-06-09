@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "7"
-install: config/install_brotli.sh && npm install
+install: chmod +x config/brotli/brotli && npm install
 before_script: npm run publish-beta
 sudo: false
 branches:
