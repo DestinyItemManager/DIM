@@ -691,8 +691,8 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           coe: [3602080346, 2682516238],                  // remove engrams
           af: [2682516238],                               // remove engrams
           dawning: [2682516238, 1111209135],              // remove engrams, planetary materials, & chroma
-          aot: [2964550958, 2659839637],                  // Remove ROI and TTK
-          triumph: [2964550958, 2659839637]               // Remove ROI and TTK
+          aot: [2964550958, 2659839637, 353834582, 560942287], // Remove ROI, TTK, motes, & glimmer items
+          triumph: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
         }
       };
       if (!item) {
