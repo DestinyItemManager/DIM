@@ -16,6 +16,7 @@
 * Added Age of Triumph filters is:aot and is:triumph
 * Add gunsmith filter is:gunsmith
 * Updated filters to remove common items for specific filters (e.g. is:wotm no longer shows exotic items from xur, engrams, and planetary materials)
+* Loadout Builder's equip button now operates on the selected character, not your last-played character.
 
 # v3.17.1
 

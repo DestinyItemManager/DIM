@@ -184,7 +184,7 @@
         "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
         "StatsIncrease": "As an items defense level increases, the stats on that item (int/dis/str) also increase."
       },
-      "Equip": "Equip on Current Character",
+      "Equip": "Equip on {character}",
       "ShowAllConfigs": "Show all configurations",
       "ShowConfigs": "Show configurations",
       "HideAllConfigs": "Hide all configurations",
