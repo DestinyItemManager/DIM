@@ -55,7 +55,7 @@ function SearchService(dimSettingsService) {
     new: ['new'],
     glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     year: ['year1', 'year2', 'year3'],
-    vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev'],
+    vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
     activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot', 'triumph'],
     hasLight: ['light', 'haslight'],
     weapon: ['weapon'],
@@ -622,14 +622,15 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         shaxx: [4134961255],         // SOURCE_VENDOR_CRUCIBLE_HANDLER
         cq: [1362425043],            // SOURCE_VENDOR_CRUCIBLE_QUARTERMASTER
         eris: [1374970038],          // SOURCE_VENDOR_CROTAS_BANE
-        ev: [3559790162]             // SOURCE_VENDOR_SPECIAL_ORDERS
+        ev: [3559790162],            // SOURCE_VENDOR_SPECIAL_ORDERS
+        gunsmith: [353834582]        // SOURCE_VENDOR_GUNSMITH
       };
       vendorHashes.restricted = {
-        fwc: [1111209135],           // remove motes of light & strange coins
-        do: [1111209135],
-        nm: [1111209135],
-        speaker: [1111209135],
-        cq: [512830513, 2682516238]  // remove ammo synths and planetary materials
+        fwc: [353834582],            // remove motes of light & strange coins
+        do: [353834582],
+        nm: [353834582],
+        speaker: [353834582],
+        cq: [353834582, 2682516238]  // remove ammo synths and planetary materials
       };
       if (!item) {
         return false;
@@ -679,7 +680,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         triumph: [3068521220, 416861381, 440710167]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
       };
       activityHashes.restricted = {
-        trials: [2179714245, 2682516238, 560942287],
+        trials: [2179714245, 2682516238, 560942287],    // remove xur exotics and patrol items
         ib: [3602080346],                               // remove engrams and random blue drops (Strike)
         qw: [3602080346],                               // remove engrams and random blue drops (Strike)
         cd: [3602080346],                               // remove engrams and random blue drops (Strike)
