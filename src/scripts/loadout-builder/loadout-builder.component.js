@@ -464,7 +464,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
           val[0].equipped = true;
         });
 
-        return dimLoadoutService.applyLoadout(dimStoreService.getActiveStore(), loadout, true);
+        return dimLoadoutService.applyLoadout(vm.activeCharacters[vm.selectedCharacter], loadout, true);
       },
       getSetBucketsStep: function(activeGuardian) {
         var bestArmor = getBestArmor(buckets[activeGuardian], vendorBuckets[activeGuardian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
