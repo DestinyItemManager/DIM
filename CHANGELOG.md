@@ -14,7 +14,6 @@
 * DIM is now better at figuring out which platforms you have Destiny accounts on.
 * DIM is faster!
 * Added Age of Triumph filters is:aot and is:triumph
-* Fixed documentation links pointing to legacy locations
 
 # v3.17.1
 
