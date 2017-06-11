@@ -1,5 +1,5 @@
-import debugItem from 'app/views/debugItem.template.html';
-import login from 'app/scripts/login/login.template.html';
+import debugItem from 'app/views/debugItem.html';
+import login from 'app/scripts/login/login.html';
 
 function routes($stateProvider, $urlRouterProvider) {
   'ngInject';

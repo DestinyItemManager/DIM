@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimMoveItemProperties.directive.html';
 
 angular.module('dimApp')
   .component('dimObjectives', Objectives())
@@ -10,22 +11,7 @@ function Objectives() {
     bindings: {
       objectives: '<'
     },
-    template: [
-      '<div class="item-objectives" ng-if="$ctrl.objectives.length">',
-      '  <div class="objective-row" ng-switch="objective.displayStyle" ng-repeat="objective in $ctrl.objectives track by $index" ng-class="{\'objective-complete\': objective.complete, \'objective-boolean\': objective.boolean }">',
-      '    <div ng-switch-when="trials">',
-      '      <i class="fa fa-circle trials" ng-repeat="i in objective.completionValue | range track by $index" ng-class="{\'incomplete\': $index >= objective.progress, \'wins\': objective.completionValue === 9}"></i>',
-      '      <span ng-if="objective.completionValue === 9 && objective.progress > 9"> + {{ objective.progress - 9 }}</span>',
-      '    </div>',
-      '    <div ng-switch-default class="objective-checkbox"><div></div></div>',
-      '    <div ng-switch-default class="objective-progress">',
-      '      <div class="objective-progress-bar" dim-percent-width="objective.progress / objective.completionValue"></div>',
-      '      <div class="objective-description">{{ objective.displayName }}</div>',
-      '      <div class="objective-text">{{ objective.display }}</div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: template
   };
 }
 
