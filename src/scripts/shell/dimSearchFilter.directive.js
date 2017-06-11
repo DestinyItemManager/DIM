@@ -609,7 +609,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eververse (ev)
     vendor: function(predicate, item) {
       var vendorHashes = {             // identifier
-        require: {
+        required: {
           fwc: [995344558],            // SOURCE_VENDOR_FUTURE_WAR_CULT
           do: [103311758],             // SOURCE_VENDOR_DEAD_ORBIT
           nm: [3072854931],            // SOURCE_VENDOR_NEW_MONARCHY
