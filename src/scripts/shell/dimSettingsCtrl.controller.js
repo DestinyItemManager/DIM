@@ -9,6 +9,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
   vm.featureFlags = {
     importExport: $featureFlags.importExport,
     qualityEnabled: $featureFlags.qualityEnabled,
+    reviewsEnabled: $featureFlags.reviewsEnabled,
     tagsEnabled: $featureFlags.tagsEnabled
   };
   vm.loadingTracker = loadingTracker;

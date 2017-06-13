@@ -52,15 +52,15 @@
           <input type="checkbox" id="showNewAnimation" ng-model="vm.settings.showNewAnimation"/>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="vm.featureFlags.reviewsEnabled">
         <td>
-          <label for="showElements" translate-attr="{ title: 'Settings.ShowElementalHelp'}" translate="Settings.ShowElemental"></label>
+          <label for="showReviews" translate-attr="{ title: 'Settings.ShowReviewsHelp'}" translate="Settings.ShowReviews"></label>
         </td>
         <td>
-          <input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/>
+          <input type="checkbox" id="showReviews" ng-model="vm.settings.showReviews"/>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="vm.featureFlags.reviewsEnabled">
         <td>
           <label for="allowIdPostToDtr" translate-attr="{ title: 'Settings.AllowIdPostToDtrHelp'}" translate="Settings.AllowIdPostToDtr"></label>
         </td>

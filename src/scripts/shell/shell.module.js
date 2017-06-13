@@ -8,6 +8,7 @@ import shellComponent from './shell/shell.component';
 import contentComponent from './content/content.component';
 import backLinkComponent from './shell/backLink.component';
 import { CountdownComponent } from './countdown.component';
+import { StarRatingComponent } from './star-rating/star-rating.component';
 
 export const ShellModule = angular
   .module('dimShell', [
@@ -20,6 +21,7 @@ export const ShellModule = angular
   .component('content', contentComponent)
   .component('backLink', backLinkComponent)
   .component('countdown', CountdownComponent)
+  .component('starRating', StarRatingComponent)
   .config(function($stateProvider) {
     'ngInject';
 

@@ -17,8 +17,8 @@
        class="item-stat item-quality"
        ng-style="::vm.item.quality.min | qualityColor">{{ ::vm.item.quality.min }}%</div>
   <div ng-if="vm.item.dtrRating"
-       class="item-dtr-rating"
-       ng-style="vm.item.dtrRating | dtrRatingColor">{{ vm.item.dtrRating }}</div>
+       class="item-stat item-review"
+       ng-style="vm.item.dtrRating | dtrRatingColor">{{ ::vm.item.dtrRating }}<i class='fa fa-star'></i></div>
   <div class="item-element"
        ng-class="::vm.item.dmg"></div>
   <div ng-class="vm.item.dimInfo.tag | tagIcon"></div>
@@ -29,7 +29,7 @@
          height="44"
          width="44" />
   </div>
-  <div ng-class="::vm.badgeClassNames"
+  <div ng-class="vm.badgeClassNames"
        ng-if="::vm.showBadge"
        ng-bind="::vm.badgeCount"></div>
 </div>

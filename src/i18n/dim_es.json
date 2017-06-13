@@ -22,7 +22,7 @@
       "NoAccountForPlatform": "No encontramos una cuenta de Destiny para {platform}.",
       "NoCookies": "No se encontraron cookies.",
       "NotConnected": "Es posible que no tengas conexión a Internet.",
-      "Twitter": "Entérate de los estados de actualizaciones:",
+      "Twitter": "Entérate de los estados de actualizaciones en:",
       "ItemUniqueness": "Unicidad de objeto",
       "ItemUniquenessExplanation": "Intentáste mover el '{name}' {type} a tu {character} pero ese destino ya cuenta con ese objeto y solo puede tener uno.",
       "VendorNotFound": "Los datos del proveedor no están disponibles."
@@ -107,7 +107,7 @@
    },
    "Infusion": {
       "Infusion": "Buscador de Combustible de Infusión.",
-      "BringGear": "Traerá el equipo a",
+      "BringGear": "Traerá el equipo a:",
       "Calc": "Calculador de Infusión",
       "InfuseItems": "Selecciona un objeto para infusionar:",
       "InfusionMaterials": "Materiales para Infusionar",
@@ -115,8 +115,7 @@
       "NoItems": "No hay objetos disponibles para infusionar.",
       "NoTransfer": "El material para infusionar\n{target} no puede ser movido.",
       "ShowItems": "Mostrar objetos infundibles en el Depósito y todos los personajes",
-      "TransferItems": "Transferir objetos",
-      "Using3": "usando 3"
+      "TransferItems": "Transferir objetos"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Error al salvar información del objeto",
@@ -249,7 +248,6 @@
       "Error": "Error cargando Destiny info:\n{error}\n Carga de nuevo para volver a intentarlo.",
       "Outdated": "Información de Destiny obsoleta",
       "OutdatedExplanation": "Bungie ha actualizado su información de base de datos de Destiny. Recarga DIM para cargar la información nueva. Toma en cuenta que puede que DIM no funcione por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas.",
-      "BungieDown": "Bungie.net puede estar teniendo problemas.",
       "Load": "Cargando información de Destiny guardada",
       "LoadCharInv": "Cargando personajes e inventario de Destiny",
       "Save": "Guardando última información de Destiny",
@@ -265,13 +263,18 @@
       "NewRep": "Nueva reputación"
    },
    "MovePopup": {
+      "OverviewTab": "Resumen",
+      "ReviewsTab": "Reseñas",
       "Consolidate": "Consolida",
       "DistributeEvenly": "Distribuye Equitativamente",
       "Equip": "Poner",
       "Split": "Partir",
       "Store": "Meter",
+      "Subtitle": "{classType} {typeName} {light, select, null{} other{con {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
-      "Vault": "Bóveda"
+      "Vault": "Bóveda",
+      "LockUnlock": "{locked, select, false{Bloquear} other{Desbloquear}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Seguir} other{No seguir}} {itemType}"
    },
    "MoveAmount": {
      "Min": "Montón mínimo (1)",
@@ -284,6 +287,23 @@
    "Notes": {
       "Error": "Error! Máximo 120 caracteres por notas.",
       "Help": "Agregar notas a este artículo"
+   },
+   "DtrReview": {
+     "ThankYou": "Gracias por enviar una reseña! ",
+     "Help": "Escribir una reseña (opcional)",
+     "HelpPros": "Describe las cosas positivas de esta arma (opcional)",
+     "HelpCons": "Describe las cosas negativas de esta arma (opcional)",
+     "YourReview": "Tu Reseña",
+     "Edit": "Editar",
+     "Delete": "Borrar",
+     "Submit": "Enviar",
+     "Cancel": "Cancelar",
+     "Pros": "Pros",
+     "Cons": "Contras",
+     "NoReviews": "No hay reseñas para este objeto, sé el primero!",
+     "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
+     "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
+     "AverageRating": "({itemRating}) basado en {numReviews} reseñas."
    },
    "Objectives": {
      "Complete": "Completo",
@@ -306,8 +326,10 @@
       "ShowOverlayHelp": "Mostrará objetos nuevos con una cobertura.",
       "ShowAnimations": "Mostrar cobertura animada en nuevos objetos.",
       "ShowAnimationsHelp": "Mostrará la cobertura animada en objetos nuevos. Apagando esto puede ahorrar ciclos de procesamiento.",
-      "ShowElemental": "Mostrar ícono de daño elemental en armas",
-      "ShowElementalHelp": "Mostrará ícono de daño elemental en armas.",
+      "ShowReviews": "Muestra la valuación de reseñas en las armas",
+      "ShowReviewsHelp": "Muestra el promedio de reseñas de armas por usuarios.",
+      "AllowIdPostToDtr": "Comparte tu nombre de cuenta y tus reseñas de objetos con Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "DIM compartirá el nombre de tu cuenta y cualquier objeto del cual hagas una reseña con Destiny Tracker",
       "SetSort": "Ordernar objetos por:",
       "SetSortHelp": "Ordernar objetos por rareza o por sus valores estadísticos.",
       "SortPrimary": "Estadística primaria",
@@ -319,7 +341,7 @@
       "VaultColumnsHelp": "Seleccionar el máximo número de columnas para el depósito.",
       "SizeItem": "Tamaño de objetos",
       "SizeItemHelp": "Qué tan grande deben verse los objetos?",
-      "ResetToDefault": "Reestablecer a Predeterminado",
+      "ResetToDefault": "Reiniciar",
       "CharacterOrder": "Órden de personajes",
       "CharacterOrderHelp": "Los personajes pueden ser ordenados por última sesión iniciada o por su fecha de creación.",
       "CharacterOrderRecent": "Por el personaje más reciente",
@@ -343,7 +365,7 @@
       "Prestige": "Nivel de Prestigio: {level}\n{exp}xp para 5 motas de luz.",
       "Quality": "Calidad Estadística",
       "Strength": "Fuerza",
-      "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 por T{nextTier}}})\n"
+      "TierProgress": "N{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 para N{nextTier}}})\n"
    },
    "StoreBucket": {
       "FillStack": "Llena la pila ({amount})",
