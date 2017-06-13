@@ -24,7 +24,7 @@ angular.module('dimApp')
 
 
 
-function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, dimItemDiscussService, $rootScope, dimActionQueue) {
+function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
   var otherDialog = null;
   let firstItemTimed = false;
 
@@ -73,7 +73,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     }
 
     vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
-      if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen && !dimItemDiscussService.dialogOpen) {
+      if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
         e.stopPropagation();
         const active = dimStoreService.getActiveStore();
 
@@ -115,8 +115,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimLoadoutService.addItemToLoadout(item, e);
       } else if (dimCompareService.dialogOpen) {
         dimCompareService.addItemToCompare(item, e);
-      } else if (dimItemDiscussService.dialogOpen) {
-        dimItemDiscussService.addItemToDiscuss(item, e);
       } else {
         dialogResult = ngDialog.open({
           template: '<dim-move-popup store="vm.store" item="vm.item" ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()"></dim-move-popup>',
@@ -176,6 +174,13 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     } else {
       processItem(vm, vm.item);
     }
+
+    scope.$watch('vm.item.dtrRating', function() {
+      if (!vm.item.reviewable) {
+        return;
+      }
+      vm.badgeClassNames['item-stat-no-bg'] = Boolean(vm.item.dtrRating);
+    });
   }
 }
 
@@ -205,12 +210,9 @@ function processItem(vm, item) {
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
     vm.badgeClassNames['item-stat-no-bg'] = Boolean(vm.item.quality);
-    vm.badgeClassNames['stat-damage-' + item.dmg] = true;
-
     vm.badgeCount = item.primStat.value;
   }
 }
-
 
 function StoreItemCtrl() {
   var vm = this;

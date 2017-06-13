@@ -107,7 +107,7 @@
    },
    "Infusion": {
       "Infusion": "Buscador de Item para Infusão",
-      "BringGear": "Elevará o item para",
+      "BringGear": "Elevará o item para:",
       "Calc": "Calculadora de infusões",
       "InfuseItems": "Selecione um item para infundir:",
       "InfusionMaterials": "Materiais de infusão",
@@ -115,8 +115,7 @@
       "NoItems": "Nenhum item para infusão encontrado.",
       "NoTransfer": "Transferência de materia para infusão\n {target} não pôde ser movido.",
       "ShowItems": "Exibir itens infundíveis de outros personagens e cofre",
-      "TransferItems": "Transferir itens",
-      "Using3": "usando 3"
+      "TransferItems": "Transferir itens"
    },
    "ItemInfoService": {
      "SaveInfoErrorTitle": "Erro salvando informação de item.",
@@ -249,7 +248,6 @@
       "Error": "Erro ao carregar informações de Destiny:\n{error}\nReinicie para tentar novamente.",
       "Outdated": "Informações desatualizadas",
       "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores.",
-      "BungieDown": "A Bungie.net parece estar passando por problemas.",
       "Load": "Carregando informações salvas",
       "LoadCharInv": "Carregando personagens e inventário",
       "Save": "Salvando últimas informações ",
@@ -265,6 +263,8 @@
       "NewRep": "Nova reputação"
    },
    "MovePopup": {
+      "OverviewTab": "Visão geral",
+      "ReviewsTab": "Análises",
       "Consolidate": "Consolidar",
       "DistributeEvenly": "Distribuir igualmente",
       "Equip": "Equip",
@@ -272,7 +272,9 @@
       "Store": "Mover",
       "Subtitle": "{classType} {typeName} {light, select, null{} other{com {light}}} {statName, select, undefined{} other{de {statName}}}",
       "Take": "Tomar",
-      "Vault": "Cofre"
+      "Vault": "Cofre",
+      "LockUnlock": "{locked, select, false{Lock} other{Unlock}} {itemType}",
+      "TrackUntrack": "{tracked, select, false{Track} other{Untrack}} {itemType}"
    },
    "MoveAmount": {
      "Min": "Quantidade mínima (1)",
@@ -285,6 +287,23 @@
    "Notes": {
       "Error": "Erro! Anotações devem ter até 120 caracteres.",
       "Help": "Adicione anotações à este item"
+   },
+   "DtrReview": {
+     "ThankYou": "Obrigado por submeteres a tua análise! Ficará disponível dentro de momentos.",
+     "Help": "Escreva uma análise (opcional)",
+     "HelpPros": "Descreva os aspetos positivos desta arma (opcional)",
+     "HelpCons": "Descreva os aspetos negativos desta arma (opcional)",
+     "YourReview": "A sua análise",
+     "Edit": "Editar",
+     "Delete": "Apagar",
+     "Submit": "Enviar",
+     "Cancel": "Cancelar",
+     "Pros": "Prós",
+     "Cons": "Contras",
+     "NoReviews": "Ainda não há análises para este item, sê o primeiro!",
+     "ServiceCallError": "O serviço de chamada do Destiny tracker falhou.",
+     "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou.",
+     "AverageRating": "({itemRating}) baseado em {numReviews} análises."
    },
    "Objectives": {
      "Complete": "Completo",
@@ -307,8 +326,10 @@
       "ShowOverlayHelp": "Itens novos serão exibidos com uma sobreposição de destaque.",
       "ShowAnimations": "Exibir animação da sobreposição em itens novos.",
       "ShowAnimationsHelp": "Irá exibir uma animação em itens novos. Desativar esse recurso pode economizar ciclos de CPU.",
-      "ShowElemental": "Exibir ícone de dano elemental em armas",
-      "ShowElementalHelp": "Exibe o ícone do dano elemental da arma.",
+      "ShowReviews": "Mostrar classificações das armas em análise.",
+      "ShowReviewsHelp": "Mostrar a média utilizador-armas analisadas.",
+      "AllowIdPostToDtr": "Partilhar username e items analisados com o Destiny Tracker.",
+      "AllowIdPostToDtrHelp": "DIM vai partilhar o seu username e qualquer item que tenhas feito review com o Destiny Tracker.",
       "SetSort": "Ordenar itens por:",
       "SetSortHelp": "Ordena os itens por nível de luz ou raridade.",
       "SortPrimary": "Estatística primária",
@@ -320,7 +341,7 @@
       "VaultColumnsHelp": "Selecione o número máximo de colunas a ser exibido no cofre.",
       "SizeItem": "Tamanho do item",
       "SizeItemHelp": "Quão grande será exibida a imagem do item?",
-      "ResetToDefault": "Restaurar para padrão",
+      "ResetToDefault": "Reset",
       "CharacterOrder": "Ordem dos personagens",
       "CharacterOrderHelp": "Personagens podem ser ordenados por data de login ou pela data de criação.",
       "CharacterOrderRecent": "Personagem com login mais recente",

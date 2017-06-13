@@ -20,6 +20,7 @@ import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
+import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import oauthModule from './oauth/oauth.module';
 
@@ -47,6 +48,7 @@ export const DimAppModule = angular
     inventoryModule,
     recordBooksModule,
     vendorsModule,
+    itemReviewModule,
     loadoutBuilderModule,
     oauthModule,
     'angularUUID2',

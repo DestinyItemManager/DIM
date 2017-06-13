@@ -13,6 +13,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
 
   var vm = this;
   vm.qualityEnabled = $featureFlags.qualityEnabled;
+  vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
   if (dimStoreService.getStores().length === 0) {
     $state.go('inventory');
