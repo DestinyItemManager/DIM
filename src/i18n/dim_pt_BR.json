@@ -83,8 +83,7 @@
       "Filters": "Filtros",
       "FilterHelp": "Buscar por item/perk ou is:arc",
       "MaterialsExchange": "Ranks de facção disponíveis",
-      "Refresh": "Atualizar dados do Destiny",
-      "SupportDIM": "Ajuda"
+      "Refresh": "Atualizar dados do Destiny"
    },
    "Help": {
       "BackToDIM": "Voltar para o DIM",
@@ -184,7 +183,6 @@
          "ChangeNodes": "Mude o Intelecto, Disciplina e Força dentro do jogo de acordo com o que é exibido ao criar cada set.",
          "StatsIncrease": "Quando o nível de defesa de um item aumenta, os atributos deste item (intelecto, disciplina e força) também aumentam."
       },
-      "Equip": "Equipar no personagem atual",
       "ShowAllConfigs": "Exibir todas as configurações",
       "ShowConfigs": "Exibir configurações",
       "HideAllConfigs": "Ocultar todas as configurações",

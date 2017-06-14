@@ -83,8 +83,7 @@
       "Filters": "Filter",
       "FilterHelp": "Suche nach Item/Perk oder is:arc",
       "MaterialsExchange": "Verfügbare Fraktionsränge",
-      "Refresh": "Aktualisiere Destiny Daten",
-      "SupportDIM": "Support"
+      "Refresh": "Aktualisiere Destiny Daten"
    },
    "Help": {
       "BackToDIM": "Zurück zu DIM",
@@ -184,7 +183,6 @@
          "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
          "StatsIncrease": "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
       },
-      "Equip": "Beim aktuellen Charakter anlegen.",
       "ShowAllConfigs": "Zeige alle Einstellungen",
       "ShowConfigs": "Zeige Einstellungen",
       "HideAllConfigs": "Verstecke alle Einstellungen",
@@ -327,7 +325,7 @@
       "ShowAnimations": "Zeige animiertes Overlay bei neuen Gegenständen an",
       "ShowAnimationsHelp": "Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten verringert die CPU Auslastung.",
       "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
-      "ShowReviewsHelp": "Zeige die durchschnittliche User basierte Wertung bei Waffen an",
+      "ShowReviewsHelp": "Zeige die durchschnittliche User basierte Wertung bei Waffen an.",
       "AllowIdPostToDtr": "Teile Account-Name und bewertete Items mit Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM wird deinen Account-Namen und jedes Item das du bewertet hast mit Destiny Tracker teilen.",
       "SetSort": "Sortiere Gegenstände nach:",

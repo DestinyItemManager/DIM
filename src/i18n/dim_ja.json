@@ -83,8 +83,7 @@
       "Filters": "フィルター",
       "FilterHelp": "アイテム／パークを検索",
       "MaterialsExchange": "利用可能な派閥のランク",
-      "Refresh": "デスティニーデータを更新",
-      "SupportDIM": "サポート"
+      "Refresh": "デスティニーデータを更新"
    },
    "Help": {
       "BackToDIM": "DIMに戻る",
@@ -184,7 +183,6 @@
          "ChangeNodes": "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい.",
          "StatsIncrease": "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
       },
-      "Equip": "使用中のキャラクターに装備する",
       "ShowAllConfigs": "全ての設定を表示する",
       "ShowConfigs": "設定を表示する",
       "HideAllConfigs": "全ての設定を隠す",

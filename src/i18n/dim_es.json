@@ -83,8 +83,7 @@
       "Filters": "Filtros",
       "FilterHelp": "Buscar objeto/beneficio o is:arc",
       "MaterialsExchange": "Rangos de facción disponible",
-      "Refresh": "Actualizar datos de Destiny",
-      "SupportDIM": "Soporte"
+      "Refresh": "Actualizar datos de Destiny"
    },
    "Help": {
       "BackToDIM": "Regresar a DIM",
@@ -184,7 +183,6 @@
          "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
          "StatsIncrease": "Mientras el nivel de defensa de los objetos incremente, las estadísticas en ese objeto (int/dis/fuer) también incrementan."
       },
-      "Equip": "Equipar al personaje actual",
       "ShowAllConfigs": "Mostrar todas las configuraciones",
       "ShowConfigs": "Mostrar configuraciones",
       "HideAllConfigs": "Ocultar todas las configuraciones",
