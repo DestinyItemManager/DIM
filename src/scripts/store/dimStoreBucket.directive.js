@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
-import dialogTemplate from './dimStoreBucket.directive2.html';
+import dialogTemplate from './dimStoreBucket.directive.dialogTemplate.html';
 
 angular.module('dimApp')
   .directive('dimStoreBucket', StoreBucket);

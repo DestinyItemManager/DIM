@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimMoveItemProperties.directive.html';
-import moveDialogTemplate from './dimMoveItemProperties.directive2.html';
+import moveDialogTemplate from './dimMoveItemProperties.directive.moveDialogTemplate.html';
 
 angular.module('dimApp')
   .component('dimObjectives', Objectives())
