@@ -7,7 +7,7 @@
     <form ng-submit="vm.finish()">
       <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>
     </form>
-    <div class="buttons">' +
+    <div class="buttons"> +
       <button ng-click="vm.finish()"><span translate="StoreBucket.Move"</span></button>
       <button ng-click="vm.stacksWorthClick()" ng-show="vm.stacksWorth > 0"><span translate="StoreBucket.FillStack" translate-values="{ amount : vm.stacksWorth }"</span></button>
     </div>
