@@ -8,7 +8,6 @@ function VendorService(
   dimBungieService,
   dimStoreService,
   dimDefinitions,
-  dimFeatureFlags,
   dimPlatformService,
   $q
 ) {

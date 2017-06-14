@@ -14,9 +14,8 @@ function ItemDiscuss() {
   };
 }
 
-function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimFeatureFlags, dimDestinyTrackerService) {
+function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimDestinyTrackerService) {
   var vm = this;
-  vm.featureFlags = dimFeatureFlags;
   vm.show = dimItemDiscussService.dialogOpen;
   vm.dtrRatingOptions = [1, 2, 3, 4, 5];
 

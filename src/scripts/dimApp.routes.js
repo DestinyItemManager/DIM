@@ -1,4 +1,3 @@
-import materialExchange from 'app/views/mats-exchange.template.html';
 import debugItem from 'app/views/debugItem.template.html';
 import login from 'app/scripts/login/login.template.html';
 
@@ -8,11 +7,6 @@ function routes($stateProvider, $urlRouterProvider) {
   const states = [{
     name: 'root',
     abstract: true
-  }, {
-    name: 'materials-exchange',
-    parent: 'content',
-    url: '/materials-exchange',
-    template: materialExchange
   }, {
     name: 'debugItem',
     parent: 'content',
@@ -24,6 +18,15 @@ function routes($stateProvider, $urlRouterProvider) {
     url: '/login',
     template: login
   }];
+
+  if ($featureFlags.materialsExchangeEnabled) {
+    states.push({
+      name: 'materials-exchange',
+      parent: 'content',
+      url: '/materials-exchange',
+      template: require('app/views/mats-exchange.template.html')
+    });
+  }
 
   if ($DIM_FLAVOR === 'dev') {
     states.push({

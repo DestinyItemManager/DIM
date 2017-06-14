@@ -46,10 +46,7 @@ require('./scripts/loadout/dimLoadoutPopup.directive');
 require('./scripts/loadout/random/dimRandom.controller');
 require('./scripts/compare/dimCompare.directive');
 require('./scripts/compare/dimCompareService.factory');
-require('./scripts/itemDiscuss/dimItemDiscuss.directive');
-require('./scripts/itemDiscuss/dimItemDiscussService.factory');
 require('./scripts/shell/dimAngularFilters.filter');
-require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
 require('./scripts/shell/dimSettingsCtrl.controller');
 require('./scripts/shell/dimSearchFilter.directive');
 require('./scripts/shell/dimClickAnywhereButHere.directive');
@@ -65,6 +62,8 @@ require('./scripts/store/dimSimpleItem.directive');
 require('./scripts/store/dimStats.directive');
 require('./scripts/store/dimFarming.directive');
 require('./scripts/store/dimClearNewItems.directive');
+require('./scripts/item-review/item-review.component');
+require('./scripts/move-popup/dimItemStats.component');
 require('./scripts/move-popup/dimMoveAmount.directive');
 require('./scripts/move-popup/dimMovePopup.directive');
 require('./scripts/move-popup/dimTalentGrid.directive');
@@ -75,7 +74,10 @@ require('./scripts/debug/dimDebugItem.controller');
 if ($DIM_FLAVOR === 'dev') {
   require('./scripts/developer/dimDeveloper.controller');
 }
-require('./scripts/materials-exchange/dimCollapsible.directive');
+if ($featureFlags.materialsExchangeEnabled) {
+  require('./scripts/shell/dimMaterialsExchangeCtrl.controller');
+  require('./scripts/materials-exchange/dimCollapsible.directive');
+}
 require('./scripts/login/dimLogin.controller');
 
 require('./scss/main.scss');

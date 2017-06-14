@@ -48,7 +48,6 @@ function StoreBucketCtrl($scope,
                          ngDialog,
                          $rootScope,
                          dimActionQueue,
-                         dimFeatureFlags,
                          dimInfoService,
                          $translate) {
   var vm = this;
@@ -178,7 +177,7 @@ function StoreBucketCtrl($scope,
     }
 
     promise = promise.then(function(moveAmount) {
-      if (dimFeatureFlags.debugMoves) {
+      if ($featureFlags.debugMoves) {
         console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
       }
       var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);

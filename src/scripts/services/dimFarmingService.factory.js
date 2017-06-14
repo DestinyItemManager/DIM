@@ -15,7 +15,6 @@ function FarmingService($rootScope,
                         dimStoreService,
                         $interval,
                         toaster,
-                        dimFeatureFlags,
                         dimSettingsService,
                         $translate,
                         dimBucketService) {
@@ -83,13 +82,13 @@ function FarmingService($rootScope,
                 const otherStoresWithSpace = _.select(otherStores, (store) => store.spaceLeftForItem(item));
 
                 if (otherStoresWithSpace.length) {
-                  if (dimFeatureFlags.debugMoves) {
+                  if ($featureFlags.debugMoves) {
                     console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', otherStoresWithSpace[0].name, 'from', dimStoreService.getStore(item.owner).name);
                   }
                   return dimItemService.moveTo(item, otherStoresWithSpace[0], false, item.amount, items, reservations);
                 }
               }
-              if (dimFeatureFlags.debugMoves) {
+              if ($featureFlags.debugMoves) {
                 console.log("Farming initiated move:", item.amount, item.name, item.type, 'to', vault.name, 'from', dimStoreService.getStore(item.owner).name);
               }
               return dimItemService.moveTo(item, vault, false, item.amount, items, reservations);

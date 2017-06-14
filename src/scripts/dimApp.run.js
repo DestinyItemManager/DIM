@@ -1,8 +1,6 @@
 import changelog from '../views/changelog-toaster-release.html';
 
-import upgradeChrome from '../views/upgrade-chrome.html';
-
-function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFeatureFlags) {
+function run($window, $rootScope, $translate, SyncService, dimInfoService, $timeout) {
   'ngInject';
 
   SyncService.init();
@@ -14,27 +12,31 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, dimFe
   $rootScope.$DIM_FLAVOR = $DIM_FLAVOR;
   $rootScope.$DIM_CHANGELOG = $DIM_CHANGELOG;
 
-  $rootScope.$on('dim-settings-loaded', () => {
+  const unregister = $rootScope.$on('dim-settings-loaded', () => {
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
-      dimInfoService.show('old-chrome', {
-        title: $translate.instant('Help.UpgradeChrome'),
-        view: upgradeChrome,
-        type: 'error'
-      }, 0);
+      $timeout(function() {
+        dimInfoService.show('old-chrome', {
+          title: $translate.instant('Help.UpgradeChrome'),
+          body: $translate.instant('Views.UpgradeChrome'),
+          type: 'error',
+          hideable: false
+        }, 0);
+      }, 1000);
     }
 
     console.log('DIM v' + $DIM_VERSION + ' (' + $DIM_FLAVOR + ') - Please report any errors to https://www.reddit.com/r/destinyitemmanager');
 
-    if (dimFeatureFlags.changelogToaster && ($DIM_FLAVOR === 'release')) {
+    if ($featureFlags.changelogToaster) {
       dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
-        title: $DIM_FLAVOR === 'release' ? $translate.instant('Help.Version.Stable', {
-          version: $DIM_VERSION
-        }) : $translate.instant('Help.Version.Beta', {
-          version: $DIM_VERSION
+        title: $translate.instant('Help.Version', {
+          version: $DIM_VERSION,
+          beta: $DIM_FLAVOR === 'beta'
         }),
-        view: changelog
+        body: changelog
       });
     }
+
+    unregister();
   });
 }
 

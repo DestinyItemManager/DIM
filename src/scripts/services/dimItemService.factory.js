@@ -7,7 +7,6 @@ angular.module('dimApp')
 function ItemService(dimStoreService,
                      dimBungieService,
                      dimCategory,
-                     dimFeatureFlags,
                      $q,
                      $translate) {
   // We'll reload the stores to check if things have been
@@ -48,7 +47,7 @@ function ItemService(dimStoreService,
       var stackable = item.maxStackSize > 1;
       // Items to be decremented
       var sourceItems = stackable
-            ? _.sortBy(_.select(source.items, function(i) {
+            ? _.sortBy(_.select(source.buckets[item.location.id], function(i) {
               return i.hash === item.hash &&
                 i.id === item.id &&
                 !i.notransfer;
@@ -56,7 +55,7 @@ function ItemService(dimStoreService,
       // Items to be incremented. There's really only ever at most one of these, but
       // it's easier to deal with as a list.
       var targetItems = stackable
-            ? _.sortBy(_.select(target.items, function(i) {
+            ? _.sortBy(_.select(target.buckets[item.location.id], function(i) {
               return i.hash === item.hash &&
                 i.id === item.id &&
                 // Don't consider full stacks as targets
@@ -83,7 +82,17 @@ function ItemService(dimStoreService,
             removedSourceItem = sourceItem.index === item.index;
           }
         } else {
+          // Perf hack: by replacing the item entirely with a cloned
+          // item that has an adjusted index, we force the ng-repeat
+          // to refresh its view of the item, updating the
+          // amount. This is because we've switched to bind-once for
+          // the amount since it rarely changes.
+          source.removeItem(sourceItem);
+          sourceItem = angular.copy(sourceItem);
           sourceItem.amount -= amountToRemove;
+          sourceItem.index = dimStoreService.createItemIndex(sourceItem);
+          source.addItem(sourceItem);
+          console.log(source.buckets[item.location.id]);
         }
 
         removeAmount -= amountToRemove;
@@ -106,7 +115,16 @@ function ItemService(dimStoreService,
         }
 
         var amountToAdd = Math.min(addAmount, targetItem.maxStackSize - targetItem.amount);
+        // Perf hack: by replacing the item entirely with a cloned
+        // item that has an adjusted index, we force the ng-repeat to
+        // refresh its view of the item, updating the amount. This is
+        // because we've switched to bind-once for the amount since it
+        // rarely changes.
+        target.removeItem(targetItem);
+        targetItem = angular.copy(targetItem);
         targetItem.amount += amountToAdd;
+        targetItem.index = dimStoreService.createItemIndex(targetItem);
+        target.addItem(targetItem);
         addAmount -= amountToAdd;
       }
       item = targetItem; // The item we're operating on switches to the last target
@@ -246,7 +264,7 @@ function ItemService(dimStoreService,
   }
 
   function equipItem(item) {
-    if (dimFeatureFlags.debugMoves) {
+    if ($featureFlags.debugMoves) {
       console.log('Equip', item.name, item.type, 'to', dimStoreService.getStore(item.owner).name);
     }
     return dimBungieService.equip(item)
@@ -279,7 +297,7 @@ function ItemService(dimStoreService,
   }
 
   function moveToStore(item, store, equip, amount) {
-    if (dimFeatureFlags.debugMoves) {
+    if ($featureFlags.debugMoves) {
       console.log('Move', amount, item.name, item.type, 'to', store.name, 'from', dimStoreService.getStore(item.owner).name);
     }
     return dimBungieService.transfer(item, store, amount)

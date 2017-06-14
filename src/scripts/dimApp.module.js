@@ -20,13 +20,13 @@ import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
 import recordBooksModule from './record-books/record-books.module';
 import vendorsModule from './vendors/vendors.module';
+import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import oauthModule from './oauth/oauth.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
 import run from './dimApp.run';
-import featureFlags from './feature-flags';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
@@ -48,6 +48,7 @@ export const DimAppModule = angular
     inventoryModule,
     recordBooksModule,
     vendorsModule,
+    itemReviewModule,
     loadoutBuilderModule,
     oauthModule,
     'angularUUID2',
@@ -57,7 +58,6 @@ export const DimAppModule = angular
   .config(config)
   .config(routes)
   .run(run)
-  .value('dimFeatureFlags', featureFlags)
   .value('dimState', state)
   .factory('loadingTracker', loadingTracker)
   .name;

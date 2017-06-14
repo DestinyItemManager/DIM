@@ -3,10 +3,15 @@ import _ from 'underscore';
 
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, dimFeatureFlags, $window, $timeout) {
+function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, $window, $timeout) {
   var vm = this;
 
-  vm.featureFlags = dimFeatureFlags;
+  vm.featureFlags = {
+    importExport: $featureFlags.importExport,
+    qualityEnabled: $featureFlags.qualityEnabled,
+    reviewsEnabled: $featureFlags.reviewsEnabled,
+    tagsEnabled: $featureFlags.tagsEnabled
+  };
   vm.loadingTracker = loadingTracker;
 
   $scope.$watchCollection('vm.settings', function() {

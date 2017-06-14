@@ -14,26 +14,28 @@ function InfoService(toaster, $http, $translate, SyncService) {
       content.body = content.body || '';
       content.hide = content.hide || $translate.instant('Help.HidePopup');
       content.func = content.func || function() {};
+      content.hideable = content.hideable === undefined ? true : content.hideable;
 
       function showToaster(body, save, timeout) {
         timeout = timeout || 0;
+
+        body = `<p>${body}</p>`;
+
+        if (content.hideable) {
+          body += `<input id="info-${id}" type="checkbox">
+            <label for="info-${id}">${content.hide}</label></p>`;
+        }
+
         toaster.pop({
           type: content.type,
           title: content.title,
-          body: [
-            '<p>' + body + '</p>',
-            '<input id="info-' + id + '" type="checkbox">',
-            '<label for="info-' + id + '">' + content.hide + '</label></p>'
-          ].join(''),
+          body: body,
           timeout: timeout,
           bodyOutputType: 'trustedHtml',
           showCloseButton: true,
-          clickHandler: function(a, b) {
-            if (b) {
-              return true;
-            }
-
-            return false;
+          clickHandler: function(_, closeButton) {
+            // Only close when the close button is clicked
+            return Boolean(closeButton);
           },
           onHideCallback: function() {
             if ($('#info-' + id).is(':checked')) {
@@ -44,19 +46,18 @@ function InfoService(toaster, $http, $translate, SyncService) {
         });
       }
 
-      SyncService.get().then(function(data) {
-        if (!data || data['info.' + id]) {
-          return;
-        }
-        if (content.view) {
-          $http.get(content.view).then(function(changelog) {
-            showToaster(changelog.data, data, timeout);
-          });
-        } else {
+      if (content.hideable) {
+        SyncService.get().then(function(data) {
+          if (!data || data['info.' + id]) {
+            return;
+          }
           showToaster(content.body, data, timeout);
-        }
+          content.func();
+        });
+      } else {
+        showToaster(content.body, {}, timeout);
         content.func();
-      });
+      }
     },
     // Remove prefs for "don't show this again"
     resetHiddenInfos: function() {

@@ -21,7 +21,7 @@ function StoreService(
   dimManifestService,
   $translate,
   uuid2,
-  dimFeatureFlags,
+  dimState,
   dimDestinyTrackerService,
   dimSettingsService,
   $http
@@ -834,7 +834,10 @@ function StoreService(
       quality: null // filled in later
     });
 
-    createdItem.taggable = createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM');
+    // *able
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.talentGrid && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
 
     // Moving rare masks destroys them
     if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
@@ -906,7 +909,7 @@ function StoreService(
     }
 
     // In debug mode, keep the original JSON around
-    if (dimFeatureFlags.debugMode) {
+    if (dimState.debug) {
       createdItem.originalItem = item;
     }
 

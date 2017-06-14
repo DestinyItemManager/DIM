@@ -26,12 +26,12 @@ class ReviewSubmitter {
     };
   }
 
-  toRatingAndReview(userReview) {
+  toRatingAndReview(item) {
     return {
-      rating: userReview.rating,
-      review: userReview.review,
-      pros: userReview.pros,
-      cons: userReview.cons
+      rating: item.userRating,
+      review: item.userReview,
+      pros: item.pros,
+      cons: item.cons
     };
   }
 
@@ -44,10 +44,10 @@ class ReviewSubmitter {
     };
   }
 
-  _submitReviewPromise(item, userReview) {
+  _submitReviewPromise(item) {
     const rollAndPerks = this._itemTransformer.getRollAndPerks(item);
     const reviewer = this._getReviewer();
-    const review = this.toRatingAndReview(userReview);
+    const review = this.toRatingAndReview(item);
 
     const rating = Object.assign(rollAndPerks, review);
     rating.reviewer = reviewer;
@@ -67,8 +67,8 @@ class ReviewSubmitter {
     this._reviewDataCache.eventuallyPurgeCachedData(item);
   }
 
-  submitReview(item, userReview) {
-    this._submitReviewPromise(item, userReview)
+  submitReview(item) {
+    this._submitReviewPromise(item)
       .then(this._eventuallyPurgeCachedData(item));
   }
 }

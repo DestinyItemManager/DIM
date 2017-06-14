@@ -38,10 +38,10 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     showNewItems: false,
     // Show animation of new item overlay on new items
     showNewAnimation: true,
-    // Show elemental damage icons
-    showElements: false,
+    // Show reviews damage icons
+    showReviews: true,
     // Can we post identifying information to DTR?
-    allowIdPostToDtr: false,
+    allowIdPostToDtr: true,
     // Sort characters (mostRecent, mostRecentReverse, fixed)
     characterOrder: 'mostRecent',
     // Sort items in buckets (primaryStat, rarityThenPrimary, quality)
