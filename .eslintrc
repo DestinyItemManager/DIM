@@ -133,9 +133,6 @@
     "no-dupe-class-members": "error",
     "no-duplicate-imports": "error",
     "no-new-symbol": "error",
-    "no-restricted-imports": ["error", {
-      "patterns": ["lodash", "lodash/*"]
-    }],
     "no-useless-computed-key": "error",
     "no-useless-constructor": "error",
     "no-var": "error",
