@@ -4,29 +4,36 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, dimBungieService, SyncService) {
+function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, $state, $translate) {
   var _platforms = [];
   var _active = null;
 
   var service = {
     getPlatforms: getPlatforms,
     getActive: getActive,
-    setActive: setActive
+    setActive: setActive,
+    reportBadPlatform: reportBadPlatform
   };
 
   return service;
 
   function getPlatforms() {
-    return dimBungieService.getAccounts()
-      .then(generatePlatforms);
+    const bungieMembershipId = OAuthTokenService.getBungieMembershipId();
+    if (bungieMembershipId) {
+      return dimBungieService.getAccounts(bungieMembershipId)
+        .then(generatePlatforms);
+    } else {
+      $state.go('login');
+      return $q.when();
+    }
   }
 
   function generatePlatforms(bungieUser) {
-    _platforms = bungieUser.destinyAccounts.map((destinyAccount) => {
+    _platforms = bungieUser.destinyMemberships.map((destinyAccount) => {
       const account = {
-        id: destinyAccount.userInfo.displayName,
-        type: destinyAccount.userInfo.membershipType,
-        membershipId: destinyAccount.userInfo.membershipId
+        id: destinyAccount.displayName,
+        type: destinyAccount.membershipType,
+        membershipId: destinyAccount.membershipId
       };
       account.label = account.type === 1 ? 'Xbox' : 'PlayStation';
       return account;
@@ -78,6 +85,18 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
 
     $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
     return promise;
+  }
+
+  // When we find a platform with no characters, remove it from the list and try something else.
+  function reportBadPlatform(platform, e) {
+    if (_platforms.length > 1) {
+      _platforms = _platforms.filter((p) => p !== platform);
+      $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
+      setActive(_platforms[0]);
+    } else {
+      // Nothing we can do
+      throw e;
+    }
   }
 }
 
