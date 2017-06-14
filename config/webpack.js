@@ -200,7 +200,7 @@ module.exports = (env) => {
         '$featureFlags.importExport': JSON.stringify(env !== 'release'),
         '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release'),
         // Sync data over gdrive
-        '$featureFlags.gdrive': $DIM_FLAVOR !== 'release',
+        '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
         '$featureFlags.debugSync': false
       }),
 
