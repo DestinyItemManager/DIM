@@ -5,7 +5,7 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
+function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $translate) {
   var service = {
     getAccounts: getAccounts,
     getCharacters: getCharacters,

@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, $state, $translate) {
+function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, OAuthService, $state, toaster) {
   var _platforms = [];
   var _active = null;
 
@@ -18,13 +18,34 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
   return service;
 
   function getPlatforms() {
-    const bungieMembershipId = OAuthTokenService.getBungieMembershipId();
-    if (bungieMembershipId) {
-      return dimBungieService.getAccounts(bungieMembershipId)
-        .then(generatePlatforms);
-    } else {
+    const token = OAuthTokenService.getToken();
+    if (!token) {
+      // We're not logged in, don't bother
       $state.go('login');
       return $q.when();
+    }
+
+    if (token.bungieMembershipId) {
+      return dimBungieService.getAccounts(token.bungieMembershipId)
+        .then(generatePlatforms)
+        .catch(function(e) {
+          toaster.pop('error', 'Unexpected error getting accounts', e.message);
+          throw e;
+        });
+    } else {
+      // they're logged in, just need to fill in membership
+      // TODO: this can be removed after everyone has had a chance to upgrade
+      return OAuthService.getAccessTokenFromRefreshToken(token.refreshToken)
+        .then(function(token) {
+          OAuthTokenService.setToken(token);
+
+          // Try again
+          return getPlatforms();
+        })
+        .catch(function(e) {
+          // Guess they just need to log in again
+          $state.go('login');
+        });
     }
   }
 

@@ -7,7 +7,7 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
 
   const service = this;
   let cache = null;
-  const matcher = /www\.bungie\.net\/(D1\/|)Platform\/(User|Destiny)\//;
+  const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny)\//;
 
   service.request = requestHandler;
 
@@ -21,19 +21,19 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
         const accessTokenIsValid = token && token.bungieMembershipId && isTokenValid(token.accessToken);
 
         if (accessTokenIsValid) {
-          config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+          config.headers.Authorization = 'Bearer ' + token.accessToken.value;
         } else {
           const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
 
           if (refreshTokenIsValid) {
-            cache = cache || OAuthService.refreshToken();
+            cache = cache || OAuthService.getAccessTokenFromRefreshToken(token.refreshToken);
 
             return cache
               .then(function(token) {
                 OAuthTokenService.setToken(token);
 
                 console.log("Successfully updated auth token from refresh token.");
-                config.headers.Authorization = OAuthTokenService.getAuthorizationHeader();
+                config.headers.Authorization = 'Bearer ' + token.accessToken.value;
                 return config;
               })
               .catch(handleRefreshTokenError)

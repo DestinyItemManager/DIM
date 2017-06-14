@@ -38,46 +38,6 @@ export function OAuthTokenService(localStorageService) {
   }
 
   /**
-   * Get just the access token from saved storage.
-   * @return {Token}
-   */
-  function getAccessToken() {
-    const token = getToken();
-    return token ? token.accessToken : undefined;
-  }
-
-  /**
-   * Get just the refresh token from saved storage.
-   * @return {Token}
-   */
-  function getRefreshToken() {
-    const token = getToken();
-    return token ? token.refreshToken : undefined;
-  }
-
-  /**
-   * Get just the bungie membership ID from saved storage.
-   * @return {string}
-   */
-  function getBungieMembershipId() {
-    const token = getToken();
-    return token ? token.bungieMembershipId : undefined;
-  }
-
-  /**
-   * Generate a bearer authorization header from our saved access token.
-   * @return {string}
-   */
-  function getAuthorizationHeader() {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      return undefined;
-    }
-
-    return 'Bearer ' + accessToken.value;
-  }
-
-  /**
    * Clear any saved token information.
    */
   function removeToken() {
@@ -128,10 +88,6 @@ export function OAuthTokenService(localStorageService) {
   return {
     getToken,
     setToken,
-    getAccessToken,
-    getRefreshToken,
-    getBungieMembershipId,
-    getAuthorizationHeader,
     removeToken,
     hasTokenExpired,
     isTokenReady
