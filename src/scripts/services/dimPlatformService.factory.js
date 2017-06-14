@@ -26,7 +26,11 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
       const account = {
         id: destinyAccount.userInfo.displayName,
         type: destinyAccount.userInfo.membershipType,
-        membershipId: destinyAccount.userInfo.membershipId
+        // This is the destiny account ID
+        membershipId: destinyAccount.userInfo.membershipId,
+        // This is the Bungie account ID, which may have multiple destiny accounts
+        // TODO: have a top-level Account object for this, instead of putting it in platform
+        bungieMembershipId: bungieUser.bungieNetUser.membershipId
       };
       account.label = account.type === 1 ? 'Xbox' : 'PlayStation';
       return account;

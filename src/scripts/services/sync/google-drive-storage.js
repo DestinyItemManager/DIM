@@ -113,7 +113,7 @@ export function GoogleDriveStorage($q, $translate, dimState) {
     getFileName: function() {
       const platform = dimState.active;
       if (platform) {
-        return 'DIM-' + $DIM_FLAVOR + '-' + platform.membershipId;
+        return 'DIM-' + $DIM_FLAVOR + '-' + platform.bungieMembershipId;
       }
       return null;
     },
