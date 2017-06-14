@@ -75,7 +75,7 @@ function MoveItemProperties() {
       '    </div>',
       '    <div ng-show="vm.item.reviewable && vm.item.totalReviews" class="item-review-average">',
       '      <star-rating rating="vm.item.dtrRating" read-only></star-rating>',
-      '      <span translate="DtrReview.AverageRating" translate-values="{ itemRating: vm.item.dtrRating, numReviews: vm.item.totalReviews }"></span>',
+      '      <span translate="DtrReview.AverageRating" translate-values="{ itemRating: vm.item.dtrRating, numRatings: vm.item.totalReviews }"></span>',
       '    </div>',
       '  </div>',
       '  <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>',

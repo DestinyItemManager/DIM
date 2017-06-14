@@ -303,7 +303,7 @@
      "NoReviews": "There are no reviews for this item, be the first!",
      "ServiceCallError": "Destiny tracker service call failed.",
      "ServiceSubmitError": "Destiny tracker service submit failed.",
-     "AverageRating": "({itemRating}) based on {numReviews} reviews."
+     "AverageRating": "({itemRating}) based on {numRatings} ratings."
    },
    "Objectives": {
      "Complete": "Complete",

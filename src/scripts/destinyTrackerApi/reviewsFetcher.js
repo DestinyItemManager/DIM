@@ -47,7 +47,7 @@ class ReviewsFetcher {
   _attachReviews(item, reviewData) {
     const userReview = this._getUserReview(reviewData);
 
-    item.totalReviews = reviewData.reviews.length;
+    item.totalReviews = reviewData.totalReviews;
     item.writtenReviews = _.filter(reviewData.reviews, 'review');
 
     if (userReview) {
