@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
+import template2 from './dimStoreBucket.directive2.html';
 
 angular.module('dimApp')
   .directive('dimStoreBucket', StoreBucket);
@@ -108,22 +109,7 @@ function StoreBucketCtrl($scope,
       ngDialog.closeAll();
       var dialogResult = ngDialog.open({
         // TODO: break this out into a separate service/directive?
-        template: [
-          '<div>',
-          '  <h1>',
-          '    <dim-simple-item item-data="vm.item"></dim-simple-item>',
-          '    <span translate="StoreBucket.HowMuch" translate-values="{ itemname: vm.item.name }"></span>',
-          '  </h1>',
-          '  <div class="ngdialog-inner-content">',
-          '    <form ng-submit="vm.finish()">',
-          '      <dim-move-amount amount="vm.moveAmount" maximum="vm.maximum" max-stack-size="vm.item.maxStackSize"></dim-move-amount>',
-          '    </form>',
-          '    <div class="buttons">' +
-          '      <button ng-click="vm.finish()"><span translate="StoreBucket.Move"</span></button>',
-          '      <button ng-click="vm.stacksWorthClick()" ng-show="vm.stacksWorth > 0"><span translate="StoreBucket.FillStack" translate-values="{ amount : vm.stacksWorth }"</span></button>',
-          '    </div>',
-          '  </div>',
-          '</div>'].join(''),
+        template: template2,
         scope: $scope,
         controllerAs: 'vm',
         controller: function($scope) {
