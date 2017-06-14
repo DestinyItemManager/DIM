@@ -151,7 +151,7 @@
       "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
       "FilterSets": "Filter sets",
       "AdvancedOptions": "Advanced Options",
-     "ContainsVendorItems": "This loadout contains vendor items",
+      "ContainsVendorItems": "This loadout contains vendor items",
       "ProcessingMode": {
          "Fast": "Fast",
          "Full": "Full",
