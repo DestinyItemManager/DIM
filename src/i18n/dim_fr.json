@@ -45,7 +45,7 @@
       "Super": "Régénération du Super: {cooldown}"
    },
    "Countdown": {
-     "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
+      "Days": "{numDays, plural, =1{# Journée} other{# Journées}}"
    },
    "Debug": {
       "Dump": "Envoyer les infos sur la console",
@@ -118,8 +118,8 @@
       "TransferItems": "Transférer objets"
    },
    "ItemInfoService": {
-     "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet",
-     "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations Spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockez - c'est pourquoi les tags et les notes n'ont pas était encore autorisé en dehors de la version beta. L'erreur était :{error}."
+      "SaveInfoErrorTitle": "Erreur en sauvegardant les infos d'objet",
+      "SaveInfoErrorDescription": "Il y a eu un problème avec la sauvegarde des informations Spécifique de DIM pour un objet. Un problème qui limite le nombre de donnés qui peuvent être stockez - c'est pourquoi les tags et les notes n'ont pas était encore autorisé en dehors de la version beta. L'erreur était :{error}."
    },
    "ItemMove": {
       "Consolidate": "{name} consolidé",
@@ -167,22 +167,22 @@
       },
       "IncludeRare": "Inclure les objets rares (bleus)",
       "Help": {
-        "Help": "Besoin d'aide?",
-        "Lock": "Protéger une série d'atouts en cliquant sur le seau à verrou et en sélectionnant atouts",
-        "NoPerk": "Si un atout n'apparaît pas, cela veut dire que vous n'avez pas d'armure avec cette atout",
-        "MultiPerk":"Pour utilisez une armure avec plusieurs atouts réunis faite shift+click sur les atouts désiré",
-        "Or": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"ou\")",
-        "And": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"et\")",
-        "DragAndDrop": "Faites glisser et déposez les objets dans les seaux verrouillés pour construire des ensembles avec cette équipement seulement",
-        "ShiftClick": "Shift click sur un élément pour construire des ensembles sans cette équipement",
-        "HigherTiers": "Les Tiers supérieurs sont meilleurs",
-        "Tier11Example": "4/5/2 (un ensemble Tier 11) est 4 Intelligence 5 Discipline, 2 Force (4+5+2 = Tier 11)",
-        "Intellect": "L'intelligence accélère le temps de recharge du super chargé",
-        "Discipline": "La Discipline accélère le temps de recharge des Grenades",
-        "Strength": "La Force accélère le temps de recharge de la mêlée",
-        "Synergy": "Essayez de trouver une armure qui a des atouts augmentant le nombre de munitions pour les types d'armes que vous utilisez.",
-        "ChangeNodes": "Changer les nœuds d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
-        "StatsIncrease": "À mesure que le niveau de défense des objets augmente, les statistiques de cet objet (int/dis/for) augmentent également."
+         "Help": "Besoin d'aide?",
+         "Lock": "Protéger une série d'atouts en cliquant sur le seau à verrou et en sélectionnant atouts",
+         "NoPerk": "Si un atout n'apparaît pas, cela veut dire que vous n'avez pas d'armure avec cette atout",
+         "MultiPerk": "Pour utilisez une armure avec plusieurs atouts réunis faite shift+click sur les atouts désiré",
+         "Or": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"ou\")",
+         "And": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"et\")",
+         "DragAndDrop": "Faites glisser et déposez les objets dans les seaux verrouillés pour construire des ensembles avec cette équipement seulement",
+         "ShiftClick": "Shift click sur un élément pour construire des ensembles sans cette équipement",
+         "HigherTiers": "Les Tiers supérieurs sont meilleurs",
+         "Tier11Example": "4/5/2 (un ensemble Tier 11) est 4 Intelligence 5 Discipline, 2 Force (4+5+2 = Tier 11)",
+         "Intellect": "L'intelligence accélère le temps de recharge du super chargé",
+         "Discipline": "La Discipline accélère le temps de recharge des Grenades",
+         "Strength": "La Force accélère le temps de recharge de la mêlée",
+         "Synergy": "Essayez de trouver une armure qui a des atouts augmentant le nombre de munitions pour les types d'armes que vous utilisez.",
+         "ChangeNodes": "Changer les nœuds d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
+         "StatsIncrease": "À mesure que le niveau de défense des objets augmente, les statistiques de cet objet (int/dis/for) augmentent également."
       },
       "Equip": "Équiper sur le perso actuel",
       "ShowAllConfigs": "Afficher toutes les configurations",
@@ -273,30 +273,30 @@
       "Vault": "Malle"
    },
    "MoveAmount": {
-     "Min": "Empilement minimum (1)",
-     "Max": "Montant total à cet emplacement",
-     "UpStack": "Augmentation jusqu'à la pile complète suivante",
-     "DownStack": "Diminution jusqu'à la pile complète suivante",
-     "Increment": "Un de plus",
-     "Decrement": "Un de moins"
+      "Min": "Empilement minimum (1)",
+      "Max": "Montant total à cet emplacement",
+      "UpStack": "Augmentation jusqu'à la pile complète suivante",
+      "DownStack": "Diminution jusqu'à la pile complète suivante",
+      "Increment": "Un de plus",
+      "Decrement": "Un de moins"
    },
    "Notes": {
       "Error": "Erreur! Max 120 charactères pour les notes.",
       "Help": "Ajouter des notes à cet objet"
    },
    "DtrReview": {
-     "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
-     "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
-     "Edit": "Éditer",
-     "Delete": "Supprimer",
-     "Submit": "Envoyer",
-     "Cancel": "Annuler",
-     "Pros": "Avantages",
-     "Cons": "Désavantages"
+      "HelpPros": "Décrivez les avantages de cette arme (optionnel)",
+      "HelpCons": "Décrivez les désavantages de cette arme (optionnel)",
+      "Edit": "Éditer",
+      "Delete": "Supprimer",
+      "Submit": "Envoyer",
+      "Cancel": "Annuler",
+      "Pros": "Avantages",
+      "Cons": "Désavantages"
    },
    "Objectives": {
-     "Complete": "Achevée",
-     "Incomplete": "Incomplet"
+      "Complete": "Achevée",
+      "Incomplete": "Incomplet"
    },
    "Postmaster": {
       "Limit": "Limite du Commit Des Postes",
@@ -359,9 +359,9 @@
       "Move": "Déplacer"
    },
    "SyncService": {
-     "GoogleDriveReAuth": "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur.",
-     "OneItemTooLarge": "Votre fichier de sauvegarde a un objet trop volumineux. Probablement un loadout enregistré avec trop d'articles.",
-     "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les loadouts enregistrés."
+      "GoogleDriveReAuth": "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur.",
+      "OneItemTooLarge": "Votre fichier de sauvegarde a un objet trop volumineux. Probablement un loadout enregistré avec trop d'articles.",
+      "SaveTooLarge": "Votre fichier de sauvegarde est trop volumineux. Supprimez les loadouts enregistrés."
    },
    "Tags": {
       "TagItem": "Tagger Objet",
@@ -384,53 +384,53 @@
       "Emotes": "Intéractions"
    },
    "RecordBooks": {
-     "RecordBooks": "Livre des Records",
-     "HideCompleted": "Cacher les records complétés"
+      "RecordBooks": "Livre des Records",
+      "HideCompleted": "Cacher les records complétés"
    },
    "Views": {
-     "About":{
-       "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
-       "ContactUs":"Nous Contacter",
-       "FAQ": "FAQ",
-       "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
-       "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous êtes attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo and mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
-       "FAQDupeGally": "Hey, DIM a dupliqué mon Gjallahorn!",
-       "FAQDupeGallyAnswer": "Non, non. Promis.",
-       "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
-       "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
-       "FAQLogout": "Comment puis-je me déconnecter de DIM?",
-       "FAQLogoutAnswer": "Votre session est liée à Bungie.net. Si vous vous déconnnectez de Bungie.net, vous vous déconnectez de DIM.",
-       "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
-       "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
-       "GitHub": "GitHub",
-       "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
-       "GitHubRepo": "DIM Git Repo",
-       "Header": "À propos de Destiny Item Manager (DIM)",
-       "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de vos coffres sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
-       "Reddit": "Reddit",
-       "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
-       "Twitter": "Twitter",
-       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
-       "Version": "Version {version} ({flavor})",
-       "Transifex": "Rejoignez l'équipe de traduction!",
-       "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
-     },
-     "Support": {
-       "Support": "Soutenir DIM",
-       "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
-       "OpenCollective": "Nous utilisons OpenCollective comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
-       "Backers": "Les Supporters",
-       "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
-       "Sponsors": "Partenaires",
-       "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site."
-     },
-     "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM",
-     "Login": {
-       "Permission": "Nous avons besoin de votre permission ...",
-       "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
-       "Auth": "Autoriser avec Bungie.net",
-       "LearnMore": "Voulez-vous en savoir plus?"
-     }
+      "About": {
+         "BungieCopyright": "Toutes images et contenu sont la propriété de Bungie. Veuillez nous contacter s'il y a un problème.",
+         "ContactUs": "Nous Contacter",
+         "FAQ": "FAQ",
+         "FAQAccess": "Comment est-ce que DIM a accès à mes données sur Destiny?",
+         "FAQAccessAnswer": "N'importe quelle extension chrome peut demander accès aux données d'un site web stockées sur votre ordinateur. Quand vous vous connectez sur Bungie.net, vous êtes attribué un jeton (un cookie) qui est généré uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo and mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce jeton pour communiquer avec Bungie en votre nom.",
+         "FAQDupeGally": "Hey, DIM a dupliqué mon Gjallahorn!",
+         "FAQDupeGallyAnswer": "Non, non. Promis.",
+         "FAQKeyboard": "Est-ce que DIM supporte des raccourcis clavier?",
+         "FAQKeyboardAnswer": "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles.",
+         "FAQLogout": "Comment puis-je me déconnecter de DIM?",
+         "FAQLogoutAnswer": "Votre session est liée à Bungie.net. Si vous vous déconnnectez de Bungie.net, vous vous déconnectez de DIM.",
+         "FAQLostItem": "J'ai perdu mes objets en utilisant votre outil!",
+         "FAQLostItemAnswer": "Il est plus que probable que votre transfer a échoué, laissant votre objet dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes sûres qu'il y est toujours.",
+         "GitHub": "GitHub",
+         "GitHubHelp": "Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de notre projet sur Github.",
+         "GitHubRepo": "DIM Git Repo",
+         "Header": "À propos de Destiny Item Manager (DIM)",
+         "HowItsMade": "DIM est construit à partir des mêmes services que Bungie.net et l'application Compagnon de Destiny. DIM peut accéder aux objets dans l'inventaire de vos Gardiens et de vos coffres sur Playstation et Xbox. Vous pouvez dès lors glisser-déposer des objets n'importe où vous les voulez.",
+         "Reddit": "Reddit",
+         "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
+         "Twitter": "Twitter",
+         "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
+         "Version": "Version {version} ({flavor})",
+         "Transifex": "Rejoignez l'équipe de traduction!",
+         "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
+      },
+      "Support": {
+         "Support": "Soutenir DIM",
+         "FreeToDownload": "DIM est un produit à télécharger et à utiliser gratuitement. Le code source pour DIM est open source, et gratuit pour toute personne voulant l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre engagement.",
+         "OpenCollective": "Nous utilisons OpenCollective comme un service pour offrir une compensation à nos développeurs pour leur dévouement et leur temps consacré à ce projet.",
+         "Backers": "Les Supporters",
+         "BackersDetail": "Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre notre développement actif.",
+         "Sponsors": "Partenaires",
+         "SponsorsDetail": "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site."
+      },
+      "UpgradeChrome": "La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à jour votre Navigateur Chrome pour pouvoir utiliser DIM",
+      "Login": {
+         "Permission": "Nous avons besoin de votre permission ...",
+         "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
+         "Auth": "Autoriser avec Bungie.net",
+         "LearnMore": "Voulez-vous en savoir plus?"
+      }
    },
    "TrialsCard": {
       "FiveWins": "Récompense à 5 Victoires (Armure)",
