@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimStats.directive.html';
 
 angular.module('dimApp')
   .directive('dimStats', Stats);
@@ -12,16 +13,7 @@ function Stats() {
     scope: {
       stats: '<'
     },
-    template: [
-      '<div class="stat-bars">',
-      '  <div class="stat" title="{{stat.tooltip}}" ng-repeat="stat in vm.statList track by stat.name">',
-      '    <img ng-src="{{::stat.icon}}">',
-      '    <div class="bar" ng-repeat="n in stat.tiers track by $index">',
-      '      <div class="progress" ng-class="{complete: (n / 60) === 1 }" dim-percent-width="n / 60"></div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('')
+    template: template
   };
 }
 

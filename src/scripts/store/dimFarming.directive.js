@@ -1,5 +1,5 @@
 import angular from 'angular';
-import template from './dimFarming.directive.template.html';
+import template from './dimFarming.directive.html';
 
 angular.module('dimApp').directive('dimFarming', Farming);
 
@@ -26,4 +26,3 @@ function FarmingCtrl(dimFarmingService, dimItemMoveService, dimSettingsService) 
     }
   });
 }
-

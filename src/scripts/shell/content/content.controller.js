@@ -1,7 +1,7 @@
-import settingsTemplate from 'app/views/settings.template.html';
-import aboutTemplate from 'app/views/about.template.html';
-import supportTemplate from 'app/views/support.template.html';
-import filtersTemplate from 'app/views/filters.template.html';
+import settingsTemplate from 'app/views/settings.html';
+import aboutTemplate from 'app/views/about.html';
+import supportTemplate from 'app/views/support.html';
+import filtersTemplate from 'app/views/filters.html';
 
 export default class ContentController {
   constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $translate) {

@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import { sum, flatMap } from '../util';
-import template from './dimLoadoutPopup.directive.template.html';
+import template from './dimLoadoutPopup.directive.html';
 
 angular.module('dimApp')
   .directive('dimLoadoutPopup', LoadoutPopup);

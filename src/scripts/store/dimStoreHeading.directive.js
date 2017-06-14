@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimStoreHeading.directive.template.html';
+import template from './dimStoreHeading.directive.html';
 
 angular.module('dimApp')
   .directive('dimStoreHeading', StoreHeading);

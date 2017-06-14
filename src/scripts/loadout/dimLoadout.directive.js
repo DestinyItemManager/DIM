@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import template from './dimLoadout.directive.template.html';
+import template from './dimLoadout.directive.html';
 
 angular.module('dimApp').directive('dimLoadout', Loadout);
 
@@ -306,4 +306,3 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     });
   };
 }
-
