@@ -1,5 +1,5 @@
-import debugItem from 'app/views/debugItem.template.html';
-import login from 'app/scripts/login/login.template.html';
+import debugItem from 'app/views/debugItem.html';
+import login from 'app/scripts/login/login.html';
 
 function routes($stateProvider, $urlRouterProvider) {
   'ngInject';
@@ -24,7 +24,7 @@ function routes($stateProvider, $urlRouterProvider) {
       name: 'materials-exchange',
       parent: 'content',
       url: '/materials-exchange',
-      template: require('app/views/mats-exchange.template.html')
+      template: require('app/views/mats-exchange.html')
     });
   }
 
@@ -33,7 +33,7 @@ function routes($stateProvider, $urlRouterProvider) {
       name: 'developer',
       parent: 'content',
       url: '/developer',
-      template: require('app/scripts/developer/developer.template.html')
+      template: require('app/scripts/developer/developer.html')
     });
   }
 

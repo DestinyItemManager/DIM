@@ -1,6 +1,6 @@
 import angular from 'angular';
 import simpleQueryString from 'simple-query-string';
-import template from './return.component.template.html';
+import template from './return.component.html';
 import { bungieApiUpdate } from '../services/bungie-api-utils';
 
 angular.module('dimLogin').component('dimReturn', {
