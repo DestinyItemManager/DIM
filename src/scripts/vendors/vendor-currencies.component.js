@@ -1,4 +1,5 @@
 import { flatMap } from '../util';
+import template from './vendor-currencies.component.html';
 
 export const VendorCurrencies = {
   controller: VendorCurrenciesCtrl,
@@ -8,12 +9,7 @@ export const VendorCurrencies = {
     totalCoins: '<',
     propertyFilter: '<'
   },
-  template: [
-    '<div class="vendor-currency" ng-repeat="currency in vm.currencies track by currency.itemHash">',
-    '  {{vm.totalCoins[currency.itemHash]}}',
-    '  <img ng-src="{{::currency.icon | bungieIcon}}" title="{{::currency.itemName}}"/>',
-    '</div>'
-  ].join('')
+  template: template
 };
 
 function VendorCurrenciesCtrl($scope, $filter) {
@@ -40,4 +36,3 @@ function VendorCurrenciesCtrl($scope, $filter) {
     vm.currencies = allCurrencies;
   });
 }
-

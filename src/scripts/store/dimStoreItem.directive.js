@@ -1,5 +1,5 @@
 import angular from 'angular';
-import template from './dimStoreItem.directive.template.html';
+import template from './dimStoreItem.directive.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
@@ -223,4 +223,3 @@ function StoreItemCtrl() {
     ? vm.item.equipment
     : (vm.item.equipment || vm.item.location.hasTransferDestination);
 }
-

@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimMoveAmount.directive.html';
 
 angular.module('dimApp')
   .directive('dimMoveAmount', MoveAmount);
@@ -15,24 +16,7 @@ function MoveAmount($timeout) {
       maxStackSize: '=maxStackSize'
     },
     replace: true,
-    template: [
-      '<div>',
-      '<div class="move-amount">',
-      '  <input ng-model="vm.amount" type="text" ng-blur="vm.constrain()"/>',
-      '  <div class="move-amount-slider">',
-      '    <rzslider rz-slider-model="vm.amount" rz-slider-options="{ floor: 1, ceil: vm.maximum, showSelectionBar: true, hideLimitLabels: true }"></rzslider>',
-      '  </div>',
-      '</div>',
-      '<div class="move-amount">',
-      '  <i class="move-amount-arrow fa fa-fast-backward" tabindex="-1" ng-click="vm.min()" translate-attr="{ title: \'MoveAmount.Min\'}"></i>',
-      '  <i class="move-amount-arrow fa fa-step-backward" tabindex="-1" ng-click="vm.downstack()" translate-attr="{ title: \'MoveAmount.DownStack\'}"></i>',
-      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.decrement()" translate-attr="{ title: \'MoveAmount.Decrement\'}">&#9664;</span>',
-      '  <span class="move-amount-arrow" tabindex="-1" ng-click="vm.increment()" translate-attr="{ title: \'MoveAmount.Increment\'}">&#9654;</span>',
-      '  <i class="move-amount-arrow fa fa-step-forward" tabindex="-1" ng-click="vm.upstack()" translate-attr="{ title: \'MoveAmount.UpStack\'}"></i>',
-      '  <i class="move-amount-arrow fa fa-fast-forward" tabindex="-1" ng-click="vm.max()" translate-attr="{ title: \'MoveAmount.Max\'}"></i>',
-      '</div>',
-      '</div>'
-    ].join(''),
+    template: template,
     link: function(scope, element) {
       $timeout(function() {
         scope.$broadcast('rzSliderForceRender');
