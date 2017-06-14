@@ -198,7 +198,10 @@ module.exports = (env) => {
         '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
         // allow importing and exporting your DIM data to JSON
         '$featureFlags.importExport': JSON.stringify(env !== 'release'),
-        '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release')
+        '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release'),
+        // Sync data over gdrive
+        '$featureFlags.gdrive': $DIM_FLAVOR !== 'release',
+        '$featureFlags.debugSync': false
       }),
 
       // Enable if you want to debug the size of the chunks

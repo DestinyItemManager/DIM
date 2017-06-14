@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
+export function GoogleDriveStorage($q, $translate, dimState) {
   'ngInject';
 
   return {
@@ -59,12 +59,12 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
 
     updateSigninStatus: function(isSignedIn) {
       if (isSignedIn) {
-        if (dimFeatureFlags.debugSync) {
+        if ($featureFlags.debugSync) {
           console.log('signed in to Google Drive');
         }
         this.getFileId();
       } else {
-        if (dimFeatureFlags.debugSync) {
+        if ($featureFlags.debugSync) {
           console.log('not signed in to Google Drive');
         }
         this.enabled = false;
@@ -72,18 +72,18 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
     },
 
     init: function() {
-      if (!dimFeatureFlags.gdrive) {
-        if (dimFeatureFlags.debugSync) {
+      if (!$featureFlags.gdrive) {
+        if ($featureFlags.debugSync) {
           console.log("Google Drive disabled");
         }
         return;
       }
-      if (dimFeatureFlags.debugSync) {
+      if ($featureFlags.debugSync) {
         console.log("gdrive init requested");
       }
       gapi.load('client:auth2', () => {
         gapi.client.init(this.drive).then(() => {
-          if (dimFeatureFlags.debugSync) {
+          if ($featureFlags.debugSync) {
             console.log("gdrive init complete");
           }
           // Listen for sign-in state changes.
@@ -98,12 +98,12 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
 
     authorize: function() {
       if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-        if (dimFeatureFlags.debugSync) {
+        if ($featureFlags.debugSync) {
           console.log('Google Drive already authorized');
         }
         return $q.when();
       } else {
-        if (dimFeatureFlags.debugSync) {
+        if ($featureFlags.debugSync) {
           console.log('authorizing Google Drive');
         }
         return gapi.auth2.getAuthInstance().signIn();
@@ -163,7 +163,7 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
             },
             parents: ['appDataFolder']
           }).then((file) => {
-            if (dimFeatureFlags.debugSync) {
+            if ($featureFlags.debugSync) {
               console.log('created file in Google Drive', file);
             }
             this.fileId = file.result.id;
@@ -190,7 +190,7 @@ export function GoogleDriveStorage($q, $translate, dimState, dimFeatureFlags) {
       gapi.auth2.getAuthInstance().signOut();
     },
 
-    enabled: dimFeatureFlags.gdrive && Boolean(localStorage.getItem('gdrive-fileid')),
+    enabled: $featureFlags.gdrive && Boolean(localStorage.getItem('gdrive-fileid')),
     name: 'GoogleDriveStorage'
   };
 }

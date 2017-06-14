@@ -18,8 +18,7 @@ function SyncService(
   LocalStorage,
   IndexedDBStorage,
   ChromeSyncStorage,
-  GoogleDriveStorage,
-  dimFeatureFlags
+  GoogleDriveStorage
 ) {
   var cached; // cached is the data in memory,
 
@@ -37,7 +36,7 @@ function SyncService(
     }
 
     if (!PUT && angular.equals(_.pick(cached, _.keys(value)), value)) {
-      if (dimFeatureFlags.debugSync) {
+      if ($featureFlags.debugSync) {
         console.log("Skip save, already got it");
       }
       return $q.when();
@@ -53,7 +52,7 @@ function SyncService(
     return adapters.reduce((promise, adapter) => {
       if (adapter.enabled) {
         return promise.then(() => {
-          if (dimFeatureFlags.debugSync) {
+          if ($featureFlags.debugSync) {
             console.log('setting', adapter.name, cached);
           }
           return adapter.set(cached);
@@ -85,13 +84,13 @@ function SyncService(
         if (adapter.enabled) {
           return promise.then((value) => {
             if (value && !_.isEmpty(value)) {
-              if (dimFeatureFlags.debugSync) {
+              if ($featureFlags.debugSync) {
                 console.log('got', value, 'from previous adapter ', previous);
               }
               return value;
             }
             previous = adapter.name;
-            if (dimFeatureFlags.debugSync) {
+            if ($featureFlags.debugSync) {
               console.log('getting from ', adapter.name);
             }
             return adapter.get();
