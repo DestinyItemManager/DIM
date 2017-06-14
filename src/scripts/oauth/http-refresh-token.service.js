@@ -18,7 +18,7 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
         !config.headers.hasOwnProperty('Authorization')) {
       const token = OAuthTokenService.getToken();
       if (token) {
-        const accessTokenIsValid = token && token.bungieMembershipId && isTokenValid(token.accessToken);
+        const accessTokenIsValid = token && isTokenValid(token.accessToken);
 
         if (accessTokenIsValid) {
           config.headers.Authorization = 'Bearer ' + token.accessToken.value;

@@ -8,6 +8,7 @@ angular.module('dimApp')
 function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $translate) {
   var service = {
     getAccounts: getAccounts,
+    getAccountsForCurrentUser: getAccountsForCurrentUser,
     getCharacters: getCharacters,
     getStores: getStores,
     transfer: transfer,
@@ -118,6 +119,13 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
 
   function getAccounts(bungieMembershipId) {
     return $http(bungieApiQuery(`/Platform/User/GetMembershipsById/${bungieMembershipId}/254/`))
+      .then(handleErrors, handleErrors)
+      .then((response) => response.data.Response);
+  }
+
+  // This is here just for migrating folks to GetMembershipsById
+  function getAccountsForCurrentUser() {
+    return $http(bungieApiQuery(`/Platform/User/GetMembershipsForCurrentUser/`))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response);
   }

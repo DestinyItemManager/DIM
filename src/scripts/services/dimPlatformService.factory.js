@@ -35,22 +35,24 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
     } else {
       // they're logged in, just need to fill in membership
       // TODO: this can be removed after everyone has had a chance to upgrade
-      return OAuthService.getAccessTokenFromRefreshToken(token.refreshToken)
-        .then(function(token) {
+      return dimBungieService.getAccountsForCurrentUser()
+        .then(function(accounts) {
+          const token = OAuthTokenService.getToken();
+          token.bungieMembershipId = accounts.bungieNetUser.membershipId;
           OAuthTokenService.setToken(token);
 
-          // Try again
-          return getPlatforms();
+          return accounts;
         })
+        .then(generatePlatforms)
         .catch(function(e) {
-          // Guess they just need to log in again
-          $state.go('login');
+          toaster.pop('error', 'Unexpected error getting accounts', e.message);
+          throw e;
         });
     }
   }
 
-  function generatePlatforms(bungieUser) {
-    _platforms = bungieUser.destinyMemberships.map((destinyAccount) => {
+  function generatePlatforms(accounts) {
+    _platforms = accounts.destinyMemberships.map((destinyAccount) => {
       const account = {
         id: destinyAccount.displayName,
         type: destinyAccount.membershipType,
