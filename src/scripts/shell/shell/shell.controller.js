@@ -3,6 +3,7 @@ export default class ShellController {
     'ngInject';
 
     this.qualityEnabled = $featureFlags.qualityEnabled;
+    this.reviewsEnabled = $featureFlags.reviewsEnabled;
     this.settings = dimSettingsService;
   }
 }
