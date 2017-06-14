@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
-import template2 from './dimStoreBucket.directive2.html';
+import dialogTemplate from './dimStoreBucket.directive2.html';
 
 angular.module('dimApp')
   .directive('dimStoreBucket', StoreBucket);
@@ -109,7 +109,7 @@ function StoreBucketCtrl($scope,
       ngDialog.closeAll();
       var dialogResult = ngDialog.open({
         // TODO: break this out into a separate service/directive?
-        template: template2,
+        template: dialogTemplate,
         scope: $scope,
         controllerAs: 'vm',
         controller: function($scope) {

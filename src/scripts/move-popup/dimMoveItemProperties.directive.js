@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimMoveItemProperties.directive.html';
-import template2 from './dimMoveItemProperties.directive2.html';
+import moveDialogTemplate from './dimMoveItemProperties.directive2.html';
 
 angular.module('dimApp')
   .component('dimObjectives', Objectives())
@@ -29,7 +29,7 @@ function MoveItemProperties() {
     },
     restrict: 'A',
     replace: true,
-    template: template2
+    template: moveDialogTemplate
   };
 }
 
