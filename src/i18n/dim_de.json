@@ -324,6 +324,8 @@
       "ShowOverlayHelp": "Zeigt neue Gegenstände mit einem hellen Overlay an.",
       "ShowAnimations": "Zeige animiertes Overlay bei neuen Gegenständen an",
       "ShowAnimationsHelp": "Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten verringert die CPU Auslastung.",
+      "ShowElemental": "Zeige Elementarschaden bei Waffen an",
+      "ShowElementalHelp": "Zeigt den Elementarschaden bei Waffen an.",
       "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
       "ShowReviewsHelp": "Zeige die durchschnittliche User basierte Wertung bei Waffen an.",
       "AllowIdPostToDtr": "Teile Account-Name und bewertete Items mit Destiny Tracker.",

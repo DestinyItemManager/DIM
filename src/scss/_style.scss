@@ -647,24 +647,6 @@ img {
   }
 }
 
-.stat-damage-arc {
-  background: $arc;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.stat-damage-solar {
-  background: $solar;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.stat-damage-void {
-  background: $void;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
 .item {
   @include item-size-padded;
   margin: 2px;
@@ -672,6 +654,7 @@ img {
   contain: strict;
   cursor: pointer;
 }
+
 .search-hidden {
   opacity: .2;
 }
@@ -701,24 +684,59 @@ img {
 }
 
 .item-element {
-  pointer-events: none;
   display: block;
   position: absolute;
-  top: 35%;
-  right: 1px;
-  height: 35%;
-  width: 35%;
-  filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
-  background-repeat: no-repeat;
-  background-size: contain;
-  &.void {
-    background-image: url('../images/void.png');
+  top: 2px;
+  left: 2px;
+  pointer-events: none;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-color: transparent;
+    border-style: solid;
   }
-  &.arc {
-    background-image: url('../images/arc.png');
+  &::before {
+    border-width: .7em;
   }
-  &.solar {
-    background-image: url('../images/solar.png');
+  &.void::before {
+    border-left-color: $void;
+    border-top-color: $void;
+  }
+  &.arc::before {
+    border-left-color: $arc;
+    border-top-color: $arc;
+  }
+  &.solar::before {
+    border-left-color: $solar;
+    border-top-color: $solar;
+  }
+
+  .show-elements & {
+    top: 35%;
+    left: auto;
+    right: 1px;
+    height: 35%;
+    width: 35%;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &::before {
+      content: none;
+    }
+
+    &.void {
+      background-image: url('../images/void.png');
+    }
+    &.arc {
+      background-image: url('../images/arc.png');
+    }
+    &.solar {
+      background-image: url('../images/solar.png');
+    }
   }
 }
 
