@@ -17,6 +17,7 @@
 * Add gunsmith filter is:gunsmith
 * Updated filters to remove common items for specific filters (e.g. is:wotm no longer shows exotic items from xur, engrams, and planetary materials)
 * Loadout Builder's equip button now operates on the selected character, not your last-played character.
+* Loadout Builder no longer has equip and create loadout buttons for loadouts that include vendor items.
 
 # v3.17.1
 
