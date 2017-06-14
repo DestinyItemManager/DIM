@@ -1,7 +1,7 @@
 <div ng-controller="dimSettingsCtrl as vm">
     <h1 translate="Views.About.Header"></h1>
     <div class="ngdialog-inner-content">
-        <a ng-href="{{$DIM_CHANGELOG}}" target="_blank"><span translate-values="{ version: $DIM_VERSION, flavor: $DIM_FLAVOR }" translate="Views.About.Version"></span></a>
+        <a ng-href="{{$DIM_CHANGELOG}}" target="_blank"><span translate-values="{ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE }" translate="Views.About.Version"></span></a>
         <p translate="Views.About.HowItsMade"></p>
         <h2 translate="Views.About.ContactUs"></h2>
         <table>
