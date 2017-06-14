@@ -12,7 +12,7 @@ const featureFlag = {
   // show changelog toaster
   changelogToaster: $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta',
   // All weapon reviews functionality
-  reviewsEnabled: $DIM_FLAVOR === 'dev',
+  reviewsEnabled: $DIM_FLAVOR !== 'release',
 
   materialsExchangeEnabled: false,
   // allow importing and exporting your DIM data to JSON
