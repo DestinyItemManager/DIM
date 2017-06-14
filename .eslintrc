@@ -170,6 +170,7 @@
     "angular/empty-controller": "error",
     "angular/no-http-callback": "error",
     "angular/di": ["error", "function"],
-    "angular/on-destroy": "error"
+    "angular/on-destroy": "error",
+    "angular/no-inline-template": "error"
   }
 }
