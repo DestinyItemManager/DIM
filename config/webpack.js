@@ -196,7 +196,7 @@ module.exports = (env) => {
         '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
         // allow importing and exporting your DIM data to JSON
         '$featureFlags.importExport': JSON.stringify(env !== 'release'),
-        '$featureFlags.reviewsEnabled': JSON.stringify(env === 'dev')
+        '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release')
       }),
 
       // Enable if you want to debug the size of the chunks
