@@ -13,7 +13,7 @@
     "chrome-extension": {},
     "es_modules": {},
     "webpack": {
-      "configPath": "./config/webpack.js",
+      "configPath": "./config/webpack.js"
     }
   }
 }

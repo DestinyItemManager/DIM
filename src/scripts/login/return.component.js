@@ -1,14 +1,13 @@
 import angular from 'angular';
 import simpleQueryString from 'simple-query-string';
 import template from './return.component.template.html';
-import { bungieApiUpdate } from '../services/bungie-api-utils';
 
 angular.module('dimLogin').component('dimReturn', {
   controller: ReturnController,
   template: template
 });
 
-function ReturnController($http) {
+function ReturnController($http, OAuthService, OAuthTokenService) {
   var ctrl = this;
 
   ctrl.code = "";
@@ -27,27 +26,13 @@ function ReturnController($http) {
       return;
     }
 
-    $http(bungieApiUpdate(
-      '/Platform/App/GetAccessTokensFromCode/',
-      {
-        code: ctrl.code
-      }
-    ))
-    .then((response) => {
-      if (response.data.ErrorCode === 1) {
-        const inception = Date.now();
-        const authorization = {
-          accessToken: angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: inception }),
-          refreshToken: angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: inception }),
-          scope: response.data.Response.scope
-        };
-
-        localStorage.authorization = JSON.stringify(authorization);
-
+    OAuthService.getAccessTokenFromCode(ctrl.code)
+      .then((token) => {
+        OAuthTokenService.setToken(token);
         window.location = "/index.html";
-      } else {
-        console.error(response.data.Message, response);
-      }
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 }
