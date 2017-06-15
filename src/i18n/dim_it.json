@@ -183,7 +183,6 @@
          "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
          "StatsIncrease": "Quando la difesa di un oggetto aumenta, aumentano anche le sue statistiche (intelletto/disciplina/forza)."
       },
-      "Equip": "Equipaggia sul personaggio corrente",
       "ShowAllConfigs": "Mostra tutte le configurazioni",
       "ShowConfigs": "Mostra configurazioni",
       "HideAllConfigs": "Nascondi tutte le configurazioni",
@@ -301,8 +300,7 @@
       "Cons": "Contro",
       "NoReviews": "Non ci sono ancora recensioni per questo oggetto, scrivi tu la prima!",
       "ServiceCallError": "Richiesta di servizio di Destiny Tracker fallita.",
-      "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker",
-      "AverageRating": "({itemRating}) basato su {numReviews} recensioni."
+      "ServiceSubmitError": "Errore di servizio salvataggio Destiny Tracker"
    },
    "Objectives": {
       "Complete": "Completo",

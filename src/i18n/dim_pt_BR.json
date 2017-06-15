@@ -300,8 +300,7 @@
       "Cons": "Contras",
       "NoReviews": "Ainda não há análises para este item, sê o primeiro!",
       "ServiceCallError": "O serviço de chamada do Destiny tracker falhou.",
-      "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou.",
-      "AverageRating": "({itemRating}) baseado em {numReviews} análises."
+      "ServiceSubmitError": "O serviço de submissão do Destiny tracker falhou."
    },
    "Objectives": {
       "Complete": "Completo",
