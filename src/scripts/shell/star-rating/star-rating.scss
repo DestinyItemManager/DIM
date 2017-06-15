@@ -13,10 +13,10 @@ star-rating {
     }
     &.read-only {
       cursor: default;
-      color: #777;
+      color: #ddd;
     }
     &.read-only.filled {
-      color: #ddd;
+      color: gold;
     }
   }
 }
