@@ -699,7 +699,7 @@ img {
     border-style: solid;
   }
   &::before {
-    border-width: .7em;
+    border-width: .45em;
   }
   &.void::before {
     border-left-color: $void;
