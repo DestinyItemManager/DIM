@@ -836,7 +836,7 @@ function StoreService(
 
     // *able
     createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
-    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.talentGrid && createdItem.equipment && createdItem.lockable);
+    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.lockable);
     createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
 
     // Moving rare masks destroys them
