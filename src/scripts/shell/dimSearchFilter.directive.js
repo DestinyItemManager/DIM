@@ -92,6 +92,12 @@ function SearchService(dimSettingsService) {
     });
   });
 
+  const states = ['rating'];
+  states.forEach(function(word) {
+    const filter = 'has:' + word;
+    keywords.push(filter);
+  });
+
   var ranges = ['light', 'level', 'quality', 'percentage', 'rating'];
   ranges.forEach(function(range) {
     comparisons.forEach((comparison) => {
@@ -121,7 +127,7 @@ function SearchFilter(dimSearchService) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:|has:)\w*)$/,
           search: function(term, callback) {
             callback($.map(this.words, function(word) {
               return word.indexOf(term) === 0 ? word : null;
@@ -284,10 +290,16 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
-        var pieces = term.split(':');
-        if (pieces.length === 3) {
-          filter = pieces[1];
-          addPredicate(filter, pieces[2]);
+        var statPieces = term.split(':');
+        if (statPieces.length === 3) {
+          filter = statPieces[1];
+          addPredicate(filter, statPieces[2]);
+        }
+      } else if (term.startsWith('has:')) {
+        var hasPieces = term.split(':');
+        if (hasPieces.length === 2) {
+          filter = hasPieces[0];
+          addPredicate(filter, hasPieces[1]);
         }
       } else if (!/^\s*$/.test(term)) {
         addPredicate("keyword", term);
@@ -497,6 +509,14 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           // Fixed #798 by searching on the description too.
           return (node.name + ' ' + node.description).toLowerCase().indexOf(predicate) >= 0;
         }));
+    },
+    has: function(predicate, item) {
+      switch (predicate) {
+      case "rating":
+        return item.dtrRating;
+      default:
+        return false;
+      }
     },
     light: function(predicate, item) {
       if (predicate.length === 0 || !item.primStat) {
