@@ -92,7 +92,7 @@ function SearchService(dimSettingsService) {
     });
   });
 
-  var ranges = ['light', 'level', 'quality', 'percentage'];
+  var ranges = ['light', 'level', 'quality', 'percentage', 'rating'];
   ranges.forEach(function(range) {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
@@ -121,7 +121,7 @@ function SearchFilter(dimSearchService) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|is:|not:|tag:|notes:|stat:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
             callback($.map(this.words, function(word) {
               return word.indexOf(term) === 0 ? word : null;
@@ -279,6 +279,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
         filter = term.replace('quality:', '').replace('percentage:', '');
         addPredicate("quality", filter);
+      } else if (term.startsWith('rating:')) {
+        filter = term.replace('rating:', '');
+        addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
         var pieces = term.split(':');
@@ -577,6 +580,50 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         break;
       case '>=':
         result = (item.quality.min >= predicate);
+        break;
+      }
+      return result;
+    },
+    rating: function(predicate, item) {
+      if (predicate.length === 0 || !item.dtrRating) {
+        return false;
+      }
+
+      var operands = ['<=', '>=', '=', '>', '<'];
+      var operand = 'none';
+      var result = false;
+
+      operands.forEach(function(element) {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      predicate = parseFloat(predicate);
+      var itemRating = parseFloat(item.dtrRating);
+
+      switch (operand) {
+      case 'none':
+        result = (itemRating === predicate);
+        break;
+      case '=':
+        result = (itemRating === predicate);
+        break;
+      case '<':
+        result = (itemRating < predicate);
+        break;
+      case '<=':
+        result = (itemRating <= predicate);
+        break;
+      case '>':
+        result = (itemRating > predicate);
+        break;
+      case '>=':
+        result = (itemRating >= predicate);
         break;
       }
       return result;
