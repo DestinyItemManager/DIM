@@ -634,7 +634,7 @@ img {
   -webkit-user-select: none;
   box-sizing: content-box;
 }
-.itemQuality .armor .item-stat-no-bg, .show-reviews .weapons .item-stat-no-bg {
+.itemQuality .item-quality ~ .item-stat, .show-reviews .item-review ~ .item-stat {
   background-color: transparent;
 }
 
