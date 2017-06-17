@@ -1,10 +1,10 @@
 @import "../../scss/variables.scss";
 
 .storage {
-  .enabled .fa {
+  .enabled h2 .fa {
     color: green;
   }
-  .disabled .fa {
+  .disabled h2 .fa {
     color: gray;
   }
 }
