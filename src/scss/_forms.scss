@@ -23,6 +23,9 @@ textarea.textarea-error {
   box-shadow: inset 0px 0px 1px black;
   display: inline-block;
   border: none;
+  color: #e0e0e0;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
   &:hover {
     background-color: $orange;
   }
