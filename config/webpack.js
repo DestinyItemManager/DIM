@@ -169,6 +169,7 @@ module.exports = (env) => {
       new webpack.DefinePlugin({
         $DIM_VERSION: JSON.stringify(version),
         $DIM_FLAVOR: JSON.stringify(env),
+        $DIM_BUILD_DATE: JSON.stringify(Date.now()),
         $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_API_KEY: JSON.stringify(process.env.API_KEY),
