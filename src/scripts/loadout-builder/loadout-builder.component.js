@@ -84,12 +84,12 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
 
   function calcArmorStats(pieces, stats) {
     for (var i = 0; i < pieces.length; i++) {
-      const armor = pieces[i].item;
-      var int = armor.normalStats[144602215];
-      var dis = armor.normalStats[1735777505];
-      var str = armor.normalStats[4244567218];
+      const armor = pieces[i];
+      var int = armor.item.normalStats[144602215];
+      var dis = armor.item.normalStats[1735777505];
+      var str = armor.item.normalStats[4244567218];
 
-      var scaleType = (armor.tier === 'Rare') ? 'base' : vm.scaleType;
+      var scaleType = (armor.item.tier === 'Rare') ? 'base' : vm.scaleType;
 
       stats.STAT_INTELLECT.value += int[scaleType];
       stats.STAT_DISCIPLINE.value += dis[scaleType];
