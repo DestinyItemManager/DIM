@@ -86,28 +86,40 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
           if ($featureFlags.debugSync) {
             console.log("gdrive init complete");
           }
+          const auth = gapi.auth2.getAuthInstance();
+          if (!auth) {
+            return $q.reject(new Error("No auth instance - has it not initialized??"));
+          }
+
           // Listen for sign-in state changes.
-          gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus.bind(this));
+          auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
 
           // Handle the initial sign-in state.
-          this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-          this.ready.resolve();
+          this.updateSigninStatus(auth.isSignedIn.get());
+          return this.ready.resolve();
         });
       });
     },
 
     authorize: function() {
-      if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-        if ($featureFlags.debugSync) {
-          console.log('Google Drive already authorized');
+      return this.ready.promise.then(() => {
+        const auth = gapi.auth2.getAuthInstance();
+        if (!auth) {
+          return $q.reject(new Error("No auth instance - has it not initialized??"));
         }
-        return $q.when();
-      } else {
-        if ($featureFlags.debugSync) {
-          console.log('authorizing Google Drive');
+
+        if (auth.isSignedIn.get()) {
+          if ($featureFlags.debugSync) {
+            console.log('Google Drive already authorized');
+          }
+          return $q.when();
+        } else {
+          if ($featureFlags.debugSync) {
+            console.log('authorizing Google Drive');
+          }
+          return auth.signIn();
         }
-        return gapi.auth2.getAuthInstance().signIn();
-      }
+      });
     },
 
     getFileName: function() {

@@ -1,7 +1,9 @@
 import angular from 'angular';
+import _ from 'underscore';
+import { sum } from '../util';
+
 import template from './storage.html';
 import './storage.scss';
-import { sum } from '../util';
 
 function StorageController($scope, dimSettingsService, SyncService, $timeout, $window, $q) {
   'ngInject';
@@ -15,12 +17,12 @@ function StorageController($scope, dimSettingsService, SyncService, $timeout, $w
   function dataStats(data) {
     const taggedItems = sum(Object.keys(data)
                             .filter((k) => k.startsWith('dimItemInfo'))
-                            .map((k) => Object.keys(data[k]).length));
+                            .map((k) => _.size(data[k])));
 
     return {
-      Loadouts: data['loadouts-v3.0'].length,
+      Loadouts: _.size(data['loadouts-v3.0']),
       TagNotes: taggedItems,
-      Settings: Object.keys(data['settings-v1.0']).length
+      Settings: _.size(data['settings-v1.0'])
     };
   }
 
@@ -99,7 +101,12 @@ function StorageController($scope, dimSettingsService, SyncService, $timeout, $w
       $window.alert("Imported DIM data!");
       $scope.$apply();
     };
-    reader.readAsText(angular.element('#importFile')[0].files[0]);
+    const file = angular.element('#importFile')[0].files[0];
+    if (file) {
+      reader.readAsText(file);
+    } else {
+      $window.alert("No File Selected!");
+    }
   };
 }
 
