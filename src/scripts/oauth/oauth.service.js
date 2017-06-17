@@ -1,49 +1,56 @@
 import angular from 'angular';
 import { bungieApiUpdate } from '../services/bungie-api-utils';
 
-export function OAuthService($q, $injector, localStorageService, OAuthTokenService) {
+export function OAuthService($injector) {
   'ngInject';
 
-  function isAuthenticated() {
-    return Boolean(OAuthTokenService.getToken());
+  function handleAccessToken(response) {
+    if (response && response.data && (response.data.ErrorCode === 1) && response.data.Response && response.data.Response.accessToken) {
+      const data = response.data.Response;
+      const inception = Date.now();
+      const accessToken = angular.merge({}, data.accessToken, { name: 'access', inception: inception });
+      const refreshToken = angular.merge({}, data.refreshToken, { name: 'refresh', inception: inception });
+
+      return {
+        accessToken,
+        refreshToken,
+        scope: data.scope,
+        bungieMembershipId: data.membershipId
+      };
+    } else {
+      throw response;
+    }
   }
 
-  function getToken() {
-    // Gets an access token from service.
-  }
-
-  function refreshToken() {
+  function getAccessTokenFromRefreshToken(refreshToken) {
+    // Break a circular dependency
     const $http = $injector.get('$http');
 
     return $http(bungieApiUpdate(
       '/Platform/App/GetAccessTokensFromRefreshToken/',
       {
-        refreshToken: OAuthTokenService.getRefreshToken().value
+        refreshToken: refreshToken.value
       }
     ))
-    .then((response) => {
-      if (response && response.data && (response.data.ErrorCode === 1) && response.data.Response && response.data.Response.accessToken) {
-        const inception = Date.now();
-        const accessToken = angular.merge({}, response.data.Response.accessToken, { name: 'access', inception: inception });
-        const refreshToken = angular.merge({}, response.data.Response.refreshToken, { name: 'refresh', inception: inception });
+      .then(handleAccessToken);
+  }
 
-        OAuthTokenService.setToken({
-          accessToken,
-          refreshToken,
-          scope: response.data.Response.scope
-        });
+  function getAccessTokenFromCode(code) {
+    // Break a circular dependency
+    const $http = $injector.get('$http');
 
-        return OAuthTokenService.getToken();
-      } else {
-        return $q.reject(response);
+    return $http(bungieApiUpdate(
+      '/Platform/App/GetAccessTokensFromCode/',
+      {
+        code
       }
-    });
+    ))
+      .then(handleAccessToken);
   }
 
   return {
-    isAuthenticated,
-    getToken,
-    refreshToken
+    getAccessTokenFromRefreshToken,
+    getAccessTokenFromCode
   };
 }
 
