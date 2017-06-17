@@ -1,6 +1,9 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './loadout-builder.html';
+import intellectIcon from 'app/images/intellect.png';
+import disciplineIcon from 'app/images/discipline.png';
+import strengthIcon from 'app/images/strength.png';
 
 export const LoadoutBuilderComponent = {
   controller: LoadoutBuilderController,
@@ -51,60 +54,57 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
         }
         var bonus = 0;
         var total = 0;
-        stats.forEach(function(stat) {
-          var scaleType = (o.tier === 'Rare') ? 'base' : vm.scaleType;
-          total += o.normalStats[stat][scaleType];
-          bonus = o.normalStats[stat].bonus;
-        });
+        for (var i = 0; i < stats.length; i++) {
+          const stat = stats[i];
+          const scaleType = (o.tier === 'Rare') ? 'base' : vm.scaleType;
+          const normalStats = o.normalStats[stat];
+          total += normalStats[scaleType];
+          bonus = normalStats.bonus;
+        }
         return total + bonus;
       }),
       bonusType: type
     };
   }
 
-  function hasPerks(item, lockedPerks) {
-    if (_.isEmpty(lockedPerks)) {
-      return true;
+  function fillTier(stat) {
+    stat.tier = Math.min((stat.value / 60) >> 0, 5);
+    stat.value = stat.value % 60;
+    stat.tiers = [0, 0, 0, 0, 0];
+
+    for (var tier = 0; tier < 5; tier++) {
+      if (tier < stat.tier) {
+        stat.tiers[tier] = 60;
+      } else if (tier === stat.tier) {
+        stat.tiers[tier] = stat.value;
+        break;
+      }
     }
-
-    var andPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash].lockType === 'and'; }), Number);
-    var orPerkHashes = _.map(_.filter(_.keys(lockedPerks), function(perkHash) { return lockedPerks[perkHash].lockType === 'or'; }), Number);
-
-    return _.some(orPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }) ||
-           (andPerkHashes.length && _.every(andPerkHashes, function(perkHash) { return _.findWhere(item.talentGrid.nodes, { hash: perkHash }); }));
   }
 
-  function fillTiers(stats) {
-    _.each(stats, function(stat) {
-      stat.tier = Math.min(Math.floor(stat.value / 60), 5);
-      stat.value = stat.value % 60;
-      stat.tiers = new Array(5).fill(0);
-      _.each([0, 1, 2, 3, 4], function(tier) {
-        stat.tiers[tier] = (tier <= stat.tier) ? ((tier === stat.tier) ? stat.value : 60) : 0;
-      });
-    });
-  }
-
-  function calcArmorStats(set) {
-    _.each(set.armor, function(armor) {
+  function calcArmorStats(pieces, stats) {
+    for (var i = 0; i < pieces.length; i++) {
+      const armor = pieces[i];
       var int = armor.item.normalStats[144602215];
       var dis = armor.item.normalStats[1735777505];
       var str = armor.item.normalStats[4244567218];
 
       var scaleType = (armor.item.tier === 'Rare') ? 'base' : vm.scaleType;
 
-      set.stats.STAT_INTELLECT.value += int[scaleType];
-      set.stats.STAT_DISCIPLINE.value += dis[scaleType];
-      set.stats.STAT_STRENGTH.value += str[scaleType];
+      stats.STAT_INTELLECT.value += int[scaleType];
+      stats.STAT_DISCIPLINE.value += dis[scaleType];
+      stats.STAT_STRENGTH.value += str[scaleType];
 
       switch (armor.bonusType) {
-      case 'int': set.stats.STAT_INTELLECT.value += int.bonus; break;
-      case 'dis': set.stats.STAT_DISCIPLINE.value += dis.bonus; break;
-      case 'str': set.stats.STAT_STRENGTH.value += str.bonus; break;
+      case 'int': stats.STAT_INTELLECT.value += int.bonus; break;
+      case 'dis': stats.STAT_DISCIPLINE.value += dis.bonus; break;
+      case 'str': stats.STAT_STRENGTH.value += str.bonus; break;
       }
-    });
+    }
 
-    fillTiers(set.stats);
+    fillTier(stats.STAT_INTELLECT);
+    fillTier(stats.STAT_DISCIPLINE);
+    fillTier(stats.STAT_STRENGTH);
   }
 
   function getBonusConfig(armor) {
@@ -119,8 +119,12 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
     };
   }
 
-  function genSetHash(armor) {
-    return _.map(armor, function(piece) { return piece.item.id; }).join('');
+  function genSetHash(armorPieces) {
+    let hash = '';
+    for (var i = 0; i < armorPieces.length; i++) {
+      hash += armorPieces[i].item.id;
+    }
+    return hash;
   }
 
   function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
@@ -138,6 +142,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
     var bestCombs;
     var armortype;
 
+    const excludedIndices = new Set(excluded.map((i) => i.index));
+
     for (armortype in bucket) {
       var combined = (vm.includeVendors) ? bucket[armortype].concat(vendorBucket[armortype]) : bucket[armortype];
       if (locked[armortype]) {
@@ -145,9 +151,28 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
       } else {
         best = [];
 
+        let hasPerks = function() { return true; };
+
+        if (!_.isEmpty(lockedPerks[armortype])) {
+          const lockedPerkKeys = Object.keys(lockedPerks[armortype]);
+          const andPerkHashes = lockedPerkKeys.filter(function(perkHash) { return lockedPerks[armortype][perkHash].lockType === 'and'; }).map(Number);
+          const orPerkHashes = lockedPerkKeys.filter(function(perkHash) { return lockedPerks[armortype][perkHash].lockType === 'or'; }).map(Number);
+
+          hasPerks = function(item) {
+            if (!orPerkHashes.length && !andPerkHashes.length) {
+              return true;
+            }
+            function matchNode(perkHash) {
+              return _.any(item.talentGrid.nodes, { hash: perkHash });
+            }
+            return (orPerkHashes.length && _.any(orPerkHashes, matchNode)) ||
+              (andPerkHashes.length && _.every(andPerkHashes, matchNode));
+          };
+        }
+
         // Filter out excluded and non-wanted perks
-        var filtered = _.filter(combined, function(item) {
-          return !_.findWhere(excluded, { index: item.index }) && hasPerks(item, lockedPerks[armortype]); // Not excluded and has the correct locked perks
+        var filtered = combined.filter(function(item) {
+          return !excludedIndices.has(item.index) && hasPerks(item); // Not excluded and has the correct locked perks
         });
 
         statHashes.forEach(function(hash, index) {
@@ -201,15 +226,6 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
       }
     });
     return topSets;
-  }
-
-  function validSet(gearset) {
-    return (
-      gearset.Helmet.item.isExotic +
-      gearset.Gauntlets.item.isExotic +
-      gearset.Chest.item.isExotic +
-      gearset.Leg.item.isExotic
-    ) < 2;
   }
 
   function getId(index) {
@@ -477,7 +493,6 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
         var ghosts = bestArmor.Ghost || [];
         var artifacts = bestArmor.Artifact || [];
         var setMap = {};
-        var set;
         var tiersSet = new Set();
         var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
         if (combos === 0) {
@@ -494,43 +509,51 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
                   for (; ci < classItems.length; ++ci) {
                     for (; gh < ghosts.length; ++gh) {
                       for (; ar < artifacts.length; ++ar) {
-                        set = {
-                          armor: {
-                            Helmet: helms[h],
-                            Gauntlets: gaunts[g],
-                            Chest: chests[c],
-                            Leg: legs[l],
-                            ClassItem: classItems[ci],
-                            Artifact: artifacts[ar],
-                            Ghost: ghosts[gh]
-                          },
-                          stats: {
-                            STAT_INTELLECT: {
-                              value: 0,
-                              tier: 0,
-                              name: 'Intellect',
-                              icon: require('app/images/intellect.png'),
-                            },
-                            STAT_DISCIPLINE: {
-                              value: 0,
-                              tier: 0,
-                              name: 'Discipline',
-                              icon: require('app/images/discipline.png'),
-                            },
-                            STAT_STRENGTH: {
-                              value: 0,
-                              tier: 0,
-                              name: 'Strength',
-                              icon: require('app/images/strength.png'),
-                            }
-                          },
-                          setHash: 0
-                        };
+                        const validSet = (
+                          Number(helms[h].item.isExotic) +
+                            Number(gaunts[g].item.isExotic) +
+                            Number(chests[c].item.isExotic) +
+                            Number(legs[l].item.isExotic)
+                        ) < 2;
 
-                        if (validSet(set.armor)) {
+                        if (validSet) {
+                          const set = {
+                            armor: {
+                              Helmet: helms[h],
+                              Gauntlets: gaunts[g],
+                              Chest: chests[c],
+                              Leg: legs[l],
+                              ClassItem: classItems[ci],
+                              Artifact: artifacts[ar],
+                              Ghost: ghosts[gh]
+                            },
+                            stats: {
+                              STAT_INTELLECT: {
+                                value: 0,
+                                tier: 0,
+                                name: 'Intellect',
+                                icon: intellectIcon
+                              },
+                              STAT_DISCIPLINE: {
+                                value: 0,
+                                tier: 0,
+                                name: 'Discipline',
+                                icon: disciplineIcon
+                              },
+                              STAT_STRENGTH: {
+                                value: 0,
+                                tier: 0,
+                                name: 'Strength',
+                                icon: strengthIcon
+                              }
+                            },
+                            setHash: 0
+                          };
+
                           vm.hasSets = true;
-                          set.setHash = genSetHash(set.armor);
-                          calcArmorStats(set);
+                          const pieces = Object.values(set.armor);
+                          set.setHash = genSetHash(pieces);
+                          calcArmorStats(pieces, set.stats);
                           var tiersString = set.stats.STAT_INTELLECT.tier +
                               '/' + set.stats.STAT_DISCIPLINE.tier +
                               '/' + set.stats.STAT_STRENGTH.tier;
@@ -550,7 +573,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
                             setMap[set.setHash].tiers[tiersString] = { stats: set.stats, configs: [getBonusConfig(set.armor)] };
                           }
 
-                          set.includesVendorItems = _.any(_.values(set.armor), (armor) => armor.item.isVendorItem);
+                          set.includesVendorItems = pieces.some((armor) => armor.item.isVendorItem);
                         }
 
                         processedCount++;
