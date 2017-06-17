@@ -1,13 +1,11 @@
 import angular from 'angular';
 import _ from 'underscore';
 
-import { LocalStorage } from './sync/local-storage';
 import { IndexedDBStorage } from './sync/indexed-db-storage';
 import { ChromeSyncStorage } from './sync/chrome-sync-storage';
 import { GoogleDriveStorage } from './sync/google-drive-storage';
 
 angular.module('dimApp')
-  .factory('LocalStorage', LocalStorage)
   .factory('IndexedDBStorage', IndexedDBStorage)
   .factory('ChromeSyncStorage', ChromeSyncStorage)
   .factory('GoogleDriveStorage', GoogleDriveStorage)
@@ -15,7 +13,6 @@ angular.module('dimApp')
 
 function SyncService(
   $q,
-  LocalStorage,
   IndexedDBStorage,
   ChromeSyncStorage,
   GoogleDriveStorage
@@ -23,11 +20,10 @@ function SyncService(
   var cached; // cached is the data in memory,
 
   const adapters = [
-    LocalStorage,
     IndexedDBStorage,
     ChromeSyncStorage,
     GoogleDriveStorage
-  ];
+  ].filter((a) => a.supported);
 
   // save data {key: value}
   function set(value, PUT) {

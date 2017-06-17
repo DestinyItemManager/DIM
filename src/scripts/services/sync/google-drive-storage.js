@@ -150,7 +150,7 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
           const files = list.result.files;
 
           // look for the saved file.
-          const file = _.find(files, { title: fileName });
+          const file = _.find(files, { name: fileName });
           if (file) {
             this.fileId = file.id;
             return this.fileId;
@@ -158,7 +158,7 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
 
           // couldn't find the file, lets create a new one.
           return gapi.client.drive.files.create({
-            title: fileName,
+            name: fileName,
             media: {
               mimeType: 'application/json'
             },
@@ -191,7 +191,8 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
       gapi.auth2.getAuthInstance().signOut();
     },
 
-    enabled: $featureFlags.gdrive && Boolean(localStorage.getItem('gdrive-fileid')),
+    supported: $featureFlags.gdrive,
+    enabled: Boolean(localStorage.getItem('gdrive-fileid')),
     name: 'GoogleDriveStorage'
   };
 }

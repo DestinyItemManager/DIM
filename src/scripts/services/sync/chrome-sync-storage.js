@@ -47,8 +47,8 @@ export function ChromeSyncStorage($q, $translate) {
       });
     },
 
-    // TODO: actually remove from the list when not-chrome
-    enabled: (window.chrome && chrome.storage && chrome.storage.sync),
+    supported: (window.chrome && chrome.storage && chrome.storage.sync),
+    enabled: true,
     name: 'ChromeSyncStorage'
   };
 }

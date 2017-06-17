@@ -1,0 +1,44 @@
+<div class="storage">
+  <back-link></back-link>
+
+  <h1 translate="Storage.Title"></h1>
+
+  <div class="storage-stats">
+    <p translate="Storage.Explain"></p>
+    <ul>
+      <li ng-repeat="(key, value) in $ctrl.dataStats" translate="Storage.{{key}}" translate-values="{value: value}"></li>
+      </li>
+    </ul>
+  </div>
+
+  <button class="dim-button" ng-click="$ctrl.forceSync()" translate="Storage.ForceSync"></button>
+
+  <div ng-repeat="adapter in $ctrl.syncService.adapters"
+       ng-switch="adapter.name"
+       ng-class="{ enabled: adapter.enabled }">
+    <h2>
+      <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
+      <span translate="Storage.{{adapter.name}}"></span>
+    </h2>
+
+    <div ng-switch-when="GoogleDriveStorage">
+      <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()" translate="Storage.DriveSync"></button>
+      <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()" translate="Storage.DriveLogout"></button>
+    </div>
+
+    <ul>
+      <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" translate="Storage.{{key}}" translate-values="{value: value}"></li>
+      </li>
+      <li ng-if="!$ctrl.adapterStats[adapter.name]" translate="Storage.NoData"></li>
+    </ul>
+  </div>
+
+  <div class="importExport">
+    <h2 translate="Storage.ImportExport"></h2>
+    <div id="exportButtons">
+      <button class="dim-button" ng-click="$ctrl.exportData()" translate="Storage.Export"></button></br>
+      <button class="dim-button" ng-click="$ctrl.importData()" translate="Storage.Import"></button></br>
+      <input type="file" id="importFile">
+    </div>
+  </div>
+</div>

@@ -22,6 +22,7 @@ textarea.textarea-error {
   padding: 3px 10px;
   box-shadow: inset 0px 0px 1px black;
   display: inline-block;
+  border: none;
   &:hover {
     background-color: $orange;
   }
