@@ -9,7 +9,7 @@
     <span translate="Storage.ForceSync"></span>
   </button>
 
-  <div ng-repeat="adapter in $ctrl.syncService.adapters"
+  <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name"
        ng-switch="adapter.name"
        class="storage-adapter">
     <h2>

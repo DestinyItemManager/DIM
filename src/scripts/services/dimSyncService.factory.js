@@ -91,7 +91,7 @@ function SyncService(
     }
 
     let previous = null;
-    _getPromise = adapters.reverse()
+    _getPromise = adapters.slice().reverse()
       .reduce((promise, adapter) => {
         if (adapter.enabled) {
           return promise.then((value) => {
