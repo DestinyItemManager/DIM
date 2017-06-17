@@ -144,17 +144,10 @@ function SyncService(
 
 
   return {
-    authorizeGdrive: function() {
-      return GoogleDriveStorage.authorize();
-      // TODO: after authorized, reload! (SyncService.get(true))!
-    },
-    logoutGdrive: function() {
-      return GoogleDriveStorage.revokeDrive();
-    },
-    get: get,
-    set: set,
-    remove: remove,
-    init: init,
-    adapters: adapters
+    get,
+    set,
+    remove,
+    init,
+    adapters
   };
 }

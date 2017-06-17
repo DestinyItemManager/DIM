@@ -5,7 +5,7 @@ import { sum } from '../util';
 import template from './storage.html';
 import './storage.scss';
 
-function StorageController($scope, dimSettingsService, SyncService, $timeout, $window, $q) {
+function StorageController($scope, dimSettingsService, SyncService, GoogleDriveStorage, $timeout, $window, $q) {
   'ngInject';
 
   const vm = this;
@@ -62,14 +62,13 @@ function StorageController($scope, dimSettingsService, SyncService, $timeout, $w
   };
 
   vm.driveSync = function() {
-    // TODO: talk directly to the google adapter
     // TODO: warn users that their data could be overridden, back up
-    return SyncService.authorizeGdrive();
+    return GoogleDriveStorage.authorize();
   };
 
   vm.driveLogout = function() {
     // TODO: explain that the data will still be there
-    return SyncService.logoutGdrive();
+    return GoogleDriveStorage.revokeDrive();
   };
 
   vm.exportData = function() {
