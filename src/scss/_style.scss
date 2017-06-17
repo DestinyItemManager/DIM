@@ -85,11 +85,7 @@ div:focus, span:focus {
 }
 
 .logo {
-  background: url('../logo.png') no-repeat;
-  background-position: left center;
-  background-size: 24px;
   height: 24px;
-  padding-left: 32px;
   color: #999;
   font-size: 16px !important;
   font-weight: bold;
@@ -99,7 +95,7 @@ div:focus, span:focus {
     filter: grayscale(100%);
   }
   &.beta {
-    filter: hue-rotate(153deg);
+    filter: hue-rotate(153deg) saturate(60%);
   }
 }
 
@@ -119,7 +115,7 @@ div:focus, span:focus {
         margin-top: 1px;
       }
     }
-    span, a {
+    span, a, img {
       vertical-align: middle;
       margin: 0 6px;
       text-decoration: none;
@@ -320,6 +316,10 @@ a {
     h1, h2, h3, p, table, dl {
       padding-left: 25px;
       padding-right: 25px;
+
+      img {
+        vertical-align: middle;
+      }
     }
   }
   form {
