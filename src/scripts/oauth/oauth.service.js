@@ -1,21 +1,33 @@
 import angular from 'angular';
-import { bungieApiUpdate } from '../services/bungie-api-utils';
+import { oauthClientId } from '../services/bungie-api-utils';
 
-export function OAuthService($injector) {
+const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
+
+// https://www.bungie.net/en/Clan/Post/1777779/227330965/0/0
+export function OAuthService($injector, $httpParamSerializer) {
   'ngInject';
 
   function handleAccessToken(response) {
-    if (response && response.data && (response.data.ErrorCode === 1) && response.data.Response && response.data.Response.accessToken) {
-      const data = response.data.Response;
+    if (response && response.data && response.data.access_token) {
+      const data = response.data;
       const inception = Date.now();
-      const accessToken = angular.merge({}, data.accessToken, { name: 'access', inception: inception });
-      const refreshToken = angular.merge({}, data.refreshToken, { name: 'refresh', inception: inception });
+      const accessToken = {
+        value: data.access_token,
+        expires: data.expires_in,
+        name: 'access',
+        inception: inception
+      };
+      const refreshToken = {
+        value: data.refresh_token,
+        expires: data.refresh_expires_in,
+        name: 'refresh',
+        inception: inception
+      };
 
       return {
         accessToken,
         refreshToken,
-        scope: data.scope,
-        bungieMembershipId: data.membershipId
+        bungieMembershipId: data.membership_id
       };
     } else {
       throw response;
@@ -26,12 +38,17 @@ export function OAuthService($injector) {
     // Break a circular dependency
     const $http = $injector.get('$http');
 
-    return $http(bungieApiUpdate(
-      '/Platform/App/GetAccessTokensFromRefreshToken/',
-      {
-        refreshToken: refreshToken.value
+    return $http({
+      method: 'POST',
+      url: TOKEN_URL,
+      data: $httpParamSerializer({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken.value
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-    ))
+    })
       .then(handleAccessToken);
   }
 
@@ -39,12 +56,18 @@ export function OAuthService($injector) {
     // Break a circular dependency
     const $http = $injector.get('$http');
 
-    return $http(bungieApiUpdate(
-      '/Platform/App/GetAccessTokensFromCode/',
-      {
-        code
+    return $http({
+      method: 'POST',
+      url: TOKEN_URL,
+      data: $httpParamSerializer({
+        code: code,
+        client_id: oauthClientId(),
+        grant_type: 'authorization_code'
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-    ))
+    })
       .then(handleAccessToken);
   }
 

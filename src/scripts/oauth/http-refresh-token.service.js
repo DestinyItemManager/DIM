@@ -77,8 +77,6 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
 
   function isTokenValid(token) {
     const expired = OAuthTokenService.hasTokenExpired(token);
-    const isReady = OAuthTokenService.isTokenReady(token);
-
-    return (!expired && isReady);
+    return !expired;
   }
 }

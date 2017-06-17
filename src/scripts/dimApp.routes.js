@@ -31,7 +31,7 @@ function routes($stateProvider, $urlRouterProvider) {
   if ($DIM_FLAVOR === 'dev') {
     states.push({
       name: 'developer',
-      parent: 'content',
+      parent: 'shell',
       url: '/developer',
       template: require('app/scripts/developer/developer.html')
     });
