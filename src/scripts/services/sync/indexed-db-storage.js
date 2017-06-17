@@ -1,6 +1,10 @@
 import idbKeyval from 'idb-keyval';
 import _ from 'underscore';
 
+/**
+ * Local storage using IndexedDB. IndexedDB has large storage limits,
+ * but may be deleted by the browser!
+ */
 export function IndexedDBStorage() {
   'ngInject';
 

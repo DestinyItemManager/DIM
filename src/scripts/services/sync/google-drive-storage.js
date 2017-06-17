@@ -4,12 +4,17 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
   'ngInject';
 
   return {
-    drive: { // drive api data
+    // drive api data
+    drive: {
       client_id: $GOOGLE_DRIVE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/drive.appdata',
       discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]
     },
+
+    // The Google Drive ID of the file we use to save data.
     fileId: null,
+
+    // A promise that will be resolved when the Google Drive API is available
     ready: $q.defer(),
 
     get: function() {
@@ -52,25 +57,34 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
             .catch((resp) => {
               // TODO: error handling
               // this.revokeDrive();
-              throw new Error('error saving. revoking drive: ' + resp.error);
+              throw new Error('error saving. ' + resp.error);
             });
         });
     },
 
+    /**
+     * React to changes in sign-in status.
+     */
     updateSigninStatus: function(isSignedIn) {
       if (isSignedIn) {
         if ($featureFlags.debugSync) {
           console.log('signed in to Google Drive');
         }
-        this.getFileId();
+        return this.getFileId();
       } else {
         if ($featureFlags.debugSync) {
           console.log('not signed in to Google Drive');
         }
         this.enabled = false;
+        return $q.resolve();
       }
     },
 
+    /**
+     * Bootstrap the Google Drive client libraries and
+     * authentication. If the user has authed in the past, they are
+     * automatically signed back in.
+     */
     init: function() {
       if (!$featureFlags.gdrive) {
         if ($featureFlags.debugSync) {
@@ -95,12 +109,14 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
           auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
 
           // Handle the initial sign-in state.
-          this.updateSigninStatus(auth.isSignedIn.get());
-          return this.ready.resolve();
+          return this.updateSigninStatus(auth.isSignedIn.get()).then(() => this.ready.resolve());
         });
       });
     },
 
+    /**
+     * Log in to Google Drive.
+     */
     authorize: function() {
       return this.ready.promise.then(() => {
         const auth = gapi.auth2.getAuthInstance();
@@ -122,6 +138,9 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
       });
     },
 
+    /**
+     * Generate a filename that is unique per DIM flavor and Bungie.net account.
+     */
     getFileName: function() {
       // TODO: in the future wait for a promise or observable on this value
       const token = OAuthTokenService.getToken();
@@ -131,7 +150,10 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
       return null;
     },
 
-    // load the file from google drive
+    /**
+     * Get the ID (not the filename) of the file in Google Drive. We
+     * may have to create it.
+     */
     getFileId: function() {
       // if we already have the fileId, just return.
       if (this.fileId) {
@@ -195,6 +217,10 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
         });
     },
 
+    /**
+     * Sign out of Google Drive. We leave the file there, so if you
+     * sign in again, we can restore those saved settings.
+     */
     revokeDrive: function() {
       console.log("revoking Google drive");
       this.fileId = undefined;

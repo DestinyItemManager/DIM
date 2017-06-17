@@ -11,13 +11,19 @@ angular.module('dimApp')
   .factory('GoogleDriveStorage', GoogleDriveStorage)
   .factory('SyncService', SyncService);
 
+/**
+ * The sync service allows us to save a single object to persistent
+ * storage - potentially using multiple different storage
+ * systems. Each system is a separate adapter that can be enabled or
+ * disabled.
+ */
 function SyncService(
   $q,
   IndexedDBStorage,
   ChromeSyncStorage,
   GoogleDriveStorage
 ) {
-  var cached; // cached is the data in memory,
+  var cached;
 
   const adapters = [
     IndexedDBStorage,
@@ -25,7 +31,13 @@ function SyncService(
     GoogleDriveStorage
   ].filter((a) => a.supported);
 
-  // save data {key: value}
+  /**
+   * Write some key/value pairs to storage. This will write to each
+   * adapter in order.
+
+   * @param {object} value an object that will be merged with the saved data object and persisted.
+   * @param {boolean} PUT if this is true, replace all data with value, rather than merging it
+   */
   function set(value, PUT) {
     if (!cached) {
       throw new Error("Must call get at least once before setting");
@@ -61,6 +73,12 @@ function SyncService(
 
   let _getPromise = null;
 
+  /**
+   * Load all the saved data. This attempts to load from each adapter
+   * in reverse order, and returns whatever produces a result first.
+   *
+   * @param {boolean} force bypass the in-memory cache.
+   */
   // get DIM saved data
   function get(force) {
     // if we already have it and we're not forcing a sync
@@ -71,8 +89,6 @@ function SyncService(
     if (_getPromise) {
       return _getPromise;
     }
-    // TODO: get from all adapters, setting along the way?
-    // TODO: this prefers (and waits for) remote data always - is that right?
 
     let previous = null;
     _getPromise = adapters.reverse()
@@ -105,10 +121,12 @@ function SyncService(
     return _getPromise;
   }
 
-  // remove something from DIM by key
+  /**
+   * Remove one or more keys from storage. It is removed from all adapters.
+   *
+   * @param {string, Array<string>} keys to delete
+   */
   function remove(key) {
-    // just delete that key, maybe someday save to an undo array?
-
     let deleted = false;
     if (_.isArray(key)) {
       _.each(key, (k) => {

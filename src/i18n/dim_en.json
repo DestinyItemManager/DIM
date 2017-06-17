@@ -371,7 +371,7 @@
       "Loadouts": "{value} loadouts",
       "Settings": "Your DIM settings and preferences",
       "TagNotes": "{value} items with tags or notes",
-      "ImportExport": "Import / Export Data",
+      "ImportExport": "Back Up Data",
       "GoogleDriveStorage": "Google Drive",
       "ChromeSyncStorage": "Chrome Sync (Extension Only)",
       "IndexedDBStorage": "Local Browser Storage",
@@ -380,7 +380,9 @@
       "DriveLogout": "Log out of Google Drive",
       "NoData": "No data",
       "Export": "Back up DIM data",
-      "Import": "Import DIM data"
+      "Import": "Import DIM data",
+      "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
+      "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it."
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",

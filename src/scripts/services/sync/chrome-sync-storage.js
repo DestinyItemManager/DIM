@@ -1,3 +1,7 @@
+/**
+ * Storage that uses Chrome's extension sync mechanism. Only available
+ * to extensions, and it has some limitation on storage.
+ */
 export function ChromeSyncStorage($q, $translate) {
   'ngInject';
 
@@ -47,6 +51,7 @@ export function ChromeSyncStorage($q, $translate) {
       });
     },
 
+    // TODO: What if they aren't signed in?
     supported: (window.chrome && chrome.storage && chrome.storage.sync),
     enabled: true,
     name: 'ChromeSyncStorage'
