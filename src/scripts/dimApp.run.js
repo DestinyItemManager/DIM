@@ -13,6 +13,7 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, $time
   $rootScope.$DIM_VERSION = $DIM_VERSION;
   $rootScope.$DIM_FLAVOR = $DIM_FLAVOR;
   $rootScope.$DIM_CHANGELOG = $DIM_CHANGELOG;
+  $rootScope.$DIM_BUILD_DATE = new Date($DIM_BUILD_DATE).toLocaleString();
 
   const unregister = $rootScope.$on('dim-settings-loaded', () => {
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {

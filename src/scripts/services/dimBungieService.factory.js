@@ -5,9 +5,10 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaster, $translate) {
+function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $translate) {
   var service = {
     getAccounts: getAccounts,
+    getAccountsForCurrentUser: getAccountsForCurrentUser,
     getCharacters: getCharacters,
     getStores: getStores,
     transfer: transfer,
@@ -59,7 +60,9 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     case 1618: // DestinyUnexpectedError
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        return $q.reject(new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label })));
+        const error = new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label }));
+        error.code = errorCode;
+        return $q.reject(error);
       }
     case 2101: // ApiInvalidOrExpiredKey
     case 2102: // ApiKeyMissingFromRequest
@@ -108,27 +111,21 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
     }
   }
 
-  function showErrorToaster(e) {
-    const twitterLink = '<a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
-    const twitter = `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`;
-
-    toaster.pop({
-      type: 'error',
-      bodyOutputType: 'trustedHtml',
-      title: 'Bungie.net Error',
-      body: e.message + twitter,
-      showCloseButton: false
-    });
-  }
-
   function getManifest() {
     return $http(bungieApiQuery('/D1/Platform/Destiny/Manifest/'))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response);
   }
 
-  function getAccounts() {
-    return $http(bungieApiQuery('/Platform/User/GetCurrentBungieAccount/'))
+  function getAccounts(bungieMembershipId) {
+    return $http(bungieApiQuery(`/Platform/User/GetMembershipsById/${bungieMembershipId}/254/`))
+      .then(handleErrors, handleErrors)
+      .then((response) => response.data.Response);
+  }
+
+  // This is here just for migrating folks to GetMembershipsById
+  function getAccountsForCurrentUser() {
+    return $http(bungieApiQuery(`/Platform/User/GetMembershipsForCurrentUser/`))
       .then(handleErrors, handleErrors)
       .then((response) => response.data.Response);
   }
@@ -176,7 +173,6 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, toaste
         });
       })
       .catch(function(e) {
-        showErrorToaster(e);
         return $q.reject(e);
       });
 

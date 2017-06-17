@@ -4,29 +4,59 @@ import _ from 'underscore';
 angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
-function PlatformService($rootScope, $q, dimBungieService, SyncService) {
+function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, OAuthService, $state, toaster) {
   var _platforms = [];
   var _active = null;
 
   var service = {
     getPlatforms: getPlatforms,
     getActive: getActive,
-    setActive: setActive
+    setActive: setActive,
+    reportBadPlatform: reportBadPlatform
   };
 
   return service;
 
   function getPlatforms() {
-    return dimBungieService.getAccounts()
-      .then(generatePlatforms);
+    const token = OAuthTokenService.getToken();
+    if (!token) {
+      // We're not logged in, don't bother
+      $state.go('login');
+      return $q.when();
+    }
+
+    if (token.bungieMembershipId) {
+      return dimBungieService.getAccounts(token.bungieMembershipId)
+        .then(generatePlatforms)
+        .catch(function(e) {
+          toaster.pop('error', 'Unexpected error getting accounts', e.message);
+          throw e;
+        });
+    } else {
+      // they're logged in, just need to fill in membership
+      // TODO: this can be removed after everyone has had a chance to upgrade
+      return dimBungieService.getAccountsForCurrentUser()
+        .then(function(accounts) {
+          const token = OAuthTokenService.getToken();
+          token.bungieMembershipId = accounts.bungieNetUser.membershipId;
+          OAuthTokenService.setToken(token);
+
+          return accounts;
+        })
+        .then(generatePlatforms)
+        .catch(function(e) {
+          toaster.pop('error', 'Unexpected error getting accounts', e.message);
+          throw e;
+        });
+    }
   }
 
-  function generatePlatforms(bungieUser) {
-    _platforms = bungieUser.destinyAccounts.map((destinyAccount) => {
+  function generatePlatforms(accounts) {
+    _platforms = accounts.destinyMemberships.map((destinyAccount) => {
       const account = {
-        id: destinyAccount.userInfo.displayName,
-        type: destinyAccount.userInfo.membershipType,
-        membershipId: destinyAccount.userInfo.membershipId
+        id: destinyAccount.displayName,
+        type: destinyAccount.membershipType,
+        membershipId: destinyAccount.membershipId
       };
       account.label = account.type === 1 ? 'Xbox' : 'PlayStation';
       return account;
@@ -78,6 +108,18 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService) {
 
     $rootScope.$broadcast('dim-active-platform-updated', { platform: _active });
     return promise;
+  }
+
+  // When we find a platform with no characters, remove it from the list and try something else.
+  function reportBadPlatform(platform, e) {
+    if (_platforms.length > 1) {
+      _platforms = _platforms.filter((p) => p !== platform);
+      $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
+      setActive(_platforms[0]);
+    } else {
+      // Nothing we can do
+      throw e;
+    }
   }
 }
 

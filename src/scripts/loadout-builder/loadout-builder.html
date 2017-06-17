@@ -141,8 +141,13 @@
     <p><span translate="LB.Loading"></span> <span>({{vm.progress*100 | number:2}}%)</span></p>
   </div>
   <div ng-show="vm.progress >= 1">
-    <div class="section loadout" ng-repeat="setType in vm.activeHighestSets">
-      <div><dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats><span class='dim-button' ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span><span class='dim-button equip-button' ng-click="vm.equipItems(setType.set)" translate="LB.Equip" translate-values="{ character: vm.activeCharacters[vm.selectedCharacter].name }"></span></div>
+    <div class="section loadout" ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash">
+      <div class="loadout-builder-controls">
+        <span ng-if="setType.set.includesVendorItems" translate="LB.ContainsVendorItems"></span>
+        <span ng-if="!setType.set.includesVendorItems" class='dim-button' ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span>
+        <span ng-if="!setType.set.includesVendorItems" class='dim-button equip-button' ng-click="vm.equipItems(setType.set)" translate="LB.Equip" translate-values="{ character: vm.activeCharacters[vm.selectedCharacter].name }"></span>
+        <dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats>
+      </div>
       <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></loadout-builder-item>

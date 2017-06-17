@@ -300,8 +300,7 @@
       "Cons": "Nachteile",
       "NoReviews": "Bisher gibt es keine Berichte für diesen Gegenstand, sei der Erste!",
       "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
-      "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
-      "AverageRating": "({itemRating}) basierend auf {numReviews} Berichten."
+      "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen."
    },
    "Objectives": {
       "Complete": "Vollständig",

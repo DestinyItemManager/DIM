@@ -300,8 +300,7 @@
       "Cons": "Contras",
       "NoReviews": "No hay reseñas para este objeto, sé el primero!",
       "ServiceCallError": "Falló la llamada al servicio de Destiny Tracker",
-      "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker",
-      "AverageRating": "({itemRating}) basado en {numReviews} reseñas."
+      "ServiceSubmitError": "Falló el envío al servicio de Destiny Tracker"
    },
    "Objectives": {
       "Complete": "Completo",
