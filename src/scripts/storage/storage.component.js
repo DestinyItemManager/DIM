@@ -26,10 +26,6 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
     };
   }
 
-  SyncService.get().then((data) => {
-    vm.dataStats = dataStats(data);
-  });
-
   function refreshAdapter(adapter) {
     if (adapter.enabled) {
       return adapter.get()
@@ -56,7 +52,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   });
 
   vm.forceSync = function() {
-    return SyncService.get()
+    return SyncService.get(true)
       .then((data) => SyncService.set(data, true))
       .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
   };

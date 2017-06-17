@@ -2,14 +2,7 @@
   <back-link></back-link>
 
   <h1 translate="Storage.Title"></h1>
-
-  <div class="storage-stats">
-    <p translate="Storage.Explain"></p>
-    <ul>
-      <li ng-repeat="(key, value) in $ctrl.dataStats" translate="Storage.{{key}}" translate-values="{value: value}"></li>
-      </li>
-    </ul>
-  </div>
+  <p translate="Storage.Explain"></p>
 
   <button class="dim-button" ng-click="$ctrl.forceSync()">
     <i class="fa fa-save"></i>
@@ -18,11 +11,17 @@
 
   <div ng-repeat="adapter in $ctrl.syncService.adapters"
        ng-switch="adapter.name"
-       ng-class="{ enabled: adapter.enabled }">
+       class="storage-adapter">
     <h2>
-      <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
       <span translate="Storage.{{adapter.name}}"></span>
+      <span class="storage-status"
+            ng-class="{ enabled: adapter.enabled }">
+        <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
+        <span translate="Storage.{{adapter.enabled ? 'Enabled' : 'Disabled'}}"></span>
+      </span>
     </h2>
+
+    <p translate="Storage.Details.{{adapter.name}}"></p>
 
     <div ng-switch-when="GoogleDriveStorage">
       <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
@@ -35,6 +34,7 @@
       </button>
     </div>
 
+    <p translate="Storage.StatLabel"></p>
     <ul>
       <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" translate="Storage.{{key}}" translate-values="{value: value}"></li>
       </li>
@@ -42,22 +42,20 @@
     </ul>
   </div>
 
-  <div class="importExport">
+  <div class="storage-adapter">
     <h2 translate="Storage.ImportExport"></h2>
-    <div id="exportButtons">
-      <div>
-        <button class="dim-button" ng-click="$ctrl.exportData()">
-          <i class="fa fa-download"></i>
-          <span translate="Storage.Export"></span>
-        </button>
-      </div>
-      <div>
-        <button class="dim-button" ng-click="$ctrl.importData()">
-          <i class="fa fa-upload"></i>
-          <span translate="Storage.Import"></span>
-        </button>
-        <input type="file" id="importFile">
-      </div>
-    </div>
+    <p>
+      <button class="dim-button" ng-click="$ctrl.exportData()">
+        <i class="fa fa-download"></i>
+        <span translate="Storage.Export"></span>
+      </button>
+    </p>
+    <p>
+      <button class="dim-button" ng-click="$ctrl.importData()">
+        <i class="fa fa-upload"></i>
+        <span translate="Storage.Import"></span>
+      </button>
+      <input type="file" id="importFile">
+    </p>
   </div>
 </div>
