@@ -388,9 +388,15 @@
       "DriveLogout": "Log out of Google Drive",
       "NoData": "No data",
       "Export": "Back up DIM data",
-      "Import": "Import DIM data",
+      "Import": "Import DIM data from file",
+      "ImportSuccess": "Imported DIM data!",
+      "ImportNoFile": "No file selected!",
       "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
-      "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it."
+      "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
+      "ImportFromExtension": "Import data from DIM Chrome Extension",
+      "ImportFromExtensionDetail": "You can import data from the DIM Chrome Extension into the DIM website.",
+      "ImportFromExtensionButton": "Import Data",
+      "ImportFromExtensionWarning": "Your DIM Chrome Extension data will overwrite your current data. Continue?"
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",

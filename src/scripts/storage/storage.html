@@ -42,6 +42,21 @@
     </ul>
   </div>
 
+  <div class="storage-adapter" ng-if="$ctrl.supportsExtensionImport">
+    <h2 translate="Storage.ImportFromExtension"></h2>
+    <p translate="Storage.ImportFromExtensionDetail"></p>
+    <p translate="Storage.StatLabel"></p>
+    <ul>
+      <li ng-repeat="(key, value) in $ctrl.extensionDataStats" translate="Storage.{{key}}" translate-values="{value: value}"></li>
+      </li>
+      <li ng-if="!$ctrl.extensionDataStats" translate="Storage.NoData"></li>
+    </ul>
+    <button class="dim-button" ng-click="$ctrl.importDataFromExtension()">
+      <i class="fa fa-upload"></i>
+      <span translate="Storage.ImportFromExtensionButton"></span>
+    </button>
+  </div>
+
   <div class="storage-adapter">
     <h2 translate="Storage.ImportExport"></h2>
     <p>

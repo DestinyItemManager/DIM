@@ -93,18 +93,56 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   vm.importData = function() {
     var reader = new FileReader();
     reader.onload = function() {
-      // TODO: we're kinda trusting that this is the right data here, no validation!
-      SyncService.set(JSON.parse(reader.result), true);
-      $window.alert("Imported DIM data!");
-      $scope.$apply();
+      $scope.$apply(() => {
+        // TODO: we're kinda trusting that this is the right data here, no validation!
+        SyncService.set(JSON.parse(reader.result), true);
+        SyncService.adapters.forEach(refreshAdapter);
+      });
+      $window.alert($translate.instant('Storage.ImportSuccess'));
     };
     const file = angular.element('#importFile')[0].files[0];
     if (file) {
       reader.readAsText(file);
     } else {
-      $window.alert("No File Selected!");
+      $window.alert($translate.instant('Storage.ImportNoFile'));
     }
   };
+
+  vm.importDataFromExtension = function() {
+    if ($window.confirm($translate.instant('Storage.ImportFromExtensionWarning'))) {
+      return SyncService.set(vm.extensionData, true)
+        .then(() => $q.all(SyncService.adapters.map(refreshAdapter)));
+    }
+    return null;
+  };
+
+  function messageHandler(event) {
+    // We only accept messages from ourselves
+    if (event.source !== window) {
+      return;
+    }
+
+    switch (event.data.type) {
+    case 'DIM_EXT_PONG':
+      vm.supportsExtensionImport = true;
+      console.log('pong!');
+      window.postMessage({ type: 'DIM_GET_DATA' }, "*");
+      break;
+
+    case 'DIM_DATA_RESPONSE':
+      console.log('data response', event);
+      vm.extensionData = event.data.data;
+      vm.extensionDataStats = dataStats(vm.extensionData);
+      break;
+    }
+  }
+
+  window.addEventListener("message", messageHandler, false);
+  window.postMessage({ type: 'DIM_EXT_PING' }, "*");
+
+  $scope.$on('$destroy', () => {
+    window.removeEventListener(messageHandler);
+  });
 }
 
 export const StorageComponent = {
