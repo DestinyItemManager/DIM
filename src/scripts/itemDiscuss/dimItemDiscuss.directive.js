@@ -1,5 +1,5 @@
 import angular from 'angular';
-import template from './dimItemDiscuss.directive.template.html';
+import template from './dimItemDiscuss.directive.html';
 
 angular.module('dimApp')
   .directive('dimItemDiscuss', ItemDiscuss);

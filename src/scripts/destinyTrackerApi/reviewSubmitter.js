@@ -21,7 +21,7 @@ class ReviewSubmitter {
 
     return {
       membershipId: membershipInfo.membershipId,
-      type: membershipInfo.type,
+      membershipType: membershipInfo.type,
       displayName: membershipInfo.id
     };
   }

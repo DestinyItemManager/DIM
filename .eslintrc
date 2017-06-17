@@ -20,6 +20,7 @@
     "chrome": true,
     "gapi": true,
     "$DIM_FLAVOR": true,
+    "$DIM_BUILD_DATE": true,
     "$DIM_CHANGELOG": true,
     "$DIM_VERSION": true,
     "$DIM_API_KEY": true,

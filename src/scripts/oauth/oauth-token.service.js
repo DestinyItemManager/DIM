@@ -17,9 +17,10 @@ export function OAuthTokenService(localStorageService) {
    * @property {string} name - Either 'access' or 'refresh'.
    * @property {number} inception - A UTC epoch milliseconds timestamp representing when the token was acquired.
    */
+
   /**
    * Get all token information from saved storage.
-   * @return {{accessToken, refreshToken, scope}}
+   * @return {{accessToken, refreshToken, scope, bungieMembershipId}}
    */
   function getToken() {
     return localStorageService.get('authorization');
@@ -30,40 +31,10 @@ export function OAuthTokenService(localStorageService) {
    * @param {Token} token.accessToken
    * @param {Token} token.refreshToken
    * @param {string} token.scope the scope bitfield describing allowed actions
+   * @param {string} token.bungieMembershipId The user's Bungie account ID
    */
   function setToken(token) {
     localStorageService.set('authorization', token);
-  }
-
-  /**
-   * Get just the access token from saved storage.
-   * @return {Token}
-   */
-  function getAccessToken() {
-    const token = getToken();
-    return token ? token.accessToken : undefined;
-  }
-
-  /**
-   * Get just the refresh token from saved storage.
-   * @return {Token}
-   */
-  function getRefreshToken() {
-    const token = getToken();
-    return token ? token.refreshToken : undefined;
-  }
-
-  /**
-   * Generate a bearer authorization header from our saved access token.
-   * @return {string}
-   */
-  function getAuthorizationHeader() {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      return undefined;
-    }
-
-    return 'Bearer ' + accessToken.value;
   }
 
   /**
@@ -117,9 +88,6 @@ export function OAuthTokenService(localStorageService) {
   return {
     getToken,
     setToken,
-    getAccessToken,
-    getRefreshToken,
-    getAuthorizationHeader,
     removeToken,
     hasTokenExpired,
     isTokenReady

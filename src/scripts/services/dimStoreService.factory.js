@@ -24,6 +24,7 @@ function StoreService(
   dimState,
   dimDestinyTrackerService,
   dimSettingsService,
+  toaster,
   $http
 ) {
   var _stores = [];
@@ -627,6 +628,13 @@ function StoreService(
           // no problem, just canceling the request
           return null;
         }
+        if (e.code === 1601) { // DestinyAccountNotFound
+          return dimPlatformService.reportBadPlatform(activePlatform, e);
+        }
+        throw e;
+      })
+      .catch(function(e) {
+        showErrorToaster(e);
         throw e;
       })
       .finally(function() {
@@ -639,6 +647,19 @@ function StoreService(
 
     _reloadPromise.activePlatform = activePlatform;
     return _reloadPromise;
+  }
+
+  function showErrorToaster(e) {
+    const twitterLink = '<a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
+    const twitter = `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`;
+
+    toaster.pop({
+      type: 'error',
+      bodyOutputType: 'trustedHtml',
+      title: 'Bungie.net Error',
+      body: e.message + twitter,
+      showCloseButton: false
+    });
   }
 
   function getStore(id) {
@@ -836,7 +857,7 @@ function StoreService(
 
     // *able
     createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
-    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.talentGrid && createdItem.equipment && createdItem.lockable);
+    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
     createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
 
     // Moving rare masks destroys them

@@ -1,5 +1,5 @@
 import angular from 'angular';
-import template from './dimStoreItem.directive.template.html';
+import template from './dimStoreItem.directive.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
@@ -174,13 +174,6 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
     } else {
       processItem(vm, vm.item);
     }
-
-    scope.$watch('vm.item.dtrRating', function() {
-      if (!vm.item.reviewable) {
-        return;
-      }
-      vm.badgeClassNames['item-stat-no-bg'] = Boolean(vm.item.dtrRating);
-    });
   }
 }
 
@@ -209,7 +202,6 @@ function processItem(vm, item) {
 
   if (vm.showBadge) {
     vm.badgeClassNames['item-stat'] = true;
-    vm.badgeClassNames['item-stat-no-bg'] = Boolean(vm.item.quality);
     vm.badgeCount = item.primStat.value;
   }
 }
@@ -223,4 +215,3 @@ function StoreItemCtrl() {
     ? vm.item.equipment
     : (vm.item.equipment || vm.item.location.hasTransferDestination);
 }
-

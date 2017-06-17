@@ -1,0 +1,4 @@
+<div class="vendor-currency" ng-repeat="currency in vm.currencies track by currency.itemHash">
+  {{vm.totalCoins[currency.itemHash]}}
+  <img ng-src="{{::currency.icon | bungieIcon}}" title="{{::currency.itemName}}"/>
+</div>

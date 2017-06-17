@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-export function GoogleDriveStorage($q, $translate, dimState) {
+export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
   'ngInject';
 
   return {
@@ -111,9 +111,10 @@ export function GoogleDriveStorage($q, $translate, dimState) {
     },
 
     getFileName: function() {
-      const platform = dimState.active;
-      if (platform) {
-        return 'DIM-' + $DIM_FLAVOR + '-' + platform.bungieMembershipId;
+      // TODO: in the future wait for a promise or observable on this value
+      const token = OAuthTokenService.getToken();
+      if (token && token.bungieMembershipId) {
+        return 'DIM-' + $DIM_FLAVOR + '-' + token.bungieMembershipId;
       }
       return null;
     },
