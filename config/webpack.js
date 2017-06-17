@@ -26,7 +26,7 @@ var preMinifiedDeps = [
 module.exports = (env) => {
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
-  if (process.env.TRAVIS_BUILD_NUMBER) {
+  if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
     version += "." + process.env.TRAVIS_BUILD_NUMBER;
   }
 
