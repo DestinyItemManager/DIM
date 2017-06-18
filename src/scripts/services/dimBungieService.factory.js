@@ -24,7 +24,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
     if (response.status === -1) {
       return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
     }
-    if (response.status === 503 || response.status === 520 || response.status === 521 || response.status === 522 || response.status === 523 || response.status === 524 || response.status === 525 || response.status === 526 /* cloudflare */) {
+    if (response.status >= 503 && response.status <= 526 /* cloudflare */) {
       return $q.reject(new Error($translate.instant('BungieService.Down')));
     }
     if (response.status < 200 || response.status >= 400) {
