@@ -329,6 +329,8 @@
       "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
       "ShowReviews": "Show review ratings on weapons",
       "ShowReviewsHelp": "Show the average user-sourced ratings on weapons.",
+      "ShowElemental": "Show elemental damage icons on weapons",
+      "ShowElementalHelp": "Show elemental damage icons on weapons.",
       "AllowIdPostToDtr": "Share account name and reviewed items with Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM will share your account name and any item you review with Destiny Tracker.",
       "SetSort": "Sort Items by:",

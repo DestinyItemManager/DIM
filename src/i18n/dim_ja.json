@@ -303,6 +303,8 @@
       "ShowOverlayHelp": "オーレイで新しいアイテムを表示します。",
       "ShowAnimations": "新しいアイテムのオーバーレイアニメーションを表示する。",
       "ShowAnimationsHelp": "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。",
+      "ShowElemental": "武器の属性アイコンを表示する",
+      "ShowElementalHelp": "武器の属性アイコンを表示する。",
       "SetSort": "アイテムを並べ替える",
       "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
       "SortPrimary": "主要",

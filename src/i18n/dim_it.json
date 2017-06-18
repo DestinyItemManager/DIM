@@ -323,6 +323,8 @@
       "ShowOverlayHelp": "Mostrerà una sfumatura sui nuovi oggetti.",
       "ShowAnimations": "Mostra una sfumatura animata sui nuovi oggetti.",
       "ShowAnimationsHelp": "Mostrerà una sfumatura animata sui nuovi oggetti. Disattivare quest'opzione può salvare cicli di CPU.",
+      "ShowElemental": "Mostra icona di danno elemetale sulle armi",
+      "ShowElementalHelp": "Mostra icona di danno elemetale sulle armi.",
       "ShowReviews": "Mostra i punteggi delle recensioni sulle armi",
       "ShowReviewsHelp": "Mostra i punteggi medi derivati dalle recensioni degli utenti.",
       "AllowIdPostToDtr": "Condividi il nome account e gli oggetti recensiti con Destiny Tracker.",

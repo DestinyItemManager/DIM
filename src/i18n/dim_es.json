@@ -323,6 +323,8 @@
       "ShowOverlayHelp": "Mostrará objetos nuevos con una cobertura.",
       "ShowAnimations": "Mostrar cobertura animada en nuevos objetos.",
       "ShowAnimationsHelp": "Mostrará la cobertura animada en objetos nuevos. Apagando esto puede ahorrar ciclos de procesamiento.",
+      "ShowElemental": "Mostrar ícono de daño elemental en armas",
+      "ShowElementalHelp": "Mostrará ícono de daño elemental en armas.",
       "ShowReviews": "Muestra la valuación de reseñas en las armas",
       "ShowReviewsHelp": "Muestra el promedio de reseñas de armas por usuarios.",
       "AllowIdPostToDtr": "Comparte tu nombre de cuenta y tus reseñas de objetos con Destiny Tracker.",
