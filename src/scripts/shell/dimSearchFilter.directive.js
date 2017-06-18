@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimSearchFilter.directive.html';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
@@ -140,7 +141,7 @@ function SearchFilter(dimSearchService) {
     bindToController: true,
     restrict: 'E',
     scope: {},
-    template: `<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" translate-attr="{ placeholder: 'Header.FilterHelp' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">`
+    template: template
   };
 }
 

@@ -1,14 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimItemTag.directive.html';
 
 angular.module('dimApp').component('dimItemTag', {
   controller: ItemTagController,
   bindings: {
     item: '='
   },
-  template: `
-    <select ng-if="$ctrl.item.dimInfo" ng-options="tag as tag.label | translate for tag in $ctrl.settings.itemTags track by tag.type" ng-model="$ctrl.selected" ng-change="$ctrl.updateTag()"></select>
-  `
+  template: template
 });
 
 
@@ -40,6 +39,3 @@ function ItemTagController($scope, $rootScope, dimSettingsService) {
     vm.item.dimInfo.save();
   });
 }
-
-
-
