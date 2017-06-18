@@ -137,11 +137,11 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
     }
   }
 
-  window.addEventListener("message", messageHandler, false);
+  window.addEventListener('message', messageHandler, false);
   window.postMessage({ type: 'DIM_EXT_PING' }, "*");
 
   $scope.$on('$destroy', () => {
-    window.removeEventListener(messageHandler);
+    window.removeEventListener('message', messageHandler);
   });
 }
 
