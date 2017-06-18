@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreHeading.directive.html';
+import dialogTemplate from './dimStoreHeading.directive.dialog.html';
 
 angular.module('dimApp')
   .directive('dimStoreHeading', StoreHeading);
@@ -53,7 +54,7 @@ function StoreHeadingCtrl($scope, ngDialog, $translate) {
       ngDialog.closeAll();
 
       dialogResult = ngDialog.open({
-        template: '<div ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()" dim-loadout-popup="vm.store"></div>',
+        template: dialogTemplate,
         plain: true,
         appendTo: 'div[loadout-id="' + vm.store.id + '"]',
         overlay: false,

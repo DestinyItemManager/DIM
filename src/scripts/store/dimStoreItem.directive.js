@@ -1,5 +1,6 @@
 import angular from 'angular';
 import template from './dimStoreItem.directive.html';
+import dialogTemplate from './dimStoreItem.directive.dialog.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
@@ -117,7 +118,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         dimCompareService.addItemToCompare(item, e);
       } else {
         dialogResult = ngDialog.open({
-          template: '<dim-move-popup store="vm.store" item="vm.item" ng-click="$event.stopPropagation();" dim-click-anywhere-but-here="closeThisDialog()"></dim-move-popup>',
+          template: dialogTemplate,
           plain: true,
           overlay: false,
           className: 'move-popup-dialog',

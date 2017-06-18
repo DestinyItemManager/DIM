@@ -1,5 +1,6 @@
 import angular from 'angular';
 import template from './dimMovePopup.directive.html';
+import infuseTemplate from 'app/views/infuse.html';
 
 angular.module('dimApp')
   .directive('dimMovePopup', MovePopup);
@@ -73,7 +74,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
 
     // Open the infuse window
     ngDialog.open({
-      template: require('app/views/infuse.html'),
+      template: infuseTemplate,
       plain: true,
       className: 'app-settings',
       appendClassName: 'modal-dialog',
