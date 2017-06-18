@@ -313,6 +313,8 @@
       "ShowOverlayHelp": "Afficher les nouveaux objets avec un indicateur.",
       "ShowAnimations": "Afficher les animations pour les nouveaux objets",
       "ShowAnimationsHelp": "Affichera les animations pour les nouveaux objets. Désactiver cette option peut améliorer les performances du CPU.",
+      "ShowElemental": "Afficher les icônes d'élément de dégât sur les armes",
+      "ShowElementalHelp": "Afficher les icônes d'élément de dégât sur les armes.",
       "AllowIdPostToDtrHelp": "DIM va partager votre nom de compte et tout élément que vous consultez avec Destiny Tracker.",
       "SetSort": "Ordonner les objets par:",
       "SetSortHelp": "Ordonner les objets par rareté ou par la valeur de leur stat première.",

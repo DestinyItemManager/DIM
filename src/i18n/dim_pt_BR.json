@@ -323,6 +323,8 @@
       "ShowOverlayHelp": "Itens novos serão exibidos com uma sobreposição de destaque.",
       "ShowAnimations": "Exibir animação da sobreposição em itens novos.",
       "ShowAnimationsHelp": "Irá exibir uma animação em itens novos. Desativar esse recurso pode economizar ciclos de CPU.",
+      "ShowElemental": "Exibir ícone de dano elemental em armas",
+      "ShowElementalHelp": "Exibe o ícone do dano elemental da arma.",
       "ShowReviews": "Mostrar classificações das armas em análise.",
       "ShowReviewsHelp": "Mostrar a média utilizador-armas analisadas.",
       "AllowIdPostToDtr": "Partilhar username e items analisados com o Destiny Tracker.",

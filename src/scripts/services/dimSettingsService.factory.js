@@ -40,6 +40,8 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
     showNewAnimation: true,
     // Show reviews damage icons
     showReviews: true,
+    // Show elemental damage icons
+    showElements: false,
     // Can we post identifying information to DTR?
     allowIdPostToDtr: true,
     // Sort characters (mostRecent, mostRecentReverse, fixed)
