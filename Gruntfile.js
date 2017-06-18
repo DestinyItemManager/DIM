@@ -185,6 +185,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('log_release_version', function() {
-    grunt.log.ok("New production version is " + betaVersion);
+    grunt.log.ok("New production version is " + pkg.version);
   });
 };
