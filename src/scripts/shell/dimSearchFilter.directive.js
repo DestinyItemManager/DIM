@@ -67,6 +67,10 @@ function SearchService(dimSettingsService) {
     transferable: ['transferable', 'movable']
   };
 
+  if ($featureFlags.reviewsEnabled) {
+    filterTrans.hasRating = ['rated', 'hasrating'];
+  }
+
   var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
     return ["is:" + word, "not:" + word];
   }));
@@ -92,13 +96,12 @@ function SearchService(dimSettingsService) {
     });
   });
 
-  const states = ['rating'];
-  states.forEach(function(word) {
-    const filter = 'has:' + word;
-    keywords.push(filter);
-  });
+  var ranges = ['light', 'level', 'quality', 'percentage'];
 
-  var ranges = ['light', 'level', 'quality', 'percentage', 'rating'];
+  if ($featureFlags.reviewsEnabled) {
+    ranges.push('rating');
+  }
+
   ranges.forEach(function(range) {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
@@ -510,14 +513,6 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           return (node.name + ' ' + node.description).toLowerCase().indexOf(predicate) >= 0;
         }));
     },
-    has: function(predicate, item) {
-      switch (predicate) {
-      case "rating":
-        return item.dtrRating;
-      default:
-        return false;
-      }
-    },
     light: function(predicate, item) {
       if (predicate.length === 0 || !item.primStat) {
         return false;
@@ -603,6 +598,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         break;
       }
       return result;
+    },
+    hasRating: function(predicate, item) {
+      return predicate.length !== 0 && item.dtrRating;
     },
     rating: function(predicate, item) {
       if (predicate.length === 0 || !item.dtrRating) {
