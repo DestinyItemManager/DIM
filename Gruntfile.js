@@ -116,6 +116,12 @@ module.exports = function(grunt) {
     grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
 
+  grunt.registerTask('update_chrome_release_manifest', function() {
+    var manifest = grunt.file.readJSON('dist/manifest.json');
+    manifest.version = pkg.version;
+    grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
+  });
+
   grunt.registerMultiTask(
     'precompress',
     'Create gzip and brotli versions of web assets',
@@ -166,7 +172,9 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('publish_release', [
+    'update_chrome_release_manifest',
     'compress:chrome',
+    'log_release_version',
     'webstore_upload:release',
     'precompress',
     'rsync:prod'
@@ -174,5 +182,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('log_beta_version', function() {
     grunt.log.ok("New Beta version is " + betaVersion);
+  });
+
+  grunt.registerTask('log_release_version', function() {
+    grunt.log.ok("New production version is " + pkg.version);
   });
 };
