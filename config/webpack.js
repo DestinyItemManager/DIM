@@ -198,8 +198,6 @@ module.exports = (env) => {
         '$featureFlags.sendingWeaponDataEnabled': JSON.stringify(env === 'dev'),
 
         '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
-        // allow importing and exporting your DIM data to JSON
-        '$featureFlags.importExport': JSON.stringify(env !== 'release'),
         '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release'),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
