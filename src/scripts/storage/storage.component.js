@@ -95,8 +95,8 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
     reader.onload = function() {
       $scope.$apply(() => {
         // TODO: we're kinda trusting that this is the right data here, no validation!
-        SyncService.set(JSON.parse(reader.result), true);
-        SyncService.adapters.forEach(refreshAdapter);
+        SyncService.set(JSON.parse(reader.result), true)
+          .then(() => $q.all(SyncService.adapters.forEach(refreshAdapter)));
       });
       $window.alert($translate.instant('Storage.ImportSuccess'));
     };
