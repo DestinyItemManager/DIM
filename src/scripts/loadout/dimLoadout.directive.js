@@ -65,6 +65,7 @@ function Loadout(dimLoadoutService, $translate) {
     });
 
     scope.$on('dim-edit-loadout', function(event, args) {
+      vm.showClass = args.showClass;
       if (args.loadout) {
         vm.show = true;
         dimLoadoutService.dialogOpen = true;

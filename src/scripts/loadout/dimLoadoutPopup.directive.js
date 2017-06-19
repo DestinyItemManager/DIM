@@ -96,7 +96,8 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   vm.editLoadout = function editLoadout(loadout) {
     ngDialog.closeAll();
     $rootScope.$broadcast('dim-edit-loadout', {
-      loadout: loadout
+      loadout: loadout,
+      showClass: true
     });
   };
 
