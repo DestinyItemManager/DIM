@@ -41,7 +41,7 @@ class ReviewsFetcher {
   }
 
   _getUserReview(reviewData) {
-    return _.findWhere(reviewData.reviews, { isReviewer: true });
+    return _.find(reviewData.reviews, { isReviewer: true });
   }
 
   _attachReviews(item, reviewData) {

@@ -72,14 +72,16 @@ class BulkFetcher {
 
     stores.forEach(function(store) {
       store.items.forEach(function(storeItem) {
-        const matchingItem = self._reviewDataCache.getRatingData(storeItem);
+        if (storeItem.reviewable) {
+          const matchingItem = self._reviewDataCache.getRatingData(storeItem);
 
-        if (matchingItem) {
-          storeItem.dtrRating = matchingItem.rating;
-          storeItem.userRating = matchingItem.userRating;
-          storeItem.userReview = matchingItem.review;
-          storeItem.pros = matchingItem.pros;
-          storeItem.cons = matchingItem.cons;
+          if (matchingItem) {
+            storeItem.dtrRating = matchingItem.rating;
+            storeItem.userRating = matchingItem.userRating;
+            storeItem.userReview = matchingItem.review;
+            storeItem.pros = matchingItem.pros;
+            storeItem.cons = matchingItem.cons;
+          }
         }
       });
     });

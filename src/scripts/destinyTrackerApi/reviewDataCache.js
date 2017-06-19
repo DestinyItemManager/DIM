@@ -20,7 +20,7 @@ class ReviewDataCache {
     // and findWhere considers 123 !== "123".
     dtrItem.referenceId = String(dtrItem.referenceId);
 
-    return _.findWhere(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
+    return _.find(this._itemStores, { referenceId: dtrItem.referenceId, roll: dtrItem.roll });
   }
 
   /**
