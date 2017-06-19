@@ -58,8 +58,7 @@ class BulkFetcher {
 
   attachRankings(bulkRankings,
                  stores) {
-    if ((!bulkRankings) &&
-        (!stores)) {
+    if (!bulkRankings && !stores) {
       return;
     }
 
