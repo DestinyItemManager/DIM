@@ -99,7 +99,7 @@ class ReviewsFetcher {
     }
     const ratingData = this._reviewDataCache.getRatingData(item);
 
-    if (ratingData.reviewsDataFetched) {
+    if (ratingData && ratingData.reviewsDataFetched) {
       this._attachCachedReviews(item,
                                ratingData);
 

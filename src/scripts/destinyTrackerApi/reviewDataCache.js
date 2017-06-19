@@ -98,9 +98,10 @@ class ReviewDataCache {
   addReviewsData(item,
                  reviewsData) {
     var matchingItem = this._getMatchingItem(item);
-
-    matchingItem.reviews = reviewsData.reviews;
-    matchingItem.reviewsDataFetched = true;
+    if (matchingItem) {
+      matchingItem.reviews = reviewsData.reviews;
+      matchingItem.reviewsDataFetched = true;
+    }
   }
 
   /**
