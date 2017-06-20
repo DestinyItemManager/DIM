@@ -7,7 +7,7 @@
   <dim-loadout></dim-loadout>
 
   <p>
-    <span class="dim-button'" ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{!vm.showGear ? 'LB.ShowGear' : 'LB.HideGear'}}</span>
+    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{!vm.showGear ? 'LB.ShowGear' : 'LB.HideGear'}}</span>
   </p>
   <div class="section" ng-show="vm.showGear">
     <span translate="Bucket.Armor"></span>: <select ng-model="vm.type" ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
