@@ -653,6 +653,7 @@ img {
   position: relative;
   contain: strict;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .search-hidden {
@@ -1512,10 +1513,8 @@ dim-compare {
   .item {
     float: right;
     padding: 0 4px 0 0;
+    margin-right: 4px;
     z-index: -10;
-    .item-stat {
-      display: none;
-    }
   }
   > div {
     padding-left: 4px;
