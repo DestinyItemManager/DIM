@@ -293,10 +293,10 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
-        var statPieces = term.split(':');
-        if (statPieces.length === 3) {
-          filter = statPieces[1];
-          addPredicate(filter, statPieces[2]);
+        var pieces = term.split(':');
+        if (pieces.length === 3) {
+          filter = pieces[1];
+          addPredicate(filter, pieces[2]);
         }
       } else if (!/^\s*$/.test(term)) {
         addPredicate("keyword", term);
