@@ -130,7 +130,7 @@ function SearchFilter(dimSearchService) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:|has:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
             callback($.map(this.words, function(word) {
               return word.indexOf(term) === 0 ? word : null;
@@ -297,12 +297,6 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         if (statPieces.length === 3) {
           filter = statPieces[1];
           addPredicate(filter, statPieces[2]);
-        }
-      } else if (term.startsWith('has:')) {
-        var hasPieces = term.split(':');
-        if (hasPieces.length === 2) {
-          filter = hasPieces[0];
-          addPredicate(filter, hasPieces[1]);
         }
       } else if (!/^\s*$/.test(term)) {
         addPredicate("keyword", term);
