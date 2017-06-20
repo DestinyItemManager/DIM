@@ -700,7 +700,7 @@ img {
     border-style: solid;
   }
   &::before {
-    border-width: .45em;
+    border-width: 5px;
   }
   &.void::before {
     border-left-color: $void;
