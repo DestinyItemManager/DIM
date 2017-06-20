@@ -32,7 +32,7 @@
 
         <div class="record-page-records" ng-if="page.records.length && !$ctrl.settings.collapsedSections[page.id]">
           <div class="record" ng-class="{ complete: record.complete }" ng-repeat="record in page.records track by $index">
-            <div class="record-icon"ng-style="{{::record.icon | bungieBackground}}"></div>
+            <div class="record-icon" ng-style="{{::record.icon | bungieBackground}}"></div>
             <div class="record-info">
               <h3>{{::record.name}}</h3>
               <p>{{::record.description}}</p>

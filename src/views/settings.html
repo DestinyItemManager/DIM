@@ -97,10 +97,10 @@
       </tr>
       <tr ng-if="vm.supportsCssVar">
         <td>
-          <label for="charCol" translate-attr="{ title: 'Settings.VaultColumnsHelp'}" translate="Settings.VaultColumns"></label>
+          <label for="vaultCol" translate-attr="{ title: 'Settings.VaultColumnsHelp'}" translate="Settings.VaultColumns"></label>
         </td>
         <td>
-          <select id="charCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
+          <select id="vaultCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
         </td>
       </tr>
       <tr ng-if="vm.supportsCssVar">
@@ -151,8 +151,8 @@
         </td>
         <td>
           <div id="exportButtons">
-            <button ng-click="vm.exportData()" translate="Settings.Export"></button></br>
-            <button ng-click="vm.importData()" translate="Settings.Import"></button></br>
+            <button ng-click="vm.exportData()" translate="Settings.Export"></button><br />
+            <button ng-click="vm.importData()" translate="Settings.Import"></button><br />
             <input type="file" id="importFile">
           </div>
         </td>

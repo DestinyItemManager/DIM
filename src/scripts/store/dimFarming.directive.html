@@ -7,7 +7,7 @@
     <p translate="{{vm.settings.farming.makeRoomForItems ? 'FarmingMode.Desc' : 'FarmingMode.MakeRoom.Desc'}}" translate-values="{ store: vm.service.store.name, gender: vm.service.store.gender }"></p>
     <div class="item-details"><span>
       <p translate="FarmingMode.Configuration"></p>
-      <p><input id="make-room-for-items" type='checkbox' ng-change="vm.settings.save()" ng-model='vm.settings.farming.makeRoomForItems' /><label for="make-room-for-items" translate-attr="{title: 'FarmingMode.MakeRoom.Tooltip'}" translate="FarmingMode.MakeRoom"></label></p>
+      <p><input id="make-room-for-items" type="checkbox" ng-change="vm.settings.save()" ng-model="vm.settings.farming.makeRoomForItems" /><label for="make-room-for-items" translate-attr="{title: 'FarmingMode.MakeRoom.Tooltip'}" translate="FarmingMode.MakeRoom"></label></p>
     </span><span>
       <p translate="FarmingMode.Quickmove"></p>
       <p><dim-simple-item ng-repeat="item in vm.service.consolidate track by $index" item-data="item" ng-click="vm.consolidate(item, vm.service.store)"></dim-simple-item></p>
