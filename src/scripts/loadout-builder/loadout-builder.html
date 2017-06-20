@@ -7,7 +7,7 @@
   <dim-loadout></dim-loadout>
 
   <p>
-    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{!vm.showGear ? 'LB.ShowGear' : 'LB.HideGear'}}</span>
+    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}</span>
   </p>
   <div class="section" ng-show="vm.showGear">
     <span translate="Bucket.Armor"></span>: <select ng-model="vm.type" ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
@@ -138,7 +138,7 @@
     </p>
   </div>
   <div ng-show="vm.progress < 1 && vm.hasSets">
-    <p><span translate="LB.Loading"></span> <span>({{vm.progress*100 | number:2}}%)</span></p>
+    <p><span translate="LB.Loading"></span> <span>({{ vm.progress*100 | number:2 }}%)</span></p>
   </div>
   <div ng-show="vm.progress >= 1">
     <div class="section loadout" ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash">
@@ -152,9 +152,9 @@
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></loadout-builder-item>
           <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small translate="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small></div>
+          <div class="label"><small translate="{{ setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus' }}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[vm.activesets].configs">
-            <small translate="{{config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small>
+            <small translate="{{ config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus' }}"></small>
           </div>
         </div>
       </div>
