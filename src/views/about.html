@@ -1,7 +1,7 @@
 <div ng-controller="dimSettingsCtrl as vm">
   <h1><img src="~app/images/logo-light.svg" alt="DIM Logo" height="36" width="36"/> <span translate="Views.About.Header"></span></h1>
   <div class="ngdialog-inner-content">
-    <a ng-href="{{$DIM_CHANGELOG}}" target="_blank"><span translate-values="{ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE }" translate="Views.About.Version"></span></a>
+    <a ng-href="{{ $DIM_CHANGELOG }}" target="_blank"><span translate-values="{ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE }" translate="Views.About.Version"></span></a>
     <p translate="Views.About.HowItsMade"></p>
     <h2 translate="Views.About.ContactUs"></h2>
     <table>

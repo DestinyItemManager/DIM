@@ -7,13 +7,13 @@
         <dim-simple-item item-data="vm.source"></dim-simple-item>
 
         <div class="infuseSourceDetailsRow">
-          <div><strong>{{vm.source.name}}</strong></div>
-          <div>{{vm.source.type}}</div>
+          <div><strong>{{ vm.source.name }}</strong></div>
+          <div>{{ vm.source.type }}</div>
         </div>
 
         <div class="infuseSourceDetailsRow">
-          <div>{{vm.stat.statName}}</div>
-          <div class="bigValue">{{vm.source.primStat.value}}</div>
+          <div>{{ vm.stat.statName }}</div>
+          <div class="bigValue">{{ vm.source.primStat.value }}</div>
         </div>
       </div>
 
@@ -36,13 +36,13 @@
         <dim-simple-item class="infusedItem" item-data="vm.target"></dim-simple-item>
         <div class="result">
           <div translate="Infusion.BringGear"></div>
-          <span class="bigValue">{{vm.infused}}</span>
-          <span class="green">(+ {{vm.infused - vm.source.primStat.value}})</span>
+          <span class="bigValue">{{ vm.infused }}</span>
+          <span class="green">(+ {{ vm.infused - vm.source.primStat.value }})</span>
           <div>
-            <span> 3 <span class="currency"><img alt="{{::vm.items[2534352370].itemName}}" title="{{::vm.items[2534352370].itemName}}" ng-src="{{vm.items[2534352370].icon | bungieIcon}}"></span></span>
-            <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{::vm.items[452597397].itemName}}" title="{{::vm.items[452597397].itemName}}" ng-src="{{vm.items[452597397].icon | bungieIcon}}"></span></span>
-            <span> + 250 <span class="currency"><img alt="{{::vm.items[3159615086].itemName}}" title="{{::vm.items[3159615086].itemName}}" ng-src="{{vm.items[3159615086].icon | bungieIcon}}"></span></span>
-            <span> + {{vm.wildcardMaterialCost | number}} <span class="currency"><img alt="{{::vm.items[vm.wildcardMaterialHash].itemName}}" title="{{::vm.items[vm.wildcardMaterialHash].itemName}}" ng-src="{{vm.items[vm.wildcardMaterialHash].icon | bungieIcon}}"></span></span>
+            <span> 3 <span class="currency"><img alt="{{ ::vm.items[2534352370].itemName }}" title="{{ ::vm.items[2534352370].itemName }}" ng-src="{{ vm.items[2534352370].icon | bungieIcon }}"></span></span>
+            <span ng-if="vm.exotic"> + 1 <span class="currency"><img alt="{{ ::vm.items[452597397].itemName }}" title="{{ ::vm.items[452597397].itemName }}" ng-src="{{vm.items[452597397].icon | bungieIcon }}"></span></span>
+            <span> + 250 <span class="currency"><img alt="{{ ::vm.items[3159615086].itemName }}" title="{{ ::vm.items[3159615086].itemName }}" ng-src="{{ vm.items[3159615086].icon | bungieIcon }}"></span></span>
+            <span> + {{ vm.wildcardMaterialCost | number }} <span class="currency"><img alt="{{ ::vm.items[vm.wildcardMaterialHash].itemName }}" title="{{ ::vm.items[vm.wildcardMaterialHash].itemName }}" ng-src="{{ vm.items[vm.wildcardMaterialHash].icon | bungieIcon }}"></span></span>
           </div>
         </div>
         <button ng-if="vm.getAllItems" ng-disabled="vm.transferInProgress" ng-click="vm.transferItems()" translate="Infusion.TransferItems"></button>
