@@ -459,7 +459,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
 
         $scope.$broadcast('dim-edit-loadout', {
           loadout: loadout,
-          equipAll: true
+          equipAll: true,
+          showClass: false
         });
       },
       equipItems: function(set) {

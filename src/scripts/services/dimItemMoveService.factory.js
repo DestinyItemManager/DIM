@@ -1,14 +1,12 @@
 import angular from 'angular';
 import _ from 'underscore';
+import didYouKnowTemplate from './dimItemMoveService.factory.html';
 
 angular.module('dimApp')
   .factory('dimItemMoveService', ItemMoveService);
 
 
 function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
-  // `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DragAndDrop')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('movebox', {
@@ -179,4 +177,3 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     moveItemTo: moveItemTo
   };
 }
-

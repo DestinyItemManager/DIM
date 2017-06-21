@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimSearchFilter.directive.html';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
@@ -67,6 +68,10 @@ function SearchService(dimSettingsService) {
     transferable: ['transferable', 'movable']
   };
 
+  if ($featureFlags.reviewsEnabled) {
+    filterTrans.hasRating = ['rated', 'hasrating'];
+  }
+
   var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
     return ["is:" + word, "not:" + word];
   }));
@@ -93,6 +98,11 @@ function SearchService(dimSettingsService) {
   });
 
   var ranges = ['light', 'level', 'quality', 'percentage'];
+
+  if ($featureFlags.reviewsEnabled) {
+    ranges.push('rating');
+  }
+
   ranges.forEach(function(range) {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
@@ -121,7 +131,7 @@ function SearchFilter(dimSearchService) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|is:|not:|tag:|notes:|stat:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
             callback($.map(this.words, function(word) {
               return word.indexOf(term) === 0 ? word : null;
@@ -140,7 +150,7 @@ function SearchFilter(dimSearchService) {
     bindToController: true,
     restrict: 'E',
     scope: {},
-    template: `<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" translate-attr="{ placeholder: 'Header.FilterHelp' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">`
+    template: template
   };
 }
 
@@ -279,6 +289,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
         filter = term.replace('quality:', '').replace('percentage:', '');
         addPredicate("quality", filter);
+      } else if (term.startsWith('rating:')) {
+        filter = term.replace('rating:', '');
+        addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
         var pieces = term.split(':');
@@ -577,6 +590,53 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         break;
       case '>=':
         result = (item.quality.min >= predicate);
+        break;
+      }
+      return result;
+    },
+    hasRating: function(predicate, item) {
+      return predicate.length !== 0 && item.dtrRating;
+    },
+    rating: function(predicate, item) {
+      if (predicate.length === 0 || !item.dtrRating) {
+        return false;
+      }
+
+      var operands = ['<=', '>=', '=', '>', '<'];
+      var operand = 'none';
+      var result = false;
+
+      operands.forEach(function(element) {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      predicate = parseFloat(predicate);
+      var itemRating = parseFloat(item.dtrRating);
+
+      switch (operand) {
+      case 'none':
+        result = (itemRating === predicate);
+        break;
+      case '=':
+        result = (itemRating === predicate);
+        break;
+      case '<':
+        result = (itemRating < predicate);
+        break;
+      case '<=':
+        result = (itemRating <= predicate);
+        break;
+      case '>':
+        result = (itemRating > predicate);
+        break;
+      case '>=':
+        result = (itemRating >= predicate);
         break;
       }
       return result;
