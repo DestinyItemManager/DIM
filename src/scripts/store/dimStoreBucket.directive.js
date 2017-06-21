@@ -2,6 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStoreBucket.directive.html';
 import dialogTemplate from './dimStoreBucket.directive.dialog.html';
+import didYouKnowTemplate from './dimStoreBucket.directive.dyk.html';
 
 angular.module('dimApp')
   .directive('dimStoreBucket', StoreBucket);
@@ -75,8 +76,6 @@ function StoreBucketCtrl($scope,
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
   };
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DoubleClick')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('doubleclick', {

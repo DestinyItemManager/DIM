@@ -1,6 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
-import didYouKnowTemplate from './dimItemMoveService.factory.html';
+import didYouKnowTemplate from './dimItemMoveService.factory.dyk.html';
 
 angular.module('dimApp')
   .factory('dimItemMoveService', ItemMoveService);
