@@ -1,7 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimStores.directive.html';
-import didYouKnowTemplate from './dimStores.directive.dyk.html';
 
 angular.module('dimApp')
   .directive('dimStores', Stores);
@@ -32,6 +31,8 @@ function Stores() {
 
 function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
   var vm = this;
+  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>
+                              <p>${$translate.instant('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('collapsed', {
