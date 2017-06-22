@@ -1,7 +1,7 @@
 /**
  * A really simple countdown timer.
  */
-function CountdownController($interval, $translate) {
+function CountdownController($interval, $i18next) {
   'ngInject';
 
   const vm = this;
@@ -32,7 +32,7 @@ function CountdownController($interval, $translate) {
 
     let text = `${hours}:${pad(minutes, 2)}`;
     if (days > 0) {
-      text = $translate.instant('Countdown.Days', { numDays: days }) + ' ' + text;
+      text = $i18next.t('Countdown.Days', { count: days }) + ' ' + text;
     }
     return text;
   }

@@ -8,7 +8,7 @@ function ItemService(dimStoreService,
                      dimBungieService,
                      dimCategory,
                      $q,
-                     $translate) {
+                     $i18next) {
   // We'll reload the stores to check if things have been
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.
@@ -72,7 +72,7 @@ function ItemService(dimStoreService,
       while (removeAmount > 0) {
         var sourceItem = sourceItems.shift();
         if (!sourceItem) {
-          throw new Error($translate.instant('ItemService.TooMuch'));
+          throw new Error($i18next.t('ItemService.TooMuch'));
         }
 
         var amountToRemove = Math.min(removeAmount, sourceItem.amount);
@@ -233,7 +233,7 @@ function ItemService(dimStoreService,
         if (otherExotic && !_.find(items, { type: otherExotic.type })) {
           const similarItem = getSimilarItem(otherExotic);
           if (!similarItem) {
-            return $q.reject(new Error($translate.instant('ItemService.Deequip', { itemname: otherExotic.name })));
+            return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: otherExotic.name })));
           }
           const target = dimStoreService.getStore(similarItem.owner);
 
@@ -277,7 +277,7 @@ function ItemService(dimStoreService,
   function dequipItem(item, excludeExotic = false) {
     const similarItem = getSimilarItem(item, [], excludeExotic);
     if (!similarItem) {
-      return $q.reject(new Error($translate.instant('ItemService.Deequip', { itemname: item.name })));
+      return $q.reject(new Error($i18next.t('ItemService.Deequip', { itemname: item.name })));
     }
     const source = dimStoreService.getStore(item.owner);
     const target = dimStoreService.getStore(similarItem.owner);
@@ -324,7 +324,7 @@ function ItemService(dimStoreService,
       return dequipItem(otherExotic, true)
         .then(() => true)
         .catch(function(e) {
-          throw new Error($translate.instant('ItemService.ExoticError', { itemname: item.name, slot: otherExotic.type, error: e.message }));
+          throw new Error($i18next.t('ItemService.ExoticError', { itemname: item.name, slot: otherExotic.type, error: e.message }));
         });
     } else {
       return $q.resolve(true);
@@ -360,7 +360,7 @@ function ItemService(dimStoreService,
         return hasLifeExotic ? i.hasLifeExotic() : !i.hasLifeExotic();
       });
     } else {
-      throw new Error($translate.instant('ItemService.TwoExotics'));
+      throw new Error($i18next.t('ItemService.TwoExotics'));
     }
   }
 
@@ -430,7 +430,7 @@ function ItemService(dimStoreService,
 
     // if there are no candidates at all, fail
     if (moveAsideCandidates.length === 0) {
-      const e = new Error($translate.instant('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
       e.code = 'no-space';
       throw e;
     }
@@ -527,7 +527,7 @@ function ItemService(dimStoreService,
     });
 
     if (!moveAsideCandidate) {
-      const e = new Error($translate.instant('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
+      const e = new Error($i18next.t('ItemService.NotEnoughRoom', { store: store.name, itemname: item.name }));
       e.code = 'no-space';
       throw e;
     }
@@ -610,7 +610,7 @@ function ItemService(dimStoreService,
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(moveAsideSource, item, moveContext);
 
       if (!moveAsideTarget || (!moveAsideTarget.isVault && moveAsideTarget.spaceLeftForItem(moveAsideItem) <= 0)) {
-        const error = new Error($translate.instant('ItemService.BucketFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), store: moveAsideTarget.name, isVault: moveAsideTarget.isVault, gender: moveAsideTarget.gender }));
+        const error = new Error($i18next.t('ItemService.BucketFull', { itemtype: (moveAsideTarget.isVault ? moveAsideItem.bucket.sort : moveAsideItem.type), store: moveAsideTarget.name, count: moveAsideTarget.isVault ? 2 : 1, context: moveAsideTarget.gender }));
         error.code = 'no-space';
         return $q.reject(error);
       } else {
@@ -647,13 +647,13 @@ function ItemService(dimStoreService,
       if (item.canBeEquippedBy(store)) {
         resolve(true);
       } else if (item.classified) {
-        reject(new Error($translate.instant('ItemService.Classified')));
+        reject(new Error($i18next.t('ItemService.Classified')));
       } else {
         var message;
         if (item.classTypeName === 'unknown') {
-          message = $translate.instant('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
+          message = $i18next.t('ItemService.OnlyEquippedLevel', { level: item.equipRequiredLevel });
         } else {
-          message = $translate.instant('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
+          message = $i18next.t('ItemService.OnlyEquippedClassLevel', { class: item.classTypeNameLocalized.toLowerCase(), level: item.equipRequiredLevel });
         }
         reject(new Error(message));
       }

@@ -29,16 +29,16 @@ function Stores() {
 }
 
 
-function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $translate) {
+function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
   var vm = this;
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.Collapse')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.Expand')}</p>`;
+  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.Collapse')}</p>` +
+                             `<p>${$i18next.t('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('collapsed', {
-      title: $translate.instant('DidYouKnow'),
+      title: $i18next.t('DidYouKnow'),
       body: didYouKnowTemplate,
-      hide: $translate.instant('DidYouKnow.DontShowAgain')
+      hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
   });
 

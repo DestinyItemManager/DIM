@@ -6,13 +6,13 @@ angular.module('dimApp')
   .factory('dimItemMoveService', ItemMoveService);
 
 
-function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
+function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('movebox', {
-      title: $translate.instant('DidYouKnow'),
+      title: $i18next.t('DidYouKnow'),
       body: didYouKnowTemplate,
-      hide: $translate.instant('DidYouKnow.DontShowAgain')
+      hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
   });
 
@@ -77,11 +77,11 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     promise = promise.then(function() {
       var message;
       if (store.isVault) {
-        message = $translate.instant('ItemMove.ToVault', { name: actionableItem.name });
+        message = $i18next.t('ItemMove.ToVault', { name: actionableItem.name });
       } else {
-        message = $translate.instant('ItemMove.ToStore', { name: actionableItem.name, store: store.name });
+        message = $i18next.t('ItemMove.ToStore', { name: actionableItem.name, store: store.name });
       }
-      toaster.pop('success', $translate.instant('ItemMove.Consolidate', { name: actionableItem.name }), message);
+      toaster.pop('success', $i18next.t('ItemMove.Consolidate', { name: actionableItem.name }), message);
     })
     .catch(function(a) {
       toaster.pop('error', actionableItem.name, a.message);
@@ -159,7 +159,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     });
 
     promise = promise.then(function() {
-      toaster.pop('success', $translate.instant('ItemMove.Distributed', { name: actionableItem.name }));
+      toaster.pop('success', $i18next.t('ItemMove.Distributed', { name: actionableItem.name }));
     })
     .catch(function(a) {
       toaster.pop('error', actionableItem.name, a.message);

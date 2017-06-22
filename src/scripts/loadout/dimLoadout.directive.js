@@ -5,7 +5,7 @@ import template from './dimLoadout.directive.html';
 angular.module('dimApp').directive('dimLoadout', Loadout);
 
 
-function Loadout(dimLoadoutService, $translate) {
+function Loadout(dimLoadoutService, $i18next) {
   return {
     controller: LoadoutCtrl,
     controllerAs: 'vm',
@@ -19,7 +19,7 @@ function Loadout(dimLoadoutService, $translate) {
     var vm = scope.vm;
 
     scope.$on('dim-stores-updated', function(evt, data) {
-      vm.classTypeValues = [{ label: $translate.instant('Loadouts.Any'), value: -1 }];
+      vm.classTypeValues = [{ label: $i18next.t('Loadouts.Any'), value: -1 }];
 
       /*
       Bug here was localization tried to change the label order, but users have saved their loadouts with data that was in the original order.
@@ -103,7 +103,7 @@ function Loadout(dimLoadoutService, $translate) {
 }
 
 
-function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $translate, dimStoreService, dimDefinitions) {
+function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService, dimSettingsService, $i18next, dimStoreService, dimDefinitions) {
   var vm = this;
 
   vm.settings = dimSettingsService;
@@ -131,8 +131,8 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
       .saveLoadout(vm.loadout)
       .catch((e) => {
         toaster.pop('error',
-                    $translate.instant('Loadouts.SaveErrorTitle'),
-                    $translate.instant('Loadouts.SaveErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+                    $i18next.t('Loadouts.SaveErrorTitle'),
+                    $i18next.t('Loadouts.SaveErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
         console.error(e);
       });
     vm.cancel();
@@ -182,7 +182,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
 
           typeInventory.push(clone);
         } else {
-          toaster.pop('warning', '', $translate.instant('Loadouts.MaxSlots', { slots: maxSlots }));
+          toaster.pop('warning', '', $i18next.t('Loadouts.MaxSlots', { slots: maxSlots }));
         }
       } else if (dupe && clone.maxStackSize > 1) {
         var increment = Math.min(dupe.amount + clone.amount, dupe.maxStackSize) - dupe.amount;
@@ -190,7 +190,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
         // TODO: handle stack splits
       }
     } else {
-      toaster.pop('warning', '', $translate.instant('Loadouts.OnlyItems'));
+      toaster.pop('warning', '', $i18next.t('Loadouts.OnlyItems'));
     }
 
     vm.recalculateStats();

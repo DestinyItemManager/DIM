@@ -19,7 +19,7 @@ function StoreService(
   SyncService,
   loadingTracker,
   dimManifestService,
-  $translate,
+  $i18next,
   uuid2,
   dimState,
   dimDestinyTrackerService,
@@ -197,9 +197,9 @@ function StoreService(
       if (item.location.id === 'BUCKET_RECOVERY' && bucketItems.length >= item.location.capacity) {
         dimInfoService.show('lostitems', {
           type: 'warning',
-          title: $translate.instant('Postmaster.Limit'),
-          body: $translate.instant('Postmaster.Desc', { store: this.name }),
-          hide: $translate.instant('Help.NeverShow')
+          title: $i18next.t('Postmaster.Limit'),
+          body: $i18next.t('Postmaster.Desc', { store: this.name }),
+          hide: $i18next.t('Help.NeverShow')
         });
       }
       item.owner = this.id;
@@ -415,10 +415,10 @@ function StoreService(
           if (raw.id === 'vault') {
             store = angular.extend(Object.create(StoreProto), {
               id: 'vault',
-              name: $translate.instant('Bucket.Vault'),
+              name: $i18next.t('Bucket.Vault'),
               class: 'vault',
               current: false,
-              className: $translate.instant('Bucket.Vault'),
+              className: $i18next.t('Bucket.Vault'),
               lastPlayed: '2005-01-01T12:00:01Z',
               icon: require('app/images/vault.png'),
               background: require('app/images/vault-background.png'),
@@ -651,7 +651,7 @@ function StoreService(
 
   function showErrorToaster(e) {
     const twitterLink = '<a target="_blank" href="http://twitter.com/ThisIsDIM">Twitter</a> <a target="_blank" href="http://twitter.com/ThisIsDIM"><i class="fa fa-twitter fa-2x" style="vertical-align: middle;"></i></a>';
-    const twitter = `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`;
+    const twitter = `<div> ${$i18next.t('BungieService.Twitter')} ${twitterLink}</div>`;
 
     toaster.pop({
       type: 'error',
@@ -1148,7 +1148,7 @@ function StoreService(
     function buildObjective(name, current, max, bool, style) {
       return {
         displayStyle: style,
-        displayName: $translate.instant('TrialsCard.' + name),
+        displayName: $i18next.t('TrialsCard.' + name),
         progress: current,
         completionValue: max,
         complete: bool ? current >= max : false,
@@ -1176,8 +1176,8 @@ function StoreService(
       return {
         displayName: def.displayDescription ||
           (objective.isComplete
-           ? $translate.instant('Objectives.Complete')
-           : $translate.instant('Objectives.Incomplete')),
+           ? $i18next.t('Objectives.Complete')
+           : $i18next.t('Objectives.Incomplete')),
         progress: objective.progress,
         completionValue: def.completionValue,
         complete: objective.isComplete,
@@ -1552,7 +1552,7 @@ function StoreService(
       getClassifiedData()])
       .then(function(args) {
         var result = [];
-        dimManifestService.statusText = $translate.instant('Manifest.LoadCharInv') + '...';
+        dimManifestService.statusText = $i18next.t('Manifest.LoadCharInv') + '...';
         _.each(items, function(item) {
           var createdItem = null;
           try {
@@ -1586,7 +1586,7 @@ function StoreService(
     if (klass) {
       return klass.className;
     } else {
-      return $translate.instant('Loadouts.Any');
+      return $i18next.t('Loadouts.Any');
     }
   }
 

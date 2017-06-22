@@ -31,7 +31,7 @@ function Compare() {
 }
 
 
-function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $translate) {
+function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $i18next) {
   var vm = this;
   vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
@@ -76,10 +76,10 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $transl
 
     if (vm.comparisons.length && vm.comparisons[0].typeName && args.item.typeName !== vm.comparisons[0].typeName) {
       if (vm.comparisons[0].classType && args.item.classType !== vm.comparisons[0].classType) {
-        toaster.pop('warning', args.item.name, $translate.instant('Compare.Error.Class', { class: vm.comparisons[0].classTypeNameLocalized }));
+        toaster.pop('warning', args.item.name, $i18next.t('Compare.Error.Class', { class: vm.comparisons[0].classTypeNameLocalized }));
         return;
       }
-      toaster.pop('warning', args.item.name, $translate.instant('Compare.Error.Archetype', { type: vm.comparisons[0].typeName }));
+      toaster.pop('warning', args.item.name, $i18next.t('Compare.Error.Archetype', { type: vm.comparisons[0].typeName }));
       return;
     }
 

@@ -5,7 +5,7 @@ angular.module('dimApp')
   .factory('dimLoadoutService', LoadoutService);
 
 
-function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
+function LoadoutService($q, $rootScope, $i18next, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
   var _loadouts = [];
   var _previousLoadouts = {}; // by character ID
 
@@ -249,7 +249,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
           if (lastPreviousLoadout && loadout.id === lastPreviousLoadout.id) {
             _previousLoadouts[store.id].pop();
           } else {
-            const previousLoadout = store.loadoutFromCurrentlyEquipped($translate.instant('Loadouts.Before', { name: loadout.name }));
+            const previousLoadout = store.loadoutFromCurrentlyEquipped($i18next.t('Loadouts.Before', { name: loadout.name }));
             _previousLoadouts[store.id].push(previousLoadout);
           }
         }
@@ -357,7 +357,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
             });
             failedItems.forEach(function(item) {
               scope.failed++;
-              toaster.pop('error', loadout.name, $translate.instant('Loadouts.CouldNotEquip', { itemname: item.name }));
+              toaster.pop('error', loadout.name, $i18next.t('Loadouts.CouldNotEquip', { itemname: item.name }));
             });
           }
         })
@@ -372,15 +372,15 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
         .then(function() {
           var value = 'success';
 
-          var message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
+          var message = $i18next.t('Loadouts.Applied', { count: scope.total, store: store.name, context: store.gender });
 
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
               value = 'error';
-              message = $translate.instant('Loadouts.AppliedError');
+              message = $i18next.t('Loadouts.AppliedError');
             } else {
               value = 'warning';
-              message = $translate.instant('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
+              message = $i18next.t('Loadouts.AppliedWarn', { failed: scope.failed, total: scope.total });
             }
           }
 
@@ -426,7 +426,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
           if (amountToMove === 0 || !sourceItem) {
             promise = promise.then(function() {
-              const error = new Error($translate.instant('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
+              const error = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
               error.level = 'warn';
               return $q.reject(error);
             });
@@ -451,7 +451,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
         // Pass in the list of items that shouldn't be moved away
         promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
       } else {
-        promise = $.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
+        promise = $.reject(new Error($i18next.t('Loadouts.DoesNotExist', { itemname: item.name })));
       }
     }
 

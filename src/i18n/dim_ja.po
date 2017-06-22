@@ -1,0 +1,1086 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DIM\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"POT-Creation-Date: 2017-06-22T21:59:12.092Z\n"
+"PO-Revision-Date: 2017-06-22T21:59:12.092Z\n"
+
+msgid "Bucket##Armor"
+msgstr "防具"
+
+msgid "Bucket##General"
+msgstr "全般"
+
+msgid "Bucket##Postmaster"
+msgstr "ポストマスター"
+
+msgid "Bucket##Progress"
+msgstr "進行状況"
+
+msgid "Bucket##Reputation"
+msgstr "ランク"
+
+msgid "Bucket##Show"
+msgstr "表示 {{bucket}}"
+
+msgid "Bucket##Unknown"
+msgstr "不明"
+
+msgid "Bucket##Vault"
+msgstr "保管庫"
+
+msgid "Bucket##Weapons"
+msgstr "武器"
+
+msgid "BungieService##DevVersion"
+msgstr "DIMの開発版を使用していますか？ bungie.netにクロムエクステンションを登録する必要があります。"
+
+msgid "BungieService##Down"
+msgstr "Bungie.net に接続不可。"
+
+msgid "BungieService##Difficulties"
+msgstr "Bungie APIに問題が発生しています。"
+
+msgid "BungieService##NetworkError"
+msgstr "ネットワークエラー。{{status}} {{statusText}}"
+
+msgid "BungieService##Throttled"
+msgstr "Bungie APIの制限が超えました。しばらくしてからお待ちください。"
+
+msgid "BungieService##NotLoggedIn"
+msgstr "この拡張を利用するためには、Bungie.net にログインしてください。"
+
+msgid "BungieService##Maintenance"
+msgstr "Bungie.net サーバーがメンテナンス中。"
+
+msgid "BungieService##NoAccount"
+msgstr "{{platform}} ではディスティニーアカウントみつかりません。正しいプラットフォームを選択しているかご確認ください。"
+
+msgid "BungieService##NoAccountForPlatform"
+msgstr "{{platform}} でのデスティニーアカウントが見つかりません。"
+
+msgid "BungieService##NoCookies"
+msgstr "クッキーが見つかりませんでした。"
+
+msgid "BungieService##NotConnected"
+msgstr "インターネットに接続してない可能性あります。"
+
+msgid "BungieService##Twitter"
+msgstr "最新情報に更新します。:"
+
+msgid "BungieService##ItemUniqueness"
+msgstr "アイテムのレア度"
+
+msgid "BungieService##ItemUniquenessExplanation"
+msgstr "'{{name}}' {{type}} を {{character}} に移動しようとしましたが、同様のアイテムがあり、一個以上を持てません。"
+
+msgid "BungieService##VendorNotFound"
+msgstr "ベンダー情報ありません"
+
+msgid "Compare##ButtonHelp"
+msgstr "アイテムを比較する"
+
+msgid "Compare##All"
+msgstr "{{type}} 比較  ({{quantity}})"
+
+msgid "Compare##Archetype"
+msgstr "原型と比較 ({{quantity}})"
+
+msgid "Compare##Compare"
+msgstr "比較"
+
+msgid "Compare##Close"
+msgstr "終了"
+
+msgid "Compare##Error##Class"
+msgstr "このアイテム {{class}} 用のため、比較できません。"
+
+msgid "Compare##Error##Archetype"
+msgstr "このアイテムは {{type}} ではないため、比較できません。"
+
+msgid "Compare##Splits"
+msgstr "同様の分割を比較する（{{quantity}}）"
+
+msgid "Cooldown##Grenade"
+msgstr "グレネードのクールダウン: {{cooldown}}"
+
+msgid "Cooldown##Melee"
+msgstr "近接のクールダウン: {{cooldown}}"
+
+msgid "Cooldown##Super"
+msgstr "スーパースキルのクールダウン: {{cooldown}}"
+
+msgid "Countdown##Days"
+msgstr "{{count}} 日間"
+
+msgid "Debug##Dump"
+msgstr "ゲーム機に情報を転送する"
+
+msgid "Debug##View"
+msgstr "アイテムのデバッグ情報を見る"
+
+msgid "DidYouKnow##DidYouKnow"
+msgstr "知っていますか？"
+
+msgid "DidYouKnow##Collapse"
+msgstr ""
+"あなたは、ちょうどDIMでセクションを崩壊させました！\n"
+"これは、あなたが通常使う必要はないDIMの部分を隠すために役に立つかもしれません。"
+
+msgid "DidYouKnow##DontShowAgain"
+msgstr "このヒントをこれ以降表示しない"
+
+msgid "DidYouKnow##DoubleClick"
+msgstr "今使用中のキャラクター(最後にログインしたキャラクター)にアイテムを移動する時はダブルクリックで即座に装備出来ます。"
+
+msgid "DidYouKnow##DragAndDrop"
+msgstr "各キャラ及び、保管庫の間にアイテムをドラッグ＆ドロップできます。"
+
+msgid "DidYouKnow##Expand"
+msgstr "セクションを再展開するには、折りたたんでいるカテゴリの一番左にあるプラス記号アイコンをクリックします。"
+
+msgid "DidYouKnow##TryNext"
+msgstr "今度お試しください。"
+
+msgid "FarmingMode##FarmingMode"
+msgstr "アイテム収集モード (アイテム移動)"
+
+msgid "FarmingMode##Desc"
+msgstr ""
+"DIMはエングラムとグリマーアイテムを{{store}}から保管庫に移動し、アイテムタイプごとに1"
+"つのスペースを開いたままにして、ポストマスターに行かないようにします。"
+
+msgid "FarmingMode##Configuration"
+msgstr "設定"
+
+msgid "FarmingMode##MakeRoom##Desc"
+msgstr "DIMはエングラムとグリマーアイテムのみを{{store}}から保管庫、または他のキャラクターに移動し、ポストマスターに行かないようにします。"
+
+msgid "FarmingMode##MakeRoom##MakeRoom"
+msgstr "設備を動かしてアイテムを拾うための空間を確保する"
+
+msgid "FarmingMode##MakeRoom##Tooltip"
+msgstr "オンにすると、DIMは武器と防具を動かして保管庫のスペースをエングラム用に作ります。"
+
+msgid "FarmingMode##OutOfRoomTitle"
+msgstr "スペースありません。"
+
+msgid "FarmingMode##OutOfRoom"
+msgstr "{{character}}からアイテムを移動するにはスペースが足りません。いくつかのエングラムを解読し、装備を分解してください。"
+
+msgid "FarmingMode##Quickmove"
+msgstr "素早く移動"
+
+msgid "FarmingMode##Stop"
+msgstr "停止"
+
+msgid "Filter##EnterName"
+msgstr "アイテム名を入力してください。"
+
+msgid "Filter##EnterNote"
+msgstr "ここにノート入力:"
+
+msgid "Header##About"
+msgstr "情報"
+
+msgid "Header##Filters"
+msgstr "フィルター"
+
+msgid "Header##FilterHelp"
+msgstr "アイテム／パークを検索"
+
+msgid "Header##MaterialsExchange"
+msgstr "利用可能な派閥のランク"
+
+msgid "Header##Refresh"
+msgstr "デスティニーデータを更新"
+
+msgid "Help##BackToDIM"
+msgstr "DIMに戻る"
+
+msgid "Help##CannotMove"
+msgstr "キャラクターからこのアイテムを外せません"
+
+msgid "Help##Drag"
+msgstr "シフトを長押しするか目的地の上で少し待つことで一部だけ移動できます。"
+
+msgid "Help##ChangingPerks"
+msgstr "パーク変更は対応していません"
+
+msgid "Help##ChangingPerksInfo"
+msgstr "残念ですがゲーム外でパークを変えることは出来ません。出来たらいいんですけどね！"
+
+msgid "Help##HidePopup"
+msgstr "ポップアップを非表示にする"
+
+msgid "Help##NeverShow"
+msgstr "次回から表示しない"
+
+msgid "Help##UpgradeChrome"
+msgstr "クロームをアップデートしてください"
+
+msgid "Help##Xur"
+msgstr "Xûrはここです"
+
+msgid "Hotkey##StartSearch"
+msgstr "検索開始"
+
+msgid "Hotkey##RefreshInventory"
+msgstr "インベントリーを更新"
+
+msgid "Hotkey##ToggleDetails"
+msgstr "完全なアイテムの詳細を表示する"
+
+msgid "Hotkey##MarkItemAs"
+msgstr "アイテムを '{{tag}}' とマークする"
+
+msgid "Hotkey##ClearNewItems"
+msgstr "新しいアイテムをクリアする"
+
+msgid "Infusion##Infusion"
+msgstr "融合対象物発掘機能"
+
+msgid "Infusion##BringGear"
+msgstr "装備を転送する:"
+
+msgid "Infusion##Calc"
+msgstr "融合計算機能"
+
+msgid "Infusion##InfuseItems"
+msgstr "融合するアイテムを選択"
+
+msgid "Infusion##InfusionMaterials"
+msgstr "融合材料"
+
+msgid "Infusion##LockedItems"
+msgstr "ロックされているアイテムも含む"
+
+msgid "Infusion##NoItems"
+msgstr "融合可能なアイテムありません。"
+
+msgid "Infusion##NoTransfer"
+msgstr ""
+"融合材を移動\n"
+" {{target}} 移動できません."
+
+msgid "Infusion##ShowItems"
+msgstr "各キャラや保管庫にある融合可能なアイテムを表示。"
+
+msgid "Infusion##TransferItems"
+msgstr "アイテムの転送"
+
+msgid "ItemInfoService##SaveInfoErrorTitle"
+msgstr "アイテム情報を保存するにエラーが発生しました。"
+
+msgid "ItemInfoService##SaveInfoErrorDescription"
+msgstr ""
+"アイテムにDIM固有の情報を保存する際に問題が発生しました。1"
+"つの問題は、保存できるデータの量に制限があることです。これがベータ版からタグとメモがまだ許可されていない理由です。エラーは{{error}}でした。"
+
+msgid "ItemMove##Consolidate"
+msgstr "{{name}}が統合されました"
+
+msgid "ItemMove##Distributed"
+msgstr ""
+"分散 {{name}}\n"
+" {{name}} は文字間で等しく分割されました。"
+
+msgid "ItemMove##ToVault"
+msgstr "{{name}} 今は全て保管庫にあります。"
+
+msgid "ItemMove##ToStore"
+msgstr "{{name}} が全て {{store}} にあります。"
+
+msgid "ItemService##BucketFull"
+msgstr "{{store}} には {{itemtype}} のスペースがありません。"
+
+msgid "ItemService##Classified"
+msgstr "この商品は現在分類されており、現時点では譲渡できません。"
+
+msgid "ItemService##Classified2"
+msgstr "極秘扱いのアイテムです。Bungie がこのアイテムについて情報提供していません。このアイテムの移動は不可です。"
+
+msgid "ItemService##Deequip"
+msgstr "{{itemname}}を取り除くために装備するアイテムが見つかりません"
+
+msgid "ItemService##ExoticError"
+msgstr "'{{itemname}}'は装備できません。なぜなら{{slot}}エキゾチックなものは装備できないからです。({{error}})"
+
+msgid "ItemService##NotEnoughRoom"
+msgstr "{{itemname}}のスペースを確保するために{{store}}から移動することはできません。"
+
+msgid "ItemService##OnlyEquippedLevel"
+msgstr "レベル {{level}} 以上のキャラクターのみ装備が可能です。"
+
+msgid "ItemService##OnlyEquippedClassLevel"
+msgstr "これは、レベル{{level}}以上の{{class}}にしか装備できません。"
+
+msgid "ItemService##PercentComplete"
+msgstr "({{percent, pct}} 完了)"
+
+msgid "ItemService##TooMuch"
+msgstr "保有している数より多めに移動しようとしています。"
+
+msgid "ItemService##TwoExotics"
+msgstr "エキゾチックをどうやって2つを装備できたのかわかりません。"
+
+msgid "LB##LB"
+msgstr "ロードアウトビルダ"
+
+msgid "LB##Guardians"
+msgstr "ガーディアン"
+
+msgid "LB##ShowGear"
+msgstr "{{class}} 装備を表示する"
+
+msgid "LB##HideGear"
+msgstr "{{class}} 装備を非表示する"
+
+msgid "LB##LockEquipped"
+msgstr "装備をロック"
+
+msgid "LB##ClearLocked"
+msgstr "ロックを解除"
+
+msgid "LB##Locked"
+msgstr "ロックされたアイテム"
+
+msgid "LB##LockedHelp"
+msgstr "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック."
+
+msgid "LB##FilterSets"
+msgstr "フィルタセット"
+
+msgid "LB##AdvancedOptions"
+msgstr "高度なオプション"
+
+msgid "LB##ProcessingMode##Fast"
+msgstr "最速"
+
+msgid "LB##ProcessingMode##Full"
+msgstr "すべて"
+
+msgid "LB##ProcessingMode##ProcessingMode"
+msgstr "処理モード"
+
+msgid "LB##ProcessingMode##HelpFast"
+msgstr "あなたの最高の装備だけを見てください。"
+
+msgid "LB##ProcessingMode##HelpFull"
+msgstr "装備が多く見つかりますが、時間がかかります。"
+
+msgid "LB##Scaled"
+msgstr "縮尺"
+
+msgid "LB##Current"
+msgstr "現在"
+
+msgid "LB##LightMode##LightMode"
+msgstr "ライトモード"
+
+msgid "LB##LightMode##HelpScaled"
+msgstr "すべてのアイテムが350防御であるかのように負荷を計算します。"
+
+msgid "LB##LightMode##HelpCurrent"
+msgstr "現在の防衛レベルでの負荷を計算します。"
+
+msgid "LB##IncludeRare"
+msgstr "レアアイテム (青) を含む"
+
+msgid "LB##Help##Help"
+msgstr "助けが必要？"
+
+msgid "LB##Help##Lock"
+msgstr "クリックするとパークを固定できます。"
+
+msgid "LB##Help##NoPerk"
+msgstr "特典が表示されない場合は、その特典を持つ装甲を所有していないことを意味します"
+
+msgid "LB##Help##MultiPerk"
+msgstr "複数の特典を持つアーマーを一緒に使用するには、希望の特典をシフト+クリックします"
+
+msgid "LB##Help##Or"
+msgstr "これらの特典のいずれかを持つアーマーが使用されます (\"or\")"
+
+msgid "LB##Help##And"
+msgstr "これの特典をすべて装備したアーマーが使用されます (\"and\")"
+
+msgid "LB##Help##DragAndDrop"
+msgstr "アイテムをドラッグしてロックされたバケットにドロップすると、その装備のみのセットが作成されます"
+
+msgid "LB##Help##ShiftClick"
+msgstr "アイテムをShiftキーを押しながらクリックすると、そのギアがないセットが作成されます"
+
+msgid "LB##Help##HigherTiers"
+msgstr "ティアが高い方がより良いです"
+
+msgid "LB##Help##Tier11Example"
+msgstr "4/5/2(ティア11装備)は知性4、鍛錬5、腕力、2(4+5+2=ティア11)"
+
+msgid "LB##Help##Intellect"
+msgstr "知性はスーパースキルのクールダウン時間を短縮する"
+
+msgid "LB##Help##Discipline"
+msgstr "鍛錬はグレネードのクールダウン時間を短縮する"
+
+msgid "LB##Help##Strength"
+msgstr "腕力は近接スキルのクールダウン時間を短縮する"
+
+msgid "LB##Help##Synergy"
+msgstr "使用中の武器の弾増弾がついてる防具を探しましょう。"
+
+msgid "LB##Help##ChangeNodes"
+msgstr "ロードアウトを作成するには知性、鍛錬、腕力の割合を表示のように変更して下さい."
+
+msgid "LB##Help##StatsIncrease"
+msgstr "アイテムの防御レベルが上昇するとともに、アイテムのステータス(知性/鍛錬/腕力)も上昇します。"
+
+msgid "LB##ShowAllConfigs"
+msgstr "全ての設定を表示する"
+
+msgid "LB##ShowConfigs"
+msgstr "設定を表示する"
+
+msgid "LB##HideAllConfigs"
+msgstr "全ての設定を隠す"
+
+msgid "LB##HideConfigs"
+msgstr "設定を隠す"
+
+msgid "LB##Loading"
+msgstr "ベストセットをロードする ({{percent, pct2}})"
+
+msgid "LB##Vendor"
+msgstr "ベンダー装備も含む"
+
+msgid "LB##Exclude"
+msgstr "省かれたアイテム"
+
+msgid "LB##ExcludeHelp"
+msgstr "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック（またはこのバケットにドラッグアンドドロップ）します。"
+
+msgid "LB##LockPerk"
+msgstr "パークを固定する"
+
+msgid "LB##Missing1"
+msgstr "フルセットを作るためのレジェンダリー、エキゾチックの部位が足りません！"
+
+msgid "LB##Missing2"
+msgstr "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！"
+
+msgid "Loadouts##Any"
+msgstr "どれか"
+
+msgid "Loadouts##Loadouts"
+msgstr "ロードアウト"
+
+msgid "Loadouts##Before"
+msgstr "前 '{{name}}'"
+
+msgid "Loadouts##Create"
+msgstr "ロードアウトを作成"
+
+msgid "Loadouts##FromEquipped"
+msgstr "装備している"
+
+msgid "Loadouts##Edit"
+msgstr "ロードアウトを編集"
+
+msgid "Loadouts##Delete"
+msgstr "ロードアウトを削除"
+
+msgid "Loadouts##ConfirmDelete"
+msgstr "本当に「{{name}}」を削除しますか？"
+
+msgid "Loadouts##ApplySearch"
+msgstr "アイテム = \"{{query}}\""
+
+msgid "Loadouts##MaximizeLight"
+msgstr "光レベルを最大化"
+
+msgid "Loadouts##ItemLeveling"
+msgstr "アイテムのレベルアップ"
+
+msgid "Loadouts##GatherEngrams"
+msgstr "エングラム収集"
+
+msgid "Loadouts##GatherEngramsExceptExotics"
+msgstr "エキゾチック"
+
+msgid "Loadouts##RestoreAllItems"
+msgstr "全アイテム"
+
+msgid "Loadouts##Random"
+msgstr "ランダム"
+
+msgid "Loadouts##Randomize"
+msgstr "ランダムで武器、防具、ゴースト、アーティファクトを装備しますか？"
+
+msgid "Loadouts##VendorsCannotEquip"
+msgstr "これらのベンダーアイテムは装備出来ません。"
+
+msgid "Loadouts##VendorsCanEquip"
+msgstr "これらのアイテムは装備出来ません。"
+
+msgid "Loadouts##MaxSlots"
+msgstr "ロードアウトでは、その種のアイテムの{{slots}}しか持てません。"
+
+msgid "Loadouts##OnlyItems"
+msgstr "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。"
+
+msgid "Loadouts##FilteredItems"
+msgstr "フィルタ処理された項目"
+
+msgid "Loadouts##NoEngrams"
+msgstr "転送出来るエングラムがありません。"
+
+msgid "Loadouts##NoExotics"
+msgstr "非エキゾチクなエングラムは転送できません。"
+
+msgid "Loadouts##LoadoutName"
+msgstr "ロードアウトの名前..."
+
+msgid "Loadouts##Save"
+msgstr "保存"
+
+msgid "Loadouts##SaveAsNew"
+msgstr "新規で保存"
+
+msgid "Loadouts##Cancel"
+msgstr "キャンセル"
+
+msgid "Loadouts##ItemsWithIcon"
+msgstr "このアイコンを持つアイテムが装備されます。アイテムをクリックすると装備を切り替えることができます。"
+
+msgid "Loadouts##CouldNotEquip"
+msgstr "{{itemname}} を装備できませんでした"
+
+msgid "Loadouts##TooManyRequested"
+msgstr "あなたは{{total}} {{itemname}}を持っていますが、あなたのロードアウトは{{requested}}を要求します。"
+
+msgid "Loadouts##DoesNotExist"
+msgstr "{{itemname}} はあなたのアカウント内に存在しません。"
+
+msgid "Loadouts##AppliedAuto"
+msgstr "自動ロードアウトビルダー"
+
+msgid "Loadouts##Applied"
+msgstr "{{amount}} 個のアイテムのロードアウトが {{store}} に転送されました."
+
+msgid "Loadouts##AppliedError"
+msgstr "あなたのロードアウトのアイテムは転送できませんでした。"
+
+msgid "Loadouts##AppliedWarn"
+msgstr "あなたのロードアウトは部分的に移転されましたが、{{total}}の{{failed}}アイテムにエラーがありました。"
+
+msgid "Loadouts##NameRequired"
+msgstr "名称が必要"
+
+msgid "Loadouts##MakeRoom"
+msgstr "ポストマスターのための部屋を作る"
+
+msgid "Loadouts##MakeRoomDone"
+msgstr "{{movedNum}} 個のアイテムを移動させたことで ポストマスターにある {{count}} 個のアイテム用のスペースを確保できした."
+
+msgid "Loadouts##MakeRoomError"
+msgstr "ポストマスターの全アイテム用のスペースを確保できませんでした: {{error}} 。"
+
+msgid "Loadouts##SaveErrorTitle"
+msgstr "ロードアウトのセーブ中にエラー"
+
+msgid "Loadouts##SaveErrorDescription"
+msgstr "ロードアウトのセーブに失敗 {{loadoutName}}: {{error}}."
+
+msgid "Loadouts##DeleteErrorTitle"
+msgstr "ロードアウト削除中にエラー"
+
+msgid "Loadouts##DeleteErrorDescription"
+msgstr "ロードアウト削除失敗 {{loadoutName}}: {{error}}."
+
+msgid "Manifest##Build"
+msgstr "Destinyのデータを再構築する。"
+
+msgid "Manifest##Download"
+msgstr "最新のDestiny情報をBungieからダウンロードする"
+
+msgid "Manifest##Error"
+msgstr ""
+"読み込みエラー:\n"
+"{{error}}\n"
+"再読み込みをしてください。"
+
+msgid "Manifest##Outdated"
+msgstr "古いデスティニーのデータ"
+
+msgid "Manifest##OutdatedExplanation"
+msgstr ""
+"Bungie がディスティニーのデータベースを更新しました。新データベース取得するためには DIM "
+"を更新してください。なお、デスティにーアプデート直後は正常に動かない可能性あります。"
+
+msgid "Manifest##Load"
+msgstr "デスティニーのセーブデータをロード中"
+
+msgid "Manifest##LoadCharInv"
+msgstr "デスティニーのキャラクターとインベントリをロード中"
+
+msgid "Manifest##Save"
+msgstr "最新のデータを保存する"
+
+msgid "Manifest##Unzip"
+msgstr "最新のデータを解凍する"
+
+msgid "MaterialsExchange##MaterialsExchange"
+msgstr "素材交換"
+
+msgid "MaterialsExchange##CurrentRank"
+msgstr "現在のランク"
+
+msgid "MaterialsExchange##CurrentRep"
+msgstr "現在の担当者"
+
+msgid "MaterialsExchange##OnHand"
+msgstr "手持ちの材料"
+
+msgid "MaterialsExchange##FromTrade"
+msgstr "交換素材"
+
+msgid "MaterialsExchange##NewRank"
+msgstr "新しいランク"
+
+msgid "MaterialsExchange##NewRep"
+msgstr "新しい担当者"
+
+msgid "MovePopup##Consolidate"
+msgstr "統合する"
+
+msgid "MovePopup##DistributeEvenly"
+msgstr "均等に割り当てる。"
+
+msgid "MovePopup##Equip"
+msgstr "装備する"
+
+msgid "MovePopup##Split"
+msgstr "分割"
+
+msgid "MovePopup##Store"
+msgstr "保管する"
+
+msgid "MovePopup##Subtitle##Light"
+msgstr "{{light}}"
+
+msgid "MovePopup##Subtitle##Stats"
+msgstr "{{statName}}"
+
+msgid "MovePopup##Subtitle##Class"
+msgstr "{{classType}}"
+
+msgid "MovePopup##Subtitle##Type"
+msgstr "{{typeName}}"
+
+msgid "MovePopup##Subtitle##Combined"
+msgstr ""
+"$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) "
+"$t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+
+msgid "MovePopup##Take"
+msgstr "取る"
+
+msgid "MovePopup##Vault"
+msgstr "保管庫"
+
+msgid "MoveAmount##Min"
+msgstr "最小限 (1)"
+
+msgid "MoveAmount##Max"
+msgstr "ここの合計は"
+
+msgid "MoveAmount##UpStack"
+msgstr "一群になるまで追加する"
+
+msgid "MoveAmount##DownStack"
+msgstr "一群になるまで減少させる"
+
+msgid "MoveAmount##Increment"
+msgstr "一つ多く"
+
+msgid "MoveAmount##Decrement"
+msgstr "一つ少なく"
+
+msgid "Notes##Error"
+msgstr "エラー！ノートは120文字が上限です。"
+
+msgid "Notes##Help"
+msgstr "このアイテムにメモを追加"
+
+msgid "Objectives##Complete"
+msgstr "完成"
+
+msgid "Objectives##Incomplete"
+msgstr "未完"
+
+msgid "Postmaster##Limit"
+msgstr "ポストマスターに空きがありません"
+
+msgid "Postmaster##Desc"
+msgstr "{{store}} のポストマスターに20個のアイテムがあります。新アイテムは前のと入り替わります."
+
+msgid "Settings##Settings"
+msgstr "設定"
+
+msgid "Settings##Language"
+msgstr "言語(反映させるにはDIMをリフレッシュしてください)"
+
+msgid "Settings##HideUnfiltered"
+msgstr "フィルタリングされていない項目を非表示にする。"
+
+msgid "Settings##HideUnfilteredHelp"
+msgstr "フィルタ条件に一致しない項目は非表示になります。"
+
+msgid "Settings##AlwaysShowDetails"
+msgstr "常にアイテム詳細を表示"
+
+msgid "Settings##AlwaysShowDetailsHelp"
+msgstr ""
+"アイテムをクリックするとポップアップが表示され、perkとstatの詳細が表示されます。このオプションは、アイテムをクリックするとその詳細を常に表示しま"
+"す。"
+
+msgid "Settings##EnableAdvancedStats"
+msgstr "高度な品質比較機能を有効にする"
+
+msgid "Settings##EnableAdvancedStatsHelp"
+msgstr "移動ダイアログで高度な最小/最大機能を有効にして、装甲比較ビューを有効にします。"
+
+msgid "Settings##ShowOverlay"
+msgstr "オーバレイで新しいアイテムを表示する。"
+
+msgid "Settings##ShowOverlayHelp"
+msgstr "オーレイで新しいアイテムを表示します。"
+
+msgid "Settings##ShowAnimations"
+msgstr "新しいアイテムのオーバーレイアニメーションを表示する。"
+
+msgid "Settings##ShowAnimationsHelp"
+msgstr "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。"
+
+msgid "Settings##ShowElemental"
+msgstr "武器の属性アイコンを表示する"
+
+msgid "Settings##ShowElementalHelp"
+msgstr "武器の属性アイコンを表示する。"
+
+msgid "Settings##SetSort"
+msgstr "アイテムを並べ替える"
+
+msgid "Settings##SetSortHelp"
+msgstr "アイテムをレア度か統計量順で並べる."
+
+msgid "Settings##SortPrimary"
+msgstr "主要"
+
+msgid "Settings##SortRarity"
+msgstr "レア度"
+
+msgid "Settings##SortRoll"
+msgstr "統計量のパーセント"
+
+msgid "Settings##InventoryColumns"
+msgstr "キャラクターインベントリ欄"
+
+msgid "Settings##InventoryColumnsHelp"
+msgstr "キャラクターインベントリの欄数を選択して下さい."
+
+msgid "Settings##VaultColumns"
+msgstr "保管庫の上限欄数"
+
+msgid "Settings##VaultColumnsHelp"
+msgstr "保管庫の上限欄数を選択して下さい."
+
+msgid "Settings##SizeItem"
+msgstr "アイテムサイズ"
+
+msgid "Settings##SizeItemHelp"
+msgstr "アイテムの大きさどのぐらいがいいですか。"
+
+msgid "Settings##CharacterOrder"
+msgstr "キャラクター指名"
+
+msgid "Settings##CharacterOrderHelp"
+msgstr "キャラクターが最近のログイン順や作成順に整理できます."
+
+msgid "Settings##CharacterOrderRecent"
+msgstr "最近使用したキャラクター順で"
+
+msgid "Settings##CharacterOrderReversed"
+msgstr "最近使用したキャラクター順で (反転)"
+
+msgid "Settings##CharacterOrderFixed"
+msgstr "固定 (作成順)"
+
+msgid "Settings##ExportSS"
+msgstr "スプレッドシートをダウンロードする"
+
+msgid "Settings##ExportSSHelp"
+msgstr "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする."
+
+msgid "Settings##DIMPopups"
+msgstr "DIMの情報"
+
+msgid "Settings##DIMPopupsReset"
+msgstr "以前非表示にしたヒントをリセットする"
+
+msgid "Settings##ImportExport"
+msgstr "データの入力／出力やデータ管理。"
+
+msgid "Settings##Export"
+msgstr "DIM データを出力。"
+
+msgid "Settings##Import"
+msgstr "DIM データを入力。"
+
+msgid "Stats##Discipline"
+msgstr "鍛錬"
+
+msgid "Stats##Intellect"
+msgstr "知性"
+
+msgid "Stats##Level"
+msgstr "レベル"
+
+msgid "Stats##NoBonus"
+msgstr "ボーナスなし。"
+
+msgid "Stats##OfMaxRoll"
+msgstr "統計量の  {{range}}"
+
+msgid "Stats##PercentHelp"
+msgstr "品質の詳細については、をクリックしてください。"
+
+msgid "Stats##Prestige"
+msgstr ""
+"評判レベル：  {{level}}\n"
+"光の欠片5個までは後  {{exp}}xp"
+
+msgid "Stats##Quality"
+msgstr "品質"
+
+msgid "Stats##Strength"
+msgstr "腕力"
+
+msgid "Stats##TierProgress"
+msgid_plural "Stats##TierProgress"
+msgstr[0] "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n"
+msgstr[1] "T{{tier}} {{statName}} ({{progress}}/300)\n"
+
+msgid "StoreBucket##FillStack"
+msgstr "フルスタック ({{amount}})"
+
+msgid "StoreBucket##HowMuch"
+msgstr "{{itemname}} を何個移動しますか。"
+
+msgid "StoreBucket##Move"
+msgstr "移動"
+
+msgid "SyncService##GoogleDriveReAuth"
+msgstr "Googleドライブを再認証するには、ブラウザを再起動する必要があります。"
+
+msgid "SyncService##OneItemTooLarge"
+msgstr "保存ファイルのアイテムが大きすぎます。または保存されたアイテムの量が多すぎます。"
+
+msgid "SyncService##SaveTooLarge"
+msgstr "容量上限です。ロードアウトを削除してください。"
+
+msgid "Tags##TagItem"
+msgstr "アイテムをタグする"
+
+msgid "Tags##Favorite"
+msgstr "お気に入り"
+
+msgid "Tags##Junk"
+msgstr "不要"
+
+msgid "Tags##Infuse"
+msgstr "融合する"
+
+msgid "Tags##Keep"
+msgstr "保管"
+
+msgid "Vendors##Vendors"
+msgstr "ベンダー"
+
+msgid "Vendors##All"
+msgstr "全て"
+
+msgid "Vendors##Available"
+msgstr "利用可能:"
+
+msgid "Vendors##Compare"
+msgstr "装備中のものと比較:"
+
+msgid "Vendors##Load"
+msgstr "ローディングベンダー"
+
+msgid "Vendors##ArmorAndWeapons"
+msgstr "アーマーとウェポン"
+
+msgid "Vendors##ShipsAndVehicles"
+msgstr "船とビークル"
+
+msgid "Vendors##Consumables"
+msgstr "消費アイテム"
+
+msgid "Vendors##Bounties"
+msgstr "バウンティ"
+
+msgid "Vendors##ShadersAndEmblems"
+msgstr "シェーダーとエンブレム"
+
+msgid "Vendors##Emotes"
+msgstr "感情表現"
+
+msgid "RecordBooks##RecordBooks"
+msgstr "記録ブック"
+
+msgid "RecordBooks##HideCompleted"
+msgstr "完了した記録を非表示にする"
+
+msgid "Views##About##BungieCopyright"
+msgstr "すべての画像やコンテンツはBungieの所有物です。 ご不明な点がございましたら、お問い合わせください。"
+
+msgid "Views##About##ContactUs"
+msgstr "お問い合わせ"
+
+msgid "Views##About##FAQ"
+msgstr "よくある質問"
+
+msgid "Views##About##FAQAccess"
+msgstr "DIMはどのようにデスティニーのデータを入手しますか？"
+
+msgid "Views##About##FAQAccessAnswer"
+msgstr ""
+"どのクロームエクステンションでもあなたのコンピューターにセーブしてあるウェブサイトのデータを使う許可を得ることが出来ます。Bungie."
+"netにログインする時、個人別のトークン(クッキー)"
+"が作られます。このトークンを使ってあなたのコンピューターとBungieが安全に情報交換が出来る様になります。毎回ログインする度にアカウント名とパスワード"
+"を入力するより、このトークンを使ったほうが個人情報がより安全だからです。DIMもこのトークンを使ってあなたの代わりにBungieと通信します。"
+
+msgid "Views##About##FAQDupeGally"
+msgstr "ちょっと、DIMが私のギャラルホルンを複製しました！"
+
+msgid "Views##About##FAQDupeGallyAnswer"
+msgstr "いいえ、こちらでは何もしていません。 約束します。"
+
+msgid "Views##About##FAQKeyboard"
+msgstr "DIMではキーボードのショートカットを使えますか？"
+
+msgid "Views##About##FAQKeyboardAnswer"
+msgstr "使えます！使用可能なショートカットリストを表示するには「？」を押してください。"
+
+msgid "Views##About##FAQLogout"
+msgstr "どうやったらDIMからログアウト出来ますか？"
+
+msgid "Views##About##FAQLogoutAnswer"
+msgstr "あなたのセッションはBungie.netと繋がっています。Bungie.netからログアウトするとDIMからもログアウトする事になります。"
+
+msgid "Views##About##FAQLostItem"
+msgstr "このツールを使っている間にアイテムを紛失してしまった！"
+
+msgid "Views##About##FAQLostItemAnswer"
+msgstr ""
+"アイテムの転送が失敗した可能性があります。保管庫か他のキャラクターに無いか確かめて下さい。DIMで検索してみて下さい。もし見つからないなら、ブラウザーの"
+"更新を。(F5かCommand+R) それでも見つからない場合は、Bungie.net かゲームで直接、探してみてください。どこかに必ず在るはずです。"
+
+msgid "Views##About##GitHub"
+msgstr "ギットハブ"
+
+msgid "Views##About##GitHubHelp"
+msgstr "もし、このプロジェクトに協力していただけるなら、このリンクからGitHubへ。"
+
+msgid "Views##About##GitHubRepo"
+msgstr "DIM Git Repo"
+
+msgid "Views##About##Header"
+msgstr "デスティニー・アイテム・マネージャー「DIM」 について"
+
+msgid "Views##About##HowItsMade"
+msgstr ""
+"DIMはBungie."
+"netとDestinyコンパニオンアプリが使っている同じサービスを素にして作られたクロームエクステンションです。DIMはPlayStationとXbox"
+"のアカウント両方対応で、キャラクターや保管庫に入っているアイテムにアクセスすることができます。アイテムはドラッグアンドドロップで自由自在に移動できます。"
+
+msgid "Views##About##Reddit"
+msgstr "レディット"
+
+msgid "Views##About##RedditHelp"
+msgstr "質問、コメント、提案があればレディットで教えてください！"
+
+msgid "Views##About##Twitter"
+msgstr "ツイッター"
+
+msgid "Views##About##TwitterHelp"
+msgstr "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。"
+
+msgid "Views##About##Version"
+msgstr "バージョン {{version}} ({{flavor}})"
+
+msgid "Views##About##Transifex"
+msgstr "翻訳チームに参加してください！"
+
+msgid "Views##About##TransifexText"
+msgstr "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
+
+msgid "Views##Support##Support"
+msgstr "DIMを支援する"
+
+msgid "Views##Support##FreeToDownload"
+msgstr ""
+"DIMは、無料でダウンロードして使用できる製品です。DIMのソースコードはオープンソースであり、誰でも自由に拡張することができます。あなたがDIMで広告"
+"を見ることはありません。それが私たちのコミットメントです。"
+
+msgid "Views##Support##OpenCollective"
+msgstr "私たちはOpenCollectiveをサービスとして使用しており、開発者にこのプロジェクトに費やされた時間と献身的な報酬を提供しています。"
+
+msgid "Views##Support##Backers"
+msgstr "支援者"
+
+msgid "Views##Support##BackersDetail"
+msgstr "1回または毎月の寄付で私たちをサポートし、積極的な開発を続けてください。"
+
+msgid "Views##Support##Sponsors"
+msgstr "スポンサー"
+
+msgid "Views##Support##SponsorsDetail"
+msgstr "スポンサーになってあなたのロゴやホームページをここに記載しましょう。"
+
+msgid "Views##UpgradeChrome"
+msgstr "古いバージョンのクロームはDIMに対応していません。クロームのアップデートをしてください。"
+
+msgid "Views##Login##Permission"
+msgstr "許可が必要です。"
+
+msgid "Views##Login##Explanation"
+msgstr "DIM にディスティニーのキャラクターや保管庫、進歩状況などを読み取ると編集する許可を与えて下さい。"
+
+msgid "Views##Login##Auth"
+msgstr "Bungie.net で許可する。"
+
+msgid "Views##Login##LearnMore"
+msgstr "詳しく知りたいですか。"
+
+msgid "TrialsCard##FiveWins"
+msgstr "5勝目の報酬 (防具)"
+
+msgid "TrialsCard##SevenWins"
+msgstr "7勝目の報酬 (武器)"
+
+msgid "TrialsCard##Flawless"
+msgstr "完全勝利"
+
+msgctxt "prod"
+msgid "Help##Version"
+msgstr "DIM v{{version}} がリリースされました"
+
+msgctxt "beta"
+msgid "Help##Version"
+msgstr "ベータがv{{version}}にアップデートされました"

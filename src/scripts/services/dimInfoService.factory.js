@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimInfoService', InfoService);
 
-function InfoService(toaster, $http, $translate, SyncService) {
+function InfoService(toaster, $http, $i18next, SyncService) {
   return {
     show: function(id, content, timeout) {
       timeout = timeout || 0;
@@ -12,7 +12,7 @@ function InfoService(toaster, $http, $translate, SyncService) {
       content.type = content.type || 'info';
       content.title = content.title || '';
       content.body = content.body || '';
-      content.hide = content.hide || $translate.instant('Help.HidePopup');
+      content.hide = content.hide || $i18next.t('Help.HidePopup');
       content.func = content.func || function() {};
       content.hideable = content.hideable === undefined ? true : content.hideable;
 

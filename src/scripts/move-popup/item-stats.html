@@ -13,6 +13,6 @@
   </span>
 </div>
 <div class="stat-box-row" ng-if="$ctrl.qualityEnabled && $ctrl.item.quality && $ctrl.item.quality.min">
-  <span class="stat-box-text stat-box-cell stat-box-wrap" translate="Stats.Quality"></span>
-  <span class="stat-box-cell stat-box-wrap" ng-style="$ctrl.item.quality.min | qualityColor:'color'" translate-values="{ range: $ctrl.item.quality.range }" translate="Stats.OfMaxRoll"></span><span><a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is" target="_blank"><i class="fa fa-question-circle" translate-attr="{ title: 'Stats.PercentHelp'}"></i></a></span>
+  <span class="stat-box-text stat-box-cell stat-box-wrap" ng-i18next="Stats.Quality"></span>
+  <span class="stat-box-cell stat-box-wrap" ng-style="$ctrl.item.quality.min | qualityColor:'color'" ng-i18next="[i18next]({ range: $ctrl.item.quality.range })Stats.OfMaxRoll"></span><span><a href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is" target="_blank"><i class="fa fa-question-circle" ng-i18next="[title]Stats.PercentHelp"></i></a></span>
 </div>

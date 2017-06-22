@@ -5,7 +5,7 @@ angular.module('dimApp')
   .controller('dimRandomCtrl', dimRandomCtrl);
 
 
-function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, $translate) {
+function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, $i18next) {
   var vm = this;
 
   const deregister = $scope.$on('dim-stores-updated', function() {
@@ -21,7 +21,7 @@ function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, 
       return;
     }
 
-    if (!$window.confirm($translate.instant('Loadouts.Randomize'))) {
+    if (!$window.confirm($i18next.t('Loadouts.Randomize'))) {
       return;
     }
 
@@ -91,7 +91,7 @@ function dimRandomCtrl($window, $scope, $q, dimStoreService, dimLoadoutService, 
 
           return dimLoadoutService.applyLoadout(store, {
             classType: -1,
-            name: $translate.instant('Loadouts.Random'),
+            name: $i18next.t('Loadouts.Random'),
             items: items
           }, true);
         }

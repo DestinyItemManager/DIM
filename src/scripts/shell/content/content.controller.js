@@ -4,7 +4,7 @@ import supportTemplate from 'app/views/support.html';
 import filtersTemplate from 'app/views/filters.html';
 
 export default class ContentController {
-  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $translate) {
+  constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $i18next) {
     'ngInject';
 
     var vm = this;
@@ -53,7 +53,7 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['r'],
-      description: $translate.instant('Hotkey.RefreshInventory'),
+      description: $i18next.t('Hotkey.RefreshInventory'),
       callback: function() {
         vm.refresh();
       }
@@ -61,7 +61,7 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['i'],
-      description: $translate.instant('Hotkey.ToggleDetails'),
+      description: $i18next.t('Hotkey.ToggleDetails'),
       callback: function() {
         $rootScope.$broadcast('dim-toggle-item-details');
       }
@@ -72,8 +72,8 @@ export default class ContentController {
         if (tag.hotkey) {
           hotkeys.add({
             combo: [tag.hotkey],
-            description: $translate.instant('Hotkey.MarkItemAs', {
-              tag: $translate.instant(tag.label)
+            description: $i18next.t('Hotkey.MarkItemAs', {
+              tag: $i18next.t(tag.label)
             }),
             callback: function() {
               $rootScope.$broadcast('dim-item-tag', { tag: tag.type });
@@ -85,7 +85,7 @@ export default class ContentController {
 
     hotkeys.add({
       combo: ['x'],
-      description: $translate.instant('Hotkey.ClearNewItems'),
+      description: $i18next.t('Hotkey.ClearNewItems'),
       callback: function() {
         dimStoreService.clearNewItems();
       }

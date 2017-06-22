@@ -3,15 +3,16 @@ import angular from 'angular';
 import AriaModule from 'angular-aria';
 import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
+import i18next from 'i18next';
 import LocalStorageModule from 'angular-local-storage';
 import MessagesModule from 'angular-messages';
 import MomentModule from 'angular-moment';
+import ngSanitize from 'angular-sanitize';
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
-import TranslateModule from 'angular-translate';
-import TranslateMessageFormatModule from 'angular-translate-interpolation-messageformat';
 import UIRouterModule from '@uirouter/angularjs';
+import 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 import 'angular-uuid2/dist/angular-uuid2.js';
@@ -35,15 +36,15 @@ export const DimAppModule = angular
     AriaModule,
     DialogModule,
     DragAndDropModule,
+    i18next,
     LocalStorageModule,
     MessagesModule,
     MomentModule,
+    ngSanitize,
     RateLimiterModule,
     ShellModule,
     SliderModule,
     ToasterModule,
-    TranslateModule,
-    TranslateMessageFormatModule,
     UIRouterModule,
     inventoryModule,
     recordBooksModule,

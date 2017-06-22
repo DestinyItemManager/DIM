@@ -5,7 +5,7 @@ import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
 angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
-function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $translate) {
+function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $i18next) {
   var service = {
     getAccounts: getAccounts,
     getAccountsForCurrentUser: getAccountsForCurrentUser,
@@ -22,13 +22,13 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   return service;
   function handleErrors(response) {
     if (response.status === -1) {
-      return $q.reject(new Error($translate.instant('BungieService.NotConnected')));
+      return $q.reject(new Error($i18next.t('BungieService.NotConnected')));
     }
     if (response.status >= 503 && response.status <= 526 /* cloudflare */) {
-      return $q.reject(new Error($translate.instant('BungieService.Down')));
+      return $q.reject(new Error($i18next.t('BungieService.Down')));
     }
     if (response.status < 200 || response.status >= 400) {
-      return $q.reject(new Error($translate.instant('BungieService.NetworkError', {
+      return $q.reject(new Error($i18next.t('BungieService.NetworkError', {
         status: response.status,
         statusText: response.statusText
       })));
@@ -41,26 +41,26 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
     case 1: // Success
       return response;
     case 1627: // DestinyVendorNotFound
-      return $q.reject(new Error($translate.instant('BungieService.VendorNotFound')));
+      return $q.reject(new Error($i18next.t('BungieService.VendorNotFound')));
     case 2106: // AuthorizationCodeInvalid
     case 2108: // AccessNotPermittedByApplicationScope
       $rootScope.$broadcast('dim-no-token-found');
       return $q.reject("DIM does not have permission to perform this action.");
     case 5: // SystemDisabled
-      return $q.reject(new Error($translate.instant('BungieService.Maintenance')));
+      return $q.reject(new Error($i18next.t('BungieService.Maintenance')));
     case 35: // ThrottleLimitExceededMinutes
     case 36: // ThrottleLimitExceededMomentarily
     case 37: // ThrottleLimitExceededSeconds
-      return $q.reject(new Error($translate.instant('BungieService.Throttled')));
+      return $q.reject(new Error($i18next.t('BungieService.Throttled')));
     case 2111: // token expired
     case 99: // WebAuthRequired
       $rootScope.$broadcast('dim-no-token-found');
-      return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
+      return $q.reject(new Error($i18next.t('BungieService.NotLoggedIn')));
     case 1601: // DestinyAccountNotFound
     case 1618: // DestinyUnexpectedError
       if (response.config.url.indexOf('/Account/') >= 0 &&
           response.config.url.indexOf('/Character/') < 0) {
-        const error = new Error($translate.instant('BungieService.NoAccount', { platform: dimState.active.label }));
+        const error = new Error($i18next.t('BungieService.NoAccount', { platform: dimState.active.label }));
         error.code = errorCode;
         return $q.reject(error);
       }
@@ -69,9 +69,9 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
     case 2107: // OriginHeaderDoesNotMatchKey
       if ($DIM_FLAVOR === 'dev') {
         $state.go('developer');
-        return $q.reject(new Error($translate.instant('BungieService.DevVersion')));
+        return $q.reject(new Error($i18next.t('BungieService.DevVersion')));
       } else {
-        return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
+        return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
       }
     }
 
@@ -83,7 +83,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
         error.status = response.data.ErrorStatus;
         return $q.reject(error);
       } else {
-        return $q.reject(new Error($translate.instant('BungieService.Difficulties')));
+        return $q.reject(new Error($i18next.t('BungieService.Difficulties')));
       }
     }
 
@@ -141,7 +141,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
 
     function processBnetCharactersRequest(response) {
       if (_.size(response.data.Response) === 0) {
-        return $q.reject(new Error($translate.instant('BungieService.NoAccountForPlatform', {
+        return $q.reject(new Error($i18next.t('BungieService.NoAccountForPlatform', {
           platform: platform.label
         })));
       }
@@ -278,11 +278,11 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
     // Handle "DestinyUniquenessViolation" (1648)
     function handleUniquenessViolation(e, item, store) {
       if (e && e.code === 1648) {
-        const error = Error($translate.instant('BungieService.ItemUniquenessExplanation', {
+        const error = Error($i18next.t('BungieService.ItemUniquenessExplanation', {
           name: item.name,
           type: item.type.toLowerCase(),
           character: store.name,
-          gender: store.gender
+          context: store.gender
         }));
         error.code = e.code;
         return $q.reject(error);

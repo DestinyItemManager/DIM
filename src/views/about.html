@@ -1,55 +1,55 @@
 <div ng-controller="dimSettingsCtrl as vm">
-  <h1><img src="~app/images/logo-light.svg" alt="DIM Logo" height="36" width="36"/> <span translate="Views.About.Header"></span></h1>
+  <h1><img src="~app/images/logo-light.svg" alt="DIM Logo" height="36" width="36"/> <span ng-i18next="Views.About.Header"></span></h1>
   <div class="ngdialog-inner-content">
-    <a ng-href="{{$DIM_CHANGELOG}}" target="_blank"><span translate-values="{ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE }" translate="Views.About.Version"></span></a>
-    <p translate="Views.About.HowItsMade"></p>
-    <h2 translate="Views.About.ContactUs"></h2>
+    <a ng-href="{{$DIM_CHANGELOG}}" target="_blank"><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
+    <p ng-i18next="Views.About.HowItsMade"></p>
+    <h2 ng-i18next="Views.About.ContactUs"></h2>
     <table>
       <tr>
-        <td translate="Views.About.Twitter"></td>
-        <td translate="Views.About.Reddit"></td>
-        <td translate="Views.About.GitHub"></td>
+        <td ng-i18next="Views.About.Twitter"></td>
+        <td ng-i18next="Views.About.Reddit"></td>
+        <td ng-i18next="Views.About.GitHub"></td>
       </tr>
       <tr>
-        <td><span translate="Views.About.TwitterHelp"></span>
+        <td><span ng-i18next="Views.About.TwitterHelp"></span>
           <br><a href="https://twitter.com/ThisIsDIM" target="_blank">@ThisIsDIM</a>
         </td>
-        <td><span translate="Views.About.RedditHelp"></span>
+        <td><span ng-i18next="Views.About.RedditHelp"></span>
           <br><a href="https://destinyitemmanager.reddit.com" target="_blank">/r/destinyitemmanager</a>
         </td>
-        <td><span translate="Views.About.GitHubHelp"></span>
-          <br><a href="https://github.com/DestinyItemManager/DIM/" target="_blank"><span translate="Views.About.GitHubRepo"></span></a>
+        <td><span ng-i18next="Views.About.GitHubHelp"></span>
+          <br><a href="https://github.com/DestinyItemManager/DIM/" target="_blank"><span ng-i18next="Views.About.GitHubRepo"></span></a>
         </td>
       </tr>
     </table>
-    <h2 translate="Views.About.FAQ"></h2>
+    <h2 ng-i18next="Views.About.FAQ"></h2>
     <div>
       <dl>
-        <dt translate="Views.About.Transifex"></dt>
+        <dt ng-i18next="Views.About.Transifex"></dt>
         <dd><a href="https://www.transifex.com/destiny-item-manager/destiny-item-manager/" target="_blank">Transifex</a></dd>
-        <dd translate="Views.About.TransifexText"></dd>
+        <dd ng-i18next="Views.About.TransifexText"></dd>
       </dl>
       <dl>
-        <dt translate="Views.About.FAQAccess"></dt>
-        <dd translate="Views.About.FAQAccessAnswer"></dd>
+        <dt ng-i18next="Views.About.FAQAccess"></dt>
+        <dd ng-i18next="Views.About.FAQAccessAnswer"></dd>
       </dl>
       <dl>
-        <dt translate="Views.About.FAQLogout"></dt>
-        <dd translate="Views.About.FAQLogoutAnswer"></dd>
+        <dt ng-i18next="Views.About.FAQLogout"></dt>
+        <dd ng-i18next="Views.About.FAQLogoutAnswer"></dd>
       </dl>
       <dl>
-        <dt translate="Views.About.FAQKeyboard"></dt>
-        <dd translate="Views.About.FAQKeyboardAnswer"></dd>
+        <dt ng-i18next="Views.About.FAQKeyboard"></dt>
+        <dd ng-i18next="Views.About.FAQKeyboardAnswer"></dd>
       </dl>
       <dl>
-        <dt translate="Views.About.FAQLostItem"></dt>
-        <dd translate="Views.About.FAQLostItemAnswer"></dd>
+        <dt ng-i18next="Views.About.FAQLostItem"></dt>
+        <dd ng-i18next="Views.About.FAQLostItemAnswer"></dd>
       </dl>
       <dl>
-        <dt translate="Views.About.FAQDupeGally"></dt>
-        <dd translate="Views.About.FAQDupeGallyAnswer"></dd>
+        <dt ng-i18next="Views.About.FAQDupeGally"></dt>
+        <dd ng-i18next="Views.About.FAQDupeGallyAnswer"></dd>
             </dl>
         </div>
-        <p translate="Views.About.BungieCopyright"></p>
+        <p ng-i18next="Views.About.BungieCopyright"></p>
     </div>
 </div>

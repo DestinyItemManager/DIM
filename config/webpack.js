@@ -93,6 +93,9 @@ module.exports = (env) => {
             ],
             fallback: 'style-loader'
           })
+        }, {
+          test: /\.po$/,
+          loaders: ['i18next-po-loader']
         }
       ],
 

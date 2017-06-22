@@ -6,8 +6,8 @@ import es from '../i18n/dim_es.json';
 import ja from '../i18n/dim_ja.json';
 import ptBr from '../i18n/dim_pt_BR.json';
 
-function config($compileProvider, $httpProvider, $translateProvider, $translateMessageFormatInterpolationProvider,
-                hotkeysProvider, localStorageServiceProvider, ngHttpRateLimiterConfigProvider, ngDialogProvider) {
+function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
+                localStorageServiceProvider, ngHttpRateLimiterConfigProvider, ngDialogProvider) {
   'ngInject';
 
   // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
@@ -20,23 +20,33 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   $httpProvider.useApplyAsync(true);
 
   // See https://angular-translate.github.io/docs/#/guide
-  $translateProvider.useSanitizeValueStrategy('escape');
-  $translateProvider.useMessageFormatInterpolation();
-  $translateProvider.preferredLanguage('en');
-
-  $translateMessageFormatInterpolationProvider.messageFormatConfigurer(function(mf) {
-    mf.setIntlSupport(true);
+  window.i18next.init({
+    debug: true,
+    lng: 'en', // If not given, i18n will detect the browser language.
+    fallbackLng: 'en',
+    interpolation: {
+      format: function(val, format) {
+        if (format === 'pct') {
+          return Math.min(100.0, Math.floor(100.0 * val)) + '%';
+        }
+        if (format === 'pct2') {
+          return Math.min(100.00, Math.floor(100.00 * val)) + '%';
+        }
+        return val;
+      }
+    },
+    resources: {
+      en: { translation: en },
+      it: { translation: it },
+      de: { translation: de },
+      fr: { translation: fr },
+      es: { translation: es },
+      ja: { translation: ja },
+      "pt-br": { translation: ptBr }
+    },
+    useCookie: false,
+    useLocalStorage: false
   });
-
-  $translateProvider
-    .translations('en', en)
-    .translations('it', it)
-    .translations('de', de)
-    .translations('fr', fr)
-    .translations('es', es)
-    .translations('ja', ja)
-    .translations('pt-br', ptBr)
-    .fallbackLanguage('en');
 
   hotkeysProvider.includeCheatSheet = true;
 

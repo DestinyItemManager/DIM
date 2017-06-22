@@ -5,7 +5,7 @@ angular.module('dimApp')
   .controller('dimInfuseCtrl', dimInfuseCtrl);
 
 
-function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoadoutService, toaster, $q, $translate) {
+function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoadoutService, toaster, $q, $i18next) {
   var vm = this;
 
   vm.items = {};
@@ -105,7 +105,7 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
 
     transferItems: function() {
       if (vm.target.notransfer) {
-        toaster.pop('error', $translate.instant('Infusion.NoTransfer', { target: vm.target.name }));
+        toaster.pop('error', $i18next.t('Infusion.NoTransfer', { target: vm.target.name }));
         return $q.resolve();
       }
       var store = dimStoreService.getStore(vm.source.owner);
@@ -156,7 +156,7 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
 
       var loadout = {
         classType: -1,
-        name: $translate.instant('Infusion.InfusionMaterials'),
+        name: $i18next.t('Infusion.InfusionMaterials'),
         items: items
       };
 

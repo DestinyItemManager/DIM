@@ -16,7 +16,7 @@ function FarmingService($rootScope,
                         $interval,
                         toaster,
                         dimSettingsService,
-                        $translate,
+                        $i18next,
                         dimBucketService) {
   let intervalId;
   let cancelReloadListener;
@@ -47,8 +47,8 @@ function FarmingService($rootScope,
 
   const outOfSpaceWarning = _.throttle((store) => {
     toaster.pop('info',
-                $translate.instant('FarmingMode.OutOfRoomTitle'),
-                $translate.instant('FarmingMode.OutOfRoom', { character: store.name }));
+                $i18next.t('FarmingMode.OutOfRoomTitle'),
+                $i18next.t('FarmingMode.OutOfRoom', { character: store.name }));
   }, 60000);
 
   return {

@@ -20,7 +20,7 @@ function LoadoutPopup() {
   };
 }
 
-function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $translate, dimBucketService, $q, dimStoreService) {
+function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimItemService, toaster, dimFarmingService, $window, dimSearchService, dimPlatformService, $i18next, dimBucketService, $q, dimStoreService) {
   var vm = this;
   vm.previousLoadout = _.last(dimLoadoutService.previousLoadouts[vm.store.id]);
 
@@ -82,12 +82,12 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
   };
 
   vm.deleteLoadout = function deleteLoadout(loadout) {
-    if ($window.confirm($translate.instant('Loadouts.ConfirmDelete', { name: loadout.name }))) {
+    if ($window.confirm($i18next.t('Loadouts.ConfirmDelete', { name: loadout.name }))) {
       dimLoadoutService.deleteLoadout(loadout)
         .catch((e) => {
           toaster.pop('error',
-                      $translate.instant('Loadouts.DeleteErrorTitle'),
-                      $translate.instant('Loadouts.DeleteErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
+                      $i18next.t('Loadouts.DeleteErrorTitle'),
+                      $i18next.t('Loadouts.DeleteErrorDescription', { loadoutName: vm.loadout.name, error: e.message }));
           console.error(e);
         });
     }
@@ -179,7 +179,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       return value;
     };
 
-    var loadout = optimalLoadout(applicableItems, bestItemFn, $translate.instant('Loadouts.ItemLeveling'));
+    var loadout = optimalLoadout(applicableItems, bestItemFn, $i18next.t('Loadouts.ItemLeveling'));
     vm.applyLoadout(loadout, $event);
   };
 
@@ -224,7 +224,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       return value;
     };
 
-    var loadout = optimalLoadout(applicableItems, bestItemFn, $translate.instant('Loadouts.MaximizeLight'));
+    var loadout = optimalLoadout(applicableItems, bestItemFn, $i18next.t('Loadouts.MaximizeLight'));
     if ($event) {
       vm.applyLoadout(loadout, $event);
     }
@@ -239,11 +239,11 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
     });
 
     if (engrams.length === 0) {
-      var engramWarning = $translate.instant('Loadouts.NoEngrams');
+      var engramWarning = $i18next.t('Loadouts.NoEngrams');
       if (options.exotics) {
-        engramWarning = $translate.instant('Loadouts.NoExotics');
+        engramWarning = $i18next.t('Loadouts.NoExotics');
       }
-      toaster.pop('warning', $translate.instant('Loadouts.GatherEngrams'), engramWarning);
+      toaster.pop('warning', $i18next.t('Loadouts.GatherEngrams'), engramWarning);
       return;
     }
 
@@ -268,7 +268,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
     var loadout = {
       classType: -1,
-      name: $translate.instant('Loadouts.GatherEngrams'),
+      name: $i18next.t('Loadouts.GatherEngrams'),
       items: finalItems
     };
     vm.applyLoadout(loadout, $event);
@@ -298,7 +298,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
     var loadout = {
       classType: -1,
-      name: $translate.instant('Loadouts.FilteredItems'),
+      name: $i18next.t('Loadouts.FilteredItems'),
       items: finalItems
     };
     vm.applyLoadout(loadout, $event);
@@ -345,13 +345,13 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       return moveItemsToVault(itemsToMove, buckets)
         .then(() => {
           toaster.pop('success',
-                      $translate.instant('Loadouts.MakeRoom'),
-                      $translate.instant('Loadouts.MakeRoomDone', { postmasterNum: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name, gender: vm.store.gender }));
+                      $i18next.t('Loadouts.MakeRoom'),
+                      $i18next.t('Loadouts.MakeRoomDone', { count: postmasterItems.length, movedNum: itemsToMove.length, store: vm.store.name, context: vm.store.gender }));
         })
         .catch((e) => {
           toaster.pop('error',
-                      $translate.instant('Loadouts.MakeRoom'),
-                      $translate.instant('Loadouts.MakeRoomError', { error: e.message }));
+                      $i18next.t('Loadouts.MakeRoom'),
+                      $i18next.t('Loadouts.MakeRoomError', { error: e.message }));
           throw e;
         });
     });

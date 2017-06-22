@@ -9,7 +9,7 @@ angular.module('dimApp')
  * The item info service maintains a map of extra, DIM-specific, synced data about items (per platform).
  * These info objects have a save method on them that can be used to persist any changes to their properties.
  */
-function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $q) {
+function ItemInfoService(dimPlatformService, SyncService, $i18next, toaster, $q) {
   /**
    * Rebuild infos from partitioned info keys.
    */
@@ -74,8 +74,8 @@ function ItemInfoService(dimPlatformService, SyncService, $translate, toaster, $
                 setInfos(key, infos)
                   .catch((e) => {
                     toaster.pop('error',
-                                $translate.instant('ItemInfoService.SaveInfoErrorTitle'),
-                                $translate.instant('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
+                                $i18next.t('ItemInfoService.SaveInfoErrorTitle'),
+                                $i18next.t('ItemInfoService.SaveInfoErrorDescription', { error: e.message }));
                     console.error("Error saving item info (tags, notes):", e);
                   });
               });

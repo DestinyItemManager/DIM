@@ -11,7 +11,7 @@ export const LoadoutBuilderComponent = {
   controllerAs: 'vm'
 };
 
-function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $translate, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
+function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
   var vm = this;
@@ -465,7 +465,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $tran
       },
       equipItems: function(set) {
         ngDialog.closeAll();
-        var loadout = { items: {}, name: $translate.instant('Loadouts.AppliedAuto') };
+        var loadout = { items: {}, name: $i18next.t('Loadouts.AppliedAuto') };
         var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
         loadout.items.helmet = [items.Helmet.item];
         loadout.items.chest = [items.Chest.item];

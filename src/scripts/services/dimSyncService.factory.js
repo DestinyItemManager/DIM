@@ -5,7 +5,7 @@ angular.module('dimApp')
   .factory('SyncService', SyncService);
 
 
-function SyncService($q, $translate) {
+function SyncService($q, $i18next) {
   var cached; // cached is the data in memory,
   var fileId; // reference to the file in drive
   var membershipId; // logged in bungie user id
@@ -40,7 +40,7 @@ function SyncService($q, $translate) {
         // grab all of the list files
         gapi.client.drive.files.list().execute(function(list) {
           if (list.code === 401) {
-            reject(new Error($translate.instant('SyncService.GoogleDriveReAuth')));
+            reject(new Error($i18next.t('SyncService.GoogleDriveReAuth')));
             return;
           }
 
@@ -163,9 +163,9 @@ function SyncService($q, $translate) {
           if (chrome.runtime.lastError) {
             const message = chrome.runtime.lastError.message;
             if (message.indexOf('QUOTA_BYTES_PER_ITEM') > -1) {
-              reject(new Error($translate.instant('SyncService.OneItemTooLarge')));
+              reject(new Error($i18next.t('SyncService.OneItemTooLarge')));
             } else if (message.indexOf('QUOTA_BYTES') > -1) {
-              reject(new Error($translate.instant('SyncService.SaveTooLarge')));
+              reject(new Error($i18next.t('SyncService.SaveTooLarge')));
             } else {
               reject(new Error(message));
             }

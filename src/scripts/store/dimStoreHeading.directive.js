@@ -19,7 +19,7 @@ function StoreHeading() {
   };
 }
 
-function StoreHeadingCtrl($scope, ngDialog, $translate) {
+function StoreHeadingCtrl($scope, ngDialog, $i18next) {
   var vm = this;
   var dialogResult = null;
 
@@ -31,7 +31,7 @@ function StoreHeadingCtrl($scope, ngDialog, $translate) {
       var prestige = _.findWhere(vm.store.progression.progressions, {
         progressionHash: 2030054750
       });
-      vm.xpTillMote = $translate.instant('Stats.Prestige', {
+      vm.xpTillMote = $i18next.t('Stats.Prestige', {
         level: prestige.level,
         exp: (prestige.nextLevelAt - prestige.progressToNextLevel)
       });

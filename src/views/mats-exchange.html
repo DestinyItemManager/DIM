@@ -1,9 +1,9 @@
 <div ng-controller="dimMaterialsExchangeCtrl as vm" class="materials-exchange">
-   <!--<a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i><span translate="Help.BackToDIM"></span></a>-->
+   <!--<a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i><span ng-i18next="Help.BackToDIM"></span></a>-->
    <div class="stats-panel">
       <div class="section">
          <div class="title">
-            <span translate="MaterialsExchange"></span>
+            <span ng-i18next="MaterialsExchange"></span>
          </div>
          <div class="stats-body">
             <div class="guardian-selector">
@@ -29,10 +29,10 @@
                      </div>
                      <table>
                         <tr class="row">
-                           <td class="col" translate="MaterialsExchange.CurrentRank"></td>
-                           <td class="col" translate="MaterialsExchange.CurrentRep"></td>
-                           <td class="col" translate="MaterialsExchange.NewRank"></td>
-                           <td class="col" translate="MaterialsExchange.NewRep"></td>
+                           <td class="col" ng-i18next="MaterialsExchange.CurrentRank"></td>
+                           <td class="col" ng-i18next="MaterialsExchange.CurrentRep"></td>
+                           <td class="col" ng-i18next="MaterialsExchange.NewRank"></td>
+                           <td class="col" ng-i18next="MaterialsExchange.NewRep"></td>
                         </tr>
                         <tr class="row">
                            <td class="col">{{vm.activeFaction.level}}</td>
@@ -48,7 +48,7 @@
       </div>
    </div>
    <div class="mats-panel">
-      <dim-collapsible-section translate-attr="{ title: 'MaterialsExchange.OnHand' }" title="MaterialsExchange.OnHand">
+      <dim-collapsible-section ng-i18next="[title]MaterialsExchange.OnHand">
          <table>
             <tbody>
                <tr>
@@ -78,7 +78,7 @@
             </tbody>
          </table>
       </dim-collapsible-section>
-      <dim-collapsible-section translate-attr="{ title: 'MaterialsExchange.FromTrade' }" is-collapsed="true" title="MaterialsExchange.FromTrade">
+      <dim-collapsible-section ng-i18next="[title]MaterialsExchange.FromTrade" is-collapsed="true">
          <table ng-show="vm.variksMats[0]">
             <tbody>
                <tr>

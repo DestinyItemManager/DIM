@@ -1,6 +1,6 @@
 import changelog from '../views/changelog-toaster-release.html';
 
-function run($window, $rootScope, $translate, SyncService, dimInfoService, $timeout) {
+function run($window, $rootScope, $i18next, SyncService, dimInfoService, $timeout) {
   'ngInject';
 
   $window.initgapi = () => {
@@ -19,8 +19,8 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, $time
     if (chromeVersion && chromeVersion.length === 2 && parseInt(chromeVersion[1], 10) < 51) {
       $timeout(function() {
         dimInfoService.show('old-chrome', {
-          title: $translate.instant('Help.UpgradeChrome'),
-          body: $translate.instant('Views.UpgradeChrome'),
+          title: $i18next.t('Help.UpgradeChrome'),
+          body: $i18next.t('Views.UpgradeChrome'),
           type: 'error',
           hideable: false
         }, 0);
@@ -31,9 +31,9 @@ function run($window, $rootScope, $translate, SyncService, dimInfoService, $time
 
     if ($featureFlags.changelogToaster) {
       dimInfoService.show('changelogv' + $DIM_VERSION.replace(/\./gi, ''), {
-        title: $translate.instant('Help.Version', {
-          version: $DIM_VERSION,
-          beta: $DIM_FLAVOR === 'beta'
+        title: $i18next.t('Help.Version', {
+          context: $DIM_FLAVOR,
+          version: $DIM_VERSION
         }),
         body: changelog
       });

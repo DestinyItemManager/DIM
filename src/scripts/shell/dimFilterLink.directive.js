@@ -14,19 +14,19 @@ angular.module('dimApp')
     }
   });
 
-function FilterLinkCtrl(dimSearchService, $window, $translate) {
+function FilterLinkCtrl(dimSearchService, $window, $i18next) {
   this.addFilter = function(filter) {
     var itemNameFilter = false;
 
     if (filter === 'item name') {
       itemNameFilter = true;
-      filter = $window.prompt($translate.instant('Filter.EnterName'));
+      filter = $window.prompt($i18next.t('Filter.EnterName'));
       filter = filter.trim();
     }
 
     if (filter === 'notes:value') {
       itemNameFilter = true;
-      filter = $window.prompt($translate.instant('Filter.EnterNote'));
+      filter = $window.prompt($i18next.t('Filter.EnterNote'));
       filter = 'notes:"' + filter.trim() + '"';
     }
 

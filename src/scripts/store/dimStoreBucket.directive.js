@@ -34,7 +34,7 @@ function StoreBucketCtrl($scope,
                          $rootScope,
                          dimActionQueue,
                          dimInfoService,
-                         $translate) {
+                         $i18next) {
   var vm = this;
 
   vm.settings = dimSettingsService;
@@ -75,14 +75,14 @@ function StoreBucketCtrl($scope,
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
   };
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DoubleClick')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
+  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DoubleClick')}</p>` +
+                             `<p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('doubleclick', {
-      title: $translate.instant('DidYouKnow'),
+      title: $i18next.t('DidYouKnow'),
       body: didYouKnowTemplate,
-      hide: $translate.instant('DidYouKnow.DontShowAgain')
+      hide: $i18next.t('DidYouKnow.DontShowAgain')
     });
   });
 
@@ -94,7 +94,7 @@ function StoreBucketCtrl($scope,
     }
 
     if (item.notransfer && item.owner !== target.id) {
-      return $q.reject(new Error($translate.instant('Help.CannotMove')));
+      return $q.reject(new Error($i18next.t('Help.CannotMove')));
     }
 
     if (item.owner === vm.store.id) {

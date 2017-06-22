@@ -16,7 +16,7 @@ angular.module('dimApp')
  * load in the user's actual settings, so it is a good sidea to
  * always watch the settings you are using.
  */
-function SettingsService($rootScope, SyncService, $window, $translate) {
+function SettingsService($rootScope, SyncService, $window) {
   var _loaded = false;
 
   const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
@@ -104,8 +104,6 @@ function SettingsService($rootScope, SyncService, $window, $translate) {
 
     $rootScope.$evalAsync(function() {
       angular.merge(settings, savedSettings);
-      $translate.use(settings.language);
-      $translate.fallbackLanguage('en');
       $rootScope.$emit('dim-settings-loaded', {});
     });
   });

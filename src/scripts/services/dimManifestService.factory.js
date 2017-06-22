@@ -19,7 +19,7 @@ angular.module('dimApp')
   .factory('dimManifestService', ManifestService);
 
 
-function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $translate, $rootScope) {
+function ManifestService($q, dimBungieService, $http, toaster, dimSettingsService, $i18next, $rootScope) {
   // Testing flags
   const alwaysLoadRemote = false;
 
@@ -47,8 +47,8 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
           // The manifest has updated!
           if (path !== service.version) {
             toaster.pop('error',
-                        $translate.instant('Manifest.Outdated'),
-                        $translate.instant('Manifest.OutdatedExplanation'));
+                        $i18next.t('Manifest.Outdated'),
+                        $i18next.t('Manifest.OutdatedExplanation'));
           }
         });
     }, 10000, true),
@@ -75,7 +75,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
               return loadManifestRemote(version, language, path);
             })
             .then(function(typedArray) {
-              service.statusText = $translate.instant('Manifest.Build') + '...';
+              service.statusText = $i18next.t('Manifest.Build') + '...';
 
               return Promise.all([
                 typedArray,
@@ -91,14 +91,14 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
         })
         .catch((e) => {
           let message = e.message || e;
-          service.statusText = $translate.instant('Manifest.Error', { error: message });
+          service.statusText = $i18next.t('Manifest.Error', { error: message });
 
           if (e.status === -1) {
-            message = $translate.instant('BungieService.NotConnected');
+            message = $i18next.t('BungieService.NotConnected');
           } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-            message = $translate.instant('BungieService.Down');
+            message = $i18next.t('BungieService.Down');
           } else if (e.status < 200 || e.status >= 400) {
-            message = $translate.instant('BungieService.NetworkError', {
+            message = $i18next.t('BungieService.NetworkError', {
               status: e.status,
               statusText: e.statusText
             });
@@ -145,15 +145,15 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
   function loadManifestRemote(version, language, path) {
-    service.statusText = $translate.instant('Manifest.Download') + '...';
+    service.statusText = $i18next.t('Manifest.Download') + '...';
 
     return $http.get("https://www.bungie.net" + path + '?host=' + window.location.hostname, { responseType: "blob" })
       .then(function(response) {
-        service.statusText = $translate.instant('Manifest.Unzip') + '...';
+        service.statusText = $i18next.t('Manifest.Unzip') + '...';
         return unzipManifest(response.data);
       })
       .then(function(arraybuffer) {
-        service.statusText = $translate.instant('Manifest.Save') + '...';
+        service.statusText = $i18next.t('Manifest.Save') + '...';
 
         var typedArray = new Uint8Array(arraybuffer);
         idbKeyval.set('dimManifest', typedArray)
@@ -182,7 +182,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       return $q.reject(new Error("Testing - always load remote"));
     }
 
-    service.statusText = $translate.instant('Manifest.Load') + '...';
+    service.statusText = $i18next.t('Manifest.Load') + '...';
     var currentManifestVersion = localStorage.getItem('manifest-version');
     if (currentManifestVersion === version) {
       return idbKeyval.get('dimManifest').then((typedArray) => {

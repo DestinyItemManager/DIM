@@ -18,7 +18,7 @@ function Stats() {
 }
 
 
-function StatsCtrl($scope, $translate) {
+function StatsCtrl($scope, $i18next) {
   var vm = this;
 
   $scope.$watch('vm.stats', () => {
@@ -31,10 +31,10 @@ function StatsCtrl($scope, $translate) {
     vm.statList.forEach(function(stat) {
       // compute tooltip
       var tier = stat.tier;
-      var next = $translate.instant('Stats.TierProgress', { progress: tier === 5 ? stat.value : (stat.value % 60), tier: tier, nextTier: tier + 1, statName: stat.name });
+      var next = $i18next.t('Stats.TierProgress', { count: tier === 5 ? 5 : 1, progress: tier === 5 ? stat.value : (stat.value % 60), tier: tier, nextTier: tier + 1, statName: stat.name });
       var cooldown = stat.cooldown || '';
       if (cooldown) {
-        cooldown = $translate.instant('Cooldown.' + stat.effect, { cooldown: cooldown });
+        cooldown = $i18next.t('Cooldown.' + stat.effect, { cooldown: cooldown });
       }
       stat.tooltip = next + cooldown;
     });

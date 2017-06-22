@@ -1,12 +1,12 @@
 <div ng-controller="dimSettingsCtrl as vm">
-  <h1 translate="Settings"></h1>
+  <h1 ng-i18next="Settings"></h1>
   <div class="ngdialog-inner-content">
 <!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
   <form class="settings">
     <table>
       <tr>
         <td>
-          <label for="language" translate="Settings.Language"></label>
+          <label for="language" ng-i18next="Settings.Language"></label>
         </td>
         <td>
           <select id="language" ng-model="vm.settings.language" ng-options="code as name for (code, name) in vm.languageOptions" required></select>
@@ -14,7 +14,7 @@
       </tr>
       <tr>
         <td>
-          <label for="condensedItems" translate-attr="{ title: 'Settings.HideUnfilteredHelp'}" translate="Settings.HideUnfiltered"></label>
+          <label for="condensedItems" ng-i18next="[title]Settings.HideUnfilteredHelp;Settings.HideUnfiltered"></label>
         </td>
         <td>
           <input type="checkbox" ng-model="vm.settings.hideFilteredItems"/>
@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td>
-          <label for="details" translate-attr="{ title: 'Settings.AlwaysShowDetailsHelp'}" translate="Settings.AlwaysShowDetails"></label>
+          <label for="details" ng-i18next="[title]Settings.AlwaysShowDetailsHelp;Settings.AlwaysShowDetails"></label>
         </td>
         <td>
           <input type="checkbox" id="details" ng-model="vm.settings.itemDetails"/>
@@ -30,7 +30,7 @@
       </tr>
       <tr ng-if="vm.featureFlags.qualityEnabled">
         <td>
-          <label for="itemQuality" translate-attr="{ title: 'Settings.EnableAdvancedStatsHelp'}" translate="Settings.EnableAdvancedStats"></label>
+          <label for="itemQuality" ng-i18next="[title]Settings.EnableAdvancedStatsHelp;Settings.EnableAdvancedStats"></label>
         </td>
         <td>
           <input type="checkbox" id="itemQuality" ng-model="vm.settings.itemQuality"/>
@@ -38,7 +38,7 @@
       </tr>
       <tr>
         <td>
-          <label for="showNewItems" translate-attr="{ title: 'Settings.ShowOverlayHelp'}" translate="Settings.ShowOverlay"></label>
+          <label for="showNewItems" ng-i18next="[title]Settings.ShowOverlayHelp;Settings.ShowOverlay"></label>
         </td>
         <td>
           <input type="checkbox" id="showNewItems" ng-model="vm.settings.showNewItems"/>
@@ -46,19 +46,19 @@
       </tr>
       <tr ng-if="vm.settings.showNewItems">
         <td>
-          <label for="showNewAnimation" translate-attr="{ title: 'Settings.ShowAnimationsHelp'}" translate="Settings.ShowAnimations"></label>
+          <label for="showNewAnimation" ng-i18next="[title]Settings.ShowAnimationsHelp;Settings.ShowAnimations"></label>
         </td>
         <td>
           <input type="checkbox" id="showNewAnimation" ng-model="vm.settings.showNewAnimation"/>
         </td>
       </tr>
       <tr>
-        <td><label for="showElements" translate-attr="{ title: 'Settings.ShowElementalHelp'}" translate="Settings.ShowElemental"></label></td>
+        <td><label for="showElements" ng-i18next="[title]Settings.ShowElementalHelp;Settings.ShowElemental"></label></td>
         <td><input type="checkbox" id="showElements" ng-model="vm.settings.showElements"/></td>
       </tr>
       <tr ng-if="vm.featureFlags.reviewsEnabled">
         <td>
-          <label for="showReviews" translate-attr="{ title: 'Settings.ShowReviewsHelp'}" translate="Settings.ShowReviews"></label>
+          <label for="showReviews" ng-i18next="[title]Settings.ShowReviewsHelp;Settings.ShowReviews"></label>
         </td>
         <td>
           <input type="checkbox" id="showReviews" ng-model="vm.settings.showReviews"/>
@@ -66,7 +66,7 @@
       </tr>
       <tr ng-if="vm.featureFlags.reviewsEnabled">
         <td>
-          <label for="allowIdPostToDtr" translate-attr="{ title: 'Settings.AllowIdPostToDtrHelp'}" translate="Settings.AllowIdPostToDtr"></label>
+          <label for="allowIdPostToDtr" ng-i18next="[title]Settings.AllowIdPostToDtrHelp;Settings.AllowIdPostToDtr"></label>
         </td>
         <td>
           <input type="checkbox" id="allowIdPostToDtr" ng-model="vm.settings.allowIdPostToDtr"/>
@@ -74,22 +74,22 @@
       </tr>
       <tr>
         <td>
-          <label for="itemSort" translate-attr="{ title: 'Settings.SetSortHelp'}" translate="Settings.SetSort"></label>
+          <label for="itemSort" ng-i18next="[title]Settings.SetSortHelp;Settings.SetSort"></label>
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat"><span translate="Settings.SortPrimary"></span></label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="primaryStat"><span ng-i18next="Settings.SortPrimary"></span></label>
           <br>
           <label>
-            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary"><span translate="Settings.SortRarity"></span></label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="rarityThenPrimary"><span ng-i18next="Settings.SortRarity"></span></label>
           <br>
           <label ng-show="vm.settings.itemQuality">
-            <input type="radio" ng-model="vm.settings.itemSort" value="quality"><span translate="Settings.SortRoll"></span></label>
+            <input type="radio" ng-model="vm.settings.itemSort" value="quality"><span ng-i18next="Settings.SortRoll"></span></label>
         </td>
       </tr>
       <tr ng-if="vm.supportsCssVar">
         <td>
-          <label for="charCol" translate-attr="{ title: 'Settings.InventoryColumnsHelp'}" translate="Settings.InventoryColumns"></label>
+          <label for="charCol" ng-i18next="[title]Settings.InventoryColumnsHelp;Settings.InventoryColumns"></label>
         </td>
         <td>
           <select id="charCol" ng-model="vm.settings.charCol" ng-options="option.id as option.name for option in vm.charColOptions" required></select>
@@ -97,7 +97,7 @@
       </tr>
       <tr ng-if="vm.supportsCssVar">
         <td>
-          <label for="charCol" translate-attr="{ title: 'Settings.VaultColumnsHelp'}" translate="Settings.VaultColumns"></label>
+          <label for="charCol" ng-i18next="[title]Settings.VaultColumnsHelp;Settings.VaultColumns"></label>
         </td>
         <td>
           <select id="charCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
@@ -105,7 +105,7 @@
       </tr>
       <tr ng-if="vm.supportsCssVar">
         <td>
-          <label for="itemSize" translate-attr="{ title: 'Settings.SizeItemHelp'}" translate="Settings.SizeItem"></label>
+          <label for="itemSize" ng-i18next="[title]Settings.SizeItemHelp;Settings.SizeItem"></label>
         </td>
         <td>
           <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" ng-change="vm.save()" /> <button ng-click="vm.resetItemSize()" translate>Settings.ResetToDefault</button>
@@ -113,46 +113,46 @@
       </tr>
       <tr>
         <td>
-          <label translate-attr="{ title: 'Settings.CharacterOrderHelp'}" translate="Settings.CharacterOrder"></label>
+          <label ng-i18next="[title]Settings.CharacterOrderHelp;Settings.CharacterOrder"></label>
         </td>
         <td>
           <label>
-            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent" ng-model-options="{ updateOn: 'default blur' }"><span translate="Settings.CharacterOrderRecent"></span></label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecent" ng-model-options="{ updateOn: 'default blur' }"><span ng-i18next="Settings.CharacterOrderRecent"></span></label>
             <br>
           <label>
-            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecentReverse" ng-model-options="{ updateOn: 'default blur' }"><span translate="Settings.CharacterOrderReversed"></span></label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="mostRecentReverse" ng-model-options="{ updateOn: 'default blur' }"><span ng-i18next="Settings.CharacterOrderReversed"></span></label>
             <br>
           <label>
-            <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }"><span translate="Settings.CharacterOrderFixed"></span></label>
+            <input type="radio" ng-model="vm.settings.characterOrder" value="fixed" ng-model-options="{ updateOn: 'default blur' }"><span ng-i18next="Settings.CharacterOrderFixed"></span></label>
         </td>
       </tr>
       <tr>
         <td>
-          <label for="spreadsheetLinks" translate-attr="{ title: 'Settings.ExportSSHelp'}" translate="Settings.ExportSS"></label>
+          <label for="spreadsheetLinks" ng-i18next="[title]Settings.ExportSSHelp;Settings.ExportSS"></label>
         </td>
         <td>
           <div id="spreadsheetLinks">
-            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Weapons"></span></button>
-            <button ng-click="vm.downloadArmorCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span translate="Bucket.Armor"></span></button>
+            <button ng-click="vm.downloadWeaponCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span ng-i18next="Bucket.Weapons"></span></button>
+            <button ng-click="vm.downloadArmorCsv()" ng-disabled="vm.loadingTracker.active()" title="Download Csv"> <i class="fa fa-table"></i> <span ng-i18next="Bucket.Armor"></span></button>
           </div>
         </td>
       </tr>
       <tr>
         <td>
-          <label for="resetHiddenInfos" translate="Settings.DIMPopups"></label>
+          <label for="resetHiddenInfos" ng-i18next="Settings.DIMPopups"></label>
         </td>
         <td>
-          <button ng-click="vm.resetHiddenInfos()" translate="Settings.DIMPopupsReset"></button>
+          <button ng-click="vm.resetHiddenInfos()" ng-i18next="Settings.DIMPopupsReset"></button>
         </td>
       </tr>
       <tr ng-if="vm.featureFlags.importExport">
         <td>
-          <label for="exportButtons" translate="Settings.ImportExport"></label>
+          <label for="exportButtons" ng-i18next="Settings.ImportExport"></label>
         </td>
         <td>
           <div id="exportButtons">
-            <button ng-click="vm.exportData()" translate="Settings.Export"></button></br>
-            <button ng-click="vm.importData()" translate="Settings.Import"></button></br>
+            <button ng-click="vm.exportData()" ng-i18next="Settings.Export"></button></br>
+            <button ng-click="vm.importData()" ng-i18next="Settings.Import"></button></br>
             <input type="file" id="importFile">
           </div>
         </td>

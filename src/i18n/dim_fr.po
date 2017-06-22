@@ -1,0 +1,1251 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DIM\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"POT-Creation-Date: 2017-06-22T21:59:12.087Z\n"
+"PO-Revision-Date: 2017-06-22T21:59:12.087Z\n"
+
+msgid "Bucket##Armor"
+msgstr "Armure"
+
+msgid "Bucket##General"
+msgstr "Général"
+
+msgid "Bucket##Postmaster"
+msgstr "Commis des postes"
+
+msgid "Bucket##Progress"
+msgstr "Progrès"
+
+msgid "Bucket##Reputation"
+msgstr "Estime"
+
+msgid "Bucket##Show"
+msgstr "Afficher {{bucket}}"
+
+msgid "Bucket##Unknown"
+msgstr "Inconnu"
+
+msgid "Bucket##Vault"
+msgstr "Coffres"
+
+msgid "Bucket##Weapons"
+msgstr "Armes"
+
+msgid "BungieService##DevVersion"
+msgstr ""
+"Est-ce une version de développement de DIM? Vous devez enregistrer votre "
+"extension chrome avec bungie.net."
+
+msgid "BungieService##Down"
+msgstr "Bungie.net est hors service."
+
+msgid "BungieService##Difficulties"
+msgstr "L'API de Bungie rencontre actuellement des difficultés."
+
+msgid "BungieService##NetworkError"
+msgstr "Erreur de réseau - {{status}} {{statusText}}"
+
+msgid "BungieService##Throttled"
+msgstr ""
+"La limite de connections à l'API de Bungie a été atteinte. Veuillez "
+"réessayer plus tard."
+
+msgid "BungieService##NotLoggedIn"
+msgstr "Veuillez vous connecter sur Bungie.net pour utiliser cette extension."
+
+msgid "BungieService##Maintenance"
+msgstr "Les serveurs Bungie.net sont indisponibles pour cause de maintenance."
+
+msgid "BungieService##NoAccount"
+msgstr ""
+"Aucun compte Destiny n'a été trouvé pour {{platform}}. Avez-vous "
+"sélectionné la bonne platforme?"
+
+msgid "BungieService##NoAccountForPlatform"
+msgstr "Nous n'avons pas trouvé de compte Destiny pour vous sur {{platform}}."
+
+msgid "BungieService##NoCookies"
+msgstr "Aucun cookie trouvé."
+
+msgid "BungieService##NotConnected"
+msgstr "Vous n'êtes probablement pas connecté à Internet."
+
+msgid "BungieService##Twitter"
+msgstr "Tenez-vous informer sur:"
+
+msgid "BungieService##ItemUniqueness"
+msgstr "Unicité d'un objet"
+
+msgid "BungieService##ItemUniquenessExplanation"
+msgstr ""
+"Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} "
+"mais cette destination a déjà cet objet et n'en autorise qu'un."
+
+msgid "BungieService##VendorNotFound"
+msgstr "Les données du vendeur sont indisponible."
+
+msgid "Compare##ButtonHelp"
+msgstr "Comparer les objets"
+
+msgid "Compare##All"
+msgstr "{{type}} comparisons ({{quantity}})"
+
+msgid "Compare##Archetype"
+msgstr "Archetype comparisons ({{quantity}})"
+
+msgid "Compare##Compare"
+msgstr "Comparer"
+
+msgid "Compare##Close"
+msgstr "Fermer"
+
+msgid "Compare##Error##Class"
+msgstr "Impossible de comparer cet objet parce qu'il n'est pas pour un {{class}}."
+
+msgid "Compare##Error##Archetype"
+msgstr "Impossible de comparer cet objet parce qu'il n'est pas un {{type}}."
+
+msgid "Compare##Splits"
+msgstr "Comparer des parts similaires ({{quantity}})"
+
+msgid "Cooldown##Grenade"
+msgstr "Régénération de Grenade: {{cooldown}}"
+
+msgid "Cooldown##Melee"
+msgstr "Régénération de Mêlée: {{cooldown}}"
+
+msgid "Cooldown##Super"
+msgstr "Régénération du Super: {{cooldown}}"
+
+msgid "Countdown##Days"
+msgid_plural "Countdown##Days"
+msgstr[0] "{{count}} Journée"
+msgstr[1] "{{count}} Journées"
+
+msgid "Debug##Dump"
+msgstr "Envoyer les infos sur la console"
+
+msgid "Debug##View"
+msgstr "Afficher les infos de débug de l'objet."
+
+msgid "DidYouKnow##DidYouKnow"
+msgstr "Le saviez-vous?"
+
+msgid "DidYouKnow##Collapse"
+msgstr ""
+"Vous venez de réduire une section dans DIM! Il peut être utile de cache des "
+"parties de DIM que vous n'avez pas besoin d'utiliser normalement."
+
+msgid "DidYouKnow##DontShowAgain"
+msgstr "Ne plus jamais afficher cette astuce"
+
+msgid "DidYouKnow##DoubleClick"
+msgstr ""
+"Si vous déplacez un objet vers votre perso actuellement actif (dernière "
+"connexion), vous pouvez double-cliquer cet objet pour l'équiper "
+"instantanément."
+
+msgid "DidYouKnow##DragAndDrop"
+msgstr ""
+"Les objets peuvent être glissés et déposés entre différentes colonnes de "
+"persos/coffres."
+
+msgid "DidYouKnow##Expand"
+msgstr ""
+"Pour re-élargir une section, cliquez simplement l'icône \"plus\" sur la "
+"gauche de la catégorie vous avez réduite."
+
+msgid "DidYouKnow##TryNext"
+msgstr "Essayez ultérieurement"
+
+msgid "FarmingMode##FarmingMode"
+msgstr "Mode Farming (transfert d'objets)"
+
+msgid "FarmingMode##Desc"
+msgstr ""
+"DIM est entrain de transférer des engrammes et objets pour Glimmer du "
+"{{store}} aux coffres et laisse un espace disponible pour chaque type "
+"d'objet afin d'éviter que rien ne soit envoyé au commis des postes."
+
+msgid "FarmingMode##Configuration"
+msgstr "Configuration"
+
+msgid "FarmingMode##MakeRoom##Desc"
+msgstr ""
+"DIM est entrain de transférer uniquement les engrammes et objets pour "
+"Glimmer du {{store}} aux coffres ou autres persos afin d'éviter que rien ne "
+"soit envoyé au commis des postes."
+
+msgid "FarmingMode##MakeRoom##MakeRoom"
+msgstr "Faites de la place pour collecter des objets en déplaçant de l'équipement"
+
+msgid "FarmingMode##MakeRoom##Tooltip"
+msgstr ""
+"Si activé, DIM déplacera les armes at armures afin de faire de la place "
+"dans les coffres pour les engrammes."
+
+msgid "FarmingMode##OutOfRoomTitle"
+msgstr "Plus de Place"
+
+msgid "FarmingMode##OutOfRoom"
+msgstr ""
+"Vous n'avez plus d'espace pour déplacer des objets hors de {{character}}. "
+"Il serait temps de décrypter quelques engrammes et de faire le tri!"
+
+msgid "FarmingMode##Quickmove"
+msgstr "Déplacement rapide"
+
+msgid "FarmingMode##Stop"
+msgstr "Stop"
+
+msgid "Filter##EnterName"
+msgstr "Entrez un nom d'objet:"
+
+msgid "Filter##EnterNote"
+msgstr "Entrez vos notes:"
+
+msgid "Header##About"
+msgstr "À propos"
+
+msgid "Header##Filters"
+msgstr "Filtres"
+
+msgid "Header##FilterHelp"
+msgstr "Rechercher objet/amélioration ou is:arc"
+
+msgid "Header##MaterialsExchange"
+msgstr "Rangs de faction disponibles"
+
+msgid "Header##Refresh"
+msgstr "Rafraîchir les données Destiny"
+
+msgid "Help##BackToDIM"
+msgstr "Retour sur DIM"
+
+msgid "Help##CannotMove"
+msgstr "Impossible de déplacer cet objet de ce personnage."
+
+msgid "Help##Drag"
+msgstr ""
+"Maintenez shift ou stoppez au-dessus d'une zone de dépôt pour transférer "
+"une partie de la pile."
+
+msgid "Help##ChangingPerks"
+msgstr "Changement d'Abilités Non Supporté"
+
+msgid "Help##ChangingPerksInfo"
+msgstr ""
+"Désolé, ce n'est pas possible de changer d'abilités en dehors du jeu. On "
+"aurait aimé!"
+
+msgid "Help##HidePopup"
+msgstr "Cacher Ce Popup"
+
+msgid "Help##NeverShow"
+msgstr "Ne plus jamais afficher."
+
+msgid "Help##UpgradeChrome"
+msgstr "Veuillez Mettre à Jour Chrome"
+
+msgid "Help##Xur"
+msgstr "Xûr est Là"
+
+msgid "Hotkey##StartSearch"
+msgstr "Commencer une recherche"
+
+msgid "Hotkey##RefreshInventory"
+msgstr "Rafraîchir l'inventaire"
+
+msgid "Hotkey##ToggleDetails"
+msgstr "Basculer sur l'affichage des détails complets d'objet"
+
+msgid "Hotkey##MarkItemAs"
+msgstr "Marquer objet comme '{{tag}}'"
+
+msgid "Hotkey##ClearNewItems"
+msgstr "Effacer les nouveaux objets"
+
+msgid "Infusion##Infusion"
+msgstr "Chercheur de Fuel à Infusion"
+
+msgid "Infusion##BringGear"
+msgstr "Cela amènera l'équipement à:"
+
+msgid "Infusion##Calc"
+msgstr "Calculateur d'infusion"
+
+msgid "Infusion##InfuseItems"
+msgstr "Sélectionner un objet avec lequel infuser:"
+
+msgid "Infusion##InfusionMaterials"
+msgstr "Matériels d'Infusion"
+
+msgid "Infusion##LockedItems"
+msgstr "Inclure objets \"verrouillés\""
+
+msgid "Infusion##NoItems"
+msgstr "Pas d'objets infusables disponibles"
+
+msgid "Infusion##NoTransfer"
+msgstr ""
+"Transférer matériel d'infusion\n"
+"{{target}} ne peut pas être déplacé."
+
+msgid "Infusion##ShowItems"
+msgstr "Afficher les objets infusables sur tous les persos et dans tous les coffres "
+
+msgid "Infusion##TransferItems"
+msgstr "Transférer objets"
+
+msgid "ItemInfoService##SaveInfoErrorTitle"
+msgstr "Erreur en sauvegardant les infos d'objet"
+
+msgid "ItemInfoService##SaveInfoErrorDescription"
+msgstr ""
+"Il y a eu un problème avec la sauvegarde des informations Spécifique de DIM "
+"pour un objet. Un problème qui limite le nombre de donnés qui peuvent être "
+"stockez - c'est pourquoi les tags et les notes n'ont pas était encore "
+"autorisé en dehors de la version beta. L'erreur était: {{error}}."
+
+msgid "ItemMove##Consolidate"
+msgstr "{{name}} consolidé"
+
+msgid "ItemMove##Distributed"
+msgstr ""
+"Distribué {{name}}\n"
+"{{name}} est maintenant divisé equitablement entre les personnages."
+
+msgid "ItemMove##ToVault"
+msgstr "Tout/Toutes les {{name}} sont maintenant dans votre Coffres."
+
+msgid "ItemMove##ToStore"
+msgstr "Tout/Toutes les {{name}} sont maintenant dans votre {{store}}."
+
+msgid "ItemService##BucketFull"
+msgid_plural "ItemService##BucketFull"
+msgstr[0] "Il y a trop d'objet '{{itemtype}}' dans le {{store}}."
+msgstr[1] "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}."
+
+msgid "ItemService##Classified"
+msgstr "Cette objet est classifié et ne peut pas être transférer à se moment."
+
+msgid "ItemService##Classified2"
+msgstr ""
+"Objet classifié. Bungie n'a pas donné d'information à propos de cette "
+"objet. Cette objet n'est pas transférable pour le moment."
+
+msgid "ItemService##Deequip"
+msgstr "Ne peut pas trouver un autre objet pour pouvoir déséquiper {{itemname}}"
+
+msgid "ItemService##ExoticError"
+msgstr ""
+"'{{itemname}}' ne peut pas être équippé {{slot}} l'emplacement ne peut pas "
+"être déséquipé. ({{error}})"
+
+msgid "ItemService##NotEnoughRoom"
+msgstr ""
+"Il n'y a rien qu'on puisse déplacer de {{store}} pour faire de la place "
+"pour {{itemname}}"
+
+msgid "ItemService##OnlyEquippedLevel"
+msgstr ""
+"Cela ne peut être équippé que par les personnages de même niveaux ou au "
+"dessus {{level}}."
+
+msgid "ItemService##OnlyEquippedClassLevel"
+msgstr ""
+"Cela ne peut être équippé que par un/une {{class}} au même niveau ou au "
+"dessus {{level}}."
+
+msgid "ItemService##PercentComplete"
+msgstr "({{percent, pct}} Achevée)"
+
+msgid "ItemService##TooMuch"
+msgstr ""
+"Il semblerait que vous avait demandé de déplacer plus d'objet qu'il en "
+"existe à la source."
+
+msgid "ItemService##TwoExotics"
+msgstr "Ont ne sait pas comment tu a fait pour avoir plus de 2 exotiques équippé!"
+
+msgid "LB##LB"
+msgstr "Constructeur de Loadout"
+
+msgid "LB##Guardians"
+msgstr "Gardiens"
+
+msgid "LB##ShowGear"
+msgstr "Afficher équipement de {{class}}"
+
+msgid "LB##HideGear"
+msgstr "Cacher équipement de {{class}}"
+
+msgid "LB##LockEquipped"
+msgstr "Verrouiller équipé"
+
+msgid "LB##ClearLocked"
+msgstr "Enlever verrouillés"
+
+msgid "LB##Locked"
+msgstr "Objets verrouillés"
+
+msgid "LB##LockedHelp"
+msgstr ""
+"Glissez et déplacez un objet dans cet espace pour construire votre set avec "
+"cet équipement. Shift + clique pour exclure les objets"
+
+msgid "LB##FilterSets"
+msgstr "Filtrer les sets"
+
+msgid "LB##AdvancedOptions"
+msgstr "Options avancées"
+
+msgid "LB##ProcessingMode##Fast"
+msgstr "Rapide"
+
+msgid "LB##ProcessingMode##Full"
+msgstr "Complet"
+
+msgid "LB##ProcessingMode##ProcessingMode"
+msgstr "Mode de processing"
+
+msgid "LB##ProcessingMode##HelpFast"
+msgstr "Ne se concentre que sur votre meilleur équipement."
+
+msgid "LB##ProcessingMode##HelpFull"
+msgstr "Se concentre sur plus d'équipements, mais prend plus de temps."
+
+msgid "LB##Scaled"
+msgstr "Échelonné"
+
+msgid "LB##Current"
+msgstr "Actuel"
+
+msgid "LB##LightMode##LightMode"
+msgstr "Mode lumière"
+
+msgid "LB##LightMode##HelpScaled"
+msgstr "Calcule les loadouts comme si tous les objets avaient 350 de défense."
+
+msgid "LB##LightMode##HelpCurrent"
+msgstr "Calcule les loadouts à leur niveau de défense actuel."
+
+msgid "LB##IncludeRare"
+msgstr "Inclure les objets rares (bleus)"
+
+msgid "LB##Help##Help"
+msgstr "Besoin d'aide?"
+
+msgid "LB##Help##Lock"
+msgstr ""
+"Protéger une série d'atouts en cliquant sur le seau à verrou et en "
+"sélectionnant atouts"
+
+msgid "LB##Help##NoPerk"
+msgstr ""
+"Si un atout n'apparaît pas, cela veut dire que vous n'avez pas d'armure "
+"avec cette atout"
+
+msgid "LB##Help##MultiPerk"
+msgstr ""
+"Pour utilisez une armure avec plusieurs atouts réunis faite shift+click sur "
+"les atouts désiré"
+
+msgid "LB##Help##Or"
+msgstr "L'armure avec n'importe lequel de ces atouts sera utilisé (\"ou\")"
+
+msgid "LB##Help##And"
+msgstr "L'armure avec n'importe lequel de ces atouts sera utilisé (\"et\")"
+
+msgid "LB##Help##DragAndDrop"
+msgstr ""
+"Faites glisser et déposez les objets dans les seaux verrouillés pour "
+"construire des ensembles avec cette équipement seulement"
+
+msgid "LB##Help##ShiftClick"
+msgstr ""
+"Shift click sur un élément pour construire des ensembles sans cette "
+"équipement"
+
+msgid "LB##Help##HigherTiers"
+msgstr "Les Tiers supérieurs sont meilleurs"
+
+msgid "LB##Help##Tier11Example"
+msgstr ""
+"4/5/2 (un ensemble Tier 11) est 4 Intelligence 5 Discipline, 2 Force (4+5+2 "
+"= Tier 11)"
+
+msgid "LB##Help##Intellect"
+msgstr "L'intelligence accélère le temps de recharge du super chargé"
+
+msgid "LB##Help##Discipline"
+msgstr "La Discipline accélère le temps de recharge des Grenades"
+
+msgid "LB##Help##Strength"
+msgstr "La Force accélère le temps de recharge de la mêlée"
+
+msgid "LB##Help##Synergy"
+msgstr ""
+"Essayez de trouver une armure qui a des atouts augmentant le nombre de "
+"munitions pour les types d'armes que vous utilisez."
+
+msgid "LB##Help##ChangeNodes"
+msgstr ""
+"Changer les nœuds d'Intelligence, de Discipline ou de Force dans le jeu à "
+"ce qui est affiché pour créer chaque ensemble pré enregistré."
+
+msgid "LB##Help##StatsIncrease"
+msgstr ""
+"À mesure que le niveau de défense des objets augmente, les statistiques de "
+"cet objet (int/dis/for) augmentent également."
+
+msgid "LB##ShowAllConfigs"
+msgstr "Afficher toutes les configurations"
+
+msgid "LB##ShowConfigs"
+msgstr "Afficher les configurations"
+
+msgid "LB##HideAllConfigs"
+msgstr "Cacher toutes les configurations"
+
+msgid "LB##HideConfigs"
+msgstr "Cacher les configurations"
+
+msgid "LB##Loading"
+msgstr "Chargement des meilleurs sets ({{percent, pct2}})"
+
+msgid "LB##Vendor"
+msgstr "Inclure objets de marchands"
+
+msgid "LB##Exclude"
+msgstr "Objets exclus"
+
+msgid "LB##ExcludeHelp"
+msgstr ""
+"Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour "
+"construire des sets sans équipement spécifique."
+
+msgid "LB##LockPerk"
+msgstr "Verrouiller amélioration"
+
+msgid "LB##Missing1"
+msgstr "Pièces légendaires ou éxotiques manquantes pour construire un set complet!"
+
+msgid "LB##Missing2"
+msgstr ""
+"Pièces rares, légendaires ou éxotiques manquantes pour construire un set "
+"complet!"
+
+msgid "Loadouts##Any"
+msgstr "Tout"
+
+msgid "Loadouts##Loadouts"
+msgstr "Loadouts"
+
+msgid "Loadouts##Before"
+msgstr "Avant '{{name}}'"
+
+msgid "Loadouts##Create"
+msgstr "Créer Loadout"
+
+msgid "Loadouts##FromEquipped"
+msgstr "Equipé"
+
+msgid "Loadouts##Edit"
+msgstr "Modifier Loadout"
+
+msgid "Loadouts##Delete"
+msgstr "Effacer Loadout"
+
+msgid "Loadouts##ConfirmDelete"
+msgstr "Êtes-vous sûr de vouloir supprimer '{{name}}'?"
+
+msgid "Loadouts##ApplySearch"
+msgstr "Objets = \"{{query}}\""
+
+msgid "Loadouts##MaximizeLight"
+msgstr "Maximiser la Lumière"
+
+msgid "Loadouts##ItemLeveling"
+msgstr "Evolution d'objet"
+
+msgid "Loadouts##GatherEngrams"
+msgstr "Réunir les Engrammes"
+
+msgid "Loadouts##GatherEngramsExceptExotics"
+msgstr "Exotiques"
+
+msgid "Loadouts##RestoreAllItems"
+msgstr "Tous les objets"
+
+msgid "Loadouts##Random"
+msgstr "Aléatoire"
+
+msgid "Loadouts##Randomize"
+msgstr "Randomisez vos armes, armures, spectres et artéfacts équipés?"
+
+msgid "Loadouts##VendorsCannotEquip"
+msgstr "Ces objets de vendeurs ne peuvent pas être équipés:"
+
+msgid "Loadouts##VendorsCanEquip"
+msgstr "Ces objets peuvent être équipés:"
+
+msgid "Loadouts##MaxSlots"
+msgstr "Tu peut uniquement avoir {{slots}} de ce type d'objet dans un loadout."
+
+msgid "Loadouts##OnlyItems"
+msgstr ""
+"Seulement les objets équipable, matériaux et consommables peuvent être "
+"ajoutés à un loadout."
+
+msgid "Loadouts##FilteredItems"
+msgstr "Objets filtrés"
+
+msgid "Loadouts##NoEngrams"
+msgstr "Aucun engrammes non-exotique n'est disponible pour le transfert."
+
+msgid "Loadouts##NoExotics"
+msgstr "Aucun engrammes n'est disponible pour le transfert."
+
+msgid "Loadouts##LoadoutName"
+msgstr "Nom du loadout..."
+
+msgid "Loadouts##Save"
+msgstr "Sauvegarder"
+
+msgid "Loadouts##SaveAsNew"
+msgstr "Sauvegarder comme nouveau"
+
+msgid "Loadouts##Cancel"
+msgstr "Annuler"
+
+msgid "Loadouts##ItemsWithIcon"
+msgstr ""
+"Les objets avec cet icone seront équipés. Cliquez sur un bouton d'objet "
+"pour l'équiper."
+
+msgid "Loadouts##CouldNotEquip"
+msgstr "Impossible d'équiper {{itemname}}"
+
+msgid "Loadouts##TooManyRequested"
+msgstr ""
+"Tu a {{total}} {{itemname}} mais ton loadout demande {{requested}} Nous "
+"avons transféré tout ce que tu avais."
+
+msgid "Loadouts##DoesNotExist"
+msgstr "{{itemname}} n'existe pas dans votre compte."
+
+msgid "Loadouts##AppliedAuto"
+msgstr "Constructeur de Loadout automatique"
+
+msgid "Loadouts##Applied"
+msgstr "Votre loadout de {{amount}} objets a été transféré à votre {{store}}"
+
+msgid "Loadouts##AppliedError"
+msgstr "Aucun des objets de votre loadout n'a pu être transféré."
+
+msgid "Loadouts##AppliedWarn"
+msgstr ""
+"Votre loadout a été partiellement transféré, mais {{failed}} sur {{total}} "
+"objets ont échoué."
+
+msgid "Loadouts##NameRequired"
+msgstr "Un nom est requis."
+
+msgid "Loadouts##MakeRoom"
+msgstr "Faites de la place pour le Commit Des Postes"
+
+msgid "Loadouts##MakeRoomDone"
+msgid_plural "Loadouts##MakeRoomDone"
+msgstr[0] ""
+"À Fini de faire de la place pour 1 objet du Commit Des Postes en déplaçant "
+"1 objet hors de {{store}}."
+msgstr[1] ""
+"À Fini de faire de la place pour {{count}} objets du Commit Des Postes}} en "
+"déplaçant {{movedNum}} objets hors de {{store}}."
+
+msgid "Loadouts##MakeRoomError"
+msgstr ""
+"Impossible de faire de la place pour tous les objets du Commit Des Postes: "
+"{{error}}."
+
+msgid "Loadouts##SaveErrorTitle"
+msgstr "Erreur lors de l'enregistrement du loadout"
+
+msgid "Loadouts##SaveErrorDescription"
+msgstr "Impossible d'enregistrer le loadout {{loadoutName}}: {{error}}"
+
+msgid "Loadouts##DeleteErrorTitle"
+msgstr "Erreur lors de la suppression du loadout"
+
+msgid "Loadouts##DeleteErrorDescription"
+msgstr "Impossible de supprimer le loadout {{loadoutName}}: {{error}}."
+
+msgid "Manifest##Build"
+msgstr "Base de données d'info de Destiny en cours de construction"
+
+msgid "Manifest##Download"
+msgstr "Téléchargement en cours des derniers infos Destiny de Bungie"
+
+msgid "Manifest##Error"
+msgstr ""
+"Erreur de chargement des infos Destiny:\n"
+"{{error}}\n"
+"Redémarrez pour rééssayer."
+
+msgid "Manifest##Outdated"
+msgstr "Infos Destiny expirées"
+
+msgid "Manifest##OutdatedExplanation"
+msgstr ""
+"Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour "
+"charger les nouvelles informations. Notez que certaines fonctionalités de "
+"DIM puissent ne pas fonctionner pendant quelques heures après que Bungie "
+"mette à jour Destiny, le temps que les nouvelles données se propagent dans "
+"leur système."
+
+msgid "Manifest##Load"
+msgstr "Chargement des données sauvegardées de Destiny"
+
+msgid "Manifest##LoadCharInv"
+msgstr "Chargement des persos et des inventaires de Destiny"
+
+msgid "Manifest##Save"
+msgstr "Sauvegarde des dernières données de Destiny"
+
+msgid "Manifest##Unzip"
+msgstr "Désarchivage des dernières données de Destiny"
+
+msgid "MaterialsExchange##MaterialsExchange"
+msgstr "Échange de matériaux"
+
+msgid "MaterialsExchange##CurrentRank"
+msgstr "Rang actuel"
+
+msgid "MaterialsExchange##CurrentRep"
+msgstr "Rép. Actuel"
+
+msgid "MaterialsExchange##OnHand"
+msgstr "Matériaux disponibles"
+
+msgid "MaterialsExchange##FromTrade"
+msgstr "Matériaux de l'échange"
+
+msgid "MaterialsExchange##NewRank"
+msgstr "Nouveau rang"
+
+msgid "MaterialsExchange##NewRep"
+msgstr "Nouvelle Rép."
+
+msgid "MovePopup##Consolidate"
+msgstr "Consolider"
+
+msgid "MovePopup##DistributeEvenly"
+msgstr "Distribuer équitablement"
+
+msgid "MovePopup##Equip"
+msgstr "Armer"
+
+msgid "MovePopup##Split"
+msgstr "Coupé"
+
+msgid "MovePopup##Store"
+msgstr "Dépôt"
+
+msgid "MovePopup##Subtitle##Light"
+msgstr "{{light}}"
+
+msgid "MovePopup##Subtitle##Stats"
+msgstr "{{statName}}"
+
+msgid "MovePopup##Subtitle##Class"
+msgstr "{{classType}}"
+
+msgid "MovePopup##Subtitle##Type"
+msgstr "{{typeName}}"
+
+msgid "MovePopup##Subtitle##Combined"
+msgstr ""
+"$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) "
+"$t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+
+msgid "MovePopup##Take"
+msgstr "Faire"
+
+msgid "MovePopup##Vault"
+msgstr "Malle"
+
+msgid "MoveAmount##Min"
+msgstr "Empilement minimum (1)"
+
+msgid "MoveAmount##Max"
+msgstr "Montant total à cet emplacement"
+
+msgid "MoveAmount##UpStack"
+msgstr "Augmentation jusqu'à la pile complète suivante"
+
+msgid "MoveAmount##DownStack"
+msgstr "Diminution jusqu'à la pile complète suivante"
+
+msgid "MoveAmount##Increment"
+msgstr "Un de plus"
+
+msgid "MoveAmount##Decrement"
+msgstr "Un de moins"
+
+msgid "Notes##Error"
+msgstr "Erreur! Max 120 charactères pour les notes."
+
+msgid "Notes##Help"
+msgstr "Ajouter des notes à cet objet"
+
+msgid "DtrReview##HelpPros"
+msgstr "Décrivez les avantages de cette arme (optionnel)"
+
+msgid "DtrReview##HelpCons"
+msgstr "Décrivez les désavantages de cette arme (optionnel)"
+
+msgid "DtrReview##Edit"
+msgstr "Éditer"
+
+msgid "DtrReview##Delete"
+msgstr "Supprimer"
+
+msgid "DtrReview##Submit"
+msgstr "Envoyer"
+
+msgid "DtrReview##Cancel"
+msgstr "Annuler"
+
+msgid "DtrReview##Pros"
+msgstr "Avantages"
+
+msgid "DtrReview##Cons"
+msgstr "Désavantages"
+
+msgid "Objectives##Complete"
+msgstr "Achevée"
+
+msgid "Objectives##Incomplete"
+msgstr "Incomplet"
+
+msgid "Postmaster##Limit"
+msgstr "Limite du Commit Des Postes"
+
+msgid "Postmaster##Desc"
+msgstr ""
+"Il y a 20 objets perdus au Commit Des Postes sur votre {{store}}. Tous les "
+"nouveaux objets remplaceront les objets existants."
+
+msgid "Settings##Settings"
+msgstr "Paramètres"
+
+msgid "Settings##Language"
+msgstr "Langue (redémarrez DIM pour prendre effet)"
+
+msgid "Settings##HideUnfiltered"
+msgstr "Cacher les objets non filtrés pendant le filtrage"
+
+msgid "Settings##HideUnfilteredHelp"
+msgstr "Les objets qui ne correspondent pas aux critères de filtrage seront cachés."
+
+msgid "Settings##AlwaysShowDetails"
+msgstr "Toujours afficher les détails de l'objet"
+
+msgid "Settings##AlwaysShowDetailsHelp"
+msgstr ""
+"Cliquer sur un objet affichera toujours un popup pouvant être agrandi pour "
+"afficher les stats et améliorations. Cette option les affichera toujours "
+"quand vous cliquerez sur un objet."
+
+msgid "Settings##EnableAdvancedStats"
+msgstr "Activer les fonctionalités de comparaison de qualité de stat avancée"
+
+msgid "Settings##EnableAdvancedStatsHelp"
+msgstr ""
+"Activera les fonctionalités avancées de min/max dans le dialogue de "
+"déplacement et activera la vue de comparaison d'armure."
+
+msgid "Settings##ShowOverlay"
+msgstr "Afficher les nouveaux objets avec un indicateur"
+
+msgid "Settings##ShowOverlayHelp"
+msgstr "Afficher les nouveaux objets avec un indicateur."
+
+msgid "Settings##ShowAnimations"
+msgstr "Afficher les animations pour les nouveaux objets"
+
+msgid "Settings##ShowAnimationsHelp"
+msgstr ""
+"Affichera les animations pour les nouveaux objets. Désactiver cette option "
+"peut améliorer les performances du CPU."
+
+msgid "Settings##ShowElemental"
+msgstr "Afficher les icônes d'élément de dégât sur les armes"
+
+msgid "Settings##ShowElementalHelp"
+msgstr "Afficher les icônes d'élément de dégât sur les armes."
+
+msgid "Settings##AllowIdPostToDtrHelp"
+msgstr ""
+"DIM va partager votre nom de compte et tout élément que vous consultez avec "
+"Destiny Tracker."
+
+msgid "Settings##SetSort"
+msgstr "Ordonner les objets par:"
+
+msgid "Settings##SetSortHelp"
+msgstr "Ordonner les objets par rareté ou par la valeur de leur stat première."
+
+msgid "Settings##SortPrimary"
+msgstr "Stat première"
+
+msgid "Settings##SortRarity"
+msgstr "Rareté"
+
+msgid "Settings##SortRoll"
+msgstr "Pourcentage de roulement de stat"
+
+msgid "Settings##InventoryColumns"
+msgstr "Colonnes d'Inventaire de Perso"
+
+msgid "Settings##InventoryColumnsHelp"
+msgstr "Sélectionner le nombre de colonnes pour l'inventaire de votre perso."
+
+msgid "Settings##VaultColumns"
+msgstr "Maximum de Colonnes de l'Inventaire des Coffres"
+
+msgid "Settings##VaultColumnsHelp"
+msgstr "Sélectionner le nombre maximum de colonnes pour l'inventaire des Coffres."
+
+msgid "Settings##SizeItem"
+msgstr "Taille d'un objet"
+
+msgid "Settings##SizeItemHelp"
+msgstr "Quelle taille devrait être les objets?"
+
+msgid "Settings##ResetToDefault"
+msgstr "Réinitialiser"
+
+msgid "Settings##CharacterOrder"
+msgstr "Ordre de Perso"
+
+msgid "Settings##CharacterOrderHelp"
+msgstr ""
+"Les persos peuvent être ordonnés par dernière connexion ou par leur date de "
+"création."
+
+msgid "Settings##CharacterOrderRecent"
+msgstr "Par le Plus Récent"
+
+msgid "Settings##CharacterOrderReversed"
+msgstr "Par le Plus Récent (Inversé)"
+
+msgid "Settings##CharacterOrderFixed"
+msgstr "Fixe (Par Age du Perso)"
+
+msgid "Settings##ExportSS"
+msgstr "Télécharger le Tableur"
+
+msgid "Settings##ExportSSHelp"
+msgstr ""
+"Télécharger une liste CSV de vos objets qui peut être facilement visualisée "
+"dans l'app de votre choix."
+
+msgid "Settings##DIMPopups"
+msgstr "Popups d'Info de DIM"
+
+msgid "Settings##DIMPopupsReset"
+msgstr "Réinitialiser les astuces cachées précédentes"
+
+msgid "Settings##ImportExport"
+msgstr "Paramètres et données d'importation/exportation"
+
+msgid "Settings##Export"
+msgstr "Exportation des données de DIM"
+
+msgid "Settings##Import"
+msgstr "Importer des données de DIM"
+
+msgid "Stats##Discipline"
+msgstr "Discipline"
+
+msgid "Stats##Intellect"
+msgstr "Intelligence"
+
+msgid "Stats##Level"
+msgstr "Niveau"
+
+msgid "Stats##NoBonus"
+msgstr "Pas de Bonus"
+
+msgid "Stats##OfMaxRoll"
+msgstr "{{range}} des stats parfaites"
+
+msgid "Stats##PercentHelp"
+msgstr "Cliquez pour plus d'informations sur ce qu'est la qualité des stats."
+
+msgid "Stats##Prestige"
+msgstr ""
+"Niveau de prestige: {{level}}\n"
+"{{exp}}xp jusqu'à 5 particule de lumière."
+
+msgid "Stats##Quality"
+msgstr "Qualité des stats"
+
+msgid "Stats##Strength"
+msgstr "Force"
+
+msgid "Stats##TierProgress"
+msgid_plural "Stats##TierProgress"
+msgstr[0] "T{{tier}} {{statName}} ({{progress}}/60 pour T{{nextTier}})\n"
+msgstr[1] "T{{tier}} {{statName}} ({{progress}}/300)\n"
+
+msgid "StoreBucket##FillStack"
+msgstr "Remplir la pile ({{amount}})"
+
+msgid "StoreBucket##HowMuch"
+msgstr "Combien de {{itemname}} faut-il déplacer?"
+
+msgid "StoreBucket##Move"
+msgstr "Déplacer"
+
+msgid "SyncService##GoogleDriveReAuth"
+msgstr "Pour réautoriser Google Drive, vous devez redémarrer votre navigateur."
+
+msgid "SyncService##OneItemTooLarge"
+msgstr ""
+"Votre fichier de sauvegarde a un objet trop volumineux. Probablement un "
+"loadout enregistré avec trop d'articles."
+
+msgid "SyncService##SaveTooLarge"
+msgstr ""
+"Votre fichier de sauvegarde est trop volumineux. Supprimez les loadouts "
+"enregistrés."
+
+msgid "Tags##TagItem"
+msgstr "Tagger Objet"
+
+msgid "Tags##Favorite"
+msgstr "Préféré"
+
+msgid "Tags##Junk"
+msgstr "Camelote"
+
+msgid "Tags##Infuse"
+msgstr "Infuser"
+
+msgid "Tags##Keep"
+msgstr "Garder"
+
+msgid "Vendors##Vendors"
+msgstr "Marchands"
+
+msgid "Vendors##All"
+msgstr "Tous"
+
+msgid "Vendors##Available"
+msgstr "Disponible sur:"
+
+msgid "Vendors##Compare"
+msgstr "Comparez avec ce que vous avez déjà:"
+
+msgid "Vendors##Load"
+msgstr "Chargement des Marchands"
+
+msgid "Vendors##ArmorAndWeapons"
+msgstr "Armure & Armes"
+
+msgid "Vendors##ShipsAndVehicles"
+msgstr "Vaisseaux & Véhicules"
+
+msgid "Vendors##Consumables"
+msgstr "Consommables"
+
+msgid "Vendors##Bounties"
+msgstr "Contrats"
+
+msgid "Vendors##ShadersAndEmblems"
+msgstr "Revêtements & Emblèmes"
+
+msgid "Vendors##Emotes"
+msgstr "Intéractions"
+
+msgid "RecordBooks##RecordBooks"
+msgstr "Livre des Records"
+
+msgid "RecordBooks##HideCompleted"
+msgstr "Cacher les records complétés"
+
+msgid "Views##About##BungieCopyright"
+msgstr ""
+"Toutes images et contenu sont la propriété de Bungie. Veuillez nous "
+"contacter s'il y a un problème."
+
+msgid "Views##About##ContactUs"
+msgstr "Nous Contacter"
+
+msgid "Views##About##FAQ"
+msgstr "FAQ"
+
+msgid "Views##About##FAQAccess"
+msgstr "Comment est-ce que DIM a accès à mes données sur Destiny?"
+
+msgid "Views##About##FAQAccessAnswer"
+msgstr ""
+"N'importe quelle extension chrome peut demander accès aux données d'un site "
+"web stockées sur votre ordinateur. Quand vous vous connectez sur "
+"Bungie.net, vous êtes attribué un jeton (un cookie) qui est généré "
+"uniquement pour votre compte. Vous utilisez ce jeton pour communiquer avec "
+"Bungie en sécurité. Ce jeton est plus sécurisé que d'envoyer votre pseudo "
+"and mot de passe avec chaque requête au serveur de Bungie. DIM utilise ce "
+"jeton pour communiquer avec Bungie en votre nom."
+
+msgid "Views##About##FAQDupeGally"
+msgstr "Hey, DIM a dupliqué mon Gjallahorn!"
+
+msgid "Views##About##FAQDupeGallyAnswer"
+msgstr "Non, non. Promis."
+
+msgid "Views##About##FAQKeyboard"
+msgstr "Est-ce que DIM supporte des raccourcis clavier?"
+
+msgid "Views##About##FAQKeyboardAnswer"
+msgstr "Oui! Tapez \"?\" pour afficher une liste de raccourcis disponibles."
+
+msgid "Views##About##FAQLogout"
+msgstr "Comment puis-je me déconnecter de DIM?"
+
+msgid "Views##About##FAQLogoutAnswer"
+msgstr ""
+"Votre session est liée à Bungie.net. Si vous vous déconnnectez de "
+"Bungie.net, vous vous déconnectez de DIM."
+
+msgid "Views##About##FAQLostItem"
+msgstr "J'ai perdu mes objets en utilisant votre outil!"
+
+msgid "Views##About##FAQLostItemAnswer"
+msgstr ""
+"Il est plus que probable que votre transfer a échoué, laissant votre objet "
+"dans les coffres ou sur un autre perso. Vous pouvez rechercher votre objet. "
+"Si vous ne le trouvez pas, relancer l'app en appuyant sur F5. Verifiez "
+"Bungie.net ou le jeu pour voir si votre objet existe toujours. Nous sommes "
+"sûres qu'il y est toujours."
+
+msgid "Views##About##GitHub"
+msgstr "GitHub"
+
+msgid "Views##About##GitHubHelp"
+msgstr ""
+"Si vous souhaitez contribuer à ce projet, retrouvez-nous sur la page de "
+"notre projet sur Github."
+
+msgid "Views##About##GitHubRepo"
+msgstr "DIM Git Repo"
+
+msgid "Views##About##Header"
+msgstr "À propos de Destiny Item Manager (DIM)"
+
+msgid "Views##About##HowItsMade"
+msgstr ""
+"DIM est construit à partir des mêmes services que Bungie.net et "
+"l'application Compagnon de Destiny. DIM peut accéder aux objets dans "
+"l'inventaire de vos Gardiens et de vos coffres sur Playstation et Xbox. "
+"Vous pouvez dès lors glisser-déposer des objets n'importe où vous les "
+"voulez."
+
+msgid "Views##About##Reddit"
+msgstr "Reddit"
+
+msgid "Views##About##RedditHelp"
+msgstr ""
+"Si vous avez des questions, des commentaires, ou des suggestions - "
+"faites-le nous savoir!"
+
+msgid "Views##About##Twitter"
+msgstr "Twitter"
+
+msgid "Views##About##TwitterHelp"
+msgstr ""
+"Suivez-nous pour rester informé des mises à jour et des informations en "
+"temps réel sur le status de l'application."
+
+msgid "Views##About##Version"
+msgstr "Version {{version}} ({{flavor}})"
+
+msgid "Views##About##Transifex"
+msgstr "Rejoignez l'équipe de traduction!"
+
+msgid "Views##About##TransifexText"
+msgstr ""
+"Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez "
+"améliorer l'une des traductions de DIM, rejoignez l'équipe."
+
+msgid "Views##Support##Support"
+msgstr "Soutenir DIM"
+
+msgid "Views##Support##FreeToDownload"
+msgstr ""
+"DIM est un produit à télécharger et à utiliser gratuitement. Le code source "
+"pour DIM est open source, et gratuit pour toute personne voulant "
+"l'améliorer. Vous ne verrez jamais une publicité dans DIM. C'est notre "
+"engagement."
+
+msgid "Views##Support##OpenCollective"
+msgstr ""
+"Nous utilisons OpenCollective comme un service pour offrir une compensation "
+"à nos développeurs pour leur dévouement et leur temps consacré à ce projet."
+
+msgid "Views##Support##Backers"
+msgstr "Les Supporters"
+
+msgid "Views##Support##BackersDetail"
+msgstr ""
+"Soutenez-nous avec un don unique ou mensuel et aidez-nous à poursuivre "
+"notre développement actif."
+
+msgid "Views##Support##Sponsors"
+msgstr "Partenaires"
+
+msgid "Views##Support##SponsorsDetail"
+msgstr "Devenez un sponsor et obtenez votre logo ici avec un lien vers votre site."
+
+msgid "Views##UpgradeChrome"
+msgstr ""
+"La version de Chrome que vous utilisez n'est pas à jour. Veuillez mettre à "
+"jour votre Navigateur Chrome pour pouvoir utiliser DIM"
+
+msgid "Views##Login##Permission"
+msgstr "Nous avons besoin de votre permission ..."
+
+msgid "Views##Login##Explanation"
+msgstr ""
+"Permettre à DIM de visualiser et de modifier vos personnages Destiny, "
+"coffre et sa progression."
+
+msgid "Views##Login##Auth"
+msgstr "Autoriser avec Bungie.net"
+
+msgid "Views##Login##LearnMore"
+msgstr "Voulez-vous en savoir plus?"
+
+msgid "TrialsCard##FiveWins"
+msgstr "Récompense à 5 Victoires (Armure)"
+
+msgid "TrialsCard##SevenWins"
+msgstr "Récompense à 7 Victoires (Arme)"
+
+msgid "TrialsCard##Flawless"
+msgstr "Sans Défaite"
+
+msgctxt "prod"
+msgid "Help##Version"
+msgstr "DIM v{{version}} Publiée"
+
+msgctxt "beta"
+msgid "Help##Version"
+msgstr "Beta a été mis à jour à v{{version}}"
