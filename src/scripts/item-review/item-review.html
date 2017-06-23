@@ -1,3 +1,33 @@
+<div ng-if"$ctrl.canReview == false">
+  <form class="settings">
+    <table>
+      <tr ng-if="$ctrl.featureFlags.qualityEnabled">
+        <td>
+          <label for="itemQuality" translate-attr="{ title: 'Settings.EnableAdvancedStatsHelp'}" translate="Settings.EnableAdvancedStats"></label>
+        </td>
+        <td>
+          <input type="checkbox" id="itemQuality" ng-model="$ctrl.settings.itemQuality"/>
+        </td>
+      </tr>
+      <tr ng-if="$ctrl.featureFlags.reviewsEnabled">
+        <td>
+          <label for="showReviews" translate-attr="{ title: 'Settings.ShowReviewsHelp'}" translate="Settings.ShowReviews"></label>
+        </td>
+        <td>
+          <input type="checkbox" id="showReviews" ng-model="$ctrl.settings.showReviews"/>
+        </td>
+      </tr>
+      <tr ng-if="$ctrl.featureFlags.reviewsEnabled">
+        <td>
+          <label for="allowIdPostToDtr" translate-attr="{ title: 'Settings.AllowIdPostToDtrHelp'}" translate="Settings.AllowIdPostToDtr"></label>
+        </td>
+        <td>
+          <input type="checkbox" id="allowIdPostToDtr" ng-model="$ctrl.settings.allowIdPostToDtr"/>
+        </td>
+      </tr>
+    </table>
+</div>
+
 <div ng-if="$ctrl.canReview" class="user-review--header">
   <span translate="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"></star-rating>
@@ -8,7 +38,7 @@
   </span>
 </div>
 
-<div class="community-review--details" ng-show="$ctrl.expandReview">
+<div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
   <textarea translate-attr="{ placeholder: 'DtrReview.Help' }"
             ng-model="$ctrl.item.userReview"
             ng-blur="$ctrl.reviewBlur()"></textarea>
@@ -22,7 +52,7 @@
   </div>
 </div>
 
-<div class="community-review--reviews" ng-hide="$ctrl.expandReview">
+<div ng-if="$ctrl.canReview" class="community-review--reviews" ng-hide="$ctrl.expandReview">
   <div ng-if="$ctrl.submitted"
        class="community-review--message"
        translate="DtrReview.ThankYou"></div>

@@ -1,7 +1,7 @@
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService) {
+function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService, $scope) {
   'ngInject';
 
   const vm = this;
@@ -60,6 +60,17 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
 
     return userReview;
   };
+
+  vm.featureFlags = {
+    qualityEnabled: true, // $featureFlags.qualityEnabled,
+    reviewsEnabled: true // $featureFlags.reviewsEnabled
+  };
+
+  vm.settings = dimSettingsService;
+
+  $scope.$watchCollection('vm.settings', function() {
+    dimSettingsService.save();
+  });
 }
 
 export const ItemReviewComponent = {
