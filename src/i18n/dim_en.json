@@ -37,6 +37,7 @@
          "Class": "Cannot compare this item as it is not for a {class}.",
          "Archetype": "Cannot compare this item as it is not a {type}."
       },
+      "ItemCount": "You have {num} of these.",
       "Splits": "Compare similar splits ({quantity})"
    },
    "Cooldown": {

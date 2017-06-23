@@ -2,19 +2,19 @@
   <div class="item-header" ng-class="vm.classes">
     <div class="item-title-container">
       <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">
-        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, 'lock')" translate-values="{itemType: vm.item.typeName, locked: vm.item.locked}" translate-attr="{title: 'MovePopup.LockUnlock'}">
-          <i class="lock fa" ng-class="{'fa-lock': vm.item.locked, 'fa-unlock-alt': !vm.item.locked, 'is-locking': vm.locking }"></i>
+        <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, 'lock')" translate-values="{ itemType: vm.item.typeName, locked: vm.item.locked }" translate-attr="{ title: 'MovePopup.LockUnlock' }">
+          <i class="lock fa" ng-class="{ 'fa-lock': vm.item.locked, 'fa-unlock-alt': !vm.item.locked, 'is-locking': vm.locking }"></i>
         </div>
-        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" translate-values="{itemType: vm.item.typeName, tracked: vm.item.tracked}" translate-attr="{title: 'MovePopup.TrackUntrack'}">
-          <i class="lock fa" ng-class="{'fa-star': vm.item.tracked, 'fa-star-o': !vm.item.tracked, 'is-locking': vm.locking }"></i>
+        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" translate-values="{ itemType: vm.item.typeName, tracked: vm.item.tracked }" translate-attr="{ title: 'MovePopup.TrackUntrack' }">
+          <i class="lock fa" ng-class="{ 'fa-star': vm.item.tracked, 'fa-star-o': !vm.item.tracked, 'is-locking': vm.locking }"></i>
         </div>
       </div>
       <div class="item-title-link">
         <a target="_blank" rel="noopener noreferrer" href="http://db.destinytracker.com/inventory/item/{{ vm.item.hash }}#{{ vm.item.talentGrid.dtrPerks }}" class="item-title">
-          {{vm.item.name}}
+          {{ vm.item.name }}
         </a>
       </div>
-      <i translate-attr="{ title: 'Compare.ButtonHelp'}" ng-if="vm.item.comparable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>
+      <i translate-attr="{ title: 'Compare.ButtonHelp' }" ng-if="vm.item.comparable" class="compare-button fa fa-clone" ng-click="vm.openCompare()"></i>
       <div ng-if="!vm.showDetailsByDefault && (vm.showDescription || vm.hasDetails) && !vm.item.classified;" ng-click="vm.changeDetails(); vm.itemDetails = !vm.itemDetails">
         <i class="info fa" ng-class="{ 'fa-chevron-circle-up': vm.itemDetails, 'fa-chevron-circle-down': !vm.itemDetails }">
         </i>
@@ -35,8 +35,8 @@
   </div>
   <div class="item-xp-bar" ng-if="vm.item.percentComplete != null && !vm.item.complete" dim-percent-width="vm.item.percentComplete"></div>
   <div ng-if="vm.item.reviewable" class="move-popup-tabs">
-    <span class="move-popup-tab" ng-class="{selected: vm.tab==='default'}" ng-click="vm.tab='default'" translate="MovePopup.OverviewTab"></span>
-    <span class="move-popup-tab" ng-class="{selected: vm.tab==='reviews'}" ng-click="vm.tab='reviews'" translate="MovePopup.ReviewsTab"></span>
+    <span class="move-popup-tab" ng-class="{ selected: vm.tab==='default' }" ng-click="vm.tab='default'" translate="MovePopup.OverviewTab"></span>
+    <span class="move-popup-tab" ng-class="{ selected: vm.tab==='reviews' }" ng-click="vm.tab='reviews'" translate="MovePopup.ReviewsTab"></span>
   </div>
   <dim-item-review item="vm.item" ng-if="vm.item.lockable" ng-show="vm.tab === 'reviews'"></dim-item-review>
   <div ng-show="vm.tab === 'default'">
@@ -51,7 +51,7 @@
     <dim-objectives class="item-details" ng-if="vm.itemDetails" objectives="vm.item.objectives"></dim-objectives>
     <div ng-if="vm.featureFlags.debugMode" class="item-details">
       <a ui-sref="debugItem({itemId: vm.item.id})" translate="Debug.View"></a>
-      <button ng-click="vm.dumpDebugInfo()" translate=Debug.Dump></a>
+      <button ng-click="vm.dumpDebugInfo()" translate="Debug.Dump" />
     </div>
   </div>
 </div>
