@@ -11,7 +11,7 @@ export default angular.module('dim-oauth', [LocalStorageModule])
   .run(function($rootScope, $state) {
     $rootScope.$on('dim-no-token-found', function() {
       if ($DIM_FLAVOR === 'dev' &&
-          (!localStorage.apiKey || !localStorage.oauthClientId)) {
+          (!localStorage.apiKey || !localStorage.oauthClientId || !localStorage.oauthClientSecret)) {
         $state.go('developer');
       } else {
         $state.go('login');

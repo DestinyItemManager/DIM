@@ -10,8 +10,10 @@
       <li>Visit <a href="https://www.bungie.net/en/Application/Create" target="_blank">https://www.bungie.net/en/Application/Create</a></li>
       <li>Paste <input type="text" ng-value="vm.URLRet" /> into the "Redirect URL" section under "App Authentication".</li>
       <li>Paste <input type="text" ng-value="vm.URL" /> into the "Origin Header" section under "Browser Based Apps".</li>
+      <li>Select "Confidential" OAuth type.</li>
       <li>After saving, copy the "API Key" here <input type="text" ng-model="vm.apiKey"/></li>
       <li>Copy the "OAuth client_id" here <input type="text" ng-model="vm.clientId"/></li>
+      <li>Copy the "OAuth client_secret" here <input type="text" ng-model="vm.clientSecret"/></li>
       <li><input type="button" ng-click="vm.save()" value="Save" /></li>
     </ol>
   </span>

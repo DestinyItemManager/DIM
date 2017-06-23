@@ -27,6 +27,8 @@
     "$DIM_WEB_API_KEY": true,
     "$DIM_CLIENT_ID": true,
     "$DIM_WEB_CLIENT_ID": true,
+    "$DIM_CLIENT_SECRET": true,
+    "$DIM_WEB_CLIENT_SECRET": true,
     "$featureFlags": true
   },
   "rules": {
