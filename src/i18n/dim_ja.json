@@ -346,8 +346,8 @@
     "Prestige": "評判レベル：  {{level}}\n光の欠片5個までは後  {{exp}}xp",
     "Quality": "品質",
     "Strength": "腕力",
-    "TierProgress_0": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "TierProgress_1": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n"
+    "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "フルスタック ({{amount}})",

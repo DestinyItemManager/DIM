@@ -132,6 +132,11 @@
     "ToStore": "Tutti i {{name}} sono ora sul tuo {{store}}."
   },
   "ItemService": {
+    "BucketFull": {
+      "Vault": "Il {{store}} ha troppe '{{itemtype}}'.",
+      "Guardian_male": "Il {{store}} ha troppe '{{itemtype}}'.",
+      "Guardian_female": "La {{store}} ha troppe '{{itemtype}}'."
+    },
     "Classified": "Questo oggetto è classificato e non può essere trasferito attualemente.",
     "Classified2": "Oggetto classificato. Bungie non fornisce informazioni riguardo questo oggetto. Questo oggetto non è ancora trasferibile.",
     "Deequip": "Impossibile trovare un altro oggetto da equipaggiare per rimuovere {{itemname}}",
@@ -141,9 +146,7 @@
     "OnlyEquippedClassLevel": "Questo oggetto può essere equipaggaito solo su un {{class}} al livello {{level}} o superiore.",
     "PercentComplete": "({{percent, pct}} Completato)",
     "TooMuch": "Sembra tu abbia richiesto di spostare una quantità maggiore di oggetti rispetto a quella disponibile nell'origine!",
-    "TwoExotics": "Non sappiamo come tu abbia equipaggiati più di 2 esotici!",
-    "BucketFull_male": "Il {{store}} ha troppe '{{itemtype}}'.",
-    "BucketFull_female": "La {{store}} ha troppe '{{itemtype}}'."
+    "TwoExotics": "Non sappiamo come tu abbia equipaggiati più di 2 esotici!"
   },
   "LB": {
     "LB": "Costruttore di Loadout",
@@ -385,7 +388,7 @@
     "Quality": "Qualità statistiche",
     "Strength": "Forza",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
-    "TierProgress_plural": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "Riempi Stack ({{amount}})",

@@ -130,8 +130,10 @@
     "ToStore": "All {{name}} are now on your {{store}}."
   },
   "ItemService": {
-    "BucketFull": "There are too many '{{itemtype}}' items in the {{store}}.",
-    "BucketFull_plural": "There are too many '{{itemtype}}' items on your {{store}}.",
+    "BucketFull": {
+      "Vault": "There are too many '{{itemtype}}' items in the {{store}}.",
+      "Guardian": "There are too many '{{itemtype}}' items on your {{store}}."
+    },
     "Classified": "This item is classified and cannot be transferred at this time.",
     "Classified2": "Classified item. Bungie does not yet provide information about this item. Item is not yet transferable.",
     "Deequip": "Cannot find another item to equip in order to dequip {{itemname}}",
@@ -382,7 +384,7 @@
     "Quality": "Stats quality",
     "Strength": "Strength",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
-    "TierProgress_plural": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "Fill Stack ({{amount}})",

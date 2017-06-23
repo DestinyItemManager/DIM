@@ -129,8 +129,10 @@
     "ToStore": "Alle {{name}} sind nun bei deinem {{store}}."
   },
   "ItemService": {
-    "BucketFull": "Es sind zu viele '{{itemtype}}'-Gegenstände im {{store}}.",
-    "BucketFull_plural": "Es sind zu viele '{{itemtype}}'-Gegenstände im Inventar vom {{store}}.",
+    "BucketFull": {
+      "Vault": "Es sind zu viele '{{itemtype}}'-Gegenstände im {{store}}.",
+      "Guardian": "Es sind zu viele '{{itemtype}}'-Gegenstände im Inventar vom {{store}}."
+    },
     "Classified": "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden.",
     "Classified2": "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar.",
     "Deequip": "Kann keinen weiteren ausrüstbaren Gegenstand finden um {{itemname}} abzulegen.",
@@ -378,7 +380,7 @@
     "Quality": "Qualität der Werte",
     "Strength": "Stärke",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n",
-    "TierProgress_plural": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "Stapel auffüllen ({{amount}})",

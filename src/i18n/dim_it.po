@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2017-06-22T21:59:12.090Z\n"
-"PO-Revision-Date: 2017-06-22T21:59:12.090Z\n"
+"POT-Creation-Date: 2017-06-23T09:30:24.178Z\n"
+"PO-Revision-Date: 2017-06-23T09:30:24.178Z\n"
 
 msgid "Bucket##Armor"
 msgstr "Armatura"
@@ -306,6 +306,9 @@ msgstr "Tutti i {{name}} sono ora nel deposito."
 
 msgid "ItemMove##ToStore"
 msgstr "Tutti i {{name}} sono ora sul tuo {{store}}."
+
+msgid "ItemService##BucketFull##Vault"
+msgstr "Il {{store}} ha troppe '{{itemtype}}'."
 
 msgid "ItemService##Classified"
 msgstr "Questo oggetto è classificato e non può essere trasferito attualemente."
@@ -994,9 +997,7 @@ msgid "Stats##Strength"
 msgstr "Forza"
 
 msgid "Stats##TierProgress"
-msgid_plural "Stats##TierProgress"
-msgstr[0] "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n"
-msgstr[1] "T{{tier}} {{statName}} ({{progress}}/300)\n"
+msgstr "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n"
 
 msgid "StoreBucket##FillStack"
 msgstr "Riempi Stack ({{amount}})"
@@ -1248,7 +1249,7 @@ msgstr ""
 "finisca dall'Amministratore."
 
 msgctxt "male"
-msgid "ItemService##BucketFull"
+msgid "ItemService##BucketFull##Guardian"
 msgstr "Il {{store}} ha troppe '{{itemtype}}'."
 
 msgctxt "male"
@@ -1288,7 +1289,7 @@ msgstr ""
 "finisca dall'Amministratore."
 
 msgctxt "female"
-msgid "ItemService##BucketFull"
+msgid "ItemService##BucketFull##Guardian"
 msgstr "La {{store}} ha troppe '{{itemtype}}'."
 
 msgctxt "female"
@@ -1330,3 +1331,7 @@ msgstr "Segui {{itemType}}"
 msgctxt "Untrack"
 msgid "MovePopup##TrackUntrack"
 msgstr "Non seguire {{itemType}}"
+
+msgctxt "Max"
+msgid "Stats##TierProgress"
+msgstr "T{{tier}} {{statName}} ({{progress}}/300)\n"

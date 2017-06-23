@@ -129,8 +129,10 @@
     "ToStore": "Tout/Toutes les {{name}} sont maintenant dans votre {{store}}."
   },
   "ItemService": {
-    "BucketFull": "Il y a trop d'objet '{{itemtype}}' dans le {{store}}.",
-    "BucketFull_plural": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}.",
+    "BucketFull": {
+      "Vault": "Il y a trop d'objet '{{itemtype}}' dans le {{store}}.",
+      "Guardian": "Il y a trop d'objet '{{itemtype}}' dans ton {{store}}."
+    },
     "Classified": "Cette objet est classifié et ne peut pas être transférer à se moment.",
     "Classified2": "Objet classifié. Bungie n'a pas donné d'information à propos de cette objet. Cette objet n'est pas transférable pour le moment.",
     "Deequip": "Ne peut pas trouver un autre objet pour pouvoir déséquiper {{itemname}}",
@@ -362,7 +364,7 @@
     "Quality": "Qualité des stats",
     "Strength": "Force",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 pour T{{nextTier}})\n",
-    "TierProgress_plural": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "Remplir la pile ({{amount}})",

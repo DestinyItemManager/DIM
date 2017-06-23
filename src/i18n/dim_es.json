@@ -129,8 +129,10 @@
     "ToStore": "Todos los {{name}} ahora están en tu {{store}}"
   },
   "ItemService": {
-    "BucketFull": "Hay muchos objetos de tipo '{{itemtype}}' en la {{store}}.",
-    "BucketFull_plural": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}.",
+    "BucketFull": {
+      "Vault": "Hay muchos objetos de tipo '{{itemtype}}' en la {{store}}.",
+      "Guardian": "Hay muchos objetos de tipo '{{itemtype}}' en tu {{store}}."
+    },
     "Classified": "Este objeto es 'clasificado' y no puede transferirse en este momento",
     "Classified2": "Objeto 'clasificado'. Bungie no a entregado información acerca de este objeto.  Este objeto todavía no es transferible.",
     "Deequip": "No se encontró otro objeto a equipar para desequipar {{itemname}}",
@@ -380,7 +382,7 @@
     "Quality": "Calidad Estadística",
     "Strength": "Fuerza",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
-    "TierProgress_plural": "N{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "Llena la pila ({{amount}})",

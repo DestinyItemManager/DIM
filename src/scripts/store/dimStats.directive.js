@@ -31,7 +31,7 @@ function StatsCtrl($scope, $i18next) {
     vm.statList.forEach(function(stat) {
       // compute tooltip
       var tier = stat.tier;
-      var next = $i18next.t('Stats.TierProgress', { count: tier === 5 ? 5 : 1, progress: tier === 5 ? stat.value : (stat.value % 60), tier: tier, nextTier: tier + 1, statName: stat.name });
+      var next = $i18next.t('Stats.TierProgress', { context: tier === 5 ? 'Max' : '', progress: tier === 5 ? stat.value : (stat.value % 60), tier: tier, nextTier: tier + 1, statName: stat.name });
       var cooldown = stat.cooldown || '';
       if (cooldown) {
         cooldown = $i18next.t('Cooldown.' + stat.effect, { cooldown: cooldown });

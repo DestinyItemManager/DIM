@@ -129,8 +129,10 @@
     "ToStore": "Todos os {{name}} estão agora no seu {{store}}."
   },
   "ItemService": {
-    "BucketFull": "Há muitos '{{itemtype}}' no {{store}}.",
-    "BucketFull_plural": "Há muitos '{{itemtype}}' em seu {{store}}.",
+    "BucketFull": {
+      "Vault": "Há muitos '{{itemtype}}' no {{store}}.",
+      "Guardian": "Há muitos '{{itemtype}}' em seu {{store}}."
+    },
     "Classified": "Este item é confidencial e não pode ser transferido no momento.",
     "Classified2": "Item confidencial. A Bungie não fornece informações sobre este item. Este item ainda não é transferível.",
     "Deequip": "Não foi possível encontrar outro item para equipar no lugar de {{itemname}}",
@@ -375,7 +377,7 @@
     "Quality": "Níveis de qualidade",
     "Strength": "Força",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 para T{{nextTier}})\n",
-    "TierProgress_plural": "T{{tier}} {{statName}} ({{progress}}/300)\n"
+    "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
   "StoreBucket": {
     "FillStack": "Encher Pilha ({{amount}})",
