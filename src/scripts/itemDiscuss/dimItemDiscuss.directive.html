@@ -36,7 +36,7 @@
             </div>
 
             <div class="user-review-submit">
-                <input class="item-dtr-review-submit" type="submit" ng-18next="[value]DtrReview.Submit" ng-disabled="!vm.item.userRating || vm.item.userRating < 1"></div>
+                <input class="item-dtr-review-submit" type="submit" ng-18next="[value]DtrReview.Submit" ng-disabled="!vm.item.userRating || vm.item.userRating < 1">
             </div>
         </form>
     </div>
@@ -61,25 +61,22 @@
           {{ communityReview.review }}
         </div>
 
-                <div ng-if="communityReview.pros || communityReview.cons" class="user-review-container">
-                    <div ng-if="communityReview.pros" class="community-reviews-pros-container">
-                        <div class="community-review-pros-header" ng-i18next="DtrReview.Pros"></div>
-                        <div class="community-review-pros">
-                            {{ communityReview.pros }}
-                        </div>
-                    </div>
+        <div ng-if="communityReview.pros || communityReview.cons" class="user-review-container">
+          <div ng-if="communityReview.pros" class="community-reviews-pros-container">
+              <div class="community-review-pros-header" ng-i18next="DtrReview.Pros"></div>
+              <div class="community-review-pros">
+                  {{ communityReview.pros }}
+              </div>
+          </div>
 
-                    <div ng-if="communityReview.cons" class="community-reviews-cons-container">
-                        <div class="community-review-cons-header" ng-i18next="DtrReview.Cons"></div>
-                        <div class="community-review-cons">
-                            {{ communityReview.cons }}
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <div ng-if="communityReview.cons" class="community-reviews-cons-container">
+              <div class="community-review-cons-header" ng-i18next="DtrReview.Cons"></div>
+              <div class="community-review-cons">
+                  {{ communityReview.cons }}
+              </div>
           </div>
         </div>
-
       </div>
     </div>
+  </div>
 </div>
