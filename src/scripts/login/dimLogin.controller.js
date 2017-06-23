@@ -1,5 +1,6 @@
 import angular from 'angular';
 import './login.scss';
+import { oauthClientId } from '../services/bungie-api-utils';
 
 angular.module('dimApp')
   .controller('dimLoginCtrl', dimLoginCtrl);
@@ -8,17 +9,8 @@ function dimLoginCtrl(uuid2) {
   const vm = this;
 
   localStorage.authorizationState = uuid2.newguid();
+  const clientId = oauthClientId();
 
-  if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
-    if (window.chrome && window.chrome.extension) {
-      vm.authorizationURL = $DIM_AUTH_URL;
-    } else {
-      vm.authorizationURL = $DIM_WEB_AUTH_URL;
-    }
-  } else {
-    vm.authorizationURL = localStorage.authorizationURL;
-  }
-
-  vm.authorizationURL = vm.authorizationURL + '?state=' + localStorage.authorizationState;
+  vm.authorizationURL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&state=${localStorage.authorizationState}`;
 }
 

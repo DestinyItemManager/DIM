@@ -173,7 +173,7 @@ mod.filter('sortItems', function() {
     }
     if (sort === 'quality') {
       items = _.sortBy(items, function(item) {
-        return item.quality && item.quality.min ? -item.quality.min : 1000;
+        return item.quality && item.quality.min ? -item.quality.min : (item.dtrRating ? -item.dtrRating : 1000);
       });
     }
     if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {

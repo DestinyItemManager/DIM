@@ -173,10 +173,10 @@ module.exports = (env) => {
         $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_API_KEY: JSON.stringify(process.env.API_KEY),
-        $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL),
+        $DIM_CLIENT_ID: JSON.stringify(process.env.OAUTH_CLIENT_ID),
         // Website and extension have different keys
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
-        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL),
+        $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
 
         // Feature flags!
 
