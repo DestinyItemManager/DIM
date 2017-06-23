@@ -1,7 +1,7 @@
-<div ng-if"$ctrl.canReview == false">
+<div ng-show="$ctrl.canReview == false">
   <form class="settings">
-    <table>
-      <tr ng-if="$ctrl.featureFlags.qualityEnabled">
+    <table >
+      <tr ng-show="$ctrl.featureFlags.qualityEnabled">
         <td>
           <label for="itemQuality" translate-attr="{ title: 'Settings.EnableAdvancedStatsHelp'}" translate="Settings.EnableAdvancedStats"></label>
         </td>
@@ -9,7 +9,7 @@
           <input type="checkbox" id="itemQuality" ng-model="$ctrl.settings.itemQuality"/>
         </td>
       </tr>
-      <tr ng-if="$ctrl.featureFlags.reviewsEnabled">
+      <tr ng-show="$ctrl.featureFlags.reviewsEnabled">
         <td>
           <label for="showReviews" translate-attr="{ title: 'Settings.ShowReviewsHelp'}" translate="Settings.ShowReviews"></label>
         </td>
@@ -17,7 +17,7 @@
           <input type="checkbox" id="showReviews" ng-model="$ctrl.settings.showReviews"/>
         </td>
       </tr>
-      <tr ng-if="$ctrl.featureFlags.reviewsEnabled">
+      <tr ng-show="$ctrl.featureFlags.reviewsEnabled">
         <td>
           <label for="allowIdPostToDtr" translate-attr="{ title: 'Settings.AllowIdPostToDtrHelp'}" translate="Settings.AllowIdPostToDtr"></label>
         </td>
@@ -26,6 +26,7 @@
         </td>
       </tr>
     </table>
+  </form>
 </div>
 
 <div ng-if="$ctrl.canReview" class="user-review--header">
