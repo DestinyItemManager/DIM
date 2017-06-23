@@ -70,9 +70,11 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
 
   $scope.$watchCollection('vm.settings', function() {
     dimSettingsService.save();
-
-    vm.canReview = dimSettingsService.allowIdPostToDtr;
   });
+
+  vm.valueChanged = function() {
+    vm.canReview = dimSettingsService.allowIdPostToDtr;
+  };
 }
 
 export const ItemReviewComponent = {

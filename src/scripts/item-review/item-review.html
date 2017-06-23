@@ -1,4 +1,4 @@
-<div ng-show="$ctrl.canReview == false">
+<div ng-if="$ctrl.canReview == false">
   <form class="settings">
     <div class="review-setting-table">
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
@@ -6,7 +6,7 @@
           <label for="showReviews" translate-attr="{ title: 'Settings.ShowReviewsHelp'}" translate="Settings.ShowReviews"></label>
         </div>
         <div class="review-setting-table--value">
-          <input type="checkbox" id="showReviews" ng-model="$ctrl.settings.showReviews"/>
+          <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
         </div>
       </div>
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
@@ -14,7 +14,7 @@
           <label for="allowIdPostToDtr" translate-attr="{ title: 'Settings.AllowIdPostToDtrHelp'}" translate="Settings.AllowIdPostToDtr"></label>
         </div>
         <div class="review-setting-table--value">
-          <input type="checkbox" id="allowIdPostToDtr" ng-model="$ctrl.settings.allowIdPostToDtr"/>
+          <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.allowIdPostToDtr"/>
         </div>
       </div>
     </div>
