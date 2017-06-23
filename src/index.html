@@ -28,7 +28,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     {{#each htmlWebpackPlugin.files.css}}
-      <link href="{ {webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
+      <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
     {{/each}}
 
   </head>
