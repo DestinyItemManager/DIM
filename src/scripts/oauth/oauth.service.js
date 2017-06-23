@@ -1,5 +1,5 @@
 import angular from 'angular';
-import { oauthClientId } from '../services/bungie-api-utils';
+import { oauthClientId, oauthClientSecret } from '../services/bungie-api-utils';
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
@@ -17,18 +17,22 @@ export function OAuthService($injector, $httpParamSerializer) {
         name: 'access',
         inception: inception
       };
-      const refreshToken = {
-        value: data.refresh_token,
-        expires: data.refresh_expires_in,
-        name: 'refresh',
-        inception: inception
-      };
 
-      return {
+      const tokens = {
         accessToken,
-        refreshToken,
         bungieMembershipId: data.membership_id
       };
+
+      if (data.refresh_token) {
+        tokens.refreshToken = {
+          value: data.refresh_token,
+          expires: data.refresh_expires_in,
+          name: 'refresh',
+          inception: inception
+        };
+      }
+
+      return tokens;
     } else {
       throw response;
     }
@@ -43,7 +47,9 @@ export function OAuthService($injector, $httpParamSerializer) {
       url: TOKEN_URL,
       data: $httpParamSerializer({
         grant_type: 'refresh_token',
-        refresh_token: refreshToken.value
+        refresh_token: refreshToken.value,
+        client_id: oauthClientId(),
+        client_secret: oauthClientSecret()
       }),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -62,6 +68,7 @@ export function OAuthService($injector, $httpParamSerializer) {
       data: $httpParamSerializer({
         code: code,
         client_id: oauthClientId(),
+        client_secret: oauthClientSecret(),
         grant_type: 'authorization_code'
       }),
       headers: {
