@@ -34,7 +34,22 @@ function bungieApiQuery(path) {
   };
 }
 
+function oauthClientId() {
+  let clientId;
+  if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
+    if (window.chrome && window.chrome.extension) {
+      clientId = $DIM_CLIENT_ID;
+    } else {
+      clientId = $DIM_WEB_CLIENT_ID;
+    }
+  } else {
+    clientId = localStorage.oauthClientId;
+  }
+  return clientId;
+}
+
 export {
   bungieApiQuery,
-  bungieApiUpdate
+  bungieApiUpdate,
+  oauthClientId
 };
