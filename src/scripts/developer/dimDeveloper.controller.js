@@ -8,6 +8,8 @@ function dimDeveloperCtrl() {
   const isExtension = window.chrome && window.chrome.extension;
 
   vm.apiKey = localStorage.apiKey;
+  vm.clientId = localStorage.oauthClientId;
+  vm.clientSecret = localStorage.oauthClientSecret;
   vm.URL = window.location.origin;
   vm.URLRet = vm.URL + '/return.html';
 
@@ -17,7 +19,8 @@ function dimDeveloperCtrl() {
 
   vm.save = function() {
     localStorage.apiKey = vm.apiKey;
-    localStorage.authorizationURL = vm.authorizationURL;
+    localStorage.oauthClientId = vm.clientId;
+    localStorage.oauthClientSecret = vm.clientSecret;
     window.location = window.location.origin + '/index.html';
   };
 }

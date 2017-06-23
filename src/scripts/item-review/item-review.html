@@ -32,18 +32,18 @@
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <div>
       <div translate="DtrReview.Pros"></div>
-      <div ng-repeat="pro in $ctrl.aggregate.pros" ng-bind='pro'></div>
+      <div ng-repeat="pro in $ctrl.aggregate.pros" ng-bind="pro"></div>
     </div>
     <div>
       <div translate="DtrReview.Cons"></div>
-      <div ng-repeat="pro in $ctrl.aggregate.cons" ng-bind='pro'></div>
+      <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>
   <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
     <div class="community-review--who">
       <star-rating rating="review.rating" read-only></star-rating>
-      <div ng-bind="review.reviewer.displayName" ng-class="{'community-review--who__special': review.isHighlighted}"></div>
-      <div ng-bind="review.timestamp | date:'mediumDate'"></div>
+      <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
+      <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
     </div>
     <div ng-bind="review.review"></div>
   </div>

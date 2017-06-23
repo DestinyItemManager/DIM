@@ -2,9 +2,9 @@
   <head>
     <title>Validating Authorization</title>
 
-    {{#each htmlWebpackPlugin.files.css}}
-    <link href="{{webpackConfig.output.publicPath}}{{this}}" rel="stylesheet">
-    {{/each}}
+    {{ #each htmlWebpackPlugin.files.css }}
+    <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
+    {{ /each }}
   </head>
 
   <body>
@@ -12,8 +12,8 @@
       <dim-return></dim-return>
     </div>
 
-    {{#each htmlWebpackPlugin.files.js}}
-    <script type="text/javascript" src="{{webpackConfig.output.publicPath}}{{this}}"></script>
-    {{/each}}
+    {{ #each htmlWebpackPlugin.files.js }}
+    <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
+    {{ /each }}
   </body>
 </html>
