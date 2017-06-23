@@ -74,6 +74,10 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
 
   vm.valueChanged = function() {
     vm.canReview = dimSettingsService.allowIdPostToDtr;
+
+    if (vm.canReview) {
+      $rootScope.$broadcast('item-clicked', vm.item);
+    }
   };
 }
 
