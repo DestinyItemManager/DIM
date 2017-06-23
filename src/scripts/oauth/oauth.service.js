@@ -17,18 +17,22 @@ export function OAuthService($injector, $httpParamSerializer) {
         name: 'access',
         inception: inception
       };
-      const refreshToken = {
-        value: data.refresh_token,
-        expires: data.refresh_expires_in,
-        name: 'refresh',
-        inception: inception
-      };
 
-      return {
+      const tokens = {
         accessToken,
-        refreshToken,
         bungieMembershipId: data.membership_id
       };
+
+      if (data.refresh_token) {
+        tokens.refreshToken = {
+          value: data.refresh_token,
+          expires: data.refresh_expires_in,
+          name: 'refresh',
+          inception: inception
+        };
+      }
+
+      return tokens;
     } else {
       throw response;
     }

@@ -60,9 +60,6 @@ export function OAuthTokenService(localStorageService) {
    * Has the token expired, based on its 'expires' property?
    */
   function hasTokenExpired(token) {
-    if (!token) {
-      return true;
-    }
     const expires = getTokenExpiration(token);
     const now = Date.now();
 
