@@ -242,7 +242,7 @@
     "AppliedWarn": "Your loadout has been partially transferred, but {{failed}} of {{total}} items had errors.",
     "NameRequired": "A name is required.",
     "MakeRoom": "Make Room for Postmaster",
-    "MakeRoomDone": "Finished making room for 1 Postmaster by moving 1 item off of {{store}}.",
+    "MakeRoomDone": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
     "MakeRoomDone_plural": "Finished making room for {{count}} Postmaster items by moving {{movedNum}} items off of {{store}}.",
     "MakeRoomError": "Unable to make room for all Postmaster items: {{error}}.",
     "SaveErrorTitle": "Error saving loadout",
