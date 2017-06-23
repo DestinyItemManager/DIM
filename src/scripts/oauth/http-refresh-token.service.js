@@ -76,6 +76,10 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   }
 
   function isTokenValid(token) {
+    // TODO: private oauth apps don't have refresh tokens!
+    if (token && token.name === 'refresh') {
+      return false;
+    }
     const expired = OAuthTokenService.hasTokenExpired(token);
     return !expired;
   }
