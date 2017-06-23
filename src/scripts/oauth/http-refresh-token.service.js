@@ -61,6 +61,10 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   function handleRefreshTokenError(response) {
     if (response.status === -1) {
       console.warn("Error getting auth token from refresh token because there's no internet connection. Not clearing token.", response);
+    } else if (response.status === 401 || response.status === 403) {
+      console.warn("Refresh token expired or not valid, clearing auth tokens & going to login", response);
+      OAuthTokenService.removeToken();
+      $rootScope.$broadcast('dim-no-token-found');
     } else if (response.data && response.data.ErrorCode) {
       if (response.data.ErrorCode === 2110 /* RefreshTokenNotYetValid */ ||
           response.data.ErrorCode === 2111 /* AccessTokenHasExpired */ ||
@@ -76,9 +80,12 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
   }
 
   function isTokenValid(token) {
+    // TODO: private oauth apps don't have refresh tokens!
+    // reject refresh tokens from the old auth process
+    if (token && token.name === 'refresh' && token.readyin) {
+      return false;
+    }
     const expired = OAuthTokenService.hasTokenExpired(token);
-    const isReady = OAuthTokenService.isTokenReady(token);
-
-    return (!expired && isReady);
+    return !expired;
   }
 }

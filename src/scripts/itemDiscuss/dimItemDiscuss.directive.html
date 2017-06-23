@@ -41,25 +41,25 @@
         </form>
     </div>
 
-    <div class="community-reviews">
-        <div ng-repeat="communityReview in vm.item.communityReviews | filter:{review: ''}" class="community-review">
-            <div class="community-review-highlighter">
-                <div class="user-review-circle green-circle" ng-if="communityReview.isHighlighted"></div>
-                <div class="user-review-circle orange-circle" ng-if="!communityReview.isHighlighted"></div>
-            </div>
-            <div class="community-review-content">
-                <div class="user-review-container">
-                    <div class="community-review-display-name">
-                        {{ communityReview.reviewer.displayName }}
-                    </div>
-                    <div class="community-review-rating">
-                        {{ communityReview.rating }}
-                    </div>
-                </div>
+  <div class="community-reviews">
+    <div ng-repeat="communityReview in vm.item.communityReviews | filter:{ review: '' }" class="community-review">
+      <div class="community-review-highlighter">
+        <div class="user-review-circle green-circle" ng-if="communityReview.isHighlighted"></div>
+        <div class="user-review-circle orange-circle" ng-if="!communityReview.isHighlighted"></div>
+      </div>
+      <div class="community-review-content">
+        <div class="user-review-container">
+          <div class="community-review-display-name">
+            {{ communityReview.reviewer.displayName }}
+          </div>
+          <div class="community-review-rating">
+            {{ communityReview.rating }}
+          </div>
+        </div>
 
-                <div ng-if="communityReview.review" class="community-review-review">
-                    {{ communityReview.review }}
-                </div>
+        <div ng-if="communityReview.review" class="community-review-review">
+          {{ communityReview.review }}
+        </div>
 
                 <div ng-if="communityReview.pros || communityReview.cons" class="user-review-container">
                     <div ng-if="communityReview.pros" class="community-reviews-pros-container">
@@ -77,6 +77,9 @@
                     </div>
                 </div>
             </div>
+          </div>
         </div>
+
+      </div>
     </div>
 </div>

@@ -60,7 +60,6 @@ module.exports = function(grunt) {
       extensions: {
         release: {
           appID: "apghicjnekejhfancbkahkhdckhdagna",
-          publish: false,
           zip: "dist/chrome.zip"
         },
         beta: {

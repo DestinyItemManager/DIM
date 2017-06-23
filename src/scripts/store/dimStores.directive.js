@@ -31,8 +31,8 @@ function Stores() {
 
 function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
   var vm = this;
-  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.Collapse')}</p>` +
-                             `<p>${$i18next.t('DidYouKnow.Expand')}</p>`;
+  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.Collapse')}</p>
+                              <p>${$i18next.t('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('collapsed', {

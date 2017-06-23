@@ -1,12 +1,13 @@
 import angular from 'angular';
 import _ from 'underscore';
-import didYouKnowTemplate from './dimItemMoveService.factory.html';
 
 angular.module('dimApp')
   .factory('dimItemMoveService', ItemMoveService);
 
 
 function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $i18next) {
+  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DragAndDrop')}</p>
+                              <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('movebox', {

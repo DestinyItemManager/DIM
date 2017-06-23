@@ -71,7 +71,7 @@
     <li class="loadout-set" ng-if="vm.previousLoadout">
       <span title="{{ vm.previousLoadout.name }}" ng-click="vm.applyLoadout(vm.previousLoadout, $event, true)">
         <i class="fa fa-undo"></i>
-        {{vm.previousLoadout.name}}
+        {{ vm.previousLoadout.name }}
       </span>
       <span ng-click="vm.applyLoadout(vm.previousLoadout, $event)">
         <span ng-i18next="Loadouts.RestoreAllItems"></span>

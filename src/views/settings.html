@@ -100,7 +100,7 @@
           <label for="charCol" ng-i18next="[title]Settings.VaultColumnsHelp;Settings.VaultColumns"></label>
         </td>
         <td>
-          <select id="charCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
+          <select id="vaultCol" ng-model="vm.settings.vaultMaxCol" ng-options="option.id as option.name for option in vm.vaultColOptions" required></select>
         </td>
       </tr>
       <tr ng-if="vm.supportsCssVar">

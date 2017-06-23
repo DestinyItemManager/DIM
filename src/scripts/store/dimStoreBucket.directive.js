@@ -75,8 +75,8 @@ function StoreBucketCtrl($scope,
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
   };
-  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DoubleClick')}</p>` +
-                             `<p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
+  const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.DoubleClick')}</p>
+                              <p>${$i18next.t('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('doubleclick', {
