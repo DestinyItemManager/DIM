@@ -177,6 +177,7 @@ module.exports = (env) => {
         $DIM_CLIENT_SECRET: JSON.stringify(process.env.OAUTH_CLIENT_SECRET),
         // Website and extension have different keys
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
+        $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
 
         // Feature flags!
