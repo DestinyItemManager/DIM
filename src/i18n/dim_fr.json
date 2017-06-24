@@ -411,7 +411,7 @@
          "RedditHelp": "Si vous avez des questions, des commentaires, ou des suggestions - faites-le nous savoir!",
          "Twitter": "Twitter",
          "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
-         "Version": "Version {version} ({flavor})",
+         "Version": "Version {version} ({flavor}), built on {date}",
          "Transifex": "Rejoignez l'équipe de traduction!",
          "TransifexText": "Nous utilisons Transifex pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe."
       },

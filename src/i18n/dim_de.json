@@ -83,7 +83,8 @@
       "Filters": "Filter",
       "FilterHelp": "Suche nach Item/Perk oder is:arc",
       "MaterialsExchange": "Verfügbare Fraktionsränge",
-      "Refresh": "Aktualisiere Destiny Daten"
+      "Refresh": "Aktualisiere Destiny Daten",
+      "SupportDIM": "Unterstützer"
    },
    "Help": {
       "BackToDIM": "Zurück zu DIM",
@@ -150,6 +151,7 @@
       "LockedHelp": "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn in den Loadouts zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
       "FilterSets": "Filter setzen",
       "AdvancedOptions": "Erweiterte Optionen",
+      "ContainsVendorItems": "Dieses Loadout enthält Gegenstände von Händlern",
       "ProcessingMode": {
          "Fast": "Schnell",
          "Full": "Vollständig",
@@ -183,6 +185,7 @@
          "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
          "StatsIncrease": "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
       },
+      "Equip": "Ausgerüstet bei {character}",
       "ShowAllConfigs": "Zeige alle Einstellungen",
       "ShowConfigs": "Zeige Einstellungen",
       "HideAllConfigs": "Verstecke alle Einstellungen",
@@ -300,7 +303,8 @@
       "Cons": "Nachteile",
       "NoReviews": "Bisher gibt es keine Berichte für diesen Gegenstand, sei der Erste!",
       "ServiceCallError": "Destiny-Tracker-Service-Aufruf fehlgeschlagen.",
-      "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen."
+      "ServiceSubmitError": "Destiny-Tracker-Service-Senden fehlgeschlagen.",
+      "AverageRating": "({itemRating}) basierend auf {numRatings} Bewertungen."
    },
    "Objectives": {
       "Complete": "Vollständig",
@@ -323,10 +327,10 @@
       "ShowOverlayHelp": "Zeigt neue Gegenstände mit einem hellen Overlay an.",
       "ShowAnimations": "Zeige animiertes Overlay bei neuen Gegenständen an",
       "ShowAnimationsHelp": "Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten verringert die CPU Auslastung.",
-      "ShowElemental": "Zeige Elementarschaden bei Waffen an",
-      "ShowElementalHelp": "Zeigt den Elementarschaden bei Waffen an.",
       "ShowReviews": "Zeige Berichtwertungen bei Waffen an",
       "ShowReviewsHelp": "Zeige die durchschnittliche User basierte Wertung bei Waffen an.",
+      "ShowElemental": "Zeige Elementarschaden bei Waffen an",
+      "ShowElementalHelp": "Zeige Elementarschaden bei Waffen an.",
       "AllowIdPostToDtr": "Teile Account-Name und bewertete Items mit Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM wird deinen Account-Namen und jedes Item das du bewertet hast mit Destiny Tracker teilen.",
       "SetSort": "Sortiere Gegenstände nach:",
@@ -424,7 +428,7 @@
          "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
          "Twitter": "Twitter",
          "TwitterHelp": "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein.",
-         "Version": "Version {version} ({flavor})",
+         "Version": "Version {version} ({flavor}), erstellt am {date}",
          "Transifex": "Trete dem Übersetzer-Team bei!",
          "TransifexText": "Wir benutzen Transifex für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
       },
