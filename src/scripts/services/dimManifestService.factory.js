@@ -16,7 +16,7 @@ import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 // can only be done using the dynamic import method.
 function requireSqlLib() {
   if (typeof WebAssembly === 'object') {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let loaded = false;
 
       window.Module = {
@@ -25,7 +25,7 @@ function requireSqlLib() {
       window.SQL = {
         onRuntimeInitialized: function() {
           if (!loaded) {
-            console.log("Loaded SQL!");
+            console.log("Using WASM SQLite");
             loaded = true;
             resolve(window.SQL);
             delete window.SQL;
@@ -33,11 +33,13 @@ function requireSqlLib() {
         }
       };
 
-      setTimeout(function() {
+      // Give it 3 seconds to load
+      setTimeout(() => {
         if (!loaded) {
           loaded = true;
-          reject('Timed out loading sql lib');
-          // TODO: or fall back?
+
+          // Fall back to the old one
+          import(/* webpackChunkName: "sqlLib" */ 'sql.js').then(resolve);
         }
       }, 3000);
 
@@ -124,6 +126,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
           const db = new SQLLib.Database(typedArray);
           // do a small request, just to test it out
           service.getAllRecords(db, 'DestinyRaceDefinition');
+          console.timeEnd('manifest');
           return db;
         })
         .catch((e) => {

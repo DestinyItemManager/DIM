@@ -34,7 +34,7 @@ mod.factory('dimDefinitions', Definitions);
 function Definitions($q, dimManifestService) {
   return {
     getDefinitions: _.memoize(function getDefinitions() {
-      return dimManifestService.getManifest()
+      return $q.when(dimManifestService.getManifest()
         .then(function(db) {
           const defs = {};
 
@@ -64,7 +64,7 @@ function Definitions($q, dimManifestService) {
         .catch(function(e) {
           console.error(e);
           return $q.reject(e);
-        });
+        }));
     })
   };
 }
