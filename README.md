@@ -17,7 +17,7 @@ Visit [/r/DestinyItemManager](http://www.reddit.com/r/DestinyItemManager/) or [@
 Have a bug or a feature request? Please first search for [existing and closed issues](https://github.com/DestinyItemManager/DIM/issues). If your problem or idea is not addressed yet, please open a new issue.
 
 ## Backers
-Support us with a one-time or monthly donation and help us continue our active development.
+[Support us](https://opencollective.com/dim#backer) with a one-time or monthly donation and help us continue our active development.
 
 <a href="https://opencollective.com/dim/backer/0/website" target="_blank"><img src="https://opencollective.com/dim/backer/0/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/1/website" target="_blank"><img src="https://opencollective.com/dim/backer/1/avatar.svg"></a>
