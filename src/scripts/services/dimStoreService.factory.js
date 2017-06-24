@@ -643,6 +643,7 @@ function StoreService(
           _reloadPromise = null;
         }
         dimManifestService.isLoaded = true;
+        console.timeEnd('manifest');
       });
 
     _reloadPromise.activePlatform = activePlatform;

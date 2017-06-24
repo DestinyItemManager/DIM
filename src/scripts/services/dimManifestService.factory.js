@@ -4,6 +4,9 @@ import angular from 'angular';
 import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
+import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-debug-wasm.js';
+import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-debug-wasm-raw.wasm';
+
 // For zip
 import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 
@@ -12,7 +15,42 @@ import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 // in the Webpack config, we need to explicitly name this chunk, which
 // can only be done using the dynamic import method.
 function requireSqlLib() {
-  return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+  if (typeof WebAssembly === 'object') {
+    return new Promise((resolve, reject) => {
+      let loaded = false;
+
+      window.Module = {
+        wasmBinaryFile: sqlWasmBinaryPath
+      };
+      window.SQL = {
+        onRuntimeInitialized: function() {
+          if (!loaded) {
+            console.log("Loaded SQL!");
+            loaded = true;
+            resolve(window.SQL);
+            delete window.SQL;
+          }
+        }
+      };
+
+      setTimeout(function() {
+        if (!loaded) {
+          loaded = true;
+          reject('Timed out loading sql lib');
+          // TODO: or fall back?
+        }
+      }, 3000);
+
+      var head = document.getElementsByTagName('head')[0];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = sqlWasmPath;
+      script.async = true;
+      head.appendChild(script);
+    });
+  } else {
+    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+  }
 }
 
 angular.module('dimApp')
@@ -58,36 +96,35 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
         return manifestPromise;
       }
 
+      console.time('manifest');
+
       service.isLoaded = false;
 
-      manifestPromise = dimBungieService.getManifest()
-        .then(function(data) {
-          const language = dimSettingsService.language;
-          const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+      manifestPromise = Promise
+        .all([
+          requireSqlLib(), // load in the sql.js library
+          dimBungieService.getManifest()
+            .then(function(data) {
+              const language = dimSettingsService.language;
+              const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
-          // Use the path as the version, rather than the "version" field, because
-          // Bungie can update the manifest file without changing that version.
-          const version = path;
-          service.version = version;
+              // Use the path as the version, rather than the "version" field, because
+              // Bungie can update the manifest file without changing that version.
+              const version = path;
+              service.version = version;
 
-          return loadManifestFromCache(version)
-            .catch(function(e) {
-              return loadManifestRemote(version, language, path);
+              return loadManifestFromCache(version)
+                .catch(function(e) {
+                  return loadManifestRemote(version, language, path);
+                });
             })
-            .then(function(typedArray) {
-              service.statusText = $translate.instant('Manifest.Build') + '...';
-
-              return Promise.all([
-                typedArray,
-                requireSqlLib(), // load in the sql.js library
-              ]);
-            })
-            .then(function([typedArray, SQLLib]) {
-              const db = new SQLLib.Database(typedArray);
-              // do a small request, just to test it out
-              service.getAllRecords(db, 'DestinyRaceDefinition');
-              return db;
-            });
+        ])
+        .then(function([SQLLib, typedArray]) {
+          service.statusText = $translate.instant('Manifest.Build') + '...';
+          const db = new SQLLib.Database(typedArray);
+          // do a small request, just to test it out
+          service.getAllRecords(db, 'DestinyRaceDefinition');
+          return db;
         })
         .catch((e) => {
           let message = e.message || e;
@@ -104,7 +141,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
             });
           } else {
             // Something may be wrong with the manifest
-            deleteManifestFile();
+            //deleteManifestFile();
           }
 
           manifestPromise = null;
