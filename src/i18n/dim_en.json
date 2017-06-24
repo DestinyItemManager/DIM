@@ -85,7 +85,8 @@
       "FilterHelp": "Search item/perk or is:arc",
       "MaterialsExchange": "Available faction ranks",
       "Refresh": "Refresh Destiny Data",
-      "SupportDIM": "Backers"
+      "SupportDIM": "Backers",
+      "Shop": "Shop"
    },
    "Help": {
       "BackToDIM": "Back to DIM",
@@ -440,7 +441,9 @@
          "Backers": "Backers",
          "BackersDetail": "Support us with a one-time or monthly donation and help us continue our active development.",
          "Sponsors": "Sponsors",
-         "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site."
+         "SponsorsDetail": "Become a sponsor and get your logo here with a link to your site.",
+         "Teespring": "We also have shirts with our new logo for sale on Teespring:",
+         "TeespringLink": "DIM on Teespring"
       },
       "UpgradeChrome": "Your version of Chrome is too old to run DIM. Please update Chrome in order to use DIM.",
       "Login": {
