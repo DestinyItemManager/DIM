@@ -49,6 +49,27 @@ Have a bug or a feature request? Please first search for [existing and closed is
 <a href="https://opencollective.com/dim/backer/27/website" target="_blank"><img src="https://opencollective.com/dim/backer/27/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/28/website" target="_blank"><img src="https://opencollective.com/dim/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/dim/backer/29/website" target="_blank"><img src="https://opencollective.com/dim/backer/29/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/30/website" target="_blank"><img src="https://opencollective.com/dim/backer/30/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/31/website" target="_blank"><img src="https://opencollective.com/dim/backer/31/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/32/website" target="_blank"><img src="https://opencollective.com/dim/backer/32/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/33/website" target="_blank"><img src="https://opencollective.com/dim/backer/33/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/34/website" target="_blank"><img src="https://opencollective.com/dim/backer/34/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/35/website" target="_blank"><img src="https://opencollective.com/dim/backer/35/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/36/website" target="_blank"><img src="https://opencollective.com/dim/backer/36/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/37/website" target="_blank"><img src="https://opencollective.com/dim/backer/37/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/38/website" target="_blank"><img src="https://opencollective.com/dim/backer/38/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/39/website" target="_blank"><img src="https://opencollective.com/dim/backer/39/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/40/website" target="_blank"><img src="https://opencollective.com/dim/backer/40/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/41/website" target="_blank"><img src="https://opencollective.com/dim/backer/41/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/42/website" target="_blank"><img src="https://opencollective.com/dim/backer/42/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/43/website" target="_blank"><img src="https://opencollective.com/dim/backer/43/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/44/website" target="_blank"><img src="https://opencollective.com/dim/backer/44/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/45/website" target="_blank"><img src="https://opencollective.com/dim/backer/45/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/46/website" target="_blank"><img src="https://opencollective.com/dim/backer/46/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/47/website" target="_blank"><img src="https://opencollective.com/dim/backer/47/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/48/website" target="_blank"><img src="https://opencollective.com/dim/backer/48/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/49/website" target="_blank"><img src="https://opencollective.com/dim/backer/49/avatar.svg"></a>
+<a href="https://opencollective.com/dim/backer/50/website" target="_blank"><img src="https://opencollective.com/dim/backer/50/avatar.svg"></a>
 
 ## Sponsors
 Become a sponsor and get your logo here with a link to your site.
@@ -57,32 +78,6 @@ Become a sponsor and get your logo here with a link to your site.
 <a href="https://opencollective.com/dim/sponsor/1/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/dim/sponsor/2/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/2/avatar.svg"></a>
 <a href="https://opencollective.com/dim/sponsor/3/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/4/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/5/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/6/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/7/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/8/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/9/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/9/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/10/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/10/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/11/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/11/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/12/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/12/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/13/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/13/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/14/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/14/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/15/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/15/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/16/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/16/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/17/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/17/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/18/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/18/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/19/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/19/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/20/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/20/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/21/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/21/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/22/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/22/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/23/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/23/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/24/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/24/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/25/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/25/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/26/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/26/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/27/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/27/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/28/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/28/avatar.svg"></a>
-<a href="https://opencollective.com/dim/sponsor/29/website" target="_blank"><img src="https://opencollective.com/dim/sponsor/29/avatar.svg"></a>
 
 ## Translation
 If you speak a language other than English that Destiny supports (Italian, German, French, Spanish, Japanese, or Portuguese), a great way to help with DIM development is to provide translations. See [translation guide](https://github.com/DestinyItemManager/DIM/blob/dev/TRANSLATIONS.md) for more info on how to help.

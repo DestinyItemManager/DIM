@@ -195,14 +195,11 @@ module.exports = (env) => {
         '$featureFlags.debugMoves': JSON.stringify(false),
         // show changelog toaster
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
-        // allow fetching item (weapon) scores and fetching/sending reviews from the Destiny Tracker API
-        '$featureFlags.sendingWeaponDataEnabled': JSON.stringify(env === 'dev'),
-
         '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
-        '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release'),
+        '$featureFlags.reviewsEnabled': JSON.stringify(true),
         // Sync data over gdrive
         '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
-        '$featureFlags.debugSync': false
+        '$featureFlags.debugSync': JSON.stringify(false)
       }),
 
       // Enable if you want to debug the size of the chunks
