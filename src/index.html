@@ -27,18 +27,18 @@
     <meta name="theme-color" content="#434444">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    {{ #each htmlWebpackPlugin.files.css }}
-      <link href="{ {webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
-    {{ /each }}
+    {{#each htmlWebpackPlugin.files.css}}
+      <link href="{{ webpackConfig.output.publicPath }}{{ this }}" rel="stylesheet">
+    {{/each}}
 
   </head>
 
   <body ng-strict-di>
     <app></app>
 
-    {{ #each htmlWebpackPlugin.files.js }}
+    {{#each htmlWebpackPlugin.files.js}}
     <script type="text/javascript" src="{{ webpackConfig.output.publicPath }}{{ this }}"></script>
-    {{ /each }}
+    {{/each}}
   </body>
 
 </html>

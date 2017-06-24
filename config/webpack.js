@@ -16,7 +16,6 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 var preMinifiedDeps = [
-  'moment/min/moment.min.js',
   'underscore/underscore-min.js',
   'indexeddbshim/dist/indexeddbshim.min.js',
   'messageformat/messageformat.min.js',

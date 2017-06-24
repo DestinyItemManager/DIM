@@ -100,7 +100,6 @@
     "angular-hotkeys": "^1.7.0",
     "angular-local-storage": "^0.5.0",
     "angular-messages": "^1.6.1",
-    "angular-moment": "^1.0.1",
     "angular-native-dragdrop": "^1.2.2",
     "angular-promise-tracker": "^2.2.2",
     "angular-sanitize": "^1.6.4",

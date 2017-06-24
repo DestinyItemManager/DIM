@@ -3,11 +3,11 @@ import angular from 'angular';
 import AriaModule from 'angular-aria';
 import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
+import ngSanitize from 'angular-sanitize';
 import i18next from 'i18next';
 import LocalStorageModule from 'angular-local-storage';
 import MessagesModule from 'angular-messages';
-import MomentModule from 'angular-moment';
-import ngSanitize from 'angular-sanitize';
+
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
@@ -39,7 +39,6 @@ export const DimAppModule = angular
     i18next,
     LocalStorageModule,
     MessagesModule,
-    MomentModule,
     ngSanitize,
     RateLimiterModule,
     ShellModule,
@@ -54,7 +53,8 @@ export const DimAppModule = angular
     oauthModule,
     'angularUUID2',
     'ajoslin.promise-tracker',
-    'cfp.hotkeys'
+    'cfp.hotkeys',
+    'ng-i18next'
   ])
   .config(config)
   .config(routes)
