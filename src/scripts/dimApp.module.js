@@ -5,7 +5,6 @@ import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 import LocalStorageModule from 'angular-local-storage';
 import MessagesModule from 'angular-messages';
-import MomentModule from 'angular-moment';
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
@@ -37,7 +36,6 @@ export const DimAppModule = angular
     DragAndDropModule,
     LocalStorageModule,
     MessagesModule,
-    MomentModule,
     RateLimiterModule,
     ShellModule,
     SliderModule,
