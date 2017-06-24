@@ -1,7 +1,7 @@
 import template from './item-review.html';
 import './item-review.scss';
 
-function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService) {
+function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerService, $scope) {
   'ngInject';
 
   const vm = this;
@@ -59,6 +59,25 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
     };
 
     return userReview;
+  };
+
+  vm.featureFlags = {
+    qualityEnabled: $featureFlags.qualityEnabled,
+    reviewsEnabled: $featureFlags.reviewsEnabled
+  };
+
+  vm.settings = dimSettingsService;
+
+  $scope.$watchCollection('vm.settings', function() {
+    dimSettingsService.save();
+  });
+
+  vm.valueChanged = function() {
+    vm.canReview = dimSettingsService.allowIdPostToDtr;
+
+    if (vm.canReview) {
+      $rootScope.$broadcast('item-clicked', vm.item);
+    }
   };
 }
 

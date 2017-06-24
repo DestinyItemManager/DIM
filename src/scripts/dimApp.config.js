@@ -7,7 +7,7 @@ import ja from '../i18n/dim_ja.json';
 import ptBr from '../i18n/dim_pt_BR.json';
 
 function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
-                localStorageServiceProvider, ngHttpRateLimiterConfigProvider, ngDialogProvider) {
+                ngHttpRateLimiterConfigProvider, ngDialogProvider) {
   'ngInject';
 
   // TODO: remove this depenency by fixing component bindings https://github.com/angular/angular.js/blob/master/CHANGELOG.md#breaking-changes-1
@@ -49,8 +49,6 @@ function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
   });
 
   hotkeysProvider.includeCheatSheet = true;
-
-  localStorageServiceProvider.setPrefix('');
 
   // Bungie's API will start throttling an API if it's called more than once per second. It does this
   // by making responses take 2s to return, not by sending an error code or throttling response. Choosing

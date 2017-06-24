@@ -5,7 +5,6 @@ import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 import ngSanitize from 'angular-sanitize';
 import i18next from 'i18next';
-import LocalStorageModule from 'angular-local-storage';
 import MessagesModule from 'angular-messages';
 
 import RateLimiterModule from 'ng-http-rate-limiter';
@@ -37,7 +36,6 @@ export const DimAppModule = angular
     DialogModule,
     DragAndDropModule,
     i18next,
-    LocalStorageModule,
     MessagesModule,
     ngSanitize,
     RateLimiterModule,

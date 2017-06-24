@@ -92,7 +92,6 @@ function ItemService(dimStoreService,
           sourceItem.amount -= amountToRemove;
           sourceItem.index = dimStoreService.createItemIndex(sourceItem);
           source.addItem(sourceItem);
-          console.log(source.buckets[item.location.id]);
         }
 
         removeAmount -= amountToRemove;
@@ -710,18 +709,18 @@ function ItemService(dimStoreService,
           }
 
           if (equip) {
-            promise = promise.then(() => (item.equipped ? item : equipItem(item)));
+            promise = promise.then((item) => (item.equipped ? item : equipItem(item)));
           } else if (!equip) {
-            promise = promise.then(() => (item.equipped ? dequipItem(item) : item));
+            promise = promise.then((item) => (item.equipped ? dequipItem(item) : item));
           }
         } else if (source.isVault && target.isVault) { // Vault to Vault
           // Do Nothing.
         } else if (source.isVault || target.isVault) { // Guardian to Vault
           if (item.equipped) {
-            promise = promise.then(() => dequipItem(item));
+            promise = promise.then((item) => dequipItem(item));
           }
 
-          promise = promise.then(() => moveToStore(item, target, equip, amount));
+          promise = promise.then((item) => moveToStore(item, target, equip, amount));
         }
 
         return promise;
