@@ -139,6 +139,12 @@ div:focus, span:focus {
     cursor: default;
     float: right;
   }
+  .header-separator {
+      display: inline;
+      width: 0;
+      height: 16px;
+      border-right: 1px solid #6f7070;
+  }
 }
 
 #actions {

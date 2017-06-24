@@ -17,6 +17,7 @@
     <span class="link" ng-click="$ctrl.showAbout($event)" translate="Header.About"></span>
     <span class="link" ng-click="$ctrl.showSupport($event)" translate="Header.SupportDIM"></span>
     <a class="link" target="_blank" rel="noopener noreferrer" href="https://teespring.com/stores/dim" translate="Header.Shop"></a>
+    <span class="link header-separator"></span>
     <span class="link" ng-click="$ctrl.toggleRecordBooks($event)" translate="RecordBooks"></span>
     <span class="link" ng-if="::$ctrl.featureFlags.vendorsEnabled" ng-class="{disabled: !$ctrl.vendorService.vendorsLoaded}" ng-click="$ctrl.toggleVendors($event)" translate="Vendors"></span>
     <span class="link" ng-if="$ctrl.xur.available" ng-click="$ctrl.showXur($event)">Xûr</span>
