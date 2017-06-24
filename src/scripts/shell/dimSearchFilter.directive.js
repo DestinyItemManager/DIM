@@ -57,7 +57,7 @@ function SearchService(dimSettingsService) {
     glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     year: ['year1', 'year2', 'year3'],
     vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
-    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot', 'triumph'],
+    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
     hasLight: ['light', 'haslight'],
     weapon: ['weapon'],
     armor: ['armor'],
@@ -735,8 +735,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           coe: [1537575125],     // SOURCE_POE_ELDER_CHALLENGE
           af: [3667653533],      // SOURCE_ARCHON_FORGE
           dawning: [3131490494], // SOURCE_DAWNING
-          aot: [3068521220, 4161861381, 440710167],    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
-          triumph: [3068521220, 416861381, 440710167]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+          aot: [3068521220, 4161861381, 440710167]    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
         },
         restricted: {
           trials: [2179714245, 2682516238, 560942287],    // remove xur exotics and patrol items
@@ -749,8 +748,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           coe: [3602080346, 2682516238],                  // remove engrams
           af: [2682516238],                               // remove engrams
           dawning: [2682516238, 1111209135],              // remove engrams, planetary materials, & chroma
-          aot: [2964550958, 2659839637, 353834582, 560942287], // Remove ROI, TTK, motes, & glimmer items
-          triumph: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
+          aot: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
         }
       };
       if (!item) {
