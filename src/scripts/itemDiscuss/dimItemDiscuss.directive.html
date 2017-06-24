@@ -1,82 +1,84 @@
 <div id="discuss-drawer" ng-if="vm.show">
-    <div class="discuss-options">
-        <button class="dim-button" style="float: right;" ng-click="vm.cancel()" translate="Loadouts.Cancel"></button>
-    </div>
+  <div class="discuss-options">
+    <button class="dim-button" style="float: right;" ng-click="vm.cancel()" translate="Loadouts.Cancel"></button>
+  </div>
 
-    <div class="user-review-form">
-        <div class="user-review-community-overview">
-            <div ng-if="vm.item.communityReviews.length" translate="DtrReview.CurrentAverageRating" translate-values="{itemName: vm.item.name, itemRating: vm.item.dtrRating, numReviews: vm.item.communityReviews.length}"></div>
-            <div ng-if="!vm.item.communityReviews.length" translate="DtrReview.NoReviewsYet" translate-values="{itemName: vm.item.name}"></div>
+  <div class="user-review-form">
+    <div class="user-review-community-overview">
+      <div ng-if="vm.item.communityReviews.length" translate="DtrReview.CurrentAverageRating" translate-values="{ itemName: vm.item.name, itemRating: vm.item.dtrRating, numReviews: vm.item.communityReviews.length }"></div>
+      <div ng-if="!vm.item.communityReviews.length" translate="DtrReview.NoReviewsYet" translate-values="{ itemName: vm.item.name }"></div>
+    </div>
+    <form name="dtrReview" ng-submit="vm.submitReview()">
+      <div class="user-review-container">
+        <div class="user-review-rating-preamble" translate="DtrReview.RatingHint"></div>
+        <div class="user-review-rating-field">
+          <select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions" ng-blur="vm.reviewBlur()"></select>
         </div>
-        <form name="dtrReview" ng-submit="vm.submitReview()">
-            <div class="user-review-container">
-                <div class="user-review-rating-preamble" translate="DtrReview.RatingHint"></div>
-                <div class="user-review-rating-field">
-                    <select class="item-dtr-review-input" ng-model="vm.item.userRating" ng-options="item for item in vm.dtrRatingOptions" ng-blur="vm.reviewBlur()"></select>
-                </div>
-            </div>
+      </div>
 
-            <div class="user-review-review-preamble" translate="DtrReview.ReviewHint"></div>
-            <div class="user-review-review-field">
-                <textarea translate-attr="{ placeholder: 'DtrReview.Help' }" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
-            </div>
+      <div class="user-review-review-preamble" translate="DtrReview.ReviewHint"></div>
+      <div class="user-review-review-field">
+        <textarea translate-attr="{ placeholder: 'DtrReview.Help' }" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
+      </div>
 
-            <div class="user-review-container">
-                <div class="user-review-pros-preamble" translate="DtrReview.Pros"></div>
-                <div class="user-review-pros-field">
-                    <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
-                </div>
-            </div>
-
-            <div class="user-review-container">
-                <div class="user-review-cons-preamble" translate="DtrReview.Cons"></div>
-                <div class="user-review-cons-field">
-                    <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
-                </div>
-            </div>
-
-            <div class="user-review-submit">
-                <input class="item-dtr-review-submit" type="submit" translate-attr="{ value: 'DtrReview.Submit' }" ng-disabled="!vm.item.userRating || vm.item.userRating < 1"></div>
-            </div>
-        </form>
-    </div>
-
-    <div class="community-reviews">
-        <div ng-repeat="communityReview in vm.item.communityReviews | filter:{review: ''}" class="community-review">
-            <div class="community-review-highlighter">
-                <div class="user-review-circle green-circle" ng-if="communityReview.isHighlighted"></div>
-                <div class="user-review-circle orange-circle" ng-if="!communityReview.isHighlighted"></div>
-            </div>
-            <div class="community-review-content">
-                <div class="user-review-container">
-                    <div class="community-review-display-name">
-                        {{ communityReview.reviewer.displayName }}
-                    </div>
-                    <div class="community-review-rating">
-                        {{ communityReview.rating }}
-                    </div>
-                </div>
-
-                <div ng-if="communityReview.review" class="community-review-review">
-                    {{ communityReview.review }}
-                </div>
-
-                <div ng-if="communityReview.pros || communityReview.cons" class="user-review-container">
-                    <div ng-if="communityReview.pros" class="community-reviews-pros-container">
-                        <div class="community-review-pros-header" translate="DtrReview.Pros"></div>
-                        <div class="community-review-pros">
-                            {{ communityReview.pros }}
-                        </div>
-                    </div>
-
-                    <div ng-if="communityReview.cons" class="community-reviews-cons-container">
-                        <div class="community-review-cons-header" translate="DtrReview.Cons"></div>
-                        <div class="community-review-cons">
-                            {{ communityReview.cons }}
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="user-review-container">
+        <div class="user-review-pros-preamble" translate="DtrReview.Pros"></div>
+        <div class="user-review-pros-field">
+          <textarea translate-attr="{ placeholder: 'DtrReview.HelpPros' }" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
         </div>
+      </div>
+
+      <div class="user-review-container">
+        <div class="user-review-cons-preamble" translate="DtrReview.Cons"></div>
+        <div class="user-review-cons-field">
+          <textarea translate-attr="{ placeholder: 'DtrReview.HelpCons' }" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
+        </div>
+      </div>
+
+      <div class="user-review-submit">
+        <input class="item-dtr-review-submit" type="submit" translate-attr="{ value: 'DtrReview.Submit' }" ng-disabled="!vm.item.userRating || vm.item.userRating < 1">
+      </div>
+    </form>
+  </div>
+
+  <div class="community-reviews">
+    <div ng-repeat="communityReview in vm.item.communityReviews | filter:{ review: '' }" class="community-review">
+      <div class="community-review-highlighter">
+        <div class="user-review-circle green-circle" ng-if="communityReview.isHighlighted"></div>
+        <div class="user-review-circle orange-circle" ng-if="!communityReview.isHighlighted"></div>
+      </div>
+      <div class="community-review-content">
+        <div class="user-review-container">
+          <div class="community-review-display-name">
+            {{ communityReview.reviewer.displayName }}
+          </div>
+          <div class="community-review-rating">
+            {{ communityReview.rating }}
+          </div>
+        </div>
+
+        <div ng-if="communityReview.review" class="community-review-review">
+          {{ communityReview.review }}
+        </div>
+
+        <div ng-if="communityReview.pros || communityReview.cons" class="user-review-container">
+          <div ng-if="communityReview.pros" class="community-reviews-pros-container">
+            <div class="community-review-pros-header" translate="DtrReview.Pros"></div>
+            <div class="community-review-pros">
+              {{ communityReview.pros }}
+            </div>
+          </div>
+
+          <div ng-if="communityReview.cons" class="community-reviews-cons-container">
+            <div class="community-review-cons-header" translate="DtrReview.Cons"></div>
+            <div class="community-review-cons">
+              {{ communityReview.cons }}
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
+
 </div>

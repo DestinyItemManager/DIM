@@ -85,11 +85,7 @@ div:focus, span:focus {
 }
 
 .logo {
-  background: url('../logo.png') no-repeat;
-  background-position: left center;
-  background-size: 24px;
   height: 24px;
-  padding-left: 32px;
   color: #999;
   font-size: 16px !important;
   font-weight: bold;
@@ -99,7 +95,7 @@ div:focus, span:focus {
     filter: grayscale(100%);
   }
   &.beta {
-    filter: hue-rotate(153deg);
+    filter: hue-rotate(153deg) saturate(60%);
   }
 }
 
@@ -119,7 +115,7 @@ div:focus, span:focus {
         margin-top: 1px;
       }
     }
-    span, a {
+    span, a, img {
       vertical-align: middle;
       margin: 0 6px;
       text-decoration: none;
@@ -320,6 +316,10 @@ a {
     h1, h2, h3, p, table, dl {
       padding-left: 25px;
       padding-right: 25px;
+
+      img {
+        vertical-align: middle;
+      }
     }
   }
   form {
@@ -647,31 +647,15 @@ img {
   }
 }
 
-.stat-damage-arc {
-  background: $arc;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.stat-damage-solar {
-  background: $solar;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
-.stat-damage-void {
-  background: $void;
-  color: white;
-  text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.65);
-}
-
 .item {
   @include item-size-padded;
   margin: 2px;
   position: relative;
   contain: strict;
   cursor: pointer;
+  box-sizing: border-box;
 }
+
 .search-hidden {
   opacity: .2;
 }
@@ -701,24 +685,59 @@ img {
 }
 
 .item-element {
-  pointer-events: none;
   display: block;
   position: absolute;
-  top: 35%;
-  right: 1px;
-  height: 35%;
-  width: 35%;
-  filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
-  background-repeat: no-repeat;
-  background-size: contain;
-  &.void {
-    background-image: url('../images/void.png');
+  top: 2px;
+  left: 2px;
+  pointer-events: none;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-color: transparent;
+    border-style: solid;
   }
-  &.arc {
-    background-image: url('../images/arc.png');
+  &::before {
+    border-width: 5px;
   }
-  &.solar {
-    background-image: url('../images/solar.png');
+  &.void::before {
+    border-left-color: $void;
+    border-top-color: $void;
+  }
+  &.arc::before {
+    border-left-color: $arc;
+    border-top-color: $arc;
+  }
+  &.solar::before {
+    border-left-color: $solar;
+    border-top-color: $solar;
+  }
+
+  .show-elements & {
+    top: 35%;
+    left: auto;
+    right: 1px;
+    height: 35%;
+    width: 35%;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.7));
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &::before {
+      content: none;
+    }
+
+    &.void {
+      background-image: url('../images/void.png');
+    }
+    &.arc {
+      background-image: url('../images/arc.png');
+    }
+    &.solar {
+      background-image: url('../images/solar.png');
+    }
   }
 }
 
@@ -1494,10 +1513,8 @@ dim-compare {
   .item {
     float: right;
     padding: 0 4px 0 0;
+    margin-right: 4px;
     z-index: -10;
-    .item-stat {
-      display: none;
-    }
   }
   > div {
     padding-left: 4px;

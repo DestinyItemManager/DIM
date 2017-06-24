@@ -37,6 +37,7 @@
          "Class": "Cannot compare this item as it is not for a {class}.",
          "Archetype": "Cannot compare this item as it is not a {type}."
       },
+      "ItemCount": "You have {num} of these.",
       "Splits": "Compare similar splits ({quantity})"
    },
    "Cooldown": {
@@ -329,13 +330,15 @@
       "ShowAnimationsHelp": "Will show the animated new item overlay on new items. Turning this off can save CPU cycles.",
       "ShowReviews": "Show review ratings on weapons",
       "ShowReviewsHelp": "Show the average user-sourced ratings on weapons.",
+      "ShowElemental": "Show elemental damage icons on weapons",
+      "ShowElementalHelp": "Show elemental damage icons on weapons.",
       "AllowIdPostToDtr": "Share account name and reviewed items with Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM will share your account name and any item you review with Destiny Tracker.",
       "SetSort": "Sort Items by:",
-      "SetSortHelp": "Sort items by rarity or their primary stat value.",
+      "SetSortHelp": "Sort items by rating, rarity, or their primary stat value.",
       "SortPrimary": "Primary stat",
       "SortRarity": "Rarity",
-      "SortRoll": "Stat roll percent",
+      "SortRoll": "Rating",
       "InventoryColumns": "Character Inventory Columns",
       "InventoryColumnsHelp": "Select the number of columns for character inventory.",
       "VaultColumns": "Vault Maximum Inventory Columns",

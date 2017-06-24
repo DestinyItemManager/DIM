@@ -6,9 +6,9 @@
       <i class="fa collapse"
          ng-class="$ctrl.settings.collapsedSections[vendorHash] ? 'fa-plus-square-o': 'fa-minus-square-o'"></i>
       <img class="vendor-icon"
-           ng-src="{{::vendor.icon | bungieIcon}}" />
-      {{::vendor.name}}
-      <span class="vendor-location">{{::vendor.location}}</span>
+           ng-src="{{ ::vendor.icon | bungieIcon }}" />
+      {{ ::vendor.name }}
+      <span class="vendor-location">{{ ::vendor.location }}</span>
     </div>
     <countdown class="vendor-timer"
                ng-if="vendor.nextRefreshDate[0] !== '9'"
@@ -21,7 +21,7 @@
                        property-filter="$ctrl.activeTab"></vendor-currencies>
     <div class="vendor-category"
          ng-repeat="category in vendor.categories | vendorTab:$ctrl.activeTab track by category.index">
-      <h3 class="category-title">{{::category.title}}</h3>
+      <h3 class="category-title">{{ ::category.title }}</h3>
       <div class="vendor-items">
         <vendor-item ng-repeat="saleItem in category.saleItems | vendorTabItems:$ctrl.activeTab track by saleItem.index"
                      sale-item="saleItem"

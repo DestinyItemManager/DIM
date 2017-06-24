@@ -7,11 +7,11 @@
   <div class="vendor-costs">
     <div ng-repeat="cost in ::$ctrl.saleItem.costs track by cost.currency.itemHash"
          class="cost"
-         ng-class="{notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value)}">
-      {{::cost.value}}
+         ng-class="{ notenough: ($ctrl.totalCoins[saleItem.cost.currency.itemHash] < saleItem.cost.value) }">
+      {{ ::cost.value }}
       <span class="currency"><img
-                               ng-src="{{::cost.currency.icon | bungieIcon}}"
-                               title="{{::cost.currency.itemName}}"></span>
+                               ng-src="{{ ::cost.currency.icon | bungieIcon }}"
+                               title="{{ ::cost.currency.itemName }}"></span>
     </div>
   </div>
 </div>

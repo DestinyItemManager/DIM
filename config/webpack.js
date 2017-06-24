@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const Visualizer = require('webpack-visualizer-plugin');
+// const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const NotifyPlugin = require('notify-webpack-plugin');
 
@@ -16,7 +16,6 @@ const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
 var preMinifiedDeps = [
-  'moment/min/moment.min.js',
   'underscore/underscore-min.js',
   'indexeddbshim/dist/indexeddbshim.min.js',
   'messageformat/messageformat.min.js',
@@ -26,7 +25,7 @@ var preMinifiedDeps = [
 module.exports = (env) => {
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
-  if (process.env.TRAVIS_BUILD_NUMBER) {
+  if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
     version += "." + process.env.TRAVIS_BUILD_NUMBER;
   }
 
@@ -174,10 +173,12 @@ module.exports = (env) => {
         $DIM_CHANGELOG: JSON.stringify(`https://github.com/DestinyItemManager/DIM/blob/${env === 'release' ? 'master' : 'dev'}/CHANGELOG.md${env === 'release' ? '' : '#next'}`),
         // These are set from the Travis repo settings instead of .travis.yml
         $DIM_API_KEY: JSON.stringify(process.env.API_KEY),
-        $DIM_AUTH_URL: JSON.stringify(process.env.AUTH_URL),
+        $DIM_CLIENT_ID: JSON.stringify(process.env.OAUTH_CLIENT_ID),
+        $DIM_CLIENT_SECRET: JSON.stringify(process.env.OAUTH_CLIENT_SECRET),
         // Website and extension have different keys
         $DIM_WEB_API_KEY: JSON.stringify(process.env.WEB_API_KEY),
-        $DIM_WEB_AUTH_URL: JSON.stringify(process.env.WEB_AUTH_URL),
+        $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
+        $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
 
         $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
 

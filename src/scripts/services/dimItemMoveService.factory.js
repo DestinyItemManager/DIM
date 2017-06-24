@@ -6,9 +6,8 @@ angular.module('dimApp')
 
 
 function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimActionQueue, dimItemService, dimInfoService, $translate) {
-  // `<div> ${$translate.instant('BungieService.Twitter')} ${twitterLink}</div>`
-  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DragAndDrop')}</p>` +
-                             `<p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
+  const didYouKnowTemplate = `<p>${$translate.instant('DidYouKnow.DragAndDrop')}</p>
+                              <p>${$translate.instant('DidYouKnow.TryNext')}</p>`;
   // Only show this once per session
   const didYouKnow = _.once(() => {
     dimInfoService.show('movebox', {
@@ -37,6 +36,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     promise = promise
       .catch(function(a) {
         toaster.pop('error', item.name, a.message);
+        console.error('error moving item', item, 'to', store, a);
       });
 
     loadingTracker.addPromise(promise);
@@ -87,6 +87,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     })
     .catch(function(a) {
       toaster.pop('error', actionableItem.name, a.message);
+      console.log('error consolidating', actionableItem, a);
     });
 
     loadingTracker.addPromise(promise);
@@ -165,6 +166,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     })
     .catch(function(a) {
       toaster.pop('error', actionableItem.name, a.message);
+      console.log('error distributing', actionableItem, a);
     });
 
     loadingTracker.addPromise(promise);
@@ -179,4 +181,3 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     moveItemTo: moveItemTo
   };
 }
-

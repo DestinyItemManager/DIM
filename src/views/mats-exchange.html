@@ -1,5 +1,5 @@
 <div ng-controller="dimMaterialsExchangeCtrl as vm" class="materials-exchange">
-   <!--<a ui-sref='inventory' class="link"><i class='fa fa-arrow-circle-left'></i><span translate="Help.BackToDIM"></span></a>-->
+   <back-link></back-link>
    <div class="stats-panel">
       <div class="section">
          <div class="title">
@@ -7,7 +7,7 @@
          </div>
          <div class="stats-body">
             <div class="guardian-selector">
-               <div ng-click="vm.setActiveCharacter(character)" ng-class="{selected: vm.activeCharacter === character}" ng-repeat="character in vm.characters track by $index" class="guardian">
+               <div ng-click="vm.setActiveCharacter(character)" ng-class="{ selected: vm.activeCharacter === character }" ng-repeat="character in vm.characters track by $index" class="guardian">
                   <div class="character-box" ng-style="{ 'background-image': 'url(' + character.background + ')' }">
                      <div class="emblem" ng-style="{ 'background-image': 'url(' + character.icon + ')' }"></div>
                      <div class="class">{{:: character.className }}</div>
@@ -18,14 +18,14 @@
             <div class="faction-details">
                <div class="faction-selector">
                   <div class="faction" ng-class="{selected : vm.activeFaction.hash == key}" ng-click="vm.setActiveFaction(key)" ng-repeat="(key,rep) in vm.activeCharacter.factions"
-                     title="{{rep.faction.factionName}} {{rep.progressToNextLevel}}/{{rep.nextLevelAt}}">
-                     <image ng-src="{{rep.faction.factionIcon | bungieIcon}}" />
+                     title="{{ rep.faction.factionName }} {{ rep.progressToNextLevel }}/{{ rep.nextLevelAt }}">
+                     <image ng-src="{{ rep.faction.factionIcon | bungieIcon }}" />
                   </div>
                </div>
                <div class="faction-info">
                   <div class="collapsible-section">
                      <div class="title">
-                        <span class="heading">{{vm.activeFaction.faction.factionName}}</span>
+                        <span class="heading">{{ vm.activeFaction.faction.factionName }}</span>
                      </div>
                      <table>
                         <tr class="row">
@@ -35,10 +35,10 @@
                            <td class="col" translate="MaterialsExchange.NewRep"></td>
                         </tr>
                         <tr class="row">
-                           <td class="col">{{vm.activeFaction.level}}</td>
-                           <td class="col">{{vm.activeFaction.progressToNextLevel}}/{{vm.activeFaction.nextLevelAt}}</td>
-                           <td class="col">{{vm.newRank}}</td>
-                           <td class="col">{{vm.newExperience}}/{{vm.activeFaction.nextLevelAt}}</td>
+                           <td class="col">{{ vm.activeFaction.level }}</td>
+                           <td class="col">{{ vm.activeFaction.progressToNextLevel }}/{{ vm.activeFaction.nextLevelAt }}</td>
+                           <td class="col">{{ vm.newRank }}</td>
+                           <td class="col">{{ vm.newExperience }}/{{ vm.activeFaction.nextLevelAt }}</td>
                         </tr>
                      </table>
                   </div>
@@ -53,26 +53,26 @@
             <tbody>
                <tr>
                   <td ng-repeat="item in vm.materials">
-                     <div class="toggleRep" ng-click="vm.toggleItem(item)" ng-class="{selected : vm.repPool[item.hash]}">
+                     <div class="toggleRep" ng-click="vm.toggleItem(item)" ng-class="{ selected : vm.repPool[item.hash] }">
                         <dim-simple-item item-data="item"></dim-simple-item>
                      </div>
                   </td>
                </tr>
                <tr>
                   <td ng-repeat="item in vm.materials">
-                     {{vm.calculateRep(item) / 2500}}
+                     {{ vm.calculateRep(item) / 2500 }}
                   </td>
                </tr>
                <tr>
                   <td ng-repeat="item in vm.planataryMats">
-                     <div class="toggleRep" ng-click="vm.toggleItem(item)" ng-class="{selected : vm.repPool[item.hash]}">
+                     <div class="toggleRep" ng-click="vm.toggleItem(item)" ng-class="{ selected : vm.repPool[item.hash] }">
                         <dim-simple-item item-data="item"></dim-simple-item>
                      </div>
                   </td>
                </tr>
                <tr>
                   <td ng-repeat="item in vm.planataryMats">
-                     {{vm.calculateRep(item) / 2500}}
+                     {{ vm.calculateRep(item) / 2500 }}
                   </td>
                </tr>
             </tbody>
@@ -87,10 +87,10 @@
                   </td>
                   <td>+</td>
                   <td>
-                     <div title="{{vm.items[3159615086].itemName}}" alt="{{vm.items[3159615086].itemName}}" class="item ng-isolate-scope">
+                     <div title="{{ vm.items[3159615086].itemName }}" alt="{{ vm.items[3159615086].itemName }}" class="item ng-isolate-scope">
                         <div class="item-elem">
-                           <div class="img" style="background-image: url({{vm.items[3159615086].icon}});">
-                              <div class="item-stat item-equipment stat-damage-">{{vm.variksMats[0].amount * 250}}</div>
+                           <div class="img" style="background-image: url({{ vm.items[3159615086].icon }});">
+                              <div class="item-stat item-equipment stat-damage-">{{ vm.variksMats[0].amount * 250 }}</div>
                            </div>
                         </div>
                      </div>
@@ -101,7 +101,7 @@
                   </td>
                   <td>=</td>
                   <td>
-                     {{vm.calculateRep(vm.variksMats[1]) / 2500}}
+                     {{ vm.calculateRep(vm.variksMats[1]) / 2500 }}
                   </td>
                </tr>
             </tbody>
@@ -110,9 +110,9 @@
             <tbody>
                <tr>
                   <td>
-                     <div title="{{vm.items[3159615086].itemName}}" alt="{{vm.items[3159615086].itemName}}" class="item ng-isolate-scope">
+                     <div title="{{ vm.items[3159615086].itemName }}" alt="{{ vm.items[3159615086].itemName }}" class="item ng-isolate-scope">
                         <div class="item-elem">
-                           <div class="img" style="background-image: url({{vm.items[3159615086].icon}});">
+                           <div class="img" style="background-image: url({{ vm.items[3159615086].icon }});">
                               <div class="item-stat item-equipment stat-damage-">{{vm.glimmer}}</div>
                            </div>
                         </div>
@@ -124,7 +124,7 @@
                   </td>
                   <td>=</td>
                   <td>
-                     {{vm.calculateRep(vm.gunSmithMats[0]) / 2500}}
+                     {{ vm.calculateRep(vm.gunSmithMats[0]) / 2500 }}
                   </td>
                </tr>
             </tbody>
@@ -141,7 +141,7 @@
                   </td>
                   <td>=</td>
                   <td>
-                     {{vm.calculateRep(vm.xurMats[1]) / 2500}}
+                     {{ vm.calculateRep(vm.xurMats[1]) / 2500 }}
                   </td>
                </tr>
             </tbody>
@@ -154,10 +154,10 @@
                   </td>
                   <td>+</td>
                   <td>
-                     <div title="{{vm.items[3159615086].itemName}}" alt="{{vm.items[3159615086].itemName}}" class="item ng-isolate-scope">
+                     <div title="{{ vm.items[3159615086].itemName }}" alt="{{ vm.items[3159615086].itemName }}" class="item ng-isolate-scope">
                         <div class="item-elem">
-                           <div class="img" style="background-image: url({{vm.items[3159615086].icon}});">
-                              <div class="item-stat item-equipment stat-damage-">{{vm.erisMats[0].amount * 250}}</div>
+                           <div class="img" style="background-image: url({{ vm.items[3159615086].icon }});">
+                              <div class="item-stat item-equipment stat-damage-">{{ vm.erisMats[0].amount * 250 }}</div>
                            </div>
                         </div>
                      </div>
@@ -168,7 +168,7 @@
                   </td>
                   <td>=</td>
                   <td>
-                     {{vm.calculateRep(vm.erisMats[1]) / 2500}}
+                     {{ vm.calculateRep(vm.erisMats[1]) / 2500 }}
                   </td>
                </tr>
             </tbody>

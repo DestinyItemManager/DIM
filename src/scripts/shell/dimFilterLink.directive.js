@@ -1,4 +1,5 @@
 import angular from 'angular';
+import template from './dimFilterLink.directive.html';
 
 /**
  * Link to a specific filter in search. Clicking adds this term to the search.
@@ -6,7 +7,7 @@ import angular from 'angular';
  */
 angular.module('dimApp')
   .component('dimFilterLink', {
-    template: "<span ng-click='$ctrl.addFilter($ctrl.filter)' ng-bind='$ctrl.filter'></span>",
+    template: template,
     controller: FilterLinkCtrl,
     bindings: {
       filter: '@'
@@ -74,4 +75,3 @@ function FilterLinkCtrl(dimSearchService, $window, $translate) {
     }
   };
 }
-

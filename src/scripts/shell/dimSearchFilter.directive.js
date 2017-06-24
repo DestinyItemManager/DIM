@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import template from './dimSearchFilter.directive.html';
 
 angular.module('dimApp')
   .factory('dimSearchService', SearchService)
@@ -56,7 +57,7 @@ function SearchService(dimSettingsService) {
     glimmer: ['glimmeritem', 'glimmerboost', 'glimmersupply'],
     year: ['year1', 'year2', 'year3'],
     vendor: ['fwc', 'do', 'nm', 'speaker', 'variks', 'shipwright', 'vanguard', 'osiris', 'xur', 'shaxx', 'cq', 'eris', 'ev', 'gunsmith'],
-    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot', 'triumph'],
+    activity: ['vanilla', 'trials', 'ib', 'qw', 'cd', 'srl', 'vog', 'ce', 'ttk', 'kf', 'roi', 'wotm', 'poe', 'coe', 'af', 'dawning', 'aot'],
     hasLight: ['light', 'haslight'],
     weapon: ['weapon'],
     armor: ['armor'],
@@ -66,6 +67,10 @@ function SearchService(dimSettingsService) {
     equipped: ['equipped'],
     transferable: ['transferable', 'movable']
   };
+
+  if ($featureFlags.reviewsEnabled) {
+    filterTrans.hasRating = ['rated', 'hasrating'];
+  }
 
   var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
     return ["is:" + word, "not:" + word];
@@ -93,6 +98,11 @@ function SearchService(dimSettingsService) {
   });
 
   var ranges = ['light', 'level', 'quality', 'percentage'];
+
+  if ($featureFlags.reviewsEnabled) {
+    ranges.push('rating');
+  }
+
   ranges.forEach(function(range) {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
@@ -121,7 +131,7 @@ function SearchFilter(dimSearchService) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
-          match: /\b((li|le|qu|pe|is:|not:|tag:|notes:|stat:)\w*)$/,
+          match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
             callback($.map(this.words, function(word) {
               return word.indexOf(term) === 0 ? word : null;
@@ -140,7 +150,7 @@ function SearchFilter(dimSearchService) {
     bindToController: true,
     restrict: 'E',
     scope: {},
-    template: `<input id="filter-input" class="dim-input" autocomplete="off" autocorrect="off" autocapitalize="off" translate-attr="{ placeholder: 'Header.FilterHelp' }" type="search" name="filter" ng-model="vm.search.query" ng-model-options="{ debounce: 500 }" ng-trim="true">`
+    template: template
   };
 }
 
@@ -279,6 +289,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       } else if (term.startsWith('quality:') || term.startsWith('percentage:')) {
         filter = term.replace('quality:', '').replace('percentage:', '');
         addPredicate("quality", filter);
+      } else if (term.startsWith('rating:')) {
+        filter = term.replace('rating:', '');
+        addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
         var pieces = term.split(':');
@@ -581,6 +594,53 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
       return result;
     },
+    hasRating: function(predicate, item) {
+      return predicate.length !== 0 && item.dtrRating;
+    },
+    rating: function(predicate, item) {
+      if (predicate.length === 0 || !item.dtrRating) {
+        return false;
+      }
+
+      var operands = ['<=', '>=', '=', '>', '<'];
+      var operand = 'none';
+      var result = false;
+
+      operands.forEach(function(element) {
+        if (predicate.substring(0, element.length) === element) {
+          operand = element;
+          predicate = predicate.substring(element.length);
+          return false;
+        } else {
+          return true;
+        }
+      }, this);
+
+      predicate = parseFloat(predicate);
+      var itemRating = parseFloat(item.dtrRating);
+
+      switch (operand) {
+      case 'none':
+        result = (itemRating === predicate);
+        break;
+      case '=':
+        result = (itemRating === predicate);
+        break;
+      case '<':
+        result = (itemRating < predicate);
+        break;
+      case '<=':
+        result = (itemRating <= predicate);
+        break;
+      case '>':
+        result = (itemRating > predicate);
+        break;
+      case '>=':
+        result = (itemRating >= predicate);
+        break;
+      }
+      return result;
+    },
     year: function(predicate, item) {
       if (predicate === 'year1') {
         return item.year === 1;
@@ -675,8 +735,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           coe: [1537575125],     // SOURCE_POE_ELDER_CHALLENGE
           af: [3667653533],      // SOURCE_ARCHON_FORGE
           dawning: [3131490494], // SOURCE_DAWNING
-          aot: [3068521220, 4161861381, 440710167],    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
-          triumph: [3068521220, 416861381, 440710167]  // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
+          aot: [3068521220, 4161861381, 440710167]    // SOURCE_AGES_OF_TRIUMPH && SOURCE_RAID_REPRISE
         },
         restricted: {
           trials: [2179714245, 2682516238, 560942287],    // remove xur exotics and patrol items
@@ -689,8 +748,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
           coe: [3602080346, 2682516238],                  // remove engrams
           af: [2682516238],                               // remove engrams
           dawning: [2682516238, 1111209135],              // remove engrams, planetary materials, & chroma
-          aot: [2964550958, 2659839637, 353834582, 560942287], // Remove ROI, TTK, motes, & glimmer items
-          triumph: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
+          aot: [2964550958, 2659839637, 353834582, 560942287] // Remove ROI, TTK, motes, & glimmer items
         }
       };
       if (!item) {

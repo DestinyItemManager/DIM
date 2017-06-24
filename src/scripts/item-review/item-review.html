@@ -1,3 +1,26 @@
+<div ng-if="$ctrl.canReview == false">
+  <form class="settings">
+    <div class="review-setting-table">
+      <div ng-show="$ctrl.featureFlags.reviewsEnabled">
+        <div class="review-setting-table--name">
+          <label for="showReviews" translate-attr="{ title: 'Settings.ShowReviewsHelp' }" translate="Settings.ShowReviews"></label>
+        </div>
+        <div class="review-setting-table--value">
+          <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
+        </div>
+      </div>
+      <div ng-show="$ctrl.featureFlags.reviewsEnabled">
+        <div class="review-setting-table--name">
+          <label for="allowIdPostToDtr" translate-attr="{ title: 'Settings.AllowIdPostToDtrHelp' }" translate="Settings.AllowIdPostToDtr"></label>
+        </div>
+        <div class="review-setting-table--value">
+          <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.allowIdPostToDtr"/>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
 <div ng-if="$ctrl.canReview" class="user-review--header">
   <span translate="DtrReview.YourReview"></span>
   <star-rating rating="$ctrl.item.userRating" on-rating-change="$ctrl.setRating(rating)" ng-blur="$ctrl.reviewBlur()"></star-rating>
@@ -8,7 +31,7 @@
   </span>
 </div>
 
-<div class="community-review--details" ng-show="$ctrl.expandReview">
+<div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
   <textarea translate-attr="{ placeholder: 'DtrReview.Help' }"
             ng-model="$ctrl.item.userReview"
             ng-blur="$ctrl.reviewBlur()"></textarea>
@@ -22,7 +45,7 @@
   </div>
 </div>
 
-<div class="community-review--reviews" ng-hide="$ctrl.expandReview">
+<div ng-if="$ctrl.canReview" class="community-review--reviews" ng-hide="$ctrl.expandReview">
   <div ng-if="$ctrl.submitted"
        class="community-review--message"
        translate="DtrReview.ThankYou"></div>
@@ -32,18 +55,18 @@
   <div ng-if="$ctrl.procon" class="community-review--procon">
     <div>
       <div translate="DtrReview.Pros"></div>
-      <div ng-repeat="pro in $ctrl.aggregate.pros" ng-bind='pro'></div>
+      <div ng-repeat="pro in $ctrl.aggregate.pros" ng-bind="pro"></div>
     </div>
     <div>
       <div translate="DtrReview.Cons"></div>
-      <div ng-repeat="pro in $ctrl.aggregate.cons" ng-bind='pro'></div>
+      <div ng-repeat="con in $ctrl.aggregate.cons" ng-bind="con"></div>
     </div>
   </div>
   <div class="community-review" ng-repeat="review in $ctrl.item.writtenReviews">
     <div class="community-review--who">
       <star-rating rating="review.rating" read-only></star-rating>
-      <div ng-bind="review.reviewer.displayName" ng-class="{'community-review--who__special': review.isHighlighted}"></div>
-      <div ng-bind="review.timestamp | date:'mediumDate'"></div>
+      <div ng-bind="review.reviewer.displayName" ng-class="{ 'community-review--who__special': review.isHighlighted }"></div>
+      <div ng-bind="review.timestamp | utcToLocal:'mediumDate'"></div>
     </div>
     <div ng-bind="review.review"></div>
   </div>

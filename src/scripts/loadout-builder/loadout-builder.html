@@ -7,10 +7,10 @@
   <dim-loadout></dim-loadout>
 
   <p>
-    <span class='dim-button' ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{!vm.showGear ? 'LB.ShowGear' : 'LB.HideGear'}}</span>
+    <span class="dim-button" ng-click="vm.showGear=!vm.showGear" translate-values="{ class: vm.i18nClassNames[vm.active] }" translate>{{ !vm.showGear ? 'LB.ShowGear' : 'LB.HideGear' }}</span>
   </p>
   <div class="section" ng-show="vm.showGear">
-    <span translate="Bucket.Armor"></span>: <select ng-model='vm.type' ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
+    <span translate="Bucket.Armor"></span>: <select ng-model="vm.type" ng-change="vm.testchange()" ng-options="val as type for (val, type) in vm.i18nItemNames"></select>
     <label>
       <input class="vendor-checkbox" type="checkbox" id="includeVendors" ng-model="vm.includeVendors" ng-change="vm.onIncludeVendorsChange()">
       <span translate="LB.Vendor"></span>
@@ -33,8 +33,8 @@
 
   <div class="section">
     <p>
-      <span class='dim-button locked-button' ng-click="vm.lockEquipped()" translate="LB.LockEquipped"></span>
-      <span class='dim-button locked-button' ng-click="vm.clearLocked()" translate="LB.ClearLocked"></span>
+      <span class="dim-button locked-button" ng-click="vm.lockEquipped()" translate="LB.LockEquipped"></span>
+      <span class="dim-button locked-button" ng-click="vm.clearLocked()" translate="LB.ClearLocked"></span>
       <span translate="LB.Locked"></span> - <small translate="LB.LockedHelp"></small>
     </p>
     <loadout-builder-locks
@@ -69,9 +69,9 @@
   </p>
   <div ng-show="vm.progress >= 1 && vm.hasSets">
     <p><span translate="LB.FilterSets"></span> (<span translate="Stats.Intellect"></span>/<span translate="Stats.Discipline"></span>/<span translate="Stats.Strength"></span>):
-      <select ng-model='vm.activesets' ng-change="vm.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"></select>
-      <span class="dim-button" ng-click='vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false' translate="LB.AdvancedOptions"></span>
-      <span class="dim-button" ng-click='vm.showHelp=!vm.showHelp;vm.showAdvanced=false' translate="LB.Help"></span>
+      <select ng-model="vm.activesets" ng-change="vm.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"></select>
+      <span class="dim-button" ng-click="vm.showAdvanced=!vm.showAdvanced;vm.showHelp=false" translate="LB.AdvancedOptions"></span>
+      <span class="dim-button" ng-click="vm.showHelp=!vm.showHelp;vm.showAdvanced=false" translate="LB.Help"></span>
       <span><div ng-show="vm.showAdvanced">
         <p>
           <label>
@@ -138,23 +138,23 @@
     </p>
   </div>
   <div ng-show="vm.progress < 1 && vm.hasSets">
-    <p><span translate="LB.Loading"></span> <span>({{vm.progress*100 | number:2}}%)</span></p>
+    <p><span translate="LB.Loading"></span> <span>({{ vm.progress*100 | number:2 }}%)</span></p>
   </div>
   <div ng-show="vm.progress >= 1">
     <div class="section loadout" ng-repeat="setType in vm.activeHighestSets track by setType.set.setHash">
       <div class="loadout-builder-controls">
         <span ng-if="setType.set.includesVendorItems" translate="LB.ContainsVendorItems"></span>
-        <span ng-if="!setType.set.includesVendorItems" class='dim-button' ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span>
-        <span ng-if="!setType.set.includesVendorItems" class='dim-button equip-button' ng-click="vm.equipItems(setType.set)" translate="LB.Equip" translate-values="{ character: vm.activeCharacters[vm.selectedCharacter].name }"></span>
+        <span ng-if="!setType.set.includesVendorItems" class="dim-button" ng-click="vm.newLoadout(setType.set)" translate="Loadouts.Create"></span>
+        <span ng-if="!setType.set.includesVendorItems" class="dim-button equip-button" ng-click="vm.equipItems(setType.set)" translate="LB.Equip" translate-values="{ character: vm.activeCharacters[vm.selectedCharacter].name }"></span>
         <dim-stats stats="setType.tiers[vm.activesets].stats"></dim-stats>
       </div>
       <div class="loadout-builder-section">
         <div class="set-item" ng-repeat="armorpiece in setType.set.armor">
           <loadout-builder-item shift-click-callback="vm.excludeItem" item-data="armorpiece.item"></loadout-builder-item>
           <dim-talent-grid class="smaller" talent-grid="armorpiece.item.talentGrid" perks-only="true"></dim-talent-grid>
-          <div class="label"><small translate="{{setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small></div>
+          <div class="label"><small translate="{{ setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'int'? 'Stats.Intellect': setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'dis'? 'Stats.Discipline' : setType.tiers[vm.activesets].configs[0][armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus' }}"></small></div>
           <div class="other-configs" ng-if="$index > 0" ng-show="collapsedConfigs[$parent.$parent.$parent.$index]" ng-repeat="config in setType.tiers[vm.activesets].configs">
-            <small translate="{{config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus'}}"></small>
+            <small translate="{{ config[armorpiece.item.type] === 'int'? 'Stats.Intellect' : config[armorpiece.item.type] === 'dis'? 'Stats.Discipline' : config[armorpiece.item.type] === 'str'? 'Stats.Strength' : 'Stats.NoBonus' }}"></small>
           </div>
         </div>
       </div>

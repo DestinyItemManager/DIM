@@ -24,9 +24,11 @@
     "$DIM_CHANGELOG": true,
     "$DIM_VERSION": true,
     "$DIM_API_KEY": true,
-    "$DIM_AUTH_URL": true,
     "$DIM_WEB_API_KEY": true,
-    "$DIM_WEB_AUTH_URL": true,
+    "$DIM_CLIENT_ID": true,
+    "$DIM_WEB_CLIENT_ID": true,
+    "$DIM_CLIENT_SECRET": true,
+    "$DIM_WEB_CLIENT_SECRET": true,
     "$GOOGLE_DRIVE_CLIENT_ID": true,
     "$featureFlags": true
   },

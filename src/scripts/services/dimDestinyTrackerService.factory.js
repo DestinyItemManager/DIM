@@ -22,15 +22,21 @@ function DestinyTrackerService($q,
   var _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
 
   $rootScope.$on('item-clicked', function(event, item) {
-    _reviewsFetcher.getItemReviews(item);
+    if (dimSettingsService.allowIdPostToDtr) {
+      _reviewsFetcher.getItemReviews(item);
+    }
   });
 
   $rootScope.$on('dim-stores-updated', function(event, stores) {
-    _bulkFetcher.bulkFetch(stores);
+    if (dimSettingsService.showReviews) {
+      _bulkFetcher.bulkFetch(stores);
+    }
   });
 
   $rootScope.$on('review-submitted', function(event, item) {
-    _reviewSubmitter.submitReview(item);
+    if (dimSettingsService.allowIdPostToDtr) {
+      _reviewSubmitter.submitReview(item);
+    }
   });
 
   return {

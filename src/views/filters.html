@@ -5,7 +5,7 @@
     Click filters below to apply, or by typing in the search box.
   </p>
   <p>
-    Filters are combined using 'and' logic, for example "is:arc light:>300" will return all arc items with over 300 light. Filters can be negated using "not:", for example "not:engram" will find all non-engram items.
+    Filters are combined using 'and' logic, for example "is:arc light:&gt;300" will return all arc items with over 300 light. Filters can be negated using "not:", for example "not:engram" will find all non-engram items.
   </p>
   <table>
     <tr>
@@ -269,28 +269,48 @@
       </td>
       <td>Shows new items.</td>
     </tr>
-    <tr ng-if="vm.featureFlags.tagsEnabled">
-      <td>
-        <dim-filter-link filter="tag:none"></dim-filter-link>
-        <dim-filter-link filter="tag:favorite"></dim-filter-link>
-        <dim-filter-link filter="tag:keep"></dim-filter-link>
-        <dim-filter-link filter="tag:junk"></dim-filter-link>
-        <dim-filter-link filter="tag:infuse"></dim-filter-link>
-      </td>
-      <td><ul>
-        <li>Shows items with out a tag.</li>
-        <li>Shows favorite items.</li>
-        <li>Shows keep items.</li>
-        <li>Shows items you wish to eventually dismantle.</li>
-        <li>Shows items you wish to eventually infuse.</li>
-      </ul></td>
-    </tr>
-    <tr ng-if="vm.featureFlags.tagsEnabled">
-      <td>
-        <dim-filter-link filter="notes:value"></dim-filter-link>
-      </td>
-      <td>Search for items that you have tagged with custom notes</td>
-    </tr>
+    <span ng-if="vm.featureFlags.tagsEnabled">
+      <tr>
+        <td>
+          <dim-filter-link filter="tag:none"></dim-filter-link>
+          <dim-filter-link filter="tag:favorite"></dim-filter-link>
+          <dim-filter-link filter="tag:keep"></dim-filter-link>
+          <dim-filter-link filter="tag:junk"></dim-filter-link>
+          <dim-filter-link filter="tag:infuse"></dim-filter-link>
+        </td>
+        <td><ul>
+          <li>Shows items with out a tag.</li>
+          <li>Shows favorite items.</li>
+          <li>Shows keep items.</li>
+          <li>Shows items you wish to eventually dismantle.</li>
+          <li>Shows items you wish to eventually infuse.</li>
+        </ul></td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="notes:value"></dim-filter-link>
+        </td>
+        <td>Search for items that you have tagged with custom notes</td>
+      </tr>
+    </span>
+    <span ng-if="vm.featureFlags.reviewsEnabled">
+      <tr>
+        <td>
+          <dim-filter-link filter="is:rated"></dim-filter-link>
+        </td>
+        <td>Shows all weapons that have a rating from Destiny Tracker.</td>
+      </tr>
+      <tr>
+        <td>
+          <dim-filter-link filter="rating:value"></dim-filter-link>
+          <dim-filter-link filter="rating:&gt;=value"></dim-filter-link>
+          <dim-filter-link filter="rating:&gt;value"></dim-filter-link>
+          <dim-filter-link filter="rating:&lt;value"></dim-filter-link>
+          <dim-filter-link filter="rating:&lt;=value"></dim-filter-link>
+        </td>
+        <td>Shows weapons based on their rating from Destiny Tracker.</td>
+      </tr>
+    </span>
     <tr>
       <td>
         <dim-filter-link filter="is:year1"></dim-filter-link>
@@ -363,7 +383,7 @@
         <dim-filter-link filter="is:af"></dim-filter-link>
         <dim-filter-link filter="is:wotm"></dim-filter-link>
         <dim-filter-link filter="is:dawning"></dim-filter-link>
-        <dim-filter-link filter="is:aot, is:triumph"></dim-filter-link>
+        <dim-filter-link filter="is:aot"></dim-filter-link>
       </td>
       <td>
         <span>Available from release <i>Vanilla</i></span>
@@ -387,3 +407,4 @@
     </tr>
   </table>
   </div>
+</div>
