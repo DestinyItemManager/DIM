@@ -3,7 +3,6 @@ import angular from 'angular';
 import AriaModule from 'angular-aria';
 import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
-import LocalStorageModule from 'angular-local-storage';
 import MessagesModule from 'angular-messages';
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
@@ -34,7 +33,6 @@ export const DimAppModule = angular
     AriaModule,
     DialogModule,
     DragAndDropModule,
-    LocalStorageModule,
     MessagesModule,
     RateLimiterModule,
     ShellModule,

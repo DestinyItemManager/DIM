@@ -5,7 +5,7 @@
  * See https://www.bungie.net/en/Help/Article/45481 for details about
  * Bungie.net OAuth.
  */
-export function OAuthTokenService(localStorageService) {
+export function OAuthTokenService() {
   'ngInject';
 
   /**
@@ -22,7 +22,7 @@ export function OAuthTokenService(localStorageService) {
    * @return {{accessToken, refreshToken, bungieMembershipId}}
    */
   function getToken() {
-    return localStorageService.get('authorization');
+    return localStorage.authorization ? JSON.parse(localStorage.authorization) : null;
   }
 
   /**
@@ -32,14 +32,14 @@ export function OAuthTokenService(localStorageService) {
    * @param {string} token.bungieMembershipId The user's Bungie account ID
    */
   function setToken(token) {
-    localStorageService.set('authorization', token);
+    localStorage.authorization = JSON.stringify(token);
   }
 
   /**
    * Clear any saved token information.
    */
   function removeToken() {
-    localStorageService.remove('authorization');
+    localStorage.removeItem('authorization');
   }
 
   /**
