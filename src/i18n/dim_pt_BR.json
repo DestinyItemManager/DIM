@@ -83,7 +83,8 @@
       "Filters": "Filtros",
       "FilterHelp": "Buscar por item/perk ou is:arc",
       "MaterialsExchange": "Ranks de facção disponíveis",
-      "Refresh": "Atualizar dados do Destiny"
+      "Refresh": "Atualizar dados do Destiny",
+      "SupportDIM": "Apoiantes"
    },
    "Help": {
       "BackToDIM": "Voltar para o DIM",
@@ -323,10 +324,10 @@
       "ShowOverlayHelp": "Itens novos serão exibidos com uma sobreposição de destaque.",
       "ShowAnimations": "Exibir animação da sobreposição em itens novos.",
       "ShowAnimationsHelp": "Irá exibir uma animação em itens novos. Desativar esse recurso pode economizar ciclos de CPU.",
-      "ShowElemental": "Exibir ícone de dano elemental em armas",
-      "ShowElementalHelp": "Exibe o ícone do dano elemental da arma.",
       "ShowReviews": "Mostrar classificações das armas em análise.",
       "ShowReviewsHelp": "Mostrar a média utilizador-armas analisadas.",
+      "ShowElemental": "Exibir ícone de dano elemental em armas",
+      "ShowElementalHelp": "Exibir ícone de dano elemental em armas.",
       "AllowIdPostToDtr": "Partilhar username e items analisados com o Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM vai partilhar o seu username e qualquer item que tenhas feito review com o Destiny Tracker.",
       "SetSort": "Ordenar itens por:",
@@ -365,6 +366,13 @@
       "Quality": "Níveis de qualidade",
       "Strength": "Força",
       "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 para T{nextTier}}})\n"
+   },
+   "Storage": {
+      "DriveSync": "Iniciar sessão no Google Drive",
+      "DriveLogout": "Terminar sessão no Google Drive",
+      "NoData": "Sem informação",
+      "ImportNoFile": "Nenhum ficheiro selecionado!",
+      "ImportFromExtension": "Importar dados da extensão do Chrome DIM"
    },
    "StoreBucket": {
       "FillStack": "Encher Pilha ({amount})",
@@ -424,7 +432,7 @@
          "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
          "Twitter": "Twitter",
          "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
-         "Version": "Versão {version} ({flavor})",
+         "Version": "Versão {version} ({flavor}), built on {date}",
          "Transifex": "Junte-se à equipe de tradução!",
          "TransifexText": "Nós usamos o Transifex para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time."
       },

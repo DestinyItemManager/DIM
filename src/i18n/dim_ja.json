@@ -83,7 +83,8 @@
       "Filters": "フィルター",
       "FilterHelp": "アイテム／パークを検索",
       "MaterialsExchange": "利用可能な派閥のランク",
-      "Refresh": "デスティニーデータを更新"
+      "Refresh": "デスティニーデータを更新",
+      "SupportDIM": "支持者"
    },
    "Help": {
       "BackToDIM": "DIMに戻る",
@@ -261,6 +262,8 @@
       "NewRep": "新しい担当者"
    },
    "MovePopup": {
+      "OverviewTab": "概要",
+      "ReviewsTab": "レビュー",
       "Consolidate": "統合する",
       "DistributeEvenly": "均等に割り当てる。",
       "Equip": "装備する",
@@ -281,6 +284,11 @@
    "Notes": {
       "Error": "エラー！ノートは120文字が上限です。",
       "Help": "このアイテムにメモを追加"
+   },
+   "DtrReview": {
+      "Edit": "編集",
+      "Delete": "削除",
+      "Cancel": "キャンセル"
    },
    "Objectives": {
       "Complete": "完成",
@@ -303,8 +311,11 @@
       "ShowOverlayHelp": "オーレイで新しいアイテムを表示します。",
       "ShowAnimations": "新しいアイテムのオーバーレイアニメーションを表示する。",
       "ShowAnimationsHelp": "新しいアイテムにアニメートされたオーバーレイが表示されます。これをオフにすると、CPUサイクルを節約できます。",
+      "ShowReviews": "武器に関するレビュー評価を表示する",
+      "ShowReviewsHelp": "武器に関するユーザーの評価を表示します。 ",
       "ShowElemental": "武器の属性アイコンを表示する",
       "ShowElementalHelp": "武器の属性アイコンを表示する。",
+      "AllowIdPostToDtr": "アカウント名を共有し、Destiny Trackerでアイテムを評価します。",
       "SetSort": "アイテムを並べ替える",
       "SetSortHelp": "アイテムをレア度か統計量順で並べる.",
       "SortPrimary": "主要",
@@ -340,6 +351,13 @@
       "Quality": "品質",
       "Strength": "腕力",
       "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 の T{nextTier}}})\n"
+   },
+   "Storage": {
+      "Enabled": "有効",
+      "Disabled": "無効",
+      "ImportExport": "データのバックアップ",
+      "NoData": "データなし",
+      "Export": "DIMのデータをバックアップ"
    },
    "StoreBucket": {
       "FillStack": "フルスタック ({amount})",
@@ -399,7 +417,7 @@
          "RedditHelp": "質問、コメント、提案があればレディットで教えてください！",
          "Twitter": "ツイッター",
          "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
-         "Version": "バージョン {version} ({flavor})",
+         "Version": "バージョン {version} ({flavor}), built on {date}",
          "Transifex": "翻訳チームに参加してください！",
          "TransifexText": "翻訳には Transifex を使用しています。翻訳チームに参加して DIM をあなたの言語にローカライズしよう."
       },

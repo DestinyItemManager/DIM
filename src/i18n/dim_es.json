@@ -83,7 +83,8 @@
       "Filters": "Filtros",
       "FilterHelp": "Buscar objeto/beneficio o is:arc",
       "MaterialsExchange": "Rangos de facción disponible",
-      "Refresh": "Actualizar datos de Destiny"
+      "Refresh": "Actualizar datos de Destiny",
+      "SupportDIM": "Partidarios"
    },
    "Help": {
       "BackToDIM": "Regresar a DIM",
@@ -323,10 +324,10 @@
       "ShowOverlayHelp": "Mostrará objetos nuevos con una cobertura.",
       "ShowAnimations": "Mostrar cobertura animada en nuevos objetos.",
       "ShowAnimationsHelp": "Mostrará la cobertura animada en objetos nuevos. Apagando esto puede ahorrar ciclos de procesamiento.",
-      "ShowElemental": "Mostrar ícono de daño elemental en armas",
-      "ShowElementalHelp": "Mostrará ícono de daño elemental en armas.",
       "ShowReviews": "Muestra la valuación de reseñas en las armas",
       "ShowReviewsHelp": "Muestra el promedio de reseñas de armas por usuarios.",
+      "ShowElemental": "Mostrar ícono de daño elemental en armas",
+      "ShowElementalHelp": "Mostrará ícono de daño elemental en armas.",
       "AllowIdPostToDtr": "Comparte tu nombre de cuenta y tus reseñas de objetos con Destiny Tracker.",
       "AllowIdPostToDtrHelp": "DIM compartirá el nombre de tu cuenta y cualquier objeto del cual hagas una reseña con Destiny Tracker",
       "SetSort": "Ordernar objetos por:",
@@ -365,6 +366,31 @@
       "Quality": "Calidad Estadística",
       "Strength": "Fuerza",
       "TierProgress": "N{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 para N{nextTier}}})\n"
+   },
+   "Storage": {
+      "Title": "Almacenamiento de DIM",
+      "Explain": "DIM almacena su propia información separada de tus datos de Destiny (mantenidos por Bungie.net).",
+      "Enabled": "Habilitado",
+      "Disabled": "Deshabilitado",
+      "StatLabel": "Esto contiene:",
+      "Settings": "Tus ajustes y preferencias de DIM",
+      "ImportExport": "Respaldar datos",
+      "IndexedDBStorage": "Almacenamiento local del Navegador",
+      "Details": {
+        "GoogleDriveStorage": "DIM puede guardar datos en la app de Google Drive. Si inicias sesión en Google Drive en navegadores multiples, tus datos serán compartidos por todas partes. Estos datos son almacenados por cada cuenta de Bungie."
+      },
+      "ForceSync": "Forzar sincronización de datos",
+      "DriveSync": "Iniciar sesión en Google Drive",
+      "DriveLogout": "Cerrar sesión de Google Drive",
+      "NoData": "No hay datos",
+      "Export": "Respaldar datos de DIM",
+      "Import": "Importar datos de DIM desde un archivo",
+      "ImportSuccess": "Datos de DIM importados!",
+      "ImportNoFile": "Ningún archivo ha sido seleccionado!",
+      "ImportFromExtension": "Importar datos desde la extensión de Chrome de DIM",
+      "ImportFromExtensionDetail": "Puedes importar datos desde la extensión de Chrome de DIM a la página web de DIM.",
+      "ImportFromExtensionButton": "Importar Datos",
+      "ImportFromExtensionWarning": "Tus datos de la extensión de Chrome de DIM van a ser sobreescritos con tus datos actuales. ¿Deseas continuar?"
    },
    "StoreBucket": {
       "FillStack": "Llena la pila ({amount})",
@@ -424,7 +450,7 @@
          "RedditHelp": "Si tienes preguntas, comentarios o sugerencias, háznoslas saber!",
          "Twitter": "Twitter",
          "TwitterHelp": "Asegúrate de seguirnos para estar informado de las actualizaciones e información de la aplicación en tiempo real.",
-         "Version": "Versión {version} ({flavor})",
+         "Version": "Versión {version} ({flavor}), built on {date}",
          "Transifex": "Únete al Equipo Traductor!",
          "TransifexText": "Utilizamos Transifex para facilitar la traducción. Si quieres mejorar alguna de las traducciones de DIM, únete al equipo."
       },
