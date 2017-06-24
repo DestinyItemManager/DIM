@@ -62,8 +62,8 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
   };
 
   vm.featureFlags = {
-    qualityEnabled: true, // $featureFlags.qualityEnabled,
-    reviewsEnabled: true // $featureFlags.reviewsEnabled
+    qualityEnabled: $featureFlags.qualityEnabled,
+    reviewsEnabled: $featureFlags.reviewsEnabled
   };
 
   vm.settings = dimSettingsService;
