@@ -136,7 +136,6 @@
     "no-useless-computed-key": "error",
     "no-useless-constructor": "error",
     "no-var": "error",
-    "object-shorthand": "error",
     "prefer-arrow-callback": "error",
     "prefer-const": "error",
     "prefer-rest-params": "error",
