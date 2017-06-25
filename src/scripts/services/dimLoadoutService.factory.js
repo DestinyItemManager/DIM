@@ -373,11 +373,7 @@ function LoadoutService($q, $rootScope, $i18next, uuid2, dimItemService, dimStor
         .then(() => {
           let value = 'success';
 
-<<<<<<< HEAD
-          var message = $i18next.t('Loadouts.Applied', { count: scope.total, store: store.name, context: store.gender });
-=======
-          let message = $translate.instant('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
->>>>>>> refs/remotes/DestinyItemManager/dev
+          let message = $i18next.t('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
 
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
@@ -430,13 +426,8 @@ function LoadoutService($q, $rootScope, $i18next, uuid2, dimItemService, dimStor
           const sourceItem = _.findWhere(source.store.items, { hash: pseudoItem.hash });
 
           if (amountToMove === 0 || !sourceItem) {
-<<<<<<< HEAD
-            promise = promise.then(function() {
-              const error = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
-=======
             promise = promise.then(() => {
-              const error = new Error($translate.instant('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
->>>>>>> refs/remotes/DestinyItemManager/dev
+              const error = new Error($i18next.t('Loadouts.TooManyRequested', { total: totalAmount, itemname: item.name, requested: pseudoItem.amount }));
               error.level = 'warn';
               return $q.reject(error);
             });

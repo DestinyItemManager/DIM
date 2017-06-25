@@ -27,7 +27,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $i18ne
     // Token expired and other auth maladies
     if (response.status === 401 || response.status === 403) {
       $rootScope.$broadcast('dim-no-token-found');
-      return $q.reject(new Error($translate.instant('BungieService.NotLoggedIn')));
+      return $q.reject(new Error($i18next.t('BungieService.NotLoggedIn')));
     }
     if (response.status >= 503 && response.status <= 526 /* cloudflare */) {
       return $q.reject(new Error($i18next.t('BungieService.Down')));

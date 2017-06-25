@@ -12,7 +12,7 @@ const source = path.join(__dirname, './src/i18n/dim_');
 const langs = ['en', 'de', 'es', 'fr', 'it', 'ja', 'pt_BR'];
 const options = { project: 'DIM' };
 
-for (var i = 0; i < 7; i++) {
-  i18nextToPo(langs[i], readFileSync(source + langs[i] + '.json'), options).then(save(source + langs[i] + '.po'));
+for (let i = 0; i < 7; i++) {
+  i18nextToPo(langs[i], readFileSync(`${source + langs[i]}.json`), options).then(save(`${source + langs[i]}.po`));
 }
 

@@ -27,10 +27,10 @@ function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
     interpolation: {
       format: function(val, format) {
         if (format === 'pct') {
-          return Math.min(100.0, Math.floor(100.0 * val)) + '%';
+          return `${Math.min(100.0, Math.floor(100.0 * val))}%`;
         }
         if (format === 'pct2') {
-          return Math.min(100.00, Math.floor(100.00 * val)) + '%';
+          return `${Math.min(100.00, Math.floor(100.00 * val))}%`;
         }
         return val;
       }
