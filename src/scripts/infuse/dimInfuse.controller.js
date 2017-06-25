@@ -6,7 +6,7 @@ angular.module('dimApp')
 
 
 function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoadoutService, toaster, $q, $translate) {
-  var vm = this;
+  const vm = this;
 
   vm.items = {};
   dimDefinitions.getDefinitions().then((defs) => {
@@ -62,20 +62,20 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
 
     // get Items for infusion
     getItems: function() {
-      var stores = dimStoreService.getStores();
-      var allItems = [];
+      let stores = dimStoreService.getStores();
+      let allItems = [];
 
       // If we want ALL our weapons, including vault's one
       if (!vm.getAllItems) {
-        stores = _.filter(stores, function(store) {
+        stores = _.filter(stores, (store) => {
           return store.id === vm.source.owner;
         });
       }
 
       // all stores
-      stores.forEach(function(store) {
+      stores.forEach((store) => {
         // all items in store
-        var items = _.filter(store.items, function(item) {
+        const items = _.filter(store.items, (item) => {
           return item.primStat &&
             item.year !== 1 &&
             (!item.locked || vm.showLockedItems) &&
@@ -86,7 +86,7 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
         allItems = allItems.concat(items);
       });
 
-      allItems = _.sortBy(allItems, function(item) {
+      allItems = _.sortBy(allItems, (item) => {
         return item.primStat.value + ((item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5);
       });
 
@@ -108,11 +108,11 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
         toaster.pop('error', $translate.instant('Infusion.NoTransfer', { target: vm.target.name }));
         return $q.resolve();
       }
-      var store = dimStoreService.getStore(vm.source.owner);
-      var items = {};
-      var key = vm.target.type.toLowerCase();
+      const store = dimStoreService.getStore(vm.source.owner);
+      const items = {};
+      const key = vm.target.type.toLowerCase();
       items[key] = items[key] || [];
-      var itemCopy = angular.copy(vm.target);
+      const itemCopy = angular.copy(vm.target);
       itemCopy.equipped = false;
       items[key].push(itemCopy);
       // Include the source, since we wouldn't want it to get moved out of the way
@@ -154,14 +154,14 @@ function dimInfuseCtrl($scope, dimStoreService, dimDefinitions, ngDialog, dimLoa
         });
       }
 
-      var loadout = {
+      const loadout = {
         classType: -1,
         name: $translate.instant('Infusion.InfusionMaterials'),
         items: items
       };
 
       vm.transferInProgress = true;
-      return dimLoadoutService.applyLoadout(store, loadout).then(function() {
+      return dimLoadoutService.applyLoadout(store, loadout).then(() => {
         vm.transferInProgress = false;
       });
     }

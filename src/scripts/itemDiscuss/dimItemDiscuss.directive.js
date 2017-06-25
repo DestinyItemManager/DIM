@@ -15,11 +15,11 @@ function ItemDiscuss() {
 }
 
 function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dimItemService, dimDestinyTrackerService) {
-  var vm = this;
+  const vm = this;
   vm.show = dimItemDiscussService.dialogOpen;
   vm.dtrRatingOptions = [1, 2, 3, 4, 5];
 
-  $scope.$on('dim-store-item-discuss', function(event, item) {
+  $scope.$on('dim-store-item-discuss', (event, item) => {
     vm.show = true;
 
     vm.item = item.item;
@@ -31,8 +31,8 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   };
 
   vm.submitReview = function submitReview() {
-    var item = vm.item;
-    var userReview = vm.toUserReview(item);
+    const item = vm.item;
+    const userReview = vm.toUserReview(item);
 
     $rootScope.$broadcast('review-submitted', item, userReview);
 
@@ -40,12 +40,12 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   };
 
   vm.toUserReview = function(item) {
-    var newRating = item.userRating;
-    var review = item.userReview;
-    var pros = item.userReviewPros;
-    var cons = item.userReviewCons;
+    const newRating = item.userRating;
+    const review = item.userReview;
+    const pros = item.userReviewPros;
+    const cons = item.userReviewCons;
 
-    var userReview = {
+    const userReview = {
       rating: newRating,
       review: review,
       pros: pros,
@@ -56,8 +56,8 @@ function ItemDiscussCtrl($scope, $rootScope, toaster, dimItemDiscussService, dim
   };
 
   vm.reviewBlur = function() {
-    var item = vm.item;
-    var userReview = vm.toUserReview(item);
+    const item = vm.item;
+    const userReview = vm.toUserReview(item);
 
     dimDestinyTrackerService.updateCachedUserRankings(item,
                                                       userReview);

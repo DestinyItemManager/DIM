@@ -4,7 +4,7 @@ import template from './dimCompare.directive.html';
 
 angular.module('dimApp')
   .directive('dimCompare', Compare)
-  .filter('statRange', function() {
+  .filter('statRange', () => {
     return function(stat, statRanges) {
       const statRange = statRanges[stat.statHash];
       if (stat.qualityPercentage) {
@@ -32,14 +32,14 @@ function Compare() {
 
 
 function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $translate) {
-  var vm = this;
+  const vm = this;
   vm.tagsEnabled = $featureFlags.tagsEnabled;
   vm.show = dimCompareService.dialogOpen;
 
   vm.comparisons = [];
   vm.statRanges = {};
 
-  $scope.$on('dim-store-item-compare', function(event, args) {
+  $scope.$on('dim-store-item-compare', (event, args) => {
     vm.show = true;
     dimCompareService.dialogOpen = true;
 
@@ -63,7 +63,7 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $transl
 
   vm.sort = function(statHash) {
     vm.sortedHash = statHash;
-    vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), function(item) {
+    vm.comparisons = _.sortBy(_.sortBy(_.sortBy(vm.comparisons, 'index'), 'name').reverse(), (item) => {
       const stat = _.find(item.stats, { statHash: statHash }) || item.primStat;
       return stat.value;
     }).reverse();
@@ -86,23 +86,23 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $transl
     if (args.dupes) {
       vm.compare = args.item;
       vm.similarTypes = _.where(dimItemService.getItems(), { typeName: vm.compare.typeName });
-      var armorSplit;
+      let armorSplit;
       if (!vm.compare.location.inWeapons) {
         vm.similarTypes = _.where(vm.similarTypes, { classType: vm.compare.classType });
-        armorSplit = _.reduce(vm.compare.stats, function(memo, stat) {
+        armorSplit = _.reduce(vm.compare.stats, (memo, stat) => {
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0);
       }
 
-      vm.archeTypes = _.filter(vm.similarTypes, function(item) {
+      vm.archeTypes = _.filter(vm.similarTypes, (item) => {
         if (item.location.inWeapons) {
-          var arch = _.find(item.stats, { statHash: vm.compare.stats[0].statHash });
+          const arch = _.find(item.stats, { statHash: vm.compare.stats[0].statHash });
           if (!arch) {
             return false;
           }
           return arch.base === _.find(vm.compare.stats, { statHash: vm.compare.stats[0].statHash }).base;
         }
-        return _.reduce(item.stats, function(memo, stat) {
+        return _.reduce(item.stats, (memo, stat) => {
           return memo + (stat.base === 0 ? 0 : stat.statHash);
         }, 0) === armorSplit;
       });
@@ -113,18 +113,17 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $transl
   };
 
   vm.remove = function remove(item) {
-    vm.comparisons = vm.comparisons.filter(function(compare) {
+    vm.comparisons = vm.comparisons.filter((compare) => {
       return compare.index !== item.index;
     });
 
     if (!vm.comparisons.length) {
       vm.cancel();
-      return;
     }
   };
 
   vm.itemClick = function itemClick(item) {
-    const element = angular.element('#' + item.index);
+    const element = angular.element(`#${item.index}`);
     const elementRect = element[0].getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
     window.scrollTo(0, absoluteElementTop - 150);
@@ -134,20 +133,20 @@ function CompareCtrl($scope, toaster, dimCompareService, dimItemService, $transl
     });
   };
 
-  $scope.$watch('vm.comparisons', function() {
-    var statBuckets = {};
+  $scope.$watch('vm.comparisons', () => {
+    const statBuckets = {};
 
     function bucketStat(stat) {
       (statBuckets[stat.statHash] = statBuckets[stat.statHash] || []).push(stat.value);
     }
 
-    vm.comparisons.forEach(function(item) {
+    vm.comparisons.forEach((item) => {
       item.stats.forEach(bucketStat);
       bucketStat(item.primStat);
     });
 
     vm.statRanges = {};
-    _.each(statBuckets, function(bucket, hash) {
+    _.each(statBuckets, (bucket, hash) => {
       const statRange = {
         min: Math.min(...bucket),
         max: Math.max(...bucket)

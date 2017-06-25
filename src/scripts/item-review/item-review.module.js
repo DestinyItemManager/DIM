@@ -6,7 +6,7 @@ export default angular
   .module('ReviewModule', [])
   .component('dimItemReview', ItemReviewComponent)
   // http://jasonwatmore.com/post/2016/03/31/angularjs-utc-to-local-date-time-filter
-  .filter('utcToLocal', function($filter) {
+  .filter('utcToLocal', ($filter) => {
     return function(utcDateString, format) {
       // return if input date is null or undefined
       if (!utcDateString) {

@@ -12,12 +12,12 @@ angular.module('dimApp').component('dimItemTag', {
 
 
 function ItemTagController($scope, $rootScope, dimSettingsService) {
-  var vm = this;
+  const vm = this;
 
   vm.settings = dimSettingsService;
-  $scope.$watch('$ctrl.item.dimInfo.tag', function() {
+  $scope.$watch('$ctrl.item.dimInfo.tag', () => {
     if (vm.item.dimInfo) {
-      vm.selected = _.find(vm.settings.itemTags, function(tag) {
+      vm.selected = _.find(vm.settings.itemTags, (tag) => {
         return tag.type === vm.item.dimInfo.tag;
       });
     }

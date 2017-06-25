@@ -23,7 +23,7 @@ function SyncService(
   ChromeSyncStorage,
   GoogleDriveStorage
 ) {
-  var cached;
+  let cached;
 
   const adapters = [
     IndexedDBStorage,

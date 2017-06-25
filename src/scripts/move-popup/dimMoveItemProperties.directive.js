@@ -4,10 +4,10 @@ import template from './dimMoveItemProperties.directive.html';
 import moveDialogTemplate from './dimMoveItemProperties.directive.moveDialog.html';
 
 angular.module('dimApp')
-  .component('dimObjectives', Objectives())
+  .component('dimObjectives', objectives())
   .directive('dimMoveItemProperties', MoveItemProperties);
 
-function Objectives() {
+function objectives() {
   return {
     bindings: {
       objectives: '<'
@@ -35,7 +35,7 @@ function MoveItemProperties() {
 
 
 function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSettingsService, ngDialog, dimState, $scope, $rootScope, dimDefinitions, dimDestinyTrackerService) {
-  var vm = this;
+  const vm = this;
 
   vm.tab = 'default';
 
@@ -54,7 +54,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.locking = false;
 
   // The 'i' keyboard shortcut toggles full details
-  $scope.$on('dim-toggle-item-details', function() {
+  $scope.$on('dim-toggle-item-details', () => {
     vm.itemDetails = !vm.itemDetails;
     vm.changeDetails();
   });
@@ -81,20 +81,20 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   };
 
   vm.reviewBlur = function() {
-    var item = vm.item;
-    var userReview = vm.toUserReview(item);
+    const item = vm.item;
+    const userReview = vm.toUserReview(item);
 
     dimDestinyTrackerService.updateCachedUserRankings(item,
                                                       userReview);
   };
 
   vm.toUserReview = function(item) {
-    var newRating = item.userRating;
-    var review = item.userReview;
-    var pros = item.userReviewPros;
-    var cons = item.userReviewCons;
+    const newRating = item.userRating;
+    const review = item.userReview;
+    const pros = item.userReviewPros;
+    const cons = item.userReviewCons;
 
-    var userReview = {
+    const userReview = {
       rating: newRating,
       review: review,
       pros: pros,
@@ -105,9 +105,9 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   };
 
   vm.submitReview = function() {
-    var item = vm.item;
+    const item = vm.item;
 
-    var userReview = vm.toUserReview(item);
+    const userReview = vm.toUserReview(item);
 
     $rootScope.$broadcast('review-submitted', item, userReview);
 
@@ -119,7 +119,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
       return;
     }
 
-    var store;
+    let store;
     if (item.owner === 'vault') {
       store = dimStoreService.getStores()[0];
     } else {
@@ -128,7 +128,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
     vm.locking = true;
 
-    var state = false;
+    let state = false;
     if (type === 'lock') {
       state = !item.locked;
     } else if (type === 'track') {
@@ -136,7 +136,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     }
 
     dimItemService.setItemState(item, store, state, type)
-      .then(function(lockState) {
+      .then((lockState) => {
         if (type === 'lock') {
           item.locked = lockState;
         } else if (type === 'track') {
@@ -144,7 +144,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
         }
         $rootScope.$broadcast('dim-filter-invalidate');
       })
-      .finally(function() {
+      .finally(() => {
         vm.locking = false;
       });
   };
@@ -160,14 +160,14 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   vm.showDetailsByDefault = (!vm.item.equipment && vm.item.notransfer);
   vm.itemDetails = vm.showDetailsByDefault;
   vm.settings = dimSettingsService;
-  $scope.$watch('vm.settings.itemDetails', function(show) {
+  $scope.$watch('vm.settings.itemDetails', (show) => {
     vm.itemDetails = vm.itemDetails || show;
   });
 
   if (vm.item.primStat) {
     vm.light = vm.item.primStat.value.toString();
     if (vm.item.dmg) {
-      vm.classes['is-' + vm.item.dmg] = true;
+      vm.classes[`is-${vm.item.dmg}`] = true;
     }
   }
 
@@ -181,10 +181,10 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
 
   function compareItems(item) {
     if (item && vm.item.stats) {
-      for (var key in Object.getOwnPropertyNames(vm.item.stats)) {
-        var itemStats = item.stats && item.stats[key];
+      for (const key in Object.getOwnPropertyNames(vm.item.stats)) {
+        const itemStats = item.stats && item.stats[key];
         if (itemStats) {
-          var vmItemStats = vm.item.stats[key];
+          const vmItemStats = vm.item.stats[key];
           if (vmItemStats) {
             vmItemStats.equippedStatsValue = itemStats.value;
             vmItemStats.equippedStatsName = itemStats.name;
@@ -205,8 +205,8 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
     if (vm.compareItem) {
       $scope.$watch('vm.compareItem', compareItems);
     } else {
-      $scope.$watch('$parent.$parent.vm.store.items', function(items) {
-        var item = _.find(items, function(item) {
+      $scope.$watch('$parent.$parent.vm.store.items', (items) => {
+        const item = _.find(items, (item) => {
           return item.equipped && item.type === vm.item.type;
         });
         compareItems(item);
@@ -215,7 +215,7 @@ function MoveItemPropertiesCtrl($sce, $q, dimStoreService, dimItemService, dimSe
   }
 
   vm.dumpDebugInfo = function() {
-    console.log("DEBUG INFO for '" + vm.item.name + "'");
+    console.log(`DEBUG INFO for '${vm.item.name}'`);
     console.log("DIM Item", vm.item);
     console.log("Bungie API Item", vm.item.originalItem || "Enable debug mode (ctrl+alt+shift+d) and refresh items to see this.");
     dimDefinitions.getDefinitions().then((defs) => {

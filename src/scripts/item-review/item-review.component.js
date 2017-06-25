@@ -38,20 +38,20 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
   };
 
   vm.reviewBlur = function() {
-    var item = vm.item;
-    var userReview = vm.toUserReview(item);
+    const item = vm.item;
+    const userReview = vm.toUserReview(item);
 
     dimDestinyTrackerService.updateCachedUserRankings(item,
                                                       userReview);
   };
 
   vm.toUserReview = function(item) {
-    var newRating = item.userRating;
-    var review = item.userReview;
-    var pros = item.userReviewPros;
-    var cons = item.userReviewCons;
+    const newRating = item.userRating;
+    const review = item.userReview;
+    const pros = item.userReviewPros;
+    const cons = item.userReviewCons;
 
-    var userReview = {
+    const userReview = {
       rating: newRating,
       review: review,
       pros: pros,
@@ -68,7 +68,7 @@ function ItemReviewController($rootScope, dimSettingsService, dimDestinyTrackerS
 
   vm.settings = dimSettingsService;
 
-  $scope.$watchCollection('vm.settings', function() {
+  $scope.$watchCollection('vm.settings', () => {
     dimSettingsService.save();
   });
 

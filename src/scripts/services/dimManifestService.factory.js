@@ -43,8 +43,8 @@ function requireSqlLib() {
         }
       }, 10000);
 
-      var head = document.getElementsByTagName('head')[0];
-      var script = document.createElement('script');
+      const head = document.getElementsByTagName('head')[0];
+      const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = sqlWasmPath;
       script.async = true;
@@ -65,7 +65,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
 
   let manifestPromise = null;
 
-  const makeStatement = _.memoize(function(table, db) {
+  const makeStatement = _.memoize((table, db) => {
     return db.prepare(`select json from ${table} where id = ?`);
   });
 
@@ -78,9 +78,9 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
     // This tells users to reload the extension. It fires no more
     // often than every 10 seconds, and only warns if the manifest
     // version has actually changed.
-    warnMissingDefinition: _.debounce(function() {
+    warnMissingDefinition: _.debounce(() => {
       dimBungieService.getManifest()
-        .then(function(data) {
+        .then((data) => {
           const language = dimSettingsService.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
@@ -104,7 +104,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
         .all([
           requireSqlLib(), // load in the sql.js library
           dimBungieService.getManifest()
-            .then(function(data) {
+            .then((data) => {
               const language = dimSettingsService.language;
               const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
@@ -114,13 +114,13 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
               service.version = version;
 
               return loadManifestFromCache(version)
-                .catch(function(e) {
+                .catch((e) => {
                   return loadManifestRemote(version, language, path);
                 });
             })
         ])
-        .then(function([SQLLib, typedArray]) {
-          service.statusText = $translate.instant('Manifest.Build') + '...';
+        .then(([SQLLib, typedArray]) => {
+          service.statusText = `${$translate.instant('Manifest.Build')}...`;
           const db = new SQLLib.Database(typedArray);
           // do a small request, just to test it out
           service.getAllRecords(db, 'DestinyRaceDefinition');
@@ -182,20 +182,20 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
   function loadManifestRemote(version, language, path) {
-    service.statusText = $translate.instant('Manifest.Download') + '...';
+    service.statusText = `${$translate.instant('Manifest.Download')}...`;
 
-    return $http.get("https://www.bungie.net" + path + '?host=' + window.location.hostname, { responseType: "blob" })
-      .then(function(response) {
-        service.statusText = $translate.instant('Manifest.Unzip') + '...';
+    return $http.get(`https://www.bungie.net${path}?host=${window.location.hostname}`, { responseType: "blob" })
+      .then((response) => {
+        service.statusText = `${$translate.instant('Manifest.Unzip')}...`;
         return unzipManifest(response.data);
       })
-      .then(function(arraybuffer) {
-        service.statusText = $translate.instant('Manifest.Save') + '...';
+      .then((arraybuffer) => {
+        service.statusText = `${$translate.instant('Manifest.Save')}...`;
 
-        var typedArray = new Uint8Array(arraybuffer);
+        const typedArray = new Uint8Array(arraybuffer);
         idbKeyval.set('dimManifest', typedArray)
           .then(() => {
-            console.log("Sucessfully stored " + typedArray.length + " byte manifest file.");
+            console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
             localStorage.setItem('manifest-version', version);
           })
           .catch((e) => console.error('Error saving manifest file', e));
@@ -219,8 +219,8 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       return $q.reject(new Error("Testing - always load remote"));
     }
 
-    service.statusText = $translate.instant('Manifest.Load') + '...';
-    var currentManifestVersion = localStorage.getItem('manifest-version');
+    service.statusText = `${$translate.instant('Manifest.Load')}...`;
+    const currentManifestVersion = localStorage.getItem('manifest-version');
     if (currentManifestVersion === version) {
       return idbKeyval.get('dimManifest').then((typedArray) => {
         if (!typedArray) {
@@ -230,7 +230,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       });
     } else {
       _gaq.push(['_trackEvent', 'Manifest', 'Need New Manifest']);
-      return $q.reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
+      return $q.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
 
@@ -238,18 +238,18 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
    * Unzip a file from a ZIP Blob into an ArrayBuffer. Returns a promise.
    */
   function unzipManifest(blob) {
-    return $q(function(resolve, reject) {
+    return $q((resolve, reject) => {
       zip.useWebWorkers = true;
       zip.workerScriptsPath = 'static/zipjs/';
-      zip.createReader(new zip.BlobReader(blob), function(zipReader) {
+      zip.createReader(new zip.BlobReader(blob), (zipReader) => {
         // get all entries from the zip
-        zipReader.getEntries(function(entries) {
+        zipReader.getEntries((entries) => {
           if (entries.length) {
-            entries[0].getData(new zip.BlobWriter(), function(blob) {
-              var blobReader = new FileReader();
+            entries[0].getData(new zip.BlobWriter(), (blob) => {
+              const blobReader = new FileReader();
               blobReader.addEventListener("error", (e) => { reject(e); });
-              blobReader.addEventListener("load", function() {
-                zipReader.close(function() {
+              blobReader.addEventListener("load", () => {
+                zipReader.close(() => {
                   resolve(blobReader.result);
                 });
               });
@@ -257,7 +257,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
             });
           }
         });
-      }, function(error) {
+      }, (error) => {
         reject(error);
       });
     });

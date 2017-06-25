@@ -82,19 +82,19 @@ function VendorService(
     // TODO: expose getVendor promise, idempotently?
   };
 
-  $rootScope.$on('dim-stores-updated', function(e, stores) {
+  $rootScope.$on('dim-stores-updated', (e, stores) => {
     // TODO: trigger on characters, not stores
     if (stores.stores.length) {
       service.reloadVendors(stores.stores);
     }
   });
 
-  $rootScope.$on('dim-active-platform-updated', function() {
+  $rootScope.$on('dim-active-platform-updated', () => {
     service.vendors = {};
     service.vendorsLoaded = false;
   });
 
-  $rootScope.$on('dim-new-manifest', function() {
+  $rootScope.$on('dim-new-manifest', () => {
     service.vendors = {};
     service.vendorsLoaded = false;
     deleteCachedVendors();
@@ -159,7 +159,7 @@ function VendorService(
         $rootScope.$broadcast('dim-vendors-updated');
         service.vendorsLoaded = true;
       })
-      .finally(function() {
+      .finally(() => {
         // Clear the reload promise so this can be called again
         if (_reloadPromise.activePlatform === activePlatform) {
           _reloadPromise = null;
@@ -280,7 +280,7 @@ function VendorService(
         if (cachedVendorUpToDate(vendor, store, vendorDef)) {
           // console.log("loaded local", vendorDef.summary.vendorName, key, vendor);
           if (vendor.failed) {
-            throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
+            throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
           }
           return vendor;
         } else {
@@ -310,10 +310,10 @@ function VendorService(
                 return idbKeyval
                   .set(key, vendor)
                   .then(() => {
-                    throw new Error("Cached failed vendor " + vendorDef.summary.vendorName);
+                    throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
                   });
               }
-              throw new Error("Failed to load vendor " + vendorDef.summary.vendorName);
+              throw new Error(`Failed to load vendor ${vendorDef.summary.vendorName}`);
             });
         }
       })
@@ -374,11 +374,11 @@ function VendorService(
     });
 
     saleItems.forEach((saleItem) => {
-      saleItem.item.itemInstanceId = "vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex;
+      saleItem.item.itemInstanceId = `vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`;
     });
 
     return dimStoreService.processItems({ id: null }, _.pluck(saleItems, 'item'))
-      .then(function(items) {
+      .then((items) => {
         const itemsById = _.indexBy(items, 'id');
         const categories = _.compact(_.map(vendor.saleItemCategories, (category) => {
           const categoryInfo = vendorDef.categories[category.categoryIndex];
@@ -396,7 +396,7 @@ function VendorService(
                   currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash')
                 };
               }).filter((c) => c.value > 0),
-              item: itemsById["vendor-" + vendorDef.hash + '-' + saleItem.vendorItemIndex],
+              item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
               // TODO: caveat, this won't update very often!
               unlocked: unlocked,
               unlockedByCharacter: unlocked ? [store.id] : [],
@@ -476,7 +476,7 @@ function VendorService(
     if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
       return {};
     }
-    var currencies = _.chain(vendors)
+    const currencies = _.chain(vendors)
           .values()
           .pluck('categories')
           .flatten()
@@ -489,7 +489,7 @@ function VendorService(
           .unique()
           .value();
     const totalCoins = {};
-    currencies.forEach(function(currencyHash) {
+    currencies.forEach((currencyHash) => {
       // Legendary marks and glimmer are special cases
       if (currencyHash === 2534352370) {
         totalCoins[currencyHash] = dimStoreService.getVault().legendaryMarks;
@@ -498,7 +498,7 @@ function VendorService(
       } else if (currencyHash === 2749350776) {
         totalCoins[currencyHash] = dimStoreService.getVault().silver;
       } else {
-        totalCoins[currencyHash] = sum(stores, function(store) {
+        totalCoins[currencyHash] = sum(stores, (store) => {
           return store.amountOfItem({ hash: currencyHash });
         });
       }

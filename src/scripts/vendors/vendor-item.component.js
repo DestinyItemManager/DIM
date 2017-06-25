@@ -13,18 +13,18 @@ export const VendorItem = {
   controller: VendorItemCtrl
 };
 
-var otherDialog = null;
+let otherDialog = null;
 
 function VendorItemCtrl($scope, ngDialog, dimStoreService) {
   'ngInject';
 
-  var vm = this;
+  const vm = this;
 
-  var dialogResult = null;
-  var detailItem = null;
-  var detailItemElement = null;
+  let dialogResult = null;
+  let detailItem = null;
+  let detailItemElement = null;
 
-  $scope.$on('ngDialog.opened', function(event, $dialog) {
+  $scope.$on('ngDialog.opened', (event, $dialog) => {
     if (dialogResult && $dialog[0].id === dialogResult.id) {
       $dialog.position({
         my: 'left top',
@@ -57,22 +57,22 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService) {
       detailItem = item;
       detailItemElement = angular.element(e.currentTarget);
 
-      var compareItems = _.flatten(dimStoreService.getStores().map(function(store) {
+      const compareItems = _.flatten(dimStoreService.getStores().map((store) => {
         return _.filter(store.items, { hash: item.hash });
       }));
 
-      var compareItemCount = sum(compareItems, 'amount');
+      const compareItemCount = sum(compareItems, 'amount');
 
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         overlay: false,
-        className: 'move-popup vendor-move-popup ' + (vm.extraMovePopupClass || ''),
+        className: `move-popup vendor-move-popup ${vm.extraMovePopupClass || ''}`,
         showClose: false,
         scope: angular.extend($scope.$new(true), {
         }),
         controllerAs: 'vm',
         controller: function() {
-          var innerVm = this;
+          const innerVm = this;
           angular.extend(innerVm, {
             settings: innerVm.settings,
             item: item,
@@ -94,7 +94,7 @@ function VendorItemCtrl($scope, ngDialog, dimStoreService) {
 
       otherDialog = dialogResult;
 
-      dialogResult.closePromise.then(function() {
+      dialogResult.closePromise.then(() => {
         dialogResult = null;
       });
     }

@@ -11,7 +11,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
     return;
   }
 
-  var vm = this;
+  const vm = this;
 
   vm.items = {};
   dimDefinitions.getDefinitions().then((defs) => {
@@ -30,17 +30,17 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   ];
 
   vm.characters = dimStoreService.getStores()
-    .filter(function(character) {
+    .filter((character) => {
       return !character.isVault;
     })
-    .map(function(item) {
-      var background = item.background;
-      var icon = item.icon;
-      var className = item.className;
-      var genderRace = item.genderRace;
-      var factions = item.progression.progressions.filter((faction) => {
+    .map((item) => {
+      const background = item.background;
+      const icon = item.icon;
+      const className = item.className;
+      const genderRace = item.genderRace;
+      const factions = item.progression.progressions.filter((faction) => {
         return vm.factions.includes(faction.hash);
-      }).reduce(function(map, obj) {
+      }).reduce((map, obj) => {
         map[obj.hash] = obj;
         return map;
       }, {});
@@ -77,18 +77,18 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
     // rank 1 = 1500
     // rank 2 = 2000
     // rank 3+ = 2500
-    var total = 0;
+    let total = 0;
 
-    for (var key in vm.repPool) {
+    for (const key in vm.repPool) {
       total = total + vm.repPool[key];
     }
 
-    var totalRank = total + vm.activeFaction.progressToNextLevel;
+    const totalRank = total + vm.activeFaction.progressToNextLevel;
     vm.newRank = Math.floor((totalRank) / 2500) + vm.activeFaction.level;
     vm.newExperience = (totalRank % 2500);
   }
 
-  var materialsHashes = [
+  const materialsHashes = [
     211861343,  // heavy ammo synth
     928169143,  // special ammo synth
     937555249,  // motes of light
@@ -96,7 +96,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
     1898539128  // weapon parts
   ];
 
-  var planataryMatsHashes = [
+  const planataryMatsHashes = [
     1797491610, // Helium Filaments
     2882093969, // Spin Metal
     3242866270, // Relic Iron
@@ -104,22 +104,22 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
     3164836592 // Wormspore
   ];
 
-  var xurMatsHashes = [
+  const xurMatsHashes = [
     1738186005, // strange coins
     211861343  // heavy ammo synth
   ];
 
-  var variksMatsHashes = [
+  const variksMatsHashes = [
     3783295803, // Ether Seeds
     211861343  // heavy ammo synth
   ];
 
-  var erisMatsHashes = [
+  const erisMatsHashes = [
     1043138475, // black wax idol
     211861343  // heavy ammo synth
   ];
 
-  var gunSmithMatsHashes = [
+  const gunSmithMatsHashes = [
     1898539128  // weapon parts
   ];
 
@@ -132,13 +132,13 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   vm.gunSmithMats = mapGunsmithItems(gunSmithMatsHashes);
 
   function mapItems(hashes) {
-    return hashes.map(function(hash) {
-      var ret = angular.copy(dimItemService.getItem({
+    return hashes.map((hash) => {
+      const ret = angular.copy(dimItemService.getItem({
         hash: hash
       }));
       if (ret) {
         ret.amount = 0;
-        dimStoreService.getStores().forEach(function(s) {
+        dimStoreService.getStores().forEach((s) => {
           ret.amount += s.amountOfItem(ret);
         });
       }
@@ -147,7 +147,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   }
 
   function mapXurItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
       mappedItems[1].amount = mappedItems[0].amount * 3;
     }
@@ -155,7 +155,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   }
 
   function mapGunsmithItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[0]) {
       mappedItems[0].amount = Math.floor(vm.glimmer / 1250) * 25;
     }
@@ -163,7 +163,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   }
 
   function mapVariksItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
       mappedItems[1].amount = mappedItems[0].amount;
     }
@@ -171,7 +171,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   }
 
   function mapErisItems(hashes) {
-    var mappedItems = mapItems(hashes);
+    const mappedItems = mapItems(hashes);
     if (mappedItems[1] && mappedItems[0] && mappedItems[0].amount) {
       mappedItems[1].amount = mappedItems[0].amount;
     }
@@ -179,7 +179,7 @@ function MaterialsController($scope, dimDefinitions, dimItemService, dimStoreSer
   }
 
   vm.calculateRep = function(item) {
-    var rep = 0;
+    let rep = 0;
     if (item && item.hash) {
       switch (item.hash) {
       case 211861343: // heavy ammo synth

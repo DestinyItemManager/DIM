@@ -8,7 +8,7 @@ function ClickAnywhereButHere($document) {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {
-      var handler = function(event) {
+      const handler = function(event) {
         if (!element[0].contains(event.target)) {
           scope.$apply(attr.dimClickAnywhereButHere);
           // scope.callback(event);
@@ -16,7 +16,7 @@ function ClickAnywhereButHere($document) {
       };
 
       $document.on('click', handler);
-      scope.$on('$destroy', function() {
+      scope.$on('$destroy', () => {
         $document.off('click', handler);
       });
     }

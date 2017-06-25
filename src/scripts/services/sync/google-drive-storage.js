@@ -45,7 +45,7 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
             throw new Error("no file!");
           }
           return $q.when(gapi.client.request({
-            path: '/upload/drive/v3/files/' + this.fileId,
+            path: `/upload/drive/v3/files/${this.fileId}`,
             method: 'PATCH',
             params: {
               uploadType: 'media',
@@ -57,7 +57,7 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
             .catch((resp) => {
               // TODO: error handling
               // this.revokeDrive();
-              throw new Error('error saving. ' + resp.error);
+              throw new Error(`error saving. ${resp.error}`);
             });
         });
     },
@@ -145,7 +145,7 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
       // TODO: in the future wait for a promise or observable on this value
       const token = OAuthTokenService.getToken();
       if (token && token.bungieMembershipId) {
-        return 'DIM-' + $DIM_FLAVOR + '-' + token.bungieMembershipId;
+        return `DIM-${$DIM_FLAVOR}-${token.bungieMembershipId}`;
       }
       return null;
     },

@@ -31,7 +31,7 @@ class ItemListBuilder {
     const allItems = this._getAllItems(stores);
 
     const allWeapons = _.filter(allItems,
-                        function(item) {
+                        (item) => {
                           if (!item.primStat) {
                             return false;
                           }
@@ -60,7 +60,7 @@ class ItemListBuilder {
    * @memberof ItemListBuilder
    */
   getWeaponList(stores, reviewDataCache) {
-    var dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
+    const dtrWeapons = this._getDtrWeapons(stores, reviewDataCache);
 
     const list = new Set(dtrWeapons);
 

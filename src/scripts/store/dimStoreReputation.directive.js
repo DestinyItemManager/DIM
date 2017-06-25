@@ -1,7 +1,7 @@
 import angular from 'angular';
 import template from './dimStoreReputation.directive.html';
 
-var StoreReputation = {
+const StoreReputation = {
   controllerAs: 'vm',
   bindings: {
     store: '<storeData'

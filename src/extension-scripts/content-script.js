@@ -1,9 +1,9 @@
-var db;
+let db;
 
 function getDB() {
   if (!db) {
-    db = new Promise(function(resolve, reject) {
-      var openreq = indexedDB.open('keyval-store', 1);
+    db = new Promise((resolve, reject) => {
+      const openreq = indexedDB.open('keyval-store', 1);
 
       openreq.onerror = function() {
         reject(openreq.error);
@@ -23,9 +23,9 @@ function getDB() {
 }
 
 function withStore(type, callback) {
-  return getDB().then(function(db) {
-    return new Promise(function(resolve, reject) {
-      var transaction = db.transaction('keyval', type);
+  return getDB().then((db) => {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction('keyval', type);
       transaction.oncomplete = function() {
         resolve();
       };
@@ -37,12 +37,12 @@ function withStore(type, callback) {
   });
 }
 
-var idbKeyval = {
+const idbKeyval = {
   get: function(key) {
-    var req;
-    return withStore('readonly', function(store) {
+    let req;
+    return withStore('readonly', (store) => {
       req = store.get(key);
-    }).then(function() {
+    }).then(() => {
       return req.result;
     });
   }
@@ -51,7 +51,7 @@ var idbKeyval = {
 
 function getDimData() {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(null, function(data) {
+    chrome.storage.sync.get(null, (data) => {
       if (chrome.runtime.lastError) {
         const message = chrome.runtime.lastError.message;
         reject(new Error(message));
@@ -76,7 +76,7 @@ function getDimData() {
     });
 }
 
-window.addEventListener("message", function(event) {
+window.addEventListener("message", (event) => {
   // We only accept messages from ourselves
   if (event.source !== window) {
     return;

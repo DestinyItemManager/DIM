@@ -8,7 +8,7 @@ function ItemStatsController(dimSettingsService) {
   this.qualityEnabled = $featureFlags.qualityEnabled;
 }
 
-var ItemStatsComponent = {
+const ItemStatsComponent = {
   bindings: {
     item: '<'
   },

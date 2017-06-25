@@ -17,12 +17,12 @@ export const LoadoutBuilderItem = {
 function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
   'ngInject';
 
-  var vm = this;
-  var dialogResult = null;
-  var detailItem = null;
-  var detailItemElement = null;
+  const vm = this;
+  let dialogResult = null;
+  let detailItem = null;
+  let detailItemElement = null;
 
-  $scope.$on('ngDialog.opened', function(event, $dialog) {
+  $scope.$on('ngDialog.opened', (event, $dialog) => {
     if (dialogResult && $dialog[0].id === dialogResult.id) {
       $dialog.position({
         my: 'left top',
@@ -53,11 +53,11 @@ function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
         detailItem = item;
         detailItemElement = angular.element(e.currentTarget);
 
-        var compareItems = flatMap(dimStoreService.getStores(), function(store) {
+        const compareItems = flatMap(dimStoreService.getStores(), (store) => {
           return _.filter(store.items, { hash: item.hash });
         });
 
-        var compareItemCount = sum(compareItems, 'amount');
+        const compareItemCount = sum(compareItems, 'amount');
 
         dialogResult = ngDialog.open({
           template: dialogTemplate,
@@ -68,7 +68,7 @@ function LoadoutBuilderItemCtrl($scope, ngDialog, dimStoreService) {
           }),
           controllerAs: 'vm',
           controller: [function() {
-            var vm = this;
+            const vm = this;
             angular.extend(vm, {
               item: item,
               compareItems: compareItems,

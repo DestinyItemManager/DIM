@@ -22,7 +22,7 @@ function dimDebugItemCtrl($scope, $state, dimStoreService, dimItemService, dimDe
     });
   }
 
-  $scope.$on('dim-stores-updated', function(e) {
+  $scope.$on('dim-stores-updated', (e) => {
     init();
   });
 }

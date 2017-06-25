@@ -6,7 +6,7 @@ angular.module('dimApp')
   .factory('dimBungieService', BungieService);
 
 function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $translate) {
-  var service = {
+  const service = {
     getAccounts: getAccounts,
     getAccountsForCurrentUser: getAccountsForCurrentUser,
     getCharacters: getCharacters,
@@ -39,7 +39,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
       })));
     }
 
-    var errorCode = response.data ? response.data.ErrorCode : -1;
+    const errorCode = response.data ? response.data.ErrorCode : -1;
 
     // See https://github.com/DestinyDevs/BungieNetPlatform/wiki/Enums#platformerrorcodes
     switch (errorCode) {
@@ -136,7 +136,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   }
 
   function getCharacters(platform) {
-    var charactersPromise = $http(bungieApiQuery(
+    const charactersPromise = $http(bungieApiQuery(
       `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/`
     ))
         .then(handleErrors, handleErrors)
@@ -151,7 +151,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
         })));
       }
 
-      return _.map(response.data.Response.data.characters, function(c) {
+      return _.map(response.data.Response.data.characters, (c) => {
         c.inventory = response.data.Response.data.inventory;
 
         return {
@@ -173,16 +173,16 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
           getDestinyAdvisors(platform, characters)
           // Don't let failure of advisors fail other requests.
             .catch((e) => console.error("Failed to load advisors", e))
-        ]).then(function(data) {
+        ]).then((data) => {
           return data[0];
         });
       })
-      .catch(function(e) {
+      .catch((e) => {
         return $q.reject(e);
       });
 
     function processInventoryResponse(character, response) {
-      var payload = response.data.Response;
+      const payload = response.data.Response;
 
       payload.id = character.id;
       payload.character = character;
@@ -192,7 +192,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
 
     function getDestinyInventories(platform, characters) {
       // Guardians
-      const promises = characters.map(function(character) {
+      const promises = characters.map((character) => {
         return $http(bungieApiQuery(
           `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
         ))
@@ -217,7 +217,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   }
 
   function getDestinyProgression(platform, characters) {
-    const promises = characters.map(function(character) {
+    const promises = characters.map((character) => {
       return $http(bungieApiQuery(
         `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
       ))
@@ -234,7 +234,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   }
 
   function getDestinyAdvisors(platform, characters) {
-    var promises = characters.map(function(character) {
+    const promises = characters.map((character) => {
       return $http(bungieApiQuery(
         `/D1/Platform/Destiny/${platform.type}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
       ))
@@ -251,7 +251,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   }
 
   function getVendorForCharacter(character, vendorHash) {
-    var platform = dimState.active;
+    const platform = dimState.active;
     return $http(bungieApiQuery(
       `/D1/Platform/Destiny/${platform.type}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     ))
@@ -260,8 +260,8 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   }
 
   function transfer(item, store, amount) {
-    var platform = dimState.active;
-    var promise = $http(bungieApiUpdate(
+    const platform = dimState.active;
+    const promise = $http(bungieApiUpdate(
       '/D1/Platform/Destiny/TransferItem/',
       {
         characterId: store.isVault ? item.owner : store.id,
@@ -274,7 +274,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
     ))
       .then(retryOnThrottled)
       .then(handleErrors, handleErrors)
-      .catch(function(e) {
+      .catch((e) => {
         return handleUniquenessViolation(e, item, store);
       });
 
@@ -297,7 +297,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   }
 
   function equip(item) {
-    var platform = dimState.active;
+    const platform = dimState.active;
     return $http(bungieApiUpdate(
       '/D1/Platform/Destiny/EquipItem/',
       {
@@ -313,11 +313,11 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
   // Returns a list of items that were successfully equipped
   function equipItems(store, items) {
     // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-    items = _.sortBy(items, function(i) {
+    items = _.sortBy(items, (i) => {
       return i.isExotic ? 1 : 0;
     });
 
-    var platform = dimState.active;
+    const platform = dimState.active;
     return $http(bungieApiUpdate(
       '/D1/Platform/Destiny/EquipItems/',
       {
@@ -327,11 +327,11 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
       }))
       .then(retryOnThrottled)
       .then(handleErrors, handleErrors)
-      .then(function(response) {
-        var data = response.data.Response;
+      .then((response) => {
+        const data = response.data.Response;
         store.updateCharacterInfoFromEquip(data.summary);
-        return _.select(items, function(i) {
-          var item = _.find(data.equipResults, {
+        return _.select(items, (i) => {
+          const item = _.find(data.equipResults, {
             itemInstanceId: i.id
           });
           return item && item.equipStatus === 1;
@@ -349,7 +349,7 @@ function BungieService($rootScope, $q, $timeout, $http, $state, dimState, $trans
       break;
     }
 
-    var platform = dimState.active;
+    const platform = dimState.active;
     return $http(bungieApiUpdate(
       `/D1/Platform/Destiny/${type}/`,
       {

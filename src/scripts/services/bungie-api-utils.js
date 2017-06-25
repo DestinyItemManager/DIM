@@ -13,7 +13,7 @@ if ($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta') {
 function bungieApiUpdate(path, data) {
   return {
     method: 'POST',
-    url: 'https://www.bungie.net' + path,
+    url: `https://www.bungie.net${path}`,
     headers: {
       'X-API-Key': apiKey
     },
@@ -26,7 +26,7 @@ function bungieApiUpdate(path, data) {
 function bungieApiQuery(path) {
   return {
     method: 'GET',
-    url: 'https://www.bungie.net' + path,
+    url: `https://www.bungie.net${path}`,
     headers: {
       'X-API-Key': apiKey
     },

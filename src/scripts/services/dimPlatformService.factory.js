@@ -5,10 +5,10 @@ angular.module('dimApp').factory('dimPlatformService', PlatformService);
 
 
 function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTokenService, OAuthService, $state, toaster) {
-  var _platforms = [];
-  var _active = null;
+  let _platforms = [];
+  let _active = null;
 
-  var service = {
+  const service = {
     getPlatforms: getPlatforms,
     getActive: getActive,
     setActive: setActive,
@@ -28,7 +28,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
     if (token.bungieMembershipId) {
       return dimBungieService.getAccounts(token.bungieMembershipId)
         .then(generatePlatforms)
-        .catch(function(e) {
+        .catch((e) => {
           toaster.pop('error', 'Unexpected error getting accounts', e.message);
           throw e;
         });
@@ -36,7 +36,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
       // they're logged in, just need to fill in membership
       // TODO: this can be removed after everyone has had a chance to upgrade
       return dimBungieService.getAccountsForCurrentUser()
-        .then(function(accounts) {
+        .then((accounts) => {
           const token = OAuthTokenService.getToken();
           token.bungieMembershipId = accounts.bungieNetUser.membershipId;
           OAuthTokenService.setToken(token);
@@ -44,7 +44,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
           return accounts;
         })
         .then(generatePlatforms)
-        .catch(function(e) {
+        .catch((e) => {
           toaster.pop('error', 'Unexpected error getting accounts', e.message);
           throw e;
         });
@@ -65,7 +65,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
     $rootScope.$broadcast('dim-platforms-updated', { platforms: _platforms });
 
     getActivePlatform()
-      .then(function(activePlatform) {
+      .then((activePlatform) => {
         setActive(activePlatform);
       });
 
@@ -73,7 +73,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
   }
 
   function getActivePlatform() {
-    return SyncService.get().then(function(data) {
+    return SyncService.get().then((data) => {
       if (!_platforms.length) {
         return null;
       }
@@ -81,7 +81,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
       if (_active && _.find(_platforms, { id: _active.id })) {
         return _active;
       } else if (data && data.platformType) {
-        var active = _.find(_platforms, function(platform) {
+        const active = _.find(_platforms, (platform) => {
           return platform.type === data.platformType;
         });
         if (active) {
@@ -98,7 +98,7 @@ function PlatformService($rootScope, $q, dimBungieService, SyncService, OAuthTok
 
   function setActive(platform) {
     _active = platform;
-    var promise;
+    let promise;
 
     if (platform === null) {
       promise = SyncService.remove('platformType');

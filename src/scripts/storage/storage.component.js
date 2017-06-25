@@ -72,14 +72,14 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   vm.exportData = function() {
     // Function to download data to a file
     function download(data, filename, type) {
-      var a = document.createElement("a");
-      var file = new Blob([data], { type: type });
-      var url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      const file = new Blob([data], { type: type });
+      const url = URL.createObjectURL(file);
       a.href = url;
       a.download = filename;
       document.body.appendChild(a);
       a.click();
-      $timeout(function() {
+      $timeout(() => {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       });
@@ -91,7 +91,7 @@ function StorageController($scope, dimSettingsService, SyncService, GoogleDriveS
   };
 
   vm.importData = function() {
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = function() {
       $scope.$apply(() => {
         // TODO: we're kinda trusting that this is the right data here, no validation!

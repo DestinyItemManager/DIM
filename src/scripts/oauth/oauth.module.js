@@ -7,8 +7,8 @@ export default angular.module('dim-oauth', [])
   .service('OAuthTokenService', OAuthTokenService)
   .service('OAuthService', OAuthService)
   .service('http-refresh-token', HttpRefreshTokenService)
-  .run(function($rootScope, $state) {
-    $rootScope.$on('dim-no-token-found', function() {
+  .run(($rootScope, $state) => {
+    $rootScope.$on('dim-no-token-found', () => {
       if ($DIM_FLAVOR === 'dev' &&
           (!localStorage.apiKey || !localStorage.oauthClientId || !localStorage.oauthClientSecret)) {
         $state.go('developer');
