@@ -43,75 +43,60 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
   }
 
   function processLoadout(data, version) {
-    if (data) {
-      if (version === 'v3.0') {
-        const ids = data['loadouts-v3.0'];
-        _loadouts.splice(0);
-
-        _.each(ids, (id) => {
-          data[id].items.forEach((item) => {
-            const itemFromStore = dimItemService.getItem({
-              id: item.id,
-              hash: item.hash
-            });
-            if (itemFromStore) {
-              itemFromStore.isInLoadout = true;
-            }
-          });
-          _loadouts.push(hydrate(data[id]));
-        });
-      } else {
-        _loadouts.splice(0);
-
-        // Remove null loadouts.
-        data = _.filter(data, (primitive) => {
-          return !_.isNull(primitive);
-        });
-
-        _.each(data, (primitive) => {
-          // Add id to loadout.
-          _loadouts.push(hydrate(primitive));
-        });
-      }
-
-      const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
-      const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
-      const loadoutGuids = _.pluck(_loadouts, 'id');
-      const containsLoadoutGuids = (item) => !_.contains(loadoutGuids, item.id);
-
-      const orphanIds = _.chain(data)
-        .filter(objectTest)
-        .filter(hasGuid)
-        .filter(containsLoadoutGuids)
-        .pluck('id')
-        .value();
-
-      if (orphanIds.length > 0) {
-        return SyncService.remove(orphanIds);
-      }
-    } else {
-      _loadouts = _loadouts.splice(0);
+    if (!data) {
+      return [];
     }
-    return $q.when();
+
+    let loadouts = [];
+    if (version === 'v3.0') {
+      const ids = data['loadouts-v3.0'];
+      loadouts = ids.map((id) => {
+        // Mark all the items as being in loadouts
+        data[id].items.forEach((item) => {
+          const itemFromStore = dimItemService.getItem({
+            id: item.id,
+            hash: item.hash
+          });
+          if (itemFromStore) {
+            itemFromStore.isInLoadout = true;
+          }
+        });
+        return hydrate(data[id]);
+      });
+    }
+
+    const objectTest = (item) => _.isObject(item) && !(_.isArray(item) || _.isFunction(item));
+    const hasGuid = (item) => _.has(item, 'id') && isGuid(item.id);
+    const loadoutGuids = new Set(_.pluck(loadouts, 'id'));
+    const containsLoadoutGuids = (item) => loadoutGuids.has(item.id);
+
+    const orphanIds = _.chain(data)
+      .filter(objectTest)
+      .filter(hasGuid)
+      .reject(containsLoadoutGuids)
+      .pluck('id')
+      .value();
+
+    if (orphanIds.length > 0) {
+      return SyncService.remove(orphanIds).then(() => loadouts);
+    }
+
+    return loadouts;
   }
 
   function getLoadouts(getLatest) {
     // Avoids the hit going to data store if we have data already.
-    if (getLatest || _.size(_loadouts) === 0) {
+    if (getLatest || !_loadouts.length) {
       return SyncService.get()
         .then((data) => {
           if (_.has(data, 'loadouts-v3.0')) {
             return processLoadout(data, 'v3.0');
-          } else if (_.has(data, 'loadouts-v2.0')) {
-            return processLoadout(data['loadouts-v2.0'], 'v2.0')
-              .then(() => {
-                saveLoadouts(_loadouts);
-              });
           } else {
-            return processLoadout();
+            return [];
           }
         })
-        .then(() => {
+        .then((newLoadouts) => {
+          _loadouts = newLoadouts;
           return _loadouts;
         });
     } else {
@@ -192,14 +177,10 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
 
   function hydrate(loadout) {
     const hydration = {
-      'v1.0': hydratev1d0,
-      'v2.0': hydratev2d0,
-      'v3.0': hydratev3d0,
-      default: hydratev3d0
+      'v3.0': hydratev3d0
     };
 
-    // v1.0 did not have a 'version' property so if it fails, we'll assume.
-    return (hydration[(loadout.version)] || hydration['v1.0'])(loadout);
+    return (hydration[(loadout.version)])(loadout);
   }
 
   // A special getItem that takes into account the fact that
@@ -452,7 +433,7 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
         // Pass in the list of items that shouldn't be moved away
         promise = dimItemService.moveTo(item, store, pseudoItem.equipped, item.amount, loadoutItemIds);
       } else {
-        promise = $.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
+        promise = $q.reject(new Error($translate.instant('Loadouts.DoesNotExist', { itemname: item.name })));
       }
     }
 
@@ -502,81 +483,6 @@ function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreServ
 
         result.items[discriminator] = (result.items[discriminator] || []);
         result.items[discriminator].push(item);
-      } else {
-        item = {
-          id: itemPrimitive.id,
-          hash: itemPrimitive.hash,
-          amount: itemPrimitive.amount,
-          equipped: itemPrimitive.equipped
-        };
-
-        result.items.unknown.push(item);
-      }
-    });
-
-    return result;
-  }
-
-  function hydratev2d0(loadoutPrimitive) {
-    const result = {
-      id: loadoutPrimitive.id,
-      name: loadoutPrimitive.name,
-      classType: (_.isUndefined(loadoutPrimitive.classType) ? -1 : loadoutPrimitive.classType),
-      version: 'v3.0',
-      items: {
-        unknown: []
-      }
-    };
-
-    _.each(loadoutPrimitive.items, (itemPrimitive) => {
-      let item = angular.copy(dimItemService.getItem({
-        id: itemPrimitive.id,
-        hash: itemPrimitive.hash
-      }));
-
-      if (item) {
-        const discriminator = item.type.toLowerCase();
-
-        item.equipped = itemPrimitive.equipped;
-
-        result.items[discriminator] = (result.items[discriminator] || []);
-        result.items[discriminator].push(item);
-      } else {
-        item = {
-          id: itemPrimitive.id,
-          hash: itemPrimitive.hash,
-          amount: itemPrimitive.amount,
-          equipped: itemPrimitive.equipped
-        };
-
-        result.items.unknown.push(item);
-      }
-    });
-
-    return result;
-  }
-
-  function hydratev1d0(loadoutPrimitive) {
-    const result = {
-      id: uuidv4(),
-      name: loadoutPrimitive.name,
-      classType: -1,
-      version: 'v3.0',
-      items: {
-        unknown: []
-      }
-    };
-
-    _.each(loadoutPrimitive.items, (itemPrimitive) => {
-      let item = angular.copy(dimItemService.getItem(itemPrimitive));
-
-      if (item) {
-        const discriminator = item.type.toLowerCase();
-
-        result.items[discriminator] = (result.items[discriminator] || []);
-        result.items[discriminator].push(item);
-
-        item.equipped = true;
       } else {
         item = {
           id: itemPrimitive.id,
