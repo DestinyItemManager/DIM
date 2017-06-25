@@ -210,7 +210,9 @@ button.toast-close-button {
 
 .changelog-toaster {
   margin: 0;
-  padding: 0 2rem;
+  padding: 0 2em;
+  max-height: 50vh;
+  overflow: auto;
   li {
     margin-bottom: 2px;
   }

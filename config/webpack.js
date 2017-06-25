@@ -195,13 +195,10 @@ module.exports = (env) => {
         '$featureFlags.debugMoves': JSON.stringify(false),
         // show changelog toaster
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
-        // allow fetching item (weapon) scores and fetching/sending reviews from the Destiny Tracker API
-        '$featureFlags.sendingWeaponDataEnabled': JSON.stringify(env === 'dev'),
-
         '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
         // allow importing and exporting your DIM data to JSON
         '$featureFlags.importExport': JSON.stringify(env !== 'release'),
-        '$featureFlags.reviewsEnabled': JSON.stringify(env !== 'release')
+        '$featureFlags.reviewsEnabled': JSON.stringify(true)
       }),
 
       // Enable if you want to debug the size of the chunks

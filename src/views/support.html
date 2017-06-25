@@ -3,18 +3,16 @@
     <div class="ngdialog-inner-content">
         <p ng-i18next="Views.Support.FreeToDownload"></p>
         <p ng-i18next="Views.Support.OpenCollective"></p>
-        <h2 ng-i18next="Views.Support.Backers"></h2>
-        <p ng-i18next="Views.Support.BackersDetail"></p>
-        <div class="backers">
-          <a ng-repeat="i in 29 | range track by $index" ng-href="https://opencollective.com/dim/backer/{{ $index }}/website" target="_blank"><img ng-src="https://opencollective.com/dim/backer/{{ $index }}/avatar.svg"></a>
-          <a ng-href="https://opencollective.com/dim#backer" target="_blank">
-            <img ng-src="https://opencollective.com/public/images/become_backer.svg">
-          </a>
-        </div>
+        <p><span ng-i18next="Views.Support.Teespring"></span> <a href="https://teespring.com/stores/dim" ng-i18next="Views.Support.TeespringLink"></a></p>
         <h2 ng-i18next="Views.Support.Sponsors"></h2>
         <p ng-i18next="Views.Support.SponsorsDetail"></p>
         <div class="backers">
-          <a ng-repeat="i in 29 | range track by $index" ng-href="https://opencollective.com/dim/sponsor/{{ $index }}/website" target="_blank"><img ng-src="https://opencollective.com/dim/sponsor/{{ $index }}/avatar.svg"></a>
+          <a ng-repeat="i in 5 | range track by $index" ng-href="https://opencollective.com/dim/sponsor/{{ $index }}/website" target="_blank" rel="noopener noreferrer"><img ng-src="https://opencollective.com/dim/sponsor/{{ $index }}/avatar.svg"></a>
+        </div>
+        <h2 translate="Views.Support.Backers"></h2>
+        <p translate="Views.Support.BackersDetail"></p>
+        <div class="backers">
+          <a ng-repeat="i in 50 | range track by $index" ng-href="https://opencollective.com/dim/backer/{{ $index }}/website" target="_blank" rel="noopener noreferrer"><img ng-src="https://opencollective.com/dim/backer/{{ $index }}/avatar.svg"></a>
         </div>
     </div>
 </div>

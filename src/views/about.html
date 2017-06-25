@@ -1,7 +1,7 @@
 <div ng-controller="dimSettingsCtrl as vm">
   <h1><img src="~app/images/logo-light.svg" alt="DIM Logo" height="36" width="36"/> <span ng-i18next="Views.About.Header"></span></h1>
   <div class="ngdialog-inner-content">
-    <a ng-href="{{ $DIM_CHANGELOG }}" target="_blank"><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
+    <a ng-href="{{ $DIM_CHANGELOG }}" target="_blank" rel="noopener noreferrer">><span ng-i18next="[i18next]({ version: $DIM_VERSION, flavor: $DIM_FLAVOR, date: $DIM_BUILD_DATE })Views.About.Version"></span></a>
     <p ng-i18next="Views.About.HowItsMade"></p>
     <h2 ng-i18next="Views.About.ContactUs"></h2>
     <table>
@@ -12,13 +12,13 @@
       </tr>
       <tr>
         <td><span ng-i18next="Views.About.TwitterHelp"></span>
-          <br><a href="https://twitter.com/ThisIsDIM" target="_blank">@ThisIsDIM</a>
+          <br><a href="https://twitter.com/ThisIsDIM" target="_blank" rel="noopener noreferrer">@ThisIsDIM</a>
         </td>
         <td><span ng-i18next="Views.About.RedditHelp"></span>
-          <br><a href="https://destinyitemmanager.reddit.com" target="_blank">/r/destinyitemmanager</a>
+          <br><a href="https://destinyitemmanager.reddit.com" target="_blank" rel="noopener noreferrer">/r/destinyitemmanager</a>
         </td>
         <td><span ng-i18next="Views.About.GitHubHelp"></span>
-          <br><a href="https://github.com/DestinyItemManager/DIM/" target="_blank"><span ng-i18next="Views.About.GitHubRepo"></span></a>
+          <br><a href="https://github.com/DestinyItemManager/DIM/" target="_blank" rel="noopener noreferrer"><span ng-i18next="Views.About.GitHubRepo"></span></a>
         </td>
       </tr>
     </table>
@@ -26,7 +26,7 @@
     <div>
       <dl>
         <dt ng-i18next="Views.About.Transifex"></dt>
-        <dd><a href="https://www.transifex.com/destiny-item-manager/destiny-item-manager/" target="_blank">Transifex</a></dd>
+        <dd><a href="https://www.transifex.com/destiny-item-manager/destiny-item-manager/" target="_blank" rel="noopener noreferrer">Transifex</a></dd>
         <dd ng-i18next="Views.About.TransifexText"></dd>
       </dl>
       <dl>

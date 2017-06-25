@@ -1,5 +1,7 @@
 # Next
 
+# 4.1.0
+
 * Fixed the logic for deciding which items can be tagged.
 * Fix "Make room for postmaster".
 * Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.
@@ -20,6 +22,8 @@
 * Loadout Builder no longer has equip and create loadout buttons for loadouts that include vendor items.
 * Loadout Builder is faster.
 * DIM has a new logo!
+* Elemental damage color has been moved to a triangle in the upper-left corner of your weapon.
+* See community weapon ratings in DIM, and submit your own! Weapon ratings can be turned on in Settings, and will show up on your individual weapons as well as in the details popup. You can submit your own reviews - each review is specific to the weapon roll you're looking at, so you know whether you've got the god roll.
 
 # v3.17.1
 
