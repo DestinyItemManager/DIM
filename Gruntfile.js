@@ -99,7 +99,7 @@ module.exports = function(grunt) {
 
     precompress: {
       web: {
-        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg}"
+        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg,wasm}"
       }
     }
   });

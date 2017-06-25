@@ -769,6 +769,11 @@ AddEncoding br .br
     Header set Content-Encoding gzip
 </FilesMatch>
 
+<FilesMatch \.wasm\.gz$>
+    ForceType application/wasm
+    Header set Content-Encoding gzip
+</FilesMatch>
+
 # ----------------------------------------------------------------------
 # | Content transformation                                             |
 # ----------------------------------------------------------------------
