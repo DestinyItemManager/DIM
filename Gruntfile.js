@@ -99,7 +99,7 @@ module.exports = function(grunt) {
 
     precompress: {
       web: {
-        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg}"
+        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg,wasm}"
       }
     }
   });
@@ -175,9 +175,9 @@ module.exports = function(grunt) {
     'update_chrome_release_manifest',
     'compress:chrome',
     'log_release_version',
-    'webstore_upload:release',
     'precompress',
-    'rsync:prod'
+    'rsync:prod',
+    'webstore_upload:release'
   ]);
 
   grunt.registerTask('log_beta_version', function() {

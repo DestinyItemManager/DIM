@@ -1,5 +1,7 @@
 # Next
 
+# 4.1.0
+
 * Fixed the logic for deciding which items can be tagged.
 * Fix "Make room for postmaster".
 * Record books have been moved out of the inventory into their own page. Get a better look at your records, collapse old books, and narrow records down to only those left to complete.

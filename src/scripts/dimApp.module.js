@@ -12,7 +12,6 @@ import TranslateMessageFormatModule from 'angular-translate-interpolation-messag
 import UIRouterModule from '@uirouter/angularjs';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
-import 'angular-uuid2/dist/angular-uuid2.js';
 
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
@@ -49,7 +48,6 @@ export const DimAppModule = angular
     loadoutBuilderModule,
     oauthModule,
     storageModule,
-    'angularUUID2',
     'ajoslin.promise-tracker',
     'cfp.hotkeys'
   ])

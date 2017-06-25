@@ -61,7 +61,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.js$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /sql\.js/],
           use: [
             'babel-loader'
           ]
@@ -96,7 +96,6 @@ module.exports = (env) => {
       ],
 
       noParse: [
-        /\/jquery\.slim\.min\.js$/,
         /\/sql\.js$/
       ]
     },
@@ -232,7 +231,7 @@ module.exports = (env) => {
     // so we exclude it from the regular minification
     // FYI, uglification runs on final chunks rather than individual modules
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      exclude: /-sqlLib-/, // ensure the sqlLib chunk doesnt get minifed
+      exclude: [/-sqlLib-/, /sql-wasm/], // ensure the sqlLib chunk doesnt get minifed
       compress: { warnings: false },
       output: { comments: false },
       sourceMap: true
