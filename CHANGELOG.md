@@ -4,7 +4,7 @@
 
 # 4.1.2
 
-# Add a "Log Out" button in settings.
+* Add a "Log Out" button in settings.
 
 # 4.1.1
 
