@@ -476,7 +476,7 @@ AddDefaultCharset utf-8
 
 <IfModule mod_headers.c>
 
-    Header set Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-eval' https://apis.google.com https://www.google-analytics.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css; connect-src 'self' https://beta.destinyitemmanager.com https://www.bungie.net https://reviews-api.destinytracker.net; img-src 'self' https://www.bungie.net https://ssl.google-analytics.com https://csi.gstatic.com https://opencollective.com data:; font-src 'self' https://fonts.gstatic.com; child-src 'self' https://accounts.google.com; object-src 'self'"
+    Header set Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-eval' https://apis.google.com https://www.google-analytics.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css; connect-src 'self' https://beta.destinyitemmanager.com https://www.bungie.net https://reviews-api.destinytracker.net; img-src 'self' https://www.bungie.net https://ssl.google-analytics.com https://csi.gstatic.com https://opencollective.com data:; font-src 'self' https://fonts.gstatic.com; child-src 'self' https://accounts.google.com https://content.googleapis.com; object-src 'self'"
 
     # `mod_headers` cannot match based on the content-type, however,
     # the `Content-Security-Policy` response header should be send
