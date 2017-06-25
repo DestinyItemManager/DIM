@@ -20,6 +20,7 @@ import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import oauthModule from './oauth/oauth.module';
+import storageModule from './storage/storage.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -46,6 +47,7 @@ export const DimAppModule = angular
     itemReviewModule,
     loadoutBuilderModule,
     oauthModule,
+    storageModule,
     'ajoslin.promise-tracker',
     'cfp.hotkeys'
   ])

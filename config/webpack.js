@@ -137,6 +137,7 @@ module.exports = (env) => {
 
         { from: './src/.htaccess' },
         { from: './src/extension-scripts/main.js', to: 'extension-scripts/' },
+        { from: './src/extension-scripts/content-script.js', to: 'extension-scripts/' },
         { from: './src/manifest.json' },
         { from: './src/manifest-webapp.json' },
         { from: './src/data', to: 'data/' },
@@ -178,6 +179,8 @@ module.exports = (env) => {
         $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
         $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
 
+        $GOOGLE_DRIVE_CLIENT_ID: JSON.stringify('22022180893-raop2mu1d7gih97t5da9vj26quqva9dc.apps.googleusercontent.com'),
+
         // Feature flags!
 
         // Tags are off in release right now
@@ -192,9 +195,10 @@ module.exports = (env) => {
         // show changelog toaster
         '$featureFlags.changelogToaster': JSON.stringify(env === 'release'),
         '$featureFlags.materialsExchangeEnabled': JSON.stringify(false),
-        // allow importing and exporting your DIM data to JSON
-        '$featureFlags.importExport': JSON.stringify(env !== 'release'),
-        '$featureFlags.reviewsEnabled': JSON.stringify(true)
+        '$featureFlags.reviewsEnabled': JSON.stringify(true),
+        // Sync data over gdrive
+        '$featureFlags.gdrive': JSON.stringify(env !== 'release'),
+        '$featureFlags.debugSync': JSON.stringify(false)
       }),
 
       // Enable if you want to debug the size of the chunks

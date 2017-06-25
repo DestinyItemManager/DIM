@@ -1,7 +1,6 @@
 <div ng-controller="dimSettingsCtrl as vm">
   <h1 translate="Settings"></h1>
   <div class="ngdialog-inner-content">
-<!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
   <form class="settings">
     <table>
       <tr>
@@ -143,18 +142,6 @@
         </td>
         <td>
           <button ng-click="vm.resetHiddenInfos()" translate="Settings.DIMPopupsReset"></button>
-        </td>
-      </tr>
-      <tr ng-if="vm.featureFlags.importExport">
-        <td>
-          <label for="exportButtons" translate="Settings.ImportExport"></label>
-        </td>
-        <td>
-          <div id="exportButtons">
-            <button ng-click="vm.exportData()" translate="Settings.Export"></button><br />
-            <button ng-click="vm.importData()" translate="Settings.Import"></button><br />
-            <input type="file" id="importFile">
-          </div>
         </td>
       </tr>
     </table>

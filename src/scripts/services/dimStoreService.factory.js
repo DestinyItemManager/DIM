@@ -1526,8 +1526,6 @@ function StoreService(
   function loadNewItems(activePlatform) {
     if (activePlatform) {
       const key = newItemsKey();
-      // Clean out old new-items from the Sync Service, we store in IndexedDB now.
-      SyncService.remove(key);
       return idbKeyval.get(key).then((v) => v || new Set());
     }
     return $q.resolve(new Set());

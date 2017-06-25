@@ -355,10 +355,7 @@
       "ExportSS": "Download Spreadsheets",
       "ExportSSHelp": "Download a CSV list of your items that can be easily viewed in the spreadsheet app of your choice.",
       "DIMPopups": "DIM Info Popups",
-      "DIMPopupsReset": "Reset previously hidden info tips",
-      "ImportExport": "Import/Export settings and data",
-      "Export": "Export DIM Data",
-      "Import": "Import DIM Data"
+      "DIMPopupsReset": "Reset previously hidden info tips"
    },
    "Stats": {
       "Discipline": "Discipline",
@@ -371,6 +368,39 @@
       "Quality": "Stats quality",
       "Strength": "Strength",
       "TierProgress": "T{tier} {statName} ({tier, plural, =5{{progress}/300} other{{progress}/60 for T{nextTier}}})\n"
+   },
+   "Storage": {
+      "Title": "DIM Storage",
+      "Explain": "DIM stores its own data separate from your Destiny data (which is maintained by Bungie.net).",
+      "Enabled": "Enabled",
+      "Disabled": "Disabled",
+      "StatLabel": "This currently contains:",
+      "Loadouts": "{value} loadouts",
+      "Settings": "Your DIM settings and preferences",
+      "TagNotes": "{value} items with tags or notes",
+      "ImportExport": "Back Up Data",
+      "GoogleDriveStorage": "Google Drive",
+      "ChromeSyncStorage": "Chrome Sync (Extension Only)",
+      "IndexedDBStorage": "Local Browser Storage",
+      "Details": {
+        "GoogleDriveStorage": "DIM can save data to Google Drive's app storage. If you sign in to Google Drive on multiple browsers, your data will be shared everywhere. This data is stored per Bungie account.",
+        "ChromeSyncStorage": "If you are logged in to Chrome, this will sync your data to other Chrome instances. It does not work on the DIM website.",
+        "IndexedDBStorage": "Local storage will save your information only on this browser. The browser may delete this information if you run out of space or don't visit DIM frequently."
+      },
+      "ForceSync": "Force sync data",
+      "DriveSync": "Log in to Google Drive",
+      "DriveLogout": "Log out of Google Drive",
+      "NoData": "No data",
+      "Export": "Back up DIM data",
+      "Import": "Import DIM data from file",
+      "ImportSuccess": "Imported DIM data!",
+      "ImportNoFile": "No file selected!",
+      "GDriveSignInWarning": "If you already have saved DIM data in Google Drive, it will overwrite anything you have saved locally. You may want to back up your data before signing in.\n\nContinue to sign in to Google Drive?",
+      "GDriveLogout": "Your data is still in Google Drive - if you log in again, DIM will go back to using it.",
+      "ImportFromExtension": "Import data from DIM Chrome Extension",
+      "ImportFromExtensionDetail": "You can import data from the DIM Chrome Extension into the DIM website.",
+      "ImportFromExtensionButton": "Import Data",
+      "ImportFromExtensionWarning": "Your DIM Chrome Extension data will overwrite your current data. Continue?"
    },
    "StoreBucket": {
       "FillStack": "Fill Stack ({amount})",

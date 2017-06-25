@@ -1,0 +1,76 @@
+<div class="storage">
+  <back-link></back-link>
+
+  <h1 translate="Storage.Title"></h1>
+  <p translate="Storage.Explain"></p>
+
+  <button class="dim-button" ng-click="$ctrl.forceSync()">
+    <i class="fa fa-save"></i>
+    <span translate="Storage.ForceSync"></span>
+  </button>
+
+  <div ng-repeat="adapter in $ctrl.syncService.adapters | orderBy:'-' track by adapter.name"
+       ng-switch="adapter.name"
+       class="storage-adapter">
+    <h2>
+      <span translate="Storage.{{adapter.name}}"></span>
+      <span class="storage-status"
+            ng-class="{ enabled: adapter.enabled }">
+        <i class="fa" ng-class="adapter.enabled ? 'fa-check-circle-o' : 'fa-times-circle-o'"></i>
+        <span translate="Storage.{{adapter.enabled ? 'Enabled' : 'Disabled'}}"></span>
+      </span>
+    </h2>
+
+    <p translate="Storage.Details.{{adapter.name}}"></p>
+
+    <div ng-switch-when="GoogleDriveStorage">
+      <button ng-if="!adapter.enabled" class="dim-button" ng-click="$ctrl.driveSync()">
+        <i class="fa fa-sign-in"></i>
+        <span translate="Storage.DriveSync"></span>
+      </button>
+      <button ng-if="adapter.enabled" class="dim-button" ng-click="$ctrl.driveLogout()">
+        <i class="fa fa-sign-out"></i>
+        <span translate="Storage.DriveLogout"></span>
+      </button>
+    </div>
+
+    <p translate="Storage.StatLabel"></p>
+    <ul>
+      <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" translate="Storage.{{key}}" translate-values="{value: value}"></li>
+      </li>
+      <li ng-if="!$ctrl.adapterStats[adapter.name]" translate="Storage.NoData"></li>
+    </ul>
+  </div>
+
+  <div class="storage-adapter" ng-if="$ctrl.supportsExtensionImport">
+    <h2 translate="Storage.ImportFromExtension"></h2>
+    <p translate="Storage.ImportFromExtensionDetail"></p>
+    <p translate="Storage.StatLabel"></p>
+    <ul>
+      <li ng-repeat="(key, value) in $ctrl.extensionDataStats" translate="Storage.{{key}}" translate-values="{value: value}"></li>
+      </li>
+      <li ng-if="!$ctrl.extensionDataStats" translate="Storage.NoData"></li>
+    </ul>
+    <button class="dim-button" ng-click="$ctrl.importDataFromExtension()">
+      <i class="fa fa-upload"></i>
+      <span translate="Storage.ImportFromExtensionButton"></span>
+    </button>
+  </div>
+
+  <div class="storage-adapter">
+    <h2 translate="Storage.ImportExport"></h2>
+    <p>
+      <button class="dim-button" ng-click="$ctrl.exportData()">
+        <i class="fa fa-download"></i>
+        <span translate="Storage.Export"></span>
+      </button>
+    </p>
+    <p>
+      <button class="dim-button" ng-click="$ctrl.importData()">
+        <i class="fa fa-upload"></i>
+        <span translate="Storage.Import"></span>
+      </button>
+      <input type="file" id="importFile">
+    </p>
+  </div>
+</div>

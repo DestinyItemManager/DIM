@@ -3,9 +3,7 @@ import changelog from '../views/changelog-toaster-release.html';
 function run($window, $rootScope, $translate, SyncService, dimInfoService, $timeout) {
   'ngInject';
 
-  $window.initgapi = () => {
-    SyncService.init();
-  };
+  SyncService.init();
 
   var chromeVersion = /Chrome\/(\d+)/.exec($window.navigator.userAgent);
 
