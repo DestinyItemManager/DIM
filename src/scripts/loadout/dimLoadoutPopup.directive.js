@@ -130,7 +130,10 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       return i.canBeEquippedBy(vm.store) &&
         i.talentGrid &&
         !i.talentGrid.xpComplete && // Still need XP
-        (i.hash !== 2168530918 || i.hash !== 3783480580); // Husk of the pit has a weirdo one-off xp mechanic
+        (i.hash !== 2168530918 || // Husk of the pit has a weirdo one-off xp mechanic
+        i.hash !== 3783480580 ||
+        i.hash !== 2576945954 ||
+        i.hash !== 1425539750);
     });
 
     const bestItemFn = function(item) {

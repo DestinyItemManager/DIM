@@ -1,5 +1,7 @@
 # Next
 
+* Exclude all variants of 'Husk of the Pit' from 'Item Leveling' loadout.
+
 # 4.1.0
 
 * Fixed the logic for deciding which items can be tagged.
