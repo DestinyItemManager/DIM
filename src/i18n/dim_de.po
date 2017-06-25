@@ -1508,7 +1508,7 @@ msgid "TrialsCard##Flawless"
 msgstr "Makellos"
 
 #: 
-msgctxt "prod"
+msgctxt "release"
 msgid "Help##Version"
 msgstr "DIM v{{version} veröffentlicht"
 

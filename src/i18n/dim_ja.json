@@ -96,7 +96,7 @@
     "NeverShow": "次回から表示しない",
     "UpgradeChrome": "クロームをアップデートしてください",
     "Xur": "Xûrはここです",
-    "Version_prod": "DIM v{{version}} がリリースされました",
+    "Version_release": "DIM v{{version}} がリリースされました",
     "Version_beta": "ベータがv{{version}}にアップデートされました"
   },
   "Hotkey": {

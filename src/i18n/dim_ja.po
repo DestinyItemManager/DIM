@@ -1439,7 +1439,7 @@ msgid "TrialsCard##Flawless"
 msgstr "完全勝利"
 
 #: 
-msgctxt "prod"
+msgctxt "release"
 msgid "Help##Version"
 msgstr "DIM v{{version}} がリリースされました"
 

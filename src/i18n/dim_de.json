@@ -97,7 +97,7 @@
     "NeverShow": "Diesen Tipp nicht erneut zeigen",
     "UpgradeChrome": "Bitte aktualisiere Chrome",
     "Xur": "Xûr ist da",
-    "Version_prod": "DIM v{{version} veröffentlicht",
+    "Version_release": "DIM v{{version} veröffentlicht",
     "Version_beta": "Beta wurde auf v{{version}} aktualisiert"
   },
   "Hotkey": {

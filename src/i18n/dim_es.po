@@ -1494,7 +1494,7 @@ msgid "TrialsCard##Flawless"
 msgstr "Invicto"
 
 #: 
-msgctxt "prod"
+msgctxt "release"
 msgid "Help##Version"
 msgstr "DIM v{{version}} ha sido Publicado"
 

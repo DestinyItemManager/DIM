@@ -1460,7 +1460,7 @@ msgid "TrialsCard##Flawless"
 msgstr "Vittoria Impeccabile"
 
 #: 
-msgctxt "prod"
+msgctxt "release"
 msgid "Help##Version"
 msgstr "Rilasciata la versione v{{version}} di DIM"
 

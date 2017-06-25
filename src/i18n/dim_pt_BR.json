@@ -97,7 +97,7 @@
     "NeverShow": "Não mostre isso novamente.",
     "UpgradeChrome": "Por favor, atualizar o Chrome.",
     "Xur": "Xûr chegou",
-    "Version_prod": "DIM v{{version}} lançado",
+    "Version_release": "DIM v{{version}} lançado",
     "Version_beta": "Beta foi atualizado para v{{version}}"
   },
   "Hotkey": {

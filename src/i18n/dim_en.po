@@ -1244,7 +1244,7 @@ msgstr "7 Win Reward (Weapon)"
 msgid "TrialsCard##Flawless"
 msgstr "Flawless"
 
-msgctxt "prod"
+msgctxt "release"
 msgid "Help##Version"
 msgstr "DIM v{{version}} Released"
 
