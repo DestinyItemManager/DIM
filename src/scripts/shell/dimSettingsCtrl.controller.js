@@ -3,7 +3,7 @@ import _ from 'underscore';
 
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService) {
+function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService, OAuthTokenService, $state) {
   const vm = this;
 
   vm.featureFlags = {
@@ -35,6 +35,12 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
 
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
+
+  vm.logout = function() {
+    OAuthTokenService.removeToken();
+    $scope.closeThisDialog();
+    $state.go('login', { reauth: true });
+  };
 
   vm.downloadWeaponCsv = function() {
     dimCsvService.downloadCsvFiles(dimStoreService.getStores(), "Weapons");

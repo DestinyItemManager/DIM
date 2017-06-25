@@ -16,7 +16,10 @@ function routes($stateProvider, $urlRouterProvider) {
     name: 'login',
     parent: 'shell',
     url: '/login',
-    template: login
+    template: login,
+    params: {
+      reauth: false
+    }
   }];
 
   if ($featureFlags.materialsExchangeEnabled) {

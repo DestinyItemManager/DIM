@@ -332,6 +332,8 @@
   },
   "Settings": {
     "Settings": "Settings",
+    "LogOutDesc": "Log out of DIM, or switch Bungie.net accounts",
+    "LogOut": "Log out",
     "Language": "Language (reload DIM to take effect)",
     "HideUnfiltered": "Hide Unfiltered Items while Filtering",
     "HideUnfilteredHelp": "Items that do not match filter criteria will be hidden.",
@@ -384,7 +386,7 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n"
   },
-   "Storage": {
+  "Storage": {
       "Title": "DIM Storage",
       "Explain": "DIM stores its own data separate from your Destiny data (which is maintained by Bungie.net).",
       "Enabled": "Enabled",
