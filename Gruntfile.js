@@ -101,12 +101,42 @@ module.exports = function(grunt) {
       web: {
         src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg}"
       }
+    },
+
+    poeditor: {
+      target1: {
+        commands: {
+          action: 'list_languages',
+          id: '9999'
+        }
+      },
+      target2: {
+        download: {
+          project_id: '<%= poeditor.options.project_id %>',
+          type: 'po', // export type (check out the doc)
+          filters: ["translated"], // https://poeditor.com/api_reference/#export
+          dest: 'src/i18n/dim_?.po',
+          languages: {
+            'de': 'de',
+            'es': 'es',
+            'fr': 'fr',
+            'it': 'it',
+            'ja': 'ja',
+            'pt-BR': 'pt_BR'
+          }
+        }
+      },
+      options: {
+        project_id: '116191',
+        api_token: process.env.POEDITOR_API
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-webstore-upload');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-rsync');
+  grunt.loadNpmTasks('grunt-poeditor-ab');
 
   grunt.registerTask('update_chrome_beta_manifest', function() {
     var manifest = grunt.file.readJSON('dist/manifest.json');
@@ -160,6 +190,10 @@ module.exports = function(grunt) {
       Promise.all(promises).then(done);
     }
   );
+
+  grunt.registerTask('download_translations', [
+    'poeditor:target2:download'
+  ]);
 
   grunt.registerTask('publish_beta', [
     'update_chrome_beta_manifest',

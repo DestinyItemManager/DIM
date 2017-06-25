@@ -1,10 +1,10 @@
-import en from '../i18n/dim_en.json';
-import it from '../i18n/dim_it.json';
-import de from '../i18n/dim_de.json';
-import fr from '../i18n/dim_fr.json';
-import es from '../i18n/dim_es.json';
-import ja from '../i18n/dim_ja.json';
-import ptBr from '../i18n/dim_pt_BR.json';
+import en from '../i18n/dim_en.po';
+import it from '../i18n/dim_it.po';
+import de from '../i18n/dim_de.po';
+import fr from '../i18n/dim_fr.po';
+import es from '../i18n/dim_es.po';
+import ja from '../i18n/dim_ja.po';
+import ptBr from '../i18n/dim_pt_BR.po';
 
 function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
                 ngHttpRateLimiterConfigProvider, ngDialogProvider) {

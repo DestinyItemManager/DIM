@@ -1,1302 +1,1539 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: DIM\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2017-06-23T09:30:24.169Z\n"
-"PO-Revision-Date: 2017-06-23T09:30:24.169Z\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Destiny Item Manager\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: 
 msgid "Bucket##Armor"
 msgstr "Rüstung"
 
+#: 
 msgid "Bucket##General"
 msgstr "Allgemein"
 
+#: 
 msgid "Bucket##Postmaster"
 msgstr "Poststelle"
 
+#: 
 msgid "Bucket##Progress"
 msgstr "Fortschritt"
 
+#: 
 msgid "Bucket##Reputation"
 msgstr "Ruf"
 
+#: 
 msgid "Bucket##Show"
 msgstr "Zeige {{bucket}}"
 
+#: 
 msgid "Bucket##Unknown"
 msgstr "Unbekannt"
 
+#: 
 msgid "Bucket##Vault"
 msgstr "Tresor"
 
+#: 
 msgid "Bucket##Weapons"
 msgstr "Waffen"
 
+#: 
 msgid "BungieService##DevVersion"
-msgstr ""
-"Benutzt du eine Entwickler-Version von DIM? Du musst deine "
-"Chrome-Erweiterung auf bungie.net registrieren."
+msgstr "Benutzt du eine Entwickler-Version von DIM? Du musst deine Chrome-Erweiterung auf bungie.net registrieren."
 
+#: 
 msgid "BungieService##Down"
 msgstr "Bungie.net ist nicht erreichbar."
 
+#: 
 msgid "BungieService##Difficulties"
 msgstr "Die Bungie-API hat zur Zeit mit Schwierigkeiten zu kämpfen."
 
+#: 
 msgid "BungieService##NetworkError"
 msgstr "Netzwerk Fehler - {{status}} {{statusText}}"
 
+#: 
 msgid "BungieService##Throttled"
-msgstr ""
-"Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es "
-"dann erneut."
+msgstr "Bungie API Drosselgrenze überschritten. Bitte warte etwas und versuche es dann erneut."
 
+#: 
 msgid "BungieService##NotLoggedIn"
 msgstr "Bitte melde dich bei Bungie.net an, um diese Erweiterung zu nutzen."
 
+#: 
 msgid "BungieService##Maintenance"
 msgstr "Bungie.net Server werden zur Zeit gewartet."
 
+#: 
 msgid "BungieService##NoAccount"
-msgstr ""
-"Es wurde kein Destiny Account für {{platform}} gefunden. Hast du die "
-"richtige Platform gewählt?"
+msgstr "Es wurde kein Destiny Account für {{platform}} gefunden. Hast du die richtige Platform gewählt?"
 
+#: 
 msgid "BungieService##NoAccountForPlatform"
 msgstr "Konnte auf {{platform}} keinen Destiny Account für dich finden."
 
+#: 
 msgid "BungieService##NoCookies"
 msgstr "Keine Cookies gefunden."
 
+#: 
 msgid "BungieService##NotConnected"
 msgstr "Du bist eventuell nicht mit dem Internet verbunden."
 
+#: 
 msgid "BungieService##Twitter"
 msgstr "Hol dir Statusupdates auf:"
 
+#: 
 msgid "BungieService##ItemUniqueness"
 msgstr "Item Einzigartigkeit"
 
+#: 
 msgid "BungieService##ItemUniquenessExplanation"
-msgstr ""
-"Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu "
-"verschieben, aber das Ziel hat schon eins davon und es ist nur eins "
-"erlaubt.."
+msgstr "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.."
 
+#: 
 msgid "BungieService##VendorNotFound"
 msgstr "Händler Daten nicht verfügbar."
 
+#: 
 msgid "Compare##ButtonHelp"
 msgstr "Gegenstände vergleichen"
 
+#: 
 msgid "Compare##All"
 msgstr "{{type}} Vergleich ({{quantity}})"
 
+#: 
 msgid "Compare##Archetype"
 msgstr "Vergleiche im Urzustand ({{quantity}})"
 
+#: 
 msgid "Compare##Compare"
 msgstr "Vergleiche"
 
+#: 
 msgid "Compare##Close"
 msgstr "Schließen"
 
+#: 
 msgid "Compare##Error##Class"
 msgstr "Kann dieses Item nicht vergleichen, da es nicht für einen {{class}} ist."
 
+#: 
 msgid "Compare##Error##Archetype"
 msgstr "Kann dieses Item nicht vergleichen, da es kein {{type}} ist."
 
+#: 
 msgid "Compare##Splits"
 msgstr "Vergleiche mit selben Werten ({{quantity}})"
 
+#: 
 msgid "Cooldown##Grenade"
 msgstr "Granaten Abklingzeit: {{cooldown}}"
 
+#: 
 msgid "Cooldown##Melee"
 msgstr "Nahkampf Abklingzeit: {{cooldown}}"
 
+#: 
 msgid "Cooldown##Super"
 msgstr "Super Abklingzeit: {{cooldown}}"
 
+#: 
 msgid "Countdown##Days"
 msgid_plural "Countdown##Days"
 msgstr[0] "{{count}} Tag"
 msgstr[1] "{{count}} Tage"
 
+#: 
 msgid "Debug##Dump"
 msgstr "Info in Konsole ausgeben"
 
+#: 
 msgid "Debug##View"
 msgstr "Zeige Item Debug Info"
 
+#: 
 msgid "DidYouKnow##DidYouKnow"
 msgstr "Wusstest du schon?"
 
+#: 
 msgid "DidYouKnow##Collapse"
-msgstr ""
-"Du hast gerade eine Sektion in DIM eingeklappt! Das kann nützlich sein um "
-"Teile von DIM zu verstecken, die du normalerweise nicht verwendest."
+msgstr "Du hast gerade eine Sektion in DIM eingeklappt! Das kann nützlich sein um Teile von DIM zu verstecken, die du normalerweise nicht verwendest."
 
+#: 
 msgid "DidYouKnow##DontShowAgain"
 msgstr "Diesen Tipp nicht erneut zeigen"
 
+#: 
 msgid "DidYouKnow##DoubleClick"
-msgstr ""
-"Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, "
-"kannst du es stattdessen doppelt anklicken um es sofort auszurüsten."
+msgstr "Wenn du ein Item zu deinem aktiven (zuletzt eingeloggt) Charakter bewegst, kannst du es stattdessen doppelt anklicken um es sofort auszurüsten."
 
+#: 
 msgid "DidYouKnow##DragAndDrop"
-msgstr ""
-"Gegenstände können zwischen verschiedenen Charackteren und dem Tresor per "
-"\"Drag and Drop\" verschoben werden"
+msgstr "Gegenstände können zwischen verschiedenen Charackteren und dem Tresor per \"Drag and Drop\" verschoben werden"
 
+#: 
 msgid "DidYouKnow##Expand"
-msgstr ""
-"Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie "
-"an, um diese wieder aufzuklappen."
+msgstr "Klicke das Plus-Zeichen auf der linken Seite der eingeklappten Kategorie an, um diese wieder aufzuklappen."
 
+#: 
 msgid "DidYouKnow##TryNext"
 msgstr "Probiere es das nächste Mal aus!"
 
+#: 
 msgid "FarmingMode##FarmingMode"
 msgstr "Farm Modus (verschickt Items)"
 
+#: 
 msgid "FarmingMode##Desc"
-msgstr ""
-"DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor "
-"und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas "
-"zur Poststelle geschickt wird."
+msgstr "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei um zu verhindern, dass etwas zur Poststelle geschickt wird."
 
+#: 
 msgid "FarmingMode##Configuration"
 msgstr "Einstellungen"
 
+#: 
 msgid "FarmingMode##MakeRoom##Desc"
-msgstr ""
-"DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor "
-"oder anderen Charakteren, nur um zu verhindern, dass etwas in der "
-"Poststelle landet."
+msgstr "DIM verschiebt Engramme und Glimmergegenstände vom {{store}} zum Tresor oder anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet."
 
+#: 
 msgid "FarmingMode##MakeRoom##MakeRoom"
 msgstr "Mache Platz durch verschieben von Ausrüstung, um Items aufnehmen zu können"
 
+#: 
 msgid "FarmingMode##MakeRoom##Tooltip"
-msgstr ""
-"Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor "
-"Platz für Engramme zu schaffen."
+msgstr "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
 
+#: 
 msgid "FarmingMode##OutOfRoomTitle"
 msgstr "Kein Platz"
 
+#: 
 msgid "FarmingMode##OutOfRoom"
-msgstr ""
-"Dir ist der Platz ausgegangen um Gegenstände von {{character}} "
-"wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den "
-"Müll auszusortieren."
+msgstr "Dir ist der Platz ausgegangen um Gegenstände von {{character}} wegzuschieben. Es ist an der Zeit einige Engramme zu entschlüsseln und den Müll auszusortieren."
 
+#: 
 msgid "FarmingMode##Quickmove"
 msgstr "Schnelles Verschieben"
 
+#: 
 msgid "FarmingMode##Stop"
 msgstr "Stop"
 
+#: 
 msgid "Filter##EnterName"
 msgstr "Trage einen Namen ein:"
 
+#: 
 msgid "Filter##EnterNote"
 msgstr "Trage eine Beschreibung ein:"
 
+#: 
 msgid "Header##About"
 msgstr "Über"
 
+#: 
 msgid "Header##Filters"
 msgstr "Filter"
 
+#: 
 msgid "Header##FilterHelp"
 msgstr "Suche nach Item/Perk oder is:arc"
 
+#: 
 msgid "Header##MaterialsExchange"
 msgstr "Verfügbare Fraktionsränge"
 
+#: 
 msgid "Header##Refresh"
 msgstr "Aktualisiere Destiny Daten"
 
+#: 
+msgid "Header##SupportDIM"
+msgstr "Unterstützer"
+
+#: 
 msgid "Help##BackToDIM"
 msgstr "Zurück zu DIM"
 
+#: 
 msgid "Help##CannotMove"
 msgstr "Item kann nicht von diesem Charakter wegbewegt werden."
 
+#: 
 msgid "Help##Drag"
 msgstr "Halte Shift oder pausiere über dem Ziel, um einen Teilstapel zu übertragen"
 
+#: 
 msgid "Help##ChangingPerks"
 msgstr "Verändern der Perks wird nicht unterstützt"
 
+#: 
 msgid "Help##ChangingPerksInfo"
-msgstr ""
-"Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu "
-"verändern. Wir würden es nur zu gern!"
+msgstr "Entschuldigung, es gibt keine Möglichkeit die Perks außerhalb des Spiels zu verändern. Wir würden es nur zu gern!"
 
+#: 
 msgid "Help##HidePopup"
 msgstr "Dieses Fenster ausblenden"
 
+#: 
 msgid "Help##NeverShow"
 msgstr "Diesen Tipp nicht erneut zeigen"
 
+#: 
 msgid "Help##UpgradeChrome"
 msgstr "Bitte aktualisiere Chrome"
 
+#: 
 msgid "Help##Xur"
 msgstr "Xûr ist da"
 
+#: 
 msgid "Hotkey##StartSearch"
 msgstr "Starte eine Suche"
 
+#: 
 msgid "Hotkey##RefreshInventory"
 msgstr "Aktualisiere Inventar"
 
+#: 
 msgid "Hotkey##ToggleDetails"
 msgstr "Zeige/verstecke vollständige Gegenstanddetails"
 
+#: 
 msgid "Hotkey##MarkItemAs"
 msgstr "Markiere Gegenstand als '{{tag}}'"
 
+#: 
 msgid "Hotkey##ClearNewItems"
 msgstr "Markierung von neuen Items entfernen"
 
+#: 
 msgid "Infusion##Infusion"
 msgstr "Finde Infusions-Material"
 
+#: 
 msgid "Infusion##BringGear"
 msgstr "Bringt die Ausrüstung auf:"
 
+#: 
 msgid "Infusion##Calc"
 msgstr "Infusionsrechner"
 
+#: 
 msgid "Infusion##InfuseItems"
 msgstr "Item auswählen zum Infundieren mit:"
 
+#: 
 msgid "Infusion##InfusionMaterials"
 msgstr "Infusions Material"
 
+#: 
 msgid "Infusion##LockedItems"
 msgstr "Beziehe 'gesperrte' Items ein"
 
+#: 
 msgid "Infusion##NoItems"
 msgstr "Keine infundierbaren Items verfügbar."
 
+#: 
 msgid "Infusion##NoTransfer"
-msgstr ""
-"Transfer des Infundiermaterials\n"
+msgstr "Transfer des Infundiermaterials\n"
 "{{target}} kann nicht verschoben werden."
 
+#: 
 msgid "Infusion##ShowItems"
 msgstr "Zeige alle infundierbaren Items von allen Charaktern und dem Tresor"
 
+#: 
 msgid "Infusion##TransferItems"
 msgstr "Übertrage Items"
 
+#: 
 msgid "ItemInfoService##SaveInfoErrorTitle"
 msgstr "Fehler beim Speichern der Item-Infos"
 
+#: 
 msgid "ItemInfoService##SaveInfoErrorDescription"
-msgstr ""
-"Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item "
-"aufgetreten. Es gibt ein Limit wie viel Daten gepeichert werden können. "
-"Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht "
-"außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}."
+msgstr "Es ist ein Fehler beim Speichern DIM-spezifischer Infos für ein Item aufgetreten. Es gibt ein Limit wie viel Daten gepeichert werden können. Dieses Problem ist der Grund dafür, das Markierungen und Notizen noch nicht außerhalb der Beta-Version zur Verfügung stehen. Der Fehler war: {{error}}."
 
+#: 
 msgid "ItemMove##Consolidate"
 msgstr "{{name}} zusammengefasst"
 
+#: 
 msgid "ItemMove##Distributed"
-msgstr ""
-"{{name}} verteilt\n"
+msgstr "{{name}} verteilt\n"
 "{{name}} ist gleichermaßen zwischen Charakteren verteilt"
 
+#: 
 msgid "ItemMove##ToVault"
 msgstr "Alle {{name}} sind nun in deinem Tresor."
 
+#: 
 msgid "ItemMove##ToStore"
 msgstr "Alle {{name}} sind nun bei deinem {{store}}."
 
-msgid "ItemService##BucketFull##Vault"
-msgstr "Es sind zu viele '{{itemtype}}'-Gegenstände im {{store}}."
+#: 
+msgid "ItemService##BucketFull"
+msgid_plural "ItemService##BucketFull"
+msgstr[0] "Es sind zu viele '{{itemtype}}'-Gegenstände im {{store}}."
+msgstr[1] "Es sind zu viele '{{itemtype}}'-Gegenstände im Inventar vom {{store}}."
 
-msgid "ItemService##BucketFull##Guardian"
-msgstr "Es sind zu viele '{{itemtype}}'-Gegenstände im Inventar vom {{store}}."
-
+#: 
 msgid "ItemService##Classified"
 msgstr "Dieses Item ist geheim und kann zur Zeit nicht übertragen werden."
 
+#: 
 msgid "ItemService##Classified2"
-msgstr ""
-"Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item "
-"zur Verfügung. Item ist noch nicht übertragbar."
+msgstr "Geheimes Item. Bungie stellt zur Zeit keine Informationen über dieses Item zur Verfügung. Item ist noch nicht übertragbar."
 
+#: 
 msgid "ItemService##Deequip"
-msgstr ""
-"Kann keinen weiteren ausrüstbaren Gegenstand finden um {{itemname}} "
-"abzulegen."
+msgstr "Kann keinen weiteren ausrüstbaren Gegenstand finden um {{itemname}} abzulegen."
 
+#: 
 msgid "ItemService##ExoticError"
-msgstr ""
-"'{{itemname}}' kann nicht ausgerüstet werden, da der exotische Gegenstand "
-"im {{slot} Slot nicht abgelegt werden kann. ({{error}})"
+msgstr "'{{itemname}}' kann nicht ausgerüstet werden, da der exotische Gegenstand im {{slot} Slot nicht abgelegt werden kann. ({{error}})"
 
+#: 
 msgid "ItemService##NotEnoughRoom"
-msgstr ""
-"Es gibt nichts was wir aus {{store}} wegbewegen könnten um Platz für "
-"{{itemname}} zu schaffen"
+msgstr "Es gibt nichts was wir aus {{store}} wegbewegen könnten um Platz für {{itemname}} zu schaffen"
 
+#: 
 msgid "ItemService##OnlyEquippedLevel"
-msgstr ""
-"Das kann nur von Charakteren ab einem Level von {{level}} oder drüber "
-"ausgerüstet werden."
+msgstr "Das kann nur von Charakteren ab einem Level von {{level}} oder drüber ausgerüstet werden."
 
+#: 
 msgid "ItemService##OnlyEquippedClassLevel"
-msgstr ""
-"Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber "
-"ausgerüstet werden."
+msgstr "Das kann nur von einem {{class}} ab einem Level von {{level}} oder drüber ausgerüstet werden."
 
+#: 
 msgid "ItemService##PercentComplete"
 msgstr "({{percent, pct}} Fertig)"
 
+#: 
 msgid "ItemService##TooMuch"
-msgstr ""
-"Es hat den Anschein dass du mehr Einheiten dieses Items verschieben "
-"wolltest als in der Quelle existieren!"
+msgstr "Es hat den Anschein dass du mehr Einheiten dieses Items verschieben wolltest als in der Quelle existieren!"
 
+#: 
 msgid "ItemService##TwoExotics"
-msgstr ""
-"Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Gegenstände "
-"auszurüsten!"
+msgstr "Wir wissen nicht wie du es geschafft hast mehr als 2 exotische Gegenstände auszurüsten!"
 
+#: 
 msgid "LB##LB"
 msgstr "Loadout Builder"
 
+#: 
 msgid "LB##Guardians"
 msgstr "Hüter"
 
+#: 
 msgid "LB##ShowGear"
 msgstr "Zeige {{class}} Ausrüstung"
 
+#: 
 msgid "LB##HideGear"
 msgstr "Verstecke {{class}} Ausrüstung"
 
+#: 
 msgid "LB##LockEquipped"
 msgstr "Ausgerüstetes sperren"
 
+#: 
 msgid "LB##ClearLocked"
 msgstr "Gesperrte entfernen"
 
+#: 
 msgid "LB##Locked"
 msgstr "Gesperrte Gegenstände"
 
+#: 
 msgid "LB##LockedHelp"
-msgstr ""
-"Ziehe einen beliebigen Gegenstand in sein Feld, um ihn in den Loadouts zu "
-"verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren."
+msgstr "Ziehe einen beliebigen Gegenstand in sein Feld, um ihn in den Loadouts zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren."
 
+#: 
 msgid "LB##FilterSets"
 msgstr "Filter setzen"
 
+#: 
 msgid "LB##AdvancedOptions"
 msgstr "Erweiterte Optionen"
 
+#: 
+msgid "LB##ContainsVendorItems"
+msgstr "Dieses Loadout enthält Gegenstände von Händlern"
+
+#: 
 msgid "LB##ProcessingMode##Fast"
 msgstr "Schnell"
 
+#: 
 msgid "LB##ProcessingMode##Full"
 msgstr "Vollständig"
 
+#: 
 msgid "LB##ProcessingMode##ProcessingMode"
 msgstr "Berechnung"
 
+#: 
 msgid "LB##ProcessingMode##HelpFast"
 msgstr "Nur die beste Ausrüstung wird einbezogen."
 
+#: 
 msgid "LB##ProcessingMode##HelpFull"
 msgstr "Bezieht mehr Ausrüstung ein, braucht dafür länger."
 
+#: 
 msgid "LB##Scaled"
 msgstr "Skaliertes"
 
+#: 
 msgid "LB##Current"
 msgstr "Aktuelles"
 
+#: 
 msgid "LB##LightMode##LightMode"
 msgstr "Lichtlevel"
 
+#: 
 msgid "LB##LightMode##HelpScaled"
 msgstr "Berechne Loadouts als ob alle Gegenstände 350 Verteidigung hätten."
 
+#: 
 msgid "LB##LightMode##HelpCurrent"
 msgstr "Berechnet Loadouts mit dem aktuellen Verteidigungswert."
 
+#: 
 msgid "LB##IncludeRare"
 msgstr "Seltene (blaue) Gegenstände einbeziehen"
 
+#: 
 msgid "LB##Help##Help"
 msgstr "Brauchst du Hilfe?"
 
+#: 
 msgid "LB##Help##Lock"
-msgstr ""
-"Sperre eine bestimmte Art von Perk, indem du auf sein Feld klickst und das "
-"Perk auswählst"
+msgstr "Sperre eine bestimmte Art von Perk, indem du auf sein Feld klickst und das Perk auswählst"
 
+#: 
 msgid "LB##Help##NoPerk"
 msgstr "Wenn ein Perk nicht auftaucht besitzt du keinen Gegenstand mit diesem Perk"
 
+#: 
 msgid "LB##Help##MultiPerk"
-msgstr ""
-"Um Rüstung mit mehreren Perks zu nutzen, klicke mit Shift+Klick auf die "
-"gewünschten Perks"
+msgstr "Um Rüstung mit mehreren Perks zu nutzen, klicke mit Shift+Klick auf die gewünschten Perks"
 
+#: 
 msgid "LB##Help##Or"
 msgstr "Rüstung mit irgendeinem dieser Perks wird benutzt (\"oder\")"
 
+#: 
 msgid "LB##Help##And"
 msgstr "Rüstung mit all diesen Perks wird benutzt (\"und\")"
 
+#: 
 msgid "LB##Help##DragAndDrop"
-msgstr ""
-"Klicke und ziehe Items in die Felder um Sets aus nur dieser Ausrüstung zu "
-"erstellen"
+msgstr "Klicke und ziehe Items in die Felder um Sets aus nur dieser Ausrüstung zu erstellen"
 
+#: 
 msgid "LB##Help##ShiftClick"
 msgstr "Shift+Klick ein Item um Sets ohne diese Ausrüstung zu erstellen"
 
+#: 
 msgid "LB##Help##HigherTiers"
 msgstr "Höhere Stufen sind besser"
 
+#: 
 msgid "LB##Help##Tier11Example"
-msgstr ""
-"4/5/2 (ein Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = "
-"Stufe 11)"
+msgstr "4/5/2 (ein Stufe 11 Set) ist 4 Intellekt, 5 Disziplin, 2 Stärke (4+5+2 = Stufe 11)"
 
+#: 
 msgid "LB##Help##Intellect"
 msgstr "Intellekt beschleunigt die Super Abklingzeit"
 
+#: 
 msgid "LB##Help##Discipline"
 msgstr "Disziplin  beschleunigt die Granaten Aufladezeit"
 
+#: 
 msgid "LB##Help##Strength"
 msgstr "Stärke beschleunigt die Nahkampf Aufladezeit"
 
+#: 
 msgid "LB##Help##Synergy"
-msgstr ""
-"Versuche Rüstung zu finden, welche dir mehr Munition für Waffenklassen "
-"geben, die du benutzt."
+msgstr "Versuche Rüstung zu finden, welche dir mehr Munition für Waffenklassen geben, die du benutzt."
 
+#: 
 msgid "LB##Help##ChangeNodes"
-msgstr ""
-"Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim "
-"Erstellen des Loadouts angezeigt werden."
+msgstr "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden."
 
+#: 
 msgid "LB##Help##StatsIncrease"
-msgstr ""
-"Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch "
-"die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
+msgstr "Wenn sich der Verteidigungswert für ein Rüstungsteil erhöht, nehmen auch die Werte für dieses Rüstungsteil (Int/Dis/Stä) zu."
 
+#: 
+msgid "LB##Equip"
+msgstr "Ausgerüstet bei {{character}}"
+
+#: 
 msgid "LB##ShowAllConfigs"
 msgstr "Zeige alle Einstellungen"
 
+#: 
 msgid "LB##ShowConfigs"
 msgstr "Zeige Einstellungen"
 
+#: 
 msgid "LB##HideAllConfigs"
 msgstr "Verstecke alle Einstellungen"
 
+#: 
 msgid "LB##HideConfigs"
 msgstr "Verstecke Einstellungen"
 
+#: 
 msgid "LB##Loading"
 msgstr "Lade die besten Sets ({{percent, pct2}})"
 
+#: 
 msgid "LB##Vendor"
 msgstr "Gegenstände von Händlern einschließen"
 
+#: 
 msgid "LB##Exclude"
 msgstr "Ignorierte Gegenstände"
 
+#: 
 msgid "LB##ExcludeHelp"
-msgstr ""
-"Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld) "
-"um Sets ohne diesen Gegenstand zu generieren."
+msgstr "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld) um Sets ohne diesen Gegenstand zu generieren."
 
+#: 
 msgid "LB##LockPerk"
 msgstr "Perk sperren"
 
+#: 
 msgid "LB##Missing1"
-msgstr ""
-"Es fehlen legendäre oder exotische Gegenstände, um ein vollständiges Set zu "
-"generieren!"
+msgstr "Es fehlen legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!"
 
+#: 
 msgid "LB##Missing2"
-msgstr ""
-"Es fehlen seltene, legendäre oder exotische Gegenstände, um ein "
-"vollständiges Set zu generieren!"
+msgstr "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!"
 
+#: 
 msgid "Loadouts##Any"
 msgstr "Irgendein"
 
+#: 
 msgid "Loadouts##Loadouts"
 msgstr "Loadouts"
 
+#: 
 msgid "Loadouts##Before"
 msgstr "Zurück zu '{{name}}'"
 
+#: 
 msgid "Loadouts##Create"
 msgstr "Loadout erstellen"
 
+#: 
 msgid "Loadouts##FromEquipped"
 msgstr "Ausrüstung"
 
+#: 
 msgid "Loadouts##Edit"
 msgstr "Loadout bearbeiten"
 
+#: 
 msgid "Loadouts##Delete"
 msgstr "Loadout löschen"
 
+#: 
 msgid "Loadouts##ConfirmDelete"
 msgstr "'{{name}}' wirklich löschen?"
 
+#: 
 msgid "Loadouts##ApplySearch"
 msgstr "Gegenstand = \"{{query}}\""
 
+#: 
 msgid "Loadouts##MaximizeLight"
 msgstr "Licht maximieren"
 
+#: 
 msgid "Loadouts##ItemLeveling"
 msgstr "Gegenstand aufwerten"
 
+#: 
 msgid "Loadouts##GatherEngrams"
 msgstr "Engramme sammeln"
 
+#: 
 msgid "Loadouts##GatherEngramsExceptExotics"
 msgstr "Exo"
 
+#: 
 msgid "Loadouts##RestoreAllItems"
 msgstr "Alle Gegenstände"
 
+#: 
 msgid "Loadouts##Random"
 msgstr "Zufällig"
 
+#: 
 msgid "Loadouts##Randomize"
-msgstr ""
-"Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt "
-"zufällig ausgewählt werden?"
+msgstr "Sollen deine ausgerüsteten Waffen und Rüstungen, sowie Geist und Artefakt zufällig ausgewählt werden?"
 
+#: 
 msgid "Loadouts##VendorsCannotEquip"
 msgstr "Folgende Händler-Gegenstände können nicht ausgerüstet werden:"
 
+#: 
 msgid "Loadouts##VendorsCanEquip"
 msgstr "Folgende Gegenstände können ausgerüstet werden:"
 
+#: 
 msgid "Loadouts##MaxSlots"
 msgstr "Du kannst nur {{slots}} Gegenstände dieser Art in einem Loadout haben."
 
+#: 
 msgid "Loadouts##OnlyItems"
-msgstr ""
-"Es können nur ausrüstbare Gegenstände, Materialien und "
-"Verbrauchsgegenstände zu einem Loadout hinzugefügt werden."
+msgstr "Es können nur ausrüstbare Gegenstände, Materialien und Verbrauchsgegenstände zu einem Loadout hinzugefügt werden."
 
+#: 
 msgid "Loadouts##FilteredItems"
 msgstr "Gefilterte Items"
 
+#: 
 msgid "Loadouts##NoEngrams"
 msgstr "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar."
 
+#: 
 msgid "Loadouts##NoExotics"
 msgstr "Es sind keine Engramme zum Transfer verfügbar."
 
+#: 
 msgid "Loadouts##LoadoutName"
 msgstr "Loadout Name..."
 
+#: 
 msgid "Loadouts##Save"
 msgstr "Speichern"
 
+#: 
 msgid "Loadouts##SaveAsNew"
 msgstr "Als neu speichern"
 
+#: 
 msgid "Loadouts##Cancel"
 msgstr "Abbrechen"
 
+#: 
 msgid "Loadouts##ItemsWithIcon"
-msgstr ""
-"Gegenstände mit diesem Symbol werden angelegt. Klicke auf einen Gegenstand "
-"um ihn anzulegen bzw. abzulegen."
+msgstr "Gegenstände mit diesem Symbol werden angelegt. Klicke auf einen Gegenstand um ihn anzulegen bzw. abzulegen."
 
+#: 
 msgid "Loadouts##CouldNotEquip"
 msgstr "{{itemname}} konnte nicht ausgerüstet werden"
 
+#: 
 msgid "Loadouts##TooManyRequested"
-msgstr ""
-"Du hast {{total}} {{itemname}}. Dein Loadout verlangt jedoch {{requested}}. "
-"Wir haben alles übertragen, was da war."
+msgstr "Du hast {{total}} {{itemname}}. Dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war."
 
+#: 
 msgid "Loadouts##DoesNotExist"
 msgstr "{{itemname}} existiert nicht auf deinem Account."
 
+#: 
 msgid "Loadouts##AppliedAuto"
 msgstr "Automatischer Loadout Builder"
 
+#: 
 msgid "Loadouts##Applied"
 msgid_plural "Loadouts##Applied"
 msgstr[0] "Dein Ein-Item Loadout wurde zum {{store}} übertragen."
 msgstr[1] "Loadout aus {{count}} Gegenständen wurde zum {{store}} übertragen."
 
+#: 
 msgid "Loadouts##AppliedError"
 msgstr "Keiner der Gegenstände in deinem Loadout konnte übertragen werden."
 
+#: 
 msgid "Loadouts##AppliedWarn"
-msgstr ""
-"Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} "
-"Gegenständen hatten Fehler."
+msgstr "Dein Loadout wurde teilweise übertragen, aber {{failed}} von {{total}} Gegenständen hatten Fehler."
 
+#: 
 msgid "Loadouts##NameRequired"
 msgstr "Ein Name ist erforderlich."
 
+#: 
 msgid "Loadouts##MakeRoom"
 msgstr "Schaffe Platz für Posstellenitems"
 
+#: 
 msgid "Loadouts##MakeRoomDone"
 msgid_plural "Loadouts##MakeRoomDone"
-msgstr[0] ""
-"Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom "
-"{{store}} geschaffen."
-msgstr[1] ""
-"Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} "
-"Items vom {{store}} geschaffen."
+msgstr[0] "Platz für 1 Poststellenitem durch verschieben von {{movedNum}} Item vom {{store}} geschaffen."
+msgstr[1] "Platz für {{count}} Poststellenitems durch verschieben von {{movedNum}} Items vom {{store}} geschaffen."
 
+#: 
 msgid "Loadouts##MakeRoomError"
-msgstr ""
-"Es kann kein Platz für alle Posstellengegenstände geschaffen werden: "
-"{{error}}."
+msgstr "Es kann kein Platz für alle Posstellengegenstände geschaffen werden: {{error}}."
 
+#: 
 msgid "Loadouts##SaveErrorTitle"
 msgstr "Fehler beim Speichern des Loadouts"
 
+#: 
 msgid "Loadouts##SaveErrorDescription"
 msgstr "Speichern des Loadouts {{loadoutName}} nicht möglich: {{error}}."
 
+#: 
 msgid "Loadouts##DeleteErrorTitle"
 msgstr "Fehler beim Löschen des Loadouts"
 
+#: 
 msgid "Loadouts##DeleteErrorDescription"
 msgstr "Löschen des Loadouts {{loadoutName}} nicht möglich: {{error}}."
 
+#: 
 msgid "Manifest##Build"
 msgstr "Lege Destiny Datenbank an"
 
+#: 
 msgid "Manifest##Download"
 msgstr "Lade neueste Daten von Bungie herunter"
 
+#: 
 msgid "Manifest##Error"
-msgstr ""
-"Fehler beim Laden von Destiny Daten:\n"
+msgstr "Fehler beim Laden von Destiny Daten:\n"
 "{{error}}\n"
 "App neu laden, um es nochmals zu versuchen."
 
+#: 
 msgid "Manifest##Outdated"
 msgstr "Veraltete Destiny Daten"
 
+#: 
 msgid "Manifest##OutdatedExplanation"
-msgstr ""
-"Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die "
-"neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig "
-"funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die "
-"neuen Daten im System verbreiten werden."
+msgstr "Bungie hat die Destiny Info-Datenbank aktualisiert. Lade DIM erneut, um die neuen Infos zu laden. Beachte, dass einige Dinge in DIM u.U. nicht richtig funktionieren, nachdem Bungie.net Destiny aktualisiert hat, solange die neuen Daten im System verbreiten werden."
 
+#: 
 msgid "Manifest##Load"
 msgstr "Lade gespeicherte Daten"
 
+#: 
 msgid "Manifest##LoadCharInv"
 msgstr "Lade Destiny Charaktere und Inventar"
 
+#: 
 msgid "Manifest##Save"
 msgstr "Speichere neueste Daten"
 
+#: 
 msgid "Manifest##Unzip"
 msgstr "Entpacke neueste Daten"
 
+#: 
 msgid "MaterialsExchange##MaterialsExchange"
 msgstr "Materialaustausch"
 
+#: 
 msgid "MaterialsExchange##CurrentRank"
 msgstr "Aktueller Rang"
 
+#: 
 msgid "MaterialsExchange##CurrentRep"
 msgstr "Aktueller Ruf"
 
+#: 
 msgid "MaterialsExchange##OnHand"
 msgstr "Materialien in Besitz"
 
+#: 
 msgid "MaterialsExchange##FromTrade"
 msgstr "Materialien vom Tausch"
 
+#: 
 msgid "MaterialsExchange##NewRank"
 msgstr "Neuer Rang"
 
+#: 
 msgid "MaterialsExchange##NewRep"
 msgstr "Neuer Ruf"
 
+#: 
 msgid "MovePopup##OverviewTab"
 msgstr "Übersicht"
 
+#: 
 msgid "MovePopup##ReviewsTab"
 msgstr "Berichte"
 
+#: 
 msgid "MovePopup##Consolidate"
 msgstr "Zusammenführen"
 
+#: 
 msgid "MovePopup##DistributeEvenly"
 msgstr "Gleichmäßig verteilen"
 
+#: 
 msgid "MovePopup##Equip"
 msgstr "Equip"
 
+#: 
 msgid "MovePopup##Split"
 msgstr "Split"
 
+#: 
 msgid "MovePopup##Store"
 msgstr "Store"
 
+#: 
 msgid "MovePopup##Subtitle##Light"
 msgstr "{{light}}"
 
+#: 
 msgid "MovePopup##Subtitle##Stats"
 msgstr "{{statName}}"
 
+#: 
 msgid "MovePopup##Subtitle##Class"
 msgstr "{{classType}}"
 
+#: 
 msgid "MovePopup##Subtitle##Type"
 msgstr "{{typeName}}"
 
+#: 
 msgid "MovePopup##Subtitle##Combined"
-msgstr ""
-"$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) "
-"$t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
+msgstr "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.statName) $t(MovePopup.Subtitle.classType) $t(MovePopup.Subtitle.typeName)"
 
+#: 
 msgid "MovePopup##Take"
 msgstr "Take"
 
+#: 
 msgid "MovePopup##Vault"
 msgstr "Vault"
 
+#: 
 msgid "MoveAmount##Min"
 msgstr "Mindest-Stapel (1)"
 
+#: 
 msgid "MoveAmount##Max"
 msgstr "Gesamtmenge in dieser Stelle."
 
+#: 
 msgid "MoveAmount##UpStack"
 msgstr "Auf nächsten vollen Stapel erhöhen"
 
+#: 
 msgid "MoveAmount##DownStack"
 msgstr "Auf letzten vollen Stapel verringern"
 
+#: 
 msgid "MoveAmount##Increment"
 msgstr "Einer mehr"
 
+#: 
 msgid "MoveAmount##Decrement"
 msgstr "Einer weniger"
 
+#: 
 msgid "Notes##Error"
 msgstr "Fehler! Max 120 Zeichen für Notizen."
 
+#: 
 msgid "Notes##Help"
 msgstr "Notiz für dieses Item hinzufügen"
 
+#: 
 msgid "DtrReview##ThankYou"
 msgstr "Vielen Dank für die eingereichte Bewertung! Sie wird bald veröffentlicht."
 
+#: 
 msgid "DtrReview##Help"
 msgstr "Schreibe einen Bericht (Optional)"
 
+#: 
 msgid "DtrReview##HelpPros"
 msgstr "Beschreibe die positiven Eigenschaften dieser Waffe (Optional)"
 
+#: 
 msgid "DtrReview##HelpCons"
 msgstr "Beschreibe die negativen Eigenschaften dieser Waffe (Optional)"
 
+#: 
 msgid "DtrReview##YourReview"
 msgstr "Dein Bericht"
 
+#: 
 msgid "DtrReview##Edit"
 msgstr "Ändern"
 
+#: 
 msgid "DtrReview##Delete"
 msgstr "Löschen"
 
+#: 
 msgid "DtrReview##Submit"
 msgstr "Absenden"
 
+#: 
 msgid "DtrReview##Cancel"
 msgstr "Abbrechen"
 
+#: 
 msgid "DtrReview##Pros"
 msgstr "Vorteile"
 
+#: 
 msgid "DtrReview##Cons"
 msgstr "Nachteile"
 
+#: 
 msgid "DtrReview##NoReviews"
 msgstr "Bisher gibt es keine Berichte für diesen Gegenstand, sei der Erste!"
 
+#: 
 msgid "DtrReview##ServiceCallError"
 msgstr "Destiny-Tracker-Service-Aufruf fehlgeschlagen."
 
+#: 
 msgid "DtrReview##ServiceSubmitError"
 msgstr "Destiny-Tracker-Service-Senden fehlgeschlagen."
 
+#: 
+msgid "DtrReview##AverageRating"
+msgstr "({{itemRating}}) basierend auf {{numRatings}} Bewertungen."
+
+#: 
 msgid "Objectives##Complete"
 msgstr "Vollständig"
 
+#: 
 msgid "Objectives##Incomplete"
 msgstr "Unvollständig"
 
+#: 
 msgid "Postmaster##Limit"
 msgstr "Poststellenlimit"
 
+#: 
 msgid "Postmaster##Desc"
-msgstr ""
-"Es sind 20 verlorene Gegenstände in der Poststelle deines {{store}}. Jedes "
-"neue Item wird bereits vorhandene überschreiben."
+msgstr "Es sind 20 verlorene Gegenstände in der Poststelle deines {{store}}. Jedes neue Item wird bereits vorhandene überschreiben."
 
+#: 
 msgid "Settings##Settings"
 msgstr "Einstellungen"
 
+#: 
 msgid "Settings##Language"
 msgstr "Sprache (lade DIM neu zum Übernehmnen)"
 
+#: 
 msgid "Settings##HideUnfiltered"
 msgstr "Blende ungefilterte Gegenstände beim Filtern aus"
 
+#: 
 msgid "Settings##HideUnfilteredHelp"
 msgstr "Items welche die Filterkriterien nicht erfüllen, werden ausgeblendet."
 
+#: 
 msgid "Settings##AlwaysShowDetails"
 msgstr "Zeige immer Gegenstand Details"
 
+#: 
 msgid "Settings##AlwaysShowDetailsHelp"
-msgstr ""
-"Ein Klick auf einen Gegenstand öffnet ein Popup, welches erweitert werden "
-"kann, um Details zu Statistiken und Perks anzuzeigen. Diese Option wird "
-"immer diese Details zeigen, wenn du auf einen Gegenstand klickst."
+msgstr "Ein Klick auf einen Gegenstand öffnet ein Popup, welches erweitert werden kann, um Details zu Statistiken und Perks anzuzeigen. Diese Option wird immer diese Details zeigen, wenn du auf einen Gegenstand klickst."
 
+#: 
 msgid "Settings##EnableAdvancedStats"
 msgstr "Aktivieren der erweiterten Vergleichsfunktion für die Qualität der Werte"
 
+#: 
 msgid "Settings##EnableAdvancedStatsHelp"
-msgstr ""
-"Ermöglicht erweiterte Min/Max-Funktionen im Verschieben-Dialog und "
-"aktiviert die Rüstungsvergleichsansicht."
+msgstr "Ermöglicht erweiterte Min/Max-Funktionen im Verschieben-Dialog und aktiviert die Rüstungsvergleichsansicht."
 
+#: 
 msgid "Settings##ShowOverlay"
 msgstr "Zeige neue Gegenstände mit einem Overlay"
 
+#: 
 msgid "Settings##ShowOverlayHelp"
 msgstr "Zeigt neue Gegenstände mit einem hellen Overlay an."
 
+#: 
 msgid "Settings##ShowAnimations"
 msgstr "Zeige animiertes Overlay bei neuen Gegenständen an"
 
+#: 
 msgid "Settings##ShowAnimationsHelp"
-msgstr ""
-"Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten "
-"verringert die CPU Auslastung."
+msgstr "Zeigt ein animiertes Overlay bei neuen Gegenständen an. Abschalten verringert die CPU Auslastung."
 
-msgid "Settings##ShowElemental"
-msgstr "Zeige Elementarschaden bei Waffen an"
-
-msgid "Settings##ShowElementalHelp"
-msgstr "Zeigt den Elementarschaden bei Waffen an."
-
+#: 
 msgid "Settings##ShowReviews"
 msgstr "Zeige Berichtwertungen bei Waffen an"
 
+#: 
 msgid "Settings##ShowReviewsHelp"
 msgstr "Zeige die durchschnittliche User basierte Wertung bei Waffen an."
 
+#: 
+#, fuzzy
+msgid "Settings##ShowElemental"
+msgstr "Zeige Elementarschaden bei Waffen an"
+
+#: 
+#, fuzzy
+msgid "Settings##ShowElementalHelp"
+msgstr "Zeigt den Elementarschaden bei Waffen an."
+
+#: 
 msgid "Settings##AllowIdPostToDtr"
 msgstr "Teile Account-Name und bewertete Items mit Destiny Tracker."
 
+#: 
 msgid "Settings##AllowIdPostToDtrHelp"
-msgstr ""
-"DIM wird deinen Account-Namen und jedes Item das du bewertet hast mit "
-"Destiny Tracker teilen."
+msgstr "DIM wird deinen Account-Namen und jedes Item das du bewertet hast mit Destiny Tracker teilen."
 
+#: 
 msgid "Settings##SetSort"
 msgstr "Sortiere Gegenstände nach:"
 
+#: 
 msgid "Settings##SetSortHelp"
 msgstr "Sortieren von Gegenständen nach Seltenheit oder ihrem primären Statuswert."
 
+#: 
 msgid "Settings##SortPrimary"
 msgstr "Primärer Wert"
 
+#: 
 msgid "Settings##SortRarity"
 msgstr "Seltenheit"
 
+#: 
 msgid "Settings##SortRoll"
 msgstr "Roll-Wert Prozent"
 
+#: 
 msgid "Settings##InventoryColumns"
 msgstr "Charakter Inventar Spalten"
 
+#: 
 msgid "Settings##InventoryColumnsHelp"
 msgstr "Wähle die Anzahl der Spalten für das Charakter Inventar."
 
+#: 
 msgid "Settings##VaultColumns"
 msgstr "Maximale Anzahl von Spalten des Tresors"
 
+#: 
 msgid "Settings##VaultColumnsHelp"
 msgstr "Wähle die maximale Anzahl von Spalten für den Tresor aus."
 
+#: 
 msgid "Settings##SizeItem"
 msgstr "Item Größe"
 
+#: 
 msgid "Settings##SizeItemHelp"
 msgstr "Wie groß sollen die Gegenstände sein?"
 
+#: 
 msgid "Settings##ResetToDefault"
 msgstr "Zurücksetzen"
 
+#: 
 msgid "Settings##CharacterOrder"
 msgstr "Charakter Reihenfolge"
 
+#: 
 msgid "Settings##CharacterOrderHelp"
-msgstr ""
-"Charakter können nach dem letzten Login oder ihrem Erstelldatum sortiert "
-"werden."
+msgstr "Charakter können nach dem letzten Login oder ihrem Erstelldatum sortiert werden."
 
+#: 
 msgid "Settings##CharacterOrderRecent"
 msgstr "Nach zuletzt aktivem Charakter"
 
+#: 
 msgid "Settings##CharacterOrderReversed"
 msgstr "Nach zuletzt aktivem Charakter (umgekehrt)"
 
+#: 
 msgid "Settings##CharacterOrderFixed"
 msgstr "Fest (Nach Alter des Charakters)"
 
+#: 
 msgid "Settings##ExportSS"
 msgstr "Lade Tabelle herunter"
 
+#: 
 msgid "Settings##ExportSSHelp"
-msgstr ""
-"Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit "
-"jedem Tabellenprogramm angezeigt werden kann."
+msgstr "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann."
 
+#: 
 msgid "Settings##DIMPopups"
 msgstr "DIM Info Popups"
 
+#: 
 msgid "Settings##DIMPopupsReset"
 msgstr "Zeige zuvor versteckte Info Tipps"
 
+#: 
 msgid "Settings##ImportExport"
 msgstr "Einstellungen und Daten importieren/exportieren"
 
+#: 
 msgid "Settings##Export"
 msgstr "DIM Daten exportieren"
 
+#: 
 msgid "Settings##Import"
 msgstr "DIM Daten importieren"
 
+#: 
 msgid "Stats##Discipline"
 msgstr "Disziplin"
 
+#: 
 msgid "Stats##Intellect"
 msgstr "Intellekt"
 
+#: 
 msgid "Stats##Level"
 msgstr "Level"
 
+#: 
 msgid "Stats##NoBonus"
 msgstr "Kein Bonus"
 
+#: 
 msgid "Stats##OfMaxRoll"
 msgstr "{{range}} des max. Rolls"
 
+#: 
 msgid "Stats##PercentHelp"
 msgstr "Klicke für mehr Informationen über die Qualität der Werte."
 
+#: 
 msgid "Stats##Prestige"
-msgstr ""
-"Prestige Level: {{level}}\n"
+msgstr "Prestige Level: {{level}}\n"
 "{{exp}}xp bis 5 Lichtpartikel."
 
+#: 
 msgid "Stats##Quality"
 msgstr "Qualität der Werte"
 
+#: 
 msgid "Stats##Strength"
 msgstr "Stärke"
 
+#: 
 msgid "Stats##TierProgress"
-msgstr "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n"
+msgid_plural "Stats##TierProgress"
+msgstr[0] "T{{tier}} {{statName}} ({{progress}}/60 für T{{nextTier}})\n"
+""
+msgstr[1] "T{{tier}} {{statName}} ({{progress}}/300)\n"
+""
 
+#: 
 msgid "StoreBucket##FillStack"
 msgstr "Stapel auffüllen ({{amount}})"
 
+#: 
 msgid "StoreBucket##HowMuch"
 msgstr "Wie viele {{itemname}} sollen verschoben werden?"
 
+#: 
 msgid "StoreBucket##Move"
 msgstr "Verschieben"
 
+#: 
 msgid "SyncService##GoogleDriveReAuth"
 msgstr "Um Google Drive wieder zu authorisieren musst du deinen Browser neustarten."
 
+#: 
 msgid "SyncService##OneItemTooLarge"
-msgstr ""
-"Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein "
-"Loadout mir zuvielen Gegenständen."
+msgstr "Ein Teil deiner Speicherdatei ist zu groß. Wahrscheinlich hast du ein Loadout mir zuvielen Gegenständen."
 
+#: 
 msgid "SyncService##SaveTooLarge"
 msgstr "Deine Speicherdatei ist zu groß. Bitte entferne gespeicherte Loadouts."
 
+#: 
 msgid "Tags##TagItem"
 msgstr "Item markieren"
 
+#: 
 msgid "Tags##Favorite"
 msgstr "Favorit"
 
+#: 
 msgid "Tags##Junk"
 msgstr "Müll"
 
+#: 
 msgid "Tags##Infuse"
 msgstr "Infundieren"
 
+#: 
 msgid "Tags##Keep"
 msgstr "Behalten"
 
+#: 
 msgid "Vendors##Vendors"
 msgstr "Händler"
 
+#: 
 msgid "Vendors##All"
 msgstr "Alle"
 
+#: 
 msgid "Vendors##Available"
 msgstr "Verfügbar auf:"
 
+#: 
 msgid "Vendors##Compare"
 msgstr "Vergleiche mit dem was du bereits hast:"
 
+#: 
 msgid "Vendors##Load"
 msgstr "Lade Händler"
 
+#: 
 msgid "Vendors##ArmorAndWeapons"
 msgstr "Panzerung & Waffen"
 
+#: 
 msgid "Vendors##ShipsAndVehicles"
 msgstr "Schiffe & Fahrzeuge"
 
+#: 
 msgid "Vendors##Consumables"
 msgstr "Verbrauchsgegenstände"
 
+#: 
 msgid "Vendors##Bounties"
 msgstr "Beutezüge"
 
+#: 
 msgid "Vendors##ShadersAndEmblems"
 msgstr "Shader & Abzeichen"
 
+#: 
 msgid "Vendors##Emotes"
 msgstr "Gesten"
 
+#: 
 msgid "RecordBooks##RecordBooks"
 msgstr "Urkundenbücher"
 
+#: 
 msgid "RecordBooks##HideCompleted"
 msgstr "Abgeschlossene Rekorde nicht anzeigen"
 
+#: 
 msgid "Views##About##BungieCopyright"
-msgstr ""
-"Alle Bilder und Inhalte sind Eigentum von Bungie. Bitte kontaktiere uns, "
-"wenn es irgendwelche Probleme gibt."
+msgstr "Alle Bilder und Inhalte sind Eigentum von Bungie. Bitte kontaktiere uns, wenn es irgendwelche Probleme gibt."
 
+#: 
 msgid "Views##About##ContactUs"
 msgstr "Kontaktiere uns"
 
+#: 
 msgid "Views##About##FAQ"
 msgstr "FAQ"
 
+#: 
 msgid "Views##About##FAQAccess"
 msgstr "Wie bekommt DIM Zugriff auf meine Destiny-Daten?"
 
+#: 
 msgid "Views##About##FAQAccessAnswer"
-msgstr ""
-"Jede Chrome-Erweiterung kann nach den Daten, die eine Website auf dem "
-"Computer speichert fragen. Wenn du dich bei Bungie.net anmeldest erhältst "
-"du einen Token (ein Cookie), das für dein Konto einzigartig ist. Dieses "
-"Token wird verwendet, um mit Bungie sicher zu kommunizieren. Das Token ist "
-"sicherer als mit jeder Anfrage an den Bungie Server den Benutzernamen und "
-"das Passwort mitzusenden. DIM verwendet dieses Token um in deinem Namen mit "
-"Bungie zu kommunizieren."
+msgstr "Jede Chrome-Erweiterung kann nach den Daten, die eine Website auf dem Computer speichert fragen. Wenn du dich bei Bungie.net anmeldest erhältst du einen Token (ein Cookie), das für dein Konto einzigartig ist. Dieses Token wird verwendet, um mit Bungie sicher zu kommunizieren. Das Token ist sicherer als mit jeder Anfrage an den Bungie Server den Benutzernamen und das Passwort mitzusenden. DIM verwendet dieses Token um in deinem Namen mit Bungie zu kommunizieren."
 
+#: 
 msgid "Views##About##FAQDupeGally"
 msgstr "Hey, DIM hat mein Gjallarhorn dupliziert!"
 
+#: 
 msgid "Views##About##FAQDupeGallyAnswer"
 msgstr "Nein, haben wir nicht. Versprochen."
 
+#: 
 msgid "Views##About##FAQKeyboard"
 msgstr "Unterstützt DIM Tastaturkürzel?"
 
+#: 
 msgid "Views##About##FAQKeyboardAnswer"
 msgstr "Ja! Drücke \"?\" um eine Liste der Kürzel zu sehen."
 
+#: 
 msgid "Views##About##FAQLogout"
 msgstr "Wie kann ich mich von DIM abmelden?"
 
+#: 
 msgid "Views##About##FAQLogoutAnswer"
-msgstr ""
-"Deine Sitzung ist an Bungie.net gebunden. Wenn du dich auf Bungie.net "
-"abmeldest, wirst du auch von DIM abgemeldet."
+msgstr "Deine Sitzung ist an Bungie.net gebunden. Wenn du dich auf Bungie.net abmeldest, wirst du auch von DIM abgemeldet."
 
+#: 
 msgid "Views##About##FAQLostItem"
 msgstr "Ich habe durch euer Tool einen Gegenstand verloren!"
 
+#: 
 msgid "Views##About##FAQLostItemAnswer"
-msgstr ""
-"Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der "
-"Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du "
-"kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, "
-"aktualisiere die App, indem du F5 drückst. Schau auf Bungie.net oder im "
-"Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, "
-"er ist da."
+msgstr "Sehr wahrscheinlich ist eine Übertragung fehlgeschlagen, so dass der Gegenstand im Tresor oder auf einem anderen Charakter gelandet ist. Du kannst nach dem Gegenstand suchen. Wenn du ihn trotzdem nicht findest, aktualisiere die App, indem du F5 drückst. Schau auf Bungie.net oder im Spiel nach, um zu sehen wo sich der Gegenstand befindet. Wir sind sicher, er ist da."
 
+#: 
 msgid "Views##About##GitHub"
 msgstr "GitHub"
 
+#: 
 msgid "Views##About##GitHubHelp"
-msgstr ""
-"Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer "
-"Projektseite auf GitHub."
+msgstr "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf GitHub."
 
+#: 
 msgid "Views##About##GitHubRepo"
 msgstr "DIM Git Repo"
 
+#: 
 msgid "Views##About##Header"
 msgstr "Über Destiny Item Manager (DIM)"
 
+#: 
 msgid "Views##About##HowItsMade"
-msgstr ""
-"DIM basiert auf denselben Diensten wie Bungie.net und der Destiny Companion "
-"App. DIM kann auf die Items in deinem Hüter-Inventar und dem Tresor auf "
-"PlayStation und Xbox zugreifen. Du kannst dann Elemente per Drag & Drop "
-"verschieben, wenn Du sie verschieben möchtest."
+msgstr "DIM basiert auf denselben Diensten wie Bungie.net und der Destiny Companion App. DIM kann auf die Items in deinem Hüter-Inventar und dem Tresor auf PlayStation und Xbox zugreifen. Du kannst dann Elemente per Drag & Drop verschieben, wenn Du sie verschieben möchtest."
 
+#: 
 msgid "Views##About##Reddit"
 msgstr "Reddit"
 
+#: 
 msgid "Views##About##RedditHelp"
 msgstr "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!"
 
+#: 
 msgid "Views##About##Twitter"
 msgstr "Twitter"
 
+#: 
 msgid "Views##About##TwitterHelp"
-msgstr ""
-"Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten "
-"Stand zu sein."
+msgstr "Folge uns, um Informationen zu DIM erhalten und immer auf dem neuesten Stand zu sein."
 
+#: 
 msgid "Views##About##Version"
 msgstr "Version {{version}} ({{flavor}})"
 
+#: 
 msgid "Views##About##Transifex"
 msgstr "Trete dem Übersetzer-Team bei!"
 
+#: 
 msgid "Views##About##TransifexText"
-msgstr ""
-"Wir benutzen Transifex für eine unkomplizierte Übersetzung. Wenn du die DIM "
-"Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
+msgstr "Wir benutzen Transifex für eine unkomplizierte Übersetzung. Wenn du die DIM Übersetzung in einer Sprache verbessern möchtest, trete dem Team bei."
 
+#: 
 msgid "Views##Support##Support"
 msgstr "Unterstütze DIM"
 
+#: 
 msgid "Views##Support##FreeToDownload"
-msgstr ""
-"DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von "
-"jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist "
-"unser Versprechen."
+msgstr "DIM ist ein kostenloses Tool. Der Quellcode ist Open-Source und kann von jedem verbessert werden. Du wirst niemals Werbung in DIM sehen. Das ist unser Versprechen."
 
+#: 
 msgid "Views##Support##OpenCollective"
-msgstr ""
-"Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu "
-"kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben."
+msgstr "Wir benutzen den OpenCollective Service um die Hingabe und Zeit zu kompensieren, die unsere Entwickler in dieses Projekt gesteckt haben."
 
+#: 
 msgid "Views##Support##Backers"
 msgstr "Unterstützer"
 
+#: 
 msgid "Views##Support##BackersDetail"
-msgstr ""
-"Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu "
-"helfen aktiv weiterzuentwickeln"
+msgstr "Unterstütze uns mit einer einmaligen oder monatlichen Spende, um uns zu helfen aktiv weiterzuentwickeln"
 
+#: 
 msgid "Views##Support##Sponsors"
 msgstr "Sponsoren"
 
+#: 
 msgid "Views##Support##SponsorsDetail"
 msgstr "Werde Sponsor und platziere hier dein Logo mit einem Link zu deiner Seite."
 
+#: 
 msgid "Views##UpgradeChrome"
-msgstr ""
-"Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM "
-"wieder nutzen zu können."
+msgstr "Deine Chrome-Version ist zu alt für DIM. Bitte aktualisiere Chrome um DIM wieder nutzen zu können."
 
+#: 
 msgid "Views##Login##Permission"
 msgstr "Wir brauchen dein Einverständnis...."
 
+#: 
 msgid "Views##Login##Explanation"
-msgstr ""
-"Erlaube DIM deinen Destiny Charakter,  Tresor und Fortschritt einzusehen "
-"und zu bearbeiten."
+msgstr "Erlaube DIM deinen Destiny Charakter,  Tresor und Fortschritt einzusehen und zu bearbeiten."
 
+#: 
 msgid "Views##Login##Auth"
 msgstr "Autorisiere mit Bungie.net"
 
+#: 
 msgid "Views##Login##LearnMore"
 msgstr "Willst du mehr wissen?"
 
+#: 
 msgid "TrialsCard##FiveWins"
 msgstr "5 Siege Belohnung (Rüstung)"
 
+#: 
 msgid "TrialsCard##SevenWins"
 msgstr "7 Siege Belohnung (Waffe)"
 
+#: 
 msgid "TrialsCard##Flawless"
 msgstr "Makellos"
 
+#: 
 msgctxt "prod"
 msgid "Help##Version"
 msgstr "DIM v{{version} veröffentlicht"
 
+#: 
 msgctxt "beta"
 msgid "Help##Version"
 msgstr "Beta wurde auf v{{version}} aktualisiert"
 
+#: 
 msgctxt "Lock"
 msgid "MovePopup##LockUnlock"
 msgstr "{{itemType}} sperren"
 
+#: 
 msgctxt "Unlock"
 msgid "MovePopup##LockUnlock"
 msgstr "{{itemType}} entsperren"
 
+#: 
 msgctxt "Track"
 msgid "MovePopup##TrackUntrack"
 msgstr "{{itemType}} verfolgen"
 
+#: 
 msgctxt "Untrack"
 msgid "MovePopup##TrackUntrack"
 msgstr "{{itemType}} nicht verfolgen"
 
-msgctxt "Max"
-msgid "Stats##TierProgress"
-msgstr "T{{tier}} {{statName}} ({{progress}}/300)\n"
