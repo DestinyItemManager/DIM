@@ -111,6 +111,17 @@ module.exports = function(grunt) {
         }
       },
       target2: {
+        upload: { // special case for uploads
+          id: '<%= poeditor.options.project_id %>',
+          language: 'en',
+          file: 'src/i18n/dim_en.po',
+          updating: 'terms_definitions',
+          overwrite: 1, // set any POE's API option
+          sync_terms: 1,
+          fuzzy_trigger: 1
+        }
+      },
+      target3: {
         download: {
           project_id: '<%= poeditor.options.project_id %>',
           type: 'po', // export type (check out the doc)
@@ -191,8 +202,12 @@ module.exports = function(grunt) {
     }
   );
 
+  grunt.registerTask('update_terms', [
+    'poeditor:target2:upload'
+  ]);
+
   grunt.registerTask('download_translations', [
-    'poeditor:target2:download'
+    'poeditor:target3:download'
   ]);
 
   grunt.registerTask('publish_beta', [
