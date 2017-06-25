@@ -4,8 +4,8 @@ import angular from 'angular';
 import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
-import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-debug-wasm.js';
-import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-debug-wasm-raw.wasm';
+import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
+import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
 
 // For zip
 import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
@@ -16,7 +16,7 @@ import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 // can only be done using the dynamic import method.
 function requireSqlLib() {
   if (typeof WebAssembly === 'object') {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       let loaded = false;
 
       window.Module = {
@@ -25,7 +25,7 @@ function requireSqlLib() {
       window.SQL = {
         onRuntimeInitialized: function() {
           if (!loaded) {
-            console.log("Using WASM SQLite");
+            console.info("Using WASM SQLite");
             loaded = true;
             resolve(window.SQL);
             delete window.SQL;
@@ -33,15 +33,15 @@ function requireSqlLib() {
         }
       };
 
-      // Give it 3 seconds to load
+      // Give it 10 seconds to load
       setTimeout(() => {
         if (!loaded) {
           loaded = true;
 
           // Fall back to the old one
-          import(/* webpackChunkName: "sqlLib" */ 'sql.js').then(resolve);
+          import(/* webpackChunkName: "sqlLib" */ 'sql.js').then(resolve, reject);
         }
-      }, 3000);
+      }, 10000);
 
       var head = document.getElementsByTagName('head')[0];
       var script = document.createElement('script');
@@ -98,8 +98,6 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
         return manifestPromise;
       }
 
-      console.time('manifest');
-
       service.isLoaded = false;
 
       manifestPromise = Promise
@@ -126,7 +124,6 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
           const db = new SQLLib.Database(typedArray);
           // do a small request, just to test it out
           service.getAllRecords(db, 'DestinyRaceDefinition');
-          console.timeEnd('manifest');
           return db;
         })
         .catch((e) => {
@@ -144,7 +141,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
             });
           } else {
             // Something may be wrong with the manifest
-            //deleteManifestFile();
+            deleteManifestFile();
           }
 
           manifestPromise = null;
