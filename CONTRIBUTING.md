@@ -7,7 +7,7 @@ Here are some tips to make sure your pull request can be merged smoothly:
 3. Please follow the existing style of DIM code when making your changes. While there's certainly room for improvement in the DIM codebase, if everybody used their favorite code style nothing would match up.
 4. You can use any ES6/ES2015 features [supported by a reasonably modern Chrome version](https://kangax.github.io/compat-table/es6).
 5. Take advantage of the [native JavaScript Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and the [Underscore](http://underscorejs.org) library to write compact, easy-to-understand code.
-6. Be sure to run `grunt eslint` before submitting your PR - it'll catch most style problems and make things much easier to merge.
+6. Be sure to run `npm run lint` before submitting your PR - it'll catch most style problems and make things much easier to merge.
 7. Don't forget to add a description of your change to `CHANGELOG.md` so it'll be included in the release notes!
 
 If you're looking to get started contributing to DIM, check out the [Quick Start](https://github.com/DestinyItemManager/DIM#quick-start) section of our README.
