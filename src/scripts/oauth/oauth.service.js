@@ -1,4 +1,4 @@
-import { oauthClientId, oauthClientSecret } from '../services/bungie-api-utils';
+import { oauthClientId, oauthClientSecret } from '../bungie-api/bungie-api-utils';
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 

@@ -5,7 +5,7 @@ import idbKeyval from 'idb-keyval';
 
 function VendorService(
   $rootScope,
-  dimBungieService,
+  Destiny1Api,
   dimStoreService,
   dimDefinitions,
   dimPlatformService,
@@ -285,7 +285,7 @@ function VendorService(
           return vendor;
         } else {
           // console.log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor && vendor.nextRefreshDate);
-          return dimBungieService
+          return Destiny1Api
             .getVendorForCharacter(store, vendorHash)
             .then((vendor) => {
               vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);

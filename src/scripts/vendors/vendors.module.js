@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 
+import bungieApiModule from '../bungie-api/bungie-api.module';
 import { VendorService } from './vendor.service';
 import { XurService } from './xur.service';
 import { VendorsComponent } from './vendors.component';
@@ -11,8 +12,7 @@ import { vendorTab, vendorTabItems } from './vendors.filters';
 import { Xur } from './xur.component';
 
 export default angular
-  // TODO: once bungie service is its own module, add a dependency here
-  .module('VendorsModule', [])
+  .module('VendorsModule', [bungieApiModule])
   .factory('dimVendorService', VendorService)
   .factory('dimXurService', XurService)
   .component('vendors', VendorsComponent)

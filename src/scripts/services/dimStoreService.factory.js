@@ -10,7 +10,7 @@ angular.module('dimApp')
 function StoreService(
   $rootScope,
   $q,
-  dimBungieService,
+  Destiny1Api,
   dimPlatformService,
   dimCategory,
   dimDefinitions,
@@ -326,7 +326,7 @@ function StoreService(
   function updateCharacters() {
     return $q.all([
       dimDefinitions.getDefinitions(),
-      dimBungieService.getCharacters(dimPlatformService.getActive())
+      Destiny1Api.getCharacters(dimPlatformService.getActive())
     ]).then(([defs, bungieStores]) => {
       _.each(_stores, (dStore) => {
         if (!dStore.isVault) {
@@ -377,7 +377,7 @@ function StoreService(
       dimBucketService.getBuckets(),
       loadNewItems(activePlatform),
       dimItemInfoService(activePlatform),
-      dimBungieService.getStores(activePlatform)])
+      Destiny1Api.getStores(activePlatform)])
       .then(([defs, buckets, newItems, itemInfoService, rawStores]) => {
         if (activePlatform !== dimPlatformService.getActive()) {
           throw new Error("Active platform mismatch");
