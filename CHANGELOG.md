@@ -1,5 +1,13 @@
 # Next
 
+# 4.1.2
+
+# Add a "Log Out" button in settings.
+
+# 4.1.1
+
+* Fixed changelog popup too large to close.
+
 # 4.1.0
 
 * Fixed the logic for deciding which items can be tagged.
