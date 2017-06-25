@@ -99,7 +99,7 @@ module.exports = function(grunt) {
 
     precompress: {
       web: {
-        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg}"
+        src: "dist/**/*.{js,html,css,json,map,ttf,eot,svg,wasm}"
       }
     },
 
@@ -153,6 +153,7 @@ module.exports = function(grunt) {
     var manifest = grunt.file.readJSON('dist/manifest.json');
     manifest.name = manifest.name + " Beta";
     manifest.version = betaVersion;
+    manifest.content_scripts[0].matches = ['https://beta.destinyitemmanager.com/*'];
     grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
   });
 

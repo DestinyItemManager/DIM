@@ -11,7 +11,7 @@ function dimDeveloperCtrl() {
   vm.clientId = localStorage.oauthClientId;
   vm.clientSecret = localStorage.oauthClientSecret;
   vm.URL = window.location.origin;
-  vm.URLRet = vm.URL + '/return.html';
+  vm.URLRet = `${vm.URL}/return.html`;
 
   if (!isExtension && window.location.protocol === 'http:') {
     vm.warning = 'Bungie.net will not accept the http protocol. Serve over https:// and try again.';
@@ -21,7 +21,7 @@ function dimDeveloperCtrl() {
     localStorage.apiKey = vm.apiKey;
     localStorage.oauthClientId = vm.clientId;
     localStorage.oauthClientSecret = vm.clientSecret;
-    window.location = window.location.origin + '/index.html';
+    window.location = `${window.location.origin}/index.html`;
   };
 }
 

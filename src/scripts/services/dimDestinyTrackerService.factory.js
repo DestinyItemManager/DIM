@@ -15,25 +15,25 @@ function DestinyTrackerService($q,
                                dimSettingsService,
                                $i18next,
                                loadingTracker) {
-  var _reviewDataCache = new ReviewDataCache();
-  var _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
-  var _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  var _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
-  var _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewDataCache = new ReviewDataCache();
+  const _trackerErrorHandler = new TrackerErrorHandler($q, $i18next);
+  const _bulkFetcher = new BulkFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewsFetcher = new ReviewsFetcher($q, $http, _trackerErrorHandler, loadingTracker, _reviewDataCache);
+  const _reviewSubmitter = new ReviewSubmitter($q, $http, dimPlatformService, _trackerErrorHandler, loadingTracker, _reviewDataCache);
 
-  $rootScope.$on('item-clicked', function(event, item) {
+  $rootScope.$on('item-clicked', (event, item) => {
     if (dimSettingsService.allowIdPostToDtr) {
       _reviewsFetcher.getItemReviews(item);
     }
   });
 
-  $rootScope.$on('dim-stores-updated', function(event, stores) {
+  $rootScope.$on('dim-stores-updated', (event, stores) => {
     if (dimSettingsService.showReviews) {
       _bulkFetcher.bulkFetch(stores);
     }
   });
 
-  $rootScope.$on('review-submitted', function(event, item) {
+  $rootScope.$on('review-submitted', (event, item) => {
     if (dimSettingsService.allowIdPostToDtr) {
       _reviewSubmitter.submitReview(item);
     }

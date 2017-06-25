@@ -362,10 +362,7 @@
     "ExportSS": "Baixar planilha",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
     "DIMPopups": "Alertas do DIM",
-    "DIMPopupsReset": "Resetar todos os alertas ocultos",
-    "ImportExport": "Importar/exportar configurações e dados",
-    "Export": "Exportar dados do DIM",
-    "Import": "Importar dados do DIM"
+    "DIMPopupsReset": "Resetar todos os alertas ocultos"
   },
   "Stats": {
     "Discipline": "Disciplina",

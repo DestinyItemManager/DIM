@@ -38,8 +38,8 @@ function InfoService(toaster, $http, $i18next, SyncService) {
             return Boolean(closeButton);
           },
           onHideCallback: function() {
-            if ($('#info-' + id).is(':checked')) {
-              save['info.' + id] = 1;
+            if ($(`#info-${id}`).is(':checked')) {
+              save[`info.${id}`] = 1;
               SyncService.set(save);
             }
           }
@@ -47,8 +47,8 @@ function InfoService(toaster, $http, $i18next, SyncService) {
       }
 
       if (content.hideable) {
-        SyncService.get().then(function(data) {
-          if (!data || data['info.' + id]) {
+        SyncService.get().then((data) => {
+          if (!data || data[`info.${id}`]) {
             return;
           }
           showToaster(content.body, data, timeout);
@@ -61,7 +61,7 @@ function InfoService(toaster, $http, $i18next, SyncService) {
     },
     // Remove prefs for "don't show this again"
     resetHiddenInfos: function() {
-      SyncService.get().then(function(data) {
+      SyncService.get().then((data) => {
         SyncService.remove(_.filter(_.keys(data), (k) => k.startsWith('info.')));
       });
     }

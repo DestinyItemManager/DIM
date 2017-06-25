@@ -28,7 +28,7 @@ function SearchService(dimSettingsService) {
    * Filter translation sets. Left-hand is the filter to run from filterFns, right side are possible filterResult
    * values that will set the left-hand to the "match."
    */
-  var filterTrans = {
+  const filterTrans = {
     dmg: ['arc', 'solar', 'void', 'kinetic'],
     type: ['primary', 'special', 'heavy', 'helmet', 'leg', 'gauntlets', 'chest', 'class', 'classitem', 'artifact', 'ghost', 'horn', 'consumable', 'ship', 'material', 'vehicle', 'emblem', 'bounties', 'quests', 'messages', 'missions', 'emote'],
     tier: ['common', 'uncommon', 'rare', 'legendary', 'exotic', 'white', 'green', 'blue', 'purple', 'yellow'],
@@ -72,14 +72,14 @@ function SearchService(dimSettingsService) {
     filterTrans.hasRating = ['rated', 'hasrating'];
   }
 
-  var keywords = _.flatten(_.flatten(_.values(filterTrans)).map(function(word) {
-    return ["is:" + word, "not:" + word];
+  const keywords = _.flatten(_.flatten(_.values(filterTrans)).map((word) => {
+    return [`is:${word}`, `not:${word}`];
   }));
 
   if ($featureFlags.tagsEnabled) {
-    dimSettingsService.itemTags.forEach(function(tag) {
+    dimSettingsService.itemTags.forEach((tag) => {
       if (tag.type) {
-        keywords.push("tag:" + tag.type);
+        keywords.push(`tag:${tag.type}`);
       } else {
         keywords.push("tag:none");
       }
@@ -90,20 +90,20 @@ function SearchService(dimSettingsService) {
   const comparisons = [":<", ":>", ":<=", ":>=", ":"];
 
   const stats = ['rof', 'impact', 'range', 'stability', 'reload', 'magazine', 'aimassist', 'equipspeed'];
-  stats.forEach(function(word) {
-    const filter = 'stat:' + word;
+  stats.forEach((word) => {
+    const filter = `stat:${word}`;
     comparisons.forEach((comparison) => {
       keywords.push(filter + comparison);
     });
   });
 
-  var ranges = ['light', 'level', 'quality', 'percentage'];
+  const ranges = ['light', 'level', 'quality', 'percentage'];
 
   if ($featureFlags.reviewsEnabled) {
     ranges.push('rating');
   }
 
-  ranges.forEach(function(range) {
+  ranges.forEach((range) => {
     comparisons.forEach((comparison) => {
       keywords.push(range + comparison);
     });
@@ -127,20 +127,20 @@ function SearchFilter(dimSearchService) {
   return {
     controller: SearchFilterCtrl,
     controllerAs: 'vm',
-    link: function Link(scope, element) {
+    link: function link(scope, element) {
       element.find('input').textcomplete([
         {
           words: dimSearchService.keywords,
           match: /\b((li|le|qu|pe|ra|is:|not:|tag:|notes:|stat:)\w*)$/,
           search: function(term, callback) {
-            callback($.map(this.words, function(word) {
+            callback($.map(this.words, (word) => {
               return word.indexOf(term) === 0 ? word : null;
             }));
           },
           index: 1,
           replace: function(word) {
             return (word.indexOf('is:') === 0 && word.indexOf('not:') === 0)
-              ? (word + ' ') : word;
+              ? (`${word} `) : word;
           }
         }
       ], {
@@ -156,28 +156,28 @@ function SearchFilter(dimSearchService) {
 
 
 function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchService, hotkeys, $i18next) {
-  var vm = this;
-  var filterInputSelector = '#filter-input';
-  var _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
+  const vm = this;
+  const filterInputSelector = '#filter-input';
+  let _duplicates = null; // Holds a map from item hash to count of occurrances of that hash
 
   vm.search = dimSearchService;
 
-  $scope.$watch('vm.search.query', function() {
+  $scope.$watch('vm.search.query', () => {
     vm.filter();
   });
 
-  $scope.$on('dim-stores-updated', function() {
+  $scope.$on('dim-stores-updated', () => {
     _duplicates = null;
     vm.filter();
   });
 
-  $scope.$on('dim-vendors-updated', function() {
+  $scope.$on('dim-vendors-updated', () => {
     _duplicates = null;
     vm.filter();
   });
 
   // Something has changed that could invalidate filters
-  $scope.$on('dim-filter-invalidate', function() {
+  $scope.$on('dim-filter-invalidate', () => {
     _duplicates = null;
     vm.filter();
   });
@@ -201,7 +201,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
     });
 
-  $scope.$on('dim-clear-filter-input', function() {
+  $scope.$on('dim-clear-filter-input', () => {
     vm.clearFilter();
   });
 
@@ -225,24 +225,23 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
   };
 
   vm.filter = function() {
-    var filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
+    let filterValue = (vm.search.query) ? vm.search.query.toLowerCase() : '';
     filterValue = filterValue.replace(/\s+and\s+/, ' ');
 
     // could probably tidy this regex, just a quick hack to support multi term:
     // [^\s]*"[^"]*" -> match is:"stuff here"
     // [^\s]*'[^']*' -> match is:'stuff here'
     // [^\s"']+' -> match is:stuff
-    var searchTerms = filterValue.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
-    var filter;
-    var predicate = '';
-    var filterFn;
-    var filters = [];
+    const searchTerms = filterValue.match(/[^\s]*"[^"]*"|[^\s]*'[^']*'|[^\s"']+/g);
+    let filter;
+    let predicate = '';
+    const filters = [];
 
     function addPredicate(predicate, filter, invert = false) {
       filters.push({ predicate: predicate, value: filter, invert: invert });
     }
 
-    _.each(searchTerms, function(term) {
+    _.each(searchTerms, (term) => {
       term = term.replace(/'/g, '').replace(/"/g, '');
 
       if (term.startsWith('is:')) {
@@ -294,7 +293,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         addPredicate("rating", filter);
       } else if (term.startsWith('stat:')) {
         // Avoid console.error by checking if all parameters are typed
-        var pieces = term.split(':');
+        const pieces = term.split(':');
         if (pieces.length === 3) {
           filter = pieces[1];
           addPredicate(filter, pieces[2]);
@@ -304,23 +303,23 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }
     });
 
-    filterFn = function(item) {
-      return _.all(filters, function(filter) {
-        var result = filterFns[filter.predicate](filter.value, item);
+    const filterFn = function(item) {
+      return _.all(filters, (filter) => {
+        const result = filterFns[filter.predicate](filter.value, item);
         return filter.invert ? !result : result;
       });
     };
 
-    _.each(dimStoreService.getStores(), function(store) {
-      _.each(store.items, function(item) {
+    _.each(dimStoreService.getStores(), (store) => {
+      _.each(store.items, (item) => {
         item.visible = (filters.length > 0) ? filterFn(item) : true;
       });
     });
 
 
     // Filter vendor items
-    _.each(dimVendorService.vendors, function(vendor) {
-      _.each(vendor.allItems, function(saleItem) {
+    _.each(dimVendorService.vendors, (vendor) => {
+      _.each(vendor.allItems, (saleItem) => {
         saleItem.item.visible = (filters.length > 0) ? filterFn(saleItem.item) : true;
       });
     });
@@ -328,7 +327,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
 
   // Cache for searches against filterTrans. Somewhat noticebly speeds up the lookup on my older Mac, YMMV. Helps
   // make the for(...) loop for filterTrans a little more bearable for the readability tradeoff.
-  var _cachedFilters = {};
+  const _cachedFilters = {};
 
   /**
    * Filter groups keyed by type check. Key is what the user will search for, e.g.
@@ -339,7 +338,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
    * @param {Object} item The item to test against.
    * @return {Boolean} Returns true for a match, false for a non-match
    */
-  var filterFns = {
+  const filterFns = {
     dmg: function(predicate, item) {
       return item.dmg === predicate;
     },
@@ -357,7 +356,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.tier.toLowerCase() === (tierMap[predicate] || predicate);
     },
     sublime: function(predicate, item) {
-      var sublimeEngrams = [
+      const sublimeEngrams = [
         1986458096, // -gauntlet
         2218811091,
         2672986950, // -body-armor
@@ -437,7 +436,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.hash !== 4248210736 && _duplicates[item.hash] > 1;
     },
     classType: function(predicate, item) {
-      var value;
+      let value;
 
       switch (predicate) {
       case 'titan':
@@ -454,13 +453,13 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return (item.classType === value);
     },
     glimmer: function(predicate, item) {
-      var boosts = [
+      const boosts = [
         1043138475, // -black-wax-idol
         1772853454, // -blue-polyphage
         3783295803, // -ether-seeds
         3446457162  // -resupply-codes
       ];
-      var supplies = [
+      const supplies = [
         269776572, // -house-banners
         3632619276, // -silken-codex
         2904517731, // -axiomatic-beads
@@ -484,7 +483,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       return item.dimInfo && item.dimInfo.notes && item.dimInfo.notes.toLocaleLowerCase().includes(predicate.toLocaleLowerCase());
     },
     stattype: function(predicate, item) {
-      return item.stats && _.any(item.stats, function(s) { return s.name.toLowerCase() === predicate && s.value > 0; });
+      return item.stats && _.any(item.stats, (s) => { return s.name.toLowerCase() === predicate && s.value > 0; });
     },
     stackable: function(predicate, item) {
       return item.maxStackSize > 1;
@@ -503,9 +502,9 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     keyword: function(predicate, item) {
       return item.name.toLowerCase().indexOf(predicate) >= 0 ||
         // Search perks as well
-        (item.talentGrid && _.any(item.talentGrid.nodes, function(node) {
+        (item.talentGrid && _.any(item.talentGrid.nodes, (node) => {
           // Fixed #798 by searching on the description too.
-          return (node.name + ' ' + node.description).toLowerCase().indexOf(predicate) >= 0;
+          return (`${node.name} ${node.description}`).toLowerCase().indexOf(predicate) >= 0;
         }));
     },
     light: function(predicate, item) {
@@ -513,11 +512,11 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         return false;
       }
 
-      var operands = ['<=', '>=', '=', '>', '<'];
-      var operand = 'none';
-      var result = false;
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
 
-      operands.forEach(function(element) {
+      operands.forEach((element) => {
         if (predicate.substring(0, element.length) === element) {
           operand = element;
           predicate = predicate.substring(element.length);
@@ -556,11 +555,11 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         return false;
       }
 
-      var operands = ['<=', '>=', '=', '>', '<'];
-      var operand = 'none';
-      var result = false;
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
 
-      operands.forEach(function(element) {
+      operands.forEach((element) => {
         if (predicate.substring(0, element.length) === element) {
           operand = element;
           predicate = predicate.substring(element.length);
@@ -602,11 +601,11 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
         return false;
       }
 
-      var operands = ['<=', '>=', '=', '>', '<'];
-      var operand = 'none';
-      var result = false;
+      const operands = ['<=', '>=', '=', '>', '<'];
+      let operand = 'none';
+      let result = false;
 
-      operands.forEach(function(element) {
+      operands.forEach((element) => {
         if (predicate.substring(0, element.length) === element) {
           operand = element;
           predicate = predicate.substring(element.length);
@@ -617,7 +616,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       }, this);
 
       predicate = parseFloat(predicate);
-      var itemRating = parseFloat(item.dtrRating);
+      const itemRating = parseFloat(item.dtrRating);
 
       switch (operand) {
       case 'none':
@@ -666,7 +665,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Eris Morn (eris)
     //   * Eververse (ev)
     vendor: function(predicate, item) {
-      var vendorHashes = {             // identifier
+      const vendorHashes = {             // identifier
         required: {
           fwc: [995344558],            // SOURCE_VENDOR_FUTURE_WAR_CULT
           do: [103311758],             // SOURCE_VENDOR_DEAD_ORBIT
@@ -718,7 +717,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
     //   * Challenge of Elders (coe)
     //   * Archon Forge (af)
     activity: function(predicate, item) {
-      var activityHashes = { // identifier
+      const activityHashes = { // identifier
         required: {
           trials: [2650556703],  // SOURCE_TRIALS_OF_OSIRIS
           ib: [1322283879],      // SOURCE_IRON_BANNER
@@ -838,18 +837,17 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
 
   // This refactored method filters items by stats
   //   * statType = [aa|impact|range|stability|rof|reload|magazine|equipspeed]
-  var filterByStats = function(predicate, item, statType) {
+  const filterByStats = function(predicate, item, statType) {
     if (predicate.length === 0 || !item.stats) {
       return false;
     }
 
-    var foundStatHash;
-    var operands = ['<=', '>=', '=', '>', '<'];
-    var operand = 'none';
-    var result = false;
-    var statHash = {};
+    const operands = ['<=', '>=', '=', '>', '<'];
+    let operand = 'none';
+    let result = false;
+    let statHash = {};
 
-    operands.forEach(function(element) {
+    operands.forEach((element) => {
       if (predicate.substring(0, element.length) === element) {
         operand = element;
         predicate = predicate.substring(element.length);
@@ -870,7 +868,7 @@ function SearchFilterCtrl($scope, dimStoreService, dimVendorService, dimSearchSe
       equipspeed: 943549884
     }[statType];
 
-    foundStatHash = _.find(item.stats, { statHash });
+    const foundStatHash = _.find(item.stats, { statHash });
 
     if (typeof foundStatHash === 'undefined') {
       return false;

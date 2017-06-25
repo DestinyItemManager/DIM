@@ -342,10 +342,7 @@
     "ExportSS": "スプレッドシートをダウンロードする",
     "ExportSSHelp": "スプリッドシートアプリで見やすい CSVアイテムリストをダウンロードする.",
     "DIMPopups": "DIMの情報",
-    "DIMPopupsReset": "以前非表示にしたヒントをリセットする",
-    "ImportExport": "データの入力／出力やデータ管理。",
-    "Export": "DIM データを出力。",
-    "Import": "DIM データを入力。"
+    "DIMPopupsReset": "以前非表示にしたヒントをリセットする"
   },
   "Stats": {
     "Discipline": "鍛錬",

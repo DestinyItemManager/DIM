@@ -4,6 +4,9 @@ import angular from 'angular';
 import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
+import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
+import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
+
 // For zip
 import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 
@@ -12,7 +15,44 @@ import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
 // in the Webpack config, we need to explicitly name this chunk, which
 // can only be done using the dynamic import method.
 function requireSqlLib() {
-  return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+  if (typeof WebAssembly === 'object') {
+    return new Promise((resolve, reject) => {
+      let loaded = false;
+
+      window.Module = {
+        wasmBinaryFile: sqlWasmBinaryPath
+      };
+      window.SQL = {
+        onRuntimeInitialized: function() {
+          if (!loaded) {
+            console.info("Using WASM SQLite");
+            loaded = true;
+            resolve(window.SQL);
+            delete window.SQL;
+          }
+        }
+      };
+
+      // Give it 10 seconds to load
+      setTimeout(() => {
+        if (!loaded) {
+          loaded = true;
+
+          // Fall back to the old one
+          import(/* webpackChunkName: "sqlLib" */ 'sql.js').then(resolve, reject);
+        }
+      }, 10000);
+
+      const head = document.getElementsByTagName('head')[0];
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = sqlWasmPath;
+      script.async = true;
+      head.appendChild(script);
+    });
+  } else {
+    return import(/* webpackChunkName: "sqlLib" */ 'sql.js');
+  }
 }
 
 angular.module('dimApp')
@@ -25,7 +65,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
 
   let manifestPromise = null;
 
-  const makeStatement = _.memoize(function(table, db) {
+  const makeStatement = _.memoize((table, db) => {
     return db.prepare(`select json from ${table} where id = ?`);
   });
 
@@ -38,9 +78,9 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
     // This tells users to reload the extension. It fires no more
     // often than every 10 seconds, and only warns if the manifest
     // version has actually changed.
-    warnMissingDefinition: _.debounce(function() {
+    warnMissingDefinition: _.debounce(() => {
       dimBungieService.getManifest()
-        .then(function(data) {
+        .then((data) => {
           const language = dimSettingsService.language;
           const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
@@ -60,34 +100,31 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
 
       service.isLoaded = false;
 
-      manifestPromise = dimBungieService.getManifest()
-        .then(function(data) {
-          const language = dimSettingsService.language;
-          const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
+      manifestPromise = Promise
+        .all([
+          requireSqlLib(), // load in the sql.js library
+          dimBungieService.getManifest()
+            .then((data) => {
+              const language = dimSettingsService.language;
+              const path = data.mobileWorldContentPaths[language] || data.mobileWorldContentPaths.en;
 
-          // Use the path as the version, rather than the "version" field, because
-          // Bungie can update the manifest file without changing that version.
-          const version = path;
-          service.version = version;
+              // Use the path as the version, rather than the "version" field, because
+              // Bungie can update the manifest file without changing that version.
+              const version = path;
+              service.version = version;
 
-          return loadManifestFromCache(version)
-            .catch(function(e) {
-              return loadManifestRemote(version, language, path);
+              return loadManifestFromCache(version)
+                .catch((e) => {
+                  return loadManifestRemote(version, language, path);
+                });
             })
-            .then(function(typedArray) {
-              service.statusText = $i18next.t('Manifest.Build') + '...';
-
-              return Promise.all([
-                typedArray,
-                requireSqlLib(), // load in the sql.js library
-              ]);
-            })
-            .then(function([typedArray, SQLLib]) {
-              const db = new SQLLib.Database(typedArray);
-              // do a small request, just to test it out
-              service.getAllRecords(db, 'DestinyRaceDefinition');
-              return db;
-            });
+        ])
+        .then(([SQLLib, typedArray]) => {
+          service.statusText = `${$i18next.t('Manifest.Build')}...`;
+          const db = new SQLLib.Database(typedArray);
+          // do a small request, just to test it out
+          service.getAllRecords(db, 'DestinyRaceDefinition');
+          return db;
         })
         .catch((e) => {
           let message = e.message || e;
@@ -145,20 +182,20 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
    * Returns a promise for the manifest data as a Uint8Array. Will cache it on succcess.
    */
   function loadManifestRemote(version, language, path) {
-    service.statusText = $i18next.t('Manifest.Download') + '...';
+    service.statusText = `${$i18next.t('Manifest.Download')}...`;
 
-    return $http.get("https://www.bungie.net" + path + '?host=' + window.location.hostname, { responseType: "blob" })
-      .then(function(response) {
-        service.statusText = $i18next.t('Manifest.Unzip') + '...';
+    return $http.get(`https://www.bungie.net${path}?host=${window.location.hostname}`, { responseType: "blob" })
+      .then((response) => {
+        service.statusText = `${$i18next.t('Manifest.Unzip')}...`;
         return unzipManifest(response.data);
       })
-      .then(function(arraybuffer) {
-        service.statusText = $i18next.t('Manifest.Save') + '...';
+      .then((arraybuffer) => {
+        service.statusText = `${$i18next.t('Manifest.Save')}...`;
 
-        var typedArray = new Uint8Array(arraybuffer);
+        const typedArray = new Uint8Array(arraybuffer);
         idbKeyval.set('dimManifest', typedArray)
           .then(() => {
-            console.log("Sucessfully stored " + typedArray.length + " byte manifest file.");
+            console.log(`Sucessfully stored ${typedArray.length} byte manifest file.`);
             localStorage.setItem('manifest-version', version);
           })
           .catch((e) => console.error('Error saving manifest file', e));
@@ -182,8 +219,8 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       return $q.reject(new Error("Testing - always load remote"));
     }
 
-    service.statusText = $i18next.t('Manifest.Load') + '...';
-    var currentManifestVersion = localStorage.getItem('manifest-version');
+    service.statusText = `${$i18next.t('Manifest.Load')}...`;
+    const currentManifestVersion = localStorage.getItem('manifest-version');
     if (currentManifestVersion === version) {
       return idbKeyval.get('dimManifest').then((typedArray) => {
         if (!typedArray) {
@@ -193,7 +230,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
       });
     } else {
       _gaq.push(['_trackEvent', 'Manifest', 'Need New Manifest']);
-      return $q.reject(new Error("version mismatch: " + version + ' ' + currentManifestVersion));
+      return $q.reject(new Error(`version mismatch: ${version} ${currentManifestVersion}`));
     }
   }
 
@@ -201,18 +238,18 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
    * Unzip a file from a ZIP Blob into an ArrayBuffer. Returns a promise.
    */
   function unzipManifest(blob) {
-    return $q(function(resolve, reject) {
+    return $q((resolve, reject) => {
       zip.useWebWorkers = true;
       zip.workerScriptsPath = 'static/zipjs/';
-      zip.createReader(new zip.BlobReader(blob), function(zipReader) {
+      zip.createReader(new zip.BlobReader(blob), (zipReader) => {
         // get all entries from the zip
-        zipReader.getEntries(function(entries) {
+        zipReader.getEntries((entries) => {
           if (entries.length) {
-            entries[0].getData(new zip.BlobWriter(), function(blob) {
-              var blobReader = new FileReader();
+            entries[0].getData(new zip.BlobWriter(), (blob) => {
+              const blobReader = new FileReader();
               blobReader.addEventListener("error", (e) => { reject(e); });
-              blobReader.addEventListener("load", function() {
-                zipReader.close(function() {
+              blobReader.addEventListener("load", () => {
+                zipReader.close(() => {
                   resolve(blobReader.result);
                 });
               });
@@ -220,7 +257,7 @@ function ManifestService($q, dimBungieService, $http, toaster, dimSettingsServic
             });
           }
         });
-      }, function(error) {
+      }, (error) => {
         reject(error);
       });
     });

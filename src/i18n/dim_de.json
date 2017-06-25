@@ -368,10 +368,7 @@
     "ExportSS": "Lade Tabelle herunter",
     "ExportSSHelp": "Lade eine CSV-Tabelle von deinen Gegenständen herunter, die leicht mit jedem Tabellenprogramm angezeigt werden kann.",
     "DIMPopups": "DIM Info Popups",
-    "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps",
-    "ImportExport": "Einstellungen und Daten importieren/exportieren",
-    "Export": "DIM Daten exportieren",
-    "Import": "DIM Daten importieren"
+    "DIMPopupsReset": "Zeige zuvor versteckte Info Tipps"
   },
   "Stats": {
     "Discipline": "Disziplin",

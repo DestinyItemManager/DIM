@@ -5,7 +5,7 @@ import dialogTemplate from './dimStoreItem.directive.dialog.html';
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
   .filter('tagIcon', ['dimSettingsService', function(dimSettingsService) {
-    var iconType = {};
+    const iconType = {};
 
     dimSettingsService.itemTags.forEach((tag) => {
       if (tag.type) {
@@ -14,9 +14,9 @@ angular.module('dimApp')
     });
 
     return function tagIcon(value) {
-      var icon = iconType[value];
+      const icon = iconType[value];
       if (icon) {
-        return "item-tag fa fa-" + icon;
+        return `item-tag fa fa-${icon}`;
       } else {
         return "item-tag no-tag";
       }
@@ -24,9 +24,8 @@ angular.module('dimApp')
   }]);
 
 
-
 function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
-  var otherDialog = null;
+  let otherDialog = null;
   let firstItemTimed = false;
 
   return {
@@ -48,23 +47,23 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       firstItemTimed = true;
     }
 
-    var vm = scope.vm;
-    var dialogResult = null;
+    const vm = scope.vm;
+    let dialogResult = null;
 
-    var dragHelp = document.getElementById('drag-help');
+    const dragHelp = document.getElementById('drag-help');
 
     if (vm.item.maxStackSize > 1) {
-      element.on('dragstart', function(e) {
+      element.on('dragstart', (e) => {
         $rootScope.dragItem = vm.item; // Kind of a hack to communicate currently-dragged item
         if (vm.item.amount > 1) {
           dragHelp.classList.remove('drag-help-hidden');
         }
       });
-      element.on('dragend', function() {
+      element.on('dragend', () => {
         dragHelp.classList.add('drag-help-hidden');
         delete $rootScope.dragItem;
       });
-      element.on('drag', function(e) {
+      element.on('drag', (e) => {
         if (e.shiftKey) {
           dragHelp.classList.add('drag-shift-activated');
         } else {
@@ -73,7 +72,7 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
       });
     }
 
-    vm.doubleClicked = dimActionQueue.wrap(function(item, e) {
+    vm.doubleClicked = dimActionQueue.wrap((item, e) => {
       if (!dimLoadoutService.dialogOpen && !dimCompareService.dialogOpen) {
         e.stopPropagation();
         const active = dimStoreService.getActiveStore();
@@ -82,13 +81,13 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         const equip = !item.equipped || item.owner !== active.id;
 
         dimItemService.moveTo(item, active, item.canBeEquippedBy(active) ? equip : false, item.amount)
-          .then(function() {
+          .then(() => {
             return dimStoreService.updateCharacters();
           });
       }
     });
 
-    vm.clicked = function openPopup(item, e) {
+    vm.clicked = function clicked(item, e) {
       e.stopPropagation();
 
       $rootScope.$broadcast('item-clicked', item);
@@ -138,13 +137,13 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
         });
         otherDialog = dialogResult;
 
-        dialogResult.closePromise.then(function() {
+        dialogResult.closePromise.then(() => {
           dialogResult = null;
         });
       }
     };
 
-    scope.$on('$destroy', function() {
+    scope.$on('$destroy', () => {
       if (dialogResult) {
         dialogResult.close();
       }
@@ -179,12 +178,12 @@ function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService,
 }
 
 function processBounty(vm, item) {
-  var showBountyPercentage = !item.complete;
+  const showBountyPercentage = !item.complete;
   vm.showBadge = showBountyPercentage;
 
   if (showBountyPercentage) {
     vm.badgeClassNames = { 'item-stat': true, 'item-bounty': true };
-    vm.badgeCount = Math.floor(100.0 * item.percentComplete) + '%';
+    vm.badgeCount = `${Math.floor(100.0 * item.percentComplete)}%`;
   }
 }
 
@@ -208,7 +207,7 @@ function processItem(vm, item) {
 }
 
 function StoreItemCtrl() {
-  var vm = this;
+  const vm = this;
 
   vm.dragChannel = (vm.item.notransfer) ? vm.item.owner + vm.item.location.type : vm.item.location.type;
   vm.draggable = !vm.item.location.inPostmaster &&

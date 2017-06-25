@@ -32,7 +32,7 @@ function CountdownController($interval, $i18next) {
 
     let text = `${hours}:${pad(minutes, 2)}`;
     if (days > 0) {
-      text = $i18next.t('Countdown.Days', { count: days }) + ' ' + text;
+      text = `${$i18next.t('Countdown.Days', { count: days })} ${text}`;
     }
     return text;
   }

@@ -3,13 +3,13 @@ require('babel-polyfill');
 require('./scripts/google');
 
 // Drag and drop
-var iosDragDropShim = require('drag-drop-webkit-mobile');
+const iosDragDropShim = require('drag-drop-webkit-mobile');
 iosDragDropShim({
   enableEnterLeave: true,
   holdToDrag: 300
 });
 // https://github.com/timruffles/ios-html5-drag-drop-shim/issues/77
-window.addEventListener('touchmove', function() {});
+window.addEventListener('touchmove', () => {});
 
 // Shim IndexedDB using WebSQL for iOS 9
 require('indexeddbshim');

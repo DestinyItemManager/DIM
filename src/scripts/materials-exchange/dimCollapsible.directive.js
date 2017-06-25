@@ -18,7 +18,7 @@ function Section() {
 }
 
 function SectionCtrl() {
-  var vm = this;
+  const vm = this;
 
   vm.collapsed = vm.isCollapsed || false;
   vm.toggleCollapsed = function(){

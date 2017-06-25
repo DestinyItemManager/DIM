@@ -14,7 +14,6 @@ import UIRouterModule from '@uirouter/angularjs';
 import 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
-import 'angular-uuid2/dist/angular-uuid2.js';
 
 import { ShellModule } from './shell/shell.module';
 import inventoryModule from './store/inventory.module';
@@ -23,6 +22,7 @@ import vendorsModule from './vendors/vendors.module';
 import itemReviewModule from './item-review/item-review.module';
 import loadoutBuilderModule from './loadout-builder/loadout-builder.module';
 import oauthModule from './oauth/oauth.module';
+import storageModule from './storage/storage.module';
 
 import config from './dimApp.config';
 import routes from './dimApp.routes';
@@ -49,7 +49,7 @@ export const DimAppModule = angular
     itemReviewModule,
     loadoutBuilderModule,
     oauthModule,
-    'angularUUID2',
+    storageModule,
     'ajoslin.promise-tracker',
     'cfp.hotkeys',
     'ng-i18next'

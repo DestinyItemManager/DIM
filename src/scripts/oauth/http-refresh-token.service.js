@@ -21,7 +21,7 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
         const accessTokenIsValid = token && isTokenValid(token.accessToken);
 
         if (accessTokenIsValid) {
-          config.headers.Authorization = 'Bearer ' + token.accessToken.value;
+          config.headers.Authorization = `Bearer ${token.accessToken.value}`;
         } else {
           const refreshTokenIsValid = token && isTokenValid(token.refreshToken);
 
@@ -29,11 +29,11 @@ export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService,
             cache = cache || OAuthService.getAccessTokenFromRefreshToken(token.refreshToken);
 
             return cache
-              .then(function(token) {
+              .then((token) => {
                 OAuthTokenService.setToken(token);
 
                 console.log("Successfully updated auth token from refresh token.");
-                config.headers.Authorization = 'Bearer ' + token.accessToken.value;
+                config.headers.Authorization = `Bearer ${token.accessToken.value}`;
                 return config;
               })
               .catch(handleRefreshTokenError)

@@ -16,7 +16,7 @@ angular.module('dimApp')
 
 function FilterLinkCtrl(dimSearchService, $window, $i18next) {
   this.addFilter = function(filter) {
-    var itemNameFilter = false;
+    let itemNameFilter = false;
 
     if (filter === 'item name') {
       itemNameFilter = true;
@@ -27,34 +27,34 @@ function FilterLinkCtrl(dimSearchService, $window, $i18next) {
     if (filter === 'notes:value') {
       itemNameFilter = true;
       filter = $window.prompt($i18next.t('Filter.EnterNote'));
-      filter = 'notes:"' + filter.trim() + '"';
+      filter = `notes:"${filter.trim()}"`;
     }
 
     if (filter.indexOf('light:') === 0 || filter.indexOf('quality:') === 0) {
-      var type = filter.split(':');
-      var lightFilterType = type[1];
-      var light = $window.prompt("Enter a " + type[0] + " value:");
+      const type = filter.split(':');
+      const lightFilterType = type[1];
+      let light = $window.prompt(`Enter a ${type[0]} value:`);
       if (light) {
         light = light.trim();
       } else {
         return;
       }
-      filter = type[0] + ':';
+      filter = `${type[0]}:`;
       switch (lightFilterType) {
       case 'value':
         filter += light;
         break;
       case '>value':
-        filter += '>' + light;
+        filter += `>${light}`;
         break;
       case '>=value':
-        filter += '>=' + light;
+        filter += `>=${light}`;
         break;
       case '<value':
-        filter += '<' + light;
+        filter += `<${light}`;
         break;
       case '<=value':
-        filter += '<=' + light;
+        filter += `<=${light}`;
         break;
       default:
         filter = '';
@@ -62,13 +62,13 @@ function FilterLinkCtrl(dimSearchService, $window, $i18next) {
       }
     }
 
-    var text = dimSearchService.query;
+    const text = dimSearchService.query;
 
     if (itemNameFilter) {
-      dimSearchService.query = filter + (text.length ? ' ' + text : '');
-    } else if ((text + ' ').indexOf(filter + ' ') < 0) {
+      dimSearchService.query = filter + (text.length ? ` ${text}` : '');
+    } else if ((`${text} `).indexOf(`${filter} `) < 0) {
       if (text.length > 0) {
-        dimSearchService.query = text + ' ' + filter;
+        dimSearchService.query = `${text} ${filter}`;
       } else {
         dimSearchService.query = filter;
       }

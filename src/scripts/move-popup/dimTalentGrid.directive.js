@@ -4,9 +4,9 @@ import template from './dimTalentGrid.directive.html';
 
 angular.module('dimApp')
   .directive('dimTalentGrid', TalentGrid)
-  .filter('talentGridNodes', function() {
+  .filter('talentGridNodes', () => {
     return function(nodes, hiddenColumns) {
-      return _.filter(nodes || [], function(node) {
+      return _.filter(nodes || [], (node) => {
         return !node.hidden && node.column >= hiddenColumns;
       });
     };
@@ -32,7 +32,7 @@ function TalentGrid() {
 
 function TalentGridCtrl(dimInfoService, $i18next) {
   const infuseHash = 1270552711;
-  var vm = this;
+  const vm = this;
   vm.nodeSize = 34;
   vm.nodePadding = 4;
   vm.scaleFactor = 1.1;

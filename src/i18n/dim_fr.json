@@ -348,10 +348,7 @@
     "ExportSS": "Télécharger le Tableur",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
     "DIMPopups": "Popups d'Info de DIM",
-    "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes",
-    "ImportExport": "Paramètres et données d'importation/exportation",
-    "Export": "Exportation des données de DIM",
-    "Import": "Importer des données de DIM"
+    "DIMPopupsReset": "Réinitialiser les astuces cachées précédentes"
   },
   "Stats": {
     "Discipline": "Discipline",

@@ -14,6 +14,12 @@
       "extension-scripts/main.js"
     ]
   },
+  "content_scripts": [
+    {
+      "matches": ["https://app.destinyitemmanager.com/*"],
+      "js": ["extension-scripts/content-script.js"]
+    }
+  ],
   "web_accessible_resources": [
     "input.html",
     "return.html"

@@ -9,16 +9,16 @@ const mod = angular.module('dimApp');
 /**
  * Take an icon path and make a full Bungie.net URL out of it
  */
-mod.filter('bungieIcon', function($sce) {
+mod.filter('bungieIcon', ($sce) => {
   return function(icon) {
-    return $sce.trustAsResourceUrl('https://www.bungie.net' + icon);
+    return $sce.trustAsResourceUrl(`https://www.bungie.net${icon}`);
   };
 });
 
 /**
  * Set the background-image of an element to a bungie icon URL.
  */
-mod.filter('bungieBackground', function() {
+mod.filter('bungieBackground', () => {
   return function backgroundImage(value) {
     if (!value) {
       return {};
@@ -30,11 +30,11 @@ mod.filter('bungieBackground', function() {
               ? ''
               : 'https://beta.destinyitemmanager.com';
       return {
-        'background-image': 'url(' + baseUrl + value.substr(1) + ')'
+        'background-image': `url(${baseUrl}${value.substr(1)})`
       };
     }
     return {
-      'background-image': 'url(https://www.bungie.net' + value + ')'
+      'background-image': `url(https://www.bungie.net${value})`
     };
   };
 });
@@ -43,9 +43,9 @@ mod.filter('bungieBackground', function() {
  * Filter a list of items down to only the equipped (or unequipped) items.
  * Usage: items | equipped:true
  */
-mod.filter('equipped', function() {
+mod.filter('equipped', () => {
   return function(items, isEquipped) {
-    return _.select(items || [], function(item) {
+    return _.select(items || [], (item) => {
       return item.equipped === isEquipped;
     });
   };
@@ -54,12 +54,12 @@ mod.filter('equipped', function() {
 /**
  * Sort the stores according to the user's preferences (via the order parameter).
  */
-mod.filter('sortStores', function() {
+mod.filter('sortStores', () => {
   return function sortStores(stores, order) {
     if (order === 'mostRecent') {
       return _.sortBy(stores, 'lastPlayed').reverse();
     } else if (order === 'mostRecentReverse') {
-      return _.sortBy(stores, function(store) {
+      return _.sortBy(stores, (store) => {
         if (store.isVault) {
           return Infinity;
         } else {
@@ -75,16 +75,16 @@ mod.filter('sortStores', function() {
 /**
  * Sort items according to the user's preferences (via the sort parameter).
  */
-mod.filter('sortItems', function() {
+mod.filter('sortItems', () => {
   return function(items, sort) {
     // Don't resort postmaster items - that way people can see
     // what'll get bumped when it's full.
-    var dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER"];
+    const dontsort = ["BUCKET_BOUNTIES", "BUCKET_MISSION", "BUCKET_QUESTS", "BUCKET_POSTMASTER"];
     if (items.length && dontsort.includes(items[0].location.id)) {
       return items;
     }
 
-    var specificSortOrder = [];
+    let specificSortOrder = [];
     // Group like items in the General Section
     if (items.length && items[0].location.id === "BUCKET_CONSUMABLES") {
       specificSortOrder = [
@@ -158,8 +158,8 @@ mod.filter('sortItems', function() {
     }
 
     if (specificSortOrder.length > 0 && sort !== 'rarityThenPrimary') {
-      items = _.sortBy(items, function(item) {
-        var ix = specificSortOrder.indexOf(item.hash);
+      items = _.sortBy(items, (item) => {
+        const ix = specificSortOrder.indexOf(item.hash);
         return (ix === -1) ? 999 : ix;
       });
       return items;
@@ -167,17 +167,17 @@ mod.filter('sortItems', function() {
 
     items = _.sortBy(items || [], 'name');
     if (sort === 'primaryStat' || sort === 'rarityThenPrimary' || sort === 'quality') {
-      items = _.sortBy(items, function(item) {
+      items = _.sortBy(items, (item) => {
         return (item.primStat) ? (-1 * item.primStat.value) : 1000;
       });
     }
     if (sort === 'quality') {
-      items = _.sortBy(items, function(item) {
+      items = _.sortBy(items, (item) => {
         return item.quality && item.quality.min ? -item.quality.min : (item.dtrRating ? -item.dtrRating : 1000);
       });
     }
     if (sort === 'rarityThenPrimary' || (items.length && items[0].location.inGeneral)) {
-      items = _.sortBy(items, function(item) {
+      items = _.sortBy(items, (item) => {
         switch (item.tier) {
         case 'Exotic':
           return 0;
@@ -201,10 +201,10 @@ mod.filter('sortItems', function() {
 /**
  * A filter that will heatmap-color a background according to a percentage.
  */
-mod.filter('qualityColor', function() {
+mod.filter('qualityColor', () => {
   return function getColor(value, property) {
     property = property || 'background-color';
-    var color = 0;
+    let color = 0;
     if (value < 0) {
       return { [property]: 'white' };
     } else if (value <= 85) {
@@ -218,20 +218,20 @@ mod.filter('qualityColor', function() {
     } else if (value >= 100) {
       color = 190;
     }
-    var result = {};
-    result[property] = 'hsl(' + color + ',85%,60%)';
+    const result = {};
+    result[property] = `hsl(${color},85%,60%)`;
     return result;
   };
 });
 
-mod.filter('dtrRatingColor', function() {
+mod.filter('dtrRatingColor', () => {
   return function getColor(value, property) {
     if (!value) {
       return null;
     }
 
     property = property || 'background-color';
-    var color = 0;
+    let color = 0;
     if (value < 2) {
       color = 0;
     } else if (value <= 3) {
@@ -245,8 +245,8 @@ mod.filter('dtrRatingColor', function() {
     } else if (value >= 4.9) {
       color = 190;
     }
-    var result = {};
-    result[property] = 'hsl(' + color + ',85%,60%)';
+    const result = {};
+    result[property] = `hsl(${color},85%,60%)`;
     return result;
   };
 });
@@ -254,7 +254,7 @@ mod.filter('dtrRatingColor', function() {
 /**
  * Reduce a string to its first letter.
  */
-mod.filter('firstLetter', function() {
+mod.filter('firstLetter', () => {
   return function(str) {
     return str.substring(0, 1);
   };
@@ -264,7 +264,7 @@ mod.filter('firstLetter', function() {
  * Filter to turn a number into an array so that we can use ng-repeat
  * over a number to loop N times.
  */
-mod.filter('range', function(){
+mod.filter('range', () => {
   return function(n) {
     return new Array(n);
   };
@@ -275,10 +275,10 @@ mod.filter('range', function(){
  * into the "viewBox" attribute, making sure to capitalize the "B",
  * as this SVG attribute name is case-sensitive.
  */
-mod.directive('svgBindViewbox', function() {
+mod.directive('svgBindViewbox', () => {
   return {
     link: function(scope, element, attrs) {
-      attrs.$observe('svgBindViewbox', function(value) {
+      attrs.$observe('svgBindViewbox', (value) => {
         element.get(0).setAttribute('viewBox', value);
       });
     }

@@ -20,15 +20,15 @@ function StoreHeading() {
 }
 
 function StoreHeadingCtrl($scope, ngDialog, $i18next) {
-  var vm = this;
-  var dialogResult = null;
+  const vm = this;
+  let dialogResult = null;
 
   function getLevelBar() {
     if (vm.store.percentToNextLevel) {
       return vm.store.percentToNextLevel;
     }
     if (vm.store.progression && vm.store.progression.progressions) {
-      var prestige = _.findWhere(vm.store.progression.progressions, {
+      const prestige = _.findWhere(vm.store.progression.progressions, {
         progressionHash: 2030054750
       });
       vm.xpTillMote = $i18next.t('Stats.Prestige', {
@@ -43,7 +43,7 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
   $scope.$watch([
     'store.percentToNextLevel',
     'store.progression.progressions'
-  ], function() {
+  ], () => {
     vm.levelBar = getLevelBar();
   });
 
@@ -56,14 +56,14 @@ function StoreHeadingCtrl($scope, ngDialog, $i18next) {
       dialogResult = ngDialog.open({
         template: dialogTemplate,
         plain: true,
-        appendTo: 'div[loadout-id="' + vm.store.id + '"]',
+        appendTo: `div[loadout-id="${vm.store.id}"]`,
         overlay: false,
         className: 'loadout-popup',
         showClose: false,
         scope: $scope
       });
 
-      dialogResult.closePromise.then(function() {
+      dialogResult.closePromise.then(() => {
         dialogResult = null;
       });
     } else {

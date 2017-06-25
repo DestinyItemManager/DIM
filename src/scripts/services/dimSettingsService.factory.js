@@ -17,7 +17,7 @@ angular.module('dimApp')
  * always watch the settings you are using.
  */
 function SettingsService($rootScope, SyncService, $window) {
-  var _loaded = false;
+  let _loaded = false;
 
   const destinyLanguages = ['de', 'en', 'fr', 'es', 'it', 'ja', 'pt-br'];
 
@@ -27,7 +27,7 @@ function SettingsService($rootScope, SyncService, $window) {
     return _.find(destinyLanguages, (lang) => browserLang.startsWith(lang)) || 'en';
   }
 
-  var settings = {
+  const settings = {
     // Hide items that don't match the current search
     hideFilteredItems: false,
     // Show full details in item popup
@@ -77,19 +77,19 @@ function SettingsService($rootScope, SyncService, $window) {
       if (!_loaded) {
         throw new Error("Settings haven't loaded - they can't be saved.");
       }
-      $rootScope.$evalAsync(function() {
+      $rootScope.$evalAsync(() => {
         SyncService.set({
-          'settings-v1.0': _.omit(settings, 'save')
+          'settings-v1.0': _.omit(settings, 'save', 'itemTags')
         });
       });
     }
   };
 
   // Load settings async
-  SyncService.get().then(function(data) {
+  SyncService.get().then((data) => {
     data = data || {};
 
-    var savedSettings = data['settings-v1.0'] || {};
+    const savedSettings = data['settings-v1.0'] || {};
 
     // for now just override itemTags. eventually let users create own?
     savedSettings.itemTags = [
@@ -102,7 +102,7 @@ function SettingsService($rootScope, SyncService, $window) {
 
     _loaded = true;
 
-    $rootScope.$evalAsync(function() {
+    $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
       $rootScope.$emit('dim-settings-loaded', {});
     });

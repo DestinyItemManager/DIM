@@ -372,10 +372,7 @@
     "ExportSS": "Scarica il foglio elettronico",
     "ExportSSHelp": "Scarica una lista CSV dei tuoi oggetti, che può essere facilmente visualizzata in un'applicazione di fogli elettronici di tua scelta.",
     "DIMPopups": "Popup informativi di DIM ",
-    "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti",
-    "ImportExport": "Importa/Esporta impostazioni e dati",
-    "Export": "Esporta Dati DIM",
-    "Import": "Importa Dati DIM"
+    "DIMPopupsReset": "Ripristina i consigli precedentemente nascosti"
   },
   "Stats": {
     "Discipline": "Disciplina",

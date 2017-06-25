@@ -22,7 +22,7 @@ function Stores() {
 
     $(document).on('scroll', stickyHeader);
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', () => {
       $(document).off('scroll', stickyHeader);
     });
   }
@@ -30,7 +30,7 @@ function Stores() {
 
 
 function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformService, loadingTracker, dimBucketService, dimInfoService, $i18next) {
-  var vm = this;
+  const vm = this;
   const didYouKnowTemplate = `<p>${$i18next.t('DidYouKnow.Collapse')}</p>
                               <p>${$i18next.t('DidYouKnow.Expand')}</p>`;
   // Only show this once per session
@@ -46,7 +46,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
   vm.stores = dimStoreService.getStores();
   vm.vault = dimStoreService.getVault();
   vm.buckets = null;
-  dimBucketService.getBuckets().then(function(buckets) {
+  dimBucketService.getBuckets().then((buckets) => {
     vm.buckets = angular.copy(buckets);
   });
   vm.toggleSection = function(id) {
@@ -55,7 +55,7 @@ function StoresCtrl(dimSettingsService, $scope, dimStoreService, dimPlatformServ
     vm.settings.save();
   };
 
-  $scope.$on('dim-stores-updated', function(e, stores) {
+  $scope.$on('dim-stores-updated', (e, stores) => {
     vm.stores = stores.stores;
     vm.vault = dimStoreService.getVault();
   });

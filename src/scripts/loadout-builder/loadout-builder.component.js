@@ -14,7 +14,7 @@ export const LoadoutBuilderComponent = {
 function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18next, dimSettingsService, dimStoreService, ngDialog, dimLoadoutService, dimDefinitions, dimVendorService) {
   'ngInject';
 
-  var vm = this;
+  const vm = this;
   vm.qualityEnabled = $featureFlags.qualityEnabled;
   vm.reviewsEnabled = $featureFlags.reviewsEnabled;
 
@@ -23,14 +23,14 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
     return;
   }
 
-  var buckets = [];
-  var vendorBuckets = [];
-  var perks = {
+  let buckets = [];
+  let vendorBuckets = [];
+  const perks = {
     warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
     titan: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
     hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] }
   };
-  var vendorPerks = {
+  const vendorPerks = {
     warlock: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
     titan: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] },
     hunter: { Helmet: [], Gauntlets: [], Chest: [], Leg: [], ClassItem: [], Ghost: [], Artifact: [] }
@@ -48,13 +48,13 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
   function getBestItem(armor, stats, type, nonExotic) {
     // for specifc armor (Helmet), look at stats (int/dis), return best one.
     return {
-      item: _.max(armor, function(o) {
+      item: _.max(armor, (o) => {
         if (nonExotic && o.isExotic) {
           return 0;
         }
-        var bonus = 0;
-        var total = 0;
-        for (var i = 0; i < stats.length; i++) {
+        let bonus = 0;
+        let total = 0;
+        for (let i = 0; i < stats.length; i++) {
           const stat = stats[i];
           const scaleType = (o.tier === 'Rare') ? 'base' : vm.scaleType;
           const normalStats = o.normalStats[stat];
@@ -72,7 +72,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
     stat.value = stat.value % 60;
     stat.tiers = [0, 0, 0, 0, 0];
 
-    for (var tier = 0; tier < 5; tier++) {
+    for (let tier = 0; tier < 5; tier++) {
       if (tier < stat.tier) {
         stat.tiers[tier] = 60;
       } else if (tier === stat.tier) {
@@ -83,13 +83,13 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
   }
 
   function calcArmorStats(pieces, stats) {
-    for (var i = 0; i < pieces.length; i++) {
+    for (let i = 0; i < pieces.length; i++) {
       const armor = pieces[i];
-      var int = armor.item.normalStats[144602215];
-      var dis = armor.item.normalStats[1735777505];
-      var str = armor.item.normalStats[4244567218];
+      const int = armor.item.normalStats[144602215];
+      const dis = armor.item.normalStats[1735777505];
+      const str = armor.item.normalStats[4244567218];
 
-      var scaleType = (armor.item.tier === 'Rare') ? 'base' : vm.scaleType;
+      const scaleType = (armor.item.tier === 'Rare') ? 'base' : vm.scaleType;
 
       stats.STAT_INTELLECT.value += int[scaleType];
       stats.STAT_DISCIPLINE.value += dis[scaleType];
@@ -121,14 +121,14 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
   function genSetHash(armorPieces) {
     let hash = '';
-    for (var i = 0; i < armorPieces.length; i++) {
+    for (let i = 0; i < armorPieces.length; i++) {
       hash += armorPieces[i].item.id;
     }
     return hash;
   }
 
   function getBestArmor(bucket, vendorBucket, locked, excluded, lockedPerks) {
-    var statHashes = [
+    const statHashes = [
         { stats: [144602215, 1735777505], type: 'intdis' },
         { stats: [144602215, 4244567218], type: 'intstr' },
         { stats: [1735777505, 4244567218], type: 'disstr' },
@@ -136,16 +136,16 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         { stats: [1735777505], type: 'dis' },
         { stats: [4244567218], type: 'str' }
     ];
-    var armor = {};
-    var best = [];
-    var curbest;
-    var bestCombs;
-    var armortype;
+    const armor = {};
+    let best = [];
+    let curbest;
+    let bestCombs;
+    let armortype;
 
     const excludedIndices = new Set(excluded.map((i) => i.index));
 
     for (armortype in bucket) {
-      var combined = (vm.includeVendors) ? bucket[armortype].concat(vendorBucket[armortype]) : bucket[armortype];
+      const combined = (vm.includeVendors) ? bucket[armortype].concat(vendorBucket[armortype]) : bucket[armortype];
       if (locked[armortype]) {
         best = [{ item: locked[armortype], bonusType: getBonusType(locked[armortype]) }];
       } else {
@@ -155,8 +155,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
         if (!_.isEmpty(lockedPerks[armortype])) {
           const lockedPerkKeys = Object.keys(lockedPerks[armortype]);
-          const andPerkHashes = lockedPerkKeys.filter(function(perkHash) { return lockedPerks[armortype][perkHash].lockType === 'and'; }).map(Number);
-          const orPerkHashes = lockedPerkKeys.filter(function(perkHash) { return lockedPerks[armortype][perkHash].lockType === 'or'; }).map(Number);
+          const andPerkHashes = lockedPerkKeys.filter((perkHash) => { return lockedPerks[armortype][perkHash].lockType === 'and'; }).map(Number);
+          const orPerkHashes = lockedPerkKeys.filter((perkHash) => { return lockedPerks[armortype][perkHash].lockType === 'or'; }).map(Number);
 
           hasPerks = function(item) {
             if (!orPerkHashes.length && !andPerkHashes.length) {
@@ -171,11 +171,11 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         }
 
         // Filter out excluded and non-wanted perks
-        var filtered = combined.filter(function(item) {
+        const filtered = combined.filter((item) => {
           return !excludedIndices.has(item.index) && hasPerks(item); // Not excluded and has the correct locked perks
         });
 
-        statHashes.forEach(function(hash, index) {
+        statHashes.forEach((hash, index) => {
           if (!vm.fullMode && index > 2) {
             return;
           }
@@ -190,9 +190,9 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
       }
 
       bestCombs = [];
-      _.each(_.uniq(best, false, function(o) {
+      _.each(_.uniq(best, false, (o) => {
         return o.item.index;
-      }), function(obj) {
+      }), (obj) => {
         obj.bonusType = getBonusType(obj.item);
         if (obj.bonusType === '') {
           bestCombs.push({ item: obj.item, bonusType: '' });
@@ -213,9 +213,9 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
   }
 
   function getActiveHighestSets(setMap, activeSets) {
-    var count = 0;
-    var topSets = [];
-    _.each(setMap, function(setType) {
+    let count = 0;
+    const topSets = [];
+    _.each(setMap, (setType) => {
       if (count >= 10) {
         return;
       }
@@ -229,7 +229,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
   }
 
   function getId(index) {
-    var split = index.split('-');
+    const split = index.split('-');
     return split[0] === 'vendor' ? index : split[0];
   }
 
@@ -242,8 +242,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
   }
 
   function mergeBuckets(bucket1, bucket2) {
-    var merged = {};
-    _.each(_.keys(bucket1), function(type) {
+    const merged = {};
+    _.each(_.keys(bucket1), (type) => {
       merged[type] = bucket1[type].concat(bucket2[type]);
     });
     return merged;
@@ -255,18 +255,18 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
   }
 
   function filterLoadoutToEquipped(loadout) {
-    var filteredLoadout = angular.copy(loadout);
-    filteredLoadout.items = _.mapObject(filteredLoadout.items, function(items) {
+    const filteredLoadout = angular.copy(loadout);
+    filteredLoadout.items = _.mapObject(filteredLoadout.items, (items) => {
       return _.select(items, 'equipped');
     });
     return filteredLoadout;
   }
 
-  dimDefinitions.getDefinitions().then(function(defs) {
+  dimDefinitions.getDefinitions().then((defs) => {
     angular.extend(vm, {
       active: 'titan',
-      i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.pluck(_.sortBy(defs.Class, function(classDef) { return classDef.classType; }), 'className')),
-      i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], function(key) { return defs.ItemCategory.get(key).title; })),
+      i18nClassNames: _.object(['titan', 'hunter', 'warlock'], _.pluck(_.sortBy(defs.Class, (classDef) => { return classDef.classType; }), 'className')),
+      i18nItemNames: _.object(['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'], _.map([45, 46, 47, 48, 49, 38, 39], (key) => { return defs.ItemCategory.get(key).title; })),
       activesets: '5/5/2',
       type: 'Helmet',
       scaleType: $featureFlags.qualityEnabled ? 'scaled' : 'base',
@@ -293,8 +293,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
           return false;
         }
 
-        var item = getItemById(droppedId, droppedType);
-        var startCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
+        const item = getItemById(droppedId, droppedType);
+        const startCount = ((item.isExotic && item.type !== 'ClassItem') ? 1 : 0);
         return (
           startCount +
           (droppedType !== 'Helmet' && vm.lockeditems.Helmet && vm.lockeditems.Helmet.isExotic) +
@@ -315,13 +315,13 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
       },
       onCharacterChange: function() {
         vm.ranked = getActiveBuckets(buckets[vm.active], vendorBuckets[vm.active], vm.includeVendors);
-        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
-        var activeStore = dimStoreService.getActiveStore();
-        vm.selectedCharacter = _.findIndex(vm.activeCharacters, function(char) { return char.id === activeStore.id; });
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), (s) => { return s.isVault; });
+        const activeStore = dimStoreService.getActiveStore();
+        vm.selectedCharacter = _.findIndex(vm.activeCharacters, (char) => { return char.id === activeStore.id; });
         vm.activePerks = getActiveBuckets(perks[vm.active], vendorPerks[vm.active], vm.includeVendors);
         vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };
         vm.lockedperks = { Helmet: {}, Gauntlets: {}, Chest: {}, Leg: {}, ClassItem: {}, Artifact: {}, Ghost: {} };
-        vm.excludeditems = _.filter(vm.excludeditems, function(item) { return item.hash === 2672107540; });
+        vm.excludeditems = _.filter(vm.excludeditems, (item) => { return item.hash === 2672107540; });
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onActiveSetsChange: function() {
@@ -338,19 +338,19 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
           vm.ranked = buckets[vm.active];
 
           // Filter any vendor items from locked or excluded items
-          _.each(vm.lockeditems, function(item, type) {
+          _.each(vm.lockeditems, (item, type) => {
             if (item && item.isVendorItem) {
               vm.lockeditems[type] = null;
             }
           });
 
-          vm.excludeditems = _.filter(vm.excludeditems, function(item) {
+          vm.excludeditems = _.filter(vm.excludeditems, (item) => {
             return !item.isVendorItem;
           });
 
           // Filter any vendor perks from locked perks
-          _.each(vm.lockedperks, function(perkMap, type) {
-            vm.lockedperks[type] = _.omit(perkMap, function(perk, perkHash) {
+          _.each(vm.lockedperks, (perkMap, type) => {
+            vm.lockedperks[type] = _.omit(perkMap, (perk, perkHash) => {
               return _.findWhere(vendorPerks[vm.active][type], { hash: Number(perkHash) });
             });
           });
@@ -358,7 +358,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         vm.highestsets = vm.getSetBucketsStep(vm.active);
       },
       onPerkLocked: function(perk, type, $event) {
-        var activeType = 'none';
+        let activeType = 'none';
         if ($event.shiftKey) {
           activeType = (vm.lockedperks[type][perk.hash] && vm.lockedperks[type][perk.hash].lockType === 'and') ? 'none' : 'and';
         } else {
@@ -380,7 +380,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         if (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], droppedId)) {
           return;
         }
-        var item = getItemById(droppedId, type);
+        const item = getItemById(droppedId, type);
         vm.lockeditems[type] = item;
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
@@ -403,7 +403,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         if (alreadyExists(vm.excludeditems, droppedId) || (vm.lockeditems[type] && alreadyExists([vm.lockeditems[type]], droppedId))) {
           return;
         }
-        var item = getItemById(droppedId, type);
+        const item = getItemById(droppedId, type);
         vm.excludeditems.push(item);
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
@@ -411,16 +411,16 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         }
       },
       onExcludedRemove: function(removedIndex) {
-        vm.excludeditems = _.filter(vm.excludeditems, function(excludeditem) { return excludeditem.index !== removedIndex; });
+        vm.excludeditems = _.filter(vm.excludeditems, (excludeditem) => { return excludeditem.index !== removedIndex; });
         vm.highestsets = vm.getSetBucketsStep(vm.active);
         if (vm.progress < 1.0) {
           vm.excludedchanged = true;
         }
       },
       lockEquipped: function() {
-        var store = vm.activeCharacters[vm.selectedCharacter];
-        var loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(""));
-        var items = _.pick(loadout.items,
+        const store = vm.activeCharacters[vm.selectedCharacter];
+        const loadout = filterLoadoutToEquipped(store.loadoutFromCurrentlyEquipped(""));
+        const items = _.pick(loadout.items,
                                'helmet',
                                'gauntlets',
                                'chest',
@@ -450,9 +450,9 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
       },
       newLoadout: function(set) {
         ngDialog.closeAll();
-        var loadout = { items: {} };
-        var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
-        _.each(items, function(itemContainer, itemType) {
+        const loadout = { items: {} };
+        const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
+        _.each(items, (itemContainer, itemType) => {
           loadout.items[itemType.toLowerCase()] = [itemContainer.item];
         });
         loadout.classType = ({ warlock: 0, titan: 1, hunter: 2 })[vm.active];
@@ -465,8 +465,8 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
       },
       equipItems: function(set) {
         ngDialog.closeAll();
-        var loadout = { items: {}, name: $i18next.t('Loadouts.AppliedAuto') };
-        var items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
+        let loadout = { items: {}, name: $i18next.t('Loadouts.AppliedAuto') };
+        const items = _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact');
         loadout.items.helmet = [items.Helmet.item];
         loadout.items.chest = [items.Chest.item];
         loadout.items.gauntlets = [items.Gauntlets.item];
@@ -478,24 +478,24 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
         loadout = angular.copy(loadout);
 
-        _.each(loadout.items, function(val) {
+        _.each(loadout.items, (val) => {
           val[0].equipped = true;
         });
 
         return dimLoadoutService.applyLoadout(vm.activeCharacters[vm.selectedCharacter], loadout, true);
       },
       getSetBucketsStep: function(activeGuardian) {
-        var bestArmor = getBestArmor(buckets[activeGuardian], vendorBuckets[activeGuardian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
-        var helms = bestArmor.Helmet || [];
-        var gaunts = bestArmor.Gauntlets || [];
-        var chests = bestArmor.Chest || [];
-        var legs = bestArmor.Leg || [];
-        var classItems = bestArmor.ClassItem || [];
-        var ghosts = bestArmor.Ghost || [];
-        var artifacts = bestArmor.Artifact || [];
-        var setMap = {};
-        var tiersSet = new Set();
-        var combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
+        const bestArmor = getBestArmor(buckets[activeGuardian], vendorBuckets[activeGuardian], vm.lockeditems, vm.excludeditems, vm.lockedperks);
+        const helms = bestArmor.Helmet || [];
+        const gaunts = bestArmor.Gauntlets || [];
+        const chests = bestArmor.Chest || [];
+        const legs = bestArmor.Leg || [];
+        const classItems = bestArmor.ClassItem || [];
+        const ghosts = bestArmor.Ghost || [];
+        const artifacts = bestArmor.Artifact || [];
+        const setMap = {};
+        const tiersSet = new Set();
+        const combos = (helms.length * gaunts.length * chests.length * legs.length * classItems.length * ghosts.length * artifacts.length);
         if (combos === 0) {
           return null;
         }
@@ -555,9 +555,9 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
                           const pieces = Object.values(set.armor);
                           set.setHash = genSetHash(pieces);
                           calcArmorStats(pieces, set.stats);
-                          var tiersString = set.stats.STAT_INTELLECT.tier +
-                              '/' + set.stats.STAT_DISCIPLINE.tier +
-                              '/' + set.stats.STAT_STRENGTH.tier;
+                          const tiersString = `${set.stats.STAT_INTELLECT.tier
+                              }/${set.stats.STAT_DISCIPLINE.tier
+                              }/${set.stats.STAT_STRENGTH.tier}`;
 
                           tiersSet.add(tiersString);
 
@@ -592,20 +592,20 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
                         }
                       } ar = 0; } gh = 0; } ci = 0; } l = 0; } c = 0; } g = 0; }
 
-          var tiers = _.each(_.groupBy(Array.from(tiersSet.keys()), function(tierString) {
-            return _.reduce(tierString.split('/'), function(memo, num){
+          const tiers = _.each(_.groupBy(Array.from(tiersSet.keys()), (tierString) => {
+            return _.reduce(tierString.split('/'), (memo, num) => {
               return memo + parseInt(num, 10);
             }, 0);
-          }), function(tier) {
+          }), (tier) => {
             tier.sort().reverse();
           });
 
           vm.allSetTiers = [];
-          var tierKeys = Object.keys(tiers);
-          for (var t = tierKeys.length; t-- > tierKeys.length - 3;) {
+          const tierKeys = Object.keys(tiers);
+          for (let t = tierKeys.length; t-- > tierKeys.length - 3;) {
             if (tierKeys[t]) {
-              vm.allSetTiers.push('- Tier ' + tierKeys[t] + ' -');
-              _.each(tiers[tierKeys[t]], function(set) {
+              vm.allSetTiers.push(`- Tier ${tierKeys[t]} -`);
+              _.each(tiers[tierKeys[t]], (set) => {
                 vm.allSetTiers.push(set);
               });
             }
@@ -628,7 +628,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
       getBonus: dimStoreService.getBonus,
       getStore: dimStoreService.getStore,
       getItems: function() {
-        var stores = dimStoreService.getStores();
+        const stores = dimStoreService.getStores();
 
         if (stores.length === 0) {
           $state.go('inventory');
@@ -637,15 +637,15 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
         function filterPerks(perks, item) {
           // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
-          var unwantedPerkHashes = [1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599];
+          const unwantedPerkHashes = [1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599];
           return _.chain(perks.concat(item.talentGrid.nodes))
-                  .uniq(function(node) { return node.hash; })
-                  .reject(function(node) { return _.contains(unwantedPerkHashes, node.hash); })
+                  .uniq((node) => { return node.hash; })
+                  .reject((node) => { return _.contains(unwantedPerkHashes, node.hash); })
                   .value();
         }
 
         function filterItems(items) {
-          return _.filter(items, function(item) {
+          return _.filter(items, (item) => {
             return item.primStat &&
               item.primStat.statHash === 3897883278 && // has defense hash
               item.talentGrid && item.talentGrid.nodes &&
@@ -656,16 +656,16 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
 
         vm.selectedCharacter = dimStoreService.getActiveStore();
         vm.active = vm.selectedCharacter.class.toLowerCase() || 'warlock';
-        vm.activeCharacters = _.reject(dimStoreService.getStores(), function(s) { return s.isVault; });
-        vm.selectedCharacter = _.findIndex(vm.activeCharacters, function(char) { return char.id === vm.selectedCharacter.id; });
+        vm.activeCharacters = _.reject(dimStoreService.getStores(), (s) => { return s.isVault; });
+        vm.selectedCharacter = _.findIndex(vm.activeCharacters, (char) => { return char.id === vm.selectedCharacter.id; });
 
-        var allItems = [];
-        var vendorItems = [];
-        _.each(stores, function(store) {
-          var items = filterItems(store.items);
+        let allItems = [];
+        let vendorItems = [];
+        _.each(stores, (store) => {
+          const items = filterItems(store.items);
 
           // Exclude felwinters if we have them
-          var felwinters = _.filter(items, { hash: 2672107540 });
+          const felwinters = _.filter(items, { hash: 2672107540 });
           if (felwinters.length) {
             vm.excludeditems.push(...felwinters);
             vm.excludeditems = _.uniq(vm.excludeditems, 'id');
@@ -674,9 +674,9 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
           allItems = allItems.concat(items);
 
           // Build a map of perks
-          _.each(items, function(item) {
+          _.each(items, (item) => {
             if (item.classType === 3) {
-              _.each(['warlock', 'titan', 'hunter'], function(classType) {
+              _.each(['warlock', 'titan', 'hunter'], (classType) => {
                 perks[classType][item.type] = filterPerks(perks[classType][item.type], item);
               });
             } else {
@@ -686,21 +686,21 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         });
 
         // Process vendors here
-        _.each(dimVendorService.vendors, function(vendor) {
-          var vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
+        _.each(dimVendorService.vendors, (vendor) => {
+          const vendItems = filterItems(_.select(_.pluck(vendor.allItems, 'item'), (item) => item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'));
           vendorItems = vendorItems.concat(vendItems);
 
           // Exclude felwinters if we have them
-          var felwinters = _.filter(vendorItems, { hash: 2672107540 });
+          const felwinters = _.filter(vendorItems, { hash: 2672107540 });
           if (felwinters.length) {
             vm.excludeditems.push(...felwinters);
             vm.excludeditems = _.uniq(vm.excludeditems, 'id');
           }
 
           // Build a map of perks
-          _.each(vendItems, function(item) {
+          _.each(vendItems, (item) => {
             if (item.classType === 3) {
-              _.each(['warlock', 'titan', 'hunter'], function(classType) {
+              _.each(['warlock', 'titan', 'hunter'], (classType) => {
                 vendorPerks[classType][item.type] = filterPerks(vendorPerks[classType][item.type], item);
               });
             } else {
@@ -710,16 +710,16 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
         });
 
         // Remove overlapping perks in allPerks from vendorPerks
-        _.each(vendorPerks, function(perksWithType, classType) {
-          _.each(perksWithType, function(perkArr, type) {
-            vendorPerks[classType][type] = _.reject(perkArr, function(perk) { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
+        _.each(vendorPerks, (perksWithType, classType) => {
+          _.each(perksWithType, (perkArr, type) => {
+            vendorPerks[classType][type] = _.reject(perkArr, (perk) => { return _.contains(_.pluck(perks[classType][type], 'hash'), perk.hash); });
           });
         });
 
         function initBuckets() {
           function normalizeStats(item) {
             item.normalStats = {};
-            _.each(item.stats, function(stat) {
+            _.each(item.stats, (stat) => {
               item.normalStats[stat.statHash] = {
                 statHash: stat.statHash,
                 base: stat.base,
@@ -733,32 +733,32 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
           }
           function getBuckets(items) {
             return {
-              Helmet: items.filter(function(item) {
+              Helmet: items.filter((item) => {
                 return item.type === 'Helmet';
               }).map(normalizeStats),
-              Gauntlets: items.filter(function(item) {
+              Gauntlets: items.filter((item) => {
                 return item.type === 'Gauntlets';
               }).map(normalizeStats),
-              Chest: items.filter(function(item) {
+              Chest: items.filter((item) => {
                 return item.type === 'Chest';
               }).map(normalizeStats),
-              Leg: items.filter(function(item) {
+              Leg: items.filter((item) => {
                 return item.type === 'Leg';
               }).map(normalizeStats),
-              ClassItem: items.filter(function(item) {
+              ClassItem: items.filter((item) => {
                 return item.type === 'ClassItem';
               }).map(normalizeStats),
-              Artifact: items.filter(function(item) {
+              Artifact: items.filter((item) => {
                 return item.type === 'Artifact';
               }).map(normalizeStats),
-              Ghost: items.filter(function(item) {
+              Ghost: items.filter((item) => {
                 return item.type === 'Ghost';
               }).map(normalizeStats)
             };
           }
           function loadBucket(classType, useVendorItems = false) {
-            var items = (useVendorItems) ? vendorItems : allItems;
-            return getBuckets(items.filter(function(item) {
+            const items = (useVendorItems) ? vendorItems : allItems;
+            return getBuckets(items.filter((item) => {
               return (item.classType === classType || item.classType === 3) && item.stats.length;
             }));
           }
@@ -784,7 +784,7 @@ function LoadoutBuilderController($scope, $state, $q, $timeout, $location, $i18n
     vm.getItems();
   });
 
-  $scope.$on('dim-active-platform-updated', function() {
+  $scope.$on('dim-active-platform-updated', () => {
     vm.activePerks = {};
     vm.excludeditems = [];
     vm.lockeditems = { Helmet: null, Gauntlets: null, Chest: null, Leg: null, ClassItem: null, Artifact: null, Ghost: null };

@@ -7,7 +7,7 @@ export default class ContentController {
   constructor(dimActivityTrackerService, dimState, ngDialog, $rootScope, loadingTracker, dimPlatformService, $interval, hotkeys, $timeout, dimStoreService, dimXurService, dimSettingsService, $window, $scope, $state, dimVendorService, $i18next) {
     'ngInject';
 
-    var vm = this;
+    const vm = this;
 
     // Variables for templates that webpack does not automatically correct.
     vm.$DIM_VERSION = $DIM_VERSION;
@@ -21,25 +21,25 @@ export default class ContentController {
       loadingTracker.addPromise(dimPlatformService.setActive(platform));
     };
 
-    $scope.$on('dim-platforms-updated', function(e, args) {
+    $scope.$on('dim-platforms-updated', (e, args) => {
       vm.platforms = args.platforms;
     });
 
-    $scope.$on('dim-active-platform-updated', function(e, args) {
+    $scope.$on('dim-active-platform-updated', (e, args) => {
       dimState.active = vm.currentPlatform = args.platform;
     });
 
     loadingTracker.addPromise(dimPlatformService.getPlatforms());
 
     vm.settings = dimSettingsService;
-    $scope.$watch(() => { return vm.settings.itemSize; }, function(size) {
-      document.querySelector('html').style.setProperty("--item-size", size + 'px');
+    $scope.$watch(() => { return vm.settings.itemSize; }, (size) => {
+      document.querySelector('html').style.setProperty("--item-size", `${size}px`);
     });
-    $scope.$watch(() => { return vm.settings.charCol; }, function(cols) {
+    $scope.$watch(() => { return vm.settings.charCol; }, (cols) => {
       document.querySelector('html').style.setProperty("--character-columns", cols);
     });
 
-    $scope.$watch(() => { return vm.settings.vaultMaxCol; }, function(cols) {
+    $scope.$watch(() => { return vm.settings.vaultMaxCol; }, (cols) => {
       document.querySelector('html').style.setProperty("--vault-max-columns", cols);
     });
 
@@ -104,7 +104,7 @@ export default class ContentController {
      * will be based on the name.
      */
     function showPopupFunction(name, template) {
-      var result;
+      let result;
       return function(e) {
         e.stopPropagation();
 
@@ -118,7 +118,7 @@ export default class ContentController {
             appendClassName: 'modal-dialog'
           });
 
-          result.closePromise.then(function() {
+          result.closePromise.then(() => {
             result = null;
           });
         }
@@ -131,15 +131,10 @@ export default class ContentController {
     vm.showFilters = showPopupFunction('filters', filtersTemplate);
     vm.showXur = showPopupFunction('xur', '<xur></xur>');
 
-    function toggleState(name) {
-      return function(e) {
-        $state.go($state.is(name) ? 'inventory' : name);
-      };
-    }
-
-    vm.toggleLoadoutBuilder = toggleState('loadout-builder');
-    vm.toggleVendors = toggleState('vendors');
-    vm.toggleRecordBooks = toggleState('record-books');
+    // TODO: make this into a ui-sref-toggle attribute directive
+    vm.toggleState = function(name) {
+      $state.go($state.is(name) ? 'inventory' : name);
+    };
 
     vm.xur = dimXurService;
 

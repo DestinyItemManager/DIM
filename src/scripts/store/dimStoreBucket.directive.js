@@ -35,22 +35,22 @@ function StoreBucketCtrl($scope,
                          dimActionQueue,
                          dimInfoService,
                          $i18next) {
-  var vm = this;
+  const vm = this;
 
   vm.settings = dimSettingsService;
 
-  vm.dropChannel = vm.bucket.type + ',' + vm.store.id + vm.bucket.type;
+  vm.dropChannel = `${vm.bucket.type},${vm.store.id}${vm.bucket.type}`;
 
   // Detect when we're hovering a dragged item over a target
-  var dragTimer = null;
-  var hovering = false;
-  var dragHelp = document.getElementById('drag-help');
-  var entered = 0;
+  let dragTimer = null;
+  let hovering = false;
+  const dragHelp = document.getElementById('drag-help');
+  let entered = 0;
   vm.onDragEnter = function() {
     if ($rootScope.dragItem && $rootScope.dragItem.owner !== vm.store.id) {
       entered = entered + 1;
       if (entered === 1) {
-        dragTimer = $timeout(function() {
+        dragTimer = $timeout(() => {
           if ($rootScope.dragItem) {
             hovering = true;
             dragHelp.classList.add('drag-dwell-activated');
@@ -70,7 +70,7 @@ function StoreBucketCtrl($scope,
     }
   };
   vm.onDrop = function(id, $event, equip) {
-    vm.moveDroppedItem(angular.element('#' + id).scope().item, equip, $event, hovering);
+    vm.moveDroppedItem(angular.element(`#${id}`).scope().item, equip, $event, hovering);
     hovering = false;
     dragHelp.classList.remove('drag-dwell-activated');
     $timeout.cancel(dragTimer);
@@ -86,8 +86,8 @@ function StoreBucketCtrl($scope,
     });
   });
 
-  vm.moveDroppedItem = dimActionQueue.wrap(function(item, equip, $event, hovering) {
-    var target = vm.store;
+  vm.moveDroppedItem = dimActionQueue.wrap((item, equip, $event, hovering) => {
+    const target = vm.store;
 
     if (target.current && equip) {
       didYouKnow();
@@ -103,18 +103,18 @@ function StoreBucketCtrl($scope,
       }
     }
 
-    var promise = $q.when(item.amount);
+    let promise = $q.when(item.amount);
 
     if (item.maxStackSize > 1 && item.amount > 1 && ($event.shiftKey || hovering)) {
       ngDialog.closeAll();
-      var dialogResult = ngDialog.open({
+      const dialogResult = ngDialog.open({
         // TODO: break this out into a separate service/directive?
         template: dialogTemplate,
         scope: $scope,
         controllerAs: 'vm',
         controller: function($scope) {
           'ngInject';
-          var vm = this;
+          const vm = this;
           vm.item = $scope.ngDialogData;
           vm.moveAmount = vm.item.amount;
           vm.maximum = dimStoreService.getStore(vm.item.owner).amountOfItem(item);
@@ -135,31 +135,31 @@ function StoreBucketCtrl($scope,
         appendClassName: 'modal-dialog'
       });
 
-      promise = dialogResult.closePromise.then(function(data) {
+      promise = dialogResult.closePromise.then((data) => {
         if (typeof data.value === 'string') {
           const error = new Error("move-canceled");
           error.code = "move-canceled";
           return $q.reject(error);
         }
-        var moveAmount = data.value;
+        const moveAmount = data.value;
         return moveAmount;
       });
     }
 
-    promise = promise.then(function(moveAmount) {
+    promise = promise.then((moveAmount) => {
       if ($featureFlags.debugMoves) {
         console.log("User initiated move:", moveAmount, item.name, item.type, 'to', target.name, 'from', dimStoreService.getStore(item.owner).name);
       }
-      var movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
+      let movePromise = dimItemService.moveTo(item, target, equip, moveAmount);
 
-      var reload = item.equipped || equip;
+      const reload = item.equipped || equip;
       if (reload) {
-        movePromise = movePromise.then(function() {
+        movePromise = movePromise.then(() => {
           return dimStoreService.updateCharacters();
         });
       }
       return movePromise;
-    }).catch(function(e) {
+    }).catch((e) => {
       if (e.message !== 'move-canceled') {
         toaster.pop('error', item.name, e.message);
       }
