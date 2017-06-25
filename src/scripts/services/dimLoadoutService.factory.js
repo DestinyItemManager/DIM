@@ -1,11 +1,12 @@
 import angular from 'angular';
+import uuidv4 from 'uuid/v4';
 import _ from 'underscore';
 
 angular.module('dimApp')
   .factory('dimLoadoutService', LoadoutService);
 
 
-function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
+function LoadoutService($q, $rootScope, $translate, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
   var _loadouts = [];
   var _previousLoadouts = {}; // by character ID
 
@@ -166,7 +167,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
     return getLoadouts()
       .then(function(loadouts) {
         if (!_.has(loadout, 'id')) {
-          loadout.id = uuid2.newguid();
+          loadout.id = uuidv4();
         }
 
         // Handle overwriting an old loadout
@@ -557,7 +558,7 @@ function LoadoutService($q, $rootScope, $translate, uuid2, dimItemService, dimSt
 
   function hydratev1d0(loadoutPrimitive) {
     var result = {
-      id: uuid2.newguid(),
+      id: uuidv4(),
       name: loadoutPrimitive.name,
       classType: -1,
       version: 'v3.0',

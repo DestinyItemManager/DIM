@@ -1,5 +1,6 @@
 import angular from 'angular';
 import _ from 'underscore';
+import uuidv4 from 'uuid/v4';
 import { sum, count } from '../util';
 import idbKeyval from 'idb-keyval';
 
@@ -20,7 +21,6 @@ function StoreService(
   loadingTracker,
   dimManifestService,
   $translate,
-  uuid2,
   dimState,
   dimDestinyTrackerService,
   dimSettingsService,
@@ -207,7 +207,7 @@ function StoreService(
     // Create a loadout from this store's equipped items
     loadoutFromCurrentlyEquipped: function(name) {
       return {
-        id: uuid2.newguid(),
+        id: uuidv4(),
         classType: -1,
         name: name,
         items: _(this.items)
