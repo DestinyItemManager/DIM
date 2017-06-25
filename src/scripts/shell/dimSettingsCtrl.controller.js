@@ -3,7 +3,7 @@ import _ from 'underscore';
 
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
-function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, $window, $timeout) {
+function SettingsController(loadingTracker, dimSettingsService, $scope, SyncService, dimCsvService, dimStoreService, dimInfoService, $window, $timeout, OAuthTokenService, $state) {
   var vm = this;
 
   vm.featureFlags = {
@@ -36,6 +36,12 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, SyncServ
 
   // Edge doesn't support these
   vm.supportsCssVar = window.CSS && window.CSS.supports && window.CSS.supports('width', 'var(--fake-var)', 0);
+
+  vm.logout = function() {
+    OAuthTokenService.removeToken();
+    $scope.closeThisDialog();
+    $state.go('login', { reauth: true });
+  };
 
   vm.showSync = function() {
     return SyncService.drive();

@@ -1,9 +1,16 @@
 <div ng-controller="dimSettingsCtrl as vm">
   <h1 translate="Settings"></h1>
   <div class="ngdialog-inner-content">
-<!--  <input ng-if='vm.showSync()' type='button' class='btn' ng-click='vm.driveSync()' value='Sync with Drive' />-->
   <form class="settings">
     <table>
+      <tr>
+        <td>
+          <label for="logout" translate="Settings.LogOutDesc"></label>
+        </td>
+        <td>
+          <button id="logout" ng-click="vm.logout()" translate="Settings.LogOut"></select>
+        </td>
+      </tr>
       <tr>
         <td>
           <label for="language" translate="Settings.Language"></label>
