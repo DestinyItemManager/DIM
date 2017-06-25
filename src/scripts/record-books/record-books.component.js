@@ -68,7 +68,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
     let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {
       const createdPage = {
-        id: recordBook.hash + '-' + i++,
+        id: `${recordBook.hash}-${i++}`,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
@@ -107,7 +107,7 @@ function RecordBooksController($scope, dimStoreService, dimDefinitions, dimSetti
       const objectiveDef = defs.Objective.get(objective.objectiveHash);
 
       let progress = objective.progress;
-      let display = objective.progress + "/" + objectiveDef.completionValue;
+      let display = `${objective.progress}/${objectiveDef.completionValue}`;
       if (recordDef.recordValueUIStyle === '_investment_record_value_ui_style_time_in_milliseconds') {
         display = objective.isComplete
           ? objective.displayValue

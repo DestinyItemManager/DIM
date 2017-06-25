@@ -37,7 +37,6 @@
     <p translate="Storage.StatLabel"></p>
     <ul>
       <li ng-repeat="(key, value) in $ctrl.adapterStats[adapter.name]" translate="Storage.{{key}}" translate-values="{value: value}"></li>
-      </li>
       <li ng-if="!$ctrl.adapterStats[adapter.name]" translate="Storage.NoData"></li>
     </ul>
   </div>
@@ -48,7 +47,6 @@
     <p translate="Storage.StatLabel"></p>
     <ul>
       <li ng-repeat="(key, value) in $ctrl.extensionDataStats" translate="Storage.{{key}}" translate-values="{value: value}"></li>
-      </li>
       <li ng-if="!$ctrl.extensionDataStats" translate="Storage.NoData"></li>
     </ul>
     <button class="dim-button" ng-click="$ctrl.importDataFromExtension()">

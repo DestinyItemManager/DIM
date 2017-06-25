@@ -15,7 +15,7 @@ const packageJson = require('../package.json');
 const nodeModulesDir = path.join(__dirname, '../node_modules');
 
 // https://github.com/dmachat/angular-webpack-cookbook/wiki/Optimizing-Development
-var preMinifiedDeps = [
+const preMinifiedDeps = [
   'underscore/underscore-min.js',
   'indexeddbshim/dist/indexeddbshim.min.js',
   'messageformat/messageformat.min.js',
@@ -26,7 +26,7 @@ module.exports = (env) => {
   const isDev = env === 'dev';
   let version = packageJson.version.toString();
   if (env === 'beta' && process.env.TRAVIS_BUILD_NUMBER) {
-    version += "." + process.env.TRAVIS_BUILD_NUMBER;
+    version += `.${process.env.TRAVIS_BUILD_NUMBER}`;
   }
 
   const config = {
@@ -216,8 +216,8 @@ module.exports = (env) => {
   // as that is what you use to require the actual node modules
   // in your code. Then use the complete path to point to the correct
   // file and make sure webpack does not try to parse it
-  preMinifiedDeps.forEach(function(dep) {
-    var depPath = path.resolve(nodeModulesDir, dep);
+  preMinifiedDeps.forEach((dep) => {
+    const depPath = path.resolve(nodeModulesDir, dep);
     config.resolve.alias[dep.split(path.sep)[0]] = depPath;
     config.module.noParse.push(new RegExp(depPath));
   });

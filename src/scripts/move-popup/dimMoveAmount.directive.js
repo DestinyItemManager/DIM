@@ -18,9 +18,9 @@ function MoveAmount($timeout) {
     replace: true,
     template: template,
     link: function(scope, element) {
-      $timeout(function() {
+      $timeout(() => {
         scope.$broadcast('rzSliderForceRender');
-        var input = element.find('input');
+        const input = element.find('input');
         input.focus();
         input.get(0).setSelectionRange(0, input.get(0).value.length);
       });
@@ -30,7 +30,7 @@ function MoveAmount($timeout) {
 
 
 function MoveAmountController() {
-  var vm = this;
+  const vm = this;
 
   vm.increment = function() {
     vm.amount = Math.min(vm.amount + 1, vm.maximum);
@@ -57,7 +57,7 @@ function MoveAmountController() {
   };
 
   vm.constrain = function() {
-    var value = parseInt(vm.amount, 10);
+    let value = parseInt(vm.amount, 10);
     if (isNaN(value)) {
       value = vm.maximum;
     }

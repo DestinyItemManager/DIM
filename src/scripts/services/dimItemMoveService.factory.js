@@ -20,21 +20,21 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
   /**
    * Move the item to the specified store. Equip it if equip is true.
    */
-  var moveItemTo = dimActionQueue.wrap(function moveItemTo(item, store, equip, amount, callback) {
+  const moveItemTo = dimActionQueue.wrap((item, store, equip, amount, callback) => {
     didYouKnow();
 
-    var reload = item.equipped || equip;
-    var promise = dimItemService.moveTo(item, store, equip, amount);
+    const reload = item.equipped || equip;
+    let promise = dimItemService.moveTo(item, store, equip, amount);
 
     if (reload) {
       // Refresh light levels and such
-      promise = promise.then(function() {
+      promise = promise.then(() => {
         return dimStoreService.updateCharacters();
       });
     }
 
     promise = promise
-      .catch(function(a) {
+      .catch((a) => {
         toaster.pop('error', item.name, a.message);
         console.error('error moving item', item, 'to', store, a);
       });
@@ -46,17 +46,17 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
   });
 
 
-  var consolidate = dimActionQueue.wrap(function(actionableItem, store, callback) {
-    var stores = _.filter(dimStoreService.getStores(), function(s) { return !s.isVault; });
-    var vault = dimStoreService.getVault();
+  const consolidate = dimActionQueue.wrap((actionableItem, store, callback) => {
+    const stores = _.filter(dimStoreService.getStores(), (s) => { return !s.isVault; });
+    const vault = dimStoreService.getVault();
 
-    var promise = $q.all(stores.map(function(s) {
+    let promise = $q.all(stores.map((s) => {
       // First move everything into the vault
-      var item = _.find(s.items, function(i) {
+      const item = _.find(s.items, (i) => {
         return store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster;
       });
       if (item) {
-        var amount = s.amountOfItem(actionableItem);
+        const amount = s.amountOfItem(actionableItem);
         return dimItemService.moveTo(item, vault, false, amount);
       }
       return undefined;
@@ -64,20 +64,20 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
 
     // Then move from the vault to the character
     if (!store.isVault) {
-      promise = promise.then(function() {
-        var item = _.find(vault.items, function(i) {
+      promise = promise.then(() => {
+        const item = _.find(vault.items, (i) => {
           return i.hash === actionableItem.hash && !i.location.inPostmaster;
         });
         if (item) {
-          var amount = vault.amountOfItem(actionableItem);
+          const amount = vault.amountOfItem(actionableItem);
           return dimItemService.moveTo(item, store, false, amount);
         }
         return undefined;
       });
     }
 
-    promise = promise.then(function() {
-      var message;
+    promise = promise.then(() => {
+      let message;
       if (store.isVault) {
         message = $translate.instant('ItemMove.ToVault', { name: actionableItem.name });
       } else {
@@ -85,7 +85,7 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
       }
       toaster.pop('success', $translate.instant('ItemMove.Consolidate', { name: actionableItem.name }), message);
     })
-    .catch(function(a) {
+    .catch((a) => {
       toaster.pop('error', actionableItem.name, a.message);
       console.log('error consolidating', actionableItem, a);
     });
@@ -96,24 +96,24 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
     return promise;
   });
 
-  var distribute = dimActionQueue.wrap(function(actionableItem, store, callback) {
+  const distribute = dimActionQueue.wrap((actionableItem, store, callback) => {
     // Sort vault to the end
-    var stores = _.sortBy(dimStoreService.getStores(), function(s) { return s.id === 'vault' ? 2 : 1; });
+    const stores = _.sortBy(dimStoreService.getStores(), (s) => { return s.id === 'vault' ? 2 : 1; });
 
-    var total = 0;
-    var amounts = stores.map(function(store) {
-      var amount = store.amountOfItem(actionableItem);
+    let total = 0;
+    const amounts = stores.map((store) => {
+      const amount = store.amountOfItem(actionableItem);
       total += amount;
       return amount;
     });
 
-    var numTargets = stores.length - 1; // exclude the vault
-    var remainder = total % numTargets;
-    var targets = stores.map(function(store, index) {
+    const numTargets = stores.length - 1; // exclude the vault
+    let remainder = total % numTargets;
+    const targets = stores.map((store, index) => {
       if (index >= numTargets) {
         return 0; // don't want any in the vault
       }
-      var result;
+      let result;
       if (remainder > 0) {
         result = Math.ceil(total / numTargets);
       } else {
@@ -122,16 +122,16 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
       remainder--;
       return result;
     });
-    var deltas = _.zip(amounts, targets).map(function(pair) {
+    const deltas = _.zip(amounts, targets).map((pair) => {
       return pair[1] - pair[0];
     });
 
-    var vaultMoves = [];
-    var targetMoves = [];
-    var vaultIndex = stores.length - 1;
-    var vault = stores[vaultIndex];
+    const vaultMoves = [];
+    const targetMoves = [];
+    const vaultIndex = stores.length - 1;
+    const vault = stores[vaultIndex];
 
-    deltas.forEach(function(delta, index) {
+    deltas.forEach((delta, index) => {
       if (delta < 0 && index !== vaultIndex) {
         vaultMoves.push({
           source: stores[index],
@@ -149,22 +149,22 @@ function ItemMoveService($q, loadingTracker, toaster, dimStoreService, dimAction
 
     // All moves to vault in parallel, then all moves to targets in parallel
     function applyMoves(moves) {
-      return $q.all(moves.map(function(move) {
-        var item = _.find(move.source.items, function(i) {
+      return $q.all(moves.map((move) => {
+        const item = _.find(move.source.items, (i) => {
           return i.hash === actionableItem.hash;
         });
         return dimItemService.moveTo(item, move.target, false, move.amount);
       }));
     }
 
-    var promise = applyMoves(vaultMoves).then(function() {
+    let promise = applyMoves(vaultMoves).then(() => {
       return applyMoves(targetMoves);
     });
 
-    promise = promise.then(function() {
+    promise = promise.then(() => {
       toaster.pop('success', $translate.instant('ItemMove.Distributed', { name: actionableItem.name }));
     })
-    .catch(function(a) {
+    .catch((a) => {
       toaster.pop('error', actionableItem.name, a.message);
       console.log('error distributing', actionableItem, a);
     });

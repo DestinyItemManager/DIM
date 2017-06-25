@@ -14,7 +14,7 @@ function Farming() {
 }
 
 function FarmingCtrl(dimFarmingService, dimItemMoveService, dimSettingsService) {
-  var vm = this;
+  const vm = this;
 
   angular.extend(vm, {
     service: dimFarmingService,

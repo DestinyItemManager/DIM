@@ -14,7 +14,7 @@ class ReviewDataCache {
   }
 
   _getMatchingItem(item) {
-    var dtrItem = this._itemTransformer.translateToDtrWeapon(item);
+    const dtrItem = this._itemTransformer.translateToDtrWeapon(item);
 
     // The DTR API isn't consistent about returning reference ID as an int in its responses
     // and findWhere considers 123 !== "123".
@@ -74,9 +74,9 @@ class ReviewDataCache {
    */
   addUserReviewData(item,
                     userReview) {
-    var matchingItem = this._getMatchingItem(item);
+    const matchingItem = this._getMatchingItem(item);
 
-    var rating = matchingItem.rating;
+    const rating = matchingItem.rating;
 
     Object.assign(matchingItem,
                   userReview);
@@ -97,7 +97,7 @@ class ReviewDataCache {
    */
   addReviewsData(item,
                  reviewsData) {
-    var matchingItem = this._getMatchingItem(item);
+    const matchingItem = this._getMatchingItem(item);
     if (matchingItem) {
       matchingItem.reviews = reviewsData.reviews;
       matchingItem.reviewsDataFetched = true;
@@ -128,11 +128,11 @@ class ReviewDataCache {
    * @memberof ReviewDataCache
    */
   eventuallyPurgeCachedData(item) {
-    var tenMinutes = 1000 * 60 * 10;
-    var self = this;
+    const tenMinutes = 1000 * 60 * 10;
+    const self = this;
 
-    setTimeout(function() {
-      var matchingItem = self._getMatchingItem(item);
+    setTimeout(() => {
+      const matchingItem = self._getMatchingItem(item);
 
       matchingItem.reviews = null;
       matchingItem.reviewsDataFetched = false;

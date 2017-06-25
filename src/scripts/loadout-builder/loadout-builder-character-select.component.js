@@ -15,12 +15,12 @@ export const LoadoutBuilderCharacterSelect = {
 function LoadoutBuilderCharacterSelectCtrl($scope, ngDialog) {
   'ngInject';
 
-  var vm = this;
-  var dialogResult = null;
+  const vm = this;
+  let dialogResult = null;
 
   vm.onSelected = function onSelected(idx) {
     if (vm.selectedCharacter !== idx) {
-      var prev = vm.selectedCharacter;
+      const prev = vm.selectedCharacter;
       vm.selectedCharacter = idx;
       vm.onSelectedChange({ prev: prev, new: idx });
     }
@@ -42,7 +42,7 @@ function LoadoutBuilderCharacterSelectCtrl($scope, ngDialog) {
         scope: $scope
       });
 
-      dialogResult.closePromise.then(function() {
+      dialogResult.closePromise.then(() => {
         dialogResult = null;
       });
     } else {

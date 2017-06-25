@@ -1,4 +1,3 @@
-import angular from 'angular';
 import { oauthClientId, oauthClientSecret } from '../services/bungie-api-utils';
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';

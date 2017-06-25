@@ -8,7 +8,7 @@ angular.module('dimLogin').component('dimReturn', {
 });
 
 function ReturnController($http, OAuthService, OAuthTokenService) {
-  var ctrl = this;
+  const ctrl = this;
 
   ctrl.code = "";
   ctrl.state = "";

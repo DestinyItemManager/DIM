@@ -33,13 +33,13 @@ mod.factory('dimDefinitions', Definitions);
  */
 function Definitions($q, dimManifestService) {
   return {
-    getDefinitions: _.memoize(function getDefinitions() {
+    getDefinitions: _.memoize(() => {
       return $q.when(dimManifestService.getManifest()
-        .then(function(db) {
+        .then((db) => {
           const defs = {};
 
           // Load objects that lazily load their properties from the sqlite DB.
-          lazyTables.forEach(function(tableShort) {
+          lazyTables.forEach((tableShort) => {
             const table = `Destiny${tableShort}Definition`;
             defs[tableShort] = {
               get: function(name) {
@@ -54,14 +54,14 @@ function Definitions($q, dimManifestService) {
           });
 
           // Resources that need to be fully loaded (because they're iterated over)
-          eagerTables.forEach(function(tableShort) {
+          eagerTables.forEach((tableShort) => {
             const table = `Destiny${tableShort}Definition`;
             defs[tableShort] = dimManifestService.getAllRecords(db, table);
           });
 
           return defs;
         })
-        .catch(function(e) {
+        .catch((e) => {
           console.error(e);
           return $q.reject(e);
         }));

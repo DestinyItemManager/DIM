@@ -8,7 +8,7 @@ export function ChromeSyncStorage($q, $translate) {
   return {
     get: function() {
       return new $q((resolve, reject) => {
-        chrome.storage.sync.get(null, function(data) {
+        chrome.storage.sync.get(null, (data) => {
           if (chrome.runtime.lastError) {
             const message = chrome.runtime.lastError.message;
             reject(new Error(message));

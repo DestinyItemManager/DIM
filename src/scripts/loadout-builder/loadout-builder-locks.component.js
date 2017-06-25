@@ -23,11 +23,11 @@ export const LoadoutBuilderLocks = {
 function LoadoutBuilderLocksCtrl($scope, ngDialog) {
   'ngInject';
 
-  var vm = this;
-  var dialogResult = null;
-  var detailItemElement = null;
+  const vm = this;
+  let dialogResult = null;
+  let detailItemElement = null;
 
-  $scope.$on('ngDialog.opened', function(event, $dialog) {
+  $scope.$on('ngDialog.opened', (event, $dialog) => {
     if (dialogResult && $dialog[0].id === dialogResult.id) {
       $dialog.position({
         my: 'left-2 top-2',
@@ -63,19 +63,19 @@ function LoadoutBuilderLocksCtrl($scope, ngDialog) {
         controllerAs: 'vmd',
         controller: function($document) {
           'ngInject';
-          var vmd = this;
+          const vmd = this;
 
-          $document.keyup(function(e) {
+          $document.keyup((e) => {
             if (vmd.shiftHeld) {
-              $scope.$apply(function() {
+              $scope.$apply(() => {
                 vmd.shiftHeld = e.shiftKey;
               });
             }
           });
 
-          $document.keydown(function(e) {
+          $document.keydown((e) => {
             if (vmd.shiftHeld === false && e.shiftKey) {
-              $scope.$apply(function() {
+              $scope.$apply(() => {
                 vmd.shiftHeld = e.shiftKey;
               });
             }

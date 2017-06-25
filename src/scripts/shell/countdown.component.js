@@ -32,7 +32,7 @@ function CountdownController($interval, $translate) {
 
     let text = `${hours}:${pad(minutes, 2)}`;
     if (days > 0) {
-      text = $translate.instant('Countdown.Days', { numDays: days }) + ' ' + text;
+      text = `${$translate.instant('Countdown.Days', { numDays: days })} ${text}`;
     }
     return text;
   }

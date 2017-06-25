@@ -7,12 +7,12 @@ import './vendors.scss';
 function VendorsController($scope, $state, $q, dimStoreService, dimSettingsService, dimVendorService) {
   'ngInject';
 
-  var vm = this;
+  const vm = this;
 
-  var $window = $(window);
-  var $vendorHeaders = $('#vendorHeaderWrapper');
-  var $vendorHeadersBackground = $('#vendorHeadersBackground');
-  var vendorsTop = $vendorHeaders.offset().top - 50; // Subtract height of title and back link
+  const $window = $(window);
+  const $vendorHeaders = $('#vendorHeaderWrapper');
+  const $vendorHeadersBackground = $('#vendorHeadersBackground');
+  const vendorsTop = $vendorHeaders.offset().top - 50; // Subtract height of title and back link
 
   function stickyHeader(e) {
     $vendorHeaders.toggleClass('sticky', $window.scrollTop() > vendorsTop);
@@ -21,7 +21,7 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
 
   $window.on('scroll', stickyHeader);
 
-  $scope.$on('$destroy', function() {
+  $scope.$on('$destroy', () => {
     $window.off('scroll', stickyHeader);
   });
 
@@ -49,11 +49,11 @@ function VendorsController($scope, $state, $q, dimStoreService, dimSettingsServi
   init();
 
   // TODO: watch vendors instead?
-  $scope.$on('dim-vendors-updated', function() {
+  $scope.$on('dim-vendors-updated', () => {
     init();
   });
 
-  $scope.$on('dim-stores-updated', function(e, args) {
+  $scope.$on('dim-stores-updated', (e, args) => {
     init(args.stores);
   });
 }

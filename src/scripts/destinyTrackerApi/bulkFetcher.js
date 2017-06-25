@@ -62,16 +62,16 @@ class BulkFetcher {
       return;
     }
 
-    var self = this;
+    const self = this;
 
     if (bulkRankings) {
-      bulkRankings.forEach(function(bulkRanking) {
+      bulkRankings.forEach((bulkRanking) => {
         self._reviewDataCache.addScore(bulkRanking);
       });
     }
 
-    stores.forEach(function(store) {
-      store.items.forEach(function(storeItem) {
+    stores.forEach((store) => {
+      store.items.forEach((storeItem) => {
         if (storeItem.reviewable) {
           const matchingItem = self._reviewDataCache.getRatingData(storeItem);
 

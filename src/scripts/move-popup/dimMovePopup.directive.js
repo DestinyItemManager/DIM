@@ -22,33 +22,33 @@ function MovePopup() {
 
 
 function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSettingsService, dimItemMoveService) {
-  var vm = this;
+  const vm = this;
   vm.moveAmount = vm.item.amount;
   vm.settings = dimSettingsService;
 
   if (vm.item.maxStackSize > 1) {
-    var store = dimStoreService.getStore(vm.item.owner);
+    const store = dimStoreService.getStore(vm.item.owner);
     vm.maximum = store.amountOfItem(vm.item);
   }
 
-  var shown = false;
+  let shown = false;
 
   // Capture the dialog element
-  var dialog = null;
-  $scope.$on('ngDialog.opened', function(event, $dialog) {
+  let dialog = null;
+  $scope.$on('ngDialog.opened', (event, $dialog) => {
     dialog = $dialog;
     vm.reposition();
   });
 
   // Reposition the popup as it is shown or if its size changes
   vm.reposition = function() {
-    var element = $scope.$parent.ngDialogData;
+    const element = $scope.$parent.ngDialogData;
     if (element) {
       if (!shown) {
         dialog.hide();
       }
       shown = true;
-      $timeout(function() {
+      $timeout(() => {
         dialog
           .position({
             my: 'left bottom',
@@ -100,7 +100,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
 
   vm.stores = dimStoreService.getStores();
 
-  vm.canShowVault = function canShowButton(item, itemStore, buttonStore) {
+  vm.canShowVault = function canShowVault(item, itemStore, buttonStore) {
     // If my itemStore is the vault, don't show a vault button.
     // Can't vault a vaulted item.
     if (itemStore.isVault) {
@@ -120,7 +120,7 @@ function MovePopupController($scope, dimStoreService, ngDialog, $timeout, dimSet
     return true;
   };
 
-  vm.canShowStore = function canShowButton(item, itemStore, buttonStore) {
+  vm.canShowStore = function canShowStore(item, itemStore, buttonStore) {
     if (buttonStore.isVault) {
       return false;
     }

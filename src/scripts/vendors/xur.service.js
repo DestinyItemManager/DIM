@@ -21,7 +21,7 @@ function XurService($rootScope, dimVendorService, dimStoreService) {
   });
 
 
-  $rootScope.$on('dim-stores-updated', function(e, args) {
+  $rootScope.$on('dim-stores-updated', (e, args) => {
     const stores = _.reject(args.stores, (s) => s.isVault);
     $rootScope.$applyAsync(() => {
       service.totalCoins = dimVendorService.countCurrencies(stores, service.vendors);

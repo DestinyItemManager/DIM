@@ -22,7 +22,7 @@ export const ShellModule = angular
   .component('backLink', backLinkComponent)
   .component('countdown', CountdownComponent)
   .component('starRating', StarRatingComponent)
-  .config(function($stateProvider) {
+  .config(($stateProvider) => {
     'ngInject';
 
     const states = [{

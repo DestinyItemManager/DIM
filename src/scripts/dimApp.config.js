@@ -24,7 +24,7 @@ function config($compileProvider, $httpProvider, $translateProvider, $translateM
   $translateProvider.useMessageFormatInterpolation();
   $translateProvider.preferredLanguage('en');
 
-  $translateMessageFormatInterpolationProvider.messageFormatConfigurer(function(mf) {
+  $translateMessageFormatInterpolationProvider.messageFormatConfigurer((mf) => {
     mf.setIntlSupport(true);
   });
 

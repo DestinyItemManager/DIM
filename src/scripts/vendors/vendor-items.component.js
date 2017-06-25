@@ -15,7 +15,7 @@ export const VendorItems = {
 function VendorItemsCtrl(dimSettingsService) {
   'ngInject';
 
-  var vm = this;
+  const vm = this;
 
   vm.settings = dimSettingsService;
 

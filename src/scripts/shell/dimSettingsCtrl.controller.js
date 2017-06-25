@@ -4,7 +4,7 @@ import _ from 'underscore';
 angular.module('dimApp').controller('dimSettingsCtrl', SettingsController);
 
 function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvService, dimStoreService, dimInfoService) {
-  var vm = this;
+  const vm = this;
 
   vm.featureFlags = {
     qualityEnabled: $featureFlags.qualityEnabled,
@@ -13,7 +13,7 @@ function SettingsController(loadingTracker, dimSettingsService, $scope, dimCsvSe
   };
   vm.loadingTracker = loadingTracker;
 
-  $scope.$watchCollection('vm.settings', function() {
+  $scope.$watchCollection('vm.settings', () => {
     dimSettingsService.save();
   });
 
