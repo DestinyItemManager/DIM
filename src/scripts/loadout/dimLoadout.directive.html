@@ -7,7 +7,7 @@
   <div class="loadout-content">
     <div id="loadout-options">
       <form name="vm.form">
-        <input class="dim-input" name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" ng-18next="[placeholder]Loadouts.LoadoutName" />
+        <input class="dim-input" name="name" ng-model="vm.loadout.name" minlength="1" maxlength="50" required type="search" ng-i18next="[placeholder]Loadouts.LoadoutName" />
         <select name="classType" ng-if="vm.showClass" ng-model="vm.loadout.classType" ng-options="item.value as item.label for item in vm.classTypeValues"></select>
         <button ng-disabled="vm.form.$invalid" ng-click="vm.save()" ng-i18next="Loadouts.Save"></button>
         <button ng-disabled="vm.form.$invalid || !vm.loadout.id" ng-click="vm.saveAsNew()" ng-i18next="Loadouts.SaveAsNew"></button>

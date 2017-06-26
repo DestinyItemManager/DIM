@@ -18,25 +18,25 @@
 
             <div class="user-review-review-preamble" ng-i18next="DtrReview.ReviewHint"></div>
             <div class="user-review-review-field">
-                <textarea ng-18next="[placeholder]DtrReview.Help" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
+                <textarea ng-i18next="[placeholder]DtrReview.Help" class="item-dtr-review" ng-model="vm.item.userReview" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
             </div>
 
             <div class="user-review-container">
                 <div class="user-review-pros-preamble" ng-i18next="DtrReview.Pros"></div>
                 <div class="user-review-pros-field">
-                    <textarea ng-18next="[placeholder]DtrReview.HelpPros" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
+                    <textarea ng-i18next="[placeholder]DtrReview.HelpPros" class="item-dtr-pros" ng-model="vm.item.userReviewPros" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
                 </div>
             </div>
 
             <div class="user-review-container">
                 <div class="user-review-cons-preamble" ng-i18next="DtrReview.Cons"></div>
                 <div class="user-review-cons-field">
-                    <textarea ng-18next="[placeholder]DtrReview.HelpCons" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
+                    <textarea ng-i18next="[placeholder]DtrReview.HelpCons" class="item-dtr-cons" ng-model="vm.item.userReviewCons" ng-model-options="{ debounce: 250 }" ng-blur="vm.reviewBlur()"></textarea>
                 </div>
             </div>
 
             <div class="user-review-submit">
-                <input class="item-dtr-review-submit" type="submit" ng-18next="[value]DtrReview.Submit" ng-disabled="!vm.item.userRating || vm.item.userRating < 1">
+                <input class="item-dtr-review-submit" type="submit" ng-i18next="[value]DtrReview.Submit" ng-disabled="!vm.item.userRating || vm.item.userRating < 1">
             </div>
         </form>
     </div>

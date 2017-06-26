@@ -3,7 +3,7 @@
     <div class="review-setting-table">
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
         <div class="review-setting-table--name">
-          <label for="showReviews" ng-18next="[title]Settings.ShowReviewsHelp;Settings.ShowReviews"></label>
+          <label for="showReviews" ng-i18next="[title]Settings.ShowReviewsHelp;Settings.ShowReviews"></label>
         </div>
         <div class="review-setting-table--value">
           <input type="checkbox" id="showReviews" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.showReviews"/>
@@ -11,7 +11,7 @@
       </div>
       <div ng-show="$ctrl.featureFlags.reviewsEnabled">
         <div class="review-setting-table--name">
-          <label for="allowIdPostToDtr" ng-18next="[title]Settings.AllowIdPostToDtrHelp;Settings.AllowIdPostToDtr"></label>
+          <label for="allowIdPostToDtr" ng-i18next="[title]Settings.AllowIdPostToDtrHelp;Settings.AllowIdPostToDtr"></label>
         </div>
         <div class="review-setting-table--value">
           <input type="checkbox" id="allowIdPostToDtr" ng-change="$ctrl.valueChanged()" ng-model="$ctrl.settings.allowIdPostToDtr"/>
@@ -32,14 +32,14 @@
 </div>
 
 <div ng-if="$ctrl.canReview" class="community-review--details" ng-show="$ctrl.expandReview">
-  <textarea ng-18next="[placeholder]DtrReview.Help"
+  <textarea ng-i18next="[placeholder]DtrReview.Help"
             ng-model="$ctrl.item.userReview"
             ng-blur="$ctrl.reviewBlur()"></textarea>
   <div ng-if="$ctrl.procon" class="community-review--procon">
-    <textarea ng-18next="[placeholder]DtrReview.HelpPros"
+    <textarea ng-i18next="[placeholder]DtrReview.HelpPros"
               ng-model="$ctrl.item.userReviewPros"
               ng-blur="$ctrl.reviewBlur()"></textarea>
-    <textarea ng-18next="[placeholder]DtrReview.HelpCons"
+    <textarea ng-i18next="[placeholder]DtrReview.HelpCons"
               ng-model="$ctrl.item.userReviewCons"
               ng-blur="$ctrl.reviewBlur()"></textarea>
   </div>

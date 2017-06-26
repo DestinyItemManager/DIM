@@ -5,7 +5,7 @@
         <div ng-if="vm.item.lockable" ng-click="vm.setItemState(vm.item, 'lock')" ng-i18next="[title:i18next]({ itemType: vm.item.typeName, context: !vm.item.locked ? 'Lock' : 'Unlock' })MovePopup.LockUnlock">
           <i class="lock fa" ng-class="{ 'fa-lock': vm.item.locked, 'fa-unlock-alt': !vm.item.locked, 'is-locking': vm.locking }"></i>
         </div>
-        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" ng-18next="[title:i18next]({ itemType: vm.item.typeName, context: !vm.item.tracked ? 'Track' : 'Untrack' })MovePopup.TrackUntrack">
+        <div ng-if="vm.item.trackable" ng-click="vm.setItemState(vm.item, 'track')" ng-i18next="[title:i18next]({ itemType: vm.item.typeName, context: !vm.item.tracked ? 'Track' : 'Untrack' })MovePopup.TrackUntrack">
           <i class="lock fa" ng-class="{ 'fa-star': vm.item.tracked, 'fa-star-o': !vm.item.tracked, 'is-locking': vm.locking }"></i>
         </div>
       </div>
@@ -40,7 +40,7 @@
   </div>
   <dim-item-review item="vm.item" ng-if="vm.item.lockable" ng-show="vm.tab === 'reviews'"></dim-item-review>
   <div ng-show="vm.tab === 'default'">
-    <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>
+    <form ng-if="vm.item.taggable" name="notes"><textarea name="data" ng-i18next="[placeholder]Notes.Help" ng-maxlength="120" ng-model="vm.item.dimInfo.notes" ng-model-options="{ debounce: 250 }" ng-change="vm.updateNote()"></textarea></form>
     <span class="textarea-error" ng-show="notes.data.$error.maxlength" ng-i18next="Notes.Error"></span>
     <div class="item-description" ng-if="vm.itemDetails && vm.showDescription" ng-bind="::vm.item.description"></div>
     <div class="item-details" ng-if="vm.item.classified" ng-i18next="ItemService.Classified2"></div>
