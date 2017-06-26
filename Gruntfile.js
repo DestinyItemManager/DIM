@@ -145,7 +145,7 @@ module.exports = function(grunt) {
       },
       options: {
         project_id: '116191',
-        api_token: 'bc887821ea8df5271b77b4087f784217' //process.env.POEDITOR_API
+        api_token: process.env.POEDITOR_API
       }
     }
   });
