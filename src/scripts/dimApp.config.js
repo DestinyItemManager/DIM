@@ -19,11 +19,11 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
   $httpProvider.interceptors.push('http-refresh-token');
   $httpProvider.useApplyAsync(true);
 
+  hotkeysProvider.includeCheatSheet = true;
+
   // See https://github.com/i18next/ng-i18next
   window.i18next.init({
     debug: true,
-    returnEmptyString: true,
-    lng: 'en', // If not given, i18n will detect the browser language.
     fallbackLng: 'en',
     interpolation: {
       format: function(val, format) {
@@ -43,12 +43,8 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       ptBr: { translation: ptBr }
     },
     useCookie: false,
-    useLocalStorage: false,
-    returnObjects: true,
-    returnNull: true,
+    useLocalStorage: false
   });
-
-  hotkeysProvider.includeCheatSheet = true;
 
   // Bungie's API will start throttling an API if it's called more than once per second. It does this
   // by making responses take 2s to return, not by sending an error code or throttling response. Choosing

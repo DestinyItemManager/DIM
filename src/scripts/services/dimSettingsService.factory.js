@@ -104,6 +104,10 @@ function SettingsService($rootScope, SyncService, $window) {
 
     $rootScope.$evalAsync(() => {
       angular.merge(settings, savedSettings);
+      // See https://github.com/i18next/ng-i18next
+      window.i18next.init({
+        lng: settings.language === 'pt-br' ? 'ptBr' : settings.language,
+      });
       $rootScope.$emit('dim-settings-loaded', {});
     });
   });
