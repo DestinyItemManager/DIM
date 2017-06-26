@@ -94,6 +94,12 @@ module.exports = function(grunt) {
           src: "dist/",
           dest: process.env.REMOTE_PATH + "prod"
         }
+      },
+      website: {
+        options: {
+          src: "destinyitemmanager.com/",
+          dest: "public_html/destinyitemmanager.com"
+        }
       }
     },
 
@@ -168,7 +174,8 @@ module.exports = function(grunt) {
     'log_beta_version',
     'webstore_upload:beta',
     'precompress',
-    'rsync:beta'
+    'rsync:beta',
+    'rsync:website',
   ]);
 
   grunt.registerTask('publish_release', [
