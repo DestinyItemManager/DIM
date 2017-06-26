@@ -4,11 +4,11 @@ import angular from 'angular';
 import _ from 'underscore';
 import idbKeyval from 'idb-keyval';
 
-import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm.js';
+import sqlWasmPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-wasm';
 import sqlWasmBinaryPath from 'file-loader?name=[name]-[hash:6].[ext]!sql.js/js/sql-optimized-wasm-raw.wasm';
 
 // For zip
-import 'imports-loader?this=>window!zip-js/WebContent/zip.js';
+import 'imports-loader?this=>window!zip-js/WebContent/zip';
 
 // Dynamic import splits up the sql library so the user only loads it
 // if they need it. So we can minify sql.js specifically (as explained

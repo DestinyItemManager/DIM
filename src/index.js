@@ -4,6 +4,7 @@ require('./scripts/google');
 
 // Drag and drop
 const iosDragDropShim = require('drag-drop-webkit-mobile');
+
 iosDragDropShim({
   enableEnterLeave: true,
   holdToDrag: 300
@@ -71,6 +72,7 @@ require('./scripts/move-popup/dimMoveItemProperties.directive');
 require('./scripts/move-popup/dimItemTag.directive');
 require('./scripts/infuse/dimInfuse.controller');
 require('./scripts/debug/dimDebugItem.controller');
+
 if ($DIM_FLAVOR === 'dev') {
   require('./scripts/developer/dimDeveloper.controller');
 }
