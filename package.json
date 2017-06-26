@@ -19,9 +19,7 @@
     "publish-beta": "grunt download_translations && npm run build-beta -s && grunt publish_beta",
     "publish-release": "grunt download_translations && npm run build-release -s && grunt publish_release",
     "server": "webpack-dev-server --config ./config/webpack.js --env=dev",
-    "install": "napa",
-    "i18n-json2po": "node json2po",
-    "i18n-po2json": "node po2json"
+    "install": "napa"
   },
   "napa": {
     "zip-js": "https://github.com/gildas-lormeau/zip.js"
