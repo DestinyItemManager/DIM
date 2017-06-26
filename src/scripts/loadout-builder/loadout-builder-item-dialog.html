@@ -13,5 +13,5 @@
     </div>
   </div>
   <div class="item-description"
-       ng-if="!vm.item.equipment">You have {{ vm.compareItemCount }} of these.</div>
+       ng-if="!vm.item.equipment" ng-i18next="[i18next]({ num: vm.compareItemCount })Compare.ItemCount"></div>
 </div>

@@ -67,6 +67,7 @@
   </div>
   <p>
   </p>
+
   <div ng-show="vm.progress >= 1 && vm.hasSets">
     <p><span ng-i18next="LB.FilterSets"></span> (<span ng-i18next="Stats.Intellect"></span>/<span ng-i18next="Stats.Discipline"></span>/<span ng-i18next="Stats.Strength"></span>):
       <select ng-model="vm.activesets" ng-change="vm.onActiveSetsChange()" ng-options="val disable when val.charAt(0) == '-' for val in vm.allSetTiers"></select>
@@ -77,7 +78,7 @@
           <label>
             <select ng-model="vm.fullMode" ng-change="vm.onModeChange()" ng-options="(item ? 'LB.ProcessingMode.Full' : 'LB.ProcessingMode.Fast') | i18next for item in [false, true]">
             </select>
-            <span ng-i18next="LB.ProcessingMode"></span>
+            <span ng-i18next="LB.ProcessingMode.ProcessingMode"></span>
           </label>
           <small>-
             <span ng-hide="vm.fullMode" ng-i18next="LB.ProcessingMode.HelpFast"></span>
@@ -89,7 +90,7 @@
               <option ng-if="::vm.qualityEnabled" value="scaled" ng-i18next="LB.Scaled"></option>
               <option value="base" ng-i18next="LB.Current"></option>
             </select>
-            <span ng-i18next="LB.LightMode"></span>
+            <span ng-i18next="LB.LightMode.LightMode"></span>
           </label>
           <small>-
             <span ng-show="vm.scaleType === 'scaled'" ng-i18next="LB.LightMode.HelpScaled"></span>
