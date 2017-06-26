@@ -158,7 +158,6 @@
     "yield-star-spacing": "error",
     "import/no-duplicates": "error",
     "import/no-namespace": "error",
-    "import/newline-after-import": "error",
-    "import/extensions": ["error", { "js": "never", "json": "always" }]
+    "import/newline-after-import": "error"
   }
 }
