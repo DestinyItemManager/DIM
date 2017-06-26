@@ -6,7 +6,7 @@ import es from '../i18n/dim_es.po';
 import ja from '../i18n/dim_ja.po';
 import ptBr from '../i18n/dim_pt_BR.po';
 
-function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
+function config($compileProvider, $httpProvider, hotkeysProvider,
                 ngHttpRateLimiterConfigProvider, ngDialogProvider) {
   'ngInject';
 
@@ -19,7 +19,9 @@ function config($compileProvider, $httpProvider, $i18next, hotkeysProvider,
   $httpProvider.interceptors.push('http-refresh-token');
   $httpProvider.useApplyAsync(true);
 
-  // See https://angular-translate.github.io/docs/#/guide
+  console.log(window.i18next);
+
+  // See https://github.com/i18next/ng-i18next
   window.i18next.init({
     debug: true,
     lng: 'en', // If not given, i18n will detect the browser language.

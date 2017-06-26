@@ -4,14 +4,16 @@ import AriaModule from 'angular-aria';
 import DialogModule from 'ng-dialog';
 import DragAndDropModule from 'angular-native-dragdrop';
 import ngSanitize from 'angular-sanitize';
+
 import i18next from 'i18next';
+
 import MessagesModule from 'angular-messages';
 
 import RateLimiterModule from 'ng-http-rate-limiter';
 import SliderModule from 'angularjs-slider';
 import ToasterModule from 'angularjs-toaster';
 import UIRouterModule from '@uirouter/angularjs';
-import 'ng-i18next';
+import ngI18Next from 'ng-i18next';
 import 'angular-hotkeys';
 import 'angular-promise-tracker';
 
@@ -30,12 +32,14 @@ import run from './dimApp.run';
 import state from './state';
 import loadingTracker from './services/dimLoadingTracker.factory';
 
+// required to make ng-i18next work
+window.i18next = i18next;
+
 export const DimAppModule = angular
   .module('dimApp', [
     AriaModule,
     DialogModule,
     DragAndDropModule,
-    i18next,
     MessagesModule,
     ngSanitize,
     RateLimiterModule,
@@ -52,7 +56,7 @@ export const DimAppModule = angular
     storageModule,
     'ajoslin.promise-tracker',
     'cfp.hotkeys',
-    'ng-i18next'
+    ngI18Next
   ])
   .config(config)
   .config(routes)
