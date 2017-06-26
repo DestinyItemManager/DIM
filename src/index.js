@@ -41,6 +41,9 @@ require('./scripts/services/dimItemMoveService.factory');
 require('./scripts/services/dimItemInfoService.factory');
 require('./scripts/services/dimFarmingService.factory');
 require('./scripts/services/dimSyncService.factory');
+require('./scripts/services/dimNotificationsService.factory');
+require('./scripts/services/notifications/dimItemNotificationGenerator.factory');
+require('./scripts/services/notifications/dimWebNotifier.factory');
 
 require('./scripts/loadout/dimLoadout.directive');
 require('./scripts/loadout/dimLoadoutPopup.directive');
