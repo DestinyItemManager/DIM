@@ -4,7 +4,7 @@ import dialogTemplate from './dimStoreItem.directive.dialog.html';
 
 angular.module('dimApp')
   .directive('dimStoreItem', StoreItem)
-  .filter('tagIcon', ['dimSettingsService', function(dimSettingsService) {
+  .filter('tagIcon', (dimSettingsService) => {
     const iconType = {};
 
     dimSettingsService.itemTags.forEach((tag) => {
@@ -21,8 +21,7 @@ angular.module('dimApp')
         return "item-tag no-tag";
       }
     };
-  }]);
-
+  });
 
 function StoreItem(dimItemService, dimStoreService, ngDialog, dimLoadoutService, dimCompareService, $rootScope, dimActionQueue) {
   let otherDialog = null;

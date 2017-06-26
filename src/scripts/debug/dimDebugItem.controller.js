@@ -3,7 +3,7 @@ import angular from 'angular';
 angular.module('dimApp')
   .controller('dimDebugItemCtrl', dimDebugItemCtrl);
 
-function dimDebugItemCtrl($scope, $state, dimStoreService, dimItemService, dimDefinitions, $stateParams, dimState) {
+function dimDebugItemCtrl($scope, dimStoreService, dimItemService, dimDefinitions, $stateParams, dimState) {
   const vm = this;
   dimState.debug = true; // if you got here, turn on debug mode
 

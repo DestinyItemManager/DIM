@@ -5,11 +5,12 @@
 export function HttpRefreshTokenService($rootScope, $q, $injector, OAuthService, OAuthTokenService) {
   'ngInject';
 
-  const service = this;
   let cache = null;
   const matcher = /www\.bungie\.net\/(D1\/)?Platform\/(User|Destiny)\//;
 
-  service.request = requestHandler;
+  return {
+    request: requestHandler
+  };
 
   function requestHandler(config) {
     config.headers = config.headers || {};
