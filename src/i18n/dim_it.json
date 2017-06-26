@@ -24,6 +24,8 @@
         "NotConnected": "Potresti non essere connesso a internet.",
         "Twitter": "Ottieni informazioni sullo stato del servizio su:",
         "ItemUniqueness": "Unicità dell elemento",
+        "ItemUniquenessExplanation_male": "Hai provato a spostare il '{{name}}' {{type}} al tuo {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
+        "ItemUniquenessExplanation_female": "Hai provato a spostare il '{{name}}' {{type}} alla tua {{character}} ma quella destinazione ne possiede già una e solo una è concessa.",
         "VendorNotFound": "I dati dei mercanti non sono disponibili."
     },
     "Compare": {
@@ -63,7 +65,11 @@
     "FarmingMode": {
         "FarmingMode": "Modalità Farming (sposta oggetti)",
         "Configuration": "Configurazione",
+        "Desc_male": "DIM sposta Engrammi e consumabili per Lumen dal {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
+        "Desc_female": "DIM sposta Engrammi e consumabili per Lumen dalla {{store}} al deposito e lascia uno slot libero per ogni tipo di oggetto per evitare che qualcosa finisca dall'Amministratore.",
         "MakeRoom": {
+            "Desc_male": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
+            "Desc_female": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dall'Amministratrice",
             "MakeRoom": "Crea spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
             "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
         },
@@ -127,6 +133,8 @@
     },
     "ItemService": {
         "BucketFull": {
+            "Guardian_male": "Il {{store}} ha troppe '{{itemtype}}'.",
+            "Guardian_female": "La {{store}} ha troppe '{{itemtype}}'.",
             "Vault": "Il {{store}} ha troppe '{{itemtype}}'."
         },
         "Classified": "Questo oggetto è classificato e non può essere trasferito attualemente.",
@@ -228,11 +236,19 @@
         "CouldNotEquip": "Impossibile equipaggiare {{itemname}}",
         "TooManyRequested": "Hai un totale di {{total}} {{itemname}}, ma il tuo loadout ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
         "DoesNotExist": "{{itemname}} non esiste sul tuo account.",
+        "Applied_male": "Il tuo loadout di un oggetto è stato trasferito al tuo {{store}}.",
+        "Applied_female": "Il tuo loadout di un oggetto  è stato trasferito alla tua {{store}}.",
+        "Applied_plural_male": "Il tuo loadout di {{count}} oggetti è stato trasferito al tuo {{store}}.",
+        "Applied_plural_female": "Il tuo loadout di {{count}} oggetti è stato trasferito alla tua {{store}}.",
         "AppliedAuto": "Costruttore Automatico di Loadout",
         "AppliedError": "Non è stato possibile trasferire nessuno degli oggetti del tuo loadout.",
         "AppliedWarn": "Il tuo loadout è stato parzialmente trasferito, ma per {{failed}} di {{total}} oggetti il trasferimento è fallito.",
         "NameRequired": "E' richiesto un nome.",
         "MakeRoom": "Crea spazio per l'Amministratore",
+        "MakeRoomDone_male": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dal {{store}}.",
+        "MakeRoomDone_female": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",
+        "MakeRoomDone_plural_male": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggetti dal {{store}}.",
+        "MakeRoomDone_plural_female": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggeti dalla {{store}}.",
         "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti dell'Amministratore: {{error}}.",
         "SaveErrorTitle": "Si è presentato un errore salvando un loadout",
         "SaveErrorDescription": "Impossibile salvare il loadout {{loadoutName}}: {{error}}.",

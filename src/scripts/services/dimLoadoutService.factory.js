@@ -354,7 +354,7 @@ function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreServic
         .then(() => {
           let value = 'success';
 
-          let message = $i18next.t('Loadouts.Applied', { amount: scope.total, store: store.name, gender: store.gender });
+          let message = $i18next.t('Loadouts.Applied', { count: scope.total, store: store.name, gender: store.gender });
 
           if (scope.failed > 0) {
             if (scope.failed === scope.total) {
