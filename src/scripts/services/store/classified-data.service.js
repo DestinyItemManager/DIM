@@ -1,6 +1,9 @@
 import idbKeyval from 'idb-keyval';
 
-export function ClassifiedDataService($http) {
+/**
+ * This service loads classified item details from the beta DIM website.
+ */
+export function ClassifiedDataService($http, dimSettingsService) {
   'ngInject';
 
   let classifiedDataPromise;
@@ -55,6 +58,34 @@ export function ClassifiedDataService($http) {
       });
 
       return classifiedDataPromise;
+    },
+
+    buildClassifiedItem(classifiedData, hash) {
+      const info = classifiedData.itemHash[hash];
+      if (info) { // do we have declassification info for item?
+        const localInfo = info.i18n[dimSettingsService.language];
+        const classifiedItem = {
+          classified: true,
+          icon: info.icon,
+          itemName: localInfo.itemName,
+          itemDescription: localInfo.itemDescription,
+          itemTypeName: localInfo.itemTypeName,
+          bucketTypeHash: info.bucketHash,
+          tierType: info.tierType,
+          classType: info.classType
+        };
+        if (info.primaryBaseStatHash) {
+          classifiedItem.primaryStat = {
+            statHash: info.primaryBaseStatHash,
+            value: info.stats[info.primaryBaseStatHash].value
+          };
+        }
+        if (info.stats) {
+          classifiedItem.stats = info.stats;
+        }
+        return classifiedItem;
+      }
+      return null;
     }
   };
 }

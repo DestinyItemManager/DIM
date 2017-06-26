@@ -22,7 +22,17 @@ const tiers = [
   'Exotic'
 ];
 
-export function ItemFactory(dimState, dimManifestService, dimSettingsService, $translate, NewItemsService) {
+export function ItemFactory(
+  dimState,
+  dimManifestService,
+  dimSettingsService,
+  $translate,
+  NewItemsService,
+  ClassifiedDataService,
+  dimDefinitions,
+  dimBucketService,
+  $q
+) {
   'ngInject';
 
   let _idTracker = {};
@@ -87,291 +97,323 @@ export function ItemFactory(dimState, dimManifestService, dimSettingsService, $t
   };
 
   return {
-    resetIdTracker() {
-      _idTracker = {};
-    },
-
-    makeItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
-      let itemDef = defs.InventoryItem.get(item.itemHash);
-      // Missing definition?
-      if (!itemDef) {
-        // maybe it is redacted...
-        itemDef = {
-          itemName: "Missing Item",
-          redacted: true
-        };
-        dimManifestService.warnMissingDefinition();
-      }
-
-      if (!itemDef.icon && !itemDef.action) {
-        itemDef.classified = true;
-        itemDef.classType = 3;
-      }
-
-      if (!itemDef.icon) {
-        itemDef.icon = '/img/misc/missing_icon.png';
-      }
-
-      if (!itemDef.itemTypeName) {
-        itemDef.itemTypeName = 'Unknown';
-      }
-
-      if (itemDef.redacted) {
-        console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
-      }
-
-      if (itemDef.classified) {
-        const classifiedItemDef = buildClassifiedItem(classifiedData, itemDef.hash);
-        if (classifiedItemDef) {
-          itemDef = classifiedItemDef;
-          item.primaryStat = itemDef.primaryStat;
-        }
-      }
-
-      if (!itemDef || !itemDef.itemName) {
-        return null;
-      }
-
-      // fix itemDef for defense items with missing nodes
-      if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
-        const defaultMinMax = _.find(itemDef.stats, (stat) => {
-          return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
-        });
-
-        if (defaultMinMax) {
-          [144602215, 1735777505, 4244567218].forEach((val) => {
-            if (!itemDef.stats[val]) {
-              itemDef.stats[val] = {
-                maximum: defaultMinMax.maximum,
-                minimum: defaultMinMax.minimum,
-                statHash: val,
-                value: 0
-              };
-            }
-          });
-        }
-      }
-
-      // def.bucketTypeHash is where it goes normally
-      let normalBucket = buckets.byHash[itemDef.bucketTypeHash];
-      // item.bucket is where it IS right now
-      let currentBucket = buckets.byHash[item.bucket] || normalBucket;
-      if (!normalBucket) {
-        currentBucket = normalBucket = buckets.unknown;
-        buckets.setHasUnknown();
-      }
-
-      // We cheat a bit for items in the vault, since we treat the
-      // vault as a character. So put them in the bucket they would
-      // have been in if they'd been on a character.
-      if (currentBucket.id.startsWith('BUCKET_VAULT')) {
-        // TODO: Remove this if Bungie ever returns bucket.id for classified
-        // items in the vault.
-        if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
-          if (currentBucket.id.endsWith('WEAPONS')) {
-            currentBucket = buckets.byType.Heavy;
-          } else if (currentBucket.id.endsWith('ARMOR')) {
-            currentBucket = buckets.byType.ClassItem;
-          } else if (currentBucket.id.endsWith('ITEMS')) {
-            currentBucket = buckets.byType.Artifact;
-          }
-        } else {
-          currentBucket = normalBucket;
-        }
-      }
-
-      const itemType = normalBucket.type || 'Unknown';
-
-      const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
-        const category = defs.ItemCategory.get(c);
-        return category ? category.identifier : null;
-      })) : [];
-
-      const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
-
-      itemDef.sourceHashes = itemDef.sourceHashes || [];
-
-      const missingSource = missingSources[itemDef.hash] || [];
-      if (missingSource.length) {
-        itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
-      }
-
-      const createdItem = angular.extend(Object.create(ItemProto), {
-        // figure out what year this item is probably from
-
-        // The bucket the item is currently in
-        location: currentBucket,
-        // The bucket the item normally resides in (even though it may be in the vault/postmaster)
-        bucket: normalBucket,
-        hash: item.itemHash,
-        // This is the type of the item (see dimCategory/dimBucketService) regardless of location
-        type: itemType,
-        categories: categories, // see defs.ItemCategory
-        tier: tiers[itemDef.tierType] || 'Common',
-        isExotic: tiers[itemDef.tierType] === 'Exotic',
-        isVendorItem: (!owner || owner.id === null),
-        name: itemDef.itemName,
-        description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
-        icon: itemDef.icon,
-        notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
-        id: item.itemInstanceId,
-        equipped: item.isEquipped,
-        equipment: item.isEquipment,
-        complete: item.isGridComplete,
-        amount: item.stackSize,
-        primStat: item.primaryStat || null,
-        typeName: itemDef.itemTypeName,
-        // "perks" are the two or so talent grid items that are "featured" for an
-        // item in its popup in the game. We don't currently use these.
-        // perks: item.perks,
-        equipRequiredLevel: item.equipRequiredLevel,
-        maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
-        // 0: titan, 1: hunter, 2: warlock, 3: any
-        classType: itemDef.classType,
-        classTypeName: getClass(itemDef.classType),
-        classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
-        dmg: dmgName,
-        visible: true,
-        sourceHashes: itemDef.sourceHashes,
-        lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
-        trackable: Boolean(currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)),
-        tracked: item.state === 2,
-        locked: item.locked,
-        redacted: Boolean(itemDef.redacted),
-        classified: Boolean(itemDef.classified),
-        isInLoadout: false,
-        dtrRating: item.dtrRating,
-        percentComplete: null, // filled in later
-        talentGrid: null, // filled in later
-        stats: null, // filled in later
-        objectives: null, // filled in later
-        quality: null // filled in later
-      });
-
-      // *able
-      createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
-      createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
-      createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
-
-      // Moving rare masks destroys them
-      if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
-        createdItem.notransfer = true;
-      }
-
-      if (createdItem.primStat) {
-        createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
-      }
-
-      // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
-      createdItem.isNew = false;
-      try {
-        createdItem.isNew = NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
-      } catch (e) {
-        console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
-      }
-
-      if (itemInfoService) {
-        try {
-          createdItem.dimInfo = itemInfoService.infoForItem(createdItem.hash, createdItem.id);
-        } catch (e) {
-          console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
-        }
-      }
-
-      try {
-        createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
-      } catch (e) {
-        console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
-      }
-      try {
-        createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
-
-        if (createdItem.stats && createdItem.stats.length === 0) {
-          createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
-        }
-      } catch (e) {
-        console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
-      }
-      try {
-        createdItem.objectives = buildObjectives(item.objectives, defs.Objective);
-      } catch (e) {
-        console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
-      }
-      if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
-        try {
-          createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
-        } catch (e) {
-          console.error(`Error building quality rating for ${createdItem.name}`, item, itemDef, e);
-        }
-      }
-
-      setItemYear(createdItem);
-
-      // More objectives properties
-      if (createdItem.objectives) {
-        createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
-        createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
-          if (objective.completionValue) {
-            return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
-          } else {
-            return 0;
-          }
-        });
-      } else if (createdItem.talentGrid) {
-        createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
-        createdItem.complete = createdItem.talentGrid.complete;
-      }
-
-      // In debug mode, keep the original JSON around
-      if (dimState.debug) {
-        createdItem.originalItem = item;
-      }
-
-      // do specific things for specific items
-      if (createdItem.hash === 491180618) { // Trials Cards
-        createdItem.objectives = buildTrials(owner.advisors.activities.trials);
-        const best = owner.advisors.activities.trials.extended.highestWinRank;
-        createdItem.complete = owner.advisors.activities.trials.completion.success;
-        createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
-      }
-
-      createdItem.index = this.createItemIndex(createdItem);
-
-      return createdItem;
-    },
-
-    // Set an ID for the item that should be unique across all items
-    createItemIndex(item) {
-      // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
-      let index = item.id;
-      if (item.id === '0') {
-        index = `${item.hash}-am${item.amount}`;
-        _idTracker[index] = (_idTracker[index] || 0) + 1;
-        index = `${index}-t${_idTracker[index]}`;
-      }
-
-      // Perf hack: the index is used as a key for ng-repeat. What we are doing here
-      // is adding extra info to that key in order to force items to be re-rendered when
-      // this index changes. These properties are selected because they're used in the
-      // dimStoreItem directive. Ideally this would just be a hash of all these properties,
-      // but for now a big string will do.
-      //
-      // Oh, also, this value needs to be safe as an HTML ID.
-
-      if (!item.complete && item.percentComplete) {
-        index += `-pc${Math.round(item.percentComplete * 100)}`;
-      }
-      if (item.quality) {
-        index += `-q${item.quality.min}`;
-      }
-      if (item.primStat && item.primStat.value) {
-        index += `-ps${item.primStat.value}`;
-      }
-
-      return index;
-    }
+    resetIdTracker,
+    processItems,
+    makeItem,
+    createItemIndex
   };
 
+
+  function resetIdTracker() {
+    _idTracker = {};
+  }
+
+  function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
+    return $q.all([
+      dimDefinitions.getDefinitions(),
+      dimBucketService.getBuckets(),
+      previousItems,
+      newItems,
+      itemInfoService,
+      ClassifiedDataService.getClassifiedData()])
+      .then((args) => {
+        const result = [];
+        dimManifestService.statusText = `${$translate.instant('Manifest.LoadCharInv')}...`;
+        _.each(items, (item) => {
+          let createdItem = null;
+          try {
+            createdItem = makeItem(...args, item, owner);
+          } catch (e) {
+            console.error("Error processing item", item, e);
+          }
+          if (createdItem !== null) {
+            createdItem.owner = owner.id;
+            result.push(createdItem);
+          }
+        });
+        return result;
+      });
+  }
+
+  function makeItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
+    let itemDef = defs.InventoryItem.get(item.itemHash);
+    // Missing definition?
+    if (!itemDef) {
+      // maybe it is redacted...
+      itemDef = {
+        itemName: "Missing Item",
+        redacted: true
+      };
+      dimManifestService.warnMissingDefinition();
+    }
+
+    if (!itemDef.icon && !itemDef.action) {
+      itemDef.classified = true;
+      itemDef.classType = 3;
+    }
+
+    if (!itemDef.icon) {
+      itemDef.icon = '/img/misc/missing_icon.png';
+    }
+
+    if (!itemDef.itemTypeName) {
+      itemDef.itemTypeName = 'Unknown';
+    }
+
+    if (itemDef.redacted) {
+      console.warn('Missing Item Definition:\n\n', item, '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.');
+    }
+
+    if (itemDef.classified) {
+      const classifiedItemDef = ClassifiedDataService.buildClassifiedItem(classifiedData, itemDef.hash);
+      if (classifiedItemDef) {
+        itemDef = classifiedItemDef;
+        item.primaryStat = itemDef.primaryStat;
+      }
+    }
+
+    if (!itemDef || !itemDef.itemName) {
+      return null;
+    }
+
+    // fix itemDef for defense items with missing nodes
+    if (item.primaryStat && item.primaryStat.statHash === 3897883278 && _.size(itemDef.stats) > 0 && _.size(itemDef.stats) !== 5) {
+      const defaultMinMax = _.find(itemDef.stats, (stat) => {
+        return _.indexOf([144602215, 1735777505, 4244567218], stat.statHash) >= 0;
+      });
+
+      if (defaultMinMax) {
+        [144602215, 1735777505, 4244567218].forEach((val) => {
+          if (!itemDef.stats[val]) {
+            itemDef.stats[val] = {
+              maximum: defaultMinMax.maximum,
+              minimum: defaultMinMax.minimum,
+              statHash: val,
+              value: 0
+            };
+          }
+        });
+      }
+    }
+
+    // def.bucketTypeHash is where it goes normally
+    let normalBucket = buckets.byHash[itemDef.bucketTypeHash];
+    // item.bucket is where it IS right now
+    let currentBucket = buckets.byHash[item.bucket] || normalBucket;
+    if (!normalBucket) {
+      currentBucket = normalBucket = buckets.unknown;
+      buckets.setHasUnknown();
+    }
+
+    // We cheat a bit for items in the vault, since we treat the
+    // vault as a character. So put them in the bucket they would
+    // have been in if they'd been on a character.
+    if (currentBucket.id.startsWith('BUCKET_VAULT')) {
+      // TODO: Remove this if Bungie ever returns bucket.id for classified
+      // items in the vault.
+      if (itemDef.classified && itemDef.itemTypeName === 'Unknown') {
+        if (currentBucket.id.endsWith('WEAPONS')) {
+          currentBucket = buckets.byType.Heavy;
+        } else if (currentBucket.id.endsWith('ARMOR')) {
+          currentBucket = buckets.byType.ClassItem;
+        } else if (currentBucket.id.endsWith('ITEMS')) {
+          currentBucket = buckets.byType.Artifact;
+        }
+      } else {
+        currentBucket = normalBucket;
+      }
+    }
+
+    const itemType = normalBucket.type || 'Unknown';
+
+    const categories = itemDef.itemCategoryHashes ? _.compact(itemDef.itemCategoryHashes.map((c) => {
+      const category = defs.ItemCategory.get(c);
+      return category ? category.identifier : null;
+    })) : [];
+
+    const dmgName = [null, 'kinetic', 'arc', 'solar', 'void'][item.damageType];
+
+    itemDef.sourceHashes = itemDef.sourceHashes || [];
+
+    const missingSource = missingSources[itemDef.hash] || [];
+    if (missingSource.length) {
+      itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
+    }
+
+    const createdItem = angular.extend(Object.create(ItemProto), {
+      // figure out what year this item is probably from
+
+      // The bucket the item is currently in
+      location: currentBucket,
+      // The bucket the item normally resides in (even though it may be in the vault/postmaster)
+      bucket: normalBucket,
+      hash: item.itemHash,
+      // This is the type of the item (see dimCategory/dimBucketService) regardless of location
+      type: itemType,
+      categories: categories, // see defs.ItemCategory
+      tier: tiers[itemDef.tierType] || 'Common',
+      isExotic: tiers[itemDef.tierType] === 'Exotic',
+      isVendorItem: (!owner || owner.id === null),
+      name: itemDef.itemName,
+      description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
+      icon: itemDef.icon,
+      notransfer: Boolean(currentBucket.inPostmaster || itemDef.nonTransferrable || !itemDef.allowActions || itemDef.classified),
+      id: item.itemInstanceId,
+      equipped: item.isEquipped,
+      equipment: item.isEquipment,
+      complete: item.isGridComplete,
+      amount: item.stackSize,
+      primStat: item.primaryStat || null,
+      typeName: itemDef.itemTypeName,
+      // "perks" are the two or so talent grid items that are "featured" for an
+      // item in its popup in the game. We don't currently use these.
+      // perks: item.perks,
+      equipRequiredLevel: item.equipRequiredLevel,
+      maxStackSize: (itemDef.maxStackSize > 0) ? itemDef.maxStackSize : 1,
+      // 0: titan, 1: hunter, 2: warlock, 3: any
+      classType: itemDef.classType,
+      classTypeName: getClass(itemDef.classType),
+      classTypeNameLocalized: getClassTypeNameLocalized(defs, itemDef.classType),
+      dmg: dmgName,
+      visible: true,
+      sourceHashes: itemDef.sourceHashes,
+      lockable: normalBucket.type !== 'Class' && ((currentBucket.inPostmaster && item.isEquipment) || currentBucket.inWeapons || item.lockable),
+      trackable: Boolean(currentBucket.inProgress && (currentBucket.hash === 2197472680 || currentBucket.hash === 1801258597)),
+      tracked: item.state === 2,
+      locked: item.locked,
+      redacted: Boolean(itemDef.redacted),
+      classified: Boolean(itemDef.classified),
+      isInLoadout: false,
+      dtrRating: item.dtrRating,
+      percentComplete: null, // filled in later
+      talentGrid: null, // filled in later
+      stats: null, // filled in later
+      objectives: null, // filled in later
+      quality: null // filled in later
+    });
+
+    // *able
+    createdItem.taggable = Boolean($featureFlags.tagsEnabled && createdItem.lockable && !_.contains(categories, 'CATEGORY_ENGRAM'));
+    createdItem.comparable = Boolean($featureFlags.compareEnabled && createdItem.equipment && createdItem.lockable);
+    createdItem.reviewable = Boolean($featureFlags.reviewsEnabled && createdItem.primStat && createdItem.primStat.statHash === 368428387);
+
+    // Moving rare masks destroys them
+    if (createdItem.inCategory('CATEGORY_MASK') && createdItem.tier !== 'Legendary') {
+      createdItem.notransfer = true;
+    }
+
+    if (createdItem.primStat) {
+      createdItem.primStat.stat = defs.Stat.get(createdItem.primStat.statHash);
+    }
+
+    // An item is new if it was previously known to be new, or if it's new since the last load (previousItems);
+    createdItem.isNew = false;
+    try {
+      createdItem.isNew = NewItemsService.isItemNew(createdItem.id, previousItems, newItems);
+    } catch (e) {
+      console.error(`Error determining new-ness of ${createdItem.name}`, item, itemDef, e);
+    }
+
+    if (itemInfoService) {
+      try {
+        createdItem.dimInfo = itemInfoService.infoForItem(createdItem.hash, createdItem.id);
+      } catch (e) {
+        console.error(`Error getting extra DIM info for ${createdItem.name}`, item, itemDef, e);
+      }
+    }
+
+    try {
+      createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
+    } catch (e) {
+      console.error(`Error building talent grid for ${createdItem.name}`, item, itemDef, e);
+    }
+    try {
+      createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
+
+      if (createdItem.stats && createdItem.stats.length === 0) {
+        createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
+      }
+    } catch (e) {
+      console.error(`Error building stats for ${createdItem.name}`, item, itemDef, e);
+    }
+    try {
+      createdItem.objectives = buildObjectives(item.objectives, defs.Objective);
+    } catch (e) {
+      console.error(`Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    }
+    if (createdItem.talentGrid && createdItem.talentGrid.infusable) {
+      try {
+        createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
+      } catch (e) {
+        console.error(`Error building quality rating for ${createdItem.name}`, item, itemDef, e);
+      }
+    }
+
+    setItemYear(createdItem);
+
+    // More objectives properties
+    if (createdItem.objectives) {
+      createdItem.complete = (!createdItem.talentGrid || createdItem.complete) && _.all(createdItem.objectives, 'complete');
+      createdItem.percentComplete = sum(createdItem.objectives, (objective) => {
+        if (objective.completionValue) {
+          return Math.min(1.0, objective.progress / objective.completionValue) / createdItem.objectives.length;
+        } else {
+          return 0;
+        }
+      });
+    } else if (createdItem.talentGrid) {
+      createdItem.percentComplete = Math.min(1.0, createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired);
+      createdItem.complete = createdItem.talentGrid.complete;
+    }
+
+    // In debug mode, keep the original JSON around
+    if (dimState.debug) {
+      createdItem.originalItem = item;
+    }
+
+    // do specific things for specific items
+    if (createdItem.hash === 491180618) { // Trials Cards
+      createdItem.objectives = buildTrials(owner.advisors.activities.trials);
+      const best = owner.advisors.activities.trials.extended.highestWinRank;
+      createdItem.complete = owner.advisors.activities.trials.completion.success;
+      createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
+    }
+
+    createdItem.index = this.createItemIndex(createdItem);
+
+    return createdItem;
+  }
+
+  // Set an ID for the item that should be unique across all items
+  function createItemIndex(item) {
+    // Try to make a unique, but stable ID. This isn't always possible, such as in the case of consumables.
+    let index = item.id;
+    if (item.id === '0') {
+      index = `${item.hash}-am${item.amount}`;
+      _idTracker[index] = (_idTracker[index] || 0) + 1;
+      index = `${index}-t${_idTracker[index]}`;
+    }
+
+    // Perf hack: the index is used as a key for ng-repeat. What we are doing here
+    // is adding extra info to that key in order to force items to be re-rendered when
+    // this index changes. These properties are selected because they're used in the
+    // dimStoreItem directive. Ideally this would just be a hash of all these properties,
+    // but for now a big string will do.
+    //
+    // Oh, also, this value needs to be safe as an HTML ID.
+
+    if (!item.complete && item.percentComplete) {
+      index += `-pc${Math.round(item.percentComplete * 100)}`;
+    }
+    if (item.quality) {
+      index += `-q${item.quality.min}`;
+    }
+    if (item.primStat && item.primStat.value) {
+      index += `-ps${item.primStat.value}`;
+    }
+
+    return index;
+  }
 
   function buildTalentGrid(item, talentDefs, progressDefs) {
     const talentGridDef = talentDefs.get(item.talentGridHash);
@@ -750,34 +792,6 @@ export function ItemFactory(dimState, dimManifestService, dimSettingsService, $t
     quality.range = getQualityRange(light.value, quality);
 
     return quality;
-  }
-
-  function buildClassifiedItem(classifiedData, hash) {
-    const info = classifiedData.itemHash[hash];
-    if (info) { // do we have declassification info for item?
-      const localInfo = info.i18n[dimSettingsService.language];
-      const classifiedItem = {
-        classified: true,
-        icon: info.icon,
-        itemName: localInfo.itemName,
-        itemDescription: localInfo.itemDescription,
-        itemTypeName: localInfo.itemTypeName,
-        bucketTypeHash: info.bucketHash,
-        tierType: info.tierType,
-        classType: info.classType
-      };
-      if (info.primaryBaseStatHash) {
-        classifiedItem.primaryStat = {
-          statHash: info.primaryBaseStatHash,
-          value: info.stats[info.primaryBaseStatHash].value
-        };
-      }
-      if (info.stats) {
-        classifiedItem.stats = info.stats;
-      }
-      return classifiedItem;
-    }
-    return null;
   }
 
   function getClassTypeNameLocalized(defs, type) {

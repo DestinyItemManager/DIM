@@ -4,11 +4,14 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimItemService', ItemService);
 
-function ItemService(dimStoreService,
-                     dimBungieService,
-                     dimCategory,
-                     $q,
-                     $translate) {
+function ItemService(
+  dimStoreService,
+  ItemFactory,
+  dimBungieService,
+  dimCategory,
+  $q,
+  $translate
+) {
   // We'll reload the stores to check if things have been
   // thrown away or moved and we just don't have up to date info. But let's
   // throttle these calls so we don't just keep refreshing over and over.
@@ -90,7 +93,7 @@ function ItemService(dimStoreService,
           source.removeItem(sourceItem);
           sourceItem = angular.copy(sourceItem);
           sourceItem.amount -= amountToRemove;
-          sourceItem.index = dimStoreService.createItemIndex(sourceItem);
+          sourceItem.index = ItemFactory.createItemIndex(sourceItem);
           source.addItem(sourceItem);
         }
 
@@ -106,7 +109,7 @@ function ItemService(dimStoreService,
           targetItem = item;
           if (!removedSourceItem) {
             targetItem = angular.copy(item);
-            targetItem.index = dimStoreService.createItemIndex(targetItem);
+            targetItem.index = ItemFactory.createItemIndex(targetItem);
           }
           removedSourceItem = false; // only move without cloning once
           targetItem.amount = 0; // We'll increment amount below
@@ -122,7 +125,7 @@ function ItemService(dimStoreService,
         target.removeItem(targetItem);
         targetItem = angular.copy(targetItem);
         targetItem.amount += amountToAdd;
-        targetItem.index = dimStoreService.createItemIndex(targetItem);
+        targetItem.index = ItemFactory.createItemIndex(targetItem);
         target.addItem(targetItem);
         addAmount -= amountToAdd;
       }

@@ -1,6 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimLoadout.directive.html';
+import { getCharacterStatsData } from '../services/store/character-stats-data';
 
 angular.module('dimApp').directive('dimLoadout', Loadout);
 
@@ -303,7 +304,7 @@ function LoadoutCtrl(dimLoadoutService, dimCategory, toaster, dimPlatformService
     }
 
     dimDefinitions.getDefinitions().then((defs) => {
-      vm.stats = dimStoreService.getCharacterStatsData(defs.Stat, { stats: combinedStats });
+      vm.stats = getCharacterStatsData(defs.Stat, { stats: combinedStats });
     });
   };
 }
