@@ -1,7 +1,7 @@
 import angular from 'angular';
 import _ from 'underscore';
 import template from './dimLoadout.directive.html';
-import { getCharacterStatsData } from '../services/store/character-stats-data';
+import { getCharacterStatsData } from '../services/store/character-utils';
 
 angular.module('dimApp').directive('dimLoadout', Loadout);
 

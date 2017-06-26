@@ -2,7 +2,7 @@ import angular from 'angular';
 import _ from 'underscore';
 import uuidv4 from 'uuid/v4';
 import { sum, count } from '../../util';
-import { getCharacterStatsData, getClass } from './character-stats-data';
+import { getCharacterStatsData, getClass } from './character-utils';
 
 // Label isn't used, but it helps us understand what each one is
 const progressionMeta = {
@@ -20,6 +20,16 @@ const progressionMeta = {
   2576753410: { label: "SRL", order: 11 }
 };
 
+const factionBadges = {
+  969832704: 'Future War Cult',
+  27411484: 'Dead Orbit',
+  2954371221: 'New Monarchy'
+};
+
+/**
+ * A factory service for producing "stores" (characters or the vault).
+ * The job of filling in their items is left to other code - this is just the basic store itself.
+ */
 export function StoreFactory($translate, dimInfoService, dimDefinitions) {
   'ngInject';
 
@@ -35,6 +45,7 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
         return i.hash === item.hash && !i.location.inPostmaster;
       }), 'amount');
     },
+
     /**
      * How much of items like this item can fit in this store? For
      * stackables, this is in stacks, not individual pieces.
@@ -46,6 +57,7 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
       }
       return item.bucket.capacity;
     },
+
     /**
      * How many *more* items like this item can fit in this store?
      * This takes into account stackables, so the answer will be in
@@ -66,9 +78,11 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
         return (openStacks * maxStackSize) + stackSpace;
       }
     },
+
     updateCharacterInfoFromEquip: function(characterInfo) {
       dimDefinitions.getDefinitions().then((defs) => this.updateCharacterInfo(defs, characterInfo));
     },
+
     updateCharacterInfo: function(defs, characterInfo) {
       this.level = characterInfo.characterLevel;
       this.percentToNextLevel = characterInfo.percentToNextLevel / 100.0;
@@ -77,22 +91,24 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
       this.icon = `https://www.bungie.net/${characterInfo.emblemPath}`;
       this.stats = getCharacterStatsData(defs.Stat, characterInfo.characterBase);
     },
+
     // Remove an item from this store. Returns whether it actually removed anything.
     removeItem: function(item) {
       // Completely remove the source item
-      function match(i) { return item.index === i.index; }
-      const sourceIndex = _.findIndex(this.items, match);
+      const match = (i) => item.index === i.index;
+      const sourceIndex = this.items.findIndex(match);
       if (sourceIndex >= 0) {
         this.items.splice(sourceIndex, 1);
 
         const bucketItems = this.buckets[item.location.id];
-        const bucketIndex = _.findIndex(bucketItems, match);
+        const bucketIndex = bucketItems.findIndex(match);
         bucketItems.splice(bucketIndex, 1);
 
         return true;
       }
       return false;
     },
+
     addItem: function(item) {
       this.items.push(item);
       const bucketItems = this.buckets[item.location.id];
@@ -107,6 +123,7 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
       }
       item.owner = this.id;
     },
+
     // Create a loadout from this store's equipped items
     loadoutFromCurrentlyEquipped: function(name) {
       return {
@@ -121,14 +138,9 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
           .value()
       };
     },
-    factionAlignment: function() {
-      const factionBadges = {
-        969832704: 'Future War Cult',
-        27411484: 'Dead Orbit',
-        2954371221: 'New Monarchy'
-      };
 
-      const badge = _.find(this.buckets.BUCKET_MISSION, (i) => factionBadges[i.hash]);
+    factionAlignment: function() {
+      const badge = this.buckets.BUCKET_MISSION.find((i) => factionBadges[i.hash]);
       if (!badge) {
         return null;
       }
@@ -201,20 +213,18 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
             item.bucket = pail.bucketHash;
           });
 
-          items = _.union(items, pail.items);
+          items = items.concat(pail.items);
         });
       });
 
       if (_.has(character.inventory.buckets, 'Invisible')) {
-        if (_.size(character.inventory.buckets.Invisible) > 0) {
-          _.each(character.inventory.buckets.Invisible, (pail) => {
-            _.each(pail.items, (item) => {
-              item.bucket = pail.bucketHash;
-            });
-
-            items = _.union(items, pail.items);
+        _.each(character.inventory.buckets.Invisible, (pail) => {
+          _.each(pail.items, (item) => {
+            item.bucket = pail.bucketHash;
           });
-        }
+
+          items = items.concat(pail.items);
+        });
       }
 
       return {
@@ -285,7 +295,7 @@ export function StoreFactory($translate, dimInfoService, dimDefinitions) {
           item.bucket = bucket.bucketHash;
         });
 
-        items = _.union(items, bucket.items);
+        items = items.concat(bucket.items);
       });
 
       return {

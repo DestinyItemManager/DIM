@@ -4,6 +4,7 @@ import { ClassifiedDataService } from './store/classified-data.service';
 import { StoreFactory } from './store/store-factory.service';
 import { ItemFactory } from './store/item-factory.service';
 import { NewItemsService } from './store/new-items.service';
+import { flatMap } from '../util';
 
 angular.module('dimApp')
   .factory('dimStoreService', StoreService)
@@ -39,6 +40,8 @@ function StoreService(
     getStores: () => _stores,
     getStore: (id) => _.find(_stores, { id: id }),
     getVault: () => _.find(_stores, { id: 'vault' }),
+    getAllItems: () => flatMap(_stores, 'items'),
+    getItemAcrossStores,
     updateCharacters,
     reloadStores
   };
@@ -53,6 +56,21 @@ function StoreService(
   });
 
   return service;
+
+  /**
+   * Find an item among all stores that matches the params provided.
+   * @param {{ id, hash, notransfer }} params
+   */
+  function getItemAcrossStores(params) {
+    const predicate = _.iteratee(_.pick(params, 'id', 'hash', 'notransfer'));
+    for (let i = 0; i < _stores.length; i++) {
+      const result = _stores[i].items.find(predicate);
+      if (result) {
+        return result;
+      }
+    }
+    return undefined;
+  }
 
   /**
    * Update the high level character information for all the stores

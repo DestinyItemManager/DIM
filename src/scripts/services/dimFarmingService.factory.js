@@ -180,7 +180,7 @@ function FarmingService($rootScope,
         ];
 
         self.consolidate = _.compact(consolidateHashes.map((hash) => {
-          const ret = angular.copy(dimItemService.getItem({
+          const ret = angular.copy(dimStoreService.getItemAcrossStores({
             hash: hash
           }));
           if (ret) {

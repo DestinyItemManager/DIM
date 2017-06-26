@@ -4,7 +4,7 @@ import template from './loadout-builder.html';
 import intellectIcon from 'app/images/intellect.png';
 import disciplineIcon from 'app/images/discipline.png';
 import strengthIcon from 'app/images/strength.png';
-import { getBonus } from '../services/store/character-stats-data';
+import { getBonus } from '../services/store/character-utils';
 
 export const LoadoutBuilderComponent = {
   controller: LoadoutBuilderController,

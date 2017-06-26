@@ -2,7 +2,8 @@ import angular from 'angular';
 import _ from 'underscore';
 import { sum } from '../../util';
 import missingSources from 'app/data/missing_sources.json';
-import { getClass, getBonus } from './character-stats-data';
+import { getClass, getBonus } from './character-utils';
+import { getQualityRating } from './armor-quality';
 
 const yearHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
@@ -22,6 +23,9 @@ const tiers = [
   'Exotic'
 ];
 
+/**
+ * A factory service for producing DIM inventory items.
+ */
 export function ItemFactory(
   dimState,
   dimManifestService,
@@ -108,6 +112,15 @@ export function ItemFactory(
     _idTracker = {};
   }
 
+  /**
+   * Process an entire list of items into DIM items.
+   * @param {string} owner the ID of the owning store.
+   * @param {Array} items a list of "raw" items from the Destiny API
+   * @param {Set<string>} previousItems a set of item IDs representing the previous store's items
+   * @param {Set<string>} newItems a set of item IDs representing the previous list of new items
+   * @param itemInfoService the item info factory for this store's platform
+   * @return {Promise<Array>} a promise for the list of items
+   */
   function processItems(owner, items, previousItems = new Set(), newItems = new Set(), itemInfoService) {
     return $q.all([
       dimDefinitions.getDefinitions(),
@@ -135,6 +148,17 @@ export function ItemFactory(
       });
   }
 
+  /**
+   * Process a single raw item into a DIM item.s
+   * @param defs the manifest definitions from dimDefinitions
+   * @param buckets the bucket definitions from dimBucketService
+   * @param {Set<string>} previousItems a set of item IDs representing the previous store's items
+   * @param {Set<string>} newItems a set of item IDs representing the previous list of new items
+   * @param itemInfoService the item info factory for this store's platform
+   * @param classifiedData a mapping from item hash to details for a classified item
+   * @param item "raw" item from the Destiny API
+   * @param {string} owner the ID of the owning store.
+   */
   function makeItem(defs, buckets, previousItems, newItems, itemInfoService, classifiedData, item, owner) {
     let itemDef = defs.InventoryItem.get(item.itemHash);
     // Missing definition?
@@ -349,7 +373,7 @@ export function ItemFactory(
       }
     }
 
-    setItemYear(createdItem);
+    createdItem.year = getItemYear(createdItem);
 
     // More objectives properties
     if (createdItem.objectives) {
@@ -379,7 +403,7 @@ export function ItemFactory(
       createdItem.percentComplete = createdItem.complete ? 1 : (best >= 7 ? .66 : (best >= 5 ? .33 : 0));
     }
 
-    createdItem.index = this.createItemIndex(createdItem);
+    createdItem.index = createItemIndex(createdItem);
 
     return createdItem;
   }
@@ -655,145 +679,6 @@ export function ItemFactory(
     });
   }
 
-  function fitValue(light) {
-    if (light > 300) {
-      return (0.2546 * light) - 23.825;
-    } if (light > 200) {
-      return (0.1801 * light) - 1.4612;
-    } else {
-      return -1;
-    }
-  }
-
-  function getScaledStat(base, light) {
-    const max = 335;
-
-    if (light > 335) {
-      light = 335;
-    }
-
-    return {
-      min: Math.floor((base) * (fitValue(max) / fitValue(light))),
-      max: Math.floor((base + 1) * (fitValue(max) / fitValue(light)))
-    };
-  }
-
-  // thanks to bungie armory for the max-base stats
-  // thanks to /u/iihavetoes for rates + equation
-  // https://www.reddit.com/r/DestinyTheGame/comments/4geixn/a_shift_in_how_we_view_stat_infusion_12tier/
-  // TODO set a property on a bucket saying whether it can have quality rating, etc
-  function getQualityRating(stats, light, type) {
-    // For a quality property, return a range string (min-max percentage)
-    function getQualityRange(light, quality) {
-      if (!quality) {
-        return '';
-      }
-
-      if (light > 335) {
-        light = 335;
-      }
-
-      return `${(quality.min === quality.max || light === 335)
-              ? quality.min
-              : (`${quality.min}%-${quality.max}`)}%`;
-    }
-
-    if (!stats || !stats.length || !light || light.value < 280) {
-      return null;
-    }
-
-    let split = 0;
-    switch (type.toLowerCase()) {
-    case 'helmet':
-      split = 46; // bungie reports 48, but i've only seen 46
-      break;
-    case 'gauntlets':
-      split = 41; // bungie reports 43, but i've only seen 41
-      break;
-    case 'chest':
-      split = 61;
-      break;
-    case 'leg':
-      split = 56;
-      break;
-    case 'classitem':
-    case 'ghost':
-      split = 25;
-      break;
-    case 'artifact':
-      split = 38;
-      break;
-    default:
-      return null;
-    }
-
-    const ret = {
-      total: {
-        min: 0,
-        max: 0
-      },
-      max: split * 2
-    };
-
-    let pure = 0;
-    stats.forEach((stat) => {
-      let scaled = {
-        min: 0,
-        max: 0
-      };
-      if (stat.base) {
-        scaled = getScaledStat(stat.base, light.value);
-        pure = scaled.min;
-      }
-      stat.scaled = scaled;
-      stat.split = split;
-      stat.qualityPercentage = {
-        min: Math.round(100 * stat.scaled.min / stat.split),
-        max: Math.round(100 * stat.scaled.max / stat.split)
-      };
-      ret.total.min += scaled.min || 0;
-      ret.total.max += scaled.max || 0;
-    });
-
-    if (pure === ret.total.min) {
-      stats.forEach((stat) => {
-        stat.scaled = {
-          min: Math.floor(stat.scaled.min / 2),
-          max: Math.floor(stat.scaled.max / 2)
-        };
-        stat.qualityPercentage = {
-          min: Math.round(100 * stat.scaled.min / stat.split),
-          max: Math.round(100 * stat.scaled.max / stat.split)
-        };
-      });
-    }
-
-    let quality = {
-      min: Math.round(ret.total.min / ret.max * 100),
-      max: Math.round(ret.total.max / ret.max * 100)
-    };
-
-    if (type.toLowerCase() !== 'artifact') {
-      stats.forEach((stat) => {
-        stat.qualityPercentage = {
-          min: Math.min(100, stat.qualityPercentage.min),
-          max: Math.min(100, stat.qualityPercentage.max)
-        };
-      });
-      quality = {
-        min: Math.min(100, quality.min),
-        max: Math.min(100, quality.max)
-      };
-    }
-
-    stats.forEach((stat) => {
-      stat.qualityPercentage.range = getQualityRange(light.value, stat.qualityPercentage);
-    });
-    quality.range = getQualityRange(light.value, quality);
-
-    return quality;
-  }
-
   function getClassTypeNameLocalized(defs, type) {
     const klass = _.find(_.values(defs.Class), { classType: type });
     if (klass) {
@@ -803,7 +688,7 @@ export function ItemFactory(
     }
   }
 
-  function setItemYear(item) {
+  function getItemYear(item) {
     // determine what year this item came from based on sourceHash value
     // items will hopefully be tagged as follows
     // No value: Vanilla, Crota's End, House of Wolves
@@ -815,16 +700,18 @@ export function ItemFactory(
     // if sourceHash doesn't contain these values, we assume they came from
     // year 1
 
-    item.year = 1;
+    let year = 1;
     const infusable = (item.talentGrid && item.talentGrid.infusable);
     const ttk = item.sourceHashes.includes(yearHashes.year2[0]);
     const roi = item.sourceHashes.includes(yearHashes.year3[0]);
     if (ttk || infusable || _.intersection(yearHashes.year2, item.sourceHashes).length) {
-      item.year = 2;
+      year = 2;
     }
     if (!ttk && (item.classified || roi || _.intersection(yearHashes.year3, item.sourceHashes).length)) {
-      item.year = 3;
+      year = 3;
     }
+
+    return year;
   }
 
   function buildStats(item, itemDef, statDefs, grid, type) {

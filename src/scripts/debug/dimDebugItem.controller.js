@@ -3,13 +3,13 @@ import angular from 'angular';
 angular.module('dimApp')
   .controller('dimDebugItemCtrl', dimDebugItemCtrl);
 
-function dimDebugItemCtrl($scope, $state, dimStoreService, dimItemService, dimDefinitions, $stateParams, dimState) {
+function dimDebugItemCtrl($scope, $state, dimStoreService, dimDefinitions, $stateParams, dimState) {
   const vm = this;
   dimState.debug = true; // if you got here, turn on debug mode
 
   function init() {
     dimDefinitions.getDefinitions().then((defs) => {
-      vm.fullItem = dimItemService.getItem({ id: $stateParams.itemId });
+      vm.fullItem = dimStoreService.getItemAcrossStores({ id: $stateParams.itemId });
       if (!vm.fullItem) {
         return;
       }

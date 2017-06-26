@@ -126,7 +126,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.itemLevelingLoadout = function itemLevelingLoadout($event) {
-    const applicableItems = _.select(dimItemService.getItems(), (i) => {
+    const applicableItems = _.select(dimStoreService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.talentGrid &&
         !i.talentGrid.xpComplete && // Still need XP
@@ -200,7 +200,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
       'Artifact',
       'Ghost'];
 
-    const applicableItems = _.select(dimItemService.getItems(), (i) => {
+    const applicableItems = _.select(dimStoreService.getAllItems(), (i) => {
       return i.canBeEquippedBy(vm.store) &&
         i.primStat && // has a primary stat (sanity check)
         _.contains(lightTypes, i.type); // one of our selected types
@@ -237,7 +237,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // A dynamic loadout set up to level weapons and armor
   vm.gatherEngramsLoadout = function gatherEngramsLoadout($event, options = {}) {
-    const engrams = _.select(dimItemService.getItems(), (i) => {
+    const engrams = _.select(dimStoreService.getAllItems(), (i) => {
       return i.isEngram() && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic);
     });
 
@@ -279,7 +279,7 @@ function LoadoutPopupCtrl($rootScope, $scope, ngDialog, dimLoadoutService, dimIt
 
   // Move items matching the current search. Max 9 per type.
   vm.searchLoadout = function searchLoadout($event) {
-    const items = _.select(dimItemService.getItems(), (i) => {
+    const items = _.select(dimStoreService.getAllItems(), (i) => {
       return i.visible && !i.location.inPostmaster;
     });
 

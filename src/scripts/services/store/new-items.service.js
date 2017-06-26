@@ -1,5 +1,9 @@
 import idbKeyval from 'idb-keyval';
 
+/**
+ * This service helps us keep track of new items. They are persisted to indexedDB between sessions.
+ * They are tracked whether or not the option to display them is on.
+ */
 export function NewItemsService(dimPlatformService, $q) {
   'ngInject';
 
@@ -11,7 +15,6 @@ export function NewItemsService(dimPlatformService, $q) {
     clearNewItems,
     loadNewItems,
     saveNewItems,
-    newItemsKey,
     buildItemSet,
     applyRemovedNewItems,
     hasNewItems: false

@@ -4,6 +4,9 @@ import _ from 'underscore';
 angular.module('dimApp')
   .factory('dimItemService', ItemService);
 
+/**
+ * A service for moving/equipping items. dimItemMoveService should be preferred for most usages.
+ */
 function ItemService(
   dimStoreService,
   ItemFactory,
@@ -21,18 +24,10 @@ function ItemService(
   }, 10000, { trailing: false });
 
   return {
-    getSimilarItem: getSimilarItem,
-    getItem: getItem,
-    getItems: getItems,
-    moveTo: moveTo,
-    equipItems: equipItems,
-    setItemState: setItemState
+    getSimilarItem,
+    moveTo,
+    equipItems
   };
-
-  function setItemState(item, store, lockState, type) {
-    return dimBungieService.setItemState(item, store, lockState, type)
-      .then(() => lockState);
-  }
 
   /**
    * Update our item and store models after an item has been moved (or equipped/dequipped).
@@ -42,7 +37,7 @@ function ItemService(
     // Refresh all the items - they may have been reloaded!
     source = dimStoreService.getStore(source.id);
     target = dimStoreService.getStore(target.id);
-    item = getItem(item);
+    item = dimStoreService.getItemAcrossStores(item);
 
     // If we've moved to a new place
     if (source.id !== target.id) {
@@ -728,18 +723,5 @@ function ItemService(
 
         return promise;
       });
-  }
-
-  function getItems() {
-    let returnValue = [];
-    dimStoreService.getStores().forEach((store) => {
-      returnValue = returnValue.concat(store.items);
-    });
-    return returnValue;
-  }
-
-  function getItem(params, store) {
-    const items = store ? store.items : getItems();
-    return _.findWhere(items, _.pick(params, 'id', 'hash', 'notransfer'));
   }
 }
