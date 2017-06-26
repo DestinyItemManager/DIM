@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+	</head>
+	<body>
+	<p>
+		<button id="opener">Open Window</button>
+		</p><p><a href="https://www.bungie.net/en/Application/Authorize/11036" target="_blank">Go To Bungie</a></p>
+		
+<script>
+function click() {
+	window.open('https://www.bungie.net/en/Application/Authorize/11036', 'bungie', 'noopener');
+	
+	//alert(window.location);
+}
+
+document.getElementById('opener').onclick = click;
+
+if (window.location.search.length > 0) {
+  window.localStorage.setItem('a', window.location.search);
+}
+
+document.write('<pre>' + window.localStorage.getItem('a') + '</pre>');
+</script>
+	</body>
+</html>
