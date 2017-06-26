@@ -5,7 +5,17 @@
     "jquery": true,
     "node": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors"
+  ],
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "config/webpack.js"
+      }
+    }
+  },
   "root": true,
   "parser": "babel-eslint",
   "parserOptions": {
