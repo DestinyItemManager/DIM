@@ -276,15 +276,8 @@
         "Equip": "Poner",
         "Split": "Partir",
         "Store": "Meter",
-        "Subtitle": {
-            "Light": "{{light}}",
-            "Light_plural": "con {{light}}",
-            "Stats": "{{statName}}",
-            "Stats_plural": "de {{statName}}",
-            "Class": "{{classType}}",
-            "Type": "{{typeName}}",
-            "Combined": "$t(MovePopup.Subtitle.Class) $t(MovePopup.Subtitle.Type) $t(MovePopup.Subtitle.Light, { count: light }) $t(MovePopup.Subtitle.Stats, { count: statName === null ? 1 : 2 })"
-        },
+        "Subtitle_Consumable": "{{classType}} {{typeName}}",
+        "Subtitle_Gear": "{{classType}} {{typeName}} con {{light}} de {{statName}}",
         "Take": "Tomar",
         "Vault": "Bóveda",
         "LockUnlock_Lock": "Bloquear {{itemType}}",

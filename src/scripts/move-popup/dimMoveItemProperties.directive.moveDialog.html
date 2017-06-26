@@ -24,7 +24,7 @@
       <div ng-if="vm.item.trackable || vm.item.lockable || vm.item.dmg" class="icon">
         <div ng-if="vm.item.dmg && vm.item.dmg !== 'kinetic'" class="element" ng-class="::vm.item.dmg"></div>
       </div>
-      <div class="item-type-info" ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType, typeName: vm.item.typeName })MovePopup.Subtitle.Combined"></div>
+      <div class="item-type-info" ng-i18next="[i18next]({ light: vm.light, statName: vm.item.primStat.stat.statName, classType: vm.classType, typeName: vm.item.typeName, context: vm.light ? 'Gear' : 'Consumable' })MovePopup.Subtitle"></div>
       <div ng-if="vm.item.objectives" ng-i18next="[i18next]({ percent: vm.item.percentComplete })ItemService.PercentComplete"></div>
       <dim-item-tag ng-if="vm.item.taggable" item="vm.item"></dim-item-tag>
     </div>

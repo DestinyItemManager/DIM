@@ -278,13 +278,8 @@
         "Equip": "Equip",
         "Split": "Split",
         "Store": "Store",
-        "Subtitle": {
-            "Light": "{{light}}",
-            "Stats": "{{statName}}",
-            "Class": "{{classType}}",
-            "Type": "{{typeName}}",
-            "Combined": "$t(MovePopup.Subtitle.Light) $t(MovePopup.Subtitle.Stats) $t(MovePopup.Subtitle.Class) $t(MovePopup.Subtitle.Type)"
-        },
+        "Subtitle_Consumable": "{{classType}} {{typeName}}",
+        "Subtitle_Gear": "{{light}} {{statName}} {{classType}} {{typeName}}",
         "Take": "Take",
         "Vault": "Vault",
         "LockUnlock_Lock": "{{itemType}} sperren",

@@ -275,15 +275,8 @@
         "Equip": "Equip",
         "Split": "Dividir",
         "Store": "Mover",
-        "Subtitle": {
-            "Light": "{{light}}",
-            "Light_plural": "com {{light}}",
-            "Stats": "{{statName}}",
-            "Stats_plural": "de {{statName}}",
-            "Class": "{{classType}}",
-            "Type": "{{typeName}}",
-            "Combined": "$t(MovePopup.Subtitle.Class) $t(MovePopup.Subtitle.Type) $t(MovePopup.Subtitle.Light, { count: light }) $t(MovePopup.Subtitle.Stats, { count: statName === null ? 1 : 2 })"
-        },
+        "Subtitle_Consumable": "{{classType}} {{typeName}}",
+        "Subtitle_Gear": "{{classType}} {{typeName}} com {{light}} de {{statName}}",
         "Take": "Tomar",
         "Vault": "Cofre"
     },
