@@ -1,10 +1,10 @@
-import en from '../i18n/dim_en.po';
-import it from '../i18n/dim_it.po';
-import de from '../i18n/dim_de.po';
-import fr from '../i18n/dim_fr.po';
-import es from '../i18n/dim_es.po';
-import ja from '../i18n/dim_ja.po';
-import ptBr from '../i18n/dim_pt_BR.po';
+import en from '../i18n/dim_en.json';
+import it from '../i18n/dim_it.json';
+import de from '../i18n/dim_de.json';
+import fr from '../i18n/dim_fr.json';
+import es from '../i18n/dim_es.json';
+import ja from '../i18n/dim_ja.json';
+import ptBr from '../i18n/dim_pt_BR.json';
 
 function config($compileProvider, $httpProvider, hotkeysProvider,
                 ngHttpRateLimiterConfigProvider, ngDialogProvider) {
@@ -19,11 +19,9 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
   $httpProvider.interceptors.push('http-refresh-token');
   $httpProvider.useApplyAsync(true);
 
-  console.log(window.i18next);
-
   // See https://github.com/i18next/ng-i18next
   window.i18next.init({
-    debug: true,
+   // debug: true,
     lng: 'en', // If not given, i18n will detect the browser language.
     fallbackLng: 'en',
     interpolation: {
@@ -47,7 +45,8 @@ function config($compileProvider, $httpProvider, hotkeysProvider,
       "pt-br": { translation: ptBr }
     },
     useCookie: false,
-    useLocalStorage: false
+    useLocalStorage: false,
+    returnObjects: true
   });
 
   hotkeysProvider.includeCheatSheet = true;

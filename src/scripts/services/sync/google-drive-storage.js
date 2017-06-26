@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
+export function GoogleDriveStorage($q, $i18next, OAuthTokenService) {
   'ngInject';
 
   return {
@@ -213,7 +213,7 @@ export function GoogleDriveStorage($q, $translate, OAuthTokenService) {
         .catch((e) => {
           // TODO: error handling
           console.error(e);
-          throw new Error($translate.instant('SyncService.GoogleDriveReAuth'));
+          throw new Error($i18next.t('SyncService.GoogleDriveReAuth'));
         });
     },
 

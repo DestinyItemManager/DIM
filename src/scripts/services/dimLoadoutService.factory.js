@@ -6,7 +6,7 @@ angular.module('dimApp')
   .factory('dimLoadoutService', LoadoutService);
 
 
-function LoadoutService($q, $rootScope, $i18next, uuid2, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
+function LoadoutService($q, $rootScope, $i18next, dimItemService, dimStoreService, toaster, loadingTracker, dimPlatformService, SyncService, dimActionQueue) {
   let _loadouts = [];
   const _previousLoadouts = {}; // by character ID
 

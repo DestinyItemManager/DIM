@@ -14,8 +14,7 @@
   </div>
   <div class="item-description"
        ng-if="!vm.item.equipment && vm.compareItemCount"
-       translate="Compare.ItemCount"
-       translate-values="{ num: vm.compareItemCount }"></div>
+       ng-i18next="[i18next]({ num: vm.compareItemCount })Compare.ItemCount"></div>
   <div class="item-details"
        ng-if="vm.saleItem.failureStrings">{{ vm.saleItem.failureStrings }}</div>
   <div class="item-details"

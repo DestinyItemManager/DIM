@@ -1,5 +1,5 @@
 <div ng-controller="dimSettingsCtrl as vm">
-  <h1 ng-i18next="Settings"></h1>
+  <h1 ng-i18next="Settings.Settings"></h1>
   <div class="ngdialog-inner-content">
   <form class="settings">
     <table>
@@ -8,7 +8,7 @@
           <label for="logout" ng-i18next="Settings.LogOutDesc"></label>
         </td>
         <td>
-          <button id="logout" ng-click="vm.logout()" ng-i18next="Settings.LogOut"></select>
+          <button id="logout" ng-click="vm.logout()" ng-i18next="Settings.LogOut" />
         </td>
       </tr>
       <tr>
@@ -115,7 +115,7 @@
           <label for="itemSize" ng-i18next="[title]Settings.SizeItemHelp;Settings.SizeItem"></label>
         </td>
         <td>
-          <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" ng-change="vm.save()" /> <button ng-click="vm.resetItemSize()" translate>Settings.ResetToDefault</button>
+          <input ng-model="vm.settings.itemSize" type="range" min="38" max="66" ng-change="vm.save()" /> <button ng-click="vm.resetItemSize()" ng-i18next="Settings.ResetToDefault" />
         </td>
       </tr>
       <tr>

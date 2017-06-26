@@ -2,7 +2,7 @@
  * Storage that uses Chrome's extension sync mechanism. Only available
  * to extensions, and it has some limitation on storage.
  */
-export function ChromeSyncStorage($q, $translate) {
+export function ChromeSyncStorage($q, $i18next) {
   'ngInject';
 
   return {
@@ -26,9 +26,9 @@ export function ChromeSyncStorage($q, $translate) {
           if (chrome.runtime.lastError) {
             const message = chrome.runtime.lastError.message;
             if (message.indexOf('QUOTA_BYTES_PER_ITEM') > -1) {
-              reject(new Error($translate.instant('SyncService.OneItemTooLarge')));
+              reject(new Error($i18next.t('SyncService.OneItemTooLarge')));
             } else if (message.indexOf('QUOTA_BYTES') > -1) {
-              reject(new Error($translate.instant('SyncService.SaveTooLarge')));
+              reject(new Error($i18next.t('SyncService.SaveTooLarge')));
             } else {
               reject(new Error(message));
             }

@@ -24,7 +24,7 @@
     <li class="loadout-set" ng-if="vm.search.query">
       <span ng-click="vm.searchLoadout($event)">
         <i class="fa fa-search"></i>
-        {{ 'Loadouts.ApplySearch' | translate:{ query: vm.search.query } }}
+        <span ng-i18next="[i18next]({ query: vm.search.query })Loadouts.ApplySearch"></span>
       </span>
     </li>
 
@@ -64,7 +64,7 @@
     <li class="loadout-set" ng-if="!vm.store.isVault">
       <span ng-click="vm.startFarming($event)">
         <img class="fa" src="~app/images/engram.svg" height="12" width="12"/>
-        <span ng-i18next="FarmingMode"></span>
+        <span ng-i18next="FarmingMode.FarmingMode"></span>
       </span>
     </li>
 

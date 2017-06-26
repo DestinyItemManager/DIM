@@ -1,5 +1,5 @@
 <div>
-    <h1 ng-i18next="Views.Support"></h1>
+    <h1 ng-i18next="Views.Support.Support"></h1>
     <div class="ngdialog-inner-content">
         <p ng-i18next="Views.Support.FreeToDownload"></p>
         <p ng-i18next="Views.Support.OpenCollective"></p>
@@ -9,8 +9,8 @@
         <div class="backers">
           <a ng-repeat="i in 5 | range track by $index" ng-href="https://opencollective.com/dim/sponsor/{{ $index }}/website" target="_blank" rel="noopener noreferrer"><img ng-src="https://opencollective.com/dim/sponsor/{{ $index }}/avatar.svg"></a>
         </div>
-        <h2 translate="Views.Support.Backers"></h2>
-        <p translate="Views.Support.BackersDetail"></p>
+        <h2 ng-i18next="Views.Support.Backers"></h2>
+        <p ng-i18next="Views.Support.BackersDetail"></p>
         <div class="backers">
           <a ng-repeat="i in 50 | range track by $index" ng-href="https://opencollective.com/dim/backer/{{ $index }}/website" target="_blank" rel="noopener noreferrer"><img ng-src="https://opencollective.com/dim/backer/{{ $index }}/avatar.svg"></a>
         </div>
