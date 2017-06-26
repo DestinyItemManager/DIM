@@ -16,7 +16,6 @@ function StoreService(
   dimBucketService,
   dimItemInfoService,
   dimInfoService,
-  SyncService,
   loadingTracker,
   dimManifestService,
   $translate,
